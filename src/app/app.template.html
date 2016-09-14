@@ -1,0 +1,16 @@
+<!-- includes HTML for app component-->
+<div>
+  
+   <samSpace labelname = "space" ></samSpace>
+   <samHeader labelname = "header" ></samHeader>
+  <nav>
+   <a [routerLinkActive]="['active', 'router-link-active']" [routerLink]=" ['./home'] ">Home</a>
+  </nav>
+</div>
+
+ <main>
+       <router-outlet></router-outlet>
+ </main>
+
+
+ <samFooter labelname = "footer" ></samFooter>

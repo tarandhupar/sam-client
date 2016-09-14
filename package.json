@@ -73,7 +73,8 @@
     "core-js": "^2.4.0",
     "rxjs": "5.0.0-beta.6",
     "zone.js": "~0.6.17",
-    "http-server": "^0.9.0"
+    "http-server": "^0.9.0",
+    "samwds": "^0.2.4"
   },
   "devDependencies": {
     "@angularclass/hmr": "^1.0.1",

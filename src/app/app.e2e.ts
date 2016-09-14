@@ -7,7 +7,7 @@ describe('App', () => {
 
   it('should have a title', () => {
     let subject = browser.getTitle();
-    let result  = 'Angular2 Webpack Starter by @gdi2290 from @AngularClass';
+    let result  = 'SAM Client Starter';
     expect(subject).toEqual(result);
   });
 
@@ -22,11 +22,6 @@ describe('App', () => {
     let result  = true;
     expect(subject).toEqual(result);
   });
-
-  it('should have buttons', () => {
-    let subject = element(by.css('button')).getText();
-    let result  = 'Submit Value';
-    expect(subject).toEqual(result);
-  });
+  
 
 });

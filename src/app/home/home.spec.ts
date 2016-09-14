@@ -7,7 +7,6 @@ import { BaseRequestOptions, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
 // Load the implementations that should be tested
-import { AppState } from '../app.service';
 import { Home } from './home.component';
 import { Title } from './title';
 
@@ -23,14 +22,13 @@ describe('Home', () => {
       },
       deps: [MockBackend, BaseRequestOptions]
     },
-
-    AppState,
+    
     Title,
     Home
   ]));
 
   it('should have default data', inject([ Home ], (home) => {
-    expect(home.localState).toEqual({ value: '' });
+    expect(home.testValue).toEqual({ value: 'Test' });
   }));
 
   it('should have a title', inject([ Home ], (home) => {

@@ -18,7 +18,7 @@ const HtmlElementsPlugin = require('./html-elements-plugin');
  * Webpack Constants
  */
 const METADATA = {
-  title: 'Angular2 Webpack Starter by @gdi2290 from @AngularClass',
+  title: 'SAM Client Starter',
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer()
 };
@@ -211,9 +211,12 @@ module.exports = {
      * See: https://www.npmjs.com/package/copy-webpack-plugin
      */
     new CopyWebpackPlugin([{
+
       from: 'src/assets',
       to: 'assets'
-    }]),
+    },
+    { from: 'node_modules/samwds/dist', 
+      to: 'assets' }]),
 
     /*
      * Plugin: HtmlWebpackPlugin
