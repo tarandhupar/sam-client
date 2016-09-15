@@ -1,6 +1,6 @@
 {
   "name": "sam-client",
-  "version": "1.0",
+  "version": "5.0.5",
   "description": "SAM Client Side Implementation",
   "keywords": [
     "angular2",
