@@ -28,7 +28,7 @@ import '../assets/js/samuikit.js';
     './app.style.css'
   ],
   templateUrl: 'app.template.html',
-  providers : [ComponentInjectService,InputTypeConstants
+  providers : [ComponentInjectService,InputTypeConstants]
 })
 export class App {
   testValue = { value: 'Test' };
