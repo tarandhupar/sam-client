@@ -16,6 +16,16 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { Home } from './home';
 import { NoContent } from './common/no-content';
+import { SamFooter } from "./common/samuikit/sam-footer";
+import { SamHeader } from "./common/samuikit/sam-header";
+import { SamSpace } from "./common/samuikit/sam-space";
+import { SamSelectComponent } from "./sam-angular/sam-select";
+import { SamAngularComponents } from "./sam-angular";
+import { SamButton } from "./common/samuikit/sam-button";
+import { SamLabel } from "./common/samuikit/sam-label";
+import { SamAccordions } from "./common/samuikit/sam-accordions";
+import { SamSelect } from "./common/samuikit/sam-select";
+
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -31,7 +41,16 @@ const APP_PROVIDERS = [
   declarations: [
     App,
     Home,
-    NoContent
+    NoContent,
+    SamAngularComponents,
+    SamFooter,
+    SamHeader,
+    SamSpace,
+    SamSelectComponent,
+    SamButton,
+    SamLabel,
+    SamAccordions,
+    SamSelect,
   ],
   imports: [ // import Angular's modules
     BrowserModule,

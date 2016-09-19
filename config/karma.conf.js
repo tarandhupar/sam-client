@@ -25,7 +25,9 @@ module.exports = function(config) {
      *
      * we are building the test environment in ./spec-bundle.js
      */
-    files: [ { pattern: './config/spec-bundle.js', watched: false } ],
+    files: [
+      { pattern: './config/spec-bundle.js', watched: false }
+    ],
 
     /*
      * preprocess matching files before serving them to the browser
@@ -46,7 +48,12 @@ module.exports = function(config) {
     },
 
     // Webpack please don't spam the console when running in karma!
-    webpackServer: { noInfo: true },
+    webpackServer: {
+      noInfo: true,
+      stats: {
+        chunks: false
+      }
+    },
 
     /*
      * test results reporter to use
@@ -66,7 +73,7 @@ module.exports = function(config) {
      * level of logging
      * possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
      */
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_WARN,
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: false,
