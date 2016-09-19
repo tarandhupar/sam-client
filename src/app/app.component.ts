@@ -37,7 +37,7 @@ export class App {
                                           {title:"Test2", content:"This is Test2", expanded:true},
                                           {title:"Test3", content:"This is Test3",expanded:false}
                                         ],
-                          bordered:false };
+                          bordered:false};
   selectValue = {
                                 type: 'dropdown',
                                 label: 'Dropdown label',
@@ -54,6 +54,10 @@ export class App {
 
   ngOnInit() {
        this.testValue = { value: 'Test2' };
+  }
+
+  clicked(){
+    console.log("****This is test*****");
   }
 
 }
