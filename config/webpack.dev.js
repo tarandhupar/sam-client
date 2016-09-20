@@ -23,7 +23,8 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: HMR
+  HMR: HMR,
+  SEARCHAPI: "http://gsaiae-samdotgov-search-api-dev02.reisys.com"
 });
 
 /**
@@ -115,6 +116,7 @@ module.exports = webpackMerge(commonConfig, {
         'ENV': JSON.stringify(METADATA.ENV),
         'NODE_ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
+        'SEARCHAPI': JSON.stringify(METADATA.SEARCHAPI),
       }
     }),
 

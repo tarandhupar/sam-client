@@ -12,6 +12,7 @@ import { SamLabel } from './common/samuikit/sam-label.ts';
 import { SamAccordions } from './common/samuikit/sam-accordions.ts';
 import { SamSelect } from './common/samuikit/sam-select.ts';
 import '../assets/js/samuikit.js';
+import {APIService} from "./common/service/api.service";
 
 
 /*
@@ -25,7 +26,7 @@ import '../assets/js/samuikit.js';
     './app.style.css'
   ],
   templateUrl: 'app.template.html',
-  providers : [ComponentInjectService,InputTypeConstants],
+  providers : [APIService, ComponentInjectService, InputTypeConstants],
   directives: [SamHeader, SamFooter, SamSpace, SamButton, SamLabel, SamAccordions, SamSelect ]
 })
 export class App {

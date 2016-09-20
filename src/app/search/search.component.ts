@@ -42,11 +42,11 @@ export class Search implements OnInit{
 	}
 
 	runSearch(newSearch){
-		
+
 		if(typeof window != "undefined"){
 			var qsobj = {};
 			if (!this.initLoad && history.pushState) {
-				
+
 				if(this.keyword.length>0){
 					qsobj['keyword'] = this.keyword;
 				}
@@ -80,10 +80,10 @@ export class Search implements OnInit{
 
 				this.initLoad = false;
 			},
-			error => {
-				console.error("Error!!", error);
-				//return Observable.throw(error);
-			}
+      error => {
+        console.error("Error!!", error);
+        //return Observable.throw(error);
+      }
     );
 	}
 
