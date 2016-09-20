@@ -1,4 +1,3 @@
-<div *ngIf="!config" class="usa-bgcolor-gray-warm-light">Something went wrong!</div>
 <div *ngIf="config" [class.usa-input-error]="config.hasError">
   <span *ngIf="config.label">{{config.label}}</span>
   <select *ngIf="config.options" [(ngModel)]="value">
