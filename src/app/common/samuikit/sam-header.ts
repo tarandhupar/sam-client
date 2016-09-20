@@ -17,6 +17,9 @@ export class SamHeader {
   constructor(
     private _componentInjectService : ComponentInjectService
   ) {
+  }
+
+  ngOnInit(){
     this.html = this._componentInjectService.renderComponentHTML('header', {});
   }
 

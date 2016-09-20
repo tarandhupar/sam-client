@@ -17,6 +17,9 @@ export class SamFooter {
   constructor(
     private _componentInjectService : ComponentInjectService
   ) {
+  }
+
+  ngOnInit(){
     this.html = this._componentInjectService.renderComponentHTML('footer', {});
   }
 }
