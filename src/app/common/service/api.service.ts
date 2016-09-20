@@ -4,47 +4,66 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class APIService {
-  private APIs: any = {
-    "search": "/v1/search",
-  };
+    private APIs: any = {
+        "search": "/sgs/v1/search",
+        "program": "/cfda/v1/program",
+        "federalHierarchy": "/cfda/v1/fh",
+        "dictionary": "/cfda/v1/dictionary"
+    };
 
-  constructor(private _http: Http){}
+    constructor(private _http: Http){}
 
   /**
-   * common function to perform an API CALL
-   *
-   * @param Object oApiParam {
+    * common function to perform an API CALL
+    *
+    * @param Object oApiParam {
     *          name: '',
     *          suffix: '',
     *          oParam: {},
     *          method: '' (GET|POST|PUT...)
     *      }
-   * @returns Observable
-   */
-  call(oApiParam: any) {
-    let method: string = oApiParam.method;
-    let oHeader = new Headers({});
-    let oURLSearchParams = new URLSearchParams();
-    // let SEARCHAPI: string = "http://gsaiae-samdotgov-search-api-dev02.reisys.com";
+    * @returns Observable
+    */
+    call(oApiParam: any) {
+        let method: string = oApiParam.method;
+        let oHeader = new Headers({});
+        let oURLSearchParams = new URLSearchParams();
 
-    //loop through oParam & add them as request parameter
-    for (var key in oApiParam.oParam) {
-      oURLSearchParams.set(key, oApiParam.oParam[key]);
+        //add API-Umbrella key
+        oURLSearchParams.set("api_key", API_KEY);
+
+        //loop through oParam & add them as request parameter
+        for (var key in oApiParam.oParam) {
+            oURLSearchParams.set(key, oApiParam.oParam[key]);
+        }
+
+        //TODO: Implement Post DATA to request
+        let jsonOption = {
+            "search": oURLSearchParams,
+            "method": RequestMethod.Get,
+            "headers": oHeader,
+            "body": "",
+            "url": API_URL + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
+        };
+
+        switch (method.toUpperCase()){
+            case "POST":
+                jsonOption.method = RequestMethod.Post;
+            break;
+            case "PUT":
+                jsonOption.method = RequestMethod.Put;
+            break;
+            case "PATCH":
+                jsonOption.method = RequestMethod.Patch;
+            break;
+            case "DELETE":
+                jsonOption.method = RequestMethod.Delete;
+            break;
+        }
+
+        let oRequestOptions = new RequestOptions(jsonOption);
+        let oRequest = new Request(oRequestOptions);
+
+        return this._http.request(oRequest).map((res: Response) => { return res.json() } );
     }
-
-    let jsonOption = {
-      "search": oURLSearchParams,
-      "method": RequestMethod.Get,
-      "headers": oHeader,
-      "body": "",
-      //todo: find a way to pass environment varibles
-      "url": process.env.SEARCHAPI + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
-    };
-
-    let oRequestOptions = new RequestOptions(jsonOption);
-    let oRequest = new Request(oRequestOptions);
-
-    console.log(jsonOption);
-    return this._http.request(oRequest).map((res: Response) => { return res.json() } );
-  }
 }

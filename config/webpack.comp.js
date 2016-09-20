@@ -15,7 +15,7 @@ const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const ENV = process.env.ENV = process.env.NODE_ENV = 'comp';
 const HOST = process.env.HOST || 'localhost';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
@@ -24,8 +24,8 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   port: PORT,
   ENV: ENV,
   HMR: HMR,
-  API_URL: "https://gsaiae-dev02.reisys.com/dev",
-  API_KEY: "ZkxTIWSlctvTe2io8k5gKlj3tOCS3heyw1N0DAFe"
+  API_URL: "https://csp-api.sam.gov/comp",
+  API_KEY: "Z5vc0lK9ubZdK6fLKDCdeYODaSVFtGElOUVSzIl0"
 });
 
 /**
