@@ -1,0 +1,11 @@
+ p {
+     text-align: justify;
+ }
+
+ select {
+     margin: 0;
+ }
+
+ li:before {
+     content: none;
+ }
