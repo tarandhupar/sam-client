@@ -29,7 +29,7 @@ import '../assets/js/samuikit.js';
 export class App {
   testValue = { value: 'Test' };
   buttonValue: any = {type:"default", data:"Default"};
-  abelValue: any = {type:"small", data:"Day"};
+  labelValue: any = {type:"small", data:"Day"};
   accordionsValue: any = {accordions: [
                                           {title:"Test1", content:"This is Test1",expanded:false},
                                           {title:"Test2", content:"This is Test2", expanded:true},
