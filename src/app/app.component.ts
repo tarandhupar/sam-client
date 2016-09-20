@@ -28,8 +28,8 @@ import '../assets/js/samuikit.js';
 })
 export class App {
   testValue = { value: 'Test' };
-  public buttonValue: any = {type:"default", data:"Default"};
-  public labelValue: any = {type:"small", data:"Day"};
+  buttonValue: any = {type:"default", data:"Default"};
+  abelValue: any = {type:"small", data:"Day"};
   accordionsValue: any = {accordions: [
                                           {title:"Test1", content:"This is Test1",expanded:false},
                                           {title:"Test2", content:"This is Test2", expanded:true},
@@ -48,11 +48,11 @@ export class App {
                               };
   labelName: string = "button";
   constructor() {
-    //console.log(this.buttonValue);
+
   }
 
   ngOnInit() {
-       //this.testValue = { type:'label' };
+
   }
 
   clicked(){
