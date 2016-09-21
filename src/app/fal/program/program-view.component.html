@@ -502,11 +502,15 @@
     <section *ngIf="oHistoricalIndex">
       <h2 id="history">History</h2><br>
       <div style="border-bottom: 2px solid #D3D3D3;" *ngFor="let item of oHistoricalIndex">
-        <p style="text-align:left; margin-top:.5em">
-          {{item.actionType | label}}
-          <span style="float:right;">{{item.createdDate}}</span>
+        <p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
+          {{item.fiscalYear}} ({{item.statusCode}})
+          <span style="float:right">{{item.actionType | historicalIndexLabel}}</span>
         </p>
-        <div style="padding-bottom: .5em">{{item.changeDescription}}</div>
+        <p *ngIf="!item.statusCode" style="text-align:left; margin-top:.7em">
+          {{item.fiscalYear}}
+          <span style="float:right">{{item.actionType | historicalIndexLabel}}</span>
+        </p>
+        <p style="text-align:right"><i>{{item.changeDescription}}</i></p>
       </div>
     </section>
 

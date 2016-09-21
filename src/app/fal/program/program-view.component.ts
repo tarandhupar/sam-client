@@ -56,7 +56,6 @@ export class ProgramViewComponent implements OnInit {
           //get authorizations and group them by id
           var auths = this.oProgram.program.data.authorizations;
           this.authorizationIdsGrouped = _.values(_.groupBy(auths, 'authorizationId'));
-          //console.log("GroupIds as array: ", this.authorizationIdsGrouped );
           this.oFHService.getFederalHierarchyById(res.program.data.organizationId)
             .subscribe(res => {
               this.oFederalHierarchy = res;
