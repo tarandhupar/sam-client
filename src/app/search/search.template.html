@@ -2,10 +2,7 @@
 	<div class="usa-width-one">
 		<h1>SAM.gov Search Results</h1>
 	</div>
-</div>
-
-<div class="usa-width-one">
-  <div class="usa-grid">
+  <div class="usa-width-one">
     <form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch(true)" #f="ngForm">
       <div class="usa-width-one-fourth">
         <label for="index" class="usa-sr-only">Select an index</label>
@@ -29,7 +26,7 @@
       <hr class="m_T-5x" />
   	</div>
 	</div>
-  <div *ngIf="data.results" class="usa-grid-full">
+  <div *ngIf="data.results">
     <div class="usa-width-one-whole">
       <button *ngIf="pageNum>0" (click)="pageChange(pageNum-1)" class="usa-button-outline">Previous</button>
       <span *ngFor="let item of createRange(totalPages); let currentElementIndex=index">
