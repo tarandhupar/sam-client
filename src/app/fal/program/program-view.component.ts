@@ -64,7 +64,6 @@ export class ProgramViewComponent implements OnInit {
           this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(id, this.oProgram.program.data.programNumber)
             .subscribe(res => {
               this.oHistoricalIndex = res;
-              console.log("historical index: ", this.oHistoricalIndex);
           });
           if (this.oProgram.program.data.relatedPrograms.flag != "na") {
             for (let programId of this.oProgram.program.data.relatedPrograms.relatedTo) {
