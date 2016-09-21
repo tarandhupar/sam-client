@@ -12,9 +12,6 @@ export class SearchService {
     }
 
     runSearch(obj) {
-      // //todo, move search url to env configuration
-      // return this.http.get(`http://gsaiae-samdotgov-search-api-dev02.reisys.com/v1/search?index=${obj.index}&q=${obj.keyword}&page=${obj.pageNum}`).map((res:Response) => res.json());
-      console.log(obj);
       let oApiParam = {
         name: 'search',
         suffix: '/',
