@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Component, Input } from '@angular/core';
+=======
+import {Component, ElementRef, OnInit, Injector, Input} from '@angular/core';
+>>>>>>> sam-angular-module
 import { ComponentInjectService } from '../service/component.inject.service.ts';
 import { InputTypeConstants } from '../constants/input.type.constants.ts';
 import { SafeHtml } from '@angular/platform-browser';
@@ -16,6 +20,7 @@ export class SamAccordions {
   html: SafeHtml;
 
   constructor(
+<<<<<<< HEAD
     private _componentInjectService : ComponentInjectService
   ) {
   }
@@ -23,5 +28,13 @@ export class SamAccordions {
   ngOnInit(){
     this.html = this._componentInjectService.renderComponentHTML('accordions', this.config);
 
+=======
+    public _injector:Injector,
+  ) {}
+
+  ngOnInit() {
+
+
+>>>>>>> sam-angular-module
   }
 }

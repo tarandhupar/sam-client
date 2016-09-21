@@ -1,17 +1,17 @@
 <div class="usa-grid">
-  <h1>SAM Select Component &lt;samSelect&gt;</h1>
+  <h1>SAM Select Component &lt;samSelect2&gt;</h1>
   <h2>Basic</h2>
   <p>Config</p>
   <div>
     <pre><code>{{basicConfig | json}}</code></pre>
   </div>
-  <samSelect [config]="basicConfig" #basicSelect></samSelect>
+  <samSelect2 [config]="basicConfig" #basicSelect></samSelect2>
   <p>Value</p>
   <div>
     <pre><code>{{basicSelect.value || "null" | json}}</code></pre>
   </div>
   <h2>Set config dynamically</h2>
-  <samSelect [config]="dynamicConfig" #dynamicSelect></samSelect>
+  <samSelect2 [config]="dynamicConfig" #dynamicSelect></samSelect2>
   <textarea [(ngModel)]="dynamicConfigString" (ngModelChange)="dynamicConfigChanged(dynamicConfigString)"></textarea>
   <p>Value</p>
   <div>

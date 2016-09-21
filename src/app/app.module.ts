@@ -5,6 +5,8 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
+import { SamAngularModule } from '../sam-angular';
+
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -19,8 +21,7 @@ import { NoContent } from './common/no-content';
 import { SamFooter } from "./common/samuikit/sam-footer";
 import { SamHeader } from "./common/samuikit/sam-header";
 import { SamSpace } from "./common/samuikit/sam-space";
-import { SamSelectComponent } from "./sam-angular/sam-select";
-import { SamAngularComponents } from "./sam-angular";
+import { SamAngularDemo } from "./sam-angular-demo";
 import { SamButton } from "./common/samuikit/sam-button";
 import { SamLabel } from "./common/samuikit/sam-label";
 import { SamAccordions } from "./common/samuikit/sam-accordions";
@@ -42,11 +43,10 @@ const APP_PROVIDERS = [
     App,
     Home,
     NoContent,
-    SamAngularComponents,
+    SamAngularDemo,
     SamFooter,
     SamHeader,
     SamSpace,
-    SamSelectComponent,
     SamButton,
     SamLabel,
     SamAccordions,
@@ -56,7 +56,8 @@ const APP_PROVIDERS = [
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: false })
+    RouterModule.forRoot(ROUTES, { useHash: false }),
+    SamAngularModule,
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
