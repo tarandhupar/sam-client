@@ -12,6 +12,7 @@ import * as _ from 'lodash';
 @Component({
   moduleId: __filename,
   templateUrl: 'program-view.component.html',
+  styleUrls: ['program-view.style.css'],
   providers: [FHService, ProgramService, DictionaryService, HistoricalIndexService]
 })
 export class ProgramViewComponent implements OnInit {

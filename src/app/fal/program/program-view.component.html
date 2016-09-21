@@ -501,16 +501,16 @@
     <!--History Section-->
     <section *ngIf="oHistoricalIndex">
       <h2 id="history">History</h2><br>
-      <div style="border-bottom: 2px solid #D3D3D3;" *ngFor="let item of oHistoricalIndex">
+      <div id="historyItem" *ngFor="let item of oHistoricalIndex">
         <p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
           {{item.fiscalYear}} ({{item.statusCode}})
-          <span style="float:right">{{item.actionType | historicalIndexLabel}}</span>
+          <span class="historyDetails">{{item.actionType | historicalIndexLabel}}</span>
         </p>
-        <p *ngIf="!item.statusCode" style="text-align:left; margin-top:.7em">
+        <p id="fiscalYear" *ngIf="!item.statusCode">
           {{item.fiscalYear}}
-          <span style="float:right">{{item.actionType | historicalIndexLabel}}</span>
+          <span class="historyDetails" >{{item.actionType | historicalIndexLabel}}</span>
         </p>
-        <p style="text-align:right"><i>{{item.changeDescription}}</i></p>
+        <p id="changeDescription"><i>{{item.changeDescription}}</i></p>
       </div>
     </section>
 
