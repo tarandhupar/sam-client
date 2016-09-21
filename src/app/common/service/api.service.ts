@@ -8,7 +8,8 @@ export class APIService {
         "search": "/sgs/v1/search",
         "program": "/cfda/v1/program",
         "federalHierarchy": "/cfda/v1/fh",
-        "dictionary": "/cfda/v1/dictionary"
+        "dictionary": "/cfda/v1/dictionary",
+        "historicalIndex": "/cfda/v1/historicalIndex"
     };
 
     constructor(private _http: Http){}
