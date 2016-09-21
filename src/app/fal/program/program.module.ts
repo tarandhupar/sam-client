@@ -6,6 +6,7 @@ import {KeysPipe} from '../../common/pipes/keyspipe.pipe';
 import {CapitalizePipe} from '../../common/pipes/capitalize.pipe';
 import {FilterMultiArrayObjectPipe} from '../../common/pipes/filter-multi-array-object.pipe';
 import {AuthorizationPipe} from '../pipes/authorization.pipe';
+import {HistoricalIndexLabelPipe} from '../pipes/historical-index-label.pipe';
 
 @NgModule({
   imports: [
@@ -17,14 +18,16 @@ import {AuthorizationPipe} from '../pipes/authorization.pipe';
     CapitalizePipe,
     FilterMultiArrayObjectPipe,
     AuthorizationPipe,
-    ProgramViewComponent
+    ProgramViewComponent,
+    HistoricalIndexLabelPipe
   ],
   declarations: [
     KeysPipe,
     CapitalizePipe,
     FilterMultiArrayObjectPipe,
     AuthorizationPipe,
-    ProgramViewComponent
+    ProgramViewComponent,
+    HistoricalIndexLabelPipe
   ],
   providers: [],
 })

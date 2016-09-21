@@ -498,6 +498,18 @@
       </div>
     </section>
 
+    <!--History Section-->
+    <section *ngIf="oHistoricalIndex">
+      <h2 id="history">History</h2><br>
+      <div style="border-bottom: 2px solid #D3D3D3;" *ngFor="let item of oHistoricalIndex">
+        <p style="text-align:left; margin-top:.5em">
+          {{item.actionType | label}}
+          <span style="float:right;">{{item.createdDate}}</span>
+        </p>
+        <div style="padding-bottom: .5em">{{item.changeDescription}}</div>
+      </div>
+    </section>
+
     <!--Internal Fields-->
     <!--<section>
       <h2 id="internal">Internal Fields <em>(Not displayed publically)</em></h2>
