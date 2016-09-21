@@ -1,9 +1,10 @@
 import { Component,OnInit } from '@angular/core';
-import { Http,RequestOptions, URLSearchParams } from '@angular/http';
 import { Router,ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import 'rxjs/add/operator/map';
 import { SearchService } from '../common/service/search.service';
+import { AssistanceListingResult } from './assistance_listings/al.component';
+import { OpportunitiesResult } from './opportunities/opportunities.component';
 
 @Component({
   moduleId: __filename,
@@ -11,7 +12,7 @@ import { SearchService } from '../common/service/search.service';
   styleUrls: [
     'search.style.css'
   ],
-  directives: [],
+  directives: [AssistanceListingResult,OpportunitiesResult],
   providers: [SearchService],
   templateUrl: 'search.template.html'
 })
@@ -26,7 +27,7 @@ export class Search implements OnInit{
 	keyword: string = "";
 	initLoad = true;
 
-	constructor(public http: Http,private activatedRoute: ActivatedRoute,private _router:Router, private searchService: SearchService) { }
+	constructor(private activatedRoute: ActivatedRoute,private _router:Router, private searchService: SearchService) { }
 	ngOnInit() {
 
 		this.activatedRoute.queryParams.subscribe(

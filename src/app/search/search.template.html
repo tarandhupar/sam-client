@@ -4,119 +4,41 @@
 	</div>
 </div>
 
-  <div class="usa-width-one">
-    <div class="usa-grid">
-      <form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch(true)" #f="ngForm">
-        <div class="usa-width-one-fourth">
-          <label for="index" class="usa-sr-only">Select an index</label>
-          <select name="index" id="index" [(ngModel)]="index">
-            <option [value]="indexes[0]" selected="true">All</option>
-						<option [value]="indexes[1]">Assistance Listings</option>
-            <option [value]="indexes[2]">Opportunities</option>
-          </select>
-        </div>
-      	<div role="search" class="usa-width-three-fourths">
-          <label class="usa-sr-only" for="search-field-big">Search big</label>
-          <input id="search-field-big" type="search" name="keyword" placeholder="#keyword" [(ngModel)]="keyword" autofocus>
-          <button type="submit">
-            <span class="usa-search-submit-text">Search</span>
-          </button>
-        </div>
-      </form>
-			<div *ngFor="let row of data.results">
-				<div *ngIf="row._type=='FBO'" class="usa-grid-full">
-        	<span class="usa-label">Opportunity</span>
-					<h3>
-	          <a href="#title">{{ row.procurementTitle }}</a>
-	        </h3>
-	        <div class="usa-width-two-thirds">
-            <p class="m_T-2x" *ngIf="row.procurementDescription!=null && row.procurementDescription.length>150">
-        	    <span [innerHTML]="row.procurementDescription | slice:0:150"></span>...
-            </p>
-            <p class="m_T-2x" *ngIf="row.procurementDescription!=null && row.procurementDescription.length<150">
-              <span [innerHTML]="row.procurementDescription"></span>
-            </p>
-      	    <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-	            <li><strong>Department:</strong> <a href="#">{{ row.parentAgencyName }}</a></li>
-	            <li><strong>Office:</strong> <a href="#">{{ row.officeName }}</a></li>
-	            <li><strong>Location:</strong>{{ row.location }}</li>
-          	</ul>
-        	</div>
-        	<div class="usa-width-one-third">
-          	<ul class="usa-text-small m_B-0">
-            	<li>
-	              <strong>Solicitation Number</strong>
-	              <ul class="usa-unstyled-list">
-	                <li>{{ row.solicitationNumber }}</li>
-	              </ul>
-          		</li>
-           		 <li>
-	              <strong>Posted Date</strong>
-	              <ul class="usa-unstyled-list">
-	                <li>{{ row.procurementPostedDate | date }}</li>
-	              </ul>
-            	</li>
-            	<li>
-              	<strong>Type</strong>
-              	<ul class="usa-unstyled-list">
-                	<li>{{row.procurementTypeValue}}</li>
-            		</ul>
-          		</li>
-          	</ul>
-      		</div>
-    		</div>
-      	<div *ngIf="row._type=='CFDA'" class="usa-grid-full">
-        	<span class="usa-label">Federal Assistance Listing</span>
-        	<h3>
-          	<a href="#title">{{row.title}}</a>
-        	</h3>
-        	<div class="usa-width-two-thirds">
-	        	<p class="m_T-2x">
-	            {{row.objective | slice:0:150}}{{row.objective && row.objective.length > 150 ? ' ...' : ''}}
-	          </p>
-          	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-            	<li *ngIf="row.fhNames && row.fhNames[0]"><strong>Department:</strong><a href=""><span>{{row.fhNames[0]}}</span></a></li>
-	            <li *ngIf="row.fhNames && row.fhNames[1]"><strong>Agency:</strong><a href=""><span>{{row.fhNames[1]}}</span></a></li>
-	            <li *ngIf="row.fhNames && row.fhNames[2]"><strong>Office:</strong><a href=""><span>{{row.fhNames[2]}}</span></a></li>
-	            <li *ngIf="row.contacts!=null"><strong>Headquarters Office:</strong> {{row.contacts[0].fullName}}<br>{{row.contacts[0].address}}&nbsp;{{row.contacts[0].city}}</li>
-	          </ul>
-        	</div>
-        	<div class="usa-width-one-third">
-          	<ul class="usa-text-small m_B-0">
-            	<li><strong>FAL Number</strong>
-            	<ul class="usa-unstyled-list">
-                <li>{{row.programNumber}}</li>
-              </ul>
-            </li>
-            <li><strong>Date Published</strong>
-              <ul class="usa-unstyled-list">
-                <li>{{row.publishedDate | date}}</li>
-              </ul>
-            </li>
-            <li><strong>Type</strong>
-              <ul class="usa-unstyled-list">
-                <li>{{row.assistanceTypes}}</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-    	</div>
-      <hr class="m_T-5x">
-		</div>
-
-    <div *ngIf="data.results" class="usa-grid-full">
-      <div class="usa-width-one-whole">
-        <button *ngIf="pageNum>0" (click)="pageChange(pageNum-1)" class="usa-button-outline">Previous</button>
-        <span *ngFor="let item of createRange(totalPages); let currentElementIndex=index">
-        	<span style="padding:0px 6px 0 2px" *ngIf="totalPages>(pageNumPaginationPadding) && pageNum+pageNumPaginationPadding<(totalPages-pageNumPaginationPadding) && currentElementIndex==(totalPages-1)">...</span>
-        	<button [ngStyle]="{'text-decoration':(pageNum==currentElementIndex?'underline':'none')}" *ngIf="showPageButton(currentElementIndex)" class="usa-button-outline" (click)="pageChange(currentElementIndex)">{{currentElementIndex+1}}</button>
-        	<span style="padding:0px 6px 0 2px" *ngIf="pageNum-pageNumPaginationPadding>=pageNumPaginationPadding && currentElementIndex==0">...</span>
-      	</span>
-        <button *ngIf="pageNum<(totalPages-1)" (click)="pageChange(pageNum+1)" class="usa-button-outline">Next</button>
+<div class="usa-width-one">
+  <div class="usa-grid">
+    <form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch(true)" #f="ngForm">
+      <div class="usa-width-one-fourth">
+        <label for="index" class="usa-sr-only">Select an index</label>
+        <select name="index" id="index" [(ngModel)]="index">
+          <option [value]="indexes[0]" selected="true">All</option>
+					<option [value]="indexes[1]">Assistance Listings</option>
+          <option [value]="indexes[2]">Opportunities</option>
+        </select>
       </div>
+    	<div role="search" class="usa-width-three-fourths">
+        <label class="usa-sr-only" for="search-field-big">Search big</label>
+        <input id="search-field-big" type="search" name="keyword" placeholder="#keyword" [(ngModel)]="keyword" autofocus>
+        <button type="submit">
+          <span class="usa-search-submit-text">Search</span>
+        </button>
+      </div>
+    </form>
+		<div *ngFor="let row of data.results">
+			<opportunities-result *ngIf="row._type=='FBO'" class="usa-grid-full" [data]="row"></opportunities-result>
+      <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row"></assistance-listing-result>
+      <hr class="m_T-5x" />
+  	</div>
+	</div>
+  <div *ngIf="data.results" class="usa-grid-full">
+    <div class="usa-width-one-whole">
+      <button *ngIf="pageNum>0" (click)="pageChange(pageNum-1)" class="usa-button-outline">Previous</button>
+      <span *ngFor="let item of createRange(totalPages); let currentElementIndex=index">
+      	<span style="padding:0px 6px 0 2px" *ngIf="totalPages>(pageNumPaginationPadding) && pageNum+pageNumPaginationPadding<(totalPages-pageNumPaginationPadding) && currentElementIndex==(totalPages-1)">...</span>
+      	<button [ngStyle]="{'text-decoration':(pageNum==currentElementIndex?'underline':'none')}" *ngIf="showPageButton(currentElementIndex)" class="usa-button-outline" (click)="pageChange(currentElementIndex)">{{currentElementIndex+1}}</button>
+      	<span style="padding:0px 6px 0 2px" *ngIf="pageNum-pageNumPaginationPadding>=pageNumPaginationPadding && currentElementIndex==0">...</span>
+    	</span>
+      <button *ngIf="pageNum<(totalPages-1)" (click)="pageChange(pageNum+1)" class="usa-button-outline">Next</button>
     </div>
-
-    <br/><br/>
-
   </div>
+  <br/><br/>
 </div>
