@@ -7,10 +7,9 @@ import 'rxjs/add/operator/map';
   directives: [],
   providers: [],
   template: `
-
     	<span class="usa-label">Federal Assistance Listing</span>
     	<h3>
-      	<a href="#title">{{data.title}}</a>
+      	<a class="assistance-listing-title" href="#title">{{data.title}}</a>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<p class="m_T-2x">
@@ -45,11 +44,7 @@ import 'rxjs/add/operator/map';
 
   `
 })
-export class AssistanceListingResult implements OnInit{
+export class AssistanceListingResult{
 	@Input() data: any;
 	constructor() { }
-	ngOnInit() {
-
-
-	}
 }

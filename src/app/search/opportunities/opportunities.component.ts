@@ -9,7 +9,7 @@ import 'rxjs/add/operator/map';
   template: `
     <span class="usa-label">Opportunity</span>
     <h3>
-      <a href="#title">{{ data.procurementTitle }}</a>
+      <a class="opportunity-title" href="#title">{{ data.procurementTitle }}</a>
     </h3>
     <div class="usa-width-two-thirds">
       <p class="m_T-2x" *ngIf="data.procurementDescription!=null && data.procurementDescription.length>150">
@@ -48,11 +48,7 @@ import 'rxjs/add/operator/map';
     </div>
   `
 })
-export class OpportunitiesResult implements OnInit{
+export class OpportunitiesResult{
 	@Input() data: any;
-	constructor() { }
-	ngOnInit() {
-
-
-	}
+	constructor() {}
 }
