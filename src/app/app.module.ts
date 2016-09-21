@@ -16,6 +16,7 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { Home } from './home';
 import { NoContent } from './common/no-content';
+import { ProgramModule } from './fal';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -37,7 +38,8 @@ const APP_PROVIDERS = [
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: false })
+    RouterModule.forRoot(ROUTES, { useHash: false }),
+    ProgramModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
