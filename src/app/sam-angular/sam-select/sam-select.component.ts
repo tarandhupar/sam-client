@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'samSelect',
+  selector: 'samSelect2',
   styleUrls: [ 'sam-select.style.css' ],
   templateUrl: 'sam-select.template.html'
 })
