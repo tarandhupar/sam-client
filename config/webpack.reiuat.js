@@ -24,8 +24,8 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   port: PORT,
   ENV: ENV,
   HMR: HMR,
-  API_URL: "https://gsaiae-dev02.reisys.com/uat",
-  API_KEY: "ZkxTIWSlctvTe2io8k5gKlj3tOCS3heyw1N0DAFe"
+  API_URL: "https://gsaiae-uat01.reisys.com/uat",
+  API_KEY: "S4e4f4V0ZSVNkflKVyy36lUXrD2TldMxMp3pd6WD"
 });
 
 /**
