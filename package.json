@@ -1,3 +1,4 @@
+//nathan comments
 {
   "name": "sam-client",
   "version": "5.0.5",
@@ -6,7 +7,7 @@
     "angular2",
     "webpack",
     "typescript"
-  ],  
+  ],
   "scripts": {
     "rimraf": "rimraf",
     "tslint": "tslint",
