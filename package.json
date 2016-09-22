@@ -6,7 +6,7 @@
     "angular2",
     "webpack",
     "typescript"
-  ],  
+  ],
   "scripts": {
     "rimraf": "rimraf",
     "tslint": "tslint",
