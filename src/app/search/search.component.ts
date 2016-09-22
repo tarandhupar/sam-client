@@ -75,21 +75,21 @@ export class Search implements OnInit{
 		}).subscribe(
 			data => {
 				console.log("DATA!",data);
-	      if(data.results){
-	        for(var i=0; i<data.results.length; i++) {
-	          if(data.results[i].contacts) {
-	            data.results[i].contacts = JSON.parse(data.results[i].contacts);
+	      if(data._embedded.results){
+	        for(var i=0; i<data._embedded.results.length; i++) {
+	          if(data._embedded.results[i].contacts) {
+	            data._embedded.results[i].contacts = JSON.parse(data._embedded.results[i].contacts);
 	          }
-	          if(data.results[i].fhNames){
-	            if(!(data.results[i].fhNames instanceof Array)){
-	              data.results[i].fhNames = [data.results[i].fhNames];
+	          if(data._embedded.results[i].fhNames){
+	            if(!(data._embedded.results[i].fhNames instanceof Array)){
+	              data._embedded.results[i].fhNames = [data._embedded.results[i].fhNames];
 	            }
 	          }
 	        }
 	      }
-				this.data = data;
-				this.totalCount = this.data['totalCount'];
-				this.totalPages = this.data['totalPages'];
+				this.data = data._embedded;
+				this.totalCount = data.page['totalElements'];
+				this.totalPages = data.page['totalPages'];
 
 				this.initLoad = false;
 			},
