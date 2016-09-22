@@ -1,42 +1,59 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'swds',
+  styleUrls: ['./sam-angular-demo.css'],
   templateUrl: 'sam-angular-demo.template.html'
 })
 export class SamAngularDemo {
-  basicConfig: any;
-  myString: string;
-  dynamicConfigString: string; // Config the user has enter in the text box
-  dynamicConfig: any; // JSON of our config
+  // Select Component
+  selectModel: any = 'ma';
+  selectConfig = {
+    options: [
+      {value: 'dc', label: 'Washington DC'},
+      {value: 'ma', label: 'Maryland'},
+      {value: 'va', label: 'Virginia'},
+    ],
+    placeholder: 'Select a region',
+    label: 'Region',
+    name: 'region',
+    errorMessage: '',
+    hint: '',
+    hasEmptyOption: false
+  };
 
-  constructor() {
-    this.basicConfig = {
-      options: [
-        {key: 1, value: 'One'},
-        {key: 2, value: 'Two'},
-        {key: 3, value: 'Three'},
-      ],
-      label: 'A label',
-    };
-    this.myString = `I'm a string`;
-    this.dynamicConfigString = JSON.stringify({
-      options: [
-        {key: 1, value: 'One'},
-        {key: 2, value: 'Two'},
-        {key: 3, value: 'Three'},
-      ],
-      label: 'A label',
-    });
-  }
+  // Checkboxes Component
+  checkboxModel: any = {
+    ma: true,
+    dc: false,
+    va: false
+  };
+  checkboxConfig: any = {
+    options: [
+      {value: 'dc', label: 'DC', idFor: 'checkbox-dc'},
+      {value: 'ma', label: 'Maryland', idFor: 'checkbox-maryland'},
+      {value: 'va', label: 'Virginia', idFor: 'checkbox-virginia', disabled: true},
+    ],
+    name: 'regions',
+    label: 'Select a region',
+    errorMessage: '',
+    hint: '',
+    hasSelectAll: false
+  };
 
-  dynamicConfigChanged(dynamicConfig) {
-    try {
-      this.dynamicConfig = JSON.parse(dynamicConfig);
-    } catch (e) {
-      console.error(e);
-      this.dynamicConfig = null;
-    }
-    console.log(this.dynamicConfig);
-  }
+  // Radio Component
+  radioModel: any = 'ma';
+  radioConfig: any = {
+    options: [
+      {value: 'dc', label: 'DC', idFor: 'radio-dc'},
+      {value: 'ma', label: 'Maryland', idFor: 'radio-maryland'},
+      {value: 'va', label: 'Virginia', idFor: 'radio-virginia'},
+    ],
+    name: 'radio-component',
+    label: 'Select a region',
+    errorMessage: '',
+    hint: ''
+  };
+
+  constructor() {  }
+
 }

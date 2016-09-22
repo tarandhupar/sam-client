@@ -1,20 +1,103 @@
 <div class="usa-grid">
-  <h1>SAM Select Component &lt;samSelect2&gt;</h1>
-  <h2>Basic</h2>
-  <p>Config</p>
-  <div>
-    <pre><code>{{basicConfig | json}}</code></pre>
+  <h2>Select Component &lt;samSelect&gt;</h2>
+  <div class="usa-width-one-third">
+    <samSelect2 [(model)]="selectModel" [config]="selectConfig"></samSelect2>
   </div>
-  <samSelect2 [config]="basicConfig" #basicSelect></samSelect2>
-  <p>Value</p>
-  <div>
-    <pre><code>{{basicSelect.value || "null" | json}}</code></pre>
+  <div class="usa-width-one-third">
+    <fieldset class="usa-fieldset-inputs usa-sans">
+      <legend><h3>Options</h3></legend>
+      <ul class="usa-unstyled-list">
+        <li>
+          <input id="hasEmptyOption" type="checkbox" [(ngModel)]="selectConfig.hasEmptyOption">
+          <label for="hasEmptyOption">Add an empty option</label>
+        </li>
+        <li>
+          <input id="isDisabled" type="checkbox" [(ngModel)]="selectConfig.disabled">
+          <label for="isDisabled">Disabled</label>
+        </li>
+        <li>
+          <label>Label text</label>
+          <input type="text" [(ngModel)]="selectConfig.label">
+        </li>
+        <li>
+          <label>Placeholder text</label>
+          <input type="text" [(ngModel)]="selectConfig.placeholder">
+        </li>
+        <li>
+          <label>Error message text</label>
+          <input type="text" [(ngModel)]="selectConfig.errorMessage">
+        </li>
+        <li>
+          <label>Hint text</label>
+          <input type="text" [(ngModel)]="selectConfig.hint">
+        </li>
+      </ul>
+    </fieldset>
   </div>
-  <h2>Set config dynamically</h2>
-  <samSelect2 [config]="dynamicConfig" #dynamicSelect></samSelect2>
-  <textarea [(ngModel)]="dynamicConfigString" (ngModelChange)="dynamicConfigChanged(dynamicConfigString)"></textarea>
-  <p>Value</p>
-  <div>
-    <pre><code>{{dynamicSelect.value || "null" | json}}</code></pre>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{selectModel | json}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
+  <div class="usa-width-one-third">
+    <samCheckboxes2 [(model)]="checkboxModel" [config]="checkboxConfig"></samCheckboxes2>
+  </div>
+  <div class="usa-width-one-third">
+    <fieldset class="usa-fieldset-inputs usa-sans">
+      <legend><h3>Options</h3></legend>
+      <ul class="usa-unstyled-list">
+        <li>
+          <input id="hasSelectAll" type="checkbox" [(ngModel)]="checkboxConfig.hasSelectAll">
+          <label for="hasSelectAll">Add a select all button</label>
+        </li>
+        <li>
+          <label>Label text</label>
+          <input type="text" [(ngModel)]="checkboxConfig.label">
+        </li>
+        <li>
+          <label>Error message text</label>
+          <input type="text" [(ngModel)]="checkboxConfig.errorMessage">
+        </li>
+        <li>
+          <label>Hint text</label>
+          <input type="text" [(ngModel)]="checkboxConfig.hint">
+        </li>
+      </ul>
+    </fieldset>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{checkboxModel | json}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2>Radiobuttons Component &lt;samRadioButtons&gt;</h2>
+  <div class="usa-width-one-third">
+    <samRadioButtons2 [(model)]="radioModel" [config]="radioConfig"></samRadioButtons2>
+  </div>
+  <div class="usa-width-one-third">
+    <fieldset class="usa-fieldset-inputs usa-sans">
+      <legend><h3>Options</h3></legend>
+      <ul class="usa-unstyled-list">
+        <li>
+          <label>Label text</label>
+          <input type="text" [(ngModel)]="radioConfig.label">
+        </li>
+        <li>
+          <label>Error message text</label>
+          <input type="text" [(ngModel)]="radioConfig.errorMessage">
+        </li>
+        <li>
+          <label>Hint text</label>
+          <input type="text" [(ngModel)]="radioConfig.hint">
+        </li>
+      </ul>
+    </fieldset>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{radioModel | json}}</code></pre>
   </div>
 </div>
