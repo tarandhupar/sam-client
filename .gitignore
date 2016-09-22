@@ -4,3 +4,4 @@ node_modules
 /npm-debug.log
 /config/webpack.local.js
 .idea
+coverage/Chrome 53.0.2785 (Mac OS X 10.11.6)/
