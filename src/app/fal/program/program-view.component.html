@@ -8,11 +8,12 @@
     <nav>
       <ul class="usa-sidenav-list">
         <li><a href="{{currentUrl}}#overview">Overview</a></li>
-        <li><a href="{{currentUrl}}#financials">Financials</a></li>
-        <li><a href="{{currentUrl}}#shouldapply">Should I apply?</a></li>
-        <li><a href="{{currentUrl}}#howapply">Applying for Assistance</a></li>
-        <li><a href="{{currentUrl}}#compliance">Compliance</a></li>
-        <li><a href="{{currentUrl}}#contact">Contact information</a></li>
+        <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
+        <li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
+        <li><a href="{{currentUrl}}#criteria-for-applying">Criteria for Applying</a></li>
+        <li><a href="{{currentUrl}}#applying-for-assistance">Applying for Assistance</a></li>
+        <li><a href="{{currentUrl}}#compliance-requirements">Compliance Requirements</a></li>
+        <li><a href="{{currentUrl}}#contact-information">Contact Information</a></li>
         <li><a href="{{currentUrl}}#history">History</a></li>
       </ul>
     </nav>
@@ -40,24 +41,41 @@
           <span *ngIf="oProgram.program.data.relatedPrograms.flag == 'na'">Not Applicable.</span>
         </span>
     </p>
-
+    <h2>Overview</h2>
     <!--Objectives-->
     <section *ngIf="oProgram">
-      <h2 id="overview">Objectives</h2>
+      <h3 id="overview">Objectives:</h3>
 
       <p>
         {{oProgram.program.data.objective}}
       </p>
+
+      <h3>Examples of Funded Projects:</h3>
+
+      <p *ngIf="oProgram?.program.data.projects?.flag == 'yes'">
+        <span *ngFor="let item of oProgram?.program.data.projects.list | keys">
+          <span *ngIf="item.value.content?.actual">
+            Fiscal Year {{item.key}}: {{item.value.content?.actual}}
+          </span>
+          <!--          <span *ngIf="item.value.content.projection">
+                      , Projection: {{item.value.content.projection}}
+                    </span>-->
+        <br />
+        </span>
+      </p>
+
+      <p *ngIf="oProgram?.program.data.projects?.flag == 'na' || oProgram?.program.data.projects?.flag == 'no'"> Not Applicable</p>
+
     </section>
 
-    <h3>Authorization:</h3>
+    <h2 id="authorizations">Authorizations</h2>
     <div *ngFor="let item of authorizationIdsGrouped">
       <p>{{ item | authorization }}</p>
     </div>
 
     <!--Financials-->
     <section>
-      <h2 id="financials">Financials</h2>
+      <h2 id="financial-information">Financial Information</h2>
 
       <svg width="650" height="300"></svg>
 
@@ -102,11 +120,6 @@
         No Data Available.
       </p>
 
-      <h3>Account Identification:</h3>
-
-      <p *ngFor="let account of oProgram?.program.data.financial.accounts">
-        {{account.code}}-{{account.description}};
-      </p>
 
       <h3>Accomplishments:</h3>
 
@@ -122,30 +135,19 @@
         Not Applicable.
       </p>
 
-      <h3>Examples of Funded Projects:</h3>
+      <h3>Account Identification:</h3>
 
-      <p *ngIf="oProgram?.program.data.projects?.flag == 'yes'">
-        <span *ngFor="let item of oProgram?.program.data.projects.list | keys">
-          <span *ngIf="item.value.content?.actual">
-            Fiscal Year {{item.key}}: {{item.value.content?.actual}}
-          </span>
-<!--          <span *ngIf="item.value.content.projection">
-            , Projection: {{item.value.content.projection}}
-          </span>-->
-        <br />
-        </span>
+      <p *ngFor="let account of oProgram?.program.data.financial.accounts">
+        {{account.code}}-{{account.description}};
       </p>
-
-      <p *ngIf="oProgram?.program.data.projects?.flag == 'na' || oProgram?.program.data.projects?.flag == 'no'"> Not Applicable</p>
-
 
     </section>
 
     <!--Should I apply?-->
     <section>
-      <h2 id="shouldapply">Should I apply?</h2>
+      <h2 id="criteria-for-applying">Criteria for Applying</h2>
 
-      <h3>Types of assistance:</h3>
+      <h3>Types of Assistance:</h3>
 
       <p *ngIf="oProgram && aDictionaries && aDictionaries.assistance_type">
         <span *ngFor="let oItem of oProgram.program.data.assistanceTypes | filterMultiArrayObject:aDictionaries.assistance_type:'element_id':true:'elements'; let isLast = last">
@@ -200,7 +202,7 @@
 
     <!--How do I apply?-->
     <section>
-      <h2 id="howapply">Applying for Assistance</h2>
+      <h2 id="applying-for-assistance">Applying for Assistance</h2>
 
       <h3>Deadlines:</h3>
 
@@ -223,7 +225,7 @@
             </span>
       </p>
 
-      <h3>Preapplication Coordination</h3>
+      <h3>Preapplication Coordination:</h3>
 
       <div *ngIf="oProgram">
         <p *ngIf="oProgram.program.data.preApplication?.coordination?.flag == 'yes'">
@@ -260,7 +262,7 @@
       </div>
 
 
-      <h3>Application procedures:</h3>
+      <h3>Application Procedures:</h3>
 
       <p *ngIf="oProgram">
         <span *ngIf="oProgram.program.data.application.procedures?.questions?.OMBCircularA102?.flag === 'yes'">
@@ -276,7 +278,7 @@
       </p>
 
 
-      <h3>Criteria for selecting proposals:</h3>
+      <h3>Criteria for Selecting Proposals:</h3>
 
       <p *ngIf="oProgram">
         <span *ngIf="oProgram.program.data.application?.selectionCriteria?.flag == 'yes'">
@@ -291,14 +293,14 @@
       </p>
 
 
-      <h3>Award procedure:</h3>
+      <h3>Award Procedure:</h3>
 
       <p *ngIf="oProgram">
         {{oProgram.program.data.award?.procedures?.content}}
       </p>
 
 
-      <h3>Range of approval/disapproval:</h3>
+      <h3>Date Range for Approval/Disapproval:</h3>
 
       <p *ngIf="oProgram">
         <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='1'">From 1 to 15 days</span>
@@ -348,7 +350,27 @@
 
     <!--Compliance requirements-->
     <section>
-      <h2 id="compliance">Compliance requirements</h2>
+      <h2 id="compliance-requirements">Compliance Requirements</h2>
+
+      <h3>Reports:</h3>
+
+      <div *ngIf="oProgram">
+        <p *ngIf="oProgram.program.data.postAward?.reports?.flag == 'yes'">
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.program?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.program.content}}</span>
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.cash?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.cash.content}}</span>
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.progress?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.progress.content}}</span>
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.expenditure?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.expenditure.content}}</span>
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.performanceMonitoring?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.performanceMonitoring.content}}</span>
+        </p>
+
+        <p class="m-a-0" *ngIf="oProgram.program.data.postAward?.reports?.flag == 'no'">
+          No reports are required.
+        </p>
+
+        <p class="m-a-0" *ngIf="oProgram.program.data.postAward?.reports?.flag == 'na'">
+          Not Applicable
+        </p>
+      </div>
 
       <h3>Audits:</h3>
 
@@ -386,27 +408,6 @@
 
         <p *ngIf="!(oProgram.program.data.postAward.records?.content) || (oProgram.program.data.postAward.records?.content == '')">
           No Data Available.
-        </p>
-      </div>
-
-
-      <h3>Reports:</h3>
-
-      <div *ngIf="oProgram">
-        <p *ngIf="oProgram.program.data.postAward?.reports?.flag == 'yes'">
-          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.program?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.program.content}}</span>
-          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.cash?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.cash.content}}</span>
-          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.progress?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.progress.content}}</span>
-          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.expenditure?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.expenditure.content}}</span>
-          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.performanceMonitoring?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.performanceMonitoring.content}}</span>
-        </p>
-
-        <p class="m-a-0" *ngIf="oProgram.program.data.postAward?.reports?.flag == 'no'">
-          No reports are required.
-        </p>
-
-        <p class="m-a-0" *ngIf="oProgram.program.data.postAward?.reports?.flag == 'na'">
-          Not Applicable
         </p>
       </div>
 
@@ -475,7 +476,7 @@
 
     <!--Contact information-->
     <section>
-      <h2 id="contact">Contact information</h2>
+      <h2 id="contact-information">Contact Information</h2>
 
       <div *ngIf="oProgram">
         <address>

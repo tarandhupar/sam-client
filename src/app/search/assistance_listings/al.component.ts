@@ -8,9 +8,9 @@ import 'rxjs/add/operator/map';
   providers: [],
   template: `
     	<span class="usa-label">Federal Assistance Listing</span>
-    	<h3>
-      	<a *ngIf="data.archive==false" class="assistance-listing-title" href="/programs/{{data._id}}/view">{{data.title}}</a>
-      	<a *ngIf="data.archive==true" class="">{{data.title}}</a>
+    	<h3 class="assistance-listing-title">
+      	<a *ngIf="data.archive==false" href="/programs/{{data._id}}/view">{{data.title}}</a>
+      	<span *ngIf="data.archive==true">{{data.title}}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<p class="m_T-2x">
@@ -27,7 +27,7 @@ import 'rxjs/add/operator/map';
       	<ul class="usa-text-small m_B-0">
         	<li><strong>FAL Number</strong>
           	<ul class="usa-unstyled-list">
-              <li>{{data.programNumber}}</li>
+              <li class="fal-program-number">{{data.programNumber}}</li>
             </ul>
           </li>
           <li><strong>Date Published</strong>
