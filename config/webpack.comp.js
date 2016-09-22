@@ -15,6 +15,20 @@ const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 /**
  * Webpack Constants
  */
+const envs = require('envs');
+const dotenv = require('dotenv').config();
+
+//check env vars are set
+if(!process.env.API_KEY){
+  if(envs('API_KEY', '') == ''){
+    console.error("API_KEY env var is not set. Exiting...");
+    process.exit(1);
+  }
+   else {
+    process.env.API_KEY = envs('API_KEY', '');
+  }
+}
+
 const ENV = process.env.ENV = process.env.NODE_ENV = 'comp';
 const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 3000;
@@ -25,7 +39,7 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   ENV: ENV,
   HMR: HMR,
   API_URL: "https://csp-api.sam.gov/comp",
-  API_KEY: "Z5vc0lK9ubZdK6fLKDCdeYODaSVFtGElOUVSzIl0"
+  API_KEY: process.env.API_KEY
 });
 
 /**
