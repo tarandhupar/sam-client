@@ -5,6 +5,8 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
+import { SamAngularModule } from '../sam-angular';
+
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -16,6 +18,15 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { Home } from './home';
 import { NoContent } from './common/no-content';
+import { SamFooter } from "./common/samuikit/sam-footer";
+import { SamHeader } from "./common/samuikit/sam-header";
+import { SamSpace } from "./common/samuikit/sam-space";
+import { SamAngularDemo } from "./sam-angular-demo";
+import { SamButton } from "./common/samuikit/sam-button";
+import { SamLabel } from "./common/samuikit/sam-label";
+import { SamAccordions } from "./common/samuikit/sam-accordions";
+import { SamSelect } from "./common/samuikit/sam-select";
+
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -31,13 +42,22 @@ const APP_PROVIDERS = [
   declarations: [
     App,
     Home,
-    NoContent
+    NoContent,
+    SamAngularDemo,
+    SamFooter,
+    SamHeader,
+    SamSpace,
+    SamButton,
+    SamLabel,
+    SamAccordions,
+    SamSelect,
   ],
   imports: [ // import Angular's modules
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: false })
+    RouterModule.forRoot(ROUTES, { useHash: false }),
+    SamAngularModule,
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
