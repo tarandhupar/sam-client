@@ -41,10 +41,10 @@
           <span *ngIf="oProgram.program.data.relatedPrograms.flag == 'na'">Not Applicable.</span>
         </span>
     </p>
-    <h2>Overview</h2>
+    <h2 id="overview">Overview</h2>
     <!--Objectives-->
     <section *ngIf="oProgram">
-      <h3 id="overview">Objectives:</h3>
+      <h3>Objectives:</h3>
 
       <p>
         {{oProgram.program.data.objective}}
