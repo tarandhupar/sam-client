@@ -18,7 +18,8 @@ export class SearchService {
         oParam: {
           index: obj.index,
           q: obj.keyword,
-          page: obj.pageNum
+          page: obj.pageNum,
+          organizationId: obj.organizationId
         },
         method: 'GET'
       };

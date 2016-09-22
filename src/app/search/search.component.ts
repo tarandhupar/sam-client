@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import { SearchService } from '../common/service/search.service';
 import { AssistanceListingResult } from './assistance_listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
+import { FHInputComponent } from './fh.component';
 
 @Component({
   moduleId: __filename,
@@ -12,13 +13,14 @@ import { OpportunitiesResult } from './opportunities/opportunities.component';
   styleUrls: [
     'search.style.css'
   ],
-  directives: [AssistanceListingResult,OpportunitiesResult],
+  directives: [AssistanceListingResult,OpportunitiesResult,FHInputComponent],
   providers: [SearchService],
   templateUrl: 'search.template.html'
 })
 export class Search implements OnInit{
 	indexes = ['', 'cfda', 'fbo'];
 	index = '';
+	organizationId:string = '';
 	pageNum = 0;
 	totalCount: any= 0;
 	totalPages: any= 0;
@@ -42,12 +44,18 @@ export class Search implements OnInit{
 		});
 	}
 
+	onOrganizationChange(orgId:string){
+		this.organizationId = orgId;
+		//console.log("org change",this.organizationId);
+	}
 	runSearch(newSearch){
 
 		if(typeof window != "undefined"){
 			var qsobj = {};
 			if (!this.initLoad && history.pushState) {
-
+				if(this.organizationId.length>0){
+					qsobj['organizationId'] = this.organizationId;
+				}
 				if(this.keyword.length>0){
 					qsobj['keyword'] = this.keyword;
 				}
@@ -71,7 +79,8 @@ export class Search implements OnInit{
 		this.searchService.runSearch({
 			keyword: this.keyword,
 			index: this.index,
-			pageNum: this.pageNum
+			pageNum: this.pageNum,
+			organizationId: this.organizationId
 		}).subscribe(
 			data => {
 				console.log("DATA!",data);
