@@ -14,7 +14,6 @@ import { SamSelect } from './common/samuikit/sam-select.ts';
 import '../assets/js/samuikit.js';
 import {APIService} from "./common/service/api.service";
 
-
 /*
  * App Component
  * Top Level Component
@@ -25,21 +24,20 @@ import {APIService} from "./common/service/api.service";
   styleUrls: [
     './app.style.css'
   ],
-  templateUrl: 'app.template.html',
-  providers : [APIService, ComponentInjectService, InputTypeConstants],
-  directives: [SamHeader, SamFooter, SamSpace, SamButton, SamLabel, SamAccordions, SamSelect ]
+  templateUrl: './app.template.html',
+  providers : [APIService,ComponentInjectService,InputTypeConstants]
 })
 export class App {
   testValue = { value: 'Test' };
-  buttonValue = {type:"default", data:"Default"};
-  labelValue = {type:"small", data:"Day"};
-  accordionsValue = {accordions: [
+  buttonValue: any = {type:"default", data:"Default"};
+  labelValue: any = {type:"small", data:"Day"};
+  accordionsValue: any = {accordions: [
                                           {title:"Test1", content:"This is Test1",expanded:false},
                                           {title:"Test2", content:"This is Test2", expanded:true},
                                           {title:"Test3", content:"This is Test3",expanded:false}
                                         ],
-                          bordered:false };
-  selectValue = {
+                          bordered:false};
+  selectValue: any = {
                                 type: 'dropdown',
                                 label: 'Dropdown label',
                                 name: 'options',
@@ -49,12 +47,17 @@ export class App {
                                   'value3': 'Option C'
                                 }
                               };
+  labelName: string = "button";
   constructor() {
 
   }
 
   ngOnInit() {
-       this.testValue = { value: 'Test2' };
+
+  }
+
+  clicked(){
+    console.log("****This is test*****");
   }
 
 }

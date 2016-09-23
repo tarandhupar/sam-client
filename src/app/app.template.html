@@ -3,8 +3,9 @@
 
    <samSpace labelname = "space" ></samSpace>
    <samHeader labelname = "header" ></samHeader>
-  <nav>
-   <a [routerLinkActive]="['active', 'router-link-active']" [routerLink]=" ['./home'] ">Home</a>
+  <nav class="usa-grid">
+    <a [routerLinkActive]="['active', 'router-link-active']" [routerLink]=" ['./home'] ">Home</a>
+    <a [routerLinkActive]="['active', 'router-link-active']" [routerLink]="['./sam-angular']">Sam Angular Components</a>
   </nav>
 </div>
 
@@ -13,7 +14,7 @@
  </main>
 
 
- <samButton labelname = "button" [config] = buttonValue></samButton>
+ <samButton (click)='clicked()' labelname = "button" [config] = buttonValue></samButton>
  <samLabel labelname="label" [config] = labelValue></samLabel>
  <samAccordions labelname = "accordions" [config] = accordionsValue></samAccordions>
  <samSelect labelname = "select" [config] = selectValue></samSelect>

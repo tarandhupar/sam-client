@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>15/15</span>
+        <span class='fraction'>23/23</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -37,7 +37,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>15/15</span>
+        <span class='fraction'>23/23</span>
       </div>
     </div>
   </div>
@@ -82,7 +82,29 @@
 37
 38
 39
-40</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -93,6 +115,10 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -100,6 +126,24 @@
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-yes">1×</span>
@@ -131,6 +175,10 @@ var input_type_constants_ts_1 = require('./common/constants/input.type.constants
 var sam_footer_ts_1 = require('./common/samuikit/sam-footer.ts');
 var sam_header_ts_1 = require('./common/samuikit/sam-header.ts');
 var sam_space_ts_1 = require('./common/samuikit/sam-space.ts');
+var sam_button_ts_1 = require('./common/samuikit/sam-button.ts');
+var sam_label_ts_1 = require('./common/samuikit/sam-label.ts');
+var sam_accordions_ts_1 = require('./common/samuikit/sam-accordions.ts');
+var sam_select_ts_1 = require('./common/samuikit/sam-select.ts');
 require('../assets/js/samuikit.js');
 /*
  * App Component
@@ -139,6 +187,24 @@ require('../assets/js/samuikit.js');
 var App = (function () {
     function App() {
         this.testValue = { value: 'Test' };
+        this.buttonValue = { type: "default", data: "Default" };
+        this.labelValue = { type: "small", data: "Day" };
+        this.accordionsValue = { accordions: [
+                { title: "Test1", content: "This is Test1", expanded: false },
+                { title: "Test2", content: "This is Test2", expanded: true },
+                { title: "Test3", content: "This is Test3", expanded: false }
+            ],
+            bordered: false };
+        this.selectValue = {
+            type: 'dropdown',
+            label: 'Dropdown label',
+            name: 'options',
+            options: {
+                'value1': 'Option A',
+                'value2': 'Option B',
+                'value3': 'Option C'
+            }
+        };
     }
     App.prototype.ngOnInit = function () {
         this.testValue = { value: 'Test2' };
@@ -152,7 +218,7 @@ var App = (function () {
             ],
             templateUrl: 'app.template.html',
             providers: [component_inject_service_ts_1.ComponentInjectService, input_type_constants_ts_1.InputTypeConstants],
-            directives: [sam_header_ts_1.SamHeader, sam_footer_ts_1.SamFooter, sam_space_ts_1.SamSpace]
+            directives: [sam_header_ts_1.SamHeader, sam_footer_ts_1.SamFooter, sam_space_ts_1.SamSpace, sam_button_ts_1.SamButton, sam_label_ts_1.SamLabel, sam_accordions_ts_1.SamAccordions, sam_select_ts_1.SamSelect]
         }), 
         __metadata('design:paramtypes', [])
     ], App);
@@ -166,7 +232,7 @@ exports.App = App;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Wed Sep 14 2016 10:37:48 GMT-0400 (EDT)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Sep 16 2016 15:44:27 GMT-0400 (EDT)
 </div>
 </div>
 <script src="../prettify.js"></script>
