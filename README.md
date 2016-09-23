@@ -22,13 +22,23 @@ Once you have those, you should install these globals with `npm install --global
 * `npm install` to install all dependencies
 * `npm run server` to start the dev server in another tab
 
+## API Umbrella Setup
+
+### For local setup 
+- Get an API Umbrella key to be able to connect to the backend microservices
+- Clone the config/webpack.local-example.js to config/webpack.local.js file and set correct value for API_URL to connect to CSP API umbrella
+- Clone the .env-example to .env and set the API_KEY setting
+
+### For Deployments
+- the API_KEY environment variable and correct NPM command (ie. 'npm run server:comp') should be setup in the docker deployment yaml file
+
 ## Running the app
 After you have installed all dependencies you can now run the app. Run `npm run server` to start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:3000` (or if you prefer IPv6, if you're using `express` server, then it's `http://[::1]:3000/`).
 
 ### server
 ```bash
 # development
-npm run server
+npm run server:local
 # production
 npm run build:prod
 npm run server:prod
