@@ -23,6 +23,7 @@ import 'rxjs/add/operator/map';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
+      	<li><span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>&nbsp;</li>
         	<li><strong>FAL Number</strong>
           	<ul class="usa-unstyled-list">
               <li class="fal-program-number">{{data.programNumber}}</li>
@@ -40,7 +41,8 @@ import 'rxjs/add/operator/map';
           </li>
         </ul>
       </div>
-  `
+  `,
+  styleUrls: ['al.style.css']
 })
 export class AssistanceListingResult{
 	@Input() data: any;
