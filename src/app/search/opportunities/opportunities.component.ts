@@ -6,8 +6,9 @@ import 'rxjs/add/operator/map';
   selector: 'opportunities-result',
   template: `
     <span class="usa-label">Opportunity</span>
-    <h3>
-      <a class="opportunity-title" href="#title">{{ data.procurementTitle }}</a>
+    <h3 class="opportunity-title">
+      <a *ngIf="data.archive==false" href="#title">{{ data.procurementTitle }}</a>
+      <span *ngIf="data.archive==true">{{ data.procurementTitle }}</span>
     </h3>
     <div class="usa-width-two-thirds">
       <p class="m_T-2x" *ngIf="data.procurementDescription!=null && data.procurementDescription.length>150">
@@ -24,6 +25,7 @@ import 'rxjs/add/operator/map';
     </div>
     <div class="usa-width-one-third">
       <ul class="usa-text-small m_B-0">
+      <li><span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>&nbsp;</li>
         <li>
           <strong>Solicitation Number</strong>
           <ul class="usa-unstyled-list">
@@ -44,7 +46,8 @@ import 'rxjs/add/operator/map';
         </li>
       </ul>
     </div>
-  `
+  `,
+  styleUrls: ['opportunities.style.css']
 })
 export class OpportunitiesResult{
 	@Input() data: any;
