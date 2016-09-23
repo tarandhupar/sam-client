@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
   selector: 'assistance-listing-result',
   template: `
     	<span class="usa-label">Federal Assistance Listing</span>
+    	<span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
     	<h3 class="assistance-listing-title">
       	<a *ngIf="data.archive==false" href="{{data._links.self.href}}">{{data.title}}</a>
       	<span *ngIf="data.archive==true">{{data.title}}</span>
@@ -23,7 +24,6 @@ import 'rxjs/add/operator/map';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-      	<li><span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>&nbsp;</li>
         	<li><strong>FAL Number</strong>
           	<ul class="usa-unstyled-list">
               <li class="fal-program-number">{{data.programNumber}}</li>
@@ -42,7 +42,7 @@ import 'rxjs/add/operator/map';
         </ul>
       </div>
   `,
-  styleUrls: ['al.style.css']
+  styleUrls: ['../search.style.css']
 })
 export class AssistanceListingResult{
 	@Input() data: any;
