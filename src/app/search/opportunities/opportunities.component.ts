@@ -5,8 +5,10 @@ import 'rxjs/add/operator/map';
   moduleId: __filename,
   selector: 'opportunities-result',
   template: `
-    <span class="usa-label">Opportunity</span>
-    <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
+    <p>
+      <span class="usa-label">Opportunity</span>
+      <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
+    </p>
     <h3 class="opportunity-title">
       <a *ngIf="data.archive==false" href="#title">{{ data.procurementTitle }}</a>
       <span *ngIf="data.archive==true">{{ data.procurementTitle }}</span>

@@ -5,8 +5,10 @@ import 'rxjs/add/operator/map';
   moduleId: __filename,
   selector: 'assistance-listing-result',
   template: `
-    	<span class="usa-label">Federal Assistance Listing</span>
-    	<span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
+      <p>
+    	  <span class="usa-label">Federal Assistance Listing</span>
+    	  <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
+    	</p>
     	<h3 class="assistance-listing-title">
       	<a *ngIf="data.archive==false" href="{{data._links.self.href}}">{{data.title}}</a>
       	<span *ngIf="data.archive==true">{{data.title}}</span>
