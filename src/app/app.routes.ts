@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Home } from './home';
-import { Search } from './search';
+import { Search } from './search/search.component';
 import { NoContent } from './common/no-content';
 import {ProgramViewComponent} from './fal/program/program-view.component';
 import { SamAngularDemo } from './sam-angular-demo';

@@ -4,8 +4,6 @@ import 'rxjs/add/operator/map';
 @Component({
   moduleId: __filename,
   selector: 'opportunities-result',
-  directives: [],
-  providers: [],
   template: `
     <span class="usa-label">Opportunity</span>
     <h3>

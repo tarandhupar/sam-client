@@ -4,8 +4,6 @@ import 'rxjs/add/operator/map';
 @Component({
   moduleId: __filename,
   selector: 'assistance-listing-result',
-  directives: [],
-  providers: [],
   template: `
     	<span class="usa-label">Federal Assistance Listing</span>
     	<h3 class="assistance-listing-title">
@@ -42,7 +40,6 @@ import 'rxjs/add/operator/map';
           </li>
         </ul>
       </div>
-
   `
 })
 export class AssistanceListingResult{

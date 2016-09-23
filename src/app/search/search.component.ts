@@ -13,7 +13,6 @@ import { FHInputComponent } from './fh.component';
   styleUrls: [
     'search.style.css'
   ],
-  directives: [AssistanceListingResult,OpportunitiesResult,FHInputComponent],
   providers: [SearchService],
   templateUrl: 'search.template.html'
 })

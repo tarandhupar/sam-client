@@ -6,7 +6,6 @@ import { APIService } from '../common/service/api.service';
 
 @Component({
 	selector: 'fh-input',
-	directives: [],
 	providers: [FHService,APIService],
 	template:`
 		<div class='organization-container'>
