@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
   template: `
     	<span class="usa-label">Federal Assistance Listing</span>
     	<h3 class="assistance-listing-title">
-      	<a *ngIf="data.archive==false" href="/programs/{{data._id}}/view">{{data.title}}</a>
+      	<a *ngIf="data.archive==false" href="{{data._links.self.href}}">{{data.title}}</a>
       	<span *ngIf="data.archive==true">{{data.title}}</span>
     	</h3>
     	<div class="usa-width-two-thirds">

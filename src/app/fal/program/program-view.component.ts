@@ -54,6 +54,7 @@ export class ProgramViewComponent implements OnInit {
       let id = params['id']; //id will be a string, not a number
       this.oProgramService.getProgramById(id).subscribe(res => {
           this.oProgram = res;
+        console.log(this.oProgram);
           //get authorizations and group them by id
           var auths = this.oProgram.program.data.authorizations;
           this.authorizationIdsGrouped = _.values(_.groupBy(auths, 'authorizationId'));
