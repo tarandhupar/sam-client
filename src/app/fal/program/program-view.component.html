@@ -482,10 +482,10 @@
 
       <div *ngIf="oProgram">
         <address>
-          <strong>Regional or Local Office:</strong><br>
+          <h3>Regional or Local Office:</h3><br>
           <span *ngIf="oProgram.program.data.contacts?.local?.flag == 'regional'"> See Regional Agency Offices. {{oProgram.program.data.contacts['local'].additionalInfo?.content}}</span>
-          <span *ngIf="oProgram.program.data.contacts?.local?.flag == 'none'"> None. {{oProgram.program.data.contacts['local'].additionalInfo?.content}}</span> <br><br>
-          <strong>Headquarters Office:</strong><br>
+          <span *ngIf="oProgram.program.data.contacts?.local?.flag == 'none'"> None. {{oProgram.program.data.contacts['local'].additionalInfo?.content}}</span> <br>
+          <h3>Headquarters Office:</h3><br>
 
           <div *ngFor="let item of oProgram.program.data.contacts?.list">
 
