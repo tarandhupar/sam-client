@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
     	  <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="assistance-listing-title">
-      	<a *ngIf="data.archive==false" href="{{data._links.self.href}}">{{data.title}}</a>
+      	<a *ngIf="data.archive==false" href="{{ data.hasOwnProperty('_links') ? _.get(data, ['_links','self','href']):'' }}">{{data.title}}</a>
       	<span *ngIf="data.archive==true">{{data.title}}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
@@ -46,7 +46,7 @@ import 'rxjs/add/operator/map';
   `,
   styleUrls: ['../search.style.css']
 })
-export class AssistanceListingResult{
-	@Input() data: any;
+export class AssistanceListingResult {
+	@Input() data: any={};
 	constructor() { }
 }
