@@ -33,7 +33,7 @@
     </div>
     <p *ngIf="oProgram">
         <span *ngIf="oFederalHierarchy"><strong>{{oFederalHierarchy.type | capitalize}}: </strong>{{oFederalHierarchy.name}}<br></span>
-        <span><strong>FAL number: </strong>{{oProgram.program.data.programNumber}}<br></span>
+        <span><strong>FAL Number: </strong>{{oProgram.program.data.programNumber}}<br></span>
         <span><strong>Related Federal Assistance: </strong>
             <span *ngIf="aRelatedProgram && oProgram.program.data.relatedPrograms.flag != 'na'">
                 <span *ngFor="let item of aRelatedProgram; let isLast = last"><a href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}</span>
@@ -110,7 +110,7 @@
         </tbody>
       </table>
 
-      <h3>Range and Average Of Financial Assistance:</h3>
+      <h3>Range and Average of Financial Assistance:</h3>
 
       <p *ngIf="(oProgram?.program.data.financial?.additionalInfo?.content) && (oProgram.program.data.financial.additionalInfo.content != '')">
         {{oProgram.program.data.financial.additionalInfo.content}}
@@ -138,7 +138,8 @@
       <h3>Account Identification:</h3>
 
       <p *ngFor="let account of oProgram?.program.data.financial.accounts">
-        {{account.code}}-{{account.description}};
+        <span *ngIf="account.description">{{account.code}}-{{account.description}};</span>
+        <span *ngIf="!account.description">{{account.code}}</span>
       </p>
 
     </section>
@@ -186,7 +187,8 @@
 
       <h3>Length and Time Phasing of Assistance:</h3>
       <p *ngIf="oProgram">
-          {{oProgram.program.data.assistance?.limitation?.awarded}}
+        {{oProgram.program.data.assistance?.limitation?.content}}
+        <span *ngIf="oProgram.program.data.assistance?.limitation?.awarded"> Method of awarding/releasing assistance: {{oProgram.program.data.assistance?.limitation?.awarded}}</span>
       </p>
 
 
@@ -480,10 +482,10 @@
 
       <div *ngIf="oProgram">
         <address>
-          <strong>Regional or local office:</strong><br>
-          <span *ngIf="oProgram.program.data.contacts?.local?.flag == 'regional'"> See Regional Agency Offices. {{oProgram.program.data.contacts['local'].additionalInfo.content}}</span>
-          <span *ngIf="oProgram.program.data.contacts?.local?.flag == 'none'"> None.</span> <br><br>
-          <strong>Headquarters office:</strong><br>
+          <strong>Regional or Local Office:</strong><br>
+          <span *ngIf="oProgram.program.data.contacts?.local?.flag == 'regional'"> See Regional Agency Offices. {{oProgram.program.data.contacts['local'].additionalInfo?.content}}</span>
+          <span *ngIf="oProgram.program.data.contacts?.local?.flag == 'none'"> None. {{oProgram.program.data.contacts['local'].additionalInfo?.content}}</span> <br><br>
+          <strong>Headquarters Office:</strong><br>
 
           <div *ngFor="let item of oProgram.program.data.contacts?.list">
 
