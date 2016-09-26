@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
-import {FHService} from '../services/fh.service';
+import {FHService} from '../../common/service/fh.service';
 import {ProgramService} from '../services/program.service';
 import { Subscription } from 'rxjs/Subscription';
 import {DictionaryService} from '../services/dictionary.service';
@@ -27,8 +27,10 @@ export class ProgramViewComponent implements OnInit {
   private sub:Subscription;
 
   constructor(private route:ActivatedRoute, private location:Location, private oHistoricalIndexService: HistoricalIndexService,
-              private oProgramService:ProgramService, private oFHService:FHService, private oDictionaryService:DictionaryService) {
-    this.currentUrl = location.path();
+              private oProgramService:ProgramService, private oFHService:FHService, private oDictionaryService:DictionaryService) {}
+
+  ngOnInit() {
+    this.currentUrl = this.location.path();
 
     //init Dictionaries
     let aDictionaries = [
@@ -42,19 +44,16 @@ export class ProgramViewComponent implements OnInit {
       'functional_codes'
     ];
 
-    oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
+    this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
       for (var key in res) {
         this.aDictionaries[key] = res[key];
       }
     });
-  }
 
-  ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
       let id = params['id']; //id will be a string, not a number
       this.oProgramService.getProgramById(id).subscribe(res => {
           this.oProgram = res;
-        console.log(this.oProgram);
           //get authorizations and group them by id
           var auths = this.oProgram.program.data.authorizations;
           this.authorizationIdsGrouped = _.values(_.groupBy(auths, 'authorizationId'));
@@ -76,9 +75,6 @@ export class ProgramViewComponent implements OnInit {
         },
           err => {
           console.log('Error logging', err)
-        },
-        () => {
-          console.log('Api CALL Completed')
         }
       );
 

@@ -7,9 +7,7 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class SearchService {
 
-    constructor(private oAPIService: APIService) {
-      console.log('Search Service started.....');
-    }
+    constructor(private oAPIService: APIService) {}
 
     runSearch(obj) {
       let oApiParam = {

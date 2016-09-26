@@ -5,15 +5,15 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class HistoricalIndexService{
 
-  constructor(private oAPIService: APIService){
-    console.log('Historical Index Service Started... ');
-  }
+  constructor(private oAPIService: APIService){}
 
   getHistoricalIndexByProgramNumber(id: string, programNumber: string) {
     let oApiParam = {
       name: 'historicalIndex',
-      suffix: '/'+id+'?programNumber='+programNumber,
-      oParam: {},
+      suffix: '/' + id,
+      oParam: {
+          'programNumber': programNumber
+      },
       method: 'GET'
     };
 
