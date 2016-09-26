@@ -29,27 +29,23 @@ export class Search implements OnInit{
 	keyword: string = "";
 	initLoad = true;
 
-	constructor(private activatedRoute: ActivatedRoute,private _router:Router, private searchService: SearchService) { }
+	constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService) { }
 	ngOnInit() {
-
 		this.activatedRoute.queryParams.subscribe(
 			data => {
 				//console.log(data);
 				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
-				//if((this.keyword && this.keyword.length>0) || (this.index == '' || this.index)){
-					this.runSearch(true);
-				//}
+				this.runSearch(true);
 		});
 	}
 
 	onOrganizationChange(orgId:string){
 		this.organizationId = orgId;
-		//console.log("org change",this.organizationId);
 	}
 	runSearch(newSearch){
-
+		//push state to history
 		if(typeof window != "undefined"){
 			var qsobj = {};
 			if (!this.initLoad && history.pushState) {
@@ -75,7 +71,7 @@ export class Search implements OnInit{
 			}
 		}
 
-
+		//make api call
 		this.searchService.runSearch({
 			keyword: this.keyword,
 			index: this.index,
@@ -104,13 +100,11 @@ export class Search implements OnInit{
 			},
       error => {
         console.error("Error!!", error);
-        //return Observable.throw(error);
       }
     );
 	}
 
 	pageChange(pagenumber){
-		//console.log("test",pagenumber);
 		this.pageNum = pagenumber;
 		this.runSearch(false)
 	}
@@ -132,9 +126,5 @@ export class Search implements OnInit{
 		}
 
 		return retVal;
-	}
-	//routing
-	goHome(){
-		this._router.navigate(['/home'],{queryParams:{}});
 	}
 }
