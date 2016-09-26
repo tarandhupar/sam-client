@@ -110,8 +110,8 @@ module.exports = {
        */
       {
         test: /\.ts$/,
-        loader: 'awesome-typescript-loader',
-        query: {
+        loaders: ['awesome-typescript-loader','angular2-template-loader'],
+        /*query: {
           compilerOptions: {
 
             // Remove TypeScript helpers to be injected
@@ -119,7 +119,7 @@ module.exports = {
             removeComments: true
 
           }
-        },
+        },*/
         exclude: [/\.e2e\.ts$/]
       },
 
