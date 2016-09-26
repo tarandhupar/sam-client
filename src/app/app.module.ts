@@ -18,6 +18,8 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { Home } from './home';
 import { NoContent } from './common/no-content';
+import { ProgramModule } from './fal';
+import { SearchModule } from './search';
 import { SamFooter } from "./common/samuikit/sam-footer";
 import { SamHeader } from "./common/samuikit/sam-header";
 import { SamSpace } from "./common/samuikit/sam-space";
@@ -57,7 +59,9 @@ const APP_PROVIDERS = [
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: false }),
+    ProgramModule,
     SamAngularModule,
+    SearchModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

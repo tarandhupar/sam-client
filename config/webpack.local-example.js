@@ -1,3 +1,5 @@
+//LOCAL USAGE: Please copy/paste file to webpack.local.js
+
 /**
  * @author: @AngularClass
  */
@@ -15,7 +17,21 @@ const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const envs = require('envs');
+const dotenv = require('dotenv').config();
+
+//check env vars are set
+if(!process.env.API_KEY){
+  if(envs('API_KEY', '')==''){
+    console.error("API_KEY env var is not set. Exiting...");
+    process.exit(1);
+  }
+   else {
+    process.env.API_KEY = envs('API_KEY', '');
+  }
+}
+
+const ENV = process.env.ENV = process.env.NODE_ENV = 'local';
 const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
@@ -24,8 +40,8 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   port: PORT,
   ENV: ENV,
   HMR: HMR,
-  API_URL: "https://gsaiae-dev02.reisys.com/dev",
-  API_KEY: "ZkxTIWSlctvTe2io8k5gKlj3tOCS3heyw1N0DAFe"
+  API_URL: "https://API_HOST/", //API UMBRELLA HOST
+  API_KEY: process.env.API_KEY // API KEY (copy/paste .env-example file to .env and change the API_KEY's value)
 });
 
 /**

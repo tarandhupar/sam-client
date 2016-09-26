@@ -50,6 +50,9 @@ declare module '*';
 declare var ENV: string;
 declare var HMR: boolean;
 declare var System: SystemJS;
+//API Umbrella info
+declare var API_URL: string;
+declare var API_KEY: string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
@@ -58,6 +61,8 @@ interface SystemJS {
 interface GlobalEnvironment {
   ENV;
   HMR;
+  API_URL;
+  API_KEY;
   SystemJS: SystemJS;
   System: SystemJS;
 }
