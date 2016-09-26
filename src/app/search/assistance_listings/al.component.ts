@@ -1,5 +1,6 @@
 import { Component,OnInit,Input } from '@angular/core';
 import 'rxjs/add/operator/map';
+import * as _ from 'lodash';
 
 @Component({
   moduleId: __filename,
@@ -10,7 +11,7 @@ import 'rxjs/add/operator/map';
     	  <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="assistance-listing-title">
-      	<a *ngIf="data.archive==false" href="{{ data.hasOwnProperty('_links') ? _.get(data, ['_links','self','href']):'' }}">{{data.title}}</a>
+      	<a *ngIf="data.archive==false" href="{{printFALLink()}}">{{data.title}}</a>
       	<span *ngIf="data.archive==true">{{data.title}}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
@@ -49,4 +50,8 @@ import 'rxjs/add/operator/map';
 export class AssistanceListingResult {
 	@Input() data: any={};
 	constructor() { }
+
+  printFALLink(){
+    return this.data.hasOwnProperty('_links') ? _.get(this.data, ['_links','self','href']):'';
+  }
 }
