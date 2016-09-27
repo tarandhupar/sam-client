@@ -17,7 +17,7 @@
         </li>
         <li>
           <label>Label text</label>
-          <input type="text" [(ngModel)]="selectConfig.label">
+          <input type="text" [(ngModel)]="selectConfig.wrapper.label">
         </li>
         <li>
           <label>Placeholder text</label>
@@ -25,11 +25,11 @@
         </li>
         <li>
           <label>Error message text</label>
-          <input type="text" [(ngModel)]="selectConfig.errorMessage">
+          <input type="text" [(ngModel)]="selectConfig.wrapper.errorMessage">
         </li>
         <li>
           <label>Hint text</label>
-          <input type="text" [(ngModel)]="selectConfig.hint">
+          <input type="text" [(ngModel)]="selectConfig.wrapper.hint">
         </li>
       </ul>
     </fieldset>
@@ -54,15 +54,15 @@
         </li>
         <li>
           <label>Label text</label>
-          <input type="text" [(ngModel)]="checkboxConfig.label">
+          <input type="text" [(ngModel)]="checkboxConfig.wrapper.label">
         </li>
         <li>
           <label>Error message text</label>
-          <input type="text" [(ngModel)]="checkboxConfig.errorMessage">
+          <input type="text" [(ngModel)]="checkboxConfig.wrapper.errorMessage">
         </li>
         <li>
           <label>Hint text</label>
-          <input type="text" [(ngModel)]="checkboxConfig.hint">
+          <input type="text" [(ngModel)]="checkboxConfig.wrapper.hint">
         </li>
       </ul>
     </fieldset>
@@ -83,15 +83,15 @@
       <ul class="usa-unstyled-list">
         <li>
           <label>Label text</label>
-          <input type="text" [(ngModel)]="radioConfig.label">
+          <input type="text" [(ngModel)]="radioConfig.wrapper.label">
         </li>
         <li>
           <label>Error message text</label>
-          <input type="text" [(ngModel)]="radioConfig.errorMessage">
+          <input type="text" [(ngModel)]="radioConfig.wrapper.errorMessage">
         </li>
         <li>
           <label>Hint text</label>
-          <input type="text" [(ngModel)]="radioConfig.hint">
+          <input type="text" [(ngModel)]="radioConfig.wrapper.hint">
         </li>
       </ul>
     </fieldset>

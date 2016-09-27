@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CheckboxesConfig, RadioButtonsConfig } from '../../sam-angular'
+import { CheckboxesConfigType, RadioButtonsConfigType, SelectConfigType } from '../../sam-angular'
 
 @Component({
   styleUrls: ['./sam-angular-demo.css'],
@@ -8,18 +8,17 @@ import { CheckboxesConfig, RadioButtonsConfig } from '../../sam-angular'
 export class SamAngularDemo {
   // Select Component
   selectModel: any = 'ma';
-  selectConfig = {
+  selectConfig: SelectConfigType = {
     options: [
       {value: 'dc', label: 'Washington DC'},
       {value: 'ma', label: 'Maryland'},
       {value: 'va', label: 'Virginia'},
     ],
+    name: 'name',
     placeholder: 'Select a region',
-    label: 'Region',
-    name: 'region',
-    errorMessage: '',
-    hint: '',
-    hasEmptyOption: false
+    wrapper: {
+      label: 'Region',
+    }
   };
 
   // Checkboxes Component
@@ -28,7 +27,7 @@ export class SamAngularDemo {
     dc: false,
     va: false
   };
-  checkboxConfig: CheckboxesConfig = new CheckboxesConfig({
+  checkboxConfig: CheckboxesConfigType = {
     options: [
       {value: 'dc', label: 'DC', idFor: 'checkbox-dc'},
       {value: 'ma', label: 'Maryland', idFor: 'checkbox-maryland'},
@@ -38,11 +37,11 @@ export class SamAngularDemo {
     wrapper: {
         label: 'Select a region'
     }
-  });
+  };
 
   // Radio Component
   radioModel: any = 'ma';
-  radioConfig: any = new RadioButtonsConfig({
+  radioConfig: RadioButtonsConfigType = {
     options: [
       {value: 'dc', label: 'DC', idFor: 'radio-dc'},
       {value: 'ma', label: 'Maryland', idFor: 'radio-maryland'},
@@ -54,7 +53,7 @@ export class SamAngularDemo {
       errorMessage: '',
       hint: ''
     }
-  });
+  };
 
   constructor() {  }
 
