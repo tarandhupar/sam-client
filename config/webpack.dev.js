@@ -16,14 +16,16 @@ const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
  * Webpack Constants
  */
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
-const HOST = process.env.HOST || 'localhost';
+const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
 const METADATA = webpackMerge(commonConfig.metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: HMR
+  HMR: HMR,
+  API_URL: "https://gsaiae-dev02.reisys.com/dev",
+  API_KEY: "ZkxTIWSlctvTe2io8k5gKlj3tOCS3heyw1N0DAFe"
 });
 
 /**
@@ -111,10 +113,14 @@ module.exports = webpackMerge(commonConfig, {
     new DefinePlugin({
       'ENV': JSON.stringify(METADATA.ENV),
       'HMR': METADATA.HMR,
+      'API_URL': JSON.stringify(METADATA.API_URL),
+      'API_KEY': JSON.stringify(METADATA.API_KEY),
       'process.env': {
         'ENV': JSON.stringify(METADATA.ENV),
         'NODE_ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
+        'API_URL': JSON.stringify(METADATA.API_URL),
+        'API_KEY': JSON.stringify(METADATA.API_KEY)
       }
     }),
 

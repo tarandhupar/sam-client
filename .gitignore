@@ -59,3 +59,8 @@ npm-debug.log
 # IDE #
 .idea/
 *.swp
+
+
+/nbproject/
+/config/webpack.local.js
+/.env

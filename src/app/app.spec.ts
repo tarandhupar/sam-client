@@ -15,7 +15,11 @@ describe('App', () => {
   it('should have a test value', inject([ App ], (app) => {
     expect(app.testValue.value).toEqual('Test');
     app.ngOnInit();
+<<<<<<< HEAD
     expect(app.testValue.value).toEqual('Test2' );
+=======
+    expect(app.testValue.value).toEqual('Test' );
+>>>>>>> csp/comp
   }));
 
 });
