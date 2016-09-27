@@ -2,7 +2,7 @@ import { inject,ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { By }              from '@angular/platform-browser';
 import { DebugElement }    from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FHService } from '../common/service/fh.service';
+import { FHService } from '../fal/services/fh.service';
 import { MockBackend } from '@angular/http/testing';
 import { APIService } from '../common/service/api.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
