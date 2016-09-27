@@ -1,5 +1,12 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { InputWrapper } from '../common/input-wrapper/input-wrapper.component';
+import { InputWrapper, OptionsType, InputWrapperConfigType } from '../common/input-wrapper/input-wrapper.component';
+
+export type CheckboxesConfigType = {
+  options: OptionsType,
+  name: string,
+  hasSelectAll?: boolean,
+  wrapper?: InputWrapperConfigType
+};
 
 /**
  * The <samCheckboxes> component is a set of checkboxes compliant with sam.gov standards
@@ -9,8 +16,9 @@ import { InputWrapper } from '../common/input-wrapper/input-wrapper.component';
  *   format:
  *   {
  *     options: Array<any>, an array of { value: <any>, label: <string> } objects.
- *     legend: <string>, Legend is a descriptive name the input group that will be spoken by screen readers
+ *     name: <string>, Legend is a descriptive name the input group that will be spoken by screen readers
  *     hasSelectAll: <boolean>, If true, there will be a "Select all" input before the other options
+ *     ... (see input-wrapper-config for the rest of the wrapper properties)
  *   }
  *
  * @Input/@Output model - the bound value of the component
@@ -18,7 +26,7 @@ import { InputWrapper } from '../common/input-wrapper/input-wrapper.component';
 @Component({
   selector: 'samCheckboxes2',
   template: `
-      <inputWrapper [label]="config.label" [errorMessage]="config.errorMessage" [hint]="config.hint">
+      <inputWrapper [labelFor]="config.wrapper?.name" [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint" [errorLabel]="config.wrapper?.errorLabel">
         <fieldset class="usa-fieldset-inputs usa-sans">
           <legend class="usa-sr-only">{{config.name}}</legend>      
           <ul class="usa-unstyled-list">
@@ -36,7 +44,7 @@ import { InputWrapper } from '../common/input-wrapper/input-wrapper.component';
   `,
 })
 export class SamCheckboxesComponent {
-  @Input() config: any = {};
+  @Input() config: CheckboxesConfigType;
   @Input() model: any = {};
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
 
@@ -53,7 +61,7 @@ export class SamCheckboxesComponent {
     });
   }
 
-  // For 508 compliance and useability, give each label an id attribute and each label a for attribute with the same value
+  // Give the check all label a name for screen readers
   checkAllLabelName() {
     return `all-${this.config.name}`;
   }

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CheckboxesConfig, RadioButtonsConfig } from '../../sam-angular'
 
 @Component({
   styleUrls: ['./sam-angular-demo.css'],
@@ -27,32 +28,33 @@ export class SamAngularDemo {
     dc: false,
     va: false
   };
-  checkboxConfig: any = {
+  checkboxConfig: CheckboxesConfig = new CheckboxesConfig({
     options: [
       {value: 'dc', label: 'DC', idFor: 'checkbox-dc'},
       {value: 'ma', label: 'Maryland', idFor: 'checkbox-maryland'},
       {value: 'va', label: 'Virginia', idFor: 'checkbox-virginia', disabled: true},
     ],
     name: 'regions',
-    label: 'Select a region',
-    errorMessage: '',
-    hint: '',
-    hasSelectAll: false
-  };
+    wrapper: {
+        label: 'Select a region'
+    }
+  });
 
   // Radio Component
   radioModel: any = 'ma';
-  radioConfig: any = {
+  radioConfig: any = new RadioButtonsConfig({
     options: [
       {value: 'dc', label: 'DC', idFor: 'radio-dc'},
       {value: 'ma', label: 'Maryland', idFor: 'radio-maryland'},
       {value: 'va', label: 'Virginia', idFor: 'radio-virginia'},
     ],
     name: 'radio-component',
-    label: 'Select a region',
-    errorMessage: '',
-    hint: ''
-  };
+    wrapper: {
+      label: 'Select a region',
+      errorMessage: '',
+      hint: ''
+    }
+  });
 
   constructor() {  }
 

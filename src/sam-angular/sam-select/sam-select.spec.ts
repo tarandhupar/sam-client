@@ -26,31 +26,31 @@ describe('The Sam Select component', () => {
   });
 
   it('should display 3 options if 3 options are specified by the config', function () {
-    component.config = {options: options};
+    component.config = {options: options, name: 'name'};
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('option').length).toBe(options.length);
   });
 
   it('should display 4 options if there is a placeholder', function () {
-    component.config = {options: options, placeholder: 'Select an option'};
+    component.config = {options: options, name: 'name', placeholder: 'Select an option'};
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('option').length).toBe(options.length + 1);
   });
 
   it('should display 4 options if there is an empty option', function () {
-    component.config = {options: options, hasEmptyOption: true};
+    component.config = {options: options, name: 'name', hasEmptyOption: true};
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('option').length).toBe(options.length + 1);
   });
 
   it('should display 5 options if there is a placeholder and an empty options', function () {
-    component.config = {options: options, hasEmptyOption: true, placeholder: 'placeholder'};
+    component.config = {options: options, name: 'name', hasEmptyOption: true, placeholder: 'placeholder'};
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('option').length).toBe(options.length + 2);
   });
 
   it('should allow an initial value to be set by the model input', async(() => {
-    component.config = {options: options};
+    component.config = {options: options, name: 'name'};
     component.model = 2;
     fixture.detectChanges();
     setTimeout(() => {
@@ -61,27 +61,27 @@ describe('The Sam Select component', () => {
 
   it('should show a hint message', function () {
     let hint = "Life pro tip: eat vegetables";
-    component.config = {hint: hint};
+    component.config = {wrapper: {hint: hint}, name: 'name', options: options};
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(hint);
   });
 
   it('should show an error message', function () {
     let errorMessage = "Uh-oh, something went wrong";
-    component.config = {errorMessage: errorMessage};
+    component.config = {wrapper: {errorMessage: errorMessage}, name: 'name', options: options};
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(errorMessage);
   });
 
   it('should show a label', function () {
     let labelText = "Pick from the following options";
-    component.config = {label: labelText};
+    component.config = {wrapper: {label: labelText}, name: 'name', options: options};
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(labelText);
   });
 
   it('should disable the dropdown', async(() => {
-    component.config = {options: options, disabled: true};
+    component.config = {options: options, name: 'name', disabled: true};
     fixture.detectChanges();
     setTimeout(() => {
       let selectElement = fixture.nativeElement.getElementsByTagName('select')[0];

@@ -1,10 +1,26 @@
 import { Component, Input } from '@angular/core';
 
+export type InputWrapperConfigType = {
+  label?: string,
+  hint?: string,
+  errorMessage?: string,
+  errorLabel?: string,
+  labelFor?: string
+};
+
+export type OptionsType = Array<{
+  value: any,
+  label: string,
+  idFor?: string,
+  disabled?: boolean
+}>;
+
 /**
- * @Input() label: <string> *optional* The text value of the <label> the describes the wrapped content
+ * @Input() label: <string> *optional* The text value of the <label> which will describe the wrapped content
  * @Input() errorLabel: <string> *optional* An error message
- * @Input() errorMessage: <string> *optional* An alternative error message
+ * @Input() errorMessage: <string> *optional* An alternate error message
  * @Input() hint: <string> *optional* Helpful text describing how to use the wrapped content
+ * @Input() labelFor: <string> *optionsal* The value of the for attribute of the label.
  */
 @Component({
   selector: 'inputWrapper',
@@ -25,7 +41,5 @@ export class InputWrapper {
   @Input() hint: string;
   @Input() labelFor: string;
 
-  constructor() {
-
-  }
+  constructor() { }
 }

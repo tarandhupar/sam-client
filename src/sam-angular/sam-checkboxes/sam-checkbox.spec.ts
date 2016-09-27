@@ -32,27 +32,27 @@ describe('The Sam Checkboxes component', () => {
   });
 
   it('should display 3 checkboxes if 3 options are specified by the config', function () {
-    component.config = {options: options};
+    component.config = {options: options, name: 'test'};
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('input').length).toBe(options.length);
   });
 
   it('should display 4 options if select all is specified', function () {
-    component.config = {options: options, hasSelectAll: true};
+    component.config = {options: options, name: 'test', hasSelectAll: true};
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('input').length).toBe(options.length + 1);
   });
 
   it('should select all elements if select all is checked', async(() => {
-    component.config = {options: options, hasSelectAll: true};
+    component.config = {options: options, name: 'test', hasSelectAll: true};
     fixture.detectChanges();
     let selectAllElement = fixture.nativeElement.getElementsByTagName('input')[0];
     selectAllElement.click();
     fixture.detectChanges();
-  });
+  }));
 
   it('should deselect all elements if select all is checked twice', function () {
-    component.config = {options: options, hasSelectAll: true};
+    component.config = {options: options, name: 'test', hasSelectAll: true};
     fixture.detectChanges();
     let selectAllElement = fixture.nativeElement.getElementsByTagName('input')[0];
     selectAllElement.click();
@@ -70,7 +70,7 @@ describe('The Sam Checkboxes component', () => {
   });
 
   it('should allow an initial value to be set by the model input', async(() => {
-    component.config = {options: options};
+    component.config = {options: options, name: 'test'};
     component.model = {'ma': true};
     fixture.detectChanges();
     setTimeout(() => {
@@ -83,21 +83,21 @@ describe('The Sam Checkboxes component', () => {
 
   it('should show a hint message', function () {
     let hint = "Life pro tip: eat vegetables";
-    component.config = {hint: hint, options: options};
+    component.config = {wrapper: { hint: hint }, name: 'test', options: options};
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(hint);
   });
 
   it('should show an error message', function () {
     let errorMessage = "Uh-oh, something went wrong";
-    component.config = {errorMessage: errorMessage, options: options};
+    component.config = {wrapper: {errorMessage: errorMessage }, name: 'test', options: options};
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(errorMessage);
   });
 
   it('should show a label', function () {
     let labelText = "Pick from the following options";
-    component.config = {label: labelText, options: options};
+    component.config = {wrapper: {label: labelText}, name: 'test', options: options};
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(labelText);
   });

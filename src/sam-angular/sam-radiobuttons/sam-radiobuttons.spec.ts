@@ -26,13 +26,13 @@ describe('The Sam Radio Buttons component', () => {
   });
 
   it('should display 3 checkboxes if 3 options are specified by the config', function () {
-    component.config = { options: options };
+    component.config = { options: options, name: 'name' };
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('input').length).toBe(options.length);
   });
 
   it('should allow an initial value to be set by the model input', async(() => {
-    component.config = {options: options};
+    component.config = {options: options, name: 'name'};
     component.model = 'ma';
     fixture.detectChanges();
     let checkedElement = fixture.debugElement.query(By.css(':checked + label'));
@@ -41,7 +41,7 @@ describe('The Sam Radio Buttons component', () => {
   }));
 
   it('should deselect one radio button when another is clicked', function () {
-    component.config = {options: options};
+    component.config = {options: options, name: 'name'};
     component.model = 'ma';
     fixture.detectChanges();
     let label1 = fixture.debugElement.query(By.css(':checked + label')).nativeElement.innerHTML;
@@ -53,21 +53,21 @@ describe('The Sam Radio Buttons component', () => {
 
   it('should show a hint message', function () {
     let hint = "Life pro tip: eat vegetables";
-    component.config = {hint: hint, options: options};
+    component.config = {wrapper: {hint: hint}, options: options, name: 'name'};
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(hint);
   });
 
   it('should show an error message', function () {
     let errorMessage = "Uh-oh, something went wrong";
-    component.config = {errorMessage: errorMessage, options: options};
+    component.config = {wrapper: {errorMessage: errorMessage}, options: options, name: 'name'};
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(errorMessage);
   });
 
   it('should show a label', function () {
     let labelText = "Pick from the following options";
-    component.config = {label: labelText, options: options};
+    component.config = {wrapper: {label: labelText}, options: options, name: 'name'};
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(labelText);
   });
