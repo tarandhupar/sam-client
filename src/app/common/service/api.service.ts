@@ -31,7 +31,7 @@ export class APIService {
         let oURLSearchParams = new URLSearchParams();
 
         //add API-Umbrella key
-        oURLSearchParams.set("api_key", API_KEY);
+        oURLSearchParams.set("api_key", API_UMBRELLA_KEY);
 
         //loop through oParam & add them as request parameter
         for (var key in oApiParam.oParam) {
@@ -44,7 +44,7 @@ export class APIService {
             "method": RequestMethod.Get,
             "headers": oHeader,
             "body": "",
-            "url": API_URL + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
+            "url": API_UMBRELLA_URL + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
         };
 
         switch (method.toUpperCase()){
