@@ -7,43 +7,7 @@ import { APIService } from '../common/service/api.service';
 @Component({
 	selector: 'fh-input',
 	providers: [FHService,APIService],
-	template:`
-		<div class='organization-container'>
-		    <div class='usa-alert usa-alert-error' role='alert' *ngIf='false'>
-		      <div class='usa-alert-body'>
-		        <h3 class='usa-alert-heading'>Agency Error</h3>
-		        <p class='usa-alert-text'>{{ error }}</p>
-		      </div>
-		    </div>
-		    <div class='no-input' *ngIf="false">
-		        {{ departmentLabel }}
-		    </div>
-		    <div class='usa-grid-full'>
-		        <div class='usa-width-one-third'>
-		            <label for='jqDepartmentFH'>Department</label>
-		            <select [(ngModel)]='selectedDeptId' (ngModelChange)='setOrganizationId("department")' id='jqDepartmentFH'>
-		                <option value=''>Please select a Department</option>
-		                <option *ngFor="let dpmt of dictionary.aDepartment" [value]="dpmt.elementId">{{dpmt.name}}</option>
-		            </select>
-		            <span *ngIf="false" class='department-label2'> {{ departmentLabel }} </span>
-		        </div>
-		        <div class='usa-width-one-third'>
-		            <label for='jqAgencyFH'>Agency</label>
-		            <select [(ngModel)]="selectedAgencyId" (ngModelChange)='setOrganizationId("agency")' [disabled]="lockAgency" id='jqAgencyFH'>
-		                <option value=''>Please select an Agency</option>
-		                <option *ngFor="let agency of dictionary.aAgency" [value]="agency.elementId">{{agency.name}}</option>
-		            </select>
-		        </div>
-		        <div *ngIf='checkOffice()' class='usa-width-one-third'>
-		            <label for='jqOfficeFH'>Office</label>
-		            <select [(ngModel)]="selectedOfficeId" [disabled]="lockOffice" id='jqOfficeFH'>
-		                <option value=''>Please select an Office</option>
-		                <option *ngFor="let office of dictionary.aOffice" [value]="office.elementId">{{office.name}}</option>
-		            </select>
-		        </div>
-		    </div>
-		</div>
-	`
+	templateUrl:'fh.template.html'
 })
 export class FHInputComponent implements OnInit {
 	@Input() hideOffice: boolean;
