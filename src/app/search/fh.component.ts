@@ -1,7 +1,7 @@
 import { Component,Input,Output,OnInit,EventEmitter } from '@angular/core';
 import { TemplateRef, ViewContainerRef } from '@angular/core';
-import { FHService } from '../common/service/fh.service';
-import { APIService } from '../common/service/api.service';
+import { FHService } from '../common/service/api/fh.service';
+import { APIService } from '../common/service/api/api.service';
 
 
 @Component({

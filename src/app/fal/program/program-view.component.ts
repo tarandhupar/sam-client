@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
-import {FHService} from '../../common/service/fh.service';
+import {FHService} from '../../common/service/api/fh.service';
 import {ProgramService} from '../services/program.service';
 import { Subscription } from 'rxjs/Subscription';
 import {DictionaryService} from '../services/dictionary.service';
