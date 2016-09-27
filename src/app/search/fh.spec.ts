@@ -82,5 +82,5 @@ describe('FederalHierarchyInput', () => {
       fixture.detectChanges(); 
       expect("ABCDEFG").toEqual("ABCDEFG");    
     }); 
-	}));
+	});
 });
