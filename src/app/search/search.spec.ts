@@ -8,7 +8,7 @@ import { SearchService } from '../common/service/search.service';
 import { AssistanceListingResult } from './assistance_listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
 import { FHInputComponent } from './fh.component';
-import { FHService } from '../common/services/fh.service';
+import { FHService } from '../common/service/fh.service';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { APIService } from '../common/service/api.service';
