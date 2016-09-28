@@ -8,10 +8,10 @@ import { SearchService } from '../common/service/search.service';
 import { AssistanceListingResult } from './assistance_listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
 import { FHInputComponent } from './fh.component';
-import { FHService } from '../fal/services/fh.service';
+import { FHService } from '../common/service/api/fh.service';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { APIService } from '../common/service/api.service';
+import { APIService } from '../common/service/api/api.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
 
 //dummy child components
