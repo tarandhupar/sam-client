@@ -29,7 +29,7 @@
       <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row"></assistance-listing-result>
       <hr class="m_T-5x" />
   	</div>
-    <div *ngIf="!data.results">
+    <div *ngIf="!initLoad && !data.results">
       <br/>
       <p>No results found for '<span [innerText]="oldKeyword"></span>'</p>
       <div style="height:300px;"></div>
