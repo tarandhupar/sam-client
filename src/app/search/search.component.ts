@@ -34,7 +34,6 @@ export class Search implements OnInit{
 
 		this.activatedRoute.queryParams.subscribe(
 			data => {
-				//console.log(data);
 				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
@@ -46,7 +45,6 @@ export class Search implements OnInit{
 
 	onOrganizationChange(orgId:string){
 		this.organizationId = orgId;
-		//console.log("org change",this.organizationId);
 	}
 	runSearch(newSearch){
 
@@ -83,7 +81,6 @@ export class Search implements OnInit{
 			organizationId: this.organizationId
 		}).subscribe(
 			data => {
-				console.log("DATA!",data);
 	      if(data._embedded.results){
 	        for(var i=0; i<data._embedded.results.length; i++) {
 	          if(data._embedded.results[i].contacts) {
@@ -110,7 +107,6 @@ export class Search implements OnInit{
 	}
 
 	pageChange(pagenumber){
-		//console.log("test",pagenumber);
 		this.pageNum = pagenumber;
 		this.runSearch(false)
 	}

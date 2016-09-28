@@ -20,6 +20,22 @@ const WebpackMd5Hash = require('webpack-md5-hash');
 /**
  * Webpack Constants
  */
+
+const envs = require('envs');
+const dotenv = require('dotenv').config();
+
+//check env vars are set
+if(!process.env.API_UMBRELLA_KEY || !process.env.API_UMBRELLA_URL){
+  if(envs('API_UMBRELLA_KEY', '') == '' || envs('API_UMBRELLA_URL', '')){
+    console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY env var are not set. Exiting...");
+    process.exit(1);
+  }
+   else {
+    process.env.API_UMBRELLA_URL = envs('API_UMBRELLA_URL', '');
+    process.env.API_UMBRELLA_KEY = envs('API_UMBRELLA_KEY', '');
+  }
+}
+
 const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 8080;
@@ -27,7 +43,9 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: false
+  HMR: false,
+  API_UMBRELLA_URL: process.env.API_UMBRELLA_URL, //API UMBRELLA HOST
+  API_UMBRELLA_KEY: process.env.API_UMBRELLA_KEY
 });
 
 module.exports = webpackMerge(commonConfig, {
@@ -125,10 +143,14 @@ module.exports = webpackMerge(commonConfig, {
     new DefinePlugin({
       'ENV': JSON.stringify(METADATA.ENV),
       'HMR': METADATA.HMR,
+      'API_UMBRELLA_URL': JSON.stringify(METADATA.API_UMBRELLA_URL),
+      'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY),
       'process.env': {
         'ENV': JSON.stringify(METADATA.ENV),
         'NODE_ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
+        'API_UMBRELLA_URL': JSON.stringify(METADATA.API_UMBRELLA_URL),
+        'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY)
       }
     }),
 

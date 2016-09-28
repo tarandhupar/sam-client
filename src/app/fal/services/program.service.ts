@@ -1,13 +1,11 @@
 import {Injectable} from '@angular/core';
-import {APIService} from '../../common/service/api.service'
+import {APIService} from '../../common/service/api/api.service'
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ProgramService{
 
-  constructor(private oAPIService: APIService){
-    console.log('Program Service Started...');
-  }
+  constructor(private oAPIService: APIService){}
 
   getProgramById(id: string) {
     let oApiParam = {
