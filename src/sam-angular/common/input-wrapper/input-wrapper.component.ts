@@ -16,7 +16,6 @@ export type OptionsType = Array<{
 
 /**
  * @Input() label: <string> *optional* The text value of the <label> which will describe the wrapped content
- * @Input() errorLabel: <string> *optional* An error message
  * @Input() errorMessage: <string> *optional* An alternate error message
  * @Input() hint: <string> *optional* Helpful text describing how to use the wrapped content
  * @Input() labelFor: <string> *optionsal* The value of the for attribute of the label.
