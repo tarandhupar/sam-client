@@ -1,7 +1,7 @@
 import { Component,Input,Output,OnInit,EventEmitter } from '@angular/core';
 import { TemplateRef, ViewContainerRef } from '@angular/core';
-import { FHService } from '../fal/services/fh.service';
-import { APIService } from '../common/service/api.service';
+import { FHService } from '../common/service/api/fh.service';
+import { APIService } from '../common/service/api/api.service';
 
 
 @Component({
@@ -82,7 +82,6 @@ export class FHInputComponent implements OnInit {
 	
 	initFederalHierarchyDropdowns(userRole){
 		this.initDictionaries("",true,false).subscribe( res => {
-			//console.log('fh',res);
 			this.dictionary.aDepartment = res._embedded.hierarchy;
 		});
 	}

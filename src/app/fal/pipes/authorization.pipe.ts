@@ -7,13 +7,11 @@ export class AuthorizationPipe implements PipeTransform {
 
     //make sure sorted by version number
     aAuthorization = _.sortBy(aAuthorization, 'version');
-    //console.log("aAuthorization, sorted by version: ", aAuthorization);
 
     // TODO, review implementation of string building of the the authorizations
 
     var title = '';
     _.forEach(aAuthorization, oAuthorization => {
-      //console.log("one auth: ", oAuthorization);
       if (oAuthorization.version > 1) {
         title = title.concat(", as amended by ");
       }
@@ -35,34 +33,7 @@ export class AuthorizationPipe implements PipeTransform {
           title = title + "Executive Order - " + ((oAuthorization.executiveOrder && oAuthorization.executiveOrder.title) || "N/A");
           break;
       }
-
-
-      //console.log("title => : ", title);
     });
     return title;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -12,7 +12,7 @@ import { SamLabel } from './common/samuikit/sam-label.ts';
 import { SamAccordions } from './common/samuikit/sam-accordions.ts';
 import { SamSelect } from './common/samuikit/sam-select.ts';
 import '../assets/js/samuikit.js';
-import {APIService} from "./common/service/api.service";
+import {APIService} from "./common/service/api/api.service";
 
 /*
  * App Component

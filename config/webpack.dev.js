@@ -15,6 +15,21 @@ const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 /**
  * Webpack Constants
  */
+const envs = require('envs');
+const dotenv = require('dotenv').config();
+
+//check env vars are set
+if(!process.env.API_UMBRELLA_KEY || !process.env.API_UMBRELLA_URL){
+  if(envs('API_UMBRELLA_KEY', '') == '' || envs('API_UMBRELLA_URL', '')){
+    console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY env var are not set. Exiting...");
+    process.exit(1);
+  }
+   else {
+    process.env.API_UMBRELLA_URL = envs('API_UMBRELLA_URL', '');
+    process.env.API_UMBRELLA_KEY = envs('API_UMBRELLA_KEY', '');
+  }
+}
+
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 3000;
@@ -24,8 +39,8 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   port: PORT,
   ENV: ENV,
   HMR: HMR,
-  API_URL: "https://gsaiae-dev02.reisys.com/dev",
-  API_KEY: "ZkxTIWSlctvTe2io8k5gKlj3tOCS3heyw1N0DAFe"
+  API_UMBRELLA_URL: process.env.API_UMBRELLA_URL, //API UMBRELLA HOST
+  API_UMBRELLA_KEY: process.env.API_UMBRELLA_KEY
 });
 
 /**
@@ -113,14 +128,14 @@ module.exports = webpackMerge(commonConfig, {
     new DefinePlugin({
       'ENV': JSON.stringify(METADATA.ENV),
       'HMR': METADATA.HMR,
-      'API_URL': JSON.stringify(METADATA.API_URL),
-      'API_KEY': JSON.stringify(METADATA.API_KEY),
+      'API_UMBRELLA_URL': JSON.stringify(METADATA.API_UMBRELLA_URL),
+      'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY),
       'process.env': {
         'ENV': JSON.stringify(METADATA.ENV),
         'NODE_ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
-        'API_URL': JSON.stringify(METADATA.API_URL),
-        'API_KEY': JSON.stringify(METADATA.API_KEY)
+        'API_UMBRELLA_URL': JSON.stringify(METADATA.API_UMBRELLA_URL),
+        'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY)
       }
     }),
 
