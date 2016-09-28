@@ -22,16 +22,12 @@ export class SamAngularDemo {
   };
 
   // Checkboxes Component
-  checkboxModel: any = {
-    ma: true,
-    dc: false,
-    va: false
-  };
+  checkboxModel: any = ['ma'];
   checkboxConfig: CheckboxesConfigType = {
     options: [
       {value: 'dc', label: 'DC', idFor: 'checkbox-dc'},
       {value: 'ma', label: 'Maryland', idFor: 'checkbox-maryland'},
-      {value: 'va', label: 'Virginia', idFor: 'checkbox-virginia', disabled: true},
+      {value: 'va', label: 'Virginia', idFor: 'checkbox-virginia'},
     ],
     name: 'regions',
     wrapper: {

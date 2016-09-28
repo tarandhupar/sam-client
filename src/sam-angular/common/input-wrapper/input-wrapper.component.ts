@@ -9,7 +9,7 @@ export type InputWrapperConfigType = {
 };
 
 export type OptionsType = Array<{
-  value: any,
+  value: string | number,
   label: string,
   idFor?: string,
   disabled?: boolean

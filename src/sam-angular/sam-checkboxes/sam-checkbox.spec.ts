@@ -71,7 +71,7 @@ describe('The Sam Checkboxes component', () => {
 
   it('should allow an initial value to be set by the model input', async(() => {
     component.config = {options: options, name: 'test'};
-    component.model = {'ma': true};
+    component.model = ['ma'];
     fixture.detectChanges();
     setTimeout(() => {
       let selectedElement = fixture.nativeElement.getElementsByTagName('input')[1];
