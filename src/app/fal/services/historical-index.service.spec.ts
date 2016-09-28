@@ -9,7 +9,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 
 
-describe('HistoricalIndexService unit tests without TestBed', () => {
+describe('HistoricalIndexService unit tests TestBed', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -30,23 +30,16 @@ describe('HistoricalIndexService unit tests without TestBed', () => {
   });
 
   beforeEach(inject([MockBackend], (backend: MockBackend) => {
-    const baseResponse = new Response(new ResponseOptions({ body: '{"response":"sot response!!"}' }));
+    const baseResponse = new Response(new ResponseOptions({ body: '{"response":"got response!!"}' }));
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(baseResponse));
   }));
 
 
-
-
-
   it('should return response when subscribed to getHistoricalIndexByProgramNumber', inject([HistoricalIndexService], (testService: HistoricalIndexService) => {
     testService.getHistoricalIndexByProgramNumber("5eb2b1a06998d59eb179a8e7fd76c173", "11.111").subscribe((res: Response) => {
-      expect(res['response']).toBe('sot response!!');
+      expect(res['response']).toBe('got response!!');
     });
   }));
-
-
-
-
 
 
 });
