@@ -15,6 +15,21 @@ const DefinePlugin = require('webpack/lib/DefinePlugin');
  */
 const ENV = process.env.ENV = process.env.NODE_ENV = 'test';
 
+const envs = require('envs');
+const dotenv = require('dotenv').config();
+
+//check env vars are set
+if(!process.env.API_UMBRELLA_KEY || !process.env.API_UMBRELLA_URL){
+  if(envs('API_UMBRELLA_KEY', '') == '' || envs('API_UMBRELLA_URL', '')){
+    console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY env var are not set. Exiting...");
+    process.exit(1);
+  }
+   else {
+    process.env.API_UMBRELLA_URL = envs('API_UMBRELLA_URL', '');
+    process.env.API_UMBRELLA_KEY = envs('API_UMBRELLA_KEY', '');
+  }
+}
+
 /**
  * Webpack configuration
  *
@@ -193,10 +208,14 @@ module.exports = {
     new DefinePlugin({
       'ENV': JSON.stringify(ENV),
       'HMR': false,
+      'API_UMBRELLA_URL': JSON.stringify(process.env.API_UMBRELLA_URL),
+      'API_UMBRELLA_KEY': JSON.stringify(process.env.API_UMBRELLA_KEY),
       'process.env': {
         'ENV': JSON.stringify(ENV),
         'NODE_ENV': JSON.stringify(ENV),
         'HMR': false,
+        'API_UMBRELLA_URL': JSON.stringify(process.env.API_UMBRELLA_URL),
+        'API_UMBRELLA_KEY': JSON.stringify(process.env.API_UMBRELLA_KEY)
       }
     }),
 
