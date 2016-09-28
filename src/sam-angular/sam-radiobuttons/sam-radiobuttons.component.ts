@@ -23,7 +23,7 @@ export type RadioButtonsConfigType = {
 @Component({
   selector: 'samRadioButtons2',
   template: `
-      <inputWrapper [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint" [errorLabel]="config.wrapper?.errorLabel">
+      <inputWrapper [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint">
         <fieldset class="usa-fieldset-inputs usa-sans">      
           <legend class="usa-sr-only">{{name}}</legend>
           <ul class="usa-unstyled-list">

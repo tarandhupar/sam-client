@@ -26,7 +26,7 @@ export type CheckboxesConfigType = {
 @Component({
   selector: 'samCheckboxes2',
   template: `
-      <inputWrapper [labelFor]="config.wrapper?.name" [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint" [errorLabel]="config.wrapper?.errorLabel">
+      <inputWrapper [labelFor]="config.wrapper?.name" [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint">
         <fieldset class="usa-fieldset-inputs usa-sans">
           <legend class="usa-sr-only">{{config.name}}</legend>      
           <ul class="usa-unstyled-list">

@@ -27,7 +27,7 @@ export type SelectConfigType = {
 @Component({
   selector: 'samSelect2',
   template: `
-      <inputWrapper [labelFor]="config.name" [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint" [errorLabel]="config.wrapper?.errorLabel">
+      <inputWrapper [labelFor]="config.name" [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint">
         <select [attr.name]="config.name" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="config.disabled">
           <option *ngIf="config.placeholder" selected="selected" disabled="disabled" value="-1">{{config.placeholder}}</option>
           <option *ngIf="config.hasEmptyOption"></option>
