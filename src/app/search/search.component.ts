@@ -25,8 +25,10 @@ export class Search implements OnInit{
 	totalCount: any= 0;
 	totalPages: any= 0;
 	pageNumPaginationPadding = 2;
+	showPerPage = 10;
 	data = [];
 	keyword: string = "";
+	oldKeyword: string = "";
 	initLoad = true;
 
 	constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService) { }
@@ -78,7 +80,7 @@ export class Search implements OnInit{
 			organizationId: this.organizationId
 		}).subscribe(
 			data => {
-	      if(data._embedded.results){
+	      if(data._embedded && data._embedded.results){
 	        for(var i=0; i<data._embedded.results.length; i++) {
 	          if(data._embedded.results[i].contacts) {
 	            data._embedded.results[i].contacts = JSON.parse(data._embedded.results[i].contacts);
@@ -89,11 +91,15 @@ export class Search implements OnInit{
 	            }
 	          }
 	        }
+	        this.data = data._embedded;
+					this.totalCount = data.page['totalElements'];
+					var maxAllowedPages = data.page['maxAllowedRecords']/this.showPerPage;
+					this.totalPages = data.page['totalPages']>maxAllowedPages?maxAllowedPages:data.page['totalPages'];
+	      } else{
+	      	this.data['results'] = null;
 	      }
-				this.data = data._embedded;
-				this.totalCount = data.page['totalElements'];
-				this.totalPages = data.page['totalPages'];
 
+				this.oldKeyword = this.keyword;
 				this.initLoad = false;
 			},
       error => {
