@@ -4,7 +4,6 @@ import { InputWrapper, InputWrapperConfigType, OptionsType } from '../common/inp
 export type RadioButtonsConfigType = {
   options: OptionsType,
   name: string,
-  hasSelectAll?: boolean,
   wrapper?: InputWrapperConfigType
 };
 
@@ -19,8 +18,7 @@ export type RadioButtonsConfigType = {
  *       the value of attribute "name" for each input. It must be unique among the dom.
  *   }
  * @Output/@Input model
- *   The input is an object where each property represents a checkbox value. It the property is true the checkbox
- *   is checked. model[checkBoxValue] == true is the checkbox is checked
+ *   The input is an array where each element is the value of a checked checkbox.
  */
 @Component({
   selector: 'samRadioButtons2',
