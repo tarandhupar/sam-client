@@ -17,10 +17,14 @@ export class SearchService {
           index: obj.index,
           q: obj.keyword,
           page: obj.pageNum,
-          organizationId: obj.organizationId
+          qFilters: {}
         },
         method: 'GET'
       };
+
+      if(obj.sourceOrganizationId != null) {
+        oApiParam.oParam.qFilters['organizationId'] = obj.sourceOrganizationId;
+      }
 
       return this.oAPIService.call(oApiParam);
     }
