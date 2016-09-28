@@ -1,4 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import { SamCheckboxesComponent } from './sam-checkboxes.component';
@@ -14,11 +15,7 @@ describe('The Sam Checkboxes component', () => {
     {value: 'va', label: 'Virginia'},
   ];
 
-  let model = {
-    ma: true,
-    dc: false,
-    va: false
-  };
+  let model = ['ma'];
 
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
@@ -46,12 +43,16 @@ describe('The Sam Checkboxes component', () => {
   it('should select all elements if select all is checked', async(() => {
     component.config = {options: options, name: 'test', hasSelectAll: true};
     fixture.detectChanges();
+    console.log(fixture.debugElement.queryAll(By.css('input')).length);
     let selectAllElement = fixture.nativeElement.getElementsByTagName('input')[0];
     selectAllElement.click();
     fixture.detectChanges();
+    setTimeout(() => {
+      expect(component.model).toEqual(['dc', 'ma', 'va']);
+    });
   }));
 
-  it('should deselect all elements if select all is checked twice', function () {
+  it('should deselect all elements if select all is checked twice', async(() => {
     component.config = {options: options, name: 'test', hasSelectAll: true};
     fixture.detectChanges();
     let selectAllElement = fixture.nativeElement.getElementsByTagName('input')[0];
@@ -59,25 +60,18 @@ describe('The Sam Checkboxes component', () => {
     fixture.detectChanges();
     selectAllElement.click();
     fixture.detectChanges();
-    let allCheckboxes = fixture.nativeElement.getElementsByTagName('input');
-    let areNoneChecked = true;
-    for (let input of allCheckboxes) {
-      if (input.checked) {
-        areNoneChecked = false;
-      }
-    }
-    expect(areNoneChecked).toBe(true);
-  });
+    setTimeout(() => {
+      expect(component.model).toEqual([]);
+    });
+  }));
 
   it('should allow an initial value to be set by the model input', async(() => {
     component.config = {options: options, name: 'test'};
     component.model = ['ma'];
     fixture.detectChanges();
     setTimeout(() => {
-      let selectedElement = fixture.nativeElement.getElementsByTagName('input')[1];
-      expect(selectedElement.checked).toBe(true);
-      let notSelectedElement = fixture.nativeElement.getElementsByTagName('input')[0];
-      expect(notSelectedElement.checked).toBe(false);
+      let inputs = fixture.debugElement.queryAll(By.css(':checked'));
+      expect(inputs.length).toEqual(1);
     });
   }));
 

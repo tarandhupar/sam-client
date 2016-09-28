@@ -112,9 +112,15 @@ export class SamCheckboxesComponent {
   }
 
   onSelectAllChange(isSelectAllChecked) {
-    this.config.options.forEach((option) => {
-      this.model[option.value] = isSelectAllChecked;
-    });
+    if (!isSelectAllChecked) {
+      this.model = [];
+      this._modelHash = {};
+    } else {
+      this.model = this.config.options.map(option => option.value);
+      this.config.options.forEach(option => {
+        this._modelHash[option.value] = true;
+      });
+    }
     this.modelChange.emit(this.model);
   }
 }
