@@ -8,7 +8,4 @@ WORKDIR /usr/src/app
 COPY . /usr/src/app/
 RUN npm install
 
-# Build dist folder
-RUN npm run build:prod
-
 EXPOSE 8080
