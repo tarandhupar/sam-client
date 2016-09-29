@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {APIService} from '../../common/service/api/api.service'
 import 'rxjs/add/operator/map';
+const stringify = require('json-stringify-safe');
+
 
 @Injectable()
 export class DictionaryService {
@@ -22,6 +24,8 @@ export class DictionaryService {
     console.log("oApiParam: ", oApiParam);
     var obj = this.oAPIService.call(oApiParam).map(data => {
         console.log("data (from apiservice): ", data);
+        console.log("data (from apiservice, circular struct. removed. ): ", JSON.parse(stringify(data)));
+
         data = data._embedded.jSONObjectList;
         var dictionary = {};
         for(var dictionaryJSON of data) {
