@@ -92,6 +92,8 @@ export class FHInputComponent implements OnInit {
             this.hasDepartmentChanged = true;
         } else { //if department is not selected then set user's organization id
             //$scope.organizationId = $scope.programOrganizationId;
+            this.organizationId = '';
+            this.sourceOrganizationId = '';
         }
 
         //empty agency & office dropdowns
@@ -124,7 +126,7 @@ export class FHInputComponent implements OnInit {
                 && this.selectedAgencyId !== null) {
             var orgArray = this.selectedAgencyId.split("|");
             this.organizationId = orgArray[0];
-          this.sourceOrganizationId = orgArray[1];
+            this.sourceOrganizationId = orgArray[1];
         } else { //if agency is not selected then set department
             //if user is a root then set department from dropdown
             /*if(AuthorizationService.authorizeByRole([SUPPORTED_ROLES.SUPER_USER]) || AuthorizationService.authorizeByRole([SUPPORTED_ROLES.RMO_SUPER_USER]) ||
@@ -133,6 +135,7 @@ export class FHInputComponent implements OnInit {
             } else if(AuthorizationService.authorizeByRole([SUPPORTED_ROLES.AGENCY_COORDINATOR])) { //if user is a agency coord then set department from user's
                 $scope.organizationId = $scope.programOrganizationId;
             }*/
+            this.setOrganizationId("department");
         }
 
         //empty office dropdowns
