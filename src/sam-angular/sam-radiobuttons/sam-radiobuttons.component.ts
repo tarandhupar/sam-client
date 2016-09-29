@@ -1,10 +1,11 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { InputWrapper, InputWrapperConfigType, OptionsType } from '../common/input-wrapper/input-wrapper.component';
+import {FieldsetWrapperConfigType, FieldsetWrapper} from '../common/wrappers/fieldset-wrapper.component';
+import { OptionsType } from '../common/options.types';
 
 export type RadioButtonsConfigType = {
   options: OptionsType,
-  name: string,
-  wrapper?: InputWrapperConfigType
+  srName: string,
+  wrapper?: FieldsetWrapperConfigType
 };
 
 /**
@@ -23,17 +24,14 @@ export type RadioButtonsConfigType = {
 @Component({
   selector: 'samRadioButtons2',
   template: `
-      <inputWrapper [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint">
-        <fieldset class="usa-fieldset-inputs usa-sans">      
-          <legend class="usa-sr-only">{{name}}</legend>
-          <ul class="usa-unstyled-list">
-            <li *ngFor="let option of config.options; let i = index">
-              <input [attr.id]="option.idFor" type="radio" (change)="onChange(option.value)" [attr.name]="config.name" [checked]="model === option.value">
-              <label [attr.for]="option.idFor">{{option.label}}</label>
-            </li>
-          </ul>
-        </fieldset>
-      </inputWrapper>
+      <fieldsetWrapper [config]="config.wrapper">
+        <ul class="usa-unstyled-list">
+          <li *ngFor="let option of config.options; let i = index">
+            <input [attr.id]="option.idFor" type="radio" (change)="onChange(option.value)" [attr.name]="config.name" [checked]="model === option.value">
+            <label [attr.for]="option.idFor">{{option.label}}</label>
+          </li>
+        </ul>
+      </fieldsetWrapper>
   `,
 })
 export class SamRadioButtonsComponent {
@@ -41,8 +39,8 @@ export class SamRadioButtonsComponent {
   @Input() model: any = {};
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
 
-  @ViewChild(InputWrapper)
-  public wrapper: InputWrapper;
+  @ViewChild(FieldsetWrapper)
+  public wrapper: FieldsetWrapper;
 
   constructor() {
 

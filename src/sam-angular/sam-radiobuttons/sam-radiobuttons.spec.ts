@@ -14,6 +14,14 @@ describe('The Sam Radio Buttons component', () => {
     {value: 'va', label: 'Virginia'},
   ];
 
+  let defaultOptions = {
+    options: options,
+    srName: 'my-radio-buttons',
+    wrapper: {
+
+    }
+  };
+
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -25,14 +33,14 @@ describe('The Sam Radio Buttons component', () => {
     component = fixture.componentInstance;
   });
 
-  it('should display 3 checkboxes if 3 options are specified by the config', function () {
-    component.config = { options: options, name: 'name' };
+  it('should display 3 radiobuttons if 3 options are specified by the config', function () {
+    component.config = defaultOptions;
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('input').length).toBe(options.length);
   });
 
   it('should allow an initial value to be set by the model input', async(() => {
-    component.config = {options: options, name: 'name'};
+    component.config = defaultOptions;
     component.model = 'ma';
     fixture.detectChanges();
     let checkedElement = fixture.debugElement.query(By.css(':checked + label'));
@@ -41,7 +49,7 @@ describe('The Sam Radio Buttons component', () => {
   }));
 
   it('should deselect one radio button when another is clicked', function () {
-    component.config = {options: options, name: 'name'};
+    component.config = defaultOptions;
     component.model = 'ma';
     fixture.detectChanges();
     let label1 = fixture.debugElement.query(By.css(':checked + label')).nativeElement.innerHTML;
@@ -53,21 +61,24 @@ describe('The Sam Radio Buttons component', () => {
 
   it('should show a hint message', function () {
     let hint = "Life pro tip: eat vegetables";
-    component.config = {wrapper: {hint: hint}, options: options, name: 'name'};
+    component.config = defaultOptions;
+    component.config.wrapper.hint = hint;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(hint);
   });
 
   it('should show an error message', function () {
     let errorMessage = "Uh-oh, something went wrong";
-    component.config = {wrapper: {errorMessage: errorMessage}, options: options, name: 'name'};
+    component.config = defaultOptions;
+    component.config.wrapper.errorMessage = errorMessage;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(errorMessage);
   });
 
   it('should show a label', function () {
     let labelText = "Pick from the following options";
-    component.config = {wrapper: {label: labelText}, options: options, name: 'name'};
+    component.config = defaultOptions;
+    component.config.wrapper.label = labelText;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(labelText);
   });

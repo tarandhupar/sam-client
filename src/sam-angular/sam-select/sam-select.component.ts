@@ -1,13 +1,14 @@
 import { Component, Input, Output, ViewChild, EventEmitter } from '@angular/core';
-import { InputWrapper, InputWrapperConfigType, OptionsType } from '../common/input-wrapper/input-wrapper.component';
+import { LabelWrapper, LabelWrapperConfigType } from '../common/wrappers/label-wrapper.component';
+import { OptionsType } from '../common/options.types';
 
 export type SelectConfigType = {
   options: OptionsType,
-  name: string,
+  srName: string,
   hasEmptyOption?: boolean,
   placeholder?: string,
   disabled?: boolean,
-  wrapper?: InputWrapperConfigType
+  wrapper?: LabelWrapperConfigType,
 };
 
 /**
@@ -21,19 +22,19 @@ export type SelectConfigType = {
  *            element so that the select value can be cleared
  *
  *   }
- * @Input() model - the bound value of the select component
+ * @Input() model - tlhe bound value of the select component
  *
  */
 @Component({
   selector: 'samSelect2',
   template: `
-      <inputWrapper [labelFor]="config.name" [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint">
-        <select [attr.name]="config.name" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="config.disabled">
+      <labelWrapper [config]="config.wrapper">
+        <select [attr.name]="config.srName" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="config.disabled">
           <option *ngIf="config.placeholder" selected="selected" disabled="disabled" value="-1">{{config.placeholder}}</option>
           <option *ngIf="config.hasEmptyOption"></option>
           <option *ngFor="let option of config.options" [value]="option.value">{{option.label}}</option>
         </select>
-      </inputWrapper>
+      </labelWrapper>
   `,
 })
 export class SamSelectComponent {
@@ -41,11 +42,16 @@ export class SamSelectComponent {
   @Input() model: any = -1;
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
 
-  @ViewChild(InputWrapper)
-  public wrapper: InputWrapper;
+  @ViewChild(LabelWrapper)
+  public wrapper: LabelWrapper;
 
   constructor() {
 
+  }
+
+  ngOnInit() {
+    this.config.wrapper = this.config.wrapper || {};
+    this.config.wrapper.labelFor = this.config.srName;
   }
 
   onChange(val) {

@@ -14,7 +14,7 @@ export class SamAngularDemo {
       {value: 'ma', label: 'Maryland'},
       {value: 'va', label: 'Virginia'},
     ],
-    name: 'name',
+    srName: 'region',
     placeholder: 'Select a region',
     wrapper: {
       label: 'Region',
@@ -29,7 +29,7 @@ export class SamAngularDemo {
       {value: 'ma', label: 'Maryland', idFor: 'checkbox-maryland'},
       {value: 'va', label: 'Virginia', idFor: 'checkbox-virginia'},
     ],
-    name: 'regions',
+    srName: 'my-sr-name',
     wrapper: {
         label: 'Select a region'
     }
@@ -43,7 +43,7 @@ export class SamAngularDemo {
       {value: 'ma', label: 'Maryland', idFor: 'radio-maryland'},
       {value: 'va', label: 'Virginia', idFor: 'radio-virginia'},
     ],
-    name: 'radio-component',
+    srName: 'radio-component',
     wrapper: {
       label: 'Select a region',
       errorMessage: '',
@@ -52,5 +52,7 @@ export class SamAngularDemo {
   };
 
   constructor() {  }
+
+
 
 }

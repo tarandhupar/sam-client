@@ -1,11 +1,12 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { InputWrapper, OptionsType, InputWrapperConfigType } from '../common/input-wrapper/input-wrapper.component';
+import { FieldsetWrapper, FieldsetWrapperConfigType } from '../common/wrappers/fieldset-wrapper.component';
+import { OptionsType } from '../common/options.types';
 
 export type CheckboxesConfigType = {
   options: OptionsType,
-  name: string,
   hasSelectAll?: boolean,
-  wrapper?: InputWrapperConfigType
+  srName: string,
+  wrapper: FieldsetWrapperConfigType
 };
 
 /**
@@ -26,21 +27,18 @@ export type CheckboxesConfigType = {
 @Component({
   selector: 'samCheckboxes2',
   template: `
-      <inputWrapper [labelFor]="config.wrapper?.name" [label]="config.wrapper?.label" [errorMessage]="config.wrapper?.errorMessage" [hint]="config.wrapper?.hint">
-        <fieldset class="usa-fieldset-inputs usa-sans">
-          <legend class="usa-sr-only">{{config.name}}</legend>      
-          <ul class="usa-unstyled-list">
-            <li *ngIf="config.hasSelectAll">
-              <input [attr.id]="checkAllLabelName()" type="checkbox" [(ngModel)]="isSelectAllChecked" (ngModelChange)="onSelectAllChange(isSelectAllChecked)">
-              <label [attr.for]="checkAllLabelName()">Select all</label>
-            </li>
-            <li *ngFor="let option of config.options; let i = index">
-              <input [attr.id]="option.idFor" [disabled]='option.disabled' type="checkbox" [(ngModel)]="_modelHash[option.value]" (ngModelChange)="onCheckChange(option.value, _modelHash[option.value])">
-              <label [attr.for]="option.idFor">{{option.label}}</label>
-            </li>
-          </ul>
-        </fieldset>
-      </inputWrapper>
+      <fieldsetWrapper [config]="config.wrapper">
+        <ul class="usa-unstyled-list">
+          <li *ngIf="config.hasSelectAll">
+            <input [attr.id]="checkAllLabelName()" type="checkbox" [(ngModel)]="isSelectAllChecked" (ngModelChange)="onSelectAllChange(isSelectAllChecked)">
+            <label [attr.for]="checkAllLabelName()">Select all</label>
+          </li>
+          <li *ngFor="let option of config.options; let i = index">
+            <input [attr.id]="option.idFor" [disabled]='option.disabled' type="checkbox" [(ngModel)]="_modelHash[option.value]" (ngModelChange)="onCheckChange(option.value, _modelHash[option.value])">
+            <label [attr.for]="option.idFor">{{option.label}}</label>
+          </li>
+        </ul>
+      </fieldsetWrapper>
   `,
 })
 export class SamCheckboxesComponent {
@@ -48,8 +46,8 @@ export class SamCheckboxesComponent {
   @Input() model: Array<any> = [];
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
 
-  @ViewChild(InputWrapper)
-  public wrapper: InputWrapper;
+  @ViewChild(FieldsetWrapper)
+  public wrapper: FieldsetWrapper;
 
   /*
    * We want our model to list the checked items in the order that they appear in in the options list
@@ -87,7 +85,7 @@ export class SamCheckboxesComponent {
 
   // Give the check all label a name for screen readers
   checkAllLabelName() {
-    return `all-${this.config.name}`;
+    return `all-${this.config.srName}`;
   }
 
   onCheckChange(key, isChecked) {
