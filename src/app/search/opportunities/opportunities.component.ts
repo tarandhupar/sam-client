@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
       <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
     </p>
     <h3 class="opportunity-title">
-      <a *ngIf="data.archive==false" href="#title">{{ data.procurementTitle }}</a>
+      <span *ngIf="data.archive==false">{{ data.procurementTitle }}</span>
       <span *ngIf="data.archive==true">{{ data.procurementTitle }}</span>
     </h3>
     <div class="usa-width-two-thirds">
