@@ -10,7 +10,7 @@
     </div>
     <div class='usa-grid-full'>
         <div class='usa-width-one-third'>
-            <label for='jqDepartmentFH'>Department</label>
+            <label for='jqDepartmentFH' class="m_T-0">Department</label>
             <select [(ngModel)]="selectedDeptId" (ngModelChange)='setOrganizationId("department")' id='jqDepartmentFH'>
                 <option value=''>Please select a Department</option>
                 <option *ngFor="let dpmt of dictionary.aDepartment" [value]="dpmt.elementId + '|' + dpmt.sourceOrganizationId">{{dpmt.name}}</option>
@@ -18,7 +18,7 @@
             <span *ngIf="false" class='department-label2'> {{ departmentLabel }} </span>
         </div>
         <div class='usa-width-one-third'>
-            <label for='jqAgencyFH'>Agency</label>
+            <label for='jqAgencyFH' class="m_T-0">Agency</label>
             <select [(ngModel)]="selectedAgencyId" (ngModelChange)='setOrganizationId("agency")' [disabled]="lockAgency" id='jqAgencyFH'>
                 <option value=''>Please select an Agency</option>
                 <option *ngFor="let agency of dictionary.aAgency" [value]="agency.elementId + '|' + agency.sourceOrganizationId">{{agency.name}}</option>
