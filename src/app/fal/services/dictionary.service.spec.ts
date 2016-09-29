@@ -36,7 +36,7 @@ describe('DictionaryService unit tests using TestBed', () => {
 
 
   it('should return response when subscribed to getHistoricalIndexByProgramNumber', inject([DictionaryService], (testService: DictionaryService) => {
-    testService.getHistoricalIndexByProgramNumber("5eb2b1a06998d59eb179a8e7fd76c173", "11.111").subscribe((res: Response) => {
+    testService.getDictionaryById("5eb2b1a06998d59eb179a8e7fd76c173").subscribe((res: Response) => {
       expect(res['response']).toBe('got response!!');
     });
   }));

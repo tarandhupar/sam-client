@@ -28,13 +28,13 @@ export class DictionaryService {
             dictionaryJSON = dictionaryJSON.content;
             this.updateTreeNodes(dictionaryJSON.id, dictionaryJSON.elements, null);
             dictionary[dictionaryJSON.id] = dictionaryJSON.elements;
-        };
+        }
 
         console.log("dictionary (returning this, inside map)", dictionary);
         return dictionary;
     });
 
-    console.log("returning obj from getDictionaryById method");
+    console.log("returning obj from getDictionaryById method", obj);
     return obj;
   }
 
