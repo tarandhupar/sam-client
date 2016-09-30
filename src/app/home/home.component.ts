@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { Router,NavigationExtras } from '@angular/router';
 @Component({
   // The selector is what angular internally uses
   // for `document.querySelectorAll(selector)` in our index.html
@@ -13,10 +13,13 @@ import { Component } from '@angular/core';
   templateUrl: './home.template.html'
 })
 export class Home {
+  indexes = ['', 'cfda', 'fbo'];
+  index = '';
+  keyword: string = "";
   // Set our default values
   testValue = { value: 'Test' };
   // TypeScript public modifiers
-  constructor() {
+  constructor(private _router:Router) {
 
   }
 
@@ -24,6 +27,20 @@ export class Home {
     console.log('hello `Home` component');
     // this.title.getData().subscribe(data => this.data = data);
   }
-
+  runSearch(){
+    var qsobj = {};
+    if(this.keyword.length>0){
+      qsobj['keyword'] = this.keyword;
+    }
+    if(this.index.length>0){
+      qsobj['index'] = this.index;
+    }
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this._router.navigate(['/search'], navigationExtras );
+    
+    return false;
+  }
 
 }

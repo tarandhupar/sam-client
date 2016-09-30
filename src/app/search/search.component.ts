@@ -26,11 +26,13 @@ export class Search implements OnInit{
 	totalCount: any= 0;
 	totalPages: any= 0;
 	pageNumPaginationPadding = 2;
+	showPerPage = 10;
 	data = [];
 	keyword: string = "";
+	oldKeyword: string = "";
 	initLoad = true;
 
-	constructor(private activatedRoute: ActivatedRoute,private _router:Router, private searchService: SearchService) { }
+	constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService) { }
 	ngOnInit() {
 
 		this.activatedRoute.queryParams.subscribe(
@@ -38,30 +40,28 @@ export class Search implements OnInit{
 				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
-        this.sourceOrganizationId = typeof data['sourceOrganizationId'] === "string" ? decodeURI(data['sourceOrganizationId']) : "";
-        this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-				//if((this.keyword && this.keyword.length>0) || (this.index == '' || this.index)){
-					this.runSearch(true);
-				//}
+                this.sourceOrganizationId = typeof data['sourceOrganizationId'] === "string" ? decodeURI(data['sourceOrganizationId']) : "";
+                this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
+                this.runSearch(true);
 		});
 	}
 
 	onOrganizationChange(orgId:string){
-    var orgArray = orgId.split('|');
-    this.organizationId = orgArray[0];
+        var orgArray = orgId.split('|');
+        this.organizationId = orgArray[0];
 		this.sourceOrganizationId = orgArray[1];
 	}
 	runSearch(newSearch){
-
+		//push state to history
 		if(typeof window != "undefined"){
 			var qsobj = {};
 			if (!this.initLoad && history.pushState) {
 				if(this.organizationId.length>0){
 					qsobj['organizationId'] = this.organizationId;
 				}
-        if(this.sourceOrganizationId.length>0){
-          qsobj['sourceOrganizationId'] = this.sourceOrganizationId;
-        }
+                if(this.sourceOrganizationId.length>0){
+                  qsobj['sourceOrganizationId'] = this.sourceOrganizationId;
+                }
 				if(this.keyword.length>0){
 					qsobj['keyword'] = this.keyword;
 				}
@@ -81,15 +81,15 @@ export class Search implements OnInit{
 			}
 		}
 
-
+		//make api call
 		this.searchService.runSearch({
 			keyword: this.keyword,
 			index: this.index,
 			pageNum: this.pageNum,
-      sourceOrganizationId: this.sourceOrganizationId
+            sourceOrganizationId: this.sourceOrganizationId
 		}).subscribe(
 			data => {
-	      if(data._embedded.results){
+	      if(data._embedded && data._embedded.results){
 	        for(var i=0; i<data._embedded.results.length; i++) {
 	          if(data._embedded.results[i].contacts) {
 	            data._embedded.results[i].contacts = JSON.parse(data._embedded.results[i].contacts);
@@ -100,16 +100,19 @@ export class Search implements OnInit{
 	            }
 	          }
 	        }
+	        this.data = data._embedded;
+            this.totalCount = data.page['totalElements'];
+            var maxAllowedPages = data.page['maxAllowedRecords']/this.showPerPage;
+            this.totalPages = data.page['totalPages']>maxAllowedPages?maxAllowedPages:data.page['totalPages'];
+	      } else{
+	      	this.data['results'] = null;
 	      }
-				this.data = data._embedded;
-				this.totalCount = data.page['totalElements'];
-				this.totalPages = data.page['totalPages'];
 
+				this.oldKeyword = this.keyword;
 				this.initLoad = false;
 			},
       error => {
         console.error("Error!!", error);
-        //return Observable.throw(error);
       }
     );
 	}
@@ -136,9 +139,5 @@ export class Search implements OnInit{
 		}
 
 		return retVal;
-	}
-	//routing
-	goHome(){
-		this._router.navigate(['/home'],{queryParams:{}});
 	}
 }
