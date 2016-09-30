@@ -33,11 +33,10 @@ describe('DictionaryService unit tests using TestBed', () => {
 
   it('should return response when a dictionary is requested', inject([DictionaryService], (testService: DictionaryService) => {
     testService.getDictionaryById("yes_no").subscribe((res: Response) => {
-        console.log(res['yes_no'])
       expect(res['yes_no']).toBeDefined();
-//      expect(res['yes_no']['elements']).toBeDefined();
-//      expect(res['yes_no']['description']).toBeDefined();
-//      expect(res['yes_no']['displayValue']).toBeDefined();
+      expect(res['yes_no'][0]['elements']).toBeDefined();
+      expect(res['yes_no'][0]['description']).toBeDefined();
+      expect(res['yes_no'][0]['displayValue']).toBeDefined();
     });
   }));
 
