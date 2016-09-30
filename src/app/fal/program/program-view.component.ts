@@ -60,14 +60,6 @@ export class ProgramViewComponent implements OnInit {
       'functional_codes'
     ];
 
-    
-    this.oDictionaryService.getDictionaryById('functional_codes').subscribe(res => {
-      console.log("result from dictionary.service for just functional_codes is:", res);
-      console.log("cleaned up", util.inspect(res));
-      console.log("cleaned up2", JSON.parse(stringify(res)));
-    });
-
-
     this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
       for (var key in res) {
         this.aDictionaries[key] = res[key];
