@@ -3,10 +3,6 @@
 		<h1>SAM.gov Search Results</h1>
 	</div>
   <div class="usa-width-one">
-    <fh-input #fhInput (organization)="onOrganizationChange($event)"></fh-input>
-    <br/>
-  </div>
-  <div class="usa-width-one">
     <form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch(true)" #f="ngForm">
       <div class="usa-width-one-fourth">
         <label for="index" class="usa-sr-only">Select an index</label>
@@ -24,10 +20,15 @@
         </button>
       </div>
     </form>
+    <div class="usa-width-one">
+      <h3>Common Filters:</h3>
+      <fh-input #fhInput [hideOffice]="true" (organization)="onOrganizationChange($event)"></fh-input>
+      <hr *ngIf="data.results" class="m_T-5x"/>
+    </div>
 		<div *ngFor="let row of data.results">
 			<opportunities-result *ngIf="row._type=='FBO'" class="usa-grid-full" [data]="row"></opportunities-result>
       <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row"></assistance-listing-result>
-      <hr class="m_T-5x" />
+      <hr class="m_T-5x"/>
   	</div>
 	</div>
   <div *ngIf="data.results">

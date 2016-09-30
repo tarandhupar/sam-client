@@ -21,6 +21,7 @@ export class Search implements OnInit{
 	indexes = ['', 'cfda', 'fbo'];
 	index = '';
 	organizationId:string = '';
+  sourceOrganizationId:string = '';
 	pageNum = 0;
 	totalCount: any= 0;
 	totalPages: any= 0;
@@ -37,6 +38,8 @@ export class Search implements OnInit{
 				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
+        this.sourceOrganizationId = typeof data['sourceOrganizationId'] === "string" ? decodeURI(data['sourceOrganizationId']) : "";
+        this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
 				//if((this.keyword && this.keyword.length>0) || (this.index == '' || this.index)){
 					this.runSearch(true);
 				//}
@@ -44,7 +47,9 @@ export class Search implements OnInit{
 	}
 
 	onOrganizationChange(orgId:string){
-		this.organizationId = orgId;
+    var orgArray = orgId.split('|');
+    this.organizationId = orgArray[0];
+		this.sourceOrganizationId = orgArray[1];
 	}
 	runSearch(newSearch){
 
@@ -54,6 +59,9 @@ export class Search implements OnInit{
 				if(this.organizationId.length>0){
 					qsobj['organizationId'] = this.organizationId;
 				}
+        if(this.sourceOrganizationId.length>0){
+          qsobj['sourceOrganizationId'] = this.sourceOrganizationId;
+        }
 				if(this.keyword.length>0){
 					qsobj['keyword'] = this.keyword;
 				}
@@ -78,7 +86,7 @@ export class Search implements OnInit{
 			keyword: this.keyword,
 			index: this.index,
 			pageNum: this.pageNum,
-			organizationId: this.organizationId
+      sourceOrganizationId: this.sourceOrganizationId
 		}).subscribe(
 			data => {
 	      if(data._embedded.results){

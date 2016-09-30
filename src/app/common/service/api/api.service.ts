@@ -35,7 +35,7 @@ export class APIService {
 
         //loop through oParam & add them as request parameter
         for (var key in oApiParam.oParam) {
-            oURLSearchParams.set(key, oApiParam.oParam[key]);
+            oURLSearchParams.set(key, (typeof oApiParam.oParam[key] === 'object') ? JSON.stringify(oApiParam.oParam[key]) : oApiParam.oParam[key]);
         }
 
         //TODO: Implement Post DATA to request
