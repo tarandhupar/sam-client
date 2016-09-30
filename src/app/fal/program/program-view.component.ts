@@ -58,7 +58,11 @@ export class ProgramViewComponent implements OnInit {
       'functional_codes'
     ];
 
-    
+    this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
+      for (var key in res) {
+        this.aDictionaries[key] = res[key];
+      }
+    });
 
     this.sub = this.route.params.subscribe(params => {
       let id = params['id']; //id will be a string, not a number
