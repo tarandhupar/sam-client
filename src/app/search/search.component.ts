@@ -47,9 +47,7 @@ export class Search implements OnInit{
 	}
 
 	onOrganizationChange(orgId:string){
-        var orgArray = orgId.split('|');
-        this.organizationId = orgArray[0];
-		this.sourceOrganizationId = orgArray[1];
+    this.organizationId = orgId;
 	}
 	runSearch(newSearch){
 		//push state to history
@@ -59,9 +57,6 @@ export class Search implements OnInit{
 				if(this.organizationId.length>0){
 					qsobj['organizationId'] = this.organizationId;
 				}
-                if(this.sourceOrganizationId.length>0){
-                  qsobj['sourceOrganizationId'] = this.sourceOrganizationId;
-                }
 				if(this.keyword.length>0){
 					qsobj['keyword'] = this.keyword;
 				}
@@ -86,7 +81,7 @@ export class Search implements OnInit{
 			keyword: this.keyword,
 			index: this.index,
 			pageNum: this.pageNum,
-            sourceOrganizationId: this.sourceOrganizationId
+      organizationId: this.organizationId
 		}).subscribe(
 			data => {
 	      if(data._embedded && data._embedded.results){

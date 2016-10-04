@@ -26,7 +26,6 @@ export class FHInputComponent implements OnInit {
 		aOffice: []
 	};
 	organizationId = '';
-  sourceOrganizationId='';
 	//programOrganizationId = '';
 	hasDepartmentChanged = false;
 	setDeptNullOnChange;
@@ -58,17 +57,17 @@ export class FHInputComponent implements OnInit {
         this.oFHService.getFederalHierarchyById(this.organizationId, true, true).subscribe(res => {
           //inferring department match
           if(res.elementId == this.organizationId) {
-            this.selectedDeptId = res.elementId + '|' + res.sourceOrganizationId;
+            this.selectedDeptId = res.elementId;
             this.setOrganizationId("department");
           }
             //inferring agency match
           else {
-            this.selectedDeptId = res.elementId + '|' + res.sourceOrganizationId;
+            this.selectedDeptId = res.elementId;
             this.initDictionaries(res.elementId, true, true).subscribe( oData => {
               if(oData.type === 'DEPARTMENT') {
                 //initialize Department "Label" and Agency dropdown
                 this.dictionary.aAgency = oData.hierarchy;
-                this.selectedAgencyId = res.hierarchy[0].elementId + '|' + res.hierarchy[0].sourceOrganizationId;
+                this.selectedAgencyId = res.hierarchy[0].elementId;
                 this.setOrganizationId("agency");
               }
             });
@@ -84,16 +83,13 @@ export class FHInputComponent implements OnInit {
 
         if(typeof this.selectedDeptId !== 'undefined' && this.selectedDeptId !== ''
                 && this.selectedDeptId !== null) {
-            var orgArray = this.selectedDeptId.split("|");
-            this.organizationId = orgArray[0];
-            this.sourceOrganizationId = orgArray[1];
+          this.organizationId = this.selectedDeptId;
 
             //once user choose a different department, switch flag of hasDepartmentChanged
             this.hasDepartmentChanged = true;
         } else { //if department is not selected then set user's organization id
             //$scope.organizationId = $scope.programOrganizationId;
             this.organizationId = '';
-            this.sourceOrganizationId = '';
         }
 
         //empty agency & office dropdowns
@@ -117,16 +113,13 @@ export class FHInputComponent implements OnInit {
         if(typeof this.setDeptNullOnChange !== 'undefined' && this.setDeptNullOnChange === true
                 && (this.selectedDeptId === '' || typeof this.selectedDeptId === 'undefined')) {
             this.organizationId = '';
-            this.sourceOrganizationId = '';
         }
 
         break;
       case 'agency':
         if(typeof this.selectedAgencyId !== 'undefined' && this.selectedAgencyId !== ''
                 && this.selectedAgencyId !== null) {
-            var orgArray = this.selectedAgencyId.split("|");
-            this.organizationId = orgArray[0];
-            this.sourceOrganizationId = orgArray[1];
+          this.organizationId = this.selectedAgencyId;
         } else { //if agency is not selected then set department
             //if user is a root then set department from dropdown
             /*if(AuthorizationService.authorizeByRole([SUPPORTED_ROLES.SUPER_USER]) || AuthorizationService.authorizeByRole([SUPPORTED_ROLES.RMO_SUPER_USER]) ||
@@ -159,7 +152,7 @@ export class FHInputComponent implements OnInit {
         }
         break;
   	}
-  	this.organization.emit(this.organizationId + '|' + this.sourceOrganizationId);//pass to output
+  	this.organization.emit(this.organizationId);//pass to output
   	this.getFederalHierarchyConfiguration(this.organizationId);
 	}
 

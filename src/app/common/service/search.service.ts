@@ -22,8 +22,8 @@ export class SearchService {
         method: 'GET'
       };
 
-      if(obj.sourceOrganizationId != null) {
-        oApiParam.oParam.qFilters['organizationId'] = obj.sourceOrganizationId;
+      if(obj.organizationId != null) {
+        oApiParam.oParam.qFilters['organizationId'] = obj.organizationId;
       }
 
       return this.oAPIService.call(oApiParam);
