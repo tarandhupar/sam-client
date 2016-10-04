@@ -7,16 +7,16 @@ import { CheckboxesConfigType, RadioButtonsConfigType, SelectConfigType } from '
 })
 export class SamAngularDemo {
   // Select Component
-  selectModel: any = 'ma';
+  selectModel = '';
   selectConfig: SelectConfigType = {
     options: [
+      {value:'', label: 'Default option', name: 'empty', disabled: true},
       {value: 'dc', label: 'Washington DC', name: 'dc'},
       {value: 'ma', label: 'Maryland', name: 'maryland'},
       {value: 'va', label: 'Virginia', name: 'virginia'},
     ],
     label: 'region',
     name: 'region',
-    placeholder: 'Select a region',
     wrapper: {
       label: 'Region',
       name: 'region',

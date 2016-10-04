@@ -37,16 +37,6 @@ describe('The Sam Select component', () => {
     expect(fixture.nativeElement.getElementsByTagName('option').length).toBe(options.length);
   });
 
-  it('should display 4 options if there is a placeholder', function () {
-    component.config = defaultConfig;
-    component.config.placeholder = 'a placeholder';
-    fixture.detectChanges();
-    expect(fixture.nativeElement.getElementsByTagName('option').length).toBe(options.length + 1);
-
-    // it would be better to create a copy of the default config rather than mutate it, but this fixes the tests for now
-    delete component.config.placeholder;
-  });
-
   it('should allow an initial value to be set by the model input', async(() => {
     component.config = defaultConfig;
     component.model = 2;
