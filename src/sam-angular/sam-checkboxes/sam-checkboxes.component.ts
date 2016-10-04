@@ -31,11 +31,12 @@ export type CheckboxesConfigType = {
       <fieldsetWrapper [config]="config.wrapper">
         <ul class="usa-unstyled-list">
           <li *ngIf="config.hasSelectAll">
-            <input [attr.id]="checkAllLabelName()" type="checkbox" [(ngModel)]="isSelectAllChecked" (ngModelChange)="onSelectAllChange(isSelectAllChecked)">
+            <input [attr.id]="checkAllLabelName()" type="checkbox" (change)="onSelectAllChange($event.target.checked)">
             <label [attr.for]="checkAllLabelName()">Select all</label>
           </li>
           <li *ngFor="let option of config.options; let i = index">
-            <input [attr.id]="option.name" [disabled]='option.disabled' type="checkbox" [(ngModel)]="_modelHash[option.value]" (ngModelChange)="onCheckChange(option.value, _modelHash[option.value])">
+            <input [attr.id]="option.name" [disabled]='option.disabled' type="checkbox"
+              (change)="onCheckChanged(option.value, $event.target.checked)" [checked]="isChecked(option.value)">
             <label [attr.for]="option.name">{{option.label}}</label>
           </li>
         </ul>
@@ -52,22 +53,9 @@ export class SamCheckboxesComponent {
 
   /*
    * We want our model to list the checked items in the order that they appear in in the options list
-   * We use two additional objects to acheive reasonable runtime for the inserts and delete that occur when items are
-   * checked and unchecked.
-   */
-
-  /**
-   * @member _ordering
-   * An array of { itemValue:
-   * Allows us to the determine the order of a value without traversing the entire options array
+   * This object allows us to efficiently determine if a value is before another value
    */
   private _ordering: any = {};
-
-  /**
-   * @member _modelHash
-   * Allows us to determine if an object is checked without traversing the entire model object
-   */
-  private _modelHash: any = {};
 
   constructor() {
 
@@ -76,14 +64,11 @@ export class SamCheckboxesComponent {
   ngOnInit() {
     this.config.wrapper.label = this.config.label;
 
-    // initialize the helper objects
+    // initialize the order lookup map
     for (let i = 0; i < this.config.options.length; i++) {
       let val = this.config.options[i].value;
       this._ordering[val] = i;
     }
-    this.model.forEach(val => {
-      this._modelHash[val] = true;
-    });
   }
 
   // Give the check all label a name for screen readers
@@ -91,14 +76,18 @@ export class SamCheckboxesComponent {
     return `all-${this.config.label}`;
   }
 
-  onCheckChange(key, isChecked) {
+  isChecked(value) {
+    return this.model.indexOf(value) !== -1;
+  }
+
+  onCheckChanged(value, isChecked) {
     if (!isChecked) {
       // If the option was unchecked, remove it from the model
-      this.model = this.model.filter(val => val !== key);
+      this.model = this.model.filter(val => val !== value);
     } else {
       // Else, insert the checked item into the model in the correct order
       let i = 0;
-      let thisOrder = this._ordering[key];
+      let thisOrder = this._ordering[value];
       while (i < this.model.length) {
         let otherValue = this.model[i];
         // If the item being inserted is after the current value, break and insert it
@@ -107,7 +96,7 @@ export class SamCheckboxesComponent {
         }
         i++;
       }
-      this.model.splice(i, 0, key);
+      this.model.splice(i, 0, value);
     }
     this.modelChange.emit(this.model);
   }
@@ -115,12 +104,8 @@ export class SamCheckboxesComponent {
   onSelectAllChange(isSelectAllChecked) {
     if (!isSelectAllChecked) {
       this.model = [];
-      this._modelHash = {};
     } else {
       this.model = this.config.options.map(option => option.value);
-      this.config.options.forEach(option => {
-        this._modelHash[option.value] = true;
-      });
     }
     this.modelChange.emit(this.model);
   }

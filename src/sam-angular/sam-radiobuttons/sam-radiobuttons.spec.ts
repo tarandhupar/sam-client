@@ -4,25 +4,21 @@ import { By } from '@angular/platform-browser';
 // Load the implementations that should be tested
 import { SamRadioButtonsComponent, SamAngularModule } from '../../sam-angular';
 import { RadioButtonsConfigType } from '../sam-radiobuttons/sam-radiobuttons.component';
-import { OptionsType } from "../common/options.types";
 
 describe('The Sam Radio Buttons component', () => {
   let component: SamRadioButtonsComponent;
   let fixture: any;
 
-  let options : OptionsType = [
+  let options : [any] = [
     {value: 'dc', label: 'Washington DC', name: 'dc'},
     {value: 'ma', label: 'Maryland', name: 'dc'},
     {value: 'va', label: 'Virginia', name: 'virginia'},
   ];
 
-  let defaultOptions : RadioButtonsConfigType = {
+  let defaultOptions = {
     options: options,
     label: 'Radio buttons',
-    name: 'my-radio-buttons',
-    wrapper: {
-      label: 'Radio buttons',
-    }
+    name: 'my-radio-buttons'
   };
 
   // provide our implementations or mocks to the dependency injector

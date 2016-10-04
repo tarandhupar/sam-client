@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FieldsetWrapper } from '../common/wrappers/fieldset-wrapper.component';
-import { OptionsType, WrapperConfigType } from '../common/types';
+import { OptionsType } from '../common/types';
 
 export type RadioButtonsConfigType = {
   options: OptionsType, // an array of radio buttons
   label: string, // descriptive name that will be the legend, can contain spaces
   name: string, // machine readable name that will group the buttons, cannot contain spaces
-  wrapper: WrapperConfigType
+  wrapper?: any
 };
 
 /**
@@ -42,6 +42,7 @@ export class SamRadioButtonsComponent {
   }
 
   ngOnInit() {
+    this.config.wrapper = this.config.wrapper || {};
     this.config.wrapper.label = this.config.label;
   }
 
