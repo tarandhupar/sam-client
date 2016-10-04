@@ -8,17 +8,17 @@ import { Component, Input } from '@angular/core';
  * @Input() labelFor: <string> *optionsal* The value of the for attribute of the label.
  */
 export type LabelWrapperConfigType = {
-  label?: string,
+  label: string,
+  name: string,
   hint?: string,
   errorMessage?: string,
-  labelFor?: string
 };
 
 @Component({
   selector: 'labelWrapper',
   template: `
     <div [class.usa-input-error]="!!config.errorMessage">
-      <label *ngIf="config.label" [attr.for]="config.labelFor" [class.usa-input-error-label]="config.errorMessage">{{config.label}}</label>
+      <label [attr.for]="config.name" [class.usa-input-error-label]="config.errorMessage">{{config.label}}</label>
       <span *ngIf="config.errorMessage" class="usa-input-error-message">{{config.errorMessage}}</span>
       <span *ngIf="config.hint" class="usa-form-hint">{{config.hint}}</span>
       <ng-content></ng-content>
@@ -26,6 +26,6 @@ export type LabelWrapperConfigType = {
   `,
 })
 export class LabelWrapper {
-  @Input() config: LabelWrapperConfigType = {};
+  @Input() config: LabelWrapperConfigType;
   constructor() { }
 }

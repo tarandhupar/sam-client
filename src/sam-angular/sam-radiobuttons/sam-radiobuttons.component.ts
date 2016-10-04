@@ -3,9 +3,10 @@ import {FieldsetWrapperConfigType, FieldsetWrapper} from '../common/wrappers/fie
 import { OptionsType } from '../common/options.types';
 
 export type RadioButtonsConfigType = {
-  options: OptionsType,
-  srName: string,
-  wrapper?: FieldsetWrapperConfigType
+  options: OptionsType, // an array of radio buttons
+  label: string, // descriptive name that will be the legend, can contain spaces
+  name: string, // machine readable name that will group the buttons, cannot contain spaces
+  wrapper: FieldsetWrapperConfigType
 };
 
 /**
@@ -13,13 +14,7 @@ export type RadioButtonsConfigType = {
  * https://gsa.github.io/sam-web-design-standards/
  *
  * @Input config: RadioButtonsConfigType
- *   {
- *     options: an array of objects: { value: <any>, label: <string>, disabled: <boolean>, idFor: <string> }
- *     name: <string>, A descriptive name the input group that will be spoken by screen readers, this is also
- *       the value of attribute "name" for each input. It must be unique among the dom.
- *   }
- * @Output/@Input model
- *   The input is an array where each element is the value of a checked checkbox.
+ * @Output/@Input model: string|number
  */
 @Component({
   selector: 'samRadioButtons2',
@@ -27,8 +22,8 @@ export type RadioButtonsConfigType = {
       <fieldsetWrapper [config]="config.wrapper">
         <ul class="usa-unstyled-list">
           <li *ngFor="let option of config.options; let i = index">
-            <input [attr.id]="option.idFor" type="radio" (change)="onChange(option.value)" [attr.name]="config.name" [checked]="model === option.value">
-            <label [attr.for]="option.idFor">{{option.label}}</label>
+            <input [attr.id]="option.name" type="radio" (change)="onChange(option.value)" [attr.name]="config.name" [checked]="model === option.value">
+            <label [attr.for]="option.name">{{option.label}}</label>
           </li>
         </ul>
       </fieldsetWrapper>
@@ -44,6 +39,10 @@ export class SamRadioButtonsComponent {
 
   constructor() {
 
+  }
+
+  ngOnInit() {
+    this.config.wrapper.label = this.config.label;
   }
 
   onChange(value) {

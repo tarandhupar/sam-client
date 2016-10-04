@@ -4,7 +4,8 @@ import { OptionsType } from '../common/options.types';
 
 export type SelectConfigType = {
   options: OptionsType,
-  srName: string,
+  label: string, // Human readable name, which will be the <label> content.
+  name: string, // machine readable name. The label-for/select-id name.
   hasEmptyOption?: boolean,
   placeholder?: string,
   disabled?: boolean,
@@ -12,24 +13,15 @@ export type SelectConfigType = {
 };
 
 /**
- * @Input() config - a configuration object. This object can also contain any of the inputs for input-wrapper (e.g. "label").
- *   {
- *     options: Array<any>, an array of { value: <any>, label: <string> } objects.
- *     name: <string>, descript name for screen readers
- *     placeholder: <string> *optional* A disabled <option> element that is selected if no
- *            option has yet been selected by the user
- *     hasEmptyOption: <boolean> *optional* *default = false* If true, the select component has a blank <option>
- *            element so that the select value can be cleared
- *
- *   }
- * @Input() model - tlhe bound value of the select component
+ * @Input() config : SelectConfigType - a configuration object.
+ * @Input() model - the value of the select component
  *
  */
 @Component({
   selector: 'samSelect2',
   template: `
       <labelWrapper [config]="config.wrapper">
-        <select [attr.id]="config.srName" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="config.disabled">
+        <select [attr.id]="config.name" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="config.disabled">
           <option *ngIf="config.placeholder" selected="selected" disabled="disabled" value="-1">{{config.placeholder}}</option>
           <option *ngIf="config.hasEmptyOption"></option>
           <option *ngFor="let option of config.options" [value]="option.value">{{option.label}}</option>
@@ -50,8 +42,10 @@ export class SamSelectComponent {
   }
 
   ngOnInit() {
-    this.config.wrapper = this.config.wrapper || {};
-    this.config.wrapper.labelFor = this.config.srName;
+    this.config.wrapper = this.config.wrapper || {
+        name: this.config.name,
+        label: this.config.label,
+      };
   }
 
   onChange(val) {

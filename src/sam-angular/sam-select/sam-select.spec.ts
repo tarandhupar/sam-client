@@ -9,14 +9,15 @@ describe('The Sam Select component', () => {
   let fixture: any;
 
   let options = [
-    {value: 1, label: 'one'},
-    {value: 2, label: 'two'},
-    {value: 3, label: 'three'}
+    {value: 1, label: 'one', name: 'one'},
+    {value: 2, label: 'two', name: 'two'},
+    {value: 3, label: 'three', name: 'three'}
   ];
 
   let defaultConfig = {
     options: options,
-    srName: 'my-select',
+    label: 'select',
+    name: 'my-select',
   };
 
   // provide our implementations or mocks to the dependency injector
@@ -67,7 +68,7 @@ describe('The Sam Select component', () => {
     fixture.detectChanges();
     setTimeout(() => {
       let selectElement = fixture.nativeElement.getElementsByTagName('select')[0];
-      expect(selectElement.selectedIndex).toBe(1);
+      expect(selectElement.selectedIndex).toBe(3);
     });
   }));
 

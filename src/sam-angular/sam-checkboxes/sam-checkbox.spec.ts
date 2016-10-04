@@ -10,16 +10,17 @@ describe('The Sam Checkboxes component', () => {
   let fixture: any;
 
   let options = [
-    {value: 'dc', label: 'Washington DC'},
-    {value: 'ma', label: 'Maryland'},
-    {value: 'va', label: 'Virginia'},
+    {value: 'dc', label: 'Washington DC', name: 'dc'},
+    {value: 'ma', label: 'Maryland', name: 'maryland'},
+    {value: 'va', label: 'Virginia', name: 'virginia'},
   ];
 
   let defaultConfig = {
     options: options,
-    srName: 'my-checkboxes',
+    label: 'I am a checkbox',
+    name: 'i-am-a-checkbox',
     wrapper: {
-
+      label: 'I am a checkbox'
     }
   };
 
@@ -104,7 +105,7 @@ describe('The Sam Checkboxes component', () => {
   it('should show a label', function () {
     let labelText = "Pick from the following options";
     component.config = defaultConfig;
-    component.config.wrapper.label = labelText;
+    component.config.label = labelText;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(labelText);
   });

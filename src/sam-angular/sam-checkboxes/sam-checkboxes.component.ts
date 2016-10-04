@@ -4,9 +4,10 @@ import { OptionsType } from '../common/options.types';
 
 export type CheckboxesConfigType = {
   options: OptionsType,
+  label: string,
+  name: string,
+  wrapper: FieldsetWrapperConfigType,
   hasSelectAll?: boolean,
-  srName: string,
-  wrapper: FieldsetWrapperConfigType
 };
 
 /**
@@ -34,8 +35,8 @@ export type CheckboxesConfigType = {
             <label [attr.for]="checkAllLabelName()">Select all</label>
           </li>
           <li *ngFor="let option of config.options; let i = index">
-            <input [attr.id]="option.idFor" [disabled]='option.disabled' type="checkbox" [(ngModel)]="_modelHash[option.value]" (ngModelChange)="onCheckChange(option.value, _modelHash[option.value])">
-            <label [attr.for]="option.idFor">{{option.label}}</label>
+            <input [attr.id]="option.name" [disabled]='option.disabled' type="checkbox" [(ngModel)]="_modelHash[option.value]" (ngModelChange)="onCheckChange(option.value, _modelHash[option.value])">
+            <label [attr.for]="option.name">{{option.label}}</label>
           </li>
         </ul>
       </fieldsetWrapper>
@@ -73,6 +74,8 @@ export class SamCheckboxesComponent {
   }
 
   ngOnInit() {
+    this.config.wrapper.label = this.config.label;
+
     // initialize the helper objects
     for (let i = 0; i < this.config.options.length; i++) {
       let val = this.config.options[i].value;
@@ -85,7 +88,7 @@ export class SamCheckboxesComponent {
 
   // Give the check all label a name for screen readers
   checkAllLabelName() {
-    return `all-${this.config.srName}`;
+    return `all-${this.config.label}`;
   }
 
   onCheckChange(key, isChecked) {

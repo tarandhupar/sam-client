@@ -3,22 +3,25 @@ import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import { SamRadioButtonsComponent, SamAngularModule } from '../../sam-angular';
+import { RadioButtonsConfigType } from '../sam-radiobuttons/sam-radiobuttons.component';
+import { OptionsType } from "../common/options.types";
 
 describe('The Sam Radio Buttons component', () => {
   let component: SamRadioButtonsComponent;
   let fixture: any;
 
-  let options = [
-    {value: 'dc', label: 'Washington DC'},
-    {value: 'ma', label: 'Maryland'},
-    {value: 'va', label: 'Virginia'},
+  let options : OptionsType = [
+    {value: 'dc', label: 'Washington DC', name: 'dc'},
+    {value: 'ma', label: 'Maryland', name: 'dc'},
+    {value: 'va', label: 'Virginia', name: 'virginia'},
   ];
 
-  let defaultOptions = {
+  let defaultOptions : RadioButtonsConfigType = {
     options: options,
-    srName: 'my-radio-buttons',
+    label: 'Radio buttons',
+    name: 'my-radio-buttons',
     wrapper: {
-
+      label: 'Radio buttons',
     }
   };
 
@@ -78,7 +81,7 @@ describe('The Sam Radio Buttons component', () => {
   it('should show a label', function () {
     let labelText = "Pick from the following options";
     component.config = defaultOptions;
-    component.config.wrapper.label = labelText;
+    component.config.label = labelText;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(labelText);
   });

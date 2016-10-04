@@ -10,14 +10,16 @@ export class SamAngularDemo {
   selectModel: any = 'ma';
   selectConfig: SelectConfigType = {
     options: [
-      {value: 'dc', label: 'Washington DC'},
-      {value: 'ma', label: 'Maryland'},
-      {value: 'va', label: 'Virginia'},
+      {value: 'dc', label: 'Washington DC', name: 'dc'},
+      {value: 'ma', label: 'Maryland', name: 'maryland'},
+      {value: 'va', label: 'Virginia', name: 'virginia'},
     ],
-    srName: 'region',
+    label: 'region',
+    name: 'region',
     placeholder: 'Select a region',
     wrapper: {
       label: 'Region',
+      name: 'region',
     }
   };
 
@@ -25,11 +27,12 @@ export class SamAngularDemo {
   checkboxModel: any = ['ma'];
   checkboxConfig: CheckboxesConfigType = {
     options: [
-      {value: 'dc', label: 'DC', idFor: 'checkbox-dc'},
-      {value: 'ma', label: 'Maryland', idFor: 'checkbox-maryland'},
-      {value: 'va', label: 'Virginia', idFor: 'checkbox-virginia'},
+      {value: 'dc', label: 'DC', name: 'checkbox-dc'},
+      {value: 'ma', label: 'Maryland', name: 'checkbox-maryland'},
+      {value: 'va', label: 'Virginia', name: 'checkbox-virginia'},
     ],
-    srName: 'my-sr-name',
+    name: 'my-sr-name',
+    label: 'Select a region',
     wrapper: {
         label: 'Select a region'
     }
@@ -39,11 +42,12 @@ export class SamAngularDemo {
   radioModel: any = 'ma';
   radioConfig: RadioButtonsConfigType = {
     options: [
-      {value: 'dc', label: 'DC', idFor: 'radio-dc'},
-      {value: 'ma', label: 'Maryland', idFor: 'radio-maryland'},
-      {value: 'va', label: 'Virginia', idFor: 'radio-virginia'},
+      {value: 'dc', label: 'DC', name: 'radio-dc'},
+      {value: 'ma', label: 'Maryland', name: 'radio-maryland'},
+      {value: 'va', label: 'Virginia', name: 'radio-virginia'},
     ],
-    srName: 'radio-component',
+    name: 'radio-component',
+    label: 'Select a region',
     wrapper: {
       label: 'Select a region',
       errorMessage: '',

@@ -8,7 +8,7 @@ import { WrapperConfigType } from 'wrapper-config.types';
  * @Input() labelFor: <string> *optionsal* The value of the for attribute of the label.
  */
 export type FieldsetWrapperConfigType = {
-  label?: string,
+  label: string,
   hint?: string,
   errorMessage?: string
 };
@@ -27,7 +27,7 @@ export type FieldsetWrapperConfigType = {
   `,
 })
 export class FieldsetWrapper {
-  @Input() config: FieldsetWrapperConfigType = {};
+  @Input() config: FieldsetWrapperConfigType;
 
   constructor() { }
 }
