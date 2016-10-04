@@ -57,6 +57,13 @@ export class SamAngularDemo {
 
   constructor() {  }
 
+  onEmptyOptionChanged($event) {
+    if ($event.target.checked) {
+      this.selectConfig.options.unshift({label: '', value: '', name: 'empty-option'});
+    } else {
+      this.selectConfig.options.shift();
+    }
+  }
 
 
 }

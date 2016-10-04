@@ -47,28 +47,13 @@ describe('The Sam Select component', () => {
     delete component.config.placeholder;
   });
 
-  it('should display 4 options if there is an empty option', function () {
-    component.config = defaultConfig;
-    component.config.hasEmptyOption = true;
-    fixture.detectChanges();
-    expect(fixture.nativeElement.getElementsByTagName('option').length).toBe(options.length + 1);
-  });
-
-  it('should display 5 options if there is a placeholder and an empty options', function () {
-    component.config = defaultConfig;
-    component.config.placeholder = 'a placeholder';
-    component.config.hasEmptyOption = true;
-    fixture.detectChanges();
-    expect(fixture.nativeElement.getElementsByTagName('option').length).toBe(options.length + 2);
-  });
-
   it('should allow an initial value to be set by the model input', async(() => {
     component.config = defaultConfig;
     component.model = 2;
     fixture.detectChanges();
     setTimeout(() => {
       let selectElement = fixture.nativeElement.getElementsByTagName('select')[0];
-      expect(selectElement.selectedIndex).toBe(3);
+      expect(selectElement.selectedIndex).toBe(1);
     });
   }));
 

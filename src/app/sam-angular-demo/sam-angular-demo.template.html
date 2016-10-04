@@ -8,7 +8,7 @@
       <legend><h3>Options</h3></legend>
       <ul class="usa-unstyled-list">
         <li>
-          <input id="hasEmptyOption" type="checkbox" [(ngModel)]="selectConfig.hasEmptyOption">
+          <input id="hasEmptyOption" type="checkbox" (change)="onEmptyOptionChanged($event)">
           <label for="hasEmptyOption">Add an empty option</label>
         </li>
         <li>

@@ -6,7 +6,6 @@ export type SelectConfigType = {
   options: OptionsType,
   label: string, // Human readable name, which will be the <label> content.
   name: string, // machine readable name. The label-for/select-id name.
-  hasEmptyOption?: boolean,
   placeholder?: string,
   disabled?: boolean,
   wrapper?: LabelWrapperConfigType,
@@ -23,7 +22,6 @@ export type SelectConfigType = {
       <labelWrapper [config]="config.wrapper">
         <select [attr.id]="config.name" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="config.disabled">
           <option *ngIf="config.placeholder" selected="selected" disabled="disabled" value="-1">{{config.placeholder}}</option>
-          <option *ngIf="config.hasEmptyOption"></option>
           <option *ngFor="let option of config.options" [value]="option.value">{{option.label}}</option>
         </select>
       </labelWrapper>
