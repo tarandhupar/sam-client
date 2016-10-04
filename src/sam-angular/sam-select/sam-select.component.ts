@@ -1,13 +1,13 @@
 import { Component, Input, Output, ViewChild, EventEmitter } from '@angular/core';
-import { LabelWrapper, LabelWrapperConfigType } from '../common/wrappers/label-wrapper.component';
-import { OptionsType } from '../common/options.types';
+import { LabelWrapper } from '../common/wrappers/label-wrapper.component';
+import { OptionsType, WrapperConfigType } from '../common/types';
 
 export type SelectConfigType = {
   options: OptionsType,
   label: string, // Human readable name, which will be the <label> content.
   name: string, // machine readable name. The label-for/select-id name.
   disabled?: boolean,
-  wrapper?: LabelWrapperConfigType,
+  wrapper?: WrapperConfigType,
 };
 
 /**

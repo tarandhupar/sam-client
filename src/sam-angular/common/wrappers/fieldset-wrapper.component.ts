@@ -1,17 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { WrapperConfigType } from 'wrapper-config.types';
-
-/**
- * label: <string> *optional* The text value of the <label> which will describe the wrapped content
- * errorMessage: <string> *optional* An alternate error message
- * hint: <string> *optional* Helpful text describing how to use the wrapped content
- * @Input() labelFor: <string> *optionsal* The value of the for attribute of the label.
- */
-export type FieldsetWrapperConfigType = {
-  label: string,
-  hint?: string,
-  errorMessage?: string
-};
+import { WrapperConfigType } from '../types';
 
 @Component({
   selector: 'fieldsetWrapper',
@@ -27,7 +15,7 @@ export type FieldsetWrapperConfigType = {
   `,
 })
 export class FieldsetWrapper {
-  @Input() config: FieldsetWrapperConfigType;
+  @Input() config: WrapperConfigType;
 
   constructor() { }
 }

@@ -1,12 +1,12 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FieldsetWrapper, FieldsetWrapperConfigType } from '../common/wrappers/fieldset-wrapper.component';
-import { OptionsType } from '../common/options.types';
+import { FieldsetWrapper,  } from '../common/wrappers/fieldset-wrapper.component';
+import { OptionsType, WrapperConfigType } from '../common/types';
 
 export type CheckboxesConfigType = {
   options: OptionsType,
   label: string,
   name: string,
-  wrapper: FieldsetWrapperConfigType,
+  wrapper: WrapperConfigType,
   hasSelectAll?: boolean,
 };
 

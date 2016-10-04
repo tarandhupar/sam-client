@@ -1,18 +1,5 @@
 import { Component, Input } from '@angular/core';
-
-
-/**
- * label: <string> *optional* The text value of the <label> which will describe the wrapped content
- * errorMessage: <string> *optional* An alternate error message
- * hint: <string> *optional* Helpful text describing how to use the wrapped content
- * @Input() labelFor: <string> *optionsal* The value of the for attribute of the label.
- */
-export type LabelWrapperConfigType = {
-  label: string,
-  name: string,
-  hint?: string,
-  errorMessage?: string,
-};
+import { WrapperConfigType } from '../types';
 
 @Component({
   selector: 'labelWrapper',
@@ -26,6 +13,6 @@ export type LabelWrapperConfigType = {
   `,
 })
 export class LabelWrapper {
-  @Input() config: LabelWrapperConfigType;
+  @Input() config: WrapperConfigType;
   constructor() { }
 }
