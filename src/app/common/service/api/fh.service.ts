@@ -11,7 +11,9 @@ export class FHService{
     let oApiParam = {
       name: 'federalHierarchy',
       suffix: '/'+id,
-      oParam: {},
+      oParam: {
+        'sort': 'name'
+      },
       method: 'GET'
     };
     if (includeParentLevels) {

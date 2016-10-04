@@ -3,15 +3,21 @@ import {
   inject,
   TestBed
 } from '@angular/core/testing';
+import { Router } from '@angular/router';
 
 // SAM Imports
 import { Home } from './home.component';
+
+class RouterStub {
+  navigate(url: string) { return url; }
+}
 
 describe('Home', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
     providers: [
-      Home
+      Home,
+      { provide: Router, useClass: RouterStub }
     ]
   }));
 

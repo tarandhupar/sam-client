@@ -17,17 +17,19 @@ export class DictionaryService {
         method: 'GET'
     };
 
-    return this.oAPIService.call(oApiParam).map(data => {
+    var obj = this.oAPIService.call(oApiParam).map(data => {
         data = data._embedded.jSONObjectList;
         var dictionary = {};
         for(var dictionaryJSON of data) {
             dictionaryJSON = dictionaryJSON.content;
             this.updateTreeNodes(dictionaryJSON.id, dictionaryJSON.elements, null);
             dictionary[dictionaryJSON.id] = dictionaryJSON.elements;
-        };
+        }
 
         return dictionary;
     });
+
+    return obj;
   }
 
   private updateTreeNodes(dictionaryName:any, elements:any, parent:any) {

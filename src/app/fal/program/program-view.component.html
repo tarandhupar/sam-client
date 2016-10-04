@@ -3,7 +3,7 @@
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <br><br>
-    <img src="/assets/logo.png">
+    <!--<img src="/assets/logo.png">-->
     <!--Side Navigation-->
     <nav>
       <ul class="usa-sidenav-list">
@@ -77,38 +77,7 @@
     <section>
       <h2 id="financial-information">Financial Information</h2>
 
-      <svg width="650" height="300"></svg>
-
-      <table>
-        <thead>
-        <tr>
-          <th></th>
-          <th scope="col">FY 15</th>
-          <th scope="col">FY 16 (est.)</th>
-          <th scope="col">FY 17 (est.)</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-          <th scope="row">Cooperative Agreements</th>
-          <td>8.000.000</td>
-          <td>8.000.000</td>
-          <td>8.000.000</td>
-        </tr>
-        <tr>
-          <th scope="row">Formula Grants</th>
-          <td>294.067.800</td>
-          <td>285.856.800</td>
-          <td>298.839.800</td>
-        </tr>
-        <tr>
-          <th scope="row">Dissemination of Technical Information</th>
-          <td>95.000.000</td>
-          <td>80.000.000</td>
-          <td>70.000.000</td>
-        </tr>
-        </tbody>
-      </table>
+      <div id="visualization"></div>
 
       <h3>Range and Average of Financial Assistance:</h3>
 
@@ -504,16 +473,18 @@
     <!--History Section-->
     <section *ngIf="oHistoricalIndex">
       <h2 id="history">History</h2><br>
-      <div id="historyItem" *ngFor="let item of oHistoricalIndex">
-        <p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
-          {{item.fiscalYear}} ({{item.statusCode}})
-          <span class="historyDetails">{{item.actionType | historicalIndexLabel}}</span>
-        </p>
-        <p id="fiscalYear" *ngIf="!item.statusCode">
-          {{item.fiscalYear}}
-          <span class="historyDetails" >{{item.actionType | historicalIndexLabel}}</span>
-        </p>
-        <p id="changeDescription">{{item.changeDescription}}</p>
+      <div *ngFor="let item of oHistoricalIndex">
+        <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">
+          <p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
+            {{item.fiscalYear}} ({{item.statusCode}})
+            <span class="historyDetails">{{item.actionType | historicalIndexLabel}}</span>
+          </p>
+          <p id="fiscalYear" *ngIf="!item.statusCode">
+            {{item.fiscalYear}}
+            <span class="historyDetails" >{{item.actionType | historicalIndexLabel}}</span>
+          </p>
+          <p id="changeDescription">{{item.changeDescription}}</p>
+        </div>
       </div>
     </section>
 
