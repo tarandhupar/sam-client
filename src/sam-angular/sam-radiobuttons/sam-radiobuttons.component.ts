@@ -19,7 +19,7 @@ export type RadioButtonsConfigType = {
 @Component({
   selector: 'samRadioButtons2',
   template: `
-      <fieldsetWrapper [config]="config.wrapper">
+      <fieldsetWrapper [label]="config.wrapper.label" [name]="config.wrapper.name" [hint]="config.wrapper.hint" [errorMessage]="config.wrapper.errorMessage">
         <ul class="usa-unstyled-list">
           <li *ngFor="let option of config.options; let i = index">
             <input [attr.id]="option.name" type="radio" (change)="onChange(option.value)" [attr.name]="config.name" [checked]="model === option.value">

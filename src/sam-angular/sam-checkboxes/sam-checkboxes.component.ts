@@ -28,7 +28,7 @@ export type CheckboxesConfigType = {
 @Component({
   selector: 'samCheckboxes2',
   template: `
-      <fieldsetWrapper [config]="config.wrapper">
+      <fieldsetWrapper [label]="config.wrapper.label" [name]="config.wrapper.name" [hint]="config.wrapper.hint" [errorMessage]="config.wrapper.errorMessage">
         <ul class="usa-unstyled-list">
           <li *ngIf="config.hasSelectAll">
             <input [attr.id]="checkAllLabelName()" type="checkbox" (change)="onSelectAllChange($event.target.checked)">

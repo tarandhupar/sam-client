@@ -1,18 +1,21 @@
 import { Component, Input } from '@angular/core';
-import { WrapperConfigType } from '../types';
 
 @Component({
   selector: 'labelWrapper',
   template: `
-    <div [class.usa-input-error]="!!config.errorMessage">
-      <label [attr.for]="config.name" [class.usa-input-error-label]="config.errorMessage">{{config.label}}</label>
-      <span *ngIf="config.errorMessage" class="usa-input-error-message">{{config.errorMessage}}</span>
-      <span *ngIf="config.hint" class="usa-form-hint">{{config.hint}}</span>
+    <div [class.usa-input-error]="!!errorMessage">
+      <label [attr.for]="name" [class.usa-input-error-label]="errorMessage">{{label}}</label>
+      <span *ngIf="errorMessage" class="usa-input-error-message">{{errorMessage}}</span>
+      <span *ngIf="hint" class="usa-form-hint">{{hint}}</span>
       <ng-content></ng-content>
     </div>
   `,
 })
 export class LabelWrapper {
-  @Input() config: WrapperConfigType;
+  @Input() label: string;
+  @Input() name: string;
+  @Input() hint: string;
+  @Input() errorMessage: string;
+
   constructor() { }
 }
