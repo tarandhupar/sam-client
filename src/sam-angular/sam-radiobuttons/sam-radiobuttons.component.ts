@@ -19,10 +19,10 @@ export type RadioButtonsConfigType = {
 @Component({
   selector: 'samRadioButtons2',
   template: `
-      <fieldsetWrapper [label]="config.wrapper.label" [name]="config.wrapper.name" [hint]="config.wrapper.hint" [errorMessage]="config.wrapper.errorMessage">
+      <fieldsetWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage">
         <ul class="usa-unstyled-list">
-          <li *ngFor="let option of config.options; let i = index">
-            <input [attr.id]="option.name" type="radio" (change)="onChange(option.value)" [attr.name]="config.name" [checked]="model === option.value">
+          <li *ngFor="let option of options; let i = index">
+            <input [attr.id]="option.name" type="radio" (change)="onChange(option.value)" [attr.name]="name" [checked]="model === option.value">
             <label [attr.for]="option.name">{{option.label}}</label>
           </li>
         </ul>
@@ -30,21 +30,19 @@ export type RadioButtonsConfigType = {
   `,
 })
 export class SamRadioButtonsComponent {
-  @Input() config: RadioButtonsConfigType;
   @Input() model: any = {};
+  @Input() options: OptionsType;
+  @Input() label: string;
+  @Input() name: string;
+  @Input() hint: string;
+  @Input() errorMessage: string;
+
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
 
   @ViewChild(FieldsetWrapper)
   public wrapper: FieldsetWrapper;
 
-  constructor() {
-
-  }
-
-  ngOnInit() {
-    this.config.wrapper = this.config.wrapper || {};
-    this.config.wrapper.label = this.config.label;
-  }
+  constructor() { }
 
   onChange(value) {
     this.model = value;

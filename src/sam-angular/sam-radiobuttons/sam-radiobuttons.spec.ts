@@ -30,16 +30,17 @@ describe('The Sam Radio Buttons component', () => {
 
     fixture = TestBed.createComponent(SamRadioButtonsComponent);
     component = fixture.componentInstance;
+    component.options = defaultOptions.options;
+    component.label = defaultOptions.label;
+    component.name = defaultOptions.name;
   });
 
   it('should display 3 radiobuttons if 3 options are specified by the config', function () {
-    component.config = defaultOptions;
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('input').length).toBe(options.length);
   });
 
   it('should allow an initial value to be set by the model input', async(() => {
-    component.config = defaultOptions;
     component.model = 'ma';
     fixture.detectChanges();
     let checkedElement = fixture.debugElement.query(By.css(':checked + label'));
@@ -48,7 +49,6 @@ describe('The Sam Radio Buttons component', () => {
   }));
 
   it('should deselect one radio button when another is clicked', function () {
-    component.config = defaultOptions;
     component.model = 'ma';
     fixture.detectChanges();
     let label1 = fixture.debugElement.query(By.css(':checked + label')).nativeElement.innerHTML;
@@ -60,24 +60,21 @@ describe('The Sam Radio Buttons component', () => {
 
   it('should show a hint message', function () {
     let hint = "Life pro tip: eat vegetables";
-    component.config = defaultOptions;
-    component.config.wrapper.hint = hint;
+    component.hint = hint;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(hint);
   });
 
   it('should show an error message', function () {
     let errorMessage = "Uh-oh, something went wrong";
-    component.config = defaultOptions;
-    component.config.wrapper.errorMessage = errorMessage;
+    component.errorMessage = errorMessage;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(errorMessage);
   });
 
   it('should show a label', function () {
     let labelText = "Pick from the following options";
-    component.config = defaultOptions;
-    component.config.label = labelText;
+    component.label = labelText;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(labelText);
   });

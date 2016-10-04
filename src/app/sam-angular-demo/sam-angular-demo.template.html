@@ -71,7 +71,13 @@
 <div class="usa-grid">
   <h2>Radiobuttons Component &lt;samRadioButtons&gt;</h2>
   <div class="usa-width-one-third">
-    <samRadioButtons2 [(model)]="radioModel" [config]="radioConfig"></samRadioButtons2>
+    <samRadioButtons2
+      [(model)]="radioModel"
+      [options]="radioConfig.options"
+      [label]="radioConfig.label"
+      [hint]="radioConfig.hint"
+      [errorMessage]="radioConfig.errorMessage">
+    </samRadioButtons2>
   </div>
   <div class="usa-width-one-third">
     <fieldset class="usa-fieldset-inputs usa-sans">
@@ -79,15 +85,15 @@
       <ul class="usa-unstyled-list">
         <li>
           <label>Label text</label>
-          <input type="text" [(ngModel)]="radioConfig.wrapper.label">
+          <input type="text" [(ngModel)]="radioConfig.label">
         </li>
         <li>
           <label>Error message text</label>
-          <input type="text" [(ngModel)]="radioConfig.wrapper.errorMessage">
+          <input type="text" [(ngModel)]="radioConfig.errorMessage">
         </li>
         <li>
           <label>Hint text</label>
-          <input type="text" [(ngModel)]="radioConfig.wrapper.hint">
+          <input type="text" [(ngModel)]="radioConfig.hint">
         </li>
       </ul>
     </fieldset>

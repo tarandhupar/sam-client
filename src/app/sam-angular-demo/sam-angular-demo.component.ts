@@ -48,11 +48,8 @@ export class SamAngularDemo {
     ],
     name: 'radio-component',
     label: 'Select a region',
-    wrapper: {
-      label: 'Select a region',
-      errorMessage: '',
-      hint: ''
-    }
+    errorMessage: '',
+    hint: ''
   };
 
   constructor() {  }
