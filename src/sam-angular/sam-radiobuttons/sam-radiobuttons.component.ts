@@ -2,13 +2,6 @@ import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core
 import { FieldsetWrapper } from '../common/wrappers/fieldset-wrapper.component';
 import { OptionsType } from '../common/types';
 
-export type RadioButtonsConfigType = {
-  options: OptionsType, // an array of radio buttons
-  label: string, // descriptive name that will be the legend, can contain spaces
-  name: string, // machine readable name that will group the buttons, cannot contain spaces
-  wrapper?: any
-};
-
 /**
  * The <samRadioButtons> component is a set of checkboxes compliant with sam.gov standards
  * https://gsa.github.io/sam-web-design-standards/
