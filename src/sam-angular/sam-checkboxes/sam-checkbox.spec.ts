@@ -19,9 +19,6 @@ describe('The Sam Checkboxes component', () => {
     options: options,
     label: 'I am a checkbox',
     name: 'i-am-a-checkbox',
-    wrapper: {
-      label: 'I am a checkbox'
-    }
   };
 
   let model = ['ma'];
@@ -35,24 +32,24 @@ describe('The Sam Checkboxes component', () => {
 
     fixture = TestBed.createComponent(SamCheckboxesComponent);
     component = fixture.componentInstance;
+    component.label = defaultConfig.label;
+    component.name = defaultConfig.name;
+    component.options = defaultConfig.options;
   });
 
   it('should display 3 checkboxes if 3 options are specified by the config', function () {
-    component.config = defaultConfig;
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('input').length).toBe(options.length);
   });
 
   it('should display 4 options if select all is specified', function () {
-    component.config = defaultConfig;
-    component.config.hasSelectAll = true;
+    component.hasSelectAll = true;
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('input').length).toBe(options.length + 1);
   });
 
   it('should select all elements if select all is checked', async(() => {
-    component.config = defaultConfig;
-    component.config.hasSelectAll = true;
+    component.hasSelectAll = true;
     fixture.detectChanges();
     let selectAllElement = fixture.nativeElement.getElementsByTagName('input')[0];
     selectAllElement.click();
@@ -63,8 +60,7 @@ describe('The Sam Checkboxes component', () => {
   }));
 
   it('should deselect all elements if select all is checked twice', async(() => {
-    component.config = defaultConfig;
-    component.config.hasSelectAll = true;
+    component.hasSelectAll = true;
     fixture.detectChanges();
     let selectAllElement = fixture.nativeElement.getElementsByTagName('input')[0];
     selectAllElement.click();
@@ -77,7 +73,6 @@ describe('The Sam Checkboxes component', () => {
   }));
 
   it('should allow an initial value to be set by the model input', async(() => {
-    component.config = defaultConfig;
     component.model = ['ma'];
     fixture.detectChanges();
     setTimeout(() => {
@@ -88,24 +83,21 @@ describe('The Sam Checkboxes component', () => {
 
   it('should show a hint message', function () {
     let hint = "Life pro tip: eat vegetables";
-    component.config = defaultConfig;
-    component.config.wrapper.hint = hint;
+    component.hint = hint;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(hint);
   });
 
   it('should show an error message', function () {
     let errorMessage = "Uh-oh, something went wrong";
-    component.config = defaultConfig;
-    component.config.wrapper.errorMessage = errorMessage;
+    component.errorMessage = errorMessage;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(errorMessage);
   });
 
   it('should show a label', function () {
     let labelText = "Pick from the following options";
-    component.config = defaultConfig;
-    component.config.label = labelText;
+    component.label = labelText;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(labelText);
   });

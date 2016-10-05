@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CheckboxesConfigType, RadioButtonsConfigType, SelectConfigType } from '../../sam-angular'
+import { SelectConfigType } from '../../sam-angular'
 
 @Component({
   styleUrls: ['./sam-angular-demo.css'],
@@ -25,7 +25,7 @@ export class SamAngularDemo {
 
   // Checkboxes Component
   checkboxModel: any = ['ma'];
-  checkboxConfig: CheckboxesConfigType = {
+  checkboxConfig = {
     options: [
       {value: 'dc', label: 'DC', name: 'checkbox-dc'},
       {value: 'ma', label: 'Maryland', name: 'checkbox-maryland'},
@@ -40,7 +40,7 @@ export class SamAngularDemo {
 
   // Radio Component
   radioModel: any = 'ma';
-  radioConfig: RadioButtonsConfigType = {
+  radioConfig = {
     options: [
       {value: 'dc', label: 'DC', name: 'radio-dc'},
       {value: 'ma', label: 'Maryland', name: 'radio-maryland'},

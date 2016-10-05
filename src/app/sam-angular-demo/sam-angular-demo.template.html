@@ -38,7 +38,14 @@
 <div class="usa-grid">
   <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
   <div class="usa-width-one-third">
-    <samCheckboxes2 [(model)]="checkboxModel" [config]="checkboxConfig"></samCheckboxes2>
+    <samCheckboxes2
+      [(model)]="checkboxModel"
+      [options]="checkboxConfig.options"
+      [label]="checkboxConfig.label"
+      [hint]="checkboxConfig.hint"
+      [errorMessage]="checkboxConfig.errorMessage"
+      [hasSelectAll]="checkboxConfig.hasSelectAll">
+    </samCheckboxes2>
   </div>
   <div class="usa-width-one-third">
     <fieldset class="usa-fieldset-inputs usa-sans">
@@ -50,15 +57,15 @@
         </li>
         <li>
           <label>Label text</label>
-          <input type="text" [(ngModel)]="checkboxConfig.wrapper.label">
+          <input type="text" [(ngModel)]="checkboxConfig.label">
         </li>
         <li>
           <label>Error message text</label>
-          <input type="text" [(ngModel)]="checkboxConfig.wrapper.errorMessage">
+          <input type="text" [(ngModel)]="checkboxConfig.errorMessage">
         </li>
         <li>
           <label>Hint text</label>
-          <input type="text" [(ngModel)]="checkboxConfig.wrapper.hint">
+          <input type="text" [(ngModel)]="checkboxConfig.hint">
         </li>
       </ul>
     </fieldset>
