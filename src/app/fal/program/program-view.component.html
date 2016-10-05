@@ -21,6 +21,11 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths">
+    <div *ngIf="oProgram && aAlert.length > 0">
+       <div *ngFor="let oAlert of aAlert">
+            <samAlert labelname="oAlert.labelname" [config]="oAlert.config"></samAlert>
+        </div>
+    </div>
     <div *ngIf="oProgram">
       <h1>
         {{oProgram?.program?.data?.title}}
@@ -42,7 +47,6 @@
         </span>
     </p>
     <h2 id="overview">Overview</h2>
-    <samLabel labelname="coming-soon-label" [config]="{type:'small', data:'Coming soon'}"></samLabel>
     <!--Objectives-->
     <section *ngIf="oProgram">
       <h3>Objectives:</h3>

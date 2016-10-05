@@ -6,6 +6,7 @@ import { SamFooter } from "./sam-footer";
 import { SamHeader } from "./sam-header";
 import { SamSpace } from "./sam-space";
 import { SamButton } from "./sam-button";
+import { SamAlert } from "./sam-alert";
 import { SamLabel } from "./sam-label";
 import { SamAccordions } from "./sam-accordions";
 import { SamSelect } from "./sam-select";
@@ -24,6 +25,7 @@ import { SamSelect } from "./sam-select";
     SamLabel,
     SamAccordions,
     SamSelect,
+    SamAlert,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +38,7 @@ import { SamSelect } from "./sam-select";
     SamLabel,
     SamAccordions,
     SamSelect,
+    SamAlert,
   ],
   providers: [ ]
 })

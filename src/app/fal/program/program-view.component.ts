@@ -31,6 +31,7 @@ export class ProgramViewComponent implements OnInit {
   aDictionaries:any = [];
   authorizationIdsGrouped:any[];
   oHistoricalIndex:any;
+  aAlert:any = [];
 
   private sub:Subscription;
 
@@ -69,6 +70,13 @@ export class ProgramViewComponent implements OnInit {
       this.oProgramService.getProgramById(id).subscribe(res => {
           this.oProgram = res;
 
+          //check if this program has changed in this FY
+          if ((new Date(this.oProgram.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
+              this.aAlert.push({"labelname":"not-updated-since", "config":{ "type": "warning", "title": "", "description": "Note: \n\
+This Federal Assistance Listing was not updated by the issuing agency in Fiscal Year "+(new Date()).getFullYear()+". \n\
+Please contact the issuing agency listed under \"Contact Information\" for more information" }});
+          }
+          
           this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
             for (var key in res) {
               this.aDictionaries[key] = res[key];
