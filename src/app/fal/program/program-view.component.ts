@@ -16,9 +16,9 @@ import * as d3 from 'd3';
   templateUrl: 'program-view.component.html',
   styleUrls: ['program-view.style.css'],
   providers: [
-    FHService, 
-    ProgramService, 
-    DictionaryService, 
+    FHService,
+    ProgramService,
+    DictionaryService,
     HistoricalIndexService,
     FilterMultiArrayObjectPipe
   ]
@@ -35,11 +35,11 @@ export class ProgramViewComponent implements OnInit {
   private sub:Subscription;
 
     constructor(
-      private route:ActivatedRoute, 
-      private location:Location, 
+      private route:ActivatedRoute,
+      private location:Location,
       private oHistoricalIndexService: HistoricalIndexService,
-      private oProgramService:ProgramService, 
-      private oFHService:FHService, 
+      private oProgramService:ProgramService,
+      private oFHService:FHService,
       private oDictionaryService:DictionaryService,
       private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) {}
 
@@ -91,7 +91,9 @@ export class ProgramViewComponent implements OnInit {
           if (this.oProgram.program.data.relatedPrograms.flag != "na") {
             for (let programId of this.oProgram.program.data.relatedPrograms.relatedTo) {
               this.oProgramService.getProgramById(programId).subscribe(relatedFal => {
-                this.aRelatedProgram.push({"programNumber": relatedFal.program.data.programNumber, "id": relatedFal.program.data._id})
+                if (relatedFal.program.archived == "false" && relatedFal.program.latest == "true"){
+                  this.aRelatedProgram.push({"programNumber": relatedFal.program.data.programNumber, "id": relatedFal.program.data._id});
+              }
               })
             }
           }
@@ -280,7 +282,7 @@ export class ProgramViewComponent implements OnInit {
       let transformedGraphData = graphData();
       let transformedData = [];
       let yearTotals = {};
-      
+
       transformedData["columns"] = ["Obligation(s)"];
       yearTotals[transformedData["columns"][0]] = "Total";
 
@@ -311,5 +313,5 @@ export class ProgramViewComponent implements OnInit {
     }
 
   }
-  
+
 }
