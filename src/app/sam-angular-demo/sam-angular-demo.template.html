@@ -1,7 +1,14 @@
 <div class="usa-grid">
   <h2>Select Component &lt;samSelect&gt;</h2>
   <div class="usa-width-one-third">
-    <samSelect2 [(model)]="selectModel" [config]="selectConfig"></samSelect2>
+    <samSelect2
+      [(model)]="selectModel"
+      [options]="selectConfig.options"
+      [label]="selectConfig.label"
+      [hint]="selectConfig.hint"
+      [errorMessage]="selectConfig.errorMessage"
+      [disabled]="selectConfig.disabled">
+    </samSelect2>
   </div>
   <div class="usa-width-one-third">
     <fieldset class="usa-fieldset-inputs usa-sans">
@@ -17,15 +24,15 @@
         </li>
         <li>
           <label>Label text</label>
-          <input type="text" [(ngModel)]="selectConfig.wrapper.label">
+          <input type="text" [(ngModel)]="selectConfig.label">
         </li>
         <li>
           <label>Error message text</label>
-          <input type="text" [(ngModel)]="selectConfig.wrapper.errorMessage">
+          <input type="text" [(ngModel)]="selectConfig.errorMessage">
         </li>
         <li>
           <label>Hint text</label>
-          <input type="text" [(ngModel)]="selectConfig.wrapper.hint">
+          <input type="text" [(ngModel)]="selectConfig.hint">
         </li>
       </ul>
     </fieldset>

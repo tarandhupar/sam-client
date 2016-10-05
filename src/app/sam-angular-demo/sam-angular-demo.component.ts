@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { SelectConfigType } from '../../sam-angular'
 
 @Component({
   styleUrls: ['./sam-angular-demo.css'],
@@ -8,19 +7,16 @@ import { SelectConfigType } from '../../sam-angular'
 export class SamAngularDemo {
   // Select Component
   selectModel = '';
-  selectConfig: SelectConfigType = {
+  selectConfig = {
     options: [
       {value:'', label: 'Default option', name: 'empty', disabled: true},
       {value: 'dc', label: 'Washington DC', name: 'dc'},
       {value: 'ma', label: 'Maryland', name: 'maryland'},
       {value: 'va', label: 'Virginia', name: 'virginia'},
     ],
+    disabled: false,
     label: 'region',
     name: 'region',
-    wrapper: {
-      label: 'Region',
-      name: 'region',
-    }
   };
 
   // Checkboxes Component
@@ -33,9 +29,6 @@ export class SamAngularDemo {
     ],
     name: 'my-sr-name',
     label: 'Select a region',
-    wrapper: {
-        label: 'Select a region'
-    }
   };
 
   // Radio Component

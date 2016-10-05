@@ -29,16 +29,17 @@ describe('The Sam Select component', () => {
 
     fixture = TestBed.createComponent(SamSelectComponent);
     component = fixture.componentInstance;
+    component.options = defaultConfig.options;
+    component.label = defaultConfig.label;
+    component.name = defaultConfig.name;
   });
 
   it('should display 3 options if 3 options are specified by the config', function () {
-    component.config = defaultConfig;
     fixture.detectChanges();
     expect(fixture.nativeElement.getElementsByTagName('option').length).toBe(options.length);
   });
 
   it('should allow an initial value to be set by the model input', async(() => {
-    component.config = defaultConfig;
     component.model = 2;
     fixture.detectChanges();
     setTimeout(() => {
@@ -49,31 +50,27 @@ describe('The Sam Select component', () => {
 
   it('should show a hint message', function () {
     let hint = "Life pro tip: eat vegetables";
-    component.config = defaultConfig;
-    component.config.wrapper.hint = hint;
+    component.hint = hint;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(hint);
   });
 
   it('should show an error message', function () {
     let errorMessage = "Uh-oh, something went wrong";
-    component.config = defaultConfig;
-    component.config.wrapper.errorMessage = errorMessage;
+    component.errorMessage = errorMessage;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(errorMessage);
   });
 
   it('should show a label', function () {
     let labelText = "Pick from the following options";
-    component.config = defaultConfig;
-    component.config.wrapper.label = labelText;
+    component.label = labelText;
     fixture.detectChanges();
     expect(fixture.nativeElement.innerHTML).toContain(labelText);
   });
 
   it('should disable the dropdown', async(() => {
-    component.config = defaultConfig;
-    component.config.disabled = true;
+    component.disabled = true;
     fixture.detectChanges();
     setTimeout(() => {
       let selectElement = fixture.nativeElement.getElementsByTagName('select')[0];

@@ -27,7 +27,7 @@ import { OptionsType } from '../common/types';
   `,
 })
 export class SamCheckboxesComponent {
-  @Input() model: [string|number|symbol] = [];
+  @Input() model: any = [];
   @Input() options: OptionsType;
   @Input() label: string;
   @Input() name: string;
