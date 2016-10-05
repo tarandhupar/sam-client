@@ -7,6 +7,12 @@ import { OptionsType } from '../common/types';
  * https://gsa.github.io/sam-web-design-standards/
  *
  * @Input/@Output model - the bound value of the component
+ * @Input options: [{Option}] - the array of checkbox values and labels (see OptionsType)
+ * @Input label: string - the content of <label>
+ * @Input name: string - semantic description for the component
+ * @Input hint: string - helpful text for the using the component
+ * @Input errorMessage: string - red error message
+ * @Input hasSelectAll: boolean - if true, an addition checkbox is added that selects all the checkboxes
  */
 @Component({
   selector: 'samCheckboxes2',

@@ -3,7 +3,15 @@ import { LabelWrapper } from '../common/wrappers/label-wrapper.component';
 import { OptionsType } from '../common/types';
 
 /**
- * @Input() model - the value of the select component
+ * The <samSelect> component is a select/options group compliant with sam.gov standards
+ * https://gsa.github.io/sam-web-design-standards/
+ *
+ * @Input/@Output model - the bound value of the component
+ * @Input options: [{Option}] - the array of checkbox values and labels (see OptionsType)
+ * @Input label: string - the innerHtml of <fieldset>
+ * @Input name: string - semantic description for the component
+ * @Input hint: string - helpful text for the using the component
+ * @Input errorMessage: string - red error message
  *
  */
 @Component({
