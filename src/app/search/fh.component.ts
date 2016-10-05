@@ -56,7 +56,7 @@ export class FHInputComponent implements OnInit {
       if(this.organizationId.length > 0) {
         this.oFHService.getFederalHierarchyById(this.organizationId, true, true).subscribe(res => {
           //inferring department match
-          if(res.elementId == this.organizationId) {
+          if(res.elementId === this.organizationId) {
             this.selectedDeptId = res.elementId;
             this.setOrganizationId("department");
           }
