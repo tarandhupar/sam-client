@@ -2,7 +2,6 @@ import { async, inject, TestBed, fakeAsync, ComponentFixture } from '@angular/co
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { MockBackend } from '@angular/http/testing';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 
@@ -13,10 +12,12 @@ import {ProgramService} from '../services/program.service';
 import {DictionaryService} from '../services/dictionary.service';
 import {HistoricalIndexService} from '../services/historical-index.service';
 import { FilterMultiArrayObjectPipe } from '../../common/pipes/filter-multi-array-object.pipe';
+import {SamUIKitModule} from '../../common/samuikit/samuikit.module';
+import { Observable } from 'rxjs';
 
-TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
 
 let fixture;
+let comp;
 
 //let MockAPIService = {
 //    call: (oApiParam) => {
@@ -52,10 +53,9 @@ let activatedRouteStub = {
 };
 
 describe('ProgramViewComponent', () => {
-
-  beforeEach(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ProgramViewComponent],
+      declarations: [ ProgramViewComponent ], //declare main and subcomponents
       providers: [
        //start - Mocks HTTP provider
         BaseRequestOptions,
@@ -76,20 +76,42 @@ describe('ProgramViewComponent', () => {
         { provide: HistoricalIndexService, useValue: MockHistoricalIndexService },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
       ],
-      imports: [ FormsModule ]
+      imports: [ SamUIKitModule ]
     });
 
-    fixture = TestBed.createComponent(ProgramViewComponent);
-  });
+    //final compile
+    TestBed.compileComponents().then( ()=>{
+      //create main component
+      fixture = TestBed.createComponent(ProgramViewComponent);
+      comp = fixture.componentInstance; 
+//      comp.searchService = fixture.debugElement.injector.get(SearchService);
+//      comp.data= [{},{}];
+      fixture.detectChanges();// trigger data binding
+    });
+    
+  }));
+  
+//  it('should "run" a search', inject([SearchService],(service: SearchService) => {
+//    fixture.detectChanges();
+//    comp.searchService = service; //Todo: confirm correct way to make stubservice override real service for test, setting the provider statement in the configuration doesn't seem to work
+//    comp.runSearch();	 
+//    fixture.whenStable().then(() => { 
+//      fixture.detectChanges(); 
+//      expect(comp.data.results[0].title).toBe("Dummy Result 1");
+//    }); 
+//	}));
 
-//  it('should render something', async(() => {
-//    const element = this.fixture.nativeElement;
-//    
-//    console.log('should render something', element)
-////    this.fixture.componentInstance.users = ['John'];
-////    this.fixture.detectChanges();
-////    expect(element.querySelectorAll('span').length).toBe(1);
-//  }));
+
+
+//  it('should "run" a search', inject([SearchService],(service: SearchService) => {
+//    fixture.detectChanges();
+//    comp.searchService = service; //Todo: confirm correct way to make stubservice override real service for test, setting the provider statement in the configuration doesn't seem to work
+//    comp.runSearch();	 
+//    fixture.whenStable().then(() => { 
+//      fixture.detectChanges(); 
+//      expect(comp.data.results[0].title).toBe("Dummy Result 1");
+//    }); 
+//	}));
+
 
 });
-
