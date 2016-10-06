@@ -1,0 +1,33 @@
+<div class="usa-grid m_B-6x" id="search-div">
+
+  <form class="usa-search marginCenter relative" onsubmit="return false;">
+
+    <div class="usa-width-one-sixths" style="position: absolute; left: 0;">
+      <label #filter class=" black-text filter-btn pull-right" id="filter" >
+        <span class="usa-search-submit-text" >{{filterValue}}&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
+      </label>
+
+      <samSelect2 class="filter-select"
+                  [(model)]="selectModel"
+                  [options]="selectConfig.options"
+                  [label]="selectConfig.label"
+                  [hint]="selectConfig.hint"
+                  [errorMessage]="selectConfig.errorMessage"
+                  [disabled]="selectConfig.disabled"
+                  (modelChange)='onSelect($event)'>
+      </samSelect2>
+    </div>
+    <div class="usa-width-one-whole usa-search-small" id="search-bar-div" #wholediv>
+
+      <button #searchbtn type="submit"
+              class="pull-right usa-search-submit search-btn">
+        <span class="usa-search-submit-text">{{searchBtnText}} <i class="fa" [ngClass]="{'fa-search':size==='small'}"></i></span>
+      </button>
+      <input #inputbar [style.width]="inputbarWidth+'px'" id="search-input" style="float: right;max-width: 800px" type="search" name="search">
+
+    </div>
+
+
+  </form>
+
+</div>

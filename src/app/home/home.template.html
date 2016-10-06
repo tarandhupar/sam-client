@@ -1,26 +1,106 @@
-<div class="card-container usa-grid-full">
-	<div class="usa-width-one">
-  	<h1 class="sample-content">SAM CLIENT IMPLEMENTATION</h1>
-	</div>
-  <div class="usa-width-one">
-  	<form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch()" #f="ngForm">
-      <div class="usa-width-one-fourth">
-        <label for="index" class="usa-sr-only">Select an index</label>
-        <select name="index" id="index" [(ngModel)]="index">
-          <option [value]="indexes[0]" selected="true">All</option>
-					<option [value]="indexes[1]">Assistance Listings</option>
-          <option [value]="indexes[2]">Opportunities</option>
-        </select>
-      </div>
-    	<div role="search" class="usa-width-three-fourths">
-        <label class="usa-sr-only" for="search-field-big">Search big</label>
-        <input id="search-field-big" type="search" name="keyword" placeholder="#keyword" [(ngModel)]="keyword" autofocus>
-        <button type="submit">
-          <span class="usa-search-submit-text">Search</span>
-        </button>
-      </div>
-    </form>
+<div class="usa-grid-full">
+  <!--<div class="usa-width-one">-->
+  <!--<h1 class="sample-content">SAM CLIENT IMPLEMENTATION</h1>-->
+  <!--</div>-->
+  <!--<div class="usa-width-one">-->
+  <!--<form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch()" #f="ngForm">-->
+  <!--<div class="usa-width-one-fourth">-->
+  <!--<label for="index" class="usa-sr-only">Select an index</label>-->
+  <!--<select name="index" id="index" [(ngModel)]="index">-->
+  <!--<option [value]="indexes[0]" selected="true">All</option>-->
+  <!--<option [value]="indexes[1]">Assistance Listings</option>-->
+  <!--<option [value]="indexes[2]">Opportunities</option>-->
+  <!--</select>-->
+  <!--</div>-->
+  <!--<div role="search" class="usa-width-three-fourths">-->
+  <!--<label class="usa-sr-only" for="search-field-big">Search big</label>-->
+  <!--<input id="search-field-big" type="search" name="keyword" placeholder="#keyword" [(ngModel)]="keyword" autofocus>-->
+  <!--<button type="submit">-->
+  <!--<span class="usa-search-submit-text">Search</span>-->
+  <!--</button>-->
+  <!--</div>-->
+  <!--</form>-->
+  <!--</div>-->
+
+
+  <!--Introduction to the sam.gov website-->
+  <div class="usa-grid-full m_T-4x m_B-6x">
+    <p class="normal-text">
+      Bacon ipsum dolor amet picanha frankfurter jerky, cupim tongue
+      drumstick filet mignon ribeye porchetta kevin ground round salami spare ribs.
+    </p>
   </div>
-  <!-- empty space -->
-  <div style="height:500px;"></div>
+
+
+  <!--search bar-->
+  <samSearchbar [size]="'large'"></samSearchbar>
+
+
+  <!--Browser topics and the register button-->
+  <div class="usa-grid-full row m_T-6x">
+
+    <!--Browse Topics-->
+    <div class="usa-width-one-whole vertical-line">
+      <div class="usa-grid-full">
+
+        <div class="usa-grid-full">
+          <div class="pull-left">
+            <h2>Browse Topics</h2>
+          </div>
+        </div>
+
+        <!--Origin Format of Four Topics along with images-->
+        <div class="usa-width-one-whole">
+
+          <div class="usa-width-one-fourth">
+            <div class="usa-width-one-half marginCenter">
+              <div class="usa-grid-full image-wrap topic-image-link">
+                <a><img src="../assets/img/blank_icon.png"></a>
+              </div>
+              <div class="usa-grid-full centered">
+                <a id="origin-topic1-link">XYZ1</a>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="usa-width-one-fourth">
+            <div class="usa-width-one-half marginCenter">
+              <div class="usa-grid-full image-wrap topic-image-link">
+                <a><img src="../assets/img/blank_icon.png"></a>
+              </div>
+              <div class="usa-grid-full centered">
+                <a>XYZ2</a>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="usa-width-one-fourth">
+            <div class="usa-width-one-half marginCenter">
+              <div class="usa-grid-full image-wrap topic-image-link">
+                <a><img src="../assets/img/blank_icon.png"></a>
+              </div>
+              <div class="usa-grid-full centered">
+                <a>XYZ3</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="usa-width-one-fourth">
+            <div class="usa-width-one-half marginCenter">
+              <div class="usa-grid-full image-wrap topic-image-link">
+                <a><img src="../assets/img/blank_icon.png"></a>
+              </div>
+              <div class="usa-grid-full centered">
+                <a>XYZ4</a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
