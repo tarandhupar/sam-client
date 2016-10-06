@@ -31,10 +31,9 @@ export class Search implements OnInit{
 	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
-	popstate = true;
+	
 	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
-		console.log("niit??",this.router);
 		this.activatedRoute.queryParams.subscribe(
 			data => {
 				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
