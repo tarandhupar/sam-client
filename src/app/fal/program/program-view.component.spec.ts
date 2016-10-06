@@ -46,7 +46,7 @@ describe('ProgramViewComponent', () => {
         }
     };
     let activatedRouteStub = {
-      queryParams: {
+      params: {
          subscribe: () =>{
            return {};
          }
@@ -105,9 +105,7 @@ describe('ProgramViewComponent', () => {
 //	}));
 
 
-  it('should "run" a search', inject([Location, HistoricalIndexService, ProgramService, FHService, DictionaryService, FilterMultiArrayObjectPipe], 
-//  it('should "run" a search', inject([ActivatedRoute, Location, HistoricalIndexService, ProgramService, FHService, DictionaryService, FilterMultiArrayObjectPipe], 
-      (location:Location, oHistoricalIndexService: HistoricalIndexService, oProgramService:ProgramService, oFHService:FHService, oDictionaryService:DictionaryService, FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) => {
+  it('should "run" a search', () => {
         let element = fixture.nativeElement;
         fixture.detectChanges();
         console.log('element, ', element)
@@ -117,13 +115,7 @@ describe('ProgramViewComponent', () => {
 //      fixture.detectChanges(); 
 //      expect(comp.data.results[0].title).toBe("Dummy Result 1");
 //    }); 
-  }));
+  });
 
-//  it('should run with async', async(() => {
-//    const element = fixture.nativeElement;
-//    fixture.detectChanges();
-//    console.log('element, ', element)
-////    expect(element.querySelectorAll('span').length).toBe(2);
-//  }));
 
 });
