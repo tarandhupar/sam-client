@@ -64,6 +64,9 @@ var activatedRouteStub = {
      }
   }
 };
+var routerStub = {
+  navigate: (path,extras) =>{}
+};
 var fhServiceStub = { 
   getFederalHierarchyById: (id: string, includeParentLevels: boolean, includeChildrenLevels: boolean)=>{
     return Observable.of({
@@ -104,6 +107,10 @@ describe('SearchComponent', () => {
         {
           provide: ActivatedRoute, //override activatedRoute
           useValue: activatedRouteStub
+        },
+        {
+          provide: Router,
+          useValue: routerStub
         },
         { provide: APIService, //override APIservice
           useValue: apiServiceStub

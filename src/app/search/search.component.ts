@@ -1,5 +1,5 @@
 import { Component,OnInit } from '@angular/core';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import 'rxjs/add/operator/map';
 import { SearchService } from '../common/service/search.service';
@@ -31,18 +31,18 @@ export class Search implements OnInit{
 	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
-
-	constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService) { }
+	popstate = true;
+	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
-
+		console.log("niit??",this.router);
 		this.activatedRoute.queryParams.subscribe(
 			data => {
 				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
-                this.sourceOrganizationId = typeof data['sourceOrganizationId'] === "string" ? decodeURI(data['sourceOrganizationId']) : "";
-                this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-                this.runSearch(true);
+        this.sourceOrganizationId = typeof data['sourceOrganizationId'] === "string" ? decodeURI(data['sourceOrganizationId']) : "";
+        this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
+        this.runSearch(true);
 		});
 	}
 
@@ -52,16 +52,15 @@ export class Search implements OnInit{
 		this.sourceOrganizationId = orgArray[1];
 	}
 	runSearch(newSearch){
-		//push state to history
 		if(typeof window != "undefined"){
 			var qsobj = {};
-			if (!this.initLoad && history.pushState) {
+			if (!this.initLoad) {
 				if(this.organizationId.length>0){
 					qsobj['organizationId'] = this.organizationId;
 				}
-                if(this.sourceOrganizationId.length>0){
-                  qsobj['sourceOrganizationId'] = this.sourceOrganizationId;
-                }
+        if(this.sourceOrganizationId.length>0){
+          qsobj['sourceOrganizationId'] = this.sourceOrganizationId;
+        }
 				if(this.keyword.length>0){
 					qsobj['keyword'] = this.keyword;
 				}
@@ -74,10 +73,11 @@ export class Search implements OnInit{
 				else{
 					this.pageNum=0;
 				}
-				var qsString = Object.keys(qsobj).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(qsobj[k])}`).join('&');
 
-		    var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + qsString;
-		    window.history.pushState({path:newurl},'',newurl);
+		    let navigationExtras: NavigationExtras = {
+		      queryParams: qsobj
+		    };
+		    this.router.navigate(['/search'],navigationExtras);
 			}
 		}
 
