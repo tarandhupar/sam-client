@@ -3,7 +3,7 @@ import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { MockBackend } from '@angular/http/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import { ProgramViewComponent } from './program-view.component';
 import { APIService } from '../../common/service/api/api.service';
@@ -17,6 +17,7 @@ import { FilterMultiArrayObjectPipe } from '../../common/pipes/filter-multi-arra
 import { AuthorizationPipe } from '../pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from '../pipes/historical-index-label.pipe';
 import { SamUIKitModule } from '../../common/samuikit/samuikit.module';
+import { Observable } from 'rxjs';
 
 let fixture;
 let comp;
@@ -24,29 +25,24 @@ let comp;
 describe('ProgramViewComponent', () => {
   beforeEach(() => {
 
-    let MockAPIService = {
-        call: (oApiParam) => {
-            return {};
-        }
-    };
     let MockFHService = {
         getFederalHierarchyById: (id: string, includeParentLevels: boolean, includeChildrenLevels: boolean) => {
-            return {};
+            return Observable.of({});
         }
     };
     let MockProgramService = {
         getProgramById: (id: string) => {
-            return {};
+            return Observable.of({});
         }
     };
     let MockDictionaryService = {
         getDictionaryById: (id: string) => {
-            return {};
+            return Observable.of({ "functional_codes": {}});
         }
     };
     let MockHistoricalIndexService = {
         getHistoricalIndexByProgramNumber: (id: string, programNumber: string) => {
-            return {};
+            return Observable.of({});
         }
     };
     let activatedRouteStub = {
@@ -77,29 +73,25 @@ describe('ProgramViewComponent', () => {
           },
           deps: [MockBackend, BaseRequestOptions]
         },
-        { provide: APIService, useValue: MockAPIService },
+        APIService,
         { provide: Location, useClass: Location }, 
         { provide: FHService, useValue: MockFHService },
         { provide: ProgramService, useValue: MockProgramService },
         { provide: DictionaryService, useValue: MockDictionaryService },
         { provide: HistoricalIndexService, useValue: MockHistoricalIndexService },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        CapitalizePipe, 
+        FilterMultiArrayObjectPipe, 
+        KeysPipe, 
+        AuthorizationPipe, 
+        HistoricalIndexLabelPipe,
       ],
       imports: [ SamUIKitModule ]
     });
 
     fixture = TestBed.createComponent(ProgramViewComponent);
     comp = fixture.componentInstance; 
-
-    //final compile
-//    TestBed.compileComponents().then( ()=>{
-//      //create main component
-//      fixture = TestBed.createComponent(ProgramViewComponent);
-//      comp = fixture.componentInstance; 
-////      comp.searchService = fixture.debugElement.injector.get(SearchService);
-////      comp.data= [{},{}];
-//      fixture.detectChanges();// trigger data binding
-//    });
   });
 
 //  it('should "run" a search', inject([SearchService],(service: SearchService) => {
@@ -127,7 +119,7 @@ describe('ProgramViewComponent', () => {
 //    }); 
   }));
 
-//  it('should render list', async(() => {
+//  it('should run with async', async(() => {
 //    const element = fixture.nativeElement;
 //    fixture.detectChanges();
 //    console.log('element, ', element)
