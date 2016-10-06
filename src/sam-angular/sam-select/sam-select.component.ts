@@ -44,4 +44,7 @@ export class SamSelectComponent {
     this.model = val;
     this.modelChange.emit(val);
   }
+
+
+
 }
