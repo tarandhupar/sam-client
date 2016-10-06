@@ -91,9 +91,11 @@ export class ProgramViewComponent implements OnInit {
           if (this.oProgram.program.data.relatedPrograms.flag != "na") {
             for (let programId of this.oProgram.program.data.relatedPrograms.relatedTo) {
               this.oProgramService.getProgramById(programId).subscribe(relatedFal => {
-                if (relatedFal.program.archived == "false" && relatedFal.program.latest == "true"){
+                console.log("Latest: ", relatedFal.program.latest);
+                console.log("Archived: ", relatedFal.program.archived);
+                if (relatedFal.program.archived == false && relatedFal.program.latest == true){
                   this.aRelatedProgram.push({"programNumber": relatedFal.program.data.programNumber, "id": relatedFal.program.data._id});
-              }
+                }
               })
             }
           }
