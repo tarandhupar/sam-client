@@ -19,7 +19,7 @@ export class SamAccordions {
     private _componentInjectService : ComponentInjectService
   ) {
   }
-  
+
   ngOnInit(){
     this.html = this._componentInjectService.renderComponentHTML('accordions', this.config);
   }

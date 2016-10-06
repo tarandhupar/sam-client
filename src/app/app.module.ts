@@ -20,15 +20,8 @@ import { Home } from './home';
 import { NoContent } from './common/no-content';
 import { ProgramModule } from './fal';
 import { SearchModule } from './search';
-import { SamFooter } from "./common/samuikit/sam-footer";
-import { SamHeader } from "./common/samuikit/sam-header";
-import { SamSpace } from "./common/samuikit/sam-space";
 import { SamAngularDemo } from "./sam-angular-demo";
-import { SamButton } from "./common/samuikit/sam-button";
-import { SamLabel } from "./common/samuikit/sam-label";
-import { SamAccordions } from "./common/samuikit/sam-accordions";
-import { SamSelect } from "./common/samuikit/sam-select";
-
+import { SamUIKitModule } from './common/samuikit/samuikit.module';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -46,13 +39,6 @@ const APP_PROVIDERS = [
     Home,
     NoContent,
     SamAngularDemo,
-    SamFooter,
-    SamHeader,
-    SamSpace,
-    SamButton,
-    SamLabel,
-    SamAccordions,
-    SamSelect,
   ],
   imports: [ // import Angular's modules
     BrowserModule,
@@ -61,6 +47,7 @@ const APP_PROVIDERS = [
     RouterModule.forRoot(ROUTES, { useHash: false }),
     ProgramModule,
     SamAngularModule,
+    SamUIKitModule,
     SearchModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
