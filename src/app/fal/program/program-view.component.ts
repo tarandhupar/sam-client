@@ -74,7 +74,7 @@ export class ProgramViewComponent implements OnInit {
           if ((new Date(this.oProgram.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
               this.aAlert.push({"labelname":"not-updated-since", "config":{ "type": "warning", "title": "", "description": "Note: \n\
 This Federal Assistance Listing was not updated by the issuing agency in "+(new Date()).getFullYear()+". \n\
-Please contact the issuing agency listed under \"Contact Information\" for more information" }});
+Please contact the issuing agency listed under \"Contact Information\" for more information." }});
           }
           
           this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
