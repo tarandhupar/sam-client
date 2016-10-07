@@ -1,18 +1,6 @@
-<!-- includes HTML for app component-->
-<div>
-
-   <samSpace labelname = "space" ></samSpace>
-   <samHeader labelname = "header" ></samHeader>
-
-</div>
-
- <main>
-       <router-outlet></router-outlet>
- </main>
-
-
- <!--samButton (click)='clicked()' labelname = "button" [config] = buttonValue></samButton>
- <samLabel labelname="label" [config] = labelValue></samLabel>
- <samAccordions labelname = "accordions" [config] = accordionsValue></samAccordions>
- <samSelect labelname = "select" [config] = selectValue></samSelect-->
- <samFooter labelname = "footer" ></samFooter>
+<samSpace labelname = "space" ></samSpace>
+<samHeader2 (searchEvent)="onHeaderSearchEvent($event.searchText)"></samHeader2>
+<main>
+     <router-outlet></router-outlet>
+</main>
+<samFooter labelname = "footer" ></samFooter>
