@@ -30,6 +30,30 @@ export class FHInputComponent implements OnInit {
 	hasDepartmentChanged = false;
 	setDeptNullOnChange;
 	organizationConfiguration;
+  defaultDpmtOption = {value:'', label: 'Please select an Department', name: ''};
+  dpmtSelectConfig = {
+    options: [
+      this.defaultDpmtOption
+    ],
+    label: 'Department',
+    name: 'Department'
+  };
+  defaultAgencyOption = {value:'', label: 'Please select an Agency', name: ''};
+  agencySelectConfig = {
+    options: [
+      this.defaultAgencyOption
+    ],
+    label: 'Agency',
+    name: 'Agency'
+  };
+  defaultOfficeOption = {value:'', label: 'Please select an Office', name: ''};
+  officeSelectConfig = {
+    options: [
+      this.defaultOfficeOption
+    ],
+    label: 'Office',
+    name: 'Office'
+  };
 
 	constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService, private oAPIService:APIService){}
 
@@ -53,6 +77,8 @@ export class FHInputComponent implements OnInit {
 	initFederalHierarchyDropdowns(userRole){
 		this.initDictionaries("",true,false).subscribe( res => {
 			this.dictionary.aDepartment = res._embedded.hierarchy;
+            var formattedData = this.formatHierarchy("department",res._embedded.hierarchy);
+            this.dpmtSelectConfig.options = formattedData;
       if(this.organizationId.length > 0) {
         this.oFHService.getFederalHierarchyById(this.organizationId, true, true).subscribe(res => {
           //inferring department match
@@ -67,6 +93,8 @@ export class FHInputComponent implements OnInit {
               if(oData.type === 'DEPARTMENT') {
                 //initialize Department "Label" and Agency dropdown
                 this.dictionary.aAgency = oData.hierarchy;
+                var agencyformattedData = this.formatHierarchy("agency",oData.hierarchy);
+                this.agencySelectConfig.options = agencyformattedData;
                 this.selectedAgencyId = res.hierarchy[0].elementId;
                 this.setOrganizationId("agency");
               }
@@ -84,7 +112,6 @@ export class FHInputComponent implements OnInit {
         if(typeof this.selectedDeptId !== 'undefined' && this.selectedDeptId !== ''
                 && this.selectedDeptId !== null) {
           this.organizationId = this.selectedDeptId;
-
             //once user choose a different department, switch flag of hasDepartmentChanged
             this.hasDepartmentChanged = true;
         } else { //if department is not selected then set user's organization id
@@ -104,7 +131,9 @@ export class FHInputComponent implements OnInit {
             this.initDictionaries(this.organizationId, true, true).subscribe( oData => {
               if(oData.type === 'DEPARTMENT') {
                 //initialize Department "Label" and Agency dropdown
+                var formattedData = this.formatHierarchy("agency",oData.hierarchy);
                 this.dictionary.aAgency = oData.hierarchy;
+                this.agencySelectConfig.options = formattedData;
               }
             });
         }
@@ -140,6 +169,8 @@ export class FHInputComponent implements OnInit {
             if(oData.type === 'AGENCY') {
                 //initialize Department "Label" and Office dropdown
                 this.dictionary.aOffice = oData.hierarchy;
+                var formattedData = this.formatHierarchy("office",oData.hierarchy);
+                this.officeSelectConfig.options = formattedData;
             }
         });
         break;
@@ -172,4 +203,28 @@ export class FHInputComponent implements OnInit {
       });*/
   	}
 	}
+
+  formatHierarchy(type,data){
+    var formattedData = [];
+    switch(type){
+      case "department":
+        formattedData.push(this.defaultDpmtOption);
+        break;
+      case "agency":
+        formattedData.push(this.defaultAgencyOption);
+        break;
+      case "office":
+        formattedData.push(this.defaultOfficeOption);
+        break;
+    }
+
+    for(var idx in data){
+      var obj = {};
+      obj['value'] = data[idx].elementId;
+      obj['label'] = data[idx].name;
+      obj['name'] = data[idx].elementId;
+      formattedData.push(obj);
+    }
+    return formattedData;
+  }
 }

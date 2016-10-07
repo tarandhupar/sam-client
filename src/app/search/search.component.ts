@@ -31,18 +31,16 @@ export class Search implements OnInit{
 	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
-
+	showOptional:any = SHOW_OPTIONAL=="true";
 	constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService) { }
 	ngOnInit() {
-
 		this.activatedRoute.queryParams.subscribe(
 			data => {
 				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
-                this.sourceOrganizationId = typeof data['sourceOrganizationId'] === "string" ? decodeURI(data['sourceOrganizationId']) : "";
-                this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-                this.runSearch(true);
+        this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
+        this.runSearch(true);
 		});
 	}
 

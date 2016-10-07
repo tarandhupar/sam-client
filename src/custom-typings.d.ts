@@ -53,6 +53,7 @@ declare var System: SystemJS;
 //API Umbrella info
 declare var API_UMBRELLA_URL: string;
 declare var API_UMBRELLA_KEY: string;
+declare var SHOW_OPTIONAL: string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
@@ -63,6 +64,7 @@ interface GlobalEnvironment {
   HMR;
   API_UMBRELLA_URL;
   API_UMBRELLA_KEY;
+  SHOW_OPTIONAL;
   SystemJS: SystemJS;
   System: SystemJS;
 }
