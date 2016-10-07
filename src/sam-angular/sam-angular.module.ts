@@ -6,6 +6,10 @@ import { HttpModule } from '@angular/http';
 
 // Sam Angular Exports
 import { SamSelectComponent } from './sam-select';
+import { SamCheckboxesComponent } from "./sam-checkboxes";
+import { LabelWrapper } from './common/wrappers/label-wrapper.component';
+import { FieldsetWrapper } from './common/wrappers/fieldset-wrapper.component';
+import { SamRadioButtonsComponent } from "./sam-radiobuttons/sam-radiobuttons.component";
 
 
 /**
@@ -13,13 +17,9 @@ import { SamSelectComponent } from './sam-select';
  * https://gsa.github.io/sam-web-design-standards/
  */
 @NgModule({
-  declarations: [ SamSelectComponent ],
-  imports: [ // import Angular's modules
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-  ],
-  exports: [ SamSelectComponent ],
+  declarations: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent, LabelWrapper, FieldsetWrapper ],
+  imports: [ BrowserModule, FormsModule, HttpModule ],
+  exports: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent ],
   providers: [ ]
 })
 export class SamAngularModule { }
