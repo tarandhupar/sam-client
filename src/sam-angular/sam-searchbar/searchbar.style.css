@@ -27,3 +27,33 @@
   padding: 8px 10px 8px 10px;
   height: 3.3rem;
 }
+
+
+.div-fill{
+  display:block;
+  width: auto;
+  overflow: hidden;
+  float: none;
+  height: 3.3rem;
+}
+
+.div-left{
+  float:left;
+}
+
+.div-right{
+  float:right;
+}
+
+.div-left, .div-right{
+  width: auto;
+  display: inline-block;
+}
+
+.search-inputbar{
+  position: absolute;
+  top:0;
+  left: 0;
+  max-width: 800px;
+  width: 100%;
+}

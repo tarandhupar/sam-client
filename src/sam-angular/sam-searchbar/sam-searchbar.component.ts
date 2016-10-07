@@ -6,6 +6,7 @@ import {Component, ElementRef, Input, Output, ViewChild, EventEmitter} from '@an
  * https://gsa.github.io/sam-web-design-standards/
  * @Input size: string - 'small': show only the search icon on the search btn
  *                       'large': show the 'Search' text on the search btn
+ * @Output onSearch: output the search object that contains keyword and searchField(filter value)
  */
 @Component({
   selector: 'samSearchbar',
@@ -15,22 +16,20 @@ import {Component, ElementRef, Input, Output, ViewChild, EventEmitter} from '@an
 })
 export class SamSearchbarComponent {
 
+
   @Input()
   size: string;
 
   @Output()
-  selectChange:EventEmitter<any> = new EventEmitter<any>();
+  onSearch:EventEmitter<any> = new EventEmitter<any>();
 
-  @ViewChild('searchbtn')
-  searchbtn:ElementRef;
-  @ViewChild('wholediv')
-  wholediv:ElementRef;
-  @ViewChild('filter')
-  filter:ElementRef;
-
+  searchIndices = {
+    'All':'',
+    'Opportunities':'cfda',
+    'Assistance Listings':'fbo'
+  }
   searchBtnText:string = "Search";
-  inputbarWidth:any = 500;
-
+  keyword:string = "";
   filterValue:string = "All";
 
   selectConfig = {
@@ -51,28 +50,17 @@ export class SamSearchbarComponent {
     if(this.size === "small"){
       this.searchBtnText = "";
     }
-    console.log(this.searchBtnText);
-    setTimeout(()=>this.adjustInputBar());
-
   }
 
-  /**
-   * Change the filter label value when select, and adjust the input bar width if necessary
-   * @param value
-   */
   onSelect(value):void {
     this.filterValue = value;
-    this.selectChange.emit(this.filterValue);
-    setTimeout(()=>this.adjustInputBar());
   }
 
-  /**
-   * Adjust the input bar width according to the width of the filter label width and search btn width
-   */
-  adjustInputBar():void {
-    this.inputbarWidth = this.wholediv.nativeElement.offsetWidth
-                          - this.searchbtn.nativeElement.offsetWidth
-                          - this.filter.nativeElement.offsetWidth;
+  onSearch():void{
+    this.onSearch.emit({
+      keyword:this.keyword,
+      searchField: this.searchIndices[this.filterValue]
+    });
   }
 
 }
