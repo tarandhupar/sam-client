@@ -1,0 +1,59 @@
+.filter-btn{
+  width: auto;
+  margin: 0;
+  padding: 8px 10px 8px 10px;
+  border-radius: 5px 0 0 5px;
+  background-color: #e2e1e1;
+  color: #777;
+  height: 3.3rem;
+}
+
+.filter-btn:hover{
+  background-color: #d9d9d9;
+  color: #2D2D2D;
+}
+
+.filter-select{
+
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: -30px;
+}
+
+.search-btn{
+  width: auto;
+  margin: 0;
+  padding: 8px 10px 8px 10px;
+  height: 3.3rem;
+}
+
+
+.div-fill{
+  display:block;
+  width: auto;
+  overflow: hidden;
+  float: none;
+  height: 3.3rem;
+}
+
+.div-left{
+  float:left;
+}
+
+.div-right{
+  float:right;
+}
+
+.div-left, .div-right{
+  width: auto;
+  display: inline-block;
+}
+
+.search-inputbar{
+  position: absolute;
+  top:0;
+  left: 0;
+  max-width: 800px;
+  width: 100%;
+}

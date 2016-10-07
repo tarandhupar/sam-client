@@ -27,20 +27,23 @@ export class Home {
     console.log('hello `Home` component');
     // this.title.getData().subscribe(data => this.data = data);
   }
-  runSearch(){
+
+
+  runSearch(searchObject){
     var qsobj = {};
-    if(this.keyword.length>0){
-      qsobj['keyword'] = this.keyword;
+    if(searchObject.keyword.length>0){
+      qsobj['keyword'] = searchObject.keyword;
     }
-    if(this.index.length>0){
-      qsobj['index'] = this.index;
+    if(searchObject.searchField.length>0){
+      qsobj['index'] = searchObject.searchField;
     }
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
     this._router.navigate(['/search'], navigationExtras );
-    
+
     return false;
   }
+
 
 }
