@@ -10,8 +10,7 @@ import 'rxjs/add/operator/map';
       <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
     </p>
     <h3 class="opportunity-title">
-      <span *ngIf="data.archive==false">{{ data.procurementTitle }}</span>
-      <span *ngIf="data.archive==true">{{ data.procurementTitle }}</span>
+      <a href="{{ printNoticeLink() }}">{{ data.procurementTitle }}</a>
     </h3>
     <div class="usa-width-two-thirds">
       <p class="m_T-2x" *ngIf="data.procurementDescription!=null && data.procurementDescription.length>150">
@@ -52,6 +51,10 @@ import 'rxjs/add/operator/map';
   styleUrls: ['../search.style.css']
 })
 export class OpportunitiesResult{
-	@Input() data: any;
-	constructor() {}
+  @Input() data: any;
+  constructor() {}
+
+  printNoticeLink(){
+    return 'opportunities/' + this.data._id + '/view';
+  }
 }

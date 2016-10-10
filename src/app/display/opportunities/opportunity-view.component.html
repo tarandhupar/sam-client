@@ -1,0 +1,33 @@
+<div class="usa-grid">
+
+  <!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <br />
+    <br />
+    <!--Side Navigation-->
+    <nav>
+      <ul class="usa-sidenav-list">
+        <li><a href="{{ currentUrl }}#overview">Overview</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!--Main Content-->
+  <div class="usa-width-three-fourths" *ngIf="oNotice">
+    <h1>
+      {{oNotice.procurementTitle}}
+    </h1>
+    <p>
+      <span *ngIf="oNotice.parentAgencyName != ''"><strong>Department: </strong>{{ oNotice.parentAgencyName }}<br></span>
+      <span *ngIf="oNotice.agencyName != ''"><strong>Agency: </strong>{{ oNotice.agencyName }}<br></span>
+      <span><strong>Solicitation Number: </strong>{{ oNotice.solicitationNumber }}<br></span>
+    </p>
+    <h2 id="overview">Overview</h2>
+    <section>
+      <h3>Description</h3>
+      <p>
+        {{ oNotice.procurementDescription }}
+      </p>
+    </section>
+  </div>
+</div>
