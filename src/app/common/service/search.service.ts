@@ -22,7 +22,7 @@ export class SearchService {
         method: 'GET'
       };
 
-      if(obj.organizationId !== null && obj.organizationId.length > 0) {
+      if(typeof obj.organizationId != 'undefined' && obj.organizationId != null) {
         oApiParam.oParam.qFilters['organizationId'] = obj.organizationId;
       }
 
