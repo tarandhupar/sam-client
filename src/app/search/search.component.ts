@@ -41,7 +41,7 @@ export class Search implements OnInit{
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.sourceOrganizationId = typeof data['sourceOrganizationId'] === "string" ? decodeURI(data['sourceOrganizationId']) : "";
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.runSearch();
+        if(this.initLoad){ this.runSearch(true); } else { this.runSearch(false); }
 		});
 	}
 
@@ -50,7 +50,7 @@ export class Search implements OnInit{
         this.organizationId = orgArray[0];
 		this.sourceOrganizationId = orgArray[1];
 	}
-	runSearch(){
+	runSearch(newsearch){
 		if(typeof window != "undefined"){
 			var qsobj = {};
 			if (!this.initLoad) {
@@ -66,11 +66,11 @@ export class Search implements OnInit{
 				if(this.index.length>0){
 					qsobj['index'] = this.index;
 				}
-				if(this.pageNum>=0){
+				if(!newsearch && this.pageNum>=0){
 					qsobj['page'] = this.pageNum+1;
 				}
 				else{
-					this.pageNum=0;
+					qsobj['page'] = 1;
 				}
 
 		    let navigationExtras: NavigationExtras = {
@@ -118,7 +118,7 @@ export class Search implements OnInit{
 
 	pageChange(pagenumber){
 		this.pageNum = pagenumber;
-		this.runSearch()
+		this.runSearch(false);
 	}
 
 	createRange(number){

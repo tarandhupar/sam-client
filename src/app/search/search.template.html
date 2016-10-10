@@ -3,7 +3,7 @@
 		<h1>SAM.gov Search Results</h1>
 	</div>
   <div class="usa-width-one">
-    <form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch()" #f="ngForm">
+    <form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch(true)" #f="ngForm">
       <div class="usa-width-one-fourth">
         <label for="index" class="usa-sr-only">Select an index</label>
         <select name="index" id="index" [(ngModel)]="index">
