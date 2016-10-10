@@ -1,4 +1,20 @@
 img {
-  height: 72px;
-  width: 72px;
+  height: 78px;
+  width: 78px;
+}
+
+samSearchbar {
+  width: 500px;
+}
+
+:host >>> .search-btn {
+   background-color: #02bfe7;
+ }
+
+:host >>> select {
+  background-color: #e4e2e0;
+}
+
+header {
+  background-color:#112e51;
 }

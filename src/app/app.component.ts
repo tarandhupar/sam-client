@@ -29,19 +29,19 @@ export class App {
 
   }
 
-  onHeaderSearchEvent(searchText) {
-    var qsobj = {
-      keyword: searchText
-    };
-    // if(this.keyword.length>0){
-    //   qsobj['keyword'] = this.keyword;
-    // }
-    // if(this.index.length>0){
-    //   qsobj['index'] = this.index;
-    // }
+  onHeaderSearchEvent(searchObject) {
+    var qsobj = {};
+    if(searchObject.keyword.length>0){
+      qsobj['keyword'] = searchObject.keyword;
+    }
+    if(searchObject.searchField.length>0){
+      qsobj['index'] = searchObject.searchField;
+    }
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
     this._router.navigate(['/search'], navigationExtras );
+
+    return false;
   }
 }
