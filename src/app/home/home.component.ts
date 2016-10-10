@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router,NavigationExtras } from '@angular/router';
+import { isDefaultHeader } from '../common/constants/globals.ts';
+
 @Component({
   // The selector is what angular internally uses
   // for `document.querySelectorAll(selector)` in our index.html
@@ -24,8 +26,11 @@ export class Home {
   }
 
   ngOnInit() {
-    console.log('hello `Home` component');
-    // this.title.getData().subscribe(data => this.data = data);
+    isDefaultHeader = false;
+  }
+
+  ngOnDestroy() {
+    isDefaultHeader = true;
   }
 
 

@@ -1,6 +1,8 @@
 <!-- includes HTML for app component-->
 <samBanner></samBanner>
-<samHeader2 (searchEvent)="onHeaderSearchEvent($event)"></samHeader2>
+
+<samHeader2 *ngIf="isHeaderWithSearch" (searchEvent)="onHeaderSearchEvent($event)"></samHeader2>
+<samHeader *ngIf="!isHeaderWithSearch" labelname = "header" ></samHeader>
 <main>
   <router-outlet></router-outlet>
 </main>

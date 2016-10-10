@@ -6,6 +6,7 @@ import { Router, NavigationExtras } from '@angular/router';
 import { ComponentInjectService } from './common/service/component.inject.service.ts';
 import { InputTypeConstants } from './common/constants/input.type.constants.ts';
 import { APIService } from "./common/service/api/api.service";
+import { isDefaultHeader } from './common/constants/globals.ts';
 
 /*
  * App Component
@@ -25,8 +26,8 @@ export class App {
 
   }
 
-  ngOnInit() {
-
+  get isHeaderWithSearch() {
+    return isDefaultHeader;
   }
 
   onHeaderSearchEvent(searchObject) {
