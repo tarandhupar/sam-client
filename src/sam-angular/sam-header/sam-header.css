@@ -1,6 +1,11 @@
 img {
-  height: 78px;
-  width: 78px;
+  height: 50px;
+  width: 50px;
+}
+
+.sam_hat_img {
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 samSearchbar {
@@ -10,6 +15,14 @@ samSearchbar {
 :host >>> .search-btn {
    background-color: #02bfe7;
  }
+
+:host >>> .search-inputbar {
+  border: none;
+}
+
+:host >>> #search-div {
+  margin-bottom: 0 !important;
+}
 
 :host >>> select {
   background-color: #e4e2e0;
