@@ -31,7 +31,7 @@ export class Search implements OnInit{
 	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
-	
+
 	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
 		this.activatedRoute.queryParams.subscribe(
@@ -41,7 +41,7 @@ export class Search implements OnInit{
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.sourceOrganizationId = typeof data['sourceOrganizationId'] === "string" ? decodeURI(data['sourceOrganizationId']) : "";
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.runSearch(true);
+        this.runSearch();
 		});
 	}
 
@@ -50,7 +50,7 @@ export class Search implements OnInit{
         this.organizationId = orgArray[0];
 		this.sourceOrganizationId = orgArray[1];
 	}
-	runSearch(newSearch){
+	runSearch(){
 		if(typeof window != "undefined"){
 			var qsobj = {};
 			if (!this.initLoad) {
@@ -66,7 +66,7 @@ export class Search implements OnInit{
 				if(this.index.length>0){
 					qsobj['index'] = this.index;
 				}
-				if(!newSearch && this.pageNum>=0){
+				if(this.pageNum>=0){
 					qsobj['page'] = this.pageNum+1;
 				}
 				else{
@@ -118,7 +118,7 @@ export class Search implements OnInit{
 
 	pageChange(pagenumber){
 		this.pageNum = pagenumber;
-		this.runSearch(false)
+		this.runSearch()
 	}
 
 	createRange(number){
