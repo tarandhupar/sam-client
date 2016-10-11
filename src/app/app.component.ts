@@ -22,6 +22,7 @@ import { globals } from './common/constants/globals.ts';
   providers : [APIService,ComponentInjectService,InputTypeConstants]
 })
 export class App {
+
   constructor(private _router: Router) {
 
   }

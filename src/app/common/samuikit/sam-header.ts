@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
   selector: 'samHeader',
   template:`<header class="sam-header">
               <nav class="" aria-label="Main navigation">
-                <div class="usa-width-one-fourth align-top marginCenter p_T-6x centered">
+                <div class="usa-width-one-fourth align-top marginCenter centered">
                     <a class="marginCenter">
-                      <img class="marginCenter" style="height: 75px; width:75px; padding: 2px 0" src="../../../assets/img/sam_wage_logo.jpg">
+                      <img class="marginCenter" style="height: 75px; width:75px; padding: 2px 0" src="../../../assets/img/sam_hat_logo.jpg">
                     </a>
 
                 </div>

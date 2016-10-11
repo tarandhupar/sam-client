@@ -21,10 +21,10 @@ export class SamSearchbarComponent {
   size: string;
 
   @Input()
-  keyword: string;
+  keyword: string = "";
 
   @Input()
-  placeholder: string;
+  placeholder: string = "";
 
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
@@ -52,6 +52,7 @@ export class SamSearchbarComponent {
   }
 
   ngOnInit() {
+
     if(this.size === "small"){
       this.searchBtnText = "";
     }

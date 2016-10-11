@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing';
 
 // Load the implementations that should be tested
 import { SamHeaderComponent } from './sam-header.component';
+import {SamAngularModule} from "../sam-angular.module";
+
 
 describe('The Sam Header component', () => {
   let component: SamHeaderComponent;
@@ -10,6 +12,7 @@ describe('The Sam Header component', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [SamAngularModule],
       providers: [SamHeaderComponent],
     });
     fixture = TestBed.createComponent(SamHeaderComponent);

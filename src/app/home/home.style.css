@@ -20,3 +20,52 @@
 .topic-div-marginCenter{
   margin:0 25%;
 }
+
+.tri-div{
+  position: absolute;
+  top:20px;
+}
+
+.tri-down {
+
+  /* Styling block element, not required */
+  position: relative;
+
+  border-bottom: 1px solid #aeb0b5;
+  background: #fff;
+}
+
+/* Required for Down Triangle */
+.tri-down:before, .tri-down:after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-color: transparent;
+  border-bottom: 0;
+}
+
+/* Stroke */
+.tri-down:before {
+  bottom: -16px;
+  left: 105px;
+
+  /* If 1px darken stroke slightly */
+  border-top-color: #aeb0b5;
+  border-width: 16px;
+}
+
+/* Fill */
+.tri-down:after {
+  bottom: -15px;
+  left: 106px;
+  border-top-color: #fff;
+  border-width: 15px;
+}
+
+.no-tri-down{
+  position: relative;
+  border-bottom: 1px solid #aeb0b5;
+  background: #fff;
+}

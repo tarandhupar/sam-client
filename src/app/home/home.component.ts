@@ -33,11 +33,12 @@ export class Home {
   testValue = { value: 'Test' };
   // TypeScript public modifiers
   constructor(private _router:Router) {
-
   }
 
   ngOnInit() {
     globals.isDefaultHeader = false;
+    console.log("Home Page");
+
   }
 
   ngOnDestroy() {
@@ -70,4 +71,6 @@ export class Home {
   closeTopicDetail(){
     this.showDetail = false;
   }
+
+
 }
