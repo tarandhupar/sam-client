@@ -8,6 +8,7 @@ import { MockBackend } from '@angular/http/testing';
 import { APIService } from '../common/service/api/api.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
 import { Observable } from 'rxjs';
+import { SamAngularModule } from '../../sam-angular';
 
 import { FHInputComponent } from './fh.component';
 
@@ -71,7 +72,7 @@ describe('FederalHierarchyInput', () => {
           useValue: activatedRouteStub
         },
       ],
-      imports: [FormsModule]
+      imports: [FormsModule,SamAngularModule]
     });
     TestBed.overrideComponent(FHInputComponent, {
       set: {
