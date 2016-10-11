@@ -56,7 +56,7 @@ export class SamSearchbarComponent {
     this.filterValue = value;
   }
 
-  onSearch():void{
+  onSearchClick():void{
     this.onSearch.emit({
       keyword:this.keyword,
       searchField: this.searchIndices[this.filterValue]
