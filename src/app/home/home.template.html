@@ -34,7 +34,10 @@
 
 
   <!--search bar-->
-  <samSearchbar [size]="'large'" (onSearch)="runSearch($event)"></samSearchbar>
+
+  <div class="marginCenter">
+    <samSearchbar [size]="'large'" (onSearch)="runSearch($event)"></samSearchbar>
+  </div>
 
 
   <!--Browser topics and the register button-->
@@ -115,7 +118,7 @@
         <span class="pull-right" style="position: absolute; right: 0"><a (click)="closeTopicDetail()">
           <i class="fa fa-times-circle"></i></a>
         </span>
-        
+
       </div>
 
       <div class="usa-width-one-whole">

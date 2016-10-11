@@ -1,4 +1,4 @@
-import {Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'samHeader',
@@ -8,19 +8,14 @@ import {Component, Input } from '@angular/core';
                     <a class="marginCenter">
                       <img class="marginCenter" style="height: 75px; width:75px; padding: 2px 0" src="../../../assets/img/sam_wage_logo.jpg">
                     </a>
+
                 </div>
-               
               </nav>
             </header>`,
 })
 export class SamHeader {
 
-  @Input() labelname;
-
   constructor() {
-  }
-
-  ngOnInit(){
   }
 
 }
