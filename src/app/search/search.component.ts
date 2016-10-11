@@ -31,6 +31,7 @@ export class Search implements OnInit{
 	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
+	showOptional:any = (SHOW_OPTIONAL=="true");
 
 	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
@@ -39,16 +40,13 @@ export class Search implements OnInit{
 				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
-        this.sourceOrganizationId = typeof data['sourceOrganizationId'] === "string" ? decodeURI(data['sourceOrganizationId']) : "";
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
         if(this.initLoad){ this.runSearch(true); } else { this.runSearch(false); }
 		});
 	}
 
 	onOrganizationChange(orgId:string){
-        var orgArray = orgId.split('|');
-        this.organizationId = orgArray[0];
-		this.sourceOrganizationId = orgArray[1];
+    this.organizationId = orgId;
 	}
 	runSearch(newsearch){
 		if(typeof window != "undefined"){
@@ -57,9 +55,6 @@ export class Search implements OnInit{
 				if(this.organizationId.length>0){
 					qsobj['organizationId'] = this.organizationId;
 				}
-        if(this.sourceOrganizationId.length>0){
-          qsobj['sourceOrganizationId'] = this.sourceOrganizationId;
-        }
 				if(this.keyword.length>0){
 					qsobj['keyword'] = this.keyword;
 				}
@@ -85,7 +80,7 @@ export class Search implements OnInit{
 			keyword: this.keyword,
 			index: this.index,
 			pageNum: this.pageNum,
-            sourceOrganizationId: this.sourceOrganizationId
+      organizationId: this.organizationId
 		}).subscribe(
 			data => {
 	      if(data._embedded && data._embedded.results){
@@ -100,9 +95,9 @@ export class Search implements OnInit{
 	          }
 	        }
 	        this.data = data._embedded;
-            this.totalCount = data.page['totalElements'];
-            var maxAllowedPages = data.page['maxAllowedRecords']/this.showPerPage;
-            this.totalPages = data.page['totalPages']>maxAllowedPages?maxAllowedPages:data.page['totalPages'];
+          this.totalCount = data.page['totalElements'];
+          var maxAllowedPages = data.page['maxAllowedRecords']/this.showPerPage;
+          this.totalPages = data.page['totalPages']>maxAllowedPages?maxAllowedPages:data.page['totalPages'];
 	      } else{
 	      	this.data['results'] = null;
 	      }
