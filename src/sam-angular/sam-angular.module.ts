@@ -20,7 +20,7 @@ import {SamBannerComponent} from "./sam-banner/sam-banner.component";
  * https://gsa.github.io/sam-web-design-standards/
  */
 @NgModule({
-  declarations: [ SamHeaderComponent, SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent, SamSearchbarComponent, SamBannerComponent, LabelWrapper, FieldsetWrapper ],
+  declarations: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent, SamSearchbarComponent, SamBannerComponent, SamHeaderComponent, LabelWrapper, FieldsetWrapper ],
   imports: [ BrowserModule, FormsModule, HttpModule ],
   exports: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent,SamSearchbarComponent,SamBannerComponent, SamHeaderComponent  ],
   providers: [ ]

@@ -1,26 +1,26 @@
 <div class="usa-grid-full">
   <!--<div class="usa-width-one">-->
-    <!--<h1 class="sample-content">SAM CLIENT IMPLEMENTATION</h1>-->
+  <!--<h1 class="sample-content">SAM CLIENT IMPLEMENTATION</h1>-->
   <!--</div>-->
   <!--<div class="usa-width-one">-->
-    <!--<form class="usa-search usa-search-big m_B-3x" (ngSubmit)="RunSearch()" #f="ngForm">-->
-      <!--<div class="usa-width-one-fourth">-->
-        <!--<label for="index" class="usa-sr-only">Select an index</label>-->
-        <!--<select name="index" id="index" [(ngModel)]="index">-->
-          <!--<option [value]="indexes[0]" selected="true">All</option>-->
-          <!--<option [value]="indexes[1]">Assistance Listings</option>-->
-          <!--<option [value]="indexes[2]">Opportunities</option>-->
-        <!--</select>-->
-      <!--</div>-->
-      <!--<div role="search" class="usa-width-three-fourths">-->
-        <!--<label class="usa-sr-only" for="search-field-big">Search big</label>-->
-        <!--<input id="search-field-big" type="search" name="keyword" placeholder="#keyword" [(ngModel)]="keyword"-->
-               <!--autofocus>-->
-        <!--<button type="submit">-->
-          <!--<span class="usa-search-submit-text">Search</span>-->
-        <!--</button>-->
-      <!--</div>-->
-    <!--</form>-->
+  <!--<form class="usa-search usa-search-big m_B-3x" (ngSubmit)="RunSearch()" #f="ngForm">-->
+  <!--<div class="usa-width-one-fourth">-->
+  <!--<label for="index" class="usa-sr-only">Select an index</label>-->
+  <!--<select name="index" id="index" [(ngModel)]="index">-->
+  <!--<option [value]="indexes[0]" selected="true">All</option>-->
+  <!--<option [value]="indexes[1]">Assistance Listings</option>-->
+  <!--<option [value]="indexes[2]">Opportunities</option>-->
+  <!--</select>-->
+  <!--</div>-->
+  <!--<div role="search" class="usa-width-three-fourths">-->
+  <!--<label class="usa-sr-only" for="search-field-big">Search big</label>-->
+  <!--<input id="search-field-big" type="search" name="keyword" placeholder="#keyword" [(ngModel)]="keyword"-->
+  <!--autofocus>-->
+  <!--<button type="submit">-->
+  <!--<span class="usa-search-submit-text">Search</span>-->
+  <!--</button>-->
+  <!--</div>-->
+  <!--</form>-->
   <!--</div>-->
 
 
@@ -34,9 +34,11 @@
 
 
   <!--search bar-->
+
   <div class="marginCenter">
     <samSearchbar [size]="'large'" (onSearch)="runSearch($event)"></samSearchbar>
   </div>
+
 
   <!--Browser topics and the register button-->
   <div class="usa-grid-full row m_T-6x">
@@ -55,54 +57,88 @@
         <div class="usa-width-one-whole">
 
           <div class="usa-width-one-fourth">
-            <div class="usa-width-one-half marginCenter">
-              <div class="usa-grid-full image-wrap topic-image-link">
-                <a><img src="../assets/img/blank_icon.png"></a>
+            <div class="usa-width-one-half topic-div-marginCenter">
+              <div class="usa-width-one-whole image-wrap topic-image-link">
+                <a (click)="selectTopic('XYZ1')"><img src="../assets/img/blank_icon.png"></a>
               </div>
-              <div class="usa-grid-full centered">
-                <a id="origin-topic1-link">XYZ1</a>
+              <div class="usa-width-one-whole centered">
+                <a (click)="selectTopic('XYZ1')">XYZ1</a>
               </div>
             </div>
 
           </div>
 
           <div class="usa-width-one-fourth">
-            <div class="usa-width-one-half marginCenter">
-              <div class="usa-grid-full image-wrap topic-image-link">
-                <a><img src="../assets/img/blank_icon.png"></a>
+            <div class="usa-width-one-half topic-div-marginCenter">
+              <div class="usa-width-one-whole image-wrap topic-image-link">
+                <a (click)="selectTopic('XYZ2')"><img src="../assets/img/blank_icon.png"></a>
               </div>
-              <div class="usa-grid-full centered">
-                <a>XYZ2</a>
+              <div class="usa-width-one-whole centered">
+                <a (click)="selectTopic('XYZ2')">XYZ2</a>
               </div>
             </div>
           </div>
 
 
           <div class="usa-width-one-fourth">
-            <div class="usa-width-one-half marginCenter">
-              <div class="usa-grid-full image-wrap topic-image-link">
-                <a><img src="../assets/img/blank_icon.png"></a>
+            <div class="usa-width-one-half topic-div-marginCenter">
+              <div class="usa-width-one-whole image-wrap topic-image-link">
+                <a (click)="selectTopic('XYZ3')"><img src="../assets/img/blank_icon.png"></a>
               </div>
-              <div class="usa-grid-full centered">
-                <a>XYZ3</a>
+              <div class="usa-width-one-whole centered">
+                <a (click)="selectTopic('XYZ3')">XYZ3</a>
               </div>
             </div>
           </div>
 
           <div class="usa-width-one-fourth">
-            <div class="usa-width-one-half marginCenter">
-              <div class="usa-grid-full image-wrap topic-image-link">
-                <a><img src="../assets/img/blank_icon.png"></a>
+            <div class="usa-width-one-half topic-div-marginCenter">
+              <div class="usa-width-one-whole image-wrap topic-image-link">
+                <a (click)="selectTopic('XYZ4')"><img src="../assets/img/blank_icon.png"></a>
               </div>
-              <div class="usa-grid-full centered">
-                <a>XYZ4</a>
+              <div class="usa-width-one-whole centered">
+                <a (click)="selectTopic('XYZ4')">XYZ4</a>
               </div>
             </div>
+
           </div>
 
         </div>
       </div>
     </div>
+  </div>
+
+  <!--Selected Format of Four Topics along with images, shows up when a link is selected-->
+  <div class="usa-width-one-whole relative">
+
+    <!--Triangle div to point out which topic detail is currently showing-->
+    <div class="usa-width-one-whole tri-div" *ngIf = "showDetail">
+      <div class="usa-width-one-fourth" [ngClass]="{'tri-down':curTopicTitle==='XYZ1','no-tri-down':curTopicTitle!=='XYZ1'}"></div>
+      <div class="usa-width-one-fourth" [ngClass]="{'tri-down':curTopicTitle==='XYZ2','no-tri-down':curTopicTitle!=='XYZ2'}"></div>
+      <div class="usa-width-one-fourth" [ngClass]="{'tri-down':curTopicTitle==='XYZ3','no-tri-down':curTopicTitle!=='XYZ3'}"></div>
+      <div class="usa-width-one-fourth" [ngClass]="{'tri-down':curTopicTitle==='XYZ4','no-tri-down':curTopicTitle!=='XYZ4'}"></div>
+    </div>
+    <!--Selected Image with detail explanation shows up-->
+    <div class="usa-width-one-whole m_T-4x topic-detail" *ngIf = "showDetail">
+      <div class="usa-width-one-whole ">
+
+        <span class="pull-right"><a (click)="closeTopicDetail()">
+          <i class="fa fa-times-circle"></i></a>
+        </span>
+      </div>
+
+      <div class="usa-width-one-whole">
+        <span>{{curTopicDetail}} </span>
+
+      </div>
+
+      <div class="usa-width-one-whole m_T-3x">
+        <span class="pull-right"><a href="#">Learn more..</a></span>
+      </div>
+
+    </div>
+
+
   </div>
 
 </div>
