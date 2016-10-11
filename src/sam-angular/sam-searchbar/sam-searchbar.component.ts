@@ -20,6 +20,12 @@ export class SamSearchbarComponent {
   @Input()
   size: string;
 
+  @Input()
+  keyword: string;
+
+  @Input()
+  placeholder: string;
+
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
 
@@ -29,7 +35,6 @@ export class SamSearchbarComponent {
     'Assistance Listings':'fbo'
   }
   searchBtnText:string = "Search";
-  keyword:string = "";
   filterValue:string = "All";
 
   selectConfig = {
