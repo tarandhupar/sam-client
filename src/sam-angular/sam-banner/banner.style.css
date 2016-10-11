@@ -5,6 +5,7 @@
   width: 100%;
 }
 
+/**Create circle to wrap the icon on the banner**/
 .span-circle-wrap{
   border-radius: 50%;
   width: 43px;
@@ -24,6 +25,6 @@
 
 }
 
-#official-site-toggle-link:hover, #collapse-link:hover{
+a:hover{
   cursor: pointer;
 }

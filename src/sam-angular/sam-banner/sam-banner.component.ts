@@ -33,6 +33,9 @@ export class SamBannerComponent {
     this.showDetail = !this.showDetail;
   }
 
+  /**
+   * Send out the close banner event(let the header adjust margin accordingly)
+   */
   closeBanner(){
     this.showBanner = false;
     this.onClose.emit(this.showBanner);

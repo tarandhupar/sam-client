@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, Output, ViewChild, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 
 /**
  * The <samSearchbar> component(filter,input bar and search button) can automatically change it size according to the div the wrap it.
@@ -53,7 +53,7 @@ export class SamSearchbarComponent {
 
   ngOnInit() {
 
-    if(this.size === "small"){
+    if(this.isSizeSmall()){
       this.searchBtnText = "";
     }
   }
@@ -67,6 +67,10 @@ export class SamSearchbarComponent {
       keyword:this.keyword,
       searchField: this.searchIndices[this.filterValue]
     });
+  }
+
+  isSizeSmall(){
+    return this.size === "small";
   }
 
 }

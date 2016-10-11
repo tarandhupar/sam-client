@@ -72,5 +72,12 @@ export class Home {
     this.showDetail = false;
   }
 
+  setClasses(topic):any{
+    if(topic === this.curTopicTitle){
+      return {"tri-down":true,"no-tri-down":false};
+    }
+    return {"tri-down":false,"no-tri-down":true};
+
+  }
 
 }

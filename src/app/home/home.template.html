@@ -113,10 +113,10 @@
 
     <!--Triangle div to point out which topic detail is currently showing-->
     <div class="usa-width-one-whole tri-div" *ngIf = "showDetail">
-      <div class="usa-width-one-fourth" [ngClass]="{'tri-down':curTopicTitle==='XYZ1','no-tri-down':curTopicTitle!=='XYZ1'}"></div>
-      <div class="usa-width-one-fourth" [ngClass]="{'tri-down':curTopicTitle==='XYZ2','no-tri-down':curTopicTitle!=='XYZ2'}"></div>
-      <div class="usa-width-one-fourth" [ngClass]="{'tri-down':curTopicTitle==='XYZ3','no-tri-down':curTopicTitle!=='XYZ3'}"></div>
-      <div class="usa-width-one-fourth" [ngClass]="{'tri-down':curTopicTitle==='XYZ4','no-tri-down':curTopicTitle!=='XYZ4'}"></div>
+      <div class="usa-width-one-fourth" [ngClass]="setClasses('XYZ1')"></div>
+      <div class="usa-width-one-fourth" [ngClass]="setClasses('XYZ2')"></div>
+      <div class="usa-width-one-fourth" [ngClass]="setClasses('XYZ3')"></div>
+      <div class="usa-width-one-fourth" [ngClass]="setClasses('XYZ4')"></div>
     </div>
     <!--Selected Image with detail explanation shows up-->
     <div class="usa-width-one-whole m_T-4x topic-detail" *ngIf = "showDetail">
