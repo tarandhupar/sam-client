@@ -1,2 +1,4 @@
 'use strict';
-export var isDefaultHeader = true;
+export let globals = {
+  isDefaultHeader: true
+};

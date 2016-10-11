@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router,NavigationExtras } from '@angular/router';
-import { isDefaultHeader } from '../common/constants/globals.ts';
+import { globals } from '../common/constants/globals.ts';
 
 @Component({
   // The selector is what angular internally uses
@@ -26,11 +26,11 @@ export class Home {
   }
 
   ngOnInit() {
-    isDefaultHeader = false;
+    globals.isDefaultHeader = false;
   }
 
   ngOnDestroy() {
-    isDefaultHeader = true;
+    globals.isDefaultHeader = true;
   }
 
 

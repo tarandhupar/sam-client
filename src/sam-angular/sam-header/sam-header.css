@@ -1,11 +1,6 @@
-img {
+.sam_hat_img {
   height: 50px;
   width: 50px;
-}
-
-.sam_hat_img {
-  margin-top: 2px;
-  margin-bottom: 2px;
 }
 
 samSearchbar {
@@ -21,6 +16,7 @@ samSearchbar {
 }
 
 :host >>> #search-div {
+  /* override m_B* css from USWDS library */
   margin-bottom: 0 !important;
 }
 
@@ -30,4 +26,11 @@ samSearchbar {
 
 header {
   background-color:#112e51;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
 }
