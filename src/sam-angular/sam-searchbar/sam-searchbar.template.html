@@ -3,9 +3,9 @@
   <form class="usa-search marginCenter relative" onsubmit="return false;">
 
     <div class="relative div-left">
-      <label class=" black-text filter-btn pull-right" >
+      <button class="filter-btn pull-right" >
       <span class="usa-search-submit-text" >{{filterValue}}&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
-    </label>
+    </button>
       <samSelect2 class="filter-select"
                   [(model)]="selectModel"
                   [options]="selectConfig.options"
@@ -19,7 +19,7 @@
 
     <div class="relative div-right">
       <button type="submit"
-              class="usa-button-primary usa-search-submit search-btn" (click)="onSearch()">
+              class="usa-button-primary usa-search-submit search-btn" (click)="onSearchClick()">
         <span class="usa-search-submit-text">{{searchBtnText}}
           <i class="fa" [ngClass]="{'fa-search':size==='small'}"></i>
         </span>
