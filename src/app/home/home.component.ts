@@ -13,6 +13,17 @@ import { Router,NavigationExtras } from '@angular/router';
   templateUrl: './home.template.html'
 })
 export class Home {
+
+  topicDetails = {
+    'XYZ1': 'Bacon ipsum dolor amet picanha frankfurter jerky, cupim tongue drumstick filet',
+    'XYZ2': 'Spicy jalapeno bacon ipsum dolor amet ullamco pariatur.',
+    'XYZ3': 'Aliqua andouille aliquip cillum sunt bacon. Turkey pork.',
+    'XYZ4': 'Non duis porchetta fatback prosciutto. Ribeye fatback labore'
+  };
+  curTopicTitle = 'XYZ1';
+  curTopicDetail = this.topicDetails[this.curTopicTitle];
+  showDetail = false;
+
   indexes = ['', 'cfda', 'fbo'];
   index = '';
   keyword: string = "";
@@ -45,5 +56,13 @@ export class Home {
     return false;
   }
 
+  selectTopic(topic){
+    this.showDetail = true;
+    this.curTopicTitle = topic;
+    this.curTopicDetail = this.topicDetails[this.curTopicTitle];
+  }
 
+  closeTopicDetail(){
+    this.showDetail = false;
+  }
 }

@@ -11,3 +11,12 @@
   -moz-transition: opacity .25s ease-in-out;
   -webkit-transition: opacity .25s ease-in-out;
 }
+
+.topic-detail{
+  border: 1px #aeb0b5 solid;
+  padding: 6px;
+}
+
+.topic-div-marginCenter{
+  margin:0 25%;
+}
