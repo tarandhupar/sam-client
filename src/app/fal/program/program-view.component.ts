@@ -68,7 +68,6 @@ export class ProgramViewComponent implements OnInit {
       let id = params['id']; //id will be a string, not a number
       this.oProgramService.getProgramById(id).subscribe(res => {
           this.oProgram = res;
-
           this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
             for (var key in res) {
               this.aDictionaries[key] = res[key];
@@ -90,9 +89,13 @@ export class ProgramViewComponent implements OnInit {
           });
           if (this.oProgram.program.data.relatedPrograms.flag != "na") {
             for (let programId of this.oProgram.program.data.relatedPrograms.relatedTo) {
-              this.oProgramService.getProgramById(programId).subscribe(relatedFal => {
-                if (relatedFal.program.archived == false && relatedFal.program.latest == true){
-                  this.aRelatedProgram.push({"programNumber": relatedFal.program.data.programNumber, "id": relatedFal.program.data._id});
+              this.oProgramService.getLatestProgramById(programId).subscribe(relatedFal => {
+                if(typeof relatedFal.program !== 'undefined')
+                {
+                  this.aRelatedProgram.push({
+                    "programNumber": relatedFal.program.data.programNumber,
+                    "id": relatedFal.program.data._id
+                  });
                 }
               })
             }

@@ -17,4 +17,15 @@ export class ProgramService{
 
     return this.oAPIService.call(oApiParam);
   }
+
+  getLatestProgramById(id: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/' + id + '/getLatestPublishedProgramByProgramId',
+      oParam: {},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
 }
