@@ -1,8 +1,10 @@
 import { async, inject, TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
-import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
+import { BaseRequestOptions, Http, HttpModule } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { Location, LocationStrategy, HashLocationStrategy, CommonModule } from '@angular/common';
+import { PipeTransform } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 import { ProgramViewComponent } from './program-view.component';
 import { APIService } from '../../common/service/api/api.service';
@@ -45,6 +47,7 @@ let MockFHService = {
     });
   }
 };
+
 let MockProgramService = {
   getProgramById: (id: string) => {
     return Observable.of({
@@ -71,6 +74,7 @@ let MockProgramService = {
     });
   }
 };
+
 let MockDictionaryService = {
   getDictionaryById: (id: string) => {
     return Observable.of({ "assistance_type:": [
@@ -91,11 +95,12 @@ let MockDictionaryService = {
     ] });
   }
 };
+
 let MockHistoricalIndexService = {
   getHistoricalIndexByProgramNumber: (id: string, programNumber: string) => {
     return Observable.of([
-      {"id":"6506cad09ee82324fcefb115d3ca16fa","organizationId":"100006809","fiscalYear":2005,"statusCode":null,"changeDescription":"Fresh Fruit and Vegetable Program ","reason":null,"actionType":"publish","programNumber":"10.582","index":1,"createdDate":1118016000000,"isManual":"0"},
-      {"id":"d1bde1a0ceda403e91216f97a1e6089c","organizationId":"100076645","fiscalYear":2016,"statusCode":"","changeDescription":"Fresh Fruit and Vegetable Program ","reason":null,"actionType":"publish","programNumber":"10.582","index":2,"createdDate":1474244542355,"isManual":"0"}
+      {"id":"6506cad09ee82324fcefb115d3ca16fa","organizationId":"100006809","fiscalYear":2005,"statusCode":null,"changeDescription":"Fresh Fruit and Vegetable Program ","reason":null,"actionType":"publish","programNumber":"15.664","index":1,"createdDate":1118016000000,"isManual":"0"},
+      {"id":"d1bde1a0ceda403e91216f97a1e6089c","organizationId":"100076645","fiscalYear":2016,"statusCode":"","changeDescription":"Fresh Fruit and Vegetable Program ","reason":null,"actionType":"publish","programNumber":"15.664","index":2,"createdDate":1474244542355,"isManual":"0"}
     ]);
   }
 };
@@ -104,21 +109,41 @@ let MockApiService = {
   call: () => {
     return Observable.of({});
   }
-}
+};
 
-let activatedRouteStub = {
-  params: {
-    subscribe: () =>{
-      return {"id": "3077ea1df409265fb4378e0e844b8811"};
-//      return Observable.of({ "id": "3077ea1df409265fb4378e0e844b8811" });
-    }
+export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
+  transform(aValue:any[], aData:any[], fieldName:string, isNested:boolean, nestedFieldName:string):any[] {
+    // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE DICTIONARY
+    return [{
+      code: "B",
+      elements: null,
+      description: null,
+      element_id: "0003001",
+      value: "Cooperative Agreements",
+      displayValue: "B - Cooperative Agreements"
+    }];
+    // END TODO
   }
 };
 
 describe('ProgramViewComponent', () => {
-//  beforeEach(() => {
-  beforeEach(async(() => {
+  //TODO: Fix spies
+//  var spyMockProgramService:any, spyMockApiService:any, spyMockHistoricalIndexService:any, spyMockFHService:any, spyMockDictionaryService:any;
+
+  beforeEach(() => {
+    //Create spy on mocked services
+//    spyMockProgramService = jasmine.createSpyObj('MockProgramService', ['getProgramById']);
+//    spyMockApiService = jasmine.createSpyObj('MockApiService', ['call']);
+//    spyMockHistoricalIndexService = jasmine.createSpyObj('MockHistoricalIndexService', ['getHistoricalIndexByProgramNumber']);
+//    spyMockFHService = jasmine.createSpyObj('MockFHService', ['getFederalHierarchyById']);
+//    spyMockDictionaryService = jasmine.createSpyObj('MockDictionaryService', ['getDictionaryById']);
+    //End TODO
     TestBed.configureTestingModule({
+      imports: [
+        SamUIKitModule,
+        HttpModule,
+        CommonModule
+      ],
       declarations: [
         ProgramViewComponent,
         CapitalizePipe,
@@ -132,23 +157,22 @@ describe('ProgramViewComponent', () => {
         BaseRequestOptions,
         MockBackend,
         {
-          provide: Http, 
-          useFactory: function (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
+          provide: Http,
+          useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
             return new Http(backend, defaultOptions);
           },
-          deps: [MockBackend, BaseRequestOptions]
+          deps: [MockBackend, BaseRequestOptions],
         },
         { provide: APIService, useValue: MockApiService },
         { provide: Location, useClass: Location }, 
-        { provide: ActivatedRoute, useValue: activatedRouteStub },
+        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '3077ea1df409265fb4378e0e844b8811' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         CapitalizePipe, 
-        FilterMultiArrayObjectPipe, 
+        { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectCustomPipe },
         KeysPipe, 
         AuthorizationPipe, 
         HistoricalIndexLabelPipe,
-      ],
-      imports: [ SamUIKitModule ]
+      ]
     }) //https://github.com/angular/angular/issues/10727
     .overrideComponent(ProgramViewComponent, {
         set: {
@@ -158,56 +182,76 @@ describe('ProgramViewComponent', () => {
             { provide: ProgramService, useValue: MockProgramService },
             { provide: DictionaryService, useValue: MockDictionaryService },
             { provide: HistoricalIndexService, useValue: MockHistoricalIndexService },
-            { provide: ActivatedRoute, useValue: activatedRouteStub },
           ]
         }
-    })
-    .compileComponents().then( () => {
-      fixture = TestBed.createComponent(ProgramViewComponent);
-      comp = fixture.componentInstance;
-
-      // change detection triggers ngOnInit
-      fixture.detectChanges();
-
-      fixture.whenStable().then(() => {
-        // change detection updates the view
-        fixture.detectChanges();
-      });
     });
 
-//    fixture = TestBed.createComponent(ProgramViewComponent);
-//    comp = fixture.componentInstance; 
-//    fixture.detectChanges(); // 1st change detection triggers ngOnInit
-//  });
-  }));
+    fixture = TestBed.createComponent(ProgramViewComponent);
+    comp = fixture.componentInstance; // BannerComponent test instance
 
-  /**
-   * TODO: Fix Component Unit Test & Add CASE SCENARIOS
-   */
-//  it('should "run" a search', inject([SearchService],(service: SearchService) => {
-//    fixture.detectChanges();
-//    comp.searchService = service; //Todo: confirm correct way to make stubservice override real service for test, setting the provider statement in the configuration doesn't seem to work
-//    comp.runSearch();	 
-//    fixture.whenStable().then(() => { 
-//      fixture.detectChanges(); 
-//      expect(comp.data.results[0].title).toBe("Dummy Result 1");
-//    }); 
-//	}));
-  
-//  it('should show alert message 2', fakeAsync(() => {
-//    console.log('comp21 , ', comp)
-//    console.log('aDictionaries 21 ', comp.aDictionaries)
-//      // change detection triggers ngOnInit
-//    fixture.detectChanges();
-//    console.log('comp22 , ', comp)
-//    console.log('aDictionaries 21 ', comp.aDictionaries)
-//    fixture.whenStable().then(() => {
-//      console.log('comp23 , ', comp)
-//      console.log('aDictionaries 21 ', comp.aDictionaries)
-//      // change detection updates the view
-//      fixture.detectChanges();
-//      console.log('comp24 , ', comp)
-//      console.log('aDictionaries 21 ', comp.aDictionaries)
-//    });
-//  }));
+    // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE
+    comp.aDictionaries = [{ "assistance_type:": [
+      {
+        code: "B",
+        elements: null,
+        description: null,
+        element_id: "0003001",
+        value: "Cooperative Agreements",
+        displayValue: "B - Cooperative Agreements"
+      },
+      {
+        code: "B",
+        elements: null,
+        description: null,
+        element_id: "0003002",
+        value: "Cooperative Agreements (Discretionary Grants)",
+        displayValue: "B - Cooperative Agreements (Discretionary Grants)"
+      }
+    ]}];
+    //end TODO
+
+    fixture.detectChanges(); // 1st change detection triggers ngOnInit
+  });
+
+  it('Should init & load data', () => {
+    /**
+     * TODO: FIX Spies
+     */
+    //checking method calls
+//    expect(spyMockProgramService.getProgramById).not.toHaveBeenCalled();
+//    expect(spyMockApiService.call).toHaveBeenCalled();
+//    expect(spyMockHistoricalIndexService.getHistoricalIndexByProgramNumber).toHaveBeenCalled();
+//    expect(spyMockFHService.getFederalHierarchyById).toHaveBeenCalled();
+//    expect(spyMockDictionaryService.getDictionaryById).toHaveBeenCalled();
+
+    //checking methods calls with args
+//      expect(spyMockProgramService.getProgramById).toHaveBeenCalledWith('3077ea1df409265fb4378e0e844b8811');
+//      expect(spyMockHistoricalIndexService.getHistoricalIndexByProgramNumber).toHaveBeenCalledWith('3077ea1df409265fb4378e0e844b8811', '15.664');
+//      expect(spyMockFHService.getFederalHierarchyById).toHaveBeenCalledWith('100156642', true, false);
+//      expect(spyMockDictionaryService.getDictionaryById).toHaveBeenCalledWith([
+//        'program_subject_terms',
+//        'date_range',
+//        'match_percent',
+//        'assistance_type',
+//        'applicant_types',
+//        'assistance_usage_types',
+//        'beneficiary_types',
+//        'functional_codes'
+//      ].join(','));
+
+    expect(comp.oProgram).toBeDefined();
+    expect(comp.oFederalHierarchy).toBeDefined();
+    expect(comp.aRelatedProgram).toBeDefined();
+    expect(comp.oHistoricalIndex).toBeDefined();
+    expect(comp.aAlert).toBeDefined();
+    expect(comp.aDictionaries).toBeDefined();
+
+    expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Fish and Wildlife Coordination and Assistance Programs')
+  });
+
+  it('Should show the alert for updated since YYYY', () => {
+    //mocked program should show the alert -> Verifying it
+    expect(comp.aAlert.length).toBeGreaterThan(0);
+    expect(fixture.debugElement.queryAll(By.css('samalert')).length).toBeGreaterThan(0);
+  });
 });
