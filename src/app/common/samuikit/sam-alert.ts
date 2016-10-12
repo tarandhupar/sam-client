@@ -22,7 +22,6 @@ export class SamAlert{
 
   ngOnInit(){
     this.html = this._componentInjectService.renderComponentHTML('alert', this.config);
-
   }
 }
 

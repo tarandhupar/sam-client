@@ -20,7 +20,7 @@
         </button>
       </div>
     </form>
-    <div class="usa-width-one">
+    <div *ngIf="showOptional" class="usa-width-one">
       <h3>Common Filters:</h3>
       <fh-input #fhInput [hideOffice]="true" (organization)="onOrganizationChange($event)"></fh-input>
       <hr *ngIf="data.results" class="m_T-5x"/>
