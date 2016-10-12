@@ -9,3 +9,4 @@
 - [ ] PR does not cause merge conflicts (Conflicts must be resolved by the submitter.)
 - [ ] Automated tests are passing locally.
 - [ ] Link to PR has been added to related Jira ticket.
+- [ ] PR does not cause duplication or overriding of Git history.
