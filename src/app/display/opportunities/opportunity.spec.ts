@@ -3,7 +3,6 @@ import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angula
 import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By }              from '@angular/platform-browser';
-import { DebugElement }    from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 
@@ -13,8 +12,6 @@ import { Observable } from 'rxjs';
 
 let comp:    OpportunityViewComponent;
 let fixture: ComponentFixture<OpportunityViewComponent>;
-let de:      DebugElement;
-let el:      HTMLElement;
 
 let MockSearchService = {
   runSearch: (obj) => {
@@ -102,5 +99,6 @@ describe('OpportunityViewComponent', () => {
     expect(comp.oNotice).toBeDefined();
     expect(comp.oSub).toBeDefined();
     expect(comp.oNotice.procurementTitle).toBe("D--FY16 Software Maintenance Renewal â€“ NetEx TAC-16-23777");
+    expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('D--FY16 Software Maintenance Renewal â€“ NetEx TAC-16-23777');
   });
 });
