@@ -84,9 +84,6 @@ export class Search implements OnInit{
 			data => {
 	      if(data._embedded && data._embedded.results){
 	        for(var i=0; i<data._embedded.results.length; i++) {
-	          if(data._embedded.results[i].contacts) {
-	            data._embedded.results[i].contacts = JSON.parse(data._embedded.results[i].contacts);
-	          }
 	          if(data._embedded.results[i].fhNames){
 	            if(!(data._embedded.results[i].fhNames instanceof Array)){
 	              data._embedded.results[i].fhNames = [data._embedded.results[i].fhNames];
