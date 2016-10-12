@@ -1,3 +1,4 @@
+/** Styles for the drop down filter btn **/
 .filter-btn{
   width: auto;
   margin: 0;
@@ -28,7 +29,7 @@
   height: 3.3rem;
 }
 
-
+/** Adjust the width of the input search bar**/
 .div-fill{
   display:block;
   width: auto;
