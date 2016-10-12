@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { RouterModule } from '@angular/router';
 
 // Sam Angular Exports
 import { SamSelectComponent } from './sam-select';
@@ -21,7 +22,7 @@ import {SamBannerComponent} from "./sam-banner/sam-banner.component";
  */
 @NgModule({
   declarations: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent, SamSearchbarComponent, SamBannerComponent, SamHeaderComponent, LabelWrapper, FieldsetWrapper ],
-  imports: [ BrowserModule, FormsModule, HttpModule ],
+  imports: [ BrowserModule, FormsModule, HttpModule, RouterModule ],
   exports: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent,SamSearchbarComponent,SamBannerComponent, SamHeaderComponent  ],
   providers: [ ]
 })

@@ -31,8 +31,8 @@ export class SamSearchbarComponent {
 
   searchIndices = {
     'All':'',
-    'Opportunities':'cfda',
-    'Assistance Listings':'fbo'
+    'Opportunities':'fbo',
+    'Assistance Listings':'cfda'
   }
   searchBtnText:string = "Search";
   filterValue:string = "All";
