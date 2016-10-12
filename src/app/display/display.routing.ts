@@ -3,7 +3,7 @@ import { OpportunityViewComponent } from './opportunities/opportunity-view.compo
 
 export const routes: Routes = [
   {
-    path: 'opportunities/:id/view',
+    path: 'opportunities/:id',
     component: OpportunityViewComponent
   },
 ];

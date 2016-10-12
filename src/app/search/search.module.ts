@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
 import { Search }   from './search.component';
 import { AssistanceListingResult } from './assistance_listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
@@ -9,7 +11,9 @@ import { FormsModule } from '@angular/forms';
 @NgModule({
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    RouterModule,
+    HttpModule
   ],
   exports: [
     Search,
