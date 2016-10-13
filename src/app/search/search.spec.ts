@@ -13,10 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { APIService } from '../common/service/api/api.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
-import {SamSearchbarComponent} from "../../sam-angular/sam-searchbar/sam-searchbar.component";
-import {SamSelectComponent} from "../../sam-angular/sam-select/sam-select.component";
-import {LabelWrapperComponent} from "../../sam-angular/common/wrappers/label-wrapper.component";
 import {SamAngularModule} from "../../sam-angular/sam-angular.module";
+import { RouterTestingModule } from '@angular/router/testing';
 
 //dummy child components
 @Component({selector: 'fh-input',template:''})
@@ -112,7 +110,14 @@ describe('SearchComponent', () => {
         { provide: APIService, //override APIservice
           useValue: apiServiceStub
         }],
-      imports: [FormsModule,SamAngularModule, RouterModule]//needed if template has form directives
+      imports: [
+        FormsModule,
+        SamAngularModule, 
+        RouterModule,
+        RouterTestingModule.withRoutes([
+          { path: 'home', component: Search }
+        ])
+      ]//needed if template has form directives
     });
     //override sub-components
     TestBed.overrideComponent(FHInputComponent,{set: {'template': '',providers:[{provide: FHService, useValue: fhServiceStub }]}});
