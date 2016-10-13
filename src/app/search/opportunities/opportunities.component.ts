@@ -22,8 +22,8 @@ import 'rxjs/add/operator/map';
       </p>
       <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         <li><strong>Department:</strong> <a href="#">{{ data.parentAgencyName }}</a></li>
-        <li><strong>Office:</strong> <a href="#">{{ data.officeName }}</a></li>
-        <li><strong>Location:</strong>{{ data.location }}</li>
+        <li><strong>Office:</strong> <a href="#">{{ data.agencyName }}</a></li>
+        <li><strong>Location:</strong> {{ data.officeName }}</li>
       </ul>
     </div>
     <div class="usa-width-one-third">
