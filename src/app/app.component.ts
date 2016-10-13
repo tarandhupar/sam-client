@@ -8,6 +8,10 @@ import { InputTypeConstants } from './common/constants/input.type.constants.ts';
 import { APIService } from "./common/service/api/api.service";
 import { globals } from './common/constants/globals.ts';
 
+//TODO: Remove samuikit.js (Deprecated)
+import '../assets/js/samuikit.js';
+//ENDTODO
+
 /*
  * App Component
  * Top Level Component
