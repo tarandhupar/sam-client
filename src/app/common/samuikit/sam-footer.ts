@@ -1,26 +1,26 @@
 import { Component, Input } from '@angular/core';
-import { ComponentInjectService } from '../service/component.inject.service.ts';
-import { InputTypeConstants } from '../constants/input.type.constants.ts';
-import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'samFooter',
-  template:`<div id='{{labelname}}' [innerHTML]='html'></div>`,
-  providers: [ComponentInjectService, InputTypeConstants]
+  template:`<footer class="m_T-6x" id="sam-footer" aria-label="footer-navigation">
+              <div class="sam-footer-wrapper">
+                <nav class="usa-grid sam-footer-body">
+                  <div class="sam-footer-logo usa-width-one-sixth">
+                    <a href="http://www.gsa.gov"><span>General Services Administration Website</span></a>
+                  </div>
+                </nav>
+              </div>
+            </footer>`,
 })
 export class SamFooter {
 
   @Input() labelname: string;
 
-  html: SafeHtml;
 
-  constructor(
-    private _componentInjectService : ComponentInjectService
-  ) {
+  constructor() {
   }
 
   ngOnInit(){
-    this.html = this._componentInjectService.renderComponentHTML('footer', {});
   }
 }
 

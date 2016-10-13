@@ -15,6 +15,6 @@ export let ROUTES: Routes = [
   { path: '**',    component: NoContent },
 ];
 
-if (ENV === 'development' || ENV === 'comp') {
+if (ENV === 'development' || ENV === 'comp' || ENV === 'local') {
   ROUTES.unshift({ path: 'sam-angular', component: SamAngularDemo });
 }
