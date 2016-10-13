@@ -1,7 +1,7 @@
 import { HostListener, Directive, ElementRef, Input, Renderer, OnInit } from '@angular/core';
 
 @Directive({ selector: '[sam-sticky]' })
-export class SamStickyDirective implements OnInit {
+export class SamStickyComponent implements OnInit {
   
   // Research sticky polyfill
   // http://html5please.com/#sticky

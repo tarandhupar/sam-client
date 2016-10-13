@@ -8,11 +8,13 @@ import {FilterMultiArrayObjectPipe} from '../../common/pipes/filter-multi-array-
 import {AuthorizationPipe} from '../pipes/authorization.pipe';
 import {HistoricalIndexLabelPipe} from '../pipes/historical-index-label.pipe';
 import {SamUIKitModule} from '../../common/samuikit/samuikit.module';
+import { SamAngularModule } from '../../../sam-angular/sam-angular.module';
 
 @NgModule({
   imports: [
     BrowserModule,
     SamUIKitModule,
+    SamAngularModule,
     routing
   ],
   exports: [
