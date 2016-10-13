@@ -48,6 +48,13 @@ export class Search implements OnInit{
 	onOrganizationChange(orgId:string){
     this.organizationId = orgId;
 	}
+
+	onSearchClick($event) {
+      this.keyword = $event.keyword;
+      this.index = $event.searchField;
+      this.runSearch(true);
+    }
+
 	runSearch(newsearch){
 		if(typeof window != "undefined"){
 			var qsobj = {};

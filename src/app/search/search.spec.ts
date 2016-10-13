@@ -13,6 +13,10 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { APIService } from '../common/service/api/api.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
+import {SamSearchbarComponent} from "../../sam-angular/sam-searchbar/sam-searchbar.component";
+import {SamSelectComponent} from "../../sam-angular/sam-select/sam-select.component";
+import {LabelWrapperComponent} from "../../sam-angular/common/wrappers/label-wrapper.component";
+import {SamAngularModule} from "../../sam-angular/sam-angular.module";
 
 //dummy child components
 @Component({selector: 'fh-input',template:''})
@@ -67,7 +71,7 @@ var activatedRouteStub = {
 var routerStub = {
   navigate: (path,extras) =>{}
 };
-var fhServiceStub = { 
+var fhServiceStub = {
   getFederalHierarchyById: (id: string, includeParentLevels: boolean, includeChildrenLevels: boolean)=>{
     return Observable.of({
       _embedded:{
@@ -81,8 +85,8 @@ var fhServiceStub = {
           href: 'test'
         }
       }
-    }); 
-  } 
+    });
+  }
 };
 describe('SearchComponent', () => {
   beforeEach(async(() => {
@@ -93,7 +97,7 @@ describe('SearchComponent', () => {
         BaseRequestOptions,
         MockBackend,
         {
-          provide: Http, 
+          provide: Http,
           useFactory: function (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
             return new Http(backend, defaultOptions);
           },
@@ -115,7 +119,7 @@ describe('SearchComponent', () => {
         { provide: APIService, //override APIservice
           useValue: apiServiceStub
         }],
-      imports: [FormsModule]//needed if template has form directives
+      imports: [FormsModule,SamAngularModule]//needed if template has form directives
     });
     //override sub-components
     TestBed.overrideComponent(FHInputComponent,{set: {'template': '',providers:[{provide: FHService, useValue: fhServiceStub }]}});
@@ -125,22 +129,22 @@ describe('SearchComponent', () => {
     TestBed.compileComponents().then( ()=>{
       //create main component
       fixture = TestBed.createComponent(Search);
-      comp = fixture.componentInstance; 
+      comp = fixture.componentInstance;
       comp.searchService = fixture.debugElement.injector.get(SearchService);
       comp.data= [{},{}];
       fixture.detectChanges();// trigger data binding
     });
-    
+
   }));
-  
+
   it('should "run" a search', inject([SearchService],(service: SearchService) => {
     fixture.detectChanges();
     comp.searchService = service; //Todo: confirm correct way to make stubservice override real service for test, setting the provider statement in the configuration doesn't seem to work
-    comp.runSearch();	 
-    fixture.whenStable().then(() => { 
-      fixture.detectChanges(); 
+    comp.runSearch();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
       expect(comp.data.results[0].title).toBe("Dummy Result 1");
-    }); 
+    });
 	}));
 
 });
