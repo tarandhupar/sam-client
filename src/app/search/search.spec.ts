@@ -2,7 +2,7 @@ import { inject,ComponentFixture, TestBed, async,fakeAsync } from '@angular/core
 import { MockBackend } from '@angular/http/testing';
 import { By }              from '@angular/platform-browser';
 import { Component,DebugElement,Input,Output,OnInit,EventEmitter }    from '@angular/core';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Router,ActivatedRoute,RouterModule } from '@angular/router';
 import { Search } from './search.component';
 import { SearchService } from '../common/service/search.service';
 import { AssistanceListingResult } from './assistance_listings/al.component';
@@ -108,7 +108,7 @@ describe('SearchComponent', () => {
         { provide: APIService, //override APIservice
           useValue: apiServiceStub
         }],
-      imports: [FormsModule]//needed if template has form directives
+      imports: [FormsModule, RouterModule]//needed if template has form directives
     });
     //override sub-components
     TestBed.overrideComponent(FHInputComponent,{set: {'template': '',providers:[{provide: FHService, useValue: fhServiceStub }]}});
