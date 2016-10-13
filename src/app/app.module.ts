@@ -19,6 +19,7 @@ import { AppState } from './app.service';
 import { Home } from './home';
 import { NoContent } from './common/no-content';
 import { ProgramModule } from './fal';
+import { DisplayModule } from './display';
 import { SearchModule } from './search';
 import { SamAngularDemo } from "./sam-angular-demo";
 import { SamUIKitModule } from './common/samuikit/samuikit.module';
@@ -46,6 +47,7 @@ const APP_PROVIDERS = [
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: false }),
     ProgramModule,
+    DisplayModule,
     SamAngularModule,
     SamUIKitModule,
     SearchModule

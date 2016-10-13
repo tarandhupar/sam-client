@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing';
 import { By }              from '@angular/platform-browser';
 import { DebugElement }    from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { OpportunitiesResult } from './opportunities.component';
 
@@ -11,6 +12,11 @@ describe('OpportunitiesResultComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ OpportunitiesResult ], 
+      imports: [
+        RouterTestingModule.withRoutes([
+          { path: 'search', component: OpportunitiesResult }
+        ])
+      ]
     });
     TestBed.compileComponents().then( ()=>{
       fixture = TestBed.createComponent(OpportunitiesResult);
