@@ -26,6 +26,10 @@ export class SearchService {
         oApiParam.oParam.qFilters['organizationId'] = obj.organizationId;
       }
 
+      if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
+        oApiParam.oParam.qFilters['noticeId'] = obj.noticeId;
+      }
+
       return this.oAPIService.call(oApiParam);
     }
 
