@@ -1,26 +1,28 @@
-import {Component, Input } from '@angular/core';
-import { ComponentInjectService } from '../service/component.inject.service.ts';
-import { InputTypeConstants } from '../constants/input.type.constants.ts';
-import { SafeHtml } from '@angular/platform-browser';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'samHeader',
-  template:`<div id='{{labelname}}' [innerHTML]="html"></div>`,
-  providers: [ComponentInjectService, InputTypeConstants]
+  template:`<header class="sam-header">
+              <nav class="" aria-label="Main navigation">
+                <div class="usa-width-one-fourth align-top marginCenter centered">
+                    <a class="marginCenter">
+                      <img class="marginCenter header-logo-img" src="../../../assets/img/sam_hat_logo.jpg">
+                    </a>
+
+                </div>
+              </nav>
+            </header>`,
+  styles:[`
+    .header-logo-img{
+      height: 75px;
+      width:75px;
+      padding: 2px 0;
+    }`]
+
 })
 export class SamHeader {
 
-  @Input() labelname;
-
-  html: SafeHtml;
-
-  constructor(
-    private _componentInjectService : ComponentInjectService
-  ) {
-  }
-
-  ngOnInit(){
-    this.html = this._componentInjectService.renderComponentHTML('header', {});
+  constructor() {
   }
 
 }

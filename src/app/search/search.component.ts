@@ -47,6 +47,11 @@ export class Search implements OnInit{
 	onOrganizationChange(orgId:string){
     this.organizationId = orgId;
 	}
+	onSearchClick($event) {
+    this.keyword = $event.keyword;
+    this.index = $event.searchField;
+    this.runSearch(true);
+  }
 	runSearch(newSearch){
 		//push state to history
 		if(typeof window != "undefined"){

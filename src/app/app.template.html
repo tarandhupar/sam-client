@@ -1,18 +1,10 @@
 <!-- includes HTML for app component-->
-<div>
-
-   <samSpace labelname = "space" ></samSpace>
-   <samHeader labelname = "header" ></samHeader>
-
+<samBanner #banner></samBanner>
+<div [style.padding-top]="banner.showBanner ? '24px' : ''">
+  <samHeader2 *ngIf="isHeaderWithSearch" (searchEvent)="onHeaderSearchEvent($event)"></samHeader2>
+  <samHeader *ngIf="!isHeaderWithSearch" labelname = "header" ></samHeader>
 </div>
-
- <main>
-       <router-outlet></router-outlet>
- </main>
-
-
- <!--samButton (click)='clicked()' labelname = "button" [config] = buttonValue></samButton>
- <samLabel labelname="label" [config] = labelValue></samLabel>
- <samAccordions labelname = "accordions" [config] = accordionsValue></samAccordions>
- <samSelect labelname = "select" [config] = selectValue></samSelect-->
- <samFooter labelname = "footer" ></samFooter>
+<main>
+  <router-outlet></router-outlet>
+</main>
+<samFooter labelname = "footer" ></samFooter>
