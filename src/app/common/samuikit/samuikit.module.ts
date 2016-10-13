@@ -9,6 +9,7 @@ import { SamButton } from "./sam-button";
 import { SamLabel } from "./sam-label";
 import { SamAccordions } from "./sam-accordions";
 import { SamSelect } from "./sam-select";
+import { SamStickyDirective } from "./sam-sticky";
 
 
 /**
@@ -24,6 +25,7 @@ import { SamSelect } from "./sam-select";
     SamLabel,
     SamAccordions,
     SamSelect,
+    SamStickyDirective,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +38,7 @@ import { SamSelect } from "./sam-select";
     SamLabel,
     SamAccordions,
     SamSelect,
+    SamStickyDirective,
   ],
   providers: [ ]
 })
