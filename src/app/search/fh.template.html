@@ -8,28 +8,15 @@
     <div class='no-input' *ngIf="false">
         {{ departmentLabel }}
     </div>
-    <div class='usa-grid-full'>
+    <div class='usa-grid-full fh-form-alt'>
         <div class='usa-width-one-third'>
-            <label for='jqDepartmentFH' class="m_T-0">Department</label>
-            <select [(ngModel)]="selectedDeptId" (ngModelChange)='setOrganizationId("department")' id='jqDepartmentFH'>
-                <option value=''>Please select a Department</option>
-                <option *ngFor="let dpmt of dictionary.aDepartment" [value]="dpmt.elementId + '|' + dpmt.sourceOrganizationId">{{dpmt.name}}</option>
-            </select>
-            <span *ngIf="false" class='department-label2'> {{ departmentLabel }} </span>
+            <samSelect2 [(model)]="selectedDeptId" [options]="dpmtSelectConfig.options" [label]="dpmtSelectConfig.label" (modelChange)='setOrganizationId("department")'></samSelect2>
         </div>
         <div class='usa-width-one-third'>
-            <label for='jqAgencyFH' class="m_T-0">Agency</label>
-            <select [(ngModel)]="selectedAgencyId" (ngModelChange)='setOrganizationId("agency")' [disabled]="lockAgency" id='jqAgencyFH'>
-                <option value=''>Please select an Agency</option>
-                <option *ngFor="let agency of dictionary.aAgency" [value]="agency.elementId + '|' + agency.sourceOrganizationId">{{agency.name}}</option>
-            </select>
+            <samSelect2 [(model)]="selectedAgencyId" [options]="agencySelectConfig.options" [label]="agencySelectConfig.label" (modelChange)='setOrganizationId("agency")'></samSelect2>
         </div>
         <div *ngIf='checkOffice()' class='usa-width-one-third'>
-            <label for='jqOfficeFH'>Office</label>
-            <select [(ngModel)]="selectedOfficeId" [disabled]="lockOffice" id='jqOfficeFH'>
-                <option value=''>Please select an Office</option>
-                <option *ngFor="let office of dictionary.aOffice" [value]="office.elementId">{{office.name}}</option>
-            </select>
+            <samSelect2 [(model)]="selectedOfficeId" [options]="officeSelectConfig.options" [label]="officeSelectConfig.label" (modelChange)='setOrganizationId("office")'></samSelect2>
         </div>
     </div>
 </div>

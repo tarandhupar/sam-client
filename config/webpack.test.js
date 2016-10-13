@@ -29,6 +29,9 @@ if(!process.env.API_UMBRELLA_KEY || !process.env.API_UMBRELLA_URL){
     process.env.API_UMBRELLA_KEY = envs('API_UMBRELLA_KEY', '');
   }
 }
+if(!process.env.SHOW_OPTIONAL){
+  process.env.SHOW_OPTIONAL = false;
+}
 
 /**
  * Webpack configuration
@@ -210,12 +213,14 @@ module.exports = {
       'HMR': false,
       'API_UMBRELLA_URL': JSON.stringify(process.env.API_UMBRELLA_URL),
       'API_UMBRELLA_KEY': JSON.stringify(process.env.API_UMBRELLA_KEY),
+      'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL),
       'process.env': {
         'ENV': JSON.stringify(ENV),
         'NODE_ENV': JSON.stringify(ENV),
         'HMR': false,
         'API_UMBRELLA_URL': JSON.stringify(process.env.API_UMBRELLA_URL),
-        'API_UMBRELLA_KEY': JSON.stringify(process.env.API_UMBRELLA_KEY)
+        'API_UMBRELLA_KEY': JSON.stringify(process.env.API_UMBRELLA_KEY),
+        'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL)
       }
     }),
 

@@ -16,9 +16,9 @@ import * as d3 from 'd3';
   templateUrl: 'program-view.component.html',
   styleUrls: ['program-view.style.css'],
   providers: [
-    FHService, 
-    ProgramService, 
-    DictionaryService, 
+    FHService,
+    ProgramService,
+    DictionaryService,
     HistoricalIndexService,
     FilterMultiArrayObjectPipe
   ]
@@ -36,11 +36,11 @@ export class ProgramViewComponent implements OnInit {
   private sub:Subscription;
 
     constructor(
-      private route:ActivatedRoute, 
-      private location:Location, 
+      private route:ActivatedRoute,
+      private location:Location,
       private oHistoricalIndexService: HistoricalIndexService,
-      private oProgramService:ProgramService, 
-      private oFHService:FHService, 
+      private oProgramService:ProgramService,
+      private oFHService:FHService,
       private oDictionaryService:DictionaryService,
       private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) {}
 
@@ -70,7 +70,7 @@ export class ProgramViewComponent implements OnInit {
 This Federal Assistance Listing was not updated by the issuing agency in "+(new Date()).getFullYear()+". \n\
 Please contact the issuing agency listed under \"Contact Information\" for more information." }});
           }
-          
+
           this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
             for (var key in res) {
               this.aDictionaries[key] = res[key];
@@ -92,8 +92,14 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           });
           if (this.oProgram.program.data.relatedPrograms.flag != "na") {
             for (let programId of this.oProgram.program.data.relatedPrograms.relatedTo) {
-              this.oProgramService.getProgramById(programId).subscribe(relatedFal => {
-                this.aRelatedProgram.push({"programNumber": relatedFal.program.data.programNumber, "id": relatedFal.program.data._id})
+              this.oProgramService.getLatestProgramById(programId).subscribe(relatedFal => {
+                if(typeof relatedFal.program !== 'undefined')
+                {
+                  this.aRelatedProgram.push({
+                    "programNumber": relatedFal.program.data.programNumber,
+                    "id": relatedFal.program.data._id
+                  });
+                }
               })
             }
           }
@@ -282,7 +288,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       let transformedGraphData = graphData();
       let transformedData = [];
       let yearTotals = {};
-      
+
       transformedData["columns"] = ["Obligation(s)"];
       yearTotals[transformedData["columns"][0]] = "Total";
 
@@ -313,5 +319,5 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
     }
 
   }
-  
+
 }

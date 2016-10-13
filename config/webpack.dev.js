@@ -29,6 +29,11 @@ if(!process.env.API_UMBRELLA_KEY || !process.env.API_UMBRELLA_URL){
     process.env.API_UMBRELLA_KEY = envs('API_UMBRELLA_KEY', '');
   }
 }
+if(!process.env.SHOW_OPTIONAL){
+  process.env.SHOW_OPTIONAL = false;
+} else {
+  process.env.SHOW_OPTIONAL = (process.env.SHOW_OPTIONAL=="true");
+}
 
 const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
 const HOST = process.env.HOST || '0.0.0.0';
@@ -40,7 +45,8 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   ENV: ENV,
   HMR: HMR,
   API_UMBRELLA_URL: process.env.API_UMBRELLA_URL, //API UMBRELLA HOST
-  API_UMBRELLA_KEY: process.env.API_UMBRELLA_KEY
+  API_UMBRELLA_KEY: process.env.API_UMBRELLA_KEY,
+  SHOW_OPTIONAL: process.env.SHOW_OPTIONAL
 });
 
 /**
@@ -130,12 +136,14 @@ module.exports = webpackMerge(commonConfig, {
       'HMR': METADATA.HMR,
       'API_UMBRELLA_URL': JSON.stringify(METADATA.API_UMBRELLA_URL),
       'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY),
+      'SHOW_OPTIONAL': JSON.stringify(METADATA.SHOW_OPTIONAL),
       'process.env': {
         'ENV': JSON.stringify(METADATA.ENV),
         'NODE_ENV': JSON.stringify(METADATA.ENV),
         'HMR': METADATA.HMR,
         'API_UMBRELLA_URL': JSON.stringify(METADATA.API_UMBRELLA_URL),
-        'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY)
+        'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY),
+        'SHOW_OPTIONAL': JSON.stringify(METADATA.SHOW_OPTIONAL)
       }
     }),
 

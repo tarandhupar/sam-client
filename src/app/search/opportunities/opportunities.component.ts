@@ -10,8 +10,7 @@ import 'rxjs/add/operator/map';
       <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
     </p>
     <h3 class="opportunity-title">
-      <span *ngIf="data.archive==false">{{ data.procurementTitle }}</span>
-      <span *ngIf="data.archive==true">{{ data.procurementTitle }}</span>
+      <a [routerLink]="['/opportunities', data._id]">>{{ data.procurementTitle }}</a>
     </h3>
     <div class="usa-width-two-thirds">
       <p class="m_T-2x" *ngIf="data.procurementDescription!=null && data.procurementDescription.length>150">
@@ -22,8 +21,8 @@ import 'rxjs/add/operator/map';
       </p>
       <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         <li><strong>Department:</strong> <a href="#">{{ data.parentAgencyName }}</a></li>
-        <li><strong>Office:</strong> <a href="#">{{ data.officeName }}</a></li>
-        <li><strong>Location:</strong>{{ data.location }}</li>
+        <li><strong>Office:</strong> <a href="#">{{ data.agencyName }}</a></li>
+        <li><strong>Location:</strong> {{ data.officeName }}</li>
       </ul>
     </div>
     <div class="usa-width-one-third">
@@ -52,6 +51,6 @@ import 'rxjs/add/operator/map';
   styleUrls: ['../search.style.css']
 })
 export class OpportunitiesResult{
-	@Input() data: any;
-	constructor() {}
+  @Input() data: any;
+  constructor() {}
 }

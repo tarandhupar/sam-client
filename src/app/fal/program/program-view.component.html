@@ -38,10 +38,10 @@
         <span *ngIf="oFederalHierarchy"><strong>{{oFederalHierarchy.type | capitalize}}: </strong>{{oFederalHierarchy.name}}<br></span>
         <span><strong>FAL Number: </strong>{{oProgram.program.data.programNumber}}<br></span>
         <span><strong>Related Federal Assistance: </strong>
-            <span *ngIf="aRelatedProgram && oProgram.program.data.relatedPrograms.flag != 'na'">
+            <span *ngIf="aRelatedProgram && oProgram.program.data.relatedPrograms.flag != 'na' && aRelatedProgram.length > 0">
                 <span *ngFor="let item of aRelatedProgram; let isLast = last"><a href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}</span>
             </span>
-          <span *ngIf="oProgram.program.data.relatedPrograms.flag == 'na'">Not Applicable.</span>
+          <span *ngIf="oProgram.program.data.relatedPrograms.flag == 'na' || aRelatedProgram.length == 0">Not Applicable.</span>
         </span>
     </p>
     <h2 id="overview">Overview</h2>

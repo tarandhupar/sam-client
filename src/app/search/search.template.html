@@ -3,24 +3,26 @@
 		<h1>SAM.gov Search Results</h1>
 	</div>
   <div class="usa-width-one">
-    <form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch(true)" #f="ngForm">
-      <div class="usa-width-one-fourth">
-        <label for="index" class="usa-sr-only">Select an index</label>
-        <select name="index" id="index" [(ngModel)]="index">
-          <option [value]="indexes[0]" selected="true">All</option>
-					<option [value]="indexes[1]">Assistance Listings</option>
-          <option [value]="indexes[2]">Opportunities</option>
-        </select>
-      </div>
-    	<div role="search" class="usa-width-three-fourths">
-        <label class="usa-sr-only" for="search-field-big">Search big</label>
-        <input id="search-field-big" type="search" name="keyword" placeholder="#keyword" [(ngModel)]="keyword" autofocus>
-        <button type="submit">
-          <span class="usa-search-submit-text">Search</span>
-        </button>
-      </div>
-    </form>
+    <samSearchbar (onSearch)="onSearchClick($event)" [keyword]="keyword" [placeholder]="'#keyword'"></samSearchbar>
+    <!--<form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch(true)" #f="ngForm">-->
+      <!--<div class="usa-width-one-fourth">-->
+        <!--<label for="index" class="usa-sr-only">Select an index</label>-->
+        <!--<select name="index" id="index" [(ngModel)]="index">-->
+          <!--<option [value]="indexes[0]" selected="true">All</option>-->
+					<!--<option [value]="indexes[1]">Assistance Listings</option>-->
+          <!--<option [value]="indexes[2]">Opportunities</option>-->
+        <!--</select>-->
+      <!--</div>-->
+    	<!--<div role="search" class="usa-width-three-fourths">-->
+        <!--<label class="usa-sr-only" for="search-field-big">Search big</label>-->
+        <!--<input id="search-field-big" type="search" name="keyword" placeholder="#keyword" [(ngModel)]="keyword" autofocus>-->
+        <!--<button type="submit">-->
+          <!--<span class="usa-search-submit-text">Search</span>-->
+        <!--</button>-->
+      <!--</div>-->
+    <!--</form>-->
     <div class="usa-width-one">
+
       <h3>Common Filters:</h3>
       <fh-input #fhInput [hideOffice]="true" (organization)="onOrganizationChange($event)"></fh-input>
       <hr *ngIf="data.results" class="m_T-5x"/>
