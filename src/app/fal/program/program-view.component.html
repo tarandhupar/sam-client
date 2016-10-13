@@ -476,11 +476,12 @@
       <h2 id="history">History</h2><br>
       <div *ngFor="let item of oHistoricalIndex">
         <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">
-          <p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
+        <!--<p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
             {{item.fiscalYear}} ({{item.statusCode}})
             <span class="historyDetails">{{item.actionType | historicalIndexLabel}}</span>
           </p>
-          <p id="fiscalYear" *ngIf="!item.statusCode">
+          <p id="fiscalYear" *ngIf="!item.statusCode">-->
+          <p>
             {{item.fiscalYear}}
             <span class="historyDetails" >{{item.actionType | historicalIndexLabel}}</span>
           </p>
