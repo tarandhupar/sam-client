@@ -27,7 +27,7 @@
     </div>
 
     <div class="relative div-fill">
-      <input class="search-inputbar" type="search" name="search" [(ngModel)]="keyword" [placeholder]="placeholder">
+      <input class="search-inputbar" type="search" name="search" [(ngModel)]="keyword" [placeholder]="placeholder" (keyup.enter)="onSearchClick()">
 
     </div>
 

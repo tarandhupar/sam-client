@@ -56,7 +56,11 @@ export class App{
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
+    } else {
+      qsobj['index'] = '';
     }
+
+    qsobj['page'] = 1;
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
