@@ -1,5 +1,5 @@
 import { Component,OnInit } from '@angular/core';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import 'rxjs/add/operator/map';
 import { SearchService } from '../common/service/search.service';
@@ -31,8 +31,9 @@ export class Search implements OnInit{
 	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
-	showOptional:any = SHOW_OPTIONAL=="true";
-	constructor(private activatedRoute: ActivatedRoute, private searchService: SearchService) { }
+	showOptional:any = (SHOW_OPTIONAL=="true");
+
+	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
 		this.activatedRoute.queryParams.subscribe(
 			data => {
@@ -40,23 +41,24 @@ export class Search implements OnInit{
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.runSearch(true);
+        if(this.initLoad){ this.runSearch(true); } else { this.runSearch(false); }
 		});
 	}
 
 	onOrganizationChange(orgId:string){
     this.organizationId = orgId;
 	}
+
 	onSearchClick($event) {
-    this.keyword = $event.keyword;
-    this.index = $event.searchField;
-    this.runSearch(true);
-  }
-	runSearch(newSearch){
-		//push state to history
+      this.keyword = $event.keyword;
+      this.index = $event.searchField;
+      this.runSearch(true);
+    }
+
+	runSearch(newsearch){
 		if(typeof window != "undefined"){
 			var qsobj = {};
-			if (!this.initLoad && history.pushState) {
+			if (!this.initLoad) {
 				if(this.organizationId.length>0){
 					qsobj['organizationId'] = this.organizationId;
 				}
@@ -66,16 +68,17 @@ export class Search implements OnInit{
 				if(this.index.length>0){
 					qsobj['index'] = this.index;
 				}
-				if(!newSearch && this.pageNum>=0){
+				if(!newsearch && this.pageNum>=0){
 					qsobj['page'] = this.pageNum+1;
 				}
 				else{
-					this.pageNum=0;
+					qsobj['page'] = 1;
 				}
-				var qsString = Object.keys(qsobj).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(qsobj[k])}`).join('&');
 
-		    var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?' + qsString;
-		    window.history.pushState({path:newurl},'',newurl);
+		    let navigationExtras: NavigationExtras = {
+		      queryParams: qsobj
+		    };
+		    this.router.navigate(['/search'],navigationExtras);
 			}
 		}
 
@@ -96,9 +99,9 @@ export class Search implements OnInit{
 	          }
 	        }
 	        this.data = data._embedded;
-            this.totalCount = data.page['totalElements'];
-            var maxAllowedPages = data.page['maxAllowedRecords']/this.showPerPage;
-            this.totalPages = data.page['totalPages']>maxAllowedPages?maxAllowedPages:data.page['totalPages'];
+          this.totalCount = data.page['totalElements'];
+          var maxAllowedPages = data.page['maxAllowedRecords']/this.showPerPage;
+          this.totalPages = data.page['totalPages']>maxAllowedPages?maxAllowedPages:data.page['totalPages'];
 	      } else{
 	      	this.data['results'] = null;
 	      }
@@ -114,7 +117,7 @@ export class Search implements OnInit{
 
 	pageChange(pagenumber){
 		this.pageNum = pagenumber;
-		this.runSearch(false)
+		this.runSearch(false);
 	}
 
 	createRange(number){
