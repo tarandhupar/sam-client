@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
   moduleId: __filename,
   templateUrl: 'opportunity-view.component.html',
-  styleUrls: [],
+  styleUrls: ['opportunity-view.style.css'],
   providers: [
     SearchService,
   ]
@@ -18,7 +18,7 @@ export class OpportunityViewComponent implements OnInit, OnDestroy {
   currentUrl: string;
 
   constructor(
-    private route:ActivatedRoute, 
+    private route:ActivatedRoute,
     private oSearchService:SearchService,
     private oLocation: Location) {}
 
