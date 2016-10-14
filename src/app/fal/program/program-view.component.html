@@ -5,7 +5,7 @@
     <br><br>
     <!--<img src="/assets/logo.png">-->
     <!--Side Navigation-->
-    <nav>
+    <nav sam-sticky limit=1200>
       <ul class="usa-sidenav-list">
         <li><a href="{{currentUrl}}#overview">Overview</a></li>
         <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
@@ -21,6 +21,9 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths">
+    <template [ngIf]="oProgram && aAlert.length > 0">
+      <samAlert *ngFor="let oAlert of aAlert" labelname="oAlert.labelname" [config]="oAlert.config"></samAlert>
+    </template>
     <div *ngIf="oProgram">
       <h1>
         {{oProgram?.program?.data?.title}}
@@ -35,14 +38,13 @@
         <span *ngIf="oFederalHierarchy"><strong>{{oFederalHierarchy.type | capitalize}}: </strong>{{oFederalHierarchy.name}}<br></span>
         <span><strong>FAL Number: </strong>{{oProgram.program.data.programNumber}}<br></span>
         <span><strong>Related Federal Assistance: </strong>
-            <span *ngIf="aRelatedProgram && oProgram.program.data.relatedPrograms.flag != 'na'">
+            <span *ngIf="aRelatedProgram && oProgram.program.data.relatedPrograms.flag != 'na' && aRelatedProgram.length > 0">
                 <span *ngFor="let item of aRelatedProgram; let isLast = last"><a href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}</span>
             </span>
-          <span *ngIf="oProgram.program.data.relatedPrograms.flag == 'na'">Not Applicable.</span>
+          <span *ngIf="oProgram.program.data.relatedPrograms.flag == 'na' || aRelatedProgram.length == 0">Not Applicable.</span>
         </span>
     </p>
     <h2 id="overview">Overview</h2>
-    <samLabel labelname="coming-soon-label" [config]="{type:'small', data:'Coming soon'}"></samLabel>
     <!--Objectives-->
     <section *ngIf="oProgram">
       <h3>Objectives:</h3>
@@ -476,11 +478,12 @@
       <h2 id="history">History</h2><br>
       <div *ngFor="let item of oHistoricalIndex">
         <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">
-          <p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
+        <!--<p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
             {{item.fiscalYear}} ({{item.statusCode}})
             <span class="historyDetails">{{item.actionType | historicalIndexLabel}}</span>
           </p>
-          <p id="fiscalYear" *ngIf="!item.statusCode">
+          <p id="fiscalYear" *ngIf="!item.statusCode">-->
+          <p>
             {{item.fiscalYear}}
             <span class="historyDetails" >{{item.actionType | historicalIndexLabel}}</span>
           </p>

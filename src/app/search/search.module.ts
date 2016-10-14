@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
 import { Search }   from './search.component';
 import { AssistanceListingResult } from './assistance_listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
@@ -11,6 +13,8 @@ import { SamAngularModule } from '../../sam-angular/sam-angular.module';
   imports: [
     BrowserModule,
     FormsModule,
+    RouterModule,
+    HttpModule,
     SamAngularModule
   ],
   exports: [
