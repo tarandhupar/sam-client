@@ -26,22 +26,20 @@ export class SamSearchbarComponent {
   @Input()
   placeholder: string = "";
 
+  @Input()
+  filterValue: string = "";
+
+
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
 
-  searchIndices = {
-    'All':'',
-    'Opportunities':'fbo',
-    'Assistance Listings':'cfda'
-  }
   searchBtnText:string = "Search";
-  filterValue:string = "All";
 
   selectConfig = {
     options: [
-      {value: 'All', label: 'All', name: 'All'},
-      {value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'},
-      {value: 'Assistance Listings', label: 'Assistance Listings', name: 'Assistance Listings'},
+      {value: '', label: 'All'},
+      {value: 'fbo', label: 'Opportunities'},
+      {value: 'cfda', label: 'Assistance Listings'},
     ],
     disabled: false,
     label: '',
@@ -58,6 +56,14 @@ export class SamSearchbarComponent {
     }
   }
 
+  getLabelForValue(value) {
+    let option = this.selectConfig.options.find(o => o.value === value);
+    if (option) {
+      return option.label;
+    }
+  }
+
+
   onSelect(value):void {
     this.filterValue = value;
   }
@@ -65,7 +71,7 @@ export class SamSearchbarComponent {
   onSearchClick():void{
     this.onSearch.emit({
       keyword:this.keyword,
-      searchField: this.searchIndices[this.filterValue]
+      searchField: this.filterValue
     });
   }
 

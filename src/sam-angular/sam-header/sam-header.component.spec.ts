@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { RouterTestingModule} from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import { SamHeaderComponent } from './sam-header.component';
 import {SamAngularModule} from "../sam-angular.module";
+import {Home} from "../../app/home/home.component";
 
 
 describe('The Sam Header component', () => {
@@ -13,9 +14,12 @@ describe('The Sam Header component', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SamAngularModule, RouterTestingModule.withRoutes([
-         { path: 'home', component: SamHeaderComponent }
-        ])],
+      declarations:[Home],
+      imports: [SamAngularModule,RouterTestingModule.withRoutes([
+        { path: '',      component: Home },
+        { path: 'home',  component: Home }]
+      )],
+
       providers: [SamHeaderComponent],
     });
     fixture = TestBed.createComponent(SamHeaderComponent);
