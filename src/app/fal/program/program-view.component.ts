@@ -157,8 +157,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       })
       .entries(financialData);
 
-      console.log(assistanceTotalsGroupedByYear);
-
     let assistanceDetails = d3.nest()
       .key(function (d: any) { return d.obligation; })
       .key(function (d: any) { return d.info; })
@@ -442,7 +440,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
   }
 
   prepareVisualizationData(financialData){
-    console.log(financialData);
     let self = this;
     let formattedFinancialData = []
 
@@ -468,9 +465,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         formattedFinancialData.push(financialItem);
       }      
     });
-
-    console.log(formattedFinancialData);
-
     return formattedFinancialData;
   }
 
