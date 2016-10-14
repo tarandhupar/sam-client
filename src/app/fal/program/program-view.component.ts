@@ -31,6 +31,7 @@ export class ProgramViewComponent implements OnInit {
   aDictionaries:any = [];
   authorizationIdsGrouped:any[];
   oHistoricalIndex:any;
+  aAlert:any = [];
 
   private sub:Subscription;
 
@@ -58,16 +59,18 @@ export class ProgramViewComponent implements OnInit {
       'functional_codes'
     ];
 
-    this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
-      for (var key in res) {
-        this.aDictionaries[key] = res[key];
-      }
-    });
-
     this.sub = this.route.params.subscribe(params => {
       let id = params['id']; //id will be a string, not a number
       this.oProgramService.getProgramById(id).subscribe(res => {
           this.oProgram = res;
+
+          //check if this program has changed in this FY
+          if ((new Date(this.oProgram.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
+              this.aAlert.push({"labelname":"not-updated-since", "config":{ "type": "warning", "title": "", "description": "Note: \n\
+This Federal Assistance Listing was not updated by the issuing agency in "+(new Date()).getFullYear()+". \n\
+Please contact the issuing agency listed under \"Contact Information\" for more information." }});
+          }
+
           this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
             for (var key in res) {
               this.aDictionaries[key] = res[key];
@@ -110,22 +113,77 @@ export class ProgramViewComponent implements OnInit {
   }
 
 
-  createVisualization(data): void {
+  createVisualization(financialData): void {
 
+    /**
+     * --------------------------------------------------
+     * Containers
+     * --------------------------------------------------
+     */
     d3.select("#visualization")
       .insert("svg")
       .attr("id", "chart")
-      .attr("style", "width: 100%; height:400px;");
+      .attr("style", "width: 100%; height:300px;");
 
     d3.select("#visualization")
       .insert("table")
       .attr("id", "chart-table");
 
-    // Prepare data
-    let { graph: graphData, table: tableData } = data;
+    /**
+     * --------------------------------------------------
+     * Data Grouping
+     * --------------------------------------------------
+     */
+    let assistanceTotals = d3.nest()
+      .key(function (d: any) { return d.obligation; })
+      .key(function (d: any) { return d.year; }).sortKeys(d3.ascending)
+      .rollup(function (values) {
+        return { "total": d3.sum(values, function (d: any) { return +d.amount; }) }
+      })
+      .entries(financialData);
 
-    // Graph
-    const chartID = "#chart";
+    let assistanceTotalsGroupedByYear = d3.nest()
+      .key(function (d: any) { return d.year; }).sortKeys(d3.ascending)
+      .key(function (d: any) { return d.obligation; })
+      .rollup(function (values) {
+        let isEstimate = false;
+        let year;
+        let formatyear;
+        values.forEach(function(item){ 
+          if(item.estimate){ isEstimate = true; }
+          year = item.year;
+        });
+        return { "year": formatYear(String(year),isEstimate), "total": d3.sum(values, function (d: any) { return +d.amount; }) }
+      })
+      .entries(financialData);
+
+    let assistanceDetails = d3.nest()
+      .key(function (d: any) { return d.obligation; })
+      .key(function (d: any) { return d.info; })
+      .key(function (d: any) { return d.year; }).sortKeys(d3.ascending)
+      .entries(financialData);
+
+    let vizTotals = d3.nest()
+      .key(function (d: any) { return d.year; }).sortKeys(d3.ascending)
+      .rollup(function (values) {
+        return { "total": d3.sum(values, function (d: any) { return +d.amount; }) }
+      })
+      .entries(financialData);
+
+    /**
+     * --------------------------------------------------
+     * Stack Chart
+     * --------------------------------------------------
+     */
+
+    let svg = d3.select("#visualization > svg");
+    let margin = { top: 30, left: 110, right: 20, bottom: 40 };
+
+    let height = parseInt(svg.style("height"), 10) - margin.top - margin.bottom;
+    let width = parseInt(svg.style("width"), 10) - margin.left - margin.right;
+    svg.attr("height", parseInt(svg.style("height"), 10));
+    svg.attr("width", parseInt(svg.style("width"), 10));
+
     const stackColors = [
       "#046b99",
       "#9bdaf1",
@@ -142,44 +200,42 @@ export class ProgramViewComponent implements OnInit {
       "#8ba6ca"
     ];
 
-    const svg = d3.select(chartID);
-    const margin = { top: 30, left: 120, right: 20, bottom: 30 };
-    const height = parseInt(svg.style("height"), 10) - margin.top - margin.bottom;
-    const width = parseInt(svg.style("width"), 10) - margin.left - margin.right;
-    const g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    let g = svg.append("g")
+      .attr("class", "bars")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");;
+    
+    let { series: series, keys: stackKeys } = getStackProperties(assistanceTotalsGroupedByYear);
 
-    const x = d3.scaleBand().rangeRound([0, width]).padding(0.3).align(.5);
-    const y = d3.scaleLinear().rangeRound([height, 0]);
-    const z = d3.scaleOrdinal().range(stackColors);
+    // Axis Range
+    let x = d3.scaleBand().range([0, width]).padding(0.25);
+    let y = d3.scaleLinear().range([height, 0]);
+    let z = d3.scaleOrdinal().range(stackColors);
 
-    x.domain(graphData.map(function (d) { return d["Year"]; }));
-    y.domain([0, d3.max(graphData, function (d) { return d.total; })]).nice();
-    z.domain(graphData.columns);
+    // Axis Domain
+    x.domain(assistanceTotalsGroupedByYear.map(function (d) { return d.values[0].value.year; }));
+    y.domain([0, d3.max(assistanceTotalsGroupedByYear, function (item) { return item.values[0].value.total; })]).nice();
+    z.domain(stackKeys);
 
-    var chart = g.selectAll(".serie")
-      .data(d3.stack().keys(graphData.columns)(graphData));
+    // Axis DOM
+    let axis = svg.append("g")
+      .attr("class", "axis")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    var graph = chart.enter().append("g");
+    let xAxis = d3.axisBottom(x)
+      .tickSizeInner(0)
+      .tickSizeOuter(0)
+      .tickPadding(10);
 
-    var serie = graph.attr("class", "serie")
-      .attr("fill", function (d, i, j) { return z(d.key); });
+    let yAxis = d3.axisLeft(y)
+      .ticks(5, "$,r")
+      .tickSizeInner(-width)
+      .tickSizeOuter(0)
+      .tickPadding(5);;
 
-    var rect = serie.selectAll("rect")
-      .data(function (d) { return d; })
-      .enter().append("rect")
-      .attr("x", function (d) { return x(d.data["Year"]); })
-      .attr("y", height)
-      .attr("width", x.bandwidth())
-      .attr("height", 0);
-
-    // Intro animation
-    rect.transition(d3.transition().duration(500).ease(d3.easeQuad))
-      .delay(function (d, i) { return i * 400 })
-      .attr("y", function (d) { return y(d[1]); })
-      .attr("height", function (d) { return y(d[0]) - y(d[1]); });
-
-    g.append("g").attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x).tickSizeInner(0).tickSizeOuter(0).tickPadding(10))
+    let gX = axis.append("g")
+      .attr("class", "axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
       .append("text")
       .attr("x", width / 2)
       .attr("y", -(height + 15))
@@ -188,133 +244,220 @@ export class ProgramViewComponent implements OnInit {
       .attr("class", "svg-font-bold")
       .text("Obligation(s)");
 
-    g.append("g").attr("class", "axis axis--y")
-      .call(d3.axisLeft(y).ticks(5, "$,r").tickSizeInner(-width).tickSizeOuter(0).tickPadding(10))
-      .append("text")
-      .attr("x", 5)
-      .attr("y", -5);
+    let gY = axis.append("g")
+      .attr("class", "axis--y")
+      .call(yAxis);
 
+    // Data Join
+    let chart = g.selectAll(".serie")
+      .data(series, function (d) {
+        return d;
+      });
+
+    // Enter
+    let graph = chart.enter().append("g");
+
+    let serie = graph.attr("class", "serie")
+      .attr("data-assistance", function (d) { return d.key; })
+      .attr("fill", function (d) { return z(d.key); });
+
+    let rect = serie.selectAll("rect")
+      .data(function (d) { return d; })
+      .enter()
+      .append("rect")
+      .attr("x", function (d) {
+        return x(d.data.values[0].value.year) + (x.bandwidth() / 4);
+      })
+      .attr("y", function (d) {
+        return y(d[1]);
+      })
+      .style("cursor", "pointer")
+      .attr("height", function (d) {
+        return y(d[0]) - y(d[1]);
+      })
+      .attr("width", x.bandwidth() / 2);
+
+    // Clean DOM
     d3.select(".axis--y .domain").remove();
+
+    // Style
     d3.selectAll("svg text").attr("style", "font-size: 17px; font-family: 'Source Sans Pro';");
     d3.selectAll(".svg-font-bold").attr("style", "font-size: 17px; font-family: 'Source Sans Pro'; font-weight: 700;");
     d3.selectAll("svg .axis--y .tick line").attr("style", "stroke: rgba(0, 0, 0, 0.1);");
+    
+    // Tooltip
+    let tooltip;
+    rect.on("mouseover", function (d) {
+        tooltip = d3.select("body").append("div")
+          .attr("class", "tooltip")
+          .style("display", "inline")
+          .style("position", "absolute")
+          .style("text-align", "center")
+          .style("font", "14px Source Sans Pro")
+          .style("padding", "10px")
+          .style("margin", "20px 0 0 20px")
+          .style("background", "white")
+          .style("-webkit-box-shadow", "3px 5px 30px -4px rgba(0,0,0,0.33)")
+          .style("-moz-box-shadow", "3px 5px 30px -4px rgba(0,0,0,0.33)")
+          .style("box-shadow", "3px 5px 30px -4px rgba(0,0,0,0.33)")
+      })
+      .on("mousemove", function (d) {
+        tooltip.html(this.parentNode.attributes["data-assistance"].value + "<span style='display: block; font-size: 17px; font-weight: 700;'>" + d3.format("($,")(d[1] - d[0]) + "</span>")
+          .style("left", (d3.event.pageX - 30) + "px")
+          .style("top", (d3.event.pageY - 10) + "px");
+      })
+      .on("mouseout", function () {
+        d3.select(".tooltip").remove();
+      });
 
-    // Table
-    const table = d3.select("#chart-table");
-    const thead = table.append("thead");
-    const tbody = table.append("tbody");
-    const numFormat = d3.format("($,");
 
+    function formatYear(year: string, estimate: boolean): string {
+      let formattedYear = "FY " + year.slice(2, 4);
+      return estimate ? formattedYear + " (est.)" : formattedYear;
+    }
+
+    function getStackProperties(data) {
+      let loopCounter = 0;
+      let yearLoop = 0;
+      let stackKeys = d3.set();
+
+      let stack = d3.stack()
+        .keys(function (d) {
+          d.forEach(function (e) {
+            e.values.forEach(function (el) {
+              stackKeys.add(el.key);
+            });
+          });
+          return stackKeys.values();
+        })
+        .value(function (d, key, i, m) {
+          if (loopCounter == m.length) {
+            loopCounter = 0;
+            yearLoop++;
+          }
+          loopCounter++;
+          return d.values[yearLoop].value.total;
+        });
+
+      return { "series": stack(data), "keys": stackKeys.values() };
+    }
+    
+    /**
+     * --------------------------------------------------
+     * Table
+     * --------------------------------------------------
+     */
+    let table = d3.select("#visualization table");
+    let thead = table.append("thead");
+    let tbody = table.append("tbody");
+
+    // Table header
     thead.selectAll("th")
-      .data(tableData.columns)
+      .data(assistanceTotalsGroupedByYear)
       .enter().append("th")
-      .text(function (d) { return d; });
+      .text(function (d) { return d.values[0].value.year; });
 
+    thead.insert("th", ":first-child").text("Obligation(s)");
+
+    // Table: Assistance Totals
     tbody.selectAll("tr")
-      .data(tableData)
-      .enter().append("tr")
+      .data(assistanceTotals)
+      .enter()
+      .append("tr")
+      .style("font-weight", "700")
+      .attr("class", "total")
+      .selectAll("td")
+      .data(function (d: any) {
+        return d.values;
+      })
+      .enter()
+      .append("td")
+      .html(function (d: any) {
+        return d3.format("($,")(d.value.total);
+      });
+
+    // Insert assistance type name column
+    tbody.selectAll("tr")
+      .data(assistanceTotals)
+      .insert("td", ":first-child")
+      .html(function (d) {
+        return "<span class=\"legend\" style=\"background-color:" + z(d.key) + "; border:1px solid #000; width: 10px; height: 10px; display: inline-block;\"></span>  " + d.key + " Total";
+      });
+
+    // Table: Assistance Details
+    tbody.selectAll("tr")
+      .data(assistanceDetails)
+      .append("tr")
+      .attr("class", "details")
       .selectAll("td")
       .data(function (d) {
-        let cells = [];
-        for (let i = 0; i < tableData.columns.length; ++i) {
-          // Formats numbers
-          // Note: Assumes that all columns except first one are numbers
-          cells.push(i > 0 ? numFormat(d[tableData.columns[i]]) : "<span style=\"border: 1px solid #000; width: 10px; height: 10px; display: inline-block;background-color:" + z(d["Obligation(s)"]) + ";\"></span>  " + d[tableData.columns[i]]);
-        }
-        return cells;
+        return d.values;
       })
-      .enter().append("td")
-      .html(function (d) { return d; });
+      .enter()
+      .append("tr")
+      .attr("class", "detail")
+      .html(function (d: any) {
+        // If additional info content its empty remove row
+        if(!d.key){
+          this.remove();
+        }
+        return "<td>" + d.key + "</td>";
+      })
+      .selectAll("tr")
+      .data(function (d) {
+        return d.values;
+      })
+      .enter()
+      .append("td")
+      .text(function (d: any) {
+        return d3.format("($,")(d.values[0].amount);
+      });
 
-    // Remove legend from total row
-    d3.select("#chart-table tr:last-child td span").remove();
-    d3.selectAll("#chart-table tr:last-child td").attr("style", "font-weight: 700");
+    // Move and unwrap assistance details
+    d3.selectAll("tr.details").each(function () {
+      this.parentNode.parentNode.insertBefore(this, this.parentNode.nextSibling);
+      this.outerHTML = this.innerHTML;
+    });
+
+
+    // Table Totals
+    table.selectAll("tbody")
+      .append("tr")
+      .html("<td>Totals</td>")
+      .style("font-weight", "700")
+      .attr("class", "totals")
+      .selectAll("tr")
+      .data(vizTotals)
+      .enter()
+      .append("td")
+      .html(function (d: any) {
+        return d3.format("($,")(d.value.total);
+      });
 
   }
 
-
-  prepareVisualizationData(financialData): Object {
-
+  prepareVisualizationData(financialData){
     let self = this;
-
-    function formatYear(year: string, hasActual: boolean): string {
-      let formattedYear = "FY" + year.slice(2, 4);
-      return hasActual ? formattedYear : formattedYear + " (est.)";
-    }
-
-    function formatLabel(item): string {
-      let assistanceType = getAssistanceType(item.assistanceType)[0].value;
-      let itemLabel = assistanceType + " - " + item.additionalInfo.content.trim();
-      return itemLabel;
-    }
+    let formattedFinancialData = []
 
     function getAssistanceType(id): Object {
-      return self.FilterMultiArrayObjectPipe.transform([id], self.aDictionaries.assistance_type, 'element_id', true, 'elements');
+      return self.FilterMultiArrayObjectPipe.transform([id], self.aDictionaries.assistance_type, 'element_id', true, 'elements')[0].value;
     }
 
-    function graphData(): any[] {
-      let transformedData = [];
-      transformedData["columns"] = [];
-      _.map(financialData, function (item: any) {
-        let itemLabel = formatLabel(item);
-        let newIndex = 0;
-        for (let name in item.values) {
-          let year = formatYear(name, item.values[name]["actual"]);
-          transformedData[newIndex] = transformedData[newIndex] || {};
-          transformedData[newIndex]["Year"] = year;
-          transformedData[newIndex][itemLabel] = item.values[name]["actual"] || item.values[name]["estimate"];
-          newIndex++;
+    financialData.map(function(item){
+      for(let year in item.values){
+        let financialItem = {
+          "obligation": getAssistanceType(item.assistanceType),
+          "info": item.additionalInfo.content || "",
+          "year": +year,
+          "amount": item.values[year]["actual"] || item.values[year]["estimate"] || 0,
+          "estimate": !!!item.values[year]["actual"]
         }
-        transformedData["columns"].push(itemLabel);
-      });
+        formattedFinancialData.push(financialItem);
+      }      
+    });
 
-      // Add Total
-      _.map(transformedData, function (item) {
-        let total = 0;
-        for (let name in item) {
-          total += (name == "Year") ? 0 : Number(item[name]);
-        }
-        item.total = total;
-      });
-
-      return transformedData;
-    }
-
-    function tableData(): any[] {
-
-      let transformedGraphData = graphData();
-      let transformedData = [];
-      let yearTotals = {};
-
-      transformedData["columns"] = ["Obligation(s)"];
-      yearTotals[transformedData["columns"][0]] = "Total";
-
-      for(let i = 0; i < transformedGraphData.length; i++ ){
-        yearTotals[transformedGraphData[i]["Year"]] = transformedGraphData[i].total;
-        transformedData["columns"].push(transformedGraphData[i]["Year"]);
-      }
-
-      _.map(financialData, function (item: any, index) {
-        let itemLabel = formatLabel(item);
-        for (let name in item.values) {
-          let year = formatYear(name, item.values[name]["actual"]);
-          transformedData[index] = transformedData[index] || {};
-          transformedData[index][year] = item.values[name]["actual"] || item.values[name]["estimate"];
-        }
-        transformedData[index]["Obligation(s)"] = itemLabel;
-      });
-
-      // Add Total
-      transformedData.push(yearTotals);
-
-      return transformedData;
-    }
-
-    return {
-      graph: graphData(),
-      table: tableData()
-    }
-
+    return formattedFinancialData;
   }
 
 }
