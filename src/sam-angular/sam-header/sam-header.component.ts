@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'samHeader2',
@@ -9,7 +9,8 @@ import { Component, Output, EventEmitter } from '@angular/core';
           <a class="sam_hat_img" [routerLink]="['/home']">
             <img class="marginCenter" src="assets/img/sam_hat_logo.jpg">
           </a>
-          <samSearchbar [size]="'small'" (onSearch)="onSearchEvent($event)"></samSearchbar>          
+          <samSearchbar [size]="'small'" (onSearch)="onSearchEvent($event)" 
+           [keyword]="keyword" [placeholder]="'#keyword'" [filterValue]="filterValue"></samSearchbar>          
         </div>   
       </div>
     </header>
@@ -18,9 +19,17 @@ import { Component, Output, EventEmitter } from '@angular/core';
 })
 export class SamHeaderComponent {
 
+  @Input() keyword: string;
+
+  @Input() filterValue: string;
+
   @Output() searchEvent: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
+
+  ngOnInit(){
+
+  }
 
   onSearchEvent($event) {
     this.searchEvent.emit($event);
