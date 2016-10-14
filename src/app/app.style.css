@@ -3,10 +3,6 @@ html, body{
   /*font-family: Arial, Helvetica, sans-serif*/
 }
 
-span.active {
-  background-color: gray;
-}
-
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{
   min-height: 90vh;

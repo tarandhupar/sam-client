@@ -2,7 +2,7 @@ import { inject,ComponentFixture, TestBed, async,fakeAsync } from '@angular/core
 import { MockBackend } from '@angular/http/testing';
 import { By }              from '@angular/platform-browser';
 import { Component,DebugElement,Input,Output,OnInit,EventEmitter }    from '@angular/core';
-import { Router,ActivatedRoute } from '@angular/router';
+import { Router,ActivatedRoute,RouterModule } from '@angular/router';
 import { Search } from './search.component';
 import { SearchService } from '../common/service/search.service';
 import { AssistanceListingResult } from './assistance_listings/al.component';
@@ -13,10 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { APIService } from '../common/service/api/api.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
-import {SamSearchbarComponent} from "../../sam-angular/sam-searchbar/sam-searchbar.component";
-import {SamSelectComponent} from "../../sam-angular/sam-select/sam-select.component";
-import {LabelWrapperComponent} from "../../sam-angular/common/wrappers/label-wrapper.component";
 import {SamAngularModule} from "../../sam-angular/sam-angular.module";
+import { RouterTestingModule } from '@angular/router/testing';
 
 //dummy child components
 @Component({selector: 'fh-input',template:''})
@@ -112,7 +110,14 @@ describe('SearchComponent', () => {
         { provide: APIService, //override APIservice
           useValue: apiServiceStub
         }],
-      imports: [FormsModule,SamAngularModule]//needed if template has form directives
+      imports: [
+        FormsModule,
+        SamAngularModule, 
+        RouterModule,
+        RouterTestingModule.withRoutes([
+          { path: 'home', component: Search }
+        ])
+      ]//needed if template has form directives
     });
     //override sub-components
     TestBed.overrideComponent(FHInputComponent,{set: {'template': '',providers:[{provide: FHService, useValue: fhServiceStub }]}});

@@ -19,6 +19,7 @@ describe('The Sam Header component', () => {
         { path: '',      component: Home },
         { path: 'home',  component: Home }]
       )],
+
       providers: [SamHeaderComponent],
     });
     fixture = TestBed.createComponent(SamHeaderComponent);
