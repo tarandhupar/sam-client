@@ -213,7 +213,10 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
     // Axis Domain
     x.domain(assistanceTotalsGroupedByYear.map(function (d) { return d.values[0].value.year; }));
-    y.domain([0, d3.max(assistanceTotalsGroupedByYear, function (item) { return item.values[0].value.total; })]).nice();
+    y.domain([0, d3.max(vizTotals, 
+      function (item) {
+        return item.value.total;
+      })]).nice();
     z.domain(stackKeys);
 
     // Axis DOM
@@ -440,14 +443,20 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
     let self = this;
     let formattedFinancialData = []
 
-    function getAssistanceType(id): Object {
+    function getAssistanceType(id): string {
       return self.FilterMultiArrayObjectPipe.transform([id], self.aDictionaries.assistance_type, 'element_id', true, 'elements')[0].value;
     }
 
     financialData.map(function(item){
       for(let year in item.values){
+        let obligation = "No Obligation";
+        if(item.assistanceType){
+         obligation = getAssistanceType(item.assistanceType);
+        }else if(item.questions.salary_or_expense.flag === "yes"){
+          obligation = "Salary or Expense";
+        }
         let financialItem = {
-          "obligation": getAssistanceType(item.assistanceType),
+          "obligation": obligation,
           "info": item.additionalInfo.content || "",
           "year": +year,
           "amount": item.values[year]["actual"] || item.values[year]["estimate"] || 0,
@@ -456,7 +465,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         formattedFinancialData.push(financialItem);
       }      
     });
-
     return formattedFinancialData;
   }
 

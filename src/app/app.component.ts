@@ -39,8 +39,7 @@ export class App{
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
-        this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
-
+        this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
       });
   }
 
@@ -56,7 +55,11 @@ export class App{
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
+    } else {
+      qsobj['index'] = '';
     }
+
+    qsobj['page'] = 1;
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
