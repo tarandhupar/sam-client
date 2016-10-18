@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { SearchPage }   from './search.page';
-import { AssistanceListingResult } from './assistance_listings/al.component';
+import { AssistanceListingResult } from './assistance-listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
 import { FHInputComponent } from './fh.component';
 import { FormsModule } from '@angular/forms';
