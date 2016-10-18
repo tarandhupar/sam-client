@@ -14,7 +14,7 @@ import { globals } from '../common/constants/globals.ts';
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
   templateUrl: './home.template.html'
 })
-export class Home {
+export class HomeComponent {
 
   topicDetails = {
     'XYZ1': 'Bacon ipsum dolor amet picanha frankfurter jerky, cupim tongue drumstick filet',

@@ -145,7 +145,7 @@ npm install --global typescript
       search.page.ts
       search.module.ts
     /home
-      home.routes.ts
+      home.route.ts
       home.page.ts
       home.module.ts
     app.component.ts

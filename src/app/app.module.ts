@@ -14,7 +14,7 @@ import { ROUTES } from './app.routes';
 import { App } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
-import { Home } from './home';
+import { HomeModule } from './home';
 import { NoContent } from './common/no-content';
 import { ProgramModule } from './fal';
 import { DisplayModule } from './display';
@@ -38,21 +38,26 @@ const APP_PROVIDERS = [
   bootstrap: [ App ],
   declarations: [
     App,
-    Home,
     NoContent,
     SamAngularDemo,
   ],
-  imports: [ // import Angular's modules
+  imports: [
+    // Angular Modules
     BrowserModule,
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, { useHash: false }),
+
+    // Page View Modules
     ProgramModule,
     DisplayModule,
+    HomeModule,
+    SearchModule,
+
+    // Other Modules
     SamAngularModule,
     SamUIKitModule,
     SamAPIKitModule,
-    SearchModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,
