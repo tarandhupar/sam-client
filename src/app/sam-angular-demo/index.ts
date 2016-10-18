@@ -1,1 +1,1 @@
-export * from './sam-angular-demo.component';
+export * from './sam-angular-demo.page';
