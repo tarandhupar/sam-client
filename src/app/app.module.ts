@@ -19,7 +19,7 @@ import { NoContent } from './common/no-content';
 import { ProgramModule } from './fal';
 import { DisplayModule } from './display';
 import { SearchModule } from './search';
-import { SamAngularDemo } from "./sam-angular-demo";
+import { SamAngularDemoModule } from "./sam-angular-demo/sam-angular-demo.module";
 
 import { SamAngularModule } from './common/samuikit/samuikit.module';
 import { SamUIKitModule } from '../ui-kit/ui-kit.module';
@@ -39,13 +39,14 @@ const APP_PROVIDERS = [
   declarations: [
     App,
     NoContent,
-    SamAngularDemo,
   ],
   imports: [
     // Angular Modules
     BrowserModule,
     FormsModule,
     HttpModule,
+
+    // Router
     RouterModule.forRoot(ROUTES, { useHash: false }),
 
     // Page View Modules
@@ -53,6 +54,7 @@ const APP_PROVIDERS = [
     DisplayModule,
     HomeModule,
     SearchModule,
+    SamAngularDemoModule,
 
     // Other Modules
     SamAngularModule,
