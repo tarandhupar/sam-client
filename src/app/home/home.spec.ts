@@ -6,7 +6,7 @@ import {
 import { Router } from '@angular/router';
 
 // SAM Imports
-import { HomeComponent } from './home.component';
+import { HomePage } from './home.page';
 
 class RouterStub {
   navigate(url: string) { return url; }
@@ -16,16 +16,16 @@ describe('Home', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
     providers: [
-      HomeComponent,
+      HomePage,
       { provide: Router, useClass: RouterStub }
     ]
   }));
 
-  it('should have default data', inject([ HomeComponent ], (home) => {
+  it('should have default data', inject([ HomePage ], (home) => {
     expect(home.testValue).toEqual({ value: 'Test' });
   }));
 
-  it('should log ngOnInit', inject([ HomeComponent ], (home) => {
+  it('should log ngOnInit', inject([ HomePage ], (home) => {
     spyOn(console, 'log');
     expect(console.log).not.toHaveBeenCalled();
 

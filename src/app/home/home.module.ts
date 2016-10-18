@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { routing } from './home.route';
 import { SamUIKitModule } from 'ui-kit/ui-kit.module';
 import { SamAPIKitModule } from 'api-kit/api-kit.module';
-import {HomeComponent} from "./home.component";
+import {HomePage} from "./home.page";
 
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import {HomeComponent} from "./home.component";
     routing
   ],
   exports: [],
-  declarations: [ HomeComponent ],
+  declarations: [ HomePage ],
   providers: [],
 })
 export class HomeModule { }
