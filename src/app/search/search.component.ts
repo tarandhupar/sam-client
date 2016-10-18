@@ -67,7 +67,9 @@ export class Search implements OnInit{
 				}
 				if(this.index.length>0){
 					qsobj['index'] = this.index;
-				}
+				} else {
+          qsobj['index'] = '';
+        }
 				if(!newsearch && this.pageNum>=0){
 					qsobj['page'] = this.pageNum+1;
 				}
