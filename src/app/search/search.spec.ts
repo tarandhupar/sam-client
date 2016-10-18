@@ -4,16 +4,16 @@ import { By }              from '@angular/platform-browser';
 import { Component,DebugElement,Input,Output,OnInit,EventEmitter }    from '@angular/core';
 import { Router,ActivatedRoute,RouterModule } from '@angular/router';
 import { SearchComponent } from './search.component';
-import { SearchService } from '../../api-kit/search/search.service';
+import { SearchService } from 'api-kit/search/search.service';
 import { AssistanceListingResult } from './assistance_listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
 import { FHInputComponent } from './fh.component';
-import { FHService } from '../../api-kit/fh/fh.service';
+import { FHService } from 'api-kit/fh/fh.service';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { WrapperService } from '../../api-kit/wrapper/wrapper.service';
+import { WrapperService } from 'api-kit/wrapper/wrapper.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
-import { SamUIKitModule } from "../../ui-kit/ui-kit.module";
+import { SamUIKitModule } from 'ui-kit/ui-kit.module';
 import { RouterTestingModule } from '@angular/router/testing';
 
 //dummy child components

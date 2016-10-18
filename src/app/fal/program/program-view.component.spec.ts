@@ -7,7 +7,7 @@ import { PipeTransform } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 import { ProgramViewComponent } from './program-view.component';
-import { FHService } from '../../../api-kit/fh/fh.service';
+import { FHService } from 'api-kit/fh/fh.service';
 import { ProgramService } from '../services/program.service';
 import { DictionaryService } from '../services/dictionary.service';
 import { HistoricalIndexService } from '../services/historical-index.service';

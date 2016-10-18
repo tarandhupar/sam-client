@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {WrapperService} from '../../../api-kit/wrapper/wrapper.service'
+import {WrapperService} from 'api-kit/wrapper/wrapper.service'
 import 'rxjs/add/operator/map';
 
 @Injectable()

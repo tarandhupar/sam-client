@@ -3,12 +3,12 @@ import { By }              from '@angular/platform-browser';
 import { DebugElement }    from '@angular/core';
 import { Router,ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { FHService } from '../../api-kit/fh/fh.service';
+import { FHService } from 'api-kit/fh/fh.service';
 import { MockBackend } from '@angular/http/testing';
-import { WrapperService } from '../../api-kit/wrapper/wrapper.service';
+import { WrapperService } from 'api-kit/wrapper/wrapper.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
 import { Observable } from 'rxjs';
-import { SamUIKitModule } from '../../ui-kit/ui-kit.module';
+import { SamUIKitModule } from 'ui-kit/ui-kit.module';
 
 import { FHInputComponent } from './fh.component';
 

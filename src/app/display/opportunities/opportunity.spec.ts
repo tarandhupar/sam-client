@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import { OpportunityViewComponent } from './opportunity-view.component';
-import { SearchService } from '../../../api-kit/search/search.service';
+import { SearchService } from 'api-kit/search/search.service';
 import { Observable } from 'rxjs';
 
 let comp:    OpportunityViewComponent;
