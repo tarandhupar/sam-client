@@ -2,13 +2,11 @@ import { Routes } from '@angular/router';
 import { Search } from './search/search.component';
 import { NoContent } from './common/no-content';
 import {ProgramViewComponent} from './fal/program/program-view.component';
-import { OpportunityViewComponent } from './display/opportunities/opportunity-view.component';
 import { SamAngularDemo } from './sam-angular-demo';
 
 export let ROUTES: Routes = [
   { path: 'search',  component: Search },
   { path: 'programs',  component: ProgramViewComponent },
-  { path: 'opportunities',  component: OpportunityViewComponent },
   { path: '**',    component: NoContent },
 ];
 
