@@ -1,5 +1,5 @@
-import { inject,ComponentFixture, TestBed, async,fakeAsync } from '@angular/core/testing';
-import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { BaseRequestOptions, Http, HttpModule } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By }              from '@angular/platform-browser';

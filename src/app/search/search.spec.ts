@@ -1,7 +1,6 @@
-import { inject,ComponentFixture, TestBed, async,fakeAsync } from '@angular/core/testing';
+import { inject,TestBed, async } from '@angular/core/testing';
 import { MockBackend } from '@angular/http/testing';
-import { By }              from '@angular/platform-browser';
-import { Component,DebugElement,Input,Output,OnInit,EventEmitter }    from '@angular/core';
+import { Component,Input}    from '@angular/core';
 import { Router,ActivatedRoute,RouterModule } from '@angular/router';
 import { SearchPage } from './search.page';
 import { SearchService, FHService } from 'api-kit';

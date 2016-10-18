@@ -1,11 +1,7 @@
 import { Component,OnInit } from '@angular/core';
 import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 import 'rxjs/add/operator/map';
 import { SearchService } from 'api-kit';
-import { AssistanceListingResult } from './assistance-listings/al.component';
-import { OpportunitiesResult } from './opportunities/opportunities.component';
-import { FHInputComponent } from './fh.component';
 
 @Component({
   moduleId: __filename,

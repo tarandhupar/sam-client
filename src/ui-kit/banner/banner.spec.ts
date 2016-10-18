@@ -1,4 +1,4 @@
-import {TestBed, async} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 // Load the implementations that should be tested

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
-import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
 

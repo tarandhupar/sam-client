@@ -1,7 +1,5 @@
-import { inject,ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { By }              from '@angular/platform-browser';
-import { DebugElement }    from '@angular/core';
-import { Router,ActivatedRoute } from '@angular/router';
+import { TestBed, async } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FHService } from 'api-kit/fh/fh.service';
 import { MockBackend } from '@angular/http/testing';
