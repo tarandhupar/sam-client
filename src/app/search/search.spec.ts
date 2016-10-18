@@ -3,7 +3,7 @@ import { MockBackend } from '@angular/http/testing';
 import { By }              from '@angular/platform-browser';
 import { Component,DebugElement,Input,Output,OnInit,EventEmitter }    from '@angular/core';
 import { Router,ActivatedRoute,RouterModule } from '@angular/router';
-import { Search } from './search.component';
+import { SearchComponent } from './search.component';
 import { SearchService } from '../../api-kit/search/search.service';
 import { AssistanceListingResult } from './assistance_listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
@@ -89,7 +89,7 @@ var fhServiceStub = {
 describe('SearchComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ Search,OpportunitiesResult,AssistanceListingResult,FHInputComponent ], //declare main and subcomponents
+      declarations: [ SearchComponent,OpportunitiesResult,AssistanceListingResult,FHInputComponent ], //declare main and subcomponents
       providers: [
         //start - Mocks HTTP provider
         BaseRequestOptions,
@@ -122,7 +122,7 @@ describe('SearchComponent', () => {
         SamUIKitModule,
         RouterModule,
         RouterTestingModule.withRoutes([
-          { path: 'home', component: Search }
+          { path: 'home', component: SearchComponent }
         ])
       ]//needed if template has form directives
     });
@@ -133,7 +133,7 @@ describe('SearchComponent', () => {
     //final compile
     TestBed.compileComponents().then( ()=>{
       //create main component
-      fixture = TestBed.createComponent(Search);
+      fixture = TestBed.createComponent(SearchComponent);
       comp = fixture.componentInstance;
       comp.searchService = fixture.debugElement.injector.get(SearchService);
       comp.data= [{},{}];

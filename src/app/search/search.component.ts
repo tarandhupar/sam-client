@@ -17,7 +17,7 @@ import { FHInputComponent } from './fh.component';
   templateUrl: 'search.template.html'
 })
 
-export class Search implements OnInit{
+export class SearchComponent implements OnInit{
 	indexes = ['', 'cfda', 'fbo'];
 	index = '';
 	organizationId:string = '';

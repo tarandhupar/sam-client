@@ -9,7 +9,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 import {App} from './app.component';
 import {ROUTES} from "./app.routes";
 import {HomeComponent} from "./home/home.component";
-import {Search} from "./search/search.component";
+import {SearchComponent} from "./search/search.component";
 import {SamUIKitModule} from "../ui-kit/ui-kit.module";
 import {OpportunitiesResult} from "./search/opportunities/opportunities.component";
 import {AssistanceListingResult} from "./search/assistance_listings/al.component";
@@ -37,7 +37,7 @@ var activatedRouteStub = {
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [HomeComponent, Search, OpportunitiesResult, AssistanceListingResult, FHInputComponent, OpportunityViewComponent, NoContent],
+    declarations: [HomeComponent, SearchComponent, OpportunitiesResult, AssistanceListingResult, FHInputComponent, OpportunityViewComponent, NoContent],
     imports: [SamUIKitModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
     providers: [
       App,
