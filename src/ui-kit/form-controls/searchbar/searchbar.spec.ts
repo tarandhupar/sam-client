@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import { SamSearchbarComponent } from './searchbar.component.ts';
-import { SamUIKitModule } from 'ui-kit/ui-kit.module';
+import { SamUIKitModule } from 'ui-kit';
 
 describe('The Sam Search Bar component', () => {
   let component: SamSearchbarComponent;

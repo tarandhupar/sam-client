@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import { SamCheckboxComponent } from './checkbox.component';
-import { SamUIKitModule } from 'ui-kit/ui-kit.module';
+import { SamUIKitModule } from 'ui-kit';
 
 describe('The Sam Checkboxes component', () => {
   let component: SamCheckboxComponent;

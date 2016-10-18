@@ -8,7 +8,7 @@ import { MockBackend } from '@angular/http/testing';
 import { WrapperService } from 'api-kit/wrapper/wrapper.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
 import { Observable } from 'rxjs';
-import { SamUIKitModule } from 'ui-kit/ui-kit.module';
+import { SamUIKitModule } from 'ui-kit';
 
 import { FHInputComponent } from './fh.component';
 

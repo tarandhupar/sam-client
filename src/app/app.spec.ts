@@ -10,7 +10,7 @@ import {App} from './app.component';
 import {ROUTES} from "./app.routes";
 import {HomePage} from "./home/home.page";
 import {SearchPage} from "./search/search.page";
-import {SamUIKitModule} from "../ui-kit/ui-kit.module";
+import {SamUIKitModule} from "ui-kit";
 import {OpportunitiesResult} from "./search/opportunities/opportunities.component";
 import {AssistanceListingResult} from "./search/assistance_listings/al.component";
 import {FHInputComponent} from "./search/fh.component";

@@ -22,7 +22,7 @@ import { SearchModule } from './search';
 import { SamAngularDemoModule } from "./sam-angular-demo/sam-angular-demo.module";
 
 import { SamAngularModule } from './common/samuikit/samuikit.module';
-import { SamUIKitModule } from '../ui-kit/ui-kit.module';
+import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from '../api-kit/api-kit.module';
 
 // Application wide providers

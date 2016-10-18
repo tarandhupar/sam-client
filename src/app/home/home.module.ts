@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { routing } from './home.route';
-import { SamUIKitModule } from 'ui-kit/ui-kit.module';
+import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit/api-kit.module';
 import {HomePage} from "./home.page";
 

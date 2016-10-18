@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { WrapperService } from 'api-kit/wrapper/wrapper.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
-import { SamUIKitModule } from 'ui-kit/ui-kit.module';
+import { SamUIKitModule } from 'ui-kit';
 import { RouterTestingModule } from '@angular/router/testing';
 
 //dummy child components
