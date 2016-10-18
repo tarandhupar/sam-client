@@ -6,15 +6,15 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 // Sam Angular Exports
-import { SamSelectComponent } from './select';
-import { SamCheckboxComponent } from "./checkbox";
-import { LabelWrapper } from './wrapper/label-wrapper.component';
-import { FieldsetWrapper } from './wrapper/fieldset-wrapper.component';
-import { SamRadioButtonComponent } from "./radiobutton/radiobutton.component";
-import { SamHeaderComponent } from './header/header.component';
-import {SamSearchbarComponent} from "./searchbar/searchbar.component";
-import {SamBannerComponent} from "./banner/banner.component";
-import {SamStickyComponent} from "./sticky/sticky.component";
+import { SamSelectComponent } from './form-controls/select';
+import { SamCheckboxComponent } from "./form-controls/checkbox";
+import { LabelWrapper } from './form-controls/wrapper/label-wrapper.component';
+import { FieldsetWrapper } from './form-controls/wrapper/fieldset-wrapper.component';
+import { SamRadioButtonComponent } from "./form-controls/radiobutton/radiobutton.component";
+import { SamHeaderComponent } from './elements/header/header.component';
+import {SamSearchbarComponent} from "./form-controls/searchbar/searchbar.component";
+import {SamBannerComponent} from "./elements/banner/banner.component";
+import {SamStickyComponent} from "./elements/sticky/sticky.component";
 
 
 /**

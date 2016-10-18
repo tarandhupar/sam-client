@@ -109,7 +109,54 @@ TypeScript 1.7.x includes everything you need. Make sure to upgrade, even if you
 npm install --global typescript
 ```
 
-## Use a TypeScript-aware editor
-We have good experience using these editors:
+## Folder structure
+
+```
+/src
+  /ui-kit                     // module containing reusable ui componet based on the samwds css
+    /form-controls            // control element for building forms
+      /select
+        select.component.ts
+        select.spec.ts
+      /checkbox
+      /wrapper
+    /components               // reusable ui components
+      /header
+      /footer
+  /api-kit                    // module for interfacing with sam.gov rests services
+    /wrapper                  // wraps https requests with the necessary headers to call sam.gov services
+      api.service.ts
+    /search
+      search.service.ts
+    /fh
+      fh.service.ts
+    ...
+  /app                         // module handles the routing and coordination of other modules
+    /common
+      /pipes
+      /components
+        /no-content
+          no-conent.component.ts
+      /services
+    /search
+      /assistance-listing (sub-component)
+      /opportunity-listing
+      search.routes.ts
+      search.page.ts
+      search.module.ts
+    /home
+      home.routes.ts
+      home.page.ts
+      home.module.ts
+    app.component.ts
+```
+
+## Naming conventions
+
+- Injectable services end with Service (e.g. SearchService)
+- Pipes end with Pipe (e.g. CapitalizePipe)
+- Components end with Component (e.g. HomeComponent)
+- Exported components in the ui-kit will be prefixed with Sam (e.g. SamSelectComponent) and their selectors will be prefixed as well (e.g. \<samSelect>)
+- 
 
 

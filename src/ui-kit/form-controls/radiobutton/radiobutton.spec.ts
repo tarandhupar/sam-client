@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import { SamRadioButtonComponent } from './radiobutton.component';
-import { SamUIKitModule } from '../ui-kit.module';
+import { SamUIKitModule } from '../../ui-kit.module';
 
 describe('The Sam Radio Buttons component', () => {
   let component: SamRadioButtonComponent;
