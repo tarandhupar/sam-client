@@ -6,7 +6,7 @@ import { Location, LocationStrategy, HashLocationStrategy, CommonModule } from '
 import { PipeTransform } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
-import { ProgramViewComponent } from './program-view.component';
+import { ProgramViewPage } from './program-view.component';
 import { FHService } from 'api-kit/fh/fh.service';
 import { ProgramService } from '../services/program.service';
 import { DictionaryService } from '../services/dictionary.service';
@@ -19,8 +19,8 @@ import { HistoricalIndexLabelPipe } from '../pipes/historical-index-label.pipe';
 import { SamAngularModule } from '../../common/samuikit/samuikit.module';
 import { Observable } from 'rxjs';
 
-let comp: ProgramViewComponent;
-let fixture: ComponentFixture<ProgramViewComponent>;
+let comp: ProgramViewPage;
+let fixture: ComponentFixture<ProgramViewPage>;
 
 let MockFHService = {
   getFederalHierarchyById: (id: string, includeParentLevels: boolean, includeChildrenLevels: boolean) => {
@@ -136,7 +136,7 @@ export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
   }
 };
 
-describe('ProgramViewComponent', () => {
+describe('ProgramViewPage', () => {
   //TODO: Fix spies
 //  var spyMockProgramService:any, spyMockApiService:any, spyMockHistoricalIndexService:any, spyMockFHService:any, spyMockDictionaryService:any;
 
@@ -155,7 +155,7 @@ describe('ProgramViewComponent', () => {
         CommonModule
       ],
       declarations: [
-        ProgramViewComponent,
+        ProgramViewPage,
         CapitalizePipe,
         FilterMultiArrayObjectPipe,
         KeysPipe,
@@ -183,7 +183,7 @@ describe('ProgramViewComponent', () => {
         HistoricalIndexLabelPipe,
       ]
     }) //https://github.com/angular/angular/issues/10727
-    .overrideComponent(ProgramViewComponent, {
+    .overrideComponent(ProgramViewPage, {
         set: {
           providers: [
             { provide: FHService, useValue: MockFHService },
@@ -194,7 +194,7 @@ describe('ProgramViewComponent', () => {
         }
     });
 
-    fixture = TestBed.createComponent(ProgramViewComponent);
+    fixture = TestBed.createComponent(ProgramViewPage);
     comp = fixture.componentInstance; // BannerComponent test instance
 
     // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE
