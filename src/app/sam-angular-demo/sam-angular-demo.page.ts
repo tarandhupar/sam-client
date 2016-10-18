@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./sam-angular-demo.css'],
   templateUrl: 'sam-angular-demo.template.html'
 })
-export class SamAngularDemoComponent {
+export class SamAngularDemoPage {
   // Select Component
   selectModel = '';
   selectConfig = {
