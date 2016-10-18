@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule} from '@angular/router/testing';
 
 // Load the implementations that should be tested
-import { SamHeaderComponent } from './sam-header.component';
+import { SamHeaderComponent } from './header.component';
 import {SamUIKitModule} from "../ui-kit.module";
 import {Home} from "../../app/home/home.component";
 

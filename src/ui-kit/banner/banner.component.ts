@@ -10,7 +10,7 @@ import { Component, Output, EventEmitter} from '@angular/core';
  */
 @Component({
   selector: 'samBanner',
-  templateUrl: './sam-banner.template.html',
+  templateUrl: './banner.template.html',
   styleUrls: [ './banner.style.css' ],
 
 })

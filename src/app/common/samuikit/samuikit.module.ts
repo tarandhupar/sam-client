@@ -9,8 +9,6 @@ import { SamButton } from "./sam-button";
 import { SamAlert } from "./sam-alert";
 import { SamLabel } from "./sam-label";
 import { SamAccordions } from "./sam-accordions";
-import { SamSelect } from "./sam-select";
-
 
 /**
  * A module for reusable SAM Web Design components
@@ -24,7 +22,6 @@ import { SamSelect } from "./sam-select";
     SamButton,
     SamLabel,
     SamAccordions,
-    SamSelect,
     SamAlert,
   ],
   imports: [
@@ -37,7 +34,6 @@ import { SamSelect } from "./sam-select";
     SamButton,
     SamLabel,
     SamAccordions,
-    SamSelect,
     SamAlert,
   ],
   providers: [ ]

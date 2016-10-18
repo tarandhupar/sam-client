@@ -32,7 +32,7 @@ import { OptionsType } from '../types';
       </fieldsetWrapper>
   `,
 })
-export class SamCheckboxesComponent {
+export class SamCheckboxComponent {
   @Input() model: any = [];
   @Input() options: OptionsType;
   @Input() label: string;

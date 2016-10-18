@@ -2,7 +2,7 @@ import {TestBed, async} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 
 // Load the implementations that should be tested
-import {SamBannerComponent} from './sam-banner.component';
+import {SamBannerComponent} from './banner.component';
 
 describe('The Sam Banner component', () => {
   let component:SamBannerComponent;

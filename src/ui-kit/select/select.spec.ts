@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 
 // Load the implementations that should be tested
-import { SamSelectComponent } from './sam-select.component';
+import { SamSelectComponent } from './select.component';
 import { SamUIKitModule } from '../ui-kit.module';
 
 describe('The Sam Select component', () => {

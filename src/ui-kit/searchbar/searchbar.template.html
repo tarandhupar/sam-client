@@ -6,15 +6,15 @@
       <button class="filter-btn pull-right" >
       <span class="usa-search-submit-text" >{{getLabelForValue(filterValue)}}&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
     </button>
-      <samSelect2 class="filter-select"
-                  [(model)]="selectModel"
-                  [options]="selectConfig.options"
-                  [label]="selectConfig.label"
-                  [hint]="selectConfig.hint"
-                  [errorMessage]="selectConfig.errorMessage"
-                  [disabled]="selectConfig.disabled"
-                  (modelChange)='onSelect($event)'>
-      </samSelect2>
+      <samSelect class="filter-select"
+                 [(model)]="selectModel"
+                 [options]="selectConfig.options"
+                 [label]="selectConfig.label"
+                 [hint]="selectConfig.hint"
+                 [errorMessage]="selectConfig.errorMessage"
+                 [disabled]="selectConfig.disabled"
+                 (modelChange)='onSelect($event)'>
+      </samSelect>
     </div>
 
     <div class="relative div-right">

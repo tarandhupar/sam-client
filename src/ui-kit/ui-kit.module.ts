@@ -6,15 +6,15 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 
 // Sam Angular Exports
-import { SamSelectComponent } from './sam-select';
-import { SamCheckboxesComponent } from "./sam-checkboxes";
+import { SamSelectComponent } from './select';
+import { SamCheckboxComponent } from "./checkbox";
 import { LabelWrapper } from './wrapper/label-wrapper.component';
 import { FieldsetWrapper } from './wrapper/fieldset-wrapper.component';
-import { SamRadioButtonsComponent } from "./sam-radiobuttons/sam-radiobuttons.component";
-import { SamHeaderComponent } from './sam-header/sam-header.component';
-import {SamSearchbarComponent} from "./sam-searchbar/sam-searchbar.component";
-import {SamBannerComponent} from "./sam-banner/sam-banner.component";
-import {SamStickyComponent} from "./sam-sticky/sam-sticky.component";
+import { SamRadioButtonComponent } from "./radiobutton/radiobutton.component";
+import { SamHeaderComponent } from './header/header.component';
+import {SamSearchbarComponent} from "./searchbar/searchbar.component";
+import {SamBannerComponent} from "./banner/banner.component";
+import {SamStickyComponent} from "./sticky/sticky.component";
 
 
 /**
@@ -22,9 +22,31 @@ import {SamStickyComponent} from "./sam-sticky/sam-sticky.component";
  * https://gsa.github.io/sam-web-design-standards/
  */
 @NgModule({
-  declarations: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent, SamSearchbarComponent, SamBannerComponent, SamHeaderComponent, LabelWrapper, FieldsetWrapper, SamStickyComponent ],
-  imports: [ BrowserModule, FormsModule, HttpModule, RouterModule ],
-  exports: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent,SamSearchbarComponent,SamBannerComponent, SamHeaderComponent, SamStickyComponent  ],
+  declarations: [
+    SamSelectComponent,
+    SamCheckboxComponent,
+    SamRadioButtonComponent,
+    SamSearchbarComponent,
+    SamBannerComponent,
+    SamHeaderComponent,
+    SamStickyComponent,
+    LabelWrapper,
+    FieldsetWrapper,
+  ],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    RouterModule
+  ],
+  exports: [
+    SamSelectComponent,
+    SamCheckboxComponent,
+    SamRadioButtonComponent,
+    SamSearchbarComponent,
+    SamBannerComponent,
+    SamHeaderComponent,
+    SamStickyComponent
+  ],
   providers: [ ]
 })
 export class SamUIKitModule { }

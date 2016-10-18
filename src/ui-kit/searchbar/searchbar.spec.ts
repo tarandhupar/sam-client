@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
-import { SamSearchbarComponent } from './sam-searchbar.component.ts';
+import { SamSearchbarComponent } from './searchbar.component.ts';
 import { SamUIKitModule } from '../ui-kit.module';
 
 describe('The Sam Search Bar component', () => {

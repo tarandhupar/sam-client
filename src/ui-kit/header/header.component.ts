@@ -15,7 +15,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       </div>
     </header>
 `,
-  styleUrls: [ 'sam-header.css' ],
+  styleUrls: [ 'header.css' ],
 })
 export class SamHeaderComponent {
 

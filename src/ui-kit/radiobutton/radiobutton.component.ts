@@ -14,7 +14,7 @@ import { OptionsType } from '../types';
  * @Input errorMessage: string - red error message
  */
 @Component({
-  selector: 'samRadioButtons2',
+  selector: 'samRadioButton2',
   template: `
       <fieldsetWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage">
         <ul class="usa-unstyled-list">
@@ -26,7 +26,7 @@ import { OptionsType } from '../types';
       </fieldsetWrapper>
   `,
 })
-export class SamRadioButtonsComponent {
+export class SamRadioButtonComponent {
   @Input() model: string|number|symbol;
   @Input() options: OptionsType;
   @Input() label: string;

@@ -15,7 +15,7 @@ import { OptionsType } from '../types';
  *
  */
 @Component({
-  selector: 'samSelect2',
+  selector: 'samSelect',
   template: `
       <labelWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage">
         <select [attr.id]="name" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="disabled">

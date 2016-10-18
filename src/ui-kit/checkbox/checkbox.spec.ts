@@ -2,11 +2,11 @@ import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
-import { SamCheckboxesComponent } from './sam-checkboxes.component';
+import { SamCheckboxComponent } from './checkbox.component';
 import { SamUIKitModule } from '../ui-kit.module';
 
 describe('The Sam Checkboxes component', () => {
-  let component: SamCheckboxesComponent;
+  let component: SamCheckboxComponent;
   let fixture: any;
 
   let options = [
@@ -26,11 +26,11 @@ describe('The Sam Checkboxes component', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SamCheckboxesComponent],
+      providers: [SamCheckboxComponent],
       imports: [SamUIKitModule]
     });
 
-    fixture = TestBed.createComponent(SamCheckboxesComponent);
+    fixture = TestBed.createComponent(SamCheckboxComponent);
     component = fixture.componentInstance;
     component.label = defaultConfig.label;
     component.name = defaultConfig.name;

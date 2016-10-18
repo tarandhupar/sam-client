@@ -10,7 +10,7 @@ import {Component, Input, Output, EventEmitter} from '@angular/core';
  */
 @Component({
   selector: 'samSearchbar',
-  templateUrl: './sam-searchbar.template.html',
+  templateUrl: './searchbar.template.html',
   styleUrls: ['./searchbar.style.css'],
 
 })
