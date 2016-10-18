@@ -1,9 +1,9 @@
-import {APIService} from './api.service';
+import {WrapperService} from './wrapper.service';
 
 describe('Service: ApiService', () => {
 
  beforeEach(function() {
-   this.oApiService = new APIService();
+   this.oApiService = new WrapperService();
  });
 
  it('should have APIs property set', function() {

@@ -3,12 +3,12 @@ import { By }              from '@angular/platform-browser';
 import { DebugElement }    from '@angular/core';
 import { Router,ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { FHService } from '../common/service/api/fh.service';
+import { FHService } from '../../api-kit/fh/fh.service';
 import { MockBackend } from '@angular/http/testing';
-import { APIService } from '../common/service/api/api.service';
+import { WrapperService } from '../../api-kit/wrapper/wrapper.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
 import { Observable } from 'rxjs';
-import { SamAngularModule } from '../../sam-angular';
+import { SamUIKitModule } from '../../ui-kit/ui-kit.module';
 
 import { FHInputComponent } from './fh.component';
 
@@ -60,7 +60,7 @@ describe('FederalHierarchyInput', () => {
         },
         //end
         {
-          provide: APIService, //override APIservice
+          provide: WrapperService, //override APIservice
           useValue: apiServiceStub
         },
         {
@@ -72,12 +72,12 @@ describe('FederalHierarchyInput', () => {
           useValue: activatedRouteStub
         },
       ],
-      imports: [FormsModule,SamAngularModule]
+      imports: [FormsModule,SamUIKitModule]
     });
     TestBed.overrideComponent(FHInputComponent, {
       set: {
         providers: [
-          { provide: FHService, useValue: fhServiceStub }, { provide: APIService, useValue: apiServiceStub }
+          { provide: FHService, useValue: fhServiceStub }, { provide: WrapperService, useValue: apiServiceStub }
         ]
       }
     });

@@ -10,7 +10,7 @@ import {App} from './app.component';
 import {ROUTES} from "./app.routes";
 import {Home} from "./home/home.component";
 import {Search} from "./search/search.component";
-import {SamAngularModule} from "../sam-angular/sam-angular.module";
+import {SamUIKitModule} from "../ui-kit/ui-kit.module";
 import {OpportunitiesResult} from "./search/opportunities/opportunities.component";
 import {AssistanceListingResult} from "./search/assistance_listings/al.component";
 import {FHInputComponent} from "./search/fh.component";
@@ -38,7 +38,7 @@ describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
     declarations: [Home, Search, OpportunitiesResult, AssistanceListingResult, FHInputComponent, OpportunityViewComponent, NoContent],
-    imports: [SamAngularModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
+    imports: [SamUIKitModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
     providers: [
       App,
       {provide: Router, useClass: RouterStub},

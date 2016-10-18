@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {APIService} from './api.service'
+import {WrapperService} from '../wrapper/wrapper.service'
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class FHService{
 
-  constructor(private oAPIService: APIService){}
+  constructor(private oAPIService: WrapperService){}
 
   getFederalHierarchyById(id: string, includeParentLevels: boolean, includeChildrenLevels: boolean) {
     let oApiParam = {

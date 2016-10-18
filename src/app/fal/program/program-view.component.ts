@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
-import {FHService} from '../../common/service/api/fh.service';
+import {FHService} from '../../../api-kit/fh/fh.service';
 import {ProgramService} from '../services/program.service';
 import { Subscription } from 'rxjs/Subscription';
 import {DictionaryService} from '../services/dictionary.service';
@@ -149,7 +149,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         let isEstimate = false;
         let year;
         let formatyear;
-        values.forEach(function(item){ 
+        values.forEach(function(item){
           if(item.estimate){ isEstimate = true; }
           year = item.year;
         });
@@ -203,7 +203,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
     let g = svg.append("g")
       .attr("class", "bars")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");;
-    
+
     let { series: series, keys: stackKeys } = getStackProperties(assistanceTotalsGroupedByYear);
 
     // Axis Range
@@ -213,7 +213,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
     // Axis Domain
     x.domain(assistanceTotalsGroupedByYear.map(function (d) { return d.values[0].value.year; }));
-    y.domain([0, d3.max(vizTotals, 
+    y.domain([0, d3.max(vizTotals,
       function (item) {
         return item.value.total;
       })]).nice();
@@ -287,7 +287,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
     d3.selectAll("svg text").attr("style", "font-size: 17px; font-family: 'Source Sans Pro';");
     d3.selectAll(".svg-font-bold").attr("style", "font-size: 17px; font-family: 'Source Sans Pro'; font-weight: 700;");
     d3.selectAll("svg .axis--y .tick line").attr("style", "stroke: rgba(0, 0, 0, 0.1);");
-    
+
     // Tooltip
     let tooltip;
     rect.on("mouseover", function (d) {
@@ -344,7 +344,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
       return { "series": stack(data), "keys": stackKeys.values() };
     }
-    
+
     /**
      * --------------------------------------------------
      * Table
@@ -463,7 +463,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           "estimate": !!!item.values[year]["actual"]
         }
         formattedFinancialData.push(financialItem);
-      }      
+      }
     });
     return formattedFinancialData;
   }

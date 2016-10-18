@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import { SamCheckboxesComponent } from './sam-checkboxes.component';
-import { SamAngularModule } from '../../sam-angular';
+import { SamUIKitModule } from '../ui-kit.module';
 
 describe('The Sam Checkboxes component', () => {
   let component: SamCheckboxesComponent;
@@ -27,7 +27,7 @@ describe('The Sam Checkboxes component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [SamCheckboxesComponent],
-      imports: [SamAngularModule]
+      imports: [SamUIKitModule]
     });
 
     fixture = TestBed.createComponent(SamCheckboxesComponent);

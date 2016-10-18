@@ -7,7 +7,9 @@ import { AssistanceListingResult } from './assistance_listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
 import { FHInputComponent } from './fh.component';
 import { FormsModule } from '@angular/forms';
-import { SamAngularModule } from '../../sam-angular/sam-angular.module';
+import { SamAngularModule } from '../common/samuikit/samuikit.module';
+import { SamUIKitModule } from '../../ui-kit/ui-kit.module';
+import { SamAPIKitModule } from '../../api-kit/api-kit.module';
 
 @NgModule({
   imports: [
@@ -15,7 +17,9 @@ import { SamAngularModule } from '../../sam-angular/sam-angular.module';
     FormsModule,
     RouterModule,
     HttpModule,
-    SamAngularModule
+    SamAngularModule,
+    SamUIKitModule,
+    SamAPIKitModule,
   ],
   exports: [
     Search,

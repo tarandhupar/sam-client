@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { APIService } from './api/api.service';
+import { WrapperService } from '../wrapper/wrapper.service';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class SearchService {
 
-    constructor(private oAPIService: APIService) {}
+    constructor(private oAPIService: WrapperService) {}
 
     runSearch(obj) {
       let oApiParam = {

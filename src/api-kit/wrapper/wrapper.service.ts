@@ -3,7 +3,7 @@ import {Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSear
 import 'rxjs/add/operator/map';
 
 @Injectable()
-export class APIService {
+export class WrapperService {
     private APIs: any = {
         "search": "/sgs/v1/search",
         "program": "/cfda/v1/program",

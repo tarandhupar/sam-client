@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {APIService} from '../../common/service/api/api.service'
+import {WrapperService} from '../../../api-kit/wrapper/wrapper.service'
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class DictionaryService {
 
-  constructor(private oAPIService: APIService){}
+  constructor(private oAPIService: WrapperService){}
 
   public getDictionaryById(id: string) {
     let oApiParam = {

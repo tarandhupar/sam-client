@@ -8,8 +8,8 @@ import { RouterModule } from '@angular/router';
 // Sam Angular Exports
 import { SamSelectComponent } from './sam-select';
 import { SamCheckboxesComponent } from "./sam-checkboxes";
-import { LabelWrapper } from './common/wrappers/label-wrapper.component';
-import { FieldsetWrapper } from './common/wrappers/fieldset-wrapper.component';
+import { LabelWrapper } from './wrapper/label-wrapper.component';
+import { FieldsetWrapper } from './wrapper/fieldset-wrapper.component';
 import { SamRadioButtonsComponent } from "./sam-radiobuttons/sam-radiobuttons.component";
 import { SamHeaderComponent } from './sam-header/sam-header.component';
 import {SamSearchbarComponent} from "./sam-searchbar/sam-searchbar.component";
@@ -27,4 +27,4 @@ import {SamStickyComponent} from "./sam-sticky/sam-sticky.component";
   exports: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent,SamSearchbarComponent,SamBannerComponent, SamHeaderComponent, SamStickyComponent  ],
   providers: [ ]
 })
-export class SamAngularModule { }
+export class SamUIKitModule { }

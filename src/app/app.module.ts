@@ -5,8 +5,6 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
-import { SamAngularModule } from '../sam-angular';
-
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -22,7 +20,10 @@ import { ProgramModule } from './fal';
 import { DisplayModule } from './display';
 import { SearchModule } from './search';
 import { SamAngularDemo } from "./sam-angular-demo";
-import { SamUIKitModule } from './common/samuikit/samuikit.module';
+
+import { SamAngularModule } from './common/samuikit/samuikit.module';
+import { SamUIKitModule } from '../ui-kit/ui-kit.module';
+import { SamAPIKitModule } from '../api-kit/api-kit.module';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -50,6 +51,7 @@ const APP_PROVIDERS = [
     DisplayModule,
     SamAngularModule,
     SamUIKitModule,
+    SamAPIKitModule,
     SearchModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection

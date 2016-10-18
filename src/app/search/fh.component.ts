@@ -1,13 +1,9 @@
 import { Component,Input,Output,OnInit,EventEmitter } from '@angular/core';
-import { TemplateRef, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FHService } from '../common/service/api/fh.service';
-import { APIService } from '../common/service/api/api.service';
-
+import { FHService } from '../../api-kit/fh/fh.service';
 
 @Component({
 	selector: 'fh-input',
-	providers: [FHService,APIService],
 	templateUrl:'fh.template.html'
 })
 export class FHInputComponent implements OnInit {
@@ -55,7 +51,7 @@ export class FHInputComponent implements OnInit {
     name: 'Office'
   };
 
-	constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService, private oAPIService:APIService){}
+	constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService){}
 
 	ngOnInit() {
     this.activatedRoute.queryParams.subscribe(

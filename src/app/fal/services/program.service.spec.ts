@@ -2,14 +2,14 @@ import { BaseRequestOptions, ResponseOptions, Http, Response } from '@angular/ht
 import { inject, TestBed } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { ProgramService } from './program.service';
-import { APIService } from '../../common/service/api/api.service'
+import { WrapperService } from '../../../api-kit/wrapper/wrapper.service'
 
 describe('Program Service', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         ProgramService,
-        APIService,
+        WrapperService,
         BaseRequestOptions,
         MockBackend,
         {

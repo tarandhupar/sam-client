@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import { SamSearchbarComponent } from './sam-searchbar.component.ts';
-import { SamAngularModule } from '../../sam-angular';
+import { SamUIKitModule } from '../ui-kit.module';
 
 describe('The Sam Search Bar component', () => {
   let component: SamSearchbarComponent;
@@ -18,8 +18,7 @@ describe('The Sam Search Bar component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SamSearchbarComponent],
-      imports: [SamAngularModule]
+      imports: [SamUIKitModule]
     });
 
     fixture = TestBed.createComponent(SamSearchbarComponent);
@@ -48,5 +47,5 @@ describe('The Sam Search Bar component', () => {
     searchBtn.triggerEventHandler('click',null);
 
   });
-  
+
 });

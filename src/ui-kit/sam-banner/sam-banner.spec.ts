@@ -3,7 +3,6 @@ import {By} from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import {SamBannerComponent} from './sam-banner.component';
-import {SamAngularModule} from '../../sam-angular';
 
 describe('The Sam Banner component', () => {
   let component:SamBannerComponent;
@@ -11,8 +10,7 @@ describe('The Sam Banner component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SamBannerComponent],
-      imports: [SamAngularModule]
+      declarations: [SamBannerComponent],
     });
 
     fixture = TestBed.createComponent(SamBannerComponent);

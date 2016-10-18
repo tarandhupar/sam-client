@@ -4,16 +4,16 @@ import { By }              from '@angular/platform-browser';
 import { Component,DebugElement,Input,Output,OnInit,EventEmitter }    from '@angular/core';
 import { Router,ActivatedRoute,RouterModule } from '@angular/router';
 import { Search } from './search.component';
-import { SearchService } from '../common/service/search.service';
+import { SearchService } from '../../api-kit/search/search.service';
 import { AssistanceListingResult } from './assistance_listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
 import { FHInputComponent } from './fh.component';
-import { FHService } from '../common/service/api/fh.service';
+import { FHService } from '../../api-kit/fh/fh.service';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { APIService } from '../common/service/api/api.service';
+import { WrapperService } from '../../api-kit/wrapper/wrapper.service';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
-import {SamAngularModule} from "../../sam-angular/sam-angular.module";
+import { SamUIKitModule } from "../../ui-kit/ui-kit.module";
 import { RouterTestingModule } from '@angular/router/testing';
 
 //dummy child components
@@ -114,12 +114,12 @@ describe('SearchComponent', () => {
           provide: Router,
           useValue: routerStub
         },
-        { provide: APIService, //override APIservice
+        { provide: WrapperService, //override APIservice
           useValue: apiServiceStub
         }],
       imports: [
         FormsModule,
-        SamAngularModule, 
+        SamUIKitModule,
         RouterModule,
         RouterTestingModule.withRoutes([
           { path: 'home', component: Search }

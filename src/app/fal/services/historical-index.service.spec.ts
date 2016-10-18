@@ -2,14 +2,14 @@ import {Http, Response, BaseRequestOptions, ResponseOptions} from '@angular/http
 import { inject, TestBed } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { HistoricalIndexService } from './historical-index.service';
-import { APIService } from '../../common/service/api/api.service'
+import { WrapperService } from '../../../api-kit/wrapper/wrapper.service'
 
 describe('HistoricalIndexService unit tests TestBed', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         HistoricalIndexService,
-        APIService,
+        WrapperService,
         BaseRequestOptions,
         MockBackend,
         {

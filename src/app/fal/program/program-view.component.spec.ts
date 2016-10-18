@@ -7,8 +7,7 @@ import { PipeTransform } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 import { ProgramViewComponent } from './program-view.component';
-import { APIService } from '../../common/service/api/api.service';
-import { FHService } from '../../common/service/api/fh.service';
+import { FHService } from '../../../api-kit/fh/fh.service';
 import { ProgramService } from '../services/program.service';
 import { DictionaryService } from '../services/dictionary.service';
 import { HistoricalIndexService } from '../services/historical-index.service';
@@ -17,7 +16,7 @@ import { CapitalizePipe } from '../../common/pipes/capitalize.pipe';
 import { FilterMultiArrayObjectPipe } from '../../common/pipes/filter-multi-array-object.pipe';
 import { AuthorizationPipe } from '../pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from '../pipes/historical-index-label.pipe';
-import { SamUIKitModule } from '../../common/samuikit/samuikit.module';
+import { SamAngularModule } from '../../common/samuikit/samuikit.module';
 import { Observable } from 'rxjs';
 
 let comp: ProgramViewComponent;
@@ -57,7 +56,7 @@ let MockProgramService = {
         "parentProgramId":null,
         "latest":false,
         "fiscalYearLatest":true,
-        "publishedDate":1292585293000, 
+        "publishedDate":1292585293000,
         "modifiedDate":1292585293000,
         "submittedDate":1291738815000,
         "status": {
@@ -151,7 +150,7 @@ describe('ProgramViewComponent', () => {
     //End TODO
     TestBed.configureTestingModule({
       imports: [
-        SamUIKitModule,
+        SamAngularModule,
         HttpModule,
         CommonModule
       ],
@@ -174,21 +173,19 @@ describe('ProgramViewComponent', () => {
           },
           deps: [MockBackend, BaseRequestOptions],
         },
-        { provide: APIService, useValue: MockApiService },
-        { provide: Location, useClass: Location }, 
+        { provide: Location, useClass: Location },
         { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '3077ea1df409265fb4378e0e844b8811' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        CapitalizePipe, 
+        CapitalizePipe,
         { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectCustomPipe },
-        KeysPipe, 
-        AuthorizationPipe, 
+        KeysPipe,
+        AuthorizationPipe,
         HistoricalIndexLabelPipe,
       ]
     }) //https://github.com/angular/angular/issues/10727
     .overrideComponent(ProgramViewComponent, {
         set: {
           providers: [
-            { provide: APIService, useValue: MockApiService },
             { provide: FHService, useValue: MockFHService },
             { provide: ProgramService, useValue: MockProgramService },
             { provide: DictionaryService, useValue: MockDictionaryService },

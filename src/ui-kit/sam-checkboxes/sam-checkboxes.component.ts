@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { FieldsetWrapper,  } from '../common/wrappers/fieldset-wrapper.component';
-import { OptionsType } from '../common/types';
+import { FieldsetWrapper,  } from '../wrapper/fieldset-wrapper.component';
+import { OptionsType } from '../types';
 
 /**
  * The <samCheckboxes> component is a set of checkboxes compliant with sam.gov standards

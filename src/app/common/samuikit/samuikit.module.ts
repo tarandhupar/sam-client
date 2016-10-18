@@ -42,4 +42,4 @@ import { SamSelect } from "./sam-select";
   ],
   providers: [ ]
 })
-export class SamUIKitModule { }
+export class SamAngularModule { }

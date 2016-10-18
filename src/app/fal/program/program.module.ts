@@ -7,8 +7,8 @@ import {CapitalizePipe} from '../../common/pipes/capitalize.pipe';
 import {FilterMultiArrayObjectPipe} from '../../common/pipes/filter-multi-array-object.pipe';
 import {AuthorizationPipe} from '../pipes/authorization.pipe';
 import {HistoricalIndexLabelPipe} from '../pipes/historical-index-label.pipe';
-import {SamUIKitModule} from '../../common/samuikit/samuikit.module';
-import { SamAngularModule } from '../../../sam-angular/sam-angular.module';
+import {SamAngularModule} from '../../common/samuikit/samuikit.module';
+import { SamUIKitModule } from '../../../ui-kit/ui-kit.module';
 
 @NgModule({
   imports: [

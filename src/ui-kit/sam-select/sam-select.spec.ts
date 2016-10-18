@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 
 // Load the implementations that should be tested
 import { SamSelectComponent } from './sam-select.component';
-import { SamAngularModule } from '../../sam-angular';
+import { SamUIKitModule } from '../ui-kit.module';
 
 describe('The Sam Select component', () => {
   let component: SamSelectComponent;
@@ -23,8 +23,8 @@ describe('The Sam Select component', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [SamUIKitModule],
       providers: [SamSelectComponent],
-      imports: [SamAngularModule]
     });
 
     fixture = TestBed.createComponent(SamSelectComponent);

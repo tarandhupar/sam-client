@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import { OpportunityViewComponent } from './opportunity-view.component';
-import { SearchService } from '../../common/service/search.service';
+import { SearchService } from '../../../api-kit/search/search.service';
 import { Observable } from 'rxjs';
 
 let comp:    OpportunityViewComponent;
@@ -62,9 +62,9 @@ describe('OpportunityViewComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ OpportunityViewComponent ], // declare the test component
-      imports: [ 
-        HttpModule, 
-        RouterTestingModule 
+      imports: [
+        HttpModule,
+        RouterTestingModule
       ],
       providers: [
         BaseRequestOptions,
@@ -76,7 +76,7 @@ describe('OpportunityViewComponent', () => {
           },
           deps: [MockBackend, BaseRequestOptions],
         },
-        { provide: Location, useClass: Location }, 
+        { provide: Location, useClass: Location },
         { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '2c1820ae561f521a499e995f2696052c' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
       ]

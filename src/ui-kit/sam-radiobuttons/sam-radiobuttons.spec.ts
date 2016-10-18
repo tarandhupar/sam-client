@@ -2,8 +2,8 @@ import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
-import { SamRadioButtonsComponent, SamAngularModule } from '../../sam-angular';
-import { RadioButtonsConfigType } from '../sam-radiobuttons/sam-radiobuttons.component';
+import { SamRadioButtonsComponent } from './sam-radiobuttons.component';
+import { SamUIKitModule } from '../ui-kit.module';
 
 describe('The Sam Radio Buttons component', () => {
   let component: SamRadioButtonsComponent;
@@ -25,7 +25,7 @@ describe('The Sam Radio Buttons component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [SamRadioButtonsComponent],
-      imports: [SamAngularModule]
+      imports: [SamUIKitModule]
     });
 
     fixture = TestBed.createComponent(SamRadioButtonsComponent);

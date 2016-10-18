@@ -3,7 +3,7 @@ import { RouterTestingModule} from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import { SamHeaderComponent } from './sam-header.component';
-import {SamAngularModule} from "../sam-angular.module";
+import {SamUIKitModule} from "../ui-kit.module";
 import {Home} from "../../app/home/home.component";
 
 
@@ -15,7 +15,7 @@ describe('The Sam Header component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations:[Home],
-      imports: [SamAngularModule,RouterTestingModule.withRoutes([
+      imports: [SamUIKitModule,RouterTestingModule.withRoutes([
         { path: '',      component: Home },
         { path: 'home',  component: Home }]
       )],

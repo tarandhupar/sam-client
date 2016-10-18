@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {APIService} from '../../common/service/api/api.service'
+import {WrapperService} from '../../../api-kit/wrapper/wrapper.service'
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class HistoricalIndexService{
 
-  constructor(private oAPIService: APIService){}
+  constructor(private oAPIService: WrapperService){}
 
   getHistoricalIndexByProgramNumber(id: string, programNumber: string) {
     let oApiParam = {

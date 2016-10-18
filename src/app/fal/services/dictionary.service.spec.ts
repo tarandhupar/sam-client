@@ -2,7 +2,7 @@ import {Http, Response, BaseRequestOptions, ResponseOptions} from '@angular/http
 import { inject, TestBed } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { DictionaryService } from './dictionary.service';
-import { APIService } from '../../common/service/api/api.service';
+import { WrapperService } from '../../../api-kit/wrapper/wrapper.service';
 
 describe('DictionaryService unit tests using TestBed', () => {
 
@@ -12,7 +12,7 @@ describe('DictionaryService unit tests using TestBed', () => {
     TestBed.configureTestingModule({
       providers: [
         DictionaryService,
-        APIService,
+        WrapperService,
         BaseRequestOptions,
         MockBackend,
         {
