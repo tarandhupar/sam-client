@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router,NavigationExtras } from '@angular/router';
-import { globals } from '../common/constants/globals.ts';
+import { globals } from '../globals.ts';
 
 @Component({
   // The selector is what angular internally uses
