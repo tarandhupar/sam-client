@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router,NavigationExtras } from '@angular/router';
-import { globals } from '../globals.ts';
+import { globals } from '../../globals.ts';
 
 @Component({
   // The selector is what angular internally uses
@@ -10,9 +10,9 @@ import { globals } from '../globals.ts';
   // We need to tell Angular's Dependency Injection which providers are in our app.
   providers: [ ],
   // Our list of styles in our component. We may add more to compose many styles together
-  styleUrls: [ './home.style.css' ],
+  styleUrls: [ 'home.style.css' ],
   // Every Angular template is first compiled by the browser before Angular runs it's compiler
-  templateUrl: './home.template.html'
+  templateUrl: 'home.template.html'
 })
 export class HomePage {
 

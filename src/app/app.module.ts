@@ -14,7 +14,7 @@ import { ROUTES } from './app.routes';
 import { App } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
-import { HomeModule } from './home';
+import { HomeModule } from './app-pages/home';
 import { NoContent } from './common/no-content';
 import { ProgramModule } from './fal';
 import { DisplayModule } from './display';
