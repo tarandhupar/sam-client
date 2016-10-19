@@ -19,7 +19,7 @@ import { NoContent } from './common/no-content';
 import { ProgramModule } from './fal';
 import { DisplayModule } from './display';
 import { SearchModule } from './search';
-import { SamAngularDemoModule } from "./sam-angular-demo/sam-angular-demo.module";
+import { UIKitDemoModule } from "./app-pages/ui-kit/ui-kit.module";
 
 import { SamAngularModule } from './common/samuikit/samuikit.module';
 import { SamUIKitModule } from 'ui-kit';
@@ -54,7 +54,7 @@ const APP_PROVIDERS = [
     DisplayModule,
     HomeModule,
     SearchModule,
-    SamAngularDemoModule,
+    UIKitDemoModule,
 
     // Other Modules
     SamAngularModule,

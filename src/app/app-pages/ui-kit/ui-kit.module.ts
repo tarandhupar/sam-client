@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-
-import { routing } from './sam-angular-demo.route';
-import { SamUIKitModule } from 'ui-kit';
-import { SamAPIKitModule } from 'api-kit/api-kit.module';
-import {SamAngularDemoPage} from "./sam-angular-demo.page";
 import {FormsModule} from "@angular/forms";
+
+import { routing } from './ui-kit.route';
+import { SamUIKitModule } from 'ui-kit';
+import { SamAPIKitModule } from '../../../api-kit/api-kit.module';
+import {UIKitDemoPage} from "./ui-kit.page";
 
 @NgModule({
   imports: [
@@ -19,8 +19,8 @@ import {FormsModule} from "@angular/forms";
   ],
   exports: [],
   declarations: [
-    SamAngularDemoPage
+    UIKitDemoPage
   ],
   providers: [],
 })
-export class SamAngularDemoModule { }
+export class UIKitDemoModule { }

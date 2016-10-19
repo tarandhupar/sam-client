@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  styleUrls: ['./sam-angular-demo.css'],
-  templateUrl: 'sam-angular-demo.template.html'
+  styleUrls: ['ui-kit.css'],
+  templateUrl: 'ui-kit.template.html'
 })
-export class SamAngularDemoPage {
+export class UIKitDemoPage {
   // Select Component
   selectModel = '';
   selectConfig = {

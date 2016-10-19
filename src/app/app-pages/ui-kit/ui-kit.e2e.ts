@@ -1,7 +1,7 @@
-describe('Sam Angular Demo Page', () => {
+describe('UI Kit Demo Page', () => {
 
   beforeEach(() => {
-    browser.get('/sam-angular');
+    browser.get('/ui-kit');
   });
 
   it('should have a select button', () => {
