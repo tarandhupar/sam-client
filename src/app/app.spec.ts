@@ -16,7 +16,7 @@ import {AssistanceListingResult} from "./search/assistance-listings/al.component
 import {FHInputComponent} from "./search/fh.component";
 import {ProgramModule} from "./fal/program/program.module";
 import {OpportunityViewComponent} from "./display/opportunities/opportunity-view.component";
-import {NoContent} from "./common/no-content/no-content";
+import {NoContentPage} from "./app-pages/404/404.page";
 
 
 class RouterStub {
@@ -37,7 +37,7 @@ var activatedRouteStub = {
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FHInputComponent, OpportunityViewComponent, NoContent],
+    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FHInputComponent, OpportunityViewComponent, NoContentPage],
     imports: [SamUIKitModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
     providers: [
       App,

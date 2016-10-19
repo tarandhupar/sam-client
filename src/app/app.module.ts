@@ -15,7 +15,7 @@ import { App } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { HomeModule } from './app-pages/home';
-import { NoContent } from './common/no-content';
+import { NoContentPage } from './app-pages/404';
 import { ProgramModule } from './fal';
 import { DisplayModule } from './display';
 import { SearchModule } from './search';
@@ -38,7 +38,7 @@ const APP_PROVIDERS = [
   bootstrap: [ App ],
   declarations: [
     App,
-    NoContent,
+    NoContentPage,
   ],
   imports: [
     // Angular Modules
