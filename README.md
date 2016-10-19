@@ -113,34 +113,28 @@ npm install --global typescript
 
 ```
 /src
-  /ui-kit                     // module containing reusable ui componet based on the samwds css
-    /form-controls            // control element for building forms
+  /api-kit                    // a module for interfacing with sam.gov rests services
+    /wrapper                  // wraps http requests with the necessary headers to call sam.gov services
+    /search                   // api.sam.gov/../search endpoint
+    /fh                       // api.sam.gov/../fh endpoint
+    ... other endpoints
+  /ui-kit                     // a module containing reusable ui componet based on the samwds css
+    /form-controls            // components for building forms
+      /wrapper                // wraps form control elements with a label, error message, and hint text
       /select
-        select.component.ts
-        select.spec.ts
       /checkbox
-      /wrapper
-    /components               // reusable ui components
-      /header
-      /footer
-  /api-kit                    // module for interfacing with sam.gov rests services
-    /wrapper                  // wraps https requests with the necessary headers to call sam.gov services
-      api.service.ts
+      ... (other form controls)
+    /header
+    /banner
+    ... (other reuable components)
+  /app                         // module handles the routing, page layouts and coordination of network modules and form components
+    /app-pages
+      /home                    // the root page
+      /404                     // page not found, page
+    /app-pipes                 // pipes used throughout the app module    
     /search
-      search.service.ts
-    /fh
-      fh.service.ts
-    ...
-  /app                         // module handles the routing and coordination of other modules
-    /common
-      /pipes
-      /components
-        /no-content
-          no-conent.component.ts
-      /services
-    /search
-      /assistance-listing (sub-component)
-      /opportunity-listing
+      /assistance-listing      // the template for assistance-listing search results
+      /opportunity-listing     // the template for opportunity search results
       search.routes.ts
       search.page.ts
       search.module.ts
