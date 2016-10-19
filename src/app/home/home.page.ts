@@ -53,6 +53,8 @@ export class HomePage {
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
+    } else {
+      qsobj['index'] = '';
     }
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
