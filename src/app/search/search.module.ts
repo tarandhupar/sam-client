@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { routing } from './search.route';
 import { SamAngularModule } from '../common/samuikit/samuikit.module';
 import { SamUIKitModule } from 'ui-kit';
-import { SamAPIKitModule } from 'api-kit/api-kit.module';
+import { SamAPIKitModule } from 'api-kit';
 
 @NgModule({
   imports: [

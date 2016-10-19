@@ -8,9 +8,9 @@ import { By } from '@angular/platform-browser';
 
 import { ProgramViewPage } from './program-view.component';
 import { FHService } from 'api-kit/fh/fh.service';
-import { ProgramService } from '../services/program.service';
-import { DictionaryService } from '../services/dictionary.service';
-import { HistoricalIndexService } from '../services/historical-index.service';
+import { ProgramService } from '../../../api-kit/program/program.service';
+import { DictionaryService } from '../../../api-kit/dictionary/dictionary.service';
+import { HistoricalIndexService } from '../../../api-kit/historical-index/historical-index.service';
 import { KeysPipe } from '../../app-pipes/keyspipe.pipe';
 import { CapitalizePipe } from '../../app-pipes/capitalize.pipe';
 import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';

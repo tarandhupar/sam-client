@@ -5,7 +5,7 @@ import {FormsModule} from "@angular/forms";
 
 import { routing } from './ui-kit.route';
 import { SamUIKitModule } from 'ui-kit';
-import { SamAPIKitModule } from '../../../api-kit/api-kit.module';
+import { SamAPIKitModule } from 'api-kit';
 import {UIKitDemoPage} from "./ui-kit.page";
 
 @NgModule({

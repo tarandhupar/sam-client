@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
-import {FHService} from 'api-kit/fh/fh.service';
-import {ProgramService} from '../services/program.service';
 import { Subscription } from 'rxjs/Subscription';
-import {DictionaryService} from '../services/dictionary.service';
-import {HistoricalIndexService} from '../services/historical-index.service';
+import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';
+
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
