@@ -19,7 +19,7 @@ import { NoContentPage } from './app-pages/404';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
 import { SearchModule } from './search';
-import { UIKitDemoModule } from "./app-pages/ui-kit/ui-kit.module";
+import { UIKitDemoModule } from "./app-pages/ui-kit-demo/ui-kit-demo.module";
 
 import { SamAngularModule } from './common/samuikit/samuikit.module';
 import { SamUIKitModule } from 'ui-kit';
