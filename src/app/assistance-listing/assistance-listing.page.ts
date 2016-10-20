@@ -316,9 +316,11 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           .style("box-shadow", "3px 5px 30px -4px rgba(0,0,0,0.33)")
       })
       .on("mousemove", function (d) {
-        tooltip.html(this.parentNode.attributes["data-assistance"].value + "<span style='display: block; font-size: 17px; font-weight: 700;'>" + d3.format("($,")(d[1] - d[0]) + "</span>")
-          .style("left", (d3.event.pageX - 30) + "px")
-          .style("top", (d3.event.pageY - 10) + "px");
+        if(tooltip){
+          tooltip.html(this.parentNode.attributes["data-assistance"].value + "<span style='display: block; font-size: 17px; font-weight: 700;'>" + d3.format("($,")(d[1] - d[0]) + "</span>")
+            .style("left", (d3.event.pageX - 30) + "px")
+            .style("top", (d3.event.pageY - 10) + "px");
+        }
       })
       .on("mouseout", function () {
         d3.select(".tooltip").remove();
@@ -421,7 +423,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       .html(function (d: any) {
         // If additional info content its empty remove row
         if(!d.key){
-          this.remove();
+          this.parentNode.removeChild(this);
         }
         return "<td>" + d.key + "</td>";
       })
