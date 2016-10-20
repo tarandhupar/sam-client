@@ -15,6 +15,7 @@ import { SamHeaderComponent } from './sam-header/sam-header.component';
 import {SamSearchbarComponent} from "./sam-searchbar/sam-searchbar.component";
 import {SamBannerComponent} from "./sam-banner/sam-banner.component";
 import {SamStickyComponent} from "./sam-sticky/sam-sticky.component";
+import {SamFooterComponent} from "./sam-footer/sam-footer.component";
 
 
 /**
@@ -22,9 +23,9 @@ import {SamStickyComponent} from "./sam-sticky/sam-sticky.component";
  * https://gsa.github.io/sam-web-design-standards/
  */
 @NgModule({
-  declarations: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent, SamSearchbarComponent, SamBannerComponent, SamHeaderComponent, LabelWrapper, FieldsetWrapper, SamStickyComponent ],
+  declarations: [ SamFooterComponent, SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent, SamSearchbarComponent, SamBannerComponent, SamHeaderComponent, LabelWrapper, FieldsetWrapper, SamStickyComponent ],
   imports: [ BrowserModule, FormsModule, HttpModule, RouterModule ],
-  exports: [ SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent,SamSearchbarComponent,SamBannerComponent, SamHeaderComponent, SamStickyComponent  ],
+  exports: [ SamFooterComponent, SamSelectComponent, SamCheckboxesComponent, SamRadioButtonsComponent,SamSearchbarComponent,SamBannerComponent, SamHeaderComponent, SamStickyComponent  ],
   providers: [ ]
 })
 export class SamAngularModule { }

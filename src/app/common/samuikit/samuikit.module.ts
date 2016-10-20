@@ -2,7 +2,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { SamFooter } from "./sam-footer";
 import { SamHeader } from "./sam-header";
 import { SamSpace } from "./sam-space";
 import { SamButton } from "./sam-button";
@@ -18,7 +17,6 @@ import { SamSelect } from "./sam-select";
  */
 @NgModule({
   declarations: [
-    SamFooter,
     SamHeader,
     SamSpace,
     SamButton,
@@ -31,7 +29,6 @@ import { SamSelect } from "./sam-select";
     BrowserModule,
   ],
   exports: [
-    SamFooter,
     SamHeader,
     SamSpace,
     SamButton,
