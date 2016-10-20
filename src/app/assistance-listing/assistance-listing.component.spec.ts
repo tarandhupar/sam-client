@@ -246,6 +246,7 @@ describe('ProgramPage', () => {
 
     expect(comp.oProgram).toBeDefined();
     expect(comp.oFederalHierarchy).toBeDefined();
+    expect(comp.federalHierarchyWithParents).toBeDefined();
     expect(comp.aRelatedProgram).toBeDefined();
     expect(comp.oHistoricalIndex).toBeDefined();
     expect(comp.aAlert).toBeDefined();
