@@ -11,15 +11,15 @@ import {Component, Input} from '@angular/core';
  */
 @Component({
   selector: 'samLabel',
-  template: `<span id={{labelName}} [ngClass]="labelClass">{{labelData}}</span>`,
+  template: `<span id={{labelId}} [ngClass]="labelClass">{{labelData}}</span>`,
 })
 export class SamLabelComponent {
 
   @Input()
-  labelName:string;
+  labelId:string;
 
   @Input()
-  type:string;
+  labelType:string;
 
   @Input()
   labelData:string;
@@ -38,9 +38,9 @@ export class SamLabelComponent {
    * Set up the SAMWDS class for the label according to the size of the label
    */
   setLabelClass(){
-    if(this.type === "small"){
+    if(this.labelType === "small"){
       this.labelClass = 'usa-label' ;
-    } else if(this.type === "big"){
+    } else if(this.labelType === "big"){
       this.labelClass = 'usa-label-big' ;
     }
   }

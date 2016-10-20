@@ -10,14 +10,14 @@ describe('The Sam Label component', () => {
   let fixture:any;
 
   let smallLabelConfig = {
-    type: 'small',
-    labelName: 'smallLabel',
+    labelType: 'small',
+    labelId: 'smallLabel',
     labelData: 'test small'
   };
 
   let bigLabelConfig = {
-    type: 'big',
-    labelName: 'bigLabel',
+    labelType: 'big',
+    labelId: 'bigLabel',
     labelData: 'test big'
   };
 
@@ -34,8 +34,8 @@ describe('The Sam Label component', () => {
 
   it('should display a small sam label', function () {
 
-    component.type = smallLabelConfig.type;
-    component.labelName = smallLabelConfig.labelName;
+    component.labelType = smallLabelConfig.labelType;
+    component.labelId = smallLabelConfig.labelId;
     component.labelData = smallLabelConfig.labelData;
     fixture.detectChanges();
 
@@ -47,8 +47,8 @@ describe('The Sam Label component', () => {
   });
 
   it('should display a big sam label', function () {
-    component.type = bigLabelConfig.type;
-    component.labelName = bigLabelConfig.labelName;
+    component.labelType = bigLabelConfig.labelType;
+    component.labelId = bigLabelConfig.labelId;
     component.labelData = bigLabelConfig.labelData;
     fixture.detectChanges();
 
