@@ -5,8 +5,6 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
-import { SamAngularModule } from '../sam-angular';
-
 /*
  * Platform and Environment providers/directives/pipes
  */
@@ -16,13 +14,16 @@ import { ROUTES } from './app.routes';
 import { App } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
-import { Home } from './home';
-import { NoContent } from './common/no-content';
-import { ProgramModule } from './fal';
-import { DisplayModule } from './display';
+import { HomeModule } from './application-content/home';
+import { PageNotFoundErrorPage } from './application-content/404';
+import { ProgramModule } from './assistance-listing';
+import { OpportunityModule } from './opportunity';
 import { SearchModule } from './search';
-import { SamAngularDemo } from "./sam-angular-demo";
-import { SamUIKitModule } from './common/samuikit/samuikit.module';
+import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
+
+import { SamAngularModule } from './common/samuikit/samuikit.module';
+import { SamUIKitModule } from 'ui-kit';
+import { SamAPIKitModule } from '../api-kit/api-kit.module';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -37,20 +38,28 @@ const APP_PROVIDERS = [
   bootstrap: [ App ],
   declarations: [
     App,
-    Home,
-    NoContent,
-    SamAngularDemo,
+    PageNotFoundErrorPage,
   ],
-  imports: [ // import Angular's modules
+  imports: [
+    // Angular Modules
     BrowserModule,
     FormsModule,
     HttpModule,
+
+    // Router
     RouterModule.forRoot(ROUTES, { useHash: false }),
+
+    // Page View Modules
     ProgramModule,
-    DisplayModule,
+    OpportunityModule,
+    HomeModule,
+    SearchModule,
+    UIKitDemoModule,
+
+    // Other Modules
     SamAngularModule,
     SamUIKitModule,
-    SearchModule
+    SamAPIKitModule,
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

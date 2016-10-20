@@ -8,15 +8,15 @@ import {RouterTestingModule} from '@angular/router/testing';
 // Load the implementations that should be tested
 import {App} from './app.component';
 import {ROUTES} from "./app.routes";
-import {Home} from "./home/home.component";
-import {Search} from "./search/search.component";
-import {SamAngularModule} from "../sam-angular/sam-angular.module";
-import {OpportunitiesResult} from "./search/opportunities/opportunities.component";
-import {AssistanceListingResult} from "./search/assistance_listings/al.component";
-import {FHInputComponent} from "./search/fh.component";
-import {ProgramModule} from "./fal/program/program.module";
-import {OpportunityViewComponent} from "./display/opportunities/opportunity-view.component";
-import {NoContent} from "./common/no-content/no-content";
+import {HomePage} from "./application-content/home/home.page";
+import {SearchPage} from "./search/search.page";
+import {SamUIKitModule} from "ui-kit";
+import {OpportunitiesResult} from "./opportunity/search-result/opportunities-result.component";
+import {AssistanceListingResult} from "./assistance-listing/search-result/assistance-listing-result.component";
+import {FHInputComponent} from "./search/agency-selector/agency-selector.component";
+import {ProgramModule} from "./assistance-listing/assistance-listing.module";
+import {OpportunityPage} from "./opportunity/opportunity.page";
+import {PageNotFoundErrorPage} from "./application-content/404/404.page";
 
 
 class RouterStub {
@@ -37,8 +37,8 @@ var activatedRouteStub = {
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [Home, Search, OpportunitiesResult, AssistanceListingResult, FHInputComponent, OpportunityViewComponent, NoContent],
-    imports: [SamAngularModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
+    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FHInputComponent, OpportunityPage, PageNotFoundErrorPage],
+    imports: [SamUIKitModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
     providers: [
       App,
       {provide: Router, useClass: RouterStub},

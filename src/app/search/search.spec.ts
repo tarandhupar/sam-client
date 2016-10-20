@@ -1,19 +1,17 @@
-import { inject,ComponentFixture, TestBed, async,fakeAsync } from '@angular/core/testing';
+import { inject,TestBed, async } from '@angular/core/testing';
 import { MockBackend } from '@angular/http/testing';
-import { By }              from '@angular/platform-browser';
-import { Component,DebugElement,Input,Output,OnInit,EventEmitter }    from '@angular/core';
+import { Component,Input}    from '@angular/core';
 import { Router,ActivatedRoute,RouterModule } from '@angular/router';
-import { Search } from './search.component';
-import { SearchService } from '../common/service/search.service';
-import { AssistanceListingResult } from './assistance_listings/al.component';
-import { OpportunitiesResult } from './opportunities/opportunities.component';
-import { FHInputComponent } from './fh.component';
-import { FHService } from '../common/service/api/fh.service';
+import { SearchPage } from './search.page';
+import { SearchService, FHService } from 'api-kit';
+import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
+import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
+import { FHInputComponent } from './agency-selector/agency-selector.component';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { APIService } from '../common/service/api/api.service';
+import { WrapperService } from 'api-kit';
 import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
-import {SamAngularModule} from "../../sam-angular/sam-angular.module";
+import { SamUIKitModule } from 'ui-kit';
 import { RouterTestingModule } from '@angular/router/testing';
 
 //dummy child components
@@ -86,10 +84,10 @@ var fhServiceStub = {
     });
   }
 };
-describe('SearchComponent', () => {
+describe('SearchPage', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ Search,OpportunitiesResult,AssistanceListingResult,FHInputComponent ], //declare main and subcomponents
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FHInputComponent ], //declare main and subcomponents
       providers: [
         //start - Mocks HTTP provider
         BaseRequestOptions,
@@ -114,15 +112,15 @@ describe('SearchComponent', () => {
           provide: Router,
           useValue: routerStub
         },
-        { provide: APIService, //override APIservice
+        { provide: WrapperService, //override APIservice
           useValue: apiServiceStub
         }],
       imports: [
         FormsModule,
-        SamAngularModule, 
+        SamUIKitModule,
         RouterModule,
         RouterTestingModule.withRoutes([
-          { path: 'home', component: Search }
+          { path: 'home', component: SearchPage }
         ])
       ]//needed if template has form directives
     });
@@ -133,7 +131,7 @@ describe('SearchComponent', () => {
     //final compile
     TestBed.compileComponents().then( ()=>{
       //create main component
-      fixture = TestBed.createComponent(Search);
+      fixture = TestBed.createComponent(SearchPage);
       comp = fixture.componentInstance;
       comp.searchService = fixture.debugElement.injector.get(SearchService);
       comp.data= [{},{}];

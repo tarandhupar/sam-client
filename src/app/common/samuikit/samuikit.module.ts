@@ -7,8 +7,6 @@ import { SamSpace } from "./sam-space";
 import { SamButton } from "./sam-button";
 import { SamAlert } from "./sam-alert";
 import { SamAccordions } from "./sam-accordions";
-import { SamSelect } from "./sam-select";
-
 
 /**
  * A module for reusable SAM Web Design components
@@ -20,7 +18,6 @@ import { SamSelect } from "./sam-select";
     SamSpace,
     SamButton,
     SamAccordions,
-    SamSelect,
     SamAlert,
   ],
   imports: [
@@ -31,9 +28,8 @@ import { SamSelect } from "./sam-select";
     SamSpace,
     SamButton,
     SamAccordions,
-    SamSelect,
     SamAlert,
   ],
   providers: [ ]
 })
-export class SamUIKitModule { }
+export class SamAngularModule { }
