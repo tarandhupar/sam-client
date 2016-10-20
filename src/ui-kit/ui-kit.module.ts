@@ -15,7 +15,7 @@ import {SamSearchbarComponent} from "./form-controls/searchbar/searchbar.compone
 import {SamBannerComponent} from "./banner/banner.component";
 import {SamStickyComponent} from "./sticky/sticky.component";
 import {SamFooterComponent} from "./footer/footer.component";
-import {SamButtonComponent} from "./form-controls/sam-button/button.component.ts";
+import {SamButtonComponent} from "./form-controls/button/button.component.ts";
 
 
 /**
