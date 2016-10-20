@@ -1,5 +1,13 @@
 import {Component, Input} from '@angular/core';
 
+/**
+ * The <samButton> component can generate a button matching SAMWDS.
+ * It is designed with sam.gov standards
+ * https://gsa.github.io/sam-web-design-standards/
+ * @Input type: the type of the button(default,alt,secondary,outline,gray,disabled,big)
+ * @Input labelName: the id that will assign to the button element
+ * @Input labelData: the text content that will show on the button
+ */
 @Component({
   selector: 'samButton',
   template: `<button id={{labelName}} [ngClass]="btnClass" [disabled]="disabled" >{{labelData}}</button>`,
