@@ -9,16 +9,16 @@ describe('The Sam Button component', () => {
   let component:SamButtonComponent;
   let fixture:any;
 
-  let defaultBtnConfig = {type: 'default', buttonId: 'defaultBtn', buttonData: 'Default'};
-  let altBtnConfig = {type: 'alt', buttonId: 'altBtn', buttonData: 'Alt'};
-  let secondaryBtnConfig = {type: 'secondary', buttonId: 'secondaryBtn', buttonData: 'Secondary'};
-  let grayBtnConfig = {type: 'gray', buttonId: 'grayBtn', buttonData: 'Gray'};
-  let outlineBtnConfig = {type: 'outline', buttonId: 'outlineBtn', buttonData: 'Outline'};
-  let invertedBtnConfig = {type: 'inverted', buttonId: 'invertedBtn', buttonData: 'Inverted'};
-  let disabledBtnConfig = {type: 'disabled', buttonId: 'disabledBtn', buttonData: 'Disabled'};
-  let bigBtnConfig = {type: 'big', buttonId: 'bigBtn', buttonData: 'Big'};
+  let defaultBtnConfig = {buttonType: 'default', buttonId: 'defaultBtn', buttonData: 'Default'};
+  let altBtnConfig = {buttonType: 'alt', buttonId: 'altBtn', buttonData: 'Alt'};
+  let secondaryBtnConfig = {buttonType: 'secondary', buttonId: 'secondaryBtn', buttonData: 'Secondary'};
+  let grayBtnConfig = {buttonType: 'gray', buttonId: 'grayBtn', buttonData: 'Gray'};
+  let outlineBtnConfig = {buttonType: 'outline', buttonId: 'outlineBtn', buttonData: 'Outline'};
+  let invertedBtnConfig = {buttonType: 'inverted', buttonId: 'invertedBtn', buttonData: 'Inverted'};
+  let disabledBtnConfig = {buttonType: 'disabled', buttonId: 'disabledBtn', buttonData: 'Disabled'};
+  let bigBtnConfig = {buttonType: 'big', buttonId: 'bigBtn', buttonData: 'Big'};
 
-  let samBtnErrorConfig = {type: 'notExist', buttonId: 'errorConfigBtn', buttonData: 'Wrong Type'};
+  let samBtnErrorConfig = {buttonType: 'notExist', buttonId: 'errorConfigBtn', buttonData: 'Wrong buttonType'};
 
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('The Sam Button component', () => {
 
   it('should display a default sam button', function () {
 
-    component.type = defaultBtnConfig.type;
+    component.buttonType = defaultBtnConfig.buttonType;
     component.buttonId = defaultBtnConfig.buttonId;
     component.buttonData = defaultBtnConfig.buttonData;
     fixture.detectChanges();
@@ -47,7 +47,7 @@ describe('The Sam Button component', () => {
 
   it('should display a alt sam button', function () {
 
-    component.type = altBtnConfig.type;
+    component.buttonType = altBtnConfig.buttonType;
     component.buttonId = altBtnConfig.buttonId;
     component.buttonData = altBtnConfig.buttonData;
     fixture.detectChanges();
@@ -60,7 +60,7 @@ describe('The Sam Button component', () => {
 
   it('should display a secondary sam button', function () {
 
-    component.type = secondaryBtnConfig.type;
+    component.buttonType = secondaryBtnConfig.buttonType;
     component.buttonId = secondaryBtnConfig.buttonId;
     component.buttonData = secondaryBtnConfig.buttonData;
     fixture.detectChanges();
@@ -73,7 +73,7 @@ describe('The Sam Button component', () => {
 
   it('should display a gray sam button', function () {
 
-    component.type = grayBtnConfig.type;
+    component.buttonType = grayBtnConfig.buttonType;
     component.buttonId = grayBtnConfig.buttonId;
     component.buttonData = grayBtnConfig.buttonData;
     fixture.detectChanges();
@@ -86,7 +86,7 @@ describe('The Sam Button component', () => {
 
   it('should display a outline sam button', function () {
 
-    component.type = outlineBtnConfig.type;
+    component.buttonType = outlineBtnConfig.buttonType;
     component.buttonId = outlineBtnConfig.buttonId;
     component.buttonData = outlineBtnConfig.buttonData;
     fixture.detectChanges();
@@ -99,7 +99,7 @@ describe('The Sam Button component', () => {
 
   it('should display a inverted sam button', function () {
 
-    component.type = invertedBtnConfig.type;
+    component.buttonType = invertedBtnConfig.buttonType;
     component.buttonId = invertedBtnConfig.buttonId;
     component.buttonData = invertedBtnConfig.buttonData;
     fixture.detectChanges();
@@ -112,7 +112,7 @@ describe('The Sam Button component', () => {
 
   it('should display a disabled sam button', function () {
 
-    component.type = disabledBtnConfig.type;
+    component.buttonType = disabledBtnConfig.buttonType;
     component.buttonId = disabledBtnConfig.buttonId;
     component.buttonData = disabledBtnConfig.buttonData;
     fixture.detectChanges();
@@ -125,7 +125,7 @@ describe('The Sam Button component', () => {
 
   it('should display a big sam button', function () {
 
-    component.type = bigBtnConfig.type;
+    component.buttonType = bigBtnConfig.buttonType;
     component.buttonId = bigBtnConfig.buttonId;
     component.buttonData = bigBtnConfig.buttonData;
     fixture.detectChanges();
@@ -136,9 +136,9 @@ describe('The Sam Button component', () => {
     expect(btnElement.nativeElement.innerHTML).toBe("Big");
   });
 
-  it('should display a default sam button when the type is not valid', function () {
+  it('should display a default sam button when the buttonType is not valid', function () {
 
-    component.type = samBtnErrorConfig.type;
+    component.buttonType = samBtnErrorConfig.buttonType;
     component.buttonId = samBtnErrorConfig.buttonId;
     component.buttonData = samBtnErrorConfig.buttonData;
     fixture.detectChanges();
@@ -146,6 +146,6 @@ describe('The Sam Button component', () => {
     expect(component.btnClass).toBe("");
     expect(component.disabled).toBe(false);
     let btnElement = fixture.debugElement.query(By.css("#errorConfigBtn"));
-    expect(btnElement.nativeElement.innerHTML).toBe("Wrong Type");
+    expect(btnElement.nativeElement.innerHTML).toBe("Wrong buttonType");
   });
 });

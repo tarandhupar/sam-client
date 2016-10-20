@@ -16,7 +16,7 @@ export class SamButtonComponent {
 
   @Input() buttonId:string;
   @Input() buttonData:string;
-  @Input() type:string;
+  @Input() buttonType:string;
 
 
   disabled: boolean = false;
@@ -36,9 +36,9 @@ export class SamButtonComponent {
   }
 
   ngOnInit() {
-    if(this.btnClassMap.hasOwnProperty(this.type)){
-      this.btnClass = this.btnClassMap[this.type];
-      if(this.type === "disabled"){
+    if(this.btnClassMap.hasOwnProperty(this.buttonType)){
+      this.btnClass = this.btnClassMap[this.buttonType];
+      if(this.buttonType === "disabled"){
         this.disabled = true;
       }
     }
