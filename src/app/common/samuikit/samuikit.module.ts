@@ -5,7 +5,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { SamFooter } from "./sam-footer";
 import { SamHeader } from "./sam-header";
 import { SamSpace } from "./sam-space";
-import { SamButton } from "./sam-button";
 import { SamAlert } from "./sam-alert";
 import { SamLabel } from "./sam-label";
 import { SamAccordions } from "./sam-accordions";
@@ -21,7 +20,6 @@ import { SamSelect } from "./sam-select";
     SamFooter,
     SamHeader,
     SamSpace,
-    SamButton,
     SamLabel,
     SamAccordions,
     SamSelect,
@@ -34,7 +32,6 @@ import { SamSelect } from "./sam-select";
     SamFooter,
     SamHeader,
     SamSpace,
-    SamButton,
     SamLabel,
     SamAccordions,
     SamSelect,
