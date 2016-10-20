@@ -8,7 +8,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 // Load the implementations that should be tested
 import {App} from './app.component';
 import {ROUTES} from "./app.routes";
-import {HomePage} from "./app-pages/home/home.page";
+import {HomePage} from "./application-content/home/home.page";
 import {SearchPage} from "./search/search.page";
 import {SamUIKitModule} from "ui-kit";
 import {OpportunitiesResult} from "./opportunity/search-result/opportunities-result.component";
@@ -16,7 +16,7 @@ import {AssistanceListingResult} from "./assistance-listing/search-result/assist
 import {FHInputComponent} from "./search/agency-selector/agency-selector.component";
 import {ProgramModule} from "./assistance-listing/assistance-listing.module";
 import {OpportunityPage} from "./opportunity/opportunity.page";
-import {NoContentPage} from "./app-pages/404/404.page";
+import {NoContentPage} from "./application-content/404/404.page";
 
 
 class RouterStub {
