@@ -7,3 +7,4 @@ export { SamSearchbarComponent } from "./form-controls/searchbar/searchbar.compo
 export { SamBannerComponent } from "./banner/banner.component";
 export { SamStickyComponent } from "./sticky/sticky.component";
 export { SamFooterComponent } from './footer/footer.component';
+export { SamButtonComponent } from './form-controls/button/button.component';

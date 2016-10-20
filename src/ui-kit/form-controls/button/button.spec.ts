@@ -9,16 +9,16 @@ describe('The Sam Button component', () => {
   let component:SamButtonComponent;
   let fixture:any;
 
-  let defaultBtnConfig = {type: 'default', labelName: 'defaultBtn', labelData: 'Default'};
-  let altBtnConfig = {type: 'alt', labelName: 'altBtn', labelData: 'Alt'};
-  let secondaryBtnConfig = {type: 'secondary', labelName: 'secondaryBtn', labelData: 'Secondary'};
-  let grayBtnConfig = {type: 'gray', labelName: 'grayBtn', labelData: 'Gray'};
-  let outlineBtnConfig = {type: 'outline', labelName: 'outlineBtn', labelData: 'Outline'};
-  let invertedBtnConfig = {type: 'inverted', labelName: 'invertedBtn', labelData: 'Inverted'};
-  let disabledBtnConfig = {type: 'disabled', labelName: 'disabledBtn', labelData: 'Disabled'};
-  let bigBtnConfig = {type: 'big', labelName: 'bigBtn', labelData: 'Big'};
+  let defaultBtnConfig = {type: 'default', buttonId: 'defaultBtn', buttonData: 'Default'};
+  let altBtnConfig = {type: 'alt', buttonId: 'altBtn', buttonData: 'Alt'};
+  let secondaryBtnConfig = {type: 'secondary', buttonId: 'secondaryBtn', buttonData: 'Secondary'};
+  let grayBtnConfig = {type: 'gray', buttonId: 'grayBtn', buttonData: 'Gray'};
+  let outlineBtnConfig = {type: 'outline', buttonId: 'outlineBtn', buttonData: 'Outline'};
+  let invertedBtnConfig = {type: 'inverted', buttonId: 'invertedBtn', buttonData: 'Inverted'};
+  let disabledBtnConfig = {type: 'disabled', buttonId: 'disabledBtn', buttonData: 'Disabled'};
+  let bigBtnConfig = {type: 'big', buttonId: 'bigBtn', buttonData: 'Big'};
 
-  let samBtnErrorConfig = {type: 'notExist', labelName: 'errorConfigBtn', labelData: 'Wrong Type'};
+  let samBtnErrorConfig = {type: 'notExist', buttonId: 'errorConfigBtn', buttonData: 'Wrong Type'};
 
 
   beforeEach(() => {
@@ -35,8 +35,8 @@ describe('The Sam Button component', () => {
   it('should display a default sam button', function () {
 
     component.type = defaultBtnConfig.type;
-    component.labelName = defaultBtnConfig.labelName;
-    component.labelData = defaultBtnConfig.labelData;
+    component.buttonId = defaultBtnConfig.buttonId;
+    component.buttonData = defaultBtnConfig.buttonData;
     fixture.detectChanges();
 
     expect(component.btnClass).toBe("");
@@ -48,8 +48,8 @@ describe('The Sam Button component', () => {
   it('should display a alt sam button', function () {
 
     component.type = altBtnConfig.type;
-    component.labelName = altBtnConfig.labelName;
-    component.labelData = altBtnConfig.labelData;
+    component.buttonId = altBtnConfig.buttonId;
+    component.buttonData = altBtnConfig.buttonData;
     fixture.detectChanges();
 
     expect(component.btnClass).toBe("usa-button-primary-alt");
@@ -61,8 +61,8 @@ describe('The Sam Button component', () => {
   it('should display a secondary sam button', function () {
 
     component.type = secondaryBtnConfig.type;
-    component.labelName = secondaryBtnConfig.labelName;
-    component.labelData = secondaryBtnConfig.labelData;
+    component.buttonId = secondaryBtnConfig.buttonId;
+    component.buttonData = secondaryBtnConfig.buttonData;
     fixture.detectChanges();
 
     expect(component.btnClass).toBe("usa-button-secondary");
@@ -74,8 +74,8 @@ describe('The Sam Button component', () => {
   it('should display a gray sam button', function () {
 
     component.type = grayBtnConfig.type;
-    component.labelName = grayBtnConfig.labelName;
-    component.labelData = grayBtnConfig.labelData;
+    component.buttonId = grayBtnConfig.buttonId;
+    component.buttonData = grayBtnConfig.buttonData;
     fixture.detectChanges();
 
     expect(component.btnClass).toBe("usa-button-gray");
@@ -87,8 +87,8 @@ describe('The Sam Button component', () => {
   it('should display a outline sam button', function () {
 
     component.type = outlineBtnConfig.type;
-    component.labelName = outlineBtnConfig.labelName;
-    component.labelData = outlineBtnConfig.labelData;
+    component.buttonId = outlineBtnConfig.buttonId;
+    component.buttonData = outlineBtnConfig.buttonData;
     fixture.detectChanges();
 
     expect(component.btnClass).toBe("usa-button-outline");
@@ -100,8 +100,8 @@ describe('The Sam Button component', () => {
   it('should display a inverted sam button', function () {
 
     component.type = invertedBtnConfig.type;
-    component.labelName = invertedBtnConfig.labelName;
-    component.labelData = invertedBtnConfig.labelData;
+    component.buttonId = invertedBtnConfig.buttonId;
+    component.buttonData = invertedBtnConfig.buttonData;
     fixture.detectChanges();
 
     expect(component.btnClass).toBe("usa-button-outline-inverse");
@@ -113,8 +113,8 @@ describe('The Sam Button component', () => {
   it('should display a disabled sam button', function () {
 
     component.type = disabledBtnConfig.type;
-    component.labelName = disabledBtnConfig.labelName;
-    component.labelData = disabledBtnConfig.labelData;
+    component.buttonId = disabledBtnConfig.buttonId;
+    component.buttonData = disabledBtnConfig.buttonData;
     fixture.detectChanges();
 
     expect(component.btnClass).toBe("usa-button-disabled");
@@ -126,8 +126,8 @@ describe('The Sam Button component', () => {
   it('should display a big sam button', function () {
 
     component.type = bigBtnConfig.type;
-    component.labelName = bigBtnConfig.labelName;
-    component.labelData = bigBtnConfig.labelData;
+    component.buttonId = bigBtnConfig.buttonId;
+    component.buttonData = bigBtnConfig.buttonData;
     fixture.detectChanges();
 
     expect(component.btnClass).toBe("usa-button-big");
@@ -139,8 +139,8 @@ describe('The Sam Button component', () => {
   it('should display a default sam button when the type is not valid', function () {
 
     component.type = samBtnErrorConfig.type;
-    component.labelName = samBtnErrorConfig.labelName;
-    component.labelData = samBtnErrorConfig.labelData;
+    component.buttonId = samBtnErrorConfig.buttonId;
+    component.buttonData = samBtnErrorConfig.buttonData;
     fixture.detectChanges();
 
     expect(component.btnClass).toBe("");
