@@ -1,6 +1,6 @@
 import { Component,Input,Output,OnInit,EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FHService } from '../../../api-kit/fh/fh.service';
+import { FHService } from 'api-kit';
 
 @Component({
 	selector: 'fh-input',

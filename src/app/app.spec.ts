@@ -11,11 +11,11 @@ import {ROUTES} from "./app.routes";
 import {HomePage} from "./app-pages/home/home.page";
 import {SearchPage} from "./search/search.page";
 import {SamUIKitModule} from "ui-kit";
-import {OpportunitiesResult} from "./search/opportunities/opportunities.component";
-import {AssistanceListingResult} from "./search/assistance-listings/al.component";
+import {OpportunitiesResult} from "./opportunity/search-result/opportunities-result.component";
+import {AssistanceListingResult} from "./assistance-listing/search-result/assistance-listing-result.component";
 import {FHInputComponent} from "./search/agency-selector/agency-selector.component";
 import {ProgramModule} from "./assistance-listing/assistance-listing.module";
-import {OpportunityPageComponent} from "./opportunity/opportunity.page";
+import {OpportunityPage} from "./opportunity/opportunity.page";
 import {NoContentPage} from "./app-pages/404/404.page";
 
 
@@ -37,7 +37,7 @@ var activatedRouteStub = {
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FHInputComponent, OpportunityPageComponent, NoContentPage],
+    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FHInputComponent, OpportunityPage, NoContentPage],
     imports: [SamUIKitModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
     providers: [
       App,

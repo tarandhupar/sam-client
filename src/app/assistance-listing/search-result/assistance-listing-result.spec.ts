@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { By }              from '@angular/platform-browser';
 
-import { AssistanceListingResult } from './al.component';
+import { AssistanceListingResult } from './assistance-listing-result.component';
 
 var fixture;
 var comp;

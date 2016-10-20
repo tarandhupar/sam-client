@@ -21,7 +21,7 @@ import * as d3 from 'd3';
     FilterMultiArrayObjectPipe
   ]
 })
-export class ProgramViewPage implements OnInit {
+export class ProgramPage implements OnInit {
   oProgram:any;
   oFederalHierarchy:any;
   aRelatedProgram:any[] = [];

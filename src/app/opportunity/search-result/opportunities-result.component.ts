@@ -48,7 +48,7 @@ import 'rxjs/add/operator/map';
       </ul>
     </div>
   `,
-  styleUrls: ['../search.style.css']
+  styleUrls: ['../opportunity.style.css']
 })
 export class OpportunitiesResult{
   @Input() data: any;

@@ -1,10 +1,10 @@
 import { Routes, RouterModule } from '@angular/router';
-import { OpportunityPageComponent } from './opportunity.page';
+import { OpportunityPage } from './opportunity.page';
 
 export const routes: Routes = [
   {
     path: 'opportunities/:id',
-    component: OpportunityPageComponent
+    component: OpportunityPage
   },
 ];
 

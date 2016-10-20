@@ -6,11 +6,8 @@ import { Location, LocationStrategy, HashLocationStrategy, CommonModule } from '
 import { PipeTransform } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
-import { ProgramViewPage } from './assistance-listing.page';
-import { FHService } from '../../api-kit/fh/fh.service';
-import { ProgramService } from '../../api-kit/program/program.service';
-import { DictionaryService } from '../../api-kit/dictionary/dictionary.service';
-import { HistoricalIndexService } from '../../api-kit/historical-index/historical-index.service';
+import { ProgramPage } from './assistance-listing.page';
+import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 import { KeysPipe } from '../app-pipes/keyspipe.pipe';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
@@ -19,8 +16,8 @@ import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { SamAngularModule } from '../common/samuikit/samuikit.module';
 import { Observable } from 'rxjs';
 
-let comp: ProgramViewPage;
-let fixture: ComponentFixture<ProgramViewPage>;
+let comp: ProgramPage;
+let fixture: ComponentFixture<ProgramPage>;
 
 let MockFHService = {
   getFederalHierarchyById: (id: string, includeParentLevels: boolean, includeChildrenLevels: boolean) => {
@@ -136,7 +133,7 @@ export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
   }
 };
 
-describe('ProgramViewPage', () => {
+describe('ProgramPage', () => {
   //TODO: Fix spies
 //  var spyMockProgramService:any, spyMockApiService:any, spyMockHistoricalIndexService:any, spyMockFHService:any, spyMockDictionaryService:any;
 
@@ -155,7 +152,7 @@ describe('ProgramViewPage', () => {
         CommonModule
       ],
       declarations: [
-        ProgramViewPage,
+        ProgramPage,
         CapitalizePipe,
         FilterMultiArrayObjectPipe,
         KeysPipe,
@@ -183,7 +180,7 @@ describe('ProgramViewPage', () => {
         HistoricalIndexLabelPipe,
       ]
     }) //https://github.com/angular/angular/issues/10727
-    .overrideComponent(ProgramViewPage, {
+    .overrideComponent(ProgramPage, {
         set: {
           providers: [
             { provide: FHService, useValue: MockFHService },
@@ -194,7 +191,7 @@ describe('ProgramViewPage', () => {
         }
     });
 
-    fixture = TestBed.createComponent(ProgramViewPage);
+    fixture = TestBed.createComponent(ProgramPage);
     comp = fixture.componentInstance; // BannerComponent test instance
 
     // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE

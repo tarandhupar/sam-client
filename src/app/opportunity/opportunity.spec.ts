@@ -6,12 +6,12 @@ import { By }              from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 
-import { OpportunityPageComponent } from './opportunity.page';
+import { OpportunityPage } from './opportunity.page';
 import { SearchService } from 'api-kit';
 import { Observable } from 'rxjs';
 
-let comp:    OpportunityPageComponent;
-let fixture: ComponentFixture<OpportunityPageComponent>;
+let comp:    OpportunityPage;
+let fixture: ComponentFixture<OpportunityPage>;
 
 let MockSearchService = {
   runSearch: (obj) => {
@@ -58,10 +58,10 @@ let MockSearchService = {
   }
 };
 
-describe('OpportunityPageComponent', () => {
+describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ OpportunityPageComponent ], // declare the test component
+      declarations: [ OpportunityPage ], // declare the test component
       imports: [
         HttpModule,
         RouterTestingModule
@@ -82,7 +82,7 @@ describe('OpportunityPageComponent', () => {
       ]
     });
 
-    TestBed.overrideComponent(OpportunityPageComponent, {
+    TestBed.overrideComponent(OpportunityPage, {
       set: {
         providers: [
           { provide: SearchService, useValue: MockSearchService }
@@ -90,7 +90,7 @@ describe('OpportunityPageComponent', () => {
       }
     });
 
-    fixture = TestBed.createComponent(OpportunityPageComponent);
+    fixture = TestBed.createComponent(OpportunityPage);
     comp = fixture.componentInstance; // BannerComponent test instance
     fixture.detectChanges();
   });

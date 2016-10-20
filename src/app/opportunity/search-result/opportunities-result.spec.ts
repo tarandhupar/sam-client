@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { By }              from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { OpportunitiesResult } from './opportunities.component';
+import { OpportunitiesResult } from './opportunities-result.component';
 
 var fixture;
 var comp;

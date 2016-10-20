@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { SearchPage }   from './search.page';
-import { AssistanceListingResult } from './assistance-listings/al.component';
-import { OpportunitiesResult } from './opportunities/opportunities.component';
+import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
+import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
 import { FHInputComponent } from './agency-selector/agency-selector.component';
 import { FormsModule } from '@angular/forms';
 

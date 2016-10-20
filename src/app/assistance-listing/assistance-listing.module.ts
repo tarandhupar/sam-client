@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ProgramViewPage }   from './assistance-listing.page';
+import { ProgramPage }   from './assistance-listing.page';
 import { routing } from './assistance-listing.routing';
 import {KeysPipe} from '../app-pipes/keyspipe.pipe';
 import {CapitalizePipe} from '../app-pipes/capitalize.pipe';
@@ -22,7 +22,7 @@ import { SamUIKitModule } from 'ui-kit';
     CapitalizePipe,
     FilterMultiArrayObjectPipe,
     AuthorizationPipe,
-    ProgramViewPage,
+    ProgramPage,
     HistoricalIndexLabelPipe
   ],
   declarations: [
@@ -30,7 +30,7 @@ import { SamUIKitModule } from 'ui-kit';
     CapitalizePipe,
     FilterMultiArrayObjectPipe,
     AuthorizationPipe,
-    ProgramViewPage,
+    ProgramPage,
     HistoricalIndexLabelPipe
   ],
   providers: [],

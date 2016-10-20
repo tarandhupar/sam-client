@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs/Subscription';
     SearchService,
   ]
 })
-export class OpportunityPageComponent implements OnInit, OnDestroy {
+export class OpportunityPage implements OnInit, OnDestroy {
   oNotice:any;
   oSub: Subscription;
   currentUrl: string;

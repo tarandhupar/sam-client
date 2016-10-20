@@ -45,7 +45,7 @@ import * as _ from 'lodash';
         </ul>
       </div>
   `,
-  styleUrls: ['../search.style.css']
+  styleUrls: ['../assistance-listing.style.css']
 })
 export class AssistanceListingResult {
 	@Input() data: any={};
