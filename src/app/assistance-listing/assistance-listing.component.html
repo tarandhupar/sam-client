@@ -33,7 +33,7 @@
   <!--Main Content-->
   <div class="usa-width-three-fourths">
     <template [ngIf]="oProgram && aAlert.length > 0">
-      <samAlert *ngFor="let oAlert of aAlert" labelname="oAlert.labelname" [config]="oAlert.config"></samAlert>
+      <samAlert *ngFor="let oAlert of aAlert" labelname="oAlert.labelname" [type]="oAlert.config.type" [title]="oAlert.config.title" [description]="oAlert.config.description"></samAlert>
     </template>
     <div *ngIf="oProgram">
       <h1>

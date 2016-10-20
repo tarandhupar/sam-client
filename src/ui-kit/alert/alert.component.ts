@@ -9,8 +9,8 @@ import { Component, Input } from '@angular/core';
  * @Input description: Set alert description
  */
 @Component({
-  selector: 'samAlert2',
-  templateUrl: './sam-alert.template.html'
+  selector: 'samAlert',
+  templateUrl: './alert.template.html'
 
 })
 export class SamAlertComponent {

@@ -15,6 +15,7 @@ import {SamSearchbarComponent} from "./form-controls/searchbar/searchbar.compone
 import {SamBannerComponent} from "./banner/banner.component";
 import {SamStickyComponent} from "./sticky/sticky.component";
 import {SamFooterComponent} from "./footer/footer.component";
+import {SamAlertComponent} from "./alert/alert.component";
 
 
 /**
@@ -31,6 +32,7 @@ import {SamFooterComponent} from "./footer/footer.component";
     SamHeaderComponent,
     SamStickyComponent,
     SamFooterComponent,
+    SamAlertComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -47,7 +49,8 @@ import {SamFooterComponent} from "./footer/footer.component";
     SamBannerComponent,
     SamHeaderComponent,
     SamStickyComponent,
-    SamFooterComponent
+    SamFooterComponent,
+    SamAlertComponent
   ],
   providers: [ ]
 })
