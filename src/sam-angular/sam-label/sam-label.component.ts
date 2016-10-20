@@ -24,7 +24,7 @@ export class SamLabelComponent {
   @Input()
   labelData:string;
 
-  labelClass:any;
+  labelClass:string;
 
   constructor() {
 
@@ -39,9 +39,9 @@ export class SamLabelComponent {
    */
   setLabelClass(){
     if(this.type === "small"){
-      this.labelClass = {'usa-label':true} ;
+      this.labelClass = 'usa-label' ;
     } else if(this.type === "big"){
-      this.labelClass = {'usa-label-big':true} ;
+      this.labelClass = 'usa-label-big' ;
     }
   }
 
