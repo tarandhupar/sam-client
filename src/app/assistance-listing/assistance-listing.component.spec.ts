@@ -6,17 +6,17 @@ import { Location, LocationStrategy, HashLocationStrategy, CommonModule } from '
 import { PipeTransform } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
-import { ProgramViewPage } from './program-view.component';
-import { FHService } from 'api-kit/fh/fh.service';
-import { ProgramService } from '../../../api-kit/program/program.service';
-import { DictionaryService } from '../../../api-kit/dictionary/dictionary.service';
-import { HistoricalIndexService } from '../../../api-kit/historical-index/historical-index.service';
-import { KeysPipe } from '../../app-pipes/keyspipe.pipe';
-import { CapitalizePipe } from '../../app-pipes/capitalize.pipe';
-import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';
-import { AuthorizationPipe } from '../pipes/authorization.pipe';
-import { HistoricalIndexLabelPipe } from '../pipes/historical-index-label.pipe';
-import { SamAngularModule } from '../../common/samuikit/samuikit.module';
+import { ProgramViewPage } from './assistance-listing.page';
+import { FHService } from '../../api-kit/fh/fh.service';
+import { ProgramService } from '../../api-kit/program/program.service';
+import { DictionaryService } from '../../api-kit/dictionary/dictionary.service';
+import { HistoricalIndexService } from '../../api-kit/historical-index/historical-index.service';
+import { KeysPipe } from '../app-pipes/keyspipe.pipe';
+import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
+import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
+import { AuthorizationPipe } from './pipes/authorization.pipe';
+import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
+import { SamAngularModule } from '../common/samuikit/samuikit.module';
 import { Observable } from 'rxjs';
 
 let comp: ProgramViewPage;

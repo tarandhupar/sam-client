@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import {Location} from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
-import { FilterMultiArrayObjectPipe } from '../../app-pipes/filter-multi-array-object.pipe';
+import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 
 import * as _ from 'lodash';
 import * as d3 from 'd3';
@@ -11,8 +11,8 @@ import * as d3 from 'd3';
 
 @Component({
   moduleId: __filename,
-  templateUrl: 'program-view.component.html',
-  styleUrls: ['program-view.style.css'],
+  templateUrl: 'assistance-listing.component.html',
+  styleUrls: ['assistance-listing.style.css'],
   providers: [
     FHService,
     ProgramService,

@@ -16,7 +16,7 @@ import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { HomeModule } from './app-pages/home';
 import { NoContentPage } from './app-pages/404';
-import { ProgramModule } from './fal';
+import { ProgramModule } from './assistance-listing';
 import { DisplayModule } from './display';
 import { SearchModule } from './search';
 import { UIKitDemoModule } from "./app-pages/ui-kit/ui-kit.module";

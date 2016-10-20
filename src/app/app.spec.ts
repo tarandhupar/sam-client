@@ -14,7 +14,7 @@ import {SamUIKitModule} from "ui-kit";
 import {OpportunitiesResult} from "./search/opportunities/opportunities.component";
 import {AssistanceListingResult} from "./search/assistance-listings/al.component";
 import {FHInputComponent} from "./search/fh.component";
-import {ProgramModule} from "./fal/program/program.module";
+import {ProgramModule} from "./assistance-listing/assistance-listing.module";
 import {OpportunityViewComponent} from "./display/opportunities/opportunity-view.component";
 import {NoContentPage} from "./app-pages/404/404.page";
 
