@@ -80,3 +80,11 @@ if (config.selected !== undefined && config.selected.length > 0) {
 <h2 id="test-coverage">Test coverage</h2>
 
 ...
+
+## Naming conventions
+
+- Injectable services end with Service (e.g. SearchService)
+- Pipes end with Pipe (e.g. CapitalizePipe)
+- Components end with Component (e.g. AssistanceListingResultComponent)
+- Components with an associated route and module end in Page (e.g. SearchPage)
+- Exported components in the ui-kit will be prefixed with Sam (e.g. SamSelectComponent) and their selectors will be prefixed as well (e.g. \<samSelect>)

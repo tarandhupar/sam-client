@@ -7,8 +7,12 @@ import { SamSpace } from "./sam-space";
 import { SamButton } from "./sam-button";
 import { SamAlert } from "./sam-alert";
 import { SamLabel } from "./sam-label";
+<<<<<<< HEAD
 import { SamSelect } from "./sam-select";
 
+=======
+import { SamAccordions } from "./sam-accordions";
+>>>>>>> GSA-IAE/comp
 
 /**
  * A module for reusable SAM Web Design components
@@ -20,7 +24,11 @@ import { SamSelect } from "./sam-select";
     SamSpace,
     SamButton,
     SamLabel,
+<<<<<<< HEAD
     SamSelect,
+=======
+    SamAccordions,
+>>>>>>> GSA-IAE/comp
     SamAlert,
   ],
   imports: [
@@ -31,9 +39,13 @@ import { SamSelect } from "./sam-select";
     SamSpace,
     SamButton,
     SamLabel,
+<<<<<<< HEAD
     SamSelect,
+=======
+    SamAccordions,
+>>>>>>> GSA-IAE/comp
     SamAlert,
   ],
   providers: [ ]
 })
-export class SamUIKitModule { }
+export class SamAngularModule { }
