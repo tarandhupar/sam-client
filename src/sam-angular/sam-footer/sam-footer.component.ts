@@ -12,7 +12,7 @@ import { Component, Input } from '@angular/core';
               </div>
             </footer>`,
 })
-export class SamFooter {
+export class SamFooterComponent {
 
   @Input() labelname: string;
 
@@ -23,6 +23,3 @@ export class SamFooter {
   ngOnInit(){
   }
 }
-
-
-
