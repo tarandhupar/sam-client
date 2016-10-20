@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { SearchPage }   from './search.page';
 import { AssistanceListingResult } from './assistance-listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
-import { FHInputComponent } from './fh.component';
+import { FHInputComponent } from './agency-selector/agency-selector.component';
 import { FormsModule } from '@angular/forms';
 
 import { routing } from './search.route';

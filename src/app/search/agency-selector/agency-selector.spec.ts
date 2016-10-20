@@ -1,14 +1,13 @@
 import { TestBed, async } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { FHService } from 'api-kit/fh/fh.service';
 import { MockBackend } from '@angular/http/testing';
-import { WrapperService } from 'api-kit/wrapper/wrapper.service';
-import { BaseRequestOptions, ConnectionBackend, Http, HttpModule } from '@angular/http';
+import { WrapperService, FHService } from 'api-kit';
+import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { Observable } from 'rxjs';
 import { SamUIKitModule } from 'ui-kit';
 
-import { FHInputComponent } from './fh.component';
+import { FHInputComponent } from './agency-selector.component';
 
 var fixture;
 var comp;

@@ -6,13 +6,13 @@ import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   moduleId: __filename,
-  templateUrl: 'opportunity-view.component.html',
-  styleUrls: ['opportunity-view.style.css'],
+  templateUrl: 'opportunity.component.html',
+  styleUrls: ['opportunity.style.css'],
   providers: [
     SearchService,
   ]
 })
-export class OpportunityViewComponent implements OnInit, OnDestroy {
+export class OpportunityPageComponent implements OnInit, OnDestroy {
   oNotice:any;
   oSub: Subscription;
   currentUrl: string;

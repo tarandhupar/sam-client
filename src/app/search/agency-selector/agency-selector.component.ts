@@ -1,10 +1,10 @@
 import { Component,Input,Output,OnInit,EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FHService } from 'api-kit/fh/fh.service';
+import { FHService } from '../../../api-kit/fh/fh.service';
 
 @Component({
 	selector: 'fh-input',
-	templateUrl:'fh.template.html'
+	templateUrl:'agency-selector.template.html'
 })
 export class FHInputComponent implements OnInit {
 	@Input() hideOffice: boolean;

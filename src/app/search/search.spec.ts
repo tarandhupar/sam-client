@@ -6,7 +6,7 @@ import { SearchPage } from './search.page';
 import { SearchService, FHService } from 'api-kit';
 import { AssistanceListingResult } from './assistance-listings/al.component';
 import { OpportunitiesResult } from './opportunities/opportunities.component';
-import { FHInputComponent } from './fh.component';
+import { FHInputComponent } from './agency-selector/agency-selector.component';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { WrapperService } from 'api-kit';

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { OpportunityViewComponent }   from './opportunities/opportunity-view.component';
-import { routing } from './display.routing';
+import { OpportunityPageComponent }   from './opportunity.page';
+import { routing } from './opportunity.route';
 import { SamAngularModule } from '../common/samuikit/samuikit.module';
 
 @NgModule({
@@ -11,10 +11,10 @@ import { SamAngularModule } from '../common/samuikit/samuikit.module';
     routing,
   ],
   exports: [
-    OpportunityViewComponent,
+    OpportunityPageComponent,
   ],
   declarations: [
-    OpportunityViewComponent,
+    OpportunityPageComponent,
   ],
 })
-export class DisplayModule { }
+export class OpportunityModule { }
