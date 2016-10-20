@@ -15,7 +15,7 @@ import { App } from './app.component';
 import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { HomeModule } from './application-content/home';
-import { NoContentPage } from './application-content/404';
+import { PageNotFoundErrorPage } from './application-content/404';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
 import { SearchModule } from './search';
@@ -38,7 +38,7 @@ const APP_PROVIDERS = [
   bootstrap: [ App ],
   declarations: [
     App,
-    NoContentPage,
+    PageNotFoundErrorPage,
   ],
   imports: [
     // Angular Modules

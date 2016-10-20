@@ -8,6 +8,6 @@ import { Component } from '@angular/core';
     </div>
   `
 })
-export class NoContentPage {
+export class PageNotFoundErrorPage {
 
 }
