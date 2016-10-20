@@ -421,11 +421,22 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       .append("tr")
       .attr("class", "detail")
       .html(function (d: any) {
+        let explanation = "";
+        d.values.forEach(function(item){
+          item.values.forEach(function(innerItem){
+            if(innerItem.explanation){
+              explanation += "FY " + item.key.slice(2,4) + " Exp: " + innerItem.explanation + ", ";
+            }
+          });
+        });
+        if(explanation){
+          explanation = "(" + explanation.slice(0,-2) +  ")";
+        }
         // If additional info content its empty remove row
         if(!d.key){
           this.parentNode.removeChild(this);
         }
-        return "<td>" + d.key + "</td>";
+        return "<td>" + d.key + explanation + "</td>";
       })
       .selectAll("tr")
       .data(function (d) {
@@ -495,7 +506,8 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           "amount": item.values[year]["actual"] || item.values[year]["estimate"] || 0,
           "estimate": !!!item.values[year]["actual"],
           "ena": item.values[year].flag == "ena" || item.values[year].flag == "na" ? true : false,
-          "nsi": item.values[year].flag == "nsi" || item.values[year].flag == "no" ? true : false
+          "nsi": item.values[year].flag == "nsi" || item.values[year].flag == "no" ? true : false,
+          "explanation": item.values[year].explanation || ""
         }
         formattedFinancialData.push(financialItem);
       }      
