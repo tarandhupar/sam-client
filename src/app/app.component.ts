@@ -2,11 +2,10 @@
  * Angular 2 decorators and services
  */
 import { Component, ViewEncapsulation } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { ComponentInjectService } from './common/service/component.inject.service.ts';
 import { InputTypeConstants } from './common/constants/input.type.constants.ts';
-import { APIService } from "./common/service/api/api.service";
-import { globals } from './common/constants/globals.ts';
+import { globals } from './globals.ts';
 
 //TODO: Remove samuikit.js (Deprecated)
 import '../assets/js/samuikit.js';
@@ -23,13 +22,26 @@ import '../assets/js/samuikit.js';
     './app.style.css'
   ],
   templateUrl: './app.template.html',
-  providers : [APIService,ComponentInjectService,InputTypeConstants]
+  providers : [ComponentInjectService,InputTypeConstants]
 })
-export class App {
+export class App{
 
-  constructor(private _router: Router) {
+  keyword: string = "";
+  index: string = "";
+
+
+  constructor(private _router: Router,private activatedRoute: ActivatedRoute) {
 
   }
+
+  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(
+      data => {
+        this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
+        this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
+      });
+  }
+
 
   get isHeaderWithSearch() {
     return globals.isDefaultHeader;
@@ -42,7 +54,11 @@ export class App {
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
+    } else {
+      qsobj['index'] = '';
     }
+
+    qsobj['page'] = 1;
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };

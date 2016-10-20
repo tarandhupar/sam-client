@@ -1,0 +1,533 @@
+<div class="usa-grid">
+
+  <!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <div *ngIf="federalHierarchyWithParents">
+      <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">
+        <img [src]="federalHierarchyWithParents.hierarchy[0].hierarchy[0]._links.logo.href" alt="HTML5 Icon" style="width:220px;height:220px;">
+      </div>
+      <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && (federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href)">
+        <img [src]="federalHierarchyWithParents.hierarchy[0]._links.logo.href" alt="HTML5 Icon" style="width:220px;height:220px;">
+      </div>
+      <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && !(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href) && federalHierarchyWithParents._links?.logo?.href">
+        <img [src]="federalHierarchyWithParents._links.logo.href" alt="HTML5 Icon" style="width:220px;height:220px;">
+      </div>
+    </div>
+    <br><br>
+    <!--<img src="/assets/logo.png">-->
+    <!--Side Navigation-->
+    <nav sam-sticky limit=1200>
+      <ul class="usa-sidenav-list">
+        <li><a href="{{currentUrl}}#overview">Overview</a></li>
+        <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
+        <li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
+        <li><a href="{{currentUrl}}#criteria-for-applying">Criteria for Applying</a></li>
+        <li><a href="{{currentUrl}}#applying-for-assistance">Applying for Assistance</a></li>
+        <li><a href="{{currentUrl}}#compliance-requirements">Compliance Requirements</a></li>
+        <li><a href="{{currentUrl}}#contact-information">Contact Information</a></li>
+        <li><a href="{{currentUrl}}#history">History</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!--Main Content-->
+  <div class="usa-width-three-fourths">
+    <template [ngIf]="oProgram && aAlert.length > 0">
+      <samAlert *ngFor="let oAlert of aAlert" labelname="oAlert.labelname" [config]="oAlert.config"></samAlert>
+    </template>
+    <div *ngIf="oProgram">
+      <h1>
+        {{oProgram?.program?.data?.title}}
+      </h1>
+    </div>
+    <div *ngIf="oProgram">
+      <p *ngIf="oProgram.program.data.alternativeNames && oProgram.program.data.alternativeNames[0] != null">
+        <strong>Popular Name:</strong> {{oProgram.program.data.alternativeNames[0]}}
+      </p>
+    </div>
+    <p *ngIf="oProgram">
+        <span *ngIf="oFederalHierarchy"><strong>{{oFederalHierarchy.type | capitalize}}: </strong>{{oFederalHierarchy.name}}<br></span>
+        <span><strong>FAL Number: </strong>{{oProgram.program.data.programNumber}}<br></span>
+        <span><strong>Related Federal Assistance: </strong>
+            <span *ngIf="aRelatedProgram && oProgram.program.data.relatedPrograms.flag != 'na' && aRelatedProgram.length > 0">
+                <span *ngFor="let item of aRelatedProgram; let isLast = last"><a href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}</span>
+            </span>
+          <span *ngIf="oProgram.program.data.relatedPrograms.flag == 'na' || aRelatedProgram.length == 0">Not Applicable.</span>
+        </span>
+    </p>
+    <h2 id="overview">Overview</h2>
+    <!--Objectives-->
+    <section *ngIf="oProgram">
+      <h3>Objectives:</h3>
+
+      <p>
+        {{oProgram.program.data.objective}}
+      </p>
+
+      <h3>Examples of Funded Projects:</h3>
+
+      <p *ngIf="oProgram?.program.data.projects?.flag == 'yes'">
+        <span *ngFor="let item of oProgram?.program.data.projects.list | keys">
+          <span *ngIf="item.value.content?.actual">
+            Fiscal Year {{item.key}}: {{item.value.content?.actual}}
+          </span>
+          <!--          <span *ngIf="item.value.content.projection">
+                      , Projection: {{item.value.content.projection}}
+                    </span>-->
+        <br />
+        </span>
+      </p>
+
+      <p *ngIf="oProgram?.program.data.projects?.flag == 'na' || oProgram?.program.data.projects?.flag == 'no'"> Not Applicable</p>
+
+    </section>
+
+    <h2 id="authorizations">Authorizations</h2>
+    <div *ngFor="let item of authorizationIdsGrouped">
+      <p>{{ item | authorization }}</p>
+    </div>
+
+    <!--Financials-->
+    <section>
+      <h2 id="financial-information">Financial Information</h2>
+
+      <div id="visualization"></div>
+
+      <h3>Range and Average of Financial Assistance:</h3>
+
+      <p *ngIf="(oProgram?.program.data.financial?.additionalInfo?.content) && (oProgram.program.data.financial.additionalInfo.content != '')">
+        {{oProgram.program.data.financial.additionalInfo.content}}
+      </p>
+
+      <p *ngIf="!(oProgram?.program.data.financial.additionalInfo?.content) || (oProgram.program.data.financial.additionalInfo?.content == '')">
+        No Data Available.
+      </p>
+
+
+      <h3>Accomplishments:</h3>
+
+      <p *ngIf="oProgram?.program.data.postAward?.accomplishments?.flag =='yes'">
+        <span *ngFor="let item of oProgram.program.data.postAward.accomplishments.list | keys">
+          <span *ngIf="item.value?.content?.actual && item.value.content?.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</span><br>
+          <span *ngIf="item.value?.content?.projection && item.value?.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</span>
+          <br>
+        </span>
+      </p>
+
+      <p *ngIf="oProgram?.program.data.postAward?.accomplishments?.flag !='yes'">
+        Not Applicable.
+      </p>
+
+      <h3>Account Identification:</h3>
+
+      <p *ngFor="let account of oProgram?.program.data.financial.accounts">
+        <span *ngIf="account.description">{{account.code}}-{{account.description}};</span>
+        <span *ngIf="!account.description">{{account.code}}</span>
+      </p>
+
+    </section>
+
+    <!--Should I apply?-->
+    <section>
+      <h2 id="criteria-for-applying">Criteria for Applying</h2>
+
+      <h3>Types of Assistance:</h3>
+
+      <p *ngIf="oProgram && aDictionaries && aDictionaries.assistance_type">
+        <span *ngFor="let oItem of oProgram.program.data.assistanceTypes | filterMultiArrayObject:aDictionaries.assistance_type:'element_id':true:'elements'; let isLast = last">
+          {{ oItem.displayValue }}{{isLast ? '' : ', '}}
+        </span>
+      </p>
+
+
+      <h3>Credentials and Documentation:</h3>
+
+      <p *ngIf="oProgram">
+          <span *ngIf="oProgram.program.data.eligibility.documentation.flag=='yes'">{{oProgram.program.data.eligibility.documentation
+            .content}}
+              <span *ngIf="oProgram.program.data.eligibility.documentation?.questions?.OMBCircularA87?.flag=='yes'">2 CFR 200, Subpart E -
+                Cost Principles applies to this program.</span>
+              <span *ngIf="oProgram.program.data.eligibility.documentation?.questions?.OMBCircularA87?.flag=='na'">This program is excluded
+                from coverage under 2 CFR 200, Subpart E - Cost Principles.</span>
+            </span>
+        <span *ngIf="oProgram.program.data.eligibility?.documentation?.flag=='na'">None</span>
+      </p>
+
+
+      <h3>Applicant Eligibility:</h3>
+
+      <p *ngIf="oProgram">
+        {{oProgram.program.data.eligibility?.applicant?.additionalInfo?.content}}
+      </p>
+
+
+      <h3>Beneficiary Eligibility:</h3>
+
+      <p *ngIf="oProgram">
+        {{oProgram.program.data.eligibility?.beneficiary?.additionalInfo?.content}}
+      </p>
+
+
+      <h3>Length and Time Phasing of Assistance:</h3>
+      <p *ngIf="oProgram">
+        {{oProgram.program.data.assistance?.limitation?.content}}
+        <span *ngIf="oProgram.program.data.assistance?.limitation?.awarded"> Method of awarding/releasing assistance: {{oProgram.program.data.assistance?.limitation?.awarded}}</span>
+      </p>
+
+
+      <h3>Use of Assistance:</h3>
+
+      <p *ngIf="oProgram">
+        {{ oProgram.program.data.usage?.rules?.content }}
+        <span *ngIf="oProgram.program.data.usage?.restrictions?.flag=='yes'">{{ oProgram.program.data.usage.restrictions.content }}</span>
+        <span *ngIf="oProgram.program.data.usage?.discretionaryFund?.flag=='yes'">{{ oProgram.program.data.usage.discretionaryFund.content }}</span>
+        <span *ngIf="oProgram.program.data.usage?.loanTerms?.flag=='yes'">{{ oProgram.program.data.usage.loanTerms.content }}</span>
+      </p>
+    </section>
+
+    <!--How do I apply?-->
+    <section>
+      <h2 id="applying-for-assistance">Applying for Assistance</h2>
+
+      <h3>Deadlines:</h3>
+
+      <p *ngIf="oProgram">
+          <span *ngIf="oProgram.program.data.application?.deadlines?.submission?.flag == 'yes'">
+              <!-- repeat over all deadlines. -->
+              <span *ngFor="let deadline of oProgram.program.data.application?.deadlines?.submission?.list">
+                {{deadline.start | date: 'MMM dd, yyyy'}} to {{deadline.end | date: 'MMM dd, yyyy'}}
+                {{deadline.description}}
+                <br>
+              </span>
+            <!-- additional deadline info-->
+                {{oProgram.program.data.application?.deadlines?.submission?.additionalInfo?.content}}
+            </span>
+            <span *ngIf="oProgram.program.data.application?.deadlines?.submission?.flag == 'no'">
+              Not Applicable.
+            </span>
+            <span *ngIf="oProgram.program.data.application?.deadlines?.submission?.flag == 'contactHQ'">
+              Contact the headquarters or regional office, as appropriate for application deadlines
+            </span>
+      </p>
+
+      <h3>Preapplication Coordination:</h3>
+
+      <div *ngIf="oProgram">
+        <p *ngIf="oProgram.program.data.preApplication?.coordination?.flag == 'yes'">
+          Preapplication coordination is required.
+
+          <!-- Environmental statements-->
+              <span *ngIf="oProgram.program.data.preApplication?.coordination?.environmentalImpact?.flag == 'yes'">
+                <span *ngFor="let entry of oProgram.program.data.preApplication?.coordination?.environmentalImpact?.reports | keys">
+                  <span *ngIf="entry.value.flag === 'yes'">An environmental impact {{entry.key}} is required for this program.</span>
+                </span>
+              </span>
+              <span *ngIf="oProgram.program.data.preApplication?.coordination?.environmentalImpact?.flag == 'no'">
+                Environmental impact information is not required for this program.
+              </span>
+
+          <!-- Executive Order  -->
+              <span *ngIf="oProgram.program.data.preApplication?.coordination?.questions?.ExecutiveOrder12372?.flag === 'yes'">
+                This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
+                An applicant should consult the office or official designated as the single point of contact in his or her State for more
+                information
+                on the process the State requires to be followed in applying for assistance, if the State has selected the program for
+                review.
+              </span>
+              <span *ngIf="oProgram.program.data.preApplication?.coordination?.questions?.ExecutiveOrder12372?.flag === 'no'">
+                This program is excluded from coverage under E.O. 12372.
+              </span>
+
+          <!-- additional content-->
+          {{oProgram.program.data.preApplication?.coordination?.additionalInfo?.content}}
+        </p>
+
+        <p class="m-t-0" *ngIf="oProgram.program.data.preApplication?.coordination?.flag == 'na'">
+          Preapplication coordination is not applicable.</p>
+      </div>
+
+
+      <h3>Application Procedures:</h3>
+
+      <p *ngIf="oProgram">
+        <span *ngIf="oProgram.program.data.application.procedures?.questions?.OMBCircularA102?.flag === 'yes'">
+          2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards applies to this program.
+        </span>
+        <span *ngIf="oProgram.program.data.application.procedures?.questions?.OMBCircularA102?.flag === 'no'">
+          This program is excluded from coverage under 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit
+          Requirements for Federal Awards.
+        </span>
+
+        <!-- additional content-->
+        {{oProgram.program.data.application?.procedures?.additionalInfo?.content}}
+      </p>
+
+
+      <h3>Criteria for Selecting Proposals:</h3>
+
+      <p *ngIf="oProgram">
+        <span *ngIf="oProgram.program.data.application?.selectionCriteria?.flag == 'yes'">
+          {{oProgram.program.data.application?.selectionCriteria?.content}}
+        </span>
+        <span *ngIf="oProgram.program.data.application?.selectionCriteria?.flag == 'na'">
+          Not Applicable
+        </span>
+        <span *ngIf="oProgram.program.data.application?.selectionCriteria?.flag == 'no'">
+          No
+        </span>
+      </p>
+
+
+      <h3>Award Procedure:</h3>
+
+      <p *ngIf="oProgram">
+        {{oProgram.program.data.award?.procedures?.content}}
+      </p>
+
+
+      <h3>Date Range for Approval/Disapproval:</h3>
+
+      <p *ngIf="oProgram">
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='1'">From 1 to 15 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='2'">From 15 to 30 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='3'">From 30 to 60 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='4'">From 60 to 90 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='5'">From 90 to 120 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='6'">From 120 to 180 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='7'">&gt; 180 Days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='8'">Not Applicable</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.approval?.interval =='9'">Other</span>
+        <span>{{oProgram.program.data.application?.deadlines?.approval?.otherInfo?.content}}</span>
+      </p>
+
+
+      <h3>Renewals:</h3>
+
+      <p *ngIf="oProgram">
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.renewal?.interval =='1'">From 1 to 15 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.renewal?.interval =='2'">From 15 to 30 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.renewal?.interval =='3'">From 30 to 60 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.renewal?.interval =='4'">From 60 to 90 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.renewal?.interval =='5'">From 90 to 120 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.renewal?.interval =='6'">From 120 to 180 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.renewal?.interval =='7'">&gt; 180 Days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.renewal?.interval =='8'">Not Applicable</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.renewal?.interval =='9'">Other</span>
+        <span>{{oProgram.program.data.application?.deadlines?.renewal?.otherInfo?.content}}</span>
+      </p>
+
+
+      <h3>Appeals:</h3>
+
+      <p *ngIf="oProgram">
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.appeal?.interval =='1'">From 1 to 15 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.appeal?.interval =='2'">From 15 to 30 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.appeal?.interval =='3'">From 30 to 60 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.appeal?.interval =='4'">From 60 to 90 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.appeal?.interval =='5'">From 90 to 120 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.appeal?.interval =='6'">From 120 to 180 days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.appeal?.interval =='7'">&gt; 180 Days</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.appeal?.interval =='8'">Not Applicable</span>
+        <span class="italic" *ngIf="oProgram.program.data.application?.deadlines?.appeal?.interval =='9'">Other</span>
+        <span>{{oProgram.program.data.application?.deadlines?.appeal?.otherInfo?.content}}</span>
+      </p>
+    </section>
+
+    <!--Compliance requirements-->
+    <section>
+      <h2 id="compliance-requirements">Compliance Requirements</h2>
+
+      <h3>Reports:</h3>
+
+      <div *ngIf="oProgram">
+        <p *ngIf="oProgram.program.data.postAward?.reports?.flag == 'yes'">
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.program?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.program.content}}</span>
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.cash?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.cash.content}}</span>
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.progress?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.progress.content}}</span>
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.expenditure?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.expenditure.content}}</span>
+          <span *ngIf="oProgram.program.data.postAward?.reports?.list?.performanceMonitoring?.flag == 'yes'">{{oProgram.program.data.postAward.reports.list.performanceMonitoring.content}}</span>
+        </p>
+
+        <p class="m-a-0" *ngIf="oProgram.program.data.postAward?.reports?.flag == 'no'">
+          No reports are required.
+        </p>
+
+        <p class="m-a-0" *ngIf="oProgram.program.data.postAward?.reports?.flag == 'na'">
+          Not Applicable
+        </p>
+      </div>
+
+      <h3>Audits:</h3>
+
+      <div *ngIf="oProgram">
+        <p *ngIf="oProgram.program.data.postAward?.audit?.flag == 'yes'">
+          <span *ngIf="oProgram.program.data.postAward?.audit?.questions?.OMBCircularA133?.flag == 'yes'">
+            In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
+            nonfederal entities that expend financial assistance of $750,000 or more in Federal
+            awards will have a single or a program-specific audit conducted for that year. Non-Federal
+            entities that expend less than $750,000 a year in Federal awards are exempt from Federal
+            audit requirements for that year, except as noted in 2 CFR 200.503
+          </span>
+          <span *ngIf="oProgram.program.data.postAward?.audit?.questions?.OMBCircularA133?.flag == 'no'">
+            This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
+          </span>
+
+          {{oProgram.program.data.postAward.audit.content}}
+        </p>
+
+        <p class="m-a-0" *ngIf="oProgram.program.data.postAward?.audit?.flag == 'no'">
+          No audits are required for this program.
+        </p>
+
+        <p class="m-a-0" *ngIf="oProgram.program.data.postAward?.audit?.flag == 'na'">
+          Not Applicable.
+        </p>
+      </div>
+
+      <h3>Records:</h3>
+
+      <div *ngIf="oProgram">
+        <p *ngIf="(oProgram.program.data.postAward.records?.content) && (oProgram.program.data.postAward.records?.content != '')">
+          {{oProgram.program.data.postAward.records?.content}}
+        </p>
+
+        <p *ngIf="!(oProgram.program.data.postAward.records?.content) || (oProgram.program.data.postAward.records?.content == '')">
+          No Data Available.
+        </p>
+      </div>
+
+      <h3>Regulations, Guidelines, and Literature:</h3>
+
+      <p *ngIf="oProgram">
+        <span *ngIf="oProgram.program.data.postAward?.documents?.flag =='yes'"> {{oProgram.program.data.postAward.documents.content}}</span>
+        <span *ngIf="oProgram.program.data.postAward?.documents?.flag !='yes'"> Not Applicable.</span>
+      </p>
+
+      <h3>Formula and Matching Requirements:</h3>
+      <p *ngIf="oProgram">
+        <!-- statutory formula-->
+        <span class="m-a-0" *ngIf="oProgram.program.data.assistance?.formula?.flag == 'yes'">
+          Statutory Formula: Title {{oProgram.program.data.assistance.formula.title}} Chapter {{oProgram.program.data.assistance.formula.chapter}}
+          Part {{oProgram.program.data.assistance.formula.part}} Subpart {{oProgram.program.data.assistance.formula.subPart}} Public Law {{oProgram.program.data.assistance.formula.publicLaw}}
+          {{oProgram.program.data.assistance.formula.additionalInfo?.content}}
+          <br>
+        </span>
+
+        <span class="m-a-0" *ngIf="oProgram.program.data.assistance?.formula?.flag == 'no'">
+          This federal assistance listing has no statutory formula
+          <br>
+        </span>
+
+        <span class="m-a-0" *ngIf="oProgram.program.data.assistance?.formula?.flag == 'na'">
+          Statuary formula is not applicable to this federal assistance listing.
+          <br>
+        </span>
+
+        <!-- matching requirements -->
+        <span class="m-a-0" *ngIf="oProgram.program.data.assistance?.matching?.flag == 'yes'">
+          Matching Requirements: Percent: {{oProgram.program.data.assistance.matching.percent}}
+          {{oProgram.program.data.assistance.matching.otherInfo?.content}}
+          <br>
+        </span>
+
+        <span class="m-a-0" *ngIf="oProgram.program.data.assistance?.matching?.flag == 'no'">
+          This program has no matching requirements.
+          <br>
+        </span>
+
+        <span class="m-a-0" *ngIf="oProgram.program.data.assistance?.matching?.flag == 'na'">
+          Matching requirements are not applicable to this federal assistance listing.
+          <br>
+        </span>
+
+        <!-- moe-->
+        <span class="m-a-0" *ngIf="oProgram.program.data.assistance?.moe?.flag == 'yes'">
+          This program has MOE requirements, see funding agency for further details. Additional Information:
+          {{oProgram.program.data.assistance.moe.additionalInfo?.content}}
+          <br>
+        </span>
+
+        <span class="m-a-0" *ngIf="oProgram.program.data.assistance?.moe?.flag ==='no'">
+          This program does not have MOE requirements.
+          <br>
+        </span>
+
+        <span class="m-a-0" *ngIf="oProgram.program.data.assistance?.moe?.flag === 'na'">
+          MOE requirements are not applicable to this federal assistance listing.
+          <br>
+        </span>
+      </p>
+    </section>
+
+    <!--Contact information-->
+    <section>
+      <h2 id="contact-information">Contact Information</h2>
+
+      <div *ngIf="oProgram">
+        <address>
+          <h3>Regional or Local Office:</h3><br>
+          <span *ngIf="oProgram.program.data.contacts?.local?.flag == 'regional'"> See Regional Agency Offices. {{oProgram.program.data.contacts['local'].additionalInfo?.content}}</span>
+          <span *ngIf="oProgram.program.data.contacts?.local?.flag == 'none'"> None. {{oProgram.program.data.contacts['local'].additionalInfo?.content}}</span> <br>
+          <h3>Headquarters Office:</h3><br>
+
+          <div *ngFor="let item of oProgram.program.data.contacts?.list">
+
+            {{item.title}} {{item.fullName}} <br>{{item.address}}, <br> {{item.city}}, {{item.state}} {{item.zip}}<br>
+            <strong>Email:</strong> <a href="mailto:{{item.email}}">{{item.email}}</a> <br>
+            <strong>Phone:</strong> {{item.phone}}<br>
+            <span *ngIf="item.fax"><strong>Fax:</strong> {{item.fax}}<br></span><br>
+          </div>
+          <strong>Website: </strong>
+          <span *ngIf="!oProgram.program.data.website || oProgram.program.data.website == null ">No Data Available</span>
+          <span *ngIf="oProgram.program.data.website">{{oProgram.program.data.website}}</span>
+        </address>
+      </div>
+    </section>
+
+    <!--History Section-->
+    <section *ngIf="oHistoricalIndex">
+      <h2 id="history">History</h2><br>
+      <div *ngFor="let item of oHistoricalIndex">
+        <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">
+        <!--<p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
+            {{item.fiscalYear}} ({{item.statusCode}})
+            <span class="historyDetails">{{item.actionType | historicalIndexLabel}}</span>
+          </p>
+          <p id="fiscalYear" *ngIf="!item.statusCode">-->
+          <p>
+            {{item.fiscalYear}}
+            <span class="historyDetails" >{{item.actionType | historicalIndexLabel}}</span>
+          </p>
+          <p id="changeDescription">{{item.changeDescription}}</p>
+        </div>
+      </div>
+    </section>
+
+    <!--Internal Fields-->
+    <!--<section>
+      <h2 id="internal">Internal Fields <em>(Not displayed publically)</em></h2>
+
+      <h3>TAFs Codes:</h3>
+      <ul>
+        <li>12-12-2014-X-1500</li>
+      </ul>
+
+      <h3>Functional Codes:</h3>
+      <ul>
+        <li>AGRICULTURAL - AN Research and Development</li>
+        <li>INCOME SECURITY AND SOCIAL SERVICES - NH Nutrition</li>
+      </ul>
+
+      <h3>Subject Terms:</h3>
+      <ul>
+        <li>83 - crop improvement </li>
+        <li>88 - experiment stations</li>
+        <li>92 - food quality, nutrition</li>
+        <li>91 - food, agricultural sciences</li>
+      </ul>
+    </section>-->
+
+  </div>
+
+</div>
+

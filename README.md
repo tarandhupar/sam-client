@@ -108,7 +108,3 @@ TypeScript 1.7.x includes everything you need. Make sure to upgrade, even if you
 ```
 npm install --global typescript
 ```
-
-## Use a TypeScript-aware editor
-We have good experience using these editors:
-
