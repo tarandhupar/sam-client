@@ -14,6 +14,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { SamAngularModule } from '../common/samuikit/samuikit.module';
+import { SamUIKitModule } from 'ui-kit';
 import { Observable } from 'rxjs';
 
 let comp: ProgramPage;
@@ -149,7 +150,8 @@ describe('ProgramPage', () => {
       imports: [
         SamAngularModule,
         HttpModule,
-        CommonModule
+        CommonModule,
+        SamUIKitModule
       ],
       declarations: [
         ProgramPage,
@@ -246,6 +248,7 @@ describe('ProgramPage', () => {
 
     expect(comp.oProgram).toBeDefined();
     expect(comp.oFederalHierarchy).toBeDefined();
+    expect(comp.federalHierarchyWithParents).toBeDefined();
     expect(comp.aRelatedProgram).toBeDefined();
     expect(comp.oHistoricalIndex).toBeDefined();
     expect(comp.aAlert).toBeDefined();

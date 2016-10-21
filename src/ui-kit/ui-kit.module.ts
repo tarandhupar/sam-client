@@ -10,13 +10,15 @@ import { SamCheckboxComponent } from "./form-controls/checkbox";
 import { LabelWrapper } from './form-controls/wrapper/label-wrapper.component';
 import { FieldsetWrapper } from './form-controls/wrapper/fieldset-wrapper.component';
 import { SamRadioButtonComponent } from "./form-controls/radiobutton/radiobutton.component";
-import { SamHeaderComponent } from './header/header.component';
+import { SamSearchHeaderComponent } from './search-header/search-header.component';
 import { SamSearchbarComponent } from "./form-controls/searchbar/searchbar.component";
 import { SamBannerComponent } from "./banner/banner.component";
 import { SamStickyComponent } from "./sticky/sticky.component";
 import { SamFooterComponent } from "./footer/footer.component";
+import { SamLabelComponent } from "./label/label.component";
+import { SamHeaderComponent } from "./header/header.component";
+import { SamAlertComponent } from "./alert/alert.component";
 import { SamAccordionsComponent } from "./accordions/accordions.component";
-
 
 
 /**
@@ -26,14 +28,17 @@ import { SamAccordionsComponent } from "./accordions/accordions.component";
 @NgModule({
   declarations: [
     SamAccordionsComponent,
+    SamLabelComponent,
     SamSelectComponent,
     SamCheckboxComponent,
     SamRadioButtonComponent,
     SamSearchbarComponent,
     SamBannerComponent,
-    SamHeaderComponent,
+    SamSearchHeaderComponent,
     SamStickyComponent,
     SamFooterComponent,
+    SamHeaderComponent,
+    SamAlertComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -44,14 +49,17 @@ import { SamAccordionsComponent } from "./accordions/accordions.component";
   ],
   exports: [
     SamAccordionsComponent,
+    SamLabelComponent,
     SamSelectComponent,
     SamCheckboxComponent,
     SamRadioButtonComponent,
     SamSearchbarComponent,
     SamBannerComponent,
-    SamHeaderComponent,
+    SamSearchHeaderComponent,
     SamStickyComponent,
-    SamFooterComponent
+    SamFooterComponent,
+    SamHeaderComponent,
+    SamAlertComponent
   ],
   providers: [ ]
 })

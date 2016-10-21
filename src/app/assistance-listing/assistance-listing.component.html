@@ -2,6 +2,17 @@
 
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
+    <div *ngIf="federalHierarchyWithParents">
+      <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">
+        <img [src]="federalHierarchyWithParents.hierarchy[0].hierarchy[0]._links.logo.href" alt="HTML5 Icon" style="width:220px;height:220px;">
+      </div>
+      <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && (federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href)">
+        <img [src]="federalHierarchyWithParents.hierarchy[0]._links.logo.href" alt="HTML5 Icon" style="width:220px;height:220px;">
+      </div>
+      <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && !(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href) && federalHierarchyWithParents._links?.logo?.href">
+        <img [src]="federalHierarchyWithParents._links.logo.href" alt="HTML5 Icon" style="width:220px;height:220px;">
+      </div>
+    </div>
     <br><br>
     <!--<img src="/assets/logo.png">-->
     <!--Side Navigation-->
@@ -22,7 +33,7 @@
   <!--Main Content-->
   <div class="usa-width-three-fourths">
     <template [ngIf]="oProgram && aAlert.length > 0">
-      <samAlert *ngFor="let oAlert of aAlert" labelname="oAlert.labelname" [config]="oAlert.config"></samAlert>
+      <samAlert *ngFor="let oAlert of aAlert" labelname="oAlert.labelname" [type]="oAlert.config.type" [title]="oAlert.config.title" [description]="oAlert.config.description"></samAlert>
     </template>
     <div *ngIf="oProgram">
       <h1>
