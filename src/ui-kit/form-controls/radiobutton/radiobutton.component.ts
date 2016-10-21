@@ -3,7 +3,7 @@ import { FieldsetWrapper } from '../wrapper/fieldset-wrapper.component';
 import { OptionsType } from '../types';
 
 /**
- * The <samRadioButtons> component is a set of checkboxes compliant with sam.gov standards
+ * The <samRadioButton> component is a set of checkboxes compliant with sam.gov standards
  * https://gsa.github.io/sam-web-design-standards/
  *
  * @Input/@Output model - the bound value of the component
@@ -14,7 +14,7 @@ import { OptionsType } from '../types';
  * @Input errorMessage: string - red error message
  */
 @Component({
-  selector: 'samRadioButton2',
+  selector: 'samRadioButton',
   template: `
       <fieldsetWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage">
         <ul class="usa-unstyled-list">

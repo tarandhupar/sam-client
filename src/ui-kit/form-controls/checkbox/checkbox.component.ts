@@ -3,7 +3,7 @@ import { FieldsetWrapper,  } from '../wrapper/fieldset-wrapper.component';
 import { OptionsType } from '../types';
 
 /**
- * The <samCheckboxes> component is a set of checkboxes compliant with sam.gov standards
+ * The <samCheckbox> component is a set of checkboxes compliant with sam.gov standards
  * https://gsa.github.io/sam-web-design-standards/
  *
  * @Input/@Output model - the bound value of the component
@@ -15,7 +15,7 @@ import { OptionsType } from '../types';
  * @Input hasSelectAll: boolean - if true, an addition checkbox is added that selects all the checkboxes
  */
 @Component({
-  selector: 'samCheckboxes2',
+  selector: 'samCheckbox',
   template: `
       <fieldsetWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage">
         <ul class="usa-unstyled-list">
