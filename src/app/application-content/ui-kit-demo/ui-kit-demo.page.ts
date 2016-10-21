@@ -45,6 +45,15 @@ export class UIKitDemoPage {
     hint: ''
   };
 
+  // Accordions Component
+  accordionsData =
+  [
+      {title:"Test1", content:"This is Test1"},
+      {title:"Test2", content:"This is Test2"},
+      {title:"Test3", content:"This is Test3"}
+  ]
+
+
   constructor() {  }
 
   onEmptyOptionChanged($event) {

@@ -7,7 +7,6 @@ import { SamSpace } from "./sam-space";
 import { SamButton } from "./sam-button";
 import { SamAlert } from "./sam-alert";
 import { SamLabel } from "./sam-label";
-import { SamSelect } from "./sam-select";
 
 
 /**
@@ -20,7 +19,6 @@ import { SamSelect } from "./sam-select";
     SamSpace,
     SamButton,
     SamLabel,
-    SamSelect,
     SamAlert,
   ],
   imports: [
@@ -31,7 +29,6 @@ import { SamSelect } from "./sam-select";
     SamSpace,
     SamButton,
     SamLabel,
-    SamSelect,
     SamAlert,
   ],
   providers: [ ]
