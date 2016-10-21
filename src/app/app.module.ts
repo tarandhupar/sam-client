@@ -12,7 +12,6 @@ import { ENV_PROVIDERS } from './environment';
 import { ROUTES } from './app.routes';
 // App is our top level component
 import { App } from './app.component';
-import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
 import { HomeModule } from './application-content/home';
 import { PageNotFoundErrorPage } from './application-content/404';
@@ -27,7 +26,6 @@ import { SamAPIKitModule } from '../api-kit/api-kit.module';
 
 // Application wide providers
 const APP_PROVIDERS = [
-  ...APP_RESOLVER_PROVIDERS,
   AppState
 ];
 
