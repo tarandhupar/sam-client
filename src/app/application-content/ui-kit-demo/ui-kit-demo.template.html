@@ -1,4 +1,32 @@
 <div class="usa-grid">
+  <h2>Button Component &lt;samButton&gt;</h2>
+  <div class="usa-width-one-whole">
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'defaultBtn'" [buttonText]="'Default'" [buttonType]="btnType" (click)="onDefaultBtnClick()"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'altBtn'" [buttonText]="'Alt'" [buttonType]="'alt'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'secondaryBtn'" [buttonText]="'Secondary'" [buttonType]="'secondary'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'grayBtn'" [buttonText]="'Gray'" [buttonType]="'gray'"></samButton>
+    </div>
+  </div>
+  <div class="usa-width-one-whole">
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'outlineBtn'" [buttonText]="'Outline'" [buttonType]="'outline'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'invertedBtn'" [buttonText]="'Inverted'" [buttonType]="'inverted'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'disabledBtn'" [buttonText]="'Disabled'" [buttonType]="'disabled'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'bigBtn'" [buttonText]="'Big'" [buttonType]="'big'"></samButton>
+    </div>
   <h2>Label Component &lt;samLabel&gt;</h2>
   <div class="usa-width-one-sixth">
     <samLabel [labelType]="'big'" [labelText]="'Big Label'"></samLabel>

@@ -15,6 +15,7 @@ import {SamSearchbarComponent} from "./form-controls/searchbar/searchbar.compone
 import {SamBannerComponent} from "./banner/banner.component";
 import {SamStickyComponent} from "./sticky/sticky.component";
 import {SamFooterComponent} from "./footer/footer.component";
+import {SamButtonComponent} from "./form-controls/button/button.component.ts";
 import {SamLabelComponent} from "./label/label.component";
 import {SamHeaderComponent} from "./header/header.component";
 import {SamAlertComponent} from "./alert/alert.component";
@@ -26,6 +27,7 @@ import {SamAlertComponent} from "./alert/alert.component";
  */
 @NgModule({
   declarations: [
+    SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
     SamCheckboxComponent,
@@ -46,6 +48,7 @@ import {SamAlertComponent} from "./alert/alert.component";
     RouterModule
   ],
   exports: [
+    SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
     SamCheckboxComponent,
