@@ -39,8 +39,7 @@ describe('The Sam Label component', () => {
     component.labelData = smallLabelConfig.labelData;
     fixture.detectChanges();
 
-    expect(component.labelClass).toBe('usa-label');
-    let labelElement = fixture.debugElement.query(By.css("#smallLabel"));
+    let labelElement = fixture.debugElement.query(By.css(".usa-label"));
     expect(labelElement.nativeElement.innerHTML).toBe("test small");
 
 
@@ -52,8 +51,7 @@ describe('The Sam Label component', () => {
     component.labelData = bigLabelConfig.labelData;
     fixture.detectChanges();
 
-    expect(component.labelClass).toBe('usa-label-big');
-    let labelElement = fixture.debugElement.query(By.css("#bigLabel"));
+    let labelElement = fixture.debugElement.query(By.css(".usa-label-big"));
     expect(labelElement.nativeElement.innerHTML).toBe("test big");
   });
 
