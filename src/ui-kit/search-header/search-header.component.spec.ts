@@ -6,7 +6,7 @@ import { SamSearchHeaderComponent } from './search-header.component';
 import {SamUIKitModule} from "ui-kit";
 
 
-describe('The Sam Header component', () => {
+describe('The Sam Search Header component', () => {
   let component: SamSearchHeaderComponent;
   let fixture: any;
 
