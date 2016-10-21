@@ -10,7 +10,7 @@ import {Component, Input} from '@angular/core';
  */
 @Component({
   selector: 'samButton',
-  template: `<button id={{buttonId}} [ngClass]="btnClass()" [disabled]="disabled" >{{buttonText}}</button>`,
+  template: `<button id={{buttonId}} [ngClass]="btnClass()" [disabled]="disabled" type="button">{{buttonText}}</button>`,
 })
 export class SamButtonComponent {
 
