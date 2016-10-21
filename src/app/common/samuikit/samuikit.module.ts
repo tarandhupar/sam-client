@@ -2,10 +2,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { SamHeader } from "./sam-header";
 import { SamSpace } from "./sam-space";
 import { SamButton } from "./sam-button";
-import { SamLabel } from "./sam-label";
 import { SamAccordions } from "./sam-accordions";
 
 /**
@@ -14,20 +12,16 @@ import { SamAccordions } from "./sam-accordions";
  */
 @NgModule({
   declarations: [
-    SamHeader,
     SamSpace,
     SamButton,
-    SamLabel,
     SamAccordions
   ],
   imports: [
     BrowserModule,
   ],
   exports: [
-    SamHeader,
     SamSpace,
     SamButton,
-    SamLabel,
     SamAccordions
   ],
   providers: [ ]

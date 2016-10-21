@@ -1,37 +1,26 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'samHeader2',
-  template: `
-    <header>
-      <div class="usa-grid">
-        <div class="header-container">
-          <a class="sam_hat_img" [routerLink]="['/']">
-            <img class="marginCenter" src="assets/img/sam_hat_logo.jpg">
-          </a>
-          <samSearchbar [size]="'small'" (onSearch)="onSearchEvent($event)" 
-           [keyword]="keyword" [placeholder]="'#keyword'" [filterValue]="filterValue"></samSearchbar>          
-        </div>   
-      </div>
-    </header>
-`,
-  styleUrls: [ 'header.css' ],
+  selector: 'samHeader',
+  template:`<header class="sam-header">
+              <nav class="" aria-label="Main navigation">
+                <div class="usa-width-one-fourth align-top marginCenter centered">
+                    <a class="marginCenter">
+                      <img class="marginCenter header-logo-img" src="../../../assets/img/sam_hat_logo.jpg">
+                    </a>
+
+                </div>
+              </nav>
+            </header>`,
+  styles:[`
+    .header-logo-img{
+      height: 75px;
+      width:75px;
+      padding: 2px 0;
+    }`]
 })
 export class SamHeaderComponent {
 
-  @Input() keyword: string;
-
-  @Input() filterValue: string;
-
-  @Output() searchEvent: EventEmitter<any> = new EventEmitter<any>();
-
   constructor() { }
 
-  ngOnInit(){
-
-  }
-
-  onSearchEvent($event) {
-    this.searchEvent.emit($event);
-  }
 }
