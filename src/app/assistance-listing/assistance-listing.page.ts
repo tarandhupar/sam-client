@@ -24,6 +24,7 @@ import * as d3 from 'd3';
 export class ProgramPage implements OnInit {
   oProgram:any;
   oFederalHierarchy:any;
+  federalHierarchyWithParents:any
   aRelatedProgram:any[] = [];
   currentUrl:string;
   aDictionaries:any = [];
@@ -84,6 +85,10 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
             .subscribe(res => {
               this.oFederalHierarchy = res;
             });
+          this.oFHService.getFederalHierarchyById(res.program.data.organizationId,true,false)
+            .subscribe(res => {
+              this.federalHierarchyWithParents = res;
+            });
           this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(id, this.oProgram.program.data.programNumber)
             .subscribe(res => {
               this.oHistoricalIndex = res;
@@ -138,7 +143,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       .rollup(function (values) {
         let ena = false; // Estimate Not Available
         let nsi = false; // Not Separately Identifiable
-        values.forEach(function(item){ 
+        values.forEach(function(item){
           if(item.ena){ ena = true; }
           if(item.nsi){ nsi = true; }
         });
@@ -153,7 +158,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         let isEstimate = false;
         let year;
         let formatyear;
-        values.forEach(function(item){ 
+        values.forEach(function(item){
           if(item.estimate){ isEstimate = true; }
           year = item.year;
         });
@@ -172,7 +177,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       .rollup(function (values) {
         let ena = false; // Estimate Not Available
         let nsi = false; // Not Separately Identifiable
-        values.forEach(function(item){ 
+        values.forEach(function(item){
           if(item.ena){ ena = true; }
           if(item.nsi){ nsi = true; }
         });
@@ -213,7 +218,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
     let g = svg.append("g")
       .attr("class", "bars")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");;
-    
+
     let { series: series, keys: stackKeys } = getStackProperties(assistanceTotalsGroupedByYear);
 
     // Axis Range
@@ -223,7 +228,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
     // Axis Domain
     x.domain(assistanceTotalsGroupedByYear.map(function (d) { return d.values[0].value.year; }));
-    let yDomainMax = d3.max(vizTotals, 
+    let yDomainMax = d3.max(vizTotals,
       function (item) {
         return item.value.total;
       });
@@ -298,7 +303,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
     d3.selectAll("svg text").attr("style", "font-size: 17px; font-family: 'Source Sans Pro';");
     d3.selectAll(".svg-font-bold").attr("style", "font-size: 17px; font-family: 'Source Sans Pro'; font-weight: 700;");
     d3.selectAll("svg .axis--y .tick line").attr("style", "stroke: rgba(0, 0, 0, 0.1);");
-    
+
     // Tooltip
     let tooltip;
     rect.on("mouseover", function (d) {
@@ -316,9 +321,11 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           .style("box-shadow", "3px 5px 30px -4px rgba(0,0,0,0.33)")
       })
       .on("mousemove", function (d) {
-        tooltip.html(this.parentNode.attributes["data-assistance"].value + "<span style='display: block; font-size: 17px; font-weight: 700;'>" + d3.format("($,")(d[1] - d[0]) + "</span>")
-          .style("left", (d3.event.pageX - 30) + "px")
-          .style("top", (d3.event.pageY - 10) + "px");
+        if(tooltip){
+          tooltip.html(this.parentNode.attributes["data-assistance"].value + "<span style='display: block; font-size: 17px; font-weight: 700;'>" + d3.format("($,")(d[1] - d[0]) + "</span>")
+            .style("left", (d3.event.pageX - 30) + "px")
+            .style("top", (d3.event.pageY - 10) + "px");
+        }
       })
       .on("mouseout", function () {
         d3.select(".tooltip").remove();
@@ -355,7 +362,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
       return { "series": stack(data), "keys": stackKeys.values() };
     }
-    
+
     /**
      * --------------------------------------------------
      * Table
@@ -419,11 +426,22 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       .append("tr")
       .attr("class", "detail")
       .html(function (d: any) {
+        let explanation = "";
+        d.values.forEach(function(item){
+          item.values.forEach(function(innerItem){
+            if(innerItem.explanation){
+              explanation += "FY " + item.key.slice(2,4) + " Exp: " + innerItem.explanation + ", ";
+            }
+          });
+        });
+        if(explanation){
+          explanation = "(" + explanation.slice(0,-2) +  ")";
+        }
         // If additional info content its empty remove row
         if(!d.key){
-          this.remove();
+          this.parentNode.removeChild(this);
         }
-        return "<td>" + d.key + "</td>";
+        return "<td>" + d.key + explanation + "</td>";
       })
       .selectAll("tr")
       .data(function (d) {
@@ -440,7 +458,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         }else{
           cellText = d3.format("($,")(d.values[0].amount);
         }
-        return cellText;  
+        return cellText;
       });
 
     // Move and unwrap assistance details
@@ -493,10 +511,11 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           "amount": item.values[year]["actual"] || item.values[year]["estimate"] || 0,
           "estimate": !!!item.values[year]["actual"],
           "ena": item.values[year].flag == "ena" || item.values[year].flag == "na" ? true : false,
-          "nsi": item.values[year].flag == "nsi" || item.values[year].flag == "no" ? true : false
+          "nsi": item.values[year].flag == "nsi" || item.values[year].flag == "no" ? true : false,
+          "explanation": item.values[year].explanation || ""
         }
         formattedFinancialData.push(financialItem);
-      }      
+      }
     });
 
     return formattedFinancialData;
