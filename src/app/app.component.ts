@@ -6,6 +6,7 @@ import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { ComponentInjectService } from './common/service/component.inject.service.ts';
 import { InputTypeConstants } from './common/constants/input.type.constants.ts';
 import { globals } from './globals.ts';
+import { SearchService } from 'api-kit';
 
 //TODO: Remove samuikit.js (Deprecated)
 import '../assets/js/samuikit.js';
@@ -22,19 +23,23 @@ import '../assets/js/samuikit.js';
     './app.style.css'
   ],
   templateUrl: './app.template.html',
-  providers : [ComponentInjectService,InputTypeConstants]
+  providers : [ComponentInjectService,InputTypeConstants,SearchService]
 })
 export class App{
 
   keyword: string = "";
   index: string = "";
+  qs: any = {};
 
-
-  constructor(private _router: Router,private activatedRoute: ActivatedRoute) {
-
+  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {
+    
   }
 
   ngOnInit() {
+    this.searchService.paramsUpdated$.subscribe(
+      obj => {
+        this.setQS(obj);
+    });
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
@@ -48,7 +53,7 @@ export class App{
   }
 
   onHeaderSearchEvent(searchObject) {
-    var qsobj = {};
+    var qsobj = this.qs;
     if(searchObject.keyword.length>0){
       qsobj['keyword'] = searchObject.keyword;
     }
@@ -65,5 +70,9 @@ export class App{
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
+  }
+
+  setQS(obj){
+    this.qs = obj;
   }
 }
