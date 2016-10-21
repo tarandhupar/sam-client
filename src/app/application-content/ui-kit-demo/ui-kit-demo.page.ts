@@ -45,6 +45,9 @@ export class UIKitDemoPage {
     hint: ''
   };
 
+  // Button Component
+  btnType: string = "default";
+
   constructor() {  }
 
   onEmptyOptionChanged($event) {
@@ -55,5 +58,17 @@ export class UIKitDemoPage {
     }
   }
 
+  /**
+   * Example to change button type when click
+   */
+  onDefaultBtnClick(){
+    if(this.btnType === "default"){
+      this.btnType = "alt";
+    }else if(this.btnType === "alt"){
+      this.btnType = "secondary";
+    }else{
+      this.btnType = "default";
+    }
+  }
 
 }
