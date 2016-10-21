@@ -9,3 +9,4 @@ export { SamStickyComponent } from "./sticky/sticky.component";
 export { SamFooterComponent } from './footer/footer.component';
 export { SamButtonComponent } from './form-controls/button/button.component';
 export { SamHeaderComponent } from './header/header.component';
+export { SamLabelComponent } from './label/label.component';
