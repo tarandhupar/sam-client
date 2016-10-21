@@ -2,6 +2,17 @@
 
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
+    <div *ngIf="federalHierarchyWithParents">
+      <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">
+        <img [src]="federalHierarchyWithParents.hierarchy[0].hierarchy[0]._links.logo.href" alt="HTML5 Icon" style="width:220px;height:220px;">
+      </div>
+      <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && (federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href)">
+        <img [src]="federalHierarchyWithParents.hierarchy[0]._links.logo.href" alt="HTML5 Icon" style="width:220px;height:220px;">
+      </div>
+      <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && !(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href) && federalHierarchyWithParents._links?.logo?.href">
+        <img [src]="federalHierarchyWithParents._links.logo.href" alt="HTML5 Icon" style="width:220px;height:220px;">
+      </div>
+    </div>
     <br><br>
     <!--<img src="/assets/logo.png">-->
     <!--Side Navigation-->
