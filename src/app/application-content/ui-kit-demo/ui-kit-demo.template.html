@@ -80,14 +80,14 @@
 <div class="usa-grid">
   <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
   <div class="usa-width-one-third">
-    <samCheckboxes2
+    <samCheckbox
       [(model)]="checkboxModel"
       [options]="checkboxConfig.options"
       [label]="checkboxConfig.label"
       [hint]="checkboxConfig.hint"
       [errorMessage]="checkboxConfig.errorMessage"
       [hasSelectAll]="checkboxConfig.hasSelectAll">
-    </samCheckboxes2>
+    </samCheckbox>
   </div>
   <div class="usa-width-one-third">
     <fieldset class="usa-fieldset-inputs usa-sans">
@@ -120,13 +120,13 @@
 <div class="usa-grid">
   <h2>Radiobuttons Component &lt;samRadioButtons&gt;</h2>
   <div class="usa-width-one-third">
-    <samRadioButton2
+    <samRadioButton
       [(model)]="radioModel"
       [options]="radioConfig.options"
       [label]="radioConfig.label"
       [hint]="radioConfig.hint"
       [errorMessage]="radioConfig.errorMessage">
-    </samRadioButton2>
+    </samRadioButton>
   </div>
   <div class="usa-width-one-third">
     <fieldset class="usa-fieldset-inputs usa-sans">
@@ -150,5 +150,15 @@
   <div class="usa-width-one-third">
     <h3>Model</h3>
     <pre><code>{{radioModel | json}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
+  <div class="usa-width-one">
+    <h2>Alert Component &lt;samAlert&gt;</h2>
+    <samAlert [type]="'success'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+    <samAlert [type]="'warning'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+    <samAlert [type]="'error'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+    <samAlert [type]="'info'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+    <samAlert [type]="'infovv'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
   </div>
 </div>

@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { SamSpace } from "./sam-space";
-import { SamAlert } from "./sam-alert";
 import { SamAccordions } from "./sam-accordions";
 
 /**
@@ -13,16 +12,14 @@ import { SamAccordions } from "./sam-accordions";
 @NgModule({
   declarations: [
     SamSpace,
-    SamAccordions,
-    SamAlert,
+    SamAccordions
   ],
   imports: [
     BrowserModule,
   ],
   exports: [
     SamSpace,
-    SamAccordions,
-    SamAlert,
+    SamAccordions
   ],
   providers: [ ]
 })
