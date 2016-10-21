@@ -6,18 +6,16 @@ import {Component, Input} from '@angular/core';
  * https://gsa.github.io/sam-web-design-standards/
  * @Input labelType: string - 'small': display small label
  *                       'big': display big label
- * @Input labeId: the id that will assign to the label element
- * @Input labelData: the text content that will show on the label
+ * @Input labelText: the text content that will show on the label
  */
 @Component({
   selector: 'samLabel',
-  template: `<span id={{labelId}} [ngClass]="labelClass()">{{labelData}}</span>`,
+  template: `<span [ngClass]="labelClass()">{{labelText}}</span>`,
 })
 export class SamLabelComponent {
 
-  @Input() labelId:string;
   @Input() labelType:string;
-  @Input() labelData:string;
+  @Input() labelText:string;
 
 
   constructor() {

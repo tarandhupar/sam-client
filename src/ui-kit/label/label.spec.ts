@@ -11,14 +11,12 @@ describe('The Sam Label component', () => {
 
   let smallLabelConfig = {
     labelType: 'small',
-    labelId: 'smallLabel',
-    labelData: 'test small'
+    labelText: 'test small'
   };
 
   let bigLabelConfig = {
     labelType: 'big',
-    labelId: 'bigLabel',
-    labelData: 'test big'
+    labelText: 'test big'
   };
 
   beforeEach(() => {
@@ -35,8 +33,7 @@ describe('The Sam Label component', () => {
   it('should display a small sam label', function () {
 
     component.labelType = smallLabelConfig.labelType;
-    component.labelId = smallLabelConfig.labelId;
-    component.labelData = smallLabelConfig.labelData;
+    component.labelText = smallLabelConfig.labelText;
     fixture.detectChanges();
 
     let labelElement = fixture.debugElement.query(By.css(".usa-label"));
@@ -47,8 +44,7 @@ describe('The Sam Label component', () => {
 
   it('should display a big sam label', function () {
     component.labelType = bigLabelConfig.labelType;
-    component.labelId = bigLabelConfig.labelId;
-    component.labelData = bigLabelConfig.labelData;
+    component.labelText = bigLabelConfig.labelText;
     fixture.detectChanges();
 
     let labelElement = fixture.debugElement.query(By.css(".usa-label-big"));
