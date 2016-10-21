@@ -10,11 +10,12 @@ import { SamCheckboxComponent } from "./form-controls/checkbox";
 import { LabelWrapper } from './form-controls/wrapper/label-wrapper.component';
 import { FieldsetWrapper } from './form-controls/wrapper/fieldset-wrapper.component';
 import { SamRadioButtonComponent } from "./form-controls/radiobutton/radiobutton.component";
-import { SamHeaderComponent } from './header/header.component';
+import { SamSearchHeaderComponent } from './search-header/search-header.component';
 import {SamSearchbarComponent} from "./form-controls/searchbar/searchbar.component";
 import {SamBannerComponent} from "./banner/banner.component";
 import {SamStickyComponent} from "./sticky/sticky.component";
 import {SamFooterComponent} from "./footer/footer.component";
+import {SamHeaderComponent} from "./header/header.component";
 
 
 /**
@@ -28,9 +29,10 @@ import {SamFooterComponent} from "./footer/footer.component";
     SamRadioButtonComponent,
     SamSearchbarComponent,
     SamBannerComponent,
-    SamHeaderComponent,
+    SamSearchHeaderComponent,
     SamStickyComponent,
     SamFooterComponent,
+    SamHeaderComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -45,9 +47,10 @@ import {SamFooterComponent} from "./footer/footer.component";
     SamRadioButtonComponent,
     SamSearchbarComponent,
     SamBannerComponent,
-    SamHeaderComponent,
+    SamSearchHeaderComponent,
     SamStickyComponent,
-    SamFooterComponent
+    SamFooterComponent,
+    SamHeaderComponent
   ],
   providers: [ ]
 })
