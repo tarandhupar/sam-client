@@ -17,7 +17,7 @@ import {SamStickyComponent} from "./sticky/sticky.component";
 import {SamFooterComponent} from "./footer/footer.component";
 import {SamLabelComponent} from "./label/label.component";
 import {SamHeaderComponent} from "./header/header.component";
-
+import {SamAlertComponent} from "./alert/alert.component";
 
 
 /**
@@ -36,6 +36,7 @@ import {SamHeaderComponent} from "./header/header.component";
     SamStickyComponent,
     SamFooterComponent,
     SamHeaderComponent,
+    SamAlertComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -54,7 +55,8 @@ import {SamHeaderComponent} from "./header/header.component";
     SamSearchHeaderComponent,
     SamStickyComponent,
     SamFooterComponent,
-    SamHeaderComponent
+    SamHeaderComponent,
+    SamAlertComponent
   ],
   providers: [ ]
 })

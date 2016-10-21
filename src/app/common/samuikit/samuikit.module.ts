@@ -4,7 +4,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { SamSpace } from "./sam-space";
 import { SamButton } from "./sam-button";
-import { SamAlert } from "./sam-alert";
 import { SamAccordions } from "./sam-accordions";
 
 /**
@@ -15,8 +14,7 @@ import { SamAccordions } from "./sam-accordions";
   declarations: [
     SamSpace,
     SamButton,
-    SamAccordions,
-    SamAlert,
+    SamAccordions
   ],
   imports: [
     BrowserModule,
@@ -24,8 +22,7 @@ import { SamAccordions } from "./sam-accordions";
   exports: [
     SamSpace,
     SamButton,
-    SamAccordions,
-    SamAlert,
+    SamAccordions
   ],
   providers: [ ]
 })
