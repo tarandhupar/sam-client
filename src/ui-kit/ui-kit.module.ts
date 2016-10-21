@@ -11,14 +11,16 @@ import { LabelWrapper } from './form-controls/wrapper/label-wrapper.component';
 import { FieldsetWrapper } from './form-controls/wrapper/fieldset-wrapper.component';
 import { SamRadioButtonComponent } from "./form-controls/radiobutton/radiobutton.component";
 import { SamSearchHeaderComponent } from './search-header/search-header.component';
-import {SamSearchbarComponent} from "./form-controls/searchbar/searchbar.component";
-import {SamBannerComponent} from "./banner/banner.component";
-import {SamStickyComponent} from "./sticky/sticky.component";
-import {SamFooterComponent} from "./footer/footer.component";
-import {SamButtonComponent} from "./form-controls/button/button.component.ts";
-import {SamLabelComponent} from "./label/label.component";
-import {SamHeaderComponent} from "./header/header.component";
-import {SamAlertComponent} from "./alert/alert.component";
+import { SamSearchbarComponent } from "./form-controls/searchbar/searchbar.component";
+import { SamBannerComponent } from "./banner/banner.component";
+import { SamStickyComponent } from "./sticky/sticky.component";
+import { SamFooterComponent } from "./footer/footer.component";
+import { SamLabelComponent } from "./label/label.component";
+import { SamHeaderComponent } from "./header/header.component";
+import { SamAlertComponent } from "./alert/alert.component";
+import { SamAccordionsComponent } from "./accordions/accordions.component";
+import { SamButtonComponent } from "./form-controls/button/button.component.ts";
+
 
 
 /**
@@ -27,6 +29,7 @@ import {SamAlertComponent} from "./alert/alert.component";
  */
 @NgModule({
   declarations: [
+    SamAccordionsComponent,
     SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
@@ -48,6 +51,7 @@ import {SamAlertComponent} from "./alert/alert.component";
     RouterModule
   ],
   exports: [
+    SamAccordionsComponent,
     SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
