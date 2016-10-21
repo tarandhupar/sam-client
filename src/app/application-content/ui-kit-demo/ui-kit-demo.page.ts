@@ -53,6 +53,8 @@ export class UIKitDemoPage {
       {title:"Test3", content:"This is Test3"}
   ]
 
+  // Button Component
+  btnType: string = "default";
 
   constructor() {  }
 
@@ -64,5 +66,17 @@ export class UIKitDemoPage {
     }
   }
 
+  /**
+   * Example to change button type when click
+   */
+  onDefaultBtnClick(){
+    if(this.btnType === "default"){
+      this.btnType = "alt";
+    }else if(this.btnType === "alt"){
+      this.btnType = "secondary";
+    }else{
+      this.btnType = "default";
+    }
+  }
 
 }

@@ -19,6 +19,8 @@ import { SamLabelComponent } from "./label/label.component";
 import { SamHeaderComponent } from "./header/header.component";
 import { SamAlertComponent } from "./alert/alert.component";
 import { SamAccordionsComponent } from "./accordions/accordions.component";
+import { SamButtonComponent } from "./form-controls/button/button.component.ts";
+
 
 
 /**
@@ -28,6 +30,7 @@ import { SamAccordionsComponent } from "./accordions/accordions.component";
 @NgModule({
   declarations: [
     SamAccordionsComponent,
+    SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
     SamCheckboxComponent,
@@ -49,6 +52,7 @@ import { SamAccordionsComponent } from "./accordions/accordions.component";
   ],
   exports: [
     SamAccordionsComponent,
+    SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
     SamCheckboxComponent,

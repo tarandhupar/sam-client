@@ -4,8 +4,8 @@ import {Component, Input} from '@angular/core';
  * The <samAccordions> component can generate accordions component with provided data
  * It is designed with sam.gov standards
  * https://gsa.github.io/sam-web-design-standards/
- * @Input accordionsData: array - Contains all the data for each accordion [{title:"", content""},...]
- * @Input bordered: string - Control whether the accordion component has a border
+ * @Input accordionsData: array - Contains all the data for each accordion [{title:"", content:""},...]
+ * @Input bordered: boolean - Control whether the accordion component has a border
  */
 @Component({
   selector: 'samAccordions',
