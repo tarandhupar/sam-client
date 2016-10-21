@@ -7,6 +7,7 @@ export { SamSearchbarComponent } from "./form-controls/searchbar/searchbar.compo
 export { SamBannerComponent } from "./banner/banner.component";
 export { SamStickyComponent } from "./sticky/sticky.component";
 export { SamFooterComponent } from './footer/footer.component';
+export { SamAccordionsComponent } from "./accordions/accordions.component";
 export { SamButtonComponent } from './form-controls/button/button.component';
 export { SamHeaderComponent } from './header/header.component';
 export { SamLabelComponent } from './label/label.component';

@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { SamSpace } from "./sam-space";
-import { SamAccordions } from "./sam-accordions";
 
 /**
  * A module for reusable SAM Web Design components
@@ -12,14 +11,12 @@ import { SamAccordions } from "./sam-accordions";
 @NgModule({
   declarations: [
     SamSpace,
-    SamAccordions
   ],
   imports: [
     BrowserModule,
   ],
   exports: [
     SamSpace,
-    SamAccordions
   ],
   providers: [ ]
 })
