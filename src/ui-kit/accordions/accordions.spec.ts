@@ -27,29 +27,32 @@ describe('The Sam Accordion component', () => {
 
   it('should display sam accordions with border', function () {
     component.accordionsData = accordionsData;
+    component.accordionsName = "bordered";
     component.bordered = true;
     fixture.detectChanges();
     expect(component.accordionsClass).toBe("usa-accordion-bordered");
     expect(component.expandIndex).toBe(-1);
-    let accordionElement_1 = fixture.debugElement.query(By.css("#accordions-0"));
+    let accordionElement_1 = fixture.debugElement.query(By.css("#bordered_accordions-0"));
     expect(accordionElement_1.nativeElement.innerHTML).toBe("This is Test1");
-    let accordionElement_2 = fixture.debugElement.query(By.css("#accordions-1"));
+    let accordionElement_2 = fixture.debugElement.query(By.css("#bordered_accordions-1"));
     expect(accordionElement_2.nativeElement.innerHTML).toBe("This is Test2");
   });
 
   it('should display sam accordions without border', function () {
     component.accordionsData = accordionsData;
+    component.accordionsName = "noBorder";
     component.bordered = false;
     fixture.detectChanges();
     expect(component.accordionsClass).toBe("usa-accordion");
-    let accordionElement_1 = fixture.debugElement.query(By.css("#accordions-0"));
+    let accordionElement_1 = fixture.debugElement.query(By.css("#noBorder_accordions-0"));
     expect(accordionElement_1.nativeElement.innerHTML).toBe("This is Test1");
-    let accordionElement_2 = fixture.debugElement.query(By.css("#accordions-1"));
+    let accordionElement_2 = fixture.debugElement.query(By.css("#noBorder_accordions-1"));
     expect(accordionElement_2.nativeElement.innerHTML).toBe("This is Test2");
   });
 
   it('should expand and then collapse the first accordion', function () {
     component.accordionsData = accordionsData;
+    component.accordionsName = "noBorder";
     component.bordered = false;
     fixture.detectChanges();
     component.setExpandIndex(0);
@@ -62,6 +65,7 @@ describe('The Sam Accordion component', () => {
 
   it('should expand the first accordion, then expand the second accordion and collapse the first one', function () {
     component.accordionsData = accordionsData;
+    component.accordionsName = "noBorder";
     component.bordered = false;
     fixture.detectChanges();
     component.setExpandIndex(0);
