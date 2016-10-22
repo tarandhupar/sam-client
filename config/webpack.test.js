@@ -13,8 +13,7 @@ const DefinePlugin = require('webpack/lib/DefinePlugin');
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'test';
-const SHOW_OPTIONAL = !!process.env.SHOW_OPTIONAL;
+const ENV = 'test';
 
 /**
  * Webpack configuration
@@ -196,7 +195,7 @@ module.exports = {
       'HMR': false,
       'API_UMBRELLA_URL': JSON.stringify("dummy"),
       'API_UMBRELLA_KEY': JSON.stringify("dummy"),
-      'SHOW_OPTIONAL': JSON.stringify(SHOW_OPTIONAL)
+      'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL === 'true')
     }),
 
 
