@@ -23,7 +23,7 @@ const API_UMBRELLA_KEY = process.env.API_UMBRELLA_KEY || apiConfig.API_UMBRELLA_
 const API_UMBRELLA_URL = process.env.API_UMBRELLA_URL || apiConfig.API_UMBRELLA_URL;
 
 if (!API_UMBRELLA_KEY || !API_UMBRELLA_KEY) {
-  console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY env var are not set. Exiting...");
+  console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY not set. Exiting...");
   process.exit(1);
 }
 
@@ -37,9 +37,7 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: false,
-  API_UMBRELLA_KEY: API_UMBRELLA_KEY,
-  API_UMBRELLA_URL: API_UMBRELLA_URL
+  HMR: false
 });
 
 module.exports = webpackMerge(commonConfig, {
@@ -137,8 +135,8 @@ module.exports = webpackMerge(commonConfig, {
     new DefinePlugin({
       'ENV': JSON.stringify(METADATA.ENV),
       'HMR': METADATA.HMR,
-      'API_UMBRELLA_URL': JSON.stringify(METADATA.API_UMBRELLA_URL),
-      'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY),
+      'API_UMBRELLA_URL': JSON.stringify(API_UMBRELLA_URL),
+      'API_UMBRELLA_KEY': JSON.stringify(API_UMBRELLA_KEY),
       'SHOW_OPTIONAL': JSON.stringify(METADATA.SHOW_OPTIONAL),
     }),
 
