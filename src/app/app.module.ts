@@ -9,7 +9,7 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
  * Platform and Environment providers/directives/pipes
  */
 import { ENV_PROVIDERS } from './environment';
-import { ROUTES } from './app.routes';
+import { ROUTES } from './app.route';
 // App is our top level component
 import { App } from './app.component';
 import { AppState } from './app.service';
