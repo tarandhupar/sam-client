@@ -33,6 +33,7 @@
     "build:prod": "webpack --config config/webpack.prod.js  --progress --profile --bail",
     "server": "npm run server:dev",
     "server:dev": "webpack-dev-server --config config/webpack.dev.js --progress --profile --watch --content-base src/",
+    "server:no-watch": "webpack-dev-server --config config/webpack.dev.js --progress --profile --content-base src/",
     "server:dev:hmr": "npm run server:dev -- --inline --hot",
     "server:prod": "ws -p 8080 -d dist/ --spa index.html",
     "prod": "npm run build:prod && npm run server:prod",
