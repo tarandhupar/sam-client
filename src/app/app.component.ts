@@ -5,10 +5,6 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 
-//TODO: Remove samuikit.js (Deprecated)
-import '../assets/js/samuikit.js';
-//ENDTODO
-
 /*
  * App Component
  * Top Level Component
