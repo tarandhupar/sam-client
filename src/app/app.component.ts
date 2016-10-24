@@ -3,14 +3,8 @@
  */
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
-import { ComponentInjectService } from './common/service/component.inject.service.ts';
-import { InputTypeConstants } from './common/constants/input.type.constants.ts';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
-
-//TODO: Remove samuikit.js (Deprecated)
-import '../assets/js/samuikit.js';
-//ENDTODO
 
 /*
  * App Component
@@ -23,7 +17,7 @@ import '../assets/js/samuikit.js';
     './app.style.css'
   ],
   templateUrl: './app.template.html',
-  providers : [ComponentInjectService,InputTypeConstants,SearchService]
+  providers : [SearchService]
 })
 export class App{
 
@@ -32,7 +26,7 @@ export class App{
   qs: any = {};
 
   constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {
-    
+
   }
 
   ngOnInit() {

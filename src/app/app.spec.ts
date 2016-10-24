@@ -7,7 +7,7 @@ import {RouterTestingModule} from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import {App} from './app.component';
-import {ROUTES} from "./app.routes";
+import {ROUTES} from "./app.route";
 import {HomePage} from "./application-content/home/home.page";
 import {SearchPage} from "./search/search.page";
 import {SamUIKitModule} from "ui-kit";
