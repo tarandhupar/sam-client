@@ -20,7 +20,7 @@ const ENV = 'test';
  *
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
-module.exports = {
+var conf = {
 
   /**
    * Source map for Karma from the help of karma-sourcemap-loader &  karma-webpack
@@ -229,3 +229,12 @@ module.exports = {
   }
 
 };
+
+if (helpers.hasProcessFlag('no-lint')) {
+  conf.module.preLoaders = conf.module.preLoaders.filter(function(f) {
+    return f.loader !== 'tslint-loader';
+  });
+  delete conf.tslint;
+}
+
+module.exports = conf;
