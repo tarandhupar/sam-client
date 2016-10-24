@@ -1,0 +1,18 @@
+// Angular Dependencies
+import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
+
+import { FHService } from './fh/fh.service';
+import { SearchService } from './search/search.service';
+import { WrapperService } from './wrapper/wrapper.service';
+
+/**
+ * A module for reusable SAM Web Design components
+ * https://gsa.github.io/sam-web-design-standards/
+ */
+@NgModule({
+  declarations: [ ],
+  imports: [ HttpModule ],
+  providers: [ SearchService, FHService, WrapperService ]
+})
+export class SamAPIKitModule { }

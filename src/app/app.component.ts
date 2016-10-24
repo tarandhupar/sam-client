@@ -5,8 +5,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { ComponentInjectService } from './common/service/component.inject.service.ts';
 import { InputTypeConstants } from './common/constants/input.type.constants.ts';
-import { APIService } from "./common/service/api/api.service";
-import { globals } from './common/constants/globals.ts';
+import { globals } from './globals.ts';
 
 //TODO: Remove samuikit.js (Deprecated)
 import '../assets/js/samuikit.js';
@@ -23,7 +22,7 @@ import '../assets/js/samuikit.js';
     './app.style.css'
   ],
   templateUrl: './app.template.html',
-  providers : [APIService,ComponentInjectService,InputTypeConstants]
+  providers : [ComponentInjectService,InputTypeConstants]
 })
 export class App{
 
