@@ -26,7 +26,7 @@ Once you have those, you should install these globals with `npm install --global
 
 ### For local setup 
 1. Get an API Umbrella URL/API Umbrella key to be able to connect to the backend microservices
-1. Set API_UMBRELLA_URL/API_UMBRELLA_KEY in api-config.json
+1. Copy the api-config.example.json to api-config.json and set the API_UMBRELLA_URL/API_UMBRELLA_KEY setting
 
 ### For Deployments
 - the API_UMBRELLA_URL/API_UMBRELLA_KEY environment variable should be setup in the docker deployment yaml file
