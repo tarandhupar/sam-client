@@ -37,11 +37,20 @@ After you have installed all dependencies you can now run the app. Run `npm run 
 ### server
 ```bash
 # development
-npm run server:local
+npm run server
 # production
 npm run build:prod
 npm run server:prod
 ```
+
+Optional
+
+```bash
+cp config/webpack.dev.js config/webpack.local.js
+npm run server:local
+```
+
+This configuration is ignored by git and can used to test webpack configurations
 
 ## Other commands
 
