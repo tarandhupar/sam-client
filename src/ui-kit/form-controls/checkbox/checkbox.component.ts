@@ -56,7 +56,7 @@ export class SamCheckboxComponent {
 
   ngOnInit() {
     if (!this.name) {
-      throw new Error("<samCheckbox> requires a name parameter for 508 compliance");
+      throw new Error("<samCheckbox> requires a [name] parameter for 508 compliance");
     }
 
     // initialize the order lookup map

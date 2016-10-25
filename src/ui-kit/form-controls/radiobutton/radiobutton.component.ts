@@ -43,7 +43,7 @@ export class SamRadioButtonComponent {
 
   ngOnInit() {
     if (!this.name) {
-      throw new Error("<samRadioButton> requires a name parameter for 508 compliance");
+      throw new Error("<samRadioButton> requires a [name] parameter for 508 compliance");
     }
   }
 
