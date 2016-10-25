@@ -41,6 +41,12 @@ export class SamRadioButtonComponent {
 
   constructor() { }
 
+  ngOnInit() {
+    if (!this.name) {
+      throw new Error("<samRadioButton> requires a name parameter for 508 compliance");
+    }
+  }
+
   onChange(value) {
     this.model = value;
     this.modelChange.emit(value);
