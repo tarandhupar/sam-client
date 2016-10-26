@@ -91,7 +91,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
             });
           this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(id, this.oProgram.program.data.programNumber)
             .subscribe(res => {
-              this.oHistoricalIndex = res;
+              this.oHistoricalIndex = res._embedded ? res._embedded.historicalIndex : [];
           });
           if (this.oProgram.program.data.relatedPrograms.flag != "na") {
             for (let programId of this.oProgram.program.data.relatedPrograms.relatedTo) {
