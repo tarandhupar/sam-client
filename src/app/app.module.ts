@@ -9,7 +9,7 @@ import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
  * Platform and Environment providers/directives/pipes
  */
 import { ENV_PROVIDERS } from './environment';
-import { ROUTES } from './app.routes';
+import { ROUTES } from './app.route';
 // App is our top level component
 import { App } from './app.component';
 import { AppState } from './app.service';
@@ -20,9 +20,8 @@ import { OpportunityModule } from './opportunity';
 import { SearchModule } from './search';
 import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
 
-import { SamAngularModule } from './common/samuikit/samuikit.module';
 import { SamUIKitModule } from 'ui-kit';
-import { SamAPIKitModule } from '../api-kit/api-kit.module';
+import { SamAPIKitModule } from 'api-kit';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -55,7 +54,6 @@ const APP_PROVIDERS = [
     UIKitDemoModule,
 
     // Other Modules
-    SamAngularModule,
     SamUIKitModule,
     SamAPIKitModule,
   ],
