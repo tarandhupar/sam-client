@@ -16,11 +16,10 @@
 module.exports = {
   link: [
     /** <link> tags for 'apple-touch-icon' (AKA Web Clips). **/
-    
+
     { rel: 'stylesheet', href: '/assets/css/samwds.min.css' }
   ],
   script: [
-    {src:'/assets/js/samuikit.js'},
-    {src:'/assets/js/samwds.min.js'}
+
   ]
 };
