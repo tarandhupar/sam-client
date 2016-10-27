@@ -402,9 +402,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .enter()
         .append("td")
         .html(d => {
-          if(d.value.ena){
+          if(d.value.ena && !d.value.total){
             return "Estimate Not Available";
-          }else if(d.value.nsi){
+          }else if(d.value.nsi && !d.value.total){
             return "Not Separately Identifiable";
           }else{
             return d3.format("($,")(d.value.total);
@@ -456,9 +456,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .enter()
         .append("td")
         .text(d => {
-          if(d.values[0].ena){
+          if(d.values[0].ena && !d.values[0].amount ){
             return "Estimate Not Available";
-          }else if(d.values[0].nsi){
+          }else if(d.values[0].nsi && !d.values[0].amount ){
             return "Not Separately Identifiable";
           }else{
             return d3.format("($,")(d.values[0].amount);
