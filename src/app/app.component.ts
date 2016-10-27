@@ -4,6 +4,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
+import { SearchService } from 'api-kit';
 
 /*
  * App Component
@@ -16,19 +17,23 @@ import { globals } from './globals.ts';
     './app.style.css'
   ],
   templateUrl: './app.template.html',
-  providers : []
+  providers : [SearchService]
 })
 export class App{
 
   keyword: string = "";
   index: string = "";
+  qs: any = {};
 
-
-  constructor(private _router: Router,private activatedRoute: ActivatedRoute) {
+  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {
 
   }
 
   ngOnInit() {
+    this.searchService.paramsUpdated$.subscribe(
+      obj => {
+        this.setQS(obj);
+    });
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
@@ -42,7 +47,7 @@ export class App{
   }
 
   onHeaderSearchEvent(searchObject) {
-    var qsobj = {};
+    var qsobj = this.qs;
     if(searchObject.keyword.length>0){
       qsobj['keyword'] = searchObject.keyword;
     }
@@ -59,5 +64,9 @@ export class App{
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
+  }
+
+  setQS(obj){
+    this.qs = obj;
   }
 }
