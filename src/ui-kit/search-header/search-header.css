@@ -1,10 +1,19 @@
-.sam_hat_img {
+.hat-img {
   height: 50px;
   width: 50px;
+  float:left;
 }
 
 samSearchbar {
   width: 500px;
+  margin-top: 8px;
+  float: left;
+}
+
+header {
+  background-color:#112e51;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 :host >>> .search-btn {
@@ -22,15 +31,4 @@ samSearchbar {
 
 :host >>> select {
   background-color: #e4e2e0;
-}
-
-header {
-  background-color:#112e51;
-  padding-top: 2px;
-  padding-bottom: 2px;
-}
-
-.header-container {
-  display: flex;
-  align-items: center;
 }
