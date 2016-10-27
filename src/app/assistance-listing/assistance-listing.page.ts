@@ -64,7 +64,7 @@ export class ProgramPage implements OnInit {
           this.oProgram = res;
 
           //check if this program has changed in this FY
-          if ((new Date(this.oProgram.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
+          if ((new Date(this.oProgram.publishedDate)).getFullYear() < new Date().getFullYear()) {
               this.aAlert.push({"labelname":"not-updated-since", "config":{ "type": "warning", "title": "", "description": "Note: \n\
 This Federal Assistance Listing was not updated by the issuing agency in "+(new Date()).getFullYear()+". \n\
 Please contact the issuing agency listed under \"Contact Information\" for more information." }});
@@ -74,33 +74,33 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
             for (var key in res) {
               this.aDictionaries[key] = res[key];
             }
-            if(this.oProgram.program.data.financial.obligations){
-              this.createVisualization(this.prepareVisualizationData(this.oProgram.program.data.financial.obligations));
+            if(this.oProgram.data.financial.obligations){
+              this.createVisualization(this.prepareVisualizationData(this.oProgram.data.financial.obligations));
             }
           });
           //get authorizations and group them by id
-          var auths = this.oProgram.program.data.authorizations;
+          var auths = this.oProgram.data.authorizations;
           this.authorizationIdsGrouped = _.values(_.groupBy(auths, 'authorizationId'));
-          this.oFHService.getFederalHierarchyById(res.program.data.organizationId,false,false)
+          this.oFHService.getFederalHierarchyById(res.data.organizationId,false,false)
             .subscribe(res => {
               this.oFederalHierarchy = res;
             });
-          this.oFHService.getFederalHierarchyById(res.program.data.organizationId,true,false)
+          this.oFHService.getFederalHierarchyById(res.data.organizationId,true,false)
             .subscribe(res => {
               this.federalHierarchyWithParents = res;
             });
-          this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(id, this.oProgram.program.data.programNumber)
+          this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(id, this.oProgram.data.programNumber)
             .subscribe(res => {
               this.oHistoricalIndex = res._embedded ? res._embedded.historicalIndex : [];
           });
-          if (this.oProgram.program.data.relatedPrograms.flag != "na") {
-            for (let programId of this.oProgram.program.data.relatedPrograms.relatedTo) {
+          if (this.oProgram.data.relatedPrograms.flag != "na") {
+            for (let programId of this.oProgram.data.relatedPrograms.relatedTo) {
               this.oProgramService.getLatestProgramById(programId).subscribe(relatedFal => {
-                if(typeof relatedFal.program !== 'undefined')
+                if(typeof relatedFal !== 'undefined')
                 {
                   this.aRelatedProgram.push({
-                    "programNumber": relatedFal.program.data.programNumber,
-                    "id": relatedFal.program.data._id
+                    "programNumber": relatedFal.data.programNumber,
+                    "id": relatedFal.data._id
                   });
                 }
               })
