@@ -17,8 +17,9 @@ const DedupePlugin = require('webpack/lib/optimize/DedupePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 
+var apiConfig;
 try{
-  const apiConfig = require('../api-config');
+  apiConfig = require('../api-config');
 }
 catch(Error){
   console.log('api-config.json not found, moving on ...', Error)
