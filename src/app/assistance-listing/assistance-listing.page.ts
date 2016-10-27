@@ -375,6 +375,14 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
      * --------------------------------------------------
      */
 
+    function actualOrEstimate(year: number): string{
+      if (new Date(year, null).getFullYear() <= new Date().getFullYear()){
+        return "Actual Not Available"
+      }else{
+        return "Estimate Not Available";
+      }
+    }
+
     (function buildTable(){
       let table = d3.select("#visualization table");
       let thead = table.append("thead");
@@ -403,7 +411,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .append("td")
         .html(d => {
           if(d.value.ena){
-            return "Estimate Not Available";
+            return actualOrEstimate(d.key);
           }else if(d.value.nsi){
             return "Not Separately Identifiable";
           }else{
@@ -457,7 +465,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .append("td")
         .text(d => {
           if(d.values[0].ena){
-            return "Estimate Not Available";
+            return actualOrEstimate(d.key);
           }else if(d.values[0].nsi){
             return "Not Separately Identifiable";
           }else{
@@ -484,7 +492,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .html(d => {
           if(d.value.ena || d.value.nsi ){
             return d.value.total == 0 
-                    ? "Estimate Not Available"
+                    ? actualOrEstimate(d.key)
                     : d3.format("($,")(d.value.total);
           }
           return d3.format("($,")(d.value.total);
