@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
+import { Subject }    from 'rxjs/Subject';
 import { WrapperService } from '../wrapper/wrapper.service';
 import 'rxjs/add/operator/map';
 
 
 @Injectable()
 export class SearchService {
-
+    private params = new Subject<Object>();
+    paramsUpdated$ = this.params.asObservable();
     constructor(private oAPIService: WrapperService) {}
 
     runSearch(obj) {
@@ -30,6 +32,9 @@ export class SearchService {
       }
 
       return this.oAPIService.call(oApiParam);
+    }
+    loadParams(obj){
+      this.params.next(obj);
     }
 
 }
