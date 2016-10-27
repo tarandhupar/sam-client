@@ -495,8 +495,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
   prepareVisualizationData(financialData){
 
-    console.log(financialData);
-
     let self = this;
     let formattedFinancialData = []
 
@@ -525,8 +523,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         formattedFinancialData.push(financialItem);
       }
     });
-    
-    console.log(formattedFinancialData);
 
     return formattedFinancialData;
   }
