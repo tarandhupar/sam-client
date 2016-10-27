@@ -6,36 +6,28 @@ const helpers = require('./helpers');
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 const commonConfig = require('./webpack.common.js'); // the settings that are common to prod and dev
 
+try{
+  const apiConfig = require('../api-config');
+}
+catch(Error){
+  console.log('api-config.json not found, moving on ...', Error)
+}
+
+const API_UMBRELLA_KEY = process.env.API_UMBRELLA_KEY || apiConfig.API_UMBRELLA_KEY;
+const API_UMBRELLA_URL = process.env.API_UMBRELLA_URL || apiConfig.API_UMBRELLA_URL;
+
+if (!API_UMBRELLA_URL || !API_UMBRELLA_KEY) {
+  console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY not set. Exiting...");
+  process.exit(1);
+}
+
 /**
  * Webpack Plugins
  */
 const DefinePlugin = require('webpack/lib/DefinePlugin');
 const NamedModulesPlugin = require('webpack/lib/NamedModulesPlugin');
 
-/**
- * Webpack Constants
- */
-const envs = require('envs');
-const dotenv = require('dotenv').config();
-
-//check env vars are set
-if(!process.env.API_UMBRELLA_KEY || !process.env.API_UMBRELLA_URL){
-  if(envs('API_UMBRELLA_KEY', '') == '' || envs('API_UMBRELLA_URL', '') == ''){
-    console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY env var are not set. Exiting...");
-    process.exit(1);
-  }
-   else {
-    process.env.API_UMBRELLA_URL = envs('API_UMBRELLA_URL', '');
-    process.env.API_UMBRELLA_KEY = envs('API_UMBRELLA_KEY', '');
-  }
-}
-if(!process.env.SHOW_OPTIONAL){
-  process.env.SHOW_OPTIONAL = false;
-} else {
-  process.env.SHOW_OPTIONAL = (process.env.SHOW_OPTIONAL=="true");
-}
-
-const ENV = process.env.ENV = process.env.NODE_ENV = 'development';
+const ENV = 'development';
 const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 3000;
 const HMR = helpers.hasProcessFlag('hot');
@@ -43,10 +35,7 @@ const METADATA = webpackMerge(commonConfig.metadata, {
   host: HOST,
   port: PORT,
   ENV: ENV,
-  HMR: HMR,
-  API_UMBRELLA_URL: process.env.API_UMBRELLA_URL, //API UMBRELLA HOST
-  API_UMBRELLA_KEY: process.env.API_UMBRELLA_KEY,
-  SHOW_OPTIONAL: process.env.SHOW_OPTIONAL
+  HMR: HMR
 });
 
 /**
@@ -134,17 +123,9 @@ module.exports = webpackMerge(commonConfig, {
     new DefinePlugin({
       'ENV': JSON.stringify(METADATA.ENV),
       'HMR': METADATA.HMR,
-      'API_UMBRELLA_URL': JSON.stringify(METADATA.API_UMBRELLA_URL),
-      'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY),
-      'SHOW_OPTIONAL': JSON.stringify(METADATA.SHOW_OPTIONAL),
-      'process.env': {
-        'ENV': JSON.stringify(METADATA.ENV),
-        'NODE_ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR,
-        'API_UMBRELLA_URL': JSON.stringify(METADATA.API_UMBRELLA_URL),
-        'API_UMBRELLA_KEY': JSON.stringify(METADATA.API_UMBRELLA_KEY),
-        'SHOW_OPTIONAL': JSON.stringify(METADATA.SHOW_OPTIONAL)
-      }
+      'API_UMBRELLA_URL': JSON.stringify(API_UMBRELLA_URL),
+      'API_UMBRELLA_KEY': JSON.stringify(API_UMBRELLA_KEY),
+      'SHOW_OPTIONAL': JSON.stringify(METADATA.SHOW_OPTIONAL)
     }),
 
     /**

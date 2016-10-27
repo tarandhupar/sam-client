@@ -26,8 +26,7 @@ Once you have those, you should install these globals with `npm install --global
 
 ### For local setup 
 1. Get an API Umbrella URL/API Umbrella key to be able to connect to the backend microservices
-1. Clone the config/webpack.local-example.js to config/webpack.local.js file
-1. Clone the .env-example to .env and set the API_UMBRELLA_URL/API_UMBRELLA_KEY setting
+1. Copy the api-config.example.json to api-config.json and set the API_UMBRELLA_URL/API_UMBRELLA_KEY setting
 
 ### For Deployments
 - the API_UMBRELLA_URL/API_UMBRELLA_KEY environment variable should be setup in the docker deployment yaml file
@@ -38,11 +37,20 @@ After you have installed all dependencies you can now run the app. Run `npm run 
 ### server
 ```bash
 # development
-npm run server:local
+npm run server
 # production
 npm run build:prod
 npm run server:prod
 ```
+
+Optional
+
+```bash
+cp config/webpack.dev.js config/webpack.local.js
+npm run server:local
+```
+
+This configuration is ignored by git and can used to test webpack configurations
 
 ## Other commands
 
@@ -108,3 +116,4 @@ TypeScript 1.7.x includes everything you need. Make sure to upgrade, even if you
 ```
 npm install --global typescript
 ```
+
