@@ -32,6 +32,10 @@ export class SamAccordionsComponent {
   }
 
   ngOnInit() {
+    if (!this.accordionsName) {
+      throw new Error("<samAccordions> required a [accordionsName] parameter for 508 compliance");
+    }
+
     this.accordionsClass = "usa-accordion";
     if (this.bordered) {
       this.accordionsClass = "usa-accordion-bordered";
