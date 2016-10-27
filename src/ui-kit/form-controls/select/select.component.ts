@@ -40,6 +40,12 @@ export class SamSelectComponent {
 
   constructor() { }
 
+  ngOnInit() {
+    if (!this.name) {
+      throw new Error("<samSelect> requires a [name] parameter for 508 compliance");
+    }
+  }
+
   onChange(val) {
     this.model = val;
     this.modelChange.emit(val);
