@@ -17,12 +17,17 @@ const DedupePlugin = require('webpack/lib/optimize/DedupePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 
-const apiConfig = require('../api-config');
+try{
+  const apiConfig = require('../api-config');
+}
+catch(Error){
+  console.log('api-config.json not found, moving on ...', Error)
+}
 
 const API_UMBRELLA_KEY = process.env.API_UMBRELLA_KEY || apiConfig.API_UMBRELLA_KEY;
 const API_UMBRELLA_URL = process.env.API_UMBRELLA_URL || apiConfig.API_UMBRELLA_URL;
 
-if (!API_UMBRELLA_KEY || !API_UMBRELLA_KEY) {
+if (!API_UMBRELLA_URL || !API_UMBRELLA_KEY) {
   console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY not set. Exiting...");
   process.exit(1);
 }
