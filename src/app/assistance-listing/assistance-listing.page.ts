@@ -445,7 +445,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
               }
             });
           });
-          if(!d.key){
+          if(!d.key && !explanation){
             // If additional info content its empty remove row
             this.parentNode.removeChild(this);
           }
