@@ -50,7 +50,9 @@ All should be prepended with `$ npm install --global`:
 1. Fork this repo into your GitHub account. Read more about forking a repo here on GitHub:
 [https://help.github.com/articles/fork-a-repo/](https://help.github.com/articles/fork-a-repo/)
 1. `$ npm install` or `$ npm update` to make sure you have the latest version of all the packages used in the app.
-1. `$ npm run server` to start the local server
+1. `$ npm run server` to start the local server (development)
+  - `$ npm run build:prod`
+  - `$ npm run server:prod`
 
 > After you have installed all dependencies you can now run the app. Run `npm run server` to start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:3000` (or if you prefer IPv6, if you're using `express` server, then it's `http://[::1]:3000/`).
 
