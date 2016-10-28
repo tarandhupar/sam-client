@@ -11,7 +11,7 @@ import * as d3 from 'd3';
 
 @Component({
   moduleId: __filename,
-  templateUrl: 'assistance-listing.component.html',
+  templateUrl: 'assistance-listing.page.html',
   styleUrls: ['assistance-listing.style.css'],
   providers: [
     FHService,
