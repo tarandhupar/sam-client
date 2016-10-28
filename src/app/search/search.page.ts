@@ -9,7 +9,7 @@ import { SearchService } from 'api-kit';
   styleUrls: [
     'search.style.css'
   ],
-  providers: [SearchService],
+  providers: [],
   templateUrl: 'search.template.html'
 })
 
@@ -37,49 +37,47 @@ export class SearchPage implements OnInit{
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        if(this.initLoad){ this.runSearch(true); } else { this.runSearch(false); }
+        this.runSearch();
 		});
+	}
+
+	loadParams(){
+		var qsobj = this.setupQS(false);
+		this.searchService.loadParams(qsobj);
 	}
 
 	onOrganizationChange(orgId:string){
     this.organizationId = orgId;
+    this.loadParams();
 	}
 
 	onSearchClick($event) {
       this.keyword = $event.keyword;
       this.index = $event.searchField;
-      this.runSearch(true);
+      this.runSearch();
     }
-
-	runSearch(newsearch){
-		if(typeof window != "undefined"){
-			var qsobj = {};
-			if (!this.initLoad) {
-				if(this.organizationId.length>0){
-					qsobj['organizationId'] = this.organizationId;
-				}
-				if(this.keyword.length>0){
-					qsobj['keyword'] = this.keyword;
-				}
-				if(this.index.length>0){
-					qsobj['index'] = this.index;
-				} else {
-          qsobj['index'] = '';
-        }
-				if(!newsearch && this.pageNum>=0){
-					qsobj['page'] = this.pageNum+1;
-				}
-				else{
-					qsobj['page'] = 1;
-				}
-
-		    let navigationExtras: NavigationExtras = {
-		      queryParams: qsobj
-		    };
-		    this.router.navigate(['/search'],navigationExtras);
-			}
+  setupQS(newsearch){
+  	var qsobj = {};
+  	if(this.organizationId.length>0){
+			qsobj['organizationId'] = this.organizationId;
 		}
-
+		if(this.keyword.length>0){
+			qsobj['keyword'] = this.keyword;
+		}
+		if(this.index.length>0){
+			qsobj['index'] = this.index;
+		} else {
+      qsobj['index'] = '';
+    }
+		if(!newsearch && this.pageNum>=0){
+			qsobj['page'] = this.pageNum+1;
+		}
+		else{
+			qsobj['page'] = 1;
+		}
+		return qsobj;
+  }
+	runSearch(){
 		//make api call
 		this.searchService.runSearch({
 			keyword: this.keyword,
@@ -115,7 +113,11 @@ export class SearchPage implements OnInit{
 
 	pageChange(pagenumber){
 		this.pageNum = pagenumber;
-		this.runSearch(false);
+		var qsobj = this.setupQS(false);
+		let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/search'],navigationExtras);
 	}
 
 	createRange(number){

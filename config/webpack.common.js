@@ -20,7 +20,8 @@ const HtmlElementsPlugin = require('./html-elements-plugin');
 const METADATA = {
   title: 'SAM Client Starter',
   baseUrl: '/',
-  isDevServer: helpers.isWebpackDevServer()
+  isDevServer: helpers.isWebpackDevServer(),
+  SHOW_OPTIONAL: process.env.SHOW_OPTIONAL === 'true'
 };
 
 /*
@@ -215,7 +216,7 @@ module.exports = {
       from: 'src/assets',
       to: 'assets'
     },
-    { from: 'node_modules/samwds/dist', 
+    { from: 'node_modules/samwds/dist',
       to: 'assets' }]),
 
     /*

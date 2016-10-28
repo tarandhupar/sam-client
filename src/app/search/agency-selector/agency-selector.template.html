@@ -10,13 +10,13 @@
     </div>
     <div class='usa-grid-full fh-form-alt'>
         <div class='usa-width-one-third'>
-            <samSelect [(model)]="selectedDeptId" [options]="dpmtSelectConfig.options" [label]="dpmtSelectConfig.label" (modelChange)='setOrganizationId("department")'></samSelect>
+            <samSelect [(model)]="selectedDeptId" [name]="dpmtSelectConfig.name" [options]="dpmtSelectConfig.options" [label]="dpmtSelectConfig.label" (modelChange)='setOrganizationId("department")'></samSelect>
         </div>
         <div class='usa-width-one-third'>
-            <samSelect [(model)]="selectedAgencyId" [options]="agencySelectConfig.options" [label]="agencySelectConfig.label" (modelChange)='setOrganizationId("agency")'></samSelect>
+            <samSelect [(model)]="selectedAgencyId" [name]="agencySelectConfig.name" [options]="agencySelectConfig.options" [label]="agencySelectConfig.label" (modelChange)='setOrganizationId("agency")'></samSelect>
         </div>
         <div *ngIf='checkOffice()' class='usa-width-one-third'>
-            <samSelect [(model)]="selectedOfficeId" [options]="officeSelectConfig.options" [label]="officeSelectConfig.label" (modelChange)='setOrganizationId("office")'></samSelect>
+            <samSelect [(model)]="selectedOfficeId" [name]="officeSelectConfig.name" [options]="officeSelectConfig.options" [label]="officeSelectConfig.label" (modelChange)='setOrganizationId("office")'></samSelect>
         </div>
     </div>
 </div>
