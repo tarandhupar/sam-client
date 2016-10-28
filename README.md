@@ -5,9 +5,11 @@
       <li><a href="#branching">Branching</a></li>
       <li><a href="#pull-requests">Pull requests</a></li>
       <li><a href="#merging">Merging</a></li>
+      <li><a href="#testing">Testing</a></li>
     </ul>
   </li>
-
+  <li><a href="#where-things-are">Where things are</a></li>
+  <li><a href="#where-things-go">Where things go</a></li>
 </ul>
 
 <h2 id="rules-of-engagement">Rules of engangement (operations)</h2>
@@ -39,6 +41,30 @@ Gitflow Workflow branch names:
 1. Discovered merge conflicts within a pull request should be corrected by the submitter of the pull request.
 1. No code freezes will be instituted; if a pull request cannot be merged or the functionality cannot be demonstrated at the Sprint review, the work will rollover to the next release (or Sprint).
 
+<h3 id="testing">Testing</h3>
+
+1. We write both unit and end to end tests for this project.
+1. We develop components using a behavior driven development pattern to view the components from a user's perspective.
+
+<h2 id="where-things-are">Where things are</h2>
+
+1. `config`: application configuration files (webpack, for example).
+2. `src`: all the code required for running the app.
+  1. `api-kit`: a service for making API calls to the various microservices.
+  2. `ui-kit`: stores user interface components used on more than one page.
+  3. `assets`: ???
+  4. `app`: pages, page-specific UI components, and so on.
+
+<h2 id="where-things-go">Where things go</h2>
+
+1. Page components: `/src/app/{business object or business epic}` - When possible, use the business object (ex. opportunity) to isolate pages, routes, and user interface components specific to that business object.
+1. Pipes:
+  - If the pipe is for a specific business object or business epic, place them in a `pipes` subfolder.
+  - If the pipe is used by two or more business object/epic areas, place them in<br>`/src/app/app-pipes`
+1. User interface components:
+  - If the component is for a specific business object or business epic, place them in a folder with the generic component name (ex. `search-result`).
+  - If the component is used by two or more business object/epic areas, place them in<br>`/src/ui-kit`
+
 
 # Getting Started
 
@@ -51,50 +77,9 @@ Gitflow Workflow branch names:
 ### For Deployments
 - the API_UMBRELLA_URL/API_UMBRELLA_KEY environment variable should be setup in the docker deployment yaml file
 
-## Other commands
-
-### build files
-
-
-### hot module replacement
-
-### watch and build files
-
-### run tests
-
-
-### watch and run our tests
-
-
-### run end-to-end tests
-
-
-### run webdriver (for end-to-end)
-```bash
-npm run webdriver:update
-npm run webdriver:start
-```
-
-### run Protractor's elementExplorer (for end-to-end)
-```bash
-npm run webdriver:start
-# in another terminal
-npm run e2e:live
-```
-
 # Configuration
 Configuration files live in `config/` we are currently using webpack, karma, and protractor for different stages of your application
 
 # Contributing
 You can include more examples as components but they must introduce a new concept such as `Home` component (separate folders), and Todo (services). I'll accept pretty much everything so feel free to open a Pull-Request
-
-# TypeScript
-> To take full advantage of TypeScript with autocomplete you would have to install it globally and use an editor with the correct TypeScript plugins.
-
-## Use latest TypeScript compiler
-TypeScript 1.7.x includes everything you need. Make sure to upgrade, even if you installed TypeScript previously.
-
-```
-npm install --global typescript
-```
 

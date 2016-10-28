@@ -19,6 +19,7 @@
       <li><a href="#hot-module-replacement">Hot module replacement</a></li>
       <li><a href="#watch-and-build-files">Watch and build files</a></li>
       <li><a href="#run-tests">Run tests</a></li>
+      <li><a href="#end-to-end">End to end</a></li>
     </ul>
   </li>
 </ul>
@@ -48,6 +49,8 @@ All should be prepended with `$ npm install --global`:
 1. [`karma`](https://www.npmjs.com/package/karma)
 1. [`protractor`](https://www.npmjs.com/package/protractor)
 1. [`typescript`](https://www.npmjs.com/package/typescript)
+  - To take full advantage of TypeScript with autocomplete you would have to install it globally and use an editor with the correct TypeScript plugins.
+  - TypeScript 1.7.x includes everything you need. Make sure to upgrade, even if you installed TypeScript previously.
 
 <h3 id="serving-locally">Serving the app locally</h3>
 
@@ -159,11 +162,26 @@ npm run test
 npm run watch:test
 ```
 
+<h3 id="end-to-end">End to end</h3>
+
 **End-to-end tests**
 
 ```bash
 # make sure you have your server running in another terminal
+npm run e2e
+```
+
+**run webdriver**
+
+```bash
 npm run webdriver:update
 npm run webdriver:start
-npm run e2e
+```
+
+**run Protractor's elementExplorer**
+
+```bash
+npm run webdriver:start
+# in another terminal
+npm run e2e:live
 ```
