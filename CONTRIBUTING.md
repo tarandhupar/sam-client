@@ -7,16 +7,20 @@
       <li><a href="#serving-locally">Serving app locally</a></li>
     </ul>
   </li>
-  <li>
-    <a href="#guidelines">Guidelines</a>
-    <ul>
-      <li><a href="#submitting-prs">Submitting pull requests</a></li>
-    </ul>
-  </li>
+  <li><a href="#submitting-prs">Submitting pull requests</a></li>
   <li><a href="#design">Design</a></li>
   <li><a href="#coding-standards">Coding Standards</a></li>
   <li><a href="#doc-blocks">Doc-blocks</a></li>
   <li><a href="#test-coverage">Test coverage</a></li>
+  <li>
+    <a href="#helpful-commands">Helpful commands</a>
+    <ul>
+      <li><a href="#build-files">Build files</a></li>
+      <li><a href="#hot-module-replacement">Hot module replacement</a></li>
+      <li><a href="#watch-and-build-files">Watch and build files</a></li>
+      <li><a href="#run-tests">Run tests</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h2 id="getting-started">Getting started</h2>
@@ -56,23 +60,7 @@ All should be prepended with `$ npm install --global`:
 
 > After you have installed all dependencies you can now run the app. Run `npm run server` to start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:3000` (or if you prefer IPv6, if you're using `express` server, then it's `http://[::1]:3000/`).
 
-<h2 id="guidelines">Guidelines</h2>
-
-1. Pull requests should contain small changes to the codebase to minimize merge conflicts and large integrations.
-1. Discovered merge conflicts within a pull request should be corrected by the submitter of the pull request.
-1. No code freezes will be instituted; if a pull request cannot be merged or the functionality cannot be demonstrated at the Sprint review, the work will rollover to the next release (or Sprint).
-1. Pull requests are reviewed and approved using the [GitHub review process](https://help.github.com/articles/about-pull-request-reviews/). Note: Reviewers should only use the "comment" or "request changes" options.
-1. Branch names should consist of the ticket ID being worked and a brief description. Ex. `SGA-201-header-component`. Note: Per the first guideline, large tickets can be broken down, either by creating more tickets under the main ticket; or, by modifying the tail of the branch name to enable multiple concurent pull requests.
-1. We have templates for [Pull Requests](https://csp-github.sam.gov/GSA-IAE/sam-front-end/blob/comp/.github/PULL_REQUEST_TEMPLATE.md) and [Issues](https://csp-github.sam.gov/GSA-IAE/sam-front-end/blob/comp/.github/ISSUE_TEMPLATE.md), please use them when applicable. Note: Sometimes GitHub will not automatically use the templates as it is supposed to.
-1. The Pull Request template contains a checklist for reviewers to use to determine if a pull request should be merged.
-
-Gitflow Workflow branch names:
-
-`comp` is equivalent to `develop`.
-`minc`, `prodlike` have no Gitflow equivalent.
-`master` is equivalent to `master`. 
-
-<h3 id="submitting-prs">Submitting a pull request</h3>
+<h2 id="submitting-prs">Submitting a pull request</h3>
 
 Here are a few guidelines to follow when submitting a pull request:
 
@@ -133,3 +121,49 @@ if (config.selected !== undefined && config.selected.length > 0) {
 - Components end with Component (e.g. AssistanceListingResultComponent)
 - Components with an associated route and module end in Page (e.g. SearchPage)
 - Exported components in the ui-kit will be prefixed with Sam (e.g. SamSelectComponent) and their selectors will be prefixed as well (e.g. \<samSelect>)
+
+<h2 id="helpful-commands">Helpful commands</h2>
+
+<h3 id="build-files">Build files</h3>
+
+```bash
+# development
+npm run build:dev
+# production
+npm run build:prod
+```
+
+<h3 id="hot-module-replacement">Hot module replacement</h3>
+
+```bash
+npm run server:dev:hmr
+```
+
+<h3 id="watch-and-build-files">Watch and build files</h3>
+
+```bash
+npm run watch
+```
+
+<h3 id="run-tests">Run tests</h3>
+
+**Base tests**
+
+```bash
+npm run test
+```
+
+**Tests + watch**
+
+```bash
+npm run watch:test
+```
+
+**End-to-end tests**
+
+```bash
+# make sure you have your server running in another terminal
+npm run webdriver:update
+npm run webdriver:start
+npm run e2e
+```
