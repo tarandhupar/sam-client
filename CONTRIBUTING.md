@@ -1,5 +1,13 @@
 <ul>
   <li>
+    <a href="#getting-started">Getting started</a>
+    <ul>
+      <li><a href="#check-node">Check NodeJS and NPM</a></li>
+      <li><a href="#installing-globals">Installing required globals</a></li>
+      <li><a href="#serving-locally">Serving app locally</a></li>
+    </ul>
+  </li>
+  <li>
     <a href="#guidelines">Guidelines</a>
     <ul>
       <li><a href="#submitting-prs">Submitting pull requests</a></li>
@@ -10,6 +18,41 @@
   <li><a href="#doc-blocks">Doc-blocks</a></li>
   <li><a href="#test-coverage">Test coverage</a></li>
 </ul>
+
+<h2 id="getting-started">Getting started</h2>
+
+<h3 id="check-node">Check NodeJS and NPM</h3>
+
+To run the app locally, you will need NodeJS and the Node Package Manager (NPM).
+
+Confirm NPM is available:
+
+`$ npm -v`
+
+If you do not see a version number, [install Node.js](https://nodejs.org/en/download/).
+
+Note: Ensure you are running the latest versions of both. If not, please [update NodeJS and NPM](https://docs.npmjs.com/getting-started/installing-node).
+
+> If you have `nvm` installed, which is highly recommended (`brew install nvm`) you can do a `nvm install --lts && nvm use` in `$` to run with the latest Node LTS. You can also have this `zsh` done for you [automatically](https://github.com/creationix/nvm#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file) 
+
+<h3 id="installing-globals">Installing required globals</h3>
+
+All should be prepended with `$ npm install --global`:
+
+1. [`webpack`](https://www.npmjs.com/package/webpack)
+1. [`webpack-dev-server`](https://www.npmjs.com/package/webpack-dev-server)
+1. [`karma`](https://www.npmjs.com/package/karma)
+1. [`protractor`](https://www.npmjs.com/package/protractor)
+1. [`typescript`](https://www.npmjs.com/package/typescript)
+
+<h3 id="serving-locally">Serving the app locally</h3>
+
+1. Fork this repo into your GitHub account. Read more about forking a repo here on GitHub:
+[https://help.github.com/articles/fork-a-repo/](https://help.github.com/articles/fork-a-repo/)
+1. `$ npm install` or `$ npm update` to make sure you have the latest version of all the packages used in the app.
+1. `$ npm run server` to start the local server
+
+> After you have installed all dependencies you can now run the app. Run `npm run server` to start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:3000` (or if you prefer IPv6, if you're using `express` server, then it's `http://[::1]:3000/`).
 
 <h2 id="guidelines">Guidelines</h2>
 
