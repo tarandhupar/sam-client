@@ -1,0 +1,22 @@
+<div class='organization-container'>
+    <div class='usa-alert usa-alert-error' role='alert' *ngIf='false'>
+      <div class='usa-alert-body'>
+        <h3 class='usa-alert-heading'>Agency Error</h3>
+        <p class='usa-alert-text'>{{ error }}</p>
+      </div>
+    </div>
+    <div class='no-input' *ngIf="false">
+        {{ departmentLabel }}
+    </div>
+    <div class='usa-grid-full fh-form-alt'>
+        <div class='usa-width-one-third'>
+            <samSelect [(model)]="selectedDeptId" [name]="dpmtSelectConfig.name" [options]="dpmtSelectConfig.options" [label]="dpmtSelectConfig.label" (modelChange)='setOrganizationId("department")'></samSelect>
+        </div>
+        <div class='usa-width-one-third'>
+            <samSelect [(model)]="selectedAgencyId" [name]="agencySelectConfig.name" [options]="agencySelectConfig.options" [label]="agencySelectConfig.label" (modelChange)='setOrganizationId("agency")'></samSelect>
+        </div>
+        <div *ngIf='checkOffice()' class='usa-width-one-third'>
+            <samSelect [(model)]="selectedOfficeId" [name]="officeSelectConfig.name" [options]="officeSelectConfig.options" [label]="officeSelectConfig.label" (modelChange)='setOrganizationId("office")'></samSelect>
+        </div>
+    </div>
+</div>

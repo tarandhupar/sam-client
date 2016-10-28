@@ -1,0 +1,184 @@
+<div class="usa-grid">
+  <h2>Accordions Component &lt;samAccordions&gt;</h2>
+  <div class="usa-width-one-whole">
+    <h3>Accordions without border</h3>
+    <samAccordions [accordionsName]="'noBorder'" [accordionsData]="accordionsData" [bordered]="false"></samAccordions>
+  </div>
+  <div class="usa-width-one-whole">
+    <h3>Accordions with border</h3>
+    <samAccordions [accordionsName]="'bordered'" [accordionsData]="accordionsData" [bordered]="true">></samAccordions>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2>Button Component &lt;samButton&gt;</h2>
+  <div class="usa-width-one-whole">
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'defaultBtn'" [buttonText]="'Default'" [buttonType]="btnType" (click)="onDefaultBtnClick()"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'altBtn'" [buttonText]="'Alt'" [buttonType]="'alt'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'secondaryBtn'" [buttonText]="'Secondary'" [buttonType]="'secondary'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'grayBtn'" [buttonText]="'Gray'" [buttonType]="'gray'"></samButton>
+    </div>
+  </div>
+  <div class="usa-width-one-whole">
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'outlineBtn'" [buttonText]="'Outline'" [buttonType]="'outline'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'invertedBtn'" [buttonText]="'Inverted'" [buttonType]="'inverted'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'disabledBtn'" [buttonText]="'Disabled'" [buttonType]="'disabled'"></samButton>
+    </div>
+    <div class="usa-width-one-fourth">
+      <samButton [buttonId]="'bigBtn'" [buttonText]="'Big'" [buttonType]="'big'"></samButton>
+    </div>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2>Label Component &lt;samLabel&gt;</h2>
+  <div class="usa-width-one-sixth">
+    <samLabel [labelType]="'big'" [labelText]="'Big Label'"></samLabel>
+  </div>
+  <div class="usa-width-one-sixth">
+    <samLabel [labelType]="'small'" [labelText]="'Small Label'"></samLabel>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2>Select Component &lt;samSelect&gt;</h2>
+  <div class="usa-width-one-third">
+    <samSelect
+      [(model)]="selectModel"
+      [name]="selectConfig.name"
+      [options]="selectConfig.options"
+      [label]="selectConfig.label"
+      [hint]="selectConfig.hint"
+      [errorMessage]="selectConfig.errorMessage"
+      [disabled]="selectConfig.disabled">
+    </samSelect>
+  </div>
+  <div class="usa-width-one-third">
+    <fieldset class="usa-fieldset-inputs usa-sans">
+      <legend><h3>Options</h3></legend>
+      <ul class="usa-unstyled-list">
+        <li>
+          <input id="hasEmptyOption" type="checkbox" (change)="onEmptyOptionChanged($event)">
+          <label for="hasEmptyOption">Add an empty option</label>
+        </li>
+        <li>
+          <input id="isDisabled" type="checkbox" [(ngModel)]="selectConfig.disabled">
+          <label for="isDisabled">Disabled</label>
+        </li>
+        <li>
+          <label>Label text</label>
+          <input type="text" [(ngModel)]="selectConfig.label">
+        </li>
+        <li>
+          <label>Error message text</label>
+          <input type="text" [(ngModel)]="selectConfig.errorMessage">
+        </li>
+        <li>
+          <label>Hint text</label>
+          <input type="text" [(ngModel)]="selectConfig.hint">
+        </li>
+      </ul>
+    </fieldset>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{selectModel | json}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
+  <div class="usa-width-one-third">
+    <samCheckbox
+      [(model)]="checkboxModel"
+      [name]="checkboxConfig.name"
+      [options]="checkboxConfig.options"
+      [label]="checkboxConfig.label"
+      [hint]="checkboxConfig.hint"
+      [errorMessage]="checkboxConfig.errorMessage"
+      [hasSelectAll]="checkboxConfig.hasSelectAll">
+    </samCheckbox>
+  </div>
+  <div class="usa-width-one-third">
+    <fieldset class="usa-fieldset-inputs usa-sans">
+      <legend><h3>Options</h3></legend>
+      <ul class="usa-unstyled-list">
+        <li>
+          <input id="hasSelectAll" type="checkbox" [(ngModel)]="checkboxConfig.hasSelectAll">
+          <label for="hasSelectAll">Add a select all button</label>
+        </li>
+        <li>
+          <label>Label text</label>
+          <input type="text" [(ngModel)]="checkboxConfig.label">
+        </li>
+        <li>
+          <label>Error message text</label>
+          <input type="text" [(ngModel)]="checkboxConfig.errorMessage">
+        </li>
+        <li>
+          <label>Hint text</label>
+          <input type="text" [(ngModel)]="checkboxConfig.hint">
+        </li>
+      </ul>
+    </fieldset>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{checkboxModel | json}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2>Radiobuttons Component &lt;samRadioButtons&gt;</h2>
+  <div class="usa-width-one-third">
+    <samRadioButton
+      [(model)]="radioModel"
+      [options]="radioConfig.options"
+      [label]="radioConfig.label"
+      [hint]="radioConfig.hint"
+      [name]="radioConfig.name"
+      [errorMessage]="radioConfig.errorMessage">
+    </samRadioButton>
+  </div>
+  <div class="usa-width-one-third">
+    <fieldset class="usa-fieldset-inputs usa-sans">
+      <legend><h3>Options</h3></legend>
+      <ul class="usa-unstyled-list">
+        <li>
+          <label>Label text</label>
+          <input type="text" [(ngModel)]="radioConfig.label">
+        </li>
+        <li>
+          <label>Error message text</label>
+          <input type="text" [(ngModel)]="radioConfig.errorMessage">
+        </li>
+        <li>
+          <label>Hint text</label>
+          <input type="text" [(ngModel)]="radioConfig.hint">
+        </li>
+      </ul>
+    </fieldset>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{radioModel | json}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
+  <div class="usa-width-one">
+    <h2>Alert Component &lt;samAlert&gt;</h2>
+    <samAlert [type]="'success'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+    <samAlert [type]="'warning'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+    <samAlert [type]="'error'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+    <samAlert [type]="'info'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+    <samAlert [type]="'infovv'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+  </div>
+</div>
+

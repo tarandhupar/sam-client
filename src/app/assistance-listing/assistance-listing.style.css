@@ -1,0 +1,23 @@
+#historyItem {
+  border-bottom: 2px solid #D3D3D3;
+}
+
+#ficalYear {
+  text-align:left;
+  margin-top:.7em;
+}
+
+.historyDetails {
+  float:right;
+}
+
+#changeDescription {
+  text-align:right;
+  font-style: italic;
+}
+
+.logo{
+  margin-top:4.2em;
+  width:163px;
+  height:142px
+}

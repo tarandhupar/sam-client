@@ -2,29 +2,34 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
-import { Search }   from './search.component';
-import { AssistanceListingResult } from './assistance_listings/al.component';
-import { OpportunitiesResult } from './opportunities/opportunities.component';
-import { FHInputComponent } from './fh.component';
+import { SearchPage }   from './search.page';
+import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
+import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
+import { FHInputComponent } from './agency-selector/agency-selector.component';
 import { FormsModule } from '@angular/forms';
-import { SamAngularModule } from '../../sam-angular/sam-angular.module';
+
+import { routing } from './search.route';
+import { SamUIKitModule } from 'ui-kit';
+import { SamAPIKitModule } from 'api-kit';
 
 @NgModule({
   imports: [
+    routing,
     BrowserModule,
     FormsModule,
     RouterModule,
     HttpModule,
-    SamAngularModule
+    SamUIKitModule,
+    SamAPIKitModule,
   ],
   exports: [
-    Search,
+    SearchPage,
     AssistanceListingResult,
     OpportunitiesResult,
     FHInputComponent
   ],
   declarations: [
-    Search,
+    SearchPage,
     AssistanceListingResult,
     OpportunitiesResult,
     FHInputComponent

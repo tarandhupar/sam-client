@@ -2,11 +2,9 @@
  * Angular 2 decorators and services
  */
 import { Component, ViewEncapsulation } from '@angular/core';
-import { Router, NavigationExtras } from '@angular/router';
-import { ComponentInjectService } from './common/service/component.inject.service.ts';
-import { InputTypeConstants } from './common/constants/input.type.constants.ts';
-import { APIService } from "./common/service/api/api.service";
-import { globals } from './common/constants/globals.ts';
+import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
+import { globals } from './globals.ts';
+import { SearchService } from 'api-kit';
 
 /*
  * App Component
@@ -19,31 +17,56 @@ import { globals } from './common/constants/globals.ts';
     './app.style.css'
   ],
   templateUrl: './app.template.html',
-  providers : [APIService,ComponentInjectService,InputTypeConstants]
+  providers : [SearchService]
 })
-export class App {
+export class App{
 
-  constructor(private _router: Router) {
+  keyword: string = "";
+  index: string = "";
+  qs: any = {};
+
+  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {
 
   }
+
+  ngOnInit() {
+    this.searchService.paramsUpdated$.subscribe(
+      obj => {
+        this.setQS(obj);
+    });
+    this.activatedRoute.queryParams.subscribe(
+      data => {
+        this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
+        this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
+      });
+  }
+
 
   get isHeaderWithSearch() {
     return globals.isDefaultHeader;
   }
 
   onHeaderSearchEvent(searchObject) {
-    var qsobj = {};
+    var qsobj = this.qs;
     if(searchObject.keyword.length>0){
       qsobj['keyword'] = searchObject.keyword;
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
+    } else {
+      qsobj['index'] = '';
     }
+
+    qsobj['page'] = 1;
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
+  }
+
+  setQS(obj){
+    this.qs = obj;
   }
 }
