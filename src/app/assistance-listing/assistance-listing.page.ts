@@ -492,7 +492,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .html(d => {
           if(d.value.ena || d.value.nsi ){
             return d.value.total == 0 
-                    ? actualOrEstimate(d.key)
+                    ? !d.value.ena ? "Not Separately Identifiable" : actualOrEstimate(d.key)
                     : d3.format("($,")(d.value.total);
           }
           return d3.format("($,")(d.value.total);
