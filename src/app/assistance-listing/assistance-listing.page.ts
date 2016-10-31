@@ -62,7 +62,6 @@ export class ProgramPage implements OnInit {
       let id = params['id']; //id will be a string, not a number
       this.oProgramService.getProgramById(id).subscribe(res => {
           this.oProgram = res;
-          console.log("Program: ", this.oProgram);
 
           //check if this program has changed in this FY
           if ((new Date(this.oProgram.publishedDate)).getFullYear() < new Date().getFullYear()) {
@@ -114,7 +113,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       );
 
     });
-    console.log("Dictionaries: ", this.aDictionaries);
   }
 
 
