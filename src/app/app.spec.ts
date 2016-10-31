@@ -11,6 +11,7 @@ import {ROUTES} from "./app.route";
 import {HomePage} from "./application-content/home/home.page";
 import {SearchPage} from "./search/search.page";
 import {SamUIKitModule} from "ui-kit";
+import { SearchService, SamAPIKitModule } from 'api-kit';
 import {OpportunitiesResult} from "./opportunity/search-result/opportunities-result.component";
 import {AssistanceListingResult} from "./assistance-listing/search-result/assistance-listing-result.component";
 import {FHInputComponent} from "./search/agency-selector/agency-selector.component";
@@ -32,6 +33,7 @@ var activatedRouteStub = {
     }
   }
 };
+var searchServiceStub = {};
 
 
 describe('App', () => {
@@ -42,7 +44,8 @@ describe('App', () => {
     providers: [
       App,
       {provide: Router, useClass: RouterStub},
-      {provide: ActivatedRoute, useValue: activatedRouteStub}
+      {provide: ActivatedRoute, useValue: activatedRouteStub},
+      {provide: SearchService, useValue: searchServiceStub}
     ]
   }));
 
