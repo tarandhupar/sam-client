@@ -9,7 +9,6 @@ import { By } from '@angular/platform-browser';
 import { ProgramPage } from './assistance-listing.page';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 import { KeysPipe } from '../app-pipes/keyspipe.pipe';
-import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
@@ -192,7 +191,6 @@ describe('ProgramPage', () => {
       ],
       declarations: [
         ProgramPage,
-        CapitalizePipe,
         FilterMultiArrayObjectPipe,
         KeysPipe,
         AuthorizationPipe,
@@ -212,7 +210,6 @@ describe('ProgramPage', () => {
         { provide: Location, useClass: Location },
         { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '3077ea1df409265fb4378e0e844b8811' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        CapitalizePipe,
         { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectCustomPipe },
         KeysPipe,
         AuthorizationPipe,
