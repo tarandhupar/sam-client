@@ -46,7 +46,7 @@
       </p>
     </div>
     <p *ngIf="oProgram">
-        <span *ngIf="oFederalHierarchy"><strong>{{oFederalHierarchy.type | capitalize}}: </strong>{{oFederalHierarchy.name}}<br></span>
+      <span *ngIf="oFederalHierarchy"><strong class="capitalize">{{oFederalHierarchy.type}}: </strong>{{oFederalHierarchy.name}}<br></span>
         <span><strong>FAL Number: </strong>{{oProgram.data.programNumber}}<br></span>
         <span><strong>Related Federal Assistance: </strong>
             <span *ngIf="aRelatedProgram && oProgram.data.relatedPrograms.flag != 'na' && aRelatedProgram.length > 0">
