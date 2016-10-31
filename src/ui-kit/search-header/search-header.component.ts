@@ -6,7 +6,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     <header>
       <div class="usa-grid">
         <div class="header-container">
-          <a class="sam_hat_img" [routerLink]="['/']">
+          <a class="hat-img" [routerLink]="['/']">
             <img class="marginCenter" src="assets/img/sam_hat_logo.jpg">
           </a>
           <samSearchbar [size]="'small'" (onSearch)="onSearchEvent($event)" 
