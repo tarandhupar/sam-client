@@ -193,6 +193,11 @@
         <span *ngIf="oProgram.data.usage?.discretionaryFund?.flag=='yes'">{{ oProgram.data.usage.discretionaryFund.content }}</span>
         <span *ngIf="oProgram.data.usage?.loanTerms?.flag=='yes'">{{ oProgram.data.usage.loanTerms.content }}</span>
       </p>
+
+      <div *ngIf="oProgram && aDictionaries['assistance_usage_types']" class="designation">
+        <h4>Designations</h4>
+        <span *ngFor="let typeID of oProgram.data.eligibility?.applicant?.assistanceUsageTypes">{{lookupTypeByID('assistance_usage_types', typeID)}}</span>
+      </div>
     </section>
 
     <!--How do I apply?-->
