@@ -148,9 +148,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           if(item.ena){ ena = true; }
           if(item.nsi){ nsi = true; }
         });
-        return { 
-          "ena": ena, 
-          "nsi": nsi, 
+        return {
+          "ena": ena,
+          "nsi": nsi,
           "total": d3.sum(values, d => +d.amount)
         }
       })
@@ -169,8 +169,8 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           year = item.year;
         });
         return {
-          "year": formatYear(String(year),isEstimate), 
-          "total": d3.sum(values, d => +d.amount) 
+          "year": formatYear(String(year),isEstimate),
+          "total": d3.sum(values, d => +d.amount)
         }
       })
       .entries(financialData);
@@ -192,10 +192,10 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           if(item.ena){ ena = true; }
           if(item.nsi){ nsi = true; }
         });
-        return { 
-          "ena": ena, 
-          "nsi": nsi, 
-          "total": d3.sum(values, d => +d.amount) 
+        return {
+          "ena": ena,
+          "nsi": nsi,
+          "total": d3.sum(values, d => +d.amount)
         }
       })
       .entries(financialData);
@@ -363,9 +363,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           return d.values[yearLoop].value.total;
         });
 
-      return { 
-        "series": stack(data), 
-        "keys": stackKeys.values() 
+      return {
+        "series": stack(data),
+        "keys": stackKeys.values()
       };
     }
 
@@ -448,7 +448,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           d.values.forEach(item => {
             item.values.forEach( innerItem =>{
               if(innerItem.explanation){
-                explanation +=  "FY " + item.key.slice(2,4) + 
+                explanation +=  "FY " + item.key.slice(2,4) +
                                 " Exp: " + innerItem.explanation + ", ";
               }
             });
@@ -491,14 +491,14 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .append("td")
         .html(d => {
           if(d.value.ena || d.value.nsi ){
-            return d.value.total == 0 
+            return d.value.total == 0
                     ? !d.value.ena ? "Not Separately Identifiable" : actualOrEstimate(d.key)
                     : d3.format("($,")(d.value.total);
           }
           return d3.format("($,")(d.value.total);
         });
     })();
-    
+
   }
 
   prepareVisualizationData(financialData){
