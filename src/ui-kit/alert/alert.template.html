@@ -1,6 +1,13 @@
 <div class="usa-alert {{selectedType}}">
-<div class="usa-alert-body">
-<h3 class="usa-alert-heading">{{title}}</h3>
-<p class="usa-alert-text">{{description}}</p>
-</div>
+  <div class="pull-right" *ngIf="showLinks">
+    <span class="pull-right m_R-1x">
+      <a class="usa-nav-link" (click)="onExpandClick()">{{expandLinkText}}</a> &nbsp;
+      <a ><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
+    </span>
+  </div>
+  <div class="usa-alert-body">
+    <h3 class="usa-alert-heading">{{title}}</h3>
+    <p class="usa-alert-text" *ngIf="showDescription">{{description}}</p>
+  </div>
+
 </div>

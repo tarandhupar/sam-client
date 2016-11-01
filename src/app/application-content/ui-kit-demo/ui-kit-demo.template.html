@@ -172,7 +172,7 @@
   </div>
 </div>
 <div class="usa-grid">
-  <div class="usa-width-one">
+  <div class="usa-width-one-whole">
     <h2>Alert Component &lt;samAlert&gt;</h2>
     <samAlert [type]="'success'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
     <samAlert [type]="'warning'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
@@ -184,5 +184,26 @@
 <div class="usa-grid">
   <h2>Alert Component &lt;samAlertList&gt;</h2>
   <samAlertList></samAlertList>
+  <h2>Alert Component for Alert List &lt;samAlert&gt;</h2>
+  <div class="usa-width-one-whole" *ngIf="!dismissAlerts">
+    <samAlert [type]="'success'"
+              [title]="'Sample Title'"
+              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
+              [showDescription]="showDescription"
+              [showLinks]="true"
+              (expand)='onExpandAlerts()'
+              (dismiss)='onDismissAlerts()'></samAlert>
+    <samAlert [type]="'warning'"
+              [title]="'Sample Title'"
+              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
+              [showDescription]="showDescription"></samAlert>
+    <samAlert [type]="'error'"
+              [title]="'Sample Title'"
+              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
+              [showDescription]="showDescription"></samAlert>
+    <samAlert [type]="'info'"
+              [title]="'Sample Title'"
+              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
+              [showDescription]="showDescription"></samAlert>
+  </div>
 </div>
-
