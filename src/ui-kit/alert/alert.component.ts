@@ -33,7 +33,7 @@ export class SamAlertComponent {
     "warning":"usa-alert-warning",
     "error":"usa-alert-error",
     "info":"usa-alert-info"
-  }
+  };
   selectedType: string = this.types['success'];
   expandLinkText: string = "Collapse";
 
@@ -60,11 +60,12 @@ export class SamAlertComponent {
   }
 
   private onExpandClick(){
-    this.expand.emit(!this.showDescription);
+    this.showDescription = !this.showDescription;
+    this.expand.emit(this.showDescription);
     if(this.showDescription){
-      this.expandLinkText = "Collapse";
-    }else{
       this.expandLinkText = "Expand";
+    }else{
+      this.expandLinkText = "Collapse";
     }
   }
 
