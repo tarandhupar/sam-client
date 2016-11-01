@@ -312,9 +312,9 @@ describe('ProgramPage', () => {
     expect(comp.aRelatedProgram.length).toBe(2);
   });
 
-  it('Should show labels for elebigility types', () => {
+  it('Should show labels for designation types', () => {
     expect(comp.aDictionaries['applicant_types']).toBeDefined();
-    let labelElement = fixture.debugElement.query(By.css(".usa-label"));
+    let labelElement = fixture.debugElement.query(By.css(".designation span"));
     expect(labelElement.nativeElement.innerHTML).toBe("U.S. Territories and possessions");
   });
 });
