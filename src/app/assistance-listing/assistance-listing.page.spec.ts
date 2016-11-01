@@ -315,6 +315,6 @@ describe('ProgramPage', () => {
   it('Should show labels for elebigility types', () => {
     expect(comp.aDictionaries['applicant_types']).toBeDefined();
     let labelElement = fixture.debugElement.query(By.css(".usa-label"));
-    expect(labelElement.nativeElement.innerHTML).toBe("24 - U.S. Territories and possessions");
+    expect(labelElement.nativeElement.innerHTML).toBe("U.S. Territories and possessions");
   });
 });

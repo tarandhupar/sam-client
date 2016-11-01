@@ -158,20 +158,24 @@
 
       <p *ngIf="oProgram">
         {{oProgram.data.eligibility?.applicant?.additionalInfo?.content}}
-        <span *ngIf="aDictionaries['applicant_types']">
-          <samLabel *ngFor="let typeID of oProgram.data.eligibility?.applicant?.types" [labelType]="'small'" [labelText]="lookupTypeByID('applicant_types', typeID)"></samLabel>
-        </span>
       </p>
+
+      <div *ngIf="oProgram && aDictionaries['applicant_types']" class="designation">
+        <h4>Designations</h4>
+        <span *ngFor="let typeID of oProgram.data.eligibility?.applicant?.types">{{lookupTypeByID('applicant_types', typeID)}}</span>
+      </div>
 
 
       <h3>Beneficiary Eligibility:</h3>
 
       <p *ngIf="oProgram">
         {{oProgram.data.eligibility?.beneficiary?.additionalInfo?.content}}
-        <span *ngIf="aDictionaries['beneficiary_types']">
-          <samLabel *ngFor="let typeID of oProgram.data.eligibility?.beneficiary?.types" [labelType]="'small'" [labelText]="lookupTypeByID('beneficiary_types', typeID)"></samLabel>
-        </span>
       </p>
+
+      <div *ngIf="oProgram && aDictionaries['beneficiary_types']" class="designation">
+        <h4>Designations</h4>
+        <span *ngFor="let typeID of oProgram.data.eligibility?.beneficiary?.types">{{lookupTypeByID('beneficiary_types', typeID)}}</span>
+      </div>
 
 
       <h3>Length and Time Phasing of Assistance:</h3>

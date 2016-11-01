@@ -21,3 +21,12 @@
   width:163px;
   height:142px
 }
+
+.designation {
+  background-color: gainsboro;
+  padding: 15px;
+}
+
+.designation h4 {
+  margin-top: 0px;
+}

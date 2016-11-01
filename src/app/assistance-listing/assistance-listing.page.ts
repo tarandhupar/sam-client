@@ -119,7 +119,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
   lookupTypeByID(dictionary_name, dictionary_id) {
     for (var type of this.aDictionaries[dictionary_name]) {
       if (type['element_id'] === dictionary_id) {
-        return type['displayValue'];
+        return type['value'];
       }
     }
 
