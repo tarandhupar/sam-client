@@ -158,6 +158,9 @@
 
       <p *ngIf="oProgram">
         {{oProgram.data.eligibility?.applicant?.additionalInfo?.content}}
+        <span *ngIf="aDictionaries['applicant_types']">
+          <samLabel *ngFor="let typeID of oProgram.data.eligibility?.applicant?.types" [labelType]="'small'" [labelText]="lookupTypeByID('applicant_types', typeID)"></samLabel>
+        </span>
       </p>
 
 
@@ -165,6 +168,9 @@
 
       <p *ngIf="oProgram">
         {{oProgram.data.eligibility?.beneficiary?.additionalInfo?.content}}
+        <span *ngIf="aDictionaries['beneficiary_types']">
+          <samLabel *ngFor="let typeID of oProgram.data.eligibility?.beneficiary?.types" [labelType]="'small'" [labelText]="lookupTypeByID('beneficiary_types', typeID)"></samLabel>
+        </span>
       </p>
 
 
