@@ -81,7 +81,6 @@ describe('FederalHierarchyInput', () => {
     TestBed.compileComponents().then( ()=>{
       fixture = TestBed.createComponent(FHInputComponent);
       comp = fixture.componentInstance;
-      fixture.detectChanges();
     });
 
   }));
@@ -89,7 +88,6 @@ describe('FederalHierarchyInput', () => {
   it('sample test', ()  => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      fixture.detectChanges();
       expect("ABCDEFG").toEqual("ABCDEFG");
     });
 	});

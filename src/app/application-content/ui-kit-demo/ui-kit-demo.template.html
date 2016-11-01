@@ -54,6 +54,7 @@
   <div class="usa-width-one-third">
     <samSelect
       [(model)]="selectModel"
+      [name]="selectConfig.name"
       [options]="selectConfig.options"
       [label]="selectConfig.label"
       [hint]="selectConfig.hint"
@@ -98,6 +99,7 @@
   <div class="usa-width-one-third">
     <samCheckbox
       [(model)]="checkboxModel"
+      [name]="checkboxConfig.name"
       [options]="checkboxConfig.options"
       [label]="checkboxConfig.label"
       [hint]="checkboxConfig.hint"
@@ -141,6 +143,7 @@
       [options]="radioConfig.options"
       [label]="radioConfig.label"
       [hint]="radioConfig.hint"
+      [name]="radioConfig.name"
       [errorMessage]="radioConfig.errorMessage">
     </samRadioButton>
   </div>
