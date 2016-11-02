@@ -150,8 +150,8 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         });
         return {
           "items": values.length,
-          "ena": ena, 
-          "nsi": nsi, 
+          "ena": ena,
+          "nsi": nsi,
           "total": d3.sum(values, d => +d.amount)
         }
       })
@@ -170,8 +170,8 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           year = item.year;
         });
         return {
-          "year": formatYear(String(year),isEstimate), 
-          "total": d3.sum(values, d => +d.amount) 
+          "year": formatYear(String(year),isEstimate),
+          "total": d3.sum(values, d => +d.amount)
         }
       })
       .entries(financialData);
@@ -197,9 +197,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         });
         return {
           "obligations": obligations.entries(),
-          "ena": ena, 
-          "nsi": nsi, 
-          "total": d3.sum(values, d => +d.amount) 
+          "ena": ena,
+          "nsi": nsi,
+          "total": d3.sum(values, d => +d.amount)
         }
       })
       .entries(financialData);
@@ -367,9 +367,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           return d.values[yearLoop].value.total;
         });
 
-      return { 
-        "series": stack(data), 
-        "keys": stackKeys.values() 
+      return {
+        "series": stack(data),
+        "keys": stackKeys.values()
       };
     }
 
@@ -452,7 +452,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           d.values.forEach(item => {
             item.values.forEach( innerItem =>{
               if(innerItem.explanation){
-                explanation +=  "FY " + item.key.slice(2,4) + 
+                explanation +=  "FY " + item.key.slice(2,4) +
                                 " Exp: " + innerItem.explanation + ", ";
               }
             });
@@ -498,18 +498,18 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .html(d => {
           let maxNumberOfObligationTypesFound = d3.max(d.value.obligations, item => item.value);
           if(d.value.ena || d.value.nsi ){
-            return d.value.total == 0 
-                    ? !d.value.ena 
-                      ? "Not Separately Identifiable" 
-                      : maxNumberOfObligationTypesFound > 1 
-                        ? "Not Available" 
+            return d.value.total == 0
+                    ? !d.value.ena
+                      ? "Not Separately Identifiable"
+                      : maxNumberOfObligationTypesFound > 1
+                        ? "Not Available"
                         : actualOrEstimate(d.key)
                     : d3.format("($,")(d.value.total);
           }
           return d3.format("($,")(d.value.total);
         });
     })();
-    
+
   }
 
   prepareVisualizationData(financialData){
@@ -522,7 +522,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
     function getAssistanceType(id): string {
       return self.FilterMultiArrayObjectPipe.transform([id], self.aDictionaries.assistance_type, 'element_id', true, 'elements')[0].value;
     }
-    
+
     financialData.map(function(item){
       for(let year in item.values){
         let obligation = "No Obligation";
