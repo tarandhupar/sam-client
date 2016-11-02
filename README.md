@@ -45,6 +45,7 @@ Gitflow Workflow branch names:
 
 1. We write both unit and end to end tests for this project.
 1. We develop components using a behavior driven development pattern to view the components from a user's perspective.
+1. We strive to achieve [...] code coverage.
 
 <h2 id="where-things-are">Where things are</h2>
 
@@ -76,10 +77,3 @@ Gitflow Workflow branch names:
 
 ### For Deployments
 - the API_UMBRELLA_URL/API_UMBRELLA_KEY environment variable should be setup in the docker deployment yaml file
-
-# Configuration
-Configuration files live in `config/` we are currently using webpack, karma, and protractor for different stages of your application
-
-# Contributing
-You can include more examples as components but they must introduce a new concept such as `Home` component (separate folders), and Todo (services). I'll accept pretty much everything so feel free to open a Pull-Request
-
