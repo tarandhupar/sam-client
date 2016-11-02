@@ -9,7 +9,7 @@ import { Cookie } from 'ng2-cookies'
 })
 export class AlertListComponent {
 
-  public ALERT_REFRESH_INTERVAL_MINUTES = 10;
+  public REFRESH_INTERVAL_MINUTES = 10;
   private intervalId: any = null;
   private showDescriptions: boolean = false;
 
@@ -23,7 +23,7 @@ export class AlertListComponent {
     } else {
       this.intervalId = setInterval(() => {
         this.fetchAlerts();
-      }, 1000 * 60 * this.ALERT_REFRESH_INTERVAL_MINUTES);
+      }, 1000 * 60 * this.REFRESH_INTERVAL_MINUTES);
 
       this.fetchAlerts();
     }
