@@ -55,6 +55,7 @@ Gitflow Workflow branch names:
   2. `ui-kit`: stores user interface components used on more than one page.
   3. `assets`: ???
   4. `app`: pages, page-specific UI components, and so on.
+3. `api-config.json` or `api-config.example.json`: we use a single API key within the marketplace for local development; therefore, the API key is set, and all you should need to do is rename this file to `api-config.json`.
 
 <h2 id="where-things-go">Where things go</h2>
 
