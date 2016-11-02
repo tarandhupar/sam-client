@@ -22,7 +22,7 @@ export class AuthorizationPipe implements PipeTransform {
         title = title + "Executive Order - " + ( oAuthorization.executiveOrder ? oAuthorization.executiveOrder.description : "N/A") + ", ";
       }
       if (oAuthorization.publicLaw != null){
-        title = title + (oAuthorization.publicLaw ? ("Public Law " + (oAuthorization.publicLaw.congressCode || "")) : "") + "-" + (oAuthorization.publicLaw ? (oAuthorization.publicLaw.lawNumber || "N/A") : "N/A") + ", ";
+        title = title + (oAuthorization.publicLaw ? ("Public Law " + (oAuthorization.publicLaw.congressCode || "")) : "") + "- " + (oAuthorization.publicLaw ? (oAuthorization.publicLaw.lawNumber || "N/A") : "N/A") + ", ";
       }
       if (oAuthorization.statute != null){
         title = title + (oAuthorization.statute ? ("Statute " + (oAuthorization.statute.volume || "")) : "") + "-" + (oAuthorization.statute ? (oAuthorization.statute.page || "N/A") : "N/A") + ", ";
