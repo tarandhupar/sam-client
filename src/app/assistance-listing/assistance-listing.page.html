@@ -440,7 +440,7 @@
 
         <!-- matching requirements -->
         <span class="m-a-0" *ngIf="oProgram.data.assistance?.matching?.flag == 'yes'">
-          Matching Requirements: Percent: {{oProgram.data.assistance.matching.percent}}
+          Matching Requirements: <ng-container *ngIf="oProgram.data.assistance.matching.percent > 0">Percent: {{oProgram.data.assistance.matching.percent}}</ng-container>
           {{oProgram.data.assistance.matching.otherInfo?.content}}
           <br>
         </span>
