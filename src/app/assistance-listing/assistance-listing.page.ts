@@ -435,7 +435,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
                   assistanceTotal.values.forEach(year => {
                     let yearTotal;
                     if(year.value.ena && !year.value.total){
-                      yearTotal = year.value.items > 1 ? "Not Available" : actualOrEstimate(year.key);
+                      yearTotal = year.value.items > 1 
+                                    ? !year.value.nsi ? actualOrEstimate(year.key) : "Not Available"
+                                    : actualOrEstimate(year.key);
                     } else if(year.value.nsi && !year.value.total){
                       yearTotal = "Not Separately Identifiable";
                     } else{
@@ -529,7 +531,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         });
 
       // Table Totals
-      console.log(vizTotals);
       table.selectAll("tbody")
         .append("tr")
         .html("<td>Totals</td>")
