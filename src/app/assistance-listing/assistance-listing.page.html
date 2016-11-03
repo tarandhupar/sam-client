@@ -205,7 +205,7 @@
             <span *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'no'">
               Not Applicable.
             </span>
-            <span *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'contactHQ'">
+            <span *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'contact'">
               Contact the headquarters or regional office, as appropriate for application deadlines
             </span>
       </p>
@@ -466,7 +466,7 @@
       <div *ngIf="oProgram">
         <address>
           <h3>Regional or Local Office:</h3><br>
-          <span *ngIf="oProgram.data.contacts?.local?.flag == 'regional'"> See Regional Agency Offices. {{oProgram.data.contacts['local'].additionalInfo?.content}}</span>
+          <span *ngIf="oProgram.data.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{oProgram.data.contacts['local'].additionalInfo?.content}}</span>
           <span *ngIf="oProgram.data.contacts?.local?.flag == 'none'"> None. {{oProgram.data.contacts['local'].additionalInfo?.content}}</span> <br>
           <h3>Headquarters Office:</h3><br>
 
