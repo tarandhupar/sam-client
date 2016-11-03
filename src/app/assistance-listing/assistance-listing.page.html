@@ -210,7 +210,7 @@
           <span *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'yes'">
               <!-- repeat over all deadlines. -->
               <span *ngFor="let deadline of oProgram.data.application?.deadlines?.submission?.list">
-                {{deadline.start | date: 'MMM dd, yyyy'}} to {{deadline.end | date: 'MMM dd, yyyy'}}
+                {{deadline.start | dateFormat: 'MMM DD, YYYY'}} to {{deadline.end | dateFormat: 'MMM DD, YYYY'}}
                 {{deadline.description}}
                 <br>
               </span>

@@ -6,6 +6,7 @@ import {KeysPipe} from '../app-pipes/keyspipe.pipe';
 import {FilterMultiArrayObjectPipe} from '../app-pipes/filter-multi-array-object.pipe';
 import {AuthorizationPipe} from './pipes/authorization.pipe';
 import {HistoricalIndexLabelPipe} from './pipes/historical-index-label.pipe';
+import {DateFormatPipe} from '../app-pipes/date-format.pipe';
 import { SamUIKitModule } from 'ui-kit';
 
 @NgModule({
@@ -19,14 +20,16 @@ import { SamUIKitModule } from 'ui-kit';
     FilterMultiArrayObjectPipe,
     AuthorizationPipe,
     ProgramPage,
-    HistoricalIndexLabelPipe
+    HistoricalIndexLabelPipe,
+    DateFormatPipe
   ],
   declarations: [
     KeysPipe,
     FilterMultiArrayObjectPipe,
     AuthorizationPipe,
     ProgramPage,
-    HistoricalIndexLabelPipe
+    HistoricalIndexLabelPipe,
+    DateFormatPipe
   ],
   providers: [],
 })
