@@ -6,7 +6,6 @@ import { AuthorizationPipe } from './authorization.pipe';
 describe('AuthorizationPipe', () => {
   let pipe = new AuthorizationPipe();
   it('transforms an authorization id to an authorization', () => {
-    // let oAuthorization = [{'Usc':{'section':'7901', 'title': '7'}, 'act':{'description': 'The National Cost Share Program is authorized under 7 U.S.C. 7901 note, as amended by section 10004(c) of the Agriculture Act of 2014 (2014 Farm Bill).'}, 'part':'94', 'section':'7901', 'title':'7', 'authorizationId':'49a6f9eea2ae391421d77f7cd3c71604', 'authorizationType':'act', 'publicLaw':{'congressCode':'113', 'number':'79'}, 'version': '1'}];
     let oAuthorization1 = [{
       USC: {
         title: "7",
@@ -71,12 +70,9 @@ describe('AuthorizationPipe', () => {
       authorizationType: "publiclaw"
     }];
     let result4 = 'Plant Protection Act, Public Law 106-224, 7 US Code 7701-7772';
-    // let oAuthorization5 = [{"version":1,"executiveOrder":{"part":"74 and 92","description":"Federal Regulations 42 CFR 52 and 45"},"authorizationId":"326ccde2aeb4606bc44959c1dfd018a9","authorizationType":"eo"}];
-    // let result5 = 'Executive Order - N/A';
     expect(pipe.transform(oAuthorization1, [])).toBe(result1);
     expect(pipe.transform(oAuthorization2, [])).toBe(result2);
     expect(pipe.transform(oAuthorization3, [])).toBe(result3);
     expect(pipe.transform(oAuthorization4, [])).toBe(result4);
-    //expect(pipe.transform(oAuthorization5, [])).toBe(result5);
   });
 });
