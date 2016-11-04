@@ -198,16 +198,13 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       .key(d => d.year)
       .sortKeys(d3.ascending)
       .rollup(values => {
-        let obligations = d3.map(),
-            ena = false,
+        let ena = false,
             nsi = false;
         values.forEach(item => {
           if(item.ena){ ena = true; }
           if(item.nsi){ nsi = true; }
-          obligations.set(item.obligation, obligations.get(item.obligation) ? obligations.get(item.obligation) + 1 : 1);
         });
         return {
-          "obligations": obligations.entries(),
           "ena": ena,
           "nsi": nsi,
           "total": d3.sum(values, d => +d.amount)
@@ -541,16 +538,17 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .enter()
         .append("td")
         .html(d => {
-          let maxNumberOfObligationTypesFound = d3.max(d.value.obligations, item => item.value);
-          if(d.value.ena || d.value.nsi ){
-            return d.value.total == 0 
-                    ? !d.value.ena 
-                      ? "Not Separately Identifiable" 
-                      : maxNumberOfObligationTypesFound > 1 
-                        ? !d.value.nsi ? actualOrEstimate(d.key) : "Not Available" 
-                        : actualOrEstimate(d.key)
-                    : d3.format("($,")(d.value.total);
+          let totalAmountIsZero = (d.value.total == 0) ? true : false;
+          let enaANDnsi = (d.value.ena && d.value.nsi) && totalAmountIsZero ? true : false;
+          let enaORnsi = (d.value.ena || d.value.nsi) && totalAmountIsZero ? true : false;
+
+          if(enaANDnsi){
+            return "Not Available";
           }
+          if(enaORnsi){
+            return !d.value.ena ? "Not Separately Identifiable" : actualOrEstimate(d.key);
+          }
+
           return d3.format("($,")(d.value.total);
         });
     })();
