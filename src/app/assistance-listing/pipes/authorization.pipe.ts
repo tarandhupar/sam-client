@@ -51,8 +51,7 @@ export class AuthorizationPipe implements PipeTransform {
         title.push(this.getUSCode(authorization));
       }
     });
-    title = title.join(', ');
-    return title;
+    return title.join(', ');
   }
 
   private getAmendedBy(authorization) {
