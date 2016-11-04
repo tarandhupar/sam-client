@@ -3,35 +3,90 @@ import * as _ from 'lodash';
 
 @Pipe({name: 'authorization'})
 export class AuthorizationPipe implements PipeTransform {
-  transform(aAuthorization, args:string[]):any {
+  transform(authorizations, args:string[]):any {
 
     //make sure sorted by version number
-    aAuthorization = _.sortBy(aAuthorization, 'version');
+    authorizations = _.sortBy(authorizations, 'version');
 
     // TODO, review implementation of string building of the the authorizations
+    var title = [];
+    _.forEach(authorizations, authorization => {
 
-    var title = '';
-    _.forEach(aAuthorization, oAuthorization => {
-      if (oAuthorization.version > 1) {
-        title = title.concat(", as amended by ");
+      // TODO: No test in the scpec for this
+      // could be its own method call
+      if (authorization.version > 1) {
+        title.push("as amended by ");
       }
-      if (oAuthorization.act != null){
-        title = title + (oAuthorization.act.description ? (oAuthorization.act.description) : "") + (oAuthorization.act.title ? (", Title " + oAuthorization.act.title) : "") + (oAuthorization.act.part ? (", Part " + oAuthorization.act.part) : "") + (oAuthorization.act.section ? (", Section " + oAuthorization.act.section) : "") + ", ";
+
+      // could be its own method call
+      if (authorization.act != null) {
+        var actText = [];
+        if (authorization.act.description) {
+          actText.push(authorization.act.description);
+        }
+        if (authorization.act.title) {
+          actText.push('Title ' + authorization.act.title);
+        }
+        if (authorization.act.part) {
+          actText.push('Part ' + authorization.act.part);
+        }
+        if (authorization.act.section) {
+          actText.push('Section ' + authorization.act.section);
+        }
+        let actString = actText.join(', ');
+        title.push(actString);
       }
-      if (oAuthorization.executiveOrder != null){
-        title = title + "Executive Order - " + ( oAuthorization.executiveOrder.description ? oAuthorization.executiveOrder.description : "") + ", ";
+
+      // could be its own method
+      if (authorization.executiveOrder != null && authorization.executiveOrder.description) {
+        title.push('Executive Order - ' + authorization.executiveOrder.description);
       }
-      if (oAuthorization.publicLaw != null){
-        title = title + (oAuthorization.publicLaw ? ("Public Law " + (oAuthorization.publicLaw.congressCode || "")) : "") + "-" + (oAuthorization.publicLaw ? (oAuthorization.publicLaw.number || "") : "") + ", ";
+
+      // could be its own method
+      if (authorization.publicLaw != null) {
+        var lawText = [];
+        if (authorization.publicLaw.congressCode) {
+          lawText.push('Public Law ' + authorization.publicLaw.congressCode);
+        }
+        if (authorization.publicLaw.number) {
+          lawText.push(authorization.publicLaw.number);
+        }
+        let lawString = lawText.join('-');
+        title.push(lawString);
       }
-      if (oAuthorization.statute != null){
-        title = title + (oAuthorization.statute.volume ? ("Statute " + (oAuthorization.statute.volume)) : "") + "-" + (oAuthorization.statute.page ? (oAuthorization.statute.page) : "") + ", ";
+
+      // could be its own method
+      if (authorization.statute != null){
+        var statuteText = [];
+        if (authorization.statute.volume) {
+          statuteText.push('Statute ' + authorization.statute.volume);
+        }
+        if (authorization.statute.page) {
+          statuteText.push(authorization.statute.page);
+        }
+        let statuteString = statuteText.join('-');
+        title.push(statuteText);
       }
-      if (oAuthorization.USC != null){
-        title = title + (oAuthorization.USC.title ? (oAuthorization.USC.title) : "") + " US Code " + (oAuthorization.USC.section ? (oAuthorization.USC.section) : "") + ", ";
+
+      // could be its own method
+      if (authorization.USC != null){
+        var authorizationText = [];
+        if (authorization.USC.title) {
+          authorizationText.push(authorization.USC.title);
+        }
+        if (authorization.USC.section) {
+          authorizationText.push('US Code ' + authorization.USC.section);
+        }
+        let authorizationString = authorizationText.join(' ');
+        title.push(authorizationString);
       }
     });
-    title = title.slice(0, -2);
+    title = title.join(', ');
+    // title = title.slice(0, -2);
     return title;
+  }
+
+  getAmendedBy(authorization) {
+
   }
 }
