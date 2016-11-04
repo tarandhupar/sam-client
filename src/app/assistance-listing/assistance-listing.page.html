@@ -158,7 +158,7 @@
 
       <div *ngIf="oProgram && oProgram.data && aDictionaries && aDictionaries['applicant_types']" class="designation">
         <h4>Designations</h4>
-        <span *ngFor="let typeID of oProgram.data.eligibility?.applicant?.types; let isLast = last">{{lookupTypeByID('applicant_types', typeID)}}{{isLast ? '' : ', '}}</span>
+        <span *ngFor="let item of oProgram.data.eligibility?.applicant?.types | filterMultiArrayObject:aDictionaries.applicant_types:'element_id':false:''; let isLast = last">{{ item.value }}{{isLast ? '' : ', '}}</span>
       </div>
 
       <p *ngIf="oProgram">
@@ -170,7 +170,7 @@
 
       <div *ngIf="oProgram && oProgram.data && aDictionaries && aDictionaries['beneficiary_types']" class="designation">
         <h4>Designations</h4>
-        <span *ngFor="let typeID of oProgram.data.eligibility?.beneficiary?.types; let isLast = last">{{lookupTypeByID('beneficiary_types', typeID)}}{{isLast ? '' : ', '}}</span>
+        <span *ngFor="let item of oProgram.data.eligibility?.beneficiary?.types | filterMultiArrayObject:aDictionaries.beneficiary_types:'element_id':false:''; let isLast = last">{{ item.value }}{{isLast ? '' : ', '}}</span>
       </div>
 
       <p *ngIf="oProgram">
@@ -189,7 +189,7 @@
 
       <div *ngIf="oProgram && oProgram.data && aDictionaries && aDictionaries['assistance_usage_types']" class="designation">
         <h4>Designations</h4>
-        <span *ngFor="let typeID of oProgram.data.eligibility?.applicant?.assistanceUsageTypes; let isLast = last">{{lookupTypeByID('assistance_usage_types', typeID)}}{{isLast ? '' : ', '}}</span>
+        <span *ngFor="let item of oProgram.data.eligibility?.applicant?.assistanceUsageTypes | filterMultiArrayObject:aDictionaries.assistance_usage_types:'element_id':false:''; let isLast = last">{{ item.value }}{{isLast ? '' : ', '}}</span>
       </div>
 
       <p *ngIf="oProgram">
