@@ -2,20 +2,18 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'samFooter',
-  template:`<footer class="m_T-6x" id="sam-footer" aria-label="footer-navigation">
-              <div class="sam-footer-wrapper">
-                <nav class="usa-grid sam-footer-body">
-                  <div class="sam-footer-logo usa-width-one-sixth">
-                    <a href="http://www.gsa.gov"><span>General Services Administration Website</span></a>
-                  </div>
-                </nav>
-              </div>
-            </footer>`,
+  templateUrl:'footer.template.html',
+
+  styles: [
+    '.sam-footer-head{color: #fff}',
+    '.sam-footer-links{font-size:13px}'
+  ]
 })
 export class SamFooterComponent {
 
   @Input() labelname: string;
 
+  private SITE_ROOT: string = 'https://transition.sam.gov';
 
   constructor() {
   }
