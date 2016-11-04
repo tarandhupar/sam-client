@@ -38,5 +38,13 @@ describe('The Sam Alert component', () => {
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.usa-alert')).nativeElement.className).toContain("usa-alert-success");
   });
+  it('check collapse description details', () => {
+    component.showDescription = false;
+    fixture.detectChanges();
+    expect(fixture.debugElement.query(By.css('.usa-alert')).nativeElement.className).toContain("usa-alert-success");
+    expect(fixture.debugElement.query(By.css('.usa-alert-heading')).nativeElement.innerHTML).toBe("i-am-a-title");
+    expect(fixture.debugElement.query(By.css('.usa-alert-text'))).toBe(null);
+
+  });
 
 });

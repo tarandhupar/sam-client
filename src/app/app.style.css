@@ -7,3 +7,7 @@ html, body{
 .occupy-page{
   min-height: 90vh;
 }
+
+.capitalize {
+  text-transform: capitalize;
+}

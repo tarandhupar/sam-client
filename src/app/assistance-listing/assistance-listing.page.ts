@@ -7,11 +7,12 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 
 import * as _ from 'lodash';
 import * as d3 from 'd3';
+import {forEach} from "@angular/router/src/utils/collection";
 
 
 @Component({
   moduleId: __filename,
-  templateUrl: 'assistance-listing.component.html',
+  templateUrl: 'assistance-listing.page.html',
   styleUrls: ['assistance-listing.style.css'],
   providers: [
     FHService,
@@ -64,7 +65,7 @@ export class ProgramPage implements OnInit {
           this.oProgram = res;
 
           //check if this program has changed in this FY
-          if ((new Date(this.oProgram.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
+          if ((new Date(this.oProgram.publishedDate)).getFullYear() < new Date().getFullYear()) {
               this.aAlert.push({"labelname":"not-updated-since", "config":{ "type": "warning", "title": "", "description": "Note: \n\
 This Federal Assistance Listing was not updated by the issuing agency in "+(new Date()).getFullYear()+". \n\
 Please contact the issuing agency listed under \"Contact Information\" for more information." }});
@@ -74,33 +75,33 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
             for (var key in res) {
               this.aDictionaries[key] = res[key];
             }
-            if(this.oProgram.program.data.financial.obligations){
-              this.createVisualization(this.prepareVisualizationData(this.oProgram.program.data.financial.obligations));
+            if(this.oProgram.data.financial.obligations){
+              this.createVisualization(this.prepareVisualizationData(this.oProgram.data.financial.obligations));
             }
           });
           //get authorizations and group them by id
-          var auths = this.oProgram.program.data.authorizations;
+          var auths = this.oProgram.data.authorizations;
           this.authorizationIdsGrouped = _.values(_.groupBy(auths, 'authorizationId'));
-          this.oFHService.getFederalHierarchyById(res.program.data.organizationId,false,false)
+          this.oFHService.getFederalHierarchyById(res.data.organizationId,false,false)
             .subscribe(res => {
               this.oFederalHierarchy = res;
             });
-          this.oFHService.getFederalHierarchyById(res.program.data.organizationId,true,false)
+          this.oFHService.getFederalHierarchyById(res.data.organizationId,true,false)
             .subscribe(res => {
               this.federalHierarchyWithParents = res;
             });
-          this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(id, this.oProgram.program.data.programNumber)
+          this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(id, this.oProgram.data.programNumber)
             .subscribe(res => {
-              this.oHistoricalIndex = res;
+              this.oHistoricalIndex = res._embedded ? res._embedded.historicalIndex : [];
           });
-          if (this.oProgram.program.data.relatedPrograms.flag != "na") {
-            for (let programId of this.oProgram.program.data.relatedPrograms.relatedTo) {
+          if (this.oProgram.data.relatedPrograms.flag != "na") {
+            for (let programId of this.oProgram.data.relatedPrograms.relatedTo) {
               this.oProgramService.getLatestProgramById(programId).subscribe(relatedFal => {
-                if(typeof relatedFal.program !== 'undefined')
+                if(typeof relatedFal !== 'undefined')
                 {
                   this.aRelatedProgram.push({
-                    "programNumber": relatedFal.program.data.programNumber,
-                    "id": relatedFal.program.data._id
+                    "programNumber": relatedFal.data.programNumber,
+                    "id": relatedFal.data._id
                   });
                 }
               })
@@ -113,6 +114,16 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       );
 
     });
+  }
+
+  lookupTypeByID(dictionary_name, dictionary_id) {
+    for (var type of this.aDictionaries[dictionary_name]) {
+      if (type['element_id'] === dictionary_id) {
+        return type['value'];
+      }
+    }
+
+    return 'Type not found';
   }
 
 
@@ -148,9 +159,10 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           if(item.ena){ ena = true; }
           if(item.nsi){ nsi = true; }
         });
-        return { 
-          "ena": ena, 
-          "nsi": nsi, 
+        return {
+          "items": values.length,
+          "ena": ena,
+          "nsi": nsi,
           "total": d3.sum(values, d => +d.amount)
         }
       })
@@ -169,8 +181,8 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           year = item.year;
         });
         return {
-          "year": formatYear(String(year),isEstimate), 
-          "total": d3.sum(values, d => +d.amount) 
+          "year": formatYear(String(year),isEstimate),
+          "total": d3.sum(values, d => +d.amount)
         }
       })
       .entries(financialData);
@@ -186,16 +198,19 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       .key(d => d.year)
       .sortKeys(d3.ascending)
       .rollup(values => {
-        let ena = false,
+        let obligations = d3.map(),
+            ena = false,
             nsi = false;
         values.forEach(item => {
           if(item.ena){ ena = true; }
           if(item.nsi){ nsi = true; }
+          obligations.set(item.obligation, obligations.get(item.obligation) ? obligations.get(item.obligation) + 1 : 1);
         });
-        return { 
-          "ena": ena, 
-          "nsi": nsi, 
-          "total": d3.sum(values, d => +d.amount) 
+        return {
+          "obligations": obligations.entries(),
+          "ena": ena,
+          "nsi": nsi,
+          "total": d3.sum(values, d => +d.amount)
         }
       })
       .entries(financialData);
@@ -363,9 +378,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           return d.values[yearLoop].value.total;
         });
 
-      return { 
-        "series": stack(data), 
-        "keys": stackKeys.values() 
+      return {
+        "series": stack(data),
+        "keys": stackKeys.values()
       };
     }
 
@@ -411,7 +426,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .append("td")
         .html(d => {
           if(d.value.ena && !d.value.total){
-            return actualOrEstimate(d.key);
+            return d.value.items > 1 ? "Not Available" : actualOrEstimate(d.key);
           }else if(d.value.nsi && !d.value.total){
             return "Not Separately Identifiable";
           }else{
@@ -448,13 +463,15 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           d.values.forEach(item => {
             item.values.forEach( innerItem =>{
               if(innerItem.explanation){
-                explanation +=  "FY " + item.key.slice(2,4) + 
+                explanation +=  "FY " + item.key.slice(2,4) +
                                 " Exp: " + innerItem.explanation + ", ";
               }
             });
           });
-          if(!d.key && !explanation){
-            // If additional info content its empty remove row
+          if(!d.key && !explanation && d.values[0].values[0].quantity == 1){
+            // If additional info content its empty
+            // and there is not an optional explanation
+            // and if there is only one obligation, remove row
             this.parentNode.removeChild(this);
           }
           return "<td>" + d.key + ( explanation  ? "(" + explanation.slice(0,-2) +  ")" : "") +  "</td>";
@@ -490,21 +507,28 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .enter()
         .append("td")
         .html(d => {
+          let maxNumberOfObligationTypesFound = d3.max(d.value.obligations, item => item.value);
           if(d.value.ena || d.value.nsi ){
-            return d.value.total == 0 
-                    ? actualOrEstimate(d.key)
+            return d.value.total == 0
+                    ? !d.value.ena
+                      ? "Not Separately Identifiable"
+                      : maxNumberOfObligationTypesFound > 1
+                        ? "Not Available"
+                        : actualOrEstimate(d.key)
                     : d3.format("($,")(d.value.total);
           }
           return d3.format("($,")(d.value.total);
         });
     })();
-    
+
   }
 
   prepareVisualizationData(financialData){
 
     let self = this;
-    let formattedFinancialData = []
+    let formattedFinancialData = [];
+    let obligations = d3.map();
+    let numberOfYears = 3;
 
     function getAssistanceType(id): string {
       return self.FilterMultiArrayObjectPipe.transform([id], self.aDictionaries.assistance_type, 'element_id', true, 'elements')[0].value;
@@ -518,6 +542,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         }else if(item.questions.salary_or_expense.flag === "yes"){
           obligation = "Salary or Expense";
         }
+
+        obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
+
         let financialItem = {
           "obligation": obligation,
           "info": item.additionalInfo ? item.additionalInfo.content || "" : "",
@@ -530,6 +557,10 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         }
         formattedFinancialData.push(financialItem);
       }
+    });
+
+    formattedFinancialData.forEach(function(item){
+      item.quantity = obligations.get(item.obligation) / numberOfYears;
     });
 
     return formattedFinancialData;
