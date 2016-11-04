@@ -156,12 +156,22 @@
 
       <h3>Applicant Eligibility:</h3>
 
+      <div *ngIf="oProgram && oProgram.data && aDictionaries && aDictionaries['applicant_types']" class="designation">
+        <h4>Designations</h4>
+        <span *ngFor="let typeID of oProgram.data.eligibility?.applicant?.types; let isLast = last">{{lookupTypeByID('applicant_types', typeID)}}{{isLast ? '' : ', '}}</span>
+      </div>
+
       <p *ngIf="oProgram">
         {{oProgram.data.eligibility?.applicant?.additionalInfo?.content}}
       </p>
 
 
       <h3>Beneficiary Eligibility:</h3>
+
+      <div *ngIf="oProgram && oProgram.data && aDictionaries && aDictionaries['beneficiary_types']" class="designation">
+        <h4>Designations</h4>
+        <span *ngFor="let typeID of oProgram.data.eligibility?.beneficiary?.types; let isLast = last">{{lookupTypeByID('beneficiary_types', typeID)}}{{isLast ? '' : ', '}}</span>
+      </div>
 
       <p *ngIf="oProgram">
         {{oProgram.data.eligibility?.beneficiary?.additionalInfo?.content}}
@@ -176,6 +186,11 @@
 
 
       <h3>Use of Assistance:</h3>
+
+      <div *ngIf="oProgram && oProgram.data && aDictionaries && aDictionaries['assistance_usage_types']" class="designation">
+        <h4>Designations</h4>
+        <span *ngFor="let typeID of oProgram.data.eligibility?.applicant?.assistanceUsageTypes; let isLast = last">{{lookupTypeByID('assistance_usage_types', typeID)}}{{isLast ? '' : ', '}}</span>
+      </div>
 
       <p *ngIf="oProgram">
         {{ oProgram.data.usage?.rules?.content }}
@@ -425,8 +440,8 @@
 
         <!-- matching requirements -->
         <span class="m-a-0" *ngIf="oProgram.data.assistance?.matching?.flag == 'yes'">
-          Matching Requirements: Percent: {{oProgram.data.assistance.matching.percent}}
-          {{oProgram.data.assistance.matching.otherInfo?.content}}
+          Matching Requirements: <ng-container *ngIf="oProgram.data?.assistance?.matching?.percent > 0">Percent: {{oProgram.data?.assistance?.matching?.percent}}</ng-container>
+          {{oProgram.data?.assistance?.matching?.otherInfo?.content}}
           <br>
         </span>
 
