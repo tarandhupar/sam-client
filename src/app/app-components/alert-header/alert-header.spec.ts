@@ -3,9 +3,10 @@ import {Observable} from 'rxjs';
 import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
-import {AlertListComponent} from './alert-list.component';
+import {AlertHeaderComponent} from './alert-header.component';
 import {SystemAlertsService} from "api-kit";
 import {SamUIKitModule} from 'ui-kit';
+import {RouterTestingModule} from "@angular/router/testing";
 
 let error = {
   "title" : "The is an error", 
@@ -49,32 +50,20 @@ let systemAlertsStub: any = {
 };
 
 describe('The AlertList component', () => {
-  let component:AlertListComponent;
+  let component:AlertHeaderComponent;
   let fixture:any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AlertListComponent],
-      imports: [SamUIKitModule],
+      declarations: [AlertHeaderComponent],
+      imports: [SamUIKitModule,RouterTestingModule],
       providers: [
         { provide: SystemAlertsService, useValue: systemAlertsStub },
       ]
     });
 
-    fixture = TestBed.createComponent(AlertListComponent);
+    fixture = TestBed.createComponent(AlertHeaderComponent);
     component = fixture.componentInstance;
-  });
-
-  it('should show 5 alerts', done => {
-    fixture.whenStable().then(() => {
-      fixture.detectChanges();
-      let alerts = fixture.debugElement.queryAll(By.css('.usa-alert'));
-      expect(alerts.length).toBe(5);
-
-      let alertErrors = fixture.debugElement.queryAll(By.css('.usa-alert-error'));
-      expect(alertErrors.length).toBe(2);
-      done();
-    });
   });
 
   it('should check for alerts every X minutes', () => {

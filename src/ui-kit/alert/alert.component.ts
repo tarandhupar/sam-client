@@ -23,8 +23,8 @@ export class SamAlertComponent {
   @Input() title: string;
   @Input() description: string;
   @Input() showDescription: boolean = true;
-  @Input() showLinks: boolean = false;
-  @Output() expand: EventEmitter<any> = new EventEmitter<any>();
+  @Input() showClose: boolean = false;
+  @Input() showGoToAlerts: boolean = false;
   @Output() dismiss: EventEmitter<any> = new EventEmitter<any>();
 
 
@@ -59,18 +59,7 @@ export class SamAlertComponent {
     return false;
   }
 
-  private onExpandClick(){
-    this.showDescription = !this.showDescription;
-    this.expand.emit(this.showDescription);
-    if(this.showDescription){
-      this.expandLinkText = "Expand";
-    }else{
-      this.expandLinkText = "Collapse";
-    }
-  }
-
   private onDismissClick(){
     this.dismiss.emit();
   }
-
 }

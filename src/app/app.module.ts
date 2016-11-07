@@ -14,6 +14,7 @@ import { ROUTES } from './app.route';
 import { App } from './app.component';
 import { AppState } from './app.service';
 import { HomeModule } from './application-content/home';
+import { AlertsModule } from './application-content/alerts'
 import { PageNotFoundErrorPage } from './application-content/404';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
@@ -50,6 +51,7 @@ const APP_PROVIDERS = [
     ProgramModule,
     OpportunityModule,
     HomeModule,
+    AlertsModule,
     SearchModule,
     UIKitDemoModule,
 

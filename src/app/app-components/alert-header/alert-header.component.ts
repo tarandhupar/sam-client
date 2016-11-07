@@ -3,16 +3,15 @@ import { SystemAlertsService } from 'api-kit';
 import { Cookie } from 'ng2-cookies'
 
 @Component({
-  selector: 'alertList',
-  templateUrl: 'alert-list.template.html',
-  styleUrls: [ 'alert-list.style.css' ]
+  selector: 'alertHeader',
+  templateUrl: 'alert-header.template.html',
+  styleUrls: [ 'alert-header.style.css' ]
 })
-export class AlertListComponent {
+export class AlertHeaderComponent {
 
   public REFRESH_INTERVAL_MINUTES = 10;
-  private intervalId: any = null;
-  private showDescriptions: boolean = false;
 
+  private intervalId: any = null;
   private alerts: any[] = [];
 
   constructor(private systemAlerts: SystemAlertsService) { }
@@ -21,9 +20,12 @@ export class AlertListComponent {
     if (Cookie.get('dismissAlerts')) {
       this.alerts = [];
     } else {
-      this.intervalId = setInterval(() => {
-        this.fetchAlerts();
-      }, 1000 * 60 * this.REFRESH_INTERVAL_MINUTES);
+      this.intervalId = setInterval(
+        () => {
+          this.fetchAlerts();
+        },
+        1000 * 60 * this.REFRESH_INTERVAL_MINUTES
+      );
 
       this.fetchAlerts();
     }
@@ -39,10 +41,6 @@ export class AlertListComponent {
     Cookie.set('dismissAlerts', 'true', 0);
     clearInterval(this.intervalId);
     this.alerts = [];
-  }
-
-  onExpand() {
-    this.showDescriptions = !this.showDescriptions;
   }
 
   mapResponseToAlertConfig(res) {

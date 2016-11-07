@@ -7,7 +7,7 @@ import { routing } from './ui-kit-demo.route';
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import {UIKitDemoPage} from "./ui-kit-demo.page";
-import { AlertListComponent } from "app/app-components/alert-list/alert-list.component";
+import { AlertHeaderComponent } from "../../app-components/alert-header/alert-header.component";
 
 @NgModule({
   imports: [
@@ -20,7 +20,7 @@ import { AlertListComponent } from "app/app-components/alert-list/alert-list.com
   ],
   exports: [],
   declarations: [
-    AlertListComponent,
+    AlertHeaderComponent,
     UIKitDemoPage
   ],
   providers: [],

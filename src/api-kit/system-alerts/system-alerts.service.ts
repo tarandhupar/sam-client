@@ -22,8 +22,8 @@ export class SystemAlertsService {
       // return this.oAPIService.call(oApiParam);
 
       let error = {
-        "title" : "The is an error",
-        "summary" : "The systems will be down for a while. During this time you cannot search for new government opportunities. The system is expected to be back in no more than 2 week and no less then 48 hours. This error will go away where services are restored.",
+        "title" : "System Outages",
+        "summary" : "The system will be down for a while. During this time you cannot search for new government opportunities. The system is expected to be back in no more than 2 week and no less then 48 hours. This error will go away where services are restored.",
         "category" : "outages",
         "description" : "The systems will be down for a while. During this time you cannot search for new government opportunities. The system is expected to be back in no more than 2 week and no less then 48 hours. This error will go away where services are restored.",
         "severity" : "ERROR",
