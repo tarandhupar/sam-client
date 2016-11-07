@@ -7,7 +7,6 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 
 import * as _ from 'lodash';
 import * as d3 from 'd3';
-import {forEach} from "@angular/router/src/utils/collection";
 
 
 @Component({
@@ -114,16 +113,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       );
 
     });
-  }
-
-  lookupTypeByID(dictionary_name, dictionary_id) {
-    for (var type of this.aDictionaries[dictionary_name]) {
-      if (type['element_id'] === dictionary_id) {
-        return type['value'];
-      }
-    }
-
-    return 'Type not found';
   }
 
 
