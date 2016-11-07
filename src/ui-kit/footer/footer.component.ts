@@ -12,9 +12,7 @@ import { Component, Input } from '@angular/core';
 export class SamFooterComponent {
 
   @Input() labelname: string;
-
-  private SITE_ROOT: string = 'https://transition.sam.gov';
-
+  
   constructor() {
   }
 
