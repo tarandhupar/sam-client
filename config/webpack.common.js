@@ -178,7 +178,7 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        loaders: ['raw-loader', 'resolve-url', 'sass?sourceMap'] // sass-loader not scss-loader
+        loaders: ['raw-loader', 'sass?sourceMap'] // sass-loader not scss-loader
         //loaders: ["style", "css", "resolve-url", "sass?sourceMap"]
       },
 
@@ -190,10 +190,6 @@ module.exports = {
       }
     ]
 
-  },
-
-  sassLoader: {
-    //includePaths: [path.resolve(__dirname, "./src/assets")]
   },
 
   /*
@@ -235,10 +231,10 @@ module.exports = {
         from: 'src/assets',
         to: 'assets'
       },
-      // {
-      //   from: 'node_modules/samwds/dist',
-      //   to: 'assets'
-      // }
+      {
+        from: 'node_modules/samwds/dist',
+        to: ''
+      }
     ]),
 
     /*
