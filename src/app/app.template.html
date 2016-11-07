@@ -1,6 +1,6 @@
 <!-- includes HTML for app component-->
-<samBanner #banner></samBanner>
-<div [style.padding-top]="banner.showBanner ? '24px' : ''">
+<samBanner #banner *ngIf="!isHeaderWithSearch"></samBanner>
+<div [style.padding-top]="isHeaderWithSearch ? '' : '24px'">
   <samSearchHeader *ngIf="isHeaderWithSearch" (searchEvent)="onHeaderSearchEvent($event)" [keyword]="keyword" [filterValue]="index"></samSearchHeader>
   <samHeader *ngIf="!isHeaderWithSearch"></samHeader>
 </div>
