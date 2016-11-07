@@ -4,6 +4,7 @@
 
 const webpack = require('webpack');
 const helpers = require('./helpers');
+const path = require('path');
 
 /*
  * Webpack Plugins
@@ -136,16 +137,6 @@ module.exports = {
         exclude: [/\.(spec|e2e)\.ts$/]
       },
 
-      /// Sweet Sassy Malassy
-      {
-        test: /\.scss$/,
-        //exclude: /node_modules/,
-        loaders: ['raw-loader', 'sass-loader'] // sass-loader not scss-loader
-      },
-
-      /// for fonts
-      { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=10000' },
-
       /*
        * Json loader support for *.json files.
        *
@@ -166,6 +157,12 @@ module.exports = {
         loaders: ['to-string-loader', 'css-loader']
       },
 
+      /// for fonts
+      {
+        test: /\.(woff2?|ttf|eot|svg)$/,
+        loader: 'url?limit=10000'
+      },
+
       /* Raw loader support for *.html
        * Returns file content as string
        *
@@ -177,6 +174,14 @@ module.exports = {
         exclude: [helpers.root('src/index.html')]
       },
 
+      /// Sweet Sassy Malassy
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        loaders: ['raw-loader', 'resolve-url', 'sass?sourceMap'] // sass-loader not scss-loader
+        //loaders: ["style", "css", "resolve-url", "sass?sourceMap"]
+      },
+
       /* File loader for supporting images, for example, in CSS files.
       */
       {
@@ -185,6 +190,10 @@ module.exports = {
       }
     ]
 
+  },
+
+  sassLoader: {
+    //includePaths: [path.resolve(__dirname, "./src/assets")]
   },
 
   /*

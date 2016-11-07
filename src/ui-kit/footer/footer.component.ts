@@ -11,6 +11,7 @@ import { Component, Input } from '@angular/core';
                 </nav>
               </div>
             </footer>`,
+  styleUrls: ['footer.scss']
 })
 export class SamFooterComponent {
 
