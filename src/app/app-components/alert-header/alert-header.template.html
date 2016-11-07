@@ -1,0 +1,5 @@
+<div *ngFor="let alert of alerts; let i=index">
+  <samAlert *ngIf="i===0" [type]="alert.type" [title]="alert.title" [description]="alert.description"
+            (dismiss)="onDismiss()" (expand)="onExpand()" [showGoToAlerts]="alerts.length > 0" [showClose]="true">
+  </samAlert>
+</div>
