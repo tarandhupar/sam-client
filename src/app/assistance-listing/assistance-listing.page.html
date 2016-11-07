@@ -2,7 +2,7 @@
 
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
-    <div *ngIf="federalHierarchyWithParents">
+    <div *ngIf="federalHierarchyWithParents" class="p_B-4x">
       <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">
         <img class="logo" id="department-logo" [src]="federalHierarchyWithParents.hierarchy[0].hierarchy[0]._links.logo.href" alt="HTML5 Icon">
       </div>
@@ -13,10 +13,9 @@
         <img class="logo" [src]="federalHierarchyWithParents._links.logo.href" alt="HTML5 Icon">
       </div>
     </div>
-    <br><br>
     <!--<img src="/assets/logo.png">-->
     <!--Side Navigation-->
-    <nav sam-sticky limit=1200>
+    <nav sam-sticky limit=1200 class="m_T-5x">
       <ul class="usa-sidenav-list">
         <li><a href="{{currentUrl}}#overview">Overview</a></li>
         <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
@@ -45,16 +44,16 @@
         <strong>Popular Name:</strong> {{oProgram.data.alternativeNames[0]}}
       </p>
     </div>
-    <p *ngIf="oProgram">
-      <span *ngIf="oFederalHierarchy"><strong class="capitalize">{{oFederalHierarchy.type}}: </strong>{{oFederalHierarchy.name}}<br></span>
-        <span><strong>FAL Number: </strong>{{oProgram.data.programNumber}}<br></span>
-        <span><strong>Related Federal Assistance: </strong>
-            <span *ngIf="aRelatedProgram && oProgram.data.relatedPrograms.flag != 'na' && aRelatedProgram.length > 0">
-                <span *ngFor="let item of aRelatedProgram; let isLast = last"><a href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}</span>
-            </span>
-          <span *ngIf="oProgram.data.relatedPrograms.flag == 'na' || aRelatedProgram.length == 0">Not Applicable.</span>
+    <span *ngIf="oProgram">
+      <div *ngIf="oFederalHierarchy"><strong class="capitalize">{{oFederalHierarchy.type}}: </strong>{{oFederalHierarchy.name}}</div>
+      <div><strong>FAL Number: </strong>{{oProgram.data.programNumber}}</div>
+      <div><strong>Related Federal Assistance: </strong>
+        <span *ngIf="aRelatedProgram && oProgram.data.relatedPrograms.flag != 'na' && aRelatedProgram.length > 0">
+          <span *ngFor="let item of aRelatedProgram; let isLast = last"><a href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}</span>
         </span>
-    </p>
+        <span *ngIf="oProgram.data.relatedPrograms.flag == 'na' || aRelatedProgram.length == 0">Not Applicable.</span>
+      </div>
+    </span>
     <h2 id="overview">Overview</h2>
     <!--Objectives-->
     <section *ngIf="oProgram">
@@ -66,20 +65,18 @@
 
       <h3>Examples of Funded Projects:</h3>
 
-      <p *ngIf="oProgram?.data.projects?.flag == 'yes'">
-        <span *ngFor="let item of oProgram?.data.projects.list | keys">
+      <span *ngIf="oProgram?.data.projects?.flag == 'yes'">
+        <div *ngFor="let item of oProgram?.data.projects.list | keys">
           <span *ngIf="item.value.content?.actual">
             Fiscal Year {{item.key}}: {{item.value.content?.actual}}
           </span>
           <!--          <span *ngIf="item.value.content.projection">
                       , Projection: {{item.value.content.projection}}
                     </span>-->
-        <br />
-        </span>
-      </p>
+        </div>
+      </span>
 
       <p *ngIf="oProgram?.data.projects?.flag == 'na' || oProgram?.data.projects?.flag == 'no'"> Not Applicable</p>
-
     </section>
 
     <h2 id="authorizations">Authorizations</h2>
@@ -106,13 +103,12 @@
 
       <h3>Accomplishments:</h3>
 
-      <p *ngIf="oProgram?.data.postAward?.accomplishments?.flag =='yes'">
-        <span *ngFor="let item of oProgram.data.postAward.accomplishments.list | keys">
-          <span *ngIf="item.value?.content?.actual && item.value.content?.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</span><br>
-          <span *ngIf="item.value?.content?.projection && item.value?.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</span>
-          <br>
-        </span>
-      </p>
+      <span *ngIf="oProgram?.data.postAward?.accomplishments?.flag =='yes'">
+        <div *ngFor="let item of oProgram.data.postAward.accomplishments.list | keys">
+          <div *ngIf="item.value?.content?.actual && item.value.content?.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</div>
+          <div *ngIf="item.value?.content?.projection && item.value?.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</div>
+        </div>
+      </span>
 
       <p *ngIf="oProgram?.data.postAward?.accomplishments?.flag !='yes'">
         Not Applicable.
@@ -206,24 +202,23 @@
 
       <h3>Deadlines:</h3>
 
-      <p *ngIf="oProgram">
-          <span *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'yes'">
-              <!-- repeat over all deadlines. -->
-              <span *ngFor="let deadline of oProgram.data.application?.deadlines?.submission?.list">
-                {{deadline.start | dateFormat: 'MMM DD, YYYY'}} to {{deadline.end | dateFormat: 'MMM DD, YYYY'}}
-                {{deadline.description}}
-                <br>
-              </span>
-            <!-- additional deadline info-->
-                {{oProgram.data.application?.deadlines?.submission?.additionalInfo?.content}}
-            </span>
-            <span *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'no'">
-              Not Applicable.
-            </span>
-            <span *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'contact'">
-              Contact the headquarters or regional office, as appropriate for application deadlines
-            </span>
-      </p>
+      <span *ngIf="oProgram">
+        <span *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'yes'">
+          <!-- repeat over all deadlines. -->
+          <div *ngFor="let deadline of oProgram.data.application?.deadlines?.submission?.list">
+            {{deadline.start | dateFormat: 'MMM DD, YYYY'}} to {{deadline.end | dateFormat: 'MMM DD, YYYY'}}
+            {{deadline.description}}
+          </div>
+          <!-- additional deadline info-->
+          {{oProgram.data.application?.deadlines?.submission?.additionalInfo?.content}}
+        </span>
+        <div *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'no'">
+          Not Applicable.
+        </div>
+        <div *ngIf="oProgram.data.application?.deadlines?.submission?.flag == 'contact'">
+          Contact the headquarters or regional office, as appropriate for application deadlines
+        </div>
+      </span>
 
       <h3>Preapplication Coordination:</h3>
 
@@ -418,60 +413,51 @@
         <span *ngIf="oProgram.data.postAward?.documents?.flag !='yes'"> Not Applicable.</span>
       </p>
 
-      <h3>Formula and Matching Requirements:</h3>
-      <p *ngIf="oProgram">
+      <h3 class="m_B-5x">Formula and Matching Requirements:</h3>
+      <span *ngIf="oProgram">
         <!-- statutory formula-->
-        <span class="m-a-0" *ngIf="oProgram.data.assistance?.formula?.flag == 'yes'">
+        <div class="m-a-0" *ngIf="oProgram.data.assistance?.formula?.flag == 'yes'">
           Statutory Formula: Title {{oProgram.data.assistance.formula.title}} Chapter {{oProgram.data.assistance.formula.chapter}}
           Part {{oProgram.data.assistance.formula.part}} Subpart {{oProgram.data.assistance.formula.subPart}} Public Law {{oProgram.data.assistance.formula.publicLaw}}
           {{oProgram.data.assistance.formula.additionalInfo?.content}}
-          <br>
-        </span>
+        </div>
 
-        <span class="m-a-0" *ngIf="oProgram.data.assistance?.formula?.flag == 'no'">
+        <div class="m-a-0" *ngIf="oProgram.data.assistance?.formula?.flag == 'no'">
           This federal assistance listing has no statutory formula
-          <br>
-        </span>
+        </div>
 
-        <span class="m-a-0" *ngIf="oProgram.data.assistance?.formula?.flag == 'na'">
+        <div class="m-a-0" *ngIf="oProgram.data.assistance?.formula?.flag == 'na'">
           Statuary formula is not applicable to this federal assistance listing.
-          <br>
-        </span>
+        </div>
 
         <!-- matching requirements -->
-        <span class="m-a-0" *ngIf="oProgram.data.assistance?.matching?.flag == 'yes'">
+        <div class="m-a-0" *ngIf="oProgram.data.assistance?.matching?.flag == 'yes'">
           Matching Requirements: <ng-container *ngIf="oProgram.data?.assistance?.matching?.percent > 0">Percent: {{oProgram.data?.assistance?.matching?.percent}}</ng-container>
           {{oProgram.data?.assistance?.matching?.otherInfo?.content}}
-          <br>
-        </span>
+        </div>
 
-        <span class="m-a-0" *ngIf="oProgram.data.assistance?.matching?.flag == 'no'">
+        <div class="m-a-0" *ngIf="oProgram.data.assistance?.matching?.flag == 'no'">
           This program has no matching requirements.
-          <br>
-        </span>
+        </div>
 
-        <span class="m-a-0" *ngIf="oProgram.data.assistance?.matching?.flag == 'na'">
+        <div class="m-a-0" *ngIf="oProgram.data.assistance?.matching?.flag == 'na'">
           Matching requirements are not applicable to this federal assistance listing.
-          <br>
-        </span>
+        </div>
 
         <!-- moe-->
-        <span class="m-a-0" *ngIf="oProgram.data.assistance?.moe?.flag == 'yes'">
+        <div class="m-a-0" *ngIf="oProgram.data.assistance?.moe?.flag == 'yes'">
           This program has MOE requirements, see funding agency for further details. Additional Information:
           {{oProgram.data.assistance.moe.additionalInfo?.content}}
-          <br>
-        </span>
+        </div>
 
-        <span class="m-a-0" *ngIf="oProgram.data.assistance?.moe?.flag ==='no'">
+        <div class="m-a-0" *ngIf="oProgram.data.assistance?.moe?.flag ==='no'">
           This program does not have MOE requirements.
-          <br>
-        </span>
+        </div>
 
-        <span class="m-a-0" *ngIf="oProgram.data.assistance?.moe?.flag === 'na'">
+        <div class="m-a-0" *ngIf="oProgram.data.assistance?.moe?.flag === 'na'">
           MOE requirements are not applicable to this federal assistance listing.
-          <br>
-        </span>
-      </p>
+        </div>
+      </span>
     </section>
 
     <!--Contact information-->
@@ -480,21 +466,24 @@
 
       <div *ngIf="oProgram">
         <address>
-          <h3>Regional or Local Office:</h3><br>
+          <h3 class="m_B-5x">Regional or Local Office:</h3>
           <span *ngIf="oProgram.data.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{oProgram.data.contacts['local'].additionalInfo?.content}}</span>
-          <span *ngIf="oProgram.data.contacts?.local?.flag == 'none'"> None. {{oProgram.data.contacts['local'].additionalInfo?.content}}</span> <br>
-          <h3>Headquarters Office:</h3><br>
+          <span *ngIf="oProgram.data.contacts?.local?.flag == 'none'"> None. {{oProgram.data.contacts['local'].additionalInfo?.content}}</span>
+
+          <h3 class="m_B-5x">Headquarters Office:</h3>
 
           <div *ngFor="let item of oProgram.data.contacts?.list">
 
-            {{item.title}} {{item.fullName}} <br>{{item.address}}, <br> {{item.city}}, {{item.state}} {{item.zip}}<br>
-            <strong>Email:</strong> <a href="mailto:{{item.email}}">{{item.email}}</a> <br>
-            <strong>Phone:</strong> {{item.phone}}<br>
-            <span *ngIf="item.fax"><strong>Fax:</strong> {{item.fax}}<br></span><br>
+            <div>{{item.title}} {{item.fullName}} <br>{{item.address}}, <br> {{item.city}}, {{item.state}} {{item.zip}}</div>
+            <div><strong>Email:</strong> <a href="mailto:{{item.email}}">{{item.email}}</a></div>
+            <div><strong>Phone:</strong> {{item.phone}}</div>
+            <div *ngIf="item.fax"><strong>Fax:</strong> {{item.fax}}</div>
           </div>
-          <strong>Website: </strong>
-          <span *ngIf="!oProgram.data.website || oProgram.data.website == null ">No Data Available</span>
-          <span *ngIf="oProgram.data.website">{{oProgram.data.website}}</span>
+          <div class="m_T-5x">
+            <strong>Website: </strong>
+            <span *ngIf="!oProgram.data.website || oProgram.data.website == null ">No Data Available</span>
+            <span *ngIf="oProgram.data.website">{{oProgram.data.website}}</span>
+          </div>
         </address>
       </div>
     </section>
