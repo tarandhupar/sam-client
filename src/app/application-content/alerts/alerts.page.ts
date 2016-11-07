@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   providers: [ ],
-  styleUrls: [ 'alerts.style.css' ],
+  styleUrls: [ ],
   templateUrl: 'alerts.template.html'
 })
 export class AlertsPage {
