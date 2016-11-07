@@ -27,7 +27,8 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
 export class SamPaginationComponent {
 
   private MaxPagesBeforeOrAfterCurrent: number = 3;
-  private threshold: number = 6; // The threshold to check whether ellipsis is needed
+  private ellipsisThreshold: number = 6; // The threshold to check whether ellipsis is needed
+  private MaxTotalPageWithoutEllipsis: number = 10; // If the total number of pages is less than this threshold, display all pages
 
   @Input() currentPage: number;
   @Input() totalPages: number;
@@ -43,14 +44,14 @@ export class SamPaginationComponent {
     var end = this.totalPages - 1;
     // If total number of pages less than or equal to 10, then display all page links
     // Otherwise, use the algorithm to calculate the start and end page to show between the first and last page
-    if(end > 9){
+    if(this.totalPages > this.MaxTotalPageWithoutEllipsis){
       // If the current page is less than the threshold, then display first 8 page links followed by ellipsis and the last page link
-      if(this.currentPage < this.threshold){
-        end = 8;
+      if(this.currentPage < this.ellipsisThreshold){
+        end = start + this.ellipsisThreshold;
       }
       // If the current page is greater than the total page minus threshold, then display the first page link followed by ellipsis and the last 8 page links
-      else if(this.currentPage > this.totalPages - this.threshold){
-        start = end - 6;
+      else if(this.currentPage > this.totalPages - this.ellipsisThreshold){
+        start = end - this.ellipsisThreshold;
       }
       // For all other conditions, display the first page link followed by ellipsis and three links before and after the current page followed by ellipsis and the last page link
       else{
@@ -94,11 +95,11 @@ export class SamPaginationComponent {
   }
 
   showLastEllipsis() {
-    return this.totalPages > 10 && this.currentPage <= this.totalPages - this.threshold;
+    return this.totalPages > this.MaxTotalPageWithoutEllipsis && this.currentPage <= this.totalPages - this.ellipsisThreshold;
   }
 
   showFirstEllipsis() {
-    return this.totalPages > 10 && this.currentPage >= this.threshold;
+    return this.totalPages > this.MaxTotalPageWithoutEllipsis && this.currentPage >= this.ellipsisThreshold;
 
   }
 
