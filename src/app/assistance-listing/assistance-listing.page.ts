@@ -187,16 +187,13 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       .key(d => d.year)
       .sortKeys(d3.ascending)
       .rollup(values => {
-        let obligations = d3.map(),
-            ena = false,
+        let ena = false,
             nsi = false;
         values.forEach(item => {
           if(item.ena){ ena = true; }
           if(item.nsi){ nsi = true; }
-          obligations.set(item.obligation, obligations.get(item.obligation) ? obligations.get(item.obligation) + 1 : 1);
         });
         return {
-          "obligations": obligations.entries(),
           "ena": ena,
           "nsi": nsi,
           "total": d3.sum(values, d => +d.amount)
@@ -402,88 +399,122 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
       thead.insert("th", ":first-child")
         .text("Obligation(s)");
 
-      // Table: Assistance Totals
-      tbody.selectAll("tr")
-        .data(assistanceTotals)
-        .enter()
-        .append("tr")
-        .style("font-weight", "700")
-        .attr("class", "total")
-        .selectAll("td")
-        .data( d => d.values)
-        .enter()
-        .append("td")
-        .html(d => {
-          if(d.value.ena && !d.value.total){
-            return d.value.items > 1 ? "Not Available" : actualOrEstimate(d.key);
-          }else if(d.value.nsi && !d.value.total){
-            return "Not Separately Identifiable";
-          }else{
-            return d3.format("($,")(d.value.total);
-          }
-        });
-
-      // Insert assistance type name column
-      tbody.selectAll("tr")
-        .data(assistanceTotals)
-        .insert("td", ":first-child")
-        .html(d => {
-          return `<span class="legend" 
-                        style="background-color:` + z(d.key) + `;
-                              border:1px solid #000; 
-                              width: 10px; 
-                              height: 10px; 
-                              display: inline-block;">
-                  </span> ` + d.key + " Total";
-        });
-
       // Table: Assistance Details
       tbody.selectAll("tr")
-        .data(assistanceDetails)
-        .append("tr")
-        .attr("class", "details")
-        .selectAll("td")
-        .data(d => d.values)
-        .enter()
-        .append("tr")
-        .attr("class", "detail")
-        .html(function (d: any) {
-          let explanation = "";
-          d.values.forEach(item => {
-            item.values.forEach( innerItem =>{
-              if(innerItem.explanation){
-                explanation +=  "FY " + item.key.slice(2,4) +
-                                " Exp: " + innerItem.explanation + ", ";
-              }
+        
+        .data(function(){
+          let obligationsArr = [];
+
+          assistanceDetails.forEach(obligation => {
+
+            let assistanceArr = [];
+            let detailsArr = [];
+
+            assistanceTotals.forEach(assistanceTotal => {
+              if(assistanceTotal.key === obligation.key){
+                assistanceArr.push(`<span style=" background-color:` + z(obligation.key) + `;
+                                                  border:1px solid #000; 
+                                                  width: 10px; 
+                                                  height: 10px; 
+                                                  display: inline-block;">
+                                    </span> ` + obligation.key + " Total");
+                  assistanceTotal.values.forEach(year => {
+                    let yearTotal;
+                    if(year.value.ena && !year.value.total){
+                      yearTotal = year.value.items > 1 
+                                    ? !year.value.nsi ? actualOrEstimate(year.key) : "Not Available"
+                                    : actualOrEstimate(year.key);
+                    } else if(year.value.nsi && !year.value.total){
+                      yearTotal = "Not Separately Identifiable";
+                    } else{
+                      yearTotal = d3.format("($,")(year.value.total);
+                    }
+                    assistanceArr.push(yearTotal);
+                  });
+                }
             });
+
+            obligation.values.forEach(info => {
+
+              let explanation = "",
+                  obligationSet = d3.set(),
+                  amountArr = [],
+                  rowArr = [],
+                  obligationArr = [];
+
+              info.values.forEach(year => {
+
+                let innerArr = [];
+                year.values.forEach(item => {
+                  let itemAmount;
+                  if(item.explanation){
+                    explanation +=  "FY " + String(item.year).slice(2,4) +
+                                    " Exp: " + item.explanation + ", ";
+                  }
+
+                  if(item.ena && !item.amount ){
+                    itemAmount = actualOrEstimate(item.year);
+                  }else if(item.nsi && !item.amount ){
+                    itemAmount = "Not Separately Identifiable";
+                  }else{
+                    itemAmount = d3.format("($,")(item.amount);
+                  }
+
+                  innerArr.push(itemAmount);
+                });
+                amountArr.push(innerArr);
+              });
+
+              obligationSet.add(info.key + ( explanation  ? "(" + explanation.slice(0,-2) +  ")" : "") );
+
+              amountArr.forEach(item => {
+                item.forEach((innerItem, index) => {
+                  rowArr[index] = rowArr[index] || [];
+                  rowArr[index].push(innerItem);
+                });
+              });
+
+              obligationArr = obligationSet.values();
+
+              rowArr.forEach( (item, index) => {
+                item.unshift(obligationArr[index] === "" 
+                              ? "" 
+                              : obligationArr[index] 
+                                      ? obligationArr[index] 
+                                      : obligationArr[0]);
+              });
+
+              if(rowArr.length === 1 && rowArr[0][0] === ""){
+                // if there is one obligation with empty name
+                // don't added it to the array
+              }else{
+                detailsArr.push(rowArr);
+              }
+
+            });
+
+            detailsArr = _.flatten(detailsArr);
+            detailsArr.unshift(assistanceArr);
+
+            obligationsArr.push(detailsArr);
+
           });
-          if(!d.key && !explanation && d.values[0].values[0].quantity == 1){
-            // If additional info content its empty
-            // and there is not an optional explanation
-            // and if there is only one obligation, remove row
-            this.parentNode.removeChild(this);
-          }
-          return "<td>" + d.key + ( explanation  ? "(" + explanation.slice(0,-2) +  ")" : "") +  "</td>";
+    
+          let obligationsData = _.flatten(obligationsArr);
+
+          return obligationsData;
         })
+        .enter().append("tr")        
         .selectAll("tr")
-        .data(d => d.values)
+        .data(d => d)
         .enter()
         .append("td")
-        .text(d => {
-          if(d.values[0].ena && !d.values[0].amount ){
-            return actualOrEstimate(d.key);
-          }else if(d.values[0].nsi && !d.values[0].amount ){
-            return "Not Separately Identifiable";
-          }else{
-            return d3.format("($,")(d.values[0].amount);
+        .html(function(d){
+          if(String(d).indexOf("Total") !== -1){
+            d3.select(this.parentNode).style("font-weight","700");
           }
+          return d;
         });
-
-      // Move and unwrap assistance details
-      d3.selectAll("tr.details").each( function() {
-        this.parentNode.parentNode.insertBefore(this, this.parentNode.nextSibling);
-        this.outerHTML = this.innerHTML;
-      });
 
       // Table Totals
       table.selectAll("tbody")
@@ -496,16 +527,17 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
         .enter()
         .append("td")
         .html(d => {
-          let maxNumberOfObligationTypesFound = d3.max(d.value.obligations, item => item.value);
-          if(d.value.ena || d.value.nsi ){
-            return d.value.total == 0
-                    ? !d.value.ena
-                      ? "Not Separately Identifiable"
-                      : maxNumberOfObligationTypesFound > 1
-                        ? "Not Available"
-                        : actualOrEstimate(d.key)
-                    : d3.format("($,")(d.value.total);
+          let totalAmountIsZero = (d.value.total == 0) ? true : false;
+          let enaANDnsi = (d.value.ena && d.value.nsi) && totalAmountIsZero ? true : false;
+          let enaORnsi = (d.value.ena || d.value.nsi) && totalAmountIsZero ? true : false;
+
+          if(enaANDnsi){
+            return "Not Available";
           }
+          if(enaORnsi){
+            return !d.value.ena ? "Not Separately Identifiable" : actualOrEstimate(d.key);
+          }
+
           return d3.format("($,")(d.value.total);
         });
     })();
