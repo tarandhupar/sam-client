@@ -15,25 +15,23 @@ export class AuthorizationPipe implements PipeTransform {
       if (oAuthorization.version > 1) {
         title = title.concat(", as amended by ");
       }
-      var type = oAuthorization.authorizationType;
-      switch (type) {
-        case "publiclaw":
-          title = title + (oAuthorization.publicLaw ? ("Public Law " + (oAuthorization.publicLaw.congressCode || "")) : "") + "-" + (oAuthorization.publicLaw ? (oAuthorization.publicLaw.lawNumber || "N/A") : "N/A");
-          break;
-        case "statute":
-          title = title + (oAuthorization.statute ? ("Statute " + (oAuthorization.statute.volume || "")) : "") + "-" + (oAuthorization.statute ? (oAuthorization.statute.page || "N/A") : "N/A");
-          break;
-        case "usc":
-          title = title + (oAuthorization.USC ? (oAuthorization.USC.title || "") : "") + " US Code " + (oAuthorization.USC ? (oAuthorization.USC.section || "") : "");
-          break;
-        case "act":
-          title = title + (oAuthorization.act ? (oAuthorization.act.description || "") : "") + ", Title " + (oAuthorization.act ? (oAuthorization.act.title || "N/A") : "N/A") + ", Part " + (oAuthorization.act ? (oAuthorization.act.part || "N/A") : "N/A") + ", Section " + (oAuthorization.act ? (oAuthorization.act.section || "N/A") : "N/A");
-          break;
-        case "eo":
-          title = title + "Executive Order - " + ((oAuthorization.executiveOrder && oAuthorization.executiveOrder.title) || "N/A");
-          break;
+      if (oAuthorization.act != null){
+        title = title + (oAuthorization.act.description ? (oAuthorization.act.description) : "") + (oAuthorization.act.title ? (", Title " + oAuthorization.act.title) : "") + (oAuthorization.act.part ? (", Part " + oAuthorization.act.part) : "") + (oAuthorization.act.section ? (", Section " + oAuthorization.act.section) : "") + ", ";
+      }
+      if (oAuthorization.executiveOrder != null){
+        title = title + "Executive Order - " + ( oAuthorization.executiveOrder.description ? oAuthorization.executiveOrder.description : "") + ", ";
+      }
+      if (oAuthorization.publicLaw != null){
+        title = title + (oAuthorization.publicLaw ? ("Public Law " + (oAuthorization.publicLaw.congressCode || "")) : "") + "-" + (oAuthorization.publicLaw ? (oAuthorization.publicLaw.number || "") : "") + ", ";
+      }
+      if (oAuthorization.statute != null){
+        title = title + (oAuthorization.statute.volume ? ("Statute " + (oAuthorization.statute.volume)) : "") + "-" + (oAuthorization.statute.page ? (oAuthorization.statute.page) : "") + ", ";
+      }
+      if (oAuthorization.USC != null){
+        title = title + (oAuthorization.USC.title ? (oAuthorization.USC.title) : "") + " US Code " + (oAuthorization.USC.section ? (oAuthorization.USC.section) : "") + ", ";
       }
     });
+    title = title.slice(0, -2);
     return title;
   }
 }
