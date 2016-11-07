@@ -136,6 +136,16 @@ module.exports = {
         exclude: [/\.(spec|e2e)\.ts$/]
       },
 
+      /// Sweet Sassy Malassy
+      {
+        test: /\.scss$/,
+        //exclude: /node_modules/,
+        loaders: ['raw-loader', 'sass-loader'] // sass-loader not scss-loader
+      },
+
+      /// for fonts
+      { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=10000' },
+
       /*
        * Json loader support for *.json files.
        *
@@ -211,13 +221,16 @@ module.exports = {
      *
      * See: https://www.npmjs.com/package/copy-webpack-plugin
      */
-    new CopyWebpackPlugin([{
-
-      from: 'src/assets',
-      to: 'assets'
-    },
-    { from: 'node_modules/samwds/dist',
-      to: 'assets' }]),
+    new CopyWebpackPlugin([
+      {
+        from: 'src/assets',
+        to: 'assets'
+      },
+      // {
+      //   from: 'node_modules/samwds/dist',
+      //   to: 'assets'
+      // }
+    ]),
 
     /*
      * Plugin: HtmlWebpackPlugin
