@@ -11,12 +11,7 @@ import { Component } from '@angular/core';
                 </div>
               </nav>
             </header>`,
-  styles:[`
-    .header-logo-img{
-      height: 75px;
-      width:75px;
-      padding: 2px 0;
-    }`]
+  styleUrls: ['header.scss']
 })
 export class SamHeaderComponent {
 

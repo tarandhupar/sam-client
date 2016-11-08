@@ -1,0 +1,54 @@
+@import 'node_modules/uswds/src/stylesheets/all';
+
+$header-box-shadow: rgba(1, 2, 2, 0.1);
+
+.header-logo-img {
+  height: 75px;
+  width:75px;
+  padding: 2px 0;
+}
+
+.sam-header {
+  background-color: $color-primary-darkest;
+  box-shadow: 0 2px 4px $header-box-shadow;
+
+  a {
+    display: inline-block;
+    min-height: 4.4rem;
+    min-width: 4.4rem;
+    background-size: 2rem auto;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
+  ul {
+    position: relative;
+    padding-left: 1.5rem;
+
+    @include media($medium-screen) {
+      padding-left: 3rem;
+    }
+  }
+
+  li {
+    float: left;
+  }
+
+  .sam-home {
+    margin-top: 1.25rem;
+    width: 25rem;
+    height: 4rem;
+    @include background-image(url('../img/transition-sam-logo.svg'), url('../img/transition-sam-logo.png'));
+    background-size: 25rem auto;
+  }
+
+  .sam-search {
+    position: absolute;
+    right: 0;
+    margin-top: 0.9rem;
+    @include background-image(url('../img/search.svg'), url('../img/search.png'));
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
+}
