@@ -53,10 +53,14 @@ export class SamSearchbarComponent {
   }
 
   ngOnInit() {
-
     if(this.isSizeSmall()){
       this.searchBtnText = "";
     }
+    // setTimeout(()=>this.setResetIconClass());
+  }
+
+  ngDoCheck(){
+    this.setResetIconClass();
   }
 
   getLabelForValue(value) {
@@ -90,7 +94,7 @@ export class SamSearchbarComponent {
   }
 
   setResetIconClass(){
-    if(this.keyword.length === 0){
+    if(this.keyword === undefined || this.keyword.length === 0){
       this.resetIconClass = "reset-icon";
       this.resetDisabled = true;
     }else{
