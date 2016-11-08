@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {Location} from '@angular/common';
-import { Subscription } from 'rxjs/Subscription';
+import { Location } from '@angular/common';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 
 import * as _ from 'lodash';
 import * as d3 from 'd3';
 
+// Todo: avoid importing all of observable
+import { ReplaySubject, Observable } from "rxjs";
 
 @Component({
   moduleId: __filename,
@@ -24,15 +25,13 @@ import * as d3 from 'd3';
 export class ProgramPage implements OnInit {
   oProgram:any;
   oFederalHierarchy:any;
-  federalHierarchyWithParents:any
+  federalHierarchyWithParents:any;
   aRelatedProgram:any[] = [];
   currentUrl:string;
   aDictionaries:any = [];
   authorizationIdsGrouped:any[];
   oHistoricalIndex:any;
   aAlert:any = [];
-
-  private sub:Subscription;
 
     constructor(
       private route:ActivatedRoute,
@@ -46,7 +45,36 @@ export class ProgramPage implements OnInit {
   ngOnInit() {
     this.currentUrl = this.location.path();
 
-    //init Dictionaries
+    var apiSource = this.loadAPI();
+
+    var dictionaryStream = this.loadDictionaries(apiSource);
+    this.startD3Updates(dictionaryStream, apiSource);  
+
+    this.loadFederalHierarchy(apiSource);
+    this.loadHistoricalIndex(apiSource);
+    this.loadRelatedPrograms(apiSource);
+  }
+
+  private loadAPI() {
+    var apiSubject = new ReplaySubject(1);
+    var apiStream = this.route.params.switchMap(params => {
+      return this.oProgramService.getProgramById(params['id']);
+    });
+    apiStream.subscribe(apiSubject);
+
+    apiSubject.subscribe(api => {
+      this.oProgram = api;
+      this.checkCurrentFY();
+      this.authorizationIdsGrouped = _.values(_.groupBy(this.oProgram.data.authorizations, 'authorizationId'));
+    }, err => {
+      console.log('Error logging', err)
+    });
+
+    return apiSubject;
+  }
+
+  private loadDictionaries(apiSource: Observable) {
+    // declare dictionaries to load
     let aDictionaries = [
       'program_subject_terms',
       'date_range',
@@ -58,63 +86,92 @@ export class ProgramPage implements OnInit {
       'functional_codes'
     ];
 
-    this.sub = this.route.params.subscribe(params => {
-      let id = params['id']; //id will be a string, not a number
-      this.oProgramService.getProgramById(id).subscribe(res => {
-          this.oProgram = res;
+    var dictionaryServiceSubject = new ReplaySubject(1);
+    this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(dictionaryServiceSubject);
 
-          //check if this program has changed in this FY
-          if ((new Date(this.oProgram.publishedDate)).getFullYear() < new Date().getFullYear()) {
-              this.aAlert.push({"labelname":"not-updated-since", "config":{ "type": "warning", "title": "", "description": "Note: \n\
-This Federal Assistance Listing was not updated by the issuing agency in "+(new Date()).getFullYear()+". \n\
-Please contact the issuing agency listed under \"Contact Information\" for more information." }});
-          }
-
-          this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(res => {
-            for (var key in res) {
-              this.aDictionaries[key] = res[key];
-            }
-            if(this.oProgram.data.financial.obligations){
-              this.createVisualization(this.prepareVisualizationData(this.oProgram.data.financial.obligations));
-            }
-          });
-          //get authorizations and group them by id
-          var auths = this.oProgram.data.authorizations;
-          this.authorizationIdsGrouped = _.values(_.groupBy(auths, 'authorizationId'));
-          this.oFHService.getFederalHierarchyById(res.data.organizationId,false,false)
-            .subscribe(res => {
-              this.oFederalHierarchy = res;
-            });
-          this.oFHService.getFederalHierarchyById(res.data.organizationId,true,false)
-            .subscribe(res => {
-              this.federalHierarchyWithParents = res;
-            });
-          this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(id, this.oProgram.data.programNumber)
-            .subscribe(res => {
-              this.oHistoricalIndex = res._embedded ? res._embedded.historicalIndex : [];
-          });
-          if (this.oProgram.data.relatedPrograms.flag != "na") {
-            for (let programId of this.oProgram.data.relatedPrograms.relatedTo) {
-              this.oProgramService.getLatestProgramById(programId).subscribe(relatedFal => {
-                if(typeof relatedFal !== 'undefined')
-                {
-                  this.aRelatedProgram.push({
-                    "programNumber": relatedFal.data.programNumber,
-                    "id": relatedFal.data._id
-                  });
-                }
-              })
-            }
-          }
-        },
-          err => {
-          console.log('Error logging', err)
-        }
-      );
-
+    dictionaryServiceSubject.subscribe(res => {
+      for (var key in res) {
+        this.aDictionaries[key] = res[key];
+      }
     });
+
+    return dictionaryServiceSubject;
   }
 
+  private startD3Updates(dictionarySource: Observable, apiSource: Observable) {
+    // Construct a stream that triggers an update whenever the api or dictionary changes
+    var d3UpdateStream = dictionarySource.combineLatest(apiSource, function(dictionary, api) {
+      return { dictionary: dictionary, api: api };
+    });
+
+    d3UpdateStream.subscribe(updated => {
+      if (updated.api.data.financial.obligations) {
+        this.createVisualization(this.prepareVisualizationData(updated.api.data.financial.obligations));
+      }
+    });
+
+    return d3UpdateStream;
+  }
+
+  //TODO: Refactor - remove fh and construct from fh w/ parents
+  private loadFederalHierarchy(apiSource: Observable) {
+    var fhStream = apiSource.switchMap(api => {
+      return this.oFHService.getFederalHierarchyById(api.data.organizationId, false, false);
+    }) ;
+    fhStream.subscribe(res => { this.oFederalHierarchy = res; });
+
+    var fhWithParentsStream = apiSource.switchMap(api => {
+      return this.oFHService.getFederalHierarchyById(api.data.organizationId, true, false);
+    })  ;
+    fhWithParentsStream.subscribe(res => { this.federalHierarchyWithParents = res; });
+
+    return [fhStream, fhWithParentsStream];
+  }
+
+  private loadHistoricalIndex(apiSource: Observable) {
+    var historicalIndexStream = apiSource.switchMap(api => {
+      return this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(api.data.id, api.data.programNumber);
+    });
+    historicalIndexStream.subscribe(res => {
+      this.oHistoricalIndex = res._embedded ? res._embedded.historicalIndex : [];
+    });
+
+    return historicalIndexStream;
+  }
+
+  private loadRelatedPrograms(apiSource: Observable) {
+    var relatedProgramsIdStream = apiSource.switchMap(api => {
+      if (api.data.relatedPrograms.flag != "na") {
+        return Observable.from(api.data.relatedPrograms.relatedTo);
+      }
+      return Observable.empty();
+    });
+
+    var relatedProgramsStream = relatedProgramsIdStream.flatMap(relatedId => {
+      return this.oProgramService.getLatestProgramById(relatedId);
+    });
+
+    relatedProgramsStream.subscribe(relatedProgram => {
+      if(typeof relatedProgram !== 'undefined') {
+        this.aRelatedProgram.push({
+          "programNumber": relatedProgram.data.programNumber,
+          "id": relatedProgram.data._id
+        });
+      }
+    });
+
+    return relatedProgramsStream;
+  }
+
+  // TODO - refactor alert
+  private checkCurrentFY() {
+    //check if this program has changed in this FY
+    if ((new Date(this.oProgram.publishedDate)).getFullYear() < new Date().getFullYear()) {
+      this.aAlert.push({"labelname":"not-updated-since", "config":{ "type": "warning", "title": "", "description": "Note: \n\
+This Federal Assistance Listing was not updated by the issuing agency in "+(new Date()).getFullYear()+". \n\
+Please contact the issuing agency listed under \"Contact Information\" for more information." }});
+    }
+  }
 
   createVisualization(financialData): void {
 
@@ -401,7 +458,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
       // Table: Assistance Details
       tbody.selectAll("tr")
-        
+
         .data(function(){
           let obligationsArr = [];
 
@@ -421,7 +478,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
                   assistanceTotal.values.forEach(year => {
                     let yearTotal;
                     if(year.value.ena && !year.value.total){
-                      yearTotal = year.value.items > 1 
+                      yearTotal = year.value.items > 1
                                     ? !year.value.nsi ? actualOrEstimate(year.key) : "Not Available"
                                     : actualOrEstimate(year.key);
                     } else if(year.value.nsi && !year.value.total){
@@ -477,10 +534,10 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
               obligationArr = obligationSet.values();
 
               rowArr.forEach( (item, index) => {
-                item.unshift(obligationArr[index] === "" 
-                              ? "" 
-                              : obligationArr[index] 
-                                      ? obligationArr[index] 
+                item.unshift(obligationArr[index] === ""
+                              ? ""
+                              : obligationArr[index]
+                                      ? obligationArr[index]
                                       : obligationArr[0]);
               });
 
@@ -499,12 +556,12 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
             obligationsArr.push(detailsArr);
 
           });
-    
+
           let obligationsData = _.flatten(obligationsArr);
 
           return obligationsData;
         })
-        .enter().append("tr")        
+        .enter().append("tr")
         .selectAll("tr")
         .data(d => d)
         .enter()
@@ -586,5 +643,4 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
     return formattedFinancialData;
   }
-
 }
