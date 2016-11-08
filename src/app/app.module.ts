@@ -45,7 +45,7 @@ const APP_PROVIDERS = [
     HttpModule,
 
     // Router
-    RouterModule.forRoot(ROUTES, { useHash: false }),
+    RouterModule.forRoot(ROUTES, { useHash: true }),
 
     // Page View Modules
     ProgramModule,
