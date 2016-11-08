@@ -1,12 +1,12 @@
 <div class="usa-alert {{selectedType}}">
-  <div class="pull-right">
-    <span class="pull-right m_R-1x" *ngIf="showClose">
-      <a ><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
-    </span>
-  </div>
   <div class="usa-alert-body">
-    <h3 class="usa-alert-heading">{{title}}</h3>
-    <p class="usa-alert-text" *ngIf="showDescription">{{description}}</p>
+    <h3 class="usa-alert-heading">
+      {{title}}
+      <span class="pull-right" *ngIf="showClose">
+        <a><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
+      </span>
+    </h3>
+    <p class="usa-alert-text truncate" *ngIf="showDescription">{{description}}</p>
     <div *ngIf="showGoToAlerts">
       <a class="usa-nav-link" [routerLink]="['/system-alerts']">More alerts&nbsp;<i class="fa fa-arrow-circle-o-right"></i></a>
     </div>

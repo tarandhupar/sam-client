@@ -15,8 +15,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
  */
 @Component({
   selector: 'samAlert',
-  templateUrl: './alert.template.html'
-
+  templateUrl: './alert.template.html',
+  styleUrls: ['./alert.style.css']
 })
 export class SamAlertComponent {
   @Input() type: string;
