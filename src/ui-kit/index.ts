@@ -11,3 +11,4 @@ export { SamAccordionsComponent } from "./accordions/accordions.component";
 export { SamButtonComponent } from './form-controls/button/button.component';
 export { SamHeaderComponent } from './header/header.component';
 export { SamLabelComponent } from './label/label.component';
+export { SamPaginationComponent } from "./pagination/pagination.component";
