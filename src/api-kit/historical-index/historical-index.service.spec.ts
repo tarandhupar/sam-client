@@ -78,7 +78,6 @@ describe('HistoricalIndexService unit tests TestBed', () => {
 
   it('should return response when subscribed to getHistoricalIndexByProgramNumber', inject([HistoricalIndexService], (testService: HistoricalIndexService) => {
     testService.getHistoricalIndexByProgramNumber("5eb2b1a06998d59eb179a8e7fd76c173", "10.001").subscribe((res: Response) => {
-      console.log('getHistoricalIndexByProgramNumber res', res)
       expect(res).toBeDefined();
       expect(res['_embedded']).toBeDefined();
       expect(res['_embedded']['historicalIndex']).toBeDefined();

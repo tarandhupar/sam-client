@@ -10,6 +10,7 @@ import { ProgramPage } from './assistance-listing.page';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 import { KeysPipe } from '../app-pipes/keyspipe.pipe';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
+import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { SamUIKitModule } from 'ui-kit';
@@ -194,6 +195,7 @@ describe('ProgramPage', () => {
         FilterMultiArrayObjectPipe,
         KeysPipe,
         AuthorizationPipe,
+        DateFormatPipe,
         HistoricalIndexLabelPipe
       ], //declare main and subcomponents
       providers: [
@@ -214,6 +216,7 @@ describe('ProgramPage', () => {
         KeysPipe,
         AuthorizationPipe,
         HistoricalIndexLabelPipe,
+        DateFormatPipe,
       ]
     }) //https://github.com/angular/angular/issues/10727
     .overrideComponent(ProgramPage, {
