@@ -56,7 +56,6 @@ export class SamSearchbarComponent {
     if(this.isSizeSmall()){
       this.searchBtnText = "";
     }
-    // setTimeout(()=>this.setResetIconClass());
   }
 
   ngDoCheck(){
