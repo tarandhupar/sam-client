@@ -1,6 +1,7 @@
-import { Component,Input } from '@angular/core';
+import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
 import * as _ from 'lodash';
+import * as moment from 'moment/moment';
 
 @Component({
   moduleId: __filename,
@@ -34,7 +35,7 @@ import * as _ from 'lodash';
           </li>
           <li><strong>Date Published</strong>
             <ul class="usa-unstyled-list">
-              <li>{{data.publishedDate | date}}</li>
+              <li>{{data.publishedDate}}</li>
             </ul>
           </li>
           <li><strong>Type</strong>
@@ -47,9 +48,13 @@ import * as _ from 'lodash';
   `,
   styleUrls: ['../assistance-listing.style.css']
 })
-export class AssistanceListingResult {
+export class AssistanceListingResult implements OnInit {
 	@Input() data: any={};
 	constructor() { }
+
+  ngOnInit(){
+    this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y");
+  }
 
   printFALLink(){
     return this.data.hasOwnProperty('_links') ? _.get(this.data, ['_links','self','href']):'';
