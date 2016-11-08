@@ -20,6 +20,7 @@ import { SamHeaderComponent } from "./header/header.component";
 import { SamAlertComponent } from "./alert/alert.component";
 import { SamAccordionsComponent } from "./accordions/accordions.component";
 import { SamButtonComponent } from "./form-controls/button/button.component.ts";
+import { SamPaginationComponent } from "./pagination/pagination.component";
 
 
 
@@ -29,6 +30,7 @@ import { SamButtonComponent } from "./form-controls/button/button.component.ts";
  */
 @NgModule({
   declarations: [
+    SamPaginationComponent,
     SamAccordionsComponent,
     SamButtonComponent,
     SamLabelComponent,
@@ -51,6 +53,7 @@ import { SamButtonComponent } from "./form-controls/button/button.component.ts";
     RouterModule
   ],
   exports: [
+    SamPaginationComponent,
     SamAccordionsComponent,
     SamButtonComponent,
     SamLabelComponent,

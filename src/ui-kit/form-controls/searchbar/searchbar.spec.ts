@@ -34,7 +34,7 @@ describe('The Sam Search Bar component', () => {
     expect(component.keyword).toBe("default");
     expect(component.placeholder).toBe("");
 
-  })
+  });
 
   it('should output event with search object when search button clicked', () => {
     let searchBtn: any;

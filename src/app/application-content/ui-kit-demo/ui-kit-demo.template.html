@@ -1,3 +1,4 @@
+<alertHeader></alertHeader>
 <div class="usa-grid">
   <h2>Accordions Component &lt;samAccordions&gt;</h2>
   <div class="usa-width-one-whole">
@@ -181,28 +182,14 @@
     <samAlert [type]="'infovv'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
   </div>
 </div>
-<div class="usa-grid">
-  <h2>Alert Component for Alert List &lt;samAlert&gt;</h2>
-  <div class="usa-width-one-whole" *ngIf="!dismissAlerts">
 
-    <samAlert [type]="'success'"
-              [title]="'Sample Title'"
-              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
-              [showDescription]="showDescription"
-              [showLinks]="true"
-              (expand)='onExpandAlerts()'
-              (dismiss)='onDismissAlerts()'></samAlert>
-    <samAlert [type]="'warning'"
-              [title]="'Sample Title'"
-              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
-              [showDescription]="showDescription"></samAlert>
-    <samAlert [type]="'error'"
-              [title]="'Sample Title'"
-              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
-              [showDescription]="showDescription"></samAlert>
-    <samAlert [type]="'info'"
-              [title]="'Sample Title'"
-              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
-              [showDescription]="showDescription"></samAlert>
+
+<div class="usa-grid">
+  <div class="usa-width-one">
+    <h2>Pagination &lt;samPagination&gt;</h2>
+    <samLabel [labelType]="'small'" [labelText]="'Current Page'"></samLabel><input [(ngModel)]="paginationConfig.currentPage" type="number">
+    <samLabel [labelType]="'small'" [labelText]="'Total Page'"></samLabel><input [(ngModel)]="paginationConfig.totalPages" type="number">
+    <samPagination [currentPage]="paginationConfig.currentPage" [totalPages]="paginationConfig.totalPages"></samPagination>
   </div>
 </div>
+

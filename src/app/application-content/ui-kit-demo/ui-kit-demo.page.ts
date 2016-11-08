@@ -60,6 +60,12 @@ export class UIKitDemoPage {
   showDescription: boolean = false;
   dismissAlerts: boolean = false;
 
+  paginationConfig = {
+    currentPage: 1,
+    totalPages: 1
+  };
+
+
   constructor() {  }
 
   onEmptyOptionChanged($event) {

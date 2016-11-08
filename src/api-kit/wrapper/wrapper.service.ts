@@ -9,7 +9,8 @@ export class WrapperService {
         "program": "/cfda/v1/program",
         "federalHierarchy": "/cfda/v1/fh",
         "dictionary": "/cfda/v1/dictionary",
-        "historicalIndex": "/cfda/v1/historicalIndex"
+        "historicalIndex": "/cfda/v1/historicalIndex",
+        "alerts": "/sgs/v1/alerts"
     };
 
     constructor(private _http: Http){}

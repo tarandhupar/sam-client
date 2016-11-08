@@ -17,10 +17,6 @@ import { Component, Output, EventEmitter} from '@angular/core';
 export class SamBannerComponent {
 
   showDetail:boolean = false;
-  showBanner:boolean = true;
-
-  @Output()
-  onClose:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() {
   }
@@ -33,13 +29,6 @@ export class SamBannerComponent {
     this.showDetail = !this.showDetail;
   }
 
-  /**
-   * Send out the close banner event(let the header adjust margin accordingly)
-   */
-  closeBanner(){
-    this.showBanner = false;
-    this.onClose.emit(this.showBanner);
-  }
 
 
 }
