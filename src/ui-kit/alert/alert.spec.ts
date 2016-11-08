@@ -1,4 +1,5 @@
 import {TestBed} from '@angular/core/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 import {By} from '@angular/platform-browser';
 
 // Load the implementations that should be tested
@@ -16,6 +17,7 @@ describe('The Sam Alert component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
       declarations: [SamAlertComponent],
     });
 
@@ -38,13 +40,4 @@ describe('The Sam Alert component', () => {
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.usa-alert')).nativeElement.className).toContain("usa-alert-success");
   });
-  it('check collapse description details', () => {
-    component.showDescription = false;
-    fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('.usa-alert')).nativeElement.className).toContain("usa-alert-success");
-    expect(fixture.debugElement.query(By.css('.usa-alert-heading')).nativeElement.innerHTML).toBe("i-am-a-title");
-    expect(fixture.debugElement.query(By.css('.usa-alert-text'))).toBe(null);
-
-  });
-
 });

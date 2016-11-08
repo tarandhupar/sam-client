@@ -23,8 +23,8 @@ export class SamAlertComponent {
   @Input() title: string;
   @Input() description: string;
   @Input() showDescription: boolean = true;
-  @Input() showLinks: boolean = false;
-  @Output() expand: EventEmitter<any> = new EventEmitter<any>();
+  @Input() showClose: boolean = false;
+  @Input() showGoToAlerts: boolean = false;
   @Output() dismiss: EventEmitter<any> = new EventEmitter<any>();
 
 
@@ -33,7 +33,7 @@ export class SamAlertComponent {
     "warning":"usa-alert-warning",
     "error":"usa-alert-error",
     "info":"usa-alert-info"
-  }
+  };
   selectedType: string = this.types['success'];
   expandLinkText: string = "Collapse";
 
@@ -59,17 +59,7 @@ export class SamAlertComponent {
     return false;
   }
 
-  private onExpandClick(){
-    this.expand.emit(!this.showDescription);
-    if(this.showDescription){
-      this.expandLinkText = "Collapse";
-    }else{
-      this.expandLinkText = "Expand";
-    }
-  }
-
   private onDismissClick(){
     this.dismiss.emit();
   }
-
 }

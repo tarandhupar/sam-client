@@ -1,3 +1,4 @@
+<alertHeader></alertHeader>
 <div class="usa-grid">
   <h2>Accordions Component &lt;samAccordions&gt;</h2>
   <div class="usa-width-one-whole">
@@ -179,30 +180,5 @@
     <samAlert [type]="'error'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
     <samAlert [type]="'info'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
     <samAlert [type]="'infovv'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
-  </div>
-</div>
-<div class="usa-grid">
-  <h2>Alert Component for Alert List &lt;samAlert&gt;</h2>
-  <div class="usa-width-one-whole" *ngIf="!dismissAlerts">
-
-    <samAlert [type]="'success'"
-              [title]="'Sample Title'"
-              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
-              [showDescription]="showDescription"
-              [showLinks]="true"
-              (expand)='onExpandAlerts()'
-              (dismiss)='onDismissAlerts()'></samAlert>
-    <samAlert [type]="'warning'"
-              [title]="'Sample Title'"
-              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
-              [showDescription]="showDescription"></samAlert>
-    <samAlert [type]="'error'"
-              [title]="'Sample Title'"
-              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
-              [showDescription]="showDescription"></samAlert>
-    <samAlert [type]="'info'"
-              [title]="'Sample Title'"
-              [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"
-              [showDescription]="showDescription"></samAlert>
   </div>
 </div>
