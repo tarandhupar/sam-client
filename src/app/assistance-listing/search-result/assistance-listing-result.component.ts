@@ -11,7 +11,7 @@ import * as _ from 'lodash';
     	  <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="assistance-listing-title">
-      	<a *ngIf="data.archive==false" href="{{printFALLink()}}">{{data.title}}</a>
+      	<a *ngIf="data.archive==false" [routerLink]="[printFALLink()]">{{data.title}}</a>
       	<span *ngIf="data.archive==true">{{data.title}}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
