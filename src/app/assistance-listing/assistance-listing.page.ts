@@ -113,25 +113,28 @@ export class ProgramPage implements OnInit {
     return d3UpdateStream;
   }
 
-  //TODO: Refactor - remove fh and construct from fh w/ parents
   private loadFederalHierarchy(apiSource: Observable<any>) {
-    var fhStream = apiSource.switchMap(api => {
-      return this.oFHService.getFederalHierarchyById(api.data.organizationId, false, false);
-    }) ;
-    fhStream.subscribe(res => { this.oFederalHierarchy = res; });
+    var oid = "";
 
     var fhWithParentsStream = apiSource.switchMap(api => {
+      oid = api.data.organizationId;
       return this.oFHService.getFederalHierarchyById(api.data.organizationId, true, false);
     })  ;
-    fhWithParentsStream.subscribe(res => { this.federalHierarchyWithParents = res; });
 
-    return [fhStream, fhWithParentsStream];
+    fhWithParentsStream.subscribe(res => {
+      this.federalHierarchyWithParents = res;
+      let filter = new FilterMultiArrayObjectPipe();
+      this.oFederalHierarchy = filter.transform([oid], [this.federalHierarchyWithParents], "elementId", true, "hierarchy")[0];
+    });
+
+    return fhWithParentsStream;
   }
 
   private loadHistoricalIndex(apiSource: Observable<any>) {
     var historicalIndexStream = apiSource.switchMap(api => {
-      return this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(api.data.id, api.data.programNumber);
+      return this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(api.data._id, api.data.programNumber);
     });
+
     historicalIndexStream.subscribe(res => {
       this.oHistoricalIndex = res._embedded ? res._embedded.historicalIndex : [];
     });
