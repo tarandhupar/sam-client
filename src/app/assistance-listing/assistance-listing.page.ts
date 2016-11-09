@@ -73,7 +73,7 @@ export class ProgramPage implements OnInit {
     return apiSubject;
   }
 
-  private loadDictionaries(apiSource: Observable) {
+  private loadDictionaries(apiSource: Observable<any>) {
     // declare dictionaries to load
     let aDictionaries = [
       'program_subject_terms',
@@ -98,7 +98,7 @@ export class ProgramPage implements OnInit {
     return dictionaryServiceSubject;
   }
 
-  private startD3Updates(dictionarySource: Observable, apiSource: Observable) {
+  private startD3Updates(dictionarySource: Observable<any>, apiSource: Observable<any>) {
     // Construct a stream that triggers an update whenever the api or dictionary changes
     var d3UpdateStream = dictionarySource.combineLatest(apiSource, function(dictionary, api) {
       return { dictionary: dictionary, api: api };
@@ -114,7 +114,7 @@ export class ProgramPage implements OnInit {
   }
 
   //TODO: Refactor - remove fh and construct from fh w/ parents
-  private loadFederalHierarchy(apiSource: Observable) {
+  private loadFederalHierarchy(apiSource: Observable<any>) {
     var fhStream = apiSource.switchMap(api => {
       return this.oFHService.getFederalHierarchyById(api.data.organizationId, false, false);
     }) ;
@@ -128,7 +128,7 @@ export class ProgramPage implements OnInit {
     return [fhStream, fhWithParentsStream];
   }
 
-  private loadHistoricalIndex(apiSource: Observable) {
+  private loadHistoricalIndex(apiSource: Observable<any>) {
     var historicalIndexStream = apiSource.switchMap(api => {
       return this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(api.data.id, api.data.programNumber);
     });
@@ -139,7 +139,7 @@ export class ProgramPage implements OnInit {
     return historicalIndexStream;
   }
 
-  private loadRelatedPrograms(apiSource: Observable) {
+  private loadRelatedPrograms(apiSource: Observable<any>) {
     var relatedProgramsIdStream = apiSource.switchMap(api => {
       if (api.data.relatedPrograms.flag != "na") {
         return Observable.from(api.data.relatedPrograms.relatedTo);
