@@ -40,13 +40,7 @@
 	</div>
   <div *ngIf="data.results">
     <div class="usa-width-one-whole">
-      <button *ngIf="pageNum>0" (click)="pageChange(pageNum-1)" class="usa-button-outline">Previous</button>
-      <span *ngFor="let item of createRange(totalPages); let currentElementIndex=index">
-      	<span style="padding:0px 6px 0 2px" *ngIf="totalPages>(pageNumPaginationPadding) && pageNum+pageNumPaginationPadding<(totalPages-pageNumPaginationPadding) && currentElementIndex==(totalPages-1)">...</span>
-      	<button [ngStyle]="{'text-decoration':(pageNum==currentElementIndex?'underline':'none')}" *ngIf="showPageButton(currentElementIndex)" class="usa-button-outline" (click)="pageChange(currentElementIndex)">{{currentElementIndex+1}}</button>
-      	<span style="padding:0px 6px 0 2px" *ngIf="pageNum-pageNumPaginationPadding>=pageNumPaginationPadding && currentElementIndex==0">...</span>
-    	</span>
-      <button *ngIf="pageNum<(totalPages-1)" (click)="pageChange(pageNum+1)" class="usa-button-outline">Next</button>
+      <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
     </div>
   </div>
   <br/><br/>

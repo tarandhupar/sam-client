@@ -182,3 +182,14 @@
     <samAlert [type]="'infovv'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
   </div>
 </div>
+
+
+<div class="usa-grid">
+  <div class="usa-width-one">
+    <h2>Pagination &lt;samPagination&gt;</h2>
+    <samLabel [labelType]="'small'" [labelText]="'Current Page'"></samLabel><input [(ngModel)]="paginationConfig.currentPage" type="number">
+    <samLabel [labelType]="'small'" [labelText]="'Total Page'"></samLabel><input [(ngModel)]="paginationConfig.totalPages" type="number">
+    <samPagination [currentPage]="paginationConfig.currentPage" [totalPages]="paginationConfig.totalPages"></samPagination>
+  </div>
+</div>
+
