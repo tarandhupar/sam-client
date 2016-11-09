@@ -167,6 +167,17 @@ module.exports = webpackMerge(commonConfig, {
       aggregateTimeout: 300,
       poll: 1000
     },
+    proxy: {
+      '/api': {
+        target: API_UMBRELLA_URL,
+        pathRewrite: {
+            '^/api' : '/',     // rewrite path
+        },
+        logLevel: "debug",
+        changeOrigin: true,
+        secure: false
+      }
+    },
     outputPath: helpers.root('dist')
   },
 

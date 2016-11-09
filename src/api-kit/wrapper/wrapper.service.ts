@@ -45,7 +45,7 @@ export class WrapperService {
             "method": RequestMethod.Get,
             "headers": oHeader,
             "body": "",
-            "url": API_UMBRELLA_URL + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
+            "url": "/api" + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
         };
 
         switch (method.toUpperCase()){
