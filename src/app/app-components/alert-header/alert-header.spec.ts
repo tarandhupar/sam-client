@@ -85,8 +85,19 @@ describe('The AlertList component', () => {
     spyOn(svc, 'getAll').and.returnValue(oneAlert);
     fixture.whenStable().then(() => {
       fixture.detectChanges();
-      let alerts = fixture.debugElement.queryAll(By.css('.usa-alert'));
+      let alerts = fixture.debugElement.queryAll(By.css('h3'));
       expect(alerts.length).toBe(1);
+      done();
+    });
+  });
+
+  it('should show 2 alert (even if the services returns 5)', done => {
+    let svc = fixture.debugElement.injector.get(SystemAlertsService);
+    spyOn(svc, 'getAll').and.returnValue(fiveAlerts);
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      let alerts = fixture.debugElement.queryAll(By.css('h3'));
+      expect(alerts.length).toBe(2);
       done();
     });
   });
