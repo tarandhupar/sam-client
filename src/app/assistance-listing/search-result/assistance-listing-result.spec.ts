@@ -1,5 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { By }              from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { AssistanceListingResult } from './assistance-listing-result.component';
 
@@ -10,6 +11,7 @@ var programNumberEl;
 describe('AssistanceListingResultComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
       declarations: [ AssistanceListingResult ],
     });
     TestBed.compileComponents().then( ()=>{

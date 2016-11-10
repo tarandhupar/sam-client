@@ -46,14 +46,20 @@ export class SamSearchbarComponent {
     name: 'filter',
   };
 
+  resetIconClass:string = "reset-icon";
+  resetDisabled:boolean = true;
+
   constructor() {
   }
 
   ngOnInit() {
-
     if(this.isSizeSmall()){
       this.searchBtnText = "";
     }
+  }
+
+  ngDoCheck(){
+    this.setResetIconClass();
   }
 
   getLabelForValue(value) {
@@ -73,6 +79,27 @@ export class SamSearchbarComponent {
       keyword:this.keyword,
       searchField: this.filterValue
     });
+  }
+
+  onKeywordChange(){
+    this.setResetIconClass();
+  }
+
+  onResetClick(){
+    if(!this.resetDisabled){
+      this.keyword = "";
+      this.setResetIconClass();
+    }
+  }
+
+  setResetIconClass(){
+    if(this.keyword === undefined || this.keyword.length === 0){
+      this.resetIconClass = "reset-icon";
+      this.resetDisabled = true;
+    }else{
+      this.resetIconClass = "reset-icon-active";
+      this.resetDisabled = false;
+    }
   }
 
   isSizeSmall(){
