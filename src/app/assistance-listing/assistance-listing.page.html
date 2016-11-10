@@ -2,32 +2,34 @@
 
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
-    <div *ngIf="federalHierarchyWithParents">
-      <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">
-        <img class="logo" id="department-logo" [src]="federalHierarchyWithParents.hierarchy[0].hierarchy[0]._links.logo.href" alt="HTML5 Icon">
+    <div>&nbsp;</div>
+    <div sam-sticky limit=1200>
+      <!--Logo-->
+      <div *ngIf="federalHierarchyWithParents">
+        <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">
+          <img class="logo" id="department-logo" [src]="federalHierarchyWithParents.hierarchy[0].hierarchy[0]._links.logo.href" alt="HTML5 Icon">
+        </div>
+        <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && (federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href)">
+          <img class="logo" [src]="federalHierarchyWithParents.hierarchy[0]._links.logo.href" alt="HTML5 Icon" >
+        </div>
+        <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && !(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href) && federalHierarchyWithParents._links?.logo?.href">
+          <img class="logo" [src]="federalHierarchyWithParents._links.logo.href" alt="HTML5 Icon">
+        </div>
       </div>
-      <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && (federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href)">
-        <img class="logo" [src]="federalHierarchyWithParents.hierarchy[0]._links.logo.href" alt="HTML5 Icon" >
-      </div>
-      <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && !(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href) && federalHierarchyWithParents._links?.logo?.href">
-        <img class="logo" [src]="federalHierarchyWithParents._links.logo.href" alt="HTML5 Icon">
-      </div>
+      <!--Side Navigation-->
+      <nav>
+        <ul class="usa-sidenav-list">
+          <li><a href="{{currentUrl}}#overview">Overview</a></li>
+          <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
+          <li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
+          <li><a href="{{currentUrl}}#criteria-for-applying">Criteria for Applying</a></li>
+          <li><a href="{{currentUrl}}#applying-for-assistance">Applying for Assistance</a></li>
+          <li><a href="{{currentUrl}}#compliance-requirements">Compliance Requirements</a></li>
+          <li><a href="{{currentUrl}}#contact-information">Contact Information</a></li>
+          <li><a href="{{currentUrl}}#history">History</a></li>
+        </ul>
+      </nav>
     </div>
-    <br><br>
-    <!--<img src="/assets/logo.png">-->
-    <!--Side Navigation-->
-    <nav sam-sticky limit=1200>
-      <ul class="usa-sidenav-list">
-        <li><a href="{{currentUrl}}#overview">Overview</a></li>
-        <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
-        <li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
-        <li><a href="{{currentUrl}}#criteria-for-applying">Criteria for Applying</a></li>
-        <li><a href="{{currentUrl}}#applying-for-assistance">Applying for Assistance</a></li>
-        <li><a href="{{currentUrl}}#compliance-requirements">Compliance Requirements</a></li>
-        <li><a href="{{currentUrl}}#contact-information">Contact Information</a></li>
-        <li><a href="{{currentUrl}}#history">History</a></li>
-      </ul>
-    </nav>
   </aside>
 
   <!--Main Content-->
