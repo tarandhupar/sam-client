@@ -1,5 +1,4 @@
-@import "~uswds/src/stylesheets/all";
-
+@import 'node_modules/uswds/src/stylesheets/all';
 
 .sam-footer-head {
   color: #fff;
@@ -9,11 +8,14 @@
   font-size:13px;
 }
 
+h4 {
+  font-family: $font-sans;
+}
+
 .sam-footer-wrapper {
   width: 100%;
   padding-bottom: 3rem;
   background-color: $color-primary-darkest;
-  font-family: $font-sans;
   font-size: $base-font-size;
 }
 
