@@ -108,8 +108,8 @@
 
       <span *ngIf="oProgram?.data.postAward?.accomplishments?.flag =='yes'">
         <div *ngFor="let item of oProgram.data.postAward.accomplishments.list | keys">
-          <div class="m_b-2x" *ngIf="item.value?.content?.actual && item.value.content?.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</div>
-          <div class="m_b-2x" *ngIf="item.value?.content?.projection && item.value?.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</div>
+          <div class="m_B-2x" *ngIf="item.value?.content?.actual && item.value.content?.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</div>
+          <div class="m_B-2x" *ngIf="item.value?.content?.projection && item.value?.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</div>
         </div>
       </span>
 
