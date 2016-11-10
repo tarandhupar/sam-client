@@ -50,7 +50,7 @@ export class ProgramPage implements OnInit {
     let apiSource = this.loadAPI();
 
     let dictionaryStream = this.loadDictionaries();
-    this.startD3Updates(dictionaryStream, apiSource);
+    this.loadChart(dictionaryStream, apiSource);
 
     this.loadFederalHierarchy(apiSource);
     this.loadHistoricalIndex(apiSource);
@@ -58,13 +58,13 @@ export class ProgramPage implements OnInit {
   }
 
   private loadAPI() {
-    var apiSubject = new ReplaySubject(1);
-    var apiStream = this.route.params.switchMap(params => {
+    var apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
+    var apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       return this.oProgramService.getProgramById(params['id']);
     });
     apiStream.subscribe(apiSubject);
 
-    apiSubject.subscribe(api => {
+    apiSubject.subscribe(api => { // run whenever api data is updated
       this.oProgram = api;
       this.checkCurrentFY();
       this.authorizationIdsGrouped = _.values(_.groupBy(this.oProgram.data.authorizations, 'authorizationId'));
@@ -88,26 +88,28 @@ export class ProgramPage implements OnInit {
       'functional_codes'
     ];
 
-    var dictionaryServiceSubject = new ReplaySubject(1);
+    var dictionaryServiceSubject = new ReplaySubject(1); // broadcasts the dictionary data to multiple subscribers
+    // construct a stream of dictionary data
     this.oDictionaryService.getDictionaryById(aDictionaries.join(',')).subscribe(dictionaryServiceSubject);
 
-    dictionaryServiceSubject.subscribe(res => {
+    dictionaryServiceSubject.subscribe(res => { // run whenever dictionary data is updated
       for (var key in res) {
-        this.aDictionaries[key] = res[key];
+        this.aDictionaries[key] = res[key]; // store the dictionary
       }
     });
 
     return dictionaryServiceSubject;
   }
 
-  private startD3Updates(dictionarySource: Observable<any>, apiSource: Observable<any>) {
-    // Construct a stream that triggers an update whenever the api or dictionary changes
+  private loadChart(dictionarySource: Observable<any>, apiSource: Observable<any>) {
+    // construct a stream that triggers an update whenever the api or dictionary changes
     var d3UpdateStream = dictionarySource.combineLatest(apiSource, function(dictionary, api) {
       return { dictionary: dictionary, api: api };
     });
 
-    d3UpdateStream.subscribe(updated => {
+    d3UpdateStream.subscribe(updated => { // run whenever underlying d3 chart data is updated
       if (updated.api.data.financial.obligations) {
+        // call to this.aDictionaries is safe because d3UpdateStream requires dictionary api to be loaded
         this.financialChart.createVisualization(
           this.financialChart.prepareVisualizationData(updated.api.data.financial.obligations, this.aDictionaries)
         );
@@ -120,13 +122,14 @@ export class ProgramPage implements OnInit {
   private loadFederalHierarchy(apiSource: Observable<any>) {
     var oid = "";
 
-    var fhWithParentsStream = apiSource.switchMap(api => {
+    var fhWithParentsStream = apiSource.switchMap(api => { // construct a stream of federal hierarchy data
       oid = api.data.organizationId;
       return this.oFHService.getFederalHierarchyById(api.data.organizationId, true, false);
     })  ;
 
-    fhWithParentsStream.subscribe(res => {
+    fhWithParentsStream.subscribe(res => { // run whenever federal hierarchy data is updated
       this.federalHierarchyWithParents = res;
+      // search for only the data belonging to this object, without it's parents or children
       this.oFederalHierarchy = this.FilterMultiArrayObjectPipe.transform(
         [oid], [this.federalHierarchyWithParents], "elementId", true, "hierarchy")[0];
     });
@@ -135,32 +138,33 @@ export class ProgramPage implements OnInit {
   }
 
   private loadHistoricalIndex(apiSource: Observable<any>) {
-    var historicalIndexStream = apiSource.switchMap(api => {
+    var historicalIndexStream = apiSource.switchMap(api => { // construct a stream of historical index data
       return this.oHistoricalIndexService.getHistoricalIndexByProgramNumber(api.data._id, api.data.programNumber);
     });
 
-    historicalIndexStream.subscribe(res => {
-      this.oHistoricalIndex = res._embedded ? res._embedded.historicalIndex : [];
+    historicalIndexStream.subscribe(res => { // run whenever historical index data is updated
+      this.oHistoricalIndex = res._embedded ? res._embedded.historicalIndex : []; // store the historical index
     });
 
     return historicalIndexStream;
   }
 
   private loadRelatedPrograms(apiSource: Observable<any>) {
-    var relatedProgramsIdStream = apiSource.switchMap(api => {
+    var relatedProgramsIdStream = apiSource.switchMap(api => { // construct a stream of related programs ids
       if (api.data.relatedPrograms.flag != "na") {
         return Observable.from(api.data.relatedPrograms.relatedTo);
       }
-      return Observable.empty();
+      return Observable.empty(); // if there are no related programs, don't trigger an update
     });
 
+    // construct a stream that contains all related programs from related program ids
     var relatedProgramsStream = relatedProgramsIdStream.flatMap(relatedId => {
       return this.oProgramService.getLatestProgramById(relatedId);
     });
 
-    relatedProgramsStream.subscribe(relatedProgram => {
+    relatedProgramsStream.subscribe(relatedProgram => { // run whenever related programs are updated
       if(typeof relatedProgram !== 'undefined') {
-        this.aRelatedProgram.push({
+        this.aRelatedProgram.push({ // store the related program
           "programNumber": relatedProgram.data.programNumber,
           "id": relatedProgram.data._id
         });
@@ -172,7 +176,7 @@ export class ProgramPage implements OnInit {
 
   // TODO - refactor alert
   private checkCurrentFY() {
-    //check if this program has changed in this FY
+    //check if this program has changed in this FY, if not, display an alert
     if ((new Date(this.oProgram.publishedDate)).getFullYear() < new Date().getFullYear()) {
       this.aAlert.push({"labelname":"not-updated-since", "config":{ "type": "warning", "title": "", "description": "Note: \n\
 This Federal Assistance Listing was not updated by the issuing agency in "+(new Date()).getFullYear()+". \n\
