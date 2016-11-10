@@ -7,7 +7,7 @@
 
 // USWDS Core -------------- //
 @import 'node_modules/uswds/src/stylesheets/core/defaults';
-@import 'node_modules/samwds/src/stylesheets/core/variables'; // override U.S. Web Design Standards defaults
+@import 'styles/core/variables'; // override U.S. Web Design Standards defaults
 @import 'node_modules/uswds/src/stylesheets/core/fonts';
 @import 'node_modules/uswds/src/stylesheets/core/base';
 @import 'node_modules/uswds/src/stylesheets/core/grid-settings';
@@ -15,9 +15,9 @@
 @import 'node_modules/uswds/src/stylesheets/core/utilities';
 
 // SAMWDS Core additions and overrides -------------- //
-@import 'node_modules/samwds/src/stylesheets/core/utilities';
-@import 'node_modules/samwds/src/stylesheets/core/margin-padding';
-@import 'node_modules/samwds/src/stylesheets/core/iae-global';
+@import 'styles/core/utilities';
+@import 'styles/core/margin-padding';
+@import 'styles/core/iae-global';
 
 
 // USWDS Elements -------------- //
@@ -48,8 +48,6 @@
 @import 'node_modules/samwds/src/stylesheets/components/accordions';
 @import 'node_modules/samwds/src/stylesheets/components/actions';
 @import 'node_modules/samwds/src/stylesheets/components/alerts';
-//@import 'node_modules/samwds/src/stylesheets/components/header';
-//@import 'node_modules/samwds/src/stylesheets/components/footer';
 @import 'node_modules/samwds/src/stylesheets/components/search-result';
 @import 'node_modules/samwds/src/stylesheets/components/navprimary';
 @import 'node_modules/samwds/src/stylesheets/components/navsecondary';
