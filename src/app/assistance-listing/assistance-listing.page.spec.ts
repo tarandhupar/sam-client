@@ -15,11 +15,11 @@ import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { SamUIKitModule } from 'ui-kit';
 import { Observable } from 'rxjs';
+import { FinancialObligationChart } from './assistance-listing.chart';
 
 let comp: ProgramPage;
 let fixture: ComponentFixture<ProgramPage>;
 
-// TODO - Fix tests broken by moving d3-chart
 let MockFHService = {
   getFederalHierarchyById: (id: string, includeParentLevels: boolean, includeChildrenLevels: boolean) => {
     return Observable.of({
@@ -197,7 +197,8 @@ describe('ProgramPage', () => {
         KeysPipe,
         AuthorizationPipe,
         DateFormatPipe,
-        HistoricalIndexLabelPipe
+        HistoricalIndexLabelPipe,
+        FinancialObligationChart
       ], //declare main and subcomponents
       providers: [
        //start - Mocks HTTP provider
