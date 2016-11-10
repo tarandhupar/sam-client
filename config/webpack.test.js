@@ -146,11 +146,10 @@ var conf = {
        */
       { test: /\.html$/, loader: 'raw-loader', exclude: [helpers.root('src/index.html')] },
 
-      {
-        test: /\.scss$/,
-        exclude: /node_modules/,
-        loaders: ['raw-loader', 'sass?sourceMap'] // sass-loader not scss-loader
-      },
+      /**
+       * Compile css
+       */
+      { test: /\.scss$/, loaders: ['raw-loader', 'sass'], exclude: /node_modules/ },
 
     ],
 

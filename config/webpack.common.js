@@ -157,12 +157,6 @@ module.exports = {
         loaders: ['to-string-loader', 'css-loader']
       },
 
-      /// for fonts
-      {
-        test: /\.(woff2?|ttf|eot|svg)$/,
-        loader: 'url?limit=10000'
-      },
-
       /* Raw loader support for *.html
        * Returns file content as string
        *
@@ -174,12 +168,11 @@ module.exports = {
         exclude: [helpers.root('src/index.html')]
       },
 
-      /// Sweet Sassy Malassy
+      /// Sass Loader
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        loaders: ['raw-loader', 'sass?sourceMap'] // sass-loader not scss-loader
-        //loaders: ["style", "css", "resolve-url", "sass?sourceMap"]
+        loaders: ['raw-loader', 'sass']
       },
 
       /* File loader for supporting images, for example, in CSS files.
