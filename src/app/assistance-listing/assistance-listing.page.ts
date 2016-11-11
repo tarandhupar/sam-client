@@ -442,9 +442,9 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
                   rowArr = [],
                   obligationArr = [],
                   explanationArr = [];
-
+              
               info.values.forEach(year => {
-
+                
                 let innerArr = [];                
                 year.values.forEach((item, index) => {
                   let itemAmount;
@@ -459,13 +459,15 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
                     itemAmount = actualOrEstimate(item.year);
                   }else if(item.nsi && !item.amount ){
                     itemAmount = "Not Separately Identifiable";
+                  }else if(item.empty ){
+                    itemAmount = " ";
                   }else{
                     itemAmount = d3.format("($,")(item.amount);
                   }
 
                   innerArr.push(itemAmount);
                 });
-                amountArr.push(innerArr);
+                amountArr.push(innerArr);  
               });
 
               obligationSet.add(info.key + ( explanation  ? "(" + explanation.slice(0,-2) +  ")" : "") );
@@ -520,7 +522,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           });
     
           let obligationsData = _.flatten(obligationsArr);
-
+          
           return obligationsData;
         })
         .enter().append("tr")        
@@ -569,10 +571,34 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
     let formattedFinancialData = [];
     let obligations = d3.map();
     let numberOfYears = 3;
+    let existingYears;
+    let missingYears;
+    let allYears = d3.set();
 
     function getAssistanceType(id): string {
       return self.FilterMultiArrayObjectPipe.transform([id], self.aDictionaries.assistance_type, 'element_id', true, 'elements')[0].value;
     }
+
+    // Find all available years
+    financialData.map(function(item){
+      for(let year in item.values){
+        allYears.add(year);
+      }
+    });
+
+    // If a year its missing
+    financialData.map(function(item){
+      existingYears = [];
+      for(let year in item.values){
+        existingYears.push(year);
+      }
+      if(existingYears.length < numberOfYears){
+        missingYears = _.difference(allYears.values(), existingYears);
+        missingYears.forEach(missingYear => {
+          item.values[missingYear] = { flag: "empty" };
+        });
+      }
+    });
 
     financialData.map(function(item){
       for(let year in item.values){
@@ -593,6 +619,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
           "estimate": !!!item.values[year]["actual"],
           "ena": item.values[year].flag == "ena" || item.values[year].flag == "na" ? true : false,
           "nsi": item.values[year].flag == "nsi" || item.values[year].flag == "no" ? true : false,
+          "empty": item.values[year].flag == "empty" ? true : false,
           "explanation": item.values[year].explanation || ""
         }
         formattedFinancialData.push(financialItem);
