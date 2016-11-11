@@ -40,7 +40,7 @@ export class WrapperService {
         }
 
         var useReverseProxy = document.getElementsByTagName('html')[0].className == "ie9" ? true : false;
-        var baseUrl = useReverseProxy ? "/api" : API_UMBRELLA_URL;
+        var baseUrl = useReverseProxy ? "/ie_api" : API_UMBRELLA_URL;
 
         //TODO: Implement Post DATA to request
         let jsonOption = {
