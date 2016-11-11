@@ -174,7 +174,6 @@ export class ProgramPage implements OnInit {
     return relatedProgramsStream;
   }
 
-  // TODO - refactor alert
   private checkCurrentFY() {
     //check if this program has changed in this FY, if not, display an alert
     if ((new Date(this.oProgram.publishedDate)).getFullYear() < new Date().getFullYear()) {
