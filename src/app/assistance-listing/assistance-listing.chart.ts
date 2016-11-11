@@ -456,7 +456,6 @@ export class FinancialObligationChart {
   }
 
   prepareVisualizationData(financialData, dictionaries) {
-
     let self = this;
     let formattedFinancialData = [];
     let obligations = d3.map();
@@ -486,7 +485,7 @@ export class FinancialObligationChart {
           "ena": item.values[year].flag == "ena" || item.values[year].flag == "na" ? true : false,
           "nsi": item.values[year].flag == "nsi" || item.values[year].flag == "no" ? true : false,
           "explanation": item.values[year].explanation || ""
-        }
+        };
         formattedFinancialData.push(financialItem);
       }
     });
