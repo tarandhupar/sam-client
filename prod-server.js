@@ -9,7 +9,6 @@ catch(Error){
 }
 
 const API_UMBRELLA_KEY = process.env.API_UMBRELLA_KEY || apiConfig.API_UMBRELLA_KEY;
-const API_UMBRELLA_URL = process.env.API_UMBRELLA_URL || apiConfig.API_UMBRELLA_URL;
 
 localWebServer({
 	'static':{
