@@ -566,7 +566,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
   }
 
   prepareVisualizationData(financialData){
-    console.log(financialData);
     let self = this;
     let formattedFinancialData = [];
     let obligations = d3.map();
@@ -629,7 +628,6 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
     formattedFinancialData.forEach(function(item){
       item.quantity = obligations.get(item.obligation) / numberOfYears;
     });
-    console.log(formattedFinancialData);
     return formattedFinancialData;
   }
 
