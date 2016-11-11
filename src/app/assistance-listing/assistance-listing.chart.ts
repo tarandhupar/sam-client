@@ -455,7 +455,7 @@ export class FinancialObligationChart {
 
   }
 
-  prepareVisualizationData(financialData, aDictionaries) {
+  prepareVisualizationData(financialData, dictionaries) {
 
     let self = this;
     let formattedFinancialData = [];
@@ -463,7 +463,7 @@ export class FinancialObligationChart {
     let numberOfYears = 3;
 
     function getAssistanceType(id): string {
-      return self.FilterMultiArrayObjectPipe.transform([id], aDictionaries.assistance_type, 'element_id', true, 'elements')[0].value;
+      return self.FilterMultiArrayObjectPipe.transform([id], dictionaries.assistance_type, 'element_id', true, 'elements')[0].value;
     }
 
     financialData.map(function (item) {

@@ -1,4 +1,4 @@
-import { async, inject, TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { BaseRequestOptions, Http, HttpModule } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -152,14 +152,8 @@ let MockHistoricalIndexService = {
   }
 };
 
-let MockApiService = {
-  call: () => {
-    return Observable.of({});
-  }
-};
-
 export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
-  transform(aValue:any[], aData:any[], fieldName:string, isNested:boolean, nestedFieldName:string):any[] {
+  transform(value:any[], data:any[], fieldName:string, isNested:boolean, nestedFieldName:string):any[] {
     // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE DICTIONARY
     return [{
       code: "B",
@@ -171,7 +165,7 @@ export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
     }];
     // END TODO
   }
-};
+}
 
 describe('ProgramPage', () => {
   //TODO: Fix spies
@@ -236,7 +230,7 @@ describe('ProgramPage', () => {
     comp = fixture.componentInstance; // BannerComponent test instance
 
     // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE
-    comp.aDictionaries = { "assistance_type": [
+    comp.dictionaries = { "assistance_type": [
       {
         code: "B",
         elements: null,
@@ -295,30 +289,30 @@ describe('ProgramPage', () => {
 //        'functional_codes'
 //      ].join(','));
 
-    expect(comp.oProgram).toBeDefined();
-    expect(comp.oFederalHierarchy).toBeDefined();
+    expect(comp.program).toBeDefined();
+    expect(comp.federalHierarchy).toBeDefined();
     expect(comp.federalHierarchyWithParents).toBeDefined();
-    expect(comp.aRelatedProgram).toBeDefined();
-    expect(comp.oHistoricalIndex).toBeDefined();
-    expect(comp.aAlert).toBeDefined();
-    expect(comp.aDictionaries).toBeDefined();
+    expect(comp.relatedProgram).toBeDefined();
+    expect(comp.historicalIndex).toBeDefined();
+    expect(comp.alert).toBeDefined();
+    expect(comp.dictionaries).toBeDefined();
 
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Fish and Wildlife Coordination and Assistance Programs')
   });
 
   it('Should show the alert for updated since YYYY', () => {
     //mocked program should show the alert -> Verifying it
-    expect(comp.aAlert.length).toBeGreaterThan(0);
+    expect(comp.alert.length).toBeGreaterThan(0);
     expect(fixture.debugElement.queryAll(By.css('samalert')).length).toBeGreaterThan(0);
   });
 
   it('Should have related FAL', () => {
     //mocked program should show the related fal -> Verifying it
-    expect(comp.aRelatedProgram.length).toBe(2);
+    expect(comp.relatedProgram.length).toBe(2);
   });
 
   it('Should show labels for designation types', () => {
-    expect(comp.aDictionaries['applicant_types']).toBeDefined();
+    expect(comp.dictionaries['applicant_types']).toBeDefined();
     let labelElement = fixture.debugElement.query(By.css(".designation span"));
     expect(labelElement.nativeElement.innerHTML).toBe("U.S. Territories and possessions");
   });

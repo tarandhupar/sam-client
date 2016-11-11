@@ -10,7 +10,7 @@ let comp: FinancialObligationChart;
 let fixture: ComponentFixture<FinancialObligationChart>;
 
 export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
-  transform(aValue:any[], aData:any[], fieldName:string, isNested:boolean, nestedFieldName:string):any[] {
+  transform(value:any[], data:any[], fieldName:string, isNested:boolean, nestedFieldName:string):any[] {
     // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE DICTIONARY
     return [{
       code: "B",
@@ -52,7 +52,7 @@ describe('FinancialObligationChart', () => {
       "additionalInfo": {},
       "assistanceType": "0003003"
     }];
-    this.aDictionaries = {
+    this.dictionaries = {
       "assistance_type": [
         {
           code: "B",
@@ -70,7 +70,7 @@ describe('FinancialObligationChart', () => {
 
   // TODO - Expand tests
   it('Should prepare data', () => {
-    let result = comp.prepareVisualizationData(this.mockedFinancialData, this.aDictionaries);
+    let result = comp.prepareVisualizationData(this.mockedFinancialData, this.dictionaries);
     expect(result[0].obligation).toBe('Project Grants');
     expect(result[0].amount).toBe(14853701);
     expect(result[0].estimate).toBe(false);
@@ -82,7 +82,7 @@ describe('FinancialObligationChart', () => {
 
   // TODO - Expand tests
   it('Should display chart', () => {
-    comp.createVisualization(comp.prepareVisualizationData(this.mockedFinancialData, this.aDictionaries));
+    comp.createVisualization(comp.prepareVisualizationData(this.mockedFinancialData, this.dictionaries));
     fixture.detectChanges();
     let chart = fixture.nativeElement.querySelector('#chart');
     let table = fixture.nativeElement.querySelector('#chart-table');
