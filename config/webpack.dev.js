@@ -169,10 +169,10 @@ module.exports = webpackMerge(commonConfig, {
       poll: 1000
     },
     proxy: {
-      '/api': {
+      '/ie_api': {
         target: API_UMBRELLA_URL,
         pathRewrite: {
-            '^/api' : '/',     // rewrite path
+            '^/ie_api' : '/',     // rewrite path
         },
         logLevel: "debug",
         changeOrigin: true,
