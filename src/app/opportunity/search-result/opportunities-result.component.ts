@@ -31,7 +31,7 @@ import * as moment from 'moment/moment';
         <li>
           <strong>Solicitation Number</strong>
           <ul class="usa-unstyled-list">
-            <li id='solicitation-number'>{{ data.solicitationNumber }}</li>
+            <li class='solicitation-number'>{{ data.solicitationNumber }}</li>
           </ul>
         </li>
           <li>
