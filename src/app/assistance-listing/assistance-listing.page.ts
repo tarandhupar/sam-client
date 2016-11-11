@@ -8,7 +8,7 @@ import { FinancialObligationChart } from './assistance-listing.chart';
 import * as _ from 'lodash';
 
 // Todo: avoid importing all of observable
-import { ReplaySubject, Observable } from "rxjs";
+import { ReplaySubject, Observable } from 'rxjs';
 
 @Component({
   moduleId: __filename,
@@ -23,26 +23,26 @@ import { ReplaySubject, Observable } from "rxjs";
   ]
 })
 export class ProgramPage implements OnInit {
-  program:any;
-  federalHierarchy:any;
-  federalHierarchyWithParents:any;
-  relatedProgram:any[] = [];
-  currentUrl:string;
-  dictionaries:any = [];
-  authorizationIdsGrouped:any[];
-  historicalIndex:any;
-  alert:any = [];
+  program: any;
+  federalHierarchy: any;
+  federalHierarchyWithParents: any;
+  relatedProgram: any[] = [];
+  currentUrl: string;
+  dictionaries: any = [];
+  authorizationIdsGrouped: any[];
+  historicalIndex: any;
+  alert: any = [];
 
-  @ViewChild(FinancialObligationChart) financialChart:FinancialObligationChart;
+  @ViewChild(FinancialObligationChart) financialChart: FinancialObligationChart;
 
   constructor(
-    private route:ActivatedRoute,
-    private location:Location,
+    private route: ActivatedRoute,
+    private location: Location,
     private historicalIndexService: HistoricalIndexService,
-    private programService:ProgramService,
-    private fhService:FHService,
-    private dictionaryService:DictionaryService,
-    private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) {}
+    private programService: ProgramService,
+    private fhService: FHService,
+    private dictionaryService: DictionaryService,
+    private filterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) {}
 
   ngOnInit() {
     this.currentUrl = this.location.path();
@@ -58,8 +58,8 @@ export class ProgramPage implements OnInit {
   }
 
   private loadAPI() {
-    var apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
-    var apiStream = this.route.params.switchMap(params => { // construct a stream of api data
+    let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
+    let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       return this.programService.getProgramById(params['id']);
     });
     apiStream.subscribe(apiSubject);
@@ -69,7 +69,7 @@ export class ProgramPage implements OnInit {
       this.checkCurrentFY();
       this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations, 'authorizationId'));
     }, err => {
-      console.log('Error logging', err)
+      console.log('Error logging', err);
     });
 
     return apiSubject;
@@ -88,12 +88,12 @@ export class ProgramPage implements OnInit {
       'functional_codes'
     ];
 
-    var dictionaryServiceSubject = new ReplaySubject(1); // broadcasts the dictionary data to multiple subscribers
+    let dictionaryServiceSubject = new ReplaySubject(1); // broadcasts the dictionary data to multiple subscribers
     // construct a stream of dictionary data
     this.dictionaryService.getDictionaryById(dictionaries.join(',')).subscribe(dictionaryServiceSubject);
 
     dictionaryServiceSubject.subscribe(res => { // run whenever dictionary data is updated
-      for (var key in res) {
+      for (let key in res) {
         this.dictionaries[key] = res[key]; // store the dictionary
       }
     });
@@ -103,7 +103,7 @@ export class ProgramPage implements OnInit {
 
   private loadChart(dictionarySource: Observable<any>, apiSource: Observable<any>) {
     // construct a stream that triggers an update whenever the api or dictionary changes
-    var d3UpdateStream = dictionarySource.combineLatest(apiSource, function(dictionary, api) {
+    let d3UpdateStream = dictionarySource.combineLatest(apiSource, function(dictionary, api) {
       return { dictionary: dictionary, api: api };
     });
 
@@ -120,9 +120,9 @@ export class ProgramPage implements OnInit {
   }
 
   private loadFederalHierarchy(apiSource: Observable<any>) {
-    var oid = "";
+    let oid = '';
 
-    var fhWithParentsStream = apiSource.switchMap(api => { // construct a stream of federal hierarchy data
+    let fhWithParentsStream = apiSource.switchMap(api => { // construct a stream of federal hierarchy data
       oid = api.data.organizationId;
       return this.fhService.getFederalHierarchyById(api.data.organizationId, true, false);
     })  ;
@@ -130,15 +130,15 @@ export class ProgramPage implements OnInit {
     fhWithParentsStream.subscribe(res => { // run whenever federal hierarchy data is updated
       this.federalHierarchyWithParents = res;
       // search for only the data belonging to this object, without it's parents or children
-      this.federalHierarchy = this.FilterMultiArrayObjectPipe.transform(
-        [oid], [this.federalHierarchyWithParents], "elementId", true, "hierarchy")[0];
+      this.federalHierarchy = this.filterMultiArrayObjectPipe.transform(
+        [oid], [this.federalHierarchyWithParents], 'elementId', true, 'hierarchy')[0];
     });
 
     return fhWithParentsStream;
   }
 
   private loadHistoricalIndex(apiSource: Observable<any>) {
-    var historicalIndexStream = apiSource.switchMap(api => { // construct a stream of historical index data
+    let historicalIndexStream = apiSource.switchMap(api => { // construct a stream of historical index data
       return this.historicalIndexService.getHistoricalIndexByProgramNumber(api.data._id, api.data.programNumber);
     });
 
@@ -150,23 +150,23 @@ export class ProgramPage implements OnInit {
   }
 
   private loadRelatedPrograms(apiSource: Observable<any>) {
-    var relatedProgramsIdStream = apiSource.switchMap(api => { // construct a stream of related programs ids
-      if (api.data.relatedPrograms.flag != "na") {
+    let relatedProgramsIdStream = apiSource.switchMap(api => { // construct a stream of related programs ids
+      if (api.data.relatedPrograms.flag !== 'na') {
         return Observable.from(api.data.relatedPrograms.relatedTo);
       }
       return Observable.empty(); // if there are no related programs, don't trigger an update
     });
 
     // construct a stream that contains all related programs from related program ids
-    var relatedProgramsStream = relatedProgramsIdStream.flatMap(relatedId => {
+    let relatedProgramsStream = relatedProgramsIdStream.flatMap(relatedId => {
       return this.programService.getLatestProgramById(relatedId);
     });
 
     relatedProgramsStream.subscribe(relatedProgram => { // run whenever related programs are updated
       if(typeof relatedProgram !== 'undefined') {
         this.relatedProgram.push({ // store the related program
-          "programNumber": relatedProgram.data.programNumber,
-          "id": relatedProgram.data._id
+          'programNumber': relatedProgram.data.programNumber,
+          'id': relatedProgram.data._id
         });
       }
     });
@@ -175,11 +175,11 @@ export class ProgramPage implements OnInit {
   }
 
   private checkCurrentFY() {
-    //check if this program has changed in this FY, if not, display an alert
+    // check if this program has changed in this FY, if not, display an alert
     if ((new Date(this.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
-      this.alert.push({"labelname":"not-updated-since", "config":{ "type": "warning", "title": "", "description": "Note: \n\
-This Federal Assistance Listing was not updated by the issuing agency in "+(new Date()).getFullYear()+". \n\
-Please contact the issuing agency listed under \"Contact Information\" for more information." }});
+      this.alert.push({'labelname':'not-updated-since', 'config':{ 'type': 'warning', 'title': '', 'description': 'Note: \n\
+This Federal Assistance Listing was not updated by the issuing agency in ' +(new Date()).getFullYear()+ '. \n\
+Please contact the issuing agency listed under "Contact Information" for more information.' }});
     }
   }
 }

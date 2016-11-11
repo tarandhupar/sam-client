@@ -1,4 +1,4 @@
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 /**
  * Function to return an array of matched data by an ID
@@ -15,12 +15,12 @@ import {Pipe, PipeTransform} from '@angular/core';
  */
 @Pipe({name: 'filterMultiArrayObject'})
 export class FilterMultiArrayObjectPipe implements PipeTransform {
-  transform(aValue:any[], aData:any[], fieldName:string, isNested:boolean, nestedFieldName:string):any[] {
+  transform(aValue: any[], aData: any[], fieldName: string, isNested: boolean, nestedFieldName: string): any[] {
 
     let aTmpArray = aData;
-    let aResults:any[] = [];
+    let aResults: any[] = [];
 
-    //nested array of objects
+    // nested array of objects
     if (isNested === true) {
       aTmpArray = this.flattenMultiArrayObject(aData, nestedFieldName);
     }
@@ -38,14 +38,14 @@ export class FilterMultiArrayObjectPipe implements PipeTransform {
     return aResults;
   }
 
-  private flattenMultiArrayObject(obj:any[], nestedFieldName:string):any[] {
+  private flattenMultiArrayObject(obj: any[], nestedFieldName: string): any[] {
     let accumulator = [];
 
-    //loop through current level of array
+    // loop through current level of array
     obj.forEach(item => {
-      //base case: return current level if not nested
+      // base case: return current level if not nested
       accumulator = accumulator.concat(item);
-      //recursive case: flatten nested array if it exists
+      // recursive case: flatten nested array if it exists
       if (item[nestedFieldName] && item[nestedFieldName] instanceof Array) {
         accumulator = accumulator.concat(this.flattenMultiArrayObject(item[nestedFieldName], nestedFieldName));
       }
