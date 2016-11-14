@@ -301,15 +301,15 @@
       <h3>Date Range for Approval/Disapproval:</h3>
 
       <p *ngIf="program">
-        <span class="italic" *ngIf="program.data.application?.deadlines?.approval?.interval =='1'">From 1 to 15 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.approval?.interval =='2'">From 15 to 30 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.approval?.interval =='3'">From 30 to 60 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.approval?.interval =='4'">From 60 to 90 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.approval?.interval =='5'">From 90 to 120 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.approval?.interval =='6'">From 120 to 180 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.approval?.interval =='7'">&gt; 180 Days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.approval?.interval =='8'">Not Applicable</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.approval?.interval =='9'">Other</span>
+        <span *ngIf="program.data.application?.deadlines?.approval?.interval =='1'"><em>From 1 to 15 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.approval?.interval =='2'"><em>From 15 to 30 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.approval?.interval =='3'"><em>From 30 to 60 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.approval?.interval =='4'"><em>From 60 to 90 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.approval?.interval =='5'"><em>From 90 to 120 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.approval?.interval =='6'"><em>From 120 to 180 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.approval?.interval =='7'"><em>&gt; 180 Days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.approval?.interval =='8'"><em>Not Applicable</em></span>
+        <span *ngIf="program.data.application?.deadlines?.approval?.interval =='9'"><em>Other</em></span>
         <span>{{program.data.application?.deadlines?.approval?.otherInfo?.content}}</span>
       </p>
 
@@ -317,15 +317,15 @@
       <h3>Renewals:</h3>
 
       <p *ngIf="program">
-        <span class="italic" *ngIf="program.data.application?.deadlines?.renewal?.interval =='1'">From 1 to 15 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.renewal?.interval =='2'">From 15 to 30 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.renewal?.interval =='3'">From 30 to 60 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.renewal?.interval =='4'">From 60 to 90 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.renewal?.interval =='5'">From 90 to 120 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.renewal?.interval =='6'">From 120 to 180 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.renewal?.interval =='7'">&gt; 180 Days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.renewal?.interval =='8'">Not Applicable</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.renewal?.interval =='9'">Other</span>
+        <span *ngIf="program.data.application?.deadlines?.renewal?.interval =='1'"><em>From 1 to 15 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.renewal?.interval =='2'"><em>From 15 to 30 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.renewal?.interval =='3'"><em>From 30 to 60 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.renewal?.interval =='4'"><em>From 60 to 90 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.renewal?.interval =='5'"><em>From 90 to 120 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.renewal?.interval =='6'"><em>From 120 to 180 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.renewal?.interval =='7'"><em>gt; 180 Days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.renewal?.interval =='8'"><em>Not Applicable</em></span>
+        <span *ngIf="program.data.application?.deadlines?.renewal?.interval =='9'"><em>Other</em></span>
         <span>{{program.data.application?.deadlines?.renewal?.otherInfo?.content}}</span>
       </p>
 
@@ -333,15 +333,15 @@
       <h3>Appeals:</h3>
 
       <p *ngIf="program">
-        <span class="italic" *ngIf="program.data.application?.deadlines?.appeal?.interval =='1'">From 1 to 15 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.appeal?.interval =='2'">From 15 to 30 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.appeal?.interval =='3'">From 30 to 60 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.appeal?.interval =='4'">From 60 to 90 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.appeal?.interval =='5'">From 90 to 120 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.appeal?.interval =='6'">From 120 to 180 days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.appeal?.interval =='7'">&gt; 180 Days</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.appeal?.interval =='8'">Not Applicable</span>
-        <span class="italic" *ngIf="program.data.application?.deadlines?.appeal?.interval =='9'">Other</span>
+        <span *ngIf="program.data.application?.deadlines?.appeal?.interval =='1'"><em>From 1 to 15 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.appeal?.interval =='2'"><em>From 15 to 30 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.appeal?.interval =='3'"><em>From 30 to 60 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.appeal?.interval =='4'"><em>From 60 to 90 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.appeal?.interval =='5'"><em>From 90 to 120 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.appeal?.interval =='6'"><em>From 120 to 180 days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.appeal?.interval =='7'"><em>&gt; 180 Days</em></span>
+        <span *ngIf="program.data.application?.deadlines?.appeal?.interval =='8'"><em>Not Applicable</em></span>
+        <span *ngIf="program.data.application?.deadlines?.appeal?.interval =='9'"><em>Other</em></span>
         <span>{{program.data.application?.deadlines?.appeal?.otherInfo?.content}}</span>
       </p>
     </section>
