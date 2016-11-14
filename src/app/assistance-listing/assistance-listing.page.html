@@ -486,13 +486,8 @@
           <span *ngIf="oProgram.data.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{oProgram.data.contacts['local'].additionalInfo?.content}}</span>
           <span *ngIf="oProgram.data.contacts?.local?.flag == 'none'"> None. {{oProgram.data.contacts['local'].additionalInfo?.content}}</span> <br>
           <h3>Headquarters Office:</h3><br>
-
           <div *ngFor="let item of oProgram.data.contacts?.list">
-
-            {{item.title}} {{item.fullName}} <br>{{item.address}}, <br> {{item.city}}, {{item.state}} {{item.zip}}<br>
-            <strong>Email:</strong> <a href="mailto:{{item.email}}">{{item.email}}</a> <br>
-            <strong>Phone:</strong> {{item.phone}}<br>
-            <span *ngIf="item.fax"><strong>Fax:</strong> {{item.fax}}<br></span><br>
+            <samAddress [data]="item"></samAddress>
           </div>
           <strong>Website: </strong>
           <span *ngIf="!oProgram.data.website || oProgram.data.website == null ">No Data Available</span>
