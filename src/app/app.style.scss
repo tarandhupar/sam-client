@@ -30,9 +30,9 @@
 @import 'node_modules/uswds/src/stylesheets/elements/typography';
 
 // SAMWDS Elements additions and overrides -------------- //
-@import 'node_modules/samwds/src/stylesheets/elements/buttons';
-@import 'node_modules/samwds/src/stylesheets/elements/inputs';
-@import 'node_modules/samwds/src/stylesheets/elements/typography';
+@import 'styles/elements/buttons';
+@import 'styles/elements/inputs';
+@import 'styles/elements/typography';
 
 // USWDS Components -------------- //
 @import 'node_modules/uswds/src/stylesheets/components/accordions';
