@@ -20,7 +20,7 @@ import { SamHeaderComponent } from "./header/header.component";
 import { SamAlertComponent } from "./alert/alert.component";
 import { SamAccordionsComponent } from "./accordions/accordions.component";
 import { SamButtonComponent } from "./form-controls/button/button.component.ts";
-import { SamAddressComponent } from "./address/address.component";
+import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.component";
 import { SamPaginationComponent } from "./pagination/pagination.component";
 
 
@@ -45,7 +45,7 @@ import { SamPaginationComponent } from "./pagination/pagination.component";
     SamFooterComponent,
     SamHeaderComponent,
     SamAlertComponent,
-    SamAddressComponent,
+    SamPointOfContactComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -69,7 +69,7 @@ import { SamPaginationComponent } from "./pagination/pagination.component";
     SamFooterComponent,
     SamHeaderComponent,
     SamAlertComponent,
-    SamAddressComponent
+    SamPointOfContactComponent
   ],
   providers: [ ]
 })

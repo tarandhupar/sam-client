@@ -487,7 +487,7 @@
           <span *ngIf="oProgram.data.contacts?.local?.flag == 'none'"> None. {{oProgram.data.contacts['local'].additionalInfo?.content}}</span> <br>
           <h3>Headquarters Office:</h3><br>
           <div *ngFor="let item of oProgram.data.contacts?.list">
-            <samAddress [data]="item"></samAddress>
+            <samPOC [data]="item"></samPOC>
           </div>
           <strong>Website: </strong>
           <span *ngIf="!oProgram.data.website || oProgram.data.website == null ">No Data Available</span>
