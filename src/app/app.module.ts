@@ -28,7 +28,7 @@ import { SamAPIKitModule } from 'api-kit';
 const APP_PROVIDERS = [
   AppState
 ];
-
+var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ? true : false;
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
@@ -45,7 +45,7 @@ const APP_PROVIDERS = [
     HttpModule,
 
     // Router
-    RouterModule.forRoot(ROUTES, { useHash: false }),
+    RouterModule.forRoot(ROUTES, { useHash: useHashValue }),
 
     // Page View Modules
     ProgramModule,
