@@ -66,6 +66,7 @@
     "classlist-polyfill": "^1.0.3",
     "core-js": "~2.4.1",
     "d3": "^4.2.6",
+    "font-awesome": "4.6.3",
     "ie-shim": "0.1.0",
     "local-web-server": "1.2.6",
     "lodash": "4.15.0",
