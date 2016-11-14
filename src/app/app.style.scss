@@ -44,10 +44,10 @@
 @import 'node_modules/uswds/src/stylesheets/components/skipnav';
 
 // SAMWDS Components additions and overrides -------- //
-@import 'node_modules/samwds/src/stylesheets/components/actions';
-@import 'node_modules/samwds/src/stylesheets/components/navprimary';
-@import 'node_modules/samwds/src/stylesheets/components/navsecondary';
-@import 'node_modules/samwds/src/stylesheets/components/navside';
+@import 'styles/components/actions';
+@import 'styles/components/navprimary';
+@import 'styles/components/navsecondary';
+@import 'styles/components/navside';
 
 html, body{
   height: 100%;
