@@ -15,18 +15,15 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
  */
 @Component({
   selector: 'samAlert',
-  templateUrl: './alert.template.html'
-
+  templateUrl: './alert.template.html',
+  styleUrls: ['./alert.style.css']
 })
 export class SamAlertComponent {
   @Input() type: string;
   @Input() title: string;
   @Input() description: string;
-  @Input() showDescription: boolean = true;
   @Input() showClose: boolean = false;
-  @Input() showGoToAlerts: boolean = false;
   @Output() dismiss: EventEmitter<any> = new EventEmitter<any>();
-
 
   types:any = {
     "success":"usa-alert-success",
@@ -35,7 +32,6 @@ export class SamAlertComponent {
     "info":"usa-alert-info"
   };
   selectedType: string = this.types['success'];
-  expandLinkText: string = "Collapse";
 
   constructor() {
   }
@@ -43,9 +39,6 @@ export class SamAlertComponent {
   ngOnInit(){
     if(!this.typeNotDefined()){
       this.selectedType = this.types[this.type];
-    }
-    if(!this.showDescription){
-      this.expandLinkText = "Expand";
     }
   }
 

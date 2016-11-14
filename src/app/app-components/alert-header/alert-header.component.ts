@@ -13,6 +13,7 @@ export class AlertHeaderComponent {
 
   private intervalId: any = null;
   private alerts: any[] = [];
+  private alertClass: string;
 
   constructor(private systemAlerts: SystemAlertsService) { }
 
@@ -37,32 +38,43 @@ export class AlertHeaderComponent {
     }
   }
 
-  onDismiss() {
+  showAlerts() {
+    return this.alerts.length;
+  }
+
+  onDismissClick() {
     Cookie.set('dismissAlerts', 'true', 0);
     clearInterval(this.intervalId);
     this.alerts = [];
   }
 
-  mapResponseToAlertConfig(res) {
-    let getAlertTypeForSeverity = {
-      'WARNING': 'warning',
-      'INFO': 'info',
-      'ERROR': 'error'
-    };
-
-    // default to error if the response does not have a severity set, or severity is invalid
-    let type = getAlertTypeForSeverity[res.severity] || 'error';
-
-    return {
-      type: type,
-      title: res.title,
-      description: res.description
-    };
-  }
-
   fetchAlerts() {
     this.systemAlerts.getAll().subscribe(alerts => {
-      this.alerts = alerts.map(this.mapResponseToAlertConfig);
+      if (!alerts.length) {
+        this.alerts = [];
+        return;
+      }
+
+      let firstSeverity = alerts[0].severity.toLowerCase();
+
+      // Only display two errors if there is more than one error and they are both critical
+      // (We didn't want two different colors of messages)
+      this.alerts = alerts.slice(0, 1);
+      if (alerts.length > 1) {
+        let secondSeverity = alerts[1].severity.toLowerCase();
+        if (secondSeverity === 'error' && firstSeverity === 'error') {
+          this.alerts = alerts.slice(0, 2);
+        }
+      }
+
+      let alertClasses = {
+        "success":"usa-alert-success",
+        "warning":"usa-alert-warning",
+        "error":"usa-alert-error",
+        "info":"usa-alert-info"
+      };
+
+      this.alertClass = alertClasses[firstSeverity] || "usa-alert-error";
     }, error => {
       console.error('Encountered an error fetching alerts: ', error);
     });
