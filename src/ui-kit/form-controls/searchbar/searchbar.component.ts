@@ -40,6 +40,7 @@ export class SamSearchbarComponent {
       {value: '', label: 'All'},
       {value: 'fbo', label: 'Opportunities'},
       {value: 'cfda', label: 'Assistance Listings'},
+      {value: 'fh', label: 'Federal Hierarchy'}
     ],
     disabled: false,
     label: '',
