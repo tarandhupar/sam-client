@@ -4,6 +4,7 @@
 
 const webpack = require('webpack');
 const helpers = require('./helpers');
+const path = require('path');
 
 /*
  * Webpack Plugins
@@ -167,6 +168,13 @@ module.exports = {
         exclude: [helpers.root('src/index.html')]
       },
 
+      /// Sass Loader
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        loaders: ['raw-loader', 'sass']
+      },
+
       /* File loader for supporting images, for example, in CSS files.
       */
       {
@@ -211,13 +219,16 @@ module.exports = {
      *
      * See: https://www.npmjs.com/package/copy-webpack-plugin
      */
-    new CopyWebpackPlugin([{
-
-      from: 'src/assets',
-      to: 'assets'
-    },
-    { from: 'node_modules/samwds/dist',
-      to: 'assets' }]),
+    new CopyWebpackPlugin([
+      {
+        from: 'src/assets',
+        to: 'assets'
+      },
+      {
+        from: 'node_modules/samwds/dist',
+        to: ''
+      }
+    ]),
 
     /*
      * Plugin: HtmlWebpackPlugin

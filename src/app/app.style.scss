@@ -1,0 +1,70 @@
+// Vendor main -------------- //
+@import 'node_modules/samwds/src/stylesheets/lib/font-awesome/font-awesome';
+
+@import 'node_modules/uswds/src/stylesheets/lib/bourbon';
+@import 'node_modules/uswds/src/stylesheets/lib/neat';
+@import 'node_modules/uswds/src/stylesheets/lib/normalize';
+
+// USWDS Core -------------- //
+@import 'node_modules/uswds/src/stylesheets/core/defaults';
+@import 'node_modules/samwds/src/stylesheets/core/variables'; // override U.S. Web Design Standards defaults
+@import 'node_modules/uswds/src/stylesheets/core/fonts';
+@import 'node_modules/uswds/src/stylesheets/core/base';
+@import 'node_modules/uswds/src/stylesheets/core/grid-settings';
+@import 'node_modules/uswds/src/stylesheets/core/grid';
+@import 'node_modules/uswds/src/stylesheets/core/utilities';
+
+// SAMWDS Core additions and overrides -------------- //
+@import 'node_modules/samwds/src/stylesheets/core/utilities';
+@import 'node_modules/samwds/src/stylesheets/core/margin-padding';
+@import 'node_modules/samwds/src/stylesheets/core/iae-global';
+
+
+// USWDS Elements -------------- //
+@import 'node_modules/uswds/src/stylesheets/elements/buttons';
+@import 'node_modules/uswds/src/stylesheets/elements/figure';
+@import 'node_modules/uswds/src/stylesheets/elements/inputs';
+@import 'node_modules/uswds/src/stylesheets/elements/labels';
+@import 'node_modules/uswds/src/stylesheets/elements/list';
+@import 'node_modules/uswds/src/stylesheets/elements/table';
+@import 'node_modules/uswds/src/stylesheets/elements/typography';
+
+// SAMWDS Elements additions and overrides -------------- //
+@import 'node_modules/samwds/src/stylesheets/elements/buttons';
+@import 'node_modules/samwds/src/stylesheets/elements/figure';
+@import 'node_modules/samwds/src/stylesheets/elements/inputs';
+@import 'node_modules/samwds/src/stylesheets/elements/typography';
+
+// USWDS Components -------------- //
+@import 'node_modules/uswds/src/stylesheets/components/accordions';
+@import 'node_modules/uswds/src/stylesheets/components/alerts';
+@import 'node_modules/uswds/src/stylesheets/components/footer';
+@import 'node_modules/uswds/src/stylesheets/components/forms';
+@import 'node_modules/uswds/src/stylesheets/components/search';
+@import 'node_modules/uswds/src/stylesheets/components/sidenav';
+@import 'node_modules/uswds/src/stylesheets/components/skipnav';
+
+// SAMWDS Components additions and overrides -------- //
+@import 'node_modules/samwds/src/stylesheets/components/accordions';
+@import 'node_modules/samwds/src/stylesheets/components/actions';
+@import 'node_modules/samwds/src/stylesheets/components/alerts';
+//@import 'node_modules/samwds/src/stylesheets/components/header';
+//@import 'node_modules/samwds/src/stylesheets/components/footer';
+@import 'node_modules/samwds/src/stylesheets/components/search-result';
+@import 'node_modules/samwds/src/stylesheets/components/navprimary';
+@import 'node_modules/samwds/src/stylesheets/components/navsecondary';
+@import 'node_modules/samwds/src/stylesheets/components/navside';
+
+html, body{
+  height: 100%;
+  /*font-family: Arial, Helvetica, sans-serif*/
+}
+
+/* Let content occupy most of the page and show footer when scroll down*/
+.occupy-page{
+  min-height: 90vh;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
