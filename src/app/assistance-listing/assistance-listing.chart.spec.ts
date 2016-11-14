@@ -63,7 +63,7 @@ describe('FinancialObligationChart Create Visualization', () => {
   });
 
   /**
-   * Basic check that some king of chart is created
+   * Basic check that some kind of chart is created
    */
   it('Should display chart', () => {
     let chart = fixture.nativeElement.querySelector('#chart');
