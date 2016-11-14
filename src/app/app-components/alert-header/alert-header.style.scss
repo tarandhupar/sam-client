@@ -16,6 +16,10 @@
   margin-right: 32px;
 }
 
-.title-and-description:not(:first-child), .alert-link {
+.title-and-description:not(:first-child) {
   margin-top: 28px;
+}
+
+.alert-link {
+  margin-top: 14px;
 }
