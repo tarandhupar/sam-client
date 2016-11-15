@@ -20,11 +20,11 @@ export class SamHeaderComponent {
 
 
   @Output()
-  dropdownControl:EventEmitter<any> = new EventEmitter<any>();
+  headerDropdownControl:EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
   dropdownEventControl(value){
-    this.dropdownControl.emit(value);
+    this.headerDropdownControl.emit(value);
   }
 }

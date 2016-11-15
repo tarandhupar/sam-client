@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { RouterTestingModule} from '@angular/router/testing';
 
 // Load the implementations that should be tested
