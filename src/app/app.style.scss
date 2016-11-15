@@ -1,12 +1,12 @@
 // Vendor main
-@import 'node_modules/font-awesome/css/font-awesome';
+@import '~font-awesome/css/font-awesome';
 
 // Internal variable should be declared before uswds variable to take higher precendence
-@import 'styles/margin-padding';
-@import 'styles/global';
-@import 'styles/typography';
+@import 'margin-padding';
+@import 'global';
+@import 'typography';
 
-@import 'node_modules/uswds/src/stylesheets/all';
+@import '~uswds/src/stylesheets/all';
 
 html, body{
   height: 100%;

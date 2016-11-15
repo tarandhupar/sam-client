@@ -186,7 +186,7 @@ module.exports = {
   },
 
   sassLoader: {
-    includePaths: ["src/app/styles", "node_modules"]
+    includePaths: ['src/app/styles']
   },
 
   /*
