@@ -28,3 +28,8 @@
   display: inline-block;
   vertical-align: top;
 }
+
+.dropdown-link{
+  text-decoration: none;
+  cursor: pointer;
+}

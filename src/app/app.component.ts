@@ -14,7 +14,7 @@ import { SearchService } from 'api-kit';
   selector: 'app',
   encapsulation: ViewEncapsulation.None,
   styleUrls: [
-    './app.style.css'
+    './app.style.scss'
   ],
   templateUrl: './app.template.html',
   providers : [SearchService]

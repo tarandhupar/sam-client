@@ -144,7 +144,12 @@ var conf = {
        *
        * See: https://github.com/webpack/raw-loader
        */
-      { test: /\.html$/, loader: 'raw-loader', exclude: [helpers.root('src/index.html')] }
+      { test: /\.html$/, loader: 'raw-loader', exclude: [helpers.root('src/index.html')] },
+
+      /**
+       * Compile css
+       */
+      { test: /\.scss$/, loaders: ['raw-loader', 'sass'], exclude: /node_modules/ },
 
     ],
 
