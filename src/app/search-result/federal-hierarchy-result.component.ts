@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
     	  <span *ngIf=false class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="federal-hierarchy-title">
-      	<a *ngIf=true>Title field</a>
+      	<a *ngIf=true>{{ data.title }}</a>
       	<span *ngIf=false>Title Field</span>
     	</h3>
     	<div class="usa-width-two-thirds">
