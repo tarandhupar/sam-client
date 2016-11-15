@@ -313,7 +313,7 @@ describe('ProgramPage', () => {
 
   it('Should show labels for designation types', () => {
     expect(comp.dictionaries['applicant_types']).toBeDefined();
-    let labelElement = fixture.debugElement.query(By.css('.designation span'));
-    expect(labelElement.nativeElement.innerHTML).toBe('U.S. Territories and possessions');
+    let labelElement = fixture.debugElement.query(By.css('.designation'));
+    expect(labelElement.nativeElement.innerHTML).toContain('U.S. Territories and possessions');
   });
 });

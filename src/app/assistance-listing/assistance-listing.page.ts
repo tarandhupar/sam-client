@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
@@ -22,7 +22,7 @@ import { ReplaySubject, Observable } from 'rxjs';
     FilterMultiArrayObjectPipe
   ]
 })
-export class ProgramPage implements OnInit {
+export class ProgramPage implements OnInit, AfterViewInit {
   program: any;
   federalHierarchy: any;
   federalHierarchyWithParents: any;
@@ -34,6 +34,8 @@ export class ProgramPage implements OnInit {
   alert: any = [];
 
   @ViewChild(FinancialObligationChart) financialChart: FinancialObligationChart;
+  private apiSource;
+  private dictionaryStream;
 
   constructor(
     private route: ActivatedRoute,
@@ -47,14 +49,16 @@ export class ProgramPage implements OnInit {
   ngOnInit() {
     this.currentUrl = this.location.path();
 
-    let apiSource = this.loadAPI();
+    this.apiSource = this.loadAPI();
+    this.dictionaryStream = this.loadDictionaries();
 
-    let dictionaryStream = this.loadDictionaries();
-    this.loadChart(dictionaryStream, apiSource);
+    this.loadFederalHierarchy(this.apiSource);
+    this.loadHistoricalIndex(this.apiSource);
+    this.loadRelatedPrograms(this.apiSource);
+  }
 
-    this.loadFederalHierarchy(apiSource);
-    this.loadHistoricalIndex(apiSource);
-    this.loadRelatedPrograms(apiSource);
+  ngAfterViewInit() {
+    this.loadChart(this.dictionaryStream, this.apiSource);
   }
 
   private loadAPI() {

@@ -27,11 +27,11 @@ export class FilterMultiArrayObjectPipe implements PipeTransform {
 
     // for each search value, filter the data to get a list of items that match the search value
     // then combine all lists of results together and flatten them, taking only unique results
-    return _.chain(_.flatMap(values, value => {
+    return _.uniq(_.flatMap(values, value => {
       return _.filter(tmpArray, item => {
         return value === item[fieldName];
       });
-    })).uniq();
+    }));
   }
 
   private flattenMultiArrayObject(obj: any[], nestedFieldName: string): any[] {
