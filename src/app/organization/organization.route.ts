@@ -1,10 +1,10 @@
 import { Routes, RouterModule } from '@angular/router';
-import { OrganizationsPage } from './organizations.page';
+import { OrganizationPage } from './organization.page.ts';
 
 export const routes: Routes = [
   {
     path: 'organizations/:id',
-    component: OrganizationsPage
+    component: OrganizationPage
   },
 ];
 

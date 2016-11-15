@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { OrganizationsPage }   from './organizations.page';
-import { routing } from './organizations.route';
+import { OrganizationPage }   from './organization.page.ts';
+import { routing } from './organization.route.ts';
 
 @NgModule({
   imports: [
@@ -9,10 +9,10 @@ import { routing } from './organizations.route';
     routing,
   ],
   exports: [
-    OrganizationsPage,
+    OrganizationPage,
   ],
   declarations: [
-    OrganizationsPage,
+    OrganizationPage,
   ],
 })
-export class OrganizationsModule { }
+export class OrganizationModule { }

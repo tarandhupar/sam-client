@@ -7,13 +7,13 @@ import { ReplaySubject } from 'rxjs';
 
 @Component({
   moduleId: __filename,
-  templateUrl: 'organizations.component.html',
-  styleUrls: ['organizations.style.css'],
+  templateUrl: 'organization.page.html',
+  styleUrls: ['organization.style.css'],
   providers: [
     FHService
   ]
 })
-export class OrganizationsPage implements OnInit, OnDestroy {
+export class OrganizationPage implements OnInit, OnDestroy {
   sub: Subscription;
   currentUrl: string;
   organizations:any;
