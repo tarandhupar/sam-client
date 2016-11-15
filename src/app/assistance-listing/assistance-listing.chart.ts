@@ -377,9 +377,8 @@ export class FinancialObligationChart {
                     itemAmount = actualOrEstimate(item.year);
                   } else if (item.nsi && !item.amount) {
                     itemAmount = "Not Separately Identifiable";
-                  }
-                  else if(item.empty){
-                    itemAmount = " "; 
+                  } else if(item.empty) {
+                    itemAmount = "";
                   } else {
                     itemAmount = d3.format("($,")(item.amount);
                   }
@@ -408,7 +407,7 @@ export class FinancialObligationChart {
                       if(index !== innerIndex){
                         obligationArr[index] = innerItem;
                         obligationArr[innerIndex] = "";
-                      }else{
+                      } else {
                         obligationArr.push("");
                       }
                     }
