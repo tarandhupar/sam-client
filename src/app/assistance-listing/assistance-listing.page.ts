@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
-import { FinancialObligationChart } from './assistance-listing.chart';
 
 import * as _ from 'lodash';
 
@@ -22,20 +21,16 @@ import { ReplaySubject, Observable } from 'rxjs';
     FilterMultiArrayObjectPipe
   ]
 })
-export class ProgramPage implements OnInit, AfterViewInit {
+export class ProgramPage implements OnInit {
   program: any;
   federalHierarchy: any;
   federalHierarchyWithParents: any;
   relatedProgram: any[] = [];
   currentUrl: string;
-  dictionaries: any = [];
+  dictionaries: any;
   authorizationIdsGrouped: any[];
   historicalIndex: any;
   alert: any = [];
-
-  @ViewChild(FinancialObligationChart) financialChart: FinancialObligationChart;
-  private apiSource;
-  private dictionaryStream;
 
   constructor(
     private route: ActivatedRoute,
@@ -49,19 +44,18 @@ export class ProgramPage implements OnInit, AfterViewInit {
   ngOnInit() {
     this.currentUrl = this.location.path();
 
-    this.apiSource = this.loadAPI();
-    this.dictionaryStream = this.loadDictionaries();
+    let programAPISource = this.loadProgram();
 
-    this.loadFederalHierarchy(this.apiSource);
-    this.loadHistoricalIndex(this.apiSource);
-    this.loadRelatedPrograms(this.apiSource);
+    this.loadDictionaries();
+    this.loadFederalHierarchy(programAPISource);
+    this.loadHistoricalIndex(programAPISource);
+    this.loadRelatedPrograms(programAPISource);
   }
 
-  ngAfterViewInit() {
-    this.loadChart(this.dictionaryStream, this.apiSource);
-  }
-
-  private loadAPI() {
+  /**
+   * @return Observable of Program API 
+   */
+  private loadProgram() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       return this.programService.getProgramById(params['id']);
@@ -79,6 +73,9 @@ export class ProgramPage implements OnInit, AfterViewInit {
     return apiSubject;
   }
 
+  /**
+   * @return Observable of Dictionary API 
+   */
   private loadDictionaries() {
     // declare dictionaries to load
     let dictionaries = [
@@ -96,31 +93,15 @@ export class ProgramPage implements OnInit, AfterViewInit {
     // construct a stream of dictionary data
     this.dictionaryService.getDictionaryById(dictionaries.join(',')).subscribe(dictionaryServiceSubject);
 
+    var temp: any = {};
     dictionaryServiceSubject.subscribe(res => { // run whenever dictionary data is updated
       for (let key in res) {
-        this.dictionaries[key] = res[key]; // store the dictionary
+        temp[key] = res[key]; // store the dictionary
       }
+      this.dictionaries = temp;
     });
 
     return dictionaryServiceSubject;
-  }
-
-  private loadChart(dictionarySource: Observable<any>, apiSource: Observable<any>) {
-    // construct a stream that triggers an update whenever the api or dictionary changes
-    let d3UpdateStream = dictionarySource.combineLatest(apiSource, function(dictionary, api) {
-      return { dictionary: dictionary, api: api };
-    });
-
-    d3UpdateStream.subscribe(updated => { // run whenever underlying d3 chart data is updated
-      if (updated.api.data.financial.obligations) {
-        // call to this.dictionaries is safe because d3UpdateStream requires dictionary api to be loaded
-        this.financialChart.createVisualization(
-          this.financialChart.prepareVisualizationData(updated.api.data.financial.obligations, this.dictionaries)
-        );
-      }
-    });
-
-    return d3UpdateStream;
   }
 
   private loadFederalHierarchy(apiSource: Observable<any>) {

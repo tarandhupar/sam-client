@@ -18,10 +18,26 @@ describe('FilterMultiArrayObjectPipe Test', () => {
     }, {
       'id': '2',
       'value': 'Bar'
-  }];
+  }, {
+    'id': '3',
+    'value': 'Bar',
+    'elements': [
+      {
+        'id': '33',
+        'value': 'Foo 3.1',
+        'elements': [
+          {
+            'id': '333',
+            'value': 'Foo 33.1'
+          }
+        ]
+      }
+    ]
+  }
+  ];
 
   it('Not found', () => {
-    expect(pipe.transform(['3'], aData, 'id', false, '')).toEqual([]);
+    expect(pipe.transform(['4'], aData, 'id', false, '')).toEqual([]);
   });
 
   it('Not nested: Single array', () => {
@@ -29,6 +45,7 @@ describe('FilterMultiArrayObjectPipe Test', () => {
   });
 
   it('Nested array', () => {
-    expect(pipe.transform(['11'], aData, 'id', true, 'elements')).toEqual([{'id': '11', 'value': 'Foo 1.1'}]);
+    expect(pipe.transform(['11'], aData, 'id', true, 'elements')).toEqual([{'id': '11', 'value': 'Foo 1.1'}]); //second level
+    expect(pipe.transform(['333'], aData, 'id', true, 'elements')).toEqual([{'id': '333', 'value': 'Foo 33.1'}]); ///third level
   });
 });

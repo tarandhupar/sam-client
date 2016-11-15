@@ -58,7 +58,8 @@ describe('FinancialObligationChart Create Visualization', () => {
       'assistanceType': '0003003'
     }];
 
-    comp.createVisualization(comp.prepareVisualizationData(mockFinancialData, mockDictionaries));
+    comp.financialData = mockFinancialData;
+    comp.dictionaries = mockDictionaries;
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
   });
 
@@ -113,8 +114,7 @@ describe('FinancialObligationChart Prepare Visualization', () => {
 
     fixture = TestBed.createComponent(FinancialObligationChart);
     comp = fixture.componentInstance;
-
-    this.mockDictionaries = {
+    comp.dictionaries = {
       'assistance_type': [
         {
           code: 'A',
@@ -127,7 +127,7 @@ describe('FinancialObligationChart Prepare Visualization', () => {
       ]
     };
 
-    fixture.detectChanges(); // 1st change detection triggers ngOnInit
+//    fixture.detectChanges(); // 1st change detection triggers ngOnInit
   });
 
   /**
@@ -145,7 +145,8 @@ describe('FinancialObligationChart Prepare Visualization', () => {
       'assistanceType': '0001001'
     }];
 
-    let result = comp.prepareVisualizationData(mockFinancialData, this.mockDictionaries);
+    comp.financialData = mockFinancialData;
+    let result = comp.prepareVisualizationData();
     expect(result).toBeDefined();
     expect(result).not.toBeNull();
 
@@ -194,7 +195,8 @@ describe('FinancialObligationChart Prepare Visualization', () => {
       'assistanceType': '0001001'
     }];
 
-    let result = comp.prepareVisualizationData(mockFinancialData, this.mockDictionaries);
+    comp.financialData = mockFinancialData;
+    let result = comp.prepareVisualizationData();
     expect(result).toBeDefined();
     expect(result).not.toBeNull();
 
@@ -281,7 +283,8 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
       'assistanceType': '0001001'
     }];
 
-    comp.createVisualization(comp.prepareVisualizationData(mockFinancialData, mockDictionaries));
+    comp.financialData = mockFinancialData;
+    comp.dictionaries = mockDictionaries;
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
   });
 
@@ -383,7 +386,7 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
     fixture = TestBed.createComponent(FinancialObligationChart);
     comp = fixture.componentInstance;
 
-    this.mockDictionaries = {
+    comp.dictionaries = {
       'assistance_type': [
         {
           code: 'B',
@@ -395,8 +398,6 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
         }
       ]
     };
-
-    fixture.detectChanges(); // 1st change detection triggers ngOnInit
   });
 
   /**
@@ -423,7 +424,9 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
       'assistanceType': '0003003'
     }];
 
-    comp.createVisualization(comp.prepareVisualizationData(mockFinancialData, this.mockDictionaries));
+    comp.financialData = mockFinancialData;
+
+    fixture.detectChanges(); // 1st change detection triggers ngOnInit
 
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
@@ -483,7 +486,9 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
       'assistanceType': '0003003'
     }];
 
-    comp.createVisualization(comp.prepareVisualizationData(mockFinancialData, this.mockDictionaries));
+    comp.financialData = mockFinancialData;
+
+    fixture.detectChanges(); // 1st change detection triggers ngOnInit
 
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();

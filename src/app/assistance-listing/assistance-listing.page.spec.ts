@@ -96,7 +96,19 @@ let MockDictionaryService = {
         element_id: '0003002',
         value: 'Cooperative Agreements (Discretionary Grants)'
       }
-    ]});
+    ], 
+    'applicant_types': [
+      {
+        code: '11',
+        description: null,
+        displayValue: '24 - U.S. Territories and possessions',
+        element_id: '0009',
+        elements: null,
+        parent: null,
+        value: 'U.S. Territories and possessions'
+      }
+    ]
+    });
   }
 };
 
@@ -228,37 +240,6 @@ describe('ProgramPage', () => {
 
     fixture = TestBed.createComponent(ProgramPage);
     comp = fixture.componentInstance; // BannerComponent test instance
-
-    // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE
-    comp.dictionaries = { 'assistance_type': [
-      {
-        code: 'B',
-        elements: null,
-        description: null,
-        element_id: '0003001',
-        value: 'Cooperative Agreements',
-        displayValue: 'B - Cooperative Agreements'
-      },
-      {
-        code: 'B',
-        elements: null,
-        description: null,
-        element_id: '0003002',
-        value: 'Cooperative Agreements (Discretionary Grants)',
-        displayValue: 'B - Cooperative Agreements (Discretionary Grants)'
-      }
-    ], 'applicant_types': [
-      {
-        code: '11',
-        description: null,
-        displayValue: '24 - U.S. Territories and possessions',
-        element_id: '0009',
-        elements: null,
-        parent: null,
-        value: 'U.S. Territories and possessions'
-      }
-    ]};
-    //end TODO
 
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
   });

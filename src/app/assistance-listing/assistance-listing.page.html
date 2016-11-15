@@ -100,7 +100,7 @@
     <section>
       <h2 id="financial-information">Financial Information</h2>
 
-      <financial-obligation-chart></financial-obligation-chart>
+      <financial-obligation-chart *ngIf='dictionaries' [financialData]='program.data?.financial?.obligations' [dictionaries]='dictionaries'></financial-obligation-chart>
 
       <h3>Range and Average of Financial Assistance:</h3>
 

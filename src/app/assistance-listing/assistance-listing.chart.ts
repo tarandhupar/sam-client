@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 
 import * as d3 from 'd3';
@@ -13,10 +13,17 @@ import * as _ from 'lodash';
   ]
 })
 export class FinancialObligationChart {
+  @Input() financialData:any[];
+  @Input() dictionaries:any;
+
   constructor(private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) {
   }
 
-  createVisualization(financialData): void {
+  ngOnInit() {
+    this.createVisualization(this.prepareVisualizationData());
+  }
+
+  createVisualization(preparedFinancialData): void {
 
     /**
      * --------------------------------------------------
@@ -59,7 +66,7 @@ export class FinancialObligationChart {
           "total": d3.sum(values, d => +d.amount)
         }
       })
-      .entries(financialData);
+      .entries(preparedFinancialData);
 
     let assistanceTotalsGroupedByYear = d3.nest()
       .key(d => d.year)
@@ -80,14 +87,14 @@ export class FinancialObligationChart {
           "total": d3.sum(values, d => +d.amount)
         }
       })
-      .entries(financialData);
+      .entries(preparedFinancialData);
 
     let assistanceDetails = d3.nest()
       .key(d => d.obligation)
       .key(d => d.info)
       .key(d => d.year)
       .sortKeys(d3.ascending)
-      .entries(financialData);
+      .entries(preparedFinancialData);
 
     let vizTotals = d3.nest()
       .key(d => d.year)
@@ -109,7 +116,7 @@ export class FinancialObligationChart {
           "total": d3.sum(values, d => +d.amount)
         }
       })
-      .entries(financialData);
+      .entries(preparedFinancialData);
 
     /**
      * --------------------------------------------------
@@ -455,17 +462,18 @@ export class FinancialObligationChart {
 
   }
 
-  prepareVisualizationData(financialData, dictionaries) {
+  prepareVisualizationData() {
     let self = this;
     let formattedFinancialData = [];
     let obligations = d3.map();
     let numberOfYears = 3;
 
     function getAssistanceType(id): string {
-      return self.FilterMultiArrayObjectPipe.transform([id], dictionaries.assistance_type, 'element_id', true, 'elements')[0].value;
+      let result = self.FilterMultiArrayObjectPipe.transform([id], self.dictionaries.assistance_type, 'element_id', true, 'elements');
+      return (result instanceof Array && result.length > 0) ? result[0].value : [];
     }
 
-    financialData.map(function (item) {
+    this.financialData.map(function (item) {
       for (let year in item.values) {
         let obligation = "No Obligation";
         if (item.assistanceType && item.assistanceType.length > 0) {
