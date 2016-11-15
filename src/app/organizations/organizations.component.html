@@ -1,0 +1,21 @@
+<div class="usa-grid">
+
+  <!--Main Content-->
+  <div class="usa-width-three-fourths" *ngIf="organizations">
+    <h1>
+      {{organizations.agencyName}}
+    </h1>
+    <p>
+      <span><strong>Code: </strong>{{organizations.code}} | Status {{isModActive()}}</span>
+    </p>
+    <section *ngIf="organizations.summary">
+      <h3>Description</h3>
+      <p id="orgDescription" [innerHTML]="organizations.summary"></p>
+    </section>
+    <div *ngIf="organizations.hierarchy.length>0">
+    <h2 id="overview">Sub-Tier Agencies</h2>
+    <p>1 - {{organizations.hierarchy.length}} of {{organizations.hierarchy.length}}</p>
+    <p *ngFor = "let element of organizations.hierarchy">{{element.org.agencyName}}</p>
+    </div>
+  </div>
+</div>

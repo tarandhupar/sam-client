@@ -26,6 +26,18 @@ export class FHService{
     return this.oAPIService.call(oApiParam);
   }
 
+  getOrganizationsById(id: string) {
+    let oApiParam = {
+      name: 'federalHierarchyV2',
+      suffix: '/'+id,
+      oParam: {
+        'sort': 'name'
+      },
+      method: 'GET'
+    };
+    return this.oAPIService.call(oApiParam);
+  }
+
   getFederalHierarchyByIds(aIDs, includeParentLevels: boolean, includeChildrenLevels: boolean) {
     let oApiParam = {
       name: 'federalHierarchy',
