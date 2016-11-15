@@ -1,1 +1,1 @@
-export * from './organization.module.ts';
+export * from './organization.module';

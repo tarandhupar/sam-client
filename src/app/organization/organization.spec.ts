@@ -188,12 +188,19 @@ describe('OrganizationPage', () => {
           deps: [MockBackend, BaseRequestOptions],
         },
         { provide: Location, useClass: Location },
-        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '2c1820ae561f521a499e995f2696052c' }]) } },
+        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '100035122' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: FHService, useValue: MockFHService }
       ]
     });
 
+    TestBed.overrideComponent(OrganizationPage, {
+      set: {
+        providers: [
+          { provide: FHService, useValue: MockFHService }
+        ]
+      }
+    });
 
     fixture = TestBed.createComponent(OrganizationPage);
     comp = fixture.componentInstance; // BannerComponent test instance
@@ -201,9 +208,9 @@ describe('OrganizationPage', () => {
   });
 
   it('Should init & load data', () => {
-    expect(comp.oNotice).toBeDefined();
-    expect(comp.oSub).toBeDefined();
-    expect(comp.oNotice.procurementTitle).toBe("D--FY16 Software Maintenance Renewal â€“ NetEx TAC-16-23777");
-    expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('D--FY16 Software Maintenance Renewal â€“ NetEx TAC-16-23777');
+    expect(comp.organization).toBeDefined();
+    expect(comp.sub).toBeDefined();
+    expect(comp.organization.agencyName).toBe("Department of Commerce");
+    expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Department of Commerce');
   });
 });
