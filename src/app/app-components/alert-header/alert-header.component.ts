@@ -5,7 +5,7 @@ import { Cookie } from 'ng2-cookies'
 @Component({
   selector: 'alertHeader',
   templateUrl: 'alert-header.template.html',
-  styleUrls: [ 'alert-header.style.css' ]
+  styleUrls: [ 'alert-header.style.scss' ]
 })
 export class AlertHeaderComponent {
 
