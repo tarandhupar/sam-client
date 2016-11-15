@@ -1,5 +1,19 @@
-<div *ngFor="let alert of alerts; let i=index">
-  <samAlert *ngIf="i===0" [type]="alert.type" [title]="alert.title" [description]="alert.description"
-            (dismiss)="onDismiss()" (expand)="onExpand()" [showGoToAlerts]="alerts.length > 0" [showClose]="true">
-  </samAlert>
+<div *ngIf="showAlerts()">
+  <div class="usa-alert" [ngClass]="alertClass">
+    <div class="usa-alert-body">
+      <div class="title-and-description" *ngFor="let alert of alerts; let i=index">
+        <h3 class="usa-alert-heading">
+          {{alert.title}}
+          <span *ngIf="i===0" class="pull-right">
+            <a><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
+          </span>
+        </h3>
+        <p class="usa-alert-text truncate">{{alert.description}}</p>
+      </div>
+      <div class="alert-link">
+        <a class="usa-nav-link" [routerLink]="['/system-alerts']">More alerts&nbsp;<i class="fa fa-arrow-circle-o-right"></i></a>
+      </div>
+    </div>
+  </div>
 </div>
+
