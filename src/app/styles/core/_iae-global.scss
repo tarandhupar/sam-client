@@ -77,6 +77,10 @@ hr {
   font-weight: $font-bold;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 .serif {
   font-family: $font-serif;
 }
