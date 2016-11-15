@@ -72,18 +72,20 @@
 
       <h3>Examples of Funded Projects:</h3>
 
-      <ng-container *ngIf="program.data?.projects?.flag == 'yes'">
-        <div *ngFor="let item of program.data.projects?.list | keys">
-          <ng-container *ngIf="item?.value?.content?.actual">
-            Fiscal Year {{item.key}}: {{item.value.content.actual}}
-          </ng-container>
-          <!--          <span *ngIf="item.value.content.projection">
-                    , Projection: {{item.value.content.projection}}
-                  </span>-->
-        </div>
-      </ng-container>
+      <ng-container [ngSwitch]="program.data?.projects?.flag">
+        <ng-container *ngSwitchCase="'yes'">
+          <div *ngFor="let item of program.data.projects?.list | keys">
+            <ng-container *ngIf="item?.value?.content?.actual">
+              Fiscal Year {{item.key}}: {{item.value.content.actual}}
+            </ng-container>
+            <!--          <span *ngIf="item.value.content.projection">
+                      , Projection: {{item.value.content.projection}}
+                    </span>-->
+          </div>
+        </ng-container>
 
-      <p *ngIf="program.data?.projects?.flag == 'na' || program.data?.projects?.flag == 'no'"> Not Applicable</p>
+        <p *ngSwitchDefault>Not Applicable</p>
+      </ng-container>
     </section>
 
     <section>
@@ -113,16 +115,16 @@
 
       <h3>Accomplishments:</h3>
 
-      <ng-container *ngIf="program.data?.postAward?.accomplishments?.flag =='yes'">
-        <div *ngFor="let item of program.data.postAward.accomplishments?.list | keys">
-          <div class="m_B-2x" *ngIf="item.value?.content?.actual && item.value.content.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</div>
-          <div class="m_B-2x" *ngIf="item.value?.content?.projection && item.value.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</div>
-        </div>
-      </ng-container>
+      <ng-container [ngSwitch]="program.data?.postAward?.accomplishments?.flag">
+        <ng-container *ngSwitchCase="'yes'">
+          <div *ngFor="let item of program.data.postAward.accomplishments?.list | keys">
+            <div class="m_B-2x" *ngIf="item.value?.content?.actual && item.value.content.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</div>
+            <div class="m_B-2x" *ngIf="item.value?.content?.projection && item.value.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</div>
+          </div>
+        </ng-container>
 
-      <p *ngIf="program.data?.postAward?.accomplishments?.flag !='yes'">
-        Not Applicable.
-      </p>
+        <p *ngSwitchDefault>Not Applicable.</p>
+      </ng-container>
 
       <h3>Account Identification:</h3>
 
@@ -148,17 +150,22 @@
       <h3>Credentials and Documentation:</h3>
 
       <p>
-        <ng-container *ngIf="program.data?.eligibility?.documentation?.flag=='yes'">
-          {{program.data.eligibility.documentation.content}}
-          <ng-container *ngIf="program.data.eligibility.documentation.questions?.OMBCircularA87?.flag=='yes'">
-            2 CFR 200, Subpart E - Cost Principles applies to this program.
-          </ng-container>
-          <ng-container *ngIf="program.data.eligibility.documentation.questions?.OMBCircularA87?.flag=='na'">
-            This program is excluded from coverage under 2 CFR 200, Subpart E - Cost Principles.
-          </ng-container>
-        </ng-container>
+        <ng-container [ngSwitch]="program.data?.eligibility?.documentation?.flag">
+          <ng-container *ngSwitchCase="'yes'">
+            {{program.data.eligibility.documentation.content}}
+            <ng-container [ngSwitch]="program.data.eligibility.documentation.questions?.OMBCircularA87?.flag">
+              <ng-container *ngSwitchCase="'yes'">
+                2 CFR 200, Subpart E - Cost Principles applies to this program.
+              </ng-container>
 
-        <ng-container *ngIf="program.data?.eligibility?.documentation?.flag=='na'">None</ng-container>
+              <ng-container *ngSwitchDefault>
+                This program is excluded from coverage under 2 CFR 200, Subpart E - Cost Principles.
+              </ng-container>
+            </ng-container>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>None</ng-container>
+        </ng-container>
       </p>
 
 
@@ -214,68 +221,82 @@
 
       <h3>Deadlines:</h3>
 
-      <ng-container *ngIf="program.data?.application?.deadlines?.submission?.flag == 'yes'">
-        <!-- repeat over all deadlines. -->
-        <div *ngFor="let deadline of program.data.application.deadlines.submission.list">
-          <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
-          <ng-container *ngIf="deadline.start && deadline.end">to</ng-container>
-          <ng-container *ngIf="deadline.end">{{deadline.end | dateFormat: 'MMM DD, YYYY'}}</ng-container>
-          {{deadline.description}}
+      <ng-container [ngSwitch]="program.data?.application?.deadlines?.submission?.flag">
+        <ng-container *ngSwitchCase="'yes'">
+          <!-- repeat over all deadlines. -->
+          <div *ngFor="let deadline of program.data.application.deadlines.submission.list">
+            <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
+            <ng-container *ngIf="deadline.start && deadline.end">to</ng-container>
+            <ng-container *ngIf="deadline.end">{{deadline.end | dateFormat: 'MMM DD, YYYY'}}</ng-container>
+            {{deadline.description}}
+          </div>
+        </ng-container>
+
+        <div *ngSwitchCase="'contact'">
+          Contact the headquarters or regional office, as appropriate for application deadlines
+        </div>
+
+        <div *ngSwitchDefault>
+          Not Applicable.
         </div>
       </ng-container>
-      <div *ngIf="program.data?.application?.deadlines?.submission?.flag == 'no'">
-        Not Applicable.
-      </div>
-      <div *ngIf="program.data?.application?.deadlines?.submission?.flag == 'contact'">
-        Contact the headquarters or regional office, as appropriate for application deadlines
-      </div>
 
       <h3>Preapplication Coordination:</h3>
 
       <div>
-        <p *ngIf="program.data?.preApplication?.coordination?.flag == 'yes'">
-          Preapplication coordination is required.
+        <ng-container [ngSwitch]="program.data?.preApplication?.coordination?.flag">
+          <p *ngSwitchCase="'yes'">
+            Preapplication coordination is required.
 
-          <!-- Environmental statements-->
-          <ng-container *ngIf="program.data.preApplication.coordination.environmentalImpact?.flag == 'yes'">
-            <ng-container *ngFor="let entry of program.data.preApplication.coordination.environmentalImpact.reports | keys">
-              <ng-container *ngIf="entry.value?.flag === 'yes'">An environmental impact {{entry.key}} is required for this program.</ng-container>
+            <!-- Environmental statements-->
+            <ng-container [ngSwitch]="program.data.preApplication.coordination.environmentalImpact?.flag ">
+              <ng-container *ngSwitchCase="'yes'">
+                <ng-container *ngFor="let entry of program.data.preApplication.coordination.environmentalImpact.reports | keys">
+                  <ng-container *ngIf="entry.value?.flag === 'yes'">An environmental impact {{entry.key}} is required for this program.</ng-container>
+                </ng-container>
+              </ng-container>
+
+              <ng-container *ngSwitchDefault>
+                Environmental impact information is not required for this program.
+              </ng-container>
             </ng-container>
-          </ng-container>
 
-          <ng-container *ngIf="program.data.preApplication.coordination.environmentalImpact?.flag == 'no'">
-            Environmental impact information is not required for this program.
-          </ng-container>
+            <!-- Executive Order  -->
+            <ng-container [ngSwitch]="program.data.preApplication.coordination.questions?.ExecutiveOrder12372?.flag">
+              <ng-container *ngSwitchCase="'yes'">
+                This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
+                An applicant should consult the office or official designated as the single point of contact in his or her State for more
+                information on the process the State requires to be followed in applying for assistance, if the State has selected the program forreview.
+              </ng-container>
 
-          <!-- Executive Order  -->
-          <ng-container *ngIf="program.data.preApplication.coordination.questions?.ExecutiveOrder12372?.flag === 'yes'">
-            This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
-            An applicant should consult the office or official designated as the single point of contact in his or her State for more
-            information on the process the State requires to be followed in applying for assistance, if the State has selected the program forreview.
-          </ng-container>
-          <ng-container *ngIf="program.data.preApplication.coordination.questions?.ExecutiveOrder12372?.flag === 'no'">
-            This program is excluded from coverage under E.O. 12372.
-          </ng-container>
+              <ng-container *ngSwitchDefault>
+                This program is excluded from coverage under E.O. 12372.
+              </ng-container>
+            </ng-container>
 
-          <!-- additional content-->
-          {{program.data.preApplication.coordination.additionalInfo?.content}}
-        </p>
+            <!-- additional content-->
+            {{program.data.preApplication.coordination.additionalInfo?.content}}
+          </p>
 
-        <p class="m-t-0" *ngIf="program.data.preApplication.coordination.flag == 'na'">
-          Preapplication coordination is not applicable.
-        </p>
+          <p class="m-t-0" *ngSwitchDefault>
+            Preapplication coordination is not applicable.
+          </p>
+        </ng-container>
       </div>
 
 
       <h3>Application Procedures:</h3>
 
       <p>
-        <ng-container *ngIf="program.data?.application?.procedures?.questions?.OMBCircularA102?.flag === 'yes'">
-          2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards applies to this program.
-        </ng-container>
-        <ng-container *ngIf="program.data?.application?.procedures?.questions?.OMBCircularA102?.flag === 'no'">
-          This program is excluded from coverage under 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit
-          Requirements for Federal Awards.
+        <ng-container [ngSwitch]="program.data?.application?.procedures?.questions?.OMBCircularA102?.flag">
+          <ng-container *ngSwitchCase="'yes'">
+            2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards applies to this program.
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>
+            This program is excluded from coverage under 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit
+            Requirements for Federal Awards.
+          </ng-container>
         </ng-container>
 
         <!-- additional content-->
@@ -286,14 +307,18 @@
       <h3>Criteria for Selecting Proposals:</h3>
 
       <p>
-        <ng-container *ngIf="program.data?.application?.selectionCriteria?.flag == 'yes'">
-          {{program.data.application.selectionCriteria.content}}
-        </ng-container>
-        <ng-container *ngIf="program.data?.application?.selectionCriteria?.flag == 'na'">
-          Not Applicable
-        </ng-container>
-        <ng-container *ngIf="program.data?.application?.selectionCriteria?.flag == 'no'">
-          No
+        <ng-container [ngSwitch]="program.data?.application?.selectionCriteria?.flag">
+          <ng-container *ngSwitchCase="'yes'">
+            {{program.data.application.selectionCriteria.content}}
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'no'">
+           No
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>
+            Not Applicable
+          </ng-container>
         </ng-container>
       </p>
 
@@ -308,48 +333,54 @@
       <h3>Date Range for Approval/Disapproval:</h3>
 
       <p>
-        <ng-container *ngIf="program.data?.application?.deadlines?.approval?.interval =='1'"><em>From 1 to 15 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.approval?.interval =='2'"><em>From 15 to 30 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.approval?.interval =='3'"><em>From 30 to 60 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.approval?.interval =='4'"><em>From 60 to 90 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.approval?.interval =='5'"><em>From 90 to 120 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.approval?.interval =='6'"><em>From 120 to 180 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.approval?.interval =='7'"><em>&gt; 180 Days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.approval?.interval =='8'"><em>Not Applicable</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.approval?.interval =='9'"><em>Other</em></ng-container>
-        <ng-container>{{program.data?.application?.deadlines?.approval?.otherInfo?.content}}</ng-container>
+        <ng-container [ngSwitch]="program.data?.application?.deadlines?.approval?.interval">
+          <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
+          <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
+          <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
+          <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
+          <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
+          <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
+          <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
+          <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
+          <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
+          <ng-container>{{program.data?.application?.deadlines?.approval?.otherInfo?.content}}</ng-container>
+        </ng-container>
       </p>
 
 
       <h3>Renewals:</h3>
 
       <p>
-        <ng-container *ngIf="program.data?.application?.deadlines?.renewal?.interval =='1'"><em>From 1 to 15 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.renewal?.interval =='2'"><em>From 15 to 30 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.renewal?.interval =='3'"><em>From 30 to 60 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.renewal?.interval =='4'"><em>From 60 to 90 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.renewal?.interval =='5'"><em>From 90 to 120 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.renewal?.interval =='6'"><em>From 120 to 180 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.renewal?.interval =='7'"><em>gt; 180 Days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.renewal?.interval =='8'"><em>Not Applicable</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.renewal?.interval =='9'"><em>Other</em></ng-container>
-        <ng-container>{{program.data?.application?.deadlines?.renewal?.otherInfo?.content}}</ng-container>
+        <ng-container [ngSwitch]="program.data?.application?.deadlines?.renewal?.interval">
+          <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
+          <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
+          <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
+          <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
+          <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
+          <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
+          <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
+          <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
+          <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
+          <ng-container>{{program.data?.application?.deadlines?.renewal?.otherInfo?.content}}</ng-container>
+        </ng-container>
       </p>
 
 
       <h3>Appeals:</h3>
 
       <p>
-        <ng-container *ngIf="program.data?.application?.deadlines?.appeal?.interval =='1'"><em>From 1 to 15 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.appeal?.interval =='2'"><em>From 15 to 30 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.appeal?.interval =='3'"><em>From 30 to 60 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.appeal?.interval =='4'"><em>From 60 to 90 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.appeal?.interval =='5'"><em>From 90 to 120 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.appeal?.interval =='6'"><em>From 120 to 180 days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.appeal?.interval =='7'"><em>&gt; 180 Days</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.appeal?.interval =='8'"><em>Not Applicable</em></ng-container>
-        <ng-container *ngIf="program.data?.application?.deadlines?.appeal?.interval =='9'"><em>Other</em></ng-container>
-        <ng-container>{{program.data?.application?.deadlines?.appeal?.otherInfo?.content}}</ng-container>
+        <ng-container [ngSwitch]="program.data?.application?.deadlines?.appeal?.interval">
+          <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
+          <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
+          <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
+          <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
+          <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
+          <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
+          <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
+          <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
+          <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
+          <ng-container>{{program.data?.application?.deadlines?.appeal?.otherInfo?.content}}</ng-container>
+        </ng-container>
       </p>
     </section>
 
@@ -360,48 +391,55 @@
       <h3>Reports:</h3>
 
       <div>
-        <p *ngIf="program.data?.postAward?.reports?.flag == 'yes'">
-          <ng-container *ngIf="program.data.postAward.reports.list?.program?.flag == 'yes'">{{program.data.postAward.reports.list.program.content}}</ng-container>
-          <ng-container *ngIf="program.data.postAward.reports.list?.cash?.flag == 'yes'">{{program.data.postAward.reports.list.cash.content}}</ng-container>
-          <ng-container *ngIf="program.data.postAward.reports.list?.progress?.flag == 'yes'">{{program.data.postAward.reports.list.progress.content}}</ng-container>
-          <ng-container *ngIf="program.data.postAward.reports.list?.expenditure?.flag == 'yes'">{{program.data.postAward.reports.list.expenditure.content}}</ng-container>
-          <ng-container *ngIf="program.data.postAward.reports.list?.performanceMonitoring?.flag == 'yes'">{{program.data.postAward.reports.list.performanceMonitoring.content}}</ng-container>
-        </p>
+        <ng-container [ngSwitch]="program.data?.postAward?.reports?.flag">
+          <p *ngSwitchCase="'yes'">
+            <ng-container *ngIf="program.data.postAward.reports.list?.program?.flag == 'yes'">{{program.data.postAward.reports.list.program.content}}</ng-container>
+            <ng-container *ngIf="program.data.postAward.reports.list?.cash?.flag == 'yes'">{{program.data.postAward.reports.list.cash.content}}</ng-container>
+            <ng-container *ngIf="program.data.postAward.reports.list?.progress?.flag == 'yes'">{{program.data.postAward.reports.list.progress.content}}</ng-container>
+            <ng-container *ngIf="program.data.postAward.reports.list?.expenditure?.flag == 'yes'">{{program.data.postAward.reports.list.expenditure.content}}</ng-container>
+            <ng-container *ngIf="program.data.postAward.reports.list?.performanceMonitoring?.flag == 'yes'">{{program.data.postAward.reports.list.performanceMonitoring.content}}</ng-container>
+          </p>
 
-        <p class="m-a-0" *ngIf="program.data?.postAward?.reports?.flag == 'no'">
-          No reports are required.
-        </p>
+          <p class="m-a-0" *ngSwitchCase="'no'">
+            No reports are required.
+          </p>
 
-        <p class="m-a-0" *ngIf="program.data?.postAward?.reports?.flag == 'na'">
-          Not Applicable
-        </p>
+          <p class="m-a-0" *ngSwitchDefault>
+            Not Applicable
+          </p>
+        </ng-container>
       </div>
 
       <h3>Audits:</h3>
 
       <div>
-        <p *ngIf="program.data?.postAward?.audit?.flag == 'yes'">
-          <ng-container *ngIf="program.data.postAward.audit.questions?.OMBCircularA133?.flag == 'yes'">
-            In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
-            nonfederal entities that expend financial assistance of $750,000 or more in Federal
-            awards will have a single or a program-specific audit conducted for that year. Non-Federal
-            entities that expend less than $750,000 a year in Federal awards are exempt from Federal
-            audit requirements for that year, except as noted in 2 CFR 200.503
-          </ng-container>
-          <ng-container *ngIf="program.data.postAward.audit.questions?.OMBCircularA133?.flag == 'no'">
-            This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
-          </ng-container>
+        <ng-container [ngSwitch]="program.data?.postAward?.audit?.flag">
+          <p *ngSwitchCase="'yes'">
+            <ng-container [ngSwitch]="program.data.postAward.audit.questions?.OMBCircularA133?.flag">
+              <ng-container *ngSwitchCase="'yes'">
+                In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
+                nonfederal entities that expend financial assistance of $750,000 or more in Federal
+                awards will have a single or a program-specific audit conducted for that year. Non-Federal
+                entities that expend less than $750,000 a year in Federal awards are exempt from Federal
+                audit requirements for that year, except as noted in 2 CFR 200.503
+              </ng-container>
 
-          {{program.data.postAward.audit.content}}
-        </p>
+              <ng-container *ngSwitchDefault>
+                This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
+              </ng-container>
+            </ng-container>
 
-        <p class="m-a-0" *ngIf="program.data?.postAward?.audit?.flag == 'no'">
-          No audits are required for this program.
-        </p>
+            {{program.data.postAward.audit.content}}
+          </p>
 
-        <p class="m-a-0" *ngIf="program.data?.postAward?.audit?.flag == 'na'">
-          Not Applicable.
-        </p>
+          <p class="m-a-0" *ngSwitchCase="'no'">
+            No audits are required for this program.
+          </p>
+
+          <p class="m-a-0" *ngSwitchDefault>
+            Not Applicable.
+          </p>
+        </ng-container>
       </div>
 
       <h3>Records:</h3>
@@ -417,53 +455,61 @@
       <h3>Regulations, Guidelines, and Literature:</h3>
 
       <p>
-        <ng-container *ngIf="program.data?.postAward?.documents?.flag =='yes'"> {{program.data.postAward.documents.content}}</ng-container>
-        <ng-container *ngIf="program.data?.postAward?.documents?.flag !='yes'"> Not Applicable.</ng-container>
+        <ng-container [ngSwitch]="program.data?.postAward?.documents?.flag">
+          <ng-container *ngSwitchCase="'yes'"> {{program.data.postAward.documents.content}}</ng-container>
+          <ng-container *ngSwitchDefault> Not Applicable.</ng-container>
+        </ng-container>
       </p>
 
       <h3 class="m_B-5x">Formula and Matching Requirements:</h3>
       <!-- statutory formula-->
-      <div class="m-a-0" *ngIf="program.data?.assistance?.formula?.flag == 'yes'">
-        Statutory Formula: Title {{program.data.assistance.formula.title}} Chapter {{program.data.assistance.formula.chapter}}
-        Part {{program.data.assistance.formula.part}} Subpart {{program.data.assistance.formula.subPart}} Public Law {{program.data.assistance.formula.publicLaw}}
-        {{program.data.assistance.formula.additionalInfo?.content}}
-      </div>
+      <ng-container [ngSwitch]="program.data?.assistance?.formula?.flag">
+        <div class="m-a-0" *ngSwitchCase="'yes'">
+          Statutory Formula: Title {{program.data.assistance.formula.title}} Chapter {{program.data.assistance.formula.chapter}}
+          Part {{program.data.assistance.formula.part}} Subpart {{program.data.assistance.formula.subPart}} Public Law {{program.data.assistance.formula.publicLaw}}
+          {{program.data.assistance.formula.additionalInfo?.content}}
+        </div>
 
-      <div class="m-a-0" *ngIf="program.data?.assistance?.formula?.flag == 'no'">
-        This federal assistance listing has no statutory formula
-      </div>
+        <div class="m-a-0" *ngSwitchCase="'no'">
+          This federal assistance listing has no statutory formula
+        </div>
 
-      <div class="m-a-0" *ngIf="program.data?.assistance?.formula?.flag == 'na'">
-        Statuary formula is not applicable to this federal assistance listing.
-      </div>
+        <div class="m-a-0" *ngSwitchDefault>
+          Statuary formula is not applicable to this federal assistance listing.
+        </div>
+      </ng-container>
 
       <!-- matching requirements -->
-      <div class="m-a-0" *ngIf="program.data?.assistance?.matching?.flag == 'yes'">
-        Matching Requirements: <ng-container *ngIf="program.data.assistance.matching?.percent > 0">Percent: {{program.data.assistance.matching.percent}}</ng-container>
-        {{program.data.assistance.matching.otherInfo?.content}}
-      </div>
+      <ng-container [ngSwitch]="program.data?.assistance?.matching?.flag">
+        <div class="m-a-0" *ngSwitchCase="'yes'">
+          Matching Requirements: <ng-container *ngIf="program.data.assistance.matching?.percent > 0">Percent: {{program.data.assistance.matching.percent}}</ng-container>
+          {{program.data.assistance.matching.otherInfo?.content}}
+        </div>
 
-      <div class="m-a-0" *ngIf="program.data?.assistance?.matching?.flag == 'no'">
-        This program has no matching requirements.
-      </div>
+        <div class="m-a-0" *ngSwitchCase="'no'">
+          This program has no matching requirements.
+        </div>
 
-      <div class="m-a-0" *ngIf="program.data?.assistance?.matching?.flag == 'na'">
-        Matching requirements are not applicable to this federal assistance listing.
-      </div>
+        <div class="m-a-0" *ngSwitchDefault>
+          Matching requirements are not applicable to this federal assistance listing.
+        </div>
+      </ng-container>
 
       <!-- moe-->
-      <div class="m-a-0" *ngIf="program.data?.assistance?.moe?.flag == 'yes'">
-        This program has MOE requirements, see funding agency for further details. Additional Information:
-        {{program.data.assistance.moe.additionalInfo?.content}}
-      </div>
+      <ng-container [ngSwitch]="program.data?.assistance?.moe?.flag">
+        <div class="m-a-0" *ngSwitchCase="'yes'">
+          This program has MOE requirements, see funding agency for further details. Additional Information:
+          {{program.data.assistance.moe.additionalInfo?.content}}
+        </div>
 
-      <div class="m-a-0" *ngIf="program.data?.assistance?.moe?.flag ==='no'">
-        This program does not have MOE requirements.
-      </div>
+        <div class="m-a-0" *ngSwitchCase="'no'">
+          This program does not have MOE requirements.
+        </div>
 
-      <div class="m-a-0" *ngIf="program.data?.assistance?.moe?.flag === 'na'">
-        MOE requirements are not applicable to this federal assistance listing.
-      </div>
+        <div class="m-a-0" *ngSwitchDefault>
+          MOE requirements are not applicable to this federal assistance listing.
+        </div>
+      </ng-container>
     </section>
 
     <!--Contact information-->
