@@ -185,6 +185,10 @@ module.exports = {
 
   },
 
+  sassLoader: {
+    includePaths: ["src/app/styles", "node_modules"]
+  },
+
   /*
    * Add additional plugins to the compiler.
    *
