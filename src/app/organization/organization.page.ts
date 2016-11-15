@@ -16,7 +16,7 @@ import { ReplaySubject } from 'rxjs';
 export class OrganizationPage implements OnInit, OnDestroy {
   sub: Subscription;
   currentUrl: string;
-  organizations:any;
+  organization:any;
 
   constructor(
     private route:ActivatedRoute,
@@ -25,20 +25,20 @@ export class OrganizationPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentUrl = this.location.path();
-    this.loadOrganizations();
+    this.loadOrganization();
 
   }
 
-  private loadOrganizations() {
+  private loadOrganization() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
-      return this.fhService.getOrganizationsById(params['id']);
+      return this.fhService.getOrganizationById(params['id']);
     });
     apiStream.subscribe(apiSubject);
 
     apiSubject.subscribe(api => { // run whenever api data is updated
       let jsonData:any = api;
-      this.organizations= jsonData._embedded[0].org;
+      this.organization= jsonData._embedded[0].org;
     }, err => {
       console.log('Error logging', err);
     });
@@ -47,7 +47,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   }
 
   private isModActive(){
-    if (this.organizations.modStatus == null || this.organizations.modStatus == "inactive"){
+    if (this.organization.modStatus == null || this.organization.modStatus == "inactive"){
       return "inactive";
     } else {
       return "active";

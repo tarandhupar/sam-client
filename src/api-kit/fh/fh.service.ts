@@ -26,7 +26,7 @@ export class FHService{
     return this.oAPIService.call(oApiParam);
   }
 
-  getOrganizationsById(id: string) {
+  getOrganizationById(id: string) {
     let oApiParam = {
       name: 'federalHierarchyV2',
       suffix: '/'+id,

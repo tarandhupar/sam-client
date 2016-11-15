@@ -3,7 +3,7 @@ import { OrganizationPage } from './organization.page.ts';
 
 export const routes: Routes = [
   {
-    path: 'organizations/:id',
+    path: 'organization/:id',
     component: OrganizationPage
   },
 ];

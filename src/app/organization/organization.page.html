@@ -1,21 +1,21 @@
 <div class="usa-grid">
 
   <!--Main Content-->
-  <div class="usa-width-three-fourths" *ngIf="organizations">
+  <div class="usa-width-three-fourths" *ngIf="organization">
     <h1>
-      {{organizations.agencyName}}
+      {{organization.agencyName}}
     </h1>
     <p>
-      <span><strong>Code: </strong>{{organizations.code}} | Status {{isModActive()}}</span>
+      <span><strong>Code: </strong>{{organization.code}} | Status {{isModActive()}}</span>
     </p>
-    <section *ngIf="organizations.summary">
+    <section *ngIf="organization.summary">
       <h3>Description</h3>
-      <p id="orgDescription" [innerHTML]="organizations.summary"></p>
+      <p id="orgDescription" [innerHTML]="organization.summary"></p>
     </section>
-    <div *ngIf="organizations.hierarchy.length>0">
+    <div *ngIf="organization.hierarchy.length>0">
     <h2 id="overview">Sub-Tier Agencies</h2>
-    <p>1 - {{organizations.hierarchy.length}} of {{organizations.hierarchy.length}}</p>
-    <p *ngFor = "let element of organizations.hierarchy">{{element.org.agencyName}}</p>
+    <p>1 - {{organization.hierarchy.length}} of {{organization.hierarchy.length}}</p>
+    <p *ngFor = "let element of organization.hierarchy">{{element.org.agencyName}}</p>
     </div>
   </div>
 </div>
