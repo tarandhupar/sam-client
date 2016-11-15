@@ -1,50 +1,17 @@
 // Vendor main -------------- //
 @import 'node_modules/font-awesome/css/font-awesome';
-
-@import 'node_modules/uswds/src/stylesheets/lib/bourbon';
-@import 'node_modules/uswds/src/stylesheets/lib/neat';
-@import 'node_modules/uswds/src/stylesheets/lib/normalize';
-
-// USWDS Core -------------- //
-@import 'node_modules/uswds/src/stylesheets/core/defaults';
-@import 'styles/core/variables'; // override U.S. Web Design Standards defaults
-@import 'node_modules/uswds/src/stylesheets/core/fonts';
-@import 'node_modules/uswds/src/stylesheets/core/base';
-@import 'node_modules/uswds/src/stylesheets/core/grid-settings';
-@import 'node_modules/uswds/src/stylesheets/core/grid';
-@import 'node_modules/uswds/src/stylesheets/core/utilities';
+@import 'node_modules/uswds/src/stylesheets/all';
 
 // SAMWDS Core additions and overrides -------------- //
-@import 'styles/core/utilities';
-@import 'styles/core/margin-padding';
-@import 'styles/core/iae-global';
-
-
-// USWDS Elements -------------- //
-@import 'node_modules/uswds/src/stylesheets/elements/buttons';
-@import 'node_modules/uswds/src/stylesheets/elements/figure';
-@import 'node_modules/uswds/src/stylesheets/elements/inputs';
-@import 'node_modules/uswds/src/stylesheets/elements/labels';
-@import 'node_modules/uswds/src/stylesheets/elements/list';
-@import 'node_modules/uswds/src/stylesheets/elements/table';
-@import 'node_modules/uswds/src/stylesheets/elements/typography';
+@import 'styles/variables'; // override U.S. Web Design Standards defaults
+@import 'styles/utilities';
+@import 'styles/margin-padding';
+@import 'styles/iae-global';
 
 // SAMWDS Elements additions and overrides -------------- //
-@import 'styles/elements/buttons';
-@import 'styles/elements/inputs';
-@import 'styles/elements/typography';
-
-// USWDS Components -------------- //
-@import 'node_modules/uswds/src/stylesheets/components/accordions';
-@import 'node_modules/uswds/src/stylesheets/components/alerts';
-@import 'node_modules/uswds/src/stylesheets/components/footer';
-@import 'node_modules/uswds/src/stylesheets/components/forms';
-@import 'node_modules/uswds/src/stylesheets/components/search';
-@import 'node_modules/uswds/src/stylesheets/components/sidenav';
-@import 'node_modules/uswds/src/stylesheets/components/skipnav';
-
-// SAMWDS Components additions and overrides -------- //
-@import 'styles/components/navside';
+@import 'styles/buttons';
+@import 'styles/inputs';
+@import 'styles/typography';
 
 html, body{
   height: 100%;

@@ -40,33 +40,3 @@
   display: inline-block;
   margin-right: 1rem;
 }
-
-.iae-button-primary,
-.iae-button-primary:visited {
-  background-color: $iae-color-primary;
-  color: $color-white;
-}
-
-.iae-button-primary:hover {
-  background-color: $iae-color-primary-hover;
-}
-
-.iae-button-primary-alt,
-.iae-button-primary-alt:visited {
-  background-color: $iae-color-primary-alt;
-}
-
-.iae-button-primary-alt:hover {
-  background-color: $iae-color-primary-alt-hover;
-}
-
-.iae-button-gray,
-.iae-button-gray:visited {
-  background-color: $iae-color-gray;
-  color: $color-black;
-}
-
-.usa-button.iae-button-gray:hover {
-  background-color: $iae-color-gray-hover;
-  color: $color-black;
-}
