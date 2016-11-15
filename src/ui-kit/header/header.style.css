@@ -1,0 +1,10 @@
+.header-logo-img{
+  height: 75px;
+  width:75px;
+  padding: 2px 0;
+}
+
+.align-top{
+  display: inline-block;
+  vertical-align: top;
+}

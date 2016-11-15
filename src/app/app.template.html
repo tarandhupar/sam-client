@@ -1,10 +1,13 @@
 <!-- includes HTML for app component-->
 <samBanner #banner *ngIf="!isHeaderWithSearch"></samBanner>
 <div [style.padding-top]="isHeaderWithSearch ? '' : '24px'">
-  <samSearchHeader *ngIf="isHeaderWithSearch" (searchEvent)="onHeaderSearchEvent($event)" [keyword]="keyword" [filterValue]="index"></samSearchHeader>
-  <samHeader *ngIf="!isHeaderWithSearch"></samHeader>
+  <samSearchHeader *ngIf="isHeaderWithSearch" (searchHeaderDropdownControl)="toggleOverlay($event)" (searchEvent)="onHeaderSearchEvent($event)" [keyword]="keyword" [filterValue]="index"></samSearchHeader>
+  <samHeader *ngIf="!isHeaderWithSearch" (dropdownControl)="toggleOverlay($event)"></samHeader>
 </div>
-<main class="occupy-page">
+
+<main class="occupy-page relative">
   <router-outlet></router-outlet>
+  <div  [ngClass]="{'overlay':showOverlay}">
+    </div>
 </main>
 <samFooter labelname = "footer" ></samFooter>

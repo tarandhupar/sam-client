@@ -1,0 +1,30 @@
+
+.white-text{
+  color: #fff;
+}
+
+.dropdown{
+  position: absolute;
+  top:25px;
+  left: -50%;
+  right: 50%;
+  background: #fff;
+  z-index: 2000;
+}
+
+.item-margin{
+  margin-left: 25%;
+}
+
+.link-disabled{
+  pointer-events: none;
+}
+
+.big-icon{
+  font-size: 50px;
+}
+
+.align-top{
+  display: inline-block;
+  vertical-align: top;
+}
