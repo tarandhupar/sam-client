@@ -1,8 +1,4 @@
-// Margins and Padding
-//
-// Declarative margins and padding classes.
-//
-// Styleguide globals.grid
+@import "./utilities";
 
 $spacing: 5px;
 @include margin-and-padding-spacing($spacing);
