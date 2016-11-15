@@ -1,10 +1,11 @@
+@import 'src/app/styles/variables';
 
 .usa-pagination li {
   display: inline-block;
   vertical-align: middle;
   padding: 5px 5px 5px 5px;
   color: #112e51;
-  font-family: ‘Source Sans Pro’;
+  font-family: @font-sans;
   margin-bottom: 0;
   text-decoration: none;
 }
