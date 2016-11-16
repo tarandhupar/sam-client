@@ -14,7 +14,7 @@ import { ReplaySubject } from 'rxjs';
   ]
 })
 export class OrganizationPage implements OnInit, OnDestroy {
-  sub: Subscription;
+  subscription: Subscription;
   currentUrl: string;
   organization:any;
 
@@ -36,9 +36,9 @@ export class OrganizationPage implements OnInit, OnDestroy {
     });
     apiStream.subscribe(apiSubject);
 
-    apiSubject.subscribe(api => { // run whenever api data is updated
+    this.subscription = apiSubject.subscribe(api => { // run whenever api data is updated
       let jsonData:any = api;
-      this.organization= jsonData._embedded[0].org;
+      this.organization = jsonData._embedded[0].org;
     }, err => {
       console.log('Error logging', err);
     });
@@ -52,6 +52,6 @@ export class OrganizationPage implements OnInit, OnDestroy {
 
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }
