@@ -10,7 +10,15 @@ header {
   height: 81px;
 }
 
-img {
-  height: 75px;
-  width:75px;
+.align-top{
+  display: inline-block;
+  vertical-align: top;
 }
+
+img{
+  margin-top:1.25rem;
+  width:30rem;
+  height:3rem;
+}
+
+
