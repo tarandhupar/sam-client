@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
@@ -7,7 +7,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 import * as _ from 'lodash';
 
 // Todo: avoid importing all of observable
-import { ReplaySubject, Observable } from 'rxjs';
+import { ReplaySubject, Observable, Subscription } from 'rxjs';
 
 @Component({
   moduleId: __filename,
@@ -21,7 +21,7 @@ import { ReplaySubject, Observable } from 'rxjs';
     FilterMultiArrayObjectPipe
   ]
 })
-export class ProgramPage implements OnInit {
+export class ProgramPage implements OnInit, OnDestroy {
   program: any;
   federalHierarchy: any;
   federalHierarchyWithParents: any;
@@ -31,6 +31,13 @@ export class ProgramPage implements OnInit {
   authorizationIdsGrouped: any[];
   historicalIndex: any;
   alert: any = [];
+
+  private apiSubjectSub: Subscription;
+  private apiStreamSub: Subscription;
+  private dictionarySub: Subscription;
+  private federalHierarchySub: Subscription;
+  private historicalIndexSub: Subscription;
+  private relatedProgramsSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -52,17 +59,27 @@ export class ProgramPage implements OnInit {
     this.loadRelatedPrograms(programAPISource);
   }
 
+  ngOnDestroy() {
+    if(this.apiSubjectSub) { this.apiSubjectSub.unsubscribe(); }
+    if(this.apiStreamSub) { this.apiStreamSub.unsubscribe(); }
+    if(this.dictionarySub) { this.dictionarySub.unsubscribe(); }
+    if(this.federalHierarchySub) { this.federalHierarchySub.unsubscribe(); }
+    if(this.historicalIndexSub) { this.historicalIndexSub.unsubscribe(); }
+    if(this.relatedProgramsSub) { this.relatedProgramsSub.unsubscribe(); }
+  }
+
   /**
-   * @return Observable of Program API 
+   * @return Observable of Program API
    */
   private loadProgram() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       return this.programService.getProgramById(params['id']);
     });
-    apiStream.subscribe(apiSubject);
+    this.apiStreamSub = apiStream.subscribe(apiSubject);
 
-    apiSubject.subscribe(api => { // run whenever api data is updated
+    this.apiSubjectSub = apiSubject.subscribe(api => {
+      // run whenever api data is updated
       this.program = api;
       this.checkCurrentFY();
       this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations, 'authorizationId'));
@@ -74,7 +91,7 @@ export class ProgramPage implements OnInit {
   }
 
   /**
-   * @return Observable of Dictionary API 
+   * @return Observable of Dictionary API
    */
   private loadDictionaries() {
     // declare dictionaries to load
@@ -91,10 +108,11 @@ export class ProgramPage implements OnInit {
 
     let dictionaryServiceSubject = new ReplaySubject(1); // broadcasts the dictionary data to multiple subscribers
     // construct a stream of dictionary data
-    this.dictionaryService.getDictionaryById(dictionaries.join(',')).subscribe(dictionaryServiceSubject);
+    this.dictionarySub = this.dictionaryService.getDictionaryById(dictionaries.join(',')).subscribe(dictionaryServiceSubject);
 
     var temp: any = {};
-    dictionaryServiceSubject.subscribe(res => { // run whenever dictionary data is updated
+    dictionaryServiceSubject.subscribe(res => {
+      // run whenever dictionary data is updated
       for (let key in res) {
         temp[key] = res[key]; // store the dictionary
       }
@@ -107,14 +125,16 @@ export class ProgramPage implements OnInit {
   private loadFederalHierarchy(apiSource: Observable<any>) {
     let oid = '';
 
-    let fhWithParentsStream = apiSource.switchMap(api => { // construct a stream of federal hierarchy data
+    // construct a stream of federal hierarchy data
+    let fhWithParentsStream = apiSource.switchMap(api => {
       oid = api.data.organizationId;
       return this.fhService.getFederalHierarchyById(api.data.organizationId, true, false);
     })  ;
 
-    fhWithParentsStream.subscribe(res => { // run whenever federal hierarchy data is updated
+    this.federalHierarchySub = fhWithParentsStream.subscribe(res => {
+      // run whenever federal hierarchy data is updated
       this.federalHierarchyWithParents = res;
-      // search for only the data belonging to this object, without it's parents or children
+      // filter for only the data belonging to this object, without it's parents or children
       this.federalHierarchy = this.filterMultiArrayObjectPipe.transform(
         [oid], [this.federalHierarchyWithParents], 'elementId', true, 'hierarchy')[0];
     });
@@ -123,11 +143,13 @@ export class ProgramPage implements OnInit {
   }
 
   private loadHistoricalIndex(apiSource: Observable<any>) {
-    let historicalIndexStream = apiSource.switchMap(api => { // construct a stream of historical index data
+    // construct a stream of historical index data
+    let historicalIndexStream = apiSource.switchMap(api => {
       return this.historicalIndexService.getHistoricalIndexByProgramNumber(api.data._id, api.data.programNumber);
     });
 
-    historicalIndexStream.subscribe(res => { // run whenever historical index data is updated
+    this.historicalIndexSub = historicalIndexStream.subscribe(res => {
+      // run whenever historical index data is updated
       this.historicalIndex = res._embedded ? res._embedded.historicalIndex : []; // store the historical index
     });
 
@@ -135,7 +157,8 @@ export class ProgramPage implements OnInit {
   }
 
   private loadRelatedPrograms(apiSource: Observable<any>) {
-    let relatedProgramsIdStream = apiSource.switchMap(api => { // construct a stream of related programs ids
+    // construct a stream of related programs ids
+    let relatedProgramsIdStream = apiSource.switchMap(api => {
       if (api.data.relatedPrograms.flag !== 'na') {
         return Observable.from(api.data.relatedPrograms.relatedTo);
       }
@@ -147,7 +170,8 @@ export class ProgramPage implements OnInit {
       return this.programService.getLatestProgramById(relatedId);
     });
 
-    relatedProgramsStream.subscribe(relatedProgram => { // run whenever related programs are updated
+    this.relatedProgramsSub = relatedProgramsStream.subscribe(relatedProgram => {
+      // run whenever related programs are updated
       if(typeof relatedProgram !== 'undefined') {
         this.relatedProgram.push({ // store the related program
           'programNumber': relatedProgram.data.programNumber,
