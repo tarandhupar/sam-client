@@ -3,7 +3,7 @@
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
-    <div sam-sticky limit=1200>
+    <div sam-sticky limit=1200 container="occupy-page">
       <!--Logo-->
       <div *ngIf="federalHierarchyWithParents">
         <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">
