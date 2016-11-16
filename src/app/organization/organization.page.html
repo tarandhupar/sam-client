@@ -1,21 +1,49 @@
 <div class="usa-grid">
+  <div class="usa-width-one-whole" *ngIf="organization">
+    
+    <h1>{{organization.agencyName}}</h1>
+    
+    <section>
+      Code {{organization.code}} 
+      <span class="divider">|</span> 
+      
+      <span class="inactive" *ngIf="isModActive() == false">
+        <i class="fa fa-circle-thin" aria-hidden="true"></i> 
+        <em>Status Inactive</em>
+      </span>
 
-  <!--Main Content-->
-  <div class="usa-width-three-fourths" *ngIf="organization">
-    <h1>
-      {{organization.agencyName}}
-    </h1>
-    <p>
-      <span><strong>Code: </strong>{{organization.code}} | Status {{isModActive()}}</span>
-    </p>
-    <section *ngIf="organization.summary">
-      <h3>Description</h3>
+      <span class="active" *ngIf="isModActive() == true">
+        <i class="fa fa-circle" aria-hidden="true"></i> 
+        <em>Status Active</em>
+      </span>
+    </section>
+    
+    <section class="usa-content" *ngIf="organization.summary">
       <p id="orgDescription" [innerHTML]="organization.summary"></p>
     </section>
-    <div *ngIf="organization.hierarchy.length>0">
+    
+    <!--Sub-Tier Agencies-->
     <h2 id="overview">Sub-Tier Agencies</h2>
-    <p>1 - {{organization.hierarchy.length}} of {{organization.hierarchy.length}}</p>
-    <p *ngFor = "let element of organization.hierarchy">{{element.org.agencyName}}</p>
-    </div>
+    <section *ngIf="organization.hierarchy.length>0">
+      <!--<p>
+        <strong>1 - {{organization.hierarchy.length}}</strong> 
+        of <strong>{{organization.hierarchy.length}}</strong>
+      </p>-->
+      <ul class="usa-zebra-list">
+        <li *ngFor = "let element of organization.hierarchy">
+          <a href="#testing">{{element.org.agencyName}}</a>
+        </li>
+      </ul>
+    </section>
+
+    <!--No Sub-Tier Agenfies found-->
+    <section *ngIf="organization.hierarchy.length==0">
+      <p class="inactive">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        &nbsp;
+        <em>No Sub-Tier Agencies Found.</em>
+      </p>
+    </section>
+    
   </div>
 </div>
