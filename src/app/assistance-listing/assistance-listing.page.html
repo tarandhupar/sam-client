@@ -7,13 +7,13 @@
       <!--Logo-->
       <ng-container *ngIf="federalHierarchyWithParents">
         <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">
-          <img class="logo" id="department-logo" [src]="federalHierarchyWithParents.hierarchy[0].hierarchy[0]._links.logo.href" alt="HTML5 Icon">
+          <img class="logo" id="program-logo" [src]="federalHierarchyWithParents.hierarchy[0].hierarchy[0]._links.logo.href" alt="HTML5 Icon">
         </div>
         <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && (federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href)">
-          <img class="logo" [src]="federalHierarchyWithParents.hierarchy[0]._links.logo.href" alt="HTML5 Icon" >
+          <img class="logo" id="program-logo" [src]="federalHierarchyWithParents.hierarchy[0]._links.logo.href" alt="HTML5 Icon" >
         </div>
         <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && !(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href) && federalHierarchyWithParents._links?.logo?.href">
-          <img class="logo" [src]="federalHierarchyWithParents._links.logo.href" alt="HTML5 Icon">
+          <img class="logo" id="program-logo" [src]="federalHierarchyWithParents._links.logo.href" alt="HTML5 Icon">
         </div>
       </ng-container>
       <!--Side Navigation-->
@@ -35,29 +35,31 @@
   <!--Main Content-->
   <div *ngIf="program" class="usa-width-three-fourths">
     <ng-container *ngIf="alert.length > 0">
-      <samAlert *ngFor="let alert of alert" labelname="alert.labelname" [type]="alert.config.type" [title]="alert.config.title" [description]="alert.config.description"></samAlert>
+      <samAlert id="program-alert" *ngFor="let alert of alert" labelname="alert.labelname" [type]="alert.config.type" [title]="alert.config.title" [description]="alert.config.description"></samAlert>
     </ng-container>
 
     <section>
       <h1>
-        {{program?.data?.title}}
+        <span class="field" id="program-title">{{program?.data?.title}}</span>
       </h1>
 
-      <p *ngIf="program.data?.alternativeNames && program.data?.alternativeNames[0] != null">
+      <p class="field" id="program-alternative-names" *ngIf="program.data?.alternativeNames && program.data?.alternativeNames[0] != null">
         <strong>Popular Name:</strong> {{program.data.alternativeNames[0]}}
       </p>
 
       <div class="content-block">
-        <span *ngIf="federalHierarchy"><strong class="capitalize">{{federalHierarchy.type}}: </strong>{{federalHierarchy.name}}</span>
-        <span><strong>FAL Number: </strong>{{program.data?.programNumber}}</span>
+        <p class="field" id="program-fh-information" *ngIf="federalHierarchy">
+          <strong class="capitalize">{{federalHierarchy.type}}: </strong>{{federalHierarchy.name}}
+        </p>
+        <span class="field" id="program-number"><strong>FAL Number: </strong>{{program.data?.programNumber}}</span>
 
         <strong>Related Federal Assistance: </strong>
         <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.flag != 'na' && relatedProgram.length > 0">
-          <ng-container *ngFor="let item of relatedProgram; let isLast = last">
-            <a href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}
+          <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
+            <a class="field" [attr.id]="'program-related-' + i" href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="program.data?.relatedPrograms?.flag == 'na' || relatedProgram.length == 0">Not Applicable.</ng-container>
+        <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.flag == 'na' || relatedProgram.length == 0">Not Applicable.</span>
       </div>
     </section>
 
@@ -313,7 +315,7 @@
           </ng-container>
 
           <ng-container *ngSwitchCase="'no'">
-           No
+            No
           </ng-container>
 
           <ng-container *ngSwitchDefault>
