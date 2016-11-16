@@ -47,10 +47,10 @@
         <strong>Popular Name:</strong> {{program.data.alternativeNames[0]}}
       </p>
 
-      <div *ngIf="federalHierarchy"><strong class="capitalize">{{federalHierarchy.type}}: </strong>{{federalHierarchy.name}}</div>
-      <div><strong>FAL Number: </strong>{{program.data?.programNumber}}</div>
+      <div class="content-block">
+        <span *ngIf="federalHierarchy"><strong class="capitalize">{{federalHierarchy.type}}: </strong>{{federalHierarchy.name}}</span>
+        <span><strong>FAL Number: </strong>{{program.data?.programNumber}}</span>
 
-      <div>
         <strong>Related Federal Assistance: </strong>
         <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.flag != 'na' && relatedProgram.length > 0">
           <ng-container *ngFor="let item of relatedProgram; let isLast = last">
@@ -72,20 +72,20 @@
 
       <h3>Examples of Funded Projects:</h3>
 
-      <ng-container [ngSwitch]="program.data?.projects?.flag">
+      <div class="content-block" [ngSwitch]="program.data?.projects?.flag">
         <ng-container *ngSwitchCase="'yes'">
-          <div *ngFor="let item of program.data.projects?.list | keys">
+          <span *ngFor="let item of program.data.projects?.list | keys">
             <ng-container *ngIf="item?.value?.content?.actual">
               Fiscal Year {{item.key}}: {{item.value.content.actual}}
             </ng-container>
             <!--          <span *ngIf="item.value.content.projection">
                       , Projection: {{item.value.content.projection}}
                     </span>-->
-          </div>
+          </span>
         </ng-container>
 
         <p *ngSwitchDefault>Not Applicable</p>
-      </ng-container>
+      </div>
     </section>
 
     <section>
@@ -115,16 +115,16 @@
 
       <h3>Accomplishments:</h3>
 
-      <ng-container [ngSwitch]="program.data?.postAward?.accomplishments?.flag">
+      <div class="content-block" [ngSwitch]="program.data?.postAward?.accomplishments?.flag">
         <ng-container *ngSwitchCase="'yes'">
-          <div *ngFor="let item of program.data.postAward.accomplishments?.list | keys">
-            <div class="m_B-2x" *ngIf="item.value?.content?.actual && item.value.content.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</div>
-            <div class="m_B-2x" *ngIf="item.value?.content?.projection && item.value.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</div>
-          </div>
+          <ng-container *ngFor="let item of program.data.postAward.accomplishments?.list | keys">
+            <span class="m_B-2x" *ngIf="item.value?.content?.actual && item.value.content.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</span>
+            <span class="m_B-2x" *ngIf="item.value?.content?.projection && item.value.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</span>
+          </ng-container>
         </ng-container>
 
         <p *ngSwitchDefault>Not Applicable.</p>
-      </ng-container>
+      </div>
 
       <h3>Account Identification:</h3>
 
@@ -171,7 +171,7 @@
 
       <h3>Applicant Eligibility:</h3>
 
-      <div *ngIf="program.data && dictionaries && dictionaries.applicant_types" class="designation">
+      <div class="designation" *ngIf="program.data && dictionaries && dictionaries.applicant_types">
         <h4>Designations</h4>
         <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.types | filterMultiArrayObject:dictionaries.applicant_types:'element_id':false:''; let isLast = last">{{ item.value }}{{isLast ? '' : ', '}}</ng-container>
       </div>
@@ -183,7 +183,7 @@
 
       <h3>Beneficiary Eligibility:</h3>
 
-      <div *ngIf="program.data && dictionaries && dictionaries.beneficiary_types" class="designation">
+      <div class="designation" *ngIf="program.data && dictionaries && dictionaries.beneficiary_types">
         <h4>Designations</h4>
         <ng-container *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaries.beneficiary_types:'element_id':false:''; let isLast = last">{{ item.value }}{{isLast ? '' : ', '}}</ng-container>
       </div>
@@ -202,7 +202,7 @@
 
       <h3>Use of Assistance:</h3>
 
-      <div *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types" class="designation">
+      <div class="designation" *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
         <h4>Designations</h4>
         <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.assistanceUsageTypes | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last">{{ item.value }}{{isLast ? '' : ', '}}</ng-container>
       </div>
@@ -221,25 +221,25 @@
 
       <h3>Deadlines:</h3>
 
-      <ng-container [ngSwitch]="program.data?.application?.deadlines?.submission?.flag">
+      <div class="content-block" [ngSwitch]="program.data?.application?.deadlines?.submission?.flag">
         <ng-container *ngSwitchCase="'yes'">
           <!-- repeat over all deadlines. -->
-          <div *ngFor="let deadline of program.data.application.deadlines.submission.list">
+          <span *ngFor="let deadline of program.data.application.deadlines.submission.list">
             <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
-            <ng-container *ngIf="deadline.start && deadline.end">to</ng-container>
+            <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
             <ng-container *ngIf="deadline.end">{{deadline.end | dateFormat: 'MMM DD, YYYY'}}</ng-container>
             {{deadline.description}}
-          </div>
+          </span>
         </ng-container>
 
-        <div *ngSwitchCase="'contact'">
+        <span *ngSwitchCase="'contact'">
           Contact the headquarters or regional office, as appropriate for application deadlines
-        </div>
+        </span>
 
-        <div *ngSwitchDefault>
+        <span *ngSwitchDefault>
           Not Applicable.
-        </div>
-      </ng-container>
+        </span>
+      </div>
 
       <h3>Preapplication Coordination:</h3>
 
@@ -523,11 +523,11 @@
 
         <h3 class="m_B-5x">Headquarters Office:</h3>
 
-        <div *ngFor="let item of program.data?.contacts?.list">
-          <div>{{item.title}} {{item.fullName}} <br>{{item.address}}, <br> {{item.city}}, {{item.state}} {{item.zip}}</div>
-          <div><strong>Email:</strong> <a href="mailto:{{item.email}}">{{item.email}}</a></div>
-          <div><strong>Phone:</strong> {{item.phone}}</div>
-          <div *ngIf="item.fax"><strong>Fax:</strong> {{item.fax}}</div>
+        <div class="content-block" *ngFor="let item of program.data?.contacts?.list">
+          <span>{{item.title}} {{item.fullName}} <br>{{item.address}}, <br> {{item.city}}, {{item.state}} {{item.zip}}</span>
+          <span><strong>Email:</strong> <a href="mailto:{{item.email}}">{{item.email}}</a></span>
+          <span><strong>Phone:</strong> {{item.phone}}</span>
+          <span *ngIf="item.fax"><strong>Fax:</strong> {{item.fax}}</span>
         </div>
         <div class="m_T-5x">
           <strong>Website: </strong>
