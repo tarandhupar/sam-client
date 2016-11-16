@@ -411,19 +411,19 @@
 
       <div>
         <ng-container [ngSwitch]="program.data?.postAward?.reports?.flag">
-          <p *ngSwitchCase="'yes'">
-            <ng-container *ngIf="program.data.postAward.reports.list?.program?.flag == 'yes'">{{program.data.postAward.reports.list.program.content}}</ng-container>
-            <ng-container *ngIf="program.data.postAward.reports.list?.cash?.flag == 'yes'">{{program.data.postAward.reports.list.cash.content}}</ng-container>
-            <ng-container *ngIf="program.data.postAward.reports.list?.progress?.flag == 'yes'">{{program.data.postAward.reports.list.progress.content}}</ng-container>
-            <ng-container *ngIf="program.data.postAward.reports.list?.expenditure?.flag == 'yes'">{{program.data.postAward.reports.list.expenditure.content}}</ng-container>
-            <ng-container *ngIf="program.data.postAward.reports.list?.performanceMonitoring?.flag == 'yes'">{{program.data.postAward.reports.list.performanceMonitoring.content}}</ng-container>
+          <p class="field" id="program-postaward-reports" *ngSwitchCase="'yes'">
+            <span class="field" id="program-postaward-reports-program" *ngIf="program.data.postAward.reports.list?.program?.flag == 'yes'">{{program.data.postAward.reports.list.program.content}}</span>
+            <span class="field" id="program-postaward-reports-cash" *ngIf="program.data.postAward.reports.list?.cash?.flag == 'yes'">{{program.data.postAward.reports.list.cash.content}}</span>
+            <span class="field" id="program-postaward-reports-progress" *ngIf="program.data.postAward.reports.list?.progress?.flag == 'yes'">{{program.data.postAward.reports.list.progress.content}}</span>
+            <span class="field" id="program-postaward-reports-expenditure" *ngIf="program.data.postAward.reports.list?.expenditure?.flag == 'yes'">{{program.data.postAward.reports.list.expenditure.content}}</span>
+            <span class="field" id="program-postaward-reports-performance" *ngIf="program.data.postAward.reports.list?.performanceMonitoring?.flag == 'yes'">{{program.data.postAward.reports.list.performanceMonitoring.content}}</span>
           </p>
 
-          <p class="m-a-0" *ngSwitchCase="'no'">
+          <p class="m-a-0 field" id="program-postaward-reports" *ngSwitchCase="'no'">
             No reports are required.
           </p>
 
-          <p class="m-a-0" *ngSwitchDefault>
+          <p class="m-a-0 field" id="program-postaward-reports" *ngSwitchDefault>
             Not Applicable
           </p>
         </ng-container>
@@ -435,27 +435,27 @@
         <ng-container [ngSwitch]="program.data?.postAward?.audit?.flag">
           <p *ngSwitchCase="'yes'">
             <ng-container [ngSwitch]="program.data.postAward.audit.questions?.OMBCircularA133?.flag">
-              <ng-container *ngSwitchCase="'yes'">
+              <span class="field" id="program-postaward-audit-a133" *ngSwitchCase="'yes'">
                 In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
                 nonfederal entities that expend financial assistance of $750,000 or more in Federal
                 awards will have a single or a program-specific audit conducted for that year. Non-Federal
                 entities that expend less than $750,000 a year in Federal awards are exempt from Federal
                 audit requirements for that year, except as noted in 2 CFR 200.503
-              </ng-container>
+              </span>
 
-              <ng-container *ngSwitchDefault>
+              <span class="field" id="program-postaward-audit-a133" *ngSwitchDefault>
                 This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
-              </ng-container>
+              </span>
             </ng-container>
 
-            {{program.data.postAward.audit.content}}
+            <span class="field" id="program-postaward-audit">{{program.data.postAward.audit.content}}</span>
           </p>
 
-          <p class="m-a-0" *ngSwitchCase="'no'">
+          <p class="m-a-0 field" id="program-postaward-audit" *ngSwitchCase="'no'">
             No audits are required for this program.
           </p>
 
-          <p class="m-a-0" *ngSwitchDefault>
+          <p class="m-a-0 field" id="program-postaward-audit" *ngSwitchDefault>
             Not Applicable.
           </p>
         </ng-container>
@@ -463,11 +463,11 @@
 
       <h3>Records:</h3>
 
-      <p *ngIf="(program.data?.postAward.records?.content) && (program.data.postAward.records.content != '')">
+      <p class="field" id="program-postaward-records" *ngIf="(program.data?.postAward.records?.content) && (program.data.postAward.records.content != '')">
         {{program.data.postAward.records.content}}
       </p>
 
-      <p *ngIf="!(program.data?.postAward.records?.content) || (program.data.postAward.records.content == '')">
+      <p class="field" id="program-postaward-records" *ngIf="!(program.data?.postAward.records?.content) || (program.data.postAward.records.content == '')">
         No Data Available.
       </p>
 
@@ -475,57 +475,57 @@
 
       <p>
         <ng-container [ngSwitch]="program.data?.postAward?.documents?.flag">
-          <ng-container *ngSwitchCase="'yes'"> {{program.data.postAward.documents.content}}</ng-container>
-          <ng-container *ngSwitchDefault> Not Applicable.</ng-container>
+          <span class="field" id="program-postaward-documents" *ngSwitchCase="'yes'"> {{program.data.postAward.documents.content}}</span>
+          <span class="field" id="program-postaward-documents" *ngSwitchDefault> Not Applicable.</span>
         </ng-container>
       </p>
 
       <h3 class="m_B-5x">Formula and Matching Requirements:</h3>
       <!-- statutory formula-->
       <ng-container [ngSwitch]="program.data?.assistance?.formula?.flag">
-        <div class="m-a-0" *ngSwitchCase="'yes'">
+        <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="'yes'">
           Statutory Formula: Title {{program.data.assistance.formula.title}} Chapter {{program.data.assistance.formula.chapter}}
           Part {{program.data.assistance.formula.part}} Subpart {{program.data.assistance.formula.subPart}} Public Law {{program.data.assistance.formula.publicLaw}}
           {{program.data.assistance.formula.additionalInfo?.content}}
         </div>
 
-        <div class="m-a-0" *ngSwitchCase="'no'">
+        <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="'no'">
           This federal assistance listing has no statutory formula
         </div>
 
-        <div class="m-a-0" *ngSwitchDefault>
+        <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchDefault>
           Statuary formula is not applicable to this federal assistance listing.
         </div>
       </ng-container>
 
       <!-- matching requirements -->
       <ng-container [ngSwitch]="program.data?.assistance?.matching?.flag">
-        <div class="m-a-0" *ngSwitchCase="'yes'">
+        <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="'yes'">
           Matching Requirements: <ng-container *ngIf="program.data.assistance.matching?.percent > 0">Percent: {{program.data.assistance.matching.percent}}</ng-container>
           {{program.data.assistance.matching.otherInfo?.content}}
         </div>
 
-        <div class="m-a-0" *ngSwitchCase="'no'">
+        <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="'no'">
           This program has no matching requirements.
         </div>
 
-        <div class="m-a-0" *ngSwitchDefault>
+        <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchDefault>
           Matching requirements are not applicable to this federal assistance listing.
         </div>
       </ng-container>
 
       <!-- moe-->
       <ng-container [ngSwitch]="program.data?.assistance?.moe?.flag">
-        <div class="m-a-0" *ngSwitchCase="'yes'">
+        <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="'yes'">
           This program has MOE requirements, see funding agency for further details. Additional Information:
           {{program.data.assistance.moe.additionalInfo?.content}}
         </div>
 
-        <div class="m-a-0" *ngSwitchCase="'no'">
+        <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="'no'">
           This program does not have MOE requirements.
         </div>
 
-        <div class="m-a-0" *ngSwitchDefault>
+        <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchDefault>
           MOE requirements are not applicable to this federal assistance listing.
         </div>
       </ng-container>
