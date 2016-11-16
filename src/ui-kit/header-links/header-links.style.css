@@ -5,9 +5,9 @@
 
 .dropdown{
   position: absolute;
-  top:25px;
-  left: -50%;
-  right: 50%;
+  top:35px;
+  left: -45%;
+  right: 45%;
   background: #fff;
   z-index: 2000;
 }
@@ -32,4 +32,16 @@
 .dropdown-link{
   text-decoration: none;
   cursor: pointer;
+}
+
+.arrow-up {
+  position: absolute;
+  margin: 0;
+  top:27px;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid white;
 }
