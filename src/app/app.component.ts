@@ -25,6 +25,8 @@ export class App{
   index: string = "";
   qs: any = {};
 
+  showOverlay = false;
+
   constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {
 
   }
@@ -71,4 +73,10 @@ export class App{
   setQS(obj){
     this.qs = obj;
   }
+
+  toggleOverlay(value){
+    this.showOverlay = value;
+
+  }
+  
 }
