@@ -68,7 +68,7 @@
 
       <h3>Objectives:</h3>
 
-      <p>
+      <p class="field" id="program-objective">
         {{program.data?.objective}}
       </p>
 
@@ -76,25 +76,25 @@
 
       <div class="content-block" [ngSwitch]="program.data?.projects?.flag">
         <ng-container *ngSwitchCase="'yes'">
-          <span *ngFor="let item of program.data.projects?.list | keys">
-            <ng-container *ngIf="item?.value?.content?.actual">
+          <span *ngFor="let item of program.data.projects?.list | keys; let i = index">
+            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.value?.content?.actual">
               Fiscal Year {{item.key}}: {{item.value.content.actual}}
-            </ng-container>
+            </span>
             <!--          <span *ngIf="item.value.content.projection">
                       , Projection: {{item.value.content.projection}}
                     </span>-->
           </span>
         </ng-container>
 
-        <p *ngSwitchDefault>Not Applicable</p>
+        <p class="field" id="program-project-example-na" *ngSwitchDefault>Not Applicable</p>
       </div>
     </section>
 
     <section>
       <h2 id="authorizations">Authorizations</h2>
 
-      <div *ngFor="let item of authorizationIdsGrouped">
-        <p>{{ item | authorization }}</p>
+      <div *ngFor="let item of authorizationIdsGrouped; let i = index">
+        <p class="field" [attr.id]="'program-authorization-' + i">{{ item | authorization }}</p>
       </div>
     </section>
 
@@ -106,11 +106,11 @@
 
       <h3>Range and Average of Financial Assistance:</h3>
 
-      <p *ngIf="(program.data?.financial?.additionalInfo?.content) && (program.data?.financial?.additionalInfo?.content != '')">
+      <p class="field" id="program-financial-additional-info" *ngIf="(program.data?.financial?.additionalInfo?.content) && (program.data?.financial?.additionalInfo?.content != '')">
         {{program.data.financial.additionalInfo.content}}
       </p>
 
-      <p *ngIf="!(program.data?.financial?.additionalInfo?.content) || (program.data?.financial?.additionalInfo?.content == '')">
+      <p class="field" id="program-financial-additional-info" *ngIf="!(program.data?.financial?.additionalInfo?.content) || (program.data?.financial?.additionalInfo?.content == '')">
         No Data Available.
       </p>
 
@@ -119,9 +119,9 @@
 
       <div class="content-block" [ngSwitch]="program.data?.postAward?.accomplishments?.flag">
         <ng-container *ngSwitchCase="'yes'">
-          <ng-container *ngFor="let item of program.data.postAward.accomplishments?.list | keys">
-            <span class="m_B-2x" *ngIf="item.value?.content?.actual && item.value.content.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</span>
-            <span class="m_B-2x" *ngIf="item.value?.content?.projection && item.value.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</span>
+          <ng-container *ngFor="let item of program.data.postAward.accomplishments?.list | keys; let i = index">
+            <span class="m_B-2x field" [attr.id]="'program-accomplishments-actual-' + i" *ngIf="item.value?.content?.actual && item.value.content.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</span>
+            <span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.value?.content?.projection && item.value.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</span>
           </ng-container>
         </ng-container>
 
@@ -130,9 +130,9 @@
 
       <h3>Account Identification:</h3>
 
-      <p *ngFor="let account of program.data?.financial?.accounts">
-        <ng-container *ngIf="account.description">{{account.code}}-{{account.description}};</ng-container>
-        <ng-container *ngIf="!account.description">{{account.code}}</ng-container>
+      <p *ngFor="let account of program.data?.financial?.accounts; let i = index">
+        <ng-container class="field" [attr.id]="'program-account-identification-' + i" *ngIf="account.description">{{account.code}}-{{account.description}};</ng-container>
+        <ng-container class="field" [attr.id]="'program-account-identification-' + i" *ngIf="!account.description">{{account.code}}</ng-container>
       </p>
     </section>
 
