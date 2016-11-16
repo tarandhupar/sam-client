@@ -18,17 +18,24 @@
       </span>
     </section>
     
+    <!-- Description -->
     <section class="usa-content" *ngIf="organization.summary">
       <p id="orgDescription" [innerHTML]="organization.summary"></p>
     </section>
     
-    <!--Sub-Tier Agencies-->
-    <h2 id="overview">Sub-Tier Agencies</h2>
+    <!-- Sub-Tier Agencies -->
     <section *ngIf="organization.hierarchy.length>0">
-      <!--<p>
-        <strong>1 - {{organization.hierarchy.length}}</strong> 
-        of <strong>{{organization.hierarchy.length}}</strong>
-      </p>-->
+      <div class="usa-grid-full m_T-6x">
+        <div class="usa-width-two-thirds">
+          <h2>Sub-Tier Agencies</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <p class="m_T-2x" style="text-align: right;">
+            <strong>1 - {{organization.hierarchy.length}}</strong> 
+            of <strong>{{organization.hierarchy.length}}</strong>
+          </p>
+        </div>
+      </div>
       <ul class="usa-zebra-list">
         <li *ngFor = "let element of organization.hierarchy">
           <a href="#testing">{{element.org.agencyName}}</a>
@@ -36,8 +43,9 @@
       </ul>
     </section>
 
-    <!--No Sub-Tier Agenfies found-->
+    <!-- No Sub-Tier Agenfies found -->
     <section *ngIf="organization.hierarchy.length==0">
+      <h2>Sub-Tier Agencies</h2>
       <p class="inactive">
         <i class="fa fa-search" aria-hidden="true"></i>
         &nbsp;
