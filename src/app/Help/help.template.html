@@ -1,0 +1,77 @@
+<div class="usa-width-one-whole">
+  <div class="jumbotron">
+    <h1 class="help-title centered relative m_T-4x m_B-6x">Help Center
+    </h1>
+  </div>
+</div>
+
+<div class="usa-grid-full">
+  <aside class="usa-width-one-fourth m_T-2x">
+    <ul class="usa-sidenav-list">
+      <li>
+        <a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/help/overview']">Help Center Home</a>
+      </li>
+      <li>
+        <a [ngClass]="getSectionClass('about')" (click)="changeSection('about')" [routerLink]="['/help/about']">About SAM.gov</a>
+        <ul class="usa-sidenav-sub_list"  *ngIf="isCurrentSection('about')">
+          <li><a [ngClass]="getSubSectionClass('whoWeAre')" (click)="changeSubSection('whoWeAre')" href="{{currentUrl}}#whoWeAre">Who we are</a></li>
+          <li><a [ngClass]="getSubSectionClass('alerts')" (click)="changeSubSection('alerts')" href="{{currentUrl}}#alerts">System Alerts</a></li>
+        </ul>
+      </li>
+      <li>
+        <a [ngClass]="getSectionClass('new')" (click)="changeSection('new')" [routerLink]="['/help/new']">New to SAM.gov?</a>
+      </li>
+      <li>
+        <a [ngClass]="getSectionClass('accounts')" (click)="changeSection('accounts')" [routerLink]="['/help/accounts']">Account Management</a>
+        <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('accounts')">
+          <li><a href="">Reset Password</a></li>
+          <li><a class="usa-current" href="">Other</a></li>
+        </ul>
+      </li>
+      <li>
+        <a [ngClass]="getSectionClass('features')" (click)="changeSection('features')" [routerLink]="['/help/features']">Features</a>
+        <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('features')">
+          <li><a href="">Workspace</a></li>
+          <li><a href="">Search</a></li>
+          <li><a href="">Reporting</a></li>
+          <li><a href="">Hierarchy</a></li>
+        </ul>
+      </li>
+      <li>
+        <a [ngClass]="getSectionClass('award')" (click)="changeSection('award')" [routerLink]="['/help/award']">Award Data</a>
+        <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('award')">
+          <li><a href="">Opportunities</a></li>
+          <li><a href="">Awards</a></li>
+          <li><a href="">Sub Awards</a></li>
+          <li><a href="">Entities</a></li>
+          <li><a href="">Assistance Listings</a></li>
+          <li><a href="">Exclusions</a></li>
+          <li><a href="">Agencies</a></li>
+        </ul>
+      </li>
+      <li>
+        <a [ngClass]="getSectionClass('policies')" (click)="changeSection('policies')" [routerLink]="['/help/policies']">Policies</a>
+        <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('policies')">
+          <li><a href="">Accessibility</a></li>
+          <li><a href="">Legal</a></li>
+          <li><a href="">Privacy Policy</a></li>
+          <li><a href="">Terms of Use</a></li>
+        </ul>
+      </li>
+      <li>
+        <a [ngClass]="getSectionClass('partners')" (click)="changeSection('partners')" [routerLink]="['/help/partners']">Our Partners</a>
+      </li>
+      <li>
+        <a [ngClass]="getSectionClass('reference')" (click)="changeSection('reference')" [routerLink]="['/help/reference']">Reference Library</a>
+      </li>
+    </ul>
+  </aside>
+  <div class="usa-width-three-fourths">
+    <div class="usa-width-one-whole m_L-4x help-section-content">
+      <!--Content for Sections-->
+      <router-outlet></router-outlet>
+
+
+    </div>
+  </div>
+</div>
