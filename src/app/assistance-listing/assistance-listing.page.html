@@ -234,19 +234,21 @@
       <div class="content-block" [ngSwitch]="program.data?.application?.deadlines?.submission?.flag">
         <ng-container *ngSwitchCase="'yes'">
           <!-- repeat over all deadlines. -->
-          <span *ngFor="let deadline of program.data.application.deadlines.submission.list">
-            <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
-            <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
-            <ng-container *ngIf="deadline.end">{{deadline.end | dateFormat: 'MMM DD, YYYY'}}</ng-container>
-            {{deadline.description}}
+          <span *ngFor="let deadline of program.data.application.deadlines.submission.list; let i = index">
+            <span class="field" [attr.id]="'program-deadline-dates-' + i">
+              <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
+              <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
+              <ng-container *ngIf="deadline.end">{{deadline.end | dateFormat: 'MMM DD, YYYY'}}</ng-container>
+            </span>
+            <span class="field" [attr.id]="'program-deadline-description-' + i">{{deadline.description}}</span>
           </span>
         </ng-container>
 
-        <span *ngSwitchCase="'contact'">
+        <span id="program-deadline-contact" *ngSwitchCase="'contact'">
           Contact the headquarters or regional office, as appropriate for application deadlines
         </span>
 
-        <span *ngSwitchDefault>
+        <span id="program-deadline-na" *ngSwitchDefault>
           Not Applicable.
         </span>
       </div>
@@ -261,34 +263,38 @@
             <!-- Environmental statements-->
             <ng-container [ngSwitch]="program.data.preApplication.coordination.environmentalImpact?.flag ">
               <ng-container *ngSwitchCase="'yes'">
-                <ng-container *ngFor="let entry of program.data.preApplication.coordination.environmentalImpact.reports | keys">
-                  <ng-container *ngIf="entry.value?.flag === 'yes'">An environmental impact {{entry.key}} is required for this program.</ng-container>
+                <ng-container *ngFor="let entry of program.data.preApplication.coordination.environmentalImpact.reports | keys; let i = index">
+                  <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.value?.flag === 'yes'">
+                    An environmental impact {{entry.key}} is required for this program.
+                  </span>
                 </ng-container>
               </ng-container>
 
-              <ng-container *ngSwitchDefault>
+              <span class="field" id="program-preapplication-coorindation-environmental-na" *ngSwitchDefault>
                 Environmental impact information is not required for this program.
-              </ng-container>
+              </span>
             </ng-container>
 
             <!-- Executive Order  -->
             <ng-container [ngSwitch]="program.data.preApplication.coordination.questions?.ExecutiveOrder12372?.flag">
-              <ng-container *ngSwitchCase="'yes'">
+              <span class="field" id="program-preapplication-coordination-executive-order" *ngSwitchCase="'yes'">
                 This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
                 An applicant should consult the office or official designated as the single point of contact in his or her State for more
                 information on the process the State requires to be followed in applying for assistance, if the State has selected the program forreview.
-              </ng-container>
+              </span>
 
-              <ng-container *ngSwitchDefault>
+              <span class="field" id="program-preapplication-coordination-executive-order" *ngSwitchDefault>
                 This program is excluded from coverage under E.O. 12372.
-              </ng-container>
+              </span>
             </ng-container>
 
             <!-- additional content-->
-            {{program.data.preApplication.coordination.additionalInfo?.content}}
+            <span class="field" id="program-preapplication-coordination">
+              {{program.data.preApplication.coordination.additionalInfo?.content}}
+            </span>
           </p>
 
-          <p class="m-t-0" *ngSwitchDefault>
+          <p class="m-t-0 field" id="program-preapplication-coordination" *ngSwitchDefault>
             Preapplication coordination is not applicable.
           </p>
         </ng-container>
@@ -299,18 +305,20 @@
 
       <p>
         <ng-container [ngSwitch]="program.data?.application?.procedures?.questions?.OMBCircularA102?.flag">
-          <ng-container *ngSwitchCase="'yes'">
+          <span class="field" id="program-application-procedures-a102" *ngSwitchCase="'yes'">
             2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards applies to this program.
-          </ng-container>
+          </span>
 
-          <ng-container *ngSwitchDefault>
+          <span class="field" id="program-application-procedures-a102" *ngSwitchDefault>
             This program is excluded from coverage under 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit
             Requirements for Federal Awards.
-          </ng-container>
+          </span>
         </ng-container>
 
         <!-- additional content-->
-        {{program.data?.application?.procedures?.additionalInfo?.content}}
+        <span class="field" id="program-application-procedures">
+          {{program.data?.application?.procedures?.additionalInfo?.content}}
+        </span>
       </p>
 
 
@@ -318,79 +326,80 @@
 
       <p>
         <ng-container [ngSwitch]="program.data?.application?.selectionCriteria?.flag">
-          <ng-container *ngSwitchCase="'yes'">
+          <span class="field" id="program-selection-criteria" *ngSwitchCase="'yes'">
             {{program.data.application.selectionCriteria.content}}
-          </ng-container>
+          </span>
 
-          <ng-container *ngSwitchCase="'no'">
+          <span class="field" id="program-selection-criteria" *ngSwitchCase="'no'">
             No
-          </ng-container>
+          </span>
 
-          <ng-container *ngSwitchDefault>
+          <span class="field" id="program-selection-criteria" *ngSwitchDefault>
             Not Applicable
-          </ng-container>
+          </span>
         </ng-container>
       </p>
 
 
       <h3>Award Procedure:</h3>
 
-      <p>
+      <p class="field" id="program-award-procedure">
         {{program.data?.award?.procedures?.content}}
       </p>
 
 
       <h3>Date Range for Approval/Disapproval:</h3>
 
-      <p>
-        <ng-container [ngSwitch]="program.data?.application?.deadlines?.approval?.interval">
-          <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
-          <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
-          <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
-          <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
-          <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
-          <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
-          <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
-          <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
-          <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
-          <ng-container>{{program.data?.application?.deadlines?.approval?.otherInfo?.content}}</ng-container>
-        </ng-container>
+
+      <p class="field" id="program-application-approval-interval" [ngSwitch]="program.data?.application?.deadlines?.approval?.interval">
+        <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
+        <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
+        <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
+        <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
+        <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
+        <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
+        <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
+        <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
+        <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
+        <span class="field" id="program-application-approval">
+          {{program.data?.application?.deadlines?.approval?.otherInfo?.content}}
+        </span>
       </p>
 
 
       <h3>Renewals:</h3>
 
-      <p>
-        <ng-container [ngSwitch]="program.data?.application?.deadlines?.renewal?.interval">
-          <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
-          <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
-          <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
-          <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
-          <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
-          <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
-          <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
-          <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
-          <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
-          <ng-container>{{program.data?.application?.deadlines?.renewal?.otherInfo?.content}}</ng-container>
-        </ng-container>
+      <p class="field" id="program-application-renewal-interval" [ngSwitch]="program.data?.application?.deadlines?.renewal?.interval">
+        <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
+        <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
+        <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
+        <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
+        <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
+        <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
+        <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
+        <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
+        <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
+        <span class="field" id="program-application-renewal">
+          {{program.data?.application?.deadlines?.renewal?.otherInfo?.content}}
+        </span>
       </p>
 
 
       <h3>Appeals:</h3>
 
-      <p>
-        <ng-container [ngSwitch]="program.data?.application?.deadlines?.appeal?.interval">
-          <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
-          <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
-          <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
-          <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
-          <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
-          <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
-          <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
-          <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
-          <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
-          <ng-container>{{program.data?.application?.deadlines?.appeal?.otherInfo?.content}}</ng-container>
-        </ng-container>
+      <p class="field" id="program-application-appeal-interval" [ngSwitch]="program.data?.application?.deadlines?.appeal?.interval">
+        <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
+        <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
+        <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
+        <ng-container *ngSwitchCase="'4'"><em>From 60 to 90 days</em></ng-container>
+        <ng-container *ngSwitchCase="'5'"><em>From 90 to 120 days</em></ng-container>
+        <ng-container *ngSwitchCase="'6'"><em>From 120 to 180 days</em></ng-container>
+        <ng-container *ngSwitchCase="'7'"><em>&gt; 180 Days</em></ng-container>
+        <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
+        <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
+        <span class="field" id="program-application-appeal">
+          {{program.data?.application?.deadlines?.appeal?.otherInfo?.content}}
+        </span>
       </p>
     </section>
 
