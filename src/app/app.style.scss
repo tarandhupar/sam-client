@@ -60,6 +60,19 @@ html, body{
   /*font-family: Arial, Helvetica, sans-serif*/
 }
 
+body {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+h1,
+h2{
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  color: black;
+}
+
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{
   min-height: 90vh;
