@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { FHService } from './fh/fh.service';
 import { SearchService } from './search/search.service';
 import { SystemAlertsService } from './system-alerts/system-alerts.service';
+import { OpportunityService } from './opportunity/opportunity.service';
 import { WrapperService } from './wrapper/wrapper.service';
 
 /**
@@ -12,8 +13,17 @@ import { WrapperService } from './wrapper/wrapper.service';
  * https://gsa.github.io/sam-web-design-standards/
  */
 @NgModule({
-  declarations: [ ],
-  imports: [ HttpModule ],
-  providers: [ SearchService, FHService, SystemAlertsService, WrapperService ]
+  declarations: [ 
+  ],
+  imports: [ 
+    HttpModule,
+  ],
+  providers: [ 
+    SearchService, 
+    FHService, 
+    SystemAlertsService, 
+    OpportunityService,
+    WrapperService,
+  ]
 })
 export class SamAPIKitModule { }

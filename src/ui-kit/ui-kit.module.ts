@@ -22,7 +22,8 @@ import { SamAlertComponent } from "./alert/alert.component";
 import { SamAccordionsComponent } from "./accordions/accordions.component";
 import { SamButtonComponent } from "./form-controls/button/button.component.ts";
 import { SamPaginationComponent } from "./pagination/pagination.component";
-
+import { SamClickOutsideDirective } from "./click-outside/click-outside.directive"
+import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 
 
 /**
@@ -31,6 +32,8 @@ import { SamPaginationComponent } from "./pagination/pagination.component";
  */
 @NgModule({
   declarations: [
+    SamClickOutsideDirective,
+    SamHeaderLinksComponent,
     SamPaginationComponent,
     SamAccordionsComponent,
     SamButtonComponent,
@@ -55,6 +58,8 @@ import { SamPaginationComponent } from "./pagination/pagination.component";
     RouterModule
   ],
   exports: [
+    SamClickOutsideDirective,
+    SamHeaderLinksComponent,
     SamPaginationComponent,
     SamAccordionsComponent,
     SamButtonComponent,
