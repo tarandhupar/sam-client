@@ -38,7 +38,7 @@
       <samAlert id="program-alert" *ngFor="let alert of alert" labelname="alert.labelname" [type]="alert.config.type" [title]="alert.config.title" [description]="alert.config.description"></samAlert>
     </ng-container>
 
-    <section>
+    <section id="program-information">
       <h1>
         <span class="field" id="program-title">{{program?.data?.title}}</span>
       </h1>
@@ -53,17 +53,20 @@
         </p>
         <span class="field" id="program-number"><strong>FAL Number: </strong>{{program.data?.programNumber}}</span>
 
-        <strong>Related Federal Assistance: </strong>
-        <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.flag != 'na' && relatedProgram.length > 0">
-          <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
-            <a class="field" [attr.id]="'program-related-' + i" href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}
+        <span>
+          <strong>Related Federal Assistance: </strong>
+          <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.flag != 'na' && relatedProgram.length > 0">
+            <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
+              <a class="field" [attr.id]="'program-related-' + i" href="programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}
+            </ng-container>
           </ng-container>
-        </ng-container>
-        <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.flag == 'na' || relatedProgram.length == 0">Not Applicable.</span>
+
+          <ng-container class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.flag == 'na' || relatedProgram.length == 0">Not Applicable.</ng-container>
+        </span>
       </div>
     </section>
 
-    <section>
+    <section id="program-overview">
       <h2 id="overview">Overview</h2>
 
       <h3>Objectives:</h3>
@@ -90,7 +93,7 @@
       </div>
     </section>
 
-    <section>
+    <section id="program-authorizations">
       <h2 id="authorizations">Authorizations</h2>
 
       <div *ngFor="let item of authorizationIdsGrouped; let i = index">
@@ -99,7 +102,7 @@
     </section>
 
     <!--Financials-->
-    <section>
+    <section id="program-financials">
       <h2 id="financial-information">Financial Information</h2>
 
       <financial-obligation-chart *ngIf='dictionaries' [financialData]='program.data?.financial?.obligations' [dictionaries]='dictionaries'></financial-obligation-chart>
@@ -137,7 +140,7 @@
     </section>
 
     <!--Should I apply?-->
-    <section>
+    <section id="program-application-criteria">
       <h2 id="criteria-for-applying">Criteria for Applying</h2>
 
       <h3>Types of Assistance:</h3>
@@ -226,7 +229,7 @@
     </section>
 
     <!--How do I apply?-->
-    <section>
+    <section id="program-application-information">
       <h2 id="applying-for-assistance">Applying for Assistance</h2>
 
       <h3>Deadlines:</h3>
@@ -404,7 +407,7 @@
     </section>
 
     <!--Compliance requirements-->
-    <section>
+    <section id="program-compliance-requirements">
       <h2 id="compliance-requirements">Compliance Requirements</h2>
 
       <h3>Reports:</h3>
@@ -532,7 +535,7 @@
     </section>
 
     <!--Contact information-->
-    <section>
+    <section id="program-contact-information">
       <h2 id="contact-information">Contact Information</h2>
 
       <address>
@@ -557,7 +560,7 @@
     </section>
 
     <!--History Section-->
-    <section *ngIf="historicalIndex">
+    <section id="program-history" *ngIf="historicalIndex">
       <h2 id="history">History</h2><br>
       <ng-container *ngFor="let item of historicalIndex; let i = index">
         <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">
