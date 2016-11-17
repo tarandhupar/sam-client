@@ -24,6 +24,8 @@ export class App{
   index: string = "";
   qs: any = {};
 
+  showOverlay = false;
+
   constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {
 
   }
@@ -49,6 +51,8 @@ export class App{
     var qsobj = this.qs;
     if(searchObject.keyword.length>0){
       qsobj['keyword'] = searchObject.keyword;
+    } else {
+      qsobj['keyword'] = '';
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
@@ -68,4 +72,10 @@ export class App{
   setQS(obj){
     this.qs = obj;
   }
+
+  toggleOverlay(value){
+    this.showOverlay = value;
+
+  }
+  
 }
