@@ -7,10 +7,8 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
   moduleId: __filename,
   templateUrl: 'opportunity.component.html',
-  styles: [ require('./opportunity.style.css') ],
-  providers: [
-    SearchService,
-  ]
+  styleUrls: [ './opportunity.style.css' ],
+  providers: [ SearchService ]
 })
 export class OpportunityPage implements OnInit, OnDestroy {
   oNotice:any;

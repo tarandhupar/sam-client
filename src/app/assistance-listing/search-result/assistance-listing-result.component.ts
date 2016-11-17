@@ -46,7 +46,7 @@ import * as moment from 'moment/moment';
         </ul>
       </div>
   `,
-  styles: [ require('../assistance-listing.style.css') ]
+  styleUrls: [ '../assistance-listing.style.css' ]
 })
 export class AssistanceListingResult implements OnInit {
 	@Input() data: any={};

@@ -1,7 +1,5 @@
 import { Component, Output, EventEmitter} from '@angular/core';
 
-
-
 /**
  * The <samBanner> component is designed with sam.gov standards to show that this is an official website
  * https://gsa.github.io/sam-web-design-standards/
@@ -11,7 +9,7 @@ import { Component, Output, EventEmitter} from '@angular/core';
 @Component({
   selector: 'samBanner',
   templateUrl: 'banner.template.html',
-  styles: [ require('./banner.style.css') ],
+  styleUrls: [ 'banner.style.css' ],
 
 })
 export class SamBannerComponent {

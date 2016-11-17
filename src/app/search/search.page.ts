@@ -6,7 +6,7 @@ import { SearchService } from 'api-kit';
 @Component({
   moduleId: __filename,
   selector: 'search',
-  styles: [ require('./search.style.css') ],
+  styleUrls: [ 'search.style.css' ],
   providers: [],
   templateUrl: 'search.template.html'
 })

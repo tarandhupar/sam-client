@@ -49,7 +49,7 @@ import * as moment from 'moment/moment';
       </ul>
     </div>
   `,
-  styles: [ require('../opportunity.style.css') ]
+  styleUrls: [ '../opportunity.style.css' ]
 })
 export class OpportunitiesResult implements OnInit{
   @Input() data: any;

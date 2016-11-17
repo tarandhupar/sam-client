@@ -1,20 +1,19 @@
 /*
  * Angular 2 decorators and services
  */
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
 
-console.log(require('./app.style.scss'));
+import './app.style.scss';
+
 /*
  * App Component
  * Top Level Component
  */
 @Component({
   selector: 'app',
-  encapsulation: ViewEncapsulation.None,
-  styles: [ require('./app.style.scss') ],
   templateUrl: './app.template.html',
   providers : [SearchService]
 })
@@ -77,5 +76,5 @@ export class App{
     this.showOverlay = value;
 
   }
-  
+
 }

@@ -155,7 +155,7 @@ module.exports = {
        */
       {
         test: /\.css$/,
-        loaders: ['to-string-loader', 'css-loader?sourceMap']
+        loaders: ['to-string-loader', 'css-loader']
       },
 
       /* Raw loader support for *.html
@@ -173,9 +173,10 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: /node_modules/,
+        loaders: [ 'style', 'css?sourceMap', 'resolve-url', 'sass?sourceMap' ]
         //loaders: [ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap!resolve-url-loader!sass-loader?sourceMap')]
-        loaders: [ExtractTextPlugin.extract('style-loader', 'sass-loader?sourceMap!resolve-url-loader!css-loader?sourceMap')]
-
+        //loaders: [ExtractTextPlugin.extract('style-loader', 'sass-loader?sourceMap!resolve-url-loader!css-loader?sourceMap')]
+        //loader: ExtractTextPlugin.extract("style", "css!resolve-url!sass")
       },
 
       {
@@ -215,7 +216,7 @@ module.exports = {
    */
   plugins: [
 
-    new ExtractTextPlugin("styles.css"),
+    // new ExtractTextPlugin("styles.css"),
     /*
      * Plugin: ForkCheckerPlugin
      * Description: Do type checking in a separate process, so webpack don't need to wait.

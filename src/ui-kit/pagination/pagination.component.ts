@@ -1,4 +1,5 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
+import './pagination.style.scss';
 
 /**
  * The <samPagination> allows users to select a page
@@ -22,7 +23,6 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
               </ul>
              </nav>    
   `,
-  styles: [ require('./pagination.style.scss') ],
 })
 export class SamPaginationComponent {
 

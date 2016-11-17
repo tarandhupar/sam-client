@@ -1,14 +1,15 @@
-$image_path: '~uswds/dist/img';
-$fa-font-path: "~font-awesome/fonts";
 
 // Vendor main
+$fa-font-path: "/src/assets/fonts";
 @import '~font-awesome/scss/font-awesome';
+//@import '~font-awesome/css/font-awesome';
 
 // Internal variable should be declared before uswds variable to take higher precendence
 @import 'margin-padding';
 @import 'global';
 @import 'typography';
 
+$image_path: '~uswds/dist/img';
 @import '~uswds/src/stylesheets/all';
 
 html, body{
