@@ -22,8 +22,11 @@ describe('FederalHierarchyResultComponent', () => {
       comp = fixture.componentInstance;
       titleEl  = fixture.debugElement.query(By.css('.federal-hierarchy-title')); // find title element
       comp.data = {
-        title: "SAMPLE TITLE",
-        archive:false
+        name: "SAMPLE TITLE",
+        isActive:true,
+        parentOrganizationHierarchy: {
+          "name" : "Department Name"
+        }
       };
       fixture.detectChanges();// trigger data binding
     });
