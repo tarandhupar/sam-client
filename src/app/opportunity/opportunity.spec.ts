@@ -7,56 +7,136 @@ import { ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import { OpportunityPage } from './opportunity.page';
-import { SearchService } from 'api-kit';
+import { OpportunityService, FHService } from 'api-kit';
 import { Observable } from 'rxjs';
 
 let comp:    OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
 
-let MockSearchService = {
-  runSearch: (obj) => {
+let MockOpportunityService = {
+  getOpportunityById(id: string) {
     return Observable.of({
-      _embedded: {
-        results: [
-        {
-          _links: {
-            self: {
-              href: "/notice/2c1820ae561f521a499e995f2696052c/view"
+      "opportunityId": "213ji321hu3jk123",
+      "data": {
+        "type": "Type Goes here",
+        "solicitationNumber": "Solicitation Number goes here",
+        "title": "Title Goes here",
+        "organizationId": "100010393",
+        "organizationLocationId": "100010393",
+        "relatedOpportunityId": "Related Opportunity Id goes here",
+        "statuses": {
+          "publishStatus": "Statuses publish status goes here",
+          "isArchived": false,
+          "isCanceled": false
+        },
+        "descriptions": [
+          {
+            "descriptionId": "Description Id goes here",
+            "content": "Content goes here"
+          }
+        ],
+        "link": {
+          "href": "Link href goes here",
+          "additionalInfo": {
+            "content": "Link Additional Info content goes here"
+          }
+        },
+        "classificationCode": "Classification Code goes here",
+        "naicsCode": [
+          "naics Code 1 goes here",
+          "naics Code 2 goes here"
+        ],
+        "isRecoveryRelated": true,
+        "isScheduleOpportunity": true,
+        "pointOfContact": [
+          {
+            "type": "point of contact type goes here",
+            "title": "point of contact title goes here",
+            "fullName": "point of contact full name goes here",
+            "email": "point of contact email goes here",
+            "phone": "point of contact email goes here",
+            "fax": "point of contact fax goes here",
+            "additionalInfo": {
+              "content": "poc additional info content goes here"
+            }
+          }
+        ],
+        "placeOfPerformance": {
+          "streetAddress": "awardee Street Address goes here",
+          "streetAddress2": "awardee Street Address2 goes here",
+          "city": "awardee City goes here",
+          "state": "awardee State goes here",
+          "zip": "awardee Zip goes here",
+          "country": "awardee Country goes here"
+        },
+        "archive": {
+          "type": "Archive type goes here",
+          "date": "2016-11-16 22:21:55"
+        },
+        "permissions": {
+          "area": {}
+        },
+        "solicitation": {
+          "setAside": "solicitation SetAside goes here",
+          "deadlines": {
+            "response": "2016-11-16 22:21:55"
+          }
+        },
+        "award": {
+          "date": "2016-11-16",
+          "number": "award Number goes here",
+          "deliveryOrderNumber": "award Delivery Orde rNumber goes here",
+          "amount": "award Amount goes here",
+          "lineItemNumber": "award Line Item Number goes here",
+          "awardee": {
+            "name": "Awardee name goes here",
+            "duns": "DUNS goes here",
+            "location": {
+              "streetAddress": "awardee Street Address goes here",
+              "streetAddress2": "awardee Street Address2 goes here",
+              "city": "awardee City goes here",
+              "state": "awardee State goes here",
+              "zip": "awardee Zip goes here",
+              "country": "awardee Country goes here"
             }
           },
-          procurementTitle: "D--FY16 Software Maintenance Renewal â€“ NetEx TAC-16-23777",
-          officeName: "VA Technology Acquisition Center",
-          procurementPostedDate: "2015-10-16T04:58:16.000-04:00",
-          _rScore: 0,
-          procurementDescription: "No Description Provided",
-          _type: "FBO",
-          agencyId: "ce16ded7f375e40d26c629ff49bdf38e",
-          parentAgencyName: "Department of Veterans Affairs",
-          archive: true,
-          procurementTypeValue: "Justification and Approval (J&A)",
-          agencyName: "VA Technology Acquisition Center",
-          solicitationNumber: "VA11815Q0598",
-          parentAgencyId: "6e8d2e2e8eef856f8905b0b163163f08",
-          officeId: "feb42329b007219da2e809e2ff56873e",
-          _id: "2c1820ae561f521a499e995f2696052c",
-          procurementType: "j"
-        }]
-      },
-      _links: {
-        self: {
-          href: "/sgs/v1/search?index=fbo&page=0&size=10"
+          "justificationAuthority": {
+            "modificationNumber": "Justification Authority Modification Number goes here",
+            "authority": "Justification Authority goes here"
+          },
+          "fairOpportunity": {
+            "authority": "Authority goes here"
+          }
         }
       },
-      page: {
-        size: 1,
-        totalElements: 1,
-        totalPages: 1,
-        number: 0,
-        maxAllowedRecords: 30000
+      "latest": true,
+      "packages": {
+        "content": [],
+        "resources": []
+      },
+      "postedDate": "2016-11-16 17:21:55",
+      "modifiedDate": "2016-11-16 17:21:55",
+      "_links": {
+        "self": {
+          "href": "http://10.98.29.81:122/v1/opportunity/123dqw"
+        }
       }
-    });
+    })
   }
 };
+
+let MockFHService = {
+  //TODO: remove this function and replace it with getOrganizationById once SAM-492 is merged to comp
+  getFederalHierarchyV2ById(id: string){
+    return Observable.of({
+      "_embedded": [
+        {
+          "org": {}
+        }
+      ]
+    });
+  }
+}
 
 describe('OpportunityPage', () => {
   beforeEach(() => {
@@ -85,7 +165,8 @@ describe('OpportunityPage', () => {
     TestBed.overrideComponent(OpportunityPage, {
       set: {
         providers: [
-          { provide: SearchService, useValue: MockSearchService }
+          { provide: OpportunityService, useValue: MockOpportunityService },
+          { provide: FHService, useValue: MockFHService },
         ]
       }
     });
@@ -96,9 +177,10 @@ describe('OpportunityPage', () => {
   });
 
   it('Should init & load data', () => {
-    expect(comp.oNotice).toBeDefined();
-    expect(comp.oSub).toBeDefined();
-    expect(comp.oNotice.procurementTitle).toBe("D--FY16 Software Maintenance Renewal â€“ NetEx TAC-16-23777");
-    expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('D--FY16 Software Maintenance Renewal â€“ NetEx TAC-16-23777');
+    expect(comp.opportunity).toBeDefined();
+    expect(comp.opportunityLocation).toBeDefined();
+    expect(comp.organization).toBeDefined();
+    expect(comp.opportunity.opportunityId).toBe("213ji321hu3jk123");
+    expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
   });
 });
