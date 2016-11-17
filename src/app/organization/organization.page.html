@@ -1,28 +1,28 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole" *ngIf="organization">
-    
+
     <h1>{{organization.agencyName}}</h1>
-    
+
     <section>
-      Code {{organization.code}} 
-      <span class="divider">&nbsp;|&nbsp;</span> 
-      
+      Code {{organization.code}}
+      <span class="divider">&nbsp;|&nbsp;</span>
+
       <span class="inactive" *ngIf="isModActive() == false">
-        <i class="fa fa-circle-thin" aria-hidden="true"></i> 
+        <i class="fa fa-circle-thin" aria-hidden="true"></i>
         <em>Status Inactive</em>
       </span>
 
       <span class="active" *ngIf="isModActive() == true">
-        <i class="fa fa-circle" aria-hidden="true"></i> 
+        <i class="fa fa-circle" aria-hidden="true"></i>
         <em>Status Active</em>
       </span>
     </section>
-    
+
     <!-- Description -->
     <section class="usa-content" *ngIf="organization.summary">
       <p id="orgDescription" [innerHTML]="organization.summary"></p>
     </section>
-    
+
     <!-- Sub-Tier Agencies -->
     <section *ngIf="organization.hierarchy.length>0">
       <div class="usa-grid-full m_T-6x">
@@ -31,14 +31,14 @@
         </div>
         <div class="usa-width-one-third">
           <p class="m_T-2x" style="text-align: right;">
-            <strong>1 - {{organization.hierarchy.length}}</strong> 
+            <strong>{{min +1}} - {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}}</strong>
             of <strong>{{organization.hierarchy.length}}</strong>
           </p>
         </div>
       </div>
       <ul class="usa-zebra-list">
-        <li *ngFor = "let element of organization.hierarchy">
-          <a href="#testing">{{element.org.agencyName}}</a>
+        <li *ngFor = "let element of organizationPerPage">
+          <a href="organization/{{element.org.orgKey}}">{{element.org.agencyName}}</a>
         </li>
       </ul>
     </section>
@@ -52,6 +52,6 @@
         <em>No Sub-Tier Agencies Found.</em>
       </p>
     </section>
-    
+    <samPagination (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></samPagination>
   </div>
 </div>

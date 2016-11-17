@@ -6,6 +6,7 @@ import { By }              from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FHService } from 'api-kit';
+import { SamUIKitModule } from 'ui-kit';
 
 import { OrganizationPage } from './organization.page';
 import { Observable } from 'rxjs';
@@ -175,7 +176,8 @@ describe('OrganizationPage', () => {
       declarations: [ OrganizationPage ], // declare the test component
       imports: [
         HttpModule,
-        RouterTestingModule
+        RouterTestingModule,
+        SamUIKitModule
       ],
       providers: [
         BaseRequestOptions,
@@ -209,7 +211,7 @@ describe('OrganizationPage', () => {
 
   it('Should init & load data', () => {
     expect(comp.organization).toBeDefined();
-    expect(comp.sub).toBeDefined();
+    expect(comp.subscription).toBeDefined();
     expect(comp.organization.agencyName).toBe("Department of Commerce");
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Department of Commerce');
   });
