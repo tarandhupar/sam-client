@@ -1,80 +1,185 @@
+The following explains how to get set up locally. For instructions regarding branching, merging, and so on; please see the [CONTRIBUTING](https://csp-github.sam.gov/joshuabruce/sam-front-end/blob/comp/CONTRIBUTING.md) documentation.
+
 <ul>
   <li>
-    <a href="rules-of-engagement">Rules of engagement</a>
+    <a href="#getting-started">Getting started</a>
     <ul>
-      <li><a href="#branching">Branching</a></li>
-      <li><a href="#pull-requests">Pull requests</a></li>
-      <li><a href="#merging">Merging</a></li>
-      <li><a href="#testing">Testing</a></li>
+      <li><a href="#check-node">Check NodeJS and NPM</a></li>
+      <li><a href="#installing-globals">Installing required globals</a></li>
+      <li><a href="#serving-locally">Serving app locally</a></li>
+      <li><a href="#submitting-prs">Submitting pull requests</a></li>      
     </ul>
   </li>
-  <li><a href="#where-things-are">Where things are</a></li>
-  <li><a href="#where-things-go">Where things go</a></li>
+  <li>
+    <a href="#coding-standards">Coding Standards</a>
+    <ul>
+      <li><a href="#design">Design</a></li>
+      <li><a href="naming-conventions">Naming conventions</a></li>
+      <li><a href="#doc-blocks">Doc-blocks</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#helpful-commands">Helpful commands</a>
+    <ul>
+      <li><a href="#build-files">Build files</a></li>
+      <li><a href="#hot-module-replacement">Hot module replacement</a></li>
+      <li><a href="#watch-and-build-files">Watch and build files</a></li>
+      <li><a href="#run-tests">Run tests</a></li>
+      <li><a href="#end-to-end">End to end</a></li>
+    </ul>
+  </li>
 </ul>
 
-<h2 id="rules-of-engagement">Rules of engangement (operations)</h2>
+<h2 id="getting-started">Getting started</h2>
 
-Those working in the project have decided on the following guidelines with regard to working with the project in GitHub.
+<h3 id="check-node">Check NodeJS and NPM</h3>
 
-<h3 id="branching">Branching</h3>
+To run the app locally, you will need NodeJS and the Node Package Manager (NPM).
 
-Gitflow Workflow branch names:
+Confirm NPM is available:
 
-`comp` is equivalent to `develop`.
-`minc`, `prodlike` have no Gitflow equivalent.
-`master` is equivalent to `master`. 
+`$ npm -v`
 
-1. Do not work in `comp` or `development` (or any other default branch directly).
-1. Branch names should consist of the ticket ID being worked and a brief description. Ex. `sam-201-header-component`. Note: Per the first guideline, large tickets can be broken down, either by creating more tickets under the main ticket; or, by modifying the tail of the branch name to enable multiple concurent pull requests.
+If you do not see a version number, [install Node.js](https://nodejs.org/en/download/).
 
-<h3 id="pull-requests">Pull requests</h3>
+Note: Ensure you are running the latest versions of both. If not, please [update NodeJS and NPM](https://docs.npmjs.com/getting-started/installing-node).
 
-1. We have templates for [Pull Requests](https://csp-github.sam.gov/GSA-IAE/sam-front-end/blob/comp/.github/PULL_REQUEST_TEMPLATE.md) and [Issues](https://csp-github.sam.gov/GSA-IAE/sam-front-end/blob/comp/.github/ISSUE_TEMPLATE.md), please use them when applicable. Note: Sometimes GitHub will not automatically use the templates as it is supposed to.
-1. Pull requests should contain small changes to the codebase to minimize merge conflicts and large integrations.
-1. The Pull Request template contains a checklist for reviewers to use to determine if a pull request should be merged.
-1. Pull requests are reviewed by someone from a different vendor than the submitter.
-  - All vendors do *not* need to review pull requests.
-  - Excpeption: Level 1 or 2 defects can be reviewed by someone from the same vendor.
+> If you have `nvm` installed, which is highly recommended (`brew install nvm`) you can do a `nvm install --lts && nvm use` in `$` to run with the latest Node LTS. You can also have this `zsh` done for you [automatically](https://github.com/creationix/nvm#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file) 
 
-<h3 id="merging">Merging</h3>
+<h3 id="installing-globals">Installing required globals</h3>
 
-1. Discovered merge conflicts within a pull request should be corrected by the submitter of the pull request.
-1. No code freezes will be instituted; if a pull request cannot be merged or the functionality cannot be demonstrated at the Sprint review, the work will rollover to the next release (or Sprint).
+All should be prepended with `$ npm install --global`:
 
-<h3 id="testing">Testing</h3>
+1. [`webpack`](https://www.npmjs.com/package/webpack)
+1. [`webpack-dev-server`](https://www.npmjs.com/package/webpack-dev-server)
+1. [`karma`](https://www.npmjs.com/package/karma)
+1. [`protractor`](https://www.npmjs.com/package/protractor)
+1. [`typescript`](https://www.npmjs.com/package/typescript)
+  - To take full advantage of TypeScript with autocomplete you would have to install it globally and use an editor with the correct TypeScript plugins.
+  - TypeScript 1.7.x includes everything you need. Make sure to upgrade, even if you installed TypeScript previously.
 
-1. We write both unit and end to end tests for this project.
-1. We develop components using a behavior driven development pattern to view the components from a user's perspective.
-1. We strive to achieve [...] code coverage.
+<h3 id="serving-locally">Serving the app locally</h3>
 
-<h2 id="where-things-are">Where things are</h2>
+1. Fork this repo into your GitHub account. Read more about forking a repo here on GitHub:
+[https://help.github.com/articles/fork-a-repo/](https://help.github.com/articles/fork-a-repo/)
+1. `$ npm install` or `$ npm update` to make sure you have the latest version of all the packages used in the app.
+1. `$ npm run server` to start the local server (development)
+  - `$ npm run build:prod`
+  - `$ npm run server:prod`
 
-1. `config`: application configuration files (webpack, for example).
-2. `src`: all the code required for running the app.
-  1. `api-kit`: a service for making API calls to the various microservices.
-  2. `ui-kit`: stores user interface components used on more than one page.
-  3. `assets`: ???
-  4. `app`: pages, page-specific UI components, and so on.
-3. `api-config.json` or `api-config.example.json`: we use a single API key within the marketplace for local development; therefore, the API key is set, and all you should need to do is rename this file to `api-config.json`.
+> After you have installed all dependencies you can now run the app. Run `npm run server` to start a local server using `webpack-dev-server` which will watch, build (in-memory), and reload for you. The port will be displayed to you as `http://0.0.0.0:3000` (or if you prefer IPv6, if you're using `express` server, then it's `http://[::1]:3000/`).
 
-<h2 id="where-things-go">Where things go</h2>
+<h3 id="submitting-prs">Submitting a pull request</h3>
 
-1. Page components: `/src/app/{business object or business epic}` - When possible, use the business object (ex. opportunity) to isolate pages, routes, and user interface components specific to that business object.
-1. Pipes:
-  - If the pipe is for a specific business object or business epic, place them in a `pipes` subfolder.
-  - If the pipe is used by two or more business object/epic areas, place them in<br>`/src/app/app-pipes`
-1. User interface components:
-  - If the component is for a specific business object or business epic, place them in a folder with the generic component name (ex. `search-result`).
-  - If the component is used by two or more business object/epic areas, place them in<br>`/src/ui-kit`
+1. Fork this repo.
+1. Create a branch per the guidelines in the README.
+1. Ensure that your contribution works via `npm run test`, if applicable.
+1. Submit your pull request against the `comp` branch using the PULL REQUEST TEMPLATE.
+
+Have questions or need help with setup? Open an issue here [https://csp-github.sam.gov/GSA-IAE/sam-front-end/issues](https://csp-github.sam.gov/GSA-IAE/sam-front-end/issues).
+
+<h2 id="coding-standards">Coding standards</h2>
+
+|Name                |Style                          |Example           |
+|:-------------------|:-----------------------------:|:----------------:|
+|Class names         |TitleCased                     |Select = {}       |
+|Function definitions|camelCased                     |isRequired(config)|
+|Variable names      |camelCased and self documenting|isRequired = true; <br> NOT i = true;|
+|Configuration JSON member names|camelCased and self documenting|srOnly: true <br> NOT sr-only: true <br> NOT s: true|
+|Tabs & spaces       |Follow the provided linter and provided .editorconfig|n/a |
+
+<h3 id="design">Design</h3>
+
+Each module is written in a [self-documenting](https://en.wikipedia.org/wiki/Self-documenting_code) fashion as much as possible. This means sometimes extracting the logic of a conditional to a method to increase human readability.
 
 
-# Getting Started
+```
+if (this.hasSelected(config)) {
+  
+}
 
-## API Umbrella Setup
+hasSelected = function(config) {
+  return (config.selected !== undefined && config.selected.length > 0);
+}
+```
 
-### For local setup 
-1. Get an API Umbrella URL/API Umbrella key to be able to connect to the backend microservices
-1. Copy the api-config.example.json to api-config.json and set the API_UMBRELLA_URL/API_UMBRELLA_KEY setting
+Instead of:
 
-### For Deployments
-- the API_UMBRELLA_URL/API_UMBRELLA_KEY environment variable should be setup in the docker deployment yaml file
+```
+if (config.selected !== undefined && config.selected.length > 0) {
+  
+}
+```
+
+<h3 id="naming-conventions">Naming conventions</h3>
+
+- Injectable services end with Service (e.g. `SearchService`)
+- Pipes end with Pipe (e.g. `CapitalizePipe`)
+- Components end with Component (e.g. `AssistanceListingResultComponent`)
+- Components with an associated route and module end in Page (e.g. `SearchPage`)
+- Exported components in the ui-kit will be prefixed with Sam (e.g. `SamSelectComponent`) and their selectors will be prefixed as well (e.g. `<samSelect>`)
+
+<h3 id="doc-blocks">Doc-blocks</h2>
+
+...
+
+<h2 id="helpful-commands">Helpful commands</h2>
+
+<h3 id="build-files">Build files</h3>
+
+```bash
+# development
+npm run build:dev
+# production
+npm run build:prod
+```
+
+<h3 id="hot-module-replacement">Hot module replacement</h3>
+
+```bash
+npm run server:dev:hmr
+```
+
+<h3 id="watch-and-build-files">Watch and build files</h3>
+
+```bash
+npm run watch
+```
+
+<h3 id="run-tests">Run tests</h3>
+
+**Base tests**
+
+```bash
+npm run test
+```
+
+**Tests + watch**
+
+```bash
+npm run watch:test
+```
+
+<h3 id="end-to-end">End to end</h3>
+
+**End-to-end tests**
+
+```bash
+# make sure you have your server running in another terminal
+npm run e2e
+```
+
+**run webdriver**
+
+```bash
+npm run webdriver:update
+npm run webdriver:start
+```
+
+**run Protractor's elementExplorer**
+
+```bash
+npm run webdriver:start
+# in another terminal
+npm run e2e:live
+```
