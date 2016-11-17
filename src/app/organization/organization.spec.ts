@@ -211,7 +211,10 @@ describe('OrganizationPage', () => {
 
   it('Should init & load data', () => {
     expect(comp.organization).toBeDefined();
+    expect(comp.organizationPerPage).toBeDefined();
     expect(comp.subscription).toBeDefined();
+    expect(comp.min).toBeDefined();
+    expect(comp.max).toBeDefined();
     expect(comp.organization.agencyName).toBe("Department of Commerce");
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Department of Commerce');
   });

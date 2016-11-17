@@ -20,10 +20,8 @@ export class OrganizationPage implements OnInit, OnDestroy {
   organizationPerPage: any;
   min: number;
   max: number;
-  private pageNum = 0;
-  private totalCount: any = 0;
+  private pageNum = 1;
   private totalPages: any = 0;
-  private pageNumPaginationPadding = 2;
   private showPerPage = 20;
 
   constructor(
@@ -48,10 +46,10 @@ export class OrganizationPage implements OnInit, OnDestroy {
     this.subscription = apiSubject.subscribe(api => { // run whenever api data is updated
       let jsonData:any = api;
       this.organization = jsonData._embedded[0].org;
-      //this.totalPages = (this.organization.hierarchy.length + this.showPerPage - 1)/this.showPerPage;
       this.totalPages = Math.ceil(this.organization.hierarchy.length / this.showPerPage);
-      this.pageNum++;
       this.organizationPerPage = this.filterHierarchy(this.pageNum, this.organization.hierarchy);
+      console.log("organization", this.organization);
+      console.log("organizationPerPage", this.organizationPerPage);
     }, err => {
       console.log('Error logging', err);
     });

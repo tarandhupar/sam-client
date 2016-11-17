@@ -4,7 +4,7 @@
     <h1>{{organization.agencyName}}</h1>
 
     <section>
-      Code {{organization.code}}
+      Code {{organization.aacCode || organization.fpdsOrgId || organization.fpdsCode || organization.oldFpdsCode}}
       <span class="divider">&nbsp;|&nbsp;</span>
 
       <span class="inactive" *ngIf="isModActive() == false">
@@ -38,7 +38,7 @@
       </div>
       <ul class="usa-zebra-list">
         <li *ngFor = "let element of organizationPerPage">
-          <a href="organization/{{element.org.orgKey}}">{{element.org.agencyName}}</a>
+          <a href="organization/{{element.org.orgKey}}">{{element.org.agencyName ? element.org.agencyName : element.org.name | capitalize}} </a>
         </li>
       </ul>
     </section>
