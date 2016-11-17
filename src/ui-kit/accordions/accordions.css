@@ -1,9 +1,7 @@
-.usa-accordion-content {
-  ul {
-    list-style: disc;
-  }
+ul {
+  list-style: disc;
+}
 
-  ol {
-    list-style: decimal;
-  }
+ol {
+  list-style: decimal;
 }

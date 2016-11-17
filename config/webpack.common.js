@@ -174,9 +174,6 @@ module.exports = {
         test: /\.scss$/,
         exclude: /node_modules/,
         loaders: [ 'style', 'css?sourceMap', 'resolve-url', 'sass?sourceMap' ]
-        //loaders: [ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap!resolve-url-loader!sass-loader?sourceMap')]
-        //loaders: [ExtractTextPlugin.extract('style-loader', 'sass-loader?sourceMap!resolve-url-loader!css-loader?sourceMap')]
-        //loader: ExtractTextPlugin.extract("style", "css!resolve-url!sass")
       },
 
       {
@@ -185,15 +182,14 @@ module.exports = {
       },
 
       // FONTS
+      // {
+      //   test: /\.(eot|svg|ttf|woff|woff2)$/,
+      //   loader: 'file?name=assets/fonts/[name].[ext]'
+      // },
       {
         test: /\.(otf|eot|svg|ttf|woff)/,
-        loader: 'url-loader?limit=8192'
+        loader: 'url-loader?limit=65000'
       },
-      //
-      // {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
-      // {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
-      // {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/octet-stream"},
-      // {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader"},
 
       /* File loader for supporting images, for example, in CSS files.
       */
@@ -251,17 +247,17 @@ module.exports = {
       },
       // {
       //   from: 'node_modules/uswds/dist',
-      //   to: 'src/assets'
+      //   to: ''
       // },
-      /// Fixme: There are redundant copies here
-      {
-        from: 'src/assets/fonts',
-        to: 'fonts',
-      },
-      {
-        from: 'src/assets/img',
-        to: 'img'
-      }
+      // /// Fixme: There are redundant copies here
+      // {
+      //   from: 'src/assets/fonts',
+      //   to: 'fonts',
+      // },
+      // {
+      //   from: 'src/assets/img',
+      //   to: 'img'
+      // }
     ]),
 
     /*
