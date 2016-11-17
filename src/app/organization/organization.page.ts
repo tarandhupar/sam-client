@@ -52,8 +52,6 @@ export class OrganizationPage implements OnInit, OnDestroy {
       this.totalPages = Math.ceil(this.organization.hierarchy.length / this.showPerPage);
       this.pageNum++;
       this.organizationPerPage = this.filterHierarchy(this.pageNum, this.organization.hierarchy);
-      console.log("Organization: ", this.organization);
-      console.log("OrganizationPerPage: ", this.organizationPerPage);
     }, err => {
       console.log('Error logging', err);
     });
