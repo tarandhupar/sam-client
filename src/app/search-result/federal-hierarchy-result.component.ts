@@ -10,12 +10,12 @@ import 'rxjs/add/operator/map';
     	  <span *ngIf=false class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="federal-hierarchy-title">
-      	<a *ngIf=true>{{ data.title }}</a>
-      	<span *ngIf=false>Title Field</span>
+      	<a *ngIf=true>{{ data.name }}</a>
+      	<span *ngIf=false>{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<p class="m_T-2x">
-          Federal Hierarchy Description Field.
+          {{ data.description && data.description !== null ? 'data.description' : '' }}
         </p>
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li><strong>Department:</strong><span>Department Field.</span></li>
@@ -24,8 +24,8 @@ import 'rxjs/add/operator/map';
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
         	<li><strong>Location Level</strong></li>
-          <li><strong>Also Known As: </strong><span>DHS</span></li>
-          <li><strong>Code: </strong><span>1234567</span></li>
+          <li><strong>Also Known As: </strong><span>{{ data.shortName && data.shortName !== null ? 'data.shortName' : '' }}</span></li>
+          <li><strong>Code: </strong><span>{{ data.code }}</span></li>
         </ul>
       </div>
   `,
