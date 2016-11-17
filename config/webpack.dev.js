@@ -16,6 +16,7 @@ catch(Error){
 
 const API_UMBRELLA_KEY = process.env.API_UMBRELLA_KEY || apiConfig.API_UMBRELLA_KEY;
 const API_UMBRELLA_URL = process.env.API_UMBRELLA_URL || apiConfig.API_UMBRELLA_URL;
+const SHOW_OPTIONAL = process.env.SHOW_OPTIONAL || apiConfig.SHOW_OPTIONAL;
 
 if (!API_UMBRELLA_URL || !API_UMBRELLA_KEY) {
   console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY not set. Exiting...");
@@ -126,7 +127,7 @@ module.exports = webpackMerge(commonConfig, {
       'HMR': METADATA.HMR,
       'API_UMBRELLA_URL': JSON.stringify(API_UMBRELLA_URL),
       'API_UMBRELLA_KEY': JSON.stringify(API_UMBRELLA_KEY),
-      'SHOW_OPTIONAL': JSON.stringify(METADATA.SHOW_OPTIONAL)
+      'SHOW_OPTIONAL': JSON.stringify(SHOW_OPTIONAL)
     }),
 
     /**
@@ -166,6 +167,17 @@ module.exports = webpackMerge(commonConfig, {
     watchOptions: {
       aggregateTimeout: 300,
       poll: 1000
+    },
+    proxy: {
+      '/ie_api': {
+        target: API_UMBRELLA_URL,
+        pathRewrite: {
+            '^/ie_api' : '/',     // rewrite path
+        },
+        logLevel: "debug",
+        changeOrigin: true,
+        secure: false
+      }
     },
     outputPath: helpers.root('dist')
   },

@@ -1,4 +1,4 @@
-<nav class="sticky-banner" *ngIf="showBanner">
+<nav class="sticky-banner">
   <div class="m_L-1x">
 
     <img title="An official website of the United States Government" class="image-wrap"
@@ -9,7 +9,6 @@
                     know<i class="fa" [ngClass]="{'fa-angle-up': showDetail,'fa-angle-down': !showDetail} "></i></a></span>
 
                   <span class="pull-right m_R-1x">This site is in beta and a work in progress &nbsp;
-                      <a (click)="closeBanner()"><i class="fa fa-times-circle"></i></a>
                   </span>
 
   </div>
@@ -22,7 +21,7 @@
             <span><i class="fa fa-bank"></i> </span>
           </div>
         </div>
-        <div class="usa-width-three-fourths">
+        <div class="usa-width-three-fourths m_T-4x">
           <p><strong> The .gov means it's official.</strong><br>
             Federal government websites always use a <strong>.gov</strong> or .mil domain. Before
             sharing
@@ -37,7 +36,7 @@
             <span><i class="fa fa-lock"></i> </span>
           </div>
         </div>
-        <div class="usa-width-three-fourths">
+        <div class="usa-width-three-fourths m_T-4x">
           <p>This site is also protected by an SSL(Secure Sockets Layer) certificate that's been signed by
             the
             U.S.

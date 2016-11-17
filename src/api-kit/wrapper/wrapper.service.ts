@@ -9,7 +9,8 @@ export class WrapperService {
         "program": "/cfda/v1/program",
         "federalHierarchy": "/cfda/v1/fh",
         "dictionary": "/cfda/v1/dictionary",
-        "historicalIndex": "/cfda/v1/historicalIndex"
+        "historicalIndex": "/cfda/v1/historicalIndex",
+        "alerts": "/sgs/v1/alerts"
     };
 
     constructor(private _http: Http){}
@@ -38,13 +39,16 @@ export class WrapperService {
             oURLSearchParams.set(key, (typeof oApiParam.oParam[key] === 'object') ? JSON.stringify(oApiParam.oParam[key]) : oApiParam.oParam[key]);
         }
 
+        var useReverseProxy = document.getElementsByTagName('html')[0].className == "ie9" ? true : false;
+        var baseUrl = useReverseProxy ? "/ie_api" : API_UMBRELLA_URL;
+
         //TODO: Implement Post DATA to request
         let jsonOption = {
             "search": oURLSearchParams,
             "method": RequestMethod.Get,
             "headers": oHeader,
             "body": "",
-            "url": API_UMBRELLA_URL + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
+            "url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
         };
 
         switch (method.toUpperCase()){

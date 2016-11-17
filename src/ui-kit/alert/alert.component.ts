@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 /**
  * The <samAlert> component is designed with sam.gov standards to show that this is an official website
@@ -7,29 +7,37 @@ import { Component, Input } from '@angular/core';
  * @Input type: Set alert type, defaults to 'success'
  * @Input title: Set alert title
  * @Input description: Set alert description
+ * @Input showDescription: boolean - Control the description of the alert
+ * @Input showLinks: boolean - Control the Expand Link and the Close button
+ * @Input closeCurAlert: boolean - Control the current alert
+ * @Output onExpand: boolean - Trigger to expand or collapse the description of all the alerts
+ * @Output onClose: boolean - Trigger to close all the alerts
  */
 @Component({
   selector: 'samAlert',
-  templateUrl: './alert.template.html'
-
+  templateUrl: './alert.template.html',
+  styleUrls: ['./alert.style.css']
 })
 export class SamAlertComponent {
   @Input() type: string;
   @Input() title: string;
   @Input() description: string;
+  @Input() showClose: boolean = false;
+  @Output() dismiss: EventEmitter<any> = new EventEmitter<any>();
+
   types:any = {
     "success":"usa-alert-success",
     "warning":"usa-alert-warning",
     "error":"usa-alert-error",
     "info":"usa-alert-info"
-  }
+  };
   selectedType: string = this.types['success'];
+
   constructor() {
   }
 
   ngOnInit(){
     if(!this.typeNotDefined()){
-
       this.selectedType = this.types[this.type];
     }
   }
@@ -44,4 +52,7 @@ export class SamAlertComponent {
     return false;
   }
 
+  private onDismissClick(){
+    this.dismiss.emit();
+  }
 }

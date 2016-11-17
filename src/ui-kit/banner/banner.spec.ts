@@ -20,22 +20,8 @@ describe('The Sam Banner component', () => {
 
   it('should display banner', function () {
     fixture.detectChanges();
-    expect(component.showBanner).toBe(true);
-
+    expect(component.showDetail).toBe(false);
   });
-
-  it('should output close banner event after clicking the close button', () => {
-    let closeBannerBtn:any;
-    component.onClose.subscribe(show => {
-      expect(show).toBe(false);
-      expect(component.showBanner).toBe(false);
-    });
-    fixture.detectChanges();
-    expect(component.showBanner).toBe(true);
-    closeBannerBtn = fixture.debugElement.query(By.css('.fa-times-circle'));
-    closeBannerBtn.triggerEventHandler('click', null);
-
-  });
-
+  
 
 });

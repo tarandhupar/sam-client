@@ -1,5 +1,6 @@
-import { Component,Input } from '@angular/core';
+import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
+import * as moment from 'moment/moment';
 
 @Component({
   moduleId: __filename,
@@ -30,13 +31,13 @@ import 'rxjs/add/operator/map';
         <li>
           <strong>Solicitation Number</strong>
           <ul class="usa-unstyled-list">
-            <li>{{ data.solicitationNumber }}</li>
+            <li class='solicitation-number'>{{ data.solicitationNumber }}</li>
           </ul>
         </li>
           <li>
           <strong>Posted Date</strong>
           <ul class="usa-unstyled-list">
-            <li>{{ data.procurementPostedDate | date }}</li>
+            <li>{{ data.procurementPostedDate  }}</li>
           </ul>
         </li>
         <li>
@@ -50,7 +51,11 @@ import 'rxjs/add/operator/map';
   `,
   styleUrls: ['../opportunity.style.css']
 })
-export class OpportunitiesResult{
+export class OpportunitiesResult implements OnInit{
   @Input() data: any;
   constructor() {}
+
+  ngOnInit(){
+    this.data.procurementPostedDate = moment(this.data.procurementPostedDate).format("MMM D, Y");
+  }
 }

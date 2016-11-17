@@ -1,4 +1,5 @@
 import {TestBed} from '@angular/core/testing';
+import {RouterTestingModule} from '@angular/router/testing';
 import {By} from '@angular/platform-browser';
 
 // Load the implementations that should be tested
@@ -16,6 +17,7 @@ describe('The Sam Alert component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
       declarations: [SamAlertComponent],
     });
 
@@ -31,12 +33,11 @@ describe('The Sam Alert component', () => {
 
   it('title + description check', () => {
     fixture.detectChanges();
-    expect(fixture.debugElement.query(By.css('.usa-alert-heading')).nativeElement.innerHTML).toBe("i-am-a-title");
-    expect(fixture.debugElement.query(By.css('.usa-alert-text')).nativeElement.innerHTML).toBe("i-am-a-description");
+    expect(fixture.debugElement.query(By.css('.usa-alert-heading')).nativeElement.textContent.trim()).toBe("i-am-a-title");
+    expect(fixture.debugElement.query(By.css('.usa-alert-text')).nativeElement.textContent.trim()).toBe("i-am-a-description");
   });
   it('type check', () => {
     fixture.detectChanges();
     expect(fixture.debugElement.query(By.css('.usa-alert')).nativeElement.className).toContain("usa-alert-success");
   });
-
 });

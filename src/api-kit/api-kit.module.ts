@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 
 import { FHService } from './fh/fh.service';
 import { SearchService } from './search/search.service';
+import { SystemAlertsService } from './system-alerts/system-alerts.service';
 import { WrapperService } from './wrapper/wrapper.service';
 
 /**
@@ -13,6 +14,6 @@ import { WrapperService } from './wrapper/wrapper.service';
 @NgModule({
   declarations: [ ],
   imports: [ HttpModule ],
-  providers: [ SearchService, FHService, WrapperService ]
+  providers: [ SearchService, FHService, SystemAlertsService, WrapperService ]
 })
 export class SamAPIKitModule { }

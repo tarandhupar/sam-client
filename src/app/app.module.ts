@@ -14,6 +14,7 @@ import { ROUTES } from './app.route';
 import { App } from './app.component';
 import { AppState } from './app.service';
 import { HomeModule } from './application-content/home';
+import { AlertsModule } from './application-content/alerts'
 import { PageNotFoundErrorPage } from './application-content/404';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
@@ -27,7 +28,7 @@ import { SamAPIKitModule } from 'api-kit';
 const APP_PROVIDERS = [
   AppState
 ];
-
+var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ? true : false;
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
@@ -44,12 +45,13 @@ const APP_PROVIDERS = [
     HttpModule,
 
     // Router
-    RouterModule.forRoot(ROUTES, { useHash: false }),
+    RouterModule.forRoot(ROUTES, { useHash: useHashValue }),
 
     // Page View Modules
     ProgramModule,
     OpportunityModule,
     HomeModule,
+    AlertsModule,
     SearchModule,
     UIKitDemoModule,
 

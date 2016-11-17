@@ -47,14 +47,24 @@ export class UIKitDemoPage {
 
   // Accordions Component
   accordionsData =
-  [
+    [
       {title:"Test1", content:"This is Test1"},
       {title:"Test2", content:"This is Test2"},
       {title:"Test3", content:"This is Test3"}
-  ]
+    ]
 
   // Button Component
   btnType: string = "default";
+
+  // SamAlert Component for Alert Manager
+  showDescription: boolean = false;
+  dismissAlerts: boolean = false;
+
+  paginationConfig = {
+    currentPage: 1,
+    totalPages: 1
+  };
+
 
   constructor() {  }
 
@@ -79,4 +89,11 @@ export class UIKitDemoPage {
     }
   }
 
+  onExpandAlerts(){
+    this.showDescription = !this.showDescription;
+  }
+
+  onDismissAlerts(){
+    this.dismissAlerts = true;
+  }
 }

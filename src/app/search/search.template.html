@@ -1,26 +1,10 @@
 <div class="usa-grid">
 	<div class="usa-width-one">
-		<h1>SAM.gov Search Results</h1>
+		<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
 	</div>
   <div class="usa-width-one">
     <samSearchbar (onSearch)="onSearchClick($event)" [keyword]="keyword" [placeholder]="'#keyword'" *ngIf="false"></samSearchbar>
-    <!--<form class="usa-search usa-search-big m_B-3x" (ngSubmit)="runSearch(true)" #f="ngForm">-->
-      <!--<div class="usa-width-one-fourth">-->
-        <!--<label for="index" class="usa-sr-only">Select an index</label>-->
-        <!--<select name="index" id="index" [(ngModel)]="index">-->
-          <!--<option [value]="indexes[0]" selected="true">All</option>-->
-					<!--<option [value]="indexes[1]">Assistance Listings</option>-->
-          <!--<option [value]="indexes[2]">Opportunities</option>-->
-        <!--</select>-->
-      <!--</div>-->
-    	<!--<div role="search" class="usa-width-three-fourths">-->
-        <!--<label class="usa-sr-only" for="search-field-big">Search big</label>-->
-        <!--<input id="search-field-big" type="search" name="keyword" placeholder="#keyword" [(ngModel)]="keyword" autofocus>-->
-        <!--<button type="submit">-->
-          <!--<span class="usa-search-submit-text">Search</span>-->
-        <!--</button>-->
-      <!--</div>-->
-    <!--</form>-->
+
     <div *ngIf="showOptional" class="usa-width-one">
 
       <h3>Common Filters:</h3>
@@ -34,19 +18,13 @@
   	</div>
     <div *ngIf="!initLoad && !data.results">
       <br/>
-      <p>No results found for '<span [innerText]="oldKeyword"></span>'</p>
+      <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
       <div style="height:300px;"></div>
     </div>
 	</div>
   <div *ngIf="data.results">
     <div class="usa-width-one-whole">
-      <button *ngIf="pageNum>0" (click)="pageChange(pageNum-1)" class="usa-button-outline">Previous</button>
-      <span *ngFor="let item of createRange(totalPages); let currentElementIndex=index">
-      	<span style="padding:0px 6px 0 2px" *ngIf="totalPages>(pageNumPaginationPadding) && pageNum+pageNumPaginationPadding<(totalPages-pageNumPaginationPadding) && currentElementIndex==(totalPages-1)">...</span>
-      	<button [ngStyle]="{'text-decoration':(pageNum==currentElementIndex?'underline':'none')}" *ngIf="showPageButton(currentElementIndex)" class="usa-button-outline" (click)="pageChange(currentElementIndex)">{{currentElementIndex+1}}</button>
-      	<span style="padding:0px 6px 0 2px" *ngIf="pageNum-pageNumPaginationPadding>=pageNumPaginationPadding && currentElementIndex==0">...</span>
-    	</span>
-      <button *ngIf="pageNum<(totalPages-1)" (click)="pageChange(pageNum+1)" class="usa-button-outline">Next</button>
+      <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
     </div>
   </div>
   <br/><br/>
