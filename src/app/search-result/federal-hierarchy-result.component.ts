@@ -22,8 +22,8 @@ import 'rxjs/add/operator/map';
         </ul>
     	</div>
     	<div class="usa-width-one-third">
-      	<ul class="usa-text-small m_B-0">
-        	<li><strong>Location Level: </strong>{{ data.type }}</li>
+      	<ul class="usa-text-small m_B-0 usa-unstyled-list">
+        	<li>{{ data.type }}</li>
           <li><strong>Also Known As: </strong><span>{{ data.shortName && data.shortName !== null ? 'data.shortName' : '' }}</span></li>
           <li><strong>Code: </strong><span>{{ data.code }}</span></li>
         </ul>
