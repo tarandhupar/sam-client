@@ -46,8 +46,15 @@ export class SearchPage implements OnInit{
 		this.searchService.loadParams(qsobj);
 	}
 
-	onOrganizationChange(orgId:string){
-    this.organizationId = orgId;
+	onOrganizationChange(orgId:any[]){
+		console.log("new org",orgId);
+    this.organizationId = orgId.reduce(function(finalStr,val,idx){
+    	if(idx==0){
+    		return val.value;
+    	} else {
+    		return finalStr;// + "," + val.value;
+    	}
+    },"");
     this.loadParams();
 	}
 

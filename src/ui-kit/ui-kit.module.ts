@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 
 // Sam Angular Exports
 import { SamSelectComponent } from './form-controls/select';
+import { SamMultiSelectComponent } from './form-controls/multiselect';
 import { SamCheckboxComponent } from "./form-controls/checkbox";
 import { LabelWrapper } from './form-controls/wrapper/label-wrapper.component';
 import { FieldsetWrapper } from './form-controls/wrapper/fieldset-wrapper.component';
@@ -35,6 +36,7 @@ import { SamPaginationComponent } from "./pagination/pagination.component";
     SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
+    SamMultiSelectComponent,
     SamCheckboxComponent,
     SamRadioButtonComponent,
     SamSearchbarComponent,
@@ -58,6 +60,7 @@ import { SamPaginationComponent } from "./pagination/pagination.component";
     SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
+    SamMultiSelectComponent,
     SamCheckboxComponent,
     SamRadioButtonComponent,
     SamSearchbarComponent,

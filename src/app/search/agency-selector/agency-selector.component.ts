@@ -7,199 +7,478 @@ import { FHService } from 'api-kit';
 	templateUrl:'agency-selector.template.html'
 })
 export class FHInputComponent implements OnInit {
-	@Input() hideOffice: boolean;
-	@Output() organization = new EventEmitter<string>();
+  @Input() multimode: boolean = true;
+  @Input() getQSValue: string = "organizationId";
+  @Input() orgId: string = "";
+	@Output() organization = new EventEmitter<any[]>();
+
+  private searchTimer: NodeJS.Timer = null;
+  searchTerm = "";
+  searchData = [];
+  autoComplete = [];
+  autocompleteData = [];
+  selectedOrganizations = [];
+  selectedSingleOrganizationName = "";
 	lockAgency = false;
 	lockOffice = false;
-	selectedDeptId="";
-	selectedAgencyId="";
-	selectedOfficeId="";
-	departmentLabel="";
-	error="";
 	dictionary = {
 		aDepartment:[],
 		aAgency: [],
 		aOffice: []
 	};
 	organizationId = '';
-	//programOrganizationId = '';
-	hasDepartmentChanged = false;
-	setDeptNullOnChange;
-	organizationConfiguration;
   defaultDpmtOption = {value:'', label: 'Please select an Department', name: ''};
   dpmtSelectConfig = {
     options: [
       this.defaultDpmtOption
     ],
+    show: true,
     label: 'Department',
-    name: 'Department'
+    name: 'Department',
+    type: 'department',
+    selectedOrg: ""
   };
   defaultAgencyOption = {value:'', label: 'Please select an Agency', name: ''};
   agencySelectConfig = {
     options: [
       this.defaultAgencyOption
     ],
+    show: false,
     label: 'Agency',
-    name: 'Agency'
+    name: 'Agency',
+    type: 'agency',
+    selectedOrg: ""
   };
   defaultOfficeOption = {value:'', label: 'Please select an Office', name: ''};
   officeSelectConfig = {
     options: [
       this.defaultOfficeOption
     ],
+    show: false,
     label: 'Office',
-    name: 'Office'
+    name: 'Office',
+    type: 'office',
+    selectedOrg: ""
   };
-
+  orgLevels = [
+    this.dpmtSelectConfig, this.agencySelectConfig, this.officeSelectConfig
+  ];
+  showAutocompleteMsg = false;
+  autocompleteMsg = "";
+  fhSearchError = false;
+  fhSearchMessage = "";
+  selectorToggle = false;
+  browseToggle=false;
+  searchObjCache = {};
+  autocompleting = false;
+  readonlyDisplay = "";
+  readOnlyToggle = true;
+  browseSelection = {};
 	constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService){}
 
+  //good
 	ngOnInit() {
-    this.activatedRoute.queryParams.subscribe(
-      data => {
-        this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.initFederalHierarchyDropdowns('');
+    if(this.orgId.length>0){
+      this.organizationId = this.orgId;
+    } else {
+      this.activatedRoute.queryParams.subscribe(
+        data => {
+          this.organizationId = typeof data[this.getQSValue] === "string" ? decodeURI(data[this.getQSValue]) : "";
+          this.initFederalHierarchyDropdowns('');
+        });
+    }
+	}
+  //good
+  updateOrgSelection(arr){
+    //nothing, binding is still intact
+  }
+  //good
+  isLetter(str) {
+    return str.length === 1 && str.match(/[a-z]/i);
+  }
+  //good
+  setReadonlyDisplay(){
+    this.readOnlyToggle = false;
+    this.readonlyDisplay = this.selectedOrganizations.reduce(function(finalStr,val,idx){
+      if(idx==0){
+        return val.name
+      } else {
+        return finalStr + ", " + val.name;
+      }
+    },"");
+    this.readOnlyToggle = true;
+  }
+  //good
+  searchTermChange(event){
+    if(event.length>=3 && !this.autocompleting){
+      if (this.searchTimer) {
+          clearTimeout(this.searchTimer);
+      }
+      this.autocompleting=true;
+      this.searchTimer = setTimeout(
+          () => {
+            this.runAutocomplete();
+            this.autocompleting = false;
+          },
+          250
+      );
+    } else if (event.length < 3 && this.autoComplete.length>0){
+      this.autocompleteData.length = 0;
+      this.autoComplete.length = 0;
+      this.showAutocompleteMsg = false;
+      this.autocompleteMsg = "";
+    } else if (event.length < 3 && this.showAutocompleteMsg){
+      this.showAutocompleteMsg = false;
+      this.autocompleteMsg = "";
+    }
+  }
+
+  //refactor for messaging
+  runAutocomplete(){
+    //only run for name searches
+    if(this.isLetter(this.searchTerm[0])){
+      var data = {
+        'limit':5,
+        'name':this.searchTerm
+      };
+
+      this.oFHService.search(data).subscribe( res => {
+        if(res["_embedded"] && res["_embedded"]["hierarchy"]){
+          this.autocompleteData = res["_embedded"]["hierarchy"];
+        }
+        if(this.autocompleteData.length>0){
+          this.showAutocompleteMsg = false;
+          this.autocompleteMsg = "";
+          this.autoComplete.length=0;
+          this.autoComplete.push(...this.autocompleteData.slice(0,5));
+        } else {
+          this.showAutocompleteMsg = true;
+          this.autocompleteMsg = "No matches found";
+        }
       });
-	}
+      
+    }
+  }
 
-	checkOffice(){
-		return !this.hideOffice;
-	}
+  //what kind of data?
+  autocompleteSelection(data){
+    this.updateBrowse(data);
+    this.autoComplete.length = 0;
+    this.setSearchTerm(data);
+  }
 
+  //what kind of data is saved to cache?
+  setSearchTerm(data){
+    this.searchTerm = data['name'];
+    this.searchObjCache = data;
+  }
+
+  //what kind of data is passed in? assumes orgLevels[idx].selectedOrganization is preset?
+  updateBrowse(data){
+    //get full hierarchy of selection to get top level organization and get hierarchy to populate/select organization options
+    if(data.type!="DEPARTMENT"){
+      this.initDictionaries(data.elementId, true, false).subscribe( fullOrgPath => {
+        this.oFHService.getFederalHierarchyById(fullOrgPath.elementId, true, true).subscribe( res => {
+          //console.log(fullOrgPath,"org path");
+          //console.log(res,"full org tree");
+          var reachedEnd = false;
+          var idx = 0;
+          var path = fullOrgPath;
+          while(!reachedEnd){
+            this.orgLevels[idx].selectedOrg = path.elementId;
+            if(idx!=0){
+              this.orgLevels[idx].options.length = 1;
+              var type = idx==1?"agency":"office";
+              var formattedOptions = this.formatHierarchy("type",res["hierarchy"]);
+              console.log("formatted options",idx,res);
+              this.orgLevels[idx].options.push(...formattedOptions);
+            } 
+            if(path["hierarchy"] && path["hierarchy"][0]){
+              if(idx!=0){
+                res = res["hierarchy"].find(function(el,idx,arr){
+                  if(el.elementId==path.elementId){
+                    return true;
+                  }
+                });
+              }
+              path = path["hierarchy"][0];
+            } else {
+              reachedEnd=true;
+            }
+            idx++;
+          }
+          console.log("???",this.orgLevels);
+        });
+      });
+    } else { 
+      this.orgLevels[0].selectedOrg = data.elementId; this.loadChildOrganizations(0) 
+    }
+  }
+
+  //good
+  updateSearchFromBrowse(){
+    if(typeof this.browseSelection["level"]!=="undefined"){
+      var selectedOrgId = this.orgLevels[this.browseSelection["level"]].selectedOrg;
+      this.searchTerm = this.orgLevels[this.browseSelection["level"]].options.reduce(function(searchterm,val,idx,arr){
+        if(val["value"]==selectedOrgId){
+          searchterm = val.label;
+        }
+        return searchterm;
+      },"");
+       
+    }
+  }
+
+  //needs refactor for messaging
+  setOrganizationFromSearch(){
+    if(this.searchTerm.length==0){
+      this.fhSearchError = true;
+      this.fhSearchMessage = "Search cannot be empty";
+      return;
+    } else {
+      this.fhSearchError = false;
+      this.fhSearchMessage = "";
+    }
+    var search = false;
+    var data = {
+      'limit':5
+    };
+
+    if(this.isLetter(this.searchTerm[0])){
+      data["name"] = this.searchTerm;
+      search = true;
+    } else {
+      data["ids"] = this.searchTerm;
+      search = true;
+    }
+    if(this.searchObjCache["name"] && this.searchTerm == this.searchObjCache["name"]){
+      this.searchData = [this.searchObjCache];
+      this.searchResponseHandler();
+      return;
+    }
+    if(search){
+      this.oFHService.search(data).subscribe( res => {
+        if(res["_embedded"] && res["_embedded"]["hierarchy"]){
+          this.searchData = res["_embedded"]["hierarchy"];
+        }
+        this.searchResponseHandler();
+      }); 
+    } else {
+      this.fhSearchError = true;
+      this.fhSearchMessage = "Invalid search entered";
+    }
+  }
+
+  //good
+  searchResponseHandler(){
+    if(this.searchData.length==0){
+      this.fhSearchError = true;
+      this.fhSearchMessage = "No matches found";
+    } else if (this.searchData.length == 1){
+      this.fhSearchError = true;
+      this.fhSearchMessage = "Match found for: " + this.searchData[0]["name"];
+      this.setOrganization(this.searchData[0]);
+    } else {
+      this.fhSearchError = true;
+      this.fhSearchMessage = "Multiple Results found. Use Browse to refine your selection.";
+    }
+  }
+
+  //switch from search call
+  setOrganizationFromBrowse(){
+    if(this.browseSelection["org"]){
+      var data = {
+        "ids":this.browseSelection["org"]
+      }
+      this.oFHService.search(data).subscribe( res => {
+        this.setOrganization(res["_embedded"]["hierarchy"][0]);
+      }); 
+    }
+  }
+
+  //refactor
+  loadChildOrganizations(lvl){
+    var orgLevel = this.orgLevels[lvl];
+    var selectionLvl = lvl;
+    var dontResetDirectChildLevel = false;
+    if(orgLevel.selectedOrg=="" && lvl>0){
+      selectionLvl = lvl-1;
+      orgLevel = this.orgLevels[selectionLvl];
+      dontResetDirectChildLevel = true;
+    }
+    for(var idx = lvl+1; idx < this.orgLevels.length; idx++){
+      this.orgLevels[idx]["selectedOrg"]="";
+    }
+
+    this.browseSelection = {
+      "level":selectionLvl,
+      "org": orgLevel["selectedOrg"]
+    };
+
+    for(var idx in this.orgLevels){
+      if(idx <= lvl+1 && this.orgLevels[idx]){
+        this.orgLevels[idx]["show"]=true;
+      } else {
+        this.orgLevels[idx]["show"]=false;
+      }
+    }
+
+    //empty agency & office dropdowns
+    if(orgLevel.type=="department"){
+      if(!dontResetDirectChildLevel){
+        this.dictionary.aAgency = [];
+        this.orgLevels[1]["options"].length = 0;
+        this.orgLevels[1]["options"].push(this.defaultAgencyOption);
+        this.agencySelectConfig["options"].length = 0;
+        this.agencySelectConfig["options"].push(this.defaultAgencyOption);
+      }
+      this.dictionary.aOffice.length = 0;
+      this.orgLevels[2]["options"].length = 0;
+      this.orgLevels[2]["options"].push(this.defaultOfficeOption);
+      this.officeSelectConfig["options"].length = 0;
+      this.officeSelectConfig["options"].push(this.defaultOfficeOption);
+      this.officeSelectConfig.show = false;
+    } else if (orgLevel.type=="agency"){
+      this.dictionary.aOffice.length = 0;
+      this.orgLevels[2]["options"].length = 0;
+      this.orgLevels[2]["options"].push(this.defaultOfficeOption);
+      this.officeSelectConfig["options"].length = 0;
+      this.officeSelectConfig["options"].push(this.defaultOfficeOption);
+    }
+
+    if(typeof orgLevel.selectedOrg !== 'undefined' && orgLevel.selectedOrg !== ''
+        && orgLevel.selectedOrg !== null) {
+        this.initDictionaries(orgLevel.selectedOrg, true, true).subscribe( oData => {
+          this.processDictionaryResponse(oData,selectionLvl);
+          this.updateSearchFromBrowse();
+        });
+        
+    }
+  }
+
+  //work for 7 levels?
+  processDictionaryResponse(data,lvl){
+    if(lvl==0){
+      var formattedData = this.formatHierarchy("agency",data.hierarchy);
+      this.dictionary.aAgency = data.hierarchy;
+      this.agencySelectConfig.options = formattedData;
+      this.officeSelectConfig.options.length = 1;
+    } else if (lvl == 1){
+      if(this.checkChildHierarchyExists(data,lvl)){
+
+        var formattedData = this.formatHierarchy("office",data["hierarchy"][0]["hierarchy"]);
+        this.dictionary.aOffice = data["hierarchy"][0].hierarchy;
+        this.officeSelectConfig.options = formattedData;
+      } else {
+        this.officeSelectConfig.show = false;
+      }
+    }
+  }
+
+  //what kind of data is expected? appears to be full hiearchy
+  checkChildHierarchyExists(data,lvl){
+    var org = data;
+    //console.log(org,lvl);
+    for(var i = 0; i <= lvl; i++){
+      console.log("iterating",i, org);
+      if(!org["hierarchy"]){
+        return false;
+      }
+      org = org["hierarchy"][0];
+    }
+    return true;
+  }
+
+  //what if lower level selectedOrg is set but not the higher lvl?
+  setOrganization(data){
+   if(data.type=="DEPARTMENT"){
+     this.orgLevels[0].selectedOrg = data.elementId;
+   } 
+   else if(data.type=="AGENCY"){
+     this.orgLevels[1].selectedOrg = data.elementId;
+   } 
+   else if(data.type=="OFFICE"){
+     this.orgLevels[2].selectedOrg = data.elementId;
+   } 
+   var obj = {};
+   obj['name'] = data['name'];
+   obj['value'] = data['elementId'];
+   this.addToSelectedOrganizations(obj);
+   this.autoComplete.length = 0;
+   this.organization.emit(this.selectedOrganizations);
+  }
+
+  //good w/minor refactor
+  addToSelectedOrganizations(data){
+    var searchArray = this.selectedOrganizations.filter( x=> {
+      return x.value == data.value;
+    });
+    
+    if(searchArray.length==0 && this.multimode){
+      this.selectedOrganizations.push(data);
+    } else if (searchArray.length==0 && !this.multimode){
+      this.selectedOrganizations.length = 0;
+      this.selectedOrganizations.push(data);
+      this.selectedSingleOrganizationName = data.name;
+    }
+  }
+
+  //handler for multiselect
+  emitSelectedOrganizations(){
+    this.organization.emit(this.selectedOrganizations);
+  }
+
+  //good, may need to revisit when readonly display is upated
+  toggleSelectorArea(){
+    this.selectorToggle = this.selectorToggle ? false : true;
+    if(this.selectorToggle == false && this.selectedOrganizations.length>0){
+      this.setReadonlyDisplay();
+    }
+  }
+
+  //good
+  toggleBrowseArea(){
+    this.browseToggle = this.browseToggle ? false : true;
+  }
+
+  //rename function
 	initDictionaries(ordId, includeParent, includeChildren){
 		//get Department level of user's organizationId
     return this.oFHService.getFederalHierarchyById(ordId, includeParent, includeChildren);
 	}
 
+  //refactor preset organziationId handling
 	initFederalHierarchyDropdowns(userRole){
 		this.initDictionaries("",true,false).subscribe( res => {
 			this.dictionary.aDepartment = res._embedded.hierarchy;
-            var formattedData = this.formatHierarchy("department",res._embedded.hierarchy);
-            this.dpmtSelectConfig.options = formattedData;
+      var formattedData = this.formatHierarchy("department",res._embedded.hierarchy);
+      this.dpmtSelectConfig.options = formattedData;
+      
       if(this.organizationId.length > 0) {
-        this.oFHService.getFederalHierarchyById(this.organizationId, true, true).subscribe(res => {
+        this.oFHService.getFederalHierarchyById(this.organizationId, false, true).subscribe(res => {
           //inferring department match
-          if(res.elementId === this.organizationId) {
-            this.selectedDeptId = res.elementId;
-            this.setOrganizationId("department");
+          this.setOrganization(res);
+          this.updateBrowse(res);
+          this.searchTerm = res.name;
+          this.setReadonlyDisplay();
+          if(res.type=="AGENCY"){
+            this.agencySelectConfig.show=true;
+            if(this.checkChildHierarchyExists(res,0)){
+              this.officeSelectConfig.show=true;
+            }
           }
-            //inferring agency match
-          else {
-            this.selectedDeptId = res.elementId;
-            this.initDictionaries(res.elementId, true, true).subscribe( oData => {
-              if(oData.type === 'DEPARTMENT') {
-                //initialize Department "Label" and Agency dropdown
-                this.dictionary.aAgency = oData.hierarchy;
-                var agencyformattedData = this.formatHierarchy("agency",oData.hierarchy);
-                this.agencySelectConfig.options = agencyformattedData;
-                this.selectedAgencyId = res.hierarchy[0].elementId;
-                this.setOrganizationId("agency");
-              }
-            });
+          if(res.type=="OFFICE"){
+            this.agencySelectConfig.show=true;
+            this.officeSelectConfig.show=true;
           }
+          
         });
       }
+      
 		});
 	}
 
-	setOrganizationId(type){
-		switch(type){
-      case 'department':
-
-        if(typeof this.selectedDeptId !== 'undefined' && this.selectedDeptId !== ''
-                && this.selectedDeptId !== null) {
-          this.organizationId = this.selectedDeptId;
-            //once user choose a different department, switch flag of hasDepartmentChanged
-            this.hasDepartmentChanged = true;
-        } else { //if department is not selected then set user's organization id
-            //$scope.organizationId = $scope.programOrganizationId;
-            this.organizationId = '';
-        }
-
-        //empty agency & office dropdowns
-        this.dictionary.aAgency = [];
-        this.selectedAgencyId = '';
-        this.dictionary.aOffice = [];
-        this.selectedOfficeId = '';
-
-        if(typeof this.selectedDeptId !== 'undefined' && this.selectedDeptId !== ''
-          	&& this.selectedDeptId !== null) {
-            //get agencies of the selected department
-            this.initDictionaries(this.organizationId, true, true).subscribe( oData => {
-              if(oData.type === 'DEPARTMENT') {
-                //initialize Department "Label" and Agency dropdown
-                var formattedData = this.formatHierarchy("agency",oData.hierarchy);
-                this.dictionary.aAgency = oData.hierarchy;
-                this.agencySelectConfig.options = formattedData;
-              }
-            });
-        }
-
-        //in case we need to set organizationId to null if department has not been selected
-        if(typeof this.setDeptNullOnChange !== 'undefined' && this.setDeptNullOnChange === true
-                && (this.selectedDeptId === '' || typeof this.selectedDeptId === 'undefined')) {
-            this.organizationId = '';
-        }
-
-        break;
-      case 'agency':
-        if(typeof this.selectedAgencyId !== 'undefined' && this.selectedAgencyId !== ''
-                && this.selectedAgencyId !== null) {
-          this.organizationId = this.selectedAgencyId;
-        } else { //if agency is not selected then set department
-            //if user is a root then set department from dropdown
-            /*if(AuthorizationService.authorizeByRole([SUPPORTED_ROLES.SUPER_USER]) || AuthorizationService.authorizeByRole([SUPPORTED_ROLES.RMO_SUPER_USER]) ||
-                (typeof $scope.showAll !== 'undefined' && $scope.showAll === true)) {
-                $scope.organizationId = $scope.selectedDeptId;
-            } else if(AuthorizationService.authorizeByRole([SUPPORTED_ROLES.AGENCY_COORDINATOR])) { //if user is a agency coord then set department from user's
-                $scope.organizationId = $scope.programOrganizationId;
-            }*/
-            this.setOrganizationId("department");
-        }
-
-        //empty office dropdowns
-        this.dictionary.aOffice = [];
-        this.selectedOfficeId = "";
-
-        //get offices of the selected agency
-        this.initDictionaries(this.organizationId, false, true).subscribe( (oData) => {
-            if(oData.type === 'AGENCY') {
-                //initialize Department "Label" and Office dropdown
-                this.dictionary.aOffice = oData.hierarchy;
-                var formattedData = this.formatHierarchy("office",oData.hierarchy);
-                this.officeSelectConfig.options = formattedData;
-            }
-        });
-        break;
-      case 'office':
-        if(typeof this.selectedOfficeId !== 'undefined' && this.selectedOfficeId !== ''
-            && this.selectedOfficeId !== null) {
-            this.organizationId = this.selectedOfficeId;
-        } else { //if office is not selected then set agency
-            this.organizationId = this.selectedAgencyId;
-        }
-        break;
-  	}
-  	this.organization.emit(this.organizationId);//pass to output
-  	this.getFederalHierarchyConfiguration(this.organizationId);
-	}
-
-	getFederalHierarchyConfiguration(organizationId){
-		if(organizationId) {
-      var oApiParam = {
-          name: 'federalHierarchyConfiguration',//not added to api service yet
-          suffix: '/'+organizationId,
-          oParam: {},
-          oData: {},
-          method: 'GET'
-      };
-
-      //todo x-auth-token header required for this call, with api umbrella does the program api service need modifications?
-      /*this.oAPIService.call(oApiParam).subscribe( (data) => {
-          this.organizationConfiguration = data;
-      });*/
-  	}
-	}
-
+  //switch case may not be needed, refactor other places where this is called
   formatHierarchy(type,data){
     var formattedData = [];
     switch(type){
