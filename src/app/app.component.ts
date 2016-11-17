@@ -41,6 +41,10 @@ export class App{
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
       });
+    this._router.events.subscribe(
+      val => {
+        this.showOverlay = false;
+      });
   }
 
 
@@ -52,6 +56,8 @@ export class App{
     var qsobj = this.qs;
     if(searchObject.keyword.length>0){
       qsobj['keyword'] = searchObject.keyword;
+    } else {
+      qsobj['keyword'] = '';
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
@@ -76,5 +82,5 @@ export class App{
     this.showOverlay = value;
 
   }
-  
+
 }

@@ -79,4 +79,18 @@ export class FHService{
 
     return name;
   };
+
+  //TODO: remove this function and replace it with getOrganizationById once SAM-492 is merged to comp
+  getFederalHierarchyV2ById(id: string) {
+    let apiParam = {
+      name: 'federalHierarchyV3',
+      suffix: '/'+id,
+      oParam: {
+        'sort': 'name'
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
 }
