@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  styleUrls: ['ui-kit-demo.css'],
+  styles: [ require('./ui-kit-demo.css') ],
   templateUrl: 'ui-kit-demo.template.html'
 })
 export class UIKitDemoPage {

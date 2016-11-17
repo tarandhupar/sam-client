@@ -22,7 +22,7 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
               </ul>
              </nav>    
   `,
-  styleUrls: [ 'pagination.style.scss' ],
+  styles: [ require('./pagination.style.scss') ],
 })
 export class SamPaginationComponent {
 

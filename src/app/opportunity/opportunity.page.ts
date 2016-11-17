@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Component({
   moduleId: __filename,
   templateUrl: 'opportunity.component.html',
-  styleUrls: ['opportunity.style.css'],
+  styles: [ require('./opportunity.style.css') ],
   providers: [
     SearchService,
   ]

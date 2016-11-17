@@ -18,7 +18,7 @@ import {Component, Input} from '@angular/core';
                 </li>
               </ul>
             </div>`,
-  styleUrls: ['accordions.scss']
+  styles: [ require('./accordions.scss') ]
 })
 export class SamAccordionsComponent {
 

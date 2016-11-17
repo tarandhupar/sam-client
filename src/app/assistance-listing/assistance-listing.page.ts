@@ -12,7 +12,7 @@ import * as d3 from 'd3';
 @Component({
   moduleId: __filename,
   templateUrl: 'assistance-listing.page.html',
-  styleUrls: ['assistance-listing.style.css'],
+  styles: [ require('./assistance-listing.style.css') ],
   providers: [
     FHService,
     ProgramService,
@@ -401,7 +401,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
       // Table: Assistance Details
       tbody.selectAll("tr")
-        
+
         .data(function(){
           let obligationsArr = [];
 
@@ -421,7 +421,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
                   assistanceTotal.values.forEach(year => {
                     let yearTotal;
                     if(year.value.ena && !year.value.total){
-                      yearTotal = year.value.items > 1 
+                      yearTotal = year.value.items > 1
                                     ? !year.value.nsi ? actualOrEstimate(year.key) : "Not Available"
                                     : actualOrEstimate(year.key);
                     } else if(year.value.nsi && !year.value.total){
@@ -442,13 +442,13 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
                   rowArr = [],
                   obligationArr = [],
                   explanationArr = [];
-              
+
               info.values.forEach(year => {
-                
-                let innerArr = [];                
+
+                let innerArr = [];
                 year.values.forEach((item, index) => {
                   let itemAmount;
-                  if(item.explanation){                  
+                  if(item.explanation){
                     explanation +=  "FY " + String(item.year).slice(2,4) +
                                     " Exp: " + item.explanation + ", ";
                     explanationArr[index] = explanationArr[index] || [];
@@ -467,7 +467,7 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
 
                   innerArr.push(itemAmount);
                 });
-                amountArr.push(innerArr);  
+                amountArr.push(innerArr);
               });
 
               obligationSet.add(info.key + ( explanation  ? "(" + explanation.slice(0,-2) +  ")" : "") );
@@ -496,12 +496,12 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
                   });
                 }
               });
-              
+
               rowArr.forEach( (item, index) => {
-                item.unshift(obligationArr[index] === "" 
-                              ? "" 
-                              : obligationArr[index] 
-                                      ? obligationArr[index] 
+                item.unshift(obligationArr[index] === ""
+                              ? ""
+                              : obligationArr[index]
+                                      ? obligationArr[index]
                                       : obligationArr[0]);
               });
 
@@ -520,12 +520,12 @@ Please contact the issuing agency listed under \"Contact Information\" for more 
             obligationsArr.push(detailsArr);
 
           });
-    
+
           let obligationsData = _.flatten(obligationsArr);
-          
+
           return obligationsData;
         })
-        .enter().append("tr")        
+        .enter().append("tr")
         .selectAll("tr")
         .data(d => d)
         .enter()

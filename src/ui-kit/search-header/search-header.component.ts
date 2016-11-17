@@ -15,7 +15,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       </div>
     </header>
 `,
-  styleUrls: [ 'search-header.css' ],
+  styles: [ require('./search-header.css') ],
 })
 export class SamSearchHeaderComponent {
 

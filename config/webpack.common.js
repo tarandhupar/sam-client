@@ -14,6 +14,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 const HtmlElementsPlugin = require('./html-elements-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 /*
  * Webpack Constants
@@ -154,7 +155,7 @@ module.exports = {
        */
       {
         test: /\.css$/,
-        loaders: ['to-string-loader', 'css-loader']
+        loaders: ['to-string-loader', 'css-loader?sourceMap']
       },
 
       /* Raw loader support for *.html
@@ -172,8 +173,26 @@ module.exports = {
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        loaders: ['raw-loader', 'sass']
+        //loaders: [ExtractTextPlugin.extract('style-loader', 'css-loader?sourceMap!resolve-url-loader!sass-loader?sourceMap')]
+        loaders: [ExtractTextPlugin.extract('style-loader', 'sass-loader?sourceMap!resolve-url-loader!css-loader?sourceMap')]
+
       },
+
+      {
+        test: /\.svg$/,
+        loaders: ['svg-url']
+      },
+
+      // FONTS
+      {
+        test: /\.(otf|eot|svg|ttf|woff)/,
+        loader: 'url-loader?limit=8192'
+      },
+      //
+      // {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
+      // {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/font-woff"},
+      // {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader?mimetype=application/octet-stream"},
+      // {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file-loader"},
 
       /* File loader for supporting images, for example, in CSS files.
       */
@@ -196,6 +215,7 @@ module.exports = {
    */
   plugins: [
 
+    new ExtractTextPlugin("styles.css"),
     /*
      * Plugin: ForkCheckerPlugin
      * Description: Do type checking in a separate process, so webpack don't need to wait.
@@ -228,6 +248,10 @@ module.exports = {
         from: 'src/assets',
         to: 'assets'
       },
+      // {
+      //   from: 'node_modules/uswds/dist',
+      //   to: 'src/assets'
+      // },
       /// Fixme: There are redundant copies here
       {
         from: 'src/assets/fonts',

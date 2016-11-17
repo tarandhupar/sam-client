@@ -11,7 +11,7 @@ import { Component, Output, EventEmitter} from '@angular/core';
 @Component({
   selector: 'samBanner',
   templateUrl: 'banner.template.html',
-  styleUrls: [ 'banner.style.css' ],
+  styles: [ require('./banner.style.css') ],
 
 })
 export class SamBannerComponent {

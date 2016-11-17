@@ -11,7 +11,7 @@ import {Component, Input} from '@angular/core';
 @Component({
   selector: 'samButton',
   template: `<button id={{buttonId}} [ngClass]="btnClass()" [disabled]="disabled" type="button">{{buttonText}}</button>`,
-  styleUrls: ['button.scss']
+  styles: [ require('./button.scss') ]
 })
 export class SamButtonComponent {
 

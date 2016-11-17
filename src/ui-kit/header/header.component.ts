@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   template:`<header>
               <img src="assets/img/sam_hat_logo.jpg">
             </header>`,
-  styleUrls: ['header.scss']
+  styles: [ require('./header.scss') ]
 })
 export class SamHeaderComponent {
 

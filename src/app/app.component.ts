@@ -6,6 +6,7 @@ import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
 
+console.log(require('./app.style.scss'));
 /*
  * App Component
  * Top Level Component
@@ -13,9 +14,7 @@ import { SearchService } from 'api-kit';
 @Component({
   selector: 'app',
   encapsulation: ViewEncapsulation.None,
-  styleUrls: [
-    './app.style.scss'
-  ],
+  styles: [ require('./app.style.scss') ],
   templateUrl: './app.template.html',
   providers : [SearchService]
 })

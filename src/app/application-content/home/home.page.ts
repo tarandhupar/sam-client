@@ -5,7 +5,7 @@ import { globals } from '../../globals.ts';
 @Component({
   selector: 'home',
   providers: [ ],
-  styleUrls: [ 'home.style.css' ],
+  styles: [ require('./home.style.css') ],
   templateUrl: 'home.template.html'
 })
 export class HomePage {
