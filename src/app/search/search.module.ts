@@ -5,7 +5,8 @@ import { HttpModule } from '@angular/http';
 import { SearchPage }   from './search.page';
 import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
-import { FederalHierarchyResult } from '../search-result/federal-hierarchy-result.component'
+import { FederalHierarchyResult } from '../search-result/federal-hierarchy-result.component';
+import { EntitiesResult } from '../entity/search-result/entities-result.component'
 import { FHInputComponent } from './agency-selector/agency-selector.component';
 import { FormsModule } from '@angular/forms';
 
@@ -28,6 +29,7 @@ import { SamAPIKitModule } from 'api-kit';
     AssistanceListingResult,
     OpportunitiesResult,
     FederalHierarchyResult,
+    EntitiesResult,
     FHInputComponent
   ],
   declarations: [
@@ -35,6 +37,7 @@ import { SamAPIKitModule } from 'api-kit';
     AssistanceListingResult,
     OpportunitiesResult,
     FederalHierarchyResult,
+    EntitiesResult,
     FHInputComponent
   ],
   providers: [],

@@ -14,7 +14,8 @@ import {SamUIKitModule} from "ui-kit";
 import { SearchService, SamAPIKitModule } from 'api-kit';
 import {OpportunitiesResult} from "./opportunity/search-result/opportunities-result.component";
 import {AssistanceListingResult} from "./assistance-listing/search-result/assistance-listing-result.component";
-import {FederalHierarchyResult} from "./search-result/federal-hierarchy-result.component"
+import {FederalHierarchyResult} from "./search-result/federal-hierarchy-result.component";
+import {EntitiesResult} from "./entity/search-result/entities-result.component";
 import {FHInputComponent} from "./search/agency-selector/agency-selector.component";
 import {ProgramModule} from "./assistance-listing/assistance-listing.module";
 import {OpportunityPage} from "./opportunity/opportunity.page";
@@ -40,7 +41,7 @@ var searchServiceStub = {};
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, FHInputComponent, OpportunityPage, PageNotFoundErrorPage],
+    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, FHInputComponent, OpportunityPage, PageNotFoundErrorPage],
     imports: [SamUIKitModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
     providers: [
       App,
