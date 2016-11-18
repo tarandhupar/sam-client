@@ -276,6 +276,10 @@ module.exports = {
 
   ],
 
+  sassLoader: {
+    includePaths: ["src/app/styles"]
+  },
+
   /*
    * Include polyfills or mocks for various node stuff
    * Description: Node configuration
