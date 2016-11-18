@@ -9,6 +9,7 @@ import { Location, LocationStrategy, HashLocationStrategy } from '@angular/commo
 import { OpportunityPage } from './opportunity.page';
 import { OpportunityService, FHService } from 'api-kit';
 import { Observable } from 'rxjs';
+import { PipesModule } from "../app-pipes/app-pipes.module";
 
 let comp:    OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
@@ -143,8 +144,9 @@ describe('OpportunityPage', () => {
     TestBed.configureTestingModule({
       declarations: [ OpportunityPage ], // declare the test component
       imports: [
+        PipesModule,
         HttpModule,
-        RouterTestingModule
+        RouterTestingModule,
       ],
       providers: [
         BaseRequestOptions,
