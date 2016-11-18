@@ -26,9 +26,10 @@
     <!-- Sub-Tier Agencies -->
     <section *ngIf="organization.hierarchy.length>0">
       <div class="usa-grid-full m_T-6x">
-        <div class="usa-width-two-thirds">
-          <h2>Sub-Tier Agencies</h2>
-        </div>
+        <ng-container class="usa-width-two-thirds"[ngSwitch]="organization.categoryDesc">
+          <ng-container *ngSwitchCase="'DEPARTMENT'"><h2>Sub-Tier Agencies</h2></ng-container>
+          <ng-container *ngSwitchCase="'AGENCY'"><h2>OFFICES</h2></ng-container>
+        </ng-container>
         <div class="usa-width-one-third">
           <p class="m_T-2x" style="text-align: right;">
             <strong>{{min +1}} - {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}}</strong>
