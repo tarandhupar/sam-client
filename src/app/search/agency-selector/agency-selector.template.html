@@ -11,37 +11,52 @@
     <div>
         <div>
             <label for="office-name">Office Name:</label>
-            <input id="office-name" type="text" style="display:inline-block;" [(ngModel)]="readonlyDisplay" [readOnly]="readOnlyToggle"  />
-            <a (click)="toggleSelectorArea()"><i *ngIf="!selectorToggle" class="fa fa-search-plus" aria-hidden="true"></i><i *ngIf="selectorToggle" class="fa fa-caret-down" aria-hidden="true"></i></a>
-        </div>
-        <div *ngIf="selectorToggle" style="border:1px #000 solid;border-radius:4px; padding:5px">
-            <span>
-            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75" style="display:inline-block;"/>
-            <ul class="autocomplete">
-                <li *ngIf="showAutocompleteMsg" class="autocomplete-msg">{{autocompleteMsg}}</li>
-                <li *ngFor="let result of autoComplete" (click)="autocompleteSelection(result)">{{result.name}}</li>
-            </ul>
-            </span>
-            <button (click)="setOrganizationFromSearch()">Search</button>
-            <div *ngIf="fhSearchError">
-                {{ fhSearchMessage }}
-            </div>
-             <div>
-                <span (click)="toggleBrowseArea()">Browse <i  *ngIf="!browseToggle" class="fa fa-caret-square-o-down" aria-hidden="true"></i><i  *ngIf="browseToggle" class="fa fa-caret-square-o-up" aria-hidden="true"></i></span>
-            </div>
-            <div class='usa-grid-full fh-form-alt' *ngIf="browseToggle">
-                <div *ngFor="let orgLevel of orgLevels; let idx = index;" class="">
-                    <div *ngIf="orgLevel['show']">
-                        <samSelect [(model)]="orgLevel.selectedOrg" [name]="orgLevel.name" [options]="orgLevel.options" [label]="orgLevel.label" (modelChange)="loadChildOrganizations(idx)" ></samSelect>
-                    </div>
+            <div class="usa-agency-picker usa-agency-picker-big">
+                <input [(ngModel)]="readonlyDisplay" [readOnly]="readOnlyToggle" class="usa-agency-picker-input" id="agency-picker-field-big" type="text" name="agency-picker">
+                <div class="usa-agency-picker-icon-area">
+                    <a (click)="toggleSelectorArea()" class="usa-agency-picker-submit-text">
+                        <i *ngIf="!selectorToggle" class="agency-picker-icon fa fa-search-plus" aria-hidden="true"></i>
+                        <i *ngIf="selectorToggle" class="agency-picker-icon fa fa-caret-down" aria-hidden="true"></i>
+                    </a>
                 </div>
-                <button (click)="setOrganizationFromBrowse()">change</button>
             </div>
-            <i class="fa fa-angle-double-right" aria-hidden="true"></i>
-            <div>
-                Selected Organization
-                <samMultiSelect *ngIf="multimode" [myOptions]="selectedOrganizations" (selectionUpdate)="emitSelectedOrganizations()"></samMultiSelect>
-                <span *ngIf="!multimode">{{selectedSingleOrganizationName}}</span>
+        </div>
+        <div *ngIf="selectorToggle" class="agency-picker-dropdown-area usa-grid">            
+            <div class="usa-width-five-twelfths">
+                <div style="position:relative;">
+                    <input type="text" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
+                    <ul *ngIf="autoCompleteToggle" class="autocomplete">
+                        <li *ngIf="showAutocompleteMsg" class="autocomplete-msg">{{autocompleteMsg}}</li>
+                        <li *ngFor="let result of autoComplete" (click)="autocompleteSelection(result)">{{result.name}}</li>
+                    </ul>
+                </div>
+                <button (click)="setOrganizationFromSearch()">Search</button>
+                <div *ngIf="fhSearchError">
+                    {{ fhSearchMessage }}
+                </div>
+                 <div>
+                    <span (click)="toggleBrowseArea()">Browse <i  *ngIf="!browseToggle" class="fa fa-caret-square-o-down" aria-hidden="true"></i><i  *ngIf="browseToggle" class="fa fa-caret-square-o-up" aria-hidden="true"></i></span>
+                </div>
+                <div class='fh-form-alt' *ngIf="browseToggle">
+                    <div *ngFor="let orgLevel of orgLevels; let idx = index;" class="">
+                        <div *ngIf="orgLevel['show']">
+                            <samSelect [(model)]="orgLevel.selectedOrg" [name]="orgLevel.name" [options]="orgLevel.options" [label]="orgLevel.label" (modelChange)="loadChildOrganizations(idx)" ></samSelect>
+                        </div>
+                    </div>
+                    <button (click)="setOrganizationFromBrowse()">change</button>
+                </div>
+            </div>
+            <div class="usa-width-one-sixth agency-picker-chevron-wrapper">
+                <i (click)="setOrganizationFromBrowse()" class="agency-picker-chevron fa fa-angle-double-right" aria-hidden="true"></i>
+            </div>
+            <div class="usa-width-five-twelfths">
+                <div>
+                    Selected Organization
+                    <samMultiSelect #multiselect *ngIf="multimode" [myOptions]="selectedOrganizations" (selectionUpdate)="emitSelectedOrganizations()"></samMultiSelect>
+                    <button (click)="removeSelectedOrgs()">Remove</button>
+                    <button (click)="close()">Done</button>
+                    <span *ngIf="!multimode">{{selectedSingleOrganizationName}}</span>
+                </div>
             </div>
         </div>
     </div>

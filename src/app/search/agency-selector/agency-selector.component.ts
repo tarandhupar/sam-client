@@ -1,4 +1,4 @@
-import { Component,Input,Output,OnInit,EventEmitter } from '@angular/core';
+import { Component,Input,Output,OnInit,EventEmitter,ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FHService } from 'api-kit';
 
@@ -10,11 +10,13 @@ export class FHInputComponent implements OnInit {
   @Input() multimode: boolean = true;
   @Input() getQSValue: string = "organizationId";
   @Input() orgId: string = "";
+  @ViewChild("multiselect") multiselect;
 	@Output() organization = new EventEmitter<any[]>();
 
   private searchTimer: NodeJS.Timer = null;
   searchTerm = "";
   searchData = [];
+  autoCompleteToggle = false;
   autoComplete = [];
   autocompleteData = [];
   selectedOrganizations = [];
@@ -99,18 +101,24 @@ export class FHInputComponent implements OnInit {
   //good
   setReadonlyDisplay(){
     this.readOnlyToggle = false;
-    this.readonlyDisplay = this.selectedOrganizations.reduce(function(finalStr,val,idx){
-      if(idx==0){
-        return val.name
-      } else {
-        return finalStr + ", " + val.name;
-      }
-    },"");
+    console.log(this.selectedOrganizations);
+    if(this.selectedOrganizations.length>0){
+      this.readonlyDisplay = this.selectedOrganizations.reduce(function(finalStr,val,idx){
+        if(idx==0){
+          return val.name
+        } else {
+          return finalStr + ", " + val.name;
+        }
+      },"");
+    } else {
+      this.readonlyDisplay = "";
+    }
     this.readOnlyToggle = true;
   }
   //good
   searchTermChange(event){
     if(event.length>=3 && !this.autocompleting){
+      this.autoCompleteToggle = true;
       if (this.searchTimer) {
           clearTimeout(this.searchTimer);
       }
@@ -127,9 +135,11 @@ export class FHInputComponent implements OnInit {
       this.autoComplete.length = 0;
       this.showAutocompleteMsg = false;
       this.autocompleteMsg = "";
+      this.autoCompleteToggle = false;
     } else if (event.length < 3 && this.showAutocompleteMsg){
       this.showAutocompleteMsg = false;
       this.autocompleteMsg = "";
+      this.autoCompleteToggle = false;
     }
   }
 
@@ -165,6 +175,7 @@ export class FHInputComponent implements OnInit {
     this.updateBrowse(data);
     this.autoComplete.length = 0;
     this.setSearchTerm(data);
+    this.autoCompleteToggle = false;
   }
 
   //what kind of data is saved to cache?
@@ -431,16 +442,28 @@ export class FHInputComponent implements OnInit {
   //good, may need to revisit when readonly display is upated
   toggleSelectorArea(){
     this.selectorToggle = this.selectorToggle ? false : true;
-    if(this.selectorToggle == false && this.selectedOrganizations.length>0){
+    if(this.selectorToggle == false){
       this.setReadonlyDisplay();
     }
   }
 
+  close(){
+    this.selectorToggle = false;
+    this.setReadonlyDisplay();
+  }
   //good
   toggleBrowseArea(){
     this.browseToggle = this.browseToggle ? false : true;
   }
-
+  keydownHandler(evt){
+    //up
+    if(evt['keyCode'] == 38){
+      console.log("up");
+    }
+    else if(evt['keyCode']==40){
+      console.log("down");
+    }
+  }
   //rename function
 	initDictionaries(ordId, includeParent, includeChildren){
 		//get Department level of user's organizationId
@@ -501,5 +524,19 @@ export class FHInputComponent implements OnInit {
       formattedData.push(obj);
     }
     return formattedData;
+  }
+  removeSelectedOrgs(){
+    var selectedValues = this.multiselect.selectedValues;
+    var filteredArray = this.multiselect.myOptions.filter(function( obj ) {
+      for(var idx in selectedValues){
+        if(selectedValues[idx] == obj.value){
+          return false;
+        }
+      }
+      return true;
+    });
+    this.multiselect.myOptions.length = 0;
+    [].push.apply(this.multiselect.myOptions,filteredArray);
+    this.emitSelectedOrganizations();
   }
 }

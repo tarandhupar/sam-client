@@ -22,7 +22,6 @@ import { OptionsType } from '../types';
       {{item.name}}
     </option>
   </select>
-  <button (click)="remove()">Remove</button>
   `
 })
 export class SamMultiSelectComponent {
@@ -44,23 +43,6 @@ export class SamMultiSelectComponent {
     this.selectedValues = Array.apply(null,options)  // convert to real Array
       .filter(option => option.selected)
       .map(option => option.value)
-  }
-
-  //remove button should be moved out
-  remove(){
-    //replace values without losing reference in parent 
-    var selectedValues = this.selectedValues;
-    var filteredArray = this.myOptions.filter(function( obj ) {
-      for(var idx in selectedValues){
-        if(selectedValues[idx] == obj.value){
-          return false;
-        }
-      }
-      return true;
-    });
-    this.myOptions.length = 0;
-    [].push.apply(this.myOptions,filteredArray);
-    this.selectionUpdate.emit(this.myOptions);
   }
 
 }
