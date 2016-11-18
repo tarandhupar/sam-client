@@ -42,15 +42,12 @@
     <span><strong>Set Aside: </strong> {{ opportunity.data?.solicitation?.setAside }}</span><br>
     <span><strong>Classification Code: </strong> {{ opportunity.data?.classificationCode }}</span><br>
     <span><strong>NAICS Code(s): </strong><br>
-      <ng-container *ngFor = "let element of opportunity.data?.naicsCode">• {{ element }}</ng-container>
+      <ng-container *ngFor = "let element of opportunity.data?.naicsCode">• {{ element }}<br></ng-container>
     </span>
     <span><strong>Place of Performance: </strong>
       <div>{{opportunity.data?.placeOfPerformance?.streetAddress}}</div>
-      <div>{{opportunity.data?.placeOfPerformance?.streetAddress2}}</div>
-      <div>{{opportunity.data?.placeOfPerformance?.city}}</div>
-      <div>{{opportunity.data?.placeOfPerformance?.state}}</div>
-      <div>{{opportunity.data?.placeOfPerformance?.zip}}</div>
-      <div>{{opportunity.data?.placeOfPerformance?.county}}</div>
+      <div>{{opportunity.data?.placeOfPerformance?.city}}, {{opportunity.data?.placeOfPerformance?.state}} {{opportunity.data?.placeOfPerformance?.zip}}</div>
+      <div>{{opportunity.data?.placeOfPerformance?.country}}</div>
     </span><br>
   </div>
 
