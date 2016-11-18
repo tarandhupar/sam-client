@@ -1,5 +1,5 @@
 
-  <div class="usa-grid-full">
+<div class="usa-grid-full help-title">
     <div class="jumbotron" *ngIf="currentSection==='overview'">
       <h1 class="centered">Help Center</h1>
     </div>
@@ -18,8 +18,8 @@
 
 
 <div class="usa-grid-full p_B-6x help-content relative" >
-  <aside class="usa-width-one-fourth p_T-2x help-menu">
-    <div  sam-sticky limit=1600 container="help-content">
+  <aside class="usa-width-one-fourth p_T-2x">
+    <div sam-sticky limit=1200 container="help-content">
       <ul class="usa-sidenav-list">
         <li>
           <a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/help/overview']">Help Center Home</a>

@@ -10,16 +10,29 @@ export class HelpPage {
 
   private currentSection: string = "overview";
   private currentUrl: string = "/help/overview";
-  private baseUrl: string = "/help";
+  private baseUrl: string = "/help/";
   private currentSubSection: string = "";
 
-  constructor(router: Router) {
+  constructor(private router: Router) {
     //router.navigateByUrl('help/overview');
+
+  }
+
+  ngOnInit(){
+    this.router.events.subscribe(
+      val => {
+        if(val.url.indexOf("#") > 0){
+          this.currentUrl = val.url.substr(0,val.url.indexOf("#"));
+        }else{
+          this.currentUrl = val.url;
+        }
+        this.currentSection = this.currentUrl.substr(this.baseUrl.length);
+      });
   }
 
   changeSection(value){
     this.currentSection = value;
-    this.currentUrl = this.baseUrl+"/"+this.currentSection;
+    this.currentUrl = this.baseUrl+this.currentSection;
   }
 
   getSectionClass(value){
