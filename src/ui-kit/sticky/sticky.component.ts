@@ -2,11 +2,16 @@ import { HostListener, Directive, ElementRef, Input, Renderer, OnInit } from '@a
 
 @Directive({ selector: '[sam-sticky]' })
 export class SamStickyComponent implements OnInit {
-  
+
   // Research sticky polyfill
   // http://html5please.com/#sticky
   @Input() limit: number;
   @Input() container: string;
+
+  // Make a nav bar sticky when the diff between nav bar and its container is larger than diffLimit
+  private diffLimit:number = 200;
+  // Set the nav bar top position when fixed
+  private stickyTop:number = 20;
 
   @HostListener('window:resize', ['$event'])
   resize(event) {
@@ -23,13 +28,27 @@ export class SamStickyComponent implements OnInit {
     let stickyElementLimit = this.el.nativeElement.offsetTop + this.el.nativeElement.offsetHeight;
     let stickyElementTopMargin = 20 + (this.el.nativeElement.offsetTop * -1);
     let stopLimit = (documentHeight - restOfDocumentHeight) + ( window.innerHeight - stickyElementLimit);
+    let parentContainerToTop = this.getElemDistanceToTop(parentContainer[0]);
 
-    if(scrollPosition > stopLimit && scrollPosition > (documentHeight - restOfDocumentHeight)){
-      let topPosition = (stickyElementTopMargin + (scrollPosition - stopLimit)) * -1;
-      this.renderer.setElementStyle(this.el.nativeElement, 'top', topPosition + "px");
-    }else if(scrollPosition < (documentHeight - restOfDocumentHeight)){
-      this.renderer.setElementStyle(this.el.nativeElement, 'top', "auto");
+    // Star to make it sticky when:
+    // 1.the element is scrolled to top
+    // 2.the container's height is larger than the element height plus diffLimit
+    if(this.getScrollTop() + this.stickyTop > parentContainerToTop+ this.el.nativeElement.offsetTop &&
+      this.el.nativeElement.offsetHeight + this.diffLimit < parentContainer[0].offsetHeight){
+      this.setPosition("fixed");
+      // Make the elem stick on top until the space is not enough to show the elem
+      if (this.el.nativeElement.offsetHeight+this.getScrollTop()< parentContainerToTop+parentContainer[0].offsetHeight-50) {
+        this.renderer.setElementStyle(this.el.nativeElement, 'top', this.stickyTop + "px");
+      }else  {
+        let topPosition = (stickyElementTopMargin + (scrollPosition - stopLimit)) * -1;
+        this.renderer.setElementStyle(this.el.nativeElement, 'top', topPosition + "px");
+      }
+
+    }else{
+      this.setPosition("static");
     }
+
+
   }
 
   constructor( private el: ElementRef, private renderer: Renderer) {}
@@ -49,9 +68,9 @@ export class SamStickyComponent implements OnInit {
   getDocHeight() {
     let D = document;
     return Math.max(
-        D.body.scrollHeight, D.documentElement.scrollHeight,
-        D.body.offsetHeight, D.documentElement.offsetHeight,
-        D.body.clientHeight, D.documentElement.clientHeight
+      D.body.scrollHeight, D.documentElement.scrollHeight,
+      D.body.offsetHeight, D.documentElement.offsetHeight,
+      D.body.clientHeight, D.documentElement.clientHeight
     );
   }
 
@@ -59,6 +78,20 @@ export class SamStickyComponent implements OnInit {
     let doc = document.documentElement;
     let top = (window.pageYOffset || doc.scrollTop)  - (doc.clientTop || 0);
     return top;
+  }
+
+  /**
+   * Get the distance from the element to the top of the document
+   */
+  getElemDistanceToTop(elem){
+    var distance = 0;
+    if (elem.offsetParent) {
+      do {
+        distance += elem.offsetTop;
+        elem = elem.offsetParent;
+      } while (elem);
+    }
+    return distance;
   }
 
 }

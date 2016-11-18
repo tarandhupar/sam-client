@@ -41,6 +41,7 @@ export class App{
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
       });
+
   }
 
 
@@ -78,5 +79,5 @@ export class App{
     this.showOverlay = value;
 
   }
-  
+
 }

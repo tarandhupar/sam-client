@@ -11,9 +11,11 @@ import { PoliciesComponent } from "./sections/policies/policies.component";
 import { ReferenceLibraryComponent}  from "./sections/reference-library/reference-library.component";
 import { PartnersComponent } from "./sections/partners/partners.component";
 import { AwardDataComponent } from "./sections/award-data/award-data.component";
+import { SamUIKitModule } from "../../ui-kit/ui-kit.module";
 
 @NgModule({
   imports: [
+    SamUIKitModule,
     BrowserModule,
     routing,
   ],

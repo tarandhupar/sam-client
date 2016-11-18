@@ -30,8 +30,11 @@ export class HelpPage {
     return this.currentSection === value;
   }
 
-  changeSubSection(value){
+  changeSubSection(value,elem){
     this.currentSubSection = value;
+    setTimeout(()=>{
+      elem.focus();
+    });
   }
 
   getSubSectionClass(value){
