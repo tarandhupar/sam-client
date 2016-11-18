@@ -56,7 +56,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
     let apiSubject = new ReplaySubject(1);
 
     opportunityApiStream.subscribe(api => {
-      this.fhService.getFederalHierarchyV2ById(api.data.organizationId).subscribe(apiSubject);
+      this.fhService.getOrganizationById(api.data.organizationId).subscribe(apiSubject);
     });
 
     this.organizationSubscription = apiSubject.subscribe(organization => {

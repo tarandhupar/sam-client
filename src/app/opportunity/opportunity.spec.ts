@@ -126,8 +126,7 @@ let MockOpportunityService = {
 };
 
 let MockFHService = {
-  //TODO: remove this function and replace it with getOrganizationById once SAM-492 is merged to comp
-  getFederalHierarchyV2ById(id: string){
+  getOrganizationById(id: string){
     return Observable.of({
       "_embedded": [
         {
