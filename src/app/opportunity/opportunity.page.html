@@ -30,13 +30,29 @@
             <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
             <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
             <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
-          </ng-container>: 
+          </ng-container>:
         </strong>
         {{ organization.name }}
       </span>
       <span><strong>Locations: </strong> {{ opportunityLocation }}</span>
     </p>
+
+    <h1>Classification</h1>
+    <ng-container *ngIf = "opportunity.parentOpportunity"><strong> Original Set Aside: </strong> {{ opportunity.parentOpportunity?.data?.solicitation?.setAside }}</ng-container><br>
+    <span><strong>Set Aside: </strong> {{ opportunity.data?.solicitation?.setAside }}</span><br>
+    <span><strong>Classification Code: </strong> {{ opportunity.data?.classificationCode }}</span><br>
+    <span><strong>NAICS Code(s): </strong><br>
+      <ng-container *ngFor = "let element of opportunity.data?.naicsCode">• {{ element }}</ng-container>
+    </span>
+    <span><strong>Place of Performance: </strong>
+      <div>{{opportunity.data?.placeOfPerformance?.streetAddress}}</div>
+      <div>{{opportunity.data?.placeOfPerformance?.streetAddress2}}</div>
+      <div>{{opportunity.data?.placeOfPerformance?.city}}</div>
+      <div>{{opportunity.data?.placeOfPerformance?.state}}</div>
+      <div>{{opportunity.data?.placeOfPerformance?.zip}}</div>
+      <div>{{opportunity.data?.placeOfPerformance?.county}}</div>
+    </span><br>
   </div>
-  
-  
+
+
 </div>
