@@ -19,24 +19,43 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths" *ngIf="opportunity">
-    <h1>
-      {{opportunity.data?.title}}
-    </h1>
-    <p class="content-block">
-      <span><strong>Solicitation Number: </strong>{{ opportunity.data?.solicitationNumber }}</span>
-      <span *ngIf='organization'>
-        <strong>
-          <ng-container [ngSwitch]='organization.type'>
-            <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
-            <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
-            <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
-          </ng-container>: 
-        </strong>
-        {{ organization.name }}
-      </span>
-      <span><strong>Locations: </strong> {{ opportunityLocation }}</span>
-    </p>
+    <section>
+      <h1>
+        {{ opportunity.data?.title }}
+      </h1>
+      <p class="content-block">
+        <span><strong>Solicitation Number: </strong>{{ opportunity.data?.solicitationNumber }}</span>
+        <span *ngIf="organization">
+          <strong>
+            <ng-container [ngSwitch]='organization.type'>
+              <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
+              <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
+              <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
+            </ng-container>:
+          </strong>
+          {{ organization.agencyName }}
+        </span>
+        <span><strong>Locations: </strong> {{ opportunityLocation }}</span>
+      </p>
+    </section>
+
+    <section id="gen-info">
+      <h2>General Information</h2>
+
+      <p><strong>Notice Type: </strong>{{ opportunity.data?.type }}</p>
+      <p><strong>Posted Date: </strong>{{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}</p>
+      <ng-container *ngIf="originalOpportunity">
+        <p><strong>Original Posted Date: </strong>{{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}</p>
+      </ng-container>
+      <p><strong>Response Date: </strong>{{ opportunity.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}</p>
+      <ng-container *ngIf="originalOpportunity">
+        <p><strong>Original Response Date: </strong>{{ originalOpportunity.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}</p>
+      </ng-container>
+      <p><strong>Archiving Policy: </strong>{{ opportunity.data?.archive?.type }}</p>
+      <p><strong>Archive Date: </strong>{{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</p>
+      <ng-container *ngIf="originalOpportunity">
+        <p><strong>Original Archive Date: </strong>{{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</p>
+      </ng-container>
+    </section>
   </div>
-  
-  
 </div>
