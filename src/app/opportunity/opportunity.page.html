@@ -1,0 +1,42 @@
+<div class="usa-grid">
+
+  <!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <br />
+    <br />
+    <!--Side Navigation-->
+    <nav>
+      <ul class="usa-sidenav-list">
+        <li><a href="{{ currentUrl }}#gen-info">General Infornation</a></li>
+        <li><a href="{{ currentUrl }}#classification">Classification</a></li>
+        <li><a href="{{ currentUrl }}#syn-desc">Synopsis/Description</a></li>
+        <li><a href="{{ currentUrl }}#package">Packages</a></li>
+        <li><a href="{{ currentUrl }}#contact-info">Contact Information</a></li>
+        <li><a href="{{ currentUrl }}#history">History</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!--Main Content-->
+  <div class="usa-width-three-fourths" *ngIf="opportunity">
+    <h1>
+      {{opportunity.data?.title}}
+    </h1>
+    <p class="content-block">
+      <span><strong>Solicitation Number: </strong>{{ opportunity.data?.solicitationNumber }}</span>
+      <span *ngIf='organization'>
+        <strong>
+          <ng-container [ngSwitch]='organization.type'>
+            <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
+            <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
+            <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
+          </ng-container>: 
+        </strong>
+        {{ organization.name }}
+      </span>
+      <span><strong>Locations: </strong> {{ opportunityLocation }}</span>
+    </p>
+  </div>
+  
+  
+</div>
