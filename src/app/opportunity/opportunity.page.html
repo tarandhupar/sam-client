@@ -30,13 +30,15 @@
             <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
             <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
             <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
-          </ng-container>: 
+          </ng-container>:
         </strong>
         {{ organization.name }}
       </span>
       <span><strong>Locations: </strong> {{ opportunityLocation }}</span>
     </p>
+    <h1>Contact Information</h1>
+    <ng-container *ngIf = "opportunity.data?.pointOfContact"></ng-container>
   </div>
-  
-  
+
+
 </div>
