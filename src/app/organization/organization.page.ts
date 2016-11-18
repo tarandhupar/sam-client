@@ -48,8 +48,6 @@ export class OrganizationPage implements OnInit, OnDestroy {
       this.organization = jsonData._embedded[0].org;
       this.totalPages = Math.ceil(this.organization.hierarchy.length / this.showPerPage);
       this.organizationPerPage = this.filterHierarchy(this.pageNum, this.organization.hierarchy);
-      console.log("organization", this.organization);
-      console.log("organizationPerPage", this.organizationPerPage);
     }, err => {
       console.log('Error logging', err);
     });
