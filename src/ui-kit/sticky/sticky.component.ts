@@ -1,5 +1,8 @@
 import { HostListener, Directive, ElementRef, Input, Renderer, OnInit } from '@angular/core';
 
+/**
+ * The sam-sticky directive is made to help nav bar stick on the page
+ */
 @Directive({ selector: '[sam-sticky]' })
 export class SamStickyComponent implements OnInit {
 
@@ -12,6 +15,8 @@ export class SamStickyComponent implements OnInit {
   private diffLimit:number = 100;
   // Set the nav bar top position when fixed
   private stickyTop:number = 20;
+  // Get the initial width of the element
+  private elemWidth:number;
 
   @HostListener('window:resize', ['$event'])
   resize(event) {
@@ -27,7 +32,7 @@ export class SamStickyComponent implements OnInit {
   constructor( private el: ElementRef, private renderer: Renderer) {}
 
   ngOnInit(){
-    this.renderer.setElementStyle(this.el.nativeElement, 'width', "fit-content");
+    this.elemWidth = this.el.nativeElement.offsetWidth;
   }
 
   setPosition(position: string){
@@ -90,9 +95,8 @@ export class SamStickyComponent implements OnInit {
 
     }else{
       this.setPosition("static");
-      this.renderer.setElementStyle(this.el.nativeElement, 'width', "fit-content");
     }
-
+    this.renderer.setElementStyle(this.el.nativeElement, 'width', this.elemWidth+"px");
   }
 
 }
