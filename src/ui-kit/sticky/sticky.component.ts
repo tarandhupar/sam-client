@@ -14,7 +14,7 @@ export class SamStickyComponent implements OnInit {
   // Make a nav bar sticky when the diff between nav bar and its container is larger than diffLimit
   private diffLimit:number = 100;
   // Set the nav bar top position when fixed
-  private stickyTop:number = 20;
+  private stickyTop:number = 10;
   // Get the initial width of the element
   private elemWidth:number;
 
@@ -75,7 +75,7 @@ export class SamStickyComponent implements OnInit {
     let parentContainerLimit = parentContainer[0].offsetHeight + parentContainer[0].offsetTop;
     let restOfDocumentHeight = documentHeight - parentContainerLimit;
     let stickyElementLimit = this.el.nativeElement.offsetTop + this.el.nativeElement.offsetHeight;
-    let stickyElementTopMargin = -20 + (this.el.nativeElement.offsetTop * -1);
+    let stickyElementTopMargin = -10 + (this.el.nativeElement.offsetTop * -1);
     let stopLimit = (documentHeight - restOfDocumentHeight) + ( window.innerHeight - stickyElementLimit);
     let parentContainerToTop = this.getElemDistanceToTop(parentContainer[0]);
 
