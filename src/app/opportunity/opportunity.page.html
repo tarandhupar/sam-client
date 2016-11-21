@@ -41,7 +41,7 @@
 
     <section id="gen-info">
       <h2>General Information</h2>
-      <ul class="usa-unstyled-list"> 
+      <ul class="usa-unstyled-list">
         <li>
           <strong>Notice Type: </strong>
           {{ opportunity.data?.type }}
@@ -51,7 +51,7 @@
           {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li *ngIf="originalOpportunity">
-          <strong>Original Posted Date: </strong> 
+          <strong>Original Posted Date: </strong>
           {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li>
@@ -84,7 +84,7 @@
           <h3>Primary Point of Contact</h3>
           <ul class="usa-unstyled-list">
             <li><strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong></li>
-            <li><em>{{opportunity.data?.pointOfContact[0].title }}</em></li>
+            <li><em>{{opportunity.data?.pointOfContact[0].title | capitalize}}</em></li>
             <li>
               <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
               <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
@@ -104,9 +104,9 @@
         <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[1]">
           <h3>Secondary Point of Contact</h3>
           <ul class="usa-unstyled-list">
-            
+
             <li><strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong></li>
-            <li><em>{{opportunity.data?.pointOfContact[1].title}}</em></li>
+            <li><em>{{opportunity.data?.pointOfContact[1].title | capitalize}}</em></li>
             <li>
               <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
               <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
@@ -125,7 +125,7 @@
         </div>
       </div>
     </section>
-    
+
 
   </div>
 
