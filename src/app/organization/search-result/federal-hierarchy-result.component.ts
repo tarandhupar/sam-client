@@ -10,15 +10,17 @@ import 'rxjs/add/operator/map';
     	  <span *ngIf=false class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="federal-hierarchy-title">
-      	<a *ngIf=true>{{ data.name }}</a>
-      	<span *ngIf=false>{{ data.name }}</span>
+      	<a [routerLink]="['/organization', data._id]">{{ data.name }}</a>
     	</h3>
     	<div class="usa-width-two-thirds">
-      	<p class="m_T-2x">
-          {{ data.description && data.description !== null ? 'data.description' : '' }}
+      	<p class="m_T-2x" *ngIf="data.description !== null && data.description.length>150" >
+          <span [innerHTML]="data.description | slice:0:150"></span>...
+        </p>
+        <p class="m_T-2x" *ngIf="data.description!=null && data.description.length<150">
+          <span [innerHTML]="data.description"></span>
         </p>
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li><strong>Department: </strong><span>{{ data.parentOrganizationHierarchy.name.substring(0, data.parentOrganizationHierarchy.name.indexOf(".")) }}</span></li>
+        	<li><strong>Department: </strong><span *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">{{ data.parentOrganizationHierarchy.name.substring(0, data.parentOrganizationHierarchy.name.indexOf(".")) }}</span></li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
@@ -37,7 +39,4 @@ export class FederalHierarchyResult implements OnInit {
 
   ngOnInit(){ }
 
-  // printFALLink(){
-  //   return this.data.hasOwnProperty('_links') ? _.get(this.data, ['_links','self','href']):'';
-  // }
 }
