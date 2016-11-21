@@ -11,7 +11,6 @@ import 'rxjs/add/operator/map';
     	</p>
     	<h3 class="federal-hierarchy-title">
       	<a [routerLink]="['/organization', data._id]">{{ data.name }}</a>
-      	<span *ngIf=false>{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<p class="m_T-2x">
@@ -36,5 +35,5 @@ export class FederalHierarchyResult implements OnInit {
   constructor() { }
 
   ngOnInit(){ }
-  
+
 }
