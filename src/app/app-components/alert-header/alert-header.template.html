@@ -5,7 +5,7 @@
         <h3 class="usa-alert-heading">
           {{alert.title}}
           <span *ngIf="i===0" class="pull-right">
-            <a><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
+            <button class="usa-button-dismiss" (click)="onDismissClick()"><span class="usa-sr-only">Dismiss</span></button>
           </span>
         </h3>
         <p class="usa-alert-text truncate">{{alert.description}}</p>
