@@ -19,46 +19,74 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths" *ngIf="opportunity">
-    <h1>
-      {{opportunity.data?.title}}
-    </h1>
-    <p class="content-block">
-      <span><strong>Solicitation Number: </strong>{{ opportunity.data?.solicitationNumber }}</span>
-      <span *ngIf='organization'>
-        <strong>
-          <ng-container [ngSwitch]='organization.type'>
-            <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
-            <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
-            <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
-          </ng-container>:
+
+    <h1>{{opportunity.data?.title}}</h1>
+
+    <ul class="usa-unstyled-list">
+      <li>
+        <strong>Solicitation Number: </strong>{{ opportunity.data?.solicitationNumber }}
+      </li>
+      <li *ngIf='organization'>
+        <strong [ngSwitch]='organization.type'>
+          <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
+          <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
+          <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
         </strong>
         {{ organization.name }}
-      </span>
-      <span><strong>Locations: </strong> {{ opportunityLocation }}</span>
-    </p>
-    <h1>Contact Information</h1>
-    <ng-container *ngIf = "opportunity.data?.pointOfContact">
-      <ng-container *ngIf = "opportunity.data?.pointOfContact[0]">
-        <div class = "contact">
-        <h2>Primary Point of Contact:</h2>
-        <div>{{opportunity.data?.pointOfContact[0].title}}</div>
-        <div>{{opportunity.data?.pointOfContact[0].fullName}}</div>
-        <div>{{opportunity.data?.pointOfContact[0].email}}</div>
-        <div>{{opportunity.data?.pointOfContact[0].phone}}</div>
-        <div>{{opportunity.data?.pointOfContact[0].fax}}</div>
+      </li>
+      <li>
+        <strong>Locations: </strong> {{ opportunityLocation }}
+      </li>
+    </ul>
+
+    <h2>Contact Information</h2>
+
+    <div class="usa-grid-full" *ngIf = "opportunity.data?.pointOfContact">
+      <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[0]">
+        <h3>Primary Point of Contact</h3>
+        <ul class="usa-unstyled-list">
+          <li><strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong></li>
+          <li><em>{{opportunity.data?.pointOfContact[0].title }}</em></li>
+          <li>
+            <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+            <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
+              {{opportunity.data?.pointOfContact[0].email}}
+            </a>
+          </li>
+          <li>
+            <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+            {{opportunity.data?.pointOfContact[0].phone}}
+          </li>
+          <li>
+            <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+            {{opportunity.data?.pointOfContact[0].fax}}
+          </li>
+        </ul>
       </div>
-      </ng-container>
-      <ng-container *ngIf = "opportunity.data?.pointOfContact[1]">
-        <div class = "contact">
-          <h2>Secondary Point of Contact:</h2>
-          <div>{{opportunity.data?.pointOfContact[1].title}}</div>
-          <div>{{opportunity.data?.pointOfContact[1].fullName}}</div>
-          <div>{{opportunity.data?.pointOfContact[1].email}}</div>
-          <div>{{opportunity.data?.pointOfContact[1].phone}}</div>
-          <div>{{opportunity.data?.pointOfContact[1].fax}}</div>
-        </div>
-      </ng-container>
-    </ng-container>
+      <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[1]">
+        <h3>Secondary Point of Contact</h3>
+        <ul class="usa-unstyled-list">
+          
+          <li><strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong></li>
+          <li><em>{{opportunity.data?.pointOfContact[1].title}}</em></li>
+          <li>
+            <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+            <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
+              {{opportunity.data?.pointOfContact[1].email}}
+            </a>
+          </li>
+          <li>
+            <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+            {{opportunity.data?.pointOfContact[1].phone}}
+          </li>
+          <li>
+            <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+            {{opportunity.data?.pointOfContact[1].fax}}
+          </li>
+        </ul>
+      </div>
+    </div>
+
   </div>
 
 
