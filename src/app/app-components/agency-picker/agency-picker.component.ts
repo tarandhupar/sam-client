@@ -1,12 +1,13 @@
-import { Component,Input,Output,OnInit,EventEmitter,ViewChild } from '@angular/core';
+import { Component,Directive, Input,ElementRef,Renderer,Output,OnInit,EventEmitter,ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FHService } from 'api-kit';
 
 @Component({
-	selector: 'fh-input',
-	templateUrl:'agency-selector.template.html'
+	selector: 'agency-picker',
+  providers: [],
+	templateUrl:'agency-picker.template.html',
 })
-export class FHInputComponent implements OnInit {
+export class AgencyPickerComponent implements OnInit {
   @Input() multimode: boolean = true;
   @Input() getQSValue: string = "organizationId";
   @Input() orgId: string = "";
@@ -16,6 +17,7 @@ export class FHInputComponent implements OnInit {
   private searchTimer: NodeJS.Timer = null;
   searchTerm = "";
   searchData = [];
+  autocompleteIndex = 0;
   autoCompleteToggle = false;
   autoComplete = [];
   autocompleteData = [];
@@ -74,10 +76,25 @@ export class FHInputComponent implements OnInit {
   searchObjCache = {};
   autocompleting = false;
   readonlyDisplay = "";
+  readonlyDisplayList = [];
   readOnlyToggle = true;
   browseSelection = {};
 	constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService){}
+  autocompleteMouseover(idx){
+    this.autocompleteIndex = idx;
+  }
+  onInputFocus(evt){
 
+  }
+  onInputBlur(evt){
+    this.resetAutocomplete();
+  }
+  resetAutocomplete(){
+    this.autoCompleteToggle = false;
+    this.autoComplete.length = 0;
+    this.autocompleteMsg = "";
+    this.autocompleteData.length = 0;
+  }
   //good
 	ngOnInit() {
     if(this.orgId.length>0){
@@ -101,17 +118,21 @@ export class FHInputComponent implements OnInit {
   //good
   setReadonlyDisplay(){
     this.readOnlyToggle = false;
-    console.log(this.selectedOrganizations);
     if(this.selectedOrganizations.length>0){
-      this.readonlyDisplay = this.selectedOrganizations.reduce(function(finalStr,val,idx){
-        if(idx==0){
-          return val.name
-        } else {
-          return finalStr + ", " + val.name;
-        }
-      },"");
+      if(!this.multimode){
+        this.readonlyDisplay = this.selectedOrganizations.reduce(function(finalStr,val,idx){
+          if(idx==0){
+            return val.name
+          } else {
+            return finalStr + ", " + val.name;
+          }
+        },"");
+      } else {
+        this.readonlyDisplayList = this.selectedOrganizations.slice(0);
+      }
     } else {
       this.readonlyDisplay = "";
+      this.readonlyDisplayList.length = 0;
     }
     this.readOnlyToggle = true;
   }
@@ -151,6 +172,7 @@ export class FHInputComponent implements OnInit {
         'limit':5,
         'name':this.searchTerm
       };
+      this.autocompleteIndex=0;
 
       this.oFHService.search(data).subscribe( res => {
         if(res["_embedded"] && res["_embedded"]["hierarchy"]){
@@ -172,10 +194,12 @@ export class FHInputComponent implements OnInit {
 
   //what kind of data?
   autocompleteSelection(data){
+    console.log(data);
     this.updateBrowse(data);
     this.autoComplete.length = 0;
     this.setSearchTerm(data);
     this.autoCompleteToggle = false;
+    this.autocompleteIndex = 0;
   }
 
   //what kind of data is saved to cache?
@@ -187,6 +211,7 @@ export class FHInputComponent implements OnInit {
   //what kind of data is passed in? assumes orgLevels[idx].selectedOrganization is preset?
   updateBrowse(data){
     //get full hierarchy of selection to get top level organization and get hierarchy to populate/select organization options
+    var lvl = 0;
     if(data.type!="DEPARTMENT"){
       this.initDictionaries(data.elementId, true, false).subscribe( fullOrgPath => {
         this.oFHService.getFederalHierarchyById(fullOrgPath.elementId, true, true).subscribe( res => {
@@ -198,12 +223,14 @@ export class FHInputComponent implements OnInit {
           while(!reachedEnd){
             this.orgLevels[idx].selectedOrg = path.elementId;
             if(idx!=0){
-              this.orgLevels[idx].options.length = 1;
+              this.orgLevels[idx].options.length = 0;
               var type = idx==1?"agency":"office";
-              var formattedOptions = this.formatHierarchy("type",res["hierarchy"]);
-              console.log("formatted options",idx,res);
+              var formattedOptions = this.formatHierarchy(type,res["hierarchy"]);
+              //console.log("formatted options",idx,res);
               this.orgLevels[idx].options.push(...formattedOptions);
+              this.orgLevels[idx].show = true;
             } 
+            console.log(idx,path,res);
             if(path["hierarchy"] && path["hierarchy"][0]){
               if(idx!=0){
                 res = res["hierarchy"].find(function(el,idx,arr){
@@ -214,15 +241,38 @@ export class FHInputComponent implements OnInit {
               }
               path = path["hierarchy"][0];
             } else {
+              if(res["hierarchy"]){
+                res = res["hierarchy"].find(function(el,idx,arr){
+                  if(el.elementId==path.elementId){
+                    return true;
+                  }
+                });
+              }
+              
+              if(res["hierarchy"]){
+                this.orgLevels[idx+1].options.length = 0;
+                var type = idx+1==1?"agency":"office";
+                var formattedOptions = this.formatHierarchy(type,res["hierarchy"]);
+                //console.log("formatted options",idx,res);
+                this.orgLevels[idx+1].options.push(...formattedOptions);
+                this.orgLevels[idx+1].show = true;
+              }
               reachedEnd=true;
             }
             idx++;
+          }
+          lvl = idx-1; 
+
+          this.browseSelection = {
+            "level" : lvl,
+            "org" : this.orgLevels[lvl].selectedOrg
           }
           console.log("???",this.orgLevels);
         });
       });
     } else { 
-      this.orgLevels[0].selectedOrg = data.elementId; this.loadChildOrganizations(0) 
+      this.orgLevels[0].selectedOrg = data.elementId; 
+      this.loadChildOrganizations(0); 
     }
   }
 
@@ -292,11 +342,43 @@ export class FHInputComponent implements OnInit {
     } else {
       this.fhSearchError = true;
       this.fhSearchMessage = "Multiple Results found. Use Browse to refine your selection.";
+      this.handleMultipleResultsFromSearch();
     }
   }
 
+  handleMultipleResultsFromSearch(){
+    this.orgLevels[0].selectedOrg = "";
+    this.orgLevels[1].show = false;
+    this.orgLevels[1].selectedOrg = "";
+    this.orgLevels[1].options.length = 1;
+    this.orgLevels[2].show = false;
+    this.orgLevels[2].selectedOrg = "";
+    this.orgLevels[2].options.length = 1;
+    /* needs discussion on the right implementation
+    console.log(this.searchData);
+    var counts = [0,0,0];
+    for(var idx in this.searchData){
+      switch(this.searchData[idx].type){
+        case "DEPARTMENT":
+          counts[0]++;
+          break;
+        case "AGENCY":
+          counts[1]++;
+          break;
+        case "OFFICE":
+          counts[2]++;
+          break; 
+      }
+    }
+    if(counts[0]==1){
+      console.log("single dpmt matched");
+    }
+    console.log(counts);
+    */
+  }
   //switch from search call
   setOrganizationFromBrowse(){
+    console.log(this.browseSelection);
     if(this.browseSelection["org"]){
       var data = {
         "ids":this.browseSelection["org"]
@@ -307,6 +389,9 @@ export class FHInputComponent implements OnInit {
     }
   }
 
+  resetBrowse(){
+
+  }
   //refactor
   loadChildOrganizations(lvl){
     var orgLevel = this.orgLevels[lvl];
@@ -326,7 +411,7 @@ export class FHInputComponent implements OnInit {
       "org": orgLevel["selectedOrg"]
     };
 
-    for(var idx in this.orgLevels){
+    for(idx in this.orgLevels){
       if(idx <= lvl+1 && this.orgLevels[idx]){
         this.orgLevels[idx]["show"]=true;
       } else {
@@ -338,23 +423,17 @@ export class FHInputComponent implements OnInit {
     if(orgLevel.type=="department"){
       if(!dontResetDirectChildLevel){
         this.dictionary.aAgency = [];
-        this.orgLevels[1]["options"].length = 0;
-        this.orgLevels[1]["options"].push(this.defaultAgencyOption);
-        this.agencySelectConfig["options"].length = 0;
-        this.agencySelectConfig["options"].push(this.defaultAgencyOption);
+        this.orgLevels[1]["options"].length = 1;;
+        //this.agencySelectConfig["options"].length = 1;
       }
       this.dictionary.aOffice.length = 0;
-      this.orgLevels[2]["options"].length = 0;
-      this.orgLevels[2]["options"].push(this.defaultOfficeOption);
-      this.officeSelectConfig["options"].length = 0;
-      this.officeSelectConfig["options"].push(this.defaultOfficeOption);
-      this.officeSelectConfig.show = false;
+      this.orgLevels[2]["options"].length = 1;
+      //this.officeSelectConfig["options"].length = 1;
+      this.orgLevels[2].show = false;
     } else if (orgLevel.type=="agency"){
       this.dictionary.aOffice.length = 0;
-      this.orgLevels[2]["options"].length = 0;
-      this.orgLevels[2]["options"].push(this.defaultOfficeOption);
-      this.officeSelectConfig["options"].length = 0;
-      this.officeSelectConfig["options"].push(this.defaultOfficeOption);
+      this.orgLevels[2]["options"].length = 1;;
+      //this.officeSelectConfig["options"].length = 1;
     }
 
     if(typeof orgLevel.selectedOrg !== 'undefined' && orgLevel.selectedOrg !== ''
@@ -456,12 +535,35 @@ export class FHInputComponent implements OnInit {
     this.browseToggle = this.browseToggle ? false : true;
   }
   keydownHandler(evt){
-    //up
-    if(evt['keyCode'] == 38){
-      console.log("up");
+    //esc
+    if (this.autoCompleteToggle && evt['keyCode'] == 27){
+      this.resetAutocomplete();
     }
-    else if(evt['keyCode']==40){
-      console.log("down");
+    //up 
+    else if(this.autoCompleteToggle && evt['keyCode'] == 38 && this.autocompleteIndex>0){
+      //console.log("up",this.autocompleteIndex);
+      this.autocompleteIndex-=1;
+    }
+    //down
+    else if(this.autoCompleteToggle && evt['keyCode']==40 && this.autocompleteIndex<=this.autocompleteData.length){
+      //console.log("down",this.autocompleteIndex);
+      this.autocompleteIndex+=1;
+    } 
+    //down
+    else if(!this.autoCompleteToggle && evt['keyCode']==40){
+      this.autoCompleteToggle = true;
+      this.runAutocomplete();
+    } 
+    //enter
+    else if (this.autoCompleteToggle && evt['keyCode']==13){
+      if(this.autocompleteData[this.autocompleteIndex]){
+        this.autocompleteSelection(this.autocompleteData[this.autocompleteIndex]);
+      }
+    }
+    //enter
+    else if (!this.autoCompleteToggle && evt['keyCode']==13){
+      console.log("got here?");
+      this.setOrganizationFromSearch();
     }
   }
   //rename function
@@ -525,6 +627,7 @@ export class FHInputComponent implements OnInit {
     }
     return formattedData;
   }
+
   removeSelectedOrgs(){
     var selectedValues = this.multiselect.selectedValues;
     var filteredArray = this.multiselect.myOptions.filter(function( obj ) {

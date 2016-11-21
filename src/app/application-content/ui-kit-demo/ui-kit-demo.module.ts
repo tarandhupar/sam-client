@@ -8,6 +8,7 @@ import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import {UIKitDemoPage} from "./ui-kit-demo.page";
 import { AlertHeaderComponent } from "../../app-components/alert-header/alert-header.component";
+import { AppComponentsModule } from "../../app-components/app-components.module";
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { AlertHeaderComponent } from "../../app-components/alert-header/alert-he
     FormsModule,
     SamUIKitModule,
     SamAPIKitModule,
+    AppComponentsModule
   ],
   exports: [],
   declarations: [
