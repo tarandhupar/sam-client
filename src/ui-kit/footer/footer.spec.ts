@@ -1,4 +1,5 @@
-import {TestBed, async} from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import {SamUIKitModule} from '../ui-kit.module';
@@ -11,7 +12,7 @@ describe('The Sam Footer component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [SamFooterComponent],
-      imports: [SamUIKitModule]
+      imports: [SamUIKitModule, RouterTestingModule]
     });
 
     fixture = TestBed.createComponent(SamFooterComponent);

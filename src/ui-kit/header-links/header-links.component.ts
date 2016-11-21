@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'SamHeaderLinks',
@@ -14,15 +15,15 @@ export class SamHeaderLinksComponent{
   private startCheckOutsideClick:boolean = false;
   private showDropdown:boolean = false;
   private dropdownData:any = [
-    {linkTitle:"Home", linkClass:"fa-home"},
-    {linkTitle:"Reports", linkClass:"fa-area-chart"},
-    {linkTitle:"Workspace", linkClass:"fa-table"},
-    {linkTitle:"Help", linkClass:"fa-info-circle"},
-    {linkTitle:"Hierarchy", linkClass:"fa-sitemap"},
-    {linkTitle:"Users", linkClass:"fa-user-plus"},
+    {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/"},
+    {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/"},
+    {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/"},
+    {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview"},
+    {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/"},
+    {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/"},
   ];
 
-  constructor() { }
+  constructor(private _router:Router) { }
 
   onMenuClick(){
     setTimeout(()=>{
@@ -34,9 +35,9 @@ export class SamHeaderLinksComponent{
 
   }
 
-  dropdownItemClick(index){
+  dropdownItemClick(item){
     this.closeDropdown();
-
+    this._router.navigateByUrl(item.linkUrl);
   }
 
   closeDropdown(){
