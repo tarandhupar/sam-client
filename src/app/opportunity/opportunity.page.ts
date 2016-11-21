@@ -14,6 +14,7 @@ import { ReplaySubject, Observable, Subscription } from 'rxjs';
 })
 export class OpportunityPage implements OnInit, OnDestroy {
   opportunity: any;
+  originalOpportunity: any;
   opportunityLocation: any;
   organization: any;
   currentUrl: string;
@@ -45,6 +46,10 @@ export class OpportunityPage implements OnInit, OnDestroy {
     this.opportunitySubscription = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.opportunity = api;
+
+      this.opportunityService.getOpportunityById(api['parentProgramId']).subscribe(parent => {
+        this.originalOpportunity = parent;
+      });
     }, err => {
       console.log('Error logging', err);
     });
