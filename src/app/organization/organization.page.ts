@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { FHService } from 'api-kit';
 import { ReplaySubject } from 'rxjs';
+import {CapitalizePipe} from "../app-pipes/capitalize.pipe";
 
 @Component({
   moduleId: __filename,
@@ -74,6 +75,15 @@ export class OrganizationPage implements OnInit, OnDestroy {
     return (this.organization.modStatus == null || this.organization.modStatus == "inactive") ? false : true;
   }
 
+  private getAgencyName(element){
+    if (element.org.agencyName){
+      return element.org.agencyName;
+    } else if (element.org.name){
+      return (new CapitalizePipe().transform(element.org.name));
+    } else {
+      return element.org.orgKey;
+    }
+  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
