@@ -224,9 +224,14 @@ module.exports = {
         from: 'src/assets',
         to: 'assets'
       },
+      /// Fixme: There are redundant copies here
       {
-        from: 'node_modules/samwds/dist',
-        to: ''
+        from: 'src/assets/fonts',
+        to: 'fonts',
+      },
+      {
+        from: 'src/assets/img',
+        to: 'img'
       }
     ]),
 
@@ -270,6 +275,10 @@ module.exports = {
     }),
 
   ],
+
+  sassLoader: {
+    includePaths: ["src/app/styles"]
+  },
 
   /*
    * Include polyfills or mocks for various node stuff
