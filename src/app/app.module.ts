@@ -16,6 +16,7 @@ import { AppState } from './app.service';
 import { HomeModule } from './application-content/home';
 import { AlertsModule } from './application-content/alerts'
 import { PageNotFoundErrorPage } from './application-content/404';
+import { ErrorModule } from './application-content/error/error.module';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
 import { OrganizationModule } from './organization';
@@ -57,6 +58,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     HomeModule,
     AlertsModule,
     SearchModule,
+    ErrorModule,
     UIKitDemoModule,
 
     // Other Modules

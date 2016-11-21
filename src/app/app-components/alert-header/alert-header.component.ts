@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SystemAlertsService } from 'api-kit';
 import { Cookie } from 'ng2-cookies'
+import { Router } from "@angular/router";
 
 @Component({
   selector: 'alertHeader',
@@ -15,9 +16,12 @@ export class AlertHeaderComponent {
   private alerts: any[] = [];
   private alertClass: string;
 
-  constructor(private systemAlerts: SystemAlertsService) { }
+  constructor(private systemAlerts: SystemAlertsService, private router: Router) {
 
-  ngOnInit(){
+  }
+
+  ngOnInit() {
+
     if (Cookie.get('dismissAlerts')) {
       this.alerts = [];
     } else {
@@ -39,7 +43,7 @@ export class AlertHeaderComponent {
   }
 
   showAlerts() {
-    return this.alerts.length;
+    return this.alerts.length && !this.router.url.match(/system-alerts$/);
   }
 
   onDismissClick() {
