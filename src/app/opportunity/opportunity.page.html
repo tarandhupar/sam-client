@@ -44,11 +44,11 @@
     <span><strong>NAICS Code(s): </strong><br>
       <ng-container *ngFor = "let element of opportunity.data?.naicsCode">• {{ element }}<br></ng-container>
     </span>
-    <span><strong>Place of Performance: </strong>
+    <ng-container *ngIf="opportunity.data?.placeOfPerformance"><strong>Place of Performance: </strong>
       <div>{{opportunity.data?.placeOfPerformance?.streetAddress}}</div>
       <div>{{opportunity.data?.placeOfPerformance?.city}}, {{opportunity.data?.placeOfPerformance?.state}} {{opportunity.data?.placeOfPerformance?.zip}}</div>
       <div>{{opportunity.data?.placeOfPerformance?.country}}</div>
-    </span><br>
+    </ng-container><br>
   </div>
 
 
