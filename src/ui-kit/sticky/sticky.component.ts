@@ -8,7 +8,7 @@ export class SamStickyComponent implements OnInit {
 
   // Research sticky polyfill
   // http://html5please.com/#sticky
-  @Input() limit: number;
+  @Input() limit: number = 0;
   @Input() container: string;
 
   // Make a nav bar sticky when the diff between nav bar and its container is larger than diffLimit
@@ -20,12 +20,13 @@ export class SamStickyComponent implements OnInit {
 
   @HostListener('window:resize', ['$event'])
   resize(event) {
-    this.adjustStickyPos();
+    this.elemWidth = this.el.nativeElement.offsetWidth;
+    this.makeSticky();
   }
 
   @HostListener('window:scroll', ['$event'])
   scroll(event) {
-    this.adjustStickyPos();
+    this.makeSticky();
 
   }
 
@@ -33,6 +34,16 @@ export class SamStickyComponent implements OnInit {
 
   ngOnInit(){
     this.elemWidth = this.el.nativeElement.offsetWidth;
+  }
+
+  makeSticky(){
+    if(window.innerWidth <= this.limit){
+      this.setPosition("static");
+      this.renderer.setElementStyle(this.el.nativeElement, 'width', "auto");
+      this.renderer.setElementStyle(this.el.nativeElement, 'top', "auto");
+    }else {
+      this.adjustStickyPos();
+    }
   }
 
   setPosition(position: string){
@@ -92,11 +103,10 @@ export class SamStickyComponent implements OnInit {
         let topPosition = (stickyElementTopMargin + (scrollPosition - stopLimit)) * -1;
         this.renderer.setElementStyle(this.el.nativeElement, 'top', topPosition + "px");
       }
-
+      this.renderer.setElementStyle(this.el.nativeElement, 'width', this.elemWidth+"px");
     }else{
       this.setPosition("static");
     }
-    this.renderer.setElementStyle(this.el.nativeElement, 'width', this.elemWidth+"px");
   }
 
 }

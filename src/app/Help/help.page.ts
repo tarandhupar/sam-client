@@ -12,6 +12,7 @@ export class HelpPage {
   private currentUrl: string = "/help/overview";
   private baseUrl: string = "/help/";
   private currentSubSection: string = "";
+  private widthLimit: number = 1200;
 
   constructor(private router: Router) {
     //router.navigateByUrl('help/overview');
@@ -47,9 +48,11 @@ export class HelpPage {
 
   changeSubSection(value,elem){
     this.currentSubSection = value;
-    setTimeout(()=>{
-      elem.focus();
-    });
+    if(window.innerWidth>this.widthLimit){
+      setTimeout(()=>{
+        elem.focus();
+      });
+    }
   }
 
   getSubSectionClass(value){
