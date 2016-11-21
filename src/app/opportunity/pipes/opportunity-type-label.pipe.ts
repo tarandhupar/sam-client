@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 
-@Pipe({name: 'noticeTypeLabel'})
+@Pipe({name: 'opportunityTypeLabel'})
 export class OpportunityTypeLabelPipe implements PipeTransform {
   transform(opportunityType: string): string {
     let label = '';

@@ -3,8 +3,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { OpportunityPage }   from './opportunity.page';
 import { routing } from './opportunity.route';
 import { PipesModule } from "../app-pipes/app-pipes.module";
-import {NoticeTypeLabelPipe} from "./pipes/opportunity-type-label.pipe";
-import {TimezoneLabelPipe} from "./pipes/timezone-label.pipe";
+import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
+import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
 
 @NgModule({
   imports: [
@@ -14,12 +14,12 @@ import {TimezoneLabelPipe} from "./pipes/timezone-label.pipe";
   ],
   exports: [
     OpportunityPage,
-    NoticeTypeLabelPipe,
+    OpportunityTypeLabelPipe,
     TimezoneLabelPipe
   ],
   declarations: [
     OpportunityPage,
-    NoticeTypeLabelPipe,
+    OpportunityTypeLabelPipe,
     TimezoneLabelPipe
   ],
 })
