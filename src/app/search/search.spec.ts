@@ -7,6 +7,8 @@ import { SearchService, SamAPIKitModule } from 'api-kit';
 import { SamUIKitModule } from 'ui-kit';
 import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
+import { FederalHierarchyResult } from '../organization/search-result/federal-hierarchy-result.component';
+import { EntitiesResult } from '../entity/search-result/entities-result.component';
 import { FHInputComponent } from './agency-selector/agency-selector.component';
 
 var fixture;
@@ -21,6 +23,12 @@ var searchServiceStub = {
         },{
           _type:"FBO",
           procurementTitle:"Dummy Result 2"
+        },{
+          _type:"FH",
+          title:"Dummy Result 3"
+        },{
+          _type:"ENT",
+          title:"Dummy Result 4"
         }],
       },
       page: {
@@ -36,7 +44,7 @@ var searchServiceStub = {
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FHInputComponent ],
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,FHInputComponent ],
       providers: [ ],
       imports: [
         SamUIKitModule,
