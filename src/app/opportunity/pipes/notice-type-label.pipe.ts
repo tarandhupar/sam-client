@@ -34,7 +34,7 @@ export class NoticeTypeLabelPipe implements PipeTransform {
         label = 'Justification and Approval (J&A)';
         break;
       case 'i':
-        label = 'Intent to Bundle Requirements (DoD-Funded)"';
+        label = 'Intent to Bundle Requirements (DoD-Funded)';
         break;
       case 'l':
         label = 'Fair Opportunity / Limited Sources Justification';

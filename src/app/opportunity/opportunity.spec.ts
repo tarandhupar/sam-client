@@ -10,6 +10,8 @@ import { OpportunityPage } from './opportunity.page';
 import { OpportunityService, FHService } from 'api-kit';
 import { Observable } from 'rxjs';
 import { PipesModule } from "../app-pipes/app-pipes.module";
+import { NoticeTypeLabelPipe } from "./pipes/notice-type-label.pipe";
+import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
 
 let comp:    OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
@@ -137,12 +139,12 @@ let MockFHService = {
       ]
     });
   }
-}
+};
 
 describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ OpportunityPage ], // declare the test component
+      declarations: [ OpportunityPage, NoticeTypeLabelPipe, TimezoneLabelPipe ], // declare the test component
       imports: [
         PipesModule,
         HttpModule,
