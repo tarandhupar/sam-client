@@ -30,8 +30,8 @@
           <strong [ngSwitch]='organization.type'>
             <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
             <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
-            <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
-          </strong>:
+            <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>:
+          </strong>
           {{ organization.agencyName }}
         </li>
         <li>
@@ -78,6 +78,6 @@
         </li>
       </ul>
     </section>
-    
+
   </div>
 </div>
