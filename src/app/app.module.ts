@@ -18,6 +18,7 @@ import { AlertsModule } from './application-content/alerts'
 import { PageNotFoundErrorPage } from './application-content/404';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
+import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
 import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
 
@@ -51,6 +52,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     // Page View Modules
     ProgramModule,
     OpportunityModule,
+    OrganizationModule,
     HomeModule,
     AlertsModule,
     SearchModule,

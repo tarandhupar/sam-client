@@ -523,17 +523,13 @@
 
         <h3 class="m_B-5x">Headquarters Office:</h3>
 
-        <div class="content-block" *ngFor="let item of program.data?.contacts?.list">
-          <span>{{item.title}} {{item.fullName}} <br>{{item.address}}, <br> {{item.city}}, {{item.state}} {{item.zip}}</span>
-          <span><strong>Email:</strong> <a href="mailto:{{item.email}}">{{item.email}}</a></span>
-          <span><strong>Phone:</strong> {{item.phone}}</span>
-          <span *ngIf="item.fax"><strong>Fax:</strong> {{item.fax}}</span>
+        <div *ngFor="let item of program.data.contacts?.list">
+          <samPOC [data]="item"></samPOC>
         </div>
-        <div class="m_T-5x">
-          <strong>Website: </strong>
-          <ng-container *ngIf="!program.data?.website || program.data?.website == null ">No Data Available</ng-container>
-          <ng-container *ngIf="program.data?.website">{{program.data.website}}</ng-container>
-        </div>
+        <strong>Website: </strong>
+        <ng-container *ngIf="!program.data?.website || program.data?.website == null ">No Data Available</ng-container>
+        <ng-container *ngIf="program.data?.website">{{program.data.website}}</ng-container>
+
       </address>
     </section>
 

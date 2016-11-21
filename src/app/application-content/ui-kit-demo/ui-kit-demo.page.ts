@@ -65,6 +65,17 @@ export class UIKitDemoPage {
     totalPages: 1
   };
 
+  pointOfContact = {
+    fullName:"John Doe",
+    address: "1234 Waterway Rd",
+    city: "Norfolk",
+    state: "VA",
+    zip:"12345",
+    email: "jdoe@test.gov",
+    phone: "222-222-2222",
+    website: "www.testsite.gov"
+  };
+
 
   constructor() {  }
 
