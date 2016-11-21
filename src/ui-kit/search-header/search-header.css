@@ -26,7 +26,6 @@ header {
 }
 
 :host >>> #search-div {
-  /* override m_B* css from USWDS library */
   margin-bottom: 0 !important;
 }
 
