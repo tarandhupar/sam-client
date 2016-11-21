@@ -1,5 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
+import { globals } from '../../app/globals.ts';
+
 
 @Component({
   selector: 'SamHeaderLinks',
@@ -51,5 +53,8 @@ export class SamHeaderLinksComponent{
       this.closeDropdown();
     }
 
+  }
+  get showOptional() {
+    return globals.showOptional;
   }
 }
