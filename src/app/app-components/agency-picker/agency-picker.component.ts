@@ -210,6 +210,9 @@ export class AgencyPickerComponent implements OnInit {
 
   //what kind of data is passed in? assumes orgLevels[idx].selectedOrganization is preset?
   updateBrowse(data){
+    for(var idx in this.orgLevels){
+      this.orgLevels[idx].selectedOrg = "";
+    }
     //get full hierarchy of selection to get top level organization and get hierarchy to populate/select organization options
     var lvl = 0;
     if(data.type!="DEPARTMENT"){
@@ -389,9 +392,6 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-  resetBrowse(){
-
-  }
   //refactor
   loadChildOrganizations(lvl){
     var orgLevel = this.orgLevels[lvl];
@@ -450,6 +450,10 @@ export class AgencyPickerComponent implements OnInit {
   processDictionaryResponse(data,lvl){
     if(lvl==0){
       var formattedData = this.formatHierarchy("agency",data.hierarchy);
+      //no child agencies
+      if(formattedData.length<=1){
+        this.orgLevels[1].show=false;
+      }
       this.dictionary.aAgency = data.hierarchy;
       this.agencySelectConfig.options = formattedData;
       this.officeSelectConfig.options.length = 1;
