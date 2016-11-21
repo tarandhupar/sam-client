@@ -49,7 +49,10 @@ export class AlertHeaderComponent {
   }
 
   fetchAlerts() {
-    this.systemAlerts.getAll().subscribe(alerts => {
+    this.systemAlerts.getAll()
+      .map(alerts => alerts.map(alert => alert.content))
+      .subscribe(alerts => {
+
       if (!alerts.length) {
         this.alerts = [];
         return;

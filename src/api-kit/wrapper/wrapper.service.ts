@@ -30,6 +30,7 @@ export class WrapperService {
     * @returns Observable
     */
     call(oApiParam: any) {
+      console.log('do api', oApiParam);
         let method: string = oApiParam.method;
         let oHeader = new Headers({});
         let oURLSearchParams = new URLSearchParams();
@@ -53,6 +54,10 @@ export class WrapperService {
             "body": "",
             "url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
         };
+
+        if (oApiParam.name === 'alerts') {
+          jsonOption.url = 'http://localhost:8080/alert/v2/alerts';
+        }
 
         switch (method.toUpperCase()){
             case "POST":
