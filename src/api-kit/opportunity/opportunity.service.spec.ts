@@ -1,22 +1,30 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BaseRequestOptions, Http, HttpModule } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { By }              from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { BaseRequestOptions, ResponseOptions, Http, Response } from '@angular/http';
+import { inject, TestBed } from '@angular/core/testing';
+import { MockBackend, MockConnection } from '@angular/http/testing';
+import { WrapperService } from '../wrapper/wrapper.service'
+import { OpportunityService } from './opportunity.service';
 
-import { OpportunityPage } from './opportunity.page';
-import { OpportunityService, FHService } from 'api-kit';
-import { Observable } from 'rxjs';
-import { PipesModule } from "../app-pipes/app-pipes.module";
+describe('Opportunity Service', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        OpportunityService,
+        WrapperService,
+        BaseRequestOptions,
+        MockBackend,
+        {
+          provide: Http,
+          useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
+            return new Http(backend, defaultOptions);
+          },
+          deps: [MockBackend, BaseRequestOptions],
+        },
+      ],
+    });
+  });
 
-let comp:    OpportunityPage;
-let fixture: ComponentFixture<OpportunityPage>;
-
-let MockOpportunityService = {
-  getOpportunityById(id: string) {
-    return Observable.of({
+  beforeEach(inject([MockBackend], (backend: MockBackend) => {
+    let mockData = {
       "opportunityId": "213ji321hu3jk123",
       "data": {
         "type": "Type Goes here",
@@ -122,67 +130,17 @@ let MockOpportunityService = {
           "href": "http://10.98.29.81:122/v1/opportunity/123dqw"
         }
       }
-    })
-  }
-};
+    };
 
-let MockFHService = {
-  //TODO: remove this function and replace it with getOrganizationById once SAM-492 is merged to comp
-  getFederalHierarchyV2ById(id: string){
-    return Observable.of({
-      "_embedded": [
-        {
-          "org": {}
-        }
-      ]
+    const baseResponse = new Response(new ResponseOptions({ body: mockData }));
+    backend.connections.subscribe((c: MockConnection) => c.mockRespond(baseResponse));
+  }));
+
+  it('should return response when subscribed to getOpportunityById', inject([OpportunityService], (testService: OpportunityService) => {
+    testService.getOpportunityById("fee2e0e30ce63b7bc136aeff32096c1d").subscribe((res: Response) => {
+      expect(res['opportunityId']).toBeDefined();
+      expect(res['opportunityId']).toBe('213ji321hu3jk123');
     });
-  }
-}
-
-describe('OpportunityPage', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [ OpportunityPage ], // declare the test component
-      imports: [
-        PipesModule,
-        HttpModule,
-        RouterTestingModule,
-      ],
-      providers: [
-        BaseRequestOptions,
-        MockBackend,
-        {
-          provide: Http,
-          useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
-            return new Http(backend, defaultOptions);
-          },
-          deps: [MockBackend, BaseRequestOptions],
-        },
-        { provide: Location, useClass: Location },
-        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '2c1820ae561f521a499e995f2696052c' }]) } },
-        { provide: LocationStrategy, useClass: HashLocationStrategy },
-      ]
-    });
-
-    TestBed.overrideComponent(OpportunityPage, {
-      set: {
-        providers: [
-          { provide: OpportunityService, useValue: MockOpportunityService },
-          { provide: FHService, useValue: MockFHService },
-        ]
-      }
-    });
-
-    fixture = TestBed.createComponent(OpportunityPage);
-    comp = fixture.componentInstance; // BannerComponent test instance
-    fixture.detectChanges();
-  });
-
-  it('Should init & load data', () => {
-    expect(comp.opportunity).toBeDefined();
-    expect(comp.opportunityLocation).toBeDefined();
-    expect(comp.organization).toBeDefined();
-    expect(comp.opportunity.opportunityId).toBe("213ji321hu3jk123");
-    expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
-  });
+  }));
 });
+
