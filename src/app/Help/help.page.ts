@@ -26,7 +26,9 @@ export class HelpPage {
         }else{
           this.currentUrl = val.url;
         }
-        this.currentSection = this.currentUrl.substr(this.baseUrl.length);
+        let section = this.currentUrl.substr(this.baseUrl.length);
+        section = section.length === 0? 'overview':section;
+        this.currentSection = section;
       });
   }
 

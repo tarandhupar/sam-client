@@ -12,18 +12,19 @@ import { AwardDataComponent } from "./sections/award-data/award-data.component";
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'help',
     component: HelpPage,
     children: [
-      { path: 'help/overview', component: OverviewComponent },
-      { path: 'help/about', component: AboutSamComponent },
-      { path: 'help/new', component: NewToSamComponent },
-      { path: 'help/accounts', component: AccountsComponent },
-      { path: 'help/features', component: FeaturesComponent },
-      { path: 'help/policies', component: PoliciesComponent },
-      { path: 'help/partners', component: PartnersComponent },
-      { path: 'help/reference', component: ReferenceLibraryComponent },
-      { path: 'help/award', component: AwardDataComponent },
+      { path: '', redirectTo: 'overview' },
+      { path: 'overview', component: OverviewComponent },
+      { path: 'about', component: AboutSamComponent },
+      { path: 'new', component: NewToSamComponent },
+      { path: 'accounts', component: AccountsComponent },
+      { path: 'features', component: FeaturesComponent },
+      { path: 'policies', component: PoliciesComponent },
+      { path: 'partners', component: PartnersComponent },
+      { path: 'reference', component: ReferenceLibraryComponent },
+      { path: 'award', component: AwardDataComponent },
 
     ]
   },
