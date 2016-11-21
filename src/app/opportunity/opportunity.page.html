@@ -32,7 +32,7 @@
             <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
             <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>:
           </strong>
-          {{ organization.agencyName }}
+          {{ organization.name }}
         </li>
         <li>
           <strong>Locations: </strong> {{ opportunityLocation }}
@@ -77,6 +77,55 @@
           {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
         </li>
       </ul>
+    </section>
+
+    <section id="contact-info">
+      <h2>Contact Information</h2>
+      <div class="usa-grid-full" *ngIf = "opportunity.data?.pointOfContact">
+        <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[0]">
+          <h3>Primary Point of Contact</h3>
+          <ul class="usa-unstyled-list">
+            <li><strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong></li>
+            <li *ngIf ="opportunity.data?.pointOfContact[0].title"><em>{{opportunity.data?.pointOfContact[0].title | capitalize}}</em></li>
+            <li>
+              <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+              <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
+                {{opportunity.data?.pointOfContact[0].email}}
+              </a>
+            </li>
+            <li>
+              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+              {{opportunity.data?.pointOfContact[0].phone}}
+            </li>
+            <li>
+              <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+              {{opportunity.data?.pointOfContact[0].fax}}
+            </li>
+          </ul>
+        </div>
+        <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[1]">
+          <h3>Secondary Point of Contact</h3>
+          <ul class="usa-unstyled-list">
+
+            <li><strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong></li>
+            <li *ngIf ="opportunity.data?.pointOfContact[1].title"><em>{{opportunity.data?.pointOfContact[1].title | capitalize}}</em></li>
+            <li>
+              <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+              <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
+                {{opportunity.data?.pointOfContact[1].email}}
+              </a>
+            </li>
+            <li>
+              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+              {{opportunity.data?.pointOfContact[1].phone}}
+            </li>
+            <li>
+              <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+              {{opportunity.data?.pointOfContact[1].fax}}
+            </li>
+          </ul>
+        </div>
+      </div>
     </section>
 
   </div>
