@@ -86,7 +86,7 @@ export class SamStickyComponent implements OnInit {
     let parentContainerLimit = parentContainer[0].offsetHeight + parentContainer[0].offsetTop;
     let restOfDocumentHeight = documentHeight - parentContainerLimit;
     let stickyElementLimit = this.el.nativeElement.offsetTop + this.el.nativeElement.offsetHeight;
-    let stickyElementTopMargin = -10 + (this.el.nativeElement.offsetTop * -1);
+    let stickyElementTopMargin = 20 + (this.el.nativeElement.offsetTop * -1);
     let stopLimit = (documentHeight - restOfDocumentHeight) + ( window.innerHeight - stickyElementLimit);
     let parentContainerToTop = this.getElemDistanceToTop(parentContainer[0]);
 
