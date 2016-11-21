@@ -82,3 +82,14 @@ html, body{
   display: block;
   margin: 3px 0px 3px 0px;
 }
+
+.usa-button-dismiss {
+  height: 44px;
+  width: 44px;
+  display: inline-block;
+  background-image: url(assets/img/times_circle.svg),url(assets/img/times_circle.png);
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-size: 15px 15px;
+  background-position: center center;
+}
