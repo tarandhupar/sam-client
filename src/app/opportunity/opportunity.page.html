@@ -37,7 +37,28 @@
       <span><strong>Locations: </strong> {{ opportunityLocation }}</span>
     </p>
     <h1>Contact Information</h1>
-    <ng-container *ngIf = "opportunity.data?.pointOfContact"></ng-container>
+    <ng-container *ngIf = "opportunity.data?.pointOfContact">
+      <ng-container *ngIf = "opportunity.data?.pointOfContact[0]">
+        <div class = "contact">
+        <h2>Primary Point of Contact:</h2>
+        <div>{{opportunity.data?.pointOfContact[0].title}}</div>
+        <div>{{opportunity.data?.pointOfContact[0].fullName}}</div>
+        <div>{{opportunity.data?.pointOfContact[0].email}}</div>
+        <div>{{opportunity.data?.pointOfContact[0].phone}}</div>
+        <div>{{opportunity.data?.pointOfContact[0].fax}}</div>
+      </div>
+      </ng-container>
+      <ng-container *ngIf = "opportunity.data?.pointOfContact[1]">
+        <div class = "contact">
+          <h2>Secondary Point of Contact:</h2>
+          <div>{{opportunity.data?.pointOfContact[1].title}}</div>
+          <div>{{opportunity.data?.pointOfContact[1].fullName}}</div>
+          <div>{{opportunity.data?.pointOfContact[1].email}}</div>
+          <div>{{opportunity.data?.pointOfContact[1].phone}}</div>
+          <div>{{opportunity.data?.pointOfContact[1].fax}}</div>
+        </div>
+      </ng-container>
+    </ng-container>
   </div>
 
 
