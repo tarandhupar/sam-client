@@ -7,6 +7,11 @@ import { FHService } from 'api-kit';
   providers: [],
 	templateUrl:'agency-picker.template.html',
 })
+
+/* 
+* 
+* 
+*/
 export class AgencyPickerComponent implements OnInit {
   @Input() multimode: boolean = true;
   @Input() getQSValue: string = "organizationId";
@@ -194,7 +199,6 @@ export class AgencyPickerComponent implements OnInit {
 
   //what kind of data?
   autocompleteSelection(data){
-    console.log(data);
     this.updateBrowse(data);
     this.autoComplete.length = 0;
     this.setSearchTerm(data);
@@ -233,7 +237,7 @@ export class AgencyPickerComponent implements OnInit {
               this.orgLevels[idx].options.push(...formattedOptions);
               this.orgLevels[idx].show = true;
             } 
-            console.log(idx,path,res);
+            //console.log(idx,path,res);
             if(path["hierarchy"] && path["hierarchy"][0]){
               if(idx!=0){
                 res = res["hierarchy"].find(function(el,idx,arr){
@@ -270,7 +274,6 @@ export class AgencyPickerComponent implements OnInit {
             "level" : lvl,
             "org" : this.orgLevels[lvl].selectedOrg
           }
-          console.log("???",this.orgLevels);
         });
       });
     } else { 
@@ -381,7 +384,7 @@ export class AgencyPickerComponent implements OnInit {
   }
   //switch from search call
   setOrganizationFromBrowse(){
-    console.log(this.browseSelection);
+    //console.log(this.browseSelection);
     if(this.browseSelection["org"]){
       var data = {
         "ids":this.browseSelection["org"]
@@ -474,7 +477,7 @@ export class AgencyPickerComponent implements OnInit {
     var org = data;
     //console.log(org,lvl);
     for(var i = 0; i <= lvl; i++){
-      console.log("iterating",i, org);
+      //console.log("iterating",i, org);
       if(!org["hierarchy"]){
         return false;
       }
@@ -566,7 +569,6 @@ export class AgencyPickerComponent implements OnInit {
     }
     //enter
     else if (!this.autoCompleteToggle && evt['keyCode']==13){
-      console.log("got here?");
       this.setOrganizationFromSearch();
     }
   }

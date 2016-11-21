@@ -47,7 +47,7 @@ export class SearchPage implements OnInit{
 	}
 
 	onOrganizationChange(orgId:any[]){
-		console.log("new org",orgId);
+		//we take only first element, incase multiple are sent back
     this.organizationId = orgId.reduce(function(finalStr,val,idx){
     	if(idx==0){
     		return val.value;
