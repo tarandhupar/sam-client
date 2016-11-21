@@ -2,10 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 
 @Pipe({name: 'noticeTypeLabel'})
-export class NoticeTypeLabelPipe implements PipeTransform {
-  transform(noticeType: string): string {
+export class OpportunityTypeLabelPipe implements PipeTransform {
+  transform(opportunityType: string): string {
     let label = '';
-    switch (noticeType) {
+    switch (opportunityType) {
       case 'p':
         label = 'Presolicitation';
         break;

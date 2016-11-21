@@ -42,7 +42,7 @@
     <section id="gen-info">
       <h2>General Information</h2>
 
-      <p><strong>Notice Type: </strong>{{ opportunity.data?.type | noticeTypeLabel }}</p>
+      <p><strong>Opportunity Type: </strong>{{ opportunity.data?.type | noticeTypeLabel }}</p>
       <p *ngIf="opportunity.postedDate">
         <strong>Posted Date: </strong>{{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
       </p>

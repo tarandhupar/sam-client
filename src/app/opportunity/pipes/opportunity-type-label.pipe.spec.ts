@@ -1,7 +1,7 @@
-import { NoticeTypeLabelPipe } from "./notice-type-label.pipe";
+import { OpportunityTypeLabelPipe } from "./opportunity-type-label.pipe";
 
-describe('NoticeLabelPipe', () => {
-  let pipe = new NoticeTypeLabelPipe();
+describe('OpportunityLabelPipe', () => {
+  let pipe = new OpportunityTypeLabelPipe();
 
   it('transforms "p" to "Presolicitation"', () => {
     expect(pipe.transform('p')).toBe('Presolicitation');
