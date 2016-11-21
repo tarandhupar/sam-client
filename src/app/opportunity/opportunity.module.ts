@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { OpportunityPage }   from './opportunity.page';
 import { routing } from './opportunity.route';
 import { PipesModule } from "../app-pipes/app-pipes.module";
-import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 
 @NgModule({
   imports: [
@@ -12,12 +11,10 @@ import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
     routing,
   ],
   exports: [
-    OpportunityPage,
-    CapitalizePipe
+    OpportunityPage
   ],
   declarations: [
-    OpportunityPage,
-    CapitalizePipe
+    OpportunityPage
   ],
 })
 export class OpportunityModule { }
