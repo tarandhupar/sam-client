@@ -26,8 +26,9 @@
     <!-- Sub-Tier Agencies -->
     <section *ngIf="organization.hierarchy.length>0">
       <div class="usa-grid-full m_T-6x">
-        <div class="usa-width-two-thirds">
-          <h2>Sub-Tier Agencies</h2>
+        <div class="usa-width-two-thirds"[ngSwitch]="organization.categoryDesc">
+          <ng-container *ngSwitchCase="'DEPARTMENT'"><h2>Sub-Tier Agencies</h2></ng-container>
+          <ng-container *ngSwitchCase="'AGENCY'"><h2>Offices</h2></ng-container>
         </div>
         <div class="usa-width-one-third">
           <p class="m_T-2x" style="text-align: right;">
@@ -38,7 +39,7 @@
       </div>
       <ul class="usa-zebra-list">
         <li *ngFor = "let element of organizationPerPage">
-          <a href="organization/{{element.org.orgKey}}">{{element.org.agencyName ? element.org.agencyName : element.org.name | capitalize}} </a>
+          <a href="organization/{{element.org.orgKey}}">{{ getAgencyName(element) }} </a>
         </li>
       </ul>
     </section>
