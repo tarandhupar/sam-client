@@ -11,6 +11,7 @@ export class TimezoneLabelPipe implements PipeTransform {
     timestamp = timestamp.replace(/UTC-07:00/g, 'Mountain');
     timestamp = timestamp.replace(/UTC-06:00/g, 'Central');
     timestamp = timestamp.replace(/UTC-05:00/g, 'Eastern');
+    timestamp = timestamp.replace(/UTC-04:00/g, 'Eastern');
 
     return timestamp;
   }
