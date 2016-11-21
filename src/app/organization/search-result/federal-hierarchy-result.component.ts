@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
     	  <span *ngIf=false class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="federal-hierarchy-title">
-      	<a *ngIf=true>{{ data.name }}</a>
+      	<a [routerLink]="['/organization', data._id]">{{ data.name }}</a>
       	<span *ngIf=false>{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
@@ -36,8 +36,5 @@ export class FederalHierarchyResult implements OnInit {
   constructor() { }
 
   ngOnInit(){ }
-
-  // printFALLink(){
-  //   return this.data.hasOwnProperty('_links') ? _.get(this.data, ['_links','self','href']):'';
-  // }
+  
 }
