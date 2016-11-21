@@ -1,7 +1,7 @@
 <div *ngIf="showAlerts()">
   <div class="usa-alert" [ngClass]="alertClass">
     <div class="usa-alert-body">
-      <div *ngFor="let alert of alerts; let i=index">
+      <div class="title-and-description" *ngFor="let alert of alerts; let i=index">
         <h3 class="usa-alert-heading">
           {{alert.title}}
           <span *ngIf="i===0" class="pull-right">
@@ -10,7 +10,7 @@
         </h3>
         <p class="usa-alert-text truncate">{{alert.description}}</p>
       </div>
-      <div>
+      <div class="alert-link">
         <a class="usa-nav-link" [routerLink]="['/system-alerts']">More alerts&nbsp;<i class="fa fa-arrow-circle-o-right"></i></a>
       </div>
     </div>

@@ -14,7 +14,7 @@ import { SearchService } from 'api-kit';
 })
 
 export class SearchPage implements OnInit{
-	indexes = ['', 'cfda', 'fbo'];
+	indexes = ['', 'cfda', 'fbo', 'fh', 'ent'];
 	index = '';
 	organizationId:string = '';
   sourceOrganizationId:string = '';
