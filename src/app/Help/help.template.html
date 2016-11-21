@@ -1,0 +1,91 @@
+
+<div class="usa-grid-full help-title">
+    <div class="jumbotron" *ngIf="currentSection==='overview'">
+      <h1 class="centered">Help Center</h1>
+    </div>
+    <div class="usa-grid-full m_B-3x p_T-4x" *ngIf="currentSection!=='overview'">
+      <div class="usa-width-one-sixth p_L-6x">
+        <a><img src="../assets/img/blank_icon.png"></a>
+      </div>
+      <div class="usa-width-five-sixths p_T-4x p_L-8x">
+        <h1>Help Center</h1>
+      </div>
+    </div>
+    <hr *ngIf="currentSection!=='overview'">
+  </div>
+
+
+
+
+<div class="usa-grid-full p_B-6x help-content relative" >
+  <aside class="usa-width-one-fourth p_T-2x">
+    <div sam-sticky limit=1200 container="help-content">
+      <ul class="usa-sidenav-list">
+        <li>
+          <a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/help/overview']">Help Center Home</a>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('about')" (click)="changeSection('about')" [routerLink]="['/help/about']">About SAM.gov</a>
+          <ul class="usa-sidenav-sub_list"  *ngIf="isCurrentSection('about')">
+            <li><a #whoWeAre [ngClass]="getSubSectionClass('whoWeAre')" (click)="changeSubSection('whoWeAre',whoWeAre)" href="{{currentUrl}}#whoWeAre">Who we are</a></li>
+            <li><a #alerts [ngClass]="getSubSectionClass('alerts')" (click)="changeSubSection('alerts',alerts)" href="{{currentUrl}}#alerts">System Alerts</a></li>
+          </ul>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('new')" (click)="changeSection('new')" [routerLink]="['/help/new']">New to SAM.gov?</a>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('accounts')" (click)="changeSection('accounts')" [routerLink]="['/help/accounts']">Account Management</a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('accounts')">
+            <li><a #resetPwd [ngClass]="getSubSectionClass('resetPwd')" (click)="changeSubSection('resetPwd',resetPwd)" href="{{currentUrl}}#resetPwd">Reset Password</a></li>
+            <li><a #other [ngClass]="getSubSectionClass('other')" (click)="changeSubSection('other',other)" href="{{currentUrl}}#other">Other</a></li>
+          </ul>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('features')" (click)="changeSection('features')" [routerLink]="['/help/features']">Features</a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('features')">
+            <li><a #workspace [ngClass]="getSubSectionClass('workspace')" (click)="changeSubSection('workspace',workspace)" href="{{currentUrl}}#workspace">Workspace</a></li>
+            <li><a #search [ngClass]="getSubSectionClass('search')" (click)="changeSubSection('search',search)" href="{{currentUrl}}#search">Search</a></li>
+            <li><a #reporting [ngClass]="getSubSectionClass('reporting')" (click)="changeSubSection('reporting',reporting)" href="{{currentUrl}}#reporting">Reporting</a></li>
+            <li><a #hierarchy [ngClass]="getSubSectionClass('hierarchy')" (click)="changeSubSection('hierarchy',hierarchy)" href="{{currentUrl}}#hierarchy">Hierarchy</a></li>
+          </ul>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('award')" (click)="changeSection('award')" [routerLink]="['/help/award']">Award Data</a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('award')">
+            <li><a #opportunities [ngClass]="getSubSectionClass('opportunities')" (click)="changeSubSection('opportunities',opportunities)" href="{{currentUrl}}#opportunities">Opportunities</a></li>
+            <li><a #awards [ngClass]="getSubSectionClass('awards')" (click)="changeSubSection('awards',awards)" href="{{currentUrl}}#awards">Awards</a></li>
+            <li><a #subAwards [ngClass]="getSubSectionClass('subAwards')" (click)="changeSubSection('subAwards',subAwards)" href="{{currentUrl}}#subAwards">Sub Awards</a></li>
+            <li><a #entities [ngClass]="getSubSectionClass('entities')" (click)="changeSubSection('entities',entities)" href="{{currentUrl}}#entities">Entities</a></li>
+            <li><a #assistanceListings [ngClass]="getSubSectionClass('assistanceListings')" (click)="changeSubSection('assistanceListings',assistanceListings)" href="{{currentUrl}}#assistanceListings">Assistance Listings</a></li>
+            <li><a #exclusions [ngClass]="getSubSectionClass('exclusions')" (click)="changeSubSection('exclusions',exclusions)" href="{{currentUrl}}#exclusions">Exclusions</a></li>
+            <li><a #agencies [ngClass]="getSubSectionClass('agencies')" (click)="changeSubSection('agencies',agencies)" href="{{currentUrl}}#agencies">Agencies</a></li>
+          </ul>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('policies')" (click)="changeSection('policies')" [routerLink]="['/help/policies']">Policies</a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('policies')">
+            <li><a #accessibility [ngClass]="getSubSectionClass('accessibility')" (click)="changeSubSection('accessibility',accessibility)" href="{{currentUrl}}#accessibility">Accessibility</a></li>
+            <li><a #legal [ngClass]="getSubSectionClass('legal')" (click)="changeSubSection('legal',legal)" href="{{currentUrl}}#legal">Legal</a></li>
+            <li><a #privacy [ngClass]="getSubSectionClass('privacy')" (click)="changeSubSection('privacy',privacy)" href="{{currentUrl}}#privacy">Privacy Policy</a></li>
+            <li><a #terms [ngClass]="getSubSectionClass('terms')" (click)="changeSubSection('terms',terms)" href="{{currentUrl}}#terms">Terms of Use</a></li>
+          </ul>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('partners')" (click)="changeSection('partners')" [routerLink]="['/help/partners']">Our Partners</a>
+        </li>
+        <li>
+          <a [ngClass]="getSectionClass('reference')" (click)="changeSection('reference')" [routerLink]="['/help/reference']">Reference Library</a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+  <div class="usa-width-three-fourths">
+    <div class="usa-width-one-whole m_L-4x">
+      <!--Content for Sections-->
+      <router-outlet></router-outlet>
+
+
+    </div>
+  </div>
+</div>
