@@ -545,8 +545,8 @@
 
         <h3 class="m_B-5x">Headquarters Office:</h3>
 
-        <div *ngFor="let item of program.data.contacts?.list">
-          <samPOC [data]="item"></samPOC>
+        <div *ngFor="let item of program.data.contacts?.list; let i = index">
+          <samPOC [attr.id]="'program-contacts-poc-' + i" [data]="item"></samPOC>
         </div>
         <strong>Website: </strong>
         <ng-container *ngIf="!program.data?.website || program.data?.website == null ">No Data Available</ng-container>

@@ -21,4 +21,26 @@ export class OpportunityService{
 
     return this.oAPIService.call(apiParam);
   }
+
+  getOpportunityOrganizationById(id: string) {
+    let apiParam = {
+        name: 'opportunity',
+        suffix: '/' + id + '/organization',
+        oParam: {},
+        method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
+
+  getOpportunityLocationById(id: string) {
+    let apiParam = {
+        name: 'opportunity',
+        suffix: '/' + id + '/location',
+        oParam: {},
+        method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
 }
