@@ -1,3 +1,11 @@
+$usa-btn-small-width:   4.5rem;
+$usa-btn-medium-width:  8.5rem;
+$usa-btn-big-width:     4.5rem;
+$small-font-size:  1.4rem;
+$small-screen: 481px;
+$base-font-size: 1.7rem;
+$h3-font-size: 2rem;
+
 @mixin clearfix {
   &:after {
     content: "";
@@ -22,29 +30,35 @@ select[multiple]{
   background-image:none;
   border-right-width:1px;
 }
-
+.usa-agency-picker-selection-area{
+  position:relative;
+}
 .autocomplete{
   position:absolute;
   top:44px;
   background:#fff;
-  padding:0px 10px;
   margin-top:0;
+  margin-left: 0;
+  margin-right: 0;
+  padding:0;
   border:1px solid #5b616b;
   border-top:none;
   width: 100%;
+  z-index: 10;
 }
 .autocomplete li{
   list-style:none;
-  margin:5px 0;
+  padding: 0 10px;
+  margin: 0;
   max-width:inherit;
 }
 
 .autocomplete li:hover{
   cursor:pointer;
-  background:#ccc;
+  background:#e1f3f8;
 }
 .autocomplete-selected{
-  background:#ccc; 
+  background:#e1f3f8; 
 }
 
 .agency-picker-browse-toggle:hover{
@@ -53,7 +67,10 @@ select[multiple]{
 
 .agency-picker-chevron-wrapper{
   text-align:center;
-  padding-top: 30px
+  padding: 15px 0;
+  @include media($small-screen) {
+    padding: 30px 0 15px;
+  }
 }
 .agency-picker-chevron{
 
@@ -77,13 +94,11 @@ select[multiple]{
   cursor:pointer;
 }
 
-$usa-btn-small-width:   4.5rem;
-$usa-btn-medium-width:  8.5rem;
-$usa-btn-big-width:     4.5rem;
-$small-font-size:  1.4rem;
-$small-screen: 481px;
-$base-font-size: 1.7rem;
-$h3-font-size: 2rem;
+.usa-agency-picker-multiselect{
+  height:auto;
+  float:left;
+  height:6em;
+}
 
 .usa-agency-picker {
   @include clearfix;
@@ -123,14 +138,16 @@ $h3-font-size: 2rem;
     }
   }
   .usa-agency-picker-icon-area{
-    float:left;
+    float:right;
     text-align:center;
     height: 4.4rem;
     width: #{$usa-btn-big-width};
     align-items:flex-start;
+    @include media($small-screen) {
+      float: left;
+    }
   }
   .usa-agency-picker-submit-text {
-    display: none;
     line-height:4.4rem;
 
     @include media($small-screen) {

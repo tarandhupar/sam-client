@@ -93,11 +93,8 @@ export class AgencyPickerComponent implements OnInit {
   autocompleteMouseover(idx){
     this.autocompleteIndex = idx;
   }
-  onInputFocus(evt){
-
-  }
   onInputBlur(evt){
-    this.resetAutocomplete();
+    //this.resetAutocomplete();
   }
   resetAutocomplete(){
     this.autoCompleteToggle = false;
@@ -644,7 +641,7 @@ export class AgencyPickerComponent implements OnInit {
 
   removeSelectedOrgs(){
     var selectedValues = this.multiselect.selectedValues;
-    var filteredArray = this.multiselect.myOptions.filter(function( obj ) {
+    var filteredArray = this.multiselect.options.filter(function( obj ) {
       for(var idx in selectedValues){
         if(selectedValues[idx] == obj.value){
           return false;
@@ -652,8 +649,13 @@ export class AgencyPickerComponent implements OnInit {
       }
       return true;
     });
-    this.multiselect.myOptions.length = 0;
-    [].push.apply(this.multiselect.myOptions,filteredArray);
+    this.multiselect.options.length = 0;
+    [].push.apply(this.multiselect.options,filteredArray);
+    this.emitSelectedOrganizations();
+  }
+  clearSelectedOrgs(){
+    this.selectedSingleOrganizationName="";
+    this.selectedOrganizations.length = 0;
     this.emitSelectedOrganizations();
   }
 }
