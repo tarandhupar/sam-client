@@ -19,7 +19,7 @@
     </section>
 
     <!-- Description -->
-    <section class="usa-content" *ngIf="organization.summary">
+    <section *ngIf="organization.summary">
       <p id="orgDescription" [innerHTML]="organization.summary"></p>
     </section>
 
@@ -55,6 +55,6 @@
         <ng-container *ngSwitchCase="'AGENCY'"><em>No Offices Agencies Found.</em></ng-container>
       </p>
     </section>
-    <samPagination (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></samPagination>
+    <samPagination *ngIf = "organization.type != 'OFFICE'" (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></samPagination>
   </div>
 </div>
