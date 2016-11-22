@@ -23,7 +23,7 @@ import * as moment from 'moment/moment';
         </ul>
     	</div>
     	<div class="usa-width-one-third">
-      	<ul class="usa-text-small m_B-0 usa-unstyled-list">
+      	<ul class="usa-text-small m_B-0">
         	<!--<li><strong>Status: </strong><span>Submitted/Pending</span></li>-->
           <li><strong>Expiration Date: </strong><span>{{ data.registrationExpirationDate }}</span></li>
           <li><strong>Purpose of Registration: </strong><span>{{ data.registrationPurpose }}</span></li>
