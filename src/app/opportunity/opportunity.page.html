@@ -66,6 +66,7 @@
         <li [ngSwitch]="opportunity.data?.archive?.type">
           <strong>Archiving Policy: </strong>
           <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
+          <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
           <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
         </li>
         <li *ngIf="opportunity.data?.archive?.date">
