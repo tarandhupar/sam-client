@@ -11,7 +11,7 @@ export class OpportunityService{
     let apiParam = {
         name: 'opportunity',
         suffix: '/' + id,
-        oParam: {'includeParent': (includeParent === true) ? true : false },
+        oParam: {},
         method: 'GET'
     };
 
