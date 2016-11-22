@@ -19,39 +19,149 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths" *ngIf="opportunity">
-    <h1>
-      {{opportunity.data?.title}}
-    </h1>
-    <p class="content-block">
-      <span><strong>Solicitation Number: </strong>{{ opportunity.data?.solicitationNumber }}</span>
-      <span *ngIf='organization'>
-        <strong>
-          <ng-container [ngSwitch]='organization.type'>
+    <section>
+      <h1>{{ opportunity.data?.title }}</h1>
+
+      <ul class="usa-unstyled-list">
+        <li>
+          <strong>Solicitation Number: </strong>{{ opportunity.data?.solicitationNumber }}
+        </li>
+        <li *ngIf='organization'>
+          <strong [ngSwitch]='organization.type'>
             <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
             <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
-            <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>
-          </ng-container>:
-        </strong>
-        {{ organization.name }}
-      </span>
-      <span><strong>Locations: </strong> {{ opportunityLocation }}</span>
-    </p>
+            <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>:
+          </strong>
+          <ng-container *ngIf="organization.agencyName">{{ organization.agencyName }}</ng-container>
+          <ng-container *ngIf="organization.name && !organization.agencyName">{{ organization.name }}</ng-container>
+        </li>
+        <li *ngIf="opportunityLocation">
+          <strong>Locations: </strong>
+          <ng-container *ngIf="opportunityLocation.street">{{ opportunityLocation.street }}</ng-container>
+          <ng-container *ngIf="opportunityLocation.city">{{ opportunityLocation.city }}</ng-container>
+          <ng-container *ngIf="opportunityLocation.state">{{ opportunityLocation.state }}</ng-container>
+          <ng-container *ngIf="opportunityLocation.zip">{{ opportunityLocation.zip }}</ng-container>
+          <ng-container *ngIf="opportunityLocation.country">{{ opportunityLocation.country }}</ng-container>
+        </li>
+      </ul>
+    </section>
 
-    <h1>Classification</h1>
-    <ng-container *ngIf = "opportunity.parentOpportunity"><strong> Original Set Aside: </strong> {{ opportunity.parentOpportunity?.data?.solicitation?.setAside }}</ng-container><br>
-    <span><strong>Set Aside: </strong> {{ opportunity.data?.solicitation?.setAside }}</span><br>
-    <span><strong>Classification Code: </strong> {{ opportunity.data?.classificationCode }}</span><br>
-    <span><strong>NAICS Code(s): </strong><br>
-      <ng-container *ngFor = "let element of opportunity.data?.naicsCode">
-        <ng-container *ngIf="element != null">• {{ element }}<br></ng-container>
-      </ng-container>
-    </span>
-    <ng-container *ngIf="opportunity.data?.placeOfPerformance"><strong>Place of Performance: </strong>
-      <div>{{opportunity.data?.placeOfPerformance?.streetAddress}}</div>
-      <div *ngIf="opportunity.data?.placeOfPerformance?.city">{{opportunity.data?.placeOfPerformance?.city}}, {{opportunity.data?.placeOfPerformance?.state}} {{opportunity.data?.placeOfPerformance?.zip}}</div>
-      <div>{{opportunity.data?.placeOfPerformance?.country}}</div>
-    </ng-container><br>
+    <section id="gen-info">
+      <h2>General Information</h2>
+      <ul class="usa-unstyled-list">
+        <li>
+          <strong>Opportunity Type: </strong>
+          {{ opportunity.data?.type | opportunityTypeLabel }}
+        </li>
+        <li *ngIf="opportunity.postedDate">
+          <strong>Posted Date: </strong>
+          {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+        </li>
+        <li *ngIf="opportunity.parentOpportunity?.postedDate">
+          <strong>Original Posted Date: </strong>
+          {{ opportunity.parentOpportunity?.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+        </li>
+        <li *ngIf="opportunity.data?.solicitation?.deadlines?.response">
+          <strong>Response Date: </strong>
+          {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+        </li>
+        <li *ngIf="opportunity.parentOpportunity?.data?.solicitation?.deadlines?.response">
+          <strong>Original Response Date: </strong>
+          {{ opportunity.parentOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+        </li>
+        <li [ngSwitch]="opportunity.data?.archive?.type">
+          <strong>Archiving Policy: </strong>
+          <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
+          <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
+        </li>
+        <li *ngIf="opportunity.data?.archive?.date">
+          <strong>Archive Date: </strong>
+          {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+        </li>
+        <li *ngIf="opportunity.parentOpportunity?.data?.archive?.date">
+          <strong>Original Archive Date: </strong>
+          {{ opportunity.parentOpportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+        </li>
+      </ul>
+    </section>
+
+    <section id="classification">
+      <h1>Classification</h1>
+      <ul class="usa-unstyled-list">
+        <li *ngIf = "opportunity.parentOpportunity">
+          <strong> Original Set Aside: </strong>
+          {{ opportunity.parentOpportunity?.data?.solicitation?.setAside }}
+        </li>
+        <li *ngIf = "opportunity.data?.solicitation?.setAside">
+          <strong>Set Aside: </strong>
+          {{ opportunity.data?.solicitation?.setAside }}
+        </li>
+        <li *ngIf="opportunity.data?.classificationCode">
+          <strong>Classification Code: </strong>
+          {{ opportunity.data?.classificationCode }}
+        </li>
+        <li *ngIf="opportunity.data?.naicsCode">
+          <strong>NAICS Code(s): </strong>
+          <ng-container *ngFor = "let element of opportunity.data?.naicsCode">
+            <ng-container *ngIf="element != null">• {{ element }}<br></ng-container>
+          </ng-container>
+        </li>
+        <li *ngIf="opportunity.data?.placeOfPerformance">
+          <strong>Place of Performance: </strong>
+          <div>{{opportunity.data?.placeOfPerformance?.streetAddress}}</div>
+          <div *ngIf="opportunity.data?.placeOfPerformance?.city">{{opportunity.data?.placeOfPerformance?.city}}, {{opportunity.data?.placeOfPerformance?.state}} {{opportunity.data?.placeOfPerformance?.zip}}</div>
+          <div>{{opportunity.data?.placeOfPerformance?.country}}</div>
+        </li>
+      </ul>
+    </section>
+
+    <section id="contact-info">
+      <h2>Contact Information</h2>
+      <div class="usa-grid-full" *ngIf = "opportunity.data?.pointOfContact">
+        <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[0]">
+          <h3>Primary Point of Contact</h3>
+          <ul class="usa-unstyled-list">
+            <li><strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong></li>
+            <li *ngIf ="opportunity.data?.pointOfContact[0].title"><em>{{opportunity.data?.pointOfContact[0].title | capitalize}}</em></li>
+            <li>
+              <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+              <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
+                {{opportunity.data?.pointOfContact[0].email}}
+              </a>
+            </li>
+            <li>
+              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+              {{opportunity.data?.pointOfContact[0].phone}}
+            </li>
+            <li>
+              <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+              {{opportunity.data?.pointOfContact[0].fax}}
+            </li>
+          </ul>
+        </div>
+        <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[1]">
+          <h3>Secondary Point of Contact</h3>
+          <ul class="usa-unstyled-list">
+
+            <li><strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong></li>
+            <li *ngIf ="opportunity.data?.pointOfContact[1].title"><em>{{opportunity.data?.pointOfContact[1].title | capitalize}}</em></li>
+            <li>
+              <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+              <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
+                {{opportunity.data?.pointOfContact[1].email}}
+              </a>
+            </li>
+            <li>
+              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+              {{opportunity.data?.pointOfContact[1].phone}}
+            </li>
+            <li>
+              <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+              {{opportunity.data?.pointOfContact[1].fax}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
   </div>
-
-
 </div>

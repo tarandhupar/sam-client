@@ -39,13 +39,12 @@ export class OpportunityPage implements OnInit, OnDestroy {
     var apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
 
     this.route.params.subscribe((params: Params) => { // construct a stream of api data
-      this.opportunityService.getOpportunityById(params['id']).subscribe(apiSubject);
+      this.opportunityService.getOpportunityById(params['id'], true).subscribe(apiSubject);
     });
 
     this.opportunitySubscription = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.opportunity = api;
-      console.log("Opportunity: ", this.opportunity)
     }, err => {
       console.log('Error logging', err);
     });
@@ -57,7 +56,14 @@ export class OpportunityPage implements OnInit, OnDestroy {
     let apiSubject = new ReplaySubject(1);
 
     opportunityApiStream.subscribe(api => {
-      this.fhService.getFederalHierarchyV2ById(api.data.organizationId).subscribe(apiSubject);
+      //organizationId length >= 30 -> call opportunity org End Point
+      if(api.data.organizationId.length >= 30) {
+        this.opportunityService.getOpportunityOrganizationById(api.data.organizationId).subscribe(apiSubject);
+      }
+      //organizationId less than 30 character then call Octo's FH End point
+      else {
+        this.fhService.getOrganizationById(api.data.organizationId).subscribe(apiSubject);
+      }
     });
 
     this.organizationSubscription = apiSubject.subscribe(organization => {
@@ -69,9 +75,10 @@ export class OpportunityPage implements OnInit, OnDestroy {
 
   private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
     opportunityApiStream.subscribe(opAPI => {
-      if(opAPI.data.organizationLocationId != '') {
-        //TODO create new endpoint to load location
-        this.opportunityLocation = opAPI.data.organizationLocationId;
+      if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
+        this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
+          this.opportunityLocation = data;
+        });
       }
     });
   }

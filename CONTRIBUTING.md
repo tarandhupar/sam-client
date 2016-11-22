@@ -1,25 +1,23 @@
+
 <ul>
   <li>
-    <a href="#guidelines">Guidelines</a>
+    <a href="rules-of-engagement">Rules of engagement</a>
     <ul>
-      <li><a href="#submitting-prs">Submitting pull requests</a></li>
+      <li><a href="#branching">Branching</a></li>
+      <li><a href="#pull-requests">Pull requests</a></li>
+      <li><a href="#merging">Merging</a></li>
+      <li><a href="#testing">Testing</a></li>
     </ul>
   </li>
-  <li><a href="#design">Design</a></li>
-  <li><a href="#coding-standards">Coding Standards</a></li>
-  <li><a href="#doc-blocks">Doc-blocks</a></li>
-  <li><a href="#test-coverage">Test coverage</a></li>
+  <li><a href="#where-things-are">Where things are</a></li>
+  <li><a href="#where-things-go">Where things go</a></li>
 </ul>
 
-<h2 id="guidelines">Guidelines</h2>
+<h2 id="rules-of-engagement">Rules of engangement (operations)</h2>
 
-1. Pull requests should contain small changes to the codebase to minimize merge conflicts and large integrations.
-1. Discovered merge conflicts within a pull request should be corrected by the submitter of the pull request.
-1. No code freezes will be instituted; if a pull request cannot be merged or the functionality cannot be demonstrated at the Sprint review, the work will rollover to the next release (or Sprint).
-1. Pull requests are reviewed and approved using the [GitHub review process](https://help.github.com/articles/about-pull-request-reviews/). Note: Reviewers should only use the "comment" or "request changes" options.
-1. Branch names should consist of the ticket ID being worked and a brief description. Ex. `SGA-201-header-component`. Note: Per the first guideline, large tickets can be broken down, either by creating more tickets under the main ticket; or, by modifying the tail of the branch name to enable multiple concurent pull requests.
-1. We have templates for [Pull Requests](https://csp-github.sam.gov/GSA-IAE/sam-front-end/blob/comp/.github/PULL_REQUEST_TEMPLATE.md) and [Issues](https://csp-github.sam.gov/GSA-IAE/sam-front-end/blob/comp/.github/ISSUE_TEMPLATE.md), please use them when applicable. Note: Sometimes GitHub will not automatically use the templates as it is supposed to.
-1. The Pull Request template contains a checklist for reviewers to use to determine if a pull request should be merged.
+Those working in the project have decided on the following guidelines with regard to working with the project in GitHub.
+
+<h3 id="branching">Branching</h3>
 
 Gitflow Workflow branch names:
 
@@ -27,64 +25,45 @@ Gitflow Workflow branch names:
 `minc`, `prodlike` have no Gitflow equivalent.
 `master` is equivalent to `master`. 
 
-<h3 id="submitting-prs">Submitting a pull request</h3>
+1. Do not work in `comp` or `development` (or any other default branch directly).
+1. Branch names should consist of the ticket ID being worked and a brief description. Ex. `sam-201-header-component`. Note: Per the first guideline, large tickets can be broken down, either by creating more tickets under the main ticket; or, by modifying the tail of the branch name to enable multiple concurent pull requests.
 
-Here are a few guidelines to follow when submitting a pull request:
+<h3 id="pull-requests">Pull requests</h3>
 
-1. Create a GitHub account or sign in to your existing account.
-1. Fork this repo into your GitHub account. Read more about forking a repo here on GitHub:
-[https://help.github.com/articles/fork-a-repo/](https://help.github.com/articles/fork-a-repo/)
-1. Create a branch per the guidelines above.
-1. Ensure that your contribution works via `npm`, if applicable.
-1. Submit your pull request against the `comp` branch.
+1. We have templates for [Pull Requests](https://csp-github.sam.gov/GSA-IAE/sam-front-end/blob/comp/.github/PULL_REQUEST_TEMPLATE.md) and [Issues](https://csp-github.sam.gov/GSA-IAE/sam-front-end/blob/comp/.github/ISSUE_TEMPLATE.md), please use them when applicable. Note: Sometimes GitHub will not automatically use the templates as it is supposed to.
+1. Pull requests should contain small changes to the codebase to minimize merge conflicts and large integrations.
+1. The Pull Request template contains a checklist for reviewers to use to determine if a pull request should be merged.
+1. Pull requests are reviewed by someone from a different vendor than the submitter.
+  - All vendors do *not* need to review pull requests.
+  - Excpeption: Level 1 or 2 defects can be reviewed by someone from the same vendor.
 
-Have questions or need help with setup? Open an issue here [https://csp-github.sam.gov/GSA-IAE/sam-front-end/issues](https://csp-github.sam.gov/GSA-IAE/sam-front-end/issues).
+<h3 id="merging">Merging</h3>
 
-<h2 id="design">Design</h2>
+1. Discovered merge conflicts within a pull request should be corrected by the submitter of the pull request.
+1. No code freezes will be instituted; if a pull request cannot be merged or the functionality cannot be demonstrated at the Sprint review, the work will rollover to the next release (or Sprint).
 
-Each module is written in a [self-documenting](https://en.wikipedia.org/wiki/Self-documenting_code) fashion as much as possible. This means sometimes extracting the logic of a conditional to a method to increase human readability.
+<h3 id="testing">Testing</h3>
 
+1. We write both unit and end to end tests for this project.
+1. We develop components using a behavior driven development pattern to view the components from a user's perspective.
+1. We strive to achieve [...] code coverage.
 
-```
-if (this.hasSelected(config)) {
-  
-}
+<h2 id="where-things-are">Where things are</h2>
 
-hasSelected = function(config) {
-  return (config.selected !== undefined && config.selected.length > 0);
-}
-```
+1. `config`: application configuration files (webpack, for example).
+2. `src`: all the code required for running the app.
+  1. `api-kit`: a service for making API calls to the various microservices.
+  2. `ui-kit`: stores user interface components used on more than one page.
+  3. `assets`: ???
+  4. `app`: pages, page-specific UI components, and so on.
+3. `api-config.json` or `api-config.example.json`: we use a single API key within the marketplace for local development; therefore, the API key is set, and all you should need to do is rename this file to `api-config.json`.
 
-Instead of:
+<h2 id="where-things-go">Where things go</h2>
 
-```
-if (config.selected !== undefined && config.selected.length > 0) {
-  
-}
-```
-
-<h2 id="coding-standards">Coding standards</h2>
-
-|Name                |Style                          |Example           |
-|:-------------------|:-----------------------------:|:----------------:|
-|Class names         |TitleCased                     |Select = {}       |
-|Function definitions|camelCased                     |isRequired(config)|
-|Variable names      |camelCased and self documenting|isRequired = true; <br> NOT i = true;|
-|Configuration JSON member names|camelCased and self documenting|srOnly: true <br> NOT sr-only: true <br> NOT s: true|
-|Tabs & spaces       |Follow the provided linter and provided .editorconfig|n/a |
-
-<h2 id="doc-blocks">Doc-blocks</h2>
-
-...
-
-<h2 id="test-coverage">Test coverage</h2>
-
-...
-
-## Naming conventions
-
-- Injectable services end with Service (e.g. SearchService)
-- Pipes end with Pipe (e.g. CapitalizePipe)
-- Components end with Component (e.g. AssistanceListingResultComponent)
-- Components with an associated route and module end in Page (e.g. SearchPage)
-- Exported components in the ui-kit will be prefixed with Sam (e.g. SamSelectComponent) and their selectors will be prefixed as well (e.g. \<samSelect>)
+1. Page components: `/src/app/{business object or business epic}` - When possible, use the business object (ex. opportunity) to isolate pages, routes, and user interface components specific to that business object.
+1. Pipes:
+  - If the pipe is for a specific business object or business epic, place them in a `pipes` subfolder.
+  - If the pipe is used by two or more business object/epic areas, place them in<br>`/src/app/app-pipes`
+1. User interface components:
+  - If the component is for a specific business object or business epic, place them in a folder with the generic component name (ex. `search-result`).
+  - If the component is used by two or more business object/epic areas, place them in<br>`/src/ui-kit`
