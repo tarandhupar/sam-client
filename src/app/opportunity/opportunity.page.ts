@@ -58,7 +58,14 @@ export class OpportunityPage implements OnInit, OnDestroy {
     let apiSubject = new ReplaySubject(1);
 
     opportunityApiStream.subscribe(api => {
-      this.fhService.getFederalHierarchyV2ById(api.data.organizationId).subscribe(apiSubject);
+      //organizationId length >= 30 -> call opportunity org End Point
+      if(api.data.organizationId.length >= 30) {
+        this.opportunityService.getOpportunityOrganizationById(api.data.organizationId).subscribe(apiSubject);
+      }
+      //organizationId less than 30 character then call Octo's FH End point
+      else {
+        this.fhService.getOrganizationById(api.data.organizationId).subscribe(apiSubject);
+      }
     });
 
     this.organizationSubscription = apiSubject.subscribe(organization => {
@@ -70,11 +77,23 @@ export class OpportunityPage implements OnInit, OnDestroy {
 
   private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
     opportunityApiStream.subscribe(opAPI => {
-      if(opAPI.data.organizationLocationId != '') {
-        //TODO create new endpoint to load location
-        this.opportunityLocation = opAPI.data.organizationLocationId;
+      if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
+        this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
+          this.opportunityLocation = data;
+        });
       }
     });
+  }
+
+  private hasPOC(index: number): boolean {
+    if(this.opportunity && this.opportunity.data && this.opportunity.data.pointOfContact[index]) {
+      return (this.opportunity.data.pointOfContact[index].email != null
+        || this.opportunity.data.pointOfContact[index].phone != null
+        || this.opportunity.data.pointOfContact[index].fullName != null
+        || this.opportunity.data.pointOfContact[index].title != null
+        || this.opportunity.data.pointOfContact[index].fax != null);
+    }
+    return false;
   }
 
   ngOnDestroy() {

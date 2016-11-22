@@ -18,12 +18,12 @@ import * as moment from 'moment/moment';
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li><strong>DUNS: </strong><span>{{ data.dunsNumber }}</span></li>
           <li><strong>NCAGE Code: </strong><span>{{ data.cageCode }}</span></li>
-          <li *ngIf="data.dodaac"><strong>DODAAC: </strong><span>{{ data.dodaac }}</span></li>
+          <li *ngIf="data.aac"><strong>DODAAC: </strong><span>{{ data.aac }}</span></li>
           <li><strong>Entity Address: </strong><span>{{ data.address.streetAddress }}<br/>{{ data.address.city }}, {{ data.address.state}}, {{data.address.zip}}</span></li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
-      	<ul class="usa-text-small m_B-0 usa-unstyled-list">
+      	<ul class="usa-text-small m_B-0">
         	<!--<li><strong>Status: </strong><span>Submitted/Pending</span></li>-->
           <li><strong>Expiration Date: </strong><span>{{ data.registrationExpirationDate }}</span></li>
           <li><strong>Purpose of Registration: </strong><span>{{ data.registrationPurpose }}</span></li>

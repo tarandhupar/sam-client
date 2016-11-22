@@ -13,7 +13,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
 
-let comp:    OpportunityPage;
+let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
 
 let MockOpportunityService = {
@@ -125,12 +125,36 @@ let MockOpportunityService = {
         }
       }
     })
+  },
+  getOpportunityOrganizationById(id: String) {
+    return Observable.of({
+      _embedded: [
+        {
+          org: {
+            "l2Name": "Naval Supply Systems Command",
+            "l1Name": "Department of the Navy",
+            "name": "DLA Maritime PSNS",
+            "type": "OFFICE",
+            "l3Name": "DLA Maritime PSNS",
+            "agencyName": "DLA Maritime PSNS"
+          }
+        }
+      ]
+    });
+  },
+  getOpportunityLocationById(id: String) {
+    return Observable.of({
+      "zip": "77720",
+      "country": null,
+      "city": "Beaumont",
+      "street": "PO Box 26015 5430 Knauth Road",
+      "state": "TX"
+    });
   }
 };
 
 let MockFHService = {
-  //TODO: remove this function and replace it with getOrganizationById once SAM-492 is merged to comp
-  getFederalHierarchyV2ById(id: string){
+  getOrganizationById(id: string) {
     return Observable.of({
       "_embedded": [
         {
@@ -144,7 +168,7 @@ let MockFHService = {
 describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe ], // declare the test component
+      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe], // declare the test component
       imports: [
         PipesModule,
         HttpModule,

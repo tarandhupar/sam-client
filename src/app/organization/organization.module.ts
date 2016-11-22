@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { OrganizationPage }   from './organization.page.ts';
 import { routing } from './organization.route.ts';
 import { SamUIKitModule } from 'ui-kit';
-import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 
 @NgModule({
   imports: [
@@ -12,12 +11,10 @@ import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
     SamUIKitModule
   ],
   exports: [
-    OrganizationPage,
-    CapitalizePipe
+    OrganizationPage
   ],
   declarations: [
-    OrganizationPage,
-    CapitalizePipe
+    OrganizationPage
   ],
 })
 export class OrganizationModule { }

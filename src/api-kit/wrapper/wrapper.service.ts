@@ -6,7 +6,6 @@ import 'rxjs/add/operator/map';
 export class WrapperService {
     private APIs: any = {
         "opportunity": "/cfda/v1/opportunity",
-        "federalHierarchyV3": "/cfda/v2/fh", //TODO: remove this line once SAM-492 is merged to comp
         "search": "/sgs/v1/search",
         "program": "/cfda/v1/program",
         "federalHierarchy": "/cfda/v1/fh",

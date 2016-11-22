@@ -24,6 +24,7 @@ describe('FederalHierarchyResultComponent', () => {
       comp.data = {
         name: "SAMPLE TITLE",
         isActive:true,
+        description: "abcd",
         parentOrganizationHierarchy: {
           "name" : "Department Name"
         }
