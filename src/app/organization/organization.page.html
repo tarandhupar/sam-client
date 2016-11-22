@@ -19,7 +19,7 @@
     </section>
 
     <!-- Description -->
-    <section class="usa-content" *ngIf="organization.summary">
+    <section *ngIf="organization.summary">
       <p id="orgDescription" [innerHTML]="organization.summary"></p>
     </section>
 
