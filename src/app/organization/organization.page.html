@@ -39,7 +39,7 @@
       </div>
       <ul class="usa-zebra-list">
         <li *ngFor = "let element of organizationPerPage">
-          <a href="organization/{{element.org.orgKey}}">{{ getAgencyName(element) }} </a>
+          <a href="{{element.url}}">{{ element.name }} </a>
         </li>
       </ul>
     </section>
