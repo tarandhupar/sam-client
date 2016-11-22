@@ -17,7 +17,7 @@
                 {{ fhSearchMessage }}
             </div>
             <div style="position:relative;">
-                <input  type="text" (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
+                <input  type="text" (blur)="onInputBlur($event)" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
                 <ul *ngIf="autoCompleteToggle" class="autocomplete" style="z-index: 10;">
                     <li *ngIf="showAutocompleteMsg" class="autocomplete-msg">{{autocompleteMsg}}</li>
                     <li *ngFor="let result of autoComplete; let i = index;" (mouseover)='autocompleteMouseover(i)' [ngClass]="i === autocompleteIndex?'autocomplete-selected':''" (mousedown)="autocompleteSelection(result)">{{result.name}}</li>

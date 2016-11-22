@@ -8,9 +8,14 @@ import { FHService } from 'api-kit';
   styleUrls: [ 'agency-picker.style.scss' ]
 })
 
-/* 
+/**
+* AgencyPickerComponent - Connects to backend FH services to select a single/multiple organizations
 * 
-* 
+* @Input multimode: boolean - congfigure to select a single or multiple organizations
+* @Input getQSValue: boolean - Looks up a query string value to prepopulate selection
+* @Input() orgId: string - Prepopulate picker with an organization id
+* @Output organization - emits array of selected organizations when user closes the selection area
+*
 */
 export class AgencyPickerComponent implements OnInit {
   @Input() multimode: boolean = true;

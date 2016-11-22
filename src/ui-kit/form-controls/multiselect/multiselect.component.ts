@@ -3,10 +3,8 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
 import { OptionsType } from '../types';
 
 /**
- * The <samMultiSelect> component is a select/options group compliant with sam.gov standards
- * https://gsa.github.io/sam-web-design-standards/
+ * The <samMultiSelect> component is a multi-select/options group compliant 
  *
- * @Input/@Output model - the bound value of the component
  * @Input options: [{Option}] - the array of checkbox values and labels (see OptionsType)
  * @Input label: string - the innerHtml of <fieldset>
  * @Input name: string - semantic description for the component
@@ -35,7 +33,6 @@ export class SamMultiSelectComponent {
   @Input() hint: string;
   @Input() errorMessage: string;
   @Input() disabled:boolean;
-  @Output() selectionUpdate = new EventEmitter<any>();
   selectedValues = [];
   constructor() { console.clear(); }
   ngAfterViewInit() {
@@ -50,7 +47,7 @@ export class SamMultiSelectComponent {
   change(options) {
     this.selectedValues = Array.apply(null,options)  // convert to real Array
       .filter(option => option.selected)
-      .map(option => option.value)
+      .map(option => option.value);
   }
 
 }
