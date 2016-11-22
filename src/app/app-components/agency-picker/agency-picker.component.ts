@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { FHService } from 'api-kit';
 
 @Component({
-	selector: 'agency-picker',
-  providers: [],
+	selector: 'agencyPicker',
 	templateUrl:'agency-picker.template.html',
+  styleUrls: [ 'agency-picker.style.scss' ]
 })
 
 /* 
@@ -392,6 +392,9 @@ export class AgencyPickerComponent implements OnInit {
       this.oFHService.search(data).subscribe( res => {
         this.setOrganization(res["_embedded"]["hierarchy"][0]);
       }); 
+    } else {
+      this.fhSearchMessage = "Please select an organization";
+      this.fhSearchError = true;
     }
   }
 

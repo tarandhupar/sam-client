@@ -24,9 +24,9 @@
                 </ul>
             </div>
             <!--button (click)="setOrganizationFromSearch()">Search</button-->
-             <div>
-                <span (click)="toggleBrowseArea()">Browse <i  *ngIf="!browseToggle" class="fa fa-caret-square-o-down" aria-hidden="true"></i><i  *ngIf="browseToggle" class="fa fa-caret-square-o-up" aria-hidden="true"></i></span>
-            </div>
+             <p>
+                <span class="agency-picker-browse-toggle" (click)="toggleBrowseArea()">Browse <i  *ngIf="!browseToggle" class="agency-picker-browse-toggle fa fa-caret-square-o-down" aria-hidden="true"></i><i  *ngIf="browseToggle" class="fa fa-caret-square-o-up" aria-hidden="true"></i></span>
+            </p>
             <div class='fh-form-alt' *ngIf="browseToggle">
                 <div *ngFor="let orgLevel of orgLevels; let idx = index;" class="">
                     <div *ngIf="orgLevel['show']">
@@ -37,12 +37,12 @@
             </div>
         </div>
         <div class="usa-width-one-sixth agency-picker-chevron-wrapper">
-            <i (click)="setOrganizationFromBrowse()" class="agency-picker-chevron fa fa-angle-double-right" aria-hidden="true"></i>
+            <a title="Click to select organization"><i (click)="setOrganizationFromBrowse()" class="agency-picker-chevron fa fa-angle-double-right" aria-hidden="true"></i></a>
         </div>
         <div class="usa-width-five-twelfths">
             Selected Organization:
-            <samMultiSelect #multiselect *ngIf="multimode" [myOptions]="selectedOrganizations" (selectionUpdate)="emitSelectedOrganizations()"></samMultiSelect>
-            <p *ngIf="!multimode">{{selectedSingleOrganizationName}}</p>
+            <samMultiSelect #multiselect *ngIf="multimode" [options]="selectedOrganizations" (selectionUpdate)="emitSelectedOrganizations()"></samMultiSelect>
+            <p *ngIf="!multimode">{{selectedSingleOrganizationName}}<span *ngIf="selectedOrganizations.length==0">No organization selected</span></p>
             <button *ngIf="multimode" (click)="removeSelectedOrgs()">Remove</button>
             <button (click)="close()">Done</button>
         </div>

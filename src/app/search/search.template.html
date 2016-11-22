@@ -6,7 +6,8 @@
     <samSearchbar (onSearch)="onSearchClick($event)" [keyword]="keyword" [placeholder]="'#keyword'" *ngIf="false"></samSearchbar>
     <div *ngIf="showOptional" class="usa-width-one">
       <h3>Common Filters:</h3>
-      <agency-picker #fhInput [multimode]="false" (organization)="onOrganizationChange($event)"></agency-picker>
+      <label>Office name:</label>
+      <agencyPicker #fhInput [multimode]="false" (organization)="onOrganizationChange($event)"></agencyPicker>
       <hr *ngIf="data.results" class="m_T-5x"/>
     </div>
 		<div *ngFor="let row of data.results">
