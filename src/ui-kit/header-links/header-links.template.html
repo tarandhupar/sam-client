@@ -5,8 +5,8 @@
   <div class="m_L-3x m_R-3x align-top m_B-0x"><a class="usa-nav-link white-text sign-up-link">Sign Up</a></div>
   <div class="arrow-up"  *ngIf="showDropdown"></div>
   <div class="dropdown usa-grid-full p_B-2x" *ngIf="showDropdown" samClickOutside (clickOutside)="onClickOutside()">
-    <div class="usa-width-one-half m_R-0 m_T-1x" *ngFor="let item of dropdownData">
-      <div class="item-margin usa-width-one-half m_T-1x">
+    <div class="usa-width-one-half m_R-0" *ngFor="let item of dropdownData" >
+      <div class="item-margin usa-width-one-half m_T-2x"  *ngIf="itemToggle(item)">
         <div class="usa-width-one-whole image-wrap">
           <a (click)="dropdownItemClick(item)"><i class="fa big-icon centered" [ngClass]="item.linkClass"></i></a>
         </div>
