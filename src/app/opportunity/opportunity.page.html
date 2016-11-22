@@ -96,15 +96,19 @@
           <strong>Set Aside: </strong>
           {{ opportunity.data?.solicitation?.setAside }}
         </li>
-        <li *ngIf="opportunity.data?.classificationCode">
+        <li *ngIf="opportunity.data?.classificationCode && dictionary">
           <strong>Classification Code: </strong>
-          {{ opportunity.data?.classificationCode }}
-        </li>
-        <li *ngIf="opportunity.data?.naicsCode">
-          <strong>NAICS Code(s): </strong>
-          <ng-container *ngFor = "let element of opportunity.data?.naicsCode">
-            <ng-container *ngIf="element != null">• {{ element }}<br></ng-container>
+          <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:dictionary.classification_code:'element_id':false:''">
+            {{ element.value }}
           </ng-container>
+        </li>
+        <li *ngIf="opportunity.data?.naicsCode && dictionary">
+          <strong>NAICS Code(s): </strong>
+          <ul>
+            <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:dictionary.naics_code:'element_id':false:''">
+              <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
+            </li>
+          </ul>
         </li>
         <li *ngIf="opportunity.data?.placeOfPerformance">
           <strong>Place of Performance: </strong>
