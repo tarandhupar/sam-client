@@ -17,12 +17,12 @@ export class SamHeaderLinksComponent{
   private startCheckOutsideClick:boolean = false;
   private showDropdown:boolean = false;
   private dropdownData:any = [
-    {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/"},
-    {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/"},
-    {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/"},
-    {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview"},
-    {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/"},
-    {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/"},
+    {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/", pageInProgress:false},
+    {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/", pageInProgress:true},
+    {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/", pageInProgress:true},
+    {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview", pageInProgress:false},
+    {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/", pageInProgress:true},
+    {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/", pageInProgress:true},
   ];
 
   constructor(private _router:Router) { }
@@ -54,7 +54,12 @@ export class SamHeaderLinksComponent{
     }
 
   }
-  get showOptional() {
-    return globals.showOptional;
+
+  itemToggle(item){
+    if(!globals.showOptional){
+      return !item.pageInProgress;
+    }
+    return true;
   }
+
 }
