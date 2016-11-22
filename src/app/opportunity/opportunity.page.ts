@@ -40,13 +40,15 @@ export class OpportunityPage implements OnInit, OnDestroy {
     var apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
 
     this.route.params.subscribe((params: Params) => { // construct a stream of api data
-      this.opportunityService.getOpportunityById(params['id'], true).subscribe(apiSubject);
+      this.opportunityService.getOpportunityById(params['id']).subscribe(apiSubject);
     });
 
     this.opportunitySubscription = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.opportunity = api;
-      this.originalOpportunity = api['parentOpportunity'];
+      this.opportunityService.getOpportunityById(api.parentOpportunity.opportunityId).subscribe(parent => {
+        this.originalOpportunity = parent;
+      });
     }, err => {
       console.log('Error logging', err);
     });
