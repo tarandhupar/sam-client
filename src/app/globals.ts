@@ -1,4 +1,5 @@
 'use strict';
 export let globals = {
-  isDefaultHeader: true
+  isDefaultHeader: true,
+  showOptional : SHOW_OPTIONAL === 'true' || ENV === 'development',
 };

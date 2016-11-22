@@ -100,6 +100,11 @@ export class SearchPage implements OnInit{
 	              data._embedded.results[i].fhNames = [data._embedded.results[i].fhNames];
 	            }
 	          }
+            if(data._embedded.results[i].parentOrganizationHierarchy) {
+              if(data._embedded.results[i].parentOrganizationHierarchy.name.indexOf(".")>-1) {
+               data._embedded.results[i].parentOrganizationHierarchy.name = data._embedded.results[i].parentOrganizationHierarchy.name.substring(0, data._embedded.results[i].parentOrganizationHierarchy.name.indexOf("."))
+              }
+            }
 	        }
 	        this.data = data._embedded;
           this.totalCount = data.page['totalElements'];
