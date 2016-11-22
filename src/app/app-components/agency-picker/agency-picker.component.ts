@@ -79,8 +79,8 @@ export class AgencyPickerComponent implements OnInit {
   ];
   showAutocompleteMsg = false;
   autocompleteMsg = "";
-  fhSearchError = false;
-  fhSearchMessage = "";
+  searchError = false;
+  searchMessage = "";
   selectorToggle = false;
   browseToggle=false;
   searchObjCache = {};
@@ -89,20 +89,24 @@ export class AgencyPickerComponent implements OnInit {
   readonlyDisplayList = [];
   readOnlyToggle = true;
   browseSelection = {};
+
 	constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService){}
+
   autocompleteMouseover(idx){
     this.autocompleteIndex = idx;
   }
+
   onInputBlur(evt){
-    //this.resetAutocomplete();
+    this.resetAutocomplete();
   }
+
   resetAutocomplete(){
     this.autoCompleteToggle = false;
     this.autoComplete.length = 0;
     this.autocompleteMsg = "";
     this.autocompleteData.length = 0;
   }
-  //good
+
 	ngOnInit() {
     if(this.orgId.length>0){
       this.organizationId = this.orgId;
@@ -114,15 +118,15 @@ export class AgencyPickerComponent implements OnInit {
         });
     }
 	}
-  //good
+
   updateOrgSelection(arr){
     //nothing, binding is still intact
   }
-  //good
+
   isLetter(str) {
     return str.length === 1 && str.match(/[a-z]/i);
   }
-  //good
+
   setReadonlyDisplay(){
     this.readOnlyToggle = false;
     if(this.selectedOrganizations.length>0){
@@ -143,7 +147,7 @@ export class AgencyPickerComponent implements OnInit {
     }
     this.readOnlyToggle = true;
   }
-  //good
+
   searchTermChange(event){
     if(event.length>=3 && !this.autocompleting){
       this.autoCompleteToggle = true;
@@ -171,7 +175,6 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-  //refactor for messaging
   runAutocomplete(){
     //only run for name searches
     if(this.isLetter(this.searchTerm[0])){
@@ -196,6 +199,9 @@ export class AgencyPickerComponent implements OnInit {
         }
       });
       
+    } else {
+      this.autocompleting = false;
+      this.autoCompleteToggle = false;
     }
   }
 
@@ -214,7 +220,7 @@ export class AgencyPickerComponent implements OnInit {
     this.searchObjCache = data;
   }
 
-  //what kind of data is passed in? assumes orgLevels[idx].selectedOrganization is preset?
+  //need to refactor
   updateBrowse(data){
     for(var idx in this.orgLevels){
       this.orgLevels[idx].selectedOrg = "";
@@ -222,10 +228,8 @@ export class AgencyPickerComponent implements OnInit {
     //get full hierarchy of selection to get top level organization and get hierarchy to populate/select organization options
     var lvl = 0;
     if(data.type!="DEPARTMENT"){
-      this.initDictionaries(data.elementId, true, false).subscribe( fullOrgPath => {
+      this.serviceCall(data.elementId, true, false).subscribe( fullOrgPath => {
         this.oFHService.getFederalHierarchyById(fullOrgPath.elementId, true, true).subscribe( res => {
-          //console.log(fullOrgPath,"org path");
-          //console.log(res,"full org tree");
           var reachedEnd = false;
           var idx = 0;
           var path = fullOrgPath;
@@ -300,13 +304,14 @@ export class AgencyPickerComponent implements OnInit {
 
   //needs refactor for messaging
   setOrganizationFromSearch(){
+    console.log("getting here");
     if(this.searchTerm.length==0){
-      this.fhSearchError = true;
-      this.fhSearchMessage = "Search cannot be empty";
+      this.searchError = true;
+      this.searchMessage = "Search cannot be empty";
       return;
     } else {
-      this.fhSearchError = false;
-      this.fhSearchMessage = "";
+      this.searchError = false;
+      this.searchMessage = "";
     }
     var search = false;
     var data = {
@@ -333,23 +338,23 @@ export class AgencyPickerComponent implements OnInit {
         this.searchResponseHandler();
       }); 
     } else {
-      this.fhSearchError = true;
-      this.fhSearchMessage = "Invalid search entered";
+      this.searchError = true;
+      this.searchMessage = "Invalid search entered";
     }
   }
 
   //good
   searchResponseHandler(){
     if(this.searchData.length==0){
-      this.fhSearchError = true;
-      this.fhSearchMessage = "No matches found";
+      this.searchError = true;
+      this.searchMessage = "No matches found";
     } else if (this.searchData.length == 1){
-      this.fhSearchError = true;
-      this.fhSearchMessage = "Match found for: " + this.searchData[0]["name"];
+      this.searchError = true;
+      this.searchMessage = "Match found for: " + this.searchData[0]["name"];
       this.setOrganization(this.searchData[0]);
     } else {
-      this.fhSearchError = true;
-      this.fhSearchMessage = "Multiple Results found. Use Browse to refine your selection.";
+      this.searchError = true;
+      this.searchMessage = "Multiple Results found. Use Browse to refine your selection.";
       this.handleMultipleResultsFromSearch();
     }
   }
@@ -384,9 +389,9 @@ export class AgencyPickerComponent implements OnInit {
     console.log(counts);
     */
   }
+
   //switch from search call
   setOrganizationFromBrowse(){
-    //console.log(this.browseSelection);
     if(this.browseSelection["org"]){
       var data = {
         "ids":this.browseSelection["org"]
@@ -395,12 +400,12 @@ export class AgencyPickerComponent implements OnInit {
         this.setOrganization(res["_embedded"]["hierarchy"][0]);
       }); 
     } else {
-      this.fhSearchMessage = "Please select an organization";
-      this.fhSearchError = true;
+      this.searchMessage = "Please select an organization";
+      this.searchError = true;
     }
   }
 
-  //refactor
+  //todo: potential refactor
   loadChildOrganizations(lvl){
     var orgLevel = this.orgLevels[lvl];
     var selectionLvl = lvl;
@@ -432,21 +437,18 @@ export class AgencyPickerComponent implements OnInit {
       if(!dontResetDirectChildLevel){
         this.dictionary.aAgency = [];
         this.orgLevels[1]["options"].length = 1;;
-        //this.agencySelectConfig["options"].length = 1;
       }
       this.dictionary.aOffice.length = 0;
       this.orgLevels[2]["options"].length = 1;
-      //this.officeSelectConfig["options"].length = 1;
       this.orgLevels[2].show = false;
     } else if (orgLevel.type=="agency"){
       this.dictionary.aOffice.length = 0;
       this.orgLevels[2]["options"].length = 1;;
-      //this.officeSelectConfig["options"].length = 1;
     }
 
     if(typeof orgLevel.selectedOrg !== 'undefined' && orgLevel.selectedOrg !== ''
         && orgLevel.selectedOrg !== null) {
-        this.initDictionaries(orgLevel.selectedOrg, true, true).subscribe( oData => {
+        this.serviceCall(orgLevel.selectedOrg, true, true).subscribe( oData => {
           this.processDictionaryResponse(oData,selectionLvl);
           this.updateSearchFromBrowse();
         });
@@ -454,12 +456,12 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-  //work for 7 levels?
+  //todo: work for 7 levels
   processDictionaryResponse(data,lvl){
     if(lvl==0){
       var formattedData = this.formatHierarchy("agency",data.hierarchy);
       //no child agencies
-      if(formattedData.length<=1){
+      if(formattedData.length <= 1){
         this.orgLevels[1].show=false;
       }
       this.dictionary.aAgency = data.hierarchy;
@@ -477,7 +479,6 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-  //what kind of data is expected? appears to be full hiearchy
   checkChildHierarchyExists(data,lvl){
     var org = data;
     //console.log(org,lvl);
@@ -491,7 +492,6 @@ export class AgencyPickerComponent implements OnInit {
     return true;
   }
 
-  //what if lower level selectedOrg is set but not the higher lvl?
   setOrganization(data){
    if(data.type=="DEPARTMENT"){
      this.orgLevels[0].selectedOrg = data.elementId;
@@ -510,7 +510,6 @@ export class AgencyPickerComponent implements OnInit {
    this.organization.emit(this.selectedOrganizations);
   }
 
-  //good w/minor refactor
   addToSelectedOrganizations(data){
     var searchArray = this.selectedOrganizations.filter( x=> {
       return x.value == data.value;
@@ -525,12 +524,10 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-  //handler for multiselect
   emitSelectedOrganizations(){
     this.organization.emit(this.selectedOrganizations);
   }
 
-  //good, may need to revisit when readonly display is upated
   toggleSelectorArea(){
     this.selectorToggle = this.selectorToggle ? false : true;
     if(this.selectorToggle == false){
@@ -542,10 +539,12 @@ export class AgencyPickerComponent implements OnInit {
     this.selectorToggle = false;
     this.setReadonlyDisplay();
   }
-  //good
+
   toggleBrowseArea(){
     this.browseToggle = this.browseToggle ? false : true;
   }
+
+  //autocomplete handling
   keydownHandler(evt){
     //esc
     if (this.autoCompleteToggle && evt['keyCode'] == 27){
@@ -557,35 +556,35 @@ export class AgencyPickerComponent implements OnInit {
       this.autocompleteIndex-=1;
     }
     //down
-    else if(this.autoCompleteToggle && evt['keyCode']==40 && this.autocompleteIndex<=this.autocompleteData.length){
+    else if(this.autoCompleteToggle && evt['keyCode']==40 && this.autocompleteIndex <= this.autocompleteData.length){
       //console.log("down",this.autocompleteIndex);
       this.autocompleteIndex+=1;
     } 
     //down
-    else if(!this.autoCompleteToggle && evt['keyCode']==40){
+    else if(!this.autoCompleteToggle && evt['keyCode'] == 40){
       this.autoCompleteToggle = true;
       this.runAutocomplete();
     } 
     //enter
-    else if (this.autoCompleteToggle && evt['keyCode']==13){
+    else if (this.autoCompleteToggle && evt['keyCode'] == 13){
       if(this.autocompleteData[this.autocompleteIndex]){
         this.autocompleteSelection(this.autocompleteData[this.autocompleteIndex]);
       }
     }
     //enter
-    else if (!this.autoCompleteToggle && evt['keyCode']==13){
+    else if (!this.autoCompleteToggle && evt['keyCode'] == 13){
       this.setOrganizationFromSearch();
     }
   }
-  //rename function
-	initDictionaries(ordId, includeParent, includeChildren){
+
+	serviceCall(ordId, includeParent, includeChildren){
 		//get Department level of user's organizationId
     return this.oFHService.getFederalHierarchyById(ordId, includeParent, includeChildren);
 	}
 
   //refactor preset organziationId handling
 	initFederalHierarchyDropdowns(userRole){
-		this.initDictionaries("",true,false).subscribe( res => {
+		this.serviceCall("",true,false).subscribe( res => {
 			this.dictionary.aDepartment = res._embedded.hierarchy;
       var formattedData = this.formatHierarchy("department",res._embedded.hierarchy);
       this.dpmtSelectConfig.options = formattedData;
