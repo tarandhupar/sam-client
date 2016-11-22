@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { FHService } from 'api-kit';
 import { ReplaySubject } from 'rxjs';
 import {CapitalizePipe} from "../app-pipes/capitalize.pipe";
+import * as _ from 'lodash';
 
 @Component({
   moduleId: __filename,
@@ -48,12 +49,23 @@ export class OrganizationPage implements OnInit, OnDestroy {
       let jsonData:any = api;
       this.organization = jsonData._embedded[0].org;
       this.totalPages = Math.ceil(this.organization.hierarchy.length / this.showPerPage);
-      this.organizationPerPage = this.filterHierarchy(this.pageNum, this.organization.hierarchy);
+      this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
     }, err => {
       console.log('Error logging', err);
     });
 
     return apiSubject;
+  }
+
+  sortHierarchyAlphabetically(hierarchy){
+    let array = [];
+    for (let element of hierarchy){
+      let item = {name: this.getAgencyName(element), url: "organization/" + element.org.orgKey};
+      array.push(item);
+    }
+    _.sortBy(array, ['name']);
+    console.log("sorted array,", array);
+    return _.sortBy(array, ['name']);
   }
 
   filterHierarchy(page,array){
@@ -64,7 +76,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
 
   pageChange(pagenumber){
     this.pageNum = pagenumber;
-    this.organizationPerPage = this.filterHierarchy(this.pageNum, this.organization.hierarchy);
+    this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
     let navigationExtras: NavigationExtras = {
       queryParams: {page: this.pageNum}
     };
