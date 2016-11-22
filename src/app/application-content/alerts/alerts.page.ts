@@ -16,7 +16,6 @@ export class AlertsPage {
 
   ngOnInit() {
     var temp = this.route.snapshot.data['alerts'];
-    console.log(temp);
     this.alerts = temp.map(alert => {
       return {
         type: alert.content.severity.toLowerCase(),

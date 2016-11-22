@@ -13,7 +13,7 @@ export class WrapperService {
         "federalHierarchyV2": "/cfda/v2/fh",
         "dictionary": "/cfda/v1/dictionary",
         "historicalIndex": "/cfda/v1/historicalIndex",
-        "alerts": "/alert/v1/alerts"
+        "alerts": "/alert/v2/alerts"
     };
 
     constructor(private _http: Http){}
@@ -53,10 +53,6 @@ export class WrapperService {
             "body": "",
             "url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
         };
-
-        // if (oApiParam.name === 'alerts') {
-        //   jsonOption.url = 'http://localhost:8080/alert/v2/alerts';
-        // }
 
         switch (method.toUpperCase()){
             case "POST":
