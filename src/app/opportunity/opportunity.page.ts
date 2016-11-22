@@ -77,7 +77,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
 
   private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
     opportunityApiStream.subscribe(opAPI => {
-      if(opAPI.data.organizationLocationId != '') {
+      if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
         this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
           this.opportunityLocation = data;
         });
