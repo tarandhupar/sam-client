@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { SystemAlertsService } from 'api-kit';
 import { Cookie } from 'ng2-cookies'
 import { Router } from "@angular/router";
+import {SYSTEM_ALERTS_PAGE_PATH} from "../../application-content/alerts/alerts.route";
 
 @Component({
   selector: 'alertHeader',
@@ -43,7 +44,8 @@ export class AlertHeaderComponent {
   }
 
   showAlerts() {
-    return this.alerts.length && !this.router.url.match(/system-alerts$/);
+    let alertsPath: RegExp = new RegExp(SYSTEM_ALERTS_PAGE_PATH + '$');
+    return this.alerts.length && !this.router.url.match(alertsPath);
   }
 
   onDismissClick() {
@@ -53,7 +55,8 @@ export class AlertHeaderComponent {
   }
 
   fetchAlerts() {
-    this.systemAlerts.getAll()
+    const MAX_ALERTS: number = 2;
+    this.systemAlerts.get(MAX_ALERTS)
       .map(alerts => alerts.map(alert => alert.content))
       .subscribe(alerts => {
 
