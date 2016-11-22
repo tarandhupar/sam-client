@@ -46,7 +46,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
     this.opportunitySubscription = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.opportunity = api;
-      this.opportunityService.getOpportunityById(api.parentOpportunity.opportunityId).subscribe(parent => {
+      this.opportunityService.getOpportunityById(this.opportunity.parentOpportunity.opportunityId).subscribe(parent => {
         this.originalOpportunity = parent;
       });
     }, err => {
