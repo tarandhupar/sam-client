@@ -64,7 +64,6 @@ export class OrganizationPage implements OnInit, OnDestroy {
       array.push(item);
     }
     _.sortBy(array, ['name']);
-    console.log("sorted array,", array);
     return _.sortBy(array, ['name']);
   }
 
