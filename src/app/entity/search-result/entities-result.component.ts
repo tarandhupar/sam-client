@@ -18,7 +18,7 @@ import * as moment from 'moment/moment';
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li><strong>DUNS: </strong><span>{{ data.dunsNumber }}</span></li>
           <li><strong>NCAGE Code: </strong><span>{{ data.cageCode }}</span></li>
-          <li *ngIf="data.aac"><strong>DODAAC: </strong><span>{{ data.aac }}</span></li>
+          <li *ngIf="data.aac && data.aac!==null"><strong>DODAAC: </strong><span>{{ data.aac }}</span></li>
           <li><strong>Entity Address: </strong><span>{{ data.address.streetAddress }}<br/>{{ data.address.city }}, {{ data.address.state}}, {{data.address.zip}}</span></li>
         </ul>
     	</div>
