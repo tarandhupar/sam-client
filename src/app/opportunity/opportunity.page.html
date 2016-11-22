@@ -36,7 +36,7 @@
           <ng-container *ngIf="organization.name && !organization.agencyName">{{ organization.name }}</ng-container>
         </li>
         <li *ngIf="opportunityLocation">
-          <strong>Locations: </strong>
+          <strong>Location: </strong>
           <ng-container *ngIf="opportunityLocation.street">{{ opportunityLocation.street }}</ng-container>
           <ng-container *ngIf="opportunityLocation.city">{{ opportunityLocation.city }}</ng-container>
           <ng-container *ngIf="opportunityLocation.state">{{ opportunityLocation.state }}</ng-container>
@@ -122,45 +122,49 @@
 
     <section id="contact-info">
       <h2>Contact Information</h2>
-      <div class="usa-grid-full" *ngIf = "opportunity.data?.pointOfContact">
-        <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[0]">
+      <div class="usa-grid-full" *ngIf="opportunity.data?.pointOfContact">
+        <div class="usa-width-one-half" *ngIf="hasPOC(0)">
           <h3>Primary Point of Contact</h3>
           <ul class="usa-unstyled-list">
             <li><strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong></li>
-            <li *ngIf ="opportunity.data?.pointOfContact[0].title"><em>{{opportunity.data?.pointOfContact[0].title | capitalize}}</em></li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[0].title">
+              <!--TODO: fix capitalize pipe-->
+              <em [innerHTML]="opportunity.data?.pointOfContact[0].title"></em>
+            </li>
+            <li *ngIf="opportunity.data?.pointOfContact[0].email">
               <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
               <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
                 {{opportunity.data?.pointOfContact[0].email}}
               </a>
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[0].phone">
               <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[0].phone}}
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[0].fax">
               <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[0].fax}}
             </li>
           </ul>
         </div>
-        <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[1]">
+        <div class="usa-width-one-half" *ngIf="hasPOC(1)">
           <h3>Secondary Point of Contact</h3>
           <ul class="usa-unstyled-list">
-
             <li><strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong></li>
-            <li *ngIf ="opportunity.data?.pointOfContact[1].title"><em>{{opportunity.data?.pointOfContact[1].title | capitalize}}</em></li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[1].title">
+              <em [innerHTML]="opportunity.data?.pointOfContact[1].title"></em>
+            </li>
+            <li *ngIf="opportunity.data?.pointOfContact[1].email">
               <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
               <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
                 {{opportunity.data?.pointOfContact[1].email}}
               </a>
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[1].phone">
               <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[1].phone}}
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[1].fax">
               <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[1].fax}}
             </li>

@@ -19,7 +19,7 @@
     </section>
 
     <!-- Description -->
-    <section class="usa-content" *ngIf="organization.summary">
+    <section *ngIf="organization.summary">
       <p id="orgDescription" [innerHTML]="organization.summary"></p>
     </section>
 
@@ -39,7 +39,7 @@
       </div>
       <ul class="usa-zebra-list">
         <li *ngFor = "let element of organizationPerPage">
-          <a href="organization/{{element.org.orgKey}}">{{ getAgencyName(element) }} </a>
+          <a href="{{element.url}}">{{ element.name }} </a>
         </li>
       </ul>
     </section>
