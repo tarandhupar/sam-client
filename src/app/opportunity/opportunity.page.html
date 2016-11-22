@@ -102,7 +102,7 @@
             {{ element.value }}
           </ng-container>
         </li>
-        <li *ngIf="opportunity.data?.naicsCode && dictionary">
+        <li *ngIf="opportunity.data?.naicsCode && opportunity.data?.naicsCode[0] != null && dictionary">
           <strong>NAICS Code(s): </strong>
           <ul>
             <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:dictionary.naics_code:'element_id':false:''">
@@ -110,7 +110,7 @@
             </li>
           </ul>
         </li>
-        <li *ngIf="opportunity.data?.placeOfPerformance">
+        <li *ngIf="opportunity.data?.placeOfPerformance && (opportunity.data?.placeOfPerformance?.streetAddress || opportunity.data?.placeOfPerformance?.city || opportunity.data?.placeOfPerformance?.country || opportunity.data?.placeOfPerformance?.state || opportunity.data?.placeOfPerformance?.zip)">
           <strong>Place of Performance: </strong>
           <div>{{opportunity.data?.placeOfPerformance?.streetAddress}}</div>
           <div *ngIf="opportunity.data?.placeOfPerformance?.city">{{opportunity.data?.placeOfPerformance?.city}}, {{opportunity.data?.placeOfPerformance?.state}} {{opportunity.data?.placeOfPerformance?.zip}}</div>
