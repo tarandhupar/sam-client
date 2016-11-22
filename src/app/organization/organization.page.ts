@@ -83,7 +83,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   }
 
   private isModActive(){
-    return (this.organization.modStatus == null || this.organization.modStatus == "inactive") ? false : true;
+    return (this.organization.modStatus == null || this.organization.modStatus == "active") ? true : false;
   }
 
   private getAgencyName(element){
