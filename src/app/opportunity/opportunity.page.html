@@ -49,11 +49,11 @@
         </li>
         <li *ngIf="opportunity.postedDate">
           <strong>Posted Date: </strong>
-          {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a' }}
         </li>
         <li *ngIf="originalOpportunity?.postedDate">
           <strong>Original Posted Date: </strong>
-          {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a' }}
         </li>
         <li *ngIf="opportunity.data?.solicitation?.deadlines?.response">
           <strong>Response Date: </strong>
@@ -71,11 +71,11 @@
         </li>
         <li *ngIf="opportunity.data?.archive?.date">
           <strong>Archive Date: </strong>
-          {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a' }}
         </li>
         <li *ngIf="originalOpportunity?.data?.archive?.date">
           <strong>Original Archive Date: </strong>
-          {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a' }}
         </li>
       </ul>
     </section>
