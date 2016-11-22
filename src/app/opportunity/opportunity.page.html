@@ -93,17 +93,17 @@
           <ul class="usa-unstyled-list">
             <li><strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong></li>
             <li *ngIf ="opportunity.data?.pointOfContact[0].title"><em>{{opportunity.data?.pointOfContact[0].title | capitalize}}</em></li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[0]?.email">
               <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
               <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
                 {{opportunity.data?.pointOfContact[0].email}}
               </a>
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[0]?.phone">
               <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[0].phone}}
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[0]?.fax">
               <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[0].fax}}
             </li>
@@ -115,17 +115,17 @@
 
             <li><strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong></li>
             <li *ngIf ="opportunity.data?.pointOfContact[1].title"><em>{{opportunity.data?.pointOfContact[1].title | capitalize}}</em></li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[1]?.email">
               <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
               <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
                 {{opportunity.data?.pointOfContact[1].email}}
               </a>
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[1]?.phone">
               <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[1].phone}}
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[1]?.fax">
               <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[1].fax}}
             </li>
