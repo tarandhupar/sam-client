@@ -15,6 +15,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
   ]
 })
 export class OpportunityPage implements OnInit, OnDestroy {
+  originalOpportunity: any;
   opportunity: any;
   opportunityLocation: any;
   organization: any;
