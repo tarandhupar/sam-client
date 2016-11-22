@@ -91,12 +91,18 @@
       <ul class="usa-unstyled-list">
         <li *ngIf = "originalOpportunity">
           <strong> Original Set Aside: </strong>
-          <ng-container *ngIf="originalOpportunity.data?.solicitation?.setAside"> {{ originalOpportunity?.data?.solicitation?.setAside }} </ng-container>
+          <ng-container *ngIf="originalOpportunity.data?.solicitation?.setAside && dictionary">
+            <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+              <ng-container>{{ element.value }}</ng-container>
+            </ng-container>
+          </ng-container>
           <ng-container *ngIf="!originalOpportunity?.data?.solicitation?.setAside">N/A</ng-container>
         </li>
-        <li *ngIf = "opportunity.data?.solicitation?.setAside">
+        <li *ngIf = "opportunity.data?.solicitation?.setAside && dictionary">
           <strong>Set Aside: </strong>
-          {{ opportunity.data?.solicitation?.setAside }}
+          <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+            <ng-container> {{ element.value }}</ng-container>
+          </ng-container>
         </li>
         <li *ngIf="opportunity.data?.classificationCode && dictionary">
           <strong>Classification Code: </strong>

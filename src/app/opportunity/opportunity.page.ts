@@ -92,7 +92,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
   }
 
   private loadDictionary() {
-    this.opportunityService.getOpportunityDictionary('classification_code,naics_code').subscribe(data => {
+    this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type').subscribe(data => {
       this.dictionary = data;
     });
   }
