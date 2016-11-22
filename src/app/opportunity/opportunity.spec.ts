@@ -150,6 +150,21 @@ let MockOpportunityService = {
       "street": "PO Box 26015 5430 Knauth Road",
       "state": "TX"
     });
+  },
+  getOpportunityDictionary(ids: String) {
+    return Observable.of({
+      classification_code: [
+        {
+          dictionary_name: "classification_code",
+          code: "10",
+          parent_element_id: null,
+          description: null,
+          element_id: "1",
+          sort_index: "1",
+          value: "10 -- Weapons"
+        }
+      ]
+    });
   }
 };
 

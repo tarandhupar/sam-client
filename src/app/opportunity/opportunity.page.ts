@@ -3,21 +3,23 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { OpportunityService, FHService } from 'api-kit';
 import { ReplaySubject, Observable, Subscription } from 'rxjs';
+import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 
 @Component({
   moduleId: __filename,
   templateUrl: 'opportunity.page.html',
   styleUrls: ['opportunity.style.css'],
   providers: [
-    OpportunityService
+    OpportunityService,
+    FilterMultiArrayObjectPipe
   ]
 })
 export class OpportunityPage implements OnInit, OnDestroy {
   opportunity: any;
-  originalOpportunity: any;
   opportunityLocation: any;
   organization: any;
   currentUrl: string;
+  dictionary: any;
 
   private organizationSubscription: Subscription;
   private opportunitySubscription: Subscription;
@@ -34,6 +36,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
     let opportunityApiStream = this.loadOpportunity();
     this.loadOrganization(opportunityApiStream);
     this.loadOpportunityLocation(opportunityApiStream);
+    this.loadDictionary();
   }
 
   private loadOpportunity() {
@@ -46,7 +49,6 @@ export class OpportunityPage implements OnInit, OnDestroy {
     this.opportunitySubscription = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.opportunity = api;
-      this.originalOpportunity = api['parentOpportunity'];
     }, err => {
       console.log('Error logging', err);
     });
@@ -82,6 +84,12 @@ export class OpportunityPage implements OnInit, OnDestroy {
           this.opportunityLocation = data;
         });
       }
+    });
+  }
+
+  private loadDictionary() {
+    this.opportunityService.getOpportunityDictionary('classification_code,naics_code').subscribe(data => {
+      this.dictionary = data;
     });
   }
 
