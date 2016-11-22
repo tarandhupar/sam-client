@@ -85,6 +85,17 @@ export class OpportunityPage implements OnInit, OnDestroy {
     });
   }
 
+  private hasPOC(index: number): boolean {
+    if(this.opportunity && this.opportunity.data && this.opportunity.data.pointOfContact[index]) {
+      return (this.opportunity.data.pointOfContact[index].email != null
+        || this.opportunity.data.pointOfContact[index].phone != null
+        || this.opportunity.data.pointOfContact[index].fullName != null
+        || this.opportunity.data.pointOfContact[index].title != null
+        || this.opportunity.data.pointOfContact[index].fax != null);
+    }
+    return false;
+  }
+
   ngOnDestroy() {
     if(this.organizationSubscription) this.organizationSubscription.unsubscribe();
     if(this.opportunitySubscription) this.opportunitySubscription.unsubscribe();

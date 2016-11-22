@@ -88,7 +88,7 @@
     <section id="contact-info">
       <h2>Contact Information</h2>
       <div class="usa-grid-full" *ngIf = "opportunity.data?.pointOfContact">
-        <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[0]">
+        <div class="usa-width-one-half" *ngIf = "hasPOC(0)">
           <h3>Primary Point of Contact</h3>
           <ul class="usa-unstyled-list">
             <li><strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong></li>
@@ -109,7 +109,7 @@
             </li>
           </ul>
         </div>
-        <div class="usa-width-one-half" *ngIf = "opportunity.data?.pointOfContact[1]">
+        <div class="usa-width-one-half" *ngIf = "hasPOC(1)">
           <h3>Secondary Point of Contact</h3>
           <ul class="usa-unstyled-list">
 
