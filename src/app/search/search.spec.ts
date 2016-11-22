@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 import { SearchPage } from './search.page';
 import { SearchService, SamAPIKitModule } from 'api-kit';
 import { SamUIKitModule } from 'ui-kit';
+import { AppComponentsModule } from '../app-components/app-components.module';
 import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
 import { FederalHierarchyResult } from '../organization/search-result/federal-hierarchy-result.component';
 import { EntitiesResult } from '../entity/search-result/entities-result.component';
-import { FHInputComponent } from './agency-selector/agency-selector.component';
 
 var fixture;
 
@@ -44,11 +44,12 @@ var searchServiceStub = {
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,FHInputComponent ],
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult ],
       providers: [ ],
       imports: [
         SamUIKitModule,
         SamAPIKitModule,
+        AppComponentsModule,
         RouterTestingModule.withRoutes([
           { path: 'search', component: SearchPage }
         ])

@@ -18,7 +18,7 @@ import { OptionsType } from '../types';
   selector: 'samMultiSelect',
   template: `
   <labelWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage">
-    <select #select multiple (change)="change($event.target.options)" class="sam-multiselect">
+    <select #select multiple (change)="change($event.target.options)" class="sam-multiselect" [disabled]="disabled">
       <option *ngFor="let item of options" [value]="item.value">
         {{item.name}}
       </option>
@@ -34,6 +34,7 @@ export class SamMultiSelectComponent {
   @Input() name: string;
   @Input() hint: string;
   @Input() errorMessage: string;
+  @Input() disabled:boolean;
   @Output() selectionUpdate = new EventEmitter<any>();
   selectedValues = [];
   constructor() { console.clear(); }
