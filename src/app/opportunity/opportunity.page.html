@@ -63,11 +63,11 @@
         </li>
         <li *ngIf="opportunity.data?.solicitation?.deadlines?.response">
           <strong>Response Date: </strong>
-          {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li *ngIf="originalOpportunity?.data?.solicitation?.deadlines?.response">
           <strong>Original Response Date: </strong>
-          {{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li [ngSwitch]="opportunity.data?.archive?.type">
           <strong>Archiving Policy: </strong>
