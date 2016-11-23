@@ -15,7 +15,7 @@ import { ReplaySubject, Observable, Subscription } from 'rxjs';
 export class OpportunityPage implements OnInit, OnDestroy {
   opportunity: any;
   originalOpportunity: any;
-  opportunityLocation: any;
+  // opportunityLocation: any;
   organization: any;
   currentUrl: string;
 
@@ -33,7 +33,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
 
     let opportunityApiStream = this.loadOpportunity();
     this.loadOrganization(opportunityApiStream);
-    this.loadOpportunityLocation(opportunityApiStream);
+    // this.loadOpportunityLocation(opportunityApiStream);
   }
 
   private loadOpportunity() {
@@ -75,15 +75,15 @@ export class OpportunityPage implements OnInit, OnDestroy {
     return apiSubject;
   }
 
-  private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
-    opportunityApiStream.subscribe(opAPI => {
-      if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
-        this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
-          this.opportunityLocation = data;
-        });
-      }
-    });
-  }
+  // private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
+  //   opportunityApiStream.subscribe(opAPI => {
+  //     if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
+  //       this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
+  //         this.opportunityLocation = data;
+  //       });
+  //     }
+  //   });
+  // }
 
   ngOnDestroy() {
     if(this.organizationSubscription) this.organizationSubscription.unsubscribe();
