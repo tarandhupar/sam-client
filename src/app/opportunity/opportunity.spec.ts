@@ -13,13 +13,16 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
 
-let comp:    OpportunityPage;
+let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
 
 let MockOpportunityService = {
   getOpportunityById(id: string) {
     return Observable.of({
       "opportunityId": "213ji321hu3jk123",
+      "parentOpportunity": {
+        "opportunityId": "0000b08b003c3a28ae6f9dd254e4a9c8"
+      },
       "data": {
         "type": "Type Goes here",
         "solicitationNumber": "Solicitation Number goes here",
@@ -125,12 +128,51 @@ let MockOpportunityService = {
         }
       }
     })
+  },
+  getOpportunityOrganizationById(id: String) {
+    return Observable.of({
+      _embedded: [
+        {
+          org: {
+            "l2Name": "Naval Supply Systems Command",
+            "l1Name": "Department of the Navy",
+            "name": "DLA Maritime PSNS",
+            "type": "OFFICE",
+            "l3Name": "DLA Maritime PSNS",
+            "agencyName": "DLA Maritime PSNS"
+          }
+        }
+      ]
+    });
+  },
+  getOpportunityDictionary(ids: String) {
+    return Observable.of({
+      classification_code: [
+        {
+          dictionary_name: "classification_code",
+          code: "10",
+          parent_element_id: null,
+          description: null,
+          element_id: "1",
+          sort_index: "1",
+          value: "10 -- Weapons"
+        }
+      ]
+    });
   }
+  // getOpportunityLocationById(id: String) {
+  //   return Observable.of({
+  //     "zip": "77720",
+  //     "country": null,
+  //     "city": "Beaumont",
+  //     "street": "PO Box 26015 5430 Knauth Road",
+  //     "state": "TX"
+  //   });
+  // }
 };
 
 let MockFHService = {
-  //TODO: remove this function and replace it with getOrganizationById once SAM-492 is merged to comp
-  getFederalHierarchyV2ById(id: string){
+  getOrganizationById(id: string) {
     return Observable.of({
       "_embedded": [
         {
@@ -144,7 +186,7 @@ let MockFHService = {
 describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe ], // declare the test component
+      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe], // declare the test component
       imports: [
         PipesModule,
         HttpModule,
@@ -182,7 +224,7 @@ describe('OpportunityPage', () => {
 
   it('Should init & load data', () => {
     expect(comp.opportunity).toBeDefined();
-    expect(comp.opportunityLocation).toBeDefined();
+    // expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
     expect(comp.opportunity.opportunityId).toBe("213ji321hu3jk123");
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');

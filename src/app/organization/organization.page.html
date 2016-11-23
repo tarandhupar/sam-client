@@ -19,14 +19,14 @@
     </section>
 
     <!-- Description -->
-    <section class="usa-content" *ngIf="organization.summary">
+    <section *ngIf="organization.summary">
       <p id="orgDescription" [innerHTML]="organization.summary"></p>
     </section>
 
     <!-- Sub-Tier Agencies -->
     <section *ngIf="organization.hierarchy.length>0">
       <div class="usa-grid-full m_T-6x">
-        <div class="usa-width-two-thirds"[ngSwitch]="organization.categoryDesc">
+        <div class="usa-width-two-thirds"[ngSwitch]="organization.type">
           <ng-container *ngSwitchCase="'DEPARTMENT'"><h2>Sub-Tier Agencies</h2></ng-container>
           <ng-container *ngSwitchCase="'AGENCY'"><h2>Offices</h2></ng-container>
         </div>
@@ -39,20 +39,22 @@
       </div>
       <ul class="usa-zebra-list">
         <li *ngFor = "let element of organizationPerPage">
-          <a href="organization/{{element.org.orgKey}}">{{ getAgencyName(element) }} </a>
+          <a href="{{element.url}}">{{ element.name }} </a>
         </li>
       </ul>
     </section>
 
     <!-- No Sub-Tier Agenfies found -->
-    <section *ngIf="organization.hierarchy.length==0">
-      <h2>Sub-Tier Agencies</h2>
+    <section [ngSwitch]="organization.type" *ngIf="organization.hierarchy.length==0 && organization.type != 'OFFICE'">
+      <ng-container *ngSwitchCase="'DEPARTMENT'"><h2>Sub-Tier Agencies</h2></ng-container>
+      <ng-container *ngSwitchCase="'AGENCY'"><h2>Offices</h2></ng-container>
       <p class="inactive">
         <i class="fa fa-search" aria-hidden="true"></i>
         &nbsp;
-        <em>No Sub-Tier Agencies Found.</em>
+        <ng-container *ngSwitchCase="'DEPARTMENT'"><em>No Sub-Tier Agencies Found.</em></ng-container>
+        <ng-container *ngSwitchCase="'AGENCY'"><em>No Offices Agencies Found.</em></ng-container>
       </p>
     </section>
-    <samPagination (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></samPagination>
+    <samPagination *ngIf = "organization.type != 'OFFICE'" (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></samPagination>
   </div>
 </div>
