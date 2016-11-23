@@ -1,5 +1,3 @@
-@import './variables';
-
 @mixin box-shadow($horizontal-offset, $vertical-offset, $blur-radius, $spread-radius, $red, $green, $blue, $alpha) {
   box-shadow: $horizontal-offset $vertical-offset $blur-radius $spread-radius rgba($red, $green, $blue, $alpha);
 }

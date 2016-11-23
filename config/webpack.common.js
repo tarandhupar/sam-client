@@ -171,25 +171,40 @@ module.exports = {
 
       /// Sass Loader
       {
-        test: /\.scss$/,
+        test: /(?!_)(\\w+)\\.(scss)$/,
         exclude: /node_modules/,
-        loaders: [ 'style', 'css?sourceMap', 'resolve-url', 'sass?sourceMap' ]
+        loaders: [ 'style', 'css?sourceMap', 'sass?sourceMap' ]
       },
 
       {
         test: /\.svg$/,
-        loaders: ['svg-url']
+        loaders: ['svg-url-loader']
       },
-
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/font-woff"
+      }, {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/font-woff"
+      }, {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/octet-stream"
+      }, {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "file-loader"
+      }, {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=image/svg+xml"
+      },
       // FONTS
       // {
       //   test: /\.(eot|svg|ttf|woff|woff2)$/,
       //   loader: 'file?name=assets/fonts/[name].[ext]'
       // },
-      {
-        test: /\.(otf|eot|svg|ttf|woff)/,
-        loader: 'url-loader?limit=65000'
-      },
+      // {
+      //   test: /\.(otf|eot|svg|ttf|woff)/,
+      //   loader: 'url-loader?limit=65000'
+      // },
 
       /* File loader for supporting images, for example, in CSS files.
       */
@@ -245,6 +260,10 @@ module.exports = {
         from: 'src/assets',
         to: 'assets'
       },
+      {
+        from: 'src/assets/fonts/font-awesome',
+        to: 'assets/fonts'
+      }
       // {
       //   from: 'node_modules/uswds/dist',
       //   to: ''

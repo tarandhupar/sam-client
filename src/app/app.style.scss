@@ -1,16 +1,24 @@
 
 // Vendor main
-$fa-font-path: "/src/assets/fonts";
+$fa-font-path: "/src/assets/fonts/font-awesome";
 @import '~font-awesome/scss/font-awesome';
+//@import './styles/vendor/font-awesome/font-awesome';
 //@import '~font-awesome/css/font-awesome';
 
+@import '~uswds/src/stylesheets/lib/bourbon';
+
 // Internal variable should be declared before uswds variable to take higher precendence
+@import 'variables';
 @import 'margin-padding';
 @import 'global';
 @import 'typography';
 
 $image_path: '~uswds/dist/img';
-@import '~uswds/src/stylesheets/all';
+$font-path: '/src/assets/fonts';
+@import '~uswds/src/stylesheets/uswds';
+//@import './styles/vendor/uswds/uswds';
+
+@import '/src/ui-kit/footer/footer';
 
 html, body{
   height: 100%;

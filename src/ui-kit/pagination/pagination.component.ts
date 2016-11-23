@@ -1,5 +1,4 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
-import './pagination.style.scss';
 
 /**
  * The <samPagination> allows users to select a page
