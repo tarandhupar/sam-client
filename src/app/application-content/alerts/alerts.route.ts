@@ -1,10 +1,14 @@
 import { Routes, RouterModule } from '@angular/router';
 import { AlertsPage } from './alerts.page';
+import {AlertsResolver} from "./alerts.resolve";
+
+export const SYSTEM_ALERTS_PAGE_PATH: string = 'system-alerts';
 
 export const routes: Routes = [
   {
-    path: 'system-alerts',
-    component: AlertsPage
+    path: SYSTEM_ALERTS_PAGE_PATH,
+    component: AlertsPage,
+    resolve: { alerts: AlertsResolver }
   },
 ];
 
