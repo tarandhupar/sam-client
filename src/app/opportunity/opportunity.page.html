@@ -50,19 +50,19 @@
         </li>
         <li *ngIf="opportunity.postedDate">
           <strong>Posted Date: </strong>
-          {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a' }}
+          {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li *ngIf="originalOpportunity?.postedDate">
           <strong>Original Posted Date: </strong>
-          {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a' }}
+          {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li *ngIf="opportunity.data?.solicitation?.deadlines?.response">
           <strong>Response Date: </strong>
-          {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li *ngIf="originalOpportunity?.data?.solicitation?.deadlines?.response">
           <strong>Original Response Date: </strong>
-          {{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li [ngSwitch]="opportunity.data?.archive?.type">
           <strong>Archiving Policy: </strong>
@@ -72,11 +72,11 @@
         </li>
         <li *ngIf="opportunity.data?.archive?.date">
           <strong>Archive Date: </strong>
-          {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a' }}
+          {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li *ngIf="originalOpportunity?.data?.archive?.date">
           <strong>Original Archive Date: </strong>
-          {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a' }}
+          {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
         </li>
       </ul>
     </section>
