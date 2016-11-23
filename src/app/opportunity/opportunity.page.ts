@@ -15,8 +15,9 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
   ]
 })
 export class OpportunityPage implements OnInit, OnDestroy {
+  originalOpportunity: any;
+  // opportunityLocation: any;
   opportunity: any;
-  opportunityLocation: any;
   organization: any;
   currentUrl: string;
   dictionary: any;
@@ -35,7 +36,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
 
     let opportunityApiStream = this.loadOpportunity();
     this.loadOrganization(opportunityApiStream);
-    this.loadOpportunityLocation(opportunityApiStream);
+    // this.loadOpportunityLocation(opportunityApiStream);
     this.loadDictionary();
   }
 
@@ -43,12 +44,17 @@ export class OpportunityPage implements OnInit, OnDestroy {
     var apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
 
     this.route.params.subscribe((params: Params) => { // construct a stream of api data
-      this.opportunityService.getOpportunityById(params['id'], true).subscribe(apiSubject);
+      this.opportunityService.getOpportunityById(params['id']).subscribe(apiSubject);
     });
 
     this.opportunitySubscription = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.opportunity = api;
+      if(this.opportunity.parentOpportunity != null) {
+        this.opportunityService.getOpportunityById(this.opportunity.parentOpportunity.opportunityId).subscribe(parent => {
+          this.originalOpportunity = parent;
+        });
+      }
     }, err => {
       console.log('Error logging', err);
     });
@@ -77,18 +83,18 @@ export class OpportunityPage implements OnInit, OnDestroy {
     return apiSubject;
   }
 
-  private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
-    opportunityApiStream.subscribe(opAPI => {
-      if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
-        this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
-          this.opportunityLocation = data;
-        });
-      }
-    });
-  }
+  // private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
+  //   opportunityApiStream.subscribe(opAPI => {
+  //     if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
+  //       this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
+  //         this.opportunityLocation = data;
+  //       });
+  //     }
+  //   });
+  // }
 
   private loadDictionary() {
-    this.opportunityService.getOpportunityDictionary('classification_code,naics_code').subscribe(data => {
+    this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type').subscribe(data => {
       this.dictionary = data;
     });
   }

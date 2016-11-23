@@ -17,6 +17,7 @@ import { HomeModule } from './application-content/home';
 import { AlertsModule } from './application-content/alerts';
 import { HelpModule } from './Help';
 import { PageNotFoundErrorPage } from './application-content/404';
+import { ErrorModule } from './application-content/error/error.module';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
 import { OrganizationModule } from './organization';
@@ -25,6 +26,7 @@ import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.m
 
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
+import {AlertHeaderComponent} from "./app-components/alert-header/alert-header.component";
 import { AppComponentsModule } from './app-components/app-components.module';
 
 // Application wide providers
@@ -40,6 +42,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
   declarations: [
     App,
     PageNotFoundErrorPage,
+    AlertHeaderComponent
   ],
   imports: [
     // Angular Modules
@@ -58,6 +61,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     AlertsModule,
     HelpModule,
     SearchModule,
+    ErrorModule,
     UIKitDemoModule,
 
     // Other Modules

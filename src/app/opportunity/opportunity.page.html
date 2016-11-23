@@ -32,16 +32,11 @@
             <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
             <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>:
           </strong>
-          <ng-container *ngIf="organization.agencyName">{{ organization.agencyName }}</ng-container>
-          <ng-container *ngIf="organization.name && !organization.agencyName">{{ organization.name }}</ng-container>
+          <ng-container *ngIf="organization.l2Name">{{ organization.l2Name }}</ng-container>
         </li>
-        <li *ngIf="opportunityLocation">
+        <li *ngIf="organization">
           <strong>Location: </strong>
-          <ng-container *ngIf="opportunityLocation.street">{{ opportunityLocation.street }}</ng-container>
-          <ng-container *ngIf="opportunityLocation.city">{{ opportunityLocation.city }}</ng-container>
-          <ng-container *ngIf="opportunityLocation.state">{{ opportunityLocation.state }}</ng-container>
-          <ng-container *ngIf="opportunityLocation.zip">{{ opportunityLocation.zip }}</ng-container>
-          <ng-container *ngIf="opportunityLocation.country">{{ opportunityLocation.country }}</ng-container>
+          <ng-container *ngIf="organization.name">{{ organization.name }}</ng-container>
         </li>
       </ul>
     </section>
@@ -55,32 +50,33 @@
         </li>
         <li *ngIf="opportunity.postedDate">
           <strong>Posted Date: </strong>
-          {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a' }}
         </li>
-        <li *ngIf="opportunity.parentOpportunity?.postedDate">
+        <li *ngIf="originalOpportunity?.postedDate">
           <strong>Original Posted Date: </strong>
-          {{ opportunity.parentOpportunity?.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a' }}
         </li>
         <li *ngIf="opportunity.data?.solicitation?.deadlines?.response">
           <strong>Response Date: </strong>
           {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
         </li>
-        <li *ngIf="opportunity.parentOpportunity?.data?.solicitation?.deadlines?.response">
+        <li *ngIf="originalOpportunity?.data?.solicitation?.deadlines?.response">
           <strong>Original Response Date: </strong>
-          {{ opportunity.parentOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
         </li>
         <li [ngSwitch]="opportunity.data?.archive?.type">
           <strong>Archiving Policy: </strong>
           <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
+          <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
           <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
         </li>
         <li *ngIf="opportunity.data?.archive?.date">
           <strong>Archive Date: </strong>
-          {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a' }}
         </li>
-        <li *ngIf="opportunity.parentOpportunity?.data?.archive?.date">
+        <li *ngIf="originalOpportunity?.data?.archive?.date">
           <strong>Original Archive Date: </strong>
-          {{ opportunity.parentOpportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a' }}
         </li>
       </ul>
     </section>
@@ -88,14 +84,20 @@
     <section id="classification">
       <h2>Classification</h2>
       <ul class="usa-unstyled-list">
-        <li *ngIf = "opportunity.parentOpportunity">
+        <li *ngIf = "originalOpportunity">
           <strong> Original Set Aside: </strong>
-          <ng-container *ngIf="opportunity.parentOpportunity?.data?.solicitation?.setAside"> {{ opportunity.parentOpportunity?.data?.solicitation?.setAside }} </ng-container> 
-          <ng-container *ngIf="!opportunity.parentOpportunity?.data?.solicitation?.setAside">N/A</ng-container> 
+          <ng-container *ngIf="originalOpportunity.data?.solicitation?.setAside && dictionary">
+            <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+              <ng-container>{{ element.value }}</ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="!originalOpportunity?.data?.solicitation?.setAside">N/A</ng-container>
         </li>
-        <li *ngIf = "opportunity.data?.solicitation?.setAside">
+        <li *ngIf = "opportunity.data?.solicitation?.setAside && dictionary">
           <strong>Set Aside: </strong>
-          {{ opportunity.data?.solicitation?.setAside }}
+          <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+            <ng-container> {{ element.value }}</ng-container>
+          </ng-container>
         </li>
         <li *ngIf="opportunity.data?.classificationCode && dictionary">
           <strong>Classification Code: </strong>

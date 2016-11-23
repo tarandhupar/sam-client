@@ -20,6 +20,9 @@ let MockOpportunityService = {
   getOpportunityById(id: string) {
     return Observable.of({
       "opportunityId": "213ji321hu3jk123",
+      "parentOpportunity": {
+        "opportunityId": "0000b08b003c3a28ae6f9dd254e4a9c8"
+      },
       "data": {
         "type": "Type Goes here",
         "solicitationNumber": "Solicitation Number goes here",
@@ -142,15 +145,6 @@ let MockOpportunityService = {
       ]
     });
   },
-  getOpportunityLocationById(id: String) {
-    return Observable.of({
-      "zip": "77720",
-      "country": null,
-      "city": "Beaumont",
-      "street": "PO Box 26015 5430 Knauth Road",
-      "state": "TX"
-    });
-  },
   getOpportunityDictionary(ids: String) {
     return Observable.of({
       classification_code: [
@@ -166,6 +160,15 @@ let MockOpportunityService = {
       ]
     });
   }
+  // getOpportunityLocationById(id: String) {
+  //   return Observable.of({
+  //     "zip": "77720",
+  //     "country": null,
+  //     "city": "Beaumont",
+  //     "street": "PO Box 26015 5430 Knauth Road",
+  //     "state": "TX"
+  //   });
+  // }
 };
 
 let MockFHService = {
@@ -221,7 +224,7 @@ describe('OpportunityPage', () => {
 
   it('Should init & load data', () => {
     expect(comp.opportunity).toBeDefined();
-    expect(comp.opportunityLocation).toBeDefined();
+    // expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
     expect(comp.opportunity.opportunityId).toBe("213ji321hu3jk123");
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');

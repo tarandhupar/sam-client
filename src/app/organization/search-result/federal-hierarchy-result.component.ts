@@ -28,7 +28,7 @@ import 'rxjs/add/operator/map';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-        	<li>{{ data.type }}</li>
+        	<span>{{ data.type }}</span>
           <li><strong>Also Known As: </strong><span *ngIf="data.alternativeNames && data.alternativeNames !== null">{{ data.alternativeNames }}</span></li>
           <li><strong>Code: </strong><span>{{ data.code }}</span></li>
         </ul>

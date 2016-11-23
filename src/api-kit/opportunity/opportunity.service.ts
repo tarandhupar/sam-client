@@ -7,11 +7,11 @@ export class OpportunityService{
 
   constructor(private oAPIService: WrapperService){}
 
-  getOpportunityById(id: string, includeParent: boolean) {
+  getOpportunityById(id: string) {
     let apiParam = {
         name: 'opportunity',
         suffix: '/' + id,
-        oParam: {'includeParent': (includeParent === true) ? true : false },
+        oParam: {},
         method: 'GET'
     };
 
@@ -29,16 +29,16 @@ export class OpportunityService{
     return this.oAPIService.call(apiParam);
   }
 
-  getOpportunityLocationById(id: string) {
-    let apiParam = {
-        name: 'opportunity',
-        suffix: '/' + id + '/location',
-        oParam: {},
-        method: 'GET'
-    };
-
-    return this.oAPIService.call(apiParam);
-  }
+  // getOpportunityLocationById(id: string) {
+  //   let apiParam = {
+  //       name: 'opportunity',
+  //       suffix: '/' + id + '/location',
+  //       oParam: {},
+  //       method: 'GET'
+  //   };
+  //
+  //   return this.oAPIService.call(apiParam);
+  // }
 
   getOpportunityDictionary(ids: string) {
     let apiParam = {
