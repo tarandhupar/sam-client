@@ -20,13 +20,16 @@ import 'rxjs/add/operator/map';
           <span [innerHTML]="data.description"></span>
         </p>
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li><strong>Department: </strong><span *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">{{ data.parentOrganizationHierarchy.name.substring(0, data.parentOrganizationHierarchy.name.indexOf(".")) }}</span></li>
+        	<li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
+        	  <strong>Department: </strong>
+        	  <span>{{ data.parentOrganizationHierarchy.name }}</span>
+        	</li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
-      	<ul class="usa-text-small m_B-0 usa-unstyled-list">
-        	<li>{{ data.type }}</li>
-          <li><strong>Also Known As: </strong><span>{{ data.shortName && data.shortName !== null ? 'data.shortName' : '' }}</span></li>
+      	<ul class="usa-text-small m_B-0">
+        	<span>{{ data.type }}</span>
+          <li><strong>Also Known As: </strong><span *ngIf="data.alternativeNames && data.alternativeNames !== null">{{ data.alternativeNames }}</span></li>
           <li><strong>Code: </strong><span>{{ data.code }}</span></li>
         </ul>
       </div>

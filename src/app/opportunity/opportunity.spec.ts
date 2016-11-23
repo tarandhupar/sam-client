@@ -20,6 +20,9 @@ let MockOpportunityService = {
   getOpportunityById(id: string) {
     return Observable.of({
       "opportunityId": "213ji321hu3jk123",
+      "parentOpportunity": {
+        "opportunityId": "0000b08b003c3a28ae6f9dd254e4a9c8"
+      },
       "data": {
         "type": "Type Goes here",
         "solicitationNumber": "Solicitation Number goes here",
@@ -138,6 +141,21 @@ let MockOpportunityService = {
             "l3Name": "DLA Maritime PSNS",
             "agencyName": "DLA Maritime PSNS"
           }
+        }
+      ]
+    });
+  },
+  getOpportunityDictionary(ids: String) {
+    return Observable.of({
+      classification_code: [
+        {
+          dictionary_name: "classification_code",
+          code: "10",
+          parent_element_id: null,
+          description: null,
+          element_id: "1",
+          sort_index: "1",
+          value: "10 -- Weapons"
         }
       ]
     });
