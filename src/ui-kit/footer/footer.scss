@@ -1,5 +1,5 @@
 @import 'variables';
-@import '~uswds/src/stylesheets/all';
+@import '~uswds/src/stylesheets/core/utilities';
 
 .sam-footer-head {
   color: #fff;
@@ -47,7 +47,7 @@
     display: inline-block;
     min-height: 10rem;
     min-width: 10rem;
-    @include background-image(url('assets/img/logos/gsa-reverse.svg'), url('assets/img/logos/gsa-reverse.png'));
+    background-image: url('assets/img/logos/gsa-reverse.svg'), url('assets/img/logos/gsa-reverse.png');
     background-size: 10rem auto;
     background-repeat: no-repeat;
   }
