@@ -32,16 +32,11 @@
             <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
             <ng-container *ngSwitchCase="'OFFICE'">Office</ng-container>:
           </strong>
-          <ng-container *ngIf="organization.agencyName">{{ organization.agencyName }}</ng-container>
-          <ng-container *ngIf="organization.name && !organization.agencyName">{{ organization.name }}</ng-container>
+          <ng-container *ngIf="organization.l2Name">{{ organization.l2Name }}</ng-container>
         </li>
-        <li *ngIf="opportunityLocation">
+        <li *ngIf="organization">
           <strong>Location: </strong>
-          <ng-container *ngIf="opportunityLocation.street">{{ opportunityLocation.street }}</ng-container>
-          <ng-container *ngIf="opportunityLocation.city">{{ opportunityLocation.city }}</ng-container>
-          <ng-container *ngIf="opportunityLocation.state">{{ opportunityLocation.state }}</ng-container>
-          <ng-container *ngIf="opportunityLocation.zip">{{ opportunityLocation.zip }}</ng-container>
-          <ng-container *ngIf="opportunityLocation.country">{{ opportunityLocation.country }}</ng-container>
+          <ng-container *ngIf="organization.name">{{ organization.name }}</ng-container>
         </li>
       </ul>
     </section>
