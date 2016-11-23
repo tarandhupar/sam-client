@@ -57,17 +57,17 @@
           <strong>Posted Date: </strong>
           {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
         </li>
-        <li *ngIf="originalOpportunity?.postedDate">
+        <li *ngIf="opportunity.parentOpportunity?.postedDate">
           <strong>Original Posted Date: </strong>
-          {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ opportunity.parentOpportunity?.postedDate | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
         </li>
         <li *ngIf="opportunity.data?.solicitation?.deadlines?.response">
           <strong>Response Date: </strong>
           {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
         </li>
-        <li *ngIf="originalOpportunity?.data?.solicitation?.deadlines?.response">
+        <li *ngIf="opportunity.parentOpportunity?.data?.solicitation?.deadlines?.response">
           <strong>Original Response Date: </strong>
-          {{ originalOpportunity.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ opportunity.parentOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
         </li>
         <li [ngSwitch]="opportunity.data?.archive?.type">
           <strong>Archiving Policy: </strong>
@@ -78,54 +78,93 @@
           <strong>Archive Date: </strong>
           {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
         </li>
-        <li *ngIf="originalOpportunity?.data?.archive?.date">
+        <li *ngIf="opportunity.parentOpportunity?.data?.archive?.date">
           <strong>Original Archive Date: </strong>
-          {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+          {{ opportunity.parentOpportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY h:mm a UTCZ' | timezoneLabel }}
+        </li>
+      </ul>
+    </section>
+
+    <section id="classification">
+      <h2>Classification</h2>
+      <ul class="usa-unstyled-list">
+        <li *ngIf = "opportunity.parentOpportunity">
+          <strong> Original Set Aside: </strong>
+          <ng-container *ngIf="opportunity.parentOpportunity?.data?.solicitation?.setAside"> {{ opportunity.parentOpportunity?.data?.solicitation?.setAside }} </ng-container> 
+          <ng-container *ngIf="!opportunity.parentOpportunity?.data?.solicitation?.setAside">N/A</ng-container> 
+        </li>
+        <li *ngIf = "opportunity.data?.solicitation?.setAside">
+          <strong>Set Aside: </strong>
+          {{ opportunity.data?.solicitation?.setAside }}
+        </li>
+        <li *ngIf="opportunity.data?.classificationCode && dictionary">
+          <strong>Classification Code: </strong>
+          <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:dictionary.classification_code:'element_id':false:''">
+            {{ element.value }}
+          </ng-container>
+        </li>
+        <li *ngIf="opportunity.data?.naicsCode && opportunity.data?.naicsCode[0] != null && dictionary">
+          <strong>NAICS Code(s): </strong>
+          <ul>
+            <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:dictionary.naics_code:'element_id':false:''">
+              <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
+            </li>
+          </ul>
+        </li>
+        <li *ngIf="opportunity.data?.placeOfPerformance && (opportunity.data?.placeOfPerformance?.streetAddress || opportunity.data?.placeOfPerformance?.city || opportunity.data?.placeOfPerformance?.country || opportunity.data?.placeOfPerformance?.state || opportunity.data?.placeOfPerformance?.zip)">
+          <strong>Place of Performance: </strong>
+          <div>{{opportunity.data?.placeOfPerformance?.streetAddress}}</div>
+          <div *ngIf="opportunity.data?.placeOfPerformance?.city">{{opportunity.data?.placeOfPerformance?.city}}, {{opportunity.data?.placeOfPerformance?.state}} {{opportunity.data?.placeOfPerformance?.zip}}</div>
+          <div>{{opportunity.data?.placeOfPerformance?.country}}</div>
         </li>
       </ul>
     </section>
 
     <section id="contact-info">
       <h2>Contact Information</h2>
-      <div class="usa-grid-full" *ngIf = "opportunity.data?.pointOfContact">
-        <div class="usa-width-one-half" *ngIf = "hasPOC(0)">
+      <div class="usa-grid-full" *ngIf="opportunity.data?.pointOfContact">
+        <div class="usa-width-one-half" *ngIf="hasPOC(0)">
           <h3>Primary Point of Contact</h3>
           <ul class="usa-unstyled-list">
             <li><strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong></li>
-            <li *ngIf ="opportunity.data?.pointOfContact[0].title"><em>{{opportunity.data?.pointOfContact[0].title | capitalize}}</em></li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[0].title">
+              <!--TODO: fix capitalize pipe-->
+              <em [innerHTML]="opportunity.data?.pointOfContact[0].title"></em>
+            </li>
+            <li *ngIf="opportunity.data?.pointOfContact[0].email">
               <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
               <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
                 {{opportunity.data?.pointOfContact[0].email}}
               </a>
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[0].phone">
               <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[0].phone}}
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[0].fax">
               <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[0].fax}}
             </li>
           </ul>
         </div>
-        <div class="usa-width-one-half" *ngIf = "hasPOC(1)">
+        <div class="usa-width-one-half" *ngIf="hasPOC(1)">
           <h3>Secondary Point of Contact</h3>
           <ul class="usa-unstyled-list">
-
             <li><strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong></li>
-            <li *ngIf ="opportunity.data?.pointOfContact[1].title"><em>{{opportunity.data?.pointOfContact[1].title | capitalize}}</em></li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[1].title">
+              <em [innerHTML]="opportunity.data?.pointOfContact[1].title"></em>
+            </li>
+            <li *ngIf="opportunity.data?.pointOfContact[1].email">
               <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
               <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
                 {{opportunity.data?.pointOfContact[1].email}}
               </a>
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[1].phone">
               <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[1].phone}}
             </li>
-            <li>
+            <li *ngIf="opportunity.data?.pointOfContact[1].fax">
               <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
               {{opportunity.data?.pointOfContact[1].fax}}
             </li>
@@ -133,6 +172,5 @@
         </div>
       </div>
     </section>
-
   </div>
 </div>
