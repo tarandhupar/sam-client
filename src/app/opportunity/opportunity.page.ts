@@ -15,6 +15,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
   ]
 })
 export class OpportunityPage implements OnInit, OnDestroy {
+  originalOpportunity: any;
   opportunity: any;
   opportunityLocation: any;
   organization: any;
@@ -43,12 +44,17 @@ export class OpportunityPage implements OnInit, OnDestroy {
     var apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
 
     this.route.params.subscribe((params: Params) => { // construct a stream of api data
-      this.opportunityService.getOpportunityById(params['id'], true).subscribe(apiSubject);
+      this.opportunityService.getOpportunityById(params['id']).subscribe(apiSubject);
     });
 
     this.opportunitySubscription = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.opportunity = api;
+      if(this.opportunity.parentOpportunity != null) {
+        this.opportunityService.getOpportunityById(this.opportunity.parentOpportunity.opportunityId).subscribe(parent => {
+          this.originalOpportunity = parent;
+        });
+      }
     }, err => {
       console.log('Error logging', err);
     });
@@ -88,7 +94,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
   }
 
   private loadDictionary() {
-    this.opportunityService.getOpportunityDictionary('classification_code,naics_code').subscribe(data => {
+    this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type').subscribe(data => {
       this.dictionary = data;
     });
   }

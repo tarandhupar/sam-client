@@ -7,11 +7,11 @@ export class OpportunityService{
 
   constructor(private oAPIService: WrapperService){}
 
-  getOpportunityById(id: string, includeParent: boolean) {
+  getOpportunityById(id: string) {
     let apiParam = {
         name: 'opportunity',
         suffix: '/' + id,
-        oParam: {'includeParent': (includeParent === true) ? true : false },
+        oParam: {},
         method: 'GET'
     };
 
