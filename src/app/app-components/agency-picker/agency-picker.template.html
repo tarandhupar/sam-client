@@ -13,8 +13,8 @@
     </div>
     <div *ngIf="selectorToggle" class="agency-picker-dropdown-area usa-grid">            
         <div class="usa-width-five-twelfths">
-            <div *ngIf="fhSearchError">
-                {{ fhSearchMessage }}
+            <div *ngIf="searchError">
+                {{ searchMessage }}
             </div>
             <div class="usa-agency-picker-selection-area">
                 <input type="text" (blur)="onInputBlur($event)" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
