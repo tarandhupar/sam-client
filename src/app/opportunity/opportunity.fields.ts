@@ -42,6 +42,7 @@ export enum OpportunityFields {
   OriginalSetAside = <any>'original-set-aside',
   ClassificationCode = <any>'classification-code',
   NAICSCode = <any>'naics-code',
+  POP = <any>'pop',
   POPLocation = <any>'pop-location',
   POPCity = <any>'pop-city',
   POPState = <any>'pop-state',

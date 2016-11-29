@@ -132,12 +132,12 @@ export class OpportunityPage implements OnInit, OnDestroy {
     });
   }
 
-  private shouldBeDisplayed(id: string) {
-    return this.displayIds[id] !== false;
+  private shouldBeDisplayed(field: OpportunityFields) {
+    return this.displayIds[field] !== false;
   }
 
-  private generateID(field: string, prefix?: string) {
-    let id = field;
+  private generateID(name: string, prefix?: string) {
+    let id = name;
     if(prefix != null) { id = prefix + '-' + id; }
     return 'opportunity-' + id;
   }
