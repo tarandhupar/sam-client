@@ -114,10 +114,34 @@ export class OpportunityPage implements OnInit, OnDestroy {
       switch (api.data.type) {
         // Base notice types
         case 'p':
+          this.displayIds[OpportunityFields.Award] = false;
+          this.displayIds[OpportunityFields.StatutoryAuthority] = false;
+          this.displayIds[OpportunityFields.JustificationAuthority] = false;
+          this.displayIds[OpportunityFields.OrderNumber] = false;
+          this.displayIds[OpportunityFields.ModificationNumber] = false;
         case 'r':
+          this.displayIds[OpportunityFields.Award] = false;
+          this.displayIds[OpportunityFields.StatutoryAuthority] = false;
+          this.displayIds[OpportunityFields.JustificationAuthority] = false;
+          this.displayIds[OpportunityFields.OrderNumber] = false;
+          this.displayIds[OpportunityFields.ModificationNumber] = false;
         case 's':
+          this.displayIds[OpportunityFields.StatutoryAuthority] = false;
+          this.displayIds[OpportunityFields.JustificationAuthority] = false;
+          this.displayIds[OpportunityFields.OrderNumber] = false;
+          this.displayIds[OpportunityFields.ModificationNumber] = false;
         case 'g':
+          this.displayIds[OpportunityFields.Award] = false;
+          this.displayIds[OpportunityFields.StatutoryAuthority] = false;
+          this.displayIds[OpportunityFields.JustificationAuthority] = false;
+          this.displayIds[OpportunityFields.OrderNumber] = false;
+          this.displayIds[OpportunityFields.ModificationNumber] = false;
         case 'f':
+          this.displayIds[OpportunityFields.Award] = false;
+          this.displayIds[OpportunityFields.StatutoryAuthority] = false;
+          this.displayIds[OpportunityFields.JustificationAuthority] = false;
+          this.displayIds[OpportunityFields.OrderNumber] = false;
+          this.displayIds[OpportunityFields.ModificationNumber] = false;
           break;
 
         // Other types
