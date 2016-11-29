@@ -7,7 +7,7 @@
     <!--Side Navigation-->
     <nav>
       <ul class="usa-sidenav-list">
-        <li><a href="{{ currentUrl }}#gen-info">General Infornation</a></li>
+        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Infornation</a></li>
         <li><a href="{{ currentUrl }}#classification">Classification</a></li>
         <li><a href="{{ currentUrl }}#syn-desc">Synopsis/Description</a></li>
         <li><a href="{{ currentUrl }}#package">Packages</a></li>
@@ -36,47 +36,57 @@
           </strong>
           <ng-container *ngIf="organization.l2Name">{{ organization.l2Name }}</ng-container>
         </li>
-        <li [attr.id]="generateID(opportunityFields.Location, 'header')" *ngIf="organization && shouldBeDisplayed(opportunityFields.Location)">
+        <li [attr.id]="generateID(opportunityFields.Location, 'header')"
+            *ngIf="organization && shouldBeDisplayed(opportunityFields.Location)">
           <strong>Location: </strong>
           <ng-container *ngIf="organization.name">{{ organization.name }}</ng-container>
         </li>
       </ul>
     </section>
 
-    <section id="gen-info">
+    <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
       <h2>General Information</h2>
       <ul class="usa-unstyled-list">
-        <li>
+        <li [attr.id]="generateID(opportunityFields.Type, 'general')"
+            *ngIf="opportunity.data?.type && shouldBeDisplayed(opportunityFields.Type)">
           <strong>Opportunity Type: </strong>
-          {{ opportunity.data?.type | opportunityTypeLabel }}
+          {{ opportunity.data.type | opportunityTypeLabel }}
         </li>
-        <li *ngIf="opportunity.postedDate">
+        <li [attr.id]="generateID(opportunityFields.PostedDate, 'general')"
+            *ngIf="opportunity.postedDate && shouldBeDisplayed(opportunityFields.PostedDate)">
           <strong>Posted Date: </strong>
           {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
         </li>
-        <li *ngIf="originalOpportunity?.postedDate">
+        <li [attr.id]="generateID(opportunityFields.OriginalPostedDate, 'general')"
+            *ngIf="originalOpportunity?.postedDate && shouldBeDisplayed(opportunityFields.OriginalPostedDate)">
           <strong>Original Posted Date: </strong>
           {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
         </li>
-        <li *ngIf="opportunity.data?.solicitation?.deadlines?.response">
+        <li [attr.id]="generateID(opportunityFields.ResponseDate, 'general')"
+            *ngIf="opportunity.data?.solicitation?.deadlines?.response && shouldBeDisplayed(opportunityFields.ResponseDate)">
           <strong>Response Date: </strong>
           {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY' }}
         </li>
-        <li *ngIf="originalOpportunity?.data?.solicitation?.deadlines?.response">
+        <li [attr.id]="generateID(opportunityFields.OriginalResponseDate, 'general')"
+            *ngIf="originalOpportunity?.data?.solicitation?.deadlines?.response && shouldBeDisplayed(opportunityFields.OriginalResponseDate)">
           <strong>Original Response Date: </strong>
           {{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
         </li>
-        <li [ngSwitch]="opportunity.data?.archive?.type">
+        <li [attr.id]="generateID(opportunityFields.ArchivePolicy, 'general')"
+            *ngIf="shouldBeDisplayed(opportunityFields.ArchivePolicy)"
+            [ngSwitch]="opportunity.data?.archive?.type">
           <strong>Archiving Policy: </strong>
           <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
           <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
           <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
         </li>
-        <li *ngIf="opportunity.data?.archive?.date">
+        <li [attr.id]="generateID(opportunityFields.ArchiveDate, 'general')"
+            *ngIf="opportunity.data?.archive?.date && shouldBeDisplayed(opportunityFields.ArchiveDate)">
           <strong>Archive Date: </strong>
           {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
         </li>
-        <li *ngIf="originalOpportunity?.data?.archive?.date">
+        <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')"
+            *ngIf="originalOpportunity?.data?.archive?.date && shouldBeDisplayed(opportunityFields.OriginalArchiveDate)">
           <strong>Original Archive Date: </strong>
           {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
         </li>
