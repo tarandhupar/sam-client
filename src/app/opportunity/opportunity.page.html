@@ -124,6 +124,14 @@
 
     <section id="contact-info">
       <h2>Contact Information</h2>
+      <div class="usa-grid-full" *ngIf="opportunityLocation">
+        <h3>Contracting Office Address:</h3>
+        <span *ngIf="opportunityLocation.street">{{opportunityLocation.street}},</span>
+        <span *ngIf="opportunityLocation.city">{{opportunityLocation.city}}, </span>
+        <span *ngIf="opportunityLocation.state">{{opportunityLocation.state}}</span>
+        <span *ngIf="opportunityLocation.country">{{opportunityLocation.country}}</span>
+        <span *ngIf="opportunityLocation.zip">{{opportunityLocation.zip}}</span>
+      </div>
       <div class="usa-grid-full" *ngIf="opportunity.data?.pointOfContact">
         <div class="usa-width-one-half" *ngIf="hasPOC(0)">
           <h3>Primary Point of Contact</h3>
