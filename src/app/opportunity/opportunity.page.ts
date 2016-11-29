@@ -138,7 +138,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
 
   private generateID(field: string, prefix?: string) {
     let id = field;
-    if(prefix != null) { id = prefix + id; }
+    if(prefix != null) { id = prefix + '-' + id; }
     return 'opportunity-' + id;
   }
 
