@@ -1,7 +1,8 @@
-.hat-img {
-  height: 50px;
-  width: 50px;
-  float:left;
+.logo-img {
+  margin-top:12px;
+  width:20rem;
+  height:37px;
+  float: left;
 }
 
 samSearchbar {
