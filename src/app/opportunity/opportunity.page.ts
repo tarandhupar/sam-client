@@ -28,6 +28,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
 
   private organizationSubscription: Subscription;
   private opportunitySubscription: Subscription;
+  private parentOpportunitySubscription: Subscription;
 
   constructor(
     private route:ActivatedRoute,
@@ -46,7 +47,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
   }
 
   private loadOpportunity() {
-    var apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
+    var apiSubject = new ReplaySubject(2); // broadcasts the api data to multiple subscribers
 
     this.route.params.subscribe((params: Params) => { // construct a stream of api data
       this.opportunityService.getOpportunityById(params['id']).subscribe(apiSubject);
@@ -56,16 +57,21 @@ export class OpportunityPage implements OnInit, OnDestroy {
       // run whenever api data is updated
       this.opportunity = api;
       if(this.opportunity.parentOpportunity != null) {
-        this.opportunityService.getOpportunityById(this.opportunity.parentOpportunity.opportunityId).subscribe(parent => {
+        this.opportunityService.getOpportunityById(this.opportunity.parentOpportunity.opportunityId).subscribe(apiSubject);
+        this.parentOpportunitySubscription = apiSubject.subscribe(parent => {
           this.originalOpportunity = parent;
         });
       }
     }, err => {
       console.log('Error logging', err);
     });
-
+    console.log("Api Subject: ", apiSubject);
     return apiSubject;
   }
+
+  // private loadParentOrganization(opportunityApiStream: Observable<any>){
+  //   let apiSubject = new ReplaySubject(1);
+  // }
 
   private loadOrganization(opportunityApiStream: Observable<any>) {
     let apiSubject = new ReplaySubject(1);
@@ -110,6 +116,13 @@ export class OpportunityPage implements OnInit, OnDestroy {
         console.log("Error: No opportunity type");
         return;
       }
+      console.log("setdisplaysID: ", api);
+      // if (api.postedDate.equals(api.modifiedDate)){
+      //   this.displayIds[OpportunityFields.OriginalPostedDate] = false;
+      // }
+      // if (api.postedDate.equals(api.modifiedDate)){
+      //   this.displayIds[OpportunityFields.OriginalPostedDate] = false;
+      // }
 
       switch (api.data.type) {
         // Base notice types
