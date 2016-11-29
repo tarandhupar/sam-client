@@ -4,6 +4,7 @@ import { Location } from '@angular/common';
 import { OpportunityService, FHService } from 'api-kit';
 import { ReplaySubject, Observable, Subscription } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
+import { OpportunityFields } from "./opportunity.fields";
 
 @Component({
   moduleId: __filename,
@@ -15,6 +16,9 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
   ]
 })
 export class OpportunityPage implements OnInit, OnDestroy {
+  public opportunityFields = OpportunityFields;
+  private displayIds = {};
+
   originalOpportunity: any;
   // opportunityLocation: any;
   opportunity: any;
@@ -38,6 +42,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
     this.loadOrganization(opportunityApiStream);
     // this.loadOpportunityLocation(opportunityApiStream);
     this.loadDictionary();
+    this.setDisplayIds(opportunityApiStream);
   }
 
   private loadOpportunity() {
@@ -97,6 +102,44 @@ export class OpportunityPage implements OnInit, OnDestroy {
     this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type').subscribe(data => {
       this.dictionary = data;
     });
+  }
+
+  private setDisplayIds(opportunityApiStream: Observable<any>) {
+    opportunityApiStream.subscribe(api => {
+      if(api.data == null || api.data.type == null) {
+        console.log("Error: No opportunity type");
+        return;
+      }
+
+      switch (api.data.type) {
+        // Base notice types
+        case 'p':
+        case 'r':
+        case 's':
+        case 'g':
+        case 'f':
+          break;
+
+        // Other types
+        case 'a':
+        case 'm':
+        case 'k':
+        case 'j':
+        case 'i':
+        case 'l':
+          break;
+      }
+    });
+  }
+
+  private shouldBeDisplayed(id: string) {
+    return this.displayIds[id] !== false;
+  }
+
+  private getID(field: string, prefix?: string) {
+    let id = field;
+    if(prefix != null) { id = prefix + id; }
+    return 'opportunity-' + id;
   }
 
   private hasPOC(index: number): boolean {
