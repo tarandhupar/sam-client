@@ -14,7 +14,7 @@ import './header.css';
             
               </nav>
             </header>`,
-  styles: [ 'header.css' ]
+  //styles: [ 'header.css' ]
 })
 export class SamHeaderComponent {
 

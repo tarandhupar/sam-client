@@ -171,9 +171,9 @@ module.exports = {
 
       /// Sass Loader
       {
-        test: /(?!_)(\\w+)\\.(scss)$/,
+        test: /\.scss$/,
         exclude: /node_modules/,
-        loaders: [ 'style', 'css?sourceMap', 'sass?sourceMap' ]
+        loaders: [ 'style', 'css?sourceMap', 'resolve-url-loader', 'sass?sourceMap' ]
       },
 
       {
