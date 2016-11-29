@@ -16,7 +16,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 })
 export class OpportunityPage implements OnInit, OnDestroy {
   originalOpportunity: any;
-  // opportunityLocation: any;
+  opportunityLocation: any;
   opportunity: any;
   organization: any;
   currentUrl: string;
@@ -36,7 +36,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
 
     let opportunityApiStream = this.loadOpportunity();
     this.loadOrganization(opportunityApiStream);
-    // this.loadOpportunityLocation(opportunityApiStream);
+    this.loadOpportunityLocation(opportunityApiStream);
     this.loadDictionary();
   }
 
@@ -83,15 +83,15 @@ export class OpportunityPage implements OnInit, OnDestroy {
     return apiSubject;
   }
 
-  // private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
-  //   opportunityApiStream.subscribe(opAPI => {
-  //     if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
-  //       this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
-  //         this.opportunityLocation = data;
-  //       });
-  //     }
-  //   });
-  // }
+  private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
+    opportunityApiStream.subscribe(opAPI => {
+      if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
+        this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
+          this.opportunityLocation = data;
+        });
+      }
+    });
+  }
 
   private loadDictionary() {
     this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type').subscribe(data => {
