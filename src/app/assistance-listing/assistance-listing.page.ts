@@ -49,7 +49,9 @@ export class ProgramPage implements OnInit, OnDestroy {
     private filterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) {}
 
   ngOnInit() {
-    this.currentUrl = this.location.path();
+    // Using document.location.href instead of
+    // location.path because of ie9 bug
+    this.currentUrl = document.location.href;
 
     let programAPISource = this.loadProgram();
 
