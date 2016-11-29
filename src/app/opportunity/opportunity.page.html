@@ -19,14 +19,16 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths" *ngIf="opportunity">
-    <section>
-      <h1>{{ opportunity.data?.title }}</h1>
+    <section [attr.id]="generateID(opportunityFields.Header)" *ngIf="shouldBeDisplayed(opportunityFields.Header)">
+      <h1 [attr.id]="generateID(opportunityFields.Title, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Title)">
+        {{ opportunity.data?.title }}
+      </h1>
 
       <ul class="usa-unstyled-list">
-        <li>
+        <li [attr.id]="generateID(opportunityFields.Solicitation, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Solicitation)">
           <strong>Solicitation Number: </strong>{{ opportunity.data?.solicitationNumber }}
         </li>
-        <li *ngIf='organization'>
+        <li [attr.id]="generateID(opportunityFields.HierarchyName, 'header')" *ngIf="organization && shouldBeDisplayed(opportunityFields.HierarchyName)">
           <strong [ngSwitch]='organization.type'>
             <ng-container *ngSwitchCase="'DEPARTMENT'">Department</ng-container>
             <ng-container *ngSwitchCase="'AGENCY'">Agency</ng-container>
@@ -34,7 +36,7 @@
           </strong>
           <ng-container *ngIf="organization.l2Name">{{ organization.l2Name }}</ng-container>
         </li>
-        <li *ngIf="organization">
+        <li [attr.id]="generateID(opportunityFields.Location, 'header')" *ngIf="organization && shouldBeDisplayed(opportunityFields.Location)">
           <strong>Location: </strong>
           <ng-container *ngIf="organization.name">{{ organization.name }}</ng-container>
         </li>

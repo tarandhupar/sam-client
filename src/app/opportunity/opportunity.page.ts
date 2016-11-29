@@ -136,7 +136,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
     return this.displayIds[id] !== false;
   }
 
-  private getID(field: string, prefix?: string) {
+  private generateID(field: string, prefix?: string) {
     let id = field;
     if(prefix != null) { id = prefix + id; }
     return 'opportunity-' + id;

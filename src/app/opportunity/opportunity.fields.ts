@@ -3,7 +3,7 @@ export enum OpportunityFields {
   Header = 'header',
   Title = 'title',
   Solicitation = 'solicitation-number',
-  HierarchyLevel = 'hierarchy-level',
+  HierarchyName = 'hierarchy-level',
   Location = 'location',
 
     // Award details section
