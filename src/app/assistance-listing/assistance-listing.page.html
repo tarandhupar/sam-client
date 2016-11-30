@@ -67,6 +67,7 @@
     </section>
 
     <section id="program-overview">
+      <a name="#/programs/{{programID}}/view#overview"></a>
       <h2 id="overview">Overview</h2>
 
       <h3>Objectives:</h3>
@@ -94,6 +95,7 @@
     </section>
 
     <section id="program-authorizations">
+      <a name="#/programs/{{programID}}/view#authorizations"></a>
       <h2 id="authorizations">Authorizations</h2>
 
       <div *ngFor="let item of authorizationIdsGrouped; let i = index">
@@ -103,6 +105,7 @@
 
     <!--Financials-->
     <section id="program-financials">
+      <a name="#/programs/{{programID}}/view#financial-information"></a>
       <h2 id="financial-information">Financial Information</h2>
 
       <financial-obligation-chart *ngIf='dictionaries' [financialData]='program.data?.financial?.obligations' [dictionaries]='dictionaries'></financial-obligation-chart>
@@ -141,6 +144,7 @@
 
     <!--Should I apply?-->
     <section id="program-application-criteria">
+      <a name="#/programs/{{programID}}/view#criteria-for-applying"></a>
       <h2 id="criteria-for-applying">Criteria for Applying</h2>
 
       <h3>Types of Assistance:</h3>
@@ -230,6 +234,7 @@
 
     <!--How do I apply?-->
     <section id="program-application-information">
+      <a name="#/programs/{{programID}}/view#applying-for-assistance"></a>
       <h2 id="applying-for-assistance">Applying for Assistance</h2>
 
       <h3>Deadlines:</h3>
@@ -408,6 +413,7 @@
 
     <!--Compliance requirements-->
     <section id="program-compliance-requirements">
+      <a name="#/programs/{{programID}}/view#compliance-requirements"></a>
       <h2 id="compliance-requirements">Compliance Requirements</h2>
 
       <h3>Reports:</h3>
@@ -536,6 +542,7 @@
 
     <!--Contact information-->
     <section id="program-contact-information">
+      <a name="#/programs/{{programID}}/view#contact-information"></a>
       <h2 id="contact-information">Contact Information</h2>
 
       <address>
@@ -557,6 +564,7 @@
 
     <!--History Section-->
     <section id="program-history" *ngIf="historicalIndex">
+      <a name="#/programs/{{programID}}/view#history"></a>
       <h2 id="history">History</h2><br>
       <ng-container *ngFor="let item of historicalIndex; let i = index">
         <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">

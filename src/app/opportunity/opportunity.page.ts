@@ -34,7 +34,7 @@ export class OpportunityPage implements OnInit {
   public displayField = {}; // object containing boolean flags for whether fields should be displayed
 
   originalOpportunity: any;
-  // opportunityLocation: any;
+  opportunityLocation: any;
   opportunity: any;
   organization: any;
   currentUrl: string;
@@ -54,7 +54,7 @@ export class OpportunityPage implements OnInit {
 
     this.loadDictionary();
     this.loadOrganization(opportunityAPI);
-    // this.loadOpportunityLocation(opportunityApiStream);
+    this.loadOpportunityLocation(opportunityAPI);
 
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
@@ -122,15 +122,15 @@ export class OpportunityPage implements OnInit {
     return organizationSubject;
   }
 
-  // private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
-  //   opportunityApiStream.subscribe(opAPI => {
-  //     if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
-  //       this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
-  //         this.opportunityLocation = data;
-  //       });
-  //     }
-  //   });
-  // }
+  private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
+    opportunityApiStream.subscribe(opAPI => {
+      if(opAPI.data.organizationLocationId != '' && typeof opAPI.data.organizationLocationId !== 'undefined') {
+        this.opportunityService.getOpportunityLocationById(opAPI.data.organizationLocationId).subscribe(data => {
+          this.opportunityLocation = data;
+        });
+      }
+    });
+  }
 
   private loadDictionary() {
     this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type').subscribe(data => {
