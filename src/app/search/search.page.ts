@@ -2,6 +2,7 @@ import { Component,OnInit } from '@angular/core';
 import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { SearchService } from 'api-kit';
+import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 
 @Component({
   moduleId: __filename,
@@ -9,7 +10,7 @@ import { SearchService } from 'api-kit';
   styleUrls: [
     'search.style.css'
   ],
-  providers: [],
+  providers: [CapitalizePipe],
   templateUrl: 'search.template.html'
 })
 
@@ -93,17 +94,24 @@ export class SearchPage implements OnInit{
       organizationId: this.organizationId
 		}).subscribe(
 			data => {
+        console.log(data);
 	      if(data._embedded && data._embedded.results){
 	        for(var i=0; i<data._embedded.results.length; i++) {
+            //Modifying FAL data
 	          if(data._embedded.results[i].fhNames){
 	            if(!(data._embedded.results[i].fhNames instanceof Array)){
 	              data._embedded.results[i].fhNames = [data._embedded.results[i].fhNames];
 	            }
 	          }
+            //Modifying FH data
             if(data._embedded.results[i].parentOrganizationHierarchy) {
               if(data._embedded.results[i].parentOrganizationHierarchy.name.indexOf(".")>-1) {
                data._embedded.results[i].parentOrganizationHierarchy.name = data._embedded.results[i].parentOrganizationHierarchy.name.substring(0, data._embedded.results[i].parentOrganizationHierarchy.name.indexOf("."))
               }
+              data._embedded.results[i].parentOrganizationHierarchy.name = new CapitalizePipe().transform(data._embedded.results[i].parentOrganizationHierarchy.name.replace(/[_-]/g, " "));
+            }
+            if(data._embedded.results[i].type) {
+              data._embedded.results[i].type = new CapitalizePipe().transform(data._embedded.results[i].type);
             }
 	        }
 	        this.data = data._embedded;
