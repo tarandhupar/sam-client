@@ -43,20 +43,23 @@ select[multiple]{
   padding:0;
   border:1px solid #5b616b;
   border-top:none;
-  width: 100%;
+  width: calc(100% - 120px);
   z-index: 10;
-}
-.autocomplete li{
-  list-style:none;
-  padding: 0 10px;
-  margin: 0;
-  max-width:inherit;
+  max-height:300px;
+  overflow:auto;
+
+  li{
+    list-style:none;
+    padding: 0 10px;
+    margin: 0;
+    max-width:inherit;
+  }
+  li:hover{
+    cursor:pointer;
+    background:#e1f3f8;
+  }
 }
 
-.autocomplete li:hover{
-  cursor:pointer;
-  background:#e1f3f8;
-}
 .autocomplete-selected{
   background:#e1f3f8; 
 }
@@ -65,27 +68,39 @@ select[multiple]{
   cursor:pointer;
 }
 
-.agency-picker-chevron-wrapper{
-  text-align:center;
-  padding: 15px 0;
-  @include media($small-screen) {
-    padding: 30px 0 15px;
+.agency-picker-readonly-area{
+  padding:15px 10px;
+  border:1px #5b616b solid;
+  position:relative;
+  width:460px;
+  margin-left:0;
+  min-height:55px;
+
+  span:hover{
+    cursor:pointer;
+  }
+
+  ul{
+    list-style:none;
+    margin:0;
+    padding:0;
   }
 }
-.agency-picker-chevron{
-
-  font-size:30px;
-}
-.agency-picker-chevron:hover{
-  cursor:pointer;
-}
-
 .agency-picker-dropdown-area{
   padding-top:15px;
   padding-bottom:15px;
   border:1px #5b616b solid;
   position:relative;
-  margin-top:10px;
+  width:460px;
+  margin-left:0;
+  background:#eee;
+}
+
+.agency-picker-search-area{
+  height:52px;
+  position:relative;
+  clear: both;
+  overflow:visible;
 }
 .agency-picker-icon{
   font-size:1.5em;
@@ -100,6 +115,26 @@ select[multiple]{
   height:6em;
 }
 
+.usa-agency-picker-search-input{
+  width: calc(100% - 120px);
+  float:left;
+}
+
+.usa-agency-picker-icon-area{
+  float:left;
+  line-height: 52px;
+  margin: 0px 10px 0 4px;
+}
+.usa-agency-picker-browse-toggle-area{
+  float:left;
+  line-height:52px;
+
+  a:hover{
+    cursor:pointer;
+  }
+}
+
+/* not used */
 .usa-agency-picker {
   @include clearfix;
   max-width: none;
@@ -143,6 +178,7 @@ select[multiple]{
     height: 4.4rem;
     width: #{$usa-btn-big-width};
     align-items:flex-start;
+
     @include media($small-screen) {
       float: left;
     }
