@@ -28,7 +28,7 @@ import * as moment from 'moment/moment';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-        	<li><strong>FAL Number</strong>
+        	<li><strong>CFDA Number</strong>
           	<ul class="usa-unstyled-list">
               <li class="fal-program-number">{{data.programNumber}}</li>
             </ul>

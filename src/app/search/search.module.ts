@@ -7,12 +7,12 @@ import { AssistanceListingResult } from '../assistance-listing/search-result/ass
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
 import { FederalHierarchyResult } from '../organization/search-result/federal-hierarchy-result.component';
 import { EntitiesResult } from '../entity/search-result/entities-result.component'
-import { FHInputComponent } from './agency-selector/agency-selector.component';
 import { FormsModule } from '@angular/forms';
 
 import { routing } from './search.route';
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
+import { AppComponentsModule } from "../app-components/app-components.module";
 
 @NgModule({
   imports: [
@@ -23,6 +23,7 @@ import { SamAPIKitModule } from 'api-kit';
     HttpModule,
     SamUIKitModule,
     SamAPIKitModule,
+    AppComponentsModule
   ],
   exports: [
     SearchPage,
@@ -30,7 +31,6 @@ import { SamAPIKitModule } from 'api-kit';
     OpportunitiesResult,
     FederalHierarchyResult,
     EntitiesResult,
-    FHInputComponent
   ],
   declarations: [
     SearchPage,
@@ -38,7 +38,6 @@ import { SamAPIKitModule } from 'api-kit';
     OpportunitiesResult,
     FederalHierarchyResult,
     EntitiesResult,
-    FHInputComponent
   ],
   providers: [],
 })

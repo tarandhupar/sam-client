@@ -7,7 +7,7 @@ import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { Observable } from 'rxjs';
 import { SamUIKitModule } from 'ui-kit';
 
-import { FHInputComponent } from './agency-selector.component';
+import { AgencyPickerComponent } from './agency-picker.component';
 
 var fixture;
 var comp;
@@ -41,10 +41,10 @@ var activatedRouteStub = {
     }
   }
 };
-describe('FederalHierarchyInput', () => {
+describe('AgencyPickerTests', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FHInputComponent ],
+      declarations: [ AgencyPickerComponent ],
       providers: [//start - Mocks HTTP provider
         BaseRequestOptions,
         MockBackend,
@@ -71,7 +71,7 @@ describe('FederalHierarchyInput', () => {
       ],
       imports: [FormsModule,SamUIKitModule]
     });
-    TestBed.overrideComponent(FHInputComponent, {
+    TestBed.overrideComponent(AgencyPickerComponent, {
       set: {
         providers: [
           { provide: FHService, useValue: fhServiceStub }, { provide: WrapperService, useValue: apiServiceStub }
@@ -79,7 +79,7 @@ describe('FederalHierarchyInput', () => {
       }
     });
     TestBed.compileComponents().then( ()=>{
-      fixture = TestBed.createComponent(FHInputComponent);
+      fixture = TestBed.createComponent(AgencyPickerComponent);
       comp = fixture.componentInstance;
     });
 

@@ -23,6 +23,7 @@ import { ReplaySubject, Observable, Subscription } from 'rxjs';
 })
 export class ProgramPage implements OnInit, OnDestroy {
   program: any;
+  programID: any;
   federalHierarchy: any;
   federalHierarchyWithParents: any;
   relatedProgram: any[] = [];
@@ -49,7 +50,9 @@ export class ProgramPage implements OnInit, OnDestroy {
     private filterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) {}
 
   ngOnInit() {
-    this.currentUrl = this.location.path();
+    // Using document.location.href instead of
+    // location.path because of ie9 bug
+    this.currentUrl = document.location.href;
 
     let programAPISource = this.loadProgram();
 
@@ -74,6 +77,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   private loadProgram() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
+      this.programID = params['id'];
       return this.programService.getProgramById(params['id']);
     });
     this.apiStreamSub = apiStream.subscribe(apiSubject);
