@@ -41,7 +41,8 @@ export class SamSearchbarComponent {
       {value: 'fbo', label: 'Opportunities'},
       {value: 'cfda', label: 'Assistance Listings'},
       {value: 'fh', label: 'Federal Hierarchy'},
-      {value: 'ent', label: 'Entities'}
+      {value: 'ent', label: 'Entities'},
+      {value: 'wd', label: 'Wage Determinations'}
     ],
     disabled: false,
     label: '',
