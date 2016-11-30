@@ -16,8 +16,22 @@ import { OpportunityFields } from "./opportunity.fields";
   ]
 })
 export class OpportunityPage implements OnInit {
-  public opportunityFields = OpportunityFields;
-  public displayField = {};
+  /**
+   * Steps to add a new field:
+   * 1. Add the field to OpportunityFields enum (opportunity.fields.ts)
+   * 2. Add an element for the field in html template (opportunity.page.html)
+   *  2a. (optional) Give the element an ID by calling generateID(...)
+   *  2b. Add an *ngIf condition to the element that checks shouldBeShown(...), as well as any null checks required
+   * 3. In setDisplayFields(...), set this.displayField[newField] = false for any conditions where it should be hidden
+   * 4. Update unit tests (opportunity.spec.ts) as appropriate
+   *
+   * Steps to add a new opportunity type:
+   * 1. Add the type to type labels pipe (opportunity-type-label.pipe.ts)
+   * 2. In setDisplayFields(...), set this.displayField[someField] = false for any fields this type does not show
+   * 3. Update unit tests (opportunity.spec.ts) as appropriate
+   */
+  public opportunityFields = OpportunityFields; // expose the OpportunityFields enum for use in html template
+  public displayField = {}; // object containing boolean flags for whether fields should be displayed
 
   originalOpportunity: any;
   // opportunityLocation: any;
