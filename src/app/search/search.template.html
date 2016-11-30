@@ -4,11 +4,10 @@
 	</div>
   <div class="usa-width-one">
     <samSearchbar (onSearch)="onSearchClick($event)" [keyword]="keyword" [placeholder]="'#keyword'" *ngIf="false"></samSearchbar>
-
     <div *ngIf="showOptional" class="usa-width-one">
-
       <h3>Common Filters:</h3>
-      <fh-input #fhInput [hideOffice]="true" (organization)="onOrganizationChange($event)"></fh-input>
+      <label>Office name:</label>
+      <agencyPicker #fhInput [multimode]="false" (organization)="onOrganizationChange($event)"></agencyPicker>
       <hr *ngIf="data.results" class="m_T-5x"/>
     </div>
 		<div *ngFor="let row of data.results">
