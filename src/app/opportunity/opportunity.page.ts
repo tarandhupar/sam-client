@@ -153,25 +153,31 @@ export class OpportunityPage implements OnInit {
 
       switch (opportunity.data.type) {
         // Base opportunity types
-        case 'p':
-        case 'r':
-        case 's':
-        case 'g':
-        case 'f':
+        case 'p': // Presolicitation
+        case 'r': // Sources Sought
+        case 's': // Special Notice
+        case 'g': // Sale of Surplus Property
+        case 'f': // Foreign Government Standard
           this.displayField[OpportunityFields.Award] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
-          this.displayField[OpportunityFields.JustificationAuthority] = false;
-          this.displayField[OpportunityFields.OrderNumber] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
-          break;
 
         // Other types
-        case 'a':
-        case 'm':
-        case 'k':
-        case 'j':
-        case 'i':
-        case 'l':
+        case 'j': // Justification and Approval (J&A)
+          this.displayField[OpportunityFields.AwardAmount] = false;
+          this.displayField[OpportunityFields.LineItemNumber] = false;
+          this.displayField[OpportunityFields.AwardedName] = false;
+          this.displayField[OpportunityFields.AwardedDUNS] = false;
+          this.displayField[OpportunityFields.AwardedAddress] = false;
+          this.displayField[OpportunityFields.Contractor] = false;
+          this.displayField[OpportunityFields.JustificationAuthority] = false;
+          this.displayField[OpportunityFields.OrderNumber] = false;
+
+        case 'a': // Award Notice
+        case 'm': // Modification/Amendment/Cancel
+        case 'k': // Combined Synopsis/Solicitation
+        case 'i': // Intent to Bundle Requirements (DoD-Funded)
+        case 'l': // Fair Opportunity / Limited Sources Justification
           break;
 
         default:
