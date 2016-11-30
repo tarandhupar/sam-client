@@ -296,5 +296,6 @@ describe('OpportunityPage', () => {
     expect(shouldDisplaySpy('title')).toBe(true);
     expect(shouldDisplaySpy('header')).toBe(true);
     expect(shouldDisplaySpy('general')).toBe(true);
+    expect(shouldDisplaySpy('contact')).toBe(true); // not explicitly set
   });
 });
