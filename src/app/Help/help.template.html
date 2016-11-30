@@ -76,6 +76,10 @@
         </li>
         <li>
           <a [ngClass]="getSectionClass('reference')" (click)="changeSection('reference')" [routerLink]="['/help/reference']">Reference Library</a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('reference')">
+            <li><a #featuredReference [ngClass]="getSubSectionClass('featuredReference')" (click)="changeSubSection('featuredReference',featuredReference)" href="{{currentUrl}}#featuredReference">Featured References</a></li>
+            <li><a #additionalReference [ngClass]="getSubSectionClass('additionalReference')" (click)="changeSubSection('additionalReference',additionalReference)" href="{{currentUrl}}#additionalReference">Additional References</a></li>
+          </ul>
         </li>
       </ul>
     </div>

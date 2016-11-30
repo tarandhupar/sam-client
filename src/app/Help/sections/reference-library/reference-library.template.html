@@ -1,13 +1,126 @@
 <section>
   <h2 class="m_T-2x">Reference Library</h2>
+  <p class="p_L-3x">
+    Albucius lobortis ius et, sea debet inimicus ne,
+    nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis
+    ne corpora vivendum.
+  </p>
+  <h3 id="featuredReference" class="p_L-3x">Featured References</h3>
+  <h4 class="p_L-8x">Federal Assistance</h4>
+  <div class="usa-grid">
+    <div class="usa-width-one-whole m_L-8x relative reference-image-container">
+      <div class="usa-width-one-whole">
+        <div class="usa-width-one-third pull-right" *ngFor="let item of data.Federal; let i= index">
+          <div class="usa-width-three-fourths image-wrap relative black-border">
+            <a class="featured-reference-toggle" (click)="selectDetail(item,'Federal')"><i class="fa fa-plus" [ngClass]="getItemClass(item,'Federal')"></i></a>
+            <a class="featured-reference-imagelink" (click)="selectDetail(item,'Federal')"><img class="reference-image" src="../assets/img/placeholder.jpg"></a>
+            <span (click)="selectDetail(item,'Federal')" class="featured-reference-title">{{item.title}}</span>
+          </div>
+        </div>
+      </div>
+      <!--Triangle div to point out which topic detail is currently showing-->
+      <div class="usa-width-one-whole tri-div">
+        <div class="usa-width-one-third" [ngClass]="getTriClass(0,'Federal')"></div>
+        <div class="usa-width-one-third" [ngClass]="getTriClass(1,'Federal')"></div>
+        <div class="usa-width-one-third" [ngClass]="getTriClass(2,'Federal')"></div>
+      </div>
+    </div>
+
+    <div class="usa-width-one-whole m_L-8x relative federal-detail" *ngIf = "detailObj.Federal.showDetail">
+      <div class="usa-width-one-twelfth div-right">&nbsp;</div>
+      <div class="div-fill relative black-border ">
+        <div class="usa-width-one-whole div-fill">
+
+          <span class="featured-reference-toggle"><a (click)="closeReferenceDetail('Federal')">
+            <i class="fa fa-minus"></i></a>
+          </span>
+          <div class="usa-width-one-whole">
+            <img class="usa-width-one-whole p_R-4x p_L-4x" src="../assets/img/ECFR.png">
+            <p class="p_L-1x p_B-1x relative">{{detailObj.Federal.detail}}</p>
+            <span class="reference-content-link usa-external_link"><a>External Link</a></span>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="usa-width-one-whole"></div>
+  </div>
+
+  <h4 class="p_L-8x">Contracts</h4>
+  <div class="usa-grid">
+    <div class="usa-width-one-whole m_L-8x relative reference-image-container">
+      <div class="usa-width-one-whole">
+        <div class="usa-width-one-third pull-right" *ngFor="let item of data.Contract; let i= index">
+          <div class="usa-width-three-fourths image-wrap relative black-border">
+            <a class="featured-reference-toggle" (click)="selectDetail(item,'Contract')"><i class="fa fa-plus" [ngClass]="getItemClass(item,'Contract')"></i></a>
+            <a (click)="selectDetail(item,'Contract')"><img class="reference-image" src="../assets/img/placeholder.jpg"></a>
+            <span (click)="selectDetail(item,'Contract')" class="featured-reference-title">{{item.title}}</span>
+          </div>
+        </div>
+      </div>
+      <!--Triangle div to point out which topic detail is currently showing-->
+      <div class="usa-width-one-whole tri-div">
+        <div class="usa-width-one-third" [ngClass]="getTriClass(0,'Contract')"></div>
+        <div class="usa-width-one-third" [ngClass]="getTriClass(1,'Contract')"></div>
+        <div class="usa-width-one-third" [ngClass]="getTriClass(2,'Contract')"></div>
+      </div>
+    </div>
+
+
+    <div class="usa-width-one-whole m_L-8x relative contract-detail" *ngIf = "detailObj.Contract.showDetail">
+      <div class="usa-width-one-twelfth div-right">&nbsp;</div>
+      <div class="div-fill relative black-border">
+        <div class="usa-width-one-whole div-fill relative">
+
+          <span class="featured-reference-toggle"><a (click)="closeReferenceDetail('Contract')">
+            <i class="fa fa-minus"></i></a>
+          </span>
+          <div class="usa-width-one-whole">
+            <img class="usa-width-one-whole p_R-4x p_L-4x" src="../assets/img/ECFR.png">
+            <p class="p_L-1x p_B-1x">{{detailObj.Contract.detail}} </p>
+            <span class="reference-content-link usa-external_link"><a>External Link</a></span>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="usa-width-one-whole"></div>
+  </div>
+  <h3 id="additionalReference" class="p_L-3x">Additional References</h3>
   <div class="usa-grid-full">
-    <p class="p_L-8x">
-      Lorem ipsum dolor sit amet, an quo elitr singulis, cu assum simul persius eos,
-      per omittam concludaturque no. Albucius lobortis ius et, sea debet inimicus ne,
-      nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis
-      ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum
-      deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam
-      fuisset convenire an.
-    </p>
+    <div class="usa-width-one-whole m_L-8x">
+      <div class="usa-width-one-third">
+        <h4>Catagory One</h4>
+        <h5>SubCatagory</h5>
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third">
+        <h4>Catagory Two</h4>
+        <h5>SubCatagory</h5>
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+        </ul>
+        <h5>SubCatagory</h5>
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third">
+        <h4>Catagory Three</h4>
+        <h5>SubCatagory</h5>
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
