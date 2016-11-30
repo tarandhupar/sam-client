@@ -17,7 +17,7 @@ export class Alert {
     return this.response.content.description;
   }
 
-  type(): string {
+  severity(): string {
     return this.response.content.severity;
   }
 
@@ -44,6 +44,19 @@ export class Alert {
         return 'fa-exclamation-triangle';
       default:
         return 'fa-exclamation-triangle';
+    }
+  }
+
+  alertClass(): string {
+    switch (this.response.content.severity.toLowerCase()) {
+      case 'warning':
+        return 'usa-alert-warning';
+      case 'informational':
+        return 'usa-alert-info';
+      case 'error':
+        return 'usa-alert-error';
+      default:
+        return 'usa-alert-error';
     }
   }
 

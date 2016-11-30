@@ -3,6 +3,7 @@ import { SystemAlertsService } from 'api-kit';
 import { Cookie } from 'ng2-cookies'
 import { Router } from "@angular/router";
 import {SYSTEM_ALERTS_PAGE_PATH} from "../alerts.route";
+import {Alert} from "../alert.model";
 
 @Component({
   selector: 'alertHeader',
@@ -14,8 +15,7 @@ export class AlertHeaderComponent {
   public REFRESH_INTERVAL_MINUTES = 10;
 
   private intervalId: any = null;
-  private alerts: any[] = [];
-  private alertClass: string;
+  private alerts: any = [];
   private alertsPath: string = SYSTEM_ALERTS_PAGE_PATH;
 
   constructor(private systemAlerts: SystemAlertsService, private router: Router) {
@@ -44,9 +44,12 @@ export class AlertHeaderComponent {
     }
   }
 
+  alertClass() {
+    return this.alerts[0].alertClass();
+  }
+
   showAlerts() {
-    let alertsPath: RegExp = new RegExp(SYSTEM_ALERTS_PAGE_PATH + '$');
-    return this.alerts.length && !this.router.url.match(alertsPath);
+    return this.alerts.length && !this.router.isActive(SYSTEM_ALERTS_PAGE_PATH, false);
   }
 
   onDismissClick() {
@@ -58,7 +61,9 @@ export class AlertHeaderComponent {
   fetchAlerts() {
     const MAX_ALERTS: number = 2;
     this.systemAlerts.get(MAX_ALERTS)
-      .map(alerts => alerts.map(alert => alert.content))
+      .map(alerts => alerts.map(alert => {
+        return Alert.FromResponse(alert);
+      }))
       .subscribe(alerts => {
 
       if (!alerts.length) {
@@ -66,26 +71,17 @@ export class AlertHeaderComponent {
         return;
       }
 
-      let firstSeverity = alerts[0].severity.toLowerCase();
+      let firstSeverity = alerts[0].severity().toLowerCase();
 
       // Only display two errors if there is more than one error and they are both critical
       // (We didn't want two different colors of messages)
       this.alerts = alerts.slice(0, 1);
       if (alerts.length > 1) {
-        let secondSeverity = alerts[1].severity.toLowerCase();
+        let secondSeverity = alerts[1].severity().toLowerCase();
         if (secondSeverity === 'error' && firstSeverity === 'error') {
           this.alerts = alerts.slice(0, 2);
         }
       }
-
-      let alertClasses = {
-        "success":"usa-alert-success",
-        "warning":"usa-alert-warning",
-        "error":"usa-alert-error",
-        "info":"usa-alert-info"
-      };
-
-      this.alertClass = alertClasses[firstSeverity] || "usa-alert-error";
     }, error => {
       console.error('Encountered an error fetching alerts: ', error);
     });

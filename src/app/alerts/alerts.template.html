@@ -1,16 +1,30 @@
 <div class="usa-grid">
   <!-- the first child cannot have a margin or the overlay breaks -->
   <div style="height: 1px"></div>
-  <h1>Alerts</h1>
+  <h1 class="alert-page-title">Alerts</h1>
   <div class="alerts-toolbar">
-    <div class="toolbar-item">status</div>
-    <div class="toolbar-item">type</div>
-    <div class="toolbar-item">date&nbsp;published</div>
+    <div class="toolbar-item">
+      <select [(ngModel)]="filters.statuses[0]">
+        <option selected disabled>Status</option>
+        <option *ngFor="let status of statuses" value="status">{{status}}</option>
+      </select>
+    </div>
+    <div class="toolbar-item">
+      <select [(ngModel)]="filters.types[0]">
+        <option selected disabled>Type</option>
+        <option *ngFor="let type of types" value="type">{{type}}</option>
+      </select>
+    </div>
+    <div class="toolbar-item">
+      <select [(ngModel)]="filters.datePublished">
+        <option selected disabled>Date published</option>
+        <option *ngFor="let datesPublished of datesPublished" value="datePublished">{{datePublished}}</option>
+      </select>
+    </div>
     <div class="toolbar-item sort-column">
       Sort by:&nbsp;
-      <select>
-        <option>1</option>
-        <option>2</option>
+      <select [(ngModel)]="sortField" (change)="onParamChanged()">
+        <option *ngFor="let sf of sortFields">{{sf}}</option>
       </select>
     </div>
   </div>
@@ -20,5 +34,5 @@
   <div *ngFor="let alert of alerts" class="alert-block">
     <alert-item [alert]="alert"></alert-item>
   </div>
-  <samPagination [currentPage]="currentPage" [totalPages]="totalPages"></samPagination>
+  <samPagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onParamChanged()"></samPagination>
 </div>

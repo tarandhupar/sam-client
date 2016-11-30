@@ -4,19 +4,33 @@ import { WrapperService } from '../wrapper/wrapper.service';
 
 @Injectable()
 export class SystemAlertsService {
-    constructor(private oAPIService: WrapperService) {}
+    constructor(private apiService: WrapperService) {}
 
-    get(count?: number) {
+    get(limit?: number, offset?: number, statuses?: [string], types?: [string], datePublished?: string) {
 
-      let oApiParam = {
+      let apiOptions: any = {
         name: 'alerts',
         suffix: '',
         method: 'GET',
-        oParam: { limit: null }
+        oParam: { }
       };
 
-      // fetch 5 alerts, if the count is not specified
-      oApiParam.oParam.limit = count || 5;
-      return this.oAPIService.call(oApiParam);
+      // specify defaults
+      apiOptions.oParam.limit = limit || 5;
+      apiOptions.oParam.offset = offset || 0;
+
+      if (statuses) {
+        apiOptions.oParam.statuses = statuses.join(',');
+      }
+
+      if (types) {
+        apiOptions.oParam.types = types.join(',');
+      }
+
+      if (datePublished) {
+        apiOptions.oParam.datePublished = datePublished;
+      }
+
+      return this.apiService.call(apiOptions);
     }
 }

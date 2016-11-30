@@ -7,10 +7,12 @@ import {SamUIKitModule} from "ui-kit";
 import {AlertItemComponent} from "./alert-item/alert-item.component";
 import {PipesModule} from "../app-pipes/app-pipes.module";
 import {AlertHeaderComponent} from "./alert-header/alert-header.component";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   imports: [
     BrowserModule,
+    FormsModule,
     routing,
     SamUIKitModule,
     PipesModule

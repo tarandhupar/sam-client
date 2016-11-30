@@ -36,6 +36,10 @@
   padding-bottom: 12px;
 }
 
+.alert-page-title {
+  margin-top: .67em;
+}
+
 :host >>> .usa-pagination {
   text-align: center;
 }
