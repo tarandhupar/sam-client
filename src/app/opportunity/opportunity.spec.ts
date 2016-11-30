@@ -287,6 +287,25 @@ describe('OpportunityPage', () => {
     }
   });
 
+  it('Should set display flag for fields for Fair Opportunity / Limited Sources Justification', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // Check J&A Authority
+    let jaExpected = {};
+    jaExpected[OpportunityFields.AwardAmount] = false;
+    jaExpected[OpportunityFields.LineItemNumber] = false;
+    jaExpected[OpportunityFields.AwardedName] = false;
+    jaExpected[OpportunityFields.AwardedDUNS] = false;
+    jaExpected[OpportunityFields.AwardedAddress] = false;
+    jaExpected[OpportunityFields.Contractor] = false;
+    jaExpected[OpportunityFields.StatutoryAuthority] = false;
+
+    setDisplaySpy(mockAPIDataType('l'));
+    for(let field in jaExpected) {
+      expect(comp.displayField[field]).toBe(jaExpected[field]);
+    }
+  });
+
   it('Should print error if invalid type', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
