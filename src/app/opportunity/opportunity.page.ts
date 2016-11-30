@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { OpportunityService, FHService } from 'api-kit';
-import { ReplaySubject, Observable, Subscription } from 'rxjs';
+import { ReplaySubject, Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 import { OpportunityFields } from "./opportunity.fields";
 
@@ -15,7 +15,7 @@ import { OpportunityFields } from "./opportunity.fields";
     FilterMultiArrayObjectPipe
   ]
 })
-export class OpportunityPage implements OnInit, OnDestroy {
+export class OpportunityPage implements OnInit {
   public opportunityFields = OpportunityFields;
   public displayField = {};
 
@@ -26,10 +26,6 @@ export class OpportunityPage implements OnInit, OnDestroy {
   currentUrl: string;
   dictionary: any;
 
-  private organizationSubscription: Subscription;
-  private opportunitySubscription: Subscription;
-  private parentOpportunitySubscription: Subscription;
-
   constructor(
     private route:ActivatedRoute,
     private opportunityService:OpportunityService,
@@ -39,58 +35,77 @@ export class OpportunityPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.currentUrl = this.location.path();
 
-    let opportunityApiStream = this.loadOpportunity();
-    this.loadOrganization(opportunityApiStream);
-    // this.loadOpportunityLocation(opportunityApiStream);
+    let opportunityAPI = this.loadOpportunity();
+    let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
+
     this.loadDictionary();
-    this.setDisplayFields(opportunityApiStream);
+    this.loadOrganization(opportunityAPI);
+    // this.loadOpportunityLocation(opportunityApiStream);
+
+    // Construct a new observable that emits both opportunity and its parent as a tuple
+    // Combined observable will not trigger until both APIs have emitted at least one value
+    let combinedOpportunityAPI = opportunityAPI.withLatestFrom(parentOpportunityAPI);
+    this.setDisplayFields(combinedOpportunityAPI);
   }
 
   private loadOpportunity() {
-    var apiSubject = new ReplaySubject(2); // broadcasts the api data to multiple subscribers
+    var opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
 
-    this.route.params.subscribe((params: Params) => { // construct a stream of api data
-      this.opportunityService.getOpportunityById(params['id']).subscribe(apiSubject);
+    this.route.params.subscribe((params: Params) => { // construct a stream of opportunity data
+      this.opportunityService.getOpportunityById(params['id']).subscribe(opportunitySubject); // attach subject to stream
     });
 
-    this.opportunitySubscription = apiSubject.subscribe(api => {
-      // run whenever api data is updated
+    opportunitySubject.subscribe(api => { // do something with the opportunity api
       this.opportunity = api;
-      if(this.opportunity.parentOpportunity != null) {
-        this.opportunityService.getOpportunityById(this.opportunity.parentOpportunity.opportunityId).subscribe(apiSubject);
-        this.parentOpportunitySubscription = apiSubject.subscribe(parent => {
-          this.originalOpportunity = parent;
-        });
-      }
     }, err => {
-      console.log('Error logging', err);
+      console.log('Error loading opportunity: ', err);
     });
-    return apiSubject;
+
+    return opportunitySubject;
   }
 
-  // private loadParentOrganization(opportunityApiStream: Observable<any>){
-  //   let apiSubject = new ReplaySubject(1);
-  // }
+  private loadParentOpportunity(opportunityAPI: Observable<any>){
+    let parentOpportunitySubject = new ReplaySubject(1); // broadcasts the parent opportunity to multiple subscribers
 
-  private loadOrganization(opportunityApiStream: Observable<any>) {
-    let apiSubject = new ReplaySubject(1);
+    opportunityAPI.subscribe(api => {
+      if (api.parentOpportunity != null) { // if this opportunity has a parent
+        // then call the opportunity api again for parent and attach the subject to the result
+        this.opportunityService.getOpportunityById(api.parentOpportunity.opportunityId).subscribe(parentOpportunitySubject);
+      } else {
+        return Observable.empty(); // if there is no parent, just return an empty observable
+      }
+    });
 
-    opportunityApiStream.subscribe(api => {
+    parentOpportunitySubject.subscribe(parent => { // do something with the parent opportunity api
+      this.originalOpportunity = parent;
+    }, err => {
+      console.log('Error loading parent opportunity: ', err);
+    });
+
+    return parentOpportunitySubject;
+  }
+
+  private loadOrganization(opportunityAPI: Observable<any>) {
+    let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
+
+    opportunityAPI.subscribe(api => {
       //organizationId length >= 30 -> call opportunity org End Point
       if(api.data.organizationId.length >= 30) {
-        this.opportunityService.getOpportunityOrganizationById(api.data.organizationId).subscribe(apiSubject);
+        this.opportunityService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
       }
       //organizationId less than 30 character then call Octo's FH End point
       else {
-        this.fhService.getOrganizationById(api.data.organizationId).subscribe(apiSubject);
+        this.fhService.getOrganizationById(api.data.organizationId).subscribe(organizationSubject);
       }
     });
 
-    this.organizationSubscription = apiSubject.subscribe(organization => {
+    organizationSubject.subscribe(organization => { // do something with the organization api
       this.organization = organization['_embedded'][0]['org'];
+    }, err => {
+      console.log('Error loading organization: ', err)
     });
 
-    return apiSubject;
+    return organizationSubject;
   }
 
   // private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
@@ -105,25 +120,24 @@ export class OpportunityPage implements OnInit, OnDestroy {
 
   private loadDictionary() {
     this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type').subscribe(data => {
+      // do something with the dictionary api
       this.dictionary = data;
+    }, err => {
+      console.log('Error loading dictionaries: ', err);
     });
   }
 
   // Sets the correct displayField flags for this opportunity type
-  private setDisplayFields(opportunityApiStream: Observable<any>) {
-    opportunityApiStream.subscribe(api => {
-      if(api.data == null || api.data.type == null) {
+  private setDisplayFields(combinedOpportunityAPI: Observable<any>) {
+    combinedOpportunityAPI.subscribe(([opportunity, parentOpportunity]) => {
+      if(opportunity.data == null || opportunity.data.type == null) {
         console.log('Error: No opportunity type');
         return;
       }
-      // if (api.postedDate.equals(api.modifiedDate)){
-      //   this.displayIds[OpportunityFields.OriginalPostedDate] = false;
-      // }
-      // if (api.postedDate.equals(api.modifiedDate)){
-      //   this.displayIds[OpportunityFields.OriginalPostedDate] = false;
-      // }
 
-      switch (api.data.type) {
+      this.displayField = {}; // for safety, clear any existing values
+
+      switch (opportunity.data.type) {
         // Base opportunity types
         case 'p':
         case 'r':
@@ -147,8 +161,44 @@ export class OpportunityPage implements OnInit, OnDestroy {
           break;
 
         default:
-          console.log('Error: Unknown opportunity type ' + api.data.type);
+          console.log('Error: Unknown opportunity type ' + opportunity.data.type);
           break;
+      }
+
+      /**
+       * TODO: Check conditional logic with PO
+       * TODO: Check if original archive date condition is needed (not mentioned in excel spreadsheet)
+       * TODO: Find ways to refactor or simplify this logic
+       */
+      if(parentOpportunity != null) {
+        let originalPostedDateCondition = opportunity.postedDate != null
+          && parentOpportunity.postedDate != null
+          && opportunity.postedDate !== parentOpportunity.postedDate;
+
+        this.displayField[OpportunityFields.OriginalPostedDate] = originalPostedDateCondition;
+
+        let originalResponseDateCondition = opportunity.data != null
+          && opportunity.solicitation != null && opportunity.solicitation.deadlines != null
+          && opportunity.solicitation.deadlines.response != null && parentOpportunity.data != null
+          && parentOpportunity.data.solicitation != null && parentOpportunity.data.solicitation.deadlines != null
+          && parentOpportunity.data.solicitation.deadlines.response != null
+          && opportunity.data.solicitation.deadlines.response !== parentOpportunity.data.solicitation.deadlines.response;
+
+        this.displayField[OpportunityFields.OriginalResponseDate] = originalResponseDateCondition;
+
+        let originalArchiveDateCondition = opportunity.data != null && opportunity.data.archive != null
+          && opportunity.data.archive.date != null && parentOpportunity.data != null && parentOpportunity.data.archive != null
+          && parentOpportunity.data.archive.date != null
+          && opportunity.data.archive.date !== parentOpportunity.data.archive.date;
+
+        this.displayField[OpportunityFields.OriginalArchiveDate] = originalArchiveDateCondition;
+
+        let originalSetAsideCondition = opportunity.data != null && opportunity.data.solicitation != null
+          && opportunity.data.solicitation.setAside != null && parentOpportunity.data != null
+          && parentOpportunity.data.solicitation != null && parentOpportunity.data.solicitation.setAside != null
+          && opportunity.data.solicitation.setAside !== parentOpportunity.data.solicitation.setAside;
+
+        this.displayField[OpportunityFields.OriginalSetAside] = originalSetAsideCondition;
       }
     });
   }
@@ -178,10 +228,5 @@ export class OpportunityPage implements OnInit, OnDestroy {
         || this.opportunity.data.pointOfContact[index].fax != null);
     }
     return false;
-  }
-
-  ngOnDestroy() {
-    if(this.organizationSubscription) this.organizationSubscription.unsubscribe();
-    if(this.opportunitySubscription) this.opportunitySubscription.unsubscribe();
   }
 }

@@ -241,9 +241,9 @@ describe('OpportunityPage', () => {
 
     // Generic function to construct mock api with specified opportunity type
     let mockAPIDataType = type => {
-      return Observable.of({
+      return Observable.of([{
         "data": {"type": type}
-      });
+      }, null]);
     };
 
     // These base types should all display the same fields
@@ -268,9 +268,9 @@ describe('OpportunityPage', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
     let mockAPIDataType = type => {
-      return Observable.of({
+      return Observable.of([{
         'data': {'type': type}
-      });
+      }, null]);
     };
 
     spyOn(console, 'log');
@@ -301,4 +301,6 @@ describe('OpportunityPage', () => {
     expect(shouldDisplaySpy('general')).toBe(true); // random string
     expect(shouldDisplaySpy('contact')).toBe(true); // not explicitly set
   });
+
+  // TODO: Add unit tests for parentOpportunity conditionals
 });
