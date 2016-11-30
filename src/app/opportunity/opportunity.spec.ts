@@ -267,10 +267,10 @@ describe('OpportunityPage', () => {
     }
   });
 
-  it('Should set display flag for fields for J&A authoritty', () => {
+  it('Should set display flag for fields for J&A type', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
-    // Check J&A Authority
+    // Check J&A
     let jaExpected = {};
     jaExpected[OpportunityFields.AwardAmount] = false;
     jaExpected[OpportunityFields.LineItemNumber] = false;
@@ -278,12 +278,36 @@ describe('OpportunityPage', () => {
     jaExpected[OpportunityFields.AwardedDUNS] = false;
     jaExpected[OpportunityFields.AwardedAddress] = false;
     jaExpected[OpportunityFields.Contractor] = false;
+
     jaExpected[OpportunityFields.JustificationAuthority] = false;
     jaExpected[OpportunityFields.OrderNumber] = false;
 
     setDisplaySpy(mockAPIDataType('j'));
     for(let field in jaExpected) {
       expect(comp.displayField[field]).toBe(jaExpected[field]);
+    }
+  });
+
+  it('Should set display flag for fields for intent to bundle type', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // Check Intent to Bundle
+    let itbExpected = {};
+    itbExpected[OpportunityFields.AwardAmount] = false;
+    itbExpected[OpportunityFields.AwardDate] = false;
+    itbExpected[OpportunityFields.LineItemNumber] = false;
+    itbExpected[OpportunityFields.AwardedName] = false;
+    itbExpected[OpportunityFields.AwardedDUNS] = false;
+    itbExpected[OpportunityFields.AwardedAddress] = false;
+    itbExpected[OpportunityFields.Contractor] = false;
+
+    itbExpected[OpportunityFields.StatutoryAuthority] = false;
+    itbExpected[OpportunityFields.JustificationAuthority] = false;
+    itbExpected[OpportunityFields.ModificationNumber] = false;
+
+    setDisplaySpy(mockAPIDataType('i'));
+    for(let field in itbExpected) {
+      expect(comp.displayField[field]).toBe(itbExpected[field]);
     }
   });
 
