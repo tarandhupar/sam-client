@@ -48,12 +48,12 @@
     <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award)">
       <h2>Award Details</h2>
       <ul class="usa-unstyled-list">
-        <li [attr.id]="generateID(opportunityFields.AwardDate, 'award')"
+        <li [attr.id]="generateID(opportunityFields.AwardDate)"
             *ngIf="opportunity.data?.award?.date && shouldBeDisplayed(opportunityFields.AwardDate)">
           <strong>Contract Award Date: </strong>
           {{ opportunity.data?.award?.date | dateFormat: 'MMM DD, YYYY' }}
         </li>
-        <li [attr.id]="generateID(opportunityFields.AwardNumber, 'award')"
+        <li [attr.id]="generateID(opportunityFields.AwardNumber)"
             *ngIf="opportunity.data?.award?.number && shouldBeDisplayed(opportunityFields.AwardNumber)">
           <strong>Contract Award Number: </strong>
           {{ opportunity.data?.award?.number }}
