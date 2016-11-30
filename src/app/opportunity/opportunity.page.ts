@@ -109,6 +109,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
     });
   }
 
+  // Sets the correct displayField flags for this opportunity type
   private setDisplayFields(opportunityApiStream: Observable<any>) {
     opportunityApiStream.subscribe(api => {
       if(api.data == null || api.data.type == null) {
@@ -123,7 +124,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
       // }
 
       switch (api.data.type) {
-        // Base notice types
+        // Base opportunity types
         case 'p':
         case 'r':
         case 's':
@@ -152,16 +153,22 @@ export class OpportunityPage implements OnInit, OnDestroy {
     });
   }
 
+  // Input should be one of the fields defined in OpportunityFields enum
+  // To hide a field, set the flag displayField[field] to false
+  // A field is always displayed by default, unless it is explicitly set not to
   private shouldBeDisplayed(field: OpportunityFields) {
     return this.displayField[field] !== false;
   }
 
+  // Given a field name, generates an id for it by adding the correct prefixes
   private generateID(name: string, prefix?: string) {
     let id = name;
     if(prefix != null) { id = prefix + '-' + id; }
     return 'opportunity-' + id;
   }
 
+  // If any part of a POC exists, then we consider the entire POC to exist
+  // If a POC does not exist, its section header is hidden
   private hasPOC(index: number): boolean {
     if(this.opportunity && this.opportunity.data && this.opportunity.data.pointOfContact[index]) {
       return (this.opportunity.data.pointOfContact[index].email != null

@@ -232,22 +232,24 @@ describe('OpportunityPage', () => {
 
   it('Should generate ids', () => {
     let generateIDSpy = spyOn(comp, 'generateID').and.callThrough();
-    expect(generateIDSpy('testID')).toBe('opportunity-testID');
-    expect(generateIDSpy('testID', 'test-prefix')).toBe('opportunity-test-prefix-testID');
+    expect(generateIDSpy('testID')).toBe('opportunity-testID'); // generate an id
+    expect(generateIDSpy('testID', 'test-prefix')).toBe('opportunity-test-prefix-testID'); // generate an id with a prefix
   });
 
   it('Should set display flag for fields', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
+    // Generic function to construct mock api with specified opportunity type
     let mockAPIDataType = type => {
       return Observable.of({
         "data": {"type": type}
       });
     };
 
-    // These types should all display the same fields
+    // These base types should all display the same fields
     let baseTypes = ['p', 'r', 'g', 's', 'f'];
 
+    // For each base type, check setDisplayFields() against expected output
     let baseExpected = {
       'award': false,
       'statutory-authority': false,
@@ -284,18 +286,19 @@ describe('OpportunityPage', () => {
     let shouldDisplaySpy = spyOn(comp, 'shouldBeDisplayed').and.callThrough().bind(comp);
 
     comp.displayField = { 'award': false, 'title': true };
-    expect(shouldDisplaySpy('award')).toBe(false);
-    expect(shouldDisplaySpy('title')).toBe(true);
+    expect(shouldDisplaySpy('award')).toBe(false); // don't display if flag is set to false
+    expect(shouldDisplaySpy('title')).toBe(true); // display if flag is set to true
   });
 
   it('Should display fields by default', () => {
     let shouldDisplaySpy = spyOn(comp, 'shouldBeDisplayed').and.callThrough().bind(comp);
 
+    // Any field that is not explicitly and exactly set to false should be displayed
     comp.displayField = { 'award': null, 'title': undefined, 'header': 0, 'general': 'foo' };
-    expect(shouldDisplaySpy('award')).toBe(true);
-    expect(shouldDisplaySpy('title')).toBe(true);
-    expect(shouldDisplaySpy('header')).toBe(true);
-    expect(shouldDisplaySpy('general')).toBe(true);
+    expect(shouldDisplaySpy('award')).toBe(true); // falsey but not false
+    expect(shouldDisplaySpy('title')).toBe(true); // falsey
+    expect(shouldDisplaySpy('header')).toBe(true); // falsey
+    expect(shouldDisplaySpy('general')).toBe(true); // random string
     expect(shouldDisplaySpy('contact')).toBe(true); // not explicitly set
   });
 });
