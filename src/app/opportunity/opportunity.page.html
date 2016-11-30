@@ -113,9 +113,11 @@
           {{ opportunity?.data?.award?.justificationAuthority?.authority }}
         </li>
         <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')"
-            *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && shouldBeDisplayed(opportunityFields.JustificationAuthority)">
-          <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
-          {{ opportunity?.data?.award?.fairOpportunity?.authority }}
+            *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && shouldBeDisplayed(opportunityFields.JustificationAuthority) && dictionary">
+          <ng-container *ngFor = "let element of [opportunity?.data?.award?.fairOpportunity?.authority] | filterMultiArrayObject:dictionary.fo_justification_authority:'element_id':false:''">
+            <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
+            {{ element.value }}
+          </ng-container>
         </li>
         <li [attr.id]="generateID(opportunityFields.OrderNumber, 'general')"
             *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
