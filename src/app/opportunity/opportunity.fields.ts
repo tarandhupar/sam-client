@@ -15,6 +15,7 @@ export enum OpportunityFields {
   AwardedName = <any>'awarded-name',
   AwardedDUNS = <any>'awarded-duns',
   AwardedAddress = <any>'awarded-address',
+  Contractor = <any>'contractor', // Contractor sub-section
   ContractorStreet = <any>'contractor-street',
   ContractorCity = <any>'contractor-city',
   ContractorState = <any>'contractor-state',
@@ -42,7 +43,7 @@ export enum OpportunityFields {
   OriginalSetAside = <any>'original-set-aside',
   ClassificationCode = <any>'classification-code',
   NAICSCode = <any>'naics-code',
-  POP = <any>'pop',
+  POP = <any>'pop', // POP sub-section
   POPLocation = <any>'pop-location',
   POPCity = <any>'pop-city',
   POPState = <any>'pop-state',
@@ -56,7 +57,7 @@ export enum OpportunityFields {
 
     // Contact information section
   Contact = <any>'contact',
-  POC = <any>'poc',
+  POC = <any>'poc', // POC sub-section
   POCTitle = <any>'poc-title',
   POCFullName = <any>'poc-full-name',
   POCEmail = <any>'poc-email',

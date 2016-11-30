@@ -8,6 +8,8 @@ import { Location, LocationStrategy, HashLocationStrategy } from '@angular/commo
 
 import { OpportunityPage } from './opportunity.page';
 import { OpportunityService, FHService } from 'api-kit';
+import { OpportunityFields } from "./opportunity.fields";
+
 import { Observable } from 'rxjs';
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
@@ -222,6 +224,13 @@ describe('OpportunityPage', () => {
     fixture.detectChanges();
   });
 
+  // Generic function to construct mock api with specified opportunity type
+  var mockAPIDataType = type => {
+    return Observable.of([{
+      "data": {"type": type}
+    }, null]);
+  };
+
   it('Should init & load data', () => {
     expect(comp.opportunity).toBeDefined();
     expect(comp.opportunityLocation).toBeDefined();
@@ -236,42 +245,50 @@ describe('OpportunityPage', () => {
     expect(generateIDSpy('testID', 'test-prefix')).toBe('opportunity-test-prefix-testID'); // generate an id with a prefix
   });
 
-  it('Should set display flag for fields', () => {
+  it('Should set display flag for fields for base types', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
-
-    // Generic function to construct mock api with specified opportunity type
-    let mockAPIDataType = type => {
-      return Observable.of([{
-        "data": {"type": type}
-      }, null]);
-    };
 
     // These base types should all display the same fields
     let baseTypes = ['p', 'r', 'g', 's', 'f'];
 
     // For each base type, check setDisplayFields() against expected output
-    let baseExpected = {
-      'award': false,
-      'statutory-authority': false,
-      'justification-authority': false,
-      'order-number': false,
-      'modification-number': false
-    };
+    let baseExpected = {};
+    baseExpected[OpportunityFields.Award] = false;
+    baseExpected[OpportunityFields.StatutoryAuthority] = false;
+    baseExpected[OpportunityFields.JustificationAuthority] = false;
+    baseExpected[OpportunityFields.OrderNumber] = false;
+    baseExpected[OpportunityFields.ModificationNumber] = false;
 
     for (let type of baseTypes) {
       setDisplaySpy(mockAPIDataType(type));
-      expect(comp.displayField).toEqual(baseExpected);
+      for (let field in baseExpected) {
+        expect(comp.displayField[field]).toBe(baseExpected[field]);
+      }
+    }
+  });
+
+  it('Should set display flag for fields for J&A authoritty', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // Check J&A Authority
+    let jaExpected = {};
+    jaExpected[OpportunityFields.AwardAmount] = false;
+    jaExpected[OpportunityFields.LineItemNumber] = false;
+    jaExpected[OpportunityFields.AwardedName] = false;
+    jaExpected[OpportunityFields.AwardedDUNS] = false;
+    jaExpected[OpportunityFields.AwardedAddress] = false;
+    jaExpected[OpportunityFields.Contractor] = false;
+    jaExpected[OpportunityFields.JustificationAuthority] = false;
+    jaExpected[OpportunityFields.OrderNumber] = false;
+
+    setDisplaySpy(mockAPIDataType('j'));
+    for(let field in jaExpected) {
+      expect(comp.displayField[field]).toBe(jaExpected[field]);
     }
   });
 
   it('Should print error if invalid type', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
-
-    let mockAPIDataType = type => {
-      return Observable.of([{
-        'data': {'type': type}
-      }, null]);
-    };
 
     spyOn(console, 'log');
 
