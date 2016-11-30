@@ -153,6 +153,7 @@ export class OpportunityPage implements OnInit {
 
       switch (opportunity.data.type) {
         // Base opportunity types
+        // These types are a superset of 'j', using case fallthrough
         case 'p': // Presolicitation
         case 'r': // Sources Sought
         case 's': // Special Notice
@@ -161,7 +162,6 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.Award] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
-
         // Other types
         case 'j': // Justification and Approval (J&A)
           this.displayField[OpportunityFields.AwardAmount] = false;
@@ -175,23 +175,22 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.OrderNumber] = false;
           break;
 
+        // Type 'i' is a superset of 'l', using case fallthrough
         case 'i': // Intent to Bundle Requirements (DoD-Funded)
-          this.displayField[OpportunityFields.AwardAmount] = false;
           this.displayField[OpportunityFields.AwardDate] = false;
+          this.displayField[OpportunityFields.JustificationAuthority] = false;
+          this.displayField[OpportunityFields.ModificationNumber] = false;
+        case 'l': // Fair Opportunity / Limited Sources Justification
+          this.displayField[OpportunityFields.AwardAmount] = false;
           this.displayField[OpportunityFields.LineItemNumber] = false;
           this.displayField[OpportunityFields.AwardedName] = false;
           this.displayField[OpportunityFields.AwardedDUNS] = false;
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
-
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
-          this.displayField[OpportunityFields.JustificationAuthority] = false;
-          this.displayField[OpportunityFields.ModificationNumber] = false;
-
         case 'a': // Award Notice
         case 'm': // Modification/Amendment/Cancel
         case 'k': // Combined Synopsis/Solicitation
-        case 'l': // Fair Opportunity / Limited Sources Justification
           break;
 
         default:

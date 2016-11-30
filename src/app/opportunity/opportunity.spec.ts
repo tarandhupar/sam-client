@@ -291,7 +291,7 @@ describe('OpportunityPage', () => {
   it('Should set display flag for fields for intent to bundle type', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
-    // Check Intent to Bundle
+    // Check intent to bundle
     let itbExpected = {};
     itbExpected[OpportunityFields.AwardAmount] = false;
     itbExpected[OpportunityFields.AwardDate] = false;
@@ -306,8 +306,27 @@ describe('OpportunityPage', () => {
     itbExpected[OpportunityFields.ModificationNumber] = false;
 
     setDisplaySpy(mockAPIDataType('i'));
-    for(let field in itbExpected) {
+    for (let field in itbExpected) {
       expect(comp.displayField[field]).toBe(itbExpected[field]);
+    }
+  });
+
+  it('Should set display flag for fields for Fair Opportunity / Limited Sources Justification type', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // Check fair opportunity / limited sources
+    let fairOppExpected = {};
+    fairOppExpected[OpportunityFields.AwardAmount] = false;
+    fairOppExpected[OpportunityFields.LineItemNumber] = false;
+    fairOppExpected[OpportunityFields.AwardedName] = false;
+    fairOppExpected[OpportunityFields.AwardedDUNS] = false;
+    fairOppExpected[OpportunityFields.AwardedAddress] = false;
+    fairOppExpected[OpportunityFields.Contractor] = false;
+    fairOppExpected[OpportunityFields.StatutoryAuthority] = false;
+
+    setDisplaySpy(mockAPIDataType('l'));
+    for(let field in fairOppExpected) {
+      expect(comp.displayField[field]).toBe(fairOppExpected[field]);
     }
   });
 
