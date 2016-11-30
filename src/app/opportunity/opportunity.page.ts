@@ -172,6 +172,17 @@ export class OpportunityPage implements OnInit {
         case 'j':
         case 'i':
         case 'l':
+          this.displayField[OpportunityFields.AwardAmount] = false;
+          this.displayField[OpportunityFields.LineItemNumber] = false;
+          this.displayField[OpportunityFields.AwardedName] = false;
+          this.displayField[OpportunityFields.AwardedDUNS] = false;
+          this.displayField[OpportunityFields.AwardedAddress] = false;
+          this.displayField[OpportunityFields.ContractorStreet] = false;
+          this.displayField[OpportunityFields.ContractorCity] = false;
+          this.displayField[OpportunityFields.ContractorState] = false;
+          this.displayField[OpportunityFields.ContractorZip] = false;
+          this.displayField[OpportunityFields.ContractorCountry] = false;
+          this.displayField[OpportunityFields.StatutoryAuthority] = false;
           break;
 
         default:
