@@ -265,7 +265,7 @@ describe('OpportunityPage', () => {
         expect(comp.displayField[field]).toBe(baseExpected[field]);
       }
     }
-  };
+  });
 
   it('Should set display flag for fields for J&A authoritty', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
