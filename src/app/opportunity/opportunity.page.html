@@ -186,6 +186,12 @@
       </ul>
     </section>
 
+    <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis)">
+      <h2>Synopsis</h2>
+      <h3>Description</h3>
+      {{opportunity.data?.descriptions[0].content}}
+    </section>
+
     <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
       <h2>Contact Information</h2>
       <div class="usa-grid-full" *ngIf="opportunityLocation">
