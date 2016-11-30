@@ -71,7 +71,6 @@ export class OpportunityPage implements OnInit {
 
     opportunitySubject.subscribe(api => { // do something with the opportunity api
       this.opportunity = api;
-      console.log("Opportunity: ",this.opportunity);
     }, err => {
       console.log('Error loading opportunity: ', err);
     });
