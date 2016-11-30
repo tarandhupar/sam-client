@@ -4,8 +4,8 @@ import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import {AlertHeaderComponent} from './alert-header.component';
-import {SystemAlertsService} from "api-kit";
-import {SamUIKitModule} from 'ui-kit';
+import {SystemAlertsService} from "../../.";
+import {SamUIKitModule} from '../../.';
 import {RouterTestingModule} from "@angular/router/testing";
 
 let error = {

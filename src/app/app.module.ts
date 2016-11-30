@@ -14,7 +14,7 @@ import { ROUTES } from './app.route';
 import { App } from './app.component';
 import { AppState } from './app.service';
 import { HomeModule } from './application-content/home';
-import { AlertsModule } from './application-content/alerts';
+import { AlertsModule } from './alerts';
 import { HelpModule } from './Help';
 import { PageNotFoundErrorPage } from './application-content/404';
 import { ErrorModule } from './application-content/error/error.module';
@@ -26,7 +26,6 @@ import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.m
 
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
-import {AlertHeaderComponent} from "./app-components/alert-header/alert-header.component";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -40,8 +39,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
   bootstrap: [ App ],
   declarations: [
     App,
-    PageNotFoundErrorPage,
-    AlertHeaderComponent
+    PageNotFoundErrorPage
   ],
   imports: [
     // Angular Modules

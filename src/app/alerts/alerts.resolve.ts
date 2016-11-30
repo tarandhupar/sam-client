@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Resolve, ActivatedRouteSnapshot, Router} from '@angular/router';
 import { Observable } from 'rxjs/Rx';
 import { SystemAlertsService } from 'api-kit';
-import {ERROR_PAGE_PATH} from "../error/error.route";
+import {ERROR_PAGE_PATH} from "../application-content/error/error.route";
 
 @Injectable()
 export class AlertsResolver implements Resolve<any> {

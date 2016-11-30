@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SystemAlertsService } from 'api-kit';
 import { Cookie } from 'ng2-cookies'
 import { Router } from "@angular/router";
-import {SYSTEM_ALERTS_PAGE_PATH} from "../../application-content/alerts/alerts.route";
+import {SYSTEM_ALERTS_PAGE_PATH} from "../alerts.route";
 
 @Component({
   selector: 'alertHeader',
@@ -16,6 +16,7 @@ export class AlertHeaderComponent {
   private intervalId: any = null;
   private alerts: any[] = [];
   private alertClass: string;
+  private alertsPath: string = SYSTEM_ALERTS_PAGE_PATH;
 
   constructor(private systemAlerts: SystemAlertsService, private router: Router) {
 

@@ -2,6 +2,8 @@
 @import '~font-awesome/css/font-awesome';
 
 // Internal variable should be declared before uswds variable to take higher precendence
+@import 'styles/variables';
+@import 'styles/utilities';
 @import 'styles/margin-padding';
 @import 'styles/global';
 @import 'styles/typography';
@@ -30,4 +32,16 @@ html, body{
 .content-block span {
   display: block;
   margin: 3px 0px 3px 0px;
+}
+
+.usa-color-info {
+  background-color: $color-primary-alt-lightest;
+}
+
+.usa-color-warning {
+  background-color: $color-gold-lightest;
+}
+
+.usa-color-error {
+  background-color: $color-secondary-lightest;
 }

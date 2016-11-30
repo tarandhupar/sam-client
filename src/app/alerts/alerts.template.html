@@ -1,0 +1,24 @@
+<div class="usa-grid">
+  <!-- the first child cannot have a margin or the overlay breaks -->
+  <div style="height: 1px"></div>
+  <h1>Alerts</h1>
+  <div class="alerts-toolbar">
+    <div class="toolbar-item">status</div>
+    <div class="toolbar-item">type</div>
+    <div class="toolbar-item">date&nbsp;published</div>
+    <div class="toolbar-item sort-column">
+      Sort by:&nbsp;
+      <select>
+        <option>1</option>
+        <option>2</option>
+      </select>
+    </div>
+  </div>
+  <div class="alert-count">
+    Showing {{alerts.length}} of <i>{{alertsTotal()}}</i>
+  </div>
+  <div *ngFor="let alert of alerts" class="alert-block">
+    <alert-item [alert]="alert"></alert-item>
+  </div>
+  <samPagination [currentPage]="currentPage" [totalPages]="totalPages"></samPagination>
+</div>
