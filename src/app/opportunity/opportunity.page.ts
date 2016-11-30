@@ -172,11 +172,19 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.JustificationAuthority] = false;
           this.displayField[OpportunityFields.OrderNumber] = false;
+          break;
         case 'a': // Award Notice
         case 'm': // Modification/Amendment/Cancel
         case 'k': // Combined Synopsis/Solicitation
         case 'i': // Intent to Bundle Requirements (DoD-Funded)
         case 'l': // Fair Opportunity / Limited Sources Justification
+          this.displayField[OpportunityFields.AwardAmount] = false;
+          this.displayField[OpportunityFields.LineItemNumber] = false;
+          this.displayField[OpportunityFields.AwardedName] = false;
+          this.displayField[OpportunityFields.AwardedDUNS] = false;
+          this.displayField[OpportunityFields.AwardedAddress] = false;
+          this.displayField[OpportunityFields.Contractor] = false;
+          this.displayField[OpportunityFields.StatutoryAuthority] = false;
           break;
 
         default:
