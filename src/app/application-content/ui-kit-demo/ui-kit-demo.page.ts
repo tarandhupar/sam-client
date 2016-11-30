@@ -76,6 +76,14 @@ export class UIKitDemoPage {
     website: "www.testsite.gov"
   };
 
+  nameModel = {
+    title: "Mr.",
+    firstName: "John",
+    middleName: "",
+    lastName: "Doe",
+    suffix: "Sr."
+  };
+
 
   constructor() {  }
 

@@ -108,9 +108,19 @@
           {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li [attr.id]="generateID(opportunityFields.StatutoryAuthority, 'general')"
-            *ngIf="opportunity?.data?.justificationAuthority?.authority && shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
+            *ngIf="opportunity?.data?.award?.justificationAuthority?.authority && shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
           <strong>J&A Statutory Authority: </strong>
-          {{ opportunity?.data?.justificationAuthority?.authority }}
+          {{ opportunity?.data?.award?.justificationAuthority?.authority }}
+        </li>
+        <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')"
+            *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && shouldBeDisplayed(opportunityFields.JustificationAuthority)">
+          <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
+          {{ opportunity?.data?.award?.fairOpportunity?.authority }}
+        </li>
+        <li [attr.id]="generateID(opportunityFields.OrderNumber, 'general')"
+            *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
+          <strong>Task/Delivery Order Number: </strong>
+          {{ opportunity?.data?.award?.deliveryOrderNumber }}
         </li>
         <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')"
             *ngIf="opportunity?.data?.justificationAuthority?.modificationNumber && shouldBeDisplayed(opportunityFields.ModificationNumber)">
