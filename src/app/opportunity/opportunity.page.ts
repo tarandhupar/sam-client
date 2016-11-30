@@ -63,7 +63,7 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadOpportunity() {
-    var opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
+    let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
 
     this.route.params.subscribe((params: Params) => { // construct a stream of opportunity data
       this.opportunityService.getOpportunityById(params['id']).subscribe(opportunitySubject); // attach subject to stream
@@ -86,7 +86,7 @@ export class OpportunityPage implements OnInit {
         // then call the opportunity api again for parent and attach the subject to the result
         this.opportunityService.getOpportunityById(api.parentOpportunity.opportunityId).subscribe(parentOpportunitySubject);
       } else {
-        return Observable.empty(); // if there is no parent, just return an empty observable
+        return Observable.of(null).subscribe(parentOpportunitySubject); // if there is no parent, just return a single null
       }
     });
 
