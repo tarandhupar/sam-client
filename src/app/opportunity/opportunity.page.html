@@ -7,6 +7,7 @@
     <!--Side Navigation-->
     <nav>
       <ul class="usa-sidenav-list">
+        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
         <li><a href="{{ currentUrl }}#syn-desc">Synopsis/Description</a></li>
@@ -40,6 +41,22 @@
             *ngIf="organization && shouldBeDisplayed(opportunityFields.Location)">
           <strong>Location: </strong>
           <ng-container *ngIf="organization.name">{{ organization.name }}</ng-container>
+        </li>
+      </ul>
+    </section>
+
+    <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award)">
+      <h2>Award Details</h2>
+      <ul class="usa-unstyled-list">
+        <li [attr.id]="generateID(opportunityFields.AwardDate, 'award')"
+            *ngIf="opportunity.data?.award?.date && shouldBeDisplayed(opportunityFields.AwardDate)">
+          <strong>Contract Award Date: </strong>
+          {{ opportunity.data?.award?.date | dateFormat: 'MMM DD, YYYY' }}
+        </li>
+        <li [attr.id]="generateID(opportunityFields.AwardNumber, 'award')"
+            *ngIf="opportunity.data?.award?.number && shouldBeDisplayed(opportunityFields.AwardNumber)">
+          <strong>Contract Award Number: </strong>
+          {{ opportunity.data?.award?.number }}
         </li>
       </ul>
     </section>
