@@ -17,7 +17,7 @@ import { OpportunityFields } from "./opportunity.fields";
 })
 export class OpportunityPage implements OnInit, OnDestroy {
   public opportunityFields = OpportunityFields;
-  private displayField = {};
+  public displayField = {};
 
   originalOpportunity: any;
   // opportunityLocation: any;
@@ -43,7 +43,7 @@ export class OpportunityPage implements OnInit, OnDestroy {
     this.loadOrganization(opportunityApiStream);
     // this.loadOpportunityLocation(opportunityApiStream);
     this.loadDictionary();
-    this.setDisplayIds(opportunityApiStream);
+    this.setDisplayFields(opportunityApiStream);
   }
 
   private loadOpportunity() {
@@ -65,7 +65,6 @@ export class OpportunityPage implements OnInit, OnDestroy {
     }, err => {
       console.log('Error logging', err);
     });
-    console.log("Api Subject: ", apiSubject);
     return apiSubject;
   }
 
@@ -110,13 +109,12 @@ export class OpportunityPage implements OnInit, OnDestroy {
     });
   }
 
-  private setDisplayIds(opportunityApiStream: Observable<any>) {
+  private setDisplayFields(opportunityApiStream: Observable<any>) {
     opportunityApiStream.subscribe(api => {
       if(api.data == null || api.data.type == null) {
-        console.log("Error: No opportunity type");
+        console.log('Error: No opportunity type');
         return;
       }
-      console.log("setdisplaysID: ", api);
       // if (api.postedDate.equals(api.modifiedDate)){
       //   this.displayIds[OpportunityFields.OriginalPostedDate] = false;
       // }
@@ -145,6 +143,10 @@ export class OpportunityPage implements OnInit, OnDestroy {
         case 'j':
         case 'i':
         case 'l':
+          break;
+
+        default:
+          console.log('Error: Unknown opportunity type ' + api.data.type);
           break;
       }
     });

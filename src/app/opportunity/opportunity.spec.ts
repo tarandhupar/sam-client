@@ -218,7 +218,7 @@ describe('OpportunityPage', () => {
     });
 
     fixture = TestBed.createComponent(OpportunityPage);
-    comp = fixture.componentInstance; // BannerComponent test instance
+    comp = fixture.componentInstance; // Opportunity Component test instance
     fixture.detectChanges();
   });
 
@@ -226,7 +226,75 @@ describe('OpportunityPage', () => {
     expect(comp.opportunity).toBeDefined();
     // expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
-    expect(comp.opportunity.opportunityId).toBe("213ji321hu3jk123");
+    expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
+  });
+
+  it('Should generate ids', () => {
+    let generateIDSpy = spyOn(comp, 'generateID').and.callThrough();
+    expect(generateIDSpy('testID')).toBe('opportunity-testID');
+    expect(generateIDSpy('testID', 'test-prefix')).toBe('opportunity-test-prefix-testID');
+  });
+
+  it('Should set display flag for fields', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    let mockAPIDataType = type => {
+      return Observable.of({
+        "data": {"type": type}
+      });
+    };
+
+    // These types should all display the same fields
+    let baseTypes = ['p', 'r', 'g', 's', 'f'];
+
+    let baseExpected = {
+      'award': false,
+      'statutory-authority': false,
+      'justification-authority': false,
+      'order-number': false,
+      'modification-number': false
+    };
+
+    for (let type of baseTypes) {
+      setDisplaySpy(mockAPIDataType(type));
+      expect(comp.displayField).toEqual(baseExpected);
+    }
+  });
+
+  it('Should print error if invalid type', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    let mockAPIDataType = type => {
+      return Observable.of({
+        'data': {'type': type}
+      });
+    };
+
+    spyOn(console, 'log');
+
+    setDisplaySpy(mockAPIDataType(null));
+    expect(console.log).toHaveBeenCalledWith('Error: No opportunity type');
+
+    setDisplaySpy(mockAPIDataType('non-existant type'));
+    expect(console.log).toHaveBeenCalledWith('Error: Unknown opportunity type non-existant type');
+  });
+
+  it('Should check display flag for fields', () => {
+    let shouldDisplaySpy = spyOn(comp, 'shouldBeDisplayed').and.callThrough().bind(comp);
+
+    comp.displayField = { 'award': false, 'title': true };
+    expect(shouldDisplaySpy('award')).toBe(false);
+    expect(shouldDisplaySpy('title')).toBe(true);
+  });
+
+  it('Should display fields by default', () => {
+    let shouldDisplaySpy = spyOn(comp, 'shouldBeDisplayed').and.callThrough().bind(comp);
+
+    comp.displayField = { 'award': null, 'title': undefined, 'header': 0, 'general': 'foo' };
+    expect(shouldDisplaySpy('award')).toBe(true);
+    expect(shouldDisplaySpy('title')).toBe(true);
+    expect(shouldDisplaySpy('header')).toBe(true);
+    expect(shouldDisplaySpy('general')).toBe(true);
   });
 });
