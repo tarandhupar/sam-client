@@ -1,5 +1,8 @@
 import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
+import * as _ from 'lodash';
+import * as moment from 'moment/moment';
+
 
 @Component({
   moduleId: __filename,
@@ -10,20 +13,37 @@ import 'rxjs/add/operator/map';
     	  <span *ngIf=false class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="wage-determination-number">
-      	<a [routerLink]="[]">{{ data.fullReferenceNumber }}</a>
+      	<span>{{ data._type=='wdSCA' ? 'Service Contract Act WD #: ' : 'Davis-Bacon Act WD #: ' }}</span><a [routerLink]="[]">{{ data.fullReferenceNumber }}</a>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li>
-        	  <strong>Revision: </strong>
-        	  <span>{{ data.revisionNumber }}</span>
+        	<li><strong>State: </strong>
+        	  <span *ngIf="data.locations[0].state!==null">{{ data.locations[0].state.name }}</span>
+        	  <span *ngIf="data.locations[0].state===null && data.locations[1] && data.locations[1].state!==null">{{ data.locations[1].state.name }}</span>
+        	</li>
+        	<li><strong>Area: </strong>
+        	  <span *ngIf="data.locations[0].counties!==null">{{ data.locations[0].counties }}</span>
+        	  <span *ngIf="data.locations[0].counties===null && data.locations[1] && data.locations[1].counties!==null">{{ data.locations[1].counties }}</span>
         	</li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-          <li *ngIf="data.services"><strong>Services: </strong><span>{{ data.services }}</span></li>
-          <li *ngIf="data.constructionTypes"><strong>Construction Types: </strong><span>{{ data.code }}</span></li>
+          <li *ngIf="data.services"><strong>Services</strong>
+            <ul class="usa-unstyled-list">
+              <span>{{ data.services }}</span>
+            </ul>
+          </li>
+          <li *ngIf="data.constructionTypes"><strong>Construction Types</strong>
+            <ul class="usa-unstyled-list">
+              <span>{{ data.constructionTypes }}</span>
+            </ul>
+          </li>
+          <li><strong>Publish Date</strong>
+            <ul class="usa-unstyled-list">
+              <span>{{ data.publishDate }}</span>
+            </ul>
+          </li>
         </ul>
       </div>
   `,
@@ -33,6 +53,8 @@ export class WageDeterminationResult implements OnInit {
   @Input() data: any={};
   constructor() { }
 
-  ngOnInit(){ }
+  ngOnInit(){
+    this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+  }
 
 }
