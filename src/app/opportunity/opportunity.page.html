@@ -189,7 +189,7 @@
     <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis)">
       <h2>Synopsis</h2>
       <h3>Description</h3>
-      {{opportunity.data?.descriptions[0].content}}
+      <div [innerHTML]="opportunity.data?.descriptions[0].content | fixhtml"></div>
     </section>
 
     <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
