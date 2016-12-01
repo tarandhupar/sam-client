@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 
 // Sam Angular Exports
 import { SamSelectComponent } from './form-controls/select';
+import { SamMultiSelectComponent } from './form-controls/multiselect';
 import { SamCheckboxComponent } from "./form-controls/checkbox";
 import { LabelWrapper } from './form-controls/wrapper/label-wrapper.component';
 import { FieldsetWrapper } from './form-controls/wrapper/fieldset-wrapper.component';
@@ -22,8 +23,9 @@ import { SamAccordionsComponent } from "./accordions/accordions.component";
 import { SamButtonComponent } from "./form-controls/button/button.component.ts";
 import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.component";
 import { SamPaginationComponent } from "./pagination/pagination.component";
-import { SamClickOutsideDirective } from "./click-outside/click-outside.directive"
+import { SamClickOutsideDirective } from "./click-outside/click-outside.directive";
 import { SamHeaderLinksComponent } from "./header-links/header-links.component";
+import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 
 
 /**
@@ -39,6 +41,7 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
     SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
+    SamMultiSelectComponent,
     SamCheckboxComponent,
     SamRadioButtonComponent,
     SamSearchbarComponent,
@@ -49,6 +52,7 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
     SamHeaderComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
+    SamNameEntryComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -65,6 +69,7 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
     SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
+    SamMultiSelectComponent,
     SamCheckboxComponent,
     SamRadioButtonComponent,
     SamSearchbarComponent,
@@ -74,7 +79,8 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
     SamFooterComponent,
     SamHeaderComponent,
     SamAlertComponent,
-    SamPointOfContactComponent
+    SamPointOfContactComponent,
+    SamNameEntryComponent
   ],
   providers: [ ]
 })
