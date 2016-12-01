@@ -48,11 +48,9 @@ export class OpportunityPage implements OnInit {
 
   ngOnInit() {
     this.currentUrl = this.location.path();
-
+    this.loadDictionary();
     let opportunityAPI = this.loadOpportunity();
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
-
-    this.loadDictionary();
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
 
@@ -133,7 +131,7 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadDictionary() {
-    this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type').subscribe(data => {
+    this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type,fo_justification_authority').subscribe(data => {
       // do something with the dictionary api
       this.dictionary = data;
     }, err => {
@@ -172,12 +170,19 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.JustificationAuthority] = false;
           this.displayField[OpportunityFields.OrderNumber] = false;
-
+          break;
         case 'a': // Award Notice
         case 'm': // Modification/Amendment/Cancel
         case 'k': // Combined Synopsis/Solicitation
         case 'i': // Intent to Bundle Requirements (DoD-Funded)
         case 'l': // Fair Opportunity / Limited Sources Justification
+          this.displayField[OpportunityFields.AwardAmount] = false;
+          this.displayField[OpportunityFields.LineItemNumber] = false;
+          this.displayField[OpportunityFields.AwardedName] = false;
+          this.displayField[OpportunityFields.AwardedDUNS] = false;
+          this.displayField[OpportunityFields.AwardedAddress] = false;
+          this.displayField[OpportunityFields.Contractor] = false;
+          this.displayField[OpportunityFields.StatutoryAuthority] = false;
           break;
 
         default:

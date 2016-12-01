@@ -24,11 +24,26 @@ import * as moment from 'moment/moment';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-        	<!--<li><strong>Status: </strong><span>Submitted/Pending</span></li>-->
-          <li><strong>Expiration Date: </strong><span>{{ data.registrationExpirationDate }}</span></li>
-          <li><strong>Purpose of Registration: </strong><span>{{ data.registrationPurpose }}</span></li>
-          <li><strong>Active Exclusions: </strong><span>{{ data.hasExclusions==true ? 'Yes' : 'No' }}</span></li>
-          <li><strong>Delinquent federal debt: </strong><span>{{ data.hasDelinquentDebt==true ? 'Yes' : 'No' }}</span></li>
+          <li><strong>Expiration Date: </strong>
+            <ul class="usa-unstyled-list">
+              <li><span>{{ data.registrationExpirationDate }}</span></li>
+            </ul>
+          </li>    
+          <li><strong>Purpose of Registration: </strong>
+            <ul class="usa-unstyled-list">
+              <li><span>{{ data.registrationPurpose }}</span></li>
+            </ul>
+          </li>    
+          <li><strong>Active Exclusions: </strong>
+            <ul class="usa-unstyled-list">
+              <li><span>{{ data.hasExclusions==true ? 'Yes' : 'No' }}</span></li>
+            </ul>
+          </li>    
+          <li><strong>Delinquent federal debt: </strong>
+            <ul class="usa-unstyled-list">
+              <li><span>{{ data.hasDelinquentDebt==true ? 'Yes' : 'No' }}</span></li>
+            </ul>
+          </li>    
         </ul>
       </div>
   `,

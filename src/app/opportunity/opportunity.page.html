@@ -108,14 +108,24 @@
           {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
         </li>
         <li [attr.id]="generateID(opportunityFields.StatutoryAuthority, 'general')"
-            *ngIf="opportunity?.data?.justificationAuthority?.authority && shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
+            *ngIf="opportunity?.data?.award?.justificationAuthority?.authority && shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
           <strong>J&A Statutory Authority: </strong>
-          {{ opportunity?.data?.justificationAuthority?.authority }}
+          {{ opportunity?.data?.award?.justificationAuthority?.authority }}
+        </li>
+        <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')"
+            *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && shouldBeDisplayed(opportunityFields.JustificationAuthority) && dictionary">
+          <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
+          {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:dictionary.fo_justification_authority:'element_id':false:'')[0]?.value }}
+        </li>
+        <li [attr.id]="generateID(opportunityFields.OrderNumber, 'general')"
+            *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
+          <strong>Task/Delivery Order Number: </strong>
+          {{ opportunity?.data?.award?.deliveryOrderNumber }}
         </li>
         <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')"
-            *ngIf="opportunity?.data?.justificationAuthority?.modificationNumber && shouldBeDisplayed(opportunityFields.ModificationNumber)">
+            *ngIf="opportunity?.data?.award?.justificationAuthority?.modificationNumber && shouldBeDisplayed(opportunityFields.ModificationNumber)">
           <strong>Modification Number: </strong>
-          {{ opportunity?.data?.justificationAuthority?.modificationNumber }}
+          {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
         </li>
       </ul>
     </section>
