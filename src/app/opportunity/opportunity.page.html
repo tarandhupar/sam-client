@@ -196,7 +196,7 @@
       </ul>
     </section>
 
-    <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis)">
+    <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="opportunity.data?.descriptions[0].content">
       <h2>Synopsis</h2>
       <h3>Description</h3>
       <div [innerHTML]="opportunity.data?.descriptions[0].content | fixhtml"></div>
