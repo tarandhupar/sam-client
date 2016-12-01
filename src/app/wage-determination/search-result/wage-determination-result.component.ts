@@ -15,12 +15,12 @@ import * as moment from 'moment/moment';
       	<span>{{ data._type=='wdSCA' ? 'Service Contract Act WD #: ' : 'Davis-Bacon Act WD #: ' }}</span><a>{{ data.fullReferenceNumber }}</a>
     	</h3>
     	<div class="usa-width-two-thirds">
-      	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li *ngIf="data.locations!==null"><strong>State: </strong>
+      	<ul *ngIf="data.locations!==null" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
+        	<li><strong>State: </strong>
         	  <span *ngIf="data.locations[0].state!==null">{{ data.locations[0].state.name }}</span>
         	  <span *ngIf="data.locations[0].state===null && data.locations[1] && data.locations[1].state!==null">{{ data.locations[1].state.name }}</span>
         	</li>
-        	<li *ngIf="data.locations!==null"><strong>Area: </strong>
+        	<li><strong>Area: </strong>
         	  <span *ngIf="data.locations[0].counties!==null">{{ data.locations[0].counties }}</span>
         	  <span *ngIf="data.locations[0].counties===null && data.locations[1] && data.locations[1].counties!==null">{{ data.locations[1].counties }}</span>
         	</li>
@@ -28,6 +28,11 @@ import * as moment from 'moment/moment';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
+      	  <li><strong>Revision #</strong>
+      	    <ul class="usa-unstyled-list">
+      	     <span>{{ data.revisionNumber }}</span>
+            </ul>
+          </li>
           <li *ngIf="data.services"><strong>Services</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.services }}</span>
@@ -38,7 +43,7 @@ import * as moment from 'moment/moment';
               <span>{{ data.constructionTypes }}</span>
             </ul>
           </li>
-          <li><strong>Publish Date</strong>
+          <li><strong>Published Date</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.publishDate }}</span>
             </ul>
