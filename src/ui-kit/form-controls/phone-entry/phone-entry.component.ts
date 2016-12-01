@@ -39,6 +39,7 @@ export class SamPhoneEntryComponent {
   process(event){
     var start = this.phoneInput.nativeElement.selectionStart;
     var end = this.phoneInput.nativeElement.selectionEnd;
+    //console.log(event,start,end);
     if(!isNaN(event.key)){
       var updatedPhoneNumber = this.phoneNumber;
       var positionIncrement = this.getPositionIncrement(start);
@@ -64,6 +65,8 @@ export class SamPhoneEntryComponent {
       this.phoneNumber = this.replaceAt(positionDecrement,"_",this.phoneNumber).substr(0,16);
       this.phoneInput.nativeElement.value = this.phoneNumber;
       this.phoneInput.nativeElement.setSelectionRange(positionDecrement,positionDecrement);
+    } else if(event.key=="ArrowRight" || event.key=="ArrowLeft"){
+      this.phoneInput.nativeElement.setSelectionRange(start,end);
     } else {
       //don't change
       this.phoneInput.nativeElement.value = this.phoneNumber;
@@ -120,7 +123,6 @@ export class SamPhoneEntryComponent {
   check(){
     var error = false;
     var digitCount = this.model.replace(/[^0-9]/g,"").length;
-    console.log(digitCount,"checkdigitcount");
     if(digitCount < 11){
 
       if((digitCount == 10 && this.model.match(/^\d/g)) || digitCount < 10){
