@@ -6,7 +6,7 @@ import { WrapperService } from '../wrapper/wrapper.service';
 export class SystemAlertsService {
     constructor(private apiService: WrapperService) {}
 
-    get(limit?: number, offset?: number, statuses?: [string], types?: [string], datePublished?: string) {
+    get(limit?: number, offset?: number, statuses?: [string], types?: [string], datePublished?: string, sort?: string) {
 
       let apiOptions: any = {
         name: 'alerts',
@@ -29,6 +29,10 @@ export class SystemAlertsService {
 
       if (datePublished) {
         apiOptions.oParam.datePublished = datePublished;
+      }
+
+      if (sort) {
+        apiOptions.oParam.sort = sort;
       }
 
       return this.apiService.call(apiOptions);

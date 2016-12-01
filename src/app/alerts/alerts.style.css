@@ -40,6 +40,16 @@
   margin-top: .67em;
 }
 
+:host >>> input {
+  width: auto;
+  max-width: none;
+  display: inline;
+}
+
+:host >>> #datesPublished {
+  width: 100px;
+}
+
 :host >>> .usa-pagination {
   text-align: center;
 }

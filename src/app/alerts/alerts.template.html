@@ -4,35 +4,24 @@
   <h1 class="alert-page-title">Alerts</h1>
   <div class="alerts-toolbar">
     <div class="toolbar-item">
-      <select [(ngModel)]="filters.statuses[0]">
-        <option selected disabled>Status</option>
-        <option *ngFor="let status of statuses" value="status">{{status}}</option>
-      </select>
+      <samCheckbox [(model)]="filters.statuses" [options]="statuses" [name]="'statuses'" (modelChange)="onParamChanged()"></samCheckbox>
     </div>
     <div class="toolbar-item">
-      <select [(ngModel)]="filters.types[0]">
-        <option selected disabled>Type</option>
-        <option *ngFor="let type of types" value="type">{{type}}</option>
-      </select>
+      <samCheckbox [(model)]="filters.types" [options]="types" [name]="'types'" (modelChange)="onParamChanged()"></samCheckbox>
     </div>
     <div class="toolbar-item">
-      <select [(ngModel)]="filters.datePublished">
-        <option selected disabled>Date published</option>
-        <option *ngFor="let datesPublished of datesPublished" value="datePublished">{{datePublished}}</option>
-      </select>
+      <samSelect [(model)]="filters.datePublished" [options]="datesPublished" [name]="'datesPublished'" (modelChange)="onParamChanged()"></samSelect>
     </div>
     <div class="toolbar-item sort-column">
       Sort by:&nbsp;
-      <select [(ngModel)]="sortField" (change)="onParamChanged()">
-        <option *ngFor="let sf of sortFields">{{sf}}</option>
-      </select>
+      <samSelect [(model)]="sortField" [options]="sortFields" [name]='sortField' (modelChange)="onParamChanged()"></samSelect>
     </div>
   </div>
   <div class="alert-count">
-    Showing {{alerts.length}} of <i>{{alertsTotal()}}</i>
+    Showing {{alerts.length}} of <i>{{totalAlerts()}}</i>
   </div>
   <div *ngFor="let alert of alerts" class="alert-block">
     <alert-item [alert]="alert"></alert-item>
   </div>
-  <samPagination [currentPage]="currentPage" [totalPages]="totalPages" (pageChange)="onParamChanged()"></samPagination>
+  <samPagination [(currentPage)]="currentPage" [totalPages]="totalPages()" (pageChange)="onParamChanged($event)"></samPagination>
 </div>

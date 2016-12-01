@@ -4,51 +4,14 @@ import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import {AlertHeaderComponent} from './alert-header.component';
-import {SystemAlertsService} from "../../.";
-import {SamUIKitModule} from '../../.';
+import {SystemAlertsService} from "api-kit";
+import {SamUIKitModule} from 'ui-kit';
 import {RouterTestingModule} from "@angular/router/testing";
 
-let error = {
-  content: {
-    "title" : "The is an error", 
-    "summary" : "The systems will be down for a while", 
-    "category" : "outages", 
-    "description" : "This is the description", 
-    "severity" : "ERROR",
-    "begins" : "2016-11-01T20:03:09Z",
-    "expires" : "2016-11-01T20:03:09Z",
-    "published" : "2016-11-01T20:03:09Z" 
-  }
-};
-
-let warning = {
-  content: {
-    "title": "The is an warning",
-    "summary": "The systems will be slow for a while",
-    "category": "outages",
-    "description": "This is the description",
-    "severity": "WARNING",
-    "begins": "2016-11-01T20:03:09Z",
-    "expires": "2016-11-01T20:03:09Z",
-    "published": "2016-11-01T20:03:09Z"
-  }
-};
-
-let info = {
-  content: {
-    "title": "The is information",
-    "summary": "The systems will have additional features tomorrow",
-    "category": "features",
-    "description": "This is the description",
-    "severity": "INFO",
-    "begins": "2016-11-01T20:03:09Z",
-    "expires": "2016-11-01T20:03:09Z",
-    "published": "2016-11-01T20:03:09Z"
-  }
-};
+// Load test data
+import {error, info, warning} from '../alerts-test-data.spec';
 
 let noAlerts = Observable.of([]);
-let oneAlert = Observable.of([error]);
 let fiveAlerts = Observable.of([error, error, warning, info, info]);
 
 let systemAlertsStub: any = {
@@ -86,9 +49,31 @@ describe('The AlertList component', () => {
     });
   });
 
-  it('should show 1 alert', done => {
+  it('should show an error', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'get').and.returnValue(oneAlert);
+    spyOn(svc, 'get').and.returnValue(Observable.of([error]));
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      let alerts = fixture.debugElement.queryAll(By.css('h3'));
+      expect(alerts.length).toBe(1);
+      done();
+    });
+  });
+
+  it('should show a warning', done => {
+    let svc = fixture.debugElement.injector.get(SystemAlertsService);
+    spyOn(svc, 'get').and.returnValue(Observable.of([warning]));
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      let alerts = fixture.debugElement.queryAll(By.css('h3'));
+      expect(alerts.length).toBe(1);
+      done();
+    });
+  });
+
+  it('should show an info', done => {
+    let svc = fixture.debugElement.injector.get(SystemAlertsService);
+    spyOn(svc, 'get').and.returnValue(Observable.of([info]));
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));
