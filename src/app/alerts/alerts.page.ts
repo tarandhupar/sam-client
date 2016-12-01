@@ -76,7 +76,7 @@ export class AlertsPage {
       this.filters.datePublished = params['date_published'] || this.defaultDatePublished();
       this.sortField = params['sort'] || this.defaultSort();
 
-      this.doSearch();
+      this.doDelayedSearch();
     });
   }
 
@@ -88,16 +88,28 @@ export class AlertsPage {
   }
 
   doSearch() {
-    let offset = (this.currentPage - 1) * ALERTS_PER_PAGE;
-    this.alertsService.get(ALERTS_PER_PAGE, offset, this.filters.statuses, this.filters.types, this.filters.datePublished, this.sortField)
-      .catch(err => {
+    this.getAlerts().catch(err => {
         this.router.navigate([ERROR_PAGE_PATH]);
         return Observable.of(err);
       })
       .subscribe(alerts => {
         this.alerts = alerts.map(alert => Alert.FromResponse(alert));
-      })
+      });
+  }
 
+  doDelayedSearch() {
+    this.getAlerts().last().catch(err => {
+      this.router.navigate([ERROR_PAGE_PATH]);
+      return Observable.of(err);
+    })
+    .subscribe(alerts => {
+      this.alerts = alerts.map(alert => Alert.FromResponse(alert));
+    })
+  }
+
+  getAlerts() {
+    let offset = (this.currentPage - 1) * ALERTS_PER_PAGE;
+    return this.alertsService.get(ALERTS_PER_PAGE, offset, this.filters.statuses, this.filters.types, this.filters.datePublished, this.sortField);
   }
 
   onParamChanged(page) {
