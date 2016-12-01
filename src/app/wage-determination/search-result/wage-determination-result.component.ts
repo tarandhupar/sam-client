@@ -12,15 +12,15 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive==false" class="usa-label">Inactive</span>
     	</p>
     	<h3 class="wage-determination-number">
-      	<span>{{ data._type=='wdSCA' ? 'Service Contract Act WD #: ' : 'Davis-Bacon Act WD #: ' }}</span><a [routerLink]="[]">{{ data.fullReferenceNumber }}</a>
+      	<span>{{ data._type=='wdSCA' ? 'Service Contract Act WD #: ' : 'Davis-Bacon Act WD #: ' }}</span><a>{{ data.fullReferenceNumber }}</a>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li><strong>State: </strong>
+        	<li *ngIf="data.locations!==null"><strong>State: </strong>
         	  <span *ngIf="data.locations[0].state!==null">{{ data.locations[0].state.name }}</span>
         	  <span *ngIf="data.locations[0].state===null && data.locations[1] && data.locations[1].state!==null">{{ data.locations[1].state.name }}</span>
         	</li>
-        	<li><strong>Area: </strong>
+        	<li *ngIf="data.locations!==null"><strong>Area: </strong>
         	  <span *ngIf="data.locations[0].counties!==null">{{ data.locations[0].counties }}</span>
         	  <span *ngIf="data.locations[0].counties===null && data.locations[1] && data.locations[1].counties!==null">{{ data.locations[1].counties }}</span>
         	</li>
