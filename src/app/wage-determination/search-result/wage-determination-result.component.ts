@@ -1,6 +1,5 @@
 import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
-import * as _ from 'lodash';
 import * as moment from 'moment/moment';
 
 
@@ -10,7 +9,7 @@ import * as moment from 'moment/moment';
   template: `
       <p>
     	  <span class="usa-label">Wage Determination</span>
-    	  <span *ngIf=false class="usa-label">ARCHIVED</span>
+    	  <span *ngIf="data.isActive==false" class="usa-label">Inactive</span>
     	</p>
     	<h3 class="wage-determination-number">
       	<span>{{ data._type=='wdSCA' ? 'Service Contract Act WD #: ' : 'Davis-Bacon Act WD #: ' }}</span><a [routerLink]="[]">{{ data.fullReferenceNumber }}</a>
