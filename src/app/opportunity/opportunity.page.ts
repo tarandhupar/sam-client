@@ -63,7 +63,7 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadOpportunity() {
-    var opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
+    let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
 
     this.route.params.subscribe((params: Params) => { // construct a stream of opportunity data
       this.opportunityService.getOpportunityById(params['id']).subscribe(opportunitySubject); // attach subject to stream
@@ -86,7 +86,7 @@ export class OpportunityPage implements OnInit {
         // then call the opportunity api again for parent and attach the subject to the result
         this.opportunityService.getOpportunityById(api.parentOpportunity.opportunityId).subscribe(parentOpportunitySubject);
       } else {
-        return Observable.empty(); // if there is no parent, just return an empty observable
+        return Observable.of(null).subscribe(parentOpportunitySubject); // if there is no parent, just return a single null
       }
     });
 
@@ -153,25 +153,38 @@ export class OpportunityPage implements OnInit {
 
       switch (opportunity.data.type) {
         // Base opportunity types
-        case 'p':
-        case 'r':
-        case 's':
-        case 'g':
-        case 'f':
+        case 'p': // Presolicitation
+        case 'r': // Sources Sought
+        case 's': // Special Notice
+        case 'g': // Sale of Surplus Property
+        case 'f': // Foreign Government Standard
           this.displayField[OpportunityFields.Award] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
-          this.displayField[OpportunityFields.JustificationAuthority] = false;
-          this.displayField[OpportunityFields.OrderNumber] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
-          break;
 
         // Other types
-        case 'a':
-        case 'm':
-        case 'k':
-        case 'j':
-        case 'i':
-        case 'l':
+        case 'j': // Justification and Approval (J&A)
+          this.displayField[OpportunityFields.AwardAmount] = false;
+          this.displayField[OpportunityFields.LineItemNumber] = false;
+          this.displayField[OpportunityFields.AwardedName] = false;
+          this.displayField[OpportunityFields.AwardedDUNS] = false;
+          this.displayField[OpportunityFields.AwardedAddress] = false;
+          this.displayField[OpportunityFields.Contractor] = false;
+          this.displayField[OpportunityFields.JustificationAuthority] = false;
+          this.displayField[OpportunityFields.OrderNumber] = false;
+          break;
+        case 'a': // Award Notice
+        case 'm': // Modification/Amendment/Cancel
+        case 'k': // Combined Synopsis/Solicitation
+        case 'i': // Intent to Bundle Requirements (DoD-Funded)
+        case 'l': // Fair Opportunity / Limited Sources Justification
+          this.displayField[OpportunityFields.AwardAmount] = false;
+          this.displayField[OpportunityFields.LineItemNumber] = false;
+          this.displayField[OpportunityFields.AwardedName] = false;
+          this.displayField[OpportunityFields.AwardedDUNS] = false;
+          this.displayField[OpportunityFields.AwardedAddress] = false;
+          this.displayField[OpportunityFields.Contractor] = false;
+          this.displayField[OpportunityFields.StatutoryAuthority] = false;
           break;
 
         default:
