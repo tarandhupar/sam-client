@@ -24,8 +24,6 @@ export class FixHTMLPipe implements PipeTransform {
     // Remove SPANs
     html = html.replace(/<\/?span>/g, '');
 
-    console.log(html);
-
     return html;
   }
 }
