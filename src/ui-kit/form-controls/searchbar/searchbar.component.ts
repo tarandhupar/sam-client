@@ -42,6 +42,7 @@ export class SamSearchbarComponent {
       {value: 'cfda', label: 'Assistance Listings'},
       {value: 'fh', label: 'Federal Hierarchy'},
       {value: 'ent', label: 'Entities'},
+      {value: 'ex', label: 'Exclusions'},
       {value: 'wd', label: 'Wage Determinations'}
     ],
     disabled: false,
