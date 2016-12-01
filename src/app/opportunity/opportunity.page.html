@@ -113,9 +113,9 @@
           {{ opportunity?.data?.award?.justificationAuthority?.authority }}
         </li>
         <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')"
-            *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && shouldBeDisplayed(opportunityFields.JustificationAuthority)">
+            *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && shouldBeDisplayed(opportunityFields.JustificationAuthority) && dictionary">
           <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
-          {{ opportunity?.data?.award?.fairOpportunity?.authority }}
+          {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:dictionary.fo_justification_authority:'element_id':false:'')[0]?.value }}
         </li>
         <li [attr.id]="generateID(opportunityFields.OrderNumber, 'general')"
             *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
@@ -123,9 +123,9 @@
           {{ opportunity?.data?.award?.deliveryOrderNumber }}
         </li>
         <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')"
-            *ngIf="opportunity?.data?.justificationAuthority?.modificationNumber && shouldBeDisplayed(opportunityFields.ModificationNumber)">
+            *ngIf="opportunity?.data?.award?.justificationAuthority?.modificationNumber && shouldBeDisplayed(opportunityFields.ModificationNumber)">
           <strong>Modification Number: </strong>
-          {{ opportunity?.data?.justificationAuthority?.modificationNumber }}
+          {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
         </li>
       </ul>
     </section>

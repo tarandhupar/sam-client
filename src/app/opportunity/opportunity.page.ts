@@ -48,11 +48,9 @@ export class OpportunityPage implements OnInit {
 
   ngOnInit() {
     this.currentUrl = this.location.path();
-
+    this.loadDictionary();
     let opportunityAPI = this.loadOpportunity();
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
-
-    this.loadDictionary();
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
 
@@ -133,7 +131,7 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadDictionary() {
-    this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type').subscribe(data => {
+    this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type,fo_justification_authority').subscribe(data => {
       // do something with the dictionary api
       this.dictionary = data;
     }, err => {
