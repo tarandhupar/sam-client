@@ -9,7 +9,7 @@ export class ReferenceLibraryComponent {
 
   detailLipsum:string = `Omnes inermis ius at, ad assum constituto referrentur eam. 
     Regione deserunt no vis, in his sale aeque. Saepe virtute impedit no nec, elitr 
-    decore antiopam cu usu, sit Id labores vivendum vim. Vitae aliquip mnesarchum`;
+    decore antiopam cu usu, sit Id labores vivendum vim.`;
 
   detailObj: any = {
     Federal:{
