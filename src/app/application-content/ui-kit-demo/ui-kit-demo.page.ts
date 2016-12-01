@@ -84,6 +84,8 @@ export class UIKitDemoPage {
     suffix: "Sr."
   };
 
+  phoneModel = "";
+
 
   constructor() {  }
 
@@ -114,5 +116,8 @@ export class UIKitDemoPage {
 
   onDismissAlerts(){
     this.dismissAlerts = true;
+  }
+  phoneModelChange(phoneNum){
+    this.phoneModel = phoneNum;
   }
 }
