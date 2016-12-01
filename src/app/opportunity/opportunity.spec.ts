@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
+import { FixHTMLPipe } from "./pipes/fix-html.pipe";
 
 let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
@@ -188,7 +189,7 @@ let MockFHService = {
 describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe], // declare the test component
+      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe], // declare the test component
       imports: [
         PipesModule,
         HttpModule,
