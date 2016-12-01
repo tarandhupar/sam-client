@@ -8,6 +8,8 @@ import { Location, LocationStrategy, HashLocationStrategy } from '@angular/commo
 
 import { OpportunityPage } from './opportunity.page';
 import { OpportunityService, FHService } from 'api-kit';
+import { OpportunityFields } from "./opportunity.fields";
+
 import { Observable } from 'rxjs';
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
@@ -159,16 +161,16 @@ let MockOpportunityService = {
         }
       ]
     });
+  },
+  getOpportunityLocationById(id: String) {
+    return Observable.of({
+      "zip": "77720",
+      "country": null,
+      "city": "Beaumont",
+      "street": "PO Box 26015 5430 Knauth Road",
+      "state": "TX"
+    });
   }
-  // getOpportunityLocationById(id: String) {
-  //   return Observable.of({
-  //     "zip": "77720",
-  //     "country": null,
-  //     "city": "Beaumont",
-  //     "street": "PO Box 26015 5430 Knauth Road",
-  //     "state": "TX"
-  //   });
-  // }
 };
 
 let MockFHService = {
@@ -218,15 +220,123 @@ describe('OpportunityPage', () => {
     });
 
     fixture = TestBed.createComponent(OpportunityPage);
-    comp = fixture.componentInstance; // BannerComponent test instance
+    comp = fixture.componentInstance; // Opportunity Component test instance
     fixture.detectChanges();
   });
 
+  // Generic function to construct mock api with specified opportunity type
+  var mockAPIDataType = type => {
+    return Observable.of([{
+      "data": {"type": type}
+    }, null]);
+  };
+
   it('Should init & load data', () => {
     expect(comp.opportunity).toBeDefined();
-    // expect(comp.opportunityLocation).toBeDefined();
+    expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
-    expect(comp.opportunity.opportunityId).toBe("213ji321hu3jk123");
+    expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
   });
+
+  it('Should generate ids', () => {
+    let generateIDSpy = spyOn(comp, 'generateID').and.callThrough();
+    expect(generateIDSpy('testID')).toBe('opportunity-testID'); // generate an id
+    expect(generateIDSpy('testID', 'test-prefix')).toBe('opportunity-test-prefix-testID'); // generate an id with a prefix
+  });
+
+  it('Should set display flag for fields for base types', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // These base types should all display the same fields
+    let baseTypes = ['p', 'r', 'g', 's', 'f'];
+
+    // For each base type, check setDisplayFields() against expected output
+    let baseExpected = {};
+    baseExpected[OpportunityFields.Award] = false;
+    baseExpected[OpportunityFields.StatutoryAuthority] = false;
+    baseExpected[OpportunityFields.JustificationAuthority] = false;
+    baseExpected[OpportunityFields.OrderNumber] = false;
+    baseExpected[OpportunityFields.ModificationNumber] = false;
+
+    for (let type of baseTypes) {
+      setDisplaySpy(mockAPIDataType(type));
+      for (let field in baseExpected) {
+        expect(comp.displayField[field]).toBe(baseExpected[field]);
+      }
+    }
+  });
+
+  it('Should set display flag for fields for J&A authoritty', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // Check J&A Authority
+    let jaExpected = {};
+    jaExpected[OpportunityFields.AwardAmount] = false;
+    jaExpected[OpportunityFields.LineItemNumber] = false;
+    jaExpected[OpportunityFields.AwardedName] = false;
+    jaExpected[OpportunityFields.AwardedDUNS] = false;
+    jaExpected[OpportunityFields.AwardedAddress] = false;
+    jaExpected[OpportunityFields.Contractor] = false;
+    jaExpected[OpportunityFields.JustificationAuthority] = false;
+    jaExpected[OpportunityFields.OrderNumber] = false;
+
+    setDisplaySpy(mockAPIDataType('j'));
+    for(let field in jaExpected) {
+      expect(comp.displayField[field]).toBe(jaExpected[field]);
+    }
+  });
+
+  it('Should set display flag for fields for Fair Opportunity / Limited Sources Justification', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    // Check J&A Authority
+    let jaExpected = {};
+    jaExpected[OpportunityFields.AwardAmount] = false;
+    jaExpected[OpportunityFields.LineItemNumber] = false;
+    jaExpected[OpportunityFields.AwardedName] = false;
+    jaExpected[OpportunityFields.AwardedDUNS] = false;
+    jaExpected[OpportunityFields.AwardedAddress] = false;
+    jaExpected[OpportunityFields.Contractor] = false;
+    jaExpected[OpportunityFields.StatutoryAuthority] = false;
+
+    setDisplaySpy(mockAPIDataType('l'));
+    for(let field in jaExpected) {
+      expect(comp.displayField[field]).toBe(jaExpected[field]);
+    }
+  });
+
+  it('Should print error if invalid type', () => {
+    let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
+
+    spyOn(console, 'log');
+
+    setDisplaySpy(mockAPIDataType(null));
+    expect(console.log).toHaveBeenCalledWith('Error: No opportunity type');
+
+    setDisplaySpy(mockAPIDataType('non-existant type'));
+    expect(console.log).toHaveBeenCalledWith('Error: Unknown opportunity type non-existant type');
+  });
+
+  it('Should check display flag for fields', () => {
+    let shouldDisplaySpy = spyOn(comp, 'shouldBeDisplayed').and.callThrough().bind(comp);
+
+    comp.displayField = { 'award': false, 'title': true };
+    expect(shouldDisplaySpy('award')).toBe(false); // don't display if flag is set to false
+    expect(shouldDisplaySpy('title')).toBe(true); // display if flag is set to true
+  });
+
+  it('Should display fields by default', () => {
+    let shouldDisplaySpy = spyOn(comp, 'shouldBeDisplayed').and.callThrough().bind(comp);
+
+    // Any field that is not explicitly and exactly set to false should be displayed
+    comp.displayField = { 'award': null, 'title': undefined, 'header': 0, 'general': 'foo' };
+    expect(shouldDisplaySpy('award')).toBe(true); // falsey but not false
+    expect(shouldDisplaySpy('title')).toBe(true); // falsey
+    expect(shouldDisplaySpy('header')).toBe(true); // falsey
+    expect(shouldDisplaySpy('general')).toBe(true); // random string
+    expect(shouldDisplaySpy('contact')).toBe(true); // not explicitly set
+  });
+
+  // TODO: Add unit tests for parentOpportunity conditionals
 });

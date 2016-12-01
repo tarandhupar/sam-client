@@ -198,3 +198,23 @@
     <samPOC [data]="pointOfContact"></samPOC>
   </div>
 </div>
+<br/>
+<div class="usa-grid">
+  <h2 class="usa-width-one">Name Entry &lt;samNameEntry&gt;</h2>
+  <div class="usa-width-one-half">
+    <samNameEntry [model]="nameModel" [prefix]="'ui-kit'"></samNameEntry>
+  </div>
+  <div class="usa-width-one-half">
+    <h3>Model</h3>
+    <pre><code>{{nameModel | json}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
+  <div class="usa-width-one-whole">
+    <h2>Agency picker &lt;agencyPicker&gt;</h2>
+    <label>Multiple Organizations:</label>
+    <agencyPicker [multimode]="true"></agencyPicker>
+    <label>Single Organization:</label>
+    <agencyPicker [multimode]="false"></agencyPicker>
+  </div>
+</div>
