@@ -204,13 +204,23 @@
     <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
       <h2>Contact Information</h2>
       <div class="usa-grid-full" *ngIf="opportunityLocation">
-        <div class="usa-width-one-whole m_B-4x">
+        <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
           <h3>Contracting Office Address:</h3>
-          <ng-container *ngIf="opportunityLocation.street">{{opportunityLocation.street}},</ng-container>
-          <ng-container *ngIf="opportunityLocation.city">{{opportunityLocation.city}}, </ng-container>
-          <ng-container *ngIf="opportunityLocation.state">{{opportunityLocation.state}}</ng-container>
-          <ng-container *ngIf="opportunityLocation.country">{{opportunityLocation.country}}</ng-container>
-          <ng-container *ngIf="opportunityLocation.zip">{{opportunityLocation.zip}}</ng-container>
+          <span [attr.id]="generateID(opportunityFields.OfficeStreet, 'contact')" *ngIf="opportunityLocation.street && shouldBeDisplayed(opportunityFields.OfficeStreet)">
+            {{opportunityLocation.street}},
+          </span>
+          <span [attr.id]="generateID(opportunityFields.OfficeCity, 'contact')" *ngIf="opportunityLocation.city && shouldBeDisplayed(opportunityFields.OfficeCity)">
+            {{opportunityLocation.city}},
+          </span>
+          <span [attr.id]="generateID(opportunityFields.OfficeState, 'contact')" *ngIf="opportunityLocation.state && shouldBeDisplayed(opportunityFields.OfficeState)">
+            {{opportunityLocation.state}}
+          </span>
+          <span [attr.id]="generateID(opportunityFields.OfficeCountry, 'contact')" *ngIf="opportunityLocation.country && shouldBeDisplayed(opportunityFields.OfficeCountry)">
+            {{opportunityLocation.country}}
+          </span>
+          <span [attr.id]="generateID(opportunityFields.OfficeZip, 'contact')" *ngIf="opportunityLocation.zip && shouldBeDisplayed(opportunityFields.OfficeZip)">
+            {{opportunityLocation.zip}}
+          </span>
         </div>
       </div>
       <div class="usa-grid-full" *ngIf="opportunity.data?.pointOfContact">
