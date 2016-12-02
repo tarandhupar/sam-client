@@ -204,21 +204,21 @@
     <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
       <h2>Contact Information</h2>
       <div class="usa-grid-full" *ngIf="opportunityLocation">
-        <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office)" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
+        <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
           <h3>Contracting Office Address:</h3>
-          <span [attr.id]="generateID(opportunityFields.OfficeStreet)" *ngIf="opportunityLocation.street && shouldBeDisplayed(opportunityFields.OfficeStreet)">
+          <span [attr.id]="generateID(opportunityFields.OfficeStreet, 'contact')" *ngIf="opportunityLocation.street && shouldBeDisplayed(opportunityFields.OfficeStreet)">
             {{opportunityLocation.street}},
           </span>
-          <span [attr.id]="generateID(opportunityFields.OfficeCity)" *ngIf="opportunityLocation.city && shouldBeDisplayed(opportunityFields.OfficeCity)">
+          <span [attr.id]="generateID(opportunityFields.OfficeCity, 'contact')" *ngIf="opportunityLocation.city && shouldBeDisplayed(opportunityFields.OfficeCity)">
             {{opportunityLocation.city}},
           </span>
-          <span [attr.id]="generateID(opportunityFields.OfficeState)" *ngIf="opportunityLocation.state && shouldBeDisplayed(opportunityFields.OfficeState)">
+          <span [attr.id]="generateID(opportunityFields.OfficeState, 'contact')" *ngIf="opportunityLocation.state && shouldBeDisplayed(opportunityFields.OfficeState)">
             {{opportunityLocation.state}}
           </span>
-          <span [attr.id]="generateID(opportunityFields.OfficeCountry)" *ngIf="opportunityLocation.country && shouldBeDisplayed(opportunityFields.OfficeCountry)">
+          <span [attr.id]="generateID(opportunityFields.OfficeCountry, 'contact')" *ngIf="opportunityLocation.country && shouldBeDisplayed(opportunityFields.OfficeCountry)">
             {{opportunityLocation.country}}
           </span>
-          <span [attr.id]="generateID(opportunityFields.OfficeZip)" *ngIf="opportunityLocation.zip && shouldBeDisplayed(opportunityFields.OfficeZip)">
+          <span [attr.id]="generateID(opportunityFields.OfficeZip, 'contact')" *ngIf="opportunityLocation.zip && shouldBeDisplayed(opportunityFields.OfficeZip)">
             {{opportunityLocation.zip}}
           </span>
         </div>
