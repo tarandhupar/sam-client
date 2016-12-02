@@ -56,7 +56,7 @@ export class OpportunityPage implements OnInit {
 
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
-    let combinedOpportunityAPI = opportunityAPI.withLatestFrom(parentOpportunityAPI);
+    let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
     this.setDisplayFields(combinedOpportunityAPI);
   }
 
