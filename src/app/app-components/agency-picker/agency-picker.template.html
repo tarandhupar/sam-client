@@ -29,7 +29,7 @@
                 <a (click)="toggleSelectorArea()" *ngIf="selectorToggle">Simple</a>
             </div>
         </div>         
-        <div class="usa-width-one" style="clear:both;" *ngIf="selectorToggle">
+        <div class="usa-width-one usa-agency-picker-browse-area" *ngIf="selectorToggle">
             <div class='fh-form-alt'>
                 <div *ngFor="let orgLevel of orgLevels; let idx = index;">
                     <div *ngIf="orgLevel['show']">
