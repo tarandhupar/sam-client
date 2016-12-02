@@ -57,6 +57,12 @@ export enum OpportunityFields {
 
     // Contact information section
   Contact = <any>'contact',
+  Office = <any>'contracting-office', // Contracting Office Address sub-section
+  OfficeStreet = <any>'contracting-office-street',
+  OfficeCity = <any>'contracting-office-city',
+  OfficeState = <any>'contracting-office-state',
+  OfficeCountry = <any>'contracting-office-country',
+  OfficeZip = <any>'contracting-office-zip',
   POC = <any>'poc', // POC sub-section
   POCTitle = <any>'poc-title',
   POCFullName = <any>'poc-full-name',
