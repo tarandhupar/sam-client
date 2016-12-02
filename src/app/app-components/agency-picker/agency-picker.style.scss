@@ -30,10 +30,12 @@ select[multiple]{
   background-image:none;
   border-right-width:1px;
 }
+
 .usa-agency-picker-selection-area{
   position:relative;
 }
-.autocomplete{
+
+.usa-agency-picker-autocomplete{
   position:absolute;
   top:44px;
   background:#fff;
@@ -58,17 +60,13 @@ select[multiple]{
     cursor:pointer;
     background:#e1f3f8;
   }
+
+  li.autocomplete-selected{
+    background:#e1f3f8; 
+  }
 }
 
-.autocomplete-selected{
-  background:#e1f3f8; 
-}
-
-.agency-picker-browse-toggle:hover{
-  cursor:pointer;
-}
-
-.agency-picker-readonly-area{
+.usa-agency-picker-readonly-area{
   padding:15px 10px;
   border:1px #5b616b solid;
   position:relative;
@@ -86,7 +84,7 @@ select[multiple]{
     padding:0;
   }
 }
-.agency-picker-dropdown-area{
+.usa-agency-picker-dropdown-area{
   padding-top:15px;
   padding-bottom:15px;
   border:1px #5b616b solid;
@@ -94,25 +92,25 @@ select[multiple]{
   width:460px;
   margin-left:0;
   background:#eee;
+  .usa-agency-picker-search-area{
+    height:52px;
+    position:relative;
+    clear: both;
+    overflow:visible;
+  }
 }
 
-.agency-picker-search-area{
-  height:52px;
-  position:relative;
-  clear: both;
-  overflow:visible;
-}
-.agency-picker-icon{
-  font-size:1.5em;
-}
-.agency-picker-icon:hover{
-  cursor:pointer;
-}
-
-.usa-agency-picker-multiselect{
-  height:auto;
+.usa-agency-picker-icon-area{
   float:left;
-  height:6em;
+  line-height: 52px;
+  margin: 0px 10px 0 4px;
+
+  .usa-agency-picker-icon{
+    font-size:1.5em;
+    &:hover{
+      cursor:pointer;
+    }
+  }
 }
 
 .usa-agency-picker-search-input-wrapper{
@@ -148,11 +146,6 @@ select[multiple]{
   }
 }
 
-.usa-agency-picker-icon-area{
-  float:left;
-  line-height: 52px;
-  margin: 0px 10px 0 4px;
-}
 .usa-agency-picker-browse-toggle-area{
   float:left;
   line-height:52px;

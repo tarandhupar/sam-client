@@ -4,24 +4,24 @@
     <div *ngIf="searchError">
         <span class="usa-input-error-message">{{ searchMessage }}</span>
     </div>
-    <div class="agency-picker-readonly-area">
+    <div class="usa-agency-picker-readonly-area">
         <ul>
             <li *ngFor="let org of readonlyDisplayList"><span (click)="removeOrg(org.value)"><i class="fa fa-times" aria-hidden="true"></i></span> {{org.name}}</li>
         </ul>
     </div>
-    <div class="agency-picker-dropdown-area usa-grid">   
-        <div class="agency-picker-search-area">
+    <div class="usa-agency-picker-dropdown-area usa-grid">   
+        <div class="usa-agency-picker-search-area">
             <div class="usa-agency-picker-search-input-wrapper">
                 <input type="text" class="usa-agency-picker-search-input" (blur)="onInputBlur($event)" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
                 <span [ngClass]="resetIconClass"><i class="fa fa-times-circle" (click)="onResetClick()"></i></span>
             </div>
-            <ul (blur)="onInputBlur($event)" #autocompletelist tabindex="0" *ngIf="autoCompleteToggle" class="autocomplete" (mousedown)="cancelBlurMethod()">
+            <ul (blur)="onInputBlur($event)" #autocompletelist tabindex="0" *ngIf="autoCompleteToggle" class="usa-agency-picker-autocomplete" (mousedown)="cancelBlurMethod()">
                 <li *ngIf="showAutocompleteMsg" class="autocomplete-msg">{{autocompleteMsg}}</li>
                 <li *ngFor="let result of autoComplete; let i = index;" (mouseover)='autocompleteMouseover(i)' [ngClass]="i === autocompleteIndex?'autocomplete-selected':''" (mousedown)="autocompleteSelection(result)">{{result.name}}</li>
             </ul>
             <div class="usa-agency-picker-icon-area">
                 <a (click)="setOrganizationFromSearch()" class="usa-agency-picker-submit-text">
-                    <i class="agency-picker-icon fa fa-search-plus" aria-hidden="true"></i>
+                    <i class="usa-agency-picker-icon fa fa-search-plus" aria-hidden="true"></i>
                 </a>
             </div>
             <div class="usa-agency-picker-browse-toggle-area">
