@@ -1,3 +1,14 @@
+export enum AlertStatus {
+  Active,
+  Inactive
+}
+
+export enum AlertSeverity {
+  Informational,
+  Warning,
+  Error
+}
+
 export class Alert {
   private response: any;
 

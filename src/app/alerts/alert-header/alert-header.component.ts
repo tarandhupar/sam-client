@@ -60,7 +60,7 @@ export class AlertHeaderComponent {
 
   fetchAlerts() {
     const MAX_ALERTS: number = 2;
-    this.systemAlerts.get(MAX_ALERTS)
+    this.systemAlerts.getActive(MAX_ALERTS)
       .map(alerts => alerts.map(alert => {
         return Alert.FromResponse(alert);
       }))

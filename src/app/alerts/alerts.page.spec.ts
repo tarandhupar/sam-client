@@ -19,7 +19,7 @@ class RouterStub {
   }
 }
 
-var activatedRouteStub = {
+let activatedRouteStub: any = {
   queryParams: new Subject(),
   snapshot: {
     data: {
@@ -29,7 +29,9 @@ var activatedRouteStub = {
 };
 
 let systemAlertsStub: any = {
-  get: () => Observable.of([error, error])
+  getActive: () => Observable.of([error, error]),
+  getAll: () => Observable.of([error, error, warning, warning, info])
+
 };
 
 describe('The AlertsPage component', () => {

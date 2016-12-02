@@ -15,10 +15,10 @@ let noAlerts = Observable.of([]);
 let fiveAlerts = Observable.of([error, error, warning, info, info]);
 
 let systemAlertsStub: any = {
-  get: () => fiveAlerts
+  getActive: () => fiveAlerts
 };
 
-describe('The AlertList component', () => {
+describe('The AlertHeader component', () => {
   let component:AlertHeaderComponent;
   let fixture:any;
 
@@ -41,7 +41,7 @@ describe('The AlertList component', () => {
 
   it('should show 0 alerts', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'get').and.returnValue(noAlerts);
+    spyOn(svc, 'getActive').and.returnValue(noAlerts);
 
     fixture.whenStable().then(() => {
       expect(fixture.nativeElement.textContent.trim()).toBe('');
@@ -51,7 +51,7 @@ describe('The AlertList component', () => {
 
   it('should show an error', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'get').and.returnValue(Observable.of([error]));
+    spyOn(svc, 'getActive').and.returnValue(Observable.of([error]));
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));
@@ -62,7 +62,7 @@ describe('The AlertList component', () => {
 
   it('should show a warning', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'get').and.returnValue(Observable.of([warning]));
+    spyOn(svc, 'getActive').and.returnValue(Observable.of([warning]));
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));
@@ -73,7 +73,7 @@ describe('The AlertList component', () => {
 
   it('should show an info', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'get').and.returnValue(Observable.of([info]));
+    spyOn(svc, 'getActive').and.returnValue(Observable.of([info]));
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));
@@ -84,7 +84,7 @@ describe('The AlertList component', () => {
 
   it('should show 2 alert (even if the services returns 5)', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'get').and.returnValue(fiveAlerts);
+    spyOn(svc, 'getActive').and.returnValue(fiveAlerts);
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));

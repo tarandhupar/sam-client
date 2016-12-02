@@ -27,21 +27,21 @@ export class AlertsPage {
   };
 
   statuses = [
-    { label: 'Active', value: 'active'},
-    { label: 'Inactive', value: 'inactive' }
+    { label: 'Active', value: 'Y'},
+    { label: 'Inactive', value: 'N' }
   ];
 
   types = [
-    { label: 'Informations', value: 'informational' },
-    { label: 'Error', value: 'error' },
-    { label: 'Warning', value: 'warning' }
+    { label: 'Informations', value: 'Informational' },
+    { label: 'Error', value: 'Error' },
+    { label: 'Warning', value: 'Warning' }
   ];
   datesPublished = [
     {label: "Last 30 Days", value: '30d'},
     {label: "Last 90 Days", value: '90d'},
     {label: "Last 6 Months", value: '1m'},
     {label: "Last 1 Year", value: '1y'},
-    {label: "All", value: 'all'}
+    {label: "All", value: ''}
   ];
   sortFields = [
     {label: 'Published date (most recent first)', value: 'pdd'},
@@ -50,7 +50,7 @@ export class AlertsPage {
     {label: 'End date (oldest first)', value: 'eda'},
   ];
 
-  constructor(private route: ActivatedRoute, private router: Router, private alertsService: SystemAlertsService) {
+  constructor(public route: ActivatedRoute, public router: Router, private alertsService: SystemAlertsService) {
     route.queryParams.subscribe(params => {
       const page = params['page'];
       if (page) {
@@ -76,28 +76,11 @@ export class AlertsPage {
       this.filters.datePublished = params['date_published'] || this.defaultDatePublished();
       this.sortField = params['sort'] || this.defaultSort();
 
-      this.doDelayedSearch();
+      this.doSearch();
     });
   }
 
-  ngOnInit() {
-    // const temp = this.route.snapshot.data['alerts'];
-    // this.alerts = temp.map(alert => {
-    //   return Alert.FromResponse(alert);
-    // });
-  }
-
   doSearch() {
-    this.getAlerts().catch(err => {
-        this.router.navigate([ERROR_PAGE_PATH]);
-        return Observable.of(err);
-      })
-      .subscribe(alerts => {
-        this.alerts = alerts.map(alert => Alert.FromResponse(alert));
-      });
-  }
-
-  doDelayedSearch() {
     this.getAlerts().last().catch(err => {
       this.router.navigate([ERROR_PAGE_PATH]);
       return Observable.of(err);
@@ -109,7 +92,18 @@ export class AlertsPage {
 
   getAlerts() {
     let offset = (this.currentPage - 1) * ALERTS_PER_PAGE;
-    return this.alertsService.get(ALERTS_PER_PAGE, offset, this.filters.statuses, this.filters.types, this.filters.datePublished, this.sortField);
+    let sort, order;
+    if (this.sortField === 'pda' || this.sortField === 'pdd') {
+      sort = 'published'
+    } else {
+      sort = 'expired';
+    }
+    if (this.sortField === 'pdd' || this.sortField === 'edd') {
+      order = 'desc';
+    } else {
+      order = 'asc';
+    }
+    return this.alertsService.getAll(ALERTS_PER_PAGE, offset, this.filters.statuses, this.filters.types, this.filters.datePublished, sort, order);
   }
 
   onParamChanged(page) {
@@ -135,10 +129,10 @@ export class AlertsPage {
   }
 
   defaultSort() { return 'pda'; }
-  defaultStatuses() { return ['active']; }
-  defaultTypes() { return ['error', 'informational', 'warning']; }
+  defaultStatuses() { return ['Y']; }
+  defaultTypes() { return ['Error', 'Informational', 'Warning']; }
   defaultPage() { return 1; }
-  defaultDatePublished() { return 'all'; }
+  defaultDatePublished() { return ''; }
 
   totalAlerts(): number {
     // TODO: get real value

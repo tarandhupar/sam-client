@@ -28,14 +28,14 @@ describe('SystemAlertsService', () => {
       expect(connection.request.method).toBe(RequestMethod.Get);
       expect(connection.request.url).toMatch(/alerts/);
     });
-    service.get();
+    service.getActive();
   })));
 
   it('should allow parameters to be passed in', inject([SystemAlertsService, MockBackend], fakeAsync((service: SystemAlertsService, backend: MockBackend) => {
     backend.connections.subscribe((connection: MockConnection) => {
       expect(connection.request.method).toBe(RequestMethod.Get);
-      expect(connection.request.url).toMatch(/alerts/);
+      expect(connection.request.url).toMatch(/allAlerts/);
     });
-    service.get(5, 5, ['active', 'inactive'], ['someType'], "1/1/2001", "sort");
+    service.getAll(5, 5, ['y', 'n'], ['warning', 'error'], "1d", "published", 'asc');
   })));
 });

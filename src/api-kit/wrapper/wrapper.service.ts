@@ -12,7 +12,8 @@ export class WrapperService {
         "federalHierarchyV2": "/federalorganizations/v1/organizations/hierarchy",
         "dictionary": "/cfda/v1/dictionary",
         "historicalIndex": "/cfda/v1/historicalIndex",
-        "alerts": "/alert/v2/alerts"
+        "alerts": "/alert/v2/alerts",
+        "allAlerts": "/alert/v2/alerts/allAlerts"
     };
 
     constructor(private _http: Http){}
