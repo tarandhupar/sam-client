@@ -23,7 +23,6 @@ export class AgencyPickerComponent implements OnInit {
   @Input() getQSValue: string = "organizationId";
   @Input() orgId: string = "";
   @Input() hint: string = "";
-  @ViewChild("multiselect") multiselect;
   @ViewChild("autocompletelist") autocompletelist;
 	@Output() organization = new EventEmitter<any[]>();
 
@@ -134,11 +133,10 @@ export class AgencyPickerComponent implements OnInit {
     if(this.orgId.length>0){
       this.organizationId = this.orgId;
     } else {
-      this.activatedRoute.queryParams.subscribe(
-        data => {
-          this.organizationId = typeof data[this.getQSValue] === "string" ? decodeURI(data[this.getQSValue]) : "";
-          this.initFederalHierarchyDropdowns('');
-        });
+      this.activatedRoute.queryParams.subscribe( data => {
+        this.organizationId = typeof data[this.getQSValue] === "string" ? decodeURI(data[this.getQSValue]) : "";
+        this.initFederalHierarchyDropdowns('');
+      });
     }
 	}
 
@@ -172,15 +170,15 @@ export class AgencyPickerComponent implements OnInit {
     if(event.length>=3 && !this.autocompleting){
       this.autoCompleteToggle = true;
       if (this.searchTimer) {
-          clearTimeout(this.searchTimer);
+        clearTimeout(this.searchTimer);
       }
       this.autocompleting=true;
       this.searchTimer = setTimeout(
-          () => {
-            this.runAutocomplete();
-            this.autocompleting = false;
-          },
-          250
+        () => {
+          this.runAutocomplete();
+          this.autocompleting = false;
+        },
+        250
       );
     } else if (event.length < 3 && this.autoComplete.length>0){
       this.autocompleteData.length = 0;
@@ -234,7 +232,6 @@ export class AgencyPickerComponent implements OnInit {
           this.autocompleteMsg = "No matches found";
         }
       });
-      
     } else {
       this.autocompleting = false;
       this.autoCompleteToggle = false;
@@ -282,7 +279,7 @@ export class AgencyPickerComponent implements OnInit {
 
   //what kind of data?
   autocompleteSelection(data){
-    data["orgkey"] = data._id;
+    data["orgKey"] = data._id;
     this.updateBrowse(data);
     this.autoComplete.length = 0;
     this.setSearchTerm(data);
@@ -312,17 +309,31 @@ export class AgencyPickerComponent implements OnInit {
             orglvldata = orglvldata['_embedded']['0']['org'];
             var orglvl = orglvldata['level'];//not zero based
             var orgType = orglvldata['type'].toLowerCase() == "department" ? "agency": "office";
-            orglvldata['hierarchy'] = orglvldata['hierarchy'].sort(function(a,b){
+            orglvldata['hierarchy'] = orglvldata['hierarchy'].filter(function(org){
+              if(org["org"]['type']=="OFFICE" && org["org"]['modStatus'] && org["org"]['modStatus']!="active"){
+                return false;
+              }
+              if(!org["org"]['name']){
+                return false;
+              }
+              return true;
+            }).sort(function(a,b){
               if(a["org"]["name"].toLowerCase() < b["org"]["name"].toLowerCase()) return -1;
               if(a["org"]["name"].toLowerCase() > b["org"]["name"].toLowerCase()) return 1;
               return 0;
             });
             if(orglvldata['hierarchy'].length>300){
-              orglvldata['hierarchy'] = orglvldata['hierarchy'].slice(0,300);
+              orglvldata['hierarchy'].length = 300;// = orglvldata['hierarchy'].slice(0,300);
             }
-            var formattedData = this.formatHierarchy(orgType,orglvldata['hierarchy']);
-            this.orgLevels[orglvl].options = formattedData;
-            this.orgLevels[orglvl].show = true;
+            
+            if(orglvldata['hierarchy'].length>0){
+              var formattedData = this.formatHierarchy(orgType,orglvldata['hierarchy']);
+              this.orgLevels[orglvl].options = formattedData;
+              this.orgLevels[orglvl].show = true;
+            } else{
+              this.orgLevels[orglvl].options.length = 1;
+              this.orgLevels[orglvl].show = false;
+            }
           });
         }
       });
@@ -332,7 +343,6 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-  //good
   updateSearchFromBrowse(){
     if(typeof this.browseSelection["level"]!=="undefined"){
       var selectedOrgId = this.orgLevels[this.browseSelection["level"]].selectedOrg;
@@ -386,7 +396,6 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-  //good
   searchResponseHandler(){
     var idx = this.checkSearchDataMatch()
     if(this.searchData.length==0){
@@ -422,7 +431,6 @@ export class AgencyPickerComponent implements OnInit {
           lvl = 3;
           break;
       }
-      //console.log(this.searchData[i].name+this.levelFormatter(lvl),this.searchTerm);
       if(this.searchData[i].name+this.levelFormatter(lvl)===this.searchTerm){
         return i;
       }
@@ -508,16 +516,23 @@ export class AgencyPickerComponent implements OnInit {
 
     if(typeof orgLevel.selectedOrg !== 'undefined' && orgLevel.selectedOrg !== ''
         && orgLevel.selectedOrg !== null) {
-        this.serviceCall(orgLevel.selectedOrg, true, true).subscribe( oData => {
-          oData = oData._embedded[0].org;
-          oData["hierarchy"] = oData["hierarchy"].sort(function(a,b){
-            if(a["org"]["name"].toLowerCase() < b["org"]["name"].toLowerCase()) return -1;
-            if(a["org"]["name"].toLowerCase() > b["org"]["name"].toLowerCase()) return 1;
-            return 0;
-          });
-          this.processDictionaryResponse(oData,selectionLvl);
-          //this.updateSearchFromBrowse();
-        });  
+      this.serviceCall(orgLevel.selectedOrg, true, true).subscribe( oData => {
+        oData = oData._embedded[0].org;
+        oData["hierarchy"] = oData["hierarchy"].filter(function(org){
+          if(org["org"]['type']=="OFFICE" && org["org"]['modStatus'] && org["org"]['modStatus']!="active"){
+            return false;
+          }
+          if(!org["org"]['name']){
+            return false;
+          }
+          return true;
+        }).sort(function(a,b){
+          if(a["org"]["name"].toLowerCase() < b["org"]["name"].toLowerCase()) return -1;
+          if(a["org"]["name"].toLowerCase() > b["org"]["name"].toLowerCase()) return 1;
+          return 0;
+        });
+        this.processDictionaryResponse(oData,selectionLvl);
+      });  
     }
   }
 
@@ -527,10 +542,11 @@ export class AgencyPickerComponent implements OnInit {
       //no child agencies
       if(formattedData.length <= 1){
         this.orgLevels[1].show=false;
+      } else {
+        this.dictionary.aAgency = data.hierarchy;
+        this.orgLevels[1].options = formattedData;
+        this.orgLevels[1].show = true;
       }
-      this.dictionary.aAgency = data.hierarchy;
-      this.orgLevels[1].options = formattedData;
-      this.orgLevels[1].show = true;
       this.orgLevels[2].options.length = 1;
       this.orgLevels[3].options.length = 1;
       this.orgLevels[4].options.length = 1;
@@ -680,7 +696,6 @@ export class AgencyPickerComponent implements OnInit {
             this.orgLevels[1].show=true;
             this.orgLevels[2].show=true;
           }
-          
         });
       }
       
@@ -741,21 +756,6 @@ export class AgencyPickerComponent implements OnInit {
       case 7:
         return " (L7)";
     }
-  }
-
-  removeSelectedOrgs(){
-    var selectedValues = this.multiselect.selectedValues;
-    var filteredArray = this.multiselect.options.filter(function( obj ) {
-      for(var idx in selectedValues){
-        if(selectedValues[idx] == obj.value){
-          return false;
-        }
-      }
-      return true;
-    });
-    this.multiselect.options.length = 0;
-    [].push.apply(this.multiselect.options,filteredArray);
-    this.emitSelectedOrganizations();
   }
   
   clearSelectedOrgs(){
