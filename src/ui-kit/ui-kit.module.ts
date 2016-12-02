@@ -26,6 +26,7 @@ import { SamPaginationComponent } from "./pagination/pagination.component";
 import { SamClickOutsideDirective } from "./click-outside/click-outside.directive";
 import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
+import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
 
 
 /**
@@ -53,6 +54,7 @@ import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.com
     SamAlertComponent,
     SamPointOfContactComponent,
     SamNameEntryComponent,
+    SamPhoneEntryComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -80,7 +82,8 @@ import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.com
     SamHeaderComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
-    SamNameEntryComponent
+    SamNameEntryComponent,
+    SamPhoneEntryComponent
   ],
   providers: [ ]
 })
