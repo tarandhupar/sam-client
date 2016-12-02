@@ -96,6 +96,7 @@ export class AgencyPickerComponent implements OnInit {
   readOnlyToggle = true;
   browseSelection = {};
   cancelBlur = false;
+  resetIconClass:string = "usa-agency-picker-search-reset";
 
 	constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService){}
 
@@ -190,6 +191,11 @@ export class AgencyPickerComponent implements OnInit {
       this.showAutocompleteMsg = false;
       this.autocompleteMsg = "";
       this.autoCompleteToggle = false;
+    }
+    if(this.searchTerm.length>0){
+      this.resetIconClass = "usa-agency-picker-search-reset-active";
+    } else {
+      this.resetIconClass = "usa-agency-picker-search-reset";
     }
   }
 
@@ -531,6 +537,9 @@ export class AgencyPickerComponent implements OnInit {
           if(a["org"]["name"].toLowerCase() > b["org"]["name"].toLowerCase()) return 1;
           return 0;
         });
+        if(oData["hierarchy"].length > 300){
+          oData["hierarchy"].length = 300;
+        }
         this.processDictionaryResponse(oData,selectionLvl);
       });  
     }
@@ -773,5 +782,9 @@ export class AgencyPickerComponent implements OnInit {
         this.orgLevels[idx].options.length = 1;  
       }
     }
+  }
+  onResetClick(){
+    this.searchTerm = "";
+    this.resetIconClass = "usa-agency-picker-search-reset";
   }
 }
