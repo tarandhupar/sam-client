@@ -1,14 +1,3 @@
-export enum AlertStatus {
-  Active,
-  Inactive
-}
-
-export enum AlertSeverity {
-  Informational,
-  Warning,
-  Error
-}
-
 export class Alert {
   private response: any;
 
@@ -17,7 +6,7 @@ export class Alert {
   }
 
   status(): string {
-    return "OK";
+    return this.response.content.archived ? 'Inactive' : 'Active';
   }
 
   title(): string {

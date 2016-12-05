@@ -24,6 +24,7 @@ import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.
 import { SamPaginationComponent } from "./pagination/pagination.component";
 import { SamClickOutsideDirective } from "./click-outside/click-outside.directive"
 import { SamHeaderLinksComponent } from "./header-links/header-links.component";
+import {SamMultiSelectDropdownComponent} from "./multiselect-dropdown/multiselect-dropdown.component";
 
 
 /**
@@ -49,6 +50,7 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
     SamHeaderComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
+    SamMultiSelectDropdownComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -74,7 +76,8 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
     SamFooterComponent,
     SamHeaderComponent,
     SamAlertComponent,
-    SamPointOfContactComponent
+    SamPointOfContactComponent,
+    SamMultiSelectDropdownComponent
   ],
   providers: [ ]
 })

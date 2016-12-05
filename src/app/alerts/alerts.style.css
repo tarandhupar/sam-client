@@ -47,7 +47,7 @@
 }
 
 :host >>> #datesPublished {
-  width: 100px;
+  width: 150px;
 }
 
 :host >>> .usa-pagination {
@@ -56,4 +56,26 @@
 
 :host >>> ul {
   padding-left: 0;
+}
+
+:host >>> .dropdown-title {
+  white-space: nowrap;
+}
+
+:host >>> samSelect label {
+  display: inline;
+}
+
+:host >>> samSelect select {
+  display: inline;
+}
+
+:host >>> samSelect.publish-select select {
+  border: none;
+}
+
+:host >>> samSelect.sort-select select {
+  width: initial;
+  margin-left: 8px;
+  padding-right: 24px;
 }

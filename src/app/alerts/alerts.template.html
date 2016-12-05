@@ -4,17 +4,16 @@
   <h1 class="alert-page-title">Alerts</h1>
   <div class="alerts-toolbar">
     <div class="toolbar-item">
-      <samCheckbox [(model)]="filters.statuses" [options]="statuses" [name]="'statuses'" (modelChange)="onParamChanged()"></samCheckbox>
+      <samMultiSelectDropdown [(model)]="filters.statuses" [options]="statuses" [name]="'statuses'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
     </div>
     <div class="toolbar-item">
-      <samCheckbox [(model)]="filters.types" [options]="types" [name]="'types'" (modelChange)="onParamChanged()"></samCheckbox>
+      <samMultiSelectDropdown [(model)]="filters.types" [options]="types" [name]="'types'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
     </div>
     <div class="toolbar-item">
-      <samSelect [(model)]="filters.datePublished" [options]="datesPublished" [name]="'datesPublished'" (modelChange)="onParamChanged()"></samSelect>
+      <samSelect class='publish-select' [(model)]="filters.datePublished" [options]="datesPublished" [name]="'datesPublished'" (modelChange)="onParamChanged()"></samSelect>
     </div>
     <div class="toolbar-item sort-column">
-      Sort by:&nbsp;
-      <samSelect [(model)]="sortField" [options]="sortFields" [name]='sortField' (modelChange)="onParamChanged()"></samSelect>
+      <samSelect class="sort-select" [(model)]="sortField" [options]="sortFields" [name]='sortField' (modelChange)="onParamChanged()" [label]="'Sort by:'"></samSelect>
     </div>
   </div>
   <div class="alert-count">

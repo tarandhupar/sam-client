@@ -27,19 +27,19 @@ export class AlertsPage {
   };
 
   statuses = [
-    { label: 'Active', value: 'Y'},
-    { label: 'Inactive', value: 'N' }
+    { label: 'Active', value: 'N', name: 'active'},
+    { label: 'Inactive', value: 'Y', name: 'inactive' }
   ];
 
   types = [
-    { label: 'Informations', value: 'Informational' },
-    { label: 'Error', value: 'Error' },
-    { label: 'Warning', value: 'Warning' }
+    { label: 'Informations', value: 'Informational', name: 'informational' },
+    { label: 'Error', value: 'Error', name: 'error' },
+    { label: 'Warning', value: 'Warning', name: 'warning' }
   ];
   datesPublished = [
     {label: "Last 30 Days", value: '30d'},
     {label: "Last 90 Days", value: '90d'},
-    {label: "Last 6 Months", value: '1m'},
+    {label: "Last 6 Months", value: '6m'},
     {label: "Last 1 Year", value: '1y'},
     {label: "All", value: ''}
   ];
@@ -129,7 +129,7 @@ export class AlertsPage {
   }
 
   defaultSort() { return 'pda'; }
-  defaultStatuses() { return ['Y']; }
+  defaultStatuses() { return ['N']; }
   defaultTypes() { return ['Error', 'Informational', 'Warning']; }
   defaultPage() { return 1; }
   defaultDatePublished() { return ''; }
