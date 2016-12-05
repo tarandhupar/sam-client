@@ -17,8 +17,12 @@ describe('ExclusionsResultComponent', () => {
       fixture = TestBed.createComponent(ExclusionsResult);
       comp = fixture.componentInstance;
       titleEl  = fixture.debugElement.query(By.css('.exclusion-title')); // find title element
+      console.log(titleEl);
       comp.data = {
         name: "SAMPLE NAME",
+        cageCode: "1234",
+        terminationDate: null,
+        isActive: true,
         address: {
           "city": "city",
           "state": "AB",

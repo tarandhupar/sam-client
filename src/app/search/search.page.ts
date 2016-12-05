@@ -96,7 +96,6 @@ export class SearchPage implements OnInit{
       organizationId: this.organizationId
 		}).subscribe(
 			data => {
-        console.log(data);
 	      if(data._embedded && data._embedded.results){
 	        for(var i=0; i<data._embedded.results.length; i++) {
             //Modifying FAL data
@@ -114,17 +113,6 @@ export class SearchPage implements OnInit{
             }
             if(data._embedded.results[i].type) {
               data._embedded.results[i].type = new CapitalizePipe().transform(data._embedded.results[i].type);
-            }
-            //Modify Exclusions Data
-            if(data._embedded.results[i].terminationDate!==null) {
-              this.inactiveDate = new Date(data._embedded.results[i].terminationDate);
-              if(this.inactiveDate<this.today) {
-                data._embedded.results[i]['isActive']=false;
-              } else {
-                data._embedded.results[i]['isActive']=true;
-              }
-            } else {
-              data._embedded.results[i]['isActive']=true;
             }
 	        }
 	        this.data = data._embedded;

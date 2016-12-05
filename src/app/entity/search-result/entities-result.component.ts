@@ -8,11 +8,11 @@ import * as moment from 'moment/moment';
   template: `
       <p>
     	  <span class="usa-label">Entity</span>
-    	  <span *ngIf="data.isActive==false" class="usa-label">INACTIVE</span>
+    	  <span *ngIf="isActive<0" class="usa-label">INACTIVE</span>
     	</p>
     	<h3 class="entity-title">
-      	<a *ngIf="true" href="/">{{ data.name }}</a>
-      	<span *ngIf="false">{{ data.name }}</span>
+      	<a *ngIf="isActive>=0" href="/">{{ data.name }}</a>
+      	<span *ngIf="isActive<0">{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
@@ -51,9 +51,11 @@ import * as moment from 'moment/moment';
 })
 export class EntitiesResult implements OnInit {
   @Input() data: any={};
+  isActive: any='';
   constructor() { }
 
   ngOnInit(){
     this.data.registrationExpirationDate = moment(this.data.registrationExpirationDate).format("MMM D, Y");
+    this.isActive = moment(this.data.registrationExpirationDate).diff(moment(new Date()).format("MMM D, Y"));
   }
 }
