@@ -8,11 +8,11 @@ import * as moment from 'moment/moment';
   template: `
       <p>
     	  <span class="usa-label">Exclusion</span>
-    	  <span *ngIf="isActive<0" class="usa-label">INACTIVE</span>
+    	  <span *ngIf="data.isActive<0" class="usa-label">INACTIVE</span>
     	</p>
     	<h3 class="exclusion-title">
-      	<a *ngIf="isActive>=0" href="/">{{ data.name }}</a>
-      	<span *ngIf="isActive<0">{{ data.name }}</span>
+      	<a *ngIf="data.isActive>=0" href="/">{{ data.name }}</a>
+      	<span *ngIf="data.isActive<0">{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
@@ -45,7 +45,6 @@ import * as moment from 'moment/moment';
 })
 export class ExclusionsResult implements OnInit {
   @Input() data: any={};
-  isActive: any='';
   constructor() { }
 
   ngOnInit(){
@@ -54,7 +53,9 @@ export class ExclusionsResult implements OnInit {
     }
     if(this.data.terminationDate!==null) {
       this.data.terminationDate = moment(this.data.terminationDate).format("MMM D, Y");
-      this.isActive = moment(this.data.terminationDate).diff(moment("02/11/2017").format("MMM D, Y"));
+      this.data["isActive"] = moment(this.data.terminationDate).diff(moment(new Date()));
+    } else {
+      this.data["isActive"] = 0;
     }
   }
 }

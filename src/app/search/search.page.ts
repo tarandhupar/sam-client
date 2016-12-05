@@ -28,8 +28,6 @@ export class SearchPage implements OnInit{
 	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
-  today: any=new Date();
-  inactiveDate: any='';
 	showOptional:any = (SHOW_OPTIONAL=="true");
 
 	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
