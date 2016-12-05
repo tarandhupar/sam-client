@@ -11,8 +11,8 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive==false" class="usa-label">INACTIVE</span>
     	</p>
     	<h3 class="entity-title">
-      	<a *ngIf="data.isActive==true" href="/">{{ data.name }}</a>
-      	<span *ngIf="data.isActive==false">{{ data.name }}</span>
+      	<a *ngIf="true" href="/">{{ data.name }}</a>
+      	<span *ngIf="false">{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
