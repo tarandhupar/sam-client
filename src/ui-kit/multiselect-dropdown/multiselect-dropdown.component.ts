@@ -26,26 +26,31 @@ export class SamMultiSelectDropdownComponent implements OnChanges {
     constructor( ) { }
 
     ngOnChanges( ) {
-        switch (this.model.length) {
-            case 1:
-                this.elementLabel = this.labelForValue(this.model[0]);
-                break;
-            case 0:
-                this.elementLabel = this.label;
-                break;
-            default:
-                this.elementLabel = 'Multiple Selected';
-                break;
+        this.updateLabel();
+
+    }
+
+    updateLabel() {
+        if (this.model.length === 0) {
+          this.elementLabel = this.label;
+        } else if (this.model.length === 1) {
+          this.elementLabel = this.labelForValue(this.model[0]);
+        } else if (this.model.length > 1 && this.model.length === this.options.length) {
+          this.elementLabel = 'All';
+        } else if (this.model.length > 1) {
+          this.elementLabel = 'Multiple '+this.label+' Selected';
+        } else {
+          throw new Error('Unable to display dropdown label');
         }
     }
 
     labelForValue(val) {
-      let option = this.options.find(o => {
-        return o.value === val;
-      });
-      if (option) {
-        return option.label;
-      }
+        let option = this.options.find(o => {
+          return o.value === val;
+        });
+        if (option) {
+          return option.label;
+        }
     }
 
     toggleItemList(event) {
@@ -67,17 +72,7 @@ export class SamMultiSelectDropdownComponent implements OnChanges {
     }
 
     modelChanged(event) {
-        switch(event.length) {
-            case 1:
-                this.elementLabel = event[0];
-                break;
-            case 0:
-                this.elementLabel = this.label;
-                break;
-            default:
-                this.elementLabel = 'Multiple Selected';
-                break;
-        }
+        this.updateLabel();
         this.modelChange.emit(event);
     }
 }

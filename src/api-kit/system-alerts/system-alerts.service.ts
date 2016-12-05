@@ -46,11 +46,11 @@ export class SystemAlertsService {
     apiOptions.oParam.limit = limit || 5;
     apiOptions.oParam.offset = offset || 0;
 
-    if (archived) {
+    if (archived && archived.length) {
       apiOptions.oParam.archived = archived.join(',');
     }
 
-    if (severity) {
+    if (severity && severity.length) {
       apiOptions.oParam.severity = severity.join(',');
     }
 

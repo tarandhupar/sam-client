@@ -34,7 +34,7 @@ export class AlertsPage {
   };
 
   types = {
-    label: 'Type',
+    label: 'Types',
     options:   [
       { label: 'Informational', value: 'Informational', name: 'informational' },
       { label: 'Error', value: 'Error', name: 'error' },
@@ -101,7 +101,7 @@ export class AlertsPage {
   defaultStatuses() { return ['N']; }
   defaultTypes() { return ['Error', 'Informational', 'Warning']; }
   defaultPage() { return 1; }
-  defaultDatePublished() { return ''; }
+  defaultDatePublished() { return '30d'; }
 
   totalAlerts(): number {
     // TODO: get real value

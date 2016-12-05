@@ -22,5 +22,5 @@
   <div *ngFor="let alert of alerts" class="alert-block">
     <alert-item [alert]="alert"></alert-item>
   </div>
-  <samPagination [(currentPage)]="currentPage" [totalPages]="totalPages()" (pageChange)="onParamChanged($event)"></samPagination>
+  <samPagination *ngIf='totalPages() > 0' [(currentPage)]="currentPage" [totalPages]="totalPages()" (pageChange)="onParamChanged($event)"></samPagination>
 </div>
