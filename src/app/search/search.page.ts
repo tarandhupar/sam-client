@@ -94,7 +94,6 @@ export class SearchPage implements OnInit{
       organizationId: this.organizationId
 		}).subscribe(
 			data => {
-        console.log(data);
 	      if(data._embedded && data._embedded.results){
 	        for(var i=0; i<data._embedded.results.length; i++) {
             //Modifying FAL data
