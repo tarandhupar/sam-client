@@ -4,10 +4,10 @@
   <h1 class="alert-page-title">Alerts</h1>
   <div class="alerts-toolbar">
     <div class="toolbar-item">
-      <samMultiSelectDropdown [(model)]="filters.statuses" [options]="statuses" [name]="'statuses'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
+      <samMultiSelectDropdown [(model)]="filters.statuses" [label]="statuses.label" [options]="statuses.options" [name]="'statuses'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
     </div>
     <div class="toolbar-item">
-      <samMultiSelectDropdown [(model)]="filters.types" [options]="types" [name]="'types'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
+      <samMultiSelectDropdown [(model)]="filters.types" [label]="types.label" [options]="types.options" [name]="'types'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
     </div>
     <div class="toolbar-item">
       <samSelect class='publish-select' [(model)]="filters.datePublished" [options]="datesPublished" [name]="'datesPublished'" (modelChange)="onParamChanged()"></samSelect>

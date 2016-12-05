@@ -28,7 +28,7 @@ export class SamMultiSelectDropdownComponent implements OnChanges {
     ngOnChanges( ) {
         switch (this.model.length) {
             case 1:
-                this.elementLabel = this.model[0];
+                this.elementLabel = this.labelForValue(this.model[0]);
                 break;
             case 0:
                 this.elementLabel = this.label;
@@ -37,6 +37,15 @@ export class SamMultiSelectDropdownComponent implements OnChanges {
                 this.elementLabel = 'Multiple Selected';
                 break;
         }
+    }
+
+    labelForValue(val) {
+      let option = this.options.find(o => {
+        return o.value === val;
+      });
+      if (option) {
+        return option.label;
+      }
     }
 
     toggleItemList(event) {
