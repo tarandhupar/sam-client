@@ -5,6 +5,7 @@ import { routing } from './opportunity.route';
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
+import { FixHTMLPipe } from "./pipes/fix-html.pipe";
 
 @NgModule({
   imports: [
@@ -15,12 +16,14 @@ import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
   exports: [
     OpportunityPage,
     OpportunityTypeLabelPipe,
-    TimezoneLabelPipe
+    TimezoneLabelPipe,
+    FixHTMLPipe
   ],
   declarations: [
     OpportunityPage,
     OpportunityTypeLabelPipe,
-    TimezoneLabelPipe
+    TimezoneLabelPipe,
+    FixHTMLPipe
   ],
 })
 export class OpportunityModule { }
