@@ -20,7 +20,7 @@ describe('FixHTMLPipe', () => {
   });
 
   it('it removes break tags', () => {
-    expect(pipe.transform('<br /><br/><br>')).toBe('');
+    expect(pipe.transform('<br /><br/><br><br     />')).toBe('');
   });
 
   it('it removes span tags', () => {

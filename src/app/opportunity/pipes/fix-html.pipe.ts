@@ -20,7 +20,7 @@ export class FixHTMLPipe implements PipeTransform {
       html = html.replace(/<\/?strong>/g, '');
 
       // Remove BRs
-      html = html.replace(/<br\s?\/?>/g, '');
+      html = html.replace(/<br\s*?\/?>/g, '');
 
       // Remove SPANs
       html = html.replace(/<\/?span>/g, '');
