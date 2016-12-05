@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {Alert} from "./alert.model";
 import {SystemAlertsService} from "../../api-kit/system-alerts/system-alerts.service";
 import {ERROR_PAGE_PATH} from "../application-content/error/error.route";
@@ -56,7 +56,7 @@ export class AlertsPage {
     {label: 'End date (oldest first)', value: 'eda'},
   ];
 
-  constructor(public route: ActivatedRoute, public router: Router, private alertsService: SystemAlertsService) {
+  constructor(public router: Router, private alertsService: SystemAlertsService) {
 
   }
 

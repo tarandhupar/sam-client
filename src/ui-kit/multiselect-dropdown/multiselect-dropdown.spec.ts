@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 
 import { SamMultiSelectDropdownComponent } from './multiselect-dropdown.component';
-import { SamUIKitModule } from '.';
+import { SamUIKitModule } from 'ui-kit';
 
 describe('Sam Multiselect Dropdown Component', function() {
     let component: SamMultiSelectDropdownComponent;
@@ -16,7 +15,7 @@ describe('Sam Multiselect Dropdown Component', function() {
             {value: 'va', label: 'Virginia', name: 'checkbox-virginia'},
         ],
         name: 'my-sr-name',
-        label: 'Select a region',
+        label: 'Regions',
         hasSelectAll: true
     };
 
@@ -39,23 +38,29 @@ describe('Sam Multiselect Dropdown Component', function() {
      * Label Tests
      */
     describe('Label', function () {
-        it('Should display "Multiple Selected" if more than one item is selected', () => {
+        it('Should display "All" if all items are selected', () => {
             component.ngOnChanges();
-
             fixture.detectChanges();
-
             let label = fixture.nativeElement.getElementsByClassName('dropdown-title');
-            expect(label[0].innerHTML).toContain('Multiple Selected');
+            expect(label[0].innerHTML).toContain('All');
         });
 
-        it ('Should display item name if only one item is selected', () => {
-            component.model = ['MA'];
+        it('Should display "Multiple Selected" if more than one item is selected', () => {
+            component.model = ['ma', 'va'];
             component.ngOnChanges();
 
             fixture.detectChanges();
 
             let label = fixture.nativeElement.getElementsByClassName('dropdown-title');
-            expect(label[0].innerHTML).toContain('MA');
+            expect(label[0].innerHTML).toMatch(/Multiple Regions Selected/);
+        });
+
+        it ('Should display item name if only one item is selected', async() => {
+            component.model = ['ma'];
+            component.ngOnChanges();
+            fixture.detectChanges();
+            let label = fixture.nativeElement.getElementsByClassName('dropdown-title');
+            expect(label[0].innerHTML).toContain('Maryland');
         });
 
         it ('Should display default label if no items are selected', () => {

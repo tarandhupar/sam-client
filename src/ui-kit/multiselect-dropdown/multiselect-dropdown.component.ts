@@ -27,7 +27,6 @@ export class SamMultiSelectDropdownComponent implements OnChanges {
 
     ngOnChanges( ) {
         this.updateLabel();
-
     }
 
     updateLabel() {
@@ -45,9 +44,7 @@ export class SamMultiSelectDropdownComponent implements OnChanges {
     }
 
     labelForValue(val) {
-        let option = this.options.find(o => {
-          return o.value === val;
-        });
+        let option = this.options.find(o => o.value === val);
         if (option) {
           return option.label;
         }
