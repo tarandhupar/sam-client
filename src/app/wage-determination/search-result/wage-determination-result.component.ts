@@ -8,21 +8,19 @@ import * as moment from 'moment/moment';
   selector: 'wage-determination-result',
   template: `
       <p>
-    	  <span class="usa-label">Wage Determination</span>
+    	  <span class="usa-label">{{ data._type=='wdSCA' ? 'SCA WAGE DETERMINATION' : 'DBA WAGE DETERMINATION' }}</span>
     	  <span *ngIf="data.isActive==false" class="usa-label">Inactive</span>
     	</p>
     	<h3 class="wage-determination-number">
-      	<span>{{ data._type=='wdSCA' ? 'Service Contract Act WD #: ' : 'Davis-Bacon Act WD #: ' }}</span><a>{{ data.fullReferenceNumber }}</a>
+      	<span>Wage Determination #: </span><a>{{ data.fullReferenceNumber }}</a>
     	</h3>
     	<div class="usa-width-two-thirds">
-      	<ul *ngIf="data.locations!==null" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li><strong>State: </strong>
-        	  <span *ngIf="data.locations[0].state!==null">{{ data.locations[0].state.name }}</span>
-        	  <span *ngIf="data.locations[0].state===null && data.locations[1] && data.locations[1].state!==null">{{ data.locations[1].state.name }}</span>
+      	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
+        	<li *ngIf="data.locations!==null"><strong>State: </strong>
+        	  <span *ngFor="let location of data.locations; let i=index">{{ location.state?.name }}{{ location.state!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
         	</li>
-        	<li><strong>Area: </strong>
-        	  <span *ngIf="data.locations[0].counties!==null">{{ data.locations[0].counties }}</span>
-        	  <span *ngIf="data.locations[0].counties===null && data.locations[1] && data.locations[1].counties!==null">{{ data.locations[1].counties }}</span>
+        	<li *ngIf="data.locations!==null"><strong>County: </strong>
+        	  <span *ngFor="let location of data.locations; let i=index">{{ location.counties }}{{ location.counties!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
         	</li>
         </ul>
     	</div>
@@ -43,7 +41,7 @@ import * as moment from 'moment/moment';
               <span>{{ data.constructionTypes }}</span>
             </ul>
           </li>
-          <li><strong>Published Date</strong>
+          <li *ngIf="data.publishDate!==null"><strong>Published Date</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.publishDate }}</span>
             </ul>
@@ -58,7 +56,9 @@ export class WageDeterminationResult implements OnInit {
   constructor() { }
 
   ngOnInit(){
+    if(this.data.publishDate!==null) {
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+    }
   }
 
 }
