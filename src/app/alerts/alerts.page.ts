@@ -75,18 +75,18 @@ export class AlertsPage {
   }
 
   getAlerts() {
-    let offset = (this.currentPage - 1) * ALERTS_PER_PAGE;
     let sort, order;
     if (this.sortField === 'pda' || this.sortField === 'pdd') {
-      sort = 'published';
+      sort = 'published_date';
     } else {
-      sort = 'expired';
+      sort = 'end_date';
     }
     if (this.sortField === 'pdd' || this.sortField === 'edd') {
       order = 'desc';
     } else {
       order = 'asc';
     }
+    let offset = (this.currentPage - 1) * ALERTS_PER_PAGE;
     return this.alertsService.getAll(ALERTS_PER_PAGE, offset, this.filters.statuses, this.filters.types, this.filters.datePublished, sort, order);
   }
 

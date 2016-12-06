@@ -1,7 +1,7 @@
 <div class="usa-grid">
   <!-- the first child cannot have a margin or the overlay breaks -->
   <div style="height: 1px"></div>
-  <h1 class="alert-page-title">Alerts</h1>
+  <h1 class="alert-page-title">System Alerts</h1>
   <div class="alerts-toolbar">
     <div class="toolbar-item">
       <samMultiSelectDropdown [(model)]="filters.statuses" [label]="statuses.label" [options]="statuses.options" [name]="'statuses'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
