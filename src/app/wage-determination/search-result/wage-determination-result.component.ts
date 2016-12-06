@@ -19,7 +19,7 @@ import * as moment from 'moment/moment';
         	<li *ngIf="data.locations!==null"><strong>State: </strong>
         	  <span *ngFor="let location of data.locations; let i=index">{{ location.state?.name }}{{ location.state!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
         	</li>
-        	<li *ngIf="data.locations!==null"><strong>County: </strong>
+        	<li *ngIf="data.locations!==null" class="break-word"><strong>County: </strong>
         	  <span *ngFor="let location of data.locations; let i=index">{{ location.counties }}{{ location.counties!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
         	</li>
         </ul>
@@ -49,7 +49,7 @@ import * as moment from 'moment/moment';
         </ul>
       </div>
   `,
-  styleUrls: []
+  styleUrls: ['../wage-determination.style.css']
 })
 export class WageDeterminationResult implements OnInit {
   @Input() data: any={};
