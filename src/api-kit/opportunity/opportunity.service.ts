@@ -36,7 +36,7 @@ export class OpportunityService{
         oParam: {},
         method: 'GET'
     };
-  
+
     return this.oAPIService.call(apiParam);
   }
 
@@ -48,6 +48,17 @@ export class OpportunityService{
           ids: ids
         },
         method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
+
+  getAttachmentById(id: string){
+    let apiParam = {
+      name: 'opportunity',
+      suffix: '/' + id + '/attachments',
+      oParam: {},
+      method: 'GET'
     };
 
     return this.oAPIService.call(apiParam);

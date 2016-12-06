@@ -23,7 +23,7 @@ let MockOpportunityService = {
   getOpportunityById(id: string) {
     return Observable.of({
       "opportunityId": "213ji321hu3jk123",
-      "parentOpportunity": {
+      "parent": {
         "opportunityId": "0000b08b003c3a28ae6f9dd254e4a9c8"
       },
       "data": {
