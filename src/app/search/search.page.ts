@@ -29,6 +29,7 @@ export class SearchPage implements OnInit{
 
 	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
+
 		this.activatedRoute.queryParams.subscribe(
 			data => {
 				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";

@@ -121,10 +121,10 @@ module.exports = {
      */
     loaders: [
 
-      {
-        test: /\.svg$/,
-        loaders: ['svg-url-loader']
-      },
+      // {
+      //   test: /\.svg$/,
+      //   loaders: ['svg-url-loader']
+      // },
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url-loader?limit=10000&mimetype=application/font-woff"
@@ -266,10 +266,10 @@ module.exports = {
         from: 'src/assets',
         to: 'assets'
       },
-      // {
-      //   from: 'src/assets',
-      //   to: 'src/assets'
-      // }
+      {
+        from: 'src/assets',
+        to: 'src/assets'
+      }
       // {
       //   from: 'src/assets/fonts/font-awesome',
       //   to: 'assets/fonts'
