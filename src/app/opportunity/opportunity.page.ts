@@ -288,4 +288,8 @@ export class OpportunityPage implements OnInit {
       return "No"
     }
   }
+
+  public getDownloadFileURL(fileID: string){
+    return API_UMBRELLA_URL + '/cfda/v1/file/' + fileID + "?api_key=" + API_UMBRELLA_KEY;
+  }
 }
