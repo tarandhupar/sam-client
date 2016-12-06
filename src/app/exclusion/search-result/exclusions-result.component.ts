@@ -28,12 +28,12 @@ import * as moment from 'moment/moment';
               <li><span>{{ data.classification.code }}</span></li>
             </ul>
           </li> 
-          <li *ngIf="data.activationDate!==null"><strong>Activation Date</strong>
+          <li><strong>Activation Date</strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.activationDate }}</span></li>
             </ul>
           </li>    
-          <li *ngIf="data.terminationDate!==null"><strong>Termination Date</strong>
+          <li><strong>Termination Date</strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.terminationDate }}</span></li>
             </ul>

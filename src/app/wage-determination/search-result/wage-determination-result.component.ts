@@ -31,17 +31,17 @@ import * as moment from 'moment/moment';
       	     <span>{{ data.revisionNumber }}</span>
             </ul>
           </li>
-          <li *ngIf="data.services"><strong>Services</strong>
+          <li *ngIf="data._type=='wdSCA'"><strong>Services</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.services }}</span>
             </ul>
           </li>
-          <li *ngIf="data.constructionTypes"><strong>Construction Types</strong>
+          <li *ngIf="data._type=='wdDBRA'"><strong>Construction Types</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.constructionTypes }}</span>
             </ul>
           </li>
-          <li *ngIf="data.publishDate!==null"><strong>Published Date</strong>
+          <li><strong>Published Date</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.publishDate }}</span>
             </ul>
