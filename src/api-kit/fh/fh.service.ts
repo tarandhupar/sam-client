@@ -105,6 +105,11 @@ export class FHService{
     if (oData['pageSize']) {
       oApiParam.oParam['size'] = oData['pageSize'];
     }
+    if (oData['topParentOrganizationId']) {
+      oApiParam.oParam['qFilters'] = {
+        topParentOrganizationId: oData['topParentOrganizationId']
+      };
+    }
     return this.oAPIService.call(oApiParam);
   }
 

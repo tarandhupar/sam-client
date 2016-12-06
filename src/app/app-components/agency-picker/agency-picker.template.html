@@ -1,21 +1,21 @@
-<div class='organization-container' [class.usa-input-error]="!!searchError">
+<div class='organization-container' [class.usa-input-error]="searchMessage">
     <label [class.usa-input-error-label]="searchMessage">{{label}}</label>
     <span *ngIf="hint" class="usa-form-hint">{{hint}}</span>
-    <div *ngIf="searchError">
+    <div *ngIf="searchMessage">
         <span class="usa-input-error-message">{{ searchMessage }}</span>
     </div>
     <div class="usa-agency-picker-readonly-area">
         <ul>
-            <li *ngFor="let org of readonlyDisplayList"><span (click)="removeOrg(org.value)"><i class="fa fa-times" aria-hidden="true"></i></span> {{org.name}}</li>
+            <li *ngFor="let org of selectedOrganizations"><span (click)="removeOrg(org.value)"><i class="fa fa-times" aria-hidden="true"></i></span> {{org.name}}</li>
         </ul>
     </div>
     <div class="usa-agency-picker-dropdown-area usa-grid">   
-        <div class="usa-agency-picker-search-area">
+        <div class="usa-agency-picker-search-area" *ngIf="!orgRoot">
             <div class="usa-agency-picker-search-input-wrapper">
-                <input type="text" class="usa-agency-picker-search-input" (blur)="onInputBlur($event)" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
+                <input type="text" class="usa-agency-picker-search-input" (blur)="autocompleteBlur($event)" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
                 <span [ngClass]="resetIconClass"><i class="fa fa-times-circle" (click)="onResetClick()"></i></span>
             </div>
-            <ul (blur)="onInputBlur($event)" #autocompletelist tabindex="0" *ngIf="autoCompleteToggle" class="usa-agency-picker-autocomplete" (mousedown)="cancelBlurMethod()">
+            <ul (blur)="autocompleteBlur($event)" #autocompletelist tabindex="0" *ngIf="autoCompleteToggle" class="usa-agency-picker-autocomplete" (mousedown)="cancelBlurMethod()">
                 <li *ngIf="showAutocompleteMsg" class="autocomplete-msg">{{autocompleteMsg}}</li>
                 <li *ngFor="let result of autoComplete; let i = index;" (mouseover)='autocompleteMouseover(i)' [ngClass]="i === autocompleteIndex?'autocomplete-selected':''" (mousedown)="autocompleteSelection(result)">{{result.name}}</li>
             </ul>
@@ -29,7 +29,7 @@
                 <a (click)="toggleSelectorArea()" *ngIf="selectorToggle">Simple</a>
             </div>
         </div>         
-        <div class="usa-width-one usa-agency-picker-browse-area" *ngIf="selectorToggle">
+        <div class="usa-width-one usa-agency-picker-browse-area" *ngIf="selectorToggle || orgRoot">
             <div class='fh-form-alt'>
                 <div *ngFor="let orgLevel of orgLevels; let idx = index;">
                     <div *ngIf="orgLevel['show']">
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="usa-width-one" *ngIf="selectorToggle">
+        <div class="usa-agency-picker-button-area usa-width-one" *ngIf="selectorToggle || orgRoot">
             <button (click)="setOrganizationFromBrowse()">Add</button>
             <button (click)="resetBrowse()">Clear</button>
         </div>
