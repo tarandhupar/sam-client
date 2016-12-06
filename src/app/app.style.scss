@@ -14,7 +14,8 @@
 
 @import '~uswds/src/stylesheets/uswds';
 
-@import 'styles/components/footer';
+@import 'components/footer';
+@import 'components/pagination';
 
 html, body{
   height: 100%;

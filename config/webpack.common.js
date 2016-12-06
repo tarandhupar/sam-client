@@ -121,6 +121,34 @@ module.exports = {
      */
     loaders: [
 
+      {
+        test: /\.svg$/,
+        loaders: ['svg-url-loader']
+      },
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/font-woff"
+      }, {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/font-woff"
+      }, {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/octet-stream"
+      }, {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "file-loader"
+      }, {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=image/svg+xml"
+      },
+
+      /* File loader for supporting images, for example, in CSS files.
+       */
+      {
+        test: /\.(jpg|png|gif)$/,
+        loader: 'file'
+      },
+
       /*
        * Typescript loader support for .ts and Angular 2 async routes via .async.ts
        * Replace templateUrl and stylesUrl with require()
@@ -171,31 +199,13 @@ module.exports = {
 
       /// Sass Loader
       {
-        test: /\.scss$/,
+        test: /app\.style\.scss/,
         exclude: /node_modules/,
-        loaders: [ 'style', 'css?sourceMap', 'resolve-url-loader', 'sass?sourceMap' ]
+        loader: ExtractTextPlugin.extract("style","css?sourceMap!sass?sourceMap")
+
       },
 
-      {
-        test: /\.svg$/,
-        loaders: ['svg-url-loader']
-      },
-      {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff"
-      }, {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff"
-      }, {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/octet-stream"
-      }, {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "file-loader"
-      }, {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=image/svg+xml"
-      },
+
       // FONTS
       // {
       //   test: /\.(eot|svg|ttf|woff|woff2)$/,
@@ -206,12 +216,6 @@ module.exports = {
       //   loader: 'url-loader?limit=65000'
       // },
 
-      /* File loader for supporting images, for example, in CSS files.
-      */
-      {
-        test: /\.(jpg|png|gif)$/,
-        loader: 'file'
-      }
     ]
 
   },
@@ -226,6 +230,8 @@ module.exports = {
    * See: http://webpack.github.io/docs/configuration.html#plugins
    */
   plugins: [
+
+    new ExtractTextPlugin("app.css"),
 
     // new ExtractTextPlugin("styles.css"),
     /*
@@ -260,10 +266,14 @@ module.exports = {
         from: 'src/assets',
         to: 'assets'
       },
-      {
-        from: 'src/assets/fonts/font-awesome',
-        to: 'assets/fonts'
-      }
+      // {
+      //   from: 'src/assets',
+      //   to: 'src/assets'
+      // }
+      // {
+      //   from: 'src/assets/fonts/font-awesome',
+      //   to: 'assets/fonts'
+      // }
       // {
       //   from: 'node_modules/uswds/dist',
       //   to: ''

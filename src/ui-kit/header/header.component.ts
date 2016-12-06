@@ -1,5 +1,4 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import './header.css';
 
 @Component({
   selector: 'samHeader',
@@ -14,7 +13,7 @@ import './header.css';
             
               </nav>
             </header>`,
-  //styles: [ 'header.css' ]
+  styleUrls: [ 'header.css' ]
 })
 export class SamHeaderComponent {
 
