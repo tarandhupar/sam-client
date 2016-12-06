@@ -1,0 +1,173 @@
+$usa-btn-small-width:   4.5rem;
+$usa-btn-medium-width:  8.5rem;
+$usa-btn-big-width:     4.5rem;
+$small-font-size:  1.4rem;
+$small-screen: 481px;
+$base-font-size: 1.7rem;
+$h3-font-size: 2rem;
+
+select[multiple]{
+  background-image:none;
+  border-right-width:1px;
+}
+.usa-agency-picker-selection-area{
+  position:relative;
+}
+.autocomplete{
+  position:absolute;
+  top:44px;
+  background:#fff;
+  margin-top:0;
+  margin-left: 0;
+  margin-right: 0;
+  padding:0;
+  border:1px solid #5b616b;
+  border-top:none;
+  width: 100%;
+  z-index: 10;
+}
+.autocomplete li{
+  list-style:none;
+  padding: 0 10px;
+  margin: 0;
+  max-width:inherit;
+}
+
+.autocomplete li:hover{
+  cursor:pointer;
+  background:#e1f3f8;
+}
+.autocomplete-selected{
+  background:#e1f3f8;
+}
+
+.agency-picker-browse-toggle:hover{
+  cursor:pointer;
+}
+
+.agency-picker-chevron-wrapper{
+  text-align:center;
+  padding: 15px 0;
+  @include media($small-screen) {
+    padding: 30px 0 15px;
+  }
+}
+.agency-picker-chevron{
+
+  font-size:30px;
+}
+.agency-picker-chevron:hover{
+  cursor:pointer;
+}
+
+.agency-picker-dropdown-area{
+  padding-top:15px;
+  padding-bottom:15px;
+  border:1px #5b616b solid;
+  position:relative;
+  margin-top:10px;
+}
+.agency-picker-icon{
+  font-size:1.5em;
+}
+.agency-picker-icon:hover{
+  cursor:pointer;
+}
+
+.usa-agency-picker-multiselect{
+  height:auto;
+  float:left;
+  height:6em;
+}
+
+.usa-agency-picker {
+  @include clearfix;
+  max-width: none;
+  position: relative;
+
+  .usa-agency-picker-input {
+    padding-top: 0;
+    padding-bottom: 0;
+    -webkit-appearance: none;
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+    box-sizing: border-box;
+    float: left;
+    font-size: $small-font-size;
+    height: 3.3rem;
+    margin: 0;
+    width: calc(100% - #{$usa-btn-small-width});
+
+    @include media($small-screen) {
+      width: calc(100% - #{$usa-btn-medium-width});
+    }
+  }
+
+  [type="submit"],
+  .usa-agency-picker-submit {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    height: 3.3rem;
+    margin: 0;
+    padding: 0;
+    width: $usa-btn-small-width;
+
+    @include media($small-screen) {
+      background-image: none;
+      width: $usa-btn-medium-width;
+    }
+  }
+  .usa-agency-picker-icon-area{
+    float:right;
+    text-align:center;
+    height: 4.4rem;
+    width: #{$usa-btn-big-width};
+    align-items:flex-start;
+    @include media($small-screen) {
+      float: left;
+    }
+  }
+  .usa-agency-picker-submit-text {
+    line-height:4.4rem;
+
+    @include media($small-screen) {
+      display: block;
+    }
+  }
+
+  &.usa-agency-picker-big {
+    @include media($small-screen) {
+      $height: 4.4rem;
+      $width: $usa-btn-big-width;
+
+      .usa-agency-picker-input {
+        font-size: $base-font-size;
+        height: $height;
+        width: calc(100% - #{$width});
+      }
+
+      [type="submit"],
+      .usa-agency-picker-submit {
+        font-size: $h3-font-size;
+        height: $height;
+        width: $width;
+      }
+    }
+  }
+
+  &.usa-agency-picker-small {
+    @include media($small-screen) {
+      $width: $usa-btn-small-width;
+
+      .usa-agency-picker-input {
+        width: calc(100% - #{$width});
+      }
+
+      [type="submit"],
+      .usa-agency-picker-submit {
+        @include search-icon;
+        width: $width;
+      }
+    }
+  }
+}

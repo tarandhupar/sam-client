@@ -9,36 +9,42 @@ import {SamUIKitModule} from 'ui-kit';
 import {RouterTestingModule} from "@angular/router/testing";
 
 let error = {
-  "title" : "The is an error", 
-  "summary" : "The systems will be down for a while", 
-  "category" : "outages", 
-  "description" : "This is the description", 
-  "severity" : "ERROR",
-  "begins" : "2016-11-01T20:03:09Z",
-  "expires" : "2016-11-01T20:03:09Z",
-  "published" : "2016-11-01T20:03:09Z" 
+  content: {
+    "title" : "The is an error", 
+    "summary" : "The systems will be down for a while", 
+    "category" : "outages", 
+    "description" : "This is the description", 
+    "severity" : "ERROR",
+    "begins" : "2016-11-01T20:03:09Z",
+    "expires" : "2016-11-01T20:03:09Z",
+    "published" : "2016-11-01T20:03:09Z" 
+  }
 };
 
 let warning = {
-  "title" : "The is an warning",
-  "summary" : "The systems will be slow for a while",
-  "category" : "outages",
-  "description" : "This is the description",
-  "severity" : "WARNING",
-  "begins" : "2016-11-01T20:03:09Z",
-  "expires" : "2016-11-01T20:03:09Z",
-  "published" : "2016-11-01T20:03:09Z"
+  content: {
+    "title": "The is an warning",
+    "summary": "The systems will be slow for a while",
+    "category": "outages",
+    "description": "This is the description",
+    "severity": "WARNING",
+    "begins": "2016-11-01T20:03:09Z",
+    "expires": "2016-11-01T20:03:09Z",
+    "published": "2016-11-01T20:03:09Z"
+  }
 };
 
 let info = {
-  "title" : "The is information",
-  "summary" : "The systems will have additional features tomorrow",
-  "category" : "features",
-  "description" : "This is the description",
-  "severity" : "INFO",
-  "begins" : "2016-11-01T20:03:09Z",
-  "expires" : "2016-11-01T20:03:09Z",
-  "published" : "2016-11-01T20:03:09Z"
+  content: {
+    "title": "The is information",
+    "summary": "The systems will have additional features tomorrow",
+    "category": "features",
+    "description": "This is the description",
+    "severity": "INFO",
+    "begins": "2016-11-01T20:03:09Z",
+    "expires": "2016-11-01T20:03:09Z",
+    "published": "2016-11-01T20:03:09Z"
+  }
 };
 
 let noAlerts = Observable.of([]);
@@ -46,7 +52,7 @@ let oneAlert = Observable.of([error]);
 let fiveAlerts = Observable.of([error, error, warning, info, info]);
 
 let systemAlertsStub: any = {
-  getAll: () => fiveAlerts
+  get: () => fiveAlerts
 };
 
 describe('The AlertList component', () => {
@@ -72,7 +78,7 @@ describe('The AlertList component', () => {
 
   it('should show 0 alerts', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'getAll').and.returnValue(noAlerts);
+    spyOn(svc, 'get').and.returnValue(noAlerts);
 
     fixture.whenStable().then(() => {
       expect(fixture.nativeElement.textContent.trim()).toBe('');
@@ -82,7 +88,7 @@ describe('The AlertList component', () => {
 
   it('should show 1 alert', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'getAll').and.returnValue(oneAlert);
+    spyOn(svc, 'get').and.returnValue(oneAlert);
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));
@@ -93,7 +99,7 @@ describe('The AlertList component', () => {
 
   it('should show 2 alert (even if the services returns 5)', done => {
     let svc = fixture.debugElement.injector.get(SystemAlertsService);
-    spyOn(svc, 'getAll').and.returnValue(fiveAlerts);
+    spyOn(svc, 'get').and.returnValue(fiveAlerts);
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let alerts = fixture.debugElement.queryAll(By.css('h3'));

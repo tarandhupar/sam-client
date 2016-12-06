@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   providers: [ ],
@@ -6,6 +7,21 @@ import { Component } from '@angular/core';
 })
 export class AlertsPage {
 
-  constructor() { }
+  alerts:[any];
+
+  constructor(private route: ActivatedRoute) {
+
+  }
+
+  ngOnInit() {
+    var temp = this.route.snapshot.data['alerts'];
+    this.alerts = temp.map(alert => {
+      return {
+        type: alert.content.severity.toLowerCase(),
+        description: alert.content.description,
+        title: alert.content.title
+      };
+    });
+  }
 
 }

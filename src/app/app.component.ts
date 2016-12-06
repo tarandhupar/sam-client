@@ -37,6 +37,10 @@ export class App{
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
       });
+    this._router.events.subscribe(
+      val => {
+        this.showOverlay = false;
+      });
   }
 
 

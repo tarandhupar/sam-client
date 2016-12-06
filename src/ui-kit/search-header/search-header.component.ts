@@ -3,11 +3,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'samSearchHeader',
   template: `
-    <header>
+    <header id="sam-search-header">
       <div class="usa-grid align-top">
         <div class="header-container">
-          <a class="hat-img" [routerLink]="['/']">
-            <img class="marginCenter" src="assets/img/sam_hat_logo.jpg">
+          <a class="logo-img" [routerLink]="['/']">
+            <img src="assets/img/transition-sam-logo.png" alt="Sam.gov Logo">
           </a>
           <samSearchbar [size]="'small'" (onSearch)="onSearchEvent($event)" 
            [keyword]="keyword" [placeholder]="'#keyword'" [filterValue]="filterValue"></samSearchbar>          

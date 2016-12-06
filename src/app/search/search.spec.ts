@@ -5,9 +5,13 @@ import { Observable } from 'rxjs';
 import { SearchPage } from './search.page';
 import { SearchService, SamAPIKitModule } from 'api-kit';
 import { SamUIKitModule } from 'ui-kit';
+import { AppComponentsModule } from '../app-components/app-components.module';
 import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
-import { FHInputComponent } from './agency-selector/agency-selector.component';
+import { FederalHierarchyResult } from '../organization/search-result/federal-hierarchy-result.component';
+import { EntitiesResult } from '../entity/search-result/entities-result.component';
+import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.component';
+import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
 
 var fixture;
 
@@ -21,6 +25,18 @@ var searchServiceStub = {
         },{
           _type:"FBO",
           procurementTitle:"Dummy Result 2"
+        },{
+          _type:"FH",
+          title:"Dummy Result 3"
+        },{
+          _type:"ENT",
+          title:"Dummy Result 4"
+        },{
+          _type:"EX",
+          title:"Dummy Result 5"
+        },{
+          _type:"WD",
+          title:"Dummy Result 6"
         }],
       },
       page: {
@@ -36,11 +52,12 @@ var searchServiceStub = {
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FHInputComponent ],
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult ],
       providers: [ ],
       imports: [
         SamUIKitModule,
         SamAPIKitModule,
+        AppComponentsModule,
         RouterTestingModule.withRoutes([
           { path: 'search', component: SearchPage }
         ])

@@ -65,6 +65,27 @@ export class UIKitDemoPage {
     totalPages: 1
   };
 
+  pointOfContact = {
+    fullName:"John Doe",
+    address: "1234 Waterway Rd",
+    city: "Norfolk",
+    state: "VA",
+    zip:"12345",
+    email: "jdoe@test.gov",
+    phone: "222-222-2222",
+    website: "www.testsite.gov"
+  };
+
+  nameModel = {
+    title: "Mr.",
+    firstName: "John",
+    middleName: "",
+    lastName: "Doe",
+    suffix: "Sr."
+  };
+  phoneModel = "";
+  phoneModel2 = "1+(123)456-3366";
+
 
   constructor() {  }
 
@@ -95,5 +116,8 @@ export class UIKitDemoPage {
 
   onDismissAlerts(){
     this.dismissAlerts = true;
+  }
+  phoneModelChange(phoneNum){
+    this.phoneModel = phoneNum;
   }
 }

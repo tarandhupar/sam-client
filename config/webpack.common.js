@@ -204,18 +204,6 @@ module.exports = {
         loader: ExtractTextPlugin.extract("style","css?sourceMap!sass?sourceMap")
 
       },
-
-
-      // FONTS
-      // {
-      //   test: /\.(eot|svg|ttf|woff|woff2)$/,
-      //   loader: 'file?name=assets/fonts/[name].[ext]'
-      // },
-      // {
-      //   test: /\.(otf|eot|svg|ttf|woff)/,
-      //   loader: 'url-loader?limit=65000'
-      // },
-
     ]
 
   },
@@ -329,6 +317,10 @@ module.exports = {
     }),
 
   ],
+
+  sassLoader: {
+    includePaths: ["src/app/styles"]
+  },
 
   /*
    * Include polyfills or mocks for various node stuff

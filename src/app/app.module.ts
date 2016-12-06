@@ -14,15 +14,20 @@ import { ROUTES } from './app.route';
 import { App } from './app.component';
 import { AppState } from './app.service';
 import { HomeModule } from './application-content/home';
-import { AlertsModule } from './application-content/alerts'
+import { AlertsModule } from './application-content/alerts';
+import { HelpModule } from './Help';
 import { PageNotFoundErrorPage } from './application-content/404';
+import { ErrorModule } from './application-content/error/error.module';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
+import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
 import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
 
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
+import {AlertHeaderComponent} from "./app-components/alert-header/alert-header.component";
+import { AppComponentsModule } from './app-components/app-components.module';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -37,6 +42,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
   declarations: [
     App,
     PageNotFoundErrorPage,
+    AlertHeaderComponent
   ],
   imports: [
     // Angular Modules
@@ -50,14 +56,18 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     // Page View Modules
     ProgramModule,
     OpportunityModule,
+    OrganizationModule,
     HomeModule,
     AlertsModule,
+    HelpModule,
     SearchModule,
+    ErrorModule,
     UIKitDemoModule,
 
     // Other Modules
     SamUIKitModule,
     SamAPIKitModule,
+    AppComponentsModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

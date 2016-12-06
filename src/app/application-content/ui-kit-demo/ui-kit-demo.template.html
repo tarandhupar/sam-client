@@ -1,4 +1,3 @@
-<alertHeader></alertHeader>
 <div class="usa-grid">
   <h2>Accordions Component &lt;samAccordions&gt;</h2>
   <div class="usa-width-one-whole">
@@ -193,3 +192,43 @@
   </div>
 </div>
 
+<div class="usa-grid">
+  <div class="usa-width-one">
+    <h2>Point of Contact &lt;samPOC&gt;</h2>
+    <samPOC [data]="pointOfContact"></samPOC>
+  </div>
+</div>
+<br/>
+<div class="usa-grid">
+  <h2 class="usa-width-one">Name Entry &lt;samNameEntry&gt;</h2>
+  <div class="usa-width-one-half">
+    <samNameEntry [model]="nameModel" [prefix]="'ui-kit'"></samNameEntry>
+  </div>
+  <div class="usa-width-one-half">
+    <h3>Model</h3>
+    <pre><code>{{nameModel | json}}</code></pre>
+  </div>
+</div>
+<br/>
+<div class="usa-grid">
+  <div class="usa-width-one-whole">
+    <h2>Agency picker &lt;agencyPicker&gt;</h2>
+    <label>Multiple Organizations:</label>
+    <agencyPicker [multimode]="true"></agencyPicker>
+    <label>Single Organization:</label>
+    <agencyPicker [multimode]="false"></agencyPicker>
+  </div>
+</div>
+<br/>
+<div class="usa-grid">
+  <h2 class="usa-width-one">Phone Entry &lt;samPhoneEntry&gt;</h2>
+  <div class="usa-width-one-third">
+    <samPhoneEntry [(model)]="phoneModel" (emitter)="phoneModelChange($event)"></samPhoneEntry>
+    <samPhoneEntry [(model)]="phoneModel2" (emitter)="phoneModelChange($event)"></samPhoneEntry>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{phoneModel | json}}</code></pre>
+  </div>
+</div>
+<br/>
