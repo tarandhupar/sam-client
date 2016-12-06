@@ -6,8 +6,6 @@ import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
 
-require('./app.style.scss');
-
 /*
  * App Component
  * Top Level Component

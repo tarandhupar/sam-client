@@ -59,8 +59,8 @@ module.exports = {
 
     'polyfills': './src/polyfills.browser.ts',
     'vendor':    './src/vendor.browser.ts',
-    'main':      './src/main.browser.ts'
-
+    'main':      './src/main.browser.ts',
+    'styles':    './src/styles.ts',
   },
 
   /*
@@ -199,7 +199,7 @@ module.exports = {
 
       /// Sass Loader
       {
-        test: /app\.style\.scss/,
+        test: /styles\/all\.scss/,
         exclude: /node_modules/,
         loader: ExtractTextPlugin.extract("style","css?sourceMap!sass?sourceMap")
 
@@ -221,7 +221,7 @@ module.exports = {
   },
 
   sassLoader: {
-    includePaths: ['src/app/styles']
+    //includePaths: ['src/styles']
   },
 
   /*
