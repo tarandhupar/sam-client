@@ -15,6 +15,7 @@
       <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row"></assistance-listing-result>
       <federal-hierarchy-result  *ngIf="row._type=='FH'" class="usa-grid-full" [data]="row"></federal-hierarchy-result>
       <entities-result *ngIf="row._type=='ENT'" class="usa-grid-full" [data]="row"></entities-result>
+      <exclusions-result *ngIf="row._type=='EX'" class="usa-grid-full" [data]="row"></exclusions-result>
       <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
       <hr class="m_T-5x"/>
   	</div>
