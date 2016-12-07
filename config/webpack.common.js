@@ -202,7 +202,6 @@ module.exports = {
         test: /styles\/all\.scss/,
         exclude: /node_modules/,
         loader: ExtractTextPlugin.extract("style","css?sourceMap!sass?sourceMap")
-
       },
     ]
 
