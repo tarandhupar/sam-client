@@ -18,16 +18,20 @@ import { FHService } from 'api-kit';
 *
 */
 export class AgencyPickerComponent implements OnInit {
+  @Input() label: string = "Multiple Organization(s):";
   @Input() multimode: boolean = true;
   @Input() getQSValue: string = "organizationId";
   @Input() orgId: string = "";
-  @ViewChild("multiselect") multiselect;
+  @Input() hint: string = "";
+  @ViewChild("autocompletelist") autocompletelist;
 	@Output() organization = new EventEmitter<any[]>();
 
   private searchTimer: NodeJS.Timer = null;
   searchTerm = "";
   searchData = [];
   autocompleteIndex = 0;
+  autocompletePage = 0;
+  autocompleteLazyLoadMarker = 3;
   autoCompleteToggle = false;
   autoComplete = [];
   autocompleteData = [];
@@ -75,7 +79,9 @@ export class AgencyPickerComponent implements OnInit {
     selectedOrg: ""
   };
   orgLevels = [
-    this.dpmtSelectConfig, this.agencySelectConfig, this.officeSelectConfig
+    this.dpmtSelectConfig, this.agencySelectConfig, this.officeSelectConfig, 
+    Object.assign({},this.officeSelectConfig), Object.assign({},this.officeSelectConfig),Object.assign({},this.officeSelectConfig),
+    Object.assign({},this.officeSelectConfig)
   ];
   showAutocompleteMsg = false;
   autocompleteMsg = "";
@@ -89,15 +95,27 @@ export class AgencyPickerComponent implements OnInit {
   readonlyDisplayList = [];
   readOnlyToggle = true;
   browseSelection = {};
+  cancelBlur = false;
+  resetIconClass:string = "usa-agency-picker-search-reset";
 
 	constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService){}
 
   autocompleteMouseover(idx){
     this.autocompleteIndex = idx;
+    this.lazyLoadAC();
   }
 
-  onInputBlur(evt){
-    this.resetAutocomplete();
+  onInputBlur(evt){  
+    if(!this.cancelBlur){
+      this.resetAutocomplete();
+    }
+    this.cancelBlur = false;
+    this.searchError = false;
+    this.searchMessage = "";
+  }
+
+  cancelBlurMethod(){
+    this.cancelBlur=true;
   }
 
   resetAutocomplete(){
@@ -108,14 +126,18 @@ export class AgencyPickerComponent implements OnInit {
   }
 
 	ngOnInit() {
+    this.orgLevels[2].label += " (L3)";
+    this.orgLevels[3].label += " (L4)";
+    this.orgLevels[4].label += " (L5)";
+    this.orgLevels[5].label += " (L6)";
+    this.orgLevels[6].label += " (L7)";
     if(this.orgId.length>0){
       this.organizationId = this.orgId;
     } else {
-      this.activatedRoute.queryParams.subscribe(
-        data => {
-          this.organizationId = typeof data[this.getQSValue] === "string" ? decodeURI(data[this.getQSValue]) : "";
-          this.initFederalHierarchyDropdowns('');
-        });
+      this.activatedRoute.queryParams.subscribe( data => {
+        this.organizationId = typeof data[this.getQSValue] === "string" ? decodeURI(data[this.getQSValue]) : "";
+        this.initFederalHierarchyDropdowns('');
+      });
     }
 	}
 
@@ -130,17 +152,7 @@ export class AgencyPickerComponent implements OnInit {
   setReadonlyDisplay(){
     this.readOnlyToggle = false;
     if(this.selectedOrganizations.length>0){
-      if(!this.multimode){
-        this.readonlyDisplay = this.selectedOrganizations.reduce(function(finalStr,val,idx){
-          if(idx==0){
-            return val.name
-          } else {
-            return finalStr + ", " + val.name;
-          }
-        },"");
-      } else {
-        this.readonlyDisplayList = this.selectedOrganizations.slice(0);
-      }
+      this.readonlyDisplayList = this.selectedOrganizations.slice(0);
     } else {
       this.readonlyDisplay = "";
       this.readonlyDisplayList.length = 0;
@@ -148,19 +160,26 @@ export class AgencyPickerComponent implements OnInit {
     this.readOnlyToggle = true;
   }
 
+  removeOrg(value){
+    this.selectedOrganizations = this.selectedOrganizations.filter(function(obj){
+      return obj.value != value;
+    });
+    this.setReadonlyDisplay();
+  }
+
   searchTermChange(event){
     if(event.length>=3 && !this.autocompleting){
       this.autoCompleteToggle = true;
       if (this.searchTimer) {
-          clearTimeout(this.searchTimer);
+        clearTimeout(this.searchTimer);
       }
       this.autocompleting=true;
       this.searchTimer = setTimeout(
-          () => {
-            this.runAutocomplete();
-            this.autocompleting = false;
-          },
-          250
+        () => {
+          this.runAutocomplete();
+          this.autocompleting = false;
+        },
+        250
       );
     } else if (event.length < 3 && this.autoComplete.length>0){
       this.autocompleteData.length = 0;
@@ -173,40 +192,100 @@ export class AgencyPickerComponent implements OnInit {
       this.autocompleteMsg = "";
       this.autoCompleteToggle = false;
     }
+    if(this.searchTerm.length>0){
+      this.resetIconClass = "usa-agency-picker-search-reset-active";
+    } else {
+      this.resetIconClass = "usa-agency-picker-search-reset";
+    }
   }
 
   runAutocomplete(){
     //only run for name searches
     if(this.isLetter(this.searchTerm[0])){
+      this.autocompletePage = 0;
       var data = {
-        'limit':5,
-        'name':this.searchTerm
+        'keyword':this.searchTerm,
+        'pageNum':this.autocompletePage,
+        'pageSize':5
       };
       this.autocompleteIndex=0;
+      this.autocompleteLazyLoadMarker = 3;
 
       this.oFHService.search(data).subscribe( res => {
-        if(res["_embedded"] && res["_embedded"]["hierarchy"]){
-          this.autocompleteData = res["_embedded"]["hierarchy"];
+        if(res["_embedded"] && res["_embedded"]["results"]){
+          this.autocompleteData = res["_embedded"]["results"];//.slice(0,5);
+          for(var idx in this.autocompleteData){
+            switch(this.autocompleteData[idx].type){
+              case "DEPARTMENT":
+                this.autocompleteData[idx].name += this.levelFormatter(1);
+                break;
+              case "AGENCY":
+                this.autocompleteData[idx].name += this.levelFormatter(2);
+                break;
+              case "OFFICE":
+                this.autocompleteData[idx].name += this.levelFormatter(3);
+                break;
+            }
+          }
         }
         if(this.autocompleteData.length>0){
           this.showAutocompleteMsg = false;
           this.autocompleteMsg = "";
           this.autoComplete.length=0;
-          this.autoComplete.push(...this.autocompleteData.slice(0,5));
+          this.autoComplete.push(...this.autocompleteData);
         } else {
           this.showAutocompleteMsg = true;
           this.autocompleteMsg = "No matches found";
         }
       });
-      
     } else {
       this.autocompleting = false;
       this.autoCompleteToggle = false;
     }
   }
 
+  lazyLoadAC(){
+    if(this.autocompleteIndex>=this.autocompleteLazyLoadMarker){
+      this.autocompleteLazyLoadMarker += 5;
+      this.autocompletePage+=1;
+      var data = {
+        'keyword':this.searchTerm,
+        'pageNum':this.autocompletePage,
+        'pageSize':5
+      };
+      this.oFHService.search(data).subscribe( res => {
+        if(res["_embedded"] && res["_embedded"]["results"]){
+          this.autocompleteData = res["_embedded"]["results"].slice(0,5);
+          for(var idx in this.autocompleteData){
+            switch(this.autocompleteData[idx].type){
+              case "DEPARTMENT":
+                this.autocompleteData[idx].name += this.levelFormatter(1);
+                break;
+              case "AGENCY":
+                this.autocompleteData[idx].name += this.levelFormatter(2);
+                break;
+              case "OFFICE":
+                this.autocompleteData[idx].name += this.levelFormatter(3);
+                break;
+            }
+          }
+        }
+        if(this.autocompleteData.length>0){
+          this.showAutocompleteMsg = false;
+          this.autocompleteMsg = "";
+          //this.autoComplete.length=0;
+          this.autoComplete.push(...this.autocompleteData);
+        } else {
+          this.showAutocompleteMsg = true;
+          this.autocompleteMsg = "No matches found";
+        }
+      });
+    }
+  }
+
   //what kind of data?
   autocompleteSelection(data){
+    data["orgKey"] = data._id;
     this.updateBrowse(data);
     this.autoComplete.length = 0;
     this.setSearchTerm(data);
@@ -228,83 +307,68 @@ export class AgencyPickerComponent implements OnInit {
     //get full hierarchy of selection to get top level organization and get hierarchy to populate/select organization options
     var lvl = 0;
     if(data.type!="DEPARTMENT"){
-      this.serviceCall(data.elementId, true, false).subscribe( fullOrgPath => {
-        this.oFHService.getFederalHierarchyById(fullOrgPath.elementId, true, true).subscribe( res => {
-          var reachedEnd = false;
-          var idx = 0;
-          var path = fullOrgPath;
-          while(!reachedEnd){
-            this.orgLevels[idx].selectedOrg = path.elementId;
-            if(idx!=0){
-              this.orgLevels[idx].options.length = 0;
-              var type = idx==1?"agency":"office";
-              var formattedOptions = this.formatHierarchy(type,res["hierarchy"]);
-              //console.log("formatted options",idx,res);
-              this.orgLevels[idx].options.push(...formattedOptions);
-              this.orgLevels[idx].show = true;
-            } 
-            //console.log(idx,path,res);
-            if(path["hierarchy"] && path["hierarchy"][0]){
-              if(idx!=0){
-                res = res["hierarchy"].find(function(el,idx,arr){
-                  if(el.elementId==path.elementId){
-                    return true;
-                  }
-                });
+      this.serviceCall(data.orgKey, true, false).subscribe( fullOrgPath => {
+        var orgPathArr = fullOrgPath['_embedded'][0]['org']['fullParentPath'].split(".");
+        for(var orgidx in orgPathArr){
+          this.orgLevels[orgidx].selectedOrg = orgPathArr[orgidx];
+          this.serviceCall(orgPathArr[orgidx],false,false).subscribe( orglvldata => {
+            orglvldata = orglvldata['_embedded']['0']['org'];
+            var orglvl = orglvldata['level'];//not zero based
+            var orgType = orglvldata['type'].toLowerCase() == "department" ? "agency": "office";
+            orglvldata['hierarchy'] = orglvldata['hierarchy'].filter(function(org){
+              if(org["org"]['type']=="OFFICE" && org["org"]['modStatus'] && org["org"]['modStatus']!="active"){
+                return false;
               }
-              path = path["hierarchy"][0];
-            } else {
-              if(res["hierarchy"]){
-                res = res["hierarchy"].find(function(el,idx,arr){
-                  if(el.elementId==path.elementId){
-                    return true;
-                  }
-                });
+              if(!org["org"]['name']){
+                return false;
               }
-              
-              if(res["hierarchy"]){
-                this.orgLevels[idx+1].options.length = 0;
-                var type = idx+1==1?"agency":"office";
-                var formattedOptions = this.formatHierarchy(type,res["hierarchy"]);
-                //console.log("formatted options",idx,res);
-                this.orgLevels[idx+1].options.push(...formattedOptions);
-                this.orgLevels[idx+1].show = true;
-              }
-              reachedEnd=true;
+              return true;
+            }).sort(function(a,b){
+              if(a["org"]["name"].toLowerCase() < b["org"]["name"].toLowerCase()) return -1;
+              if(a["org"]["name"].toLowerCase() > b["org"]["name"].toLowerCase()) return 1;
+              return 0;
+            });
+            if(orglvldata['hierarchy'].length>300){
+              orglvldata['hierarchy'].length = 300;// = orglvldata['hierarchy'].slice(0,300);
             }
-            idx++;
-          }
-          lvl = idx-1; 
-
-          this.browseSelection = {
-            "level" : lvl,
-            "org" : this.orgLevels[lvl].selectedOrg
-          }
-        });
+            
+            if(orglvldata['hierarchy'].length>0){
+              var formattedData = this.formatHierarchy(orgType,orglvldata['hierarchy']);
+              this.orgLevels[orglvl].options = formattedData;
+              this.orgLevels[orglvl].show = true;
+            } else{
+              this.orgLevels[orglvl].options.length = 1;
+              this.orgLevels[orglvl].show = false;
+            }
+          });
+        }
       });
     } else { 
-      this.orgLevels[0].selectedOrg = data.elementId; 
+      this.orgLevels[0].selectedOrg = data.orgKey; 
       this.loadChildOrganizations(0); 
     }
   }
 
-  //good
   updateSearchFromBrowse(){
     if(typeof this.browseSelection["level"]!=="undefined"){
       var selectedOrgId = this.orgLevels[this.browseSelection["level"]].selectedOrg;
-      this.searchTerm = this.orgLevels[this.browseSelection["level"]].options.reduce(function(searchterm,val,idx,arr){
+      var searchTerm = this.orgLevels[this.browseSelection["level"]].options.reduce(function(searchterm,val,idx,arr){
         if(val["value"]==selectedOrgId){
           searchterm = val.label;
         }
         return searchterm;
       },"");
-       
+      //searchTerm = searchTerm.replace(/\s\(\S+\)$/,"");
+      this.searchTerm = searchTerm;
     }
   }
 
   //needs refactor for messaging
   setOrganizationFromSearch(){
-    console.log("getting here");
+    var selected
+    for(var idx in this.orgLevels){
+      this.orgLevels[idx].selectedOrg = "";
+    }
     if(this.searchTerm.length==0){
       this.searchError = true;
       this.searchMessage = "Search cannot be empty";
@@ -313,45 +377,44 @@ export class AgencyPickerComponent implements OnInit {
       this.searchError = false;
       this.searchMessage = "";
     }
-    var search = false;
     var data = {
       'limit':5
     };
 
     if(this.isLetter(this.searchTerm[0])){
-      data["name"] = this.searchTerm;
-      search = true;
-    } else {
-      data["ids"] = this.searchTerm;
-      search = true;
-    }
-    if(this.searchObjCache["name"] && this.searchTerm == this.searchObjCache["name"]){
-      this.searchData = [this.searchObjCache];
-      this.searchResponseHandler();
-      return;
-    }
-    if(search){
+      data["keyword"] = this.searchTerm.replace(/\s\(\S+\)$/,"");
       this.oFHService.search(data).subscribe( res => {
-        if(res["_embedded"] && res["_embedded"]["hierarchy"]){
-          this.searchData = res["_embedded"]["hierarchy"];
-        }
+        this.searchData = res["_embedded"]["results"];
         this.searchResponseHandler();
       }); 
     } else {
-      this.searchError = true;
-      this.searchMessage = "Invalid search entered";
+      data["ids"] = this.searchTerm;
+      this.oFHService.getOrganizationById(this.searchTerm).subscribe(res=>{
+        if(res["_embedded"].length===1){
+          res = res["_embedded"][0]['org'];
+          this.setOrganization(res);
+          this.updateBrowse(res);
+        } else {
+          console.log("error",res);
+        }
+        //this.setOrganizationFromBrowse();
+      });
     }
   }
 
-  //good
   searchResponseHandler(){
+    var idx = this.checkSearchDataMatch()
     if(this.searchData.length==0){
       this.searchError = true;
       this.searchMessage = "No matches found";
-    } else if (this.searchData.length == 1){
-      this.searchError = true;
-      this.searchMessage = "Match found for: " + this.searchData[0]["name"];
-      this.setOrganization(this.searchData[0]);
+    } else if (this.searchData.length == 1 || idx !==-1){
+      this.searchError = false;
+      this.searchMessage = "";//"Match found for: " + this.searchData[0]["name"];
+      //console.log(idx, this.searchData);
+      this.oFHService.getOrganizationById(this.searchData[idx]['_id']).subscribe(data =>{
+        this.setOrganization(data["_embedded"][0]["org"]);
+        this.updateBrowse(data["_embedded"][0]["org"]);
+      });
     } else {
       this.searchError = true;
       this.searchMessage = "Multiple Results found. Use Browse to refine your selection.";
@@ -359,14 +422,30 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
+  //todo, search needs a way to return the level
+  checkSearchDataMatch(){
+    for(var i = 0;i < this.searchData.length;i++){
+      var lvl;
+      switch(this.searchData[i].type){
+        case "DEPARTMENT":
+          lvl = 1;
+          break;
+        case "AGENCY":
+          lvl = 2;
+          break;
+        case "OFFICE":
+          lvl = 3;
+          break;
+      }
+      if(this.searchData[i].name+this.levelFormatter(lvl)===this.searchTerm){
+        return i;
+      }
+    }
+    return -1;
+  }
+
   handleMultipleResultsFromSearch(){
-    this.orgLevels[0].selectedOrg = "";
-    this.orgLevels[1].show = false;
-    this.orgLevels[1].selectedOrg = "";
-    this.orgLevels[1].options.length = 1;
-    this.orgLevels[2].show = false;
-    this.orgLevels[2].selectedOrg = "";
-    this.orgLevels[2].options.length = 1;
+    this.resetBrowse();
     /* needs discussion on the right implementation
     console.log(this.searchData);
     var counts = [0,0,0];
@@ -392,12 +471,17 @@ export class AgencyPickerComponent implements OnInit {
 
   //switch from search call
   setOrganizationFromBrowse(){
-    if(this.browseSelection["org"]){
-      var data = {
-        "ids":this.browseSelection["org"]
+    var selectedOrg;
+    for(var idx in this.orgLevels){
+      if(this.orgLevels[idx]['selectedOrg']){
+        selectedOrg = this.orgLevels[idx]['selectedOrg'];
       }
-      this.oFHService.search(data).subscribe( res => {
-        this.setOrganization(res["_embedded"]["hierarchy"][0]);
+    }
+    if(selectedOrg){
+      this.oFHService.getOrganizationById(selectedOrg).subscribe( res => {
+        this.setOrganization(res["_embedded"][0]['org']);
+        this.searchError = false;
+        this.searchMessage = "";
       }); 
     } else {
       this.searchMessage = "Please select an organization";
@@ -423,67 +507,75 @@ export class AgencyPickerComponent implements OnInit {
       "level":selectionLvl,
       "org": orgLevel["selectedOrg"]
     };
-
     for(idx in this.orgLevels){
-      if(idx <= lvl+1 && this.orgLevels[idx]){
+      var hide = false;
+      if(dontResetDirectChildLevel && idx > lvl){
+        hide = true;
+      }
+      if(!hide && idx <= lvl && this.orgLevels[idx]){
         this.orgLevels[idx]["show"]=true;
       } else {
         this.orgLevels[idx]["show"]=false;
+        this.orgLevels[idx]["options"].length = 1;
       }
-    }
-
-    //empty agency & office dropdowns
-    if(orgLevel.type=="department"){
-      if(!dontResetDirectChildLevel){
-        this.dictionary.aAgency = [];
-        this.orgLevels[1]["options"].length = 1;;
-      }
-      this.dictionary.aOffice.length = 0;
-      this.orgLevels[2]["options"].length = 1;
-      this.orgLevels[2].show = false;
-    } else if (orgLevel.type=="agency"){
-      this.dictionary.aOffice.length = 0;
-      this.orgLevels[2]["options"].length = 1;;
     }
 
     if(typeof orgLevel.selectedOrg !== 'undefined' && orgLevel.selectedOrg !== ''
         && orgLevel.selectedOrg !== null) {
-        this.serviceCall(orgLevel.selectedOrg, true, true).subscribe( oData => {
-          this.processDictionaryResponse(oData,selectionLvl);
-          this.updateSearchFromBrowse();
+      this.serviceCall(orgLevel.selectedOrg, true, true).subscribe( oData => {
+        oData = oData._embedded[0].org;
+        oData["hierarchy"] = oData["hierarchy"].filter(function(org){
+          if(org["org"]['type']=="OFFICE" && org["org"]['modStatus'] && org["org"]['modStatus']!="active"){
+            return false;
+          }
+          if(!org["org"]['name']){
+            return false;
+          }
+          return true;
+        }).sort(function(a,b){
+          if(a["org"]["name"].toLowerCase() < b["org"]["name"].toLowerCase()) return -1;
+          if(a["org"]["name"].toLowerCase() > b["org"]["name"].toLowerCase()) return 1;
+          return 0;
         });
-        
+        if(oData["hierarchy"].length > 300){
+          oData["hierarchy"].length = 300;
+        }
+        this.processDictionaryResponse(oData,selectionLvl);
+      });  
     }
   }
 
-  //todo: work for 7 levels
   processDictionaryResponse(data,lvl){
     if(lvl==0){
       var formattedData = this.formatHierarchy("agency",data.hierarchy);
       //no child agencies
       if(formattedData.length <= 1){
         this.orgLevels[1].show=false;
-      }
-      this.dictionary.aAgency = data.hierarchy;
-      this.agencySelectConfig.options = formattedData;
-      this.officeSelectConfig.options.length = 1;
-    } else if (lvl == 1){
-      if(this.checkChildHierarchyExists(data,lvl)){
-
-        var formattedData = this.formatHierarchy("office",data["hierarchy"][0]["hierarchy"]);
-        this.dictionary.aOffice = data["hierarchy"][0].hierarchy;
-        this.officeSelectConfig.options = formattedData;
       } else {
-        this.officeSelectConfig.show = false;
+        this.dictionary.aAgency = data.hierarchy;
+        this.orgLevels[1].options = formattedData;
+        this.orgLevels[1].show = true;
+      }
+      this.orgLevels[2].options.length = 1;
+      this.orgLevels[3].options.length = 1;
+      this.orgLevels[4].options.length = 1;
+      this.orgLevels[5].options.length = 1;
+      this.orgLevels[6].options.length = 1;
+    } else if (lvl >= 1){
+      if(data['hierarchy'] && data['hierarchy'].length>0){
+        var formattedData = this.formatHierarchy("office",data["hierarchy"]);
+        this.dictionary.aOffice = data["hierarchy"];
+        this.orgLevels[lvl+1].options = formattedData;
+        this.orgLevels[lvl+1].show = true;
+      } else {
+        this.orgLevels[lvl+1].show = false;
       }
     }
   }
 
   checkChildHierarchyExists(data,lvl){
     var org = data;
-    //console.log(org,lvl);
     for(var i = 0; i <= lvl; i++){
-      //console.log("iterating",i, org);
       if(!org["hierarchy"]){
         return false;
       }
@@ -493,21 +585,16 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   setOrganization(data){
-   if(data.type=="DEPARTMENT"){
-     this.orgLevels[0].selectedOrg = data.elementId;
-   } 
-   else if(data.type=="AGENCY"){
-     this.orgLevels[1].selectedOrg = data.elementId;
-   } 
-   else if(data.type=="OFFICE"){
-     this.orgLevels[2].selectedOrg = data.elementId;
-   } 
+   var level = 1;
+   level = data["level"];
+   this.orgLevels[level-1].selectedOrg = data.orgKey;
    var obj = {};
-   obj['name'] = data['name'];
-   obj['value'] = data['elementId'];
+   obj['name'] = data['name'] + this.levelFormatter(level);
+   obj['value'] = data['elementId'] ? data['elementId'] : data['orgKey'];
    this.addToSelectedOrganizations(obj);
    this.autoComplete.length = 0;
    this.organization.emit(this.selectedOrganizations);
+   this.setReadonlyDisplay();
   }
 
   addToSelectedOrganizations(data){
@@ -553,12 +640,16 @@ export class AgencyPickerComponent implements OnInit {
     //up 
     else if(this.autoCompleteToggle && evt['keyCode'] == 38 && this.autocompleteIndex>0){
       //console.log("up",this.autocompleteIndex);
+      evt.preventDefault();
       this.autocompleteIndex-=1;
+      this.autocompletelist.nativeElement.scrollTop = this.autocompletelist.nativeElement.getElementsByTagName("li")[this.autocompleteIndex].offsetTop;      
     }
     //down
-    else if(this.autoCompleteToggle && evt['keyCode']==40 && this.autocompleteIndex <= this.autocompleteData.length){
+    else if(this.autoCompleteToggle && evt['keyCode']==40 && this.autocompleteIndex <= this.autoComplete.length-1){
       //console.log("down",this.autocompleteIndex);
       this.autocompleteIndex+=1;
+      this.autocompletelist.nativeElement.scrollTop = this.autocompletelist.nativeElement.getElementsByTagName("li")[this.autocompleteIndex].offsetTop;
+      this.lazyLoadAC();
     } 
     //down
     else if(!this.autoCompleteToggle && evt['keyCode'] == 40){
@@ -567,8 +658,8 @@ export class AgencyPickerComponent implements OnInit {
     } 
     //enter
     else if (this.autoCompleteToggle && evt['keyCode'] == 13){
-      if(this.autocompleteData[this.autocompleteIndex]){
-        this.autocompleteSelection(this.autocompleteData[this.autocompleteIndex]);
+      if(this.autoComplete[this.autocompleteIndex]){
+        this.autocompleteSelection(this.autoComplete[this.autocompleteIndex]);
       }
     }
     //enter
@@ -577,36 +668,43 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-	serviceCall(ordId, includeParent, includeChildren){
+	serviceCall(orgId, includeParent, includeChildren){
 		//get Department level of user's organizationId
-    return this.oFHService.getFederalHierarchyById(ordId, includeParent, includeChildren);
+    if(orgId!=""){
+      return this.oFHService.getOrganizationById(orgId);
+    } else {
+      return this.oFHService.getDepartments();
+    }
 	}
 
   //refactor preset organziationId handling
 	initFederalHierarchyDropdowns(userRole){
 		this.serviceCall("",true,false).subscribe( res => {
-			this.dictionary.aDepartment = res._embedded.hierarchy;
-      var formattedData = this.formatHierarchy("department",res._embedded.hierarchy);
+			//this.dictionary.aDepartment = res._embedded.hierarchy;
+      res._embedded = res._embedded.sort(function(a,b){
+        if(a["org"]["name"].toLowerCase() < b["org"]["name"].toLowerCase()) return -1;
+        if(a["org"]["name"].toLowerCase() > b["org"]["name"].toLowerCase()) return 1;
+        return 0;
+      });
+      var formattedData = this.formatHierarchy("department",res._embedded);
       this.dpmtSelectConfig.options = formattedData;
       
       if(this.organizationId.length > 0) {
-        this.oFHService.getFederalHierarchyById(this.organizationId, false, true).subscribe(res => {
-          //inferring department match
+        this.oFHService.getOrganizationById(this.organizationId).subscribe(res => {
           this.setOrganization(res);
           this.updateBrowse(res);
           this.searchTerm = res.name;
           this.setReadonlyDisplay();
           if(res.type=="AGENCY"){
-            this.agencySelectConfig.show=true;
+            this.orgLevels[1].show=true;
             if(this.checkChildHierarchyExists(res,0)){
-              this.officeSelectConfig.show=true;
+              this.orgLevels[2].show=true;
             }
           }
           if(res.type=="OFFICE"){
-            this.agencySelectConfig.show=true;
-            this.officeSelectConfig.show=true;
+            this.orgLevels[1].show=true;
+            this.orgLevels[2].show=true;
           }
-          
         });
       }
       
@@ -616,45 +714,77 @@ export class AgencyPickerComponent implements OnInit {
   //switch case may not be needed, refactor other places where this is called
   formatHierarchy(type,data){
     var formattedData = [];
+    var level = 1;
     switch(type){
       case "department":
         formattedData.push(this.defaultDpmtOption);
         break;
       case "agency":
         formattedData.push(this.defaultAgencyOption);
+        level = 2;
         break;
       case "office":
         formattedData.push(this.defaultOfficeOption);
+        level = 3;
         break;
     }
 
     for(var idx in data){
       var obj = {};
-      obj['value'] = data[idx].elementId;
-      obj['label'] = data[idx].name;
-      obj['name'] = data[idx].elementId;
-      formattedData.push(obj);
+      if(data[idx]["org"]){
+        level = data[idx]["org"]["level"];
+        obj['value'] = data[idx]["org"]["orgKey"];
+        obj['label'] = data[idx]["org"]["name"] + this.levelFormatter(level);
+        obj['name'] = data[idx]["org"]["orgKey"];
+      } else {
+        obj['value'] = data[idx]["elementId"];
+        obj['label'] = data[idx]["name"]+ this.levelFormatter(level);
+        obj['name'] = data[idx]["elementId"];
+      }
+      if(obj['label']){
+        formattedData.push(obj);
+      }
     }
     return formattedData;
   }
 
-  removeSelectedOrgs(){
-    var selectedValues = this.multiselect.selectedValues;
-    var filteredArray = this.multiselect.options.filter(function( obj ) {
-      for(var idx in selectedValues){
-        if(selectedValues[idx] == obj.value){
-          return false;
-        }
-      }
-      return true;
-    });
-    this.multiselect.options.length = 0;
-    [].push.apply(this.multiselect.options,filteredArray);
-    this.emitSelectedOrganizations();
+  levelFormatter(lvl){
+    switch(lvl){
+      case 1:
+        return " (D)";
+      case 2:
+        return " (A)";
+      case 3:
+        return " (L3)";
+      case 4:
+        return " (L4)";
+      case 5:
+        return " (L5)";
+      case 6:
+        return " (L6)";
+      case 7:
+        return " (L7)";
+    }
   }
+  
   clearSelectedOrgs(){
     this.selectedSingleOrganizationName="";
     this.selectedOrganizations.length = 0;
     this.emitSelectedOrganizations();
+  }
+  
+  resetBrowse(){
+    for(var idx in this.orgLevels){
+      this.orgLevels[idx].selectedOrg = "";
+      //sub-tier and office need full reset only
+      if(parseInt(idx) > 0){
+        this.orgLevels[idx].show = false;
+        this.orgLevels[idx].options.length = 1;  
+      }
+    }
+  }
+  onResetClick(){
+    this.searchTerm = "";
+    this.resetIconClass = "usa-agency-picker-search-reset";
   }
 }
