@@ -48,8 +48,7 @@ import * as moment from 'moment/moment';
           </li>
         </ul>
       </div>
-  `,
-  styleUrls: []
+  `
 })
 export class WageDeterminationResult implements OnInit {
   @Input() data: any={};
