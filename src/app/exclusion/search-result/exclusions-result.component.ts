@@ -40,8 +40,7 @@ import * as moment from 'moment/moment';
           </li>      
         </ul>
       </div>
-  `,
-  styleUrls: []
+  `
 })
 export class ExclusionsResult implements OnInit {
   @Input() data: any={};
