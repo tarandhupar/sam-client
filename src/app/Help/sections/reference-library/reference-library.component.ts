@@ -25,21 +25,21 @@ export class ReferenceLibraryComponent {
   private data: any={
     Federal: [
         {
-          title:"Uniform Grant Guidance (2 CFR 200)",
-          detail:"Details for Uniform Grant Guidance: "+this.detailLipsum,
-          link:"View the e-CFR",
-          url:"fakeUrl"
+          title:"Benifits.gov Learning Center",
+          detail:"Benifits.gov Learning Center: "+this.detailLipsum,
+          link:"View Benifits.gov",
+          url:"http://www.Benefits.gov"
         },
         {
           title:"Grants.gov Learning Center",
           detail:"Details for Grants.gov Learning Center: "+this.detailLipsum,
-          link:"View the Grants.gov",
+          link:"View Grants.gov",
           url:"http://www.grants.gov/web/grants/learn-grants.html"
         },
         {
           title:"Data Element Repository",
           detail:"Details for Data Element Repository: "+this.detailLipsum,
-          link:"View the DER",
+          link:"View DER",
           url:"fakeUrl"
         }
       ],
@@ -47,20 +47,20 @@ export class ReferenceLibraryComponent {
         {
           title:"Federal Acquisition Regulation",
           detail:"Details for Federal Acquisition Regulation: "+this.detailLipsum,
-          link:"View the FAR",
-          url:"fakeUrl"
+          link:"View FAR",
+          url:"https://www.acquisition.gov/?q=browsefar"
         },
         {
-          title:"Contracts Reference Example1",
-          detail:"Details for Contracts Reference Example1: "+this.detailLipsum,
-          link:"View example1",
-          url:"hfakeUrl"
+          title:"SBA Commercial Market Representative",
+          detail:"Details for SBA Commercial Market Representative: "+this.detailLipsum,
+          link:"View SBA CMR",
+          url:"https://www.sba.gov/contracting/resources-small-businesses/commercial-market-representatives"
         },
         {
-          title:"Contracts Reference Example2",
-          detail:"Details for Contracts Reference Example2: "+this.detailLipsum,
-          link:"View example2",
-          url:"fakeUrl"
+          title:"Request DUNS Number",
+          detail:"Details for Request DUNS Number: "+this.detailLipsum,
+          link:"View DUNS Number",
+          url:"http://fedgov.dnb.com/webform"
         }
     ]
   };
