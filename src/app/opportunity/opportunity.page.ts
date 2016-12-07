@@ -5,6 +5,7 @@ import { OpportunityService, FHService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 import { OpportunityFields } from "./opportunity.fields";
+import { trigger, state, style, transition, animate } from '@angular/core';
 
 @Component({
   moduleId: __filename,
@@ -13,6 +14,18 @@ import { OpportunityFields } from "./opportunity.fields";
   providers: [
     OpportunityService,
     FilterMultiArrayObjectPipe
+  ],
+  animations: [
+    trigger('accordion', [
+      state('collapsed', style({
+        height: '0px',
+      })),
+      state('expanded', style({
+        height: '*',
+      })),
+      transition('collapsed => expanded', animate('100ms ease-in')),
+      transition('expanded => collapsed', animate('100ms ease-out'))
+    ])
   ]
 })
 export class OpportunityPage implements OnInit {
@@ -142,6 +155,9 @@ export class OpportunityPage implements OnInit {
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
       this.attachment = attachment;
+      this.attachment.packages.forEach((key: any) => {
+        key.accordionState = 'collapsed';
+      });
       console.log("Attachment: ", this.attachment);
     }, err => {
       console.log('Error loading organization: ', err)
@@ -283,13 +299,18 @@ export class OpportunityPage implements OnInit {
 
   private isSecure(field: string){
     if(field === "Public"){
-      return "No";
+      return "Not Secure";
     } else {
-      return "Yes"
+      return "Secured"
     }
   }
 
   public getDownloadFileURL(fileID: string){
     return API_UMBRELLA_URL + '/cfda/v1/file/' + fileID + "?api_key=" + API_UMBRELLA_KEY;
   }
+
+  toggleAccordion(card){
+    card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
+  }
+
 }
