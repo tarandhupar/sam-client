@@ -84,7 +84,6 @@ export class OpportunityPage implements OnInit {
 
     opportunitySubject.subscribe(api => { // do something with the opportunity api
       this.opportunity = api;
-      console.log("This opportunity: ", this.opportunity);
     }, err => {
       console.log('Error loading opportunity: ', err);
     });
@@ -158,7 +157,6 @@ export class OpportunityPage implements OnInit {
       this.attachment.packages.forEach((key: any) => {
         key.accordionState = 'collapsed';
       });
-      console.log("Attachment: ", this.attachment);
     }, err => {
       console.log('Error loading organization: ', err)
     });
