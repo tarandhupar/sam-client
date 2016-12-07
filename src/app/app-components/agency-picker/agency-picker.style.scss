@@ -33,6 +33,16 @@ $h3-font-size: 2rem;
 .usa-agency-picker-browse-area{
   clear:both;
 }
+
+.usa-agency-picker-button-area{
+  float:right;
+  overflow:auto;
+  button{
+    margin-right:0;
+    margin-left:8.5px;
+  }
+}
+
 .usa-agency-picker-selection-area{
   position:relative;
 }
