@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 
 @Component({
   providers: [ ],
-  styleUrls: ['./reference-library.style.css'],
   templateUrl: './reference-library.template.html',
 })
 export class ReferenceLibraryComponent {
