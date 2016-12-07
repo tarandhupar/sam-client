@@ -121,32 +121,35 @@ module.exports = {
      */
     loaders: [
 
-      // {
-      //   test: /\.svg$/,
-      //   loaders: ['svg-url-loader']
-      // },
+      /*
+       * Font loaders
+       */
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url-loader?limit=10000&mimetype=application/font-woff"
-      }, {
+      },
+      {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url-loader?limit=10000&mimetype=application/font-woff"
-      }, {
+      },
+      {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url-loader?limit=10000&mimetype=application/octet-stream"
-      }, {
+      },
+      {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         loader: "file-loader"
-      }, {
+      },
+      {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url-loader?limit=10000&mimetype=image/svg+xml"
       },
 
-      /* File loader for supporting images, for example, in CSS files.
+      /* File loader for supporting images
        */
       {
         test: /\.(jpg|png|gif)$/,
-        loader: 'file'
+        loader: 'url-loader'
       },
 
       /*
@@ -208,7 +211,11 @@ module.exports = {
   },
 
   sassLoader: {
-    //includePaths: ['src/styles']
+    /*
+     * Uncomment to allow sass files to easily include other sass files without using long paths
+     * I prefer not to use this to allow ideas to more easily find the paths of imported files
+     */
+    // includePaths: ['src/styles']
   },
 
   /*
@@ -220,7 +227,6 @@ module.exports = {
 
     new ExtractTextPlugin("app.css"),
 
-    // new ExtractTextPlugin("styles.css"),
     /*
      * Plugin: ForkCheckerPlugin
      * Description: Do type checking in a separate process, so webpack don't need to wait.
@@ -251,29 +257,8 @@ module.exports = {
     new CopyWebpackPlugin([
       {
         from: 'src/assets',
-        to: 'assets'
-      },
-      {
-        from: 'src/assets',
         to: 'src/assets'
       }
-      // {
-      //   from: 'src/assets/fonts/font-awesome',
-      //   to: 'assets/fonts'
-      // }
-      // {
-      //   from: 'node_modules/uswds/dist',
-      //   to: ''
-      // },
-      // /// Fixme: There are redundant copies here
-      // {
-      //   from: 'src/assets/fonts',
-      //   to: 'fonts',
-      // },
-      // {
-      //   from: 'src/assets/img',
-      //   to: 'img'
-      // }
     ]),
 
     /*
