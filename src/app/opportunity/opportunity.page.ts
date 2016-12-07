@@ -280,12 +280,12 @@ export class OpportunityPage implements OnInit {
     }
     return false;
   }
-  
-  private isPublic(field: string){
+
+  private isSecure(field: string){
     if(field === "Public"){
-      return "Yes";
+      return "No";
     } else {
-      return "No"
+      return "Yes"
     }
   }
 
