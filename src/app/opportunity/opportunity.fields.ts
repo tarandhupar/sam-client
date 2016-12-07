@@ -55,6 +55,9 @@ export enum OpportunityFields {
   Description = <any>'description',
   BenefitsDescription = <any>'benefits-description',
 
+  // Packages
+  Packages = <any>'packages',
+
     // Contact information section
   Contact = <any>'contact',
   Office = <any>'contracting-office', // Contracting Office Address sub-section

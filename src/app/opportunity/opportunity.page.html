@@ -11,7 +11,7 @@
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
-        <li><a href="{{ currentUrl }}#package">Packages</a></li>
+        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
         <li><a href="{{ currentUrl }}#history">History</a></li>
       </ul>
@@ -202,7 +202,7 @@
       <div [innerHTML]="opportunity.data?.descriptions[0].content | fixhtml"></div>
     </section>
 
-    <section *ngIf="attachment">
+    <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
 
       <h2>Packages</h2>
 
