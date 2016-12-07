@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'samSearchHeader',
   template: `
-    <header id="sam-search-header">
+    <header id="sam-search-header" class='search-header'>
       <div class="usa-grid align-top">
         <div class="header-container">
           <a class="logo-img" [routerLink]="['/']">
@@ -18,10 +18,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
            src="../../assets/img/us_flag_small.png" alt="US Flag Logo"/>
       </div>
       <SamHeaderLinks (onDropdownToggle)="dropdownEventControl($event)"></SamHeaderLinks>
-      
     </header>
-`,
-  styleUrls: [ 'search-header.css' ]
+`
 })
 export class SamSearchHeaderComponent {
 
