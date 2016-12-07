@@ -7,6 +7,7 @@ import { AssistanceListingResult } from '../assistance-listing/search-result/ass
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
 import { FederalHierarchyResult } from '../organization/search-result/federal-hierarchy-result.component';
 import { EntitiesResult } from '../entity/search-result/entities-result.component';
+import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.component';
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
 import { FormsModule } from '@angular/forms';
 
@@ -32,6 +33,7 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     OpportunitiesResult,
     FederalHierarchyResult,
     EntitiesResult,
+    ExclusionsResult,
     WageDeterminationResult
   ],
   declarations: [
@@ -40,6 +42,7 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     OpportunitiesResult,
     FederalHierarchyResult,
     EntitiesResult,
+    ExclusionsResult,
     WageDeterminationResult
   ],
   providers: [],
