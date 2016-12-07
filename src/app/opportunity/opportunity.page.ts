@@ -228,9 +228,12 @@ export class OpportunityPage implements OnInit {
 
         this.displayField[OpportunityFields.OriginalPostedDate] = originalPostedDateCondition;
 
+        console.log(opportunity.data.solicitation.deadlines.response !== parent.data.solicitation.deadlines.response);
+        console.log(parent.data.solicitation.deadlines.response);
+
         let originalResponseDateCondition = opportunity.data != null
-          && opportunity.solicitation != null && opportunity.solicitation.deadlines != null
-          && opportunity.solicitation.deadlines.response != null && parent.data != null
+          && opportunity.data.solicitation != null && opportunity.data.solicitation.deadlines != null
+          && opportunity.data.solicitation.deadlines.response != null && parent.data != null
           && parent.data.solicitation != null && parent.data.solicitation.deadlines != null
           && parent.data.solicitation.deadlines.response != null
           && opportunity.data.solicitation.deadlines.response !== parent.data.solicitation.deadlines.response;
