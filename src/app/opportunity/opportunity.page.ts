@@ -39,6 +39,7 @@ export class OpportunityPage implements OnInit {
   organization: any;
   currentUrl: string;
   dictionary: any;
+  attachment: any;
 
   constructor(
     private route:ActivatedRoute,
@@ -53,6 +54,7 @@ export class OpportunityPage implements OnInit {
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
+    this.loadAttachments(opportunityAPI);
 
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
@@ -69,6 +71,7 @@ export class OpportunityPage implements OnInit {
 
     opportunitySubject.subscribe(api => { // do something with the opportunity api
       this.opportunity = api;
+      console.log("This opportunity: ", this.opportunity);
     }, err => {
       console.log('Error loading opportunity: ', err);
     });
@@ -80,9 +83,9 @@ export class OpportunityPage implements OnInit {
     let parentOpportunitySubject = new ReplaySubject(1); // broadcasts the parent opportunity to multiple subscribers
 
     opportunityAPI.subscribe(api => {
-      if (api.parentOpportunity != null) { // if this opportunity has a parent
+      if (api.parent != null) { // if this opportunity has a parent
         // then call the opportunity api again for parent and attach the subject to the result
-        this.opportunityService.getOpportunityById(api.parentOpportunity.opportunityId).subscribe(parentOpportunitySubject);
+        this.opportunityService.getOpportunityById(api.parent.opportunityId).subscribe(parentOpportunitySubject);
       } else {
         return Observable.of(null).subscribe(parentOpportunitySubject); // if there is no parent, just return a single null
       }
@@ -130,6 +133,23 @@ export class OpportunityPage implements OnInit {
     });
   }
 
+  private loadAttachments(opportunityAPI: Observable<any>){
+    let attachmentSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
+      opportunityAPI.subscribe(api => {
+        this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
+
+    });
+
+    attachmentSubject.subscribe(attachment => { // do something with the organization api
+      this.attachment = attachment;
+      console.log("Attachment: ", this.attachment);
+    }, err => {
+      console.log('Error loading organization: ', err)
+    });
+
+    return attachmentSubject;
+  }
+
   private loadDictionary() {
     this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type,fo_justification_authority').subscribe(data => {
       // do something with the dictionary api
@@ -141,7 +161,7 @@ export class OpportunityPage implements OnInit {
 
   // Sets the correct displayField flags for this opportunity type
   private setDisplayFields(combinedOpportunityAPI: Observable<any>) {
-    combinedOpportunityAPI.subscribe(([opportunity, parentOpportunity]) => {
+    combinedOpportunityAPI.subscribe(([opportunity, parent]) => {
       if(opportunity.data == null || opportunity.data.type == null) {
         console.log('Error: No opportunity type');
         return;
@@ -201,33 +221,33 @@ export class OpportunityPage implements OnInit {
        * TODO: Check if original archive date condition is needed (not mentioned in excel spreadsheet)
        * TODO: Find ways to refactor or simplify this logic
        */
-      if(parentOpportunity != null) {
+      if(parent != null) {
         let originalPostedDateCondition = opportunity.postedDate != null
-          && parentOpportunity.postedDate != null
-          && opportunity.postedDate !== parentOpportunity.postedDate;
+          && parent.postedDate != null
+          && opportunity.postedDate !== parent.postedDate;
 
         this.displayField[OpportunityFields.OriginalPostedDate] = originalPostedDateCondition;
 
         let originalResponseDateCondition = opportunity.data != null
           && opportunity.solicitation != null && opportunity.solicitation.deadlines != null
-          && opportunity.solicitation.deadlines.response != null && parentOpportunity.data != null
-          && parentOpportunity.data.solicitation != null && parentOpportunity.data.solicitation.deadlines != null
-          && parentOpportunity.data.solicitation.deadlines.response != null
-          && opportunity.data.solicitation.deadlines.response !== parentOpportunity.data.solicitation.deadlines.response;
+          && opportunity.solicitation.deadlines.response != null && parent.data != null
+          && parent.data.solicitation != null && parent.data.solicitation.deadlines != null
+          && parent.data.solicitation.deadlines.response != null
+          && opportunity.data.solicitation.deadlines.response !== parent.data.solicitation.deadlines.response;
 
         this.displayField[OpportunityFields.OriginalResponseDate] = originalResponseDateCondition;
 
         let originalArchiveDateCondition = opportunity.data != null && opportunity.data.archive != null
-          && opportunity.data.archive.date != null && parentOpportunity.data != null && parentOpportunity.data.archive != null
-          && parentOpportunity.data.archive.date != null
-          && opportunity.data.archive.date !== parentOpportunity.data.archive.date;
+          && opportunity.data.archive.date != null && parent.data != null && parent.data.archive != null
+          && parent.data.archive.date != null
+          && opportunity.data.archive.date !== parent.data.archive.date;
 
         this.displayField[OpportunityFields.OriginalArchiveDate] = originalArchiveDateCondition;
 
         let originalSetAsideCondition = opportunity.data != null && opportunity.data.solicitation != null
-          && opportunity.data.solicitation.setAside != null && parentOpportunity.data != null
-          && parentOpportunity.data.solicitation != null && parentOpportunity.data.solicitation.setAside != null
-          && opportunity.data.solicitation.setAside !== parentOpportunity.data.solicitation.setAside;
+          && opportunity.data.solicitation.setAside != null && parent.data != null
+          && parent.data.solicitation != null && parent.data.solicitation.setAside != null
+          && opportunity.data.solicitation.setAside !== parent.data.solicitation.setAside;
 
         this.displayField[OpportunityFields.OriginalSetAside] = originalSetAsideCondition;
       }
@@ -259,5 +279,17 @@ export class OpportunityPage implements OnInit {
         || this.opportunity.data.pointOfContact[index].fax != null);
     }
     return false;
+  }
+
+  private isSecure(field: string){
+    if(field === "Public"){
+      return "No";
+    } else {
+      return "Yes"
+    }
+  }
+
+  public getDownloadFileURL(fileID: string){
+    return API_UMBRELLA_URL + '/cfda/v1/file/' + fileID + "?api_key=" + API_UMBRELLA_KEY;
   }
 }
