@@ -21,6 +21,10 @@
   }
 }
 
+.break-word {
+  word-wrap: break-word;
+}
+
 .sr-only {
   position: absolute;
   overflow: hidden;
