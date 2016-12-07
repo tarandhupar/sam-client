@@ -9,7 +9,6 @@ import { OpportunityFields } from "./opportunity.fields";
 @Component({
   moduleId: __filename,
   templateUrl: 'opportunity.page.html',
-  styleUrls: ['opportunity.style.css'],
   providers: [
     OpportunityService,
     FilterMultiArrayObjectPipe
