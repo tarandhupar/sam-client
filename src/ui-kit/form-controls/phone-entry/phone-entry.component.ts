@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild,Output, EventEmitter } from '@angular/core';
+import { Component, Input, ViewChild,Output, EventEmitter,OnInit } from '@angular/core';
 import { LabelWrapper } from '../wrapper/label-wrapper.component';
 
 /**
@@ -12,22 +12,27 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
   selector: 'samPhoneEntry',
   template: `
     <labelWrapper [label]="'Phone Number'" [name]="getIdentifer('phone-number')" [errorMessage]="errorMsg">
-      <input (blur)="check()" maxlength="15" #phoneInput class="" [value]="phoneNumberTemplate" (keydown)="process($event)" id="{{getIdentifer('phone-number')}}" name="{{getIdentifer('phone-number')}}" type="text">
+      <input (blur)="check()" maxlength="15" #phoneInput class="" [value]="phoneNumberMirror" (keydown)="process($event)" id="{{getIdentifer('phone-number')}}" name="{{getIdentifer('phone-number')}}" type="text">
     </labelWrapper>
   `,
 })
-export class SamPhoneEntryComponent {
+export class SamPhoneEntryComponent implements OnInit{
   @Input() model: string = "";
   @Input() prefix: string = "";
   @ViewChild("phoneInput") phoneInput;
   @Output() emitter = new EventEmitter<string>();
   errorMsg: string = "";
   phoneNumberTemplate = "_+(___)___-____";
+  phoneNumberMirror = this.phoneNumberTemplate;
   phoneNumber = this.phoneNumberTemplate;
   badIndex = [1,2,6,10];
   constructor() { }
 
   ngOnInit() {
+    if(this.model.length>0){
+      this.phoneNumberMirror = this.model;
+      this.phoneNumber = this.model;
+    }
   }
 
   getIdentifer(str){
