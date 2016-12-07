@@ -11,7 +11,7 @@
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
-        <li><a href="{{ currentUrl }}#package">Packages</a></li>
+        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
         <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
         <li><a href="{{ currentUrl }}#history">History</a></li>
       </ul>
@@ -202,37 +202,64 @@
       <div [innerHTML]="opportunity.data?.descriptions[0].content | fixhtml"></div>
     </section>
 
-    <div class="usa-width-one-whole">
-      <h2>Packages</h2>
-      <ng-container *ngIf="attachment">
-        <ng-container *ngFor="let package of attachment.packages">
-          <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
-          <p><b>Type:</b> {{ package.type }}</p>
-          <p><b>Date Posted:</b> {{ package.postedDate | dateFormat: 'MMM DD, YYYY' }}    <b>Secure:</b>{{isSecure(package.access)}}</p>
-          <ng-container *ngIf = "package.access === 'Private'">Secure/sensitive attachments are not currently available, please go to <a href="https://www.fbo.gov/">FBO.gov</a> to view this attachment.</ng-container>
-          <ng-container *ngIf="package.access === 'Public'">
-            <!--<p>It's public</p>-->
-            <ng-container *ngFor="let element of package.attachments">
-              <!--<p>Element: {{element}}</p>-->
-              <ng-container *ngFor="let resource of attachment.resources">
-                <!--<p>Resource: {{resource}}</p>-->
-                <ng-container *ngIf="element.resourceId === resource.resourceId">
-                  <!--<p>Description</p>-->
-                  <ng-container *ngIf="resource.type === 'link'">
-                    <p><a href="{{resource.uri}}">{{resource.description}}</a></p>
-                  </ng-container>
-                  <ng-container *ngIf="resource.type === 'file'">
-                    <p><a href="{{getDownloadFileURL(resource.resourceId)}}">{{resource.description}}</a></p>
-                  </ng-container>
+    <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
 
-                </ng-container>
+      <h2>Packages</h2>
+
+      <!-- Header -->
+      <div class="card" *ngFor="let package of attachment.packages">
+
+        <!-- It's public -->
+        <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" (click)="toggleAccordion(package)">
+          <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
+          <strong>Type: {{ package.type }}</strong>
+        </div>
+
+        <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
+          <li *ngFor="let element of package.attachments">
+            <!-- Element -->
+            <ng-container *ngFor="let resource of attachment.resources">
+              <!-- Resource -->
+              <ng-container *ngIf="element.resourceId === resource.resourceId">
+                <!-- Description -->
+                <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
+                  {{resource.description}}
+                </a>
+                <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
+                  {{resource.description}}
+                </a>
               </ng-container>
             </ng-container>
-          </ng-container>
-        </ng-container>
-      </ng-container>
+          </li>
+        </ul>
 
-    </div>
+        <!-- Its private -->
+        <div *ngIf="package.access === 'Private'" class="card-header-secure">
+          <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
+          <strong>Type: {{ package.type }}</strong>
+        </div>
+
+        <div *ngIf="package.access === 'Private'" class="card-secure-content">
+          <p>
+            <i class="fa fa-lock fa-3x fa-pull-left" aria-hidden="true"></i>
+            <em>Secure/sensitive attachments are not currently available, please go to <a href="https://www.fbo.gov/">FBO.gov</a> to view this attachment.</em>
+          </p>
+        </div>
+
+        <!-- Extra options -->
+        <div class="card-extra-content">
+          <div class="label-container-inline">
+            <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+            <strong>Posted on {{ package.postedDate | dateFormat: 'MMM DD, YYYY' }}</strong>
+          </div>
+          <div class="label-container-inline" style="float: right;">
+            <i class="fa" [ngClass]="{'fa-unlock' : package.access === 'Public', 'fa-lock': package.access === 'Private'}" aria-hidden="true"></i>
+            <strong>{{isSecure(package.access)}}</strong>
+          </div>
+        </div>
+      </div>
+
+    </section>
 
 
     <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
