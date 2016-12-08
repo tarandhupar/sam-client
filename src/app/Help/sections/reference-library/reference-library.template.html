@@ -8,13 +8,17 @@
   <h3 id="featuredReference" class="p_L-3x">Featured References</h3>
   <h4 class="p_L-8x">Federal Assistance</h4>
   <div class="usa-grid">
-    <div class="usa-width-one-whole m_L-8x relative reference-image-container">
+    <div class="usa-width-one-whole m_L-8x relative" [ngClass]="getImageContainerClass()">
       <div class="usa-width-one-whole">
-        <div class="usa-width-one-third pull-right" *ngFor="let item of data.Federal; let i= index">
-          <div class="usa-width-three-fourths image-wrap relative black-border" tabindex="0" (keyup.enter)="selectDetail(item,'Federal')">
-            <a [id]="'federal_assistance-icon-'+i" class="featured-reference-toggle" (click)="selectDetail(item,'Federal')"><i class="fa fa-plus" [ngClass]="getItemClass(item,'Federal')"></i></a>
-            <a [id]="'federal_assistance-image-'+i" class="featured-reference-imagelink" (click)="selectDetail(item,'Federal')"><img class="reference-image" src="../assets/img/placeholder.jpg"></a>
-            <span [id]="'federal_assistance-link-'+i"  (click)="selectDetail(item,'Federal')" class="featured-reference-title">{{item.title}}</span>
+        <div class="usa-width-one-third" *ngFor="let item of data.Federal; let i= index">
+          <div class="usa-width-three-fourths image-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,'Federal',$event)" [ngClass]="getBorderClass(i,'Federal')">
+            <div [ngClass]="getLayerClass(i,'Federal')" class="reference-image-layer-unselect" (click)="selectDetail(item,'Federal',$event)">
+              <span class="featured-reference-toggle" (click)="selectDetail(item,'Federal',$event)">
+                <i [id]="'federal_assistance-icon-'+i" class="fa fa-plus" [ngClass]="getItemClass(item,'Federal')"></i>
+              </span>
+              <span [id]="'federal_assistance-link-'+i" class="featured-reference-title" (click)="selectDetail(item,'Federal',$event)">{{item.title}}</span>
+            </div>
+            <img class="reference-image" src="../assets/img/placeholder.jpg" alt="{{item.title}}">
           </div>
         </div>
       </div>
@@ -27,20 +31,16 @@
     </div>
 
     <div class="usa-width-one-whole m_L-8x relative" *ngIf = "detailObj.Federal.showDetail">
-      <div class="usa-width-one-twelfth div-right">&nbsp;</div>
-      <div class="div-fill relative black-border ">
-        <div class="usa-width-one-whole div-fill">
+      <div class="usa-width-one-twelfth div-right" *ngIf ="largeScreen()">&nbsp;</div>
+      <div class="div-fill relative black-border">
+        <div class="usa-width-one-whole div-fill relative">
 
-          <span class="featured-reference-toggle"><a (click)="closeReferenceDetail('Federal')">
-            <i class="fa fa-minus"></i></a>
-          </span>
-          <div class="usa-width-one-whole">
-            <img class="usa-width-one-whole p_R-4x p_L-4x" src="../assets/img/ECFR.png">
-            <p class="p_L-1x p_R-1x p_B-1x federal-detail">{{detailObj.Federal.detail}}</p>
-            <span class="reference-content-link usa-external_link"><a>External Link</a></span>
-
+          <a class="featured-reference-close" (click)="closeReferenceDetail('Federal')">Close</a>
+          <div class="usa-width-one-whole m_T-4x">
+              <h3 class="p_L-2x">{{detailObj.Federal.item.title}}</h3>
+              <p class="p_L-5x p_R-2x p_B-1x contract-detail">{{detailObj.Federal.item.detail}}</p>
+              <span class="reference-content-link usa-external_link"><a href="{{detailObj.Federal.item.url}}">{{detailObj.Federal.item.link}}</a></span>
           </div>
-
         </div>
       </div>
     </div>
@@ -49,13 +49,17 @@
 
   <h4 class="p_L-8x">Contracts</h4>
   <div class="usa-grid">
-    <div class="usa-width-one-whole m_L-8x relative reference-image-container">
+    <div class="usa-width-one-whole m_L-8x relative" [ngClass]="getImageContainerClass()">
       <div class="usa-width-one-whole">
-        <div class="usa-width-one-third pull-right" *ngFor="let item of data.Contract; let i= index">
-          <div class="usa-width-three-fourths image-wrap relative black-border" tabindex="0" (keyup.enter)="selectDetail(item,'Contract')">
-            <a [id]="'contract-icon-'+i" class="featured-reference-toggle" (click)="selectDetail(item,'Contract')"><i class="fa fa-plus" [ngClass]="getItemClass(item,'Contract')"></i></a>
-            <a [id]="'contract-image-'+i" (click)="selectDetail(item,'Contract')"><img class="reference-image" src="../assets/img/placeholder.jpg"></a>
-            <span [id]="'contract-link-'+i" (click)="selectDetail(item,'Contract')" class="featured-reference-title">{{item.title}}</span>
+        <div class="usa-width-one-third" *ngFor="let item of data.Contract; let i= index">
+          <div class="usa-width-three-fourths image-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,'Contract',$event)" [ngClass]="getBorderClass(i,'Contract')">
+            <div [id]="'contract-div-'+i" [ngClass]="getLayerClass(i,'Contract')" class="reference-image-layer-unselect" (click)="selectDetail(item,'Contract',$event)">
+              <span class="featured-reference-toggle" (click)="selectDetail(item,'Contract',$event)">
+                <i [id]="'contract-icon-'+i" class="fa fa-plus" [ngClass]="getItemClass(item,'Contract')"></i>
+              </span>
+              <span [id]="'contract-link-'+i" class="featured-reference-title" (click)="selectDetail(item,'Contract',$event)">{{item.title}}</span>
+            </div>
+            <img class="reference-image" src="../assets/img/placeholder.jpg" alt="{{item.title}}">
           </div>
         </div>
       </div>
@@ -69,20 +73,16 @@
 
 
     <div class="usa-width-one-whole m_L-8x relative" *ngIf = "detailObj.Contract.showDetail">
-      <div class="usa-width-one-twelfth div-right">&nbsp;</div>
+      <div class="usa-width-one-twelfth div-right" *ngIf ="largeScreen()">&nbsp;</div>
       <div class="div-fill relative black-border">
         <div class="usa-width-one-whole div-fill relative">
 
-          <span class="featured-reference-toggle"><a (click)="closeReferenceDetail('Contract')">
-            <i class="fa fa-minus"></i></a>
-          </span>
-          <div class="usa-width-one-whole">
-            <img class="usa-width-one-whole p_R-4x p_L-4x" src="../assets/img/ECFR.png">
-            <p class="p_L-1x p_R-1x p_B-1x contract-detail">{{detailObj.Contract.detail}}</p>
-            <span class="reference-content-link usa-external_link"><a>External Link</a></span>
+          <a class="featured-reference-close" (click)="closeReferenceDetail('Contract')">Close</a>
+          <div class="usa-width-one-whole m_T-4x">
+              <h3 class="p_L-2x">{{detailObj.Contract.item.title}}</h3>
+              <p class="p_L-5x p_R-2x p_B-1x contract-detail">{{detailObj.Contract.item.detail}}</p>
+              <span class="reference-content-link usa-external_link"><a  href="{{detailObj.Contract.item.url}}">{{detailObj.Contract.item.link}}</a></span>
           </div>
-
-
         </div>
       </div>
     </div>
@@ -92,24 +92,27 @@
   <div class="usa-grid-full">
     <div class="usa-width-one-whole m_L-8x">
       <div class="usa-width-one-third">
-        <h4>Catagory One</h4>
-        <h5>SubCatagory</h5>
+        <h4>Accessibility Resources</h4>
+        <h5>Federal Accessibility Initiative</h5>
         <ul class="usa-unstyled-list">
-          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
-          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
-          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+          <li class="m_B"><a class="usa-external_link" href="http://www.section508.gov/">Section 508</a></li>
+          <li class="m_B"><a class="usa-external_link" href="http://dodcio.defense.gov/DoDSection508.aspx">DoD Section 508</a></li>
+        </ul>
+        <h5 class="m_T-2x">W3C Accessibility Initiative</h5>
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="https://www.w3.org/WAI/">Web Accessibility Initiative</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.w3.org/TR/WCAG10-TECHS/">Web Accessibility Guidelines</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.w3.org/WAI/wcag-curric/oversam.htm/">Web Accessibility Curriculum</a></li>
         </ul>
       </div>
       <div class="usa-width-one-third">
-        <h4>Catagory Two</h4>
-        <h5>SubCatagory</h5>
+        <h4>Additional Resources</h4>
         <ul class="usa-unstyled-list">
-          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
-          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
-        </ul>
-        <h5>SubCatagory</h5>
-        <ul class="usa-unstyled-list">
-          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.digitalgov.gov/resources/required-web-content-and-links/">Digital Gov</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.whitehouse.gov/omb/circulars/a133_compliance_supplement_2016">
+            OMB Compliance Supplement</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.ppirssrng.csd.disa.mil/">PPIRS-SR NG</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://oamp.od.nih.gov/acquisition-offices/contract-tool-box/federal-links">Federal Procurement Links</a></li>
         </ul>
       </div>
       <div class="usa-width-one-third">
