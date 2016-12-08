@@ -66,7 +66,7 @@ export class AlertsPage {
   }
 
   doSearch() {
-    this.getAlerts().last().catch(err => {
+    this.getAlerts().catch(err => {
       this.router.navigate([ERROR_PAGE_PATH]);
       return Observable.of(err);
     })

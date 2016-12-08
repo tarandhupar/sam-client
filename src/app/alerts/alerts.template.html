@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="alert-count">
-    Showing {{alerts.length}} of <i>{{totalAlerts()}}</i>
+    Showing {{alerts.length}} of {{totalAlerts()}}
   </div>
   <div *ngFor="let alert of alerts" class="alert-block">
     <alert-item [alert]="alert"></alert-item>
