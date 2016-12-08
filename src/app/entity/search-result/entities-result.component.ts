@@ -34,13 +34,8 @@ import Moment = moment.Moment;
             <ul class="usa-unstyled-list">
               <li><span>{{ data.registrationPurpose }}</span></li>
             </ul>
-          </li>    
-          <li><strong>Active Exclusions: </strong>
-            <ul class="usa-unstyled-list">
-              <li><span>{{ data.hasExclusions==true ? 'Yes' : 'No' }}</span></li>
-            </ul>
-          </li>    
-          <li><strong>Delinquent federal debt: </strong>
+          </li>      
+          <li><strong>Delinquent Federal Debt: </strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.hasDelinquentDebt==true ? 'Yes' : 'No' }}</span></li>
             </ul>
