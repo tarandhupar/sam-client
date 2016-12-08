@@ -136,3 +136,15 @@ hr {
     background-color: transparent;
   }
 }
+
+.usa-color-info {
+  background-color: $color-primary-alt-lightest;
+}
+
+.usa-color-warning {
+  background-color: $color-gold-lightest;
+}
+
+.usa-color-error {
+  background-color: $color-secondary-lightest;
+}

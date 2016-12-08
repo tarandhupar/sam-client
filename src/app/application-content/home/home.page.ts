@@ -25,8 +25,6 @@ export class HomePage {
 
   ngOnInit() {
     globals.isDefaultHeader = false;
-    console.log("Home Page");
-
   }
 
   ngOnDestroy() {

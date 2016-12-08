@@ -23,6 +23,8 @@
 @import 'components/searchbar';
 @import 'components/header-links';
 @import 'components/search-header';
+@import 'components/multiselect-dropdown';
+@import 'components/alert-item';
 
 @import 'pages/assistance-listing';
 @import 'pages/help';
@@ -31,6 +33,7 @@
 @import 'pages/organization';
 @import 'pages/search';
 @import 'pages/reference-library';
+@import 'pages/alerts';
 
 html, body{
   height: 100%;
