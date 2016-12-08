@@ -110,4 +110,16 @@ export class ReferenceLibraryComponent {
     }
     return "item-border-unselect";
   }
+
+  private largeScreen(): boolean{
+    return window.innerWidth >= 1200;
+  }
+
+  private getImageContainerClass(): string{
+    if(this.largeScreen()){
+      return "reference-image-container"
+    }
+    return "reference-image-container-small"
+
+  }
 }

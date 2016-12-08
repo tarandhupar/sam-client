@@ -8,9 +8,9 @@
   <h3 id="featuredReference" class="p_L-3x">Featured References</h3>
   <h4 class="p_L-8x">Federal Assistance</h4>
   <div class="usa-grid">
-    <div class="usa-width-one-whole m_L-8x relative reference-image-container">
+    <div class="usa-width-one-whole m_L-8x relative" [ngClass]="getImageContainerClass()">
       <div class="usa-width-one-whole">
-        <div class="usa-width-one-third pull-right" *ngFor="let item of data.Federal; let i= index">
+        <div class="usa-width-one-third" *ngFor="let item of data.Federal; let i= index">
           <div class="usa-width-three-fourths image-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,'Federal',$event)" [ngClass]="getBorderClass(i,'Federal')">
             <div [ngClass]="getLayerClass(i,'Federal')" class="reference-image-layer-unselect" (click)="selectDetail(item,'Federal',$event)">
               <span class="featured-reference-toggle" (click)="selectDetail(item,'Federal',$event)">
@@ -18,7 +18,7 @@
               </span>
               <span [id]="'federal_assistance-link-'+i" class="featured-reference-title" (click)="selectDetail(item,'Federal',$event)">{{item.title}}</span>
             </div>
-            <img class="reference-image" src="../assets/img/placeholder.jpg">
+            <img class="reference-image" src="../assets/img/placeholder.jpg" alt="{{item.title}}">
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
     </div>
 
     <div class="usa-width-one-whole m_L-8x relative" *ngIf = "detailObj.Federal.showDetail">
-      <div class="usa-width-one-twelfth div-right">&nbsp;</div>
+      <div class="usa-width-one-twelfth div-right" *ngIf ="largeScreen()">&nbsp;</div>
       <div class="div-fill relative black-border">
         <div class="usa-width-one-whole div-fill relative">
 
@@ -49,9 +49,9 @@
 
   <h4 class="p_L-8x">Contracts</h4>
   <div class="usa-grid">
-    <div class="usa-width-one-whole m_L-8x relative reference-image-container">
+    <div class="usa-width-one-whole m_L-8x relative" [ngClass]="getImageContainerClass()">
       <div class="usa-width-one-whole">
-        <div class="usa-width-one-third pull-right" *ngFor="let item of data.Contract; let i= index">
+        <div class="usa-width-one-third" *ngFor="let item of data.Contract; let i= index">
           <div class="usa-width-three-fourths image-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,'Contract',$event)" [ngClass]="getBorderClass(i,'Contract')">
             <div [id]="'contract-div-'+i" [ngClass]="getLayerClass(i,'Contract')" class="reference-image-layer-unselect" (click)="selectDetail(item,'Contract',$event)">
               <span class="featured-reference-toggle" (click)="selectDetail(item,'Contract',$event)">
@@ -59,7 +59,7 @@
               </span>
               <span [id]="'contract-link-'+i" class="featured-reference-title" (click)="selectDetail(item,'Contract',$event)">{{item.title}}</span>
             </div>
-            <img class="reference-image" src="../assets/img/placeholder.jpg">
+            <img class="reference-image" src="../assets/img/placeholder.jpg" alt="{{item.title}}">
           </div>
         </div>
       </div>
@@ -73,7 +73,7 @@
 
 
     <div class="usa-width-one-whole m_L-8x relative" *ngIf = "detailObj.Contract.showDetail">
-      <div class="usa-width-one-twelfth div-right">&nbsp;</div>
+      <div class="usa-width-one-twelfth div-right" *ngIf ="largeScreen()">&nbsp;</div>
       <div class="div-fill relative black-border">
         <div class="usa-width-one-whole div-fill relative">
 
