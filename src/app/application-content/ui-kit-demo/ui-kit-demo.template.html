@@ -214,10 +214,9 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
     <h2>Agency picker &lt;agencyPicker&gt;</h2>
-    <label>Multiple Organizations:</label>
-    <agencyPicker [multimode]="true"></agencyPicker>
-    <label>Single Organization:</label>
-    <agencyPicker [multimode]="false"></agencyPicker>
+    <agencyPicker [hint]="'Please select one or more organization filters'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker>
+    <agencyPicker [hint]="'Please select one organization'" [label]="'Filter by Organization:'" [multimode]="false"></agencyPicker>
+    <agencyPicker [orgRoot]="100006688" [hint]="'Please select one or more organization filters under GSA'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker>
   </div>
 </div>
 <br/>

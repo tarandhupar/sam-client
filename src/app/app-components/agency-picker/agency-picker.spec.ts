@@ -85,10 +85,24 @@ describe('AgencyPickerTests', () => {
 
   }));
 
-  it('sample test', ()  => {
+  it('hint test', ()  => {
+    comp.hint = "dummy text";
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect("ABCDEFG").toEqual("ABCDEFG");
+      let nativeElement = fixture.nativeElement;
+      console.log(nativeElement.querySelector('.usa-form-hint').textContent);
+      expect(nativeElement.querySelector('.usa-form-hint').textContent).toEqual("dummy text");
     });
 	});
+
+  it('label test', ()  => {
+    comp.label = "dummy label";
+    fixture.detectChanges();
+    fixture.whenStable().then(() => {
+      let nativeElement = fixture.nativeElement;
+      console.log(nativeElement.querySelector('.organization-container > label').textContent);
+      expect(nativeElement.querySelector('.organization-container > label').textContent).toEqual("dummy label");
+    });
+  });
+
 });
