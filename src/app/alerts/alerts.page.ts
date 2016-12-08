@@ -110,6 +110,6 @@ export class AlertsPage {
   }
 
   totalPages(): number {
-    return this.totalAlerts / ALERTS_PER_PAGE;
+    return Math.floor(this._totalAlerts / ALERTS_PER_PAGE) + 1;
   }
 }
