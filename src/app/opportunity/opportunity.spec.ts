@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
+import { FixHTMLPipe } from "./pipes/fix-html.pipe";
 
 let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
@@ -22,7 +23,7 @@ let MockOpportunityService = {
   getOpportunityById(id: string) {
     return Observable.of({
       "opportunityId": "213ji321hu3jk123",
-      "parentOpportunity": {
+      "parent": {
         "opportunityId": "0000b08b003c3a28ae6f9dd254e4a9c8"
       },
       "data": {
@@ -170,6 +171,72 @@ let MockOpportunityService = {
       "street": "PO Box 26015 5430 Knauth Road",
       "state": "TX"
     });
+  },
+  getAttachmentById(id: String) {
+    return Observable.of({
+      packages: [
+        {
+          packageId: "1ccd07afdd57069cedb998a7cf02a85d",
+          name: "Solicitation 1",
+          type: "Solicitation",
+          postedDate: 1452124800000,
+          access: "Public",
+          attachments: [
+            {
+              attachmentId: "221e068991250e6e3dfd42920592e6a6",
+              resourceId: "3a6434285f304b1c0210af324320a33c"
+            },
+            {
+              attachmentId: "2bc535a8a9413df6378f2073a1dce418",
+              resourceId: "5b8be0a5def80f9cd690d9c41b3a01c1"
+            }
+          ]
+        },
+        {
+          packageId: "18fd4a18e69c946b517963756590a0af",
+          name: "Solicitation 1",
+          type: "Solicitation",
+          postedDate: 1452124800000,
+          access: "Public",
+          attachments: [
+            {
+              attachmentId: "6ba9fd3a836e2cc9a6b9a6f6bda76c6f",
+              resourceId: "6ba9fd3a836e2cc9a6b9a6f6bda76c6f"
+            }
+          ]
+        }
+      ],
+      resources: [
+        {
+          resourceId: "6ba9fd3a836e2cc9a6b9a6f6bda76c6f",
+          name: "",
+          type: "link",
+          uri: "http://www.wdol.gov/wdol/scafiles",
+          description: "Wage Determination",
+          mimeType: ""
+        },
+        {
+          resourceId: "3a6434285f304b1c0210af324320a33c",
+          name: "506-09b_Blank_vendor_questionnaire.docx",
+          type: "file",
+          uri: "506-09b_Blank_vendor_questionnaire.docx",
+          description: "Vendor Questionnaire",
+          mimeType: "application/vnd.openxmlformats-o"
+        },
+        {
+          resourceId: "5b8be0a5def80f9cd690d9c41b3a01c1",
+          name: "STLJC2016-001_REKEYING.docx",
+          type: "file",
+          uri: "STLJC2016-001_REKEYING.docx",
+          description: "Scope of Work",
+          mimeType: "application/vnd.openxmlformats-o"
+        }
+      ],
+      _links: {
+        self: {
+          href: "http://10.98.29.81:122/v1/opportunity/7e5a8c7c4742472a1ac9faef90042e56/attachments"
+        }
+      });
   }
 };
 
@@ -188,7 +255,7 @@ let MockFHService = {
 describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe], // declare the test component
+      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe], // declare the test component
       imports: [
         PipesModule,
         HttpModule,
@@ -235,6 +302,7 @@ describe('OpportunityPage', () => {
     expect(comp.opportunity).toBeDefined();
     expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
+    expect(comp.attachment).toBeDefined();
     expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
   });

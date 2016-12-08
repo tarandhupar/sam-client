@@ -83,8 +83,8 @@ export class UIKitDemoPage {
     lastName: "Doe",
     suffix: "Sr."
   };
-
   phoneModel = "";
+  phoneModel2 = "1+(123)456-3366";
 
 
   constructor() {  }

@@ -9,17 +9,8 @@ import { HelpModule } from "../../help.module"
 describe('Reference Library page in online help', () => {
   let component:ReferenceLibraryComponent;
   let fixture:any;
-
-  let federalItemConfig = {
-    title:"Data Element Repository",
-    detail:"Details for Data Element Repository: ",
-  };
-
-  let contractItemConfig = {
-    title:"Federal Acquisition Regulation",
-    detail:"Details for Data Element Repository: ",
-  };
-
+  let federalItemConfig: any;
+  let contractItemConfig: any;
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -29,6 +20,19 @@ describe('Reference Library page in online help', () => {
     });
     fixture = TestBed.createComponent(ReferenceLibraryComponent);
     component = fixture.componentInstance;
+    federalItemConfig = {
+      title:"Data Element Repository",
+      detail:"Details for Data Element Repository: "+component.detailLipsum,
+      link:"view the e-CFR",
+      url:"fakeUrl"
+    };
+
+    contractItemConfig = {
+      title:"Federal Acquisition Regulation",
+      detail:"Details for Federal Acquisition Regulation: "+component.detailLipsum,
+      link:"view the FAR",
+      url:"fakeUrl"
+    };
   });
 
   it('should compile', () => {
@@ -46,42 +50,53 @@ describe('Reference Library page in online help', () => {
     expect(additionalRef.nativeElement.innerHTML).toBe("Additional References");
   });
 
-  it('should toggle federal assistance detail when clicking on federal assistance image, link or icon', ()=>{
-    fixture.detectChanges();
-    expect(component.detailObj.Federal.showDetail).toBe(false);
-    component.selectDetail(federalItemConfig,"Federal");
-    expect(component.detailObj.Federal.showDetail).toBe(true);
-    component.selectDetail(federalItemConfig,"Federal");
-    expect(component.detailObj.Federal.showDetail).toBe(false);
-  });
-
-  it('should open contract detail when clicking on contract image',  ()=>{
+  it('should open contract detail when clicking on contract icon',  ()=>{
     fixture.detectChanges();
     expect(component.detailObj.Contract.showDetail).toBe(false);
-    let imageLink = fixture.debugElement.query(By.css("#contract-image-0"));
-    imageLink.triggerEventHandler('click',null);
+    fixture.nativeElement.querySelector('#contract-icon-0').click();
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let contractDetail = fixture.debugElement.query(By.css(".contract-detail"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail+component.detailLipsum);
+      expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail);
       expect(component.detailObj.Contract.showDetail).toBe(true);
     });
-
   });
 
-  it('should hide contract detail when clicking on the same contract image while the corresponding detail is open', ()=>{
+  it('should open contract detail when clicking on contract link',  ()=>{
+    fixture.detectChanges();
+    expect(component.detailObj.Contract.showDetail).toBe(false);
+    fixture.nativeElement.querySelector('#contract-link-0').click();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      let contractDetail = fixture.debugElement.query(By.css(".contract-detail"));
+      expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail);
+      expect(component.detailObj.Contract.showDetail).toBe(true);
+    });
+  });
+
+  it('should open contract detail when clicking on contract semi-transparent div',  ()=>{
+    fixture.detectChanges();
+    expect(component.detailObj.Contract.showDetail).toBe(false);
+    fixture.nativeElement.querySelector('#contract-div-0').click();
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      let contractDetail = fixture.debugElement.query(By.css(".contract-detail"));
+      expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail);
+      expect(component.detailObj.Contract.showDetail).toBe(true);
+    });
+  });
+
+  it('should hide contract detail when clicking on the same contract icon while the corresponding detail is open', ()=>{
     component.detailObj.Contract.showDetail = true;
-    component.detailObj.Contract.title = contractItemConfig.title;
-    component.detailObj.Contract.detail = contractItemConfig.detail+component.detailLipsum;
+    component.detailObj.Contract.item = contractItemConfig;
     fixture.detectChanges();
     let contractDetail = fixture.debugElement.query(By.css(".contract-detail"));
-    expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail+component.detailLipsum);
-    let imageLink = fixture.debugElement.query(By.css("#contract-image-0"));
-    imageLink.triggerEventHandler('click',null);
+    expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail);
+    fixture.nativeElement.querySelector('#contract-icon-0').click();
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       expect(component.detailObj.Contract.showDetail).toBe(false);
     });
   });
-
+  
 });

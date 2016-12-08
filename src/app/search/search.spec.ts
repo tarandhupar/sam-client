@@ -10,6 +10,7 @@ import { AssistanceListingResult } from '../assistance-listing/search-result/ass
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
 import { FederalHierarchyResult } from '../organization/search-result/federal-hierarchy-result.component';
 import { EntitiesResult } from '../entity/search-result/entities-result.component';
+import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.component';
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
 
 var fixture;
@@ -31,8 +32,11 @@ var searchServiceStub = {
           _type:"ENT",
           title:"Dummy Result 4"
         },{
-          _type:"WD",
+          _type:"EX",
           title:"Dummy Result 5"
+        },{
+          _type:"WD",
+          title:"Dummy Result 6"
         }],
       },
       page: {
@@ -48,7 +52,7 @@ var searchServiceStub = {
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,WageDeterminationResult ],
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult ],
       providers: [ ],
       imports: [
         SamUIKitModule,
