@@ -15,6 +15,7 @@ export const ALERTS_PER_PAGE: number = 5;
 export class AlertsPage {
 
   alerts:Alert[] = [];
+  _totalAlerts:number;
 
   currentPage: number = this.defaultPage();
   sortField = this.defaultSort();
@@ -70,7 +71,8 @@ export class AlertsPage {
       return Observable.of(err);
     })
     .subscribe(alerts => {
-      this.alerts = alerts.map(alert => Alert.FromResponse(alert));
+      this._totalAlerts = alerts.total;
+      this.alerts = alerts.alerts.map(alert => Alert.FromResponse(alert));
     })
   }
 
@@ -97,18 +99,17 @@ export class AlertsPage {
     this.doSearch();
   }
 
-  defaultSort() { return 'pda'; }
+  defaultSort() { return 'pdd'; }
   defaultStatuses() { return ['N']; }
   defaultTypes() { return ['Error', 'Informational', 'Warning']; }
   defaultPage() { return 1; }
   defaultDatePublished() { return '30d'; }
 
   totalAlerts(): number {
-    // TODO: get real value
-    return 100;
+    return this._totalAlerts;
   }
 
   totalPages(): number {
-    return this.totalAlerts() / ALERTS_PER_PAGE;
+    return this.totalAlerts / ALERTS_PER_PAGE;
   }
 }

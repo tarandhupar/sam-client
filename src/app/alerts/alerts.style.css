@@ -31,9 +31,12 @@
 }
 
 .alert-block {
+  padding-bottom: 12px;
+}
+
+.alert-block:not(:last-child) {
   margin-bottom: 12px;
   border-bottom: 1px solid grey;
-  padding-bottom: 12px;
 }
 
 .alert-page-title {
