@@ -39,10 +39,6 @@ h5{
   right: 10px;
 }
 
-.reference-image{
-
-}
-
 .reference-image-layer-unselect, .reference-image-layer-select{
   z-index: 100;
   width: 100%;
@@ -74,7 +70,6 @@ h5{
 
 .black-border{
   border: 2px solid #000;
-  /*change for detail border*/
 }
 
 .div-fill{
@@ -114,7 +109,6 @@ h5{
   bottom: -15px;
   left: 30%;
   border-top-color: #000;
-/*change for detail border*/
   border-width: 15px;
 }
 
@@ -130,7 +124,6 @@ h5{
 
 .item-border-unselect:hover, .item-border-select{
   border: 2px #000 solid;
-  /*change for icon border*/
 }
 
 .white-text{
