@@ -25,9 +25,9 @@ export class ReferenceLibraryComponent {
   private data: any={
     Federal: [
         {
-          title:"Benifits.gov Learning Center",
-          detail:"Benifits.gov Learning Center: "+this.detailLipsum,
-          link:"View Benifits.gov",
+          title:"Benefits.gov Learning Center",
+          detail:"Benefits.gov Learning Center: "+this.detailLipsum,
+          link:"View Benefits.gov",
           url:"http://www.Benefits.gov"
         },
         {
