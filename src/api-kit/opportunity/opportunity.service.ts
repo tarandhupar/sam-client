@@ -29,16 +29,16 @@ export class OpportunityService{
     return this.oAPIService.call(apiParam);
   }
 
-  // getOpportunityLocationById(id: string) {
-  //   let apiParam = {
-  //       name: 'opportunity',
-  //       suffix: '/' + id + '/location',
-  //       oParam: {},
-  //       method: 'GET'
-  //   };
-  //
-  //   return this.oAPIService.call(apiParam);
-  // }
+  getOpportunityLocationById(id: string) {
+    let apiParam = {
+        name: 'opportunity',
+        suffix: '/' + id + '/location',
+        oParam: {},
+        method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
 
   getOpportunityDictionary(ids: string) {
     let apiParam = {
@@ -48,6 +48,17 @@ export class OpportunityService{
           ids: ids
         },
         method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
+
+  getAttachmentById(id: string){
+    let apiParam = {
+      name: 'opportunity',
+      suffix: '/' + id + '/attachments',
+      oParam: {},
+      method: 'GET'
     };
 
     return this.oAPIService.call(apiParam);

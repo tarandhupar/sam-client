@@ -6,7 +6,6 @@ import { globals } from '../../app/globals.ts';
 @Component({
   selector: 'SamHeaderLinks',
   templateUrl: 'header-links.template.html',
-  styleUrls: [ 'header-links.style.css' ]
 })
 export class SamHeaderLinksComponent{
 
@@ -15,8 +14,8 @@ export class SamHeaderLinksComponent{
   onDropdownToggle:EventEmitter<any> = new EventEmitter<any>();
 
   private startCheckOutsideClick:boolean = false;
-  private showDropdown:boolean = false;
-  private dropdownData:any = [
+  showDropdown:boolean = false;
+  dropdownData:any = [
     {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/", pageInProgress:false},
     {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/", pageInProgress:true},
     {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/", pageInProgress:true},
@@ -28,11 +27,10 @@ export class SamHeaderLinksComponent{
   constructor(private _router:Router) { }
 
   onMenuClick(){
+    this.showDropdown = !this.showDropdown;
+    this.onDropdownToggle.emit(this.showDropdown);
     setTimeout(()=>{
-      this.showDropdown = !this.showDropdown;
-      this.onDropdownToggle.emit(this.showDropdown);
       this.startCheckOutsideClick = this.showDropdown;
-
     });
 
   }

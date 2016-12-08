@@ -4,8 +4,7 @@ import { OptionsType } from '../form-controls/types';
 
 @Component({
     selector: 'samMultiSelectDropdown',
-    templateUrl: 'multiselect-dropdown.template.html',
-    styleUrls: ['multiselect-dropdown.scss']
+    templateUrl: 'multiselect-dropdown.template.html'
 })
 export class SamMultiSelectDropdownComponent implements OnChanges {
 

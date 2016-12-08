@@ -1,84 +1,84 @@
-.alerts-toolbar {
-  display: table;
-  margin-bottom: 12px;
-}
+/*.alerts-toolbar {*/
+  /*display: table;*/
+  /*margin-bottom: 12px;*/
+/*}*/
 
-.alert-count {
-  margin-bottom: 40px;
-}
+/*.alert-count {*/
+  /*margin-bottom: 40px;*/
+/*}*/
 
-.sort-by-text {
-  display: inline;
-}
+/*.sort-by-text {*/
+  /*display: inline;*/
+/*}*/
 
-.sort-column {
-  width: 100%;
-  text-align: right;
-}
+/*.sort-column {*/
+  /*width: 100%;*/
+  /*text-align: right;*/
+/*}*/
 
-.toolbar-item {
-  display: table-cell;
-  vertical-align: middle;
-}
+/*.toolbar-item {*/
+  /*display: table-cell;*/
+  /*vertical-align: middle;*/
+/*}*/
 
-.toolbar-item:not(.sort-column) {
-  padding-right: 12px;
-}
+/*.toolbar-item:not(.sort-column) {*/
+  /*padding-right: 12px;*/
+/*}*/
 
-.sort-column select {
-  display: inline;
-  width: 200px;
-}
+/*.sort-column select {*/
+  /*display: inline;*/
+  /*width: 200px;*/
+/*}*/
 
-.alert-block {
-  padding-bottom: 12px;
-}
+/*.alert-block {*/
+  /*padding-bottom: 12px;*/
+/*}*/
 
-.alert-block:not(:last-child) {
-  margin-bottom: 12px;
-  border-bottom: 1px solid grey;
-}
+/*.alert-block:not(:last-child) {*/
+  /*margin-bottom: 12px;*/
+  /*border-bottom: 1px solid grey;*/
+/*}*/
 
-.alert-page-title {
-  margin-top: .67em;
-}
+/*.alert-page-title {*/
+  /*margin-top: .67em;*/
+/*}*/
 
-:host >>> input {
-  width: auto;
-  max-width: none;
-  display: inline;
-}
+/*:host >>> input {*/
+  /*width: auto;*/
+  /*max-width: none;*/
+  /*display: inline;*/
+/*}*/
 
-:host >>> #datesPublished {
-  width: 150px;
-}
+/*:host >>> #datesPublished {*/
+  /*width: 150px;*/
+/*}*/
 
-:host >>> .usa-pagination {
-  text-align: center;
-}
+/*:host >>> .usa-pagination {*/
+  /*text-align: center;*/
+/*}*/
 
-:host >>> ul {
-  padding-left: 0;
-}
+/*:host >>> ul {*/
+  /*padding-left: 0;*/
+/*}*/
 
-:host >>> .dropdown-title {
-  white-space: nowrap;
-}
+/*:host >>> .dropdown-title {*/
+  /*white-space: nowrap;*/
+/*}*/
 
-:host >>> samSelect label {
-  display: inline;
-}
+/*:host >>> samSelect label {*/
+  /*display: inline;*/
+/*}*/
 
-:host >>> samSelect select {
-  display: inline;
-}
+/*:host >>> samSelect select {*/
+  /*display: inline;*/
+/*}*/
 
-:host >>> samSelect.publish-select select {
-  border: none;
-}
+/*:host >>> samSelect.publish-select select {*/
+  /*border: none;*/
+/*}*/
 
-:host >>> samSelect.sort-select select {
-  width: initial;
-  margin-left: 8px;
-  padding-right: 24px;
-}
+/*:host >>> samSelect.sort-select select {*/
+  /*width: initial;*/
+  /*margin-left: 8px;*/
+  /*padding-right: 24px;*/
+/*}*/

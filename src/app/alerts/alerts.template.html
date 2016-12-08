@@ -1,4 +1,4 @@
-<div class="usa-grid">
+<div class="usa-grid alerts-page">
   <!-- the first child cannot have a margin or the overlay breaks -->
   <div style="height: 1px"></div>
   <h1 class="alert-page-title">System Alerts</h1>
@@ -16,8 +16,11 @@
       <samSelect class="sort-select" [(model)]="sortField" [options]="sortFields" [name]='sortField' (modelChange)="onParamChanged()" [label]="'Sort by:'"></samSelect>
     </div>
   </div>
-  <div class="alert-count">
-    Showing {{alerts.length}} of {{totalAlerts()}}
+  <div class="alert-count" *ngIf="alerts.length > 0">
+    Showing {{alertsStart()}}-{{alertsEnd()}} of {{totalAlerts()}}
+  </div>
+  <div class="alert-count" *ngIf="alerts.length === 0">
+    <em>No results found for selected criteria. Please use filters to expand the search results.</em>
   </div>
   <div *ngFor="let alert of alerts" class="alert-block">
     <alert-item [alert]="alert"></alert-item>

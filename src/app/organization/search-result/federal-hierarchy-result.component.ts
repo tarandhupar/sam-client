@@ -28,13 +28,20 @@ import 'rxjs/add/operator/map';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-        	<span><strong>{{ data.type=="AGENCY" ? 'Sub-tier' : data.type }}</strong></span>
-          <li *ngIf="data.alternativeNames && data.alternativeNames !== null"><strong>Also Known As: </strong><span>{{ data.alternativeNames }}</span></li>
-          <li><strong>Code: </strong><span>{{ data.code }}</span></li>
+        	<span><strong>{{ data.type=="Agency" ? 'Sub-Tier' : data.type }}</strong></span>
+          <li *ngIf="data.alternativeNames && data.alternativeNames !== null"><strong>Also Known As</strong>
+            <ul class="usa-unstyled-list">
+              <li><span>{{ data.alternativeNames }}</span></li>
+            </ul>  
+          </li>
+          <li><strong>Code</strong>
+            <ul class="usa-unstyled-list">
+              <li><span>{{ data.code }}</span></li>
+            </ul>
+          </li>    
         </ul>
       </div>
-  `,
-  styleUrls: []
+  `
 })
 export class FederalHierarchyResult implements OnInit {
   @Input() data: any={};

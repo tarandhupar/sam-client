@@ -3,11 +3,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'samSearchHeader',
   template: `
-    <header id="sam-search-header">
+    <header id="sam-search-header" class='search-header'>
       <div class="usa-grid align-top">
         <div class="header-container">
-          <a class="hat-img" [routerLink]="['/']">
-            <img class="marginCenter" src="assets/img/sam_hat_logo.jpg" alt="Sam.gov Logo">
+          <a class="logo-img" [routerLink]="['/']">
+            <img src="assets/img/transition-sam-logo.png" alt="Sam.gov Logo">
           </a>
           <samSearchbar [size]="'small'" (onSearch)="onSearchEvent($event)" 
            [keyword]="keyword" [placeholder]="'#keyword'" [filterValue]="filterValue"></samSearchbar>          
@@ -18,10 +18,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
            src="../../assets/img/us_flag_small.png" alt="US Flag Logo"/>
       </div>
       <SamHeaderLinks (onDropdownToggle)="dropdownEventControl($event)"></SamHeaderLinks>
-      
     </header>
-`,
-  styleUrls: [ 'search-header.css' ],
+`
 })
 export class SamSearchHeaderComponent {
 

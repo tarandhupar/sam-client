@@ -10,6 +10,7 @@ export class WrapperService {
         "program": "/cfda/v1/program",
         "federalHierarchy": "/cfda/v1/fh",
         "federalHierarchyV2": "/federalorganizations/v1/organizations/hierarchy",
+        "department": "/federalorganizations/v1/organizations/departments",
         "dictionary": "/cfda/v1/dictionary",
         "historicalIndex": "/cfda/v1/historicalIndex",
         "alerts": "/alert/v2/alerts",

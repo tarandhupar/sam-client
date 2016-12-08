@@ -7,8 +7,7 @@ import {Alert} from "../alert.model";
 
 @Component({
   selector: 'alertHeader',
-  templateUrl: 'alert-header.template.html',
-  styleUrls: [ 'alert-header.style.scss' ]
+  templateUrl: 'alert-header.template.html'
 })
 export class AlertHeaderComponent {
 

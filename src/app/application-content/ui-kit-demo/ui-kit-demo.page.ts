@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 
 @Component({
-  styleUrls: ['ui-kit-demo.css'],
   templateUrl: 'ui-kit-demo.template.html'
 })
 export class UIKitDemoPage {
@@ -76,6 +75,16 @@ export class UIKitDemoPage {
     website: "www.testsite.gov"
   };
 
+  nameModel = {
+    title: "Mr.",
+    firstName: "John",
+    middleName: "",
+    lastName: "Doe",
+    suffix: "Sr."
+  };
+  phoneModel = "";
+  phoneModel2 = "1+(123)456-3366";
+
 
   constructor() {  }
 
@@ -106,5 +115,8 @@ export class UIKitDemoPage {
 
   onDismissAlerts(){
     this.dismissAlerts = true;
+  }
+  phoneModelChange(phoneNum){
+    this.phoneModel = phoneNum;
   }
 }

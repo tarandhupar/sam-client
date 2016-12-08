@@ -9,7 +9,6 @@ export const ALERTS_PER_PAGE: number = 5;
 
 @Component({
   providers: [ ],
-  styleUrls: [ 'alerts.style.css' ],
   templateUrl: 'alerts.template.html'
 })
 export class AlertsPage {
@@ -111,5 +110,13 @@ export class AlertsPage {
 
   totalPages(): number {
     return Math.floor(this._totalAlerts / ALERTS_PER_PAGE) + 1;
+  }
+
+  alertsStart(): number {
+    return (this.currentPage-1) * ALERTS_PER_PAGE + 1;
+  }
+
+  alertsEnd(): number {
+    return this.alertsStart() + this.alerts.length - 1;
   }
 }
