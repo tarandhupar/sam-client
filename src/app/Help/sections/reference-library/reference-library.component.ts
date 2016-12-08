@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { globals } from '../../../globals';
 
 @Component({
   providers: [ ],
@@ -121,5 +122,9 @@ export class ReferenceLibraryComponent {
     }
     return "reference-image-container-small"
 
+  }
+
+  private linkToggle():boolean{
+    return globals.showOptional;
   }
 }

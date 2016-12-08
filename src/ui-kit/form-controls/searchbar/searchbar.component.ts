@@ -46,7 +46,7 @@ export class SamSearchbarComponent {
       {value: 'wd', label: 'Wage Determinations'}
     ],
     disabled: false,
-    label: 'search-bar-select',
+    label: '',
     name: 'filter',
   };
 

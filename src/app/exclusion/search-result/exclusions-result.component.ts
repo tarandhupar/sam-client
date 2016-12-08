@@ -18,7 +18,7 @@ import * as moment from 'moment/moment';
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li><strong>DUNS: </strong><span>{{ data.dunsNumber }}</span></li>
           <li><strong>CAGE Code: </strong><span>{{ data.cageCode }}</span></li>
-          <li><strong>Address: </strong><span>{{ data.address.streetAddress }}, {{ data.address.city }}, {{ data.address.state}} {{data.address.zip}}</span></li>
+          <li><strong>Address: </strong><span>{{ data.address.streetAddress }}{{data.address.city=="" || data.address.streetAddress=="" ? '' : ','}} {{ data.address.city }}{{data.address.state=="" || data.address.city=="" ? '' : ','}} {{ data.address.state}} {{data.address.zip}}</span></li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
