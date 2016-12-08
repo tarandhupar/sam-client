@@ -3,8 +3,8 @@
   <form class="usa-search relative" onsubmit="return false;">
 
     <div class="relative div-left">
-      <button class="filter-btn pull-right" >
-      <span class="usa-search-submit-text" >{{getLabelForValue(filterValue)}}&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
+      <button class="filter-btn pull-right">
+      <span class="usa-search-submit-text">{{getLabelForValue(filterValue)}}&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
     </button>
       <samSelect class="filter-select"
                  [(model)]="selectModel"
@@ -28,7 +28,7 @@
     </div>
 
     <div class="relative div-fill">
-      <input class="search-inputbar" type="search" name="search" [(ngModel)]="keyword" (ngModelChange)="onKeywordChange()" [placeholder]="placeholder" (keyup.enter)="onSearchClick()">
+      <input class="search-inputbar" type="search" name="search" aria-label="search-keyword" [(ngModel)]="keyword" (ngModelChange)="onKeywordChange()" [placeholder]="placeholder" (keyup.enter)="onSearchClick()">
       <span [ngClass]="resetIconClass"><i class="fa fa-times-circle" (click)="onResetClick()"></i></span>
     </div>
 
