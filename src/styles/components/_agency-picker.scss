@@ -13,7 +13,9 @@ $usa-btn-big-width:     4.5rem;
 
 .usa-agency-picker-button-area{
   float:right;
-  overflow:auto;
+  overflow:hidden;
+  position:relative;
+
   button{
     margin-right:0;
     margin-left:8.5px;
@@ -50,6 +52,11 @@ $usa-btn-big-width:     4.5rem;
     background:#e1f3f8;
   }
 
+  /*IE9 bugfix*/
+  li:focus{
+    outline:none;
+  }
+
   li.autocomplete-selected{
     background:#e1f3f8;
   }
@@ -59,7 +66,7 @@ $usa-btn-big-width:     4.5rem;
   padding:15px 10px;
   border:1px #5b616b solid;
   position:relative;
-  width:460px;
+  width: 100%;
   margin-left:0;
   min-height:55px;
 
@@ -72,13 +79,16 @@ $usa-btn-big-width:     4.5rem;
     margin:0;
     padding:0;
   }
+  @include media($small-screen) {
+    width: 460px;
+  }
 }
 .usa-agency-picker-dropdown-area{
   padding-top:15px;
   padding-bottom:15px;
   border:1px #5b616b solid;
   position:relative;
-  width:460px;
+  width:100%;
   margin-left:0;
   background:#eee;
   .usa-agency-picker-search-area{
@@ -86,6 +96,10 @@ $usa-btn-big-width:     4.5rem;
     position:relative;
     clear: both;
     overflow:visible;
+  }
+
+  @include media($small-screen) {
+    width: 460px;
   }
 }
 
@@ -141,99 +155,5 @@ $usa-btn-big-width:     4.5rem;
 
   a:hover{
     cursor:pointer;
-  }
-}
-
-/* not used */
-.usa-agency-picker {
-  @include clearfix;
-  max-width: none;
-  position: relative;
-
-  .usa-agency-picker-input {
-    padding-top: 0;
-    padding-bottom: 0;
-    -webkit-appearance: none;
-    border-bottom-right-radius: 0;
-    border-top-right-radius: 0;
-    box-sizing: border-box;
-    float: left;
-    font-size: $small-font-size;
-    height: 3.3rem;
-    margin: 0;
-    width: calc(100% - #{$usa-btn-small-width});
-
-    @include media($small-screen) {
-      width: calc(100% - #{$usa-btn-medium-width});
-    }
-  }
-
-  [type="submit"],
-  .usa-agency-picker-submit {
-    border-bottom-left-radius: 0;
-    border-top-left-radius: 0;
-    height: 3.3rem;
-    margin: 0;
-    padding: 0;
-    width: $usa-btn-small-width;
-
-    @include media($small-screen) {
-      background-image: none;
-      width: $usa-btn-medium-width;
-    }
-  }
-  .usa-agency-picker-icon-area{
-    float:right;
-    text-align:center;
-    height: 4.4rem;
-    width: #{$usa-btn-big-width};
-    align-items:flex-start;
-
-    @include media($small-screen) {
-      float: left;
-    }
-  }
-  .usa-agency-picker-submit-text {
-    line-height:4.4rem;
-
-    @include media($small-screen) {
-      display: block;
-    }
-  }
-
-  &.usa-agency-picker-big {
-    @include media($small-screen) {
-      $height: 4.4rem;
-      $width: $usa-btn-big-width;
-
-      .usa-agency-picker-input {
-        font-size: $base-font-size;
-        height: $height;
-        width: calc(100% - #{$width});
-      }
-
-      [type="submit"],
-      .usa-agency-picker-submit {
-        font-size: $h3-font-size;
-        height: $height;
-        width: $width;
-      }
-    }
-  }
-
-  &.usa-agency-picker-small {
-    @include media($small-screen) {
-      $width: $usa-btn-small-width;
-
-      .usa-agency-picker-input {
-        width: calc(100% - #{$width});
-      }
-
-      [type="submit"],
-      .usa-agency-picker-submit {
-        @include search-icon;
-        width: $width;
-      }
-    }
   }
 }
