@@ -47,8 +47,7 @@ import Moment = moment.Moment;
           </li>    
         </ul>
       </div>
-  `,
-  styleUrls: []
+  `
 })
 export class EntitiesResult implements OnInit {
   @Input() data: any={};

@@ -13,8 +13,6 @@ import { Component, Output, EventEmitter } from '@angular/core';
             
               </nav>
             </header>`,
-  styleUrls: ['header.scss']
-
 })
 export class SamHeaderComponent {
 

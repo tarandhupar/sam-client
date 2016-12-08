@@ -6,8 +6,7 @@ import {SYSTEM_ALERTS_PAGE_PATH} from "../../application-content/alerts/alerts.r
 
 @Component({
   selector: 'alertHeader',
-  templateUrl: 'alert-header.template.html',
-  styleUrls: [ 'alert-header.style.scss' ]
+  templateUrl: 'alert-header.template.html'
 })
 export class AlertHeaderComponent {
 

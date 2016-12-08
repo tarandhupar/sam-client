@@ -14,6 +14,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 const HtmlElementsPlugin = require('./html-elements-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 /*
  * Webpack Constants
@@ -58,8 +59,8 @@ module.exports = {
 
     'polyfills': './src/polyfills.browser.ts',
     'vendor':    './src/vendor.browser.ts',
-    'main':      './src/main.browser.ts'
-
+    'main':      './src/main.browser.ts',
+    'styles':    './src/styles.ts',
   },
 
   /*
@@ -121,6 +122,37 @@ module.exports = {
     loaders: [
 
       /*
+       * Font loaders
+       */
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/font-woff"
+      },
+      {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/font-woff"
+      },
+      {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/octet-stream"
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "file-loader"
+      },
+      {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=image/svg+xml"
+      },
+
+      /* File loader for supporting images
+       */
+      {
+        test: /\.(jpg|png|gif)$/,
+        loader: 'url-loader'
+      },
+
+      /*
        * Typescript loader support for .ts and Angular 2 async routes via .async.ts
        * Replace templateUrl and stylesUrl with require()
        *
@@ -152,10 +184,10 @@ module.exports = {
        * Returns file content as string
        *
        */
-      {
-        test: /\.css$/,
-        loaders: ['to-string-loader', 'css-loader']
-      },
+      // {
+      //   test: /\.css$/,
+      //   loaders: ['to-string-loader', 'css-loader']
+      // },
 
       /* Raw loader support for *.html
        * Returns file content as string
@@ -170,19 +202,20 @@ module.exports = {
 
       /// Sass Loader
       {
-        test: /\.scss$/,
+        test: /styles\/all\.scss/,
         exclude: /node_modules/,
-        loaders: ['raw-loader', 'sass']
+        loader: ExtractTextPlugin.extract("style","css?sourceMap!sass?sourceMap")
       },
-
-      /* File loader for supporting images, for example, in CSS files.
-      */
-      {
-        test: /\.(jpg|png|gif)$/,
-        loader: 'file'
-      }
     ]
 
+  },
+
+  sassLoader: {
+    /*
+     * Uncomment to allow sass files to easily include other sass files without using long paths
+     * I prefer not to use this to allow ideas to more easily find the paths of imported files
+     */
+    // includePaths: ['src/styles']
   },
 
   /*
@@ -191,6 +224,8 @@ module.exports = {
    * See: http://webpack.github.io/docs/configuration.html#plugins
    */
   plugins: [
+
+    new ExtractTextPlugin("app.css"),
 
     /*
      * Plugin: ForkCheckerPlugin
@@ -222,16 +257,7 @@ module.exports = {
     new CopyWebpackPlugin([
       {
         from: 'src/assets',
-        to: 'assets'
-      },
-      /// Fixme: There are redundant copies here
-      {
-        from: 'src/assets/fonts',
-        to: 'fonts',
-      },
-      {
-        from: 'src/assets/img',
-        to: 'img'
+        to: 'src/assets'
       }
     ]),
 

@@ -4,7 +4,6 @@ import { globals } from '../../app/globals.ts';
 @Component({
   selector: 'samFooter',
   templateUrl:'footer.template.html',
-  styleUrls: ['footer.scss']
 })
 export class SamFooterComponent {
 

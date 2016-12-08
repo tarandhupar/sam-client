@@ -4,13 +4,12 @@ import { FHService } from 'api-kit';
 
 @Component({
 	selector: 'agencyPicker',
-	templateUrl:'agency-picker.template.html',
-  styleUrls: [ 'agency-picker.style.scss' ]
+	templateUrl:'agency-picker.template.html'
 })
 
 /**
 * AgencyPickerComponent - Connects to backend FH services to select a single/multiple organizations
-* 
+*
 * @Input multimode: boolean - congfigure to select a single or multiple organizations
 * @Input getQSValue: boolean - Looks up a query string value to prepopulate selection
 * @Input() orgId: string - Prepopulate picker with an organization id
@@ -78,7 +77,7 @@ export class AgencyPickerComponent implements OnInit {
     selectedOrg: ""
   };
   orgLevels = [
-    this.dpmtSelectConfig, this.agencySelectConfig, this.officeSelectConfig, 
+    this.dpmtSelectConfig, this.agencySelectConfig, this.officeSelectConfig,
     Object.assign({},this.officeSelectConfig), Object.assign({},this.officeSelectConfig),Object.assign({},this.officeSelectConfig),
     Object.assign({},this.officeSelectConfig)
   ];
@@ -103,7 +102,7 @@ export class AgencyPickerComponent implements OnInit {
     this.lazyLoadAutocomplete();
   }
 
-  autocompleteBlur(evt){  
+  autocompleteBlur(evt){
     if(!this.cancelBlur){
       this.resetAutocomplete();
     }
@@ -169,12 +168,12 @@ export class AgencyPickerComponent implements OnInit {
     if (this.autoCompleteToggle && evt['keyCode'] == 27){
       this.resetAutocomplete();
     }
-    //up 
+    //up
     else if(this.autoCompleteToggle && evt['keyCode'] == 38 && this.autocompleteIndex>0){
       //console.log("up",this.autocompleteIndex);
       evt.preventDefault();
       this.autocompleteIndex-=1;
-      this.autocompletelist.nativeElement.scrollTop = this.autocompletelist.nativeElement.getElementsByTagName("li")[this.autocompleteIndex].offsetTop;      
+      this.autocompletelist.nativeElement.scrollTop = this.autocompletelist.nativeElement.getElementsByTagName("li")[this.autocompleteIndex].offsetTop;
     }
     //down
     else if(this.autoCompleteToggle && evt['keyCode']==40 && this.autocompleteIndex < this.autoComplete.length-1){
@@ -182,12 +181,12 @@ export class AgencyPickerComponent implements OnInit {
       this.autocompleteIndex+=1;
       this.autocompletelist.nativeElement.scrollTop = this.autocompletelist.nativeElement.getElementsByTagName("li")[this.autocompleteIndex].offsetTop;
       this.lazyLoadAutocomplete();
-    } 
+    }
     //down
     else if(!this.autoCompleteToggle && evt['keyCode'] == 40){
       this.autoCompleteToggle = true;
       this.runAutocomplete();
-    } 
+    }
     //enter
     else if (this.autoCompleteToggle && evt['keyCode'] == 13){
       if(this.autoComplete[this.autocompleteIndex]){
@@ -354,7 +353,7 @@ export class AgencyPickerComponent implements OnInit {
             if(orglvldata['hierarchy'].length>this.dropdownLimit){
               orglvldata['hierarchy'].length = this.dropdownLimit;
             }
-            
+
             if(orglvldata['hierarchy'].length>0){
               var formattedData = this.formatHierarchy(orgType,orglvldata['hierarchy']);
               this.orgLevels[orglvl].options = formattedData;
@@ -366,9 +365,9 @@ export class AgencyPickerComponent implements OnInit {
           });
         }
       });
-    } else { 
-      this.orgLevels[0].selectedOrg = data.orgKey; 
-      this.loadChildOrganizations(0); 
+    } else {
+      this.orgLevels[0].selectedOrg = data.orgKey;
+      this.loadChildOrganizations(0);
     }
   }
 
@@ -395,7 +394,7 @@ export class AgencyPickerComponent implements OnInit {
       this.oFHService.search(data).subscribe( res => {
         this.searchData = res["_embedded"]["results"];
         this.searchResponseHandler();
-      }); 
+      });
     } else {
       data["ids"] = this.searchTerm;
       this.serviceCall(this.searchTerm).subscribe(res=>{
@@ -453,7 +452,7 @@ export class AgencyPickerComponent implements OnInit {
       }
       //will need an update once API is updated to return all parent orgs (only returns direct parent)
       //skip match if orgroot is set and result doesn't belong to orgroot
-      if(this.orgRoot && (this.orgRoot!=this.searchData[i]._id || 
+      if(this.orgRoot && (this.orgRoot!=this.searchData[i]._id ||
         (this.searchData[i].parentOrganizationHierarchy && this.searchData[i].parentOrganizationHierarchy['organizationId']!=this.orgRoot))){
         skip = true;
       }
@@ -479,7 +478,7 @@ export class AgencyPickerComponent implements OnInit {
           break;
         case "OFFICE":
           counts[2]++;
-          break; 
+          break;
       }
     }
     if(counts[0]==1){
@@ -501,7 +500,7 @@ export class AgencyPickerComponent implements OnInit {
       this.oFHService.getOrganizationById(selectedOrg).subscribe( res => {
         this.setOrganization(res["_embedded"][0]['org']);
         this.searchMessage = "";
-      }); 
+      });
     } else {
       this.searchMessage = "Please select an organization";
     }
@@ -546,7 +545,7 @@ export class AgencyPickerComponent implements OnInit {
           oData["hierarchy"].length = this.dropdownLimit;
         }
         this.processDictionaryResponse(oData,selectionLvl);
-      });  
+      });
     }
   }
 
@@ -598,7 +597,7 @@ export class AgencyPickerComponent implements OnInit {
     var searchArray = this.selectedOrganizations.filter( x=> {
       return x.value == data.value;
     });
-    
+
     if(searchArray.length==0 && this.multimode){
       this.selectedOrganizations.push(data);
     } else if (searchArray.length==0 && !this.multimode){
@@ -739,13 +738,13 @@ export class AgencyPickerComponent implements OnInit {
         return " (L7)";
     }
   }
-  
+
   clearSelectedOrgs(){
     this.selectedSingleOrganizationName="";
     this.selectedOrganizations.length = 0;
     this.emitSelectedOrganizations();
   }
-  
+
   resetBrowse(){
     for(var idx in this.orgLevels){
       //if orgroot is set, only reset orgs below orgroot (defined in lockHierarchy)
@@ -754,7 +753,7 @@ export class AgencyPickerComponent implements OnInit {
         //sub-tier and office need full reset only
         if(parseInt(idx) > this.lockHierachy.length){
           this.orgLevels[idx].show = false;
-          this.orgLevels[idx].options.length = 1;  
+          this.orgLevels[idx].options.length = 1;
         }
       }
     }
