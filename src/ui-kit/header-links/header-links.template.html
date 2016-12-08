@@ -1,8 +1,9 @@
 <div class="pull-right align-top relative">
   <div class="align-top m_B-0x p_R-3x " >
-    <span tabindex="0" class="menu-link header-link" title="menu" [ngClass]="{'link-disabled':showDropdown}" (click)="onMenuClick()" (keyup.enter)="onMenuClick()">
+    <button class="menu-link header-link" title="menu" [ngClass]="{'link-disabled':showDropdown}" (click)="onMenuClick()">
       <i class="fa fa-bars white-text"></i>
-    </span>
+      <span class="usa-sr-only">menu option</span>
+    </button>
   </div>
   <div class="arrow-up"  *ngIf="showDropdown"></div>
   <div class="dropdown usa-grid-full p_B-2x" *ngIf="showDropdown" samClickOutside (clickOutside)="onClickOutside()">

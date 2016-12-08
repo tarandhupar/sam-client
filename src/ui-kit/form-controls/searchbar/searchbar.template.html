@@ -21,6 +21,7 @@
     <div class="relative div-right">
       <button type="submit"
               class="usa-button-primary usa-search-submit search-btn" (click)="onSearchClick()">
+        <span class="usa-sr-only">searchBtn</span>
         <span class="usa-search-submit-text">{{searchBtnText}}
           <i class="fa" [ngClass]="{'fa-search':isSizeSmall()}"></i>
         </span>
