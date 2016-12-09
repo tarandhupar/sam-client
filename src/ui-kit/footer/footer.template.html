@@ -1,6 +1,13 @@
 <footer id="sam-footer" aria-label="footer-navigation">
   <nav class="sam-footer-wrapper">
     <div class="sam-footer-body usa-grid">
+      <!--<div class="sam-footer-logo usa-width-one-sixth">-->
+        <!--<a href="http://www.gsa.gov">-->
+          <!--<img src="assets/img/logos/gsa-reverse.png" />-->
+          <!--<span>General Services Administration Website</span>-->
+        <!--</a>-->
+      <!--</div>-->
+
       <div class="sam-footer-logo usa-width-one-sixth">
         <a href="http://www.gsa.gov"><span>General Services Administration Website</span></a>
       </div>
@@ -31,7 +38,7 @@
           </ul>
         </li>
         <li class=" usa-width-one-fourth">
-          <h4 class="m_T-0 sam-footer-head">Policies</h4>
+          <h4 class="m_T-0 sam-footer-head" *ngIf="linkToggle()">Policies</h4>
           <ul class="sam-footer-links usa-unstyled-list">
             <li class="m_B"><a href="#" title="Accessibility" *ngIf="linkToggle()">Accessibility</a></li>
             <li class="m_B"><a href="#" title="Legal" *ngIf="linkToggle()">Legal</a></li>

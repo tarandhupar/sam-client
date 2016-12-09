@@ -6,7 +6,6 @@ import { globals } from '../../app/globals.ts';
 @Component({
   selector: 'SamHeaderLinks',
   templateUrl: 'header-links.template.html',
-  styleUrls: [ 'header-links.style.css' ]
 })
 export class SamHeaderLinksComponent{
 

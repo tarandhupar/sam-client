@@ -1,7 +1,7 @@
 /*
  * Angular 2 decorators and services
  */
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
@@ -12,10 +12,6 @@ import { SearchService } from 'api-kit';
  */
 @Component({
   selector: 'app',
-  encapsulation: ViewEncapsulation.None,
-  styleUrls: [
-    './app.style.scss'
-  ],
   templateUrl: './app.template.html',
   providers : [SearchService]
 })
