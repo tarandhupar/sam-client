@@ -44,7 +44,7 @@ export class SamPhoneEntryComponent implements OnInit{
   process(event){
     var start = this.phoneInput.nativeElement.selectionStart;
     var end = this.phoneInput.nativeElement.selectionEnd;
-    //console.log(event,start,end);
+    console.log(event,start,end);
     if(!isNaN(event.key)){
       var updatedPhoneNumber = this.phoneNumber;
       var positionIncrement = this.getPositionIncrement(start);
@@ -67,7 +67,17 @@ export class SamPhoneEntryComponent implements OnInit{
     } else if(event.key=="Backspace") {
       event.preventDefault();
       var positionDecrement = this.getPositionDecrement(start);
-      this.phoneNumber = this.replaceAt(positionDecrement,"_",this.phoneNumber).substr(0,16);
+
+      if(start!=end){
+        for(var idx=start; idx < end; idx++){
+          if(this.badIndex.indexOf(idx)==-1){
+            this.phoneNumber = this.replaceAt(idx,"_",this.phoneNumber);
+          }
+        }
+        positionDecrement = start;
+      } else {
+        this.phoneNumber = this.replaceAt(positionDecrement,"_",this.phoneNumber).substr(0,16);
+      }
       this.phoneInput.nativeElement.value = this.phoneNumber;
       this.phoneInput.nativeElement.setSelectionRange(positionDecrement,positionDecrement);
     } else if(event.key=="ArrowRight" || event.key=="ArrowLeft"){
