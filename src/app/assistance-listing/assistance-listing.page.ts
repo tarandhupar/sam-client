@@ -12,7 +12,6 @@ import { ReplaySubject, Observable, Subscription } from 'rxjs';
 @Component({
   moduleId: __filename,
   templateUrl: 'assistance-listing.page.html',
-  styleUrls: ['assistance-listing.style.css'],
   providers: [
     FHService,
     ProgramService,

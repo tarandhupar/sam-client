@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 @Component({
   providers: [ ],
-  styleUrls: ['help.style.css'],
   templateUrl: 'help.template.html',
 })
 export class HelpPage {

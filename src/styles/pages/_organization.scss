@@ -1,0 +1,52 @@
+#organization-page {
+  .usa-grid{
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1{
+    margin-top: 50px !important;
+    line-height: 1.1;
+  }
+
+  .divider{
+    color: #ccc;
+  }
+
+  .active{
+    color: #4aa564;
+  }
+  .inactive{
+    color: #5b616b;
+  }
+
+  .usa-zebra-list{
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 50px;
+  }
+  .usa-zebra-list > li{
+    margin-bottom: 0;
+    border-top: 1px solid rgba(204, 204, 204, 0.30);
+  }
+  .usa-zebra-list > li:nth-child(odd) {
+    background-color: rgba(241, 241, 241, 0.35);
+  }
+  .usa-zebra-list > li:hover{
+    background-color: rgba(241, 241, 241, 1);
+    -webkit-transition: background-color 300ms ease-out;
+    -moz-transition: background-color 300ms ease-out;
+    -o-transition: background-color 300ms ease-out;
+    -ms-transition: background-color 300ms ease-out;
+    transition: background-color 300ms ease-out;
+  }
+  .usa-zebra-list li a{
+    padding: 8px 14px;
+    display: block;
+    text-decoration: none;
+  }
+
+  .usa-zebra-list li a:hover{
+    text-decoration: underline;
+  }
+}
