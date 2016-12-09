@@ -44,7 +44,7 @@ export class SamPhoneEntryComponent implements OnInit{
   process(event){
     var start = this.phoneInput.nativeElement.selectionStart;
     var end = this.phoneInput.nativeElement.selectionEnd;
-    console.log(event,start,end);
+    //console.log(event,start,end);
     if(!isNaN(event.key)){
       var updatedPhoneNumber = this.phoneNumber;
       var positionIncrement = this.getPositionIncrement(start);
