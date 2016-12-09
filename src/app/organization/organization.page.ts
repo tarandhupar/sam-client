@@ -10,7 +10,6 @@ import * as _ from 'lodash';
 @Component({
   moduleId: __filename,
   templateUrl: 'organization.page.html',
-  styleUrls: ['organization.style.css'],
   providers: [
     FHService
   ]

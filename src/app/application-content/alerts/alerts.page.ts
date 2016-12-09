@@ -3,7 +3,6 @@ import {ActivatedRoute} from "@angular/router";
 
 @Component({
   providers: [ ],
-  styleUrls: [ ],
   templateUrl: 'alerts.template.html'
 })
 export class AlertsPage {

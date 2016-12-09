@@ -3,7 +3,7 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
 import { OptionsType } from '../types';
 
 /**
- * The <samMultiSelect> component is a multi-select/options group compliant 
+ * The <samMultiSelect> component is a multi-select/options group compliant
  *
  * @Input options: [{Option}] - the array of checkbox values and labels (see OptionsType)
  * @Input label: string - the innerHtml of <fieldset>
@@ -22,8 +22,7 @@ import { OptionsType } from '../types';
       </option>
     </select>
   </labelWrapper>
-  `,
-  styleUrls: ['multiselect.styles.scss']
+  `
 })
 export class SamMultiSelectComponent {
   @ViewChild('select') selectElRef;

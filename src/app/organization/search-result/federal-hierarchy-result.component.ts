@@ -41,8 +41,7 @@ import 'rxjs/add/operator/map';
           </li>    
         </ul>
       </div>
-  `,
-  styleUrls: []
+  `
 })
 export class FederalHierarchyResult implements OnInit {
   @Input() data: any={};

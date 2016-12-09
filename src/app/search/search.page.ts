@@ -7,9 +7,6 @@ import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 @Component({
   moduleId: __filename,
   selector: 'search',
-  styleUrls: [
-    'search.style.css'
-  ],
   providers: [CapitalizePipe],
   templateUrl: 'search.template.html'
 })

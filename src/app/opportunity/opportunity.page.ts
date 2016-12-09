@@ -10,7 +10,6 @@ import { trigger, state, style, transition, animate } from '@angular/core';
 @Component({
   moduleId: __filename,
   templateUrl: 'opportunity.page.html',
-  styleUrls: ['opportunity.style.css'],
   providers: [
     OpportunityService,
     FilterMultiArrayObjectPipe

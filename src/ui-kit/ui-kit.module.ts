@@ -25,6 +25,7 @@ import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.
 import { SamPaginationComponent } from "./pagination/pagination.component";
 import { SamClickOutsideDirective } from "./click-outside/click-outside.directive";
 import { SamHeaderLinksComponent } from "./header-links/header-links.component";
+import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multiselect-dropdown.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
 
@@ -53,6 +54,7 @@ import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.
     SamHeaderComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
+    SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
     LabelWrapper,
@@ -82,6 +84,7 @@ import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.
     SamHeaderComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
+    SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent
   ],

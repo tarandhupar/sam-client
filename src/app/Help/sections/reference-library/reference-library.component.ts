@@ -3,7 +3,6 @@ import { globals } from '../../../globals';
 
 @Component({
   providers: [ ],
-  styleUrls: ['./reference-library.style.css'],
   templateUrl: './reference-library.template.html',
 })
 export class ReferenceLibraryComponent {
