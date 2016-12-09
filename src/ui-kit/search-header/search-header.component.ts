@@ -7,7 +7,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       <div class="usa-grid align-top">
         <div class="header-container">
           <a class="logo-img" [routerLink]="['/']">
-            <img src="assets/img/transition-sam-logo.png" alt="Sam.gov Logo">
+            <img src="src/assets/img/transition-sam-logo.png" alt="Sam.gov Logo">
           </a>
           <samSearchbar [size]="'small'" (onSearch)="onSearchEvent($event)" 
            [keyword]="keyword" [placeholder]="'#keyword'" [filterValue]="filterValue"></samSearchbar>          
@@ -15,7 +15,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       </div>
       <div class="m_R-2x align-top pull-right">
         <img title="An official website of the United States Government" class="image-wrap"
-           src="../../assets/img/us_flag_small.png" alt="US Flag Logo"/>
+           src="src/assets/img/us_flag_small.png" alt="US Flag Logo"/>
       </div>
       <SamHeaderLinks (onDropdownToggle)="dropdownEventControl($event)"></SamHeaderLinks>
     </header>
