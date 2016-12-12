@@ -223,7 +223,7 @@ export class AgencyPickerComponent implements OnInit {
   //what kind of data?
   autocompleteSelection(data){
     this.autocompletePreselect = data._id;
-    console.log("preselect set",this.autocompletePreselect);
+    //console.log("preselect set",this.autocompletePreselect);
     data["orgKey"] = data._id;
     this.updateBrowse(data);
     this.autoComplete.length = 0;
@@ -254,7 +254,6 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   searchTermChange(event){
-    console.log("preselect reset");
     this.autocompletePreselect = "";
     if(event.length>=3 && !this.autocompleting){
       this.autoCompleteToggle = true;
@@ -370,10 +369,8 @@ export class AgencyPickerComponent implements OnInit {
 
   //needs refactor for messaging
   setOrganizationFromSearch(){
-    console.log("search trigger'd",this.autocompletePreselect);
     if(this.autocompletePreselect.length>0){
       this.serviceCall(this.autocompletePreselect,false).subscribe(res=>{
-        console.log("woahh",res);
         this.setOrganization(res["_embedded"][0]["org"]);
       });
       return;
