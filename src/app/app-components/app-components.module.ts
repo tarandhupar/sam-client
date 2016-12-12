@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
+import { InputAutocompleteComponent } from './input-autocomplete/input-autocomplete.component';
 
 
 
@@ -14,7 +15,8 @@ import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
  */
 @NgModule({
   declarations: [
-    AgencyPickerComponent
+    AgencyPickerComponent,
+    InputAutocompleteComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +25,8 @@ import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
     SamAPIKitModule
   ],
   exports: [
-    AgencyPickerComponent
+    AgencyPickerComponent,
+    InputAutocompleteComponent
   ],
   providers: [ ]
 })
