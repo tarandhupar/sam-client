@@ -230,6 +230,7 @@ export class AgencyPickerComponent implements OnInit {
     this.setSearchTerm(data);
     this.autoCompleteToggle = false;
     this.autocompleteIndex = 0;
+    this.setOrganizationFromSearch();
   }
 
   //utility
