@@ -240,7 +240,7 @@ export class OpportunityPage implements OnInit {
           && opportunity.postedDate !== parent.postedDate;
 
         this.displayField[OpportunityFields.OriginalPostedDate] = originalPostedDateCondition;
-        
+
         let originalResponseDateCondition = opportunity.data != null
           && opportunity.data.solicitation != null && opportunity.data.solicitation.deadlines != null
           && opportunity.data.solicitation.deadlines.response != null && parent.data != null
@@ -303,7 +303,23 @@ export class OpportunityPage implements OnInit {
   }
 
   public getDownloadFileURL(fileID: string){
-    return API_UMBRELLA_URL + '/cfda/v1/file/' + fileID + "?api_key=" + API_UMBRELLA_KEY;
+    return this.getBaseURL() + '/file/' + fileID + this.getAPIUmbrellaKey();
+  }
+
+  public getDownloadPackageURL(packageID: string) {
+    return this.getBaseURL() + '/opportunity/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey();
+  }
+
+  public getDownloadAllPackagesURL(opportunityID: string) {
+    return this.getBaseURL() + '/opportunity/' + opportunityID + '/download/zip' + this.getAPIUmbrellaKey();
+  }
+
+  public getBaseURL() {
+    return API_UMBRELLA_URL + '/cfda/v1';
+  }
+
+  public getAPIUmbrellaKey() {
+    return '?api_key=' + API_UMBRELLA_KEY;
   }
 
   toggleAccordion(card){

@@ -205,14 +205,18 @@
     <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
 
       <h2>Packages</h2>
+      <a href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">Download All Packages</a>
 
       <!-- Header -->
       <div class="card" *ngFor="let package of attachment.packages">
 
         <!-- It's public -->
-        <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" (click)="toggleAccordion(package)">
-          <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
-          <strong>Type: {{ package.type }}</strong>
+        <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" >
+          <div (click)="toggleAccordion(package)">
+            <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
+            <strong>Type: {{ package.type }}</strong>
+          </div>
+          <a href="{{getDownloadPackageURL(package.packageId)}}">Download Package</a>
         </div>
 
         <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
