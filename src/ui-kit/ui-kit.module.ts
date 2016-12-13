@@ -28,6 +28,7 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multiselect-dropdown.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
+import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.component";
 
 
 /**
@@ -57,6 +58,7 @@ import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
+    SamDateEntryComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -86,7 +88,8 @@ import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
-    SamPhoneEntryComponent
+    SamPhoneEntryComponent,
+    SamDateEntryComponent
   ],
   providers: [ ]
 })

@@ -85,6 +85,16 @@ export class UIKitDemoPage {
   phoneModel = "";
   phoneModel2 = "1+(123)456-3366";
 
+  dateModel = {
+    month: null,
+    day: null,
+    year: null
+  };
+  dateModel2 = {
+    month: 12,
+    day: 31,
+    year: 2016
+  };
 
   constructor() {  }
 
