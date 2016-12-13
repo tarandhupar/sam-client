@@ -1,9 +1,4 @@
 import { Component, Injectable } from '@angular/core';
-import { SystemAlertsService } from 'api-kit';
-import { Cookie } from 'ng2-cookies'
-import { Router } from "@angular/router";
-import {SYSTEM_ALERTS_PAGE_PATH} from "../alerts.route";
-import {Alert} from "../alert.model";
 
 @Injectable()
 export class AlertFooterService {
