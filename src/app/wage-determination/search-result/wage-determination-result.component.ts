@@ -12,7 +12,7 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive==false" class="usa-label">Inactive</span>
     	</p>
     	<h3 class="wage-determination-number">
-      	<span>Wage Determination #: </span><a>{{ data.fullReferenceNumber }}</a>
+      	<span>{{ data._type=='wdSCA' ? 'SCA Wage Determination #: ' : 'DBA Wage Determination #: ' }}</span><a>{{ data.fullReferenceNumber }}</a>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
@@ -31,17 +31,17 @@ import * as moment from 'moment/moment';
       	     <span>{{ data.revisionNumber }}</span>
             </ul>
           </li>
-          <li *ngIf="data._type=='wdSCA'"><strong>Services</strong>
+          <li *ngIf="data._type=='wdSCA'"><strong>Service</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.services }}</span>
             </ul>
           </li>
-          <li *ngIf="data._type=='wdDBRA'"><strong>Construction Types</strong>
+          <li *ngIf="data._type=='wdDBRA'"><strong>Construction Type</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.constructionTypes }}</span>
             </ul>
           </li>
-          <li><strong>Published Date</strong>
+          <li><strong>Publish Date</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.publishDate }}</span>
             </ul>
