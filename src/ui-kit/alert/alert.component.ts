@@ -22,6 +22,7 @@ export class SamAlertComponent {
   @Input() title: string;
   @Input() description: string;
   @Input() showClose: boolean = false;
+  @Input() dismissTimer = 0;
   @Output() dismiss: EventEmitter<any> = new EventEmitter<any>();
 
   types:any = {
@@ -38,6 +39,11 @@ export class SamAlertComponent {
   ngOnInit(){
     if(!this.typeNotDefined()){
       this.selectedType = this.types[this.type];
+    }
+    if(this.dismissTimer>0){
+      setTimeout(()=>{
+        this.dismiss.emit();
+      },this.dismissTimer);
     }
   }
 
