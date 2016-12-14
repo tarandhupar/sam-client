@@ -30,26 +30,35 @@
     height: 3.3rem;
   }
 
+  .usa-search{
+    display:table;
+  }
+
   /** Adjust the width of the input search bar**/
   .div-fill{
-    display:block;
-    width: auto;
+    //display:block;
+    display: table-cell;
+    width: 100%;
     overflow: visible;
-    float: left;
+    //float: left;
     height: 3.3rem;
+    vertical-align:top;
   }
 
   .div-left{
-    float:left;
+    //float:left;
+    vertical-align:top;
   }
 
   .div-right{
-    float:right;
+    //float:right;
+    vertical-align:top;
   }
 
   .div-left, .div-right{
     width: auto;
-    display: inline-block;
+    //display: inline-block;
+    display: table-cell;
   }
 
   .search-inputbar{
@@ -81,9 +90,13 @@
     cursor: pointer;
   }
 
+  .usa-search-submit-text{
+    white-space:nowrap;
+  }
+
   .usa-search-autocomplete{
     position:absolute;
-    top:44px;
+    //top:44px;
     background:#fff;
     margin-top:0;
     margin-left: 0;
