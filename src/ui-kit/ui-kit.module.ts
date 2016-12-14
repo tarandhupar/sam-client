@@ -19,7 +19,7 @@ import { SamFooterComponent } from "./footer/footer.component";
 import { SamLabelComponent } from "./label/label.component";
 import { SamHeaderComponent } from "./header/header.component";
 import { SamAlertComponent } from "./alert/alert.component";
-import { SamAccordionsComponent } from "./accordions/accordions.component";
+import { SamAccordionComponent, SamAccordionSection } from "./accordion/accordion.component";
 import { SamButtonComponent } from "./form-controls/button/button.component.ts";
 import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.component";
 import { SamPaginationComponent } from "./pagination/pagination.component";
@@ -40,7 +40,8 @@ import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.com
     SamClickOutsideDirective,
     SamHeaderLinksComponent,
     SamPaginationComponent,
-    SamAccordionsComponent,
+    SamAccordionComponent,
+    SamAccordionSection,
     SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,
@@ -71,7 +72,8 @@ import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.com
     SamClickOutsideDirective,
     SamHeaderLinksComponent,
     SamPaginationComponent,
-    SamAccordionsComponent,
+    SamAccordionComponent,
+    SamAccordionSection,
     SamButtonComponent,
     SamLabelComponent,
     SamSelectComponent,

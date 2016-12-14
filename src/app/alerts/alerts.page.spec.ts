@@ -47,7 +47,7 @@ describe('The AlertsPage component', () => {
 
   it('should do a search when a dropdown value changes', async(() => {
     component.filters.statuses = ['active', 'inactive'];
-    component.onParamChanged();
+    component.onParamChanged(undefined);
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       const items = fixture.debugElement.queryAll(By.directive(AlertItemComponent));
