@@ -12,10 +12,9 @@ export class AutoCompleteWrapper {
     switch(name) {
       case "suggestions":
             return this.oSearchService.autosearch(oData);
-      break;
+      
       case "agencypicker":
             return this.oFHService.search(oData);
-      break;
     }
   }
 }
