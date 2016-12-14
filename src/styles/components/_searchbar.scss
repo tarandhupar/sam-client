@@ -36,33 +36,27 @@
 
   /** Adjust the width of the input search bar**/
   .div-fill{
-    //display:block;
     display: table-cell;
     width: 100%;
     overflow: visible;
-    //float: left;
     height: 3.3rem;
     vertical-align:top;
   }
 
   .div-left{
-    //float:left;
     vertical-align:top;
   }
 
   .div-right{
-    //float:right;
     vertical-align:top;
   }
 
   .div-left, .div-right{
     width: auto;
-    //display: inline-block;
     display: table-cell;
   }
 
   .search-inputbar{
-    //position: absolute;
     top:0;
     left: 0;
     max-width: 800px;

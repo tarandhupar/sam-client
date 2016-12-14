@@ -1,5 +1,4 @@
 import { Component,Directive, Input,ElementRef,Renderer,Output,OnInit,EventEmitter,ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { AutoCompleteWrapper } from 'api-kit';
 
 @Component({
@@ -10,10 +9,10 @@ import { AutoCompleteWrapper } from 'api-kit';
 export class InputAutocompleteComponent implements OnInit {
 
   //@Input() orgRoot = "";
+  @Input() searchTerm: string = "";
   @Input() autoComplete = [];
   @Input() lazyLoad: boolean = false;
   @ViewChild("autocompletelist") autocompletelist;
-	// @Output() autocompleteSelection = new EventEmitter<any>();
   @Input() serviceName: string;
   @Input() index: string;
   @Output() keyEnterEmit = new EventEmitter<any>();
@@ -21,7 +20,6 @@ export class InputAutocompleteComponent implements OnInit {
 
   private searchTimer: NodeJS.Timer = null;
   autocompletePreselect = "";
-  @Input() searchTerm: string = "";
   searchData = [];
   autocompleteIndex = 0;
   autocompletePage = 0;
@@ -91,6 +89,7 @@ export class InputAutocompleteComponent implements OnInit {
     if(this.autocompleteIndex>=this.autocompleteLazyLoadMarker && !this.autocompleteEnd){
       this.autocompleteLazyLoadMarker += this.autocompletePageSize;
       //this.autocompletePage+=1;
+      this.autocompletePageSize+=5;
       var data = {
         'index':this.index,
         'keyword':this.searchTerm,
@@ -131,6 +130,7 @@ export class InputAutocompleteComponent implements OnInit {
       if(this.autoComplete[this.autocompleteIndex]){
         this.autocompleteSelection(this.autoComplete[this.autocompleteIndex]);
       }
+      this.resetAutocomplete();
     }
     //enter
     else if (!this.autoCompleteToggle && evt['keyCode'] == 13){
@@ -163,8 +163,7 @@ export class InputAutocompleteComponent implements OnInit {
     this.searchTermEmit.emit(this.searchTerm);
     this.autocompletePreselect = "";
     if(event.length>=3 && !this.autocompleting){
-      console.log("we get here?");
-      console.log(this.serviceName);
+      //console.log("we get here?");
       this.autoCompleteToggle = true;
       if (this.searchTimer) {
         clearTimeout(this.searchTimer);
@@ -192,7 +191,7 @@ export class InputAutocompleteComponent implements OnInit {
 
   searchCall(data, lazyloadFlag){
     this.autoCompleteWrapper.search(data, this.serviceName).subscribe( res => {
-      console.log(res);
+      //console.log(res);
       if(res){
         this.autocompleteData = res;
       }
@@ -203,6 +202,9 @@ export class InputAutocompleteComponent implements OnInit {
           this.autoComplete.length=0;
         }
         this.autoComplete.push(...this.autocompleteData);
+        this.autoComplete = this.autoComplete.filter(function(item, pos, self) {
+          return self.indexOf(item) == pos;
+        });
       } else {
         this.showAutocompleteMsg = true;
         this.autocompleteMsg = "No matches found";
