@@ -227,10 +227,10 @@
               <ng-container *ngIf="element.resourceId === resource.resourceId">
                 <!-- Description -->
                 <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
-                  {{resource.description}} <ng-container *ngIf="resource.size != 0">({{resource.size}} bytes)</ng-container>
+                  {{resource.description}} <ng-container *ngIf="resource.size != 0">({{resource.size | filesize}})</ng-container>
                 </a>
                 <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
-                  {{resource.description}} <ng-container *ngIf="resource.size != 0">({{resource.size}} bytes)</ng-container>
+                  {{resource.description}} <ng-container *ngIf="resource.size != 0">({{resource.size | filesize}})</ng-container>
                 </a>
               </ng-container>
             </ng-container>

@@ -322,8 +322,7 @@ export class OpportunityPage implements OnInit {
     return '?api_key=' + API_UMBRELLA_KEY;
   }
 
-  toggleAccordion(card){
+  public toggleAccordion(card){
     card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
   }
-
 }
