@@ -16,6 +16,7 @@ export class InputAutocompleteComponent implements OnInit {
 	// @Output() autocompleteSelection = new EventEmitter<any>();
   @Input() serviceName: string;
   @Input() index: string;
+  @Output() keyEnterEmit = new EventEmitter<any>();
   @Output() searchTermEmit = new EventEmitter<any>();
 
   private searchTimer: NodeJS.Timer = null;
@@ -133,7 +134,7 @@ export class InputAutocompleteComponent implements OnInit {
     }
     //enter
     else if (!this.autoCompleteToggle && evt['keyCode'] == 13){
-      //this.setOrganizationFromSearch();
+      this.keyEnterEmit.emit();
     }
   }
 

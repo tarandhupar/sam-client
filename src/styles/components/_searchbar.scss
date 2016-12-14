@@ -33,7 +33,7 @@
   /** Adjust the width of the input search bar**/
   .div-fill{
     display:block;
-    width: 57.6rem;
+    width: auto;
     overflow: visible;
     float: left;
     height: 3.3rem;
@@ -54,13 +54,12 @@
 
   .search-inputbar{
     //position: absolute;
-    //top:0;
-    //left: 0;
-    //max-width: 800px;
+    top:0;
+    left: 0;
+    max-width: 800px;
     width: 100%;
     height: 3.25rem;
     margin: 0rem;
-    max-width: 57.6rem;
   }
 
   .reset-icon,.reset-icon-active{
@@ -80,5 +79,41 @@
 
   .reset-icon-active:hover{
     cursor: pointer;
+  }
+
+  .usa-search-autocomplete{
+    position:absolute;
+    top:44px;
+    background:#fff;
+    margin-top:0;
+    margin-left: 0;
+    margin-right: 0;
+    padding:0;
+    border:1px solid #5b616b;
+    border-top:none;
+    width: calc(100%);
+    z-index: 10;
+    max-height:300px;
+    overflow:auto;
+
+    li{
+      list-style:none;
+      padding: 0 10px;
+      margin: 0;
+      max-width:inherit;
+    }
+    li:hover{
+      cursor:pointer;
+      background:#e1f3f8;
+    }
+
+    /*IE9 bugfix*/
+    li:focus{
+      outline:none;
+    }
+
+    li.autocomplete-selected{
+      background:#e1f3f8;
+    }
   }
 }
