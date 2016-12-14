@@ -64,6 +64,9 @@ export class SamDateEntryComponent implements OnInit{
     if(this.model["month"] != null && (this.model["month"]<1 || this.model["month"] > 12)){
       isValid = false;
     } 
+    if(this.model["month"] == null || this.model["day"] == null || this.model["year"] == null){
+      isValid = false;
+    }
 
     if(!isValid){ 
       this.errorMsg = "Invalid date";
