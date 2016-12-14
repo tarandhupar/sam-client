@@ -243,7 +243,7 @@
     <select [(ngModel)]="footerAlertModel.type">
       <option *ngFor="let type of footerAlertTypes">{{ type }}</option>
     </select>
-    <label>Timer (in milliseconds, 0 is infinite)</label>
+    <label>Dismiss Timer (in milliseconds, 0 is infinite)</label>
     <input [(ngModel)]="footerAlertModel.timer" type="number" min="0">
     <button (click)="onFooterAlertBtnClick()">Add Footer alert</button>
   </div>
