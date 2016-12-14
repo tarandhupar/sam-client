@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { FHService } from 'api-kit';
 import { ReplaySubject } from 'rxjs';
-import {CapitalizePipe} from "../app-pipes/capitalize.pipe";
+import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 import * as _ from 'lodash';
 
 @Component({
@@ -29,7 +29,18 @@ export class OrganizationPage implements OnInit, OnDestroy {
     private activatedRoute:ActivatedRoute,
     private router: Router,
     private location: Location,
-    private fhService:FHService) {}
+    private fhService:FHService) {
+
+    router.events.subscribe(s => {
+      if (s instanceof NavigationEnd) {
+        const tree = router.parseUrl(router.url);
+        if (tree.fragment) {
+          const element = document.getElementById(tree.fragment);
+          if (element) { element.scrollIntoView(); }
+        }
+      }
+    });
+  }
 
   ngOnInit() {
     this.currentUrl = this.location.path();
@@ -75,7 +86,8 @@ export class OrganizationPage implements OnInit, OnDestroy {
     this.pageNum = pagenumber;
     this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
     let navigationExtras: NavigationExtras = {
-      queryParams: {page: this.pageNum}
+      queryParams: {page: this.pageNum},
+      fragment: 'organization-sub-hierarchy'
     };
     this.router.navigate(['/organization',this.organization.orgKey],navigationExtras);
   }
