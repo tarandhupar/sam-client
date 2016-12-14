@@ -26,6 +26,7 @@ export class FHService{
     return this.oAPIService.call(oApiParam);
   }
 
+  //gets organization with heirarchy data
   getOrganizationById(id: string) {
     let oApiParam = {
       name: 'federalHierarchyV2',
@@ -38,9 +39,19 @@ export class FHService{
     return this.oAPIService.call(oApiParam);
   }
 
+  //gets organization WITHOUT heirarchy data (lighter)
+  getSimpleOrganizationById(id: string) {
+    let oApiParam = {
+      name: 'federalOrganization',
+      suffix: '/'+id,
+      method: 'GET'
+    };
+    return this.oAPIService.call(oApiParam);
+  }
+
   getDepartments() {
     let oApiParam = {
-      name: 'department',
+      name: 'federalDepartment',
       suffix: '/',
       method: 'GET'
     };

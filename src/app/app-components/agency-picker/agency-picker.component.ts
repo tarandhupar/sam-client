@@ -29,6 +29,7 @@ export class AgencyPickerComponent implements OnInit {
 	@Output() organization = new EventEmitter<any[]>();
 
   private searchTimer: NodeJS.Timer = null;
+  autocompletePreselect = "";
   searchTerm = "";
   searchData = [];
   autocompleteIndex = 0;
@@ -146,7 +147,6 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   lazyLoadAutocomplete(){
-    console.log(this.autocompleteEnd);
     if(this.autocompleteIndex>=this.autocompleteLazyLoadMarker && !this.autocompleteEnd){
       this.autocompleteLazyLoadMarker += this.autocompletePageSize;
       //this.autocompletePage+=1;
@@ -197,11 +197,6 @@ export class AgencyPickerComponent implements OnInit {
     else if (!this.autoCompleteToggle && evt['keyCode'] == 13){
       this.setOrganizationFromSearch();
     }
-    var x = 0;
-    if(this.autocompletelist && this.autocompletelist['nativeElement'] && this.autocompletelist.nativeElement.getElementsByTagName("li")){
-      x = this.autocompletelist.nativeElement.getElementsByTagName("li").length;
-    }
-    //console.log(this.autocompleteIndex, this.autoComplete.length,x,this.autocompleteLazyLoadMarker, this.autoComplete);
   }
 
   //init
@@ -227,12 +222,15 @@ export class AgencyPickerComponent implements OnInit {
 
   //what kind of data?
   autocompleteSelection(data){
+    this.autocompletePreselect = data._id;
+    //console.log("preselect set",this.autocompletePreselect);
     data["orgKey"] = data._id;
     this.updateBrowse(data);
     this.autoComplete.length = 0;
     this.setSearchTerm(data);
     this.autoCompleteToggle = false;
     this.autocompleteIndex = 0;
+    this.setOrganizationFromSearch();
   }
 
   //utility
@@ -257,6 +255,7 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   searchTermChange(event){
+    this.autocompletePreselect = "";
     if(event.length>=3 && !this.autocompleting){
       this.autoCompleteToggle = true;
       if (this.searchTimer) {
@@ -293,7 +292,6 @@ export class AgencyPickerComponent implements OnInit {
       if(res["_embedded"] && res["_embedded"]["results"]){
         var comp = this;
 
-        console.log(res);
         this.autocompleteData = res["_embedded"]["results"].map(function(org){
           switch(org['type']){
             case "DEPARTMENT":
@@ -308,7 +306,6 @@ export class AgencyPickerComponent implements OnInit {
           }
           return org;
         });
-        console.log(this.autocompletePage,res['page']['totalPages']-1);
         if(this.autocompletePage < res['page']['totalPages']-1){
           this.autocompletePage+=1;
         } else{
@@ -341,11 +338,11 @@ export class AgencyPickerComponent implements OnInit {
     //get full hierarchy of selection to get top level organization and get hierarchy to populate/select organization options
     var lvl = 0;
     if(data.type!="DEPARTMENT"){
-      this.serviceCall(data.orgKey).subscribe( fullOrgPath => {
+      this.serviceCall(data.orgKey,false).subscribe( fullOrgPath => {
         var orgPathArr = fullOrgPath['_embedded'][0]['org']['fullParentPath'].split(".");
         for(var orgidx in orgPathArr){
           this.orgLevels[orgidx].selectedOrg = orgPathArr[orgidx];
-          this.serviceCall(orgPathArr[orgidx]).subscribe( orglvldata => {
+          this.serviceCall(orgPathArr[orgidx],true).subscribe( orglvldata => {
             orglvldata = orglvldata['_embedded']['0']['org'];
             var orglvl = orglvldata['level'];//not zero based
             var orgType = orglvldata['type'].toLowerCase() == "department" ? "agency": "office";
@@ -373,6 +370,12 @@ export class AgencyPickerComponent implements OnInit {
 
   //needs refactor for messaging
   setOrganizationFromSearch(){
+    if(this.autocompletePreselect.length>0){
+      this.serviceCall(this.autocompletePreselect,false).subscribe(res=>{
+        this.setOrganization(res["_embedded"][0]["org"]);
+      });
+      return;
+    }
     for(var idx in this.orgLevels){
       //this.orgLevels[idx].selectedOrg = "";
     }
@@ -397,7 +400,7 @@ export class AgencyPickerComponent implements OnInit {
       });
     } else {
       data["ids"] = this.searchTerm;
-      this.serviceCall(this.searchTerm).subscribe(res=>{
+      this.serviceCall(this.searchTerm,false).subscribe(res=>{
         if(res["_embedded"].length===1){
           res = res["_embedded"][0]['org'];
           if(this.orgRoot && res['fullParentPath'].split(".").indexOf(this.orgRoot)==-1){
@@ -537,7 +540,7 @@ export class AgencyPickerComponent implements OnInit {
     //run call
     if(typeof orgLevel.selectedOrg !== 'undefined' && orgLevel.selectedOrg !== ''
         && orgLevel.selectedOrg !== null) {
-      this.serviceCall(orgLevel.selectedOrg).subscribe( oData => {
+      this.serviceCall(orgLevel.selectedOrg,true).subscribe( oData => {
         oData = oData._embedded[0].org;
         //filter and sort if too many results
         oData["hierarchy"] = oData["hierarchy"].filter(this._filterActiveOrgs).sort(this._nameOrgSort);
@@ -623,10 +626,14 @@ export class AgencyPickerComponent implements OnInit {
     this.browseToggle = this.browseToggle ? false : true;
   }
 
-	serviceCall(orgId){
+	serviceCall(orgId,hierarchy:boolean){
 		//get Department level of user's organizationId
     if(orgId!=""){
-      return this.oFHService.getOrganizationById(orgId);
+      if(hierarchy){
+        return this.oFHService.getOrganizationById(orgId);
+      } else{
+        return this.oFHService.getSimpleOrganizationById(orgId);
+      }
     } else {
       return this.oFHService.getDepartments();
     }
@@ -636,14 +643,14 @@ export class AgencyPickerComponent implements OnInit {
 	initDropdowns(){
     var root = this.orgRoot ? this.orgRoot : "";
     if(!this.orgRoot){
-  		this.serviceCall(root).subscribe( res => {
+  		this.serviceCall(root,true).subscribe( res => {
         res._embedded = res._embedded.sort(this._nameOrgSort);
         var formattedData = this.formatHierarchy("department",res._embedded);
         this.orgLevels[0].options = formattedData;
         this.processPresetOrg();
   		});
     } else {
-      this.serviceCall(root).subscribe( res => {
+      this.serviceCall(root,true).subscribe( res => {
         var orgPath = res._embedded[0]['org']['fullParentPath'].split(".");
         this.lockHierachy = orgPath;
         for(var idx in orgPath){
@@ -669,7 +676,7 @@ export class AgencyPickerComponent implements OnInit {
 
   processPresetOrg(){
     if(this.organizationId.length > 0) {
-      this.serviceCall(this.organizationId).subscribe(res => {
+      this.serviceCall(this.organizationId,true).subscribe(res => {
         res = res._embedded[0]['org'];
         this.setOrganization(res);
         this.updateBrowse(res);
@@ -760,6 +767,7 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   onResetClick(){
+    this.autocompletePreselect = "";
     this.searchTerm = "";
     this.resetIconClass = "usa-agency-picker-search-reset";
   }
