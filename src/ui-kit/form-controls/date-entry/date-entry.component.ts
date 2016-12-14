@@ -23,7 +23,7 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
         </div>
         <div class="usa-form-group usa-form-group-year">
           <label [attr.for]="getIdentifer('date')+'_3'">Year</label>
-          <input (blur)="onBlur($event)" [(ngModel)]="model.year" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_3" name="date_of_birth_3" pattern="[0-9]{4}" type="number" min="1900" max="2000">
+          <input (blur)="onBlur($event)" [(ngModel)]="model.year" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_3" name="date_of_birth_3" pattern="[0-9]{4}" type="number" min="1900" max="3000">
         </div>
       </div>
     </labelWrapper>
