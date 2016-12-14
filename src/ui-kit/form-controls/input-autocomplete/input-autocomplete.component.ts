@@ -1,6 +1,6 @@
 import { Component,Directive, Input,ElementRef,Renderer,Output,OnInit,EventEmitter,ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FHService } from 'api-kit';
+import { AutoCompleteWrapper } from 'api-kit';
 
 @Component({
 	selector: 'samInputAutocomplete',
@@ -13,11 +13,14 @@ export class InputAutocompleteComponent implements OnInit {
   @Input() autoComplete = [];
   @Input() lazyLoad: boolean = false;
   @ViewChild("autocompletelist") autocompletelist;
-	//@Output() autocompleteSelection = new EventEmitter<any>();
+	// @Output() autocompleteSelection = new EventEmitter<any>();
+  @Input() serviceName: string;
+  @Input() index: string;
+  @Output() searchTermEmit = new EventEmitter<any>();
 
   private searchTimer: NodeJS.Timer = null;
   autocompletePreselect = "";
-  @Input() searchTerm = "";
+  @Input() searchTerm: string = "";
   searchData = [];
   autocompleteIndex = 0;
   autocompletePage = 0;
@@ -32,9 +35,10 @@ export class InputAutocompleteComponent implements OnInit {
   autocompleting = false;
   cancelBlur = false;
   dropdownLimit = 300;
-  resetIconClass:string = "usa-agency-picker-search-reset";
+  resetIconClass:string = "reset-icon";
+  resetDisabled:boolean = true;
 
-	constructor(private oFHService:FHService){}
+	constructor(private autoCompleteWrapper:AutoCompleteWrapper){}
 
   //autocomplete
   autocompleteMouseover(idx){
@@ -63,19 +67,16 @@ export class InputAutocompleteComponent implements OnInit {
   }
 
   runAutocomplete(){
-    //only run for name searches
-    if(this._isLetter(this.searchTerm)){
+    if(this.searchTerm){
       this.autoComplete.length = 0;
       this.autocompleteEnd = false;
       this.autocompletePage = 0;
       var data = {
+        'index':this.index,
         'keyword':this.searchTerm,
         'pageNum':this.autocompletePage,
         'pageSize':this.autocompletePageSize
       };
-      /*if(this.orgRoot){
-        data['parentOrganizationId'] = this.orgRoot;
-      }*/
       this.autocompleteIndex=0;
       this.autocompleteLazyLoadMarker = 3;
       this.searchCall(data,false);
@@ -90,13 +91,11 @@ export class InputAutocompleteComponent implements OnInit {
       this.autocompleteLazyLoadMarker += this.autocompletePageSize;
       //this.autocompletePage+=1;
       var data = {
+        'index':this.index,
         'keyword':this.searchTerm,
         'pageNum':this.autocompletePage,
         'pageSize':this.autocompletePageSize
       };
-      /*if(this.orgRoot){
-        data['parentOrganizationId'] = this.orgRoot;
-      }*/
       this.searchCall(data,false);
     }
   }
@@ -140,45 +139,31 @@ export class InputAutocompleteComponent implements OnInit {
 
   //init
 	ngOnInit() {
+    this.setResetIconClass();
 	}
 
   //what kind of data?
   autocompleteSelection(data){
-    this.autocompletePreselect = data._id;
-    //data["orgKey"] = data._id;
+    //console.log("Test",data);
+    this.autocompletePreselect = data;
     this.autoComplete.length = 0;
-    this.setSearchTerm(data);
+    this.searchTerm=data;
     this.autoCompleteToggle = false;
     this.autocompleteIndex = 0;
 
-    this.emitAutoselect();
-  }
-
-  //utility
-  _isLetter(str) {
-    return  str.match(/[^0-9]/);
-  }
-
-  _nameOrgSort(a,b){
-    if(a["org"]["name"].toLowerCase() < b["org"]["name"].toLowerCase()) return -1;
-    if(a["org"]["name"].toLowerCase() > b["org"]["name"].toLowerCase()) return 1;
-    return 0;
-  }
-
-  _filterActiveOrgs(org){
-    if(org["org"]['type']=="OFFICE" && org["org"]['modStatus'] && org["org"]['modStatus']!="active"){
-      return false;
-    }
-    if(!org["org"]['name']){
-      return false;
-    }
-    return true;
+    //this.emitAutoselect();
+      this.searchTermChange(this.searchTerm);
   }
 
   searchTermChange(event){
+    //console.log("triggered",event);
+    //console.log("index",this.index);
+    this.setResetIconClass();
+    this.searchTermEmit.emit(this.searchTerm);
     this.autocompletePreselect = "";
     if(event.length>=3 && !this.autocompleting){
       console.log("we get here?");
+      console.log(this.serviceName);
       this.autoCompleteToggle = true;
       if (this.searchTimer) {
         clearTimeout(this.searchTimer);
@@ -202,37 +187,13 @@ export class InputAutocompleteComponent implements OnInit {
       this.autocompleteMsg = "";
       this.autoCompleteToggle = false;
     }
-    if(this.searchTerm.length>0){
-      this.resetIconClass = "usa-agency-picker-search-reset-active";
-    } else {
-      this.resetIconClass = "usa-agency-picker-search-reset";
-    }
   }
 
-  searchCall(data,lazyloadFlag){
-    this.oFHService.search(data).subscribe( res => {
-      if(res["_embedded"] && res["_embedded"]["results"]){
-        var comp = this;
-
-        this.autocompleteData = res["_embedded"]["results"].map(function(org){
-          switch(org['type']){
-            case "DEPARTMENT":
-              org.name += comp.levelFormatter(1);
-              break;
-            case "AGENCY":
-              org.name += comp.levelFormatter(2);
-              break;
-            case "OFFICE":
-              org.name += comp.levelFormatter(3);
-              break;
-          }
-          return org;
-        });
-        if(this.autocompletePage < res['page']['totalPages']-1){
-          this.autocompletePage+=1;
-        } else{
-          this.autocompleteEnd = true;
-        }
+  searchCall(data, lazyloadFlag){
+    this.autoCompleteWrapper.search(data, this.serviceName).subscribe( res => {
+      console.log(res);
+      if(res){
+        this.autocompleteData = res;
       }
       if(this.autocompleteData.length>0){
         this.showAutocompleteMsg = false;
@@ -248,49 +209,24 @@ export class InputAutocompleteComponent implements OnInit {
     });
   }
 
-  setSearchTerm(data){
-    this.searchTerm = data['name'];
-  }
-
   emitAutoselect(){
-    //this.organization.emit(this.selectedOrganizations);
-  }
-
-	serviceCall(orgId,hierarchy:boolean){
-		//get Department level of user's organizationId
-    if(orgId!=""){
-      if(hierarchy){
-        return this.oFHService.getOrganizationById(orgId);
-      } else{
-        return this.oFHService.getSimpleOrganizationById(orgId);
-      }
-    } else {
-      return this.oFHService.getDepartments();
-    }
-	}
-
-  levelFormatter(lvl){
-    switch(lvl){
-      case 1:
-        return " (D)";
-      case 2:
-        return " (A)";
-      case 3:
-        return " (L3)";
-      case 4:
-        return " (L4)";
-      case 5:
-        return " (L5)";
-      case 6:
-        return " (L6)";
-      case 7:
-        return " (L7)";
-    }
   }
 
   onResetClick(){
-    this.autocompletePreselect = "";
-    this.searchTerm = "";
-    this.resetIconClass = "usa-agency-picker-search-reset";
+    if(!this.resetDisabled){
+      this.autocompletePreselect = "";
+      this.searchTerm = "";
+      this.searchTermChange(this.searchTerm);
+    }
+  }
+
+  setResetIconClass(){
+    if(this.searchTerm === undefined || this.searchTerm.length === 0){
+      this.resetIconClass = "reset-icon";
+      this.resetDisabled = true;
+    }else{
+      this.resetIconClass = "reset-icon-active";
+      this.resetDisabled = false;
+    }
   }
 }

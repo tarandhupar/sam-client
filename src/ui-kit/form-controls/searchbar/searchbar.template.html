@@ -28,12 +28,13 @@
       </button>
     </div>
 
+    <!--<div class="relative div-fill">-->
+      <!--<input class="search-inputbar" type="search" name="search" aria-label="search-keyword" [(ngModel)]="keyword" (ngModelChange)="onKeywordChange()" [placeholder]="placeholder" (keyup.enter)="onSearchClick()">-->
+      <!--<span [ngClass]="resetIconClass"><i class="fa fa-times-circle" (click)="onResetClick()"></i></span>-->
+    <!--</div>-->
     <div class="relative div-fill">
-      <input class="search-inputbar" type="search" name="search" aria-label="search-keyword" [(ngModel)]="keyword" (ngModelChange)="onKeywordChange()" [placeholder]="placeholder" (keyup.enter)="onSearchClick()">
-      <span [ngClass]="resetIconClass"><i class="fa fa-times-circle" (click)="onResetClick()"></i></span>
+    <samInputAutocomplete [serviceName]="'suggestions'" [index]="filterValue" (searchTermEmit)="callSearch($event)" [searchTerm]="keyword"></samInputAutocomplete>
     </div>
-
-
   </form>
 
 </div>

@@ -28,7 +28,7 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multiselect-dropdown.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
-
+import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -57,6 +57,7 @@ import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
+    InputAutocompleteComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
