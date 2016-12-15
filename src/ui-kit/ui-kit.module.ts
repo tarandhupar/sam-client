@@ -62,6 +62,8 @@ import { SamModalComponent } from "./modal/modal.component";
     SamNameEntryComponent,
     SamPhoneEntryComponent,
     SamDateEntryComponent,
+    InputAutocompleteComponent,
+    SamModalComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -93,7 +95,9 @@ import { SamModalComponent } from "./modal/modal.component";
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
-    SamDateEntryComponent
+    SamDateEntryComponent,
+    InputAutocompleteComponent,
+    SamModalComponent
   ],
   providers: [ ]
 })
