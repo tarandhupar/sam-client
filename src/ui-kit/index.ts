@@ -2,6 +2,7 @@ export * from './ui-kit.module';
 export { SamSelectComponent } from './form-controls/select';
 export { SamCheckboxComponent } from "./form-controls/checkbox";
 export { SamTextComponent } from './form-controls/text';
+export { SamTextareaComponent } from './form-controls/textarea';
 export { SamRadioButtonComponent } from "./form-controls/radiobutton/radiobutton.component";
 export { SamSearchHeaderComponent } from './search-header/search-header.component';
 export { SamSearchbarComponent } from "./form-controls/searchbar/searchbar.component";

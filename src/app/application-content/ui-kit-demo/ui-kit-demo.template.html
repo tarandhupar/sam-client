@@ -151,6 +151,46 @@
   </div>
 </div>
 <div class="usa-grid">
+  <h2>Select Text &lt;samTextarea&gt;</h2>
+  <div class="usa-width-one-third">
+    <samTextarea
+      [(ngModel)]="textareaModel"
+      [name]="textareaConfig.name"
+      [label]="textareaConfig.label"
+      [hint]="textareaConfig.hint"
+      [errorMessage]="textareaConfig.errorMessage"
+      [disabled]="textareaConfig.disabled">
+    </samTextarea>
+  </div>
+  <div class="usa-width-one-third">
+    <fieldset class="usa-fieldset-inputs usa-sans">
+      <legend><h3>Options</h3></legend>
+      <ul class="usa-unstyled-list">
+        <li>
+          <input id="isDisabled" type="checkbox" [(ngModel)]="textareaConfig.disabled">
+          <label for="isDisabled">Disabled</label>
+        </li>
+        <li>
+          <label>Label text</label>
+          <input type="text" [(ngModel)]="textareaConfig.label">
+        </li>
+        <li>
+          <label>Error message text</label>
+          <input type="text" [(ngModel)]="textareaConfig.errorMessage">
+        </li>
+        <li>
+          <label>Hint text</label>
+          <input type="text" [(ngModel)]="textareaConfig.hint">
+        </li>
+      </ul>
+    </fieldset>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{textareaModel}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
   <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
   <div class="usa-width-one-third">
     <samCheckbox
