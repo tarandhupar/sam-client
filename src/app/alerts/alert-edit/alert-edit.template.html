@@ -1,4 +1,4 @@
-<div class="alert-edit">
+<div class="alert-item">
   <h2>Add Alert</h2>
   <div class="usa-width-one-half">
     <div class="usa-input-error">
@@ -6,20 +6,15 @@
       <span class="usa-input-error-message" id="input-error-message" role="alert">Helpful error message</span>
       <input id="input-error" name="input-error" type="text" aria-describedby="input-error-message">
     </div>
-    <div class="alert-body">
-      {{alert.description()}}
+    <div class="usa-input-error">
+      <label class="usa-input-error-label" for="input-error">Text input error</label>
+      <span class="usa-input-error-message" id="input-error-message" role="alert">Helpful error message</span>
+      <textarea id="description-input" name="input-error" type="text" aria-describedby="input-error-message"></textarea>
     </div>
   </div>
   <div class="usa-width-one-half">
-    <div class="alert-right-item">
-      Published Date: {{alert.publishedDate() | dateFormat: 'MMM DD, YYYY'}}
-    </div>
-    <div class="alert-right-item">
-      End Date: {{alert.endDate() | dateFormat: 'MMM DD, YYYY'}}
-    </div>
-    <div class="alert-right-item">
-      Status: {{alert.status()}}
-    </div>
+    <samDateEntry></samDateEntry>
+    <samDateEntry></samDateEntry>
   </div>
   <div class="alert-edit-actions">
     <div class="pull-right">
