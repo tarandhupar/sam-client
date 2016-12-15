@@ -28,6 +28,8 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multiselect-dropdown.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
+import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.component";
+
 import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
 
 /**
@@ -58,6 +60,7 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
+    SamDateEntryComponent,
     InputAutocompleteComponent,
     LabelWrapper,
     FieldsetWrapper,
@@ -90,6 +93,7 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
+    SamDateEntryComponent,
     InputAutocompleteComponent
   ],
   providers: [ ]

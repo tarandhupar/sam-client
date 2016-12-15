@@ -94,6 +94,17 @@ export class UIKitDemoPage {
     timer: 0
   }
 
+  dateModel = {
+    month: null,
+    day: null,
+    year: null
+  };
+  dateModel2 = {
+    month: 12,
+    day: 31,
+    year: 2016
+  };
+
   constructor(private alertFooterService: AlertFooterService) {  }
 
   onEmptyOptionChanged($event) {
