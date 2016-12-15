@@ -1,6 +1,7 @@
 export * from './ui-kit.module';
 export { SamSelectComponent } from './form-controls/select';
 export { SamCheckboxComponent } from "./form-controls/checkbox";
+export { SamTextComponent } from './form-controls/text';
 export { SamRadioButtonComponent } from "./form-controls/radiobutton/radiobutton.component";
 export { SamSearchHeaderComponent } from './search-header/search-header.component';
 export { SamSearchbarComponent } from "./form-controls/searchbar/searchbar.component";
@@ -14,4 +15,4 @@ export { SamLabelComponent } from './label/label.component';
 export { SamPaginationComponent } from "./pagination/pagination.component";
 export { SamClickOutsideDirective } from "./click-outside/click-outside.directive"
 export { SamHeaderLinksComponent } from "./header-links/header-links.component";
-export { SamMultiSelectDropdownComponent } from "./multiselect-dropdown"
+export { SamMultiSelectDropdownComponent } from "./multiselect-dropdown";

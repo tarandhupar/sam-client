@@ -31,6 +31,15 @@ export class UIKitDemoPage {
     label: 'Select a region',
   };
 
+  textModel = 'Some Text';
+  textConfig = {
+    label: "Enter zipcode",
+    hint: "Zipcode can be short or long version",
+    errorMessage: 'Uh-oh, something went wrong',
+    name: 'aria-friendly-name',
+    disabled: false,
+  };
+
   // Radio Component
   radioModel: any = 'ma';
   radioConfig = {

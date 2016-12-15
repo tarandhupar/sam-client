@@ -29,7 +29,7 @@ import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multisel
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
 import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.component";
-
+import {SamTextComponent} from "./form-controls/text/text.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -60,6 +60,7 @@ import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.com
     SamNameEntryComponent,
     SamPhoneEntryComponent,
     SamDateEntryComponent,
+    SamTextComponent,
     LabelWrapper,
     FieldsetWrapper,
   ],
@@ -91,7 +92,8 @@ import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.com
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
-    SamDateEntryComponent
+    SamDateEntryComponent,
+    SamTextComponent
   ],
   providers: [ ]
 })
