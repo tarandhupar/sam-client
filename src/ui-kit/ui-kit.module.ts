@@ -87,7 +87,8 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
-    SamPhoneEntryComponent
+    SamPhoneEntryComponent,
+    InputAutocompleteComponent
   ],
   providers: [ ]
 })

@@ -12,7 +12,7 @@ export class SuggestionsService {
       name: 'suggestions',
       suffix: '/',
       oParam: {
-        index: oData.index.toUpperCase(),
+        index: oData.index,
         q: oData.keyword
       },
       method: 'GET'
