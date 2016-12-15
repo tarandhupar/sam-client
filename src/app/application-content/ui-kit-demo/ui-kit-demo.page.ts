@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AlertFooterService } from '../../alerts/alert-footer';
 
 @Component({
   templateUrl: 'ui-kit-demo.template.html'
@@ -85,6 +86,14 @@ export class UIKitDemoPage {
   phoneModel = "";
   phoneModel2 = "1+(123)456-3366";
 
+  footerAlertTypes = ['success','warning','error','info'];
+  footerAlertModel = {
+    title: "test title",
+    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+    type: "error",
+    timer: 0
+  }
+
   dateModel = {
     month: null,
     day: null,
@@ -96,7 +105,7 @@ export class UIKitDemoPage {
     year: 2016
   };
 
-  constructor() {  }
+  constructor(private alertFooterService: AlertFooterService) {  }
 
   onEmptyOptionChanged($event) {
     if ($event.target.checked) {
@@ -128,5 +137,8 @@ export class UIKitDemoPage {
   }
   phoneModelChange(phoneNum){
     this.phoneModel = phoneNum;
+  }
+  onFooterAlertBtnClick(){
+    this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.footerAlertModel)));
   }
 }

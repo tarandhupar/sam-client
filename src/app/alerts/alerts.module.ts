@@ -7,6 +7,8 @@ import {SamUIKitModule} from "ui-kit";
 import {AlertItemComponent} from "./alert-item/alert-item.component";
 import {PipesModule} from "../app-pipes/app-pipes.module";
 import {AlertHeaderComponent} from "./alert-header/alert-header.component";
+import {AlertFooterComponent} from "./alert-footer/alert-footer.component";
+import {AlertFooterService} from "./alert-footer/alert-footer.service";
 import {FormsModule} from "@angular/forms";
 
 @NgModule({
@@ -17,8 +19,8 @@ import {FormsModule} from "@angular/forms";
     SamUIKitModule,
     PipesModule
   ],
-  exports: [ AlertHeaderComponent ],
-  declarations: [ AlertsPage, AlertItemComponent, AlertHeaderComponent ],
-  providers: [ /* AlertsResolver */ ],
+  exports: [ AlertHeaderComponent, AlertFooterComponent ],
+  declarations: [ AlertsPage, AlertItemComponent, AlertHeaderComponent, AlertFooterComponent ],
+  providers: [ AlertFooterService/* AlertsResolver */ ],
 })
 export class AlertsModule { }
