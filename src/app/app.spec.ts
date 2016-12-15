@@ -27,6 +27,7 @@ import { PipesModule } from "./app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./opportunity/pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./opportunity/pipes/timezone-label.pipe";
 import { FixHTMLPipe } from "./opportunity/pipes/fix-html.pipe";
+import {FilesizePipe} from "./opportunity/pipes/filesize.pipe";
 
 
 class RouterStub {
@@ -48,7 +49,7 @@ var searchServiceStub = {};
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, ExclusionsResult, WageDeterminationResult, OpportunityPage, PageNotFoundErrorPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe],
+    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, ExclusionsResult, WageDeterminationResult, OpportunityPage, PageNotFoundErrorPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe],
     imports: [PipesModule, SamUIKitModule, AppComponentsModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
     providers: [
       App,
