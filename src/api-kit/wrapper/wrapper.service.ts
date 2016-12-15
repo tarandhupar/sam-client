@@ -27,6 +27,7 @@ export class WrapperService {
     *          name: '',
     *          suffix: '',
     *          oParam: {},
+    *          body: {},
     *          method: '' (GET|POST|PUT...)
     *      }
     * @returns Observable
@@ -52,7 +53,7 @@ export class WrapperService {
             "search": oURLSearchParams,
             "method": RequestMethod.Get,
             "headers": oHeader,
-            "body": "",
+            "body": oApiParam.body,
             "url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
         };
 

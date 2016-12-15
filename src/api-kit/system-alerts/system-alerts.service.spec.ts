@@ -38,4 +38,28 @@ describe('SystemAlertsService', () => {
     });
     service.getAll(5, 5, ['y', 'n'], ['warning', 'error'], "1d", "published", 'asc');
   })));
+
+  it('should update an alert', inject([SystemAlertsService, MockBackend], fakeAsync((service: SystemAlertsService, backend: MockBackend) => {
+    backend.connections.subscribe((connection: MockConnection) => {
+      expect(connection.request.method).toBe(RequestMethod.Put);
+      expect(connection.request.url).toMatch(/alerts/);
+    });
+    service.updateAlert(1, true, 'SEVERE', '1/2/16', '1/2/3');
+  })));
+
+  it('should create an alert', inject([SystemAlertsService, MockBackend], fakeAsync((service: SystemAlertsService, backend: MockBackend) => {
+    backend.connections.subscribe((connection: MockConnection) => {
+      expect(connection.request.method).toBe(RequestMethod.Post);
+      expect(connection.request.url).toMatch(/alerts/);
+    });
+    service.createAlert(true, 'SEVERE', '1/2/16', '1/2/3');
+  })));
+
+  it('should delete an alert', inject([SystemAlertsService, MockBackend], fakeAsync((service: SystemAlertsService, backend: MockBackend) => {
+    backend.connections.subscribe((connection: MockConnection) => {
+      expect(connection.request.method).toBe(RequestMethod.Delete);
+      expect(connection.request.url).toMatch(/alerts/);
+    });
+    service.deleteAlert(1);
+  })));
 });

@@ -68,4 +68,50 @@ export class SystemAlertsService {
 
     return this.apiService.call(apiOptions);
   }
+
+  updateAlert(id: number, archived: boolean, severity: string, publishedDate: string, endDate: string) {
+    const apiOptions: any = {
+      name: 'alerts',
+      suffix: '',
+      method: 'PUT',
+      body: {
+        id: id,
+        archived: archived,
+        severity: severity,
+        published: publishedDate,
+        end_date: endDate
+      }
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  createAlert(archived: boolean, severity: string, publishedDate: string, endDate: string) {
+    const apiOptions: any = {
+      name: 'alerts',
+      suffix: '',
+      method: 'POST',
+      body: {
+        archived: archived,
+        severity: severity,
+        published: publishedDate,
+        end_date: endDate
+      }
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  deleteAlert(id: number) {
+    const apiOptions: any = {
+      name: 'alerts',
+      suffix: '',
+      method: 'DELETE',
+      body: {
+        id: id
+      }
+    };
+
+    return this.apiService.call(apiOptions);
+  }
 }
