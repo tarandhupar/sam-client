@@ -34,8 +34,6 @@ export class InputAutocompleteComponent implements OnInit {
   autocompleting = false;
   cancelBlur = false;
   dropdownLimit = 300;
-  resetIconClass:string = "reset-icon";
-  resetDisabled:boolean = true;
 
 	constructor(private autoCompleteWrapper:AutoCompleteWrapper){}
 
@@ -140,7 +138,6 @@ export class InputAutocompleteComponent implements OnInit {
 
   //init
 	ngOnInit() {
-    this.setResetIconClass();
 	}
 
   //what kind of data?
@@ -159,7 +156,6 @@ export class InputAutocompleteComponent implements OnInit {
   searchTermChange(event){
     //console.log("triggered",event);
     //console.log("index",this.index);
-    this.setResetIconClass();
     this.searchTermEmit.emit(this.searchTerm);
     this.autocompletePreselect = "";
     if(event.length>=3 && !this.autocompleting){
@@ -216,20 +212,8 @@ export class InputAutocompleteComponent implements OnInit {
   }
 
   onResetClick(){
-    if(!this.resetDisabled){
       this.autocompletePreselect = "";
       this.searchTerm = "";
       this.searchTermChange(this.searchTerm);
-    }
-  }
-
-  setResetIconClass(){
-    if(this.searchTerm === undefined || this.searchTerm.length === 0){
-      this.resetIconClass = "reset-icon";
-      this.resetDisabled = true;
-    }else{
-      this.resetIconClass = "reset-icon-active";
-      this.resetDisabled = false;
-    }
   }
 }

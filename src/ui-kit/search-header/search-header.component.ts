@@ -37,6 +37,8 @@ export class SamSearchHeaderComponent {
   }
 
   onSearchEvent($event) {
+    this.keyword=$event.keyword;
+    this.filterValue=$event.searchField;
     this.searchEvent.emit($event);
   }
 

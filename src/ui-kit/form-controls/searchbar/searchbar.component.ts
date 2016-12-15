@@ -28,7 +28,6 @@ export class SamSearchbarComponent {
   @Input()
   filterValue: string = "";
 
-
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
 
@@ -87,27 +86,6 @@ export class SamSearchbarComponent {
       searchField: this.filterValue
     });
   }
-
-  // onKeywordChange(){
-  //   this.setResetIconClass();
-  // }
-  //
-  // onResetClick(){
-  //   if(!this.resetDisabled){
-  //     this.keyword = "";
-  //     this.setResetIconClass();
-  //   }
-  // }
-  //
-  // setResetIconClass(){
-  //   if(this.keyword === undefined || this.keyword.length === 0){
-  //     this.resetIconClass = "reset-icon";
-  //     this.resetDisabled = true;
-  //   }else{
-  //     this.resetIconClass = "reset-icon-active";
-  //     this.resetDisabled = false;
-  //   }
-  // }
 
   isSizeSmall(){
     return this.size === "small";
