@@ -25,7 +25,7 @@
 
   .image-library-close{
     position: absolute;
-    top:20px;
+    top:3px;
     right:10px;
     text-decoration: none;
   }
@@ -50,7 +50,6 @@
   }
 
   .reference-image-layer-unselect{
-    /*background-color:rgba(214,215,217,0.6);*/
     background: #aaa;
     background-color:rgba(255,255,255,0.8);
   }
@@ -71,17 +70,6 @@
 
   .black-border{
     border: 2px solid #000;
-  }
-
-  .div-fill{
-    display:block;
-    overflow: hidden;
-    float: none;
-  }
-
-  .div-right{
-    float:right;
-    display: inline-block;
   }
 
   .tri-div{
@@ -130,4 +118,12 @@
   .white-text{
     color: #ffffff;
   }
+
+  .detail-div{
+    margin-right: 8.33%;
+    display:block;
+    overflow: hidden;
+    float: none;
+  }
+
 }

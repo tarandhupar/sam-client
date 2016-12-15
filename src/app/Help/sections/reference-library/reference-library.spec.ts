@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import { ReferenceLibraryComponent } from "./reference-library.component";
-import { HelpModule } from "../../help.module"
+import { HelpModule } from "../../help.module";
 
 describe('Reference Library page in online help', () => {
   let component:ReferenceLibraryComponent;

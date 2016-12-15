@@ -31,7 +31,7 @@ export class NewToSamComponent {
     }
   ];
 
-  private showImageLibrary: boolean = false;
+  showImageLibrary: boolean = false;
 
   constructor() { }
 

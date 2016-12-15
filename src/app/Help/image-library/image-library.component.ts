@@ -8,6 +8,7 @@ export class ImageLibraryComponent {
 
   @Input() name:string;
   @Input() data:any;
+  @Input() showDetailTitle:boolean = true;
 
   detailObj: any = {
     showDetail: false,
