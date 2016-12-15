@@ -30,7 +30,7 @@
         <div class="usa-width-one-whole m_T-4x">
           <h3 class="p_L-2x" *ngIf="showDetailTitle">{{detailObj.item.title}}</h3>
           <p class="p_L-5x p_R-2x p_B-1x detail-text">{{detailObj.item.detail}}</p>
-          <span class="reference-content-link usa-external_link"><a  href="{{detailObj.item.url}}">{{detailObj.item.link}}</a></span>
+          <span class="reference-content-link" [ngClass]="getLinkClass()"><a  href="{{detailObj.item.url}}">{{detailObj.item.link}}</a></span>
         </div>
       </div>
     </div>

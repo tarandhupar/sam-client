@@ -9,6 +9,7 @@ export class ImageLibraryComponent {
   @Input() name:string;
   @Input() data:any;
   @Input() showDetailTitle:boolean = true;
+  @Input() isExternalLink:boolean = true;
 
   detailObj: any = {
     showDetail: false,
@@ -71,6 +72,10 @@ export class ImageLibraryComponent {
     }
     return "reference-image-container-small"
 
+  }
+
+  private getLinkClass(): string{
+    return this.isExternalLink? "usa-external_link":"";
   }
 
 }

@@ -44,4 +44,5 @@ describe("New to Sam.gov page in help page", ()=>{
       expect(component.showImageLibrary).toBe(false);
     });
   });
+
 });

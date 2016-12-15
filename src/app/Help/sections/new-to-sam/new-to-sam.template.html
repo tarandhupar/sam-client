@@ -78,7 +78,7 @@
 
   <div *ngIf="showImageLibrary">
     <div class="usa-grid-full ">
-      <h3 class="m_0"><a (click)="closeImageLibrary()"><span><i class="fa fa-arrow-circle-o-left m_R-1x"></i>Back</span></a></h3>
+      <h3 class="m_0"><a class="new-to-sam-back" (click)="closeImageLibrary()"><span><i class="fa fa-arrow-circle-o-left m_R-1x"></i>Back</span></a></h3>
       <p>
         Ad verterem scripserit pro, falli apeirian ad est, vis
         ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum
@@ -87,13 +87,13 @@
       </p>
     </div>
     <div class="usa-grid-full">
-      <imageLibrary [name]="new-to-sam-1" [data]="data" [showDetailTitle]="false"></imageLibrary>
+      <imageLibrary [name]="new-to-sam-1" [data]="data" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
     </div>
     <div class="usa-grid-full m_T-3x">
-      <imageLibrary [name]="new-to-sam-2" [data]="data" [showDetailTitle]="false"></imageLibrary>
+      <imageLibrary [name]="new-to-sam-2" [data]="data" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
     </div>
     <div class="usa-grid-full m_T-3x">
-      <imageLibrary [name]="new-to-sam-3" [data]="data" [showDetailTitle]="false"></imageLibrary>
+      <imageLibrary [name]="new-to-sam-3" [data]="data" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
     </div>
   </div>
 
