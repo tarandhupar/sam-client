@@ -37,8 +37,9 @@
         <li>
           <a [ngClass]="getSectionClass('accounts')" (click)="changeSection('accounts')" [routerLink]="['/help/accounts']">User Accounts</a>
           <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('accounts')">
-            <li><a #resetPwd [ngClass]="getSubSectionClass('resetPwd')" (click)="changeSubSection('resetPwd',resetPwd)" href="{{currentUrl}}#resetPwd">Reset Password</a></li>
-            <li><a #other [ngClass]="getSubSectionClass('other')" (click)="changeSubSection('other',other)" href="{{currentUrl}}#other">Other</a></li>
+            <li><a #userSignUp [ngClass]="getSubSectionClass('userSignUp')" (click)="changeSubSection('userSignUp', userSignUp)" href="{{currentUrl}}#userSignUp">User Sign Up</a></li>
+            <li><a #entityRegistration [ngClass]="getSubSectionClass('entityRegistration')" (click)="changeSubSection('entityRegistration', entityRegistration)" href="{{currentUrl}}#entityRegistration">Entity Registration</a></li>
+            <li><a #samDotGovTransition [ngClass]="getSubSectionClass('samDotGovTransition')" (click)="changeSubSection('samDotGovTransition', samDotGovTransition)" href="{{currentUrl}}#samDotGovTransition">SAM.gov Transition</a></li>
           </ul>
         </li>
         <li>

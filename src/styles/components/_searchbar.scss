@@ -89,38 +89,42 @@
   }
 
   .usa-search-autocomplete{
-    position:absolute;
-    //top:44px;
-    background:#fff;
-    margin-top:0;
-    margin-left: 0;
-    margin-right: 0;
-    padding:0;
-    border:1px solid #5b616b;
-    border-top:none;
     width: calc(100%);
-    z-index: 10;
-    max-height:300px;
-    overflow:auto;
+  }
+}
 
-    li{
-      list-style:none;
-      padding: 0 10px;
-      margin: 0;
-      max-width:inherit;
-    }
-    li:hover{
-      cursor:pointer;
-      background:#e1f3f8;
-    }
+.usa-search-autocomplete{
+  position:absolute;
+  //top:44px;
+  background:#fff;
+  margin-top:0;
+  margin-left: 0;
+  margin-right: 0;
+  padding:0;
+  border:1px solid #5b616b;
+  border-top:none;
+  width: inherit;
+  z-index: 10;
+  max-height:300px;
+  overflow:auto;
 
-    /*IE9 bugfix*/
-    li:focus{
-      outline:none;
-    }
+  li{
+    list-style:none;
+    padding: 0 10px;
+    margin: 0;
+    max-width:inherit;
+  }
+  li:hover{
+    cursor:pointer;
+    background:#e1f3f8;
+  }
 
-    li.autocomplete-selected{
-      background:#e1f3f8;
-    }
+  /*IE9 bugfix*/
+  li:focus{
+    outline:none;
+  }
+
+  li.autocomplete-selected{
+    background:#e1f3f8;
   }
 }

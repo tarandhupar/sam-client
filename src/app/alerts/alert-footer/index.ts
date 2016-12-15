@@ -1,0 +1,1 @@
+export { AlertFooterService } from './alert-footer.service';

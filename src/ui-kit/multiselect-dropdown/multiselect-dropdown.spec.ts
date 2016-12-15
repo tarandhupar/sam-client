@@ -55,7 +55,7 @@ describe('Sam Multiselect Dropdown Component', function() {
             expect(label[0].innerHTML).toMatch(/Multiple Regions Selected/);
         });
 
-        it ('Should display item name if only one item is selected', async() => {
+        it ('Should display item name if only one item is selected', () => {
             component.model = ['ma'];
             component.ngOnChanges();
             fixture.detectChanges();
