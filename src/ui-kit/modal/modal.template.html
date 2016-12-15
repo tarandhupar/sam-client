@@ -1,0 +1,19 @@
+<div *ngIf="show" class="modal-dialog" tabindex="-1" (click)="onDismissClick()">
+	<div class="modal-content" (click)="preventClosing($event)">
+		<div class="usa-alert {{this.types[this.config['type']]}}">
+		  <div class="usa-alert-body">
+		    <h3 class="usa-alert-heading">
+		      {{config.title}}
+		      <span class="pull-right" *ngIf="showClose">
+		        <a><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
+		      </span>
+		    </h3>
+		  </div>
+		</div>
+		<div class="modal-body">
+		  <p *ngIf="config.description">{{config.description}}</p>
+			<ng-content></ng-content>
+		</div>
+	</div>
+</div>
+<div *ngIf="show" class="modal-backdrop"></div>
