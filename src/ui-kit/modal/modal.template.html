@@ -1,19 +1,22 @@
-<div *ngIf="show" class="modal-dialog" tabindex="-1" (click)="onDismissClick()">
+<div #modalRoot *ngIf="show" tabindex="-1" role="dialog" class="modal-dialog" tabindex="-1" (keydown.esc)="closeOnEscape ? closeModal() : 0" (click)="closeOnOutsideClick ? closeModal() : 0">
 	<div class="modal-content" (click)="preventClosing($event)">
-		<div class="usa-alert {{this.types[this.config['type']]}}">
+		<div class="usa-alert {{this.types[type]}}">
 		  <div class="usa-alert-body">
 		    <h3 class="usa-alert-heading">
-		      {{config.title}}
+		      {{title}}
 		      <span class="pull-right" *ngIf="showClose">
-		        <a><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
+		        <a><i class="fa fa-times-circle" (click)="closeModal()"></i></a>
 		      </span>
 		    </h3>
 		  </div>
 		</div>
 		<div class="modal-body">
-		  <p *ngIf="config.description">{{config.description}}</p>
+		  <p *ngIf="description">{{description}}</p>
 			<ng-content></ng-content>
+			<div *ngIf="cancelButtonLabel || submitButtonLabel" style="text-align:center;">
+				<button style="padding-right:15px;" *ngIf="submitButtonLabel" (click)="submitBtnClick()">{{submitButtonLabel}}</button>
+				<button style="padding-left:15px;" *ngIf="cancelButtonLabel" (click)="closeModal()">{{cancelButtonLabel}}</button>
+			</div>
 		</div>
 	</div>
 </div>
-<div *ngIf="show" class="modal-backdrop"></div>

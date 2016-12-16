@@ -285,7 +285,7 @@
 <div class="usa-grid">
   <h2 class="usa-width-one">Modal &lt;samModal&gt;</h2>
   <div class="usa-width-one-half">
-    <samModal [showClose]="true" #modal1 [config]="modalConfig">
+    <samModal [showClose]="true" #modal1 [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [cancelButtonLabel]="'Ok'">
     </samModal>
     <label>Title</label>
     <input [(ngModel)]="modalConfig.title" type="text">
@@ -299,10 +299,10 @@
     
     <p>Modal with 'transclude content'</p>
     <button (click)="onModalInitClick2()">Show Modal 2</button>
-    <samModal #modal2 [config]="modalConfig2">
+    <samModal #modal2 [title]="modalConfig2.title" [type]="modalConfig2.type" [closeOnOutsideClick]="false">
       <p>This is a notification...</p>
       <div style="text-align:center;">
-        <button (click)="modal2.onDismissClick()">Ok</button>
+        <button (click)="modal2.closeModal()">Ok</button>
       </div>
     </samModal>
   </div>

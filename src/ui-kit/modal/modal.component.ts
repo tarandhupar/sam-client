@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 /**
  * The <samModal> component is designed with sam.gov standards to show that this is an official website
  * https://gsa.github.io/sam-web-design-standards/
@@ -11,14 +11,21 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class SamModalComponent {
   @Input() id = "";
-  @Input() startOpen = false;
-  @Input() config: {};
   @Input() type: string;
   @Input() title: string;
   @Input() description: string;
+  @Input() cancelButtonLabel: string = "";
+  @Input() submitButtonLabel: string = "";
   @Input() showClose: boolean = false;
-  @Output() dismiss: EventEmitter<any> = new EventEmitter<any>();
+  @Input() closeOnOutsideClick: boolean = true;
+  @Input() closeOnEscape: boolean = true;
+  @Output() onOpen: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onSubmit: EventEmitter<any> = new EventEmitter<any>();
   show = false;
+  private backdropElement: HTMLElement;
+  @ViewChild("modalRoot")
+    public modalRoot: ElementRef;
 
   types:any = {
     "success":"usa-alert-success",
@@ -31,8 +38,9 @@ export class SamModalComponent {
   constructor() { }
 
   ngOnInit(){
+    this.createBackdrop();
     if(!this.typeNotDefined()){
-      this.selectedType = this.types[this.config['type']];
+      this.selectedType = this.types[this.type];
     }
   }
 
@@ -46,12 +54,36 @@ export class SamModalComponent {
     return false;
   }
 
-  onDismissClick(){
-    this.show = false;
-    this.dismiss.emit();
+  
+
+  private preventClosing(evt){
+    evt.stopPropagation();
   }
 
-  preventClosing(evt){
-    evt.stopPropagation();
+  openModal(...args: any[]){
+    if(this.show)
+      return;
+    this.show = true;
+    this.onOpen.emit(args);
+    document.body.appendChild(this.backdropElement);
+    window.setTimeout(() => this.modalRoot.nativeElement.focus(), 0);
+    document.body.className += " modal-open";
+  }
+
+  closeModal(){
+    this.show = false;
+    this.onClose.emit();
+    document.body.removeChild(this.backdropElement);
+    document.body.className = document.body.className.replace(/modal-open\b/, "");
+  }
+
+  submitBtnClick(){
+    this.onSubmit.emit();
+    //if user needs modal to close, they should do it manually
+  }
+
+  private createBackdrop(){
+    this.backdropElement = document.createElement("div");
+    this.backdropElement.classList.add("modal-backdrop");
   }
 }

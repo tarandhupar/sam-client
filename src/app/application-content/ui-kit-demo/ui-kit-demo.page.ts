@@ -155,16 +155,9 @@ export class UIKitDemoPage {
     this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.footerAlertModel)));
   }
   onModalInitClick(){
-    this.vcModal1.config = this.modalConfig;
-    this.vcModal1.show = true;
-  }
-  closeModal1(){
-    this.vcModal1.onDismissClick();
+    this.vcModal1.openModal();
   }
   onModalInitClick2(){
-    this.vcModal2.show = true;
-  }
-  closeModal2(){
-    this.vcModal2.onDismissClick();
+    this.vcModal2.openModal();
   }
 }
