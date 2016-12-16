@@ -4,8 +4,8 @@
 
     <div class="relative div-left">
       <button class="filter-btn pull-right">
-      <span class="usa-search-submit-text">{{getLabelForValue(filterValue)}}&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
-    </button>
+        <span class="usa-search-submit-text">{{getLabelForValue(filterValue)}}&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
+      </button>
       <samSelect class="filter-select"
                  [(model)]="selectModel"
                  [name]="selectConfig.name"
@@ -18,6 +18,15 @@
       </samSelect>
     </div>
 
+    <div class="relative div-fill">
+      <samInputAutocomplete [serviceName]="'suggestions'"
+                            [index]="filterValue"
+                            (searchTermEmit)="callSearch($event)"
+                            [searchTerm]="keyword"
+                            (keyEnterEmit)="onSearchClick()">
+      </samInputAutocomplete>
+    </div>
+
     <div class="relative div-right">
       <button type="submit"
               class="usa-button-primary usa-search-submit search-btn" (click)="onSearchClick()">
@@ -27,12 +36,6 @@
         </span>
       </button>
     </div>
-
-    <div class="relative div-fill">
-      <input class="search-inputbar" type="search" name="search" aria-label="search-keyword" [(ngModel)]="keyword" (ngModelChange)="onKeywordChange()" [placeholder]="placeholder" (keyup.enter)="onSearchClick()">
-      <span [ngClass]="resetIconClass"><i class="fa fa-times-circle" (click)="onResetClick()"></i></span>
-    </div>
-
 
   </form>
 

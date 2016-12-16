@@ -28,7 +28,6 @@ export class SamSearchbarComponent {
   @Input()
   filterValue: string = "";
 
-
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
 
@@ -50,7 +49,7 @@ export class SamSearchbarComponent {
   };
 
   resetIconClass:string = "reset-icon";
-  resetDisabled:boolean = true;
+  // resetDisabled:boolean = true;
 
   constructor() {
   }
@@ -61,9 +60,9 @@ export class SamSearchbarComponent {
     }
   }
 
-  ngDoCheck(){
-    this.setResetIconClass();
-  }
+  // ngDoCheck(){
+  //   this.setResetIconClass();
+  // }
 
   getLabelForValue(value) {
     let option = this.selectConfig.options.find(o => o.value === value);
@@ -77,32 +76,15 @@ export class SamSearchbarComponent {
     this.filterValue = value;
   }
 
+  callSearch(searchTerm):void {
+    this.keyword=searchTerm;
+  }
+
   onSearchClick():void{
     this.onSearch.emit({
-      keyword:this.keyword,
+      keyword: this.keyword,
       searchField: this.filterValue
     });
-  }
-
-  onKeywordChange(){
-    this.setResetIconClass();
-  }
-
-  onResetClick(){
-    if(!this.resetDisabled){
-      this.keyword = "";
-      this.setResetIconClass();
-    }
-  }
-
-  setResetIconClass(){
-    if(this.keyword === undefined || this.keyword.length === 0){
-      this.resetIconClass = "reset-icon";
-      this.resetDisabled = true;
-    }else{
-      this.resetIconClass = "reset-icon-active";
-      this.resetDisabled = false;
-    }
   }
 
   isSizeSmall(){

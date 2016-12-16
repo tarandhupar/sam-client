@@ -7,23 +7,27 @@ import { SearchService } from './search/search.service';
 import { SystemAlertsService } from './system-alerts/system-alerts.service';
 import { OpportunityService } from './opportunity/opportunity.service';
 import { WrapperService } from './wrapper/wrapper.service';
+import { SuggestionsService } from './search/suggestions.service';
+import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
 
 /**
  * A module for reusable SAM Web Design components
  * https://gsa.github.io/sam-web-design-standards/
  */
 @NgModule({
-  declarations: [ 
+  declarations: [
   ],
-  imports: [ 
+  imports: [
     HttpModule,
   ],
-  providers: [ 
-    SearchService, 
-    FHService, 
-    SystemAlertsService, 
+  providers: [
+    SearchService,
+    FHService,
+    SystemAlertsService,
     OpportunityService,
     WrapperService,
+    SuggestionsService,
+    AutoCompleteWrapper
   ]
 })
 export class SamAPIKitModule { }
