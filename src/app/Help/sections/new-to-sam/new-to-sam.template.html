@@ -43,27 +43,27 @@
         </div>
       </div>
       <div class="usa-width-one-fourth col">
-        <div class="usa-width-one-whole square-button" (click)="openImageLibrary()">
-          <h5 class="centered">Lipsum Text</h5>
+        <div class="usa-width-one-whole square-button" (click)="openImageLibrary('area1')">
+          <h5 class="centered">Lipsum Text1</h5>
           <h5 class="centered">Learn more</h5>
         </div>
-        <div class="usa-width-one-whole square-button m_T-3x" (click)="openImageLibrary()">
-          <h5 class="centered">Lipsum Text</h5>
+        <div class="usa-width-one-whole square-button m_T-3x" (click)="openImageLibrary('area2')">
+          <h5 class="centered">Lipsum Text2</h5>
           <h5 class="centered">Learn more</h5>
         </div>
       </div>
       <div class="usa-width-one-fourth col">
-        <div class="usa-width-one-whole square-button" (click)="openImageLibrary()">
-          <h5 class="centered">Lipsum Text</h5>
+        <div class="usa-width-one-whole square-button" (click)="openImageLibrary('area3')">
+          <h5 class="centered">Lipsum Text3</h5>
           <h5 class="centered">Learn more</h5>
         </div>
-        <div class="usa-width-one-whole square-button m_T-3x" (click)="openImageLibrary()">
-          <h5 class="centered">Lipsum Text</h5>
+        <div class="usa-width-one-whole square-button m_T-3x" (click)="openImageLibrary('area4')">
+          <h5 class="centered">Lipsum Text4</h5>
           <h5 class="centered">Learn more</h5>
         </div>
       </div>
-      <div class="usa-width-one-fourth long-button col" (click)="openImageLibrary()">
-        <h5 class="centered m_T-6x">Lipsum Text</h5>
+      <div class="usa-width-one-fourth long-button col" (click)="openImageLibrary('area5')">
+        <h5 class="centered m_T-6x">Lipsum Text4</h5>
         <h5 class="centered">Learn more</h5>
       </div>
     </div>
@@ -86,15 +86,10 @@
         fuisset convenire an.
       </p>
     </div>
-    <div class="usa-grid-full">
-      <imageLibrary [name]="new-to-sam-1" [data]="data" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
+    <div class="usa-grid-full m_T-4x" *ngFor="let row of curImageGroup">
+      <imageLibrary [name]="new-to-sam-1" [data]="row" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
     </div>
-    <div class="usa-grid-full m_T-3x">
-      <imageLibrary [name]="new-to-sam-2" [data]="data" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
-    </div>
-    <div class="usa-grid-full m_T-3x">
-      <imageLibrary [name]="new-to-sam-3" [data]="data" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
-    </div>
+
   </div>
 
 </section>
