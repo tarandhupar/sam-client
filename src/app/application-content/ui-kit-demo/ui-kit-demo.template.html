@@ -2,11 +2,25 @@
   <h2>Accordions Component &lt;samAccordions&gt;</h2>
   <div class="usa-width-one-whole">
     <h3>Accordions without border</h3>
-    <samAccordions [accordionsName]="'noBorder'" [accordionsData]="accordionsData" [bordered]="false"></samAccordions>
+    <samAccordion>
+      <samAccordionSection headerText="Section title 1" name="aria-friendly-section-name">
+        <a href>A link</a>
+      </samAccordionSection>
+      <samAccordionSection headerText="Section title 2" name="aria-friendly-section-name-2">
+        <a href>A second link</a>
+      </samAccordionSection>
+    </samAccordion>
   </div>
   <div class="usa-width-one-whole">
-    <h3>Accordions with border</h3>
-    <samAccordions [accordionsName]="'bordered'" [accordionsData]="accordionsData" [bordered]="true">></samAccordions>
+    <h3>Accordions with border, and initial selected tab</h3>
+    <samAccordion [expandIndex]="1" [bordered]="true">
+      <samAccordionSection headerText="Section title 1" name="aria-friendly-section-name">
+        <a href>A link</a>
+      </samAccordionSection>
+      <samAccordionSection headerText="Section title 2" name="aria-friendly-section-name-2">
+        <a href>A second link</a>
+      </samAccordionSection>
+    </samAccordion>
   </div>
 </div>
 <div class="usa-grid">
@@ -229,6 +243,43 @@
   <div class="usa-width-one-third">
     <h3>Model</h3>
     <pre><code>{{phoneModel | json}}</code></pre>
+  </div>
+</div>
+<br/>
+<div class="usa-grid">
+  <h2 class="usa-width-one">Alert Footer</h2>
+  <div>
+    <label>Title</label>
+    <input [(ngModel)]="footerAlertModel.title" type="text">
+    <label>Description</label>
+    <input [(ngModel)]="footerAlertModel.description" type="text">
+    <label>Type</label>
+    <select [(ngModel)]="footerAlertModel.type">
+      <option *ngFor="let type of footerAlertTypes">{{ type }}</option>
+    </select>
+    <label>Dismiss Timer (in milliseconds, 0 is infinite)</label>
+    <input [(ngModel)]="footerAlertModel.timer" type="number" min="0">
+    <button (click)="onFooterAlertBtnClick()">Add Footer alert</button>
+  </div>
+</div>
+<br/>
+<div class="usa-grid">
+  <h2 class="usa-width-one">Date Entry &lt;samDateEntry&gt;</h2>
+  <div class="usa-width-one-third">
+    <samDateEntry [model]="dateModel"></samDateEntry>
+    <samDateEntry [model]="dateModel2" [prefix]="'example2'"></samDateEntry>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{dateModel | json}}</code></pre>
+  </div>
+</div>
+<br/>
+<br/>
+<div class="usa-grid">
+  <h2 class="usa-width-one">Autocomplete &lt;samPhoneEntry&gt;</h2>
+  <div class="usa-width-one">
+    <samInputAutocomplete [serviceName]="'suggestions'"></samInputAutocomplete>
   </div>
 </div>
 <br/>

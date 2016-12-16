@@ -26,6 +26,7 @@
 @import 'components/multiselect-dropdown';
 @import 'components/alert-item';
 @import 'components/image-library';
+@import 'components/alert-footer';
 
 @import 'pages/assistance-listing';
 @import 'pages/help';
@@ -35,7 +36,11 @@
 @import 'pages/search';
 @import 'pages/reference-library';
 @import 'pages/alerts';
+<<<<<<< HEAD
 @import 'pages/new-to-sam';
+=======
+@import 'pages/help-accounts';
+>>>>>>> GSA-IAE/comp
 
 html, body{
   height: 100%;

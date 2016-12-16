@@ -1,24 +1,140 @@
-<section>
-  <h2 class="m_T-2x">User Accounts</h2>
-  <div class="usa-grid-full">
-    <h3 id="resetPwd" class="p_L-3x">Reset Password</h3>
-    <p class="p_L-8x">
-      Lorem ipsum dolor sit amet, an quo elitr singulis, cu assum simul persius eos,
-      per omittam concludaturque no. Albucius lobortis ius et, sea debet inimicus ne,
-      nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis
-      ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum
-      deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam
-      fuisset convenire an.
+<div class="accounts">
+  <section>
+    <h2 class="m_T-2x text-center">User Accounts</h2>
+    <div>
+      <div class="signup-vs-box clearfix">
+        <h3 class="centered">User Sign Up vs. Entity Registration</h3>
+        <div class="usa-width-one-half">
+          <ol>
+            <li>Saved search queries</li>
+            <li>Registering a new entity</li>
+            <li>Request non-public data access as a Federal government user</li>
+          </ol>
+        </div>
+        <div class="usa-width-one-half">
+          <ol start="4">
+            <li>Give a user additional roles</li>
+            <li>Invite users to your entity by clicking “Invite User.”</li>
+            <li>Approve/reject requests for roles with your entity</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+    <p>
+      The overall benefits of signing up in the new SAM.gov include streamlined and integrated processes, elimination of data redundancies, and reduced costs while providing improved capability. Entity accounts are discussed in more detail in Entity Registration.
     </p>
-  </div>
-  <div class="usa-grid-full">
-    <h3 id="other" class="p_L-3x">Other</h3>
-    <p class="p_L-8x">
-      Albucius lobortis ius et, sea debet inimicus ne,
-      nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis
-      ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum
-      deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam
-      fuisset convenire an.
-    </p>
-  </div>
-</section>
+  </section>
+  <section>
+    <h3 id="userSignUp">User Sign Up</h3>
+    <p>In the new SAM.gov, any functions are accessible to the general public without logging in, including searching for public information about entities and exclusions. Additional functionality is available to the user with the creation of a SAM Account.</p>
+    <samAccordion>
+      <samAccordionSection [name]="'how-to-sign-up'" [headerText]="'How to Sign Up'">
+        <p>
+          Create an Individual User Account to perform tasks such as register/update your entity, create and manage exclusion records or to view For Office Use Only (FOUO) level data for entity records.
+        </p>
+        <p>
+          Information required to sign up:
+        </p>
+        <ul>
+          <li>Your first name</li>
+          <li>Your last name</li>
+          <li>Your email address</li>
+          <li>Country (select your option from the dropdown list provided)</li>
+          <li>Phone number</li>
+          <li>Username</li>
+          <li>A password</li>
+          <li>Your security question responses</li>
+          <li>As part of your SAM account creation, you will be required to prove (“validate”) that you have access to the email address you used.  During the registration process, a link (URL) is sent to your email account that you must click to activate your new SAM account. Click the validation link in the email to activate your user account. If the email link is not hyperlinked (i.e., underlined or appearing in a different color), please copy the validation link and paste it into the browser address bar.</li>
+          <li>The account you create here will allow you to access them all in one place. After you sign up you can connect existing accounts you may have. This will now give you the ability for single sign on for all accounts.</li>
+        </ul>
+      </samAccordionSection>
+      <samAccordionSection [name]="'who-should-use'" [headerText]="'Who Should Use SAM.gov?'">
+        <p>SAM is used by anyone interested in the business of the Federal Government, including:</p>
+        <ul>
+          <li>Entities (contractors, federal assistance recipients, and other potential award recipients) who need to register to do business with the government, look for opportunities or assistance programs, or report subcontract information;</li>
+          <li>Government contracting and grants officials responsible for activities with contracts, grants, past performance reporting and suspension and debarment activities;</li>
+          <li>Public users searching for government business information.</li>
+        </ul>
+      </samAccordionSection>
+      <samAccordionSection [name]="'do-i-need-an-account'" [headerText]="'Do I Need an Account to use the system?'">
+        <p>Public users that want to save their searches or government users needing access to higher levels of sensitive data must register for a SAM user account. Anyone can create a user account in SAM.  A user account provides you access to SAM functionality such as saving search queries, requesting roles for Government employees, and requesting access to non-public information.</p>
+      </samAccordionSection>
+      <samAccordionSection [name]="'how-do-i-reset-my-password'" [headerText]="'How do I reset my password?'">
+        <p>Click “Forgot Password?”</p>
+        <p>Enter your username and the email address associated with your account.  This should be the email address that you entered in your SAM account user profile, regardless of whether you currently have access to that email account. </p>
+        <p>An email from SAM.gov will be sent to your email account.  Click the link in the email.</p>
+        <p>Create your new password.  Your new password should be different than your previous ten passwords you have used in SAM.</p>
+      </samAccordionSection>
+      <samAccordionSection [name]="'how-do-i-update-my-sam-dot-gov-registration'" [headerText]="'How do I update my SAM.gov registration?'">
+        <ul>
+          <li>Go to SAM’s homepage (SAM.gov), login with your username and password. You will be directed to your My SAM page.</li>
+          <li>Select the “Existing Entity Registrations” section found in the navigation panel on the left side of the screen.</li>
+          <li>Search for the entity registration that you want to update. If the registration is active, the information will show under Registration Details for Complete Record.</li>
+          <li>Select the Update Entity button. Make the necessary changes, and click “Save and Continue” on each updated page.</li>
+          <li>After you review the entire registration, click “Submit” on the final review page.</li>
+        </ul>
+      </samAccordionSection>
+      <samAccordionSection [name]="'what-happens-if-i-delete-my-account'" [headerText]="'What happens if I delete my account?'">
+        <p>Once the account is deleted, all the My Access information is deleted. You will receive an email confirmation that your account and access has been deleted within the next 48 hours.</p>
+      </samAccordionSection>
+    </samAccordion>
+  </section>
+  <section>
+    <h3 id="entityRegistration">Entity Registration</h3>
+    <samAccordion>
+      <samAccordionSection [name]="'how-do-i-associate-my-account-with-my-organization'" [headerText]="'How do I associate my account with my organization?'">
+        <p>An administrator can invite other administrators or non-administrator users to access/view the entity registration in SAM. Once an administrator is assigned to the registration, all other users will need to gain access either by invitation or by requesting a user role.</p>
+      </samAccordionSection>
+      <samAccordionSection [name]="'what-can-i-do-if-i-associate-with-my-organization'" [headerText]="'What can I do if I associate with my organization?'">
+        <ul>
+          <li>Manage your current users by clicking “Users List.” You can:</li>
+          <li>View a user’s profile information</li>
+          <li>Give a user additional roles</li>
+          <li>Remove a user’s roles</li>
+          <li>Unlock a locked user’s account</li>
+          <li>Invite users to your entity by clicking “Invite User.”</li>
+          <li>View/delete invitations that you’ve sent by clicking “Pending Sent Invitations.”</li>
+          <li>Approve/reject requests for roles with your entity by clicking “Pending Roles Requests.”</li>
+        </ul>
+      </samAccordionSection>
+    </samAccordion>
+  </section>
+  <section>
+    <h3 id="samDotGovTransition">SAM.gov Transition</h3>
+    <p>Essentially, the New SAM.gov has integrate all ten current systems under one unified systematic domain which will act as the entry point for the award process. The ten systems below have been modernized into a cloud based platform that has simplified the federal award process for federal buyer and sellers, and enabling the shared acquisition services.</p>
+    <h4>Ten Legacy Systems</h4>
+    <div class="usa-grid-full">
+      <div class="usa-width-one-half">
+        <ul>
+          <li>System for Award Management (SAM)</li>
+          <li>Federal Procurement Data System – Next Generation (FPDS-NG)</li>
+          <li>Federal Business Opportunities (FBO)</li>
+          <li>Electronic Subcontracting Reporting System (eSRS)</li>
+          <li>Past Performance Information Retrieval System (PPIRS)</li>
+          <li>Wage Determination OnLine (WDOL)</li>
+        </ul>
+      </div>
+      <div class="usa-width-one-half">
+        <ul>
+          <li>Federal Funding Accountability and Transparency Act (FFATA) Sub award Reporting System (FSRS)</li>
+          <li>Contractor Performance Assessment Reporting System (CPARS)</li>
+          <li>Federal Awardee Performance and Integrity Information System (FAPIIS)</li>
+          <li>Catalog of Federal Domestic Assistance (CFDA)</li>
+        </ul>
+      </div>
+      <samAccordion>
+        <samAccordionSection [name]="'legacy-websites'" [headerText]="'What if I have an account at one or more of the legacy websites?'">
+          <p>
+            With the New SAM.gov you can migrate roles from the previous legacy systems without losing any priveleges.
+          </p>
+        </samAccordionSection>
+        <samAccordionSection [name]="'what-is-single-sign-on'" [headerText]="'What is Single Sign On?'">
+          <p>The new SAM.gov allows users single sign on access to the previous legacy systems. Once migrated, the user will be able to enter the site with one username and password.</p>
+        </samAccordionSection>
+        <samAccordionSection [name]="'multi-factor-authentication'" [headerText]="'Multi-factor Authentication'">
+          <p>We take the security of your personal information serious. Along with creating a password and submitting security questions, a one-time access code will be sent to insure the user’s security. We have sent you a one-time access code by email.</p>
+        </samAccordionSection>
+      </samAccordion>
+    </div>
+  </section>
+</div>

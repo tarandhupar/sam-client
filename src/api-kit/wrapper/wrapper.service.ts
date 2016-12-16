@@ -10,11 +10,13 @@ export class WrapperService {
         "program": "/cfda/v1/program",
         "federalHierarchy": "/cfda/v1/fh",
         "federalHierarchyV2": "/federalorganizations/v1/organizations/hierarchy",
-        "department": "/federalorganizations/v1/organizations/departments",
+        "federalOrganization": "/federalorganizations/v1/organizations",
+        "federalDepartment": "/federalorganizations/v1/organizations/departments",
         "dictionary": "/cfda/v1/dictionary",
         "historicalIndex": "/cfda/v1/historicalIndex",
         "alerts": "/alert/v2/alerts",
-        "allAlerts": "/alert/v2/alerts/allAlerts"
+        "allAlerts": "/alert/v2/alerts/allAlerts",
+        "suggestions": "/sgs/v1/search/suggestions"
     };
 
     constructor(private _http: Http){}

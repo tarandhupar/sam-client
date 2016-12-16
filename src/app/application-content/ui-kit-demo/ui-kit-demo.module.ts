@@ -8,6 +8,7 @@ import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import {UIKitDemoPage} from "./ui-kit-demo.page";
 import { AppComponentsModule } from "../../app-components/app-components.module";
+import { AlertsModule } from "../../alerts/alerts.module";
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { AppComponentsModule } from "../../app-components/app-components.module"
     FormsModule,
     SamUIKitModule,
     SamAPIKitModule,
-    AppComponentsModule
+    AppComponentsModule,
+    AlertsModule
   ],
   exports: [],
   declarations: [
