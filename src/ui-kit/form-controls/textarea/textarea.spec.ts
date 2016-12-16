@@ -4,7 +4,7 @@ import { LabelWrapper } from "../wrapper/label-wrapper.component";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 
-fdescribe('The Sam Textarea component', () => {
+describe('The Sam Textarea component', () => {
   let component: SamTextareaComponent;
   let fixture: any;
 
