@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
+import { OnInit, Component, Input, Output, EventEmitter, ElementRef, ViewChild } from '@angular/core';
 /**
  * The <samModal> component is designed with sam.gov standards to show that this is an official website
  * https://gsa.github.io/sam-web-design-standards/
@@ -9,7 +9,7 @@ import { Component, Input, Output, EventEmitter, ElementRef, ViewChild } from '@
   selector: 'samModal',
   templateUrl: './modal.template.html'
 })
-export class SamModalComponent {
+export class SamModalComponent implements OnInit {
   @Input() id = "";
   @Input() type: string;
   @Input() title: string;
@@ -35,10 +35,12 @@ export class SamModalComponent {
   };
   selectedType: string = this.types['success'];
 
-  constructor() { }
+  constructor() { 
+    this.createBackdrop();
+  }
 
   ngOnInit(){
-    this.createBackdrop();
+    
     if(!this.typeNotDefined()){
       this.selectedType = this.types[this.type];
     }
@@ -65,16 +67,23 @@ export class SamModalComponent {
       return;
     this.show = true;
     this.onOpen.emit(args);
-    document.body.appendChild(this.backdropElement);
-    window.setTimeout(() => this.modalRoot.nativeElement.focus(), 0);
-    document.body.className += " modal-open";
+    if(document && document.body){
+      document.body.appendChild(this.backdropElement);
+      document.body.className += " modal-open";
+    }
+    if(window){
+      window.setTimeout(() => this.modalRoot.nativeElement.focus(), 0);
+    }
+    
   }
 
   closeModal(){
     this.show = false;
     this.onClose.emit();
-    document.body.removeChild(this.backdropElement);
-    document.body.className = document.body.className.replace(/modal-open\b/, "");
+    if(document && document.body){
+      document.body.removeChild(this.backdropElement);
+      document.body.className = document.body.className.replace(/modal-open\b/, "");
+    }
   }
 
   submitBtnClick(){

@@ -297,7 +297,7 @@
     </select>
     <button (click)="onModalInitClick()">Show Modal</button>
     
-    <p>Modal with 'transclude content'</p>
+    <p>Modal with 'transclude content' and disabled 'close on outside click'</p>
     <button (click)="onModalInitClick2()">Show Modal 2</button>
     <samModal #modal2 [title]="modalConfig2.title" [type]="modalConfig2.type" [closeOnOutsideClick]="false">
       <p>This is a notification...</p>
