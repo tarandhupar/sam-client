@@ -285,7 +285,7 @@
 <div class="usa-grid">
   <h2 class="usa-width-one">Modal &lt;samModal&gt;</h2>
   <div class="usa-width-one-half">
-    <samModal [showClose]="true" #modal1 [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [cancelButtonLabel]="'Ok'">
+    <samModal [showClose]="true" #modal1 [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [submitButtonLabel]="'Yes'" [cancelButtonLabel]="'No'" (onSubmit)="onModalClose()">
     </samModal>
     <label>Title</label>
     <input [(ngModel)]="modalConfig.title" type="text">

@@ -157,6 +157,9 @@ export class UIKitDemoPage {
   onModalInitClick(){
     this.vcModal1.openModal();
   }
+  onModalClose(){
+    this.vcModal1.closeModal();
+  }
   onModalInitClick2(){
     this.vcModal2.openModal();
   }

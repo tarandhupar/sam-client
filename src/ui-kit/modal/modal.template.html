@@ -13,9 +13,9 @@
 		<div class="modal-body">
 		  <p *ngIf="description">{{description}}</p>
 			<ng-content></ng-content>
-			<div *ngIf="cancelButtonLabel || submitButtonLabel" style="text-align:center;">
-				<button style="padding-right:15px;" *ngIf="submitButtonLabel" (click)="submitBtnClick()">{{submitButtonLabel}}</button>
-				<button style="padding-left:15px;" *ngIf="cancelButtonLabel" (click)="closeModal()">{{cancelButtonLabel}}</button>
+			<div *ngIf="cancelButtonLabel || submitButtonLabel" class="usa-modal-content-btn-area">
+				<button class="usa-modal-content-submit-btn" *ngIf="submitButtonLabel" (click)="submitBtnClick()">{{submitButtonLabel}}</button>
+				<button class="usa-button-outline usa-modal-content-cancel-btn" *ngIf="cancelButtonLabel" (click)="closeModal()">{{cancelButtonLabel}}</button>
 			</div>
 		</div>
 	</div>
