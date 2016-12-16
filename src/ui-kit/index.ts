@@ -14,4 +14,5 @@ export { SamLabelComponent } from './label/label.component';
 export { SamPaginationComponent } from "./pagination/pagination.component";
 export { SamClickOutsideDirective } from "./click-outside/click-outside.directive"
 export { SamHeaderLinksComponent } from "./header-links/header-links.component";
-export { SamMultiSelectDropdownComponent } from "./multiselect-dropdown"
+export { SamMultiSelectDropdownComponent } from "./multiselect-dropdown";
+export { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";

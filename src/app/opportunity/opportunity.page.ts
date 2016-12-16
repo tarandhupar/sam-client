@@ -53,6 +53,7 @@ export class OpportunityPage implements OnInit {
   dictionary: any;
   attachment: any;
   relatedOpportunities:any;
+  logoUrl: string;
 
   constructor(
     private route:ActivatedRoute,
@@ -137,16 +138,36 @@ export class OpportunityPage implements OnInit {
       //organizationId less than 30 character then call Octo's FH End point
       else {
         this.fhService.getOrganizationById(api.data.organizationId).subscribe(organizationSubject);
+        this.loadLogo(organizationSubject);
       }
     });
 
     organizationSubject.subscribe(organization => { // do something with the organization api
       this.organization = organization['_embedded'][0]['org'];
     }, err => {
-      console.log('Error loading organization: ', err)
+      console.log('Error loading organization: ', err);
     });
 
     return organizationSubject;
+  }
+
+  private loadLogo(organizationAPI: Observable<any>) {
+    organizationAPI.subscribe(org => {
+      if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
+        return;
+      }
+
+      if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
+        this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
+        return;
+      }
+
+      if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
+        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
+      }
+    }, err => {
+      console.log('Error loading logo: ', err);
+    });
   }
 
   private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
@@ -172,7 +193,7 @@ export class OpportunityPage implements OnInit {
         key.accordionState = 'collapsed';
       });
     }, err => {
-      console.log('Error loading organization: ', err)
+      console.log('Error loading attachments: ', err)
     });
 
     return attachmentSubject;
