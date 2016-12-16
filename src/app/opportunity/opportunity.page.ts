@@ -142,7 +142,6 @@ export class OpportunityPage implements OnInit {
         return;
       }
 
-      console.log(org);
       if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
         this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
         return;
