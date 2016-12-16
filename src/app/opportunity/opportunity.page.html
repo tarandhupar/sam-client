@@ -357,7 +357,6 @@
     </section>
     <h2>Awards Summary</h2>
     <div class="usa-grid-full" *ngIf="relatedOpportunities">
-      HI
       <ng-container *ngFor="let element of relatedOpportunities">
         <span>{{element.data?.title}}</span><br>
         <span><b>Contractor Awarded DUNS: </b>{{element.data?.award?.awardee?.duns}}</span><br>
