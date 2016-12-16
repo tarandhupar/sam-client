@@ -150,7 +150,8 @@ export class InputAutocompleteComponent implements OnInit {
     this.autocompleteIndex = 0;
 
     //this.emitAutoselect();
-      this.searchTermChange(this.searchTerm);
+    //this.searchTermChange(this.searchTerm);
+    this.searchTermEmit.emit(this.searchTerm);
   }
 
   searchTermChange(event){
