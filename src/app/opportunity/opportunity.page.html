@@ -361,7 +361,7 @@
         <span>{{element.data?.award?.awardee?.location?.country}}</span><br>
         <span><b>Contract Dollar Amount: </b>{{element.data?.award?.amount}}</span><br>
         <span><b>Contract Award Number: </b>{{element.data?.award?.number}}</span><br>
-        <span><b>Contract Award Date: </b>{{element.data?.award?.date}}</span><br>
+        <span><b>Contract Award Date: </b>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span><br>
         <span><b>Contract Line Item Number: </b>{{element.data?.award?.lineItemNumber}}</span><br><br>
       </ng-container>
     </div>
