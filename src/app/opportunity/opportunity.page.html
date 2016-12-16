@@ -349,5 +349,21 @@
         </div>
       </div>
     </section>
+    <h2>Awards Summary</h2>
+    <div class="usa-grid-full" *ngIf="relatedOpportunities">
+      HI
+      <ng-container *ngFor="let element of relatedOpportunities">
+        <span>{{element.data?.title}}</span><br>
+        <span><b>Contractor Awarded DUNS: </b>{{element.data?.award?.awardee?.duns}}</span><br>
+        <span><b>Contractor Awarded Address: </b></span><br>
+        <span>{{element.data?.award?.awardee?.location?.streetAddress}}</span><br>
+        <span>{{element.data?.award?.awardee?.location?.city}}, {{element.data?.award?.awardee?.location?.state}} {{element.data?.award?.awardee?.location?.zip}}</span><br>
+        <span>{{element.data?.award?.awardee?.location?.country}}</span><br>
+        <span><b>Contract Dollar Amount: </b>{{element.data?.award?.amount}}</span><br>
+        <span><b>Contract Award Number: </b>{{element.data?.award?.number}}</span><br>
+        <span><b>Contract Award Date: </b>{{element.data?.award?.date}}</span><br>
+        <span><b>Contract Line Item Number: </b>{{element.data?.award?.lineItemNumber}}</span><br><br>
+      </ng-container>
+    </div>
   </div>
 </div>
