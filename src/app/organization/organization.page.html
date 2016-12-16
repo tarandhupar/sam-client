@@ -18,6 +18,11 @@
       </span>
     </section>
 
+    <!-- Logo -->
+    <ng-container *ngIf="logoUrl">
+      <img class="logo" [src]="logoUrl" alt="HTML5 Icon">
+    </ng-container>
+
     <!-- Description -->
     <section *ngIf="organization.summary">
       <p id="orgDescription" [innerHTML]="organization.summary"></p>
