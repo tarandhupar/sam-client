@@ -4,18 +4,24 @@
   <aside class="usa-width-one-fourth">
     <br />
     <br />
-    <!--Side Navigation-->
-    <nav>
-      <ul class="usa-sidenav-list">
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
-        <li><a href="{{ currentUrl }}#history">History</a></li>
-      </ul>
-    </nav>
+    <div sam-sticky limit=1200 container="occupy-page">
+      <!--Logo-->
+      <ng-container *ngIf="logoUrl">
+        <img class="logo" [src]="logoUrl" alt="HTML5 Icon">
+      </ng-container>
+      <!--Side Navigation-->
+      <nav>
+        <ul class="usa-sidenav-list">
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
+          <li><a href="{{ currentUrl }}#history">History</a></li>
+        </ul>
+      </nav>
+    </div>
   </aside>
 
   <!--Main Content-->
