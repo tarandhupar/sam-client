@@ -13,6 +13,7 @@ export const ALERTS_PER_PAGE: number = 5;
 })
 export class AlertsPage {
 
+  isAdding: boolean = false;
   alerts:Alert[] = [];
   _totalAlerts:number;
 
@@ -118,5 +119,9 @@ export class AlertsPage {
 
   alertsEnd(): number {
     return this.alertsStart() + this.alerts.length - 1;
+  }
+
+  onAddClick() {
+    this.isAdding = !this.isAdding;
   }
 }

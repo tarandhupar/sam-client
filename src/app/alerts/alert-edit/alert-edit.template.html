@@ -1,26 +1,21 @@
-<div class="alert-item">
-  <h2>Add Alert</h2>
-  <div class="usa-width-one-half">
-    <div class="usa-input-error">
-      <label class="usa-input-error-label" for="input-error">Text input error</label>
-      <span class="usa-input-error-message" id="input-error-message" role="alert">Helpful error message</span>
-      <input id="input-error" name="input-error" type="text" aria-describedby="input-error-message">
+<div class="alert-item usa-bgcolor-gold-lightest edit">
+  <h2 class="alert-edit-title">Add Alert</h2>
+  <div class="usa-grid-full">
+    <div class="usa-width-one-half">
+      <samText [name]="'title-input'" [ngModel]="''" [label]="'Title'"></samText>
+      <samTextarea [name]="'description-input'" [ngModel]="''" [label]="'Description'"></samTextarea>
     </div>
-    <div class="usa-input-error">
-      <label class="usa-input-error-label" for="input-error">Text input error</label>
-      <span class="usa-input-error-message" id="input-error-message" role="alert">Helpful error message</span>
-      <textarea id="description-input" name="input-error" type="text" aria-describedby="input-error-message"></textarea>
+    <div class="usa-width-one-half">
+      <samDateEntry class='publish-date' [name]="'publish-date'" [label]="'Publish Date'"></samDateEntry>
+      <samDateEntry [name]="'end-date'" [label]="'End Date'"></samDateEntry>
+      <samSelect [options]="typeOptions" [name]="'alert-types'" [label]="'Type'"></samSelect>
     </div>
   </div>
-  <div class="usa-width-one-half">
-    <samDateEntry></samDateEntry>
-    <samDateEntry></samDateEntry>
-  </div>
-  <div class="alert-edit-actions">
+  <div class="alert-edit-actions clearfix">
     <div class="pull-right">
       <div class="usa-button usa-button-primary">Publish</div>
-      <div class="usa-button">Draft</div>
-      <div class="usa-button">Cancel</div>
+      <div class="usa-button usa-button-disabled">Draft</div>
+      <div class="usa-button usa-button-disabled">Cancel</div>
     </div>
   </div>
 </div>

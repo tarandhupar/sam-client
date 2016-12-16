@@ -5,13 +5,13 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
  * The <samNameInput> component is a Name entry portion of a form
  *
  * @Input/@Output model - the bound value of the component
- * @Input prefix - Prefix name/id attribute values
+ * @Input name - Prefix name/id attribute values
  *
  */
 @Component({
   selector: 'samDateEntry',
   template: `
-    <labelWrapper [label]="'Date of birth'" [name]="getIdentifer('date')" [errorMessage]="errorMsg" [hint]="'For example: 04 28 1986'">
+    <labelWrapper [label]="label" [name]="getIdentifer('date')" [errorMessage]="errorMessage" [hint]="hint">
       <div class="usa-date-of-birth" style="overflow:auto;">
         <div class="usa-form-group usa-form-group-month">
           <label [attr.for]="getIdentifer('date')+'_1'">Month</label>
@@ -35,9 +35,11 @@ export class SamDateEntryComponent implements OnInit{
     day:"",
     year:""
   };
-  @Input() prefix: string = "";
   @Output() emitter = new EventEmitter<string>();
-  errorMsg: string = "";
+  @Input() errorMessage: string = "";
+  @Input() name: string = "";
+  @Input() label: string;
+  @Input() hint: string;
 
   constructor() { }
 
@@ -48,7 +50,7 @@ export class SamDateEntryComponent implements OnInit{
   }
 
   onChange(){
-    if(this.errorMsg){
+    if(this.errorMessage){
       this.validate();
     }
   }
@@ -57,27 +59,27 @@ export class SamDateEntryComponent implements OnInit{
     let isValid = true;
     if(this.model["year"] != null && this.model["year"]<1900){
       isValid = false;
-    } 
+    }
     if(this.model["day"] != null && (this.model["day"]<1 || this.model["day"] > 31)){
       isValid = false;
-    } 
+    }
     if(this.model["month"] != null && (this.model["month"]<1 || this.model["month"] > 12)){
       isValid = false;
-    } 
+    }
     if(this.model["month"] == null || this.model["day"] == null || this.model["year"] == null){
       isValid = false;
     }
 
-    if(!isValid){ 
-      this.errorMsg = "Invalid date";
+    if(!isValid){
+      this.errorMessage = "Invalid date";
     } else {
-      this.errorMsg = "";
+      this.errorMessage = "";
     }
   }
 
   getIdentifer(str){
-    if(this.prefix && this.prefix.length>0){
-      str = this.prefix + "-" + str;
+    if(this.name && this.name.length>0){
+      str = this.name + "-" + str;
     }
     return str;
   }

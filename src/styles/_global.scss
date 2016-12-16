@@ -114,6 +114,18 @@ hr {
   float: right;
 }
 
+// ensure button has a big enough hit box
+.usa-button-icon {
+  height: 44px;
+  width: 44px;
+  display: inline-block;
+  background-color: transparent;
+
+  &:hover {
+    opacity: .6;
+  }
+}
+
 .usa-button-dismiss {
   // hit area
   height: 44px;
