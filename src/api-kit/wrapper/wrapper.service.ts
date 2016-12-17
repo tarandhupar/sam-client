@@ -7,6 +7,7 @@ export class WrapperService {
     private APIs: any = {
         "opportunity": "/cfda/v1/opportunity",
         "search": "/sgs/v1/search",
+        "featuredSearch": "/sgs/v1/search/featured",
         "program": "/cfda/v1/program",
         "federalHierarchy": "/cfda/v1/fh",
         "federalHierarchyV2": "/federalorganizations/v1/organizations/hierarchy",

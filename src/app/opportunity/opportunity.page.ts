@@ -123,6 +123,7 @@ export class OpportunityPage implements OnInit {
       //organizationId less than 30 character then call Octo's FH End point
       else {
         this.fhService.getOrganizationById(api.data.organizationId).subscribe(organizationSubject);
+        //console.log("Inside opportunity", organizationSubject);
         this.loadLogo(organizationSubject);
       }
     });
@@ -138,6 +139,7 @@ export class OpportunityPage implements OnInit {
 
   private loadLogo(organizationAPI: Observable<any>) {
     organizationAPI.subscribe(org => {
+      //console.log(org);
       if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
         return;
       }
