@@ -11,7 +11,7 @@ import { trigger, state, style, transition, animate } from '@angular/core';
 @Component({
   selector: 'tab',
   template: `
-    <div [hidden]="!active" class="pane">
+    <div [hidden]="!active" class="usa-tabs-content">
       <ng-content></ng-content>
     </div>
   `
@@ -25,7 +25,7 @@ export class Tab {
 @Component({
   selector: 'tabs',
   template:`
-    <ul class="tabs">
+    <ul class="usa-tabs">
       <li *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab.active">
         {{tab.title}}
       </li>
