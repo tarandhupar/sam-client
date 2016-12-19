@@ -4,18 +4,24 @@
   <aside class="usa-width-one-fourth">
     <br />
     <br />
-    <!--Side Navigation-->
-    <nav>
-      <ul class="usa-sidenav-list">
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
-        <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
-        <li><a href="{{ currentUrl }}#history">History</a></li>
-      </ul>
-    </nav>
+    <div sam-sticky limit=1200 container="occupy-page">
+      <!--Logo-->
+      <ng-container *ngIf="logoUrl">
+        <img class="logo" [src]="logoUrl" alt="HTML5 Icon">
+      </ng-container>
+      <!--Side Navigation-->
+      <nav>
+        <ul class="usa-sidenav-list">
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
+          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
+          <li><a href="{{ currentUrl }}#history">History</a></li>
+        </ul>
+      </nav>
+    </div>
   </aside>
 
   <!--Main Content-->
@@ -349,5 +355,21 @@
         </div>
       </div>
     </section>
+    <h2>Awards Summary</h2>
+    <div class="usa-grid-full" *ngIf="relatedOpportunities">
+      <ng-container *ngFor="let element of relatedOpportunities">
+        <!--<br> TAGS ARE TEMPORARY AND WILL BE REMOVED IN THE THEMING TASK-->
+        <span>{{element.data?.title}}</span><br>
+        <span><b>Contractor Awarded DUNS: </b>{{element.data?.award?.awardee?.duns}}</span><br>
+        <span><b>Contractor Awarded Address: </b></span><br>
+        <span>{{element.data?.award?.awardee?.location?.streetAddress}}</span><br>
+        <span>{{element.data?.award?.awardee?.location?.city}}, {{element.data?.award?.awardee?.location?.state}} {{element.data?.award?.awardee?.location?.zip}}</span><br>
+        <span>{{element.data?.award?.awardee?.location?.country}}</span><br>
+        <span><b>Contract Dollar Amount: </b>{{element.data?.award?.amount}}</span><br>
+        <span><b>Contract Award Number: </b>{{element.data?.award?.number}}</span><br>
+        <span><b>Contract Award Date: </b>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span><br>
+        <span><b>Contract Line Item Number: </b>{{element.data?.award?.lineItemNumber}}</span><br><br>
+      </ng-container>
+    </div>
   </div>
 </div>

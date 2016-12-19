@@ -52,6 +52,8 @@ export class OpportunityPage implements OnInit {
   currentUrl: string;
   dictionary: any;
   attachment: any;
+  relatedOpportunities:any;
+  logoUrl: string;
 
   constructor(
     private route:ActivatedRoute,
@@ -64,6 +66,7 @@ export class OpportunityPage implements OnInit {
     this.loadDictionary();
     let opportunityAPI = this.loadOpportunity();
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
+    this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
     this.loadAttachments(opportunityAPI);
@@ -111,6 +114,19 @@ export class OpportunityPage implements OnInit {
     return parentOpportunitySubject;
   }
 
+  private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
+    let relatedOpprtunitiesSubject = new ReplaySubject(1);
+    opportunityAPI.subscribe(api => {
+      let id = api.parent ? api.parent.opportunityId : api.opportunityId;
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(id, "a").subscribe(relatedOpprtunitiesSubject);
+    });
+    relatedOpprtunitiesSubject.subscribe(data => { // do something with the related opportunity api
+      this.relatedOpportunities = data[0];
+    }, err => {
+      console.log('Error loading related opportunities: ', err);
+    });
+  }
+
   private loadOrganization(opportunityAPI: Observable<any>) {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
 
@@ -122,16 +138,36 @@ export class OpportunityPage implements OnInit {
       //organizationId less than 30 character then call Octo's FH End point
       else {
         this.fhService.getOrganizationById(api.data.organizationId).subscribe(organizationSubject);
+        this.loadLogo(organizationSubject);
       }
     });
 
     organizationSubject.subscribe(organization => { // do something with the organization api
       this.organization = organization['_embedded'][0]['org'];
     }, err => {
-      console.log('Error loading organization: ', err)
+      console.log('Error loading organization: ', err);
     });
 
     return organizationSubject;
+  }
+
+  private loadLogo(organizationAPI: Observable<any>) {
+    organizationAPI.subscribe(org => {
+      if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
+        return;
+      }
+
+      if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
+        this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
+        return;
+      }
+
+      if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
+        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
+      }
+    }, err => {
+      console.log('Error loading logo: ', err);
+    });
   }
 
   private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
@@ -157,7 +193,7 @@ export class OpportunityPage implements OnInit {
         key.accordionState = 'collapsed';
       });
     }, err => {
-      console.log('Error loading organization: ', err)
+      console.log('Error loading attachments: ', err)
     });
 
     return attachmentSubject;
@@ -240,7 +276,7 @@ export class OpportunityPage implements OnInit {
           && opportunity.postedDate !== parent.postedDate;
 
         this.displayField[OpportunityFields.OriginalPostedDate] = originalPostedDateCondition;
-        
+
         let originalResponseDateCondition = opportunity.data != null
           && opportunity.data.solicitation != null && opportunity.data.solicitation.deadlines != null
           && opportunity.data.solicitation.deadlines.response != null && parent.data != null
