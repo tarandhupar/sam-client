@@ -3,8 +3,6 @@ import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
-import { ReplaySubject, Observable } from 'rxjs';
-import {FHService} from "../../api-kit/fh/fh.service";
 
 @Component({
   moduleId: __filename,
@@ -30,7 +28,7 @@ export class SearchPage implements OnInit{
 	initLoad = true;
 	showOptional:any = (SHOW_OPTIONAL=="true");
 
-	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService, private fhService: FHService) { }
+	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
 		this.activatedRoute.queryParams.subscribe(
 			data => {

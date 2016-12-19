@@ -73,7 +73,8 @@ export class FHFeaturedResult implements OnInit {
       }
 
       if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
-        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
+        // this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
+        this.callOrganizationById(org['_embedded'][0]['org']['parentOrgKey']);
       }
     }, err => {
       console.log('Error loading logo: ', err);
