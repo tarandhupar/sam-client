@@ -118,12 +118,12 @@ export class OpportunityPage implements OnInit {
     let relatedOpportunitiesSubject = new ReplaySubject(1);
     combinedOpportunityAPI.subscribe(([opportunity, parent]) => {
       console.log ("opportunity API: ", opportunity);
-      let id = opportunity.parent ? opportunity.parent.opportunityId : opportunity.opportunityId;
-      if ((opportunity.parent != null && (parent.type == 'a' || parent.type == 'i' || parent.type == 'l')) || (opportunity.parent == null && (opportunity.opportunityId == 'a' || opportunity.opportunityId == 'i' || opportunity.opportunityId == 'l')) ){
-        console.log("Returned");
+      console.log ("parent API: ", parent);
+      let parentId = opportunity.parent ? opportunity.parent.opportunityId : opportunity.opportunityId;
+      if ((opportunity.parent != null && (parent.data.type == 'a' || parent.data.type == 'i' || parent.data.type == 'l' || opportunity.data.type == 'a' || opportunity.data.type == 'i' || opportunity.data.type == 'l')) || (opportunity.parent == null && (opportunity.data.type == 'a' || opportunity.data.type == 'i' || opportunity.data.type == 'l')) ){
         return;
       } else {
-      this.opportunityService.getRelatedOpportunitiesByIdAndType(id, "a").subscribe(relatedOpportunitiesSubject);
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(parentId, opportunity.opportunityId, "a").subscribe(relatedOpportunitiesSubject);
     }
     });
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
