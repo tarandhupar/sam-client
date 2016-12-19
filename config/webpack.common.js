@@ -202,7 +202,8 @@ module.exports = {
 
       /// Sass Loader
       {
-        test: /styles\/all\.scss/,
+        //test: /styles\/all\.scss/,
+        test: new RegExp(path.join('src', 'styles', 'all.scss')),
         exclude: /node_modules/,
         loader: ExtractTextPlugin.extract("style","css?sourceMap!sass?sourceMap")
       },
@@ -301,10 +302,6 @@ module.exports = {
     }),
 
   ],
-
-  sassLoader: {
-    includePaths: ["src/app/styles"]
-  },
 
   /*
    * Include polyfills or mocks for various node stuff
