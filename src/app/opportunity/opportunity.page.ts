@@ -66,7 +66,6 @@ export class OpportunityPage implements OnInit {
     this.loadDictionary();
     let opportunityAPI = this.loadOpportunity();
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
-    this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
     this.loadAttachments(opportunityAPI);
@@ -74,6 +73,7 @@ export class OpportunityPage implements OnInit {
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
+    this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.setDisplayFields(combinedOpportunityAPI);
   }
 
@@ -115,12 +115,11 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
-    let relatedOpprtunitiesSubject = new ReplaySubject(1);
-    opportunityAPI.subscribe(api => {
-      let id = api.parent ? api.parent.opportunityId : api.opportunityId;
-      this.opportunityService.getRelatedOpportunitiesByIdAndType(id, "a").subscribe(relatedOpprtunitiesSubject);
-    });
-    relatedOpprtunitiesSubject.subscribe(data => { // do something with the related opportunity api
+    let relatedOpportunitiesSubject = new ReplaySubject(1);
+    opportunityAPI.subscribe((opportunity => {
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a").subscribe(relatedOpportunitiesSubject);
+    }));
+    relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       this.relatedOpportunities = data[0];
     }, err => {
       console.log('Error loading related opportunities: ', err);
