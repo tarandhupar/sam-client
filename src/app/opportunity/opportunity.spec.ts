@@ -172,6 +172,55 @@ let MockOpportunityService = {
       "state": "TX"
     });
   },
+  getRelatedOpportunitiesByIdAndType(id: String, type:String){
+    return Observable.of([
+      [
+        {
+          data: {
+            title: "Q--TaleMed, LLC Awarded 12/03/2010 Effective 12/15/2010 thru 12/14/2015",
+            descriptions: [ ],
+            link: {
+              additionalInfo: { }
+            },
+            naicsCode: [ ],
+            pointOfContact: [ ],
+            placeOfPerformance: { },
+            archive: { },
+            permissions: {
+              area: { }
+            },
+            solicitation: {
+              deadlines: { }
+            },
+            award: {
+              date: "2010-12-06",
+              number: "V797P-7303A",
+              amount: "$0.00",
+              awardee: {
+                duns: "624069618",
+                location: {
+                  streetAddress2: ""
+                }
+              },
+              justificationAuthority: { },
+              fairOpportunity: { }
+            }
+          },
+          links: [
+            {
+              rel: "self",
+              href: "http://localhost:8085/v1/opportunity/4ccb80f006871fa383fbbde9d4732ad7"
+            },
+            {
+              rel: "attachments",
+              href: "http://localhost:8085/v1/opportunity/4ccb80f006871fa383fbbde9d4732ad7/attachments"
+            }
+          ]
+        }
+      ]
+    ]);
+  },
+
   getAttachmentById(id: String) {
     return Observable.of({
       packages: [
@@ -303,6 +352,7 @@ describe('OpportunityPage', () => {
     expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
     expect(comp.attachment).toBeDefined();
+    expect(comp.relatedOpportunities).toBeDefined();
     expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
   });
