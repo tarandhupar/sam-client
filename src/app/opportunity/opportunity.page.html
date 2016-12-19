@@ -355,6 +355,7 @@
         </div>
       </div>
     </section>
+
     <h2>Awards Summary</h2>
     <div class="usa-grid-full" *ngIf="relatedOpportunities">
       <ng-container *ngFor="let element of relatedOpportunities">
@@ -370,5 +371,58 @@
         <span><b>Contract Line Item Number: </b>{{element.data?.award?.lineItemNumber}}</span><br><br>
       </ng-container>
     </div>
+
+    <div class="card">
+      <div class="card-header-secure">
+        <h3>
+          Triman Industries Inc 1042 Industrial Dr West Berlin 08091-9164 US
+        </h3>
+      </div>
+      <div class="card-secure-content">
+        <div class="usa-grid-full">
+          <div class="usa-width-one-half">
+            <strong>Contractor Information</strong>
+            <ul class="usa-label-list">
+              <li><span>DUNS</span> <span>966423352</span></li>
+              <li><span>Address</span>
+                  <span>
+                    574 Merry Way<br>
+                    Sterling, Georgia 20176<br>
+                    United States
+                  </span>
+              </li>
+            </ul>
+          </div>
+          <div class="usa-width-one-half">
+            <strong>Contract Information</strong>
+            <ul class="usa-label-list">
+              <li><span>Amount</span> <span>$250,000</span></li>
+              <li><span>Number</span> <span>SPE4A617V2333</span></li>
+              <li><span>CLIN</span> <span>0001</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card-extra-content">
+        <div class="label-container-inline">
+          <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+          Contract Award Date: <strong>November 4, 2016</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header-secure">
+        <h3>
+          Data Device Corporation
+        </h3>
+      </div>
+      <div class="card-secure-content">
+        Lorem Ipsum
+      </div>
+    </div>
+
+    <br><br>
+
   </div>
 </div>
