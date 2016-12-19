@@ -374,9 +374,25 @@
                 <li>
                   <span>Address</span>
                   <span>
-                    {{element.data?.award?.awardee?.location?.streetAddress}}<br>
-                    {{element.data?.award?.awardee?.location?.city}}, {{element.data?.award?.awardee?.location?.state}} {{element.data?.award?.awardee?.location?.zip}}<br>
-                    {{element.data?.award?.awardee?.location?.country}}<br>
+                    <ng-container *ngIf=" element.data?.award?.awardee?.location?.streetAddress || 
+                                          element.data?.award?.awardee?.location?.city ||
+                                          element.data?.award?.awardee?.location?.state ||
+                                          element.data?.award?.awardee?.location?.zip ||
+                                          element.data?.award?.awardee?.location?.country">
+                      {{element.data?.award?.awardee?.location?.streetAddress}}<br>
+                      {{element.data?.award?.awardee?.location?.city}}
+                      <ng-container *ngIf="element.data?.award?.awardee?.location?.city">,</ng-container> 
+                      {{element.data?.award?.awardee?.location?.state}} 
+                      {{element.data?.award?.awardee?.location?.zip}}<br>
+                      {{element.data?.award?.awardee?.location?.country}}<br>
+                    </ng-container>
+                    <ng-container *ngIf=" !element.data?.award?.awardee?.location?.streetAddress && 
+                                          !element.data?.award?.awardee?.location?.city &&
+                                          !element.data?.award?.awardee?.location?.state &&
+                                          !element.data?.award?.awardee?.location?.zip &&
+                                          !element.data?.award?.awardee?.location?.country">
+                      &mdash;
+                    </ng-container>
                   </span>
                 </li>
               </ul>
