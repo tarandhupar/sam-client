@@ -37,9 +37,9 @@ import { ReplaySubject, Observable } from 'rxjs';
         </ul>
       </div>
       </div>
-      <div class="featured-result-title">
-      <span class="usa-label">Featured Result</span>
-      </div>
+      <h4 class="featured-result-title">
+      <span class="">Featured Result</span>
+      </h4>
   `
 })
 export class FHFeaturedResult implements OnInit {
@@ -47,27 +47,41 @@ export class FHFeaturedResult implements OnInit {
   logoUrl: string;
   constructor(private fhService: FHService) { }
 
-  ngOnInit(){
-    console.log("inside featured component",this.data['_id']);
-    this.fhService.getOrganizationById(this.data['_id']).subscribe(organizationSubject => {
-      console.log("Featured", organizationSubject);
-      this.loadLogo(organizationSubject);
-    });
+  ngOnInit() {
+    if (this.data['_id'] !== null) {
+      console.log("inside featured component", this.data['_id']);
+      this.callOrganizationById(this.data['_id']);
+    }
   }
 
-  private loadLogo(org: any) {
+  private callOrganizationById(orgId: string) {
+    let organizationSubject = new ReplaySubject(1);
+    this.fhService.getOrganizationById(orgId).subscribe(organizationSubject);
+      console.log("Featured", organizationSubject);
+      this.loadLogo(organizationSubject);
+  }
+
+  private loadLogo(organizationAPI: Observable<any>) {
+    organizationAPI.subscribe(org => {
+      console.log("main", org);
       if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
+        console.log("we get returned");
         return;
       }
 
       if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
         this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
+        console.log("I get called");
         return;
       }
 
       if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
+        console.log("call logo again", this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
         this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
       }
+    }, err => {
+      console.log('Error loading logo: ', err);
+    });
   }
 
 }
