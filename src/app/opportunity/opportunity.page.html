@@ -358,19 +358,51 @@
 
     <h2>Awards Summary</h2>
     <div class="usa-grid-full" *ngIf="relatedOpportunities">
-      <ng-container *ngFor="let element of relatedOpportunities">
-        <!--<br> TAGS ARE TEMPORARY AND WILL BE REMOVED IN THE THEMING TASK-->
-        <span>{{element.data?.title}}</span><br>
-        <span><b>Contractor Awarded DUNS: </b>{{element.data?.award?.awardee?.duns}}</span><br>
-        <span><b>Contractor Awarded Address: </b></span><br>
-        <span>{{element.data?.award?.awardee?.location?.streetAddress}}</span><br>
-        <span>{{element.data?.award?.awardee?.location?.city}}, {{element.data?.award?.awardee?.location?.state}} {{element.data?.award?.awardee?.location?.zip}}</span><br>
-        <span>{{element.data?.award?.awardee?.location?.country}}</span><br>
-        <span><b>Contract Dollar Amount: </b>{{element.data?.award?.amount}}</span><br>
-        <span><b>Contract Award Number: </b>{{element.data?.award?.number}}</span><br>
-        <span><b>Contract Award Date: </b>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span><br>
-        <span><b>Contract Line Item Number: </b>{{element.data?.award?.lineItemNumber}}</span><br><br>
-      </ng-container>
+      
+      <div class="card" *ngFor="let element of relatedOpportunities">
+        
+        <div class="card-header-secure">
+          <h3>{{element.data?.title}}</h3>
+        </div>
+        
+        <div class="card-secure-content">
+          <div class="usa-grid-full">
+            <div class="usa-width-one-half">
+              <strong>Contractor Information</strong>
+              <ul class="usa-label-list">
+                <li><span>DUNS</span> <span>{{element.data?.award?.awardee?.duns}}</span></li>
+                <li>
+                  <span>Address</span>
+                  <span>
+                    {{element.data?.award?.awardee?.location?.streetAddress}}<br>
+                    {{element.data?.award?.awardee?.location?.city}}, {{element.data?.award?.awardee?.location?.state}} {{element.data?.award?.awardee?.location?.zip}}<br>
+                    {{element.data?.award?.awardee?.location?.country}}<br>
+                  </span>
+                </li>
+              </ul>
+
+              
+            </div>
+            <div class="usa-width-one-half">
+              <strong>Contract Information</strong>
+              <ul class="usa-label-list">
+                <li><span>Amount</span> <span><i class="fa fa-usd" aria-hidden="true"></i> {{element.data?.award?.amount}}</span></li>
+                <li><span>Number</span> <span>{{element.data?.award?.number}}</span></li>
+                <li><span>CLIN</span> <span>{{element.data?.award?.lineItemNumber}}</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-extra-content">
+          <div class="label-container-inline">
+            <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+            Contract Award Date: <strong>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</strong>
+          </div>
+        </div>
+
+      </div>
+
     </div>
 
     <div class="card">
@@ -409,17 +441,6 @@
           <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
           Contract Award Date: <strong>November 4, 2016</strong>
         </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header-secure">
-        <h3>
-          Data Device Corporation
-        </h3>
-      </div>
-      <div class="card-secure-content">
-        Lorem Ipsum
       </div>
     </div>
 
