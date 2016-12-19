@@ -1,6 +1,6 @@
-import {Input, Component, OnInit} from '@angular/core';
+import {Input, Output, Component, OnInit, EventEmitter} from '@angular/core';
 import {Alert} from "../alert.model";
-import {OptionsType} from "../../../ui-kit/form-controls/types";
+import {OptionsType} from "ui-kit/form-controls/types";
 
 @Component({
   selector: 'alert-edit',
@@ -10,6 +10,9 @@ export class AlertEditComponent implements OnInit {
 
   @Input() alert: Alert;
   @Input() mode: string;
+  @Output() publish: EventEmitter<any> = new EventEmitter<any>();
+  @Output() draft: EventEmitter<any> = new EventEmitter<any>();
+  @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
   typeOptions: OptionsType = [
     { name: 'info', label: 'Information', value: 'Information'},
@@ -22,8 +25,13 @@ export class AlertEditComponent implements OnInit {
   }
 
   ngOnInit() {
+    const modes = ['edit', 'add'];
     if (!this.mode) {
       throw new Error('[mode] must be set for "alert-item" (either "edit" or "add")');
+    }
+
+    if (!modes.find(m => m === this.mode)) {
+      throw new Error('[mode] must be "edit" or "add"');
     }
 
     if (!this.alert) {
@@ -31,11 +39,27 @@ export class AlertEditComponent implements OnInit {
     }
   }
 
-  onPublishClick() {
-
+  onPublishClick(event) {
+    this.publish.emit(this.alert);
   }
 
-  onSaveDraftClick() {
+  onDraftClick(event) {
+    this.draft.emit(this.alert);
+  }
 
+  onCancelClick(event) {
+    this.cancel.emit(null);
+  }
+
+  onSeverityChange(val) {
+    this.alert.setSeverity(val);
+  }
+
+  onDescriptionChange(val) {
+    this.alert.setDescription(val);
+  }
+
+  onTitleChange(val) {
+    this.alert.setTitle(val);
   }
 }

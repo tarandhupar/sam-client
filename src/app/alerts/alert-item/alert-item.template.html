@@ -1,11 +1,11 @@
-<div ngIf="!isEditing">
+<div *ngIf="!isEditing">
   <div>
     <div class="alert-type-indicator" [ngClass]="alert.colorClass()">
       <i class="alert-type-icon fa" [ngClass]="alert.iconClass()"></i>{{alert.severity()}}
     </div>
     <div class="pull-right">
-      <button class="usa-button-icon" (click)="onEditClick()" title="edit"><i class="fa fa-inverse fa-pencil"></i><span class="usa-sr-only">Edit</span></button>
-      <button class="usa-button-icon" (click)="onDeleteClick()" title="delete"><i class="fa fa-trash"></i><span class="usa-sr-only">Delete</span></button>
+      <i class="fa fa-pencil usa-button-icon" (click)="onEditClick()" title="edit"><span class="usa-sr-only">Edit</span></i>
+      <i class="fa fa-trash usa-button-icon" (click)="onDeleteClick()" title="edit"><span class="usa-sr-only">Delete</span></i>
     </div>
   </div>
   <div class="alert-item usa-grid-full">
@@ -30,6 +30,6 @@
     </div>
   </div>
 </div>
-<alert-edit *ngIf="isEditing" [alert]="alert">
-
+<alert-edit *ngIf="isEditing" [alert]="alert" [mode]="'edit'" (publish)="onEditAlertPublish($event)"
+            (draft)="onEditAlertDraft($event)" (cancel)="onEditAlertCancel()">
 </alert-edit>

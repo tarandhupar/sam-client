@@ -114,6 +114,8 @@ hr {
   float: right;
 }
 
+
+
 // ensure button has a big enough hit box
 .usa-button-icon {
   height: 44px;
@@ -122,6 +124,7 @@ hr {
   background-color: transparent;
 
   &:hover {
+    cursor: pointer;
     opacity: .6;
   }
 }

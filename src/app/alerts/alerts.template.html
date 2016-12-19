@@ -23,10 +23,10 @@
       </div>
     </div>
     <div class="pull-right">
-      <button class="usa-primary" (click)="onAddClick()"><i class="fa fa-plus"></i>Add</button>
+      <button class="usa-primary" (click)="onAddClick()"><i class="fa fa-plus">&nbsp;</i>Add</button>
     </div>
   </div>
-  <alert-edit *ngIf="isAdding" [mode]="'create'"></alert-edit>
+  <alert-edit *ngIf="isAdding" [mode]="'add'" (cancel)="onAddAlertCancel()" (draft)="onAddAlertDraft($event)" (publish)="onAddAlertPublish($event)"></alert-edit>
   <div class="alert-count" *ngIf="alerts.length === 0">
     <em>No results found for selected criteria. Please use filters to expand the search results.</em>
   </div>

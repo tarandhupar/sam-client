@@ -122,6 +122,20 @@ export class AlertsPage {
   }
 
   onAddClick() {
-    this.isAdding = !this.isAdding;
+    this.isAdding = true;
+  }
+
+  onAddAlertPublish(alert) {
+    this.alertsService.createAlert(false, alert.severity(), alert.publishedDate(), alert.endDate());
+    this.isAdding = false;
+  }
+
+  onAddAlertDraft(alert) {
+    this.alertsService.createAlert(true, alert.severity(), alert.publishedDate(), alert.endDate());
+    this.isAdding = false;
+  }
+
+  onAddAlertCancel() {
+    this.isAdding = false;
   }
 }
