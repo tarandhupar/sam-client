@@ -119,11 +119,14 @@
     color: #ffffff;
   }
 
-  .detail-div{
-    margin-right: 8.33%;
+  .detail-div,.detail-div-large{
     display:block;
     overflow: hidden;
     float: none;
+  }
+
+  .detail-div-large{
+    margin-right: 8.33%;
   }
 
 }

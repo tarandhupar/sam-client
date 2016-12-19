@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, HostListener } from '@angular/core';
 
 @Component({
   selector: 'imageLibrary',
@@ -11,10 +11,13 @@ export class ImageLibraryComponent {
   @Input() showDetailTitle:boolean = true;
   @Input() isExternalLink:boolean = true;
 
+
   detailObj: any = {
     showDetail: false,
     item: {}
   };
+
+  innerWidth: number = window.innerWidth;
 
   constructor() { }
 
@@ -63,7 +66,7 @@ export class ImageLibraryComponent {
   }
 
   private largeScreen(): boolean{
-    return window.innerWidth >= 1200;
+    return this.innerWidth >= 1200;
   }
 
   private getImageContainerClass(): string{
@@ -76,6 +79,11 @@ export class ImageLibraryComponent {
 
   private getLinkClass(): string{
     return this.isExternalLink? "usa-external_link":"";
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.innerWidth = event.target.innerWidth;
   }
 
 }

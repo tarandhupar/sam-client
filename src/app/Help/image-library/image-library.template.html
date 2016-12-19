@@ -23,7 +23,7 @@
 
 
   <div class="usa-width-one-whole m_L-8x relative" *ngIf = "detailObj.showDetail">
-    <div class="relative black-border" [ngClass]="{'detail-div':largeScreen()}">
+    <div class="relative black-border" [ngClass]="{'detail-div':!largeScreen(),'detail-div-large':largeScreen()}">
       <div class="usa-width-one-whole relative">
 
         <a class="image-library-close" (click)="closeReferenceDetail()">Close</a>
