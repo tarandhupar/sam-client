@@ -36,7 +36,7 @@ export class SamDateEntryComponent implements OnInit{
     year:""
   };
   @Input() prefix: string = "";
-  @Output() emitter = new EventEmitter<string>();
+  @Output() emitter = new EventEmitter<any>();
   @ViewChild('month') month;
   @ViewChild('day') day;
   @ViewChild('year') year;
@@ -52,10 +52,10 @@ export class SamDateEntryComponent implements OnInit{
   }
 
   onChange(){
-    console.log(this.month,this.day,this.year);
     if(this.errorMsg){
       this.validate();
     }
+    this.emitter.emit(this.model);
   }
 
   validate(){
