@@ -47,36 +47,32 @@ export class FHFeaturedResult implements OnInit {
   logoUrl: string;
   constructor(private fhService: FHService) { }
 
-  ngOnInit() {
-    if (this.data['_id'] !== null) {
-      console.log("inside featured component", this.data['_id']);
-      this.callOrganizationById(this.data['_id']);
+  ngOnInit() {}
+
+  ngOnChanges(changes) {
+    if(this.data['_id']) {
+    this.callOrganizationById(this.data['_id']);
     }
   }
 
   private callOrganizationById(orgId: string) {
     let organizationSubject = new ReplaySubject(1);
     this.fhService.getOrganizationById(orgId).subscribe(organizationSubject);
-      console.log("Featured", organizationSubject);
       this.loadLogo(organizationSubject);
   }
 
   private loadLogo(organizationAPI: Observable<any>) {
     organizationAPI.subscribe(org => {
-      console.log("main", org);
       if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
-        console.log("we get returned");
         return;
       }
 
       if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
         this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
-        console.log("I get called");
         return;
       }
 
       if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
-        console.log("call logo again", this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
         this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
       }
     }, err => {
