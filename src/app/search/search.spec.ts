@@ -48,17 +48,14 @@ var searchServiceStub = {
         number: 0
       }
     });
-  }
-};
-
-var fhServiceStub = {
+  },
   featuredSearch: ()=>{
     return Observable.of({
       alternativeNames: null,
       code: "abcd1234",
-      name: "ML Test Dept",
+      name: "SAMPLE NAME",
       description: "",
-      _id: "12345",
+      _id: "1234",
       type: "DEPARTMENT",
       shortName: "abcd",
       isActive: true,
@@ -66,6 +63,8 @@ var fhServiceStub = {
     });
   }
 };
+
+var fhServiceStub = {};
 
 describe('SearchPage', () => {
   beforeEach(() => {
@@ -98,5 +97,14 @@ describe('SearchPage', () => {
       expect(fixture.componentInstance.data.results[0].title).toBe("Dummy Result 1");
     });
 	});
+
+  it('should "run" a featured search', () => {
+    fixture.componentInstance.keyword = "test";
+    fixture.componentInstance.pageNum = 0;
+    fixture.componentInstance.runSearch();
+    fixture.whenStable().then(() => {
+      expect(fixture.componentInstance.featuredData.name).toBe("SAMPLE NAME");
+    });
+  });
 
 });
