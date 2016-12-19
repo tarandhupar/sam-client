@@ -64,12 +64,11 @@ export class OpportunityService{
     return this.oAPIService.call(apiParam);
   }
 
-  getRelatedOpportunitiesByIdAndType(parentId: string, id:string, type:string){
+  getRelatedOpportunitiesByIdAndType(id:string, type:string){
     let apiParam = {
       name: 'opportunity',
       suffix: '/' + id + '/relatedopportunities',
       oParam: {
-        'parentId': parentId,
         'type': type
       },
       method: 'GET'

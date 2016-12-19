@@ -73,7 +73,7 @@ export class OpportunityPage implements OnInit {
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
-    this.loadRelatedOpportunitiesByIdAndType(combinedOpportunityAPI);
+    this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.setDisplayFields(combinedOpportunityAPI);
   }
 
@@ -114,18 +114,11 @@ export class OpportunityPage implements OnInit {
     return parentOpportunitySubject;
   }
 
-  private loadRelatedOpportunitiesByIdAndType(combinedOpportunityAPI: Observable<any>){
+  private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
-    combinedOpportunityAPI.subscribe(([opportunity, parent]) => {
-      console.log ("opportunity API: ", opportunity);
-      console.log ("parent API: ", parent);
-      let parentId = opportunity.parent ? opportunity.parent.opportunityId : opportunity.opportunityId;
-      if ((opportunity.parent != null && (parent.data.type == 'a' || parent.data.type == 'i' || parent.data.type == 'l' || opportunity.data.type == 'a' || opportunity.data.type == 'i' || opportunity.data.type == 'l')) || (opportunity.parent == null && (opportunity.data.type == 'a' || opportunity.data.type == 'i' || opportunity.data.type == 'l')) ){
-        return;
-      } else {
-      this.opportunityService.getRelatedOpportunitiesByIdAndType(parentId, opportunity.opportunityId, "a").subscribe(relatedOpportunitiesSubject);
-    }
-    });
+    opportunityAPI.subscribe((opportunity => {
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a").subscribe(relatedOpportunitiesSubject);
+    }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       this.relatedOpportunities = data[0];
     }, err => {

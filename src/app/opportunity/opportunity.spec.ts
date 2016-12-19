@@ -172,7 +172,7 @@ let MockOpportunityService = {
       "state": "TX"
     });
   },
-  getRelatedOpportunitiesByIdAndType(parentId: String, id: String, type:String){
+  getRelatedOpportunitiesByIdAndType(id: String, type:String){
     return Observable.of([
       [
         {
