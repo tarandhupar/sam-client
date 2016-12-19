@@ -10,8 +10,8 @@ export class NewToSamComponent {
     Regione deserunt no vis, in his sale aeque. Saepe virtute impedit no nec, elitr 
     decore antiopam cu usu, sit Id labores vivendum vim.`;
 
-  //Lipsum data for each image icon
-  private imageGroupdata:any = [
+  //Lipsum data for each image, will work as image content data set
+  private imageGroupData:any = [
     {
       title:"Lipsum text title1",
       detail:"Detail Lipsum text1: "+this.detailLipsum,
@@ -32,6 +32,10 @@ export class NewToSamComponent {
     }
   ];
 
+  // Array of Indices that point to current the image content in imageGroupData(i -> imageGroupData[i]) to avoid entering duplicate image contents
+  // Each area will have multiple Image library components(3 Image library components for each area for now)
+  // Each Image Library component needs an array 3 objects of image content data as input
+  // Each object of image content data will be pointed using the index in imageGroupData
   private imageGroupIndexData:any = {
     area1:[[0,2,1],[0,1,2],[1,2,0]],
     area2:[[0,1,2],[0,2,1],[1,0,2]],
@@ -52,7 +56,7 @@ export class NewToSamComponent {
     for(let indexList of this.imageGroupIndexData[type]){
       let tempDataList: any = [];
       for(let indexItem of indexList){
-        tempDataList.push(this.imageGroupdata[indexItem]);
+        tempDataList.push(this.imageGroupData[indexItem]);
       }
       this.curImageGroup.push(tempDataList);
     }
