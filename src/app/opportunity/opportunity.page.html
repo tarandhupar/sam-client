@@ -51,390 +51,401 @@
       </ul>
     </section>
 
-    <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award)">
-      <h2>Award Details</h2>
-      <ul class="usa-unstyled-list">
-        <li [attr.id]="generateID(opportunityFields.AwardDate)"
-            *ngIf="opportunity.data?.award?.date && shouldBeDisplayed(opportunityFields.AwardDate)">
-          <strong>Contract Award Date: </strong>
-          {{ opportunity.data?.award?.date | dateFormat: 'MMM DD, YYYY' }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.AwardNumber)"
-            *ngIf="opportunity.data?.award?.number && shouldBeDisplayed(opportunityFields.AwardNumber)">
-          <strong>Contract Award Number: </strong>
-          {{ opportunity.data?.award?.number }}
-        </li>
-      </ul>
-    </section>
-
-    <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
-      <h2>General Information</h2>
-      <ul class="usa-unstyled-list">
-        <li [attr.id]="generateID(opportunityFields.Type, 'general')"
-            *ngIf="opportunity.data?.type && shouldBeDisplayed(opportunityFields.Type)">
-          <strong>Opportunity Type: </strong>
-          {{ opportunity.data.type | opportunityTypeLabel }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.PostedDate, 'general')"
-            *ngIf="opportunity.postedDate && shouldBeDisplayed(opportunityFields.PostedDate)">
-          <strong>Posted Date: </strong>
-          {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.OriginalPostedDate, 'general')"
-            *ngIf="originalOpportunity?.postedDate && shouldBeDisplayed(opportunityFields.OriginalPostedDate)">
-          <strong>Original Posted Date: </strong>
-          {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.ResponseDate, 'general')"
-            *ngIf="opportunity.data?.solicitation?.deadlines?.response && shouldBeDisplayed(opportunityFields.ResponseDate)">
-          <strong>Response Date: </strong>
-          {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY' }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.OriginalResponseDate, 'general')"
-            *ngIf="originalOpportunity?.data?.solicitation?.deadlines?.response && shouldBeDisplayed(opportunityFields.OriginalResponseDate)">
-          <strong>Original Response Date: </strong>
-          {{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.ArchivePolicy, 'general')"
-            *ngIf="shouldBeDisplayed(opportunityFields.ArchivePolicy)"
-            [ngSwitch]="opportunity.data?.archive?.type">
-          <strong>Archiving Policy: </strong>
-          <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
-          <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
-          <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
-        </li>
-        <li [attr.id]="generateID(opportunityFields.ArchiveDate, 'general')"
-            *ngIf="opportunity.data?.archive?.date && shouldBeDisplayed(opportunityFields.ArchiveDate)">
-          <strong>Archive Date: </strong>
-          {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')"
-            *ngIf="originalOpportunity?.data?.archive?.date && shouldBeDisplayed(opportunityFields.OriginalArchiveDate)">
-          <strong>Original Archive Date: </strong>
-          {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.StatutoryAuthority, 'general')"
-            *ngIf="opportunity?.data?.award?.justificationAuthority?.authority && shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
-          <strong>J&A Statutory Authority: </strong>
-          {{ opportunity?.data?.award?.justificationAuthority?.authority }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')"
-            *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && shouldBeDisplayed(opportunityFields.JustificationAuthority) && dictionary">
-          <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
-          {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:dictionary.fo_justification_authority:'element_id':false:'')[0]?.value }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.OrderNumber, 'general')"
-            *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
-          <strong>Task/Delivery Order Number: </strong>
-          {{ opportunity?.data?.award?.deliveryOrderNumber }}
-        </li>
-        <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')"
-            *ngIf="opportunity?.data?.award?.justificationAuthority?.modificationNumber && shouldBeDisplayed(opportunityFields.ModificationNumber)">
-          <strong>Modification Number: </strong>
-          {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
-        </li>
-      </ul>
-    </section>
-
-    <section [attr.id]="generateID(opportunityFields.Classification)" *ngIf="shouldBeDisplayed(opportunityFields.Classification)">
-      <h2>Classification</h2>
-      <ul class="usa-unstyled-list">
-        <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')"
-            *ngIf="originalOpportunity && shouldBeDisplayed(opportunityFields.OriginalSetAside)">
-          <strong> Original Set Aside: </strong>
-          <ng-container *ngIf="originalOpportunity.data?.solicitation?.setAside && dictionary">
-            <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
-              <ng-container>{{ element.value }}</ng-container>
-            </ng-container>
-          </ng-container>
-          <ng-container *ngIf="!originalOpportunity?.data?.solicitation?.setAside">N/A</ng-container>
-        </li>
-        <li [attr.id]="generateID(opportunityFields.SetAside, 'classification')"
-            *ngIf="opportunity.data?.solicitation?.setAside && dictionary && shouldBeDisplayed(opportunityFields.SetAside)">
-          <strong>Set Aside: </strong>
-          <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
-            <ng-container> {{ element.value }}</ng-container>
-          </ng-container>
-        </li>
-        <li [attr.id]="generateID(opportunityFields.ClassificationCode, 'classification')"
-            *ngIf="opportunity.data?.classificationCode && dictionary && shouldBeDisplayed(opportunityFields.ClassificationCode)">
-          <strong>Classification Code: </strong>
-          <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:dictionary.classification_code:'element_id':false:''">
-            {{ element.value }}
-          </ng-container>
-        </li>
-        <li [attr.id]="generateID(opportunityFields.NAICSCode, 'classification')"
-            *ngIf="opportunity.data?.naicsCode && opportunity.data?.naicsCode[0] != null && dictionary && shouldBeDisplayed(opportunityFields.NAICSCode)">
-          <strong>NAICS Code(s): </strong>
-          <ul>
-            <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:dictionary.naics_code:'element_id':false:''">
-              <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
+    
+    <tabs>
+      <tab tabTitle="Opportunity">
+        
+        <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award)">
+          <h2>Award Details</h2>
+          <ul class="usa-unstyled-list">
+            <li [attr.id]="generateID(opportunityFields.AwardDate)"
+                *ngIf="opportunity.data?.award?.date && shouldBeDisplayed(opportunityFields.AwardDate)">
+              <strong>Contract Award Date: </strong>
+              {{ opportunity.data?.award?.date | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AwardNumber)"
+                *ngIf="opportunity.data?.award?.number && shouldBeDisplayed(opportunityFields.AwardNumber)">
+              <strong>Contract Award Number: </strong>
+              {{ opportunity.data?.award?.number }}
             </li>
           </ul>
-        </li>
-        <li [attr.id]="generateID(opportunityFields.POP, 'classification')"
-            *ngIf="opportunity.data?.placeOfPerformance && (opportunity.data?.placeOfPerformance?.streetAddress
-            || opportunity.data?.placeOfPerformance?.city || opportunity.data?.placeOfPerformance?.country
-            || opportunity.data?.placeOfPerformance?.state || opportunity.data?.placeOfPerformance?.zip)
-            && shouldBeDisplayed(opportunityFields.POP)">
-          <strong >Place of Performance: </strong>
-          <div [attr.id]="generateID(opportunityFields.POPLocation, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPLocation)">
-            {{opportunity.data?.placeOfPerformance?.streetAddress}}
-          </div>
+        </section>
 
-          <div>
-            <span [attr.id]="generateID(opportunityFields.POPCity, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPCity)">
-              {{opportunity.data?.placeOfPerformance?.city}}
-            </span>
-            <ng-container *ngIf="opportunity.data?.placeOfPerformance?.city && opportunity.data?.placeOfPerformance?.state">,</ng-container>
-            <span [attr.id]="generateID(opportunityFields.POPState, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPState)">
-              {{opportunity.data?.placeOfPerformance?.state}}
-            </span>
-            <span [attr.id]="generateID(opportunityFields.POPZip, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPZip)">
-              {{opportunity.data?.placeOfPerformance?.zip}}
-            </span>
-          </div>
+        <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
+          <h2>General Information</h2>
+          <ul class="usa-unstyled-list">
+            <li [attr.id]="generateID(opportunityFields.Type, 'general')"
+                *ngIf="opportunity.data?.type && shouldBeDisplayed(opportunityFields.Type)">
+              <strong>Opportunity Type: </strong>
+              {{ opportunity.data.type | opportunityTypeLabel }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.PostedDate, 'general')"
+                *ngIf="opportunity.postedDate && shouldBeDisplayed(opportunityFields.PostedDate)">
+              <strong>Posted Date: </strong>
+              {{ opportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.OriginalPostedDate, 'general')"
+                *ngIf="originalOpportunity?.postedDate && shouldBeDisplayed(opportunityFields.OriginalPostedDate)">
+              <strong>Original Posted Date: </strong>
+              {{ originalOpportunity.postedDate | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.ResponseDate, 'general')"
+                *ngIf="opportunity.data?.solicitation?.deadlines?.response && shouldBeDisplayed(opportunityFields.ResponseDate)">
+              <strong>Response Date: </strong>
+              {{ opportunity.data.solicitation.deadlines.response | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.OriginalResponseDate, 'general')"
+                *ngIf="originalOpportunity?.data?.solicitation?.deadlines?.response && shouldBeDisplayed(opportunityFields.OriginalResponseDate)">
+              <strong>Original Response Date: </strong>
+              {{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.ArchivePolicy, 'general')"
+                *ngIf="shouldBeDisplayed(opportunityFields.ArchivePolicy)"
+                [ngSwitch]="opportunity.data?.archive?.type">
+              <strong>Archiving Policy: </strong>
+              <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
+              <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
+              <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.ArchiveDate, 'general')"
+                *ngIf="opportunity.data?.archive?.date && shouldBeDisplayed(opportunityFields.ArchiveDate)">
+              <strong>Archive Date: </strong>
+              {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')"
+                *ngIf="originalOpportunity?.data?.archive?.date && shouldBeDisplayed(opportunityFields.OriginalArchiveDate)">
+              <strong>Original Archive Date: </strong>
+              {{ originalOpportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.StatutoryAuthority, 'general')"
+                *ngIf="opportunity?.data?.award?.justificationAuthority?.authority && shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
+              <strong>J&A Statutory Authority: </strong>
+              {{ opportunity?.data?.award?.justificationAuthority?.authority }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')"
+                *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && shouldBeDisplayed(opportunityFields.JustificationAuthority) && dictionary">
+              <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
+              {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:dictionary.fo_justification_authority:'element_id':false:'')[0]?.value }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.OrderNumber, 'general')"
+                *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
+              <strong>Task/Delivery Order Number: </strong>
+              {{ opportunity?.data?.award?.deliveryOrderNumber }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')"
+                *ngIf="opportunity?.data?.award?.justificationAuthority?.modificationNumber && shouldBeDisplayed(opportunityFields.ModificationNumber)">
+              <strong>Modification Number: </strong>
+              {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
+            </li>
+          </ul>
+        </section>
 
-          <div [attr.id]="generateID(opportunityFields.POPCountry, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPCountry)">
-            {{opportunity.data?.placeOfPerformance?.country}}
-          </div>
-        </li>
-      </ul>
-    </section>
-
-    <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0].content">
-      <h2>Synopsis</h2>
-      <h3>Description</h3>
-      <div [innerHTML]="opportunity.data?.descriptions[0].content | fixhtml"></div>
-    </section>
-
-    <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
-
-      <h2>Packages</h2>
-
-      <!-- Header -->
-      <div class="card" *ngFor="let package of attachment.packages">
-
-        <!-- It's public -->
-        <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" (click)="toggleAccordion(package)">
-          <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
-          <strong>Type: {{ package.type }}</strong>
-        </div>
-
-        <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
-          <li *ngFor="let element of package.attachments">
-            <!-- Element -->
-            <ng-container *ngFor="let resource of attachment.resources">
-              <!-- Resource -->
-              <ng-container *ngIf="element.resourceId === resource.resourceId">
-                <!-- Description -->
-                <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
-                  {{resource.description}}
-                </a>
-                <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
-                  {{resource.description}}
-                </a>
+        <section [attr.id]="generateID(opportunityFields.Classification)" *ngIf="shouldBeDisplayed(opportunityFields.Classification)">
+          <h2>Classification</h2>
+          <ul class="usa-unstyled-list">
+            <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')"
+                *ngIf="originalOpportunity && shouldBeDisplayed(opportunityFields.OriginalSetAside)">
+              <strong> Original Set Aside: </strong>
+              <ng-container *ngIf="originalOpportunity.data?.solicitation?.setAside && dictionary">
+                <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+                  <ng-container>{{ element.value }}</ng-container>
+                </ng-container>
               </ng-container>
-            </ng-container>
-          </li>
-        </ul>
-
-        <!-- Its private -->
-        <div *ngIf="package.access === 'Private'" class="card-header-secure">
-          <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
-          <strong>Type: {{ package.type }}</strong>
-        </div>
-
-        <div *ngIf="package.access === 'Private'" class="card-secure-content">
-          <p>
-            <i class="fa fa-lock fa-3x fa-pull-left" aria-hidden="true"></i>
-            <em>Secure/sensitive attachments are not currently available, please go to <a href="https://www.fbo.gov/">FBO.gov</a> to view this attachment.</em>
-          </p>
-        </div>
-
-        <!-- Extra options -->
-        <div class="card-extra-content">
-          <div class="label-container-inline">
-            <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-            <strong>Posted on {{ package.postedDate | dateFormat: 'MMM DD, YYYY' }}</strong>
-          </div>
-          <div class="label-container-inline" style="float: right;">
-            <i class="fa" [ngClass]="{'fa-unlock' : package.access === 'Public', 'fa-lock': package.access === 'Private'}" aria-hidden="true"></i>
-            <strong>{{isSecure(package.access)}}</strong>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-
-    <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
-      <h2>Contact Information</h2>
-      <div class="usa-grid-full" *ngIf="opportunityLocation">
-        <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
-          <h3>Contracting Office Address:</h3>
-          <span [attr.id]="generateID(opportunityFields.OfficeStreet, 'contact')" *ngIf="opportunityLocation.street && shouldBeDisplayed(opportunityFields.OfficeStreet)">
-            {{opportunityLocation.street}},
-          </span>
-          <span [attr.id]="generateID(opportunityFields.OfficeCity, 'contact')" *ngIf="opportunityLocation.city && shouldBeDisplayed(opportunityFields.OfficeCity)">
-            {{opportunityLocation.city}},
-          </span>
-          <span [attr.id]="generateID(opportunityFields.OfficeState, 'contact')" *ngIf="opportunityLocation.state && shouldBeDisplayed(opportunityFields.OfficeState)">
-            {{opportunityLocation.state}}
-          </span>
-          <span [attr.id]="generateID(opportunityFields.OfficeCountry, 'contact')" *ngIf="opportunityLocation.country && shouldBeDisplayed(opportunityFields.OfficeCountry)">
-            {{opportunityLocation.country}}
-          </span>
-          <span [attr.id]="generateID(opportunityFields.OfficeZip, 'contact')" *ngIf="opportunityLocation.zip && shouldBeDisplayed(opportunityFields.OfficeZip)">
-            {{opportunityLocation.zip}}
-          </span>
-        </div>
-      </div>
-      <div class="usa-grid-full" *ngIf="opportunity.data?.pointOfContact">
-        <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-primary')" *ngIf="hasPOC(0) && shouldBeDisplayed(opportunityFields.POC)">
-          <h3>Primary Point of Contact</h3>
-          <ul class="usa-unstyled-list">
-            <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-primary')"
-                *ngIf="shouldBeDisplayed(opportunityFields.POCFullName)">
-              <strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong>
+              <ng-container *ngIf="!originalOpportunity?.data?.solicitation?.setAside">N/A</ng-container>
             </li>
-            <li [attr.id]="generateID(opportunityFields.POCTitle, 'contact-primary')"
-                *ngIf="opportunity.data?.pointOfContact[0].title && shouldBeDisplayed(opportunityFields.POCTitle)">
-              <!--TODO: fix capitalize pipe-->
-              <em [innerHTML]="opportunity.data?.pointOfContact[0].title"></em>
+            <li [attr.id]="generateID(opportunityFields.SetAside, 'classification')"
+                *ngIf="opportunity.data?.solicitation?.setAside && dictionary && shouldBeDisplayed(opportunityFields.SetAside)">
+              <strong>Set Aside: </strong>
+              <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+                <ng-container> {{ element.value }}</ng-container>
+              </ng-container>
             </li>
-            <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-primary')"
-                *ngIf="opportunity.data?.pointOfContact[0].email && shouldBeDisplayed(opportunityFields.POCEmail)">
-              <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
-              <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
-                {{opportunity.data?.pointOfContact[0].email}}
-              </a>
+            <li [attr.id]="generateID(opportunityFields.ClassificationCode, 'classification')"
+                *ngIf="opportunity.data?.classificationCode && dictionary && shouldBeDisplayed(opportunityFields.ClassificationCode)">
+              <strong>Classification Code: </strong>
+              <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:dictionary.classification_code:'element_id':false:''">
+                {{ element.value }}
+              </ng-container>
             </li>
-            <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-primary')"
-                *ngIf="opportunity.data?.pointOfContact[0].phone && shouldBeDisplayed(opportunityFields.POCPhone)">
-              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
-              {{opportunity.data?.pointOfContact[0].phone}}
-            </li>
-            <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-primary')"
-                *ngIf="opportunity.data?.pointOfContact[0].fax && shouldBeDisplayed(opportunityFields.POCFax)">
-              <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
-              {{opportunity.data?.pointOfContact[0].fax}}
-            </li>
-          </ul>
-        </div>
-        <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-secondary')" *ngIf="hasPOC(1) && shouldBeDisplayed(opportunityFields.POC)">
-          <h3>Secondary Point of Contact</h3>
-          <ul class="usa-unstyled-list">
-            <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-secondary')"
-                *ngIf="shouldBeDisplayed(opportunityFields.POCFullName)">
-              <strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong>
-            </li>
-            <li [attr.id]="generateID(opportunityFields.POCTitle, 'contact-secondary')"
-                *ngIf="opportunity.data?.pointOfContact[1].title && shouldBeDisplayed(opportunityFields.POCTitle)">
-              <!--TODO: fix capitalize pipe-->
-              <em [innerHTML]="opportunity.data?.pointOfContact[1].title"></em>
-            </li>
-            <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-secondary')"
-                *ngIf="opportunity.data?.pointOfContact[1].email && shouldBeDisplayed(opportunityFields.POCEmail)">
-              <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
-              <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
-                {{opportunity.data?.pointOfContact[1].email}}
-              </a>
-            </li>
-            <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-secondary')"
-                *ngIf="opportunity.data?.pointOfContact[1].phone && shouldBeDisplayed(opportunityFields.POCPhone)">
-              <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
-              {{opportunity.data?.pointOfContact[1].phone}}
-            </li>
-            <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-secondary')"
-                *ngIf="opportunity.data?.pointOfContact[1].fax && shouldBeDisplayed(opportunityFields.POCFax)">
-              <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
-              {{opportunity.data?.pointOfContact[1].fax}}
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <h2>Awards Summary</h2>
-    <div class="usa-grid-full" *ngIf="relatedOpportunities">
-      
-      <div class="card" *ngFor="let element of relatedOpportunities">
-        
-        <div class="card-header-secure">
-          <h3>{{element.data?.title}}</h3>
-        </div>
-        
-        <div class="card-secure-content">
-          <div class="usa-grid-full">
-            <div class="usa-width-one-half">
-              <strong>Contractor Awarded</strong>
-              <ul class="usa-label-list">
-                <li><span>DUNS</span> 
-                  <span>
-                    {{element.data?.award?.awardee?.duns}}
-                    <ng-container *ngIf="!element.data?.award?.awardee?.duns">
-                      &mdash;
-                    </ng-container>
-                  </span>
-                </li>
-                <li>
-                  <span>Address</span>
-                  <span>
-                    <ng-container *ngIf=" element.data?.award?.awardee?.location?.streetAddress || 
-                                          element.data?.award?.awardee?.location?.city ||
-                                          element.data?.award?.awardee?.location?.state ||
-                                          element.data?.award?.awardee?.location?.zip ||
-                                          element.data?.award?.awardee?.location?.country">
-                      {{element.data?.award?.awardee?.location?.streetAddress}}<br>
-                      {{element.data?.award?.awardee?.location?.city}}
-                      <ng-container *ngIf="element.data?.award?.awardee?.location?.city">,</ng-container> 
-                      {{element.data?.award?.awardee?.location?.state}} 
-                      {{element.data?.award?.awardee?.location?.zip}}<br>
-                      {{element.data?.award?.awardee?.location?.country}}<br>
-                    </ng-container>
-                    <ng-container *ngIf=" !element.data?.award?.awardee?.location?.streetAddress && 
-                                          !element.data?.award?.awardee?.location?.city &&
-                                          !element.data?.award?.awardee?.location?.state &&
-                                          !element.data?.award?.awardee?.location?.zip &&
-                                          !element.data?.award?.awardee?.location?.country">
-                      &mdash;
-                    </ng-container>
-                  </span>
+            <li [attr.id]="generateID(opportunityFields.NAICSCode, 'classification')"
+                *ngIf="opportunity.data?.naicsCode && opportunity.data?.naicsCode[0] != null && dictionary && shouldBeDisplayed(opportunityFields.NAICSCode)">
+              <strong>NAICS Code(s): </strong>
+              <ul>
+                <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:dictionary.naics_code:'element_id':false:''">
+                  <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
                 </li>
               </ul>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.POP, 'classification')"
+                *ngIf="opportunity.data?.placeOfPerformance && (opportunity.data?.placeOfPerformance?.streetAddress
+                || opportunity.data?.placeOfPerformance?.city || opportunity.data?.placeOfPerformance?.country
+                || opportunity.data?.placeOfPerformance?.state || opportunity.data?.placeOfPerformance?.zip)
+                && shouldBeDisplayed(opportunityFields.POP)">
+              <strong >Place of Performance: </strong>
+              <div [attr.id]="generateID(opportunityFields.POPLocation, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPLocation)">
+                {{opportunity.data?.placeOfPerformance?.streetAddress}}
+              </div>
 
-              
+              <div>
+                <span [attr.id]="generateID(opportunityFields.POPCity, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPCity)">
+                  {{opportunity.data?.placeOfPerformance?.city}}
+                </span>
+                <ng-container *ngIf="opportunity.data?.placeOfPerformance?.city && opportunity.data?.placeOfPerformance?.state">,</ng-container>
+                <span [attr.id]="generateID(opportunityFields.POPState, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPState)">
+                  {{opportunity.data?.placeOfPerformance?.state}}
+                </span>
+                <span [attr.id]="generateID(opportunityFields.POPZip, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPZip)">
+                  {{opportunity.data?.placeOfPerformance?.zip}}
+                </span>
+              </div>
+
+              <div [attr.id]="generateID(opportunityFields.POPCountry, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPCountry)">
+                {{opportunity.data?.placeOfPerformance?.country}}
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0].content">
+          <h2>Synopsis</h2>
+          <h3>Description</h3>
+          <div [innerHTML]="opportunity.data?.descriptions[0].content | fixhtml"></div>
+        </section>
+
+        <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
+
+          <h2>Packages</h2>
+
+          <!-- Header -->
+          <div class="card" *ngFor="let package of attachment.packages">
+
+            <!-- It's public -->
+            <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" (click)="toggleAccordion(package)">
+              <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
+              <strong>Type: {{ package.type }}</strong>
             </div>
-            <div class="usa-width-one-half">
-              <strong>Contract Award</strong>
-              <ul class="usa-label-list">
-                <li><span>Amount</span> <span><i class="fa fa-usd" aria-hidden="true"></i> {{element.data?.award?.amount}}</span></li>
-                <li><span>Number</span> <span>{{element.data?.award?.number}}</span></li>
-                <li><span>CLIN</span> 
-                  <span>
-                    {{element.data?.award?.lineItemNumber}}
-                    <ng-container *ngIf="!element.data?.award?.lineItemNumber">
-                      &mdash;
-                    </ng-container>
-                  </span>
+
+            <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
+              <li *ngFor="let element of package.attachments">
+                <!-- Element -->
+                <ng-container *ngFor="let resource of attachment.resources">
+                  <!-- Resource -->
+                  <ng-container *ngIf="element.resourceId === resource.resourceId">
+                    <!-- Description -->
+                    <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
+                      {{resource.description}}
+                    </a>
+                    <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
+                      {{resource.description}}
+                    </a>
+                  </ng-container>
+                </ng-container>
+              </li>
+            </ul>
+
+            <!-- Its private -->
+            <div *ngIf="package.access === 'Private'" class="card-header-secure">
+              <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
+              <strong>Type: {{ package.type }}</strong>
+            </div>
+
+            <div *ngIf="package.access === 'Private'" class="card-secure-content">
+              <p>
+                <i class="fa fa-lock fa-3x fa-pull-left" aria-hidden="true"></i>
+                <em>Secure/sensitive attachments are not currently available, please go to <a href="https://www.fbo.gov/">FBO.gov</a> to view this attachment.</em>
+              </p>
+            </div>
+
+            <!-- Extra options -->
+            <div class="card-extra-content">
+              <div class="label-container-inline">
+                <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                <strong>Posted on {{ package.postedDate | dateFormat: 'MMM DD, YYYY' }}</strong>
+              </div>
+              <div class="label-container-inline" style="float: right;">
+                <i class="fa" [ngClass]="{'fa-unlock' : package.access === 'Public', 'fa-lock': package.access === 'Private'}" aria-hidden="true"></i>
+                <strong>{{isSecure(package.access)}}</strong>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
+          <h2>Contact Information</h2>
+          <div class="usa-grid-full" *ngIf="opportunityLocation">
+            <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
+              <h3>Contracting Office Address:</h3>
+              <span [attr.id]="generateID(opportunityFields.OfficeStreet, 'contact')" *ngIf="opportunityLocation.street && shouldBeDisplayed(opportunityFields.OfficeStreet)">
+                {{opportunityLocation.street}},
+              </span>
+              <span [attr.id]="generateID(opportunityFields.OfficeCity, 'contact')" *ngIf="opportunityLocation.city && shouldBeDisplayed(opportunityFields.OfficeCity)">
+                {{opportunityLocation.city}},
+              </span>
+              <span [attr.id]="generateID(opportunityFields.OfficeState, 'contact')" *ngIf="opportunityLocation.state && shouldBeDisplayed(opportunityFields.OfficeState)">
+                {{opportunityLocation.state}}
+              </span>
+              <span [attr.id]="generateID(opportunityFields.OfficeCountry, 'contact')" *ngIf="opportunityLocation.country && shouldBeDisplayed(opportunityFields.OfficeCountry)">
+                {{opportunityLocation.country}}
+              </span>
+              <span [attr.id]="generateID(opportunityFields.OfficeZip, 'contact')" *ngIf="opportunityLocation.zip && shouldBeDisplayed(opportunityFields.OfficeZip)">
+                {{opportunityLocation.zip}}
+              </span>
+            </div>
+          </div>
+          <div class="usa-grid-full" *ngIf="opportunity.data?.pointOfContact">
+            <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-primary')" *ngIf="hasPOC(0) && shouldBeDisplayed(opportunityFields.POC)">
+              <h3>Primary Point of Contact</h3>
+              <ul class="usa-unstyled-list">
+                <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-primary')"
+                    *ngIf="shouldBeDisplayed(opportunityFields.POCFullName)">
+                  <strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong>
+                </li>
+                <li [attr.id]="generateID(opportunityFields.POCTitle, 'contact-primary')"
+                    *ngIf="opportunity.data?.pointOfContact[0].title && shouldBeDisplayed(opportunityFields.POCTitle)">
+                  <!--TODO: fix capitalize pipe-->
+                  <em [innerHTML]="opportunity.data?.pointOfContact[0].title"></em>
+                </li>
+                <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-primary')"
+                    *ngIf="opportunity.data?.pointOfContact[0].email && shouldBeDisplayed(opportunityFields.POCEmail)">
+                  <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+                  <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
+                    {{opportunity.data?.pointOfContact[0].email}}
+                  </a>
+                </li>
+                <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-primary')"
+                    *ngIf="opportunity.data?.pointOfContact[0].phone && shouldBeDisplayed(opportunityFields.POCPhone)">
+                  <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+                  {{opportunity.data?.pointOfContact[0].phone}}
+                </li>
+                <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-primary')"
+                    *ngIf="opportunity.data?.pointOfContact[0].fax && shouldBeDisplayed(opportunityFields.POCFax)">
+                  <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+                  {{opportunity.data?.pointOfContact[0].fax}}
                 </li>
               </ul>
             </div>
+            <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-secondary')" *ngIf="hasPOC(1) && shouldBeDisplayed(opportunityFields.POC)">
+              <h3>Secondary Point of Contact</h3>
+              <ul class="usa-unstyled-list">
+                <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-secondary')"
+                    *ngIf="shouldBeDisplayed(opportunityFields.POCFullName)">
+                  <strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong>
+                </li>
+                <li [attr.id]="generateID(opportunityFields.POCTitle, 'contact-secondary')"
+                    *ngIf="opportunity.data?.pointOfContact[1].title && shouldBeDisplayed(opportunityFields.POCTitle)">
+                  <!--TODO: fix capitalize pipe-->
+                  <em [innerHTML]="opportunity.data?.pointOfContact[1].title"></em>
+                </li>
+                <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-secondary')"
+                    *ngIf="opportunity.data?.pointOfContact[1].email && shouldBeDisplayed(opportunityFields.POCEmail)">
+                  <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
+                  <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
+                    {{opportunity.data?.pointOfContact[1].email}}
+                  </a>
+                </li>
+                <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-secondary')"
+                    *ngIf="opportunity.data?.pointOfContact[1].phone && shouldBeDisplayed(opportunityFields.POCPhone)">
+                  <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
+                  {{opportunity.data?.pointOfContact[1].phone}}
+                </li>
+                <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-secondary')"
+                    *ngIf="opportunity.data?.pointOfContact[1].fax && shouldBeDisplayed(opportunityFields.POCFax)">
+                  <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
+                  {{opportunity.data?.pointOfContact[1].fax}}
+                </li>
+              </ul>
+            </div>
           </div>
+        </section>
+
+      </tab>
+
+      <tab tabTitle="Award Notices">
+        
+        <h2>Awards Summary</h2>
+        <div *ngIf="relatedOpportunities">
+          
+          <div class="card" *ngFor="let element of relatedOpportunities">
+            
+            <div class="card-header-secure">
+              <h3>{{element.data?.title}}</h3>
+            </div>
+            
+            <div class="card-secure-content">
+              <div class="usa-grid-full">
+                <div class="usa-width-one-half">
+                  <strong>Contractor Awarded</strong>
+                  <ul class="usa-label-list">
+                    <li><span>DUNS</span> 
+                      <span>
+                        {{element.data?.award?.awardee?.duns}}
+                        <ng-container *ngIf="!element.data?.award?.awardee?.duns">
+                          &mdash;
+                        </ng-container>
+                      </span>
+                    </li>
+                    <li>
+                      <span>Address</span>
+                      <span>
+                        <ng-container *ngIf=" element.data?.award?.awardee?.location?.streetAddress || 
+                                              element.data?.award?.awardee?.location?.city ||
+                                              element.data?.award?.awardee?.location?.state ||
+                                              element.data?.award?.awardee?.location?.zip ||
+                                              element.data?.award?.awardee?.location?.country">
+                          {{element.data?.award?.awardee?.location?.streetAddress}}<br>
+                          {{element.data?.award?.awardee?.location?.city}}
+                          <ng-container *ngIf="element.data?.award?.awardee?.location?.city">,</ng-container> 
+                          {{element.data?.award?.awardee?.location?.state}} 
+                          {{element.data?.award?.awardee?.location?.zip}}<br>
+                          {{element.data?.award?.awardee?.location?.country}}<br>
+                        </ng-container>
+                        <ng-container *ngIf=" !element.data?.award?.awardee?.location?.streetAddress && 
+                                              !element.data?.award?.awardee?.location?.city &&
+                                              !element.data?.award?.awardee?.location?.state &&
+                                              !element.data?.award?.awardee?.location?.zip &&
+                                              !element.data?.award?.awardee?.location?.country">
+                          &mdash;
+                        </ng-container>
+                      </span>
+                    </li>
+                  </ul>
+
+                  
+                </div>
+                <div class="usa-width-one-half">
+                  <strong>Contract Award</strong>
+                  <ul class="usa-label-list">
+                    <li><span>Amount</span> <span><i class="fa fa-usd" aria-hidden="true"></i> {{element.data?.award?.amount}}</span></li>
+                    <li><span>Number</span> <span>{{element.data?.award?.number}}</span></li>
+                    <li><span>CLIN</span> 
+                      <span>
+                        {{element.data?.award?.lineItemNumber}}
+                        <ng-container *ngIf="!element.data?.award?.lineItemNumber">
+                          &mdash;
+                        </ng-container>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-extra-content">
+              <div class="label-container-inline">
+                <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                Contract Award Date: <strong>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</strong>
+              </div>
+            </div>
+
+          </div>
+
         </div>
 
-        <div class="card-extra-content">
-          <div class="label-container-inline">
-            <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-            Contract Award Date: <strong>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</strong>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
+      </tab>
+    </tabs>
+    
+  
     <br><br>
 
   </div>
