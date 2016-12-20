@@ -9,6 +9,7 @@ import { PoliciesComponent } from "./sections/policies/policies.component";
 import { ReferenceLibraryComponent}  from "./sections/reference-library/reference-library.component";
 import { PartnersComponent } from "./sections/partners/partners.component";
 import { AwardDataComponent } from "./sections/award-data/award-data.component";
+import { TransitionToSamComponent } from "./sections/transition-to-sam/transition-to-sam.component";
 
 export const routes: Routes = [
   {
@@ -17,6 +18,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'overview' },
       { path: 'overview', component: OverviewComponent },
+      { path: 'transition', component: TransitionToSamComponent },
       { path: 'about', component: AboutSamComponent },
       { path: 'new', component: NewToSamComponent },
       { path: 'accounts', component: AccountsComponent },
@@ -25,7 +27,6 @@ export const routes: Routes = [
       { path: 'partners', component: PartnersComponent },
       { path: 'reference', component: ReferenceLibraryComponent },
       { path: 'award', component: AwardDataComponent },
-
     ]
   },
 ];

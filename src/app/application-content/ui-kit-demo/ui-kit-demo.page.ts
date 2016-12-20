@@ -105,6 +105,28 @@ export class UIKitDemoPage {
     year: 2016
   };
 
+  //Image Library
+  imageLibraryData:any =  [
+    {
+      title:"Benefits.gov Learning Center",
+      detail:"Benefits.gov Learning Center: Lipsum content",
+      link:"View Benefits.gov",
+      url:"http://www.Benefits.gov"
+    },
+    {
+      title:"Grants.gov Learning Center",
+      detail:"Details for Grants.gov Learning Center: Lipsum content",
+      link:"View Grants.gov",
+      url:"http://www.grants.gov/web/grants/learn-grants.html"
+    },
+    {
+      title:"Data Element Repository",
+      detail:"Details for Data Element Repository: Lipsum content",
+      link:"View DER",
+      url:"fakeUrl"
+    }
+  ];
+
   modalAlertTypes = ['success','warning','error','info'];
   @ViewChild('modal1') vcModal1;
   @ViewChild('modal2') vcModal2;

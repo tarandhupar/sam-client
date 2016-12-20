@@ -15,6 +15,7 @@ import { routing } from './search.route';
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
+import {FHFeaturedResult} from "../organization/featured-result/featured-result.component";
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     FederalHierarchyResult,
     EntitiesResult,
     ExclusionsResult,
-    WageDeterminationResult
+    WageDeterminationResult,
+    FHFeaturedResult
   ],
   declarations: [
     SearchPage,
@@ -43,7 +45,8 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     FederalHierarchyResult,
     EntitiesResult,
     ExclusionsResult,
-    WageDeterminationResult
+    WageDeterminationResult,
+    FHFeaturedResult
   ],
   providers: [],
 })

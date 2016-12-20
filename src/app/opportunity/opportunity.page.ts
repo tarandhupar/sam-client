@@ -52,6 +52,7 @@ export class OpportunityPage implements OnInit {
   currentUrl: string;
   dictionary: any;
   attachment: any;
+  relatedOpportunities:any;
   logoUrl: string;
 
   constructor(
@@ -72,6 +73,7 @@ export class OpportunityPage implements OnInit {
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
+    this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.setDisplayFields(combinedOpportunityAPI);
   }
 
@@ -112,6 +114,18 @@ export class OpportunityPage implements OnInit {
     return parentOpportunitySubject;
   }
 
+  private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
+    let relatedOpportunitiesSubject = new ReplaySubject(1);
+    opportunityAPI.subscribe((opportunity => {
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a").subscribe(relatedOpportunitiesSubject);
+    }));
+    relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
+      this.relatedOpportunities = data[0];
+    }, err => {
+      console.log('Error loading related opportunities: ', err);
+    });
+  }
+
   private loadOrganization(opportunityAPI: Observable<any>) {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
 
@@ -123,6 +137,7 @@ export class OpportunityPage implements OnInit {
       //organizationId less than 30 character then call Octo's FH End point
       else {
         this.fhService.getOrganizationById(api.data.organizationId).subscribe(organizationSubject);
+        //console.log("Inside opportunity", organizationSubject);
         this.loadLogo(organizationSubject);
       }
     });
@@ -138,6 +153,7 @@ export class OpportunityPage implements OnInit {
 
   private loadLogo(organizationAPI: Observable<any>) {
     organizationAPI.subscribe(org => {
+      //console.log(org);
       if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
         return;
       }
