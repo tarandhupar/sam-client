@@ -12,7 +12,8 @@ import { ReferenceLibraryComponent}  from "./sections/reference-library/referenc
 import { PartnersComponent } from "./sections/partners/partners.component";
 import { AwardDataComponent } from "./sections/award-data/award-data.component";
 import { SamUIKitModule } from "ui-kit/ui-kit.module";
-import {TransitionToSamComponent} from "./sections/transition-to-sam/transition-to-sam.component";
+import { TransitionToSamComponent } from "./sections/transition-to-sam/transition-to-sam.component";
+import { ImageLibraryComponent } from "./image-library/image-library.component";
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import {TransitionToSamComponent} from "./sections/transition-to-sam/transition-
     BrowserModule,
     routing,
   ],
-  exports: [],
+  exports: [ ImageLibraryComponent ],
   declarations: [
     HelpPage,
     TransitionToSamComponent,
@@ -32,7 +33,8 @@ import {TransitionToSamComponent} from "./sections/transition-to-sam/transition-
     OverviewComponent,
     PartnersComponent,
     PoliciesComponent,
-    ReferenceLibraryComponent
+    ReferenceLibraryComponent,
+    ImageLibraryComponent
   ],
   providers: [],
 })
