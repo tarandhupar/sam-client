@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterContentInit, ContentChildren, QueryList, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { OpportunityService, FHService } from 'api-kit';
@@ -6,51 +6,6 @@ import { ReplaySubject, Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 import { OpportunityFields } from "./opportunity.fields";
 import { trigger, state, style, transition, animate } from '@angular/core';
-
-// Tab
-@Component({
-  selector: 'tab',
-  template: `
-    <div [class.hide]="!active" class="usa-tabs-content">
-      <ng-content></ng-content>
-    </div>
-  `
-})
-export class Tab {
-  @Input('tabTitle') title: string;
-  @Input() active = false;
-}
-
-// Tabs
-@Component({
-  selector: 'tabs',
-  template:`
-    <ul class="usa-tabs">
-      <li *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab.active">
-        {{tab.title}}
-      </li>
-    </ul>
-    <ng-content></ng-content>
-  `
-})
-export class Tabs implements AfterContentInit {
-  @ContentChildren(Tab) tabs: QueryList<Tab>;
-
-  ngAfterContentInit(){
-    let activeTabs = this.tabs.filter((tab)=>tab.active);
-
-    if(activeTabs.length === 0){
-      this.selectTab(this.tabs.first);
-    }
-  }
-
-  selectTab(tab: Tab){
-    this.tabs.toArray().forEach(tab => tab.active = false);
-    tab.active = true;
-  }
-
-}
-
 
 @Component({
   moduleId: __filename,

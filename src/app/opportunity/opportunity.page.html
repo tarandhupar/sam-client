@@ -52,8 +52,8 @@
     </section>
 
 
-    <tabs>
-      <tab tabTitle="Opportunity">
+    <samTabs>
+      <samTab tabTitle="Opportunity">
 
         <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award)">
           <h2>Award Details</h2>
@@ -359,9 +359,9 @@
           </div>
         </section>
 
-      </tab>
+      </samTab>
 
-      <tab *ngIf="relatedOpportunities" tabTitle="Award Notices">
+      <samTab *ngIf="relatedOpportunities" tabTitle="Award Notices">
 
         <h2>Awards Summary</h2>
 
@@ -439,8 +439,8 @@
 
         </div>
 
-      </tab>
-    </tabs>
+      </samTab>
+    </samTabs>
 
 
     <br><br>
