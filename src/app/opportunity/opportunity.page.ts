@@ -165,7 +165,7 @@ export class OpportunityPage implements OnInit {
       this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a").subscribe(relatedOpportunitiesSubject);
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
-      this.relatedOpportunities = data.relatedOpportunities[0];
+      this.relatedOpportunities = data['relatedOpportunities'][0];
     }, err => {
       console.log('Error loading related opportunities: ', err);
     });

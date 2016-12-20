@@ -51,10 +51,10 @@
       </ul>
     </section>
 
-    
+
     <tabs>
       <tab tabTitle="Opportunity">
-        
+
         <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award)">
           <h2>Award Details</h2>
           <ul class="usa-unstyled-list">
@@ -361,23 +361,22 @@
 
       </tab>
 
-      <tab tabTitle="Award Notices">
-        
+      <tab *ngIf="relatedOpportunities" tabTitle="Award Notices">
+
         <h2>Awards Summary</h2>
-        <div *ngIf="relatedOpportunities">
-          
+
           <div class="card" *ngFor="let element of relatedOpportunities">
-            
+
             <div class="card-header-secure">
               <h3>{{element.data?.title}}</h3>
             </div>
-            
+
             <div class="card-secure-content">
               <div class="usa-grid-full">
                 <div class="usa-width-one-half">
                   <strong>Contractor Awarded</strong>
                   <ul class="usa-label-list">
-                    <li><span>DUNS</span> 
+                    <li><span>DUNS</span>
                       <span>
                         {{element.data?.award?.awardee?.duns}}
                         <ng-container *ngIf="!element.data?.award?.awardee?.duns">
@@ -388,19 +387,19 @@
                     <li>
                       <span>Address</span>
                       <span>
-                        <ng-container *ngIf=" element.data?.award?.awardee?.location?.streetAddress || 
+                        <ng-container *ngIf=" element.data?.award?.awardee?.location?.streetAddress ||
                                               element.data?.award?.awardee?.location?.city ||
                                               element.data?.award?.awardee?.location?.state ||
                                               element.data?.award?.awardee?.location?.zip ||
                                               element.data?.award?.awardee?.location?.country">
                           {{element.data?.award?.awardee?.location?.streetAddress}}<br>
                           {{element.data?.award?.awardee?.location?.city}}
-                          <ng-container *ngIf="element.data?.award?.awardee?.location?.city">,</ng-container> 
-                          {{element.data?.award?.awardee?.location?.state}} 
+                          <ng-container *ngIf="element.data?.award?.awardee?.location?.city">,</ng-container>
+                          {{element.data?.award?.awardee?.location?.state}}
                           {{element.data?.award?.awardee?.location?.zip}}<br>
                           {{element.data?.award?.awardee?.location?.country}}<br>
                         </ng-container>
-                        <ng-container *ngIf=" !element.data?.award?.awardee?.location?.streetAddress && 
+                        <ng-container *ngIf=" !element.data?.award?.awardee?.location?.streetAddress &&
                                               !element.data?.award?.awardee?.location?.city &&
                                               !element.data?.award?.awardee?.location?.state &&
                                               !element.data?.award?.awardee?.location?.zip &&
@@ -411,14 +410,14 @@
                     </li>
                   </ul>
 
-                  
+
                 </div>
                 <div class="usa-width-one-half">
                   <strong>Contract Award</strong>
                   <ul class="usa-label-list">
                     <li><span>Amount</span> <span><i class="fa fa-usd" aria-hidden="true"></i> {{element.data?.award?.amount}}</span></li>
                     <li><span>Number</span> <span>{{element.data?.award?.number}}</span></li>
-                    <li><span>CLIN</span> 
+                    <li><span>CLIN</span>
                       <span>
                         {{element.data?.award?.lineItemNumber}}
                         <ng-container *ngIf="!element.data?.award?.lineItemNumber">
@@ -438,14 +437,12 @@
               </div>
             </div>
 
-          </div>
-
         </div>
 
       </tab>
     </tabs>
-    
-  
+
+
     <br><br>
 
   </div>
