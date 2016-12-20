@@ -13,6 +13,7 @@
 
 @import '~uswds/src/stylesheets/uswds';
 
+@import 'components/accordion';
 @import 'components/footer';
 @import 'components/pagination';
 @import 'components/header';
@@ -54,6 +55,11 @@ h2{
   letter-spacing: -0.5px;
   line-height: 1.1;
   color: black;
+}
+
+h4 {
+  font-weight: normal;
+  text-align: center;
 }
 
 /* Let content occupy most of the page and show footer when scroll down*/
