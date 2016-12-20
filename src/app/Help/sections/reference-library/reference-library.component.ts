@@ -10,17 +10,7 @@ export class ReferenceLibraryComponent {
   detailLipsum:string = `Omnes inermis ius at, ad assum constituto referrentur eam. 
     Regione deserunt no vis, in his sale aeque. Saepe virtute impedit no nec, elitr 
     decore antiopam cu usu, sit Id labores vivendum vim.`;
-
-  detailObj: any = {
-    Federal:{
-      showDetail: false,
-      item: {}
-    },
-    Contract:{
-      showDetail: false,
-      item: {}
-    }
-  };
+  
 
   private data: any={
     Federal: [
@@ -66,62 +56,6 @@ export class ReferenceLibraryComponent {
   };
 
   constructor() { }
-
-  selectDetail(item, type, event){
-    if(this.detailObj[type].item.title === item.title){
-      this.detailObj[type].showDetail = false;
-      this.detailObj[type].item = {};
-    }else{
-      this.detailObj[type].showDetail = true;
-      this.detailObj[type].item = item;
-    }
-    event.stopPropagation();
-  }
-
-  private getItemClass(item, type){
-    if(this.detailObj[type].item.title !== item.title){
-      return "fa-plus";
-    }
-    return "fa-minus";
-  }
-
-  private getTriClass(index, type): string{
-    if(this.detailObj[type].item.title === this.data[type][index].title){
-      return "tri-down";
-    }
-    return "no-tri-down";
-  }
-
-  private closeReferenceDetail(type){
-    this.detailObj[type].showDetail = false;
-    this.detailObj[type].item = {};
-  }
-
-  private getLayerClass(index,type): string{
-    if(this.detailObj[type].item.title === this.data[type][index].title){
-      return "reference-image-layer-select";
-    }
-    return "reference-image-layer-unselect";
-  }
-
-  private getBorderClass(index,type): string{
-    if(this.detailObj[type].item.title === this.data[type][index].title){
-      return "item-border-select";
-    }
-    return "item-border-unselect";
-  }
-
-  private largeScreen(): boolean{
-    return window.innerWidth >= 1200;
-  }
-
-  private getImageContainerClass(): string{
-    if(this.largeScreen()){
-      return "reference-image-container"
-    }
-    return "reference-image-container-small"
-
-  }
 
   private linkToggle():boolean{
     return globals.showOptional;

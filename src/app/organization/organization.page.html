@@ -24,7 +24,7 @@
     </section>
 
     <!-- Sub-Tier Agencies -->
-    <section *ngIf="organization.hierarchy.length>0">
+    <section id="organization-sub-hierarchy" *ngIf="organization.hierarchy.length>0">
       <div class="usa-grid-full m_T-6x">
         <div class="usa-width-two-thirds"[ngSwitch]="organization.type">
           <ng-container *ngSwitchCase="'DEPARTMENT'"><h2>Sub-Tier Agencies</h2></ng-container>
@@ -44,7 +44,7 @@
       </ul>
     </section>
 
-    <!-- No Sub-Tier Agenfies found -->
+    <!-- No Sub-Tier Agencies found -->
     <section [ngSwitch]="organization.type" *ngIf="organization.hierarchy.length==0 && organization.type != 'OFFICE'">
       <ng-container *ngSwitchCase="'DEPARTMENT'"><h2>Sub-Tier Agencies</h2></ng-container>
       <ng-container *ngSwitchCase="'AGENCY'"><h2>Offices</h2></ng-container>

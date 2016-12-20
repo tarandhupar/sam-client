@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AlertFooterService } from '../../alerts/alert-footer';
 
 @Component({
   templateUrl: 'ui-kit-demo.template.html'
@@ -85,8 +86,48 @@ export class UIKitDemoPage {
   phoneModel = "";
   phoneModel2 = "1+(123)456-3366";
 
+  footerAlertTypes = ['success','warning','error','info'];
+  footerAlertModel = {
+    title: "test title",
+    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+    type: "error",
+    timer: 0
+  }
 
-  constructor() {  }
+  dateModel = {
+    month: null,
+    day: null,
+    year: null
+  };
+  dateModel2 = {
+    month: 12,
+    day: 31,
+    year: 2016
+  };
+
+  //Image Library
+  imageLibraryData:any =  [
+    {
+      title:"Benefits.gov Learning Center",
+      detail:"Benefits.gov Learning Center: Lipsum content",
+      link:"View Benefits.gov",
+      url:"http://www.Benefits.gov"
+    },
+    {
+      title:"Grants.gov Learning Center",
+      detail:"Details for Grants.gov Learning Center: Lipsum content",
+      link:"View Grants.gov",
+      url:"http://www.grants.gov/web/grants/learn-grants.html"
+    },
+    {
+      title:"Data Element Repository",
+      detail:"Details for Data Element Repository: Lipsum content",
+      link:"View DER",
+      url:"fakeUrl"
+    }
+  ];
+
+  constructor(private alertFooterService: AlertFooterService) {  }
 
   onEmptyOptionChanged($event) {
     if ($event.target.checked) {
@@ -118,5 +159,8 @@ export class UIKitDemoPage {
   }
   phoneModelChange(phoneNum){
     this.phoneModel = phoneNum;
+  }
+  onFooterAlertBtnClick(){
+    this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.footerAlertModel)));
   }
 }
