@@ -4,7 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import { ReferenceLibraryComponent } from "./reference-library.component";
-import { HelpModule } from "../../help.module"
+import { HelpModule } from "../../help.module";
 
 describe('Reference Library page in online help', () => {
   let component:ReferenceLibraryComponent;
@@ -48,55 +48,6 @@ describe('Reference Library page in online help', () => {
     expect(featuredRef.nativeElement.innerHTML).toBe("Featured References");
     expect(additionalRef).toBeDefined();
     expect(additionalRef.nativeElement.innerHTML).toBe("Additional References");
-  });
-
-  it('should open contract detail when clicking on contract icon',  ()=>{
-    fixture.detectChanges();
-    expect(component.detailObj.Contract.showDetail).toBe(false);
-    fixture.nativeElement.querySelector('#contract-icon-0').click();
-    fixture.whenStable().then(() => {
-      fixture.detectChanges();
-      let contractDetail = fixture.debugElement.query(By.css(".contract-detail"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail);
-      expect(component.detailObj.Contract.showDetail).toBe(true);
-    });
-  });
-
-  it('should open contract detail when clicking on contract link',  ()=>{
-    fixture.detectChanges();
-    expect(component.detailObj.Contract.showDetail).toBe(false);
-    fixture.nativeElement.querySelector('#contract-link-0').click();
-    fixture.whenStable().then(() => {
-      fixture.detectChanges();
-      let contractDetail = fixture.debugElement.query(By.css(".contract-detail"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail);
-      expect(component.detailObj.Contract.showDetail).toBe(true);
-    });
-  });
-
-  it('should open contract detail when clicking on contract semi-transparent div',  ()=>{
-    fixture.detectChanges();
-    expect(component.detailObj.Contract.showDetail).toBe(false);
-    fixture.nativeElement.querySelector('#contract-div-0').click();
-    fixture.whenStable().then(() => {
-      fixture.detectChanges();
-      let contractDetail = fixture.debugElement.query(By.css(".contract-detail"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail);
-      expect(component.detailObj.Contract.showDetail).toBe(true);
-    });
-  });
-
-  it('should hide contract detail when clicking on the same contract icon while the corresponding detail is open', ()=>{
-    component.detailObj.Contract.showDetail = true;
-    component.detailObj.Contract.item = contractItemConfig;
-    fixture.detectChanges();
-    let contractDetail = fixture.debugElement.query(By.css(".contract-detail"));
-    expect(contractDetail.nativeElement.innerHTML).toBe(contractItemConfig.detail);
-    fixture.nativeElement.querySelector('#contract-icon-0').click();
-    fixture.whenStable().then(() => {
-      fixture.detectChanges();
-      expect(component.detailObj.Contract.showDetail).toBe(false);
-    });
   });
   
 });
