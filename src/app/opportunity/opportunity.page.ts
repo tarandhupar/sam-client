@@ -362,4 +362,11 @@ export class OpportunityPage implements OnInit {
   public toggleAccordion(card){
     card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
   }
+
+  public hasResources(){
+    for(let pkg of this.attachment['packages']) {
+      if(pkg['access'] === 'Public') { return true; }
+    }
+    return false;
+  }
 }

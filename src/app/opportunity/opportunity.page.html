@@ -211,9 +211,9 @@
     <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
 
       <h2>Packages</h2>
-      
-      <a href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">
-        <i class="fa fa-cloud-download" aria-hidden="true"></i> 
+
+      <a *ngIf="hasResources()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">
+        <i class="fa fa-cloud-download" aria-hidden="true"></i>
         <strong>Download All Packages</strong>
       </a>
 
@@ -228,7 +228,7 @@
           </div>
           <span class="card-download">
             <a href="{{getDownloadPackageURL(package.packageId)}}">
-              <i class="fa fa-cloud-download fa-lg" aria-hidden="true"></i> 
+              <i class="fa fa-cloud-download fa-lg" aria-hidden="true"></i>
               <span>Download</span>
             </a>
           </span>
