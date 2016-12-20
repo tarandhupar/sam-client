@@ -74,10 +74,9 @@ export class OpportunityPage implements OnInit {
         }
       }
     });
-    this.route.queryParams.subscribe(
-      data => {
-        this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
-      });
+    route.queryParams.subscribe(data => {
+      this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
+    });
   }
 
   ngOnInit() {
