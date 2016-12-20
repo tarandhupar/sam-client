@@ -1,0 +1,39 @@
+<div class="usa-grid image-library">
+  <div class="usa-width-one-whole m_L-8x relative" [ngClass]="getImageContainerClass()">
+    <div class="usa-width-one-whole">
+      <div class="usa-width-one-third" *ngFor="let item of data; let i= index">
+        <div class="usa-width-three-fourths image-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,$event)" [ngClass]="getBorderClass(i)">
+          <div [id]="name+'-div-'+i" [ngClass]="getLayerClass(i)" class="reference-image-layer-unselect" (click)="selectDetail(item,$event)">
+                <span class="image-library-toggle" (click)="selectDetail(item,$event)">
+                  <i [id]="name+'-icon-'+i" class="fa fa-plus" [ngClass]="getItemClass(item)"></i>
+                </span>
+            <span [id]="name+'-link-'+i" class="image-library-title" (click)="selectDetail(item,$event)">{{item.title}}</span>
+          </div>
+          <img class="reference-image" src="src/assets/img/placeholder.jpg" alt="{{item.title}}">
+        </div>
+      </div>
+    </div>
+    <!--Triangle div to point out which topic detail is currently showing-->
+    <div class="usa-width-one-whole tri-div">
+      <div class="usa-width-one-third" [ngClass]="getTriClass(0)"></div>
+      <div class="usa-width-one-third" [ngClass]="getTriClass(1)"></div>
+      <div class="usa-width-one-third" [ngClass]="getTriClass(2)"></div>
+    </div>
+  </div>
+
+
+  <div class="usa-width-one-whole m_L-8x relative" *ngIf = "detailObj.showDetail">
+    <div class="relative black-border" [ngClass]="{'detail-div':!largeScreen(),'detail-div-large':largeScreen()}">
+      <div class="usa-width-one-whole relative">
+
+        <a class="image-library-close" (click)="closeReferenceDetail()">Close</a>
+        <div class="usa-width-one-whole m_T-4x">
+          <h3 class="p_L-2x" *ngIf="showDetailTitle">{{detailObj.item.title}}</h3>
+          <p class="p_L-5x p_R-2x p_B-1x detail-text">{{detailObj.item.detail}}</p>
+          <span class="reference-content-link" [ngClass]="getLinkClass()"><a  href="{{detailObj.item.url}}">{{detailObj.item.link}}</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="usa-width-one-whole"></div>
+</div>

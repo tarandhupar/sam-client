@@ -1,0 +1,58 @@
+.new-to-sam{
+  .small-text{
+    font-size: 14px;
+  }
+
+  .square-button{
+    border-radius:  20px;
+    background: dodgerblue;
+    width: 100%;
+    color: #ffffff;
+  }
+
+  .square-button:before{
+    content: "";
+    display: block;
+    padding-top: 26%;
+  }
+
+  .square-button:after{
+    content: "";
+    display: block;
+    padding-bottom: 26%;
+  }
+
+  .square-button:hover, .long-button:hover{
+    cursor: pointer;
+  }
+
+  .long-button{
+    border-radius: 20px;
+    background: dodgerblue;
+    color: #ffffff;
+  }
+
+  .square-paragragh-area{
+    width: 100%;
+  }
+
+  .square-paragragh-area:before{
+    content: "";
+    display: block;
+    padding-top: 20%;
+  }
+
+  .square-paragragh-area:after{
+    content: "";
+    display: block;
+    padding-bottom: 18%;
+  }
+
+  .button-row{
+    display: flex;
+  }
+
+  .new-to-sam-back:hover{
+    cursor: pointer;
+  }
+}
