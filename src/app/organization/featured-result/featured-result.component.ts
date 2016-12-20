@@ -75,6 +75,8 @@ export class FHFeaturedResult implements OnInit {
       if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
         this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
         return;
+      } else {
+        this.logoUrl = null;
       }
 
       if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {

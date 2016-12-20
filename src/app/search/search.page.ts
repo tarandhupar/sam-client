@@ -92,6 +92,10 @@ export class SearchPage implements OnInit{
       }).subscribe(
         data => {
           this.featuredData = data;
+        },
+        error => {
+          this.featuredData = null;
+          console.error("No featured results", error);
         }
       );
     } else {
