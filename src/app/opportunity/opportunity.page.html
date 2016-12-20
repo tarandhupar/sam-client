@@ -356,7 +356,7 @@
       </div>
     </section>
     <h2>Awards Summary</h2>
-    <div class="usa-grid-full" *ngIf="relatedOpportunities">
+    <div id = "awards-summary" class="usa-grid-full" *ngIf="relatedOpportunities">
       <ng-container *ngFor="let element of relatedOpportunities">
         <!--<br> TAGS ARE TEMPORARY AND WILL BE REMOVED IN THE THEMING TASK-->
         <span>{{element.data?.title}}</span><br>

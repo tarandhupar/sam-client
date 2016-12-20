@@ -366,20 +366,12 @@ export class OpportunityPage implements OnInit {
     }
     let navigationExtras: NavigationExtras = {
       queryParams: {page: this.pageNum},
-      //fragment: 'organization-sub-hierarchy'
+      fragment: 'awards-summary'
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
   }
 
-  // pageChange(pagenumber){
-  //   this.pageNum = pagenumber;
-  //   var qsobj = this.setupQS(false);
-  //   let navigationExtras: NavigationExtras = {
-  //     queryParams: qsobj
-  //   };
-  //   this.router.navigate(['/search'],navigationExtras);
-  // }
 
   public getDownloadFileURL(fileID: string){
     return API_UMBRELLA_URL + '/cfda/v1/file/' + fileID + "?api_key=" + API_UMBRELLA_KEY;
