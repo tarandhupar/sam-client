@@ -20,6 +20,7 @@ import { FederalHierarchyResult } from "./organization/search-result/federal-hie
 import { EntitiesResult } from "./entity/search-result/entities-result.component";
 import { ExclusionsResult } from "./exclusion/search-result/exclusions-result.component";
 import { WageDeterminationResult } from "./wage-determination/search-result/wage-determination-result.component";
+import { FHFeaturedResult } from "./organization/featured-result/featured-result.component";
 import { ProgramModule } from "./assistance-listing/assistance-listing.module";
 import { OpportunityPage } from "./opportunity/opportunity.page";
 import { PageNotFoundErrorPage } from "./application-content/404/404.page";
@@ -27,6 +28,7 @@ import { PipesModule } from "./app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./opportunity/pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./opportunity/pipes/timezone-label.pipe";
 import { FixHTMLPipe } from "./opportunity/pipes/fix-html.pipe";
+import { FHService } from "../api-kit/fh/fh.service";
 
 
 class RouterStub {
@@ -43,18 +45,20 @@ var activatedRouteStub = {
   }
 };
 var searchServiceStub = {};
+var fhServiceStub = {};
 
 
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, ExclusionsResult, WageDeterminationResult, OpportunityPage, PageNotFoundErrorPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe],
+    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, ExclusionsResult, WageDeterminationResult, FHFeaturedResult, OpportunityPage, PageNotFoundErrorPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe],
     imports: [PipesModule, SamUIKitModule, AppComponentsModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
     providers: [
       App,
       {provide: Router, useClass: RouterStub},
       {provide: ActivatedRoute, useValue: activatedRouteStub},
-      {provide: SearchService, useValue: searchServiceStub}
+      {provide: SearchService, useValue: searchServiceStub},
+      {provide: FHService, useValue: fhServiceStub}
     ]
   }));
 

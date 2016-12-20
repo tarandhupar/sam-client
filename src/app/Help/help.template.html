@@ -21,9 +21,8 @@
   <aside class="usa-width-one-fourth p_T-2x">
     <div sam-sticky limit=1200 container="help-content">
       <ul class="usa-sidenav-list">
-        <li>
-          <a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/help/overview']">Help Center Home</a>
-        </li>
+        <li><a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/help/overview']">Help Center Home</a></li>
+        <li><a [ngClass]="getSectionClass('transition')" (click)="changeSection('transition')" [routerLink]="['/help/transition']">Transition to SAM.gov</a></li>
         <li>
           <a [ngClass]="getSectionClass('about')" (click)="changeSection('about')" [routerLink]="['/help/about']">About SAM.gov</a>
           <ul class="usa-sidenav-sub_list"  *ngIf="isCurrentSection('about')">
@@ -39,7 +38,6 @@
           <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('accounts')">
             <li><a #userSignUp [ngClass]="getSubSectionClass('userSignUp')" (click)="changeSubSection('userSignUp', userSignUp)" href="{{currentUrl}}#userSignUp">User Sign Up</a></li>
             <li><a #entityRegistration [ngClass]="getSubSectionClass('entityRegistration')" (click)="changeSubSection('entityRegistration', entityRegistration)" href="{{currentUrl}}#entityRegistration">Entity Registration</a></li>
-            <li><a #samDotGovTransition [ngClass]="getSubSectionClass('samDotGovTransition')" (click)="changeSubSection('samDotGovTransition', samDotGovTransition)" href="{{currentUrl}}#samDotGovTransition">SAM.gov Transition</a></li>
           </ul>
         </li>
         <li>

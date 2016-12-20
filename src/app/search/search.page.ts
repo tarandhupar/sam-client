@@ -22,6 +22,7 @@ export class SearchPage implements OnInit{
 	pageNumPaginationPadding = 2;
 	showPerPage = 10;
 	data = [];
+  featuredData: any = null;
 	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
@@ -84,6 +85,23 @@ export class SearchPage implements OnInit{
 		return qsobj;
   }
 	runSearch(){
+    //make featuredSearch api call only for first page
+    if(this.pageNum<=0 && this.keyword!=='') {
+      this.searchService.featuredSearch({
+        keyword: this.keyword
+      }).subscribe(
+        data => {
+          this.featuredData = data;
+        },
+        error => {
+          this.featuredData = null;
+          console.error("No featured results", error);
+        }
+      );
+    } else {
+      this.featuredData = null;
+    }
+
 		//make api call
 		this.searchService.runSearch({
 			keyword: this.keyword,
