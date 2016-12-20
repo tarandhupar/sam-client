@@ -15,9 +15,14 @@ export class AlertEditComponent implements OnInit {
   @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
   typeOptions: OptionsType = [
-    { name: 'info', label: 'Information', value: 'Information'},
-    { name: 'critical', label: 'Critical', value: 'Critical'},
+    { name: 'information', label: 'Informational', value: 'Informational'},
+    { name: 'error', label: 'Error', value: 'Error'},
     { name: 'warning', label: 'Warning', value: 'Warning'}
+  ];
+
+  statusOptions: OptionsType = [
+    { name: 'active', label: 'Active', value: 'active' },
+    { name: 'inactive', label: 'Inactive', value: 'inactive' }
   ];
 
   constructor() {
@@ -61,5 +66,9 @@ export class AlertEditComponent implements OnInit {
 
   onTitleChange(val) {
     this.alert.setTitle(val);
+  }
+
+  status() {
+    return 'inactive';
   }
 }

@@ -126,8 +126,15 @@ export class AlertsPage {
   }
 
   onAddAlertPublish(alert) {
-    this.alertsService.createAlert(false, alert.severity(), alert.publishedDate(), alert.endDate());
-    this.isAdding = false;
+    this.alertsService.createAlert(false, alert.severity(), alert.publishedDate(), alert.endDate()).subscribe(
+      (data) => {
+        this.isAdding = false;
+      },
+      (error) => {
+        console.error('Error while adding alerts: ', error);
+        this.router.navigate([ERROR_PAGE_PATH]);
+      }
+    );
   }
 
   onAddAlertDraft(alert) {
