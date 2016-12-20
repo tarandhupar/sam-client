@@ -33,6 +33,8 @@ import { SamTabComponent } from "./tabs/tabs.component";
 import { SamTabsComponent } from "./tabs/tabs.component";
 
 import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
+import { SamModalComponent } from "./modal/modal.component";
+
 
 /**
  * A module for reusable SAM Web Design components
@@ -64,6 +66,7 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
     SamPhoneEntryComponent,
     SamDateEntryComponent,
     InputAutocompleteComponent,
+    SamModalComponent,
     LabelWrapper,
     FieldsetWrapper,
     SamTabsComponent,
@@ -100,7 +103,8 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
     SamDateEntryComponent,
     InputAutocompleteComponent,
     SamTabsComponent,
-    SamTabComponent
+    SamTabComponent,
+    SamModalComponent
   ],
   providers: [ ]
 })
