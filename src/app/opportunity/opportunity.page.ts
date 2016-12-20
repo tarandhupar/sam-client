@@ -54,6 +54,7 @@ export class OpportunityPage implements OnInit {
   attachment: any;
   relatedOpportunities:any;
   logoUrl: string;
+  opportunityAPI: any;
   private pageNum = 0;
   private totalPages = 10;
   private showPerPage = 20;
@@ -75,9 +76,7 @@ export class OpportunityPage implements OnInit {
     });
     this.route.queryParams.subscribe(
       data => {
-        // this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
-        // this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        // this.runSearch();
+        this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
       });
   }
 
@@ -85,18 +84,16 @@ export class OpportunityPage implements OnInit {
     this.currentUrl = this.location.path();
     this.loadDictionary();
     let opportunityAPI = this.loadOpportunity();
+    this.opportunityAPI = opportunityAPI;
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
     this.loadAttachments(opportunityAPI);
-
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
     this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.setDisplayFields(combinedOpportunityAPI);
-    console.log("Total Pages", this.totalPages);
-    console.log("Page Num", this.pageNum);
   }
 
   private loadOpportunity() {
@@ -139,7 +136,7 @@ export class OpportunityPage implements OnInit {
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
     opportunityAPI.subscribe((opportunity => {
-      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a").subscribe(relatedOpportunitiesSubject);
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum).subscribe(relatedOpportunitiesSubject);
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       this.relatedOpportunities = data['relatedOpportunities'][0];
@@ -362,12 +359,27 @@ export class OpportunityPage implements OnInit {
 
   pageChange(pagenumber){
     this.pageNum = pagenumber;
+    if (this.pageNum>=0){
+      this.pageNum++;
+    } else {
+      this.pageNum = 1;
+    }
     let navigationExtras: NavigationExtras = {
       queryParams: {page: this.pageNum},
       //fragment: 'organization-sub-hierarchy'
     };
-    this.router.navigate(['/opportunity',this.opportunity.opportunityId],navigationExtras);
+    this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
+    this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
   }
+
+  // pageChange(pagenumber){
+  //   this.pageNum = pagenumber;
+  //   var qsobj = this.setupQS(false);
+  //   let navigationExtras: NavigationExtras = {
+  //     queryParams: qsobj
+  //   };
+  //   this.router.navigate(['/search'],navigationExtras);
+  // }
 
   public getDownloadFileURL(fileID: string){
     return API_UMBRELLA_URL + '/cfda/v1/file/' + fileID + "?api_key=" + API_UMBRELLA_KEY;
@@ -376,5 +388,6 @@ export class OpportunityPage implements OnInit {
   toggleAccordion(card){
     card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
   }
+
 
 }
