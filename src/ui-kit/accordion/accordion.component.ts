@@ -68,7 +68,7 @@ export class SamAccordionSection implements OnInit {
 @Component({
   selector: 'samAccordion',
   template: `
-    <ul [ngClass]="accordionClass">
+    <ul class="accordion-list" [ngClass]="accordionClass">
       <ng-content></ng-content>             
     </ul>
 `,
