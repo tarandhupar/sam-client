@@ -311,8 +311,7 @@ describe('OpportunityPage', () => {
       imports: [
         PipesModule,
         HttpModule,
-        RouterTestingModule,
-        SamUIKitModule
+        RouterTestingModule
       ],
       providers: [
         BaseRequestOptions,
