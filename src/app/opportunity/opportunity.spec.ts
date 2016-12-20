@@ -173,53 +173,59 @@ let MockOpportunityService = {
       "state": "TX"
     });
   },
-  getRelatedOpportunitiesByIdAndType(id: String, type:String){
-    return Observable.of([
-      [
-        {
-          data: {
-            title: "Q--TaleMed, LLC Awarded 12/03/2010 Effective 12/15/2010 thru 12/14/2015",
-            descriptions: [ ],
-            link: {
-              additionalInfo: { }
-            },
-            naicsCode: [ ],
-            pointOfContact: [ ],
-            placeOfPerformance: { },
-            archive: { },
-            permissions: {
-              area: { }
-            },
-            solicitation: {
-              deadlines: { }
-            },
-            award: {
-              date: "2010-12-06",
-              number: "V797P-7303A",
-              amount: "$0.00",
-              awardee: {
-                duns: "624069618",
-                location: {
-                  streetAddress2: ""
-                }
+  getRelatedOpportunitiesByIdAndType(id: string, type:string, page:number){
+    return Observable.of({
+      recipientCount: "16",
+      unparsableCount: "0",
+      count: "94",
+      totalAwardAmt: "38973373.6199999973",
+      relatedOpportunities: [
+        [
+          {
+            data: {
+              title: "Q--Global Dynamics, LLC 621I V797P-7333A 3/15/2011 - 3/14/2016",
+              descriptions: [ ],
+              link: {
+                additionalInfo: { }
               },
-              justificationAuthority: { },
-              fairOpportunity: { }
-            }
-          },
-          links: [
-            {
-              rel: "self",
-              href: "http://localhost:8085/v1/opportunity/4ccb80f006871fa383fbbde9d4732ad7"
+              naicsCode: [ ],
+              pointOfContact: [ ],
+              placeOfPerformance: { },
+              archive: { },
+              permissions: {
+                area: { }
+              },
+              solicitation: {
+                deadlines: { }
+              },
+              award: {
+                date: "2011-03-04",
+                number: "V797P-7333A",
+                amount: "125,000.00",
+                awardee: {
+                  duns: "962913526",
+                  location: {
+                    streetAddress2: ""
+                  }
+                },
+                justificationAuthority: { },
+                fairOpportunity: { }
+              }
             },
-            {
-              rel: "attachments",
-              href: "http://localhost:8085/v1/opportunity/4ccb80f006871fa383fbbde9d4732ad7/attachments"
-            }
-          ]
-        }
+            links: [
+              {
+                rel: "self",
+                href: "http://10.98.29.81:122/v1/opportunity/ffa3a4f080f2506d17ae8e4f4e1e2a51"
+              },
+              {
+                rel: "attachments",
+                href: "http://10.98.29.81:122/v1/opportunity/ffa3a4f080f2506d17ae8e4f4e1e2a51/attachments"
+              }
+            ]
+          }
+        ]
       ]
-    ]);
+    });
   },
 
   getAttachmentById(id: String) {
@@ -309,7 +315,9 @@ describe('OpportunityPage', () => {
       imports: [
         PipesModule,
         HttpModule,
-        RouterTestingModule,
+        RouterTestingModule.withRoutes([
+          { path: 'opportunities', component: OpportunityPage }
+        ]),
         SamUIKitModule
       ],
       providers: [
