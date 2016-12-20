@@ -29,6 +29,9 @@ import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multisel
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
 import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.component";
+import { SamTabComponent } from "./tabs/tabs.component";
+import { SamTabsComponent } from "./tabs/tabs.component";
+
 import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
 import { SamModalComponent } from "./modal/modal.component";
 
@@ -66,6 +69,8 @@ import { SamModalComponent } from "./modal/modal.component";
     SamModalComponent,
     LabelWrapper,
     FieldsetWrapper,
+    SamTabsComponent,
+    SamTabComponent
   ],
   imports: [
     BrowserModule,
@@ -97,6 +102,8 @@ import { SamModalComponent } from "./modal/modal.component";
     SamPhoneEntryComponent,
     SamDateEntryComponent,
     InputAutocompleteComponent,
+    SamTabsComponent,
+    SamTabComponent,
     SamModalComponent
   ],
   providers: [ ]

@@ -13,6 +13,7 @@
   .card h3 a{
     text-decoration: none;
   }
+
   /* Propose new font weight */
   /*.card strong,
   .card h3{
@@ -89,6 +90,35 @@
     margin-right: 15px;
   }
 
+  /* Label List */
+  /*============================*/
+  .usa-label-list{
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  .usa-label-list > li:first-child{
+    border-top: none;
+  }
+
+  .usa-label-list > li{
+    margin-bottom: 5px;
+    margin-top: 5px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(204, 204, 204, 0.30);
+  }
+
+  .usa-label-list li > span:first-child{
+    width: 80px;
+  }
+
+  .usa-label-list li > span:first-child,
+  .usa-label-list li > span:last-child{
+    display: inline-block;
+    vertical-align: text-top;
+  }
 
   /* Zebra List */
   /*============================*/
