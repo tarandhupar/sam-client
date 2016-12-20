@@ -53,8 +53,8 @@
     font: normal normal normal 22px/1 FontAwesome;
   }
 
-  .card-header.expanded{
-    opacity: 0.7;
+  .card-header.expanded > div{
+    opacity: 0.8;
   }
 
   .card-header.expanded::before{
@@ -86,6 +86,20 @@
     margin-right: 15px;
   }
 
+  .card-download{
+    position: absolute;
+    top: 13px;
+    right: 20px;
+    a{
+      text-decoration: none;
+      span{
+        display: block;
+        margin-top: -2px;
+        font-size: 14px;
+        margin-left: -20px;
+      }
+    }
+  }
 
   /* Zebra List */
   /*============================*/
@@ -123,4 +137,8 @@
   .usa-zebra-list li a:hover{
     text-decoration: underline;
   }
+
+  /* File Size */
+  /*============================*/
+
 }

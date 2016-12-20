@@ -211,6 +211,7 @@
     <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
 
       <h2>Packages</h2>
+      <i class="fa fa-cloud-download" aria-hidden="true"></i> 
       <a href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">Download All Packages</a>
 
       <!-- Header -->
@@ -222,7 +223,12 @@
             <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
             <strong>Type: {{ package.type }}</strong>
           </div>
-          <a href="{{getDownloadPackageURL(package.packageId)}}">Download Package</a>
+          <span class="card-download">
+            <a href="{{getDownloadPackageURL(package.packageId)}}">
+              <i class="fa fa-cloud-download fa-lg" aria-hidden="true"></i> 
+              <span>Download</span>
+            </a>
+          </span>
         </div>
 
         <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
@@ -233,10 +239,16 @@
               <ng-container *ngIf="element.resourceId === resource.resourceId">
                 <!-- Description -->
                 <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
-                  {{resource.description}} <ng-container *ngIf="resource.size && resource.size != 0">({{resource.size | filesize}})</ng-container>
+                  {{resource.description}}
+                  <ng-container *ngIf="resource.size && resource.size != 0">
+                    <sup>{{resource.size | filesize}}</sup>
+                  </ng-container>
                 </a>
                 <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
-                  {{resource.description}} <ng-container *ngIf="resource.size && resource.size != 0">({{resource.size | filesize}})</ng-container>
+                  {{resource.description}}
+                  <ng-container *ngIf="resource.size && resource.size != 0">
+                    <sup>{{resource.size | filesize}}</sup>
+                  </ng-container>
                 </a>
               </ng-container>
             </ng-container>
