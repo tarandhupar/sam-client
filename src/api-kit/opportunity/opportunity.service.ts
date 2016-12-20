@@ -69,7 +69,8 @@ export class OpportunityService{
       name: 'opportunity',
       suffix: '/' + id + '/relatedopportunities',
       oParam: {
-        'type': type
+        'type': type,
+        //'page': page
       },
       method: 'GET'
     };

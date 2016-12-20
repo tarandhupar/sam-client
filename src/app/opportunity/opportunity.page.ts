@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, NavigationEnd, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { OpportunityService, FHService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
@@ -54,12 +54,32 @@ export class OpportunityPage implements OnInit {
   attachment: any;
   relatedOpportunities:any;
   logoUrl: string;
+  private pageNum = 0;
+  private totalPages = 10;
+  private showPerPage = 20;
 
   constructor(
+    private router: Router,
     private route:ActivatedRoute,
     private opportunityService:OpportunityService,
     private fhService:FHService,
-    private location: Location) {}
+    private location: Location) {
+    router.events.subscribe(s => {
+      if (s instanceof NavigationEnd) {
+        const tree = router.parseUrl(router.url);
+        if (tree.fragment) {
+          const element = document.getElementById(tree.fragment);
+          if (element) { element.scrollIntoView(); }
+        }
+      }
+    });
+    this.route.queryParams.subscribe(
+      data => {
+        // this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
+        // this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
+        // this.runSearch();
+      });
+  }
 
   ngOnInit() {
     this.currentUrl = this.location.path();
@@ -75,6 +95,8 @@ export class OpportunityPage implements OnInit {
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
     this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.setDisplayFields(combinedOpportunityAPI);
+    console.log("Total Pages", this.totalPages);
+    console.log("Page Num", this.pageNum);
   }
 
   private loadOpportunity() {
@@ -120,7 +142,8 @@ export class OpportunityPage implements OnInit {
       this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a").subscribe(relatedOpportunitiesSubject);
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
-      this.relatedOpportunities = data[0];
+      this.relatedOpportunities = data['relatedOpportunities'][0];
+      this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
     }, err => {
       console.log('Error loading related opportunities: ', err);
     });
@@ -335,6 +358,15 @@ export class OpportunityPage implements OnInit {
     } else {
       return "Secured"
     }
+  }
+
+  pageChange(pagenumber){
+    this.pageNum = pagenumber;
+    let navigationExtras: NavigationExtras = {
+      queryParams: {page: this.pageNum},
+      //fragment: 'organization-sub-hierarchy'
+    };
+    this.router.navigate(['/opportunity',this.opportunity.opportunityId],navigationExtras);
   }
 
   public getDownloadFileURL(fileID: string){

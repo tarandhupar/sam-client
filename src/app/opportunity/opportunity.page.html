@@ -371,5 +371,6 @@
         <span><b>Contract Line Item Number: </b>{{element.data?.award?.lineItemNumber}}</span><br><br>
       </ng-container>
     </div>
+    <samPagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
   </div>
 </div>
