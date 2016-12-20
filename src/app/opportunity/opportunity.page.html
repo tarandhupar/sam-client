@@ -211,8 +211,11 @@
     <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
 
       <h2>Packages</h2>
-      <i class="fa fa-cloud-download" aria-hidden="true"></i> 
-      <a href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">Download All Packages</a>
+      
+      <a href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">
+        <i class="fa fa-cloud-download" aria-hidden="true"></i> 
+        <strong>Download All Packages</strong>
+      </a>
 
       <!-- Header -->
       <div class="card" *ngFor="let package of attachment.packages">
