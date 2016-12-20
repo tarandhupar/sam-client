@@ -11,7 +11,7 @@ import { trigger, state, style, transition, animate } from '@angular/core';
 @Component({
   selector: 'tab',
   template: `
-    <div [hidden]="!active" class="usa-tabs-content">
+    <div [class.hide]="!active" class="usa-tabs-content">
       <ng-content></ng-content>
     </div>
   `
