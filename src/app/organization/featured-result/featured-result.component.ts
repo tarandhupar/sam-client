@@ -7,39 +7,44 @@ import { ReplaySubject, Observable } from 'rxjs';
   moduleId: __filename,
   selector: 'fh-featured-result',
   template: `
-    	<h4 class="featured-result-title">
-      	<a [routerLink]="['/organization', data._id]">{{ data.name }}</a>
-    	</h4>
-    	 <!--Logo-->
-      <ng-container *ngIf="logoUrl">
-        <img class="logo-small" [src]="logoUrl" alt="HTML5 Icon">
-      </ng-container>
-    	<div>
-    	<div class="usa-width-two-thirds">
-      	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
-        	  <strong>Department: </strong>
-        	  <span>{{ data.name }}</span>
-        	</li>
-        </ul>
-    	</div>
-    	<div class="usa-width-one-third">
-      	<ul class="usa-unstyled-list usa-text-small m_B-0">
-        	<li><strong>{{ data.type=="Agency" ? 'Sub-Tier' : data.type }}</strong></li>
-          <li *ngIf="data.alternativeNames && data.alternativeNames !== null">
-            <strong>Also Known As: </strong>
-            <span>{{ data.alternativeNames }}</span>
-          </li>
-          <li>
-            <strong>Code: </strong>
-            <span>{{ data.code }}</span>
-          </li>    
-        </ul>
+    <div class="featured-result">
+
+      <div class="card">
+        <div class="card-header-secure">
+          <h3>
+            <a [routerLink]="['/organization', data._id]">{{ data.name }}</a>
+          </h3>
+          <ng-container *ngIf="data.alternativeNames && data.alternativeNames !== null">
+              Also known as <strong><em>{{ data.alternativeNames }}</em></strong>
+          </ng-container>
+        </div>
+        <div class="card-secure-content clearfix">
+
+          <div *ngIf="logoUrl" class="logo-small"  style="float: left; margin-right: 10px;">
+            <img [src]="logoUrl" alt="HTML5 Icon">
+          </div>
+
+          <div>
+            <ul class="usa-unstyled-list">
+              <li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
+                <strong>Department: {{ data.name }}</strong>
+              </li>
+              <li>
+                {{ data.type=="Agency" ? 'Sub-Tier' : data.type }}
+              </li>
+              <li>
+                Code <strong>{{ data.code }}</strong>
+              </li>    
+            </ul>
+          </div>
+
+        </div>
+        <div class="card-extra-content">
+          <i class="fa fa-star" aria-hidden="true" style="color:#fdb81e;"></i> <strong>Featured Result</strong>
+        </div>
       </div>
-      </div>
-      <h4 class="featured-result-title">
-      <span class="">Featured Result</span>
-      </h4>
+
+    </div>
   `
 })
 export class FHFeaturedResult implements OnInit {
