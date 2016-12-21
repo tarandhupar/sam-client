@@ -7,6 +7,12 @@
     text-align: center;
   }
 
+  .usa-button-small{
+    @extend .usa-button;
+    font-size: 15px;
+    padding: 8px 12px;
+  }
+
   /* Segment */
   /*============================*/
   .segment{
@@ -114,29 +120,15 @@
   .download-container-header{
     position: relative;
     .download-button{
-      top: -8px;
-      right: 4px;
+      top: 0px;
+      right: -8px;
     }
   }
 
   .download-button{
     position: absolute;
-    top: 10px;
-    right: 15px;
-    a{
-      display: block;
-      padding: 5px;
-      text-align: center;
-      text-decoration: none;
-      span{
-        display: block;
-        margin-top: -2px;
-        font-size: 14px;
-      }
-    }
-    a:visited{
-      color: #003264;
-    }
+    top: 8px;
+    right: 10px;
   }
 
   /* Label List */

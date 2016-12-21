@@ -227,12 +227,13 @@
           <div class="download-container-header">
             <h2>Packages</h2>
             <span class="download-button">
-              <a *ngIf="hasResources()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">
-                <i class="fa fa-cloud-download fa-2x" aria-hidden="true"></i>
-                <span>Download All</span>
+              <a class="usa-button-small usa-button-gray" *ngIf="hasResources()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">
+                <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                <span>Download All Packages</span>
               </a>
             </span>
           </div>
+
           
           <!-- Header -->
           <div class="card download-container" *ngFor="let package of attachment.packages">
@@ -244,8 +245,8 @@
             </div>
 
             <span class="download-button">
-              <a href="{{getDownloadPackageURL(package.packageId)}}">
-                <i class="fa fa-cloud-download fa-lg" aria-hidden="true"></i>
+              <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId)}}">
+                <i class="fa fa-cloud-download" aria-hidden="true"></i>
                 <span>Download</span>
               </a>
             </span>
