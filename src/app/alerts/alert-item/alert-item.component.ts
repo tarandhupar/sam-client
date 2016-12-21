@@ -13,6 +13,8 @@ export class AlertItemComponent {
   @Input() alert: Alert;
   @Output() delete: EventEmitter<Alert> = new EventEmitter<Alert>();
   @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
+  @Output() draft: EventEmitter<Alert> = new EventEmitter<Alert>();
+  @Output() publish: EventEmitter<Alert> = new EventEmitter<Alert>();
   isEditing: boolean = false;
   isDeleting: boolean = false;
 
@@ -50,16 +52,11 @@ export class AlertItemComponent {
   }
 
   onEditAlertPublish(alert: Alert) {
-    this.alertsService.updateAlert(
-      alert.id(),
-      alert.archived(),
-      alert.severity(),
-      alert.publishedDate(),
-      alert.endDate(),
-    )
+    this.publish.emit(alert);
+    //this.alertsService.updateAlert(alert.raw());
   }
 
   onEditAlertDraft(alert) {
-
+    this.draft.emit(alert);
   }
 }

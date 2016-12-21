@@ -45,10 +45,12 @@ export class AlertEditComponent implements OnInit {
   }
 
   onPublishClick(event) {
+    this.alert.setArchived(false);
     this.publish.emit(this.alert);
   }
 
   onDraftClick(event) {
+    this.alert.setArchived(true);
     this.draft.emit(this.alert);
   }
 
@@ -66,6 +68,14 @@ export class AlertEditComponent implements OnInit {
 
   onTitleChange(val) {
     this.alert.setTitle(val);
+  }
+
+  onEndDateChange(val) {
+    this.alert.setEndDate(val);
+  }
+
+  onPublishDateChange(val) {
+    this.alert.setPublishedDate(val);
   }
 
   status() {

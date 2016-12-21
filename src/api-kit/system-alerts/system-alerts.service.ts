@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 
+export type AlertType = {
+  content: {
+    title: string,
+    begins?: string,
+    expires: string,
+    summary?: string,
+    category?: string,
+    severity: string,
+    published: string,
+    description: string
+  },
+  archived: string,
+  id?: number,
+}
 
 @Injectable()
 export class SystemAlertsService {
@@ -69,34 +83,23 @@ export class SystemAlertsService {
     return this.apiService.call(apiOptions);
   }
 
-  updateAlert(id: number, archived: boolean, severity: string, publishedDate: string, endDate: string) {
+  updateAlert(alert: AlertType) {
     const apiOptions: any = {
       name: 'alerts',
       suffix: '',
       method: 'PUT',
-      body: {
-        id: id,
-        archived: archived,
-        severity: severity,
-        published: publishedDate,
-        end_date: endDate
-      }
+      body: alert
     };
 
     return this.apiService.call(apiOptions);
   }
 
-  createAlert(archived: boolean, severity: string, publishedDate: string, endDate: string) {
+  createAlert(alert: AlertType) {
     const apiOptions: any = {
       name: 'alerts',
       suffix: '',
       method: 'POST',
-      body: {
-        archived: archived,
-        severity: severity,
-        published: publishedDate,
-        end_date: endDate
-      }
+      body: alert
     };
 
     return this.apiService.call(apiOptions);

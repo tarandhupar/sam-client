@@ -29,8 +29,9 @@ export class AlertsPage {
   statuses = {
     label: 'Status',
     options: [
-      { label: 'Active', value: 'N', name: 'active'},
-      { label: 'Inactive', value: 'Y', name: 'inactive' }
+      { label: 'Published and Active', value: 'N', name: 'active' },
+      { label: 'Published and Inactive', value: 'Y', name: 'inactive' },
+      { label: 'Draft', value: 'X', name: 'draft' }
     ]
   };
 
@@ -126,7 +127,7 @@ export class AlertsPage {
   }
 
   onAddAlertPublish(alert) {
-    this.alertsService.createAlert(false, alert.severity(), alert.publishedDate(), alert.endDate()).subscribe(
+    this.alertsService.createAlert(alert.raw()).subscribe(
       (data) => {
         this.isAdding = false;
       },
@@ -137,8 +138,12 @@ export class AlertsPage {
     );
   }
 
+  onEditAlertPublish(alert) {
+    //this.alertsService.updateAlert()
+  }
+
   onAddAlertDraft(alert) {
-    this.alertsService.createAlert(true, alert.severity(), alert.publishedDate(), alert.endDate());
+    this.alertsService.createAlert(alert.raw());
     this.isAdding = false;
   }
 

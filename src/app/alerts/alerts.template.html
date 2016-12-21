@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="pull-right">
-      <button class="usa-primary" (click)="onAddClick()"><i class="fa fa-plus">&nbsp;</i>Add</button>
+      <button class="alerts-primary-bg" (click)="onAddClick()"><i class="fa fa-plus">&nbsp;</i>Add</button>
     </div>
   </div>
   <alert-edit *ngIf="isAdding" [mode]="'add'" (cancel)="onAddAlertCancel()" (draft)="onAddAlertDraft($event)" (publish)="onAddAlertPublish($event)"></alert-edit>

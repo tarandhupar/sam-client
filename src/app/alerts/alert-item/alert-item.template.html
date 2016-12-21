@@ -7,11 +7,11 @@
         <button class="usa-button usa-button-unstyled" (click)="onCancelDeleteClick()"><a>Cancel</a></button>
       </div>
     </div>
-    <div class="alert-type-indicator pull-left" [ngClass]="alert.colorClass()">
+    <div class="alert-type-indicator" [ngClass]="alert.colorClass()">
       <i class="alert-type-icon fa" [ngClass]="alert.iconClass()"></i>{{alert.severity()}}
     </div>
     <div class="pull-right">
-      <i class="fa fa-gear usa-button-icon" (click)="onEditClick()" title="edit"><span class="usa-sr-only">Edit</span></i>
+      <i class="fa fa-pencil usa-button-icon" (click)="onEditClick()" title="edit"><span class="usa-sr-only">Edit</span></i>
       <i class="fa fa-trash usa-button-icon" (click)="onDeleteClick()" title="edit"><span class="usa-sr-only">Delete</span></i>
     </div>
   </div>

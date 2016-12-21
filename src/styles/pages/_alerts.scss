@@ -1,3 +1,9 @@
+$alert-primary-color: #0071bc;
+
+.alerts-primary-bg {
+  background-color: $alert-primary-color;
+}
+
 .alerts-page {
   .alerts-toolbar {
     display: table;

@@ -348,8 +348,8 @@
 <div class="usa-grid">
   <h2 class="usa-width-one">Date Entry &lt;samDateEntry&gt;</h2>
   <div class="usa-width-one-third">
-    <samDateEntry [model]="dateModel"></samDateEntry>
-    <samDateEntry [model]="dateModel2" [name]="'example2'"></samDateEntry>
+    <samDateEntry></samDateEntry>
+    <samDateEntry [name]="'example2'"></samDateEntry>
   </div>
   <div class="usa-width-one-third">
     <h3>Model</h3>
@@ -362,6 +362,14 @@
   <h2 class="usa-width-one">Autocomplete &lt;samPhoneEntry&gt;</h2>
   <div class="usa-width-one">
     <samInputAutocomplete [serviceName]="'suggestions'"></samInputAutocomplete>
+  </div>
+</div>
+<br/>
+<br/>
+<div class="usa-grid relative">
+  <h2 class="usa-grid-full">Image Library Component &lt;imageLibrary&gt;</h2>
+  <div class="usa-grid-full">
+    <imageLibrary [name]="'ImageLibrarySample'" [data]="imageLibraryData"></imageLibrary>
   </div>
 </div>
 <br/>

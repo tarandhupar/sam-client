@@ -1,29 +1,31 @@
-export class Alert {
-  private response: any;
+import { AlertType } from "../../api-kit/system-alerts/system-alerts.service";
 
-  constructor() {
-    this.response = {
-      content: { }
-    };
-    this.setArchived(true);
-    this.setDescription('');
-    this.setTitle('');
-    this.setEndDate(null);
-    this.setPublishedDate(null);
-  }
+export class Alert {
+  private _raw: AlertType = {
+    archived: null,
+    content: {
+      title: null,
+      description: null,
+      expires: null,
+      published: null,
+      severity: null,
+    }
+  };
+
+  constructor() {  }
 
   id(): number {
-    return this.response.id;
+    return this._raw.id;
   }
   setId(id: number) {
-    this.response.id = id;
+    this._raw.id = id;
   }
 
   archived(): boolean {
-    return this.response.archived.toLowerCase() === 'y';
+    return this._raw.archived.toLowerCase() === 'y';
   }
   setArchived(archived: boolean) {
-    this.response.archived = archived ? 'Inactive' : 'Active';
+    this._raw.archived = archived ? 'Y' : 'N';
   }
 
   status(): string {
@@ -31,24 +33,24 @@ export class Alert {
   }
 
   title(): string {
-    return this.response.content.title;
+    return this._raw.content.title;
   }
   setTitle(title: string) {
-    this.response.content.title = title;
+    this._raw.content.title = title;
   }
 
   description(): string {
-    return this.response.content.description;
+    return this._raw.content.description;
   }
   setDescription(desc: string) {
-    this.response.content.description = desc;
+    this._raw.content.description = desc;
   }
 
   severity(): string {
-    return this.response.content.severity;
+    return this._raw.content.severity;
   }
   setSeverity(severity: string) {
-    this.response.content.severity = severity;
+    this._raw.content.severity = severity;
   }
 
   colorClass(): string {
@@ -91,22 +93,26 @@ export class Alert {
   }
 
   publishedDate(): string {
-    return this.response.content.published;
+    return this._raw.content.published;
   }
   setPublishedDate(publishedDate: string) {
-    this.response.content.published = publishedDate;
+    this._raw.content.published = publishedDate;
   }
 
   endDate(): string {
-    return this.response.content.expires;
+    return this._raw.content.expires;
   }
   setEndDate(endDate: string) {
-    this.response.content.expires = endDate;
+    this._raw.content.expires = endDate;
   }
 
-  static FromResponse(obj: Object): Alert {
+  raw(): AlertType {
+    return this._raw;
+  }
+
+  static FromResponse(res: AlertType): Alert {
     let a = new Alert();
-    a.response = obj;
+    a._raw = res;
     return a;
   }
 }
