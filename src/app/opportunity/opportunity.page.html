@@ -384,10 +384,30 @@
         <h2 id="opportunity-award-summary">Awards Summary</h2>
 
         <!-- Awards Metadata -->
-        <div>
-          <div>
-            <strong>Total Number of Awards</strong><br>
-            {{relatedOpportunitiesMetadata.count}}
+
+        <div class="usa-grid-full segment usa-text-center">
+          <div class="usa-width-one-third">
+            <strong>Total Number of Awards</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.count}}
+            </p>
+          </div>
+
+          <div class="usa-width-one-third">
+            <strong>Total Amount Awarded</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.totalAwardAmt | currency:'USD':true:'1.2-2'}}<br>
+              <em *ngIf="relatedOpportunitiesMetadata.unparsableCount > 0" class="usa-text-small">
+                (Plus {{relatedOpportunitiesMetadata.unparsableCount}} other variable amounts)
+              </em>
+            </p>
+          </div>
+
+          <div class="usa-width-one-third">
+            <strong>Total Number of Recipients</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.recipientCount}}
+            </p>
           </div>
         </div>
 

@@ -52,8 +52,8 @@ export class OpportunityPage implements OnInit {
   currentUrl: string;
   dictionary: any;
   attachment: any;
-  relatedOpportunities: any;
-  relatedOpportunitiesMetadata: any;
+  relatedOpportunities:any;
+  relatedOpportunitiesMetadata:any;
   logoUrl: string;
   opportunityAPI: any;
   private pageNum = 0;
@@ -144,7 +144,7 @@ export class OpportunityPage implements OnInit {
         'count': data['count'],
         'recipientCount': data['recipientCount'],
         'totalAwardAmt': data['totalAwardAmt'],
-        'unparseableCount': data['unparseableCount']
+        'unparsableCount': data['unparsableCount']
       };
       this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
     }, err => {
