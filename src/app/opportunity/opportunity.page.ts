@@ -126,7 +126,7 @@ export class OpportunityPage implements OnInit {
         'count': data['count'],
         'recipientCount': data['recipientCount'],
         'totalAwardAmt': data['totalAwardAmt'],
-        'unparseableCount': data['unparseableCount']
+        'unparsableCount': data['unparsableCount']
       };
     }, err => {
       console.log('Error loading related opportunities: ', err);
