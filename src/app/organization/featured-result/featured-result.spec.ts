@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { FHFeaturedResult } from './featured-result.component';
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { SearchService } from "../../../api-kit/search/search.service";
+import { Observable } from "rxjs/Rx";
 
 var fixture;
 var comp;

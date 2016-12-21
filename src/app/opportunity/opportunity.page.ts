@@ -53,8 +53,10 @@ export class OpportunityPage implements OnInit {
   dictionary: any;
   attachment: any;
   relatedOpportunities:any;
+  relatedOpportunitiesMetadata:any;
   logoUrl: string;
   opportunityAPI: any;
+  currentTab: string = 'Opportunity';
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
@@ -140,6 +142,12 @@ export class OpportunityPage implements OnInit {
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       this.relatedOpportunities = data['relatedOpportunities'][0];
+      this.relatedOpportunitiesMetadata = {
+        'count': data['count'],
+        'recipientCount': data['recipientCount'],
+        'totalAwardAmt': data['totalAwardAmt'],
+        'unparsableCount': data['unparsableCount']
+      };
       this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
     }, err => {
       console.log('Error loading related opportunities: ', err);
@@ -377,12 +385,38 @@ export class OpportunityPage implements OnInit {
 
 
   public getDownloadFileURL(fileID: string){
-    return API_UMBRELLA_URL + '/cfda/v1/file/' + fileID + "?api_key=" + API_UMBRELLA_KEY;
+    return this.getBaseURL() + '/file/' + fileID + this.getAPIUmbrellaKey();
   }
 
-  toggleAccordion(card){
+  currentTabSelected(tab){
+    this.currentTab = tab.title;
+  }
+
+  public getDownloadPackageURL(packageID: string) {
+    return this.getBaseURL() + '/opportunity/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey();
+  }
+
+  public getDownloadAllPackagesURL(opportunityID: string) {
+    return this.getBaseURL() + '/opportunity/' + opportunityID + '/download/zip' + this.getAPIUmbrellaKey();
+  }
+
+  public getBaseURL() {
+    return API_UMBRELLA_URL + '/cfda/v1';
+  }
+
+  public getAPIUmbrellaKey() {
+    return '?api_key=' + API_UMBRELLA_KEY;
+  }
+
+  public toggleAccordion(card){
     card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
   }
 
+  public hasResources(){
+    for(let pkg of this.attachment['packages']) {
+      if(pkg['access'] === 'Public') { return true; }
+    }
+    return false;
+  }
 
 }
