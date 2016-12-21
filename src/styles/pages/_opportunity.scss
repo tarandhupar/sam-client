@@ -20,6 +20,11 @@
     font-weight: 600;
   }*/
 
+  .card-simple{
+    border-bottom: 1px solid #D4D4D5;
+    padding-bottom: 30px;
+  }
+
   .card{
     box-shadow: 0 1px 3px 0 #D4D4D5,0 0 0 1px #D4D4D5;
     border-radius: 4px;
@@ -111,7 +116,9 @@
   }
 
   .usa-label-list li > span:first-child{
-    width: 80px;
+    // width: 80px;
+    font-weight: 700;
+    font-size: 15px;
   }
 
   .usa-label-list li > span:first-child,

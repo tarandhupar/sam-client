@@ -375,18 +375,15 @@
 
         <h2 id="opportunity-award-summary">Awards Summary</h2>
 
-          <div class="card" *ngFor="let element of relatedOpportunities">
+          <div class="card-simple" *ngFor="let element of relatedOpportunities">
 
-            <div class="card-header-secure">
-              <h3>{{element.data?.title}}</h3>
-            </div>
+            <h3>{{element.data?.title}}</h3>
 
-            <div class="card-secure-content">
+            <div class="card-simple-content">
               <div class="usa-grid-full">
                 <div class="usa-width-one-half">
-                  <strong>Contractor Awarded</strong>
                   <ul class="usa-label-list">
-                    <li><span>DUNS</span>
+                    <li><span>Contractor Awarded DUNS: </span>
                       <span>
                         {{element.data?.award?.awardee?.duns}}
                         <ng-container *ngIf="!element.data?.award?.awardee?.duns">
@@ -395,7 +392,7 @@
                       </span>
                     </li>
                     <li>
-                      <span>Address</span>
+                      <span>Contractor Awarded Address: </span>
                       <span>
                         <ng-container *ngIf=" element.data?.award?.awardee?.location?.streetAddress ||
                                               element.data?.award?.awardee?.location?.city ||
@@ -423,11 +420,11 @@
 
                 </div>
                 <div class="usa-width-one-half">
-                  <strong>Contract Award</strong>
                   <ul class="usa-label-list">
-                    <li><span>Amount</span> <span><i class="fa fa-usd" aria-hidden="true"></i> {{element.data?.award?.amount}}</span></li>
-                    <li><span>Number</span> <span>{{element.data?.award?.number}}</span></li>
-                    <li><span>CLIN</span>
+                    <li><span>Contract Award Dollar Amount: </span> <span><i class="fa fa-usd" aria-hidden="true"></i> {{element.data?.award?.amount}}</span></li>
+                    <li><span>Contract Award Number: </span> <span>{{element.data?.award?.number}}</span></li>
+                    <li><span>Contract Award Date: </span> <span>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span></li>
+                    <li><span>Contract Line Item Number: </span>
                       <span>
                         {{element.data?.award?.lineItemNumber}}
                         <ng-container *ngIf="!element.data?.award?.lineItemNumber">
@@ -440,12 +437,6 @@
               </div>
             </div>
 
-            <div class="card-extra-content">
-              <div class="label-container-inline">
-                <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-                Contract Award Date: <strong>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</strong>
-              </div>
-            </div>
         </div>
         <samPagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
       </samTab>
