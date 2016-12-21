@@ -29,7 +29,7 @@ import { ReplaySubject, Observable } from 'rxjs';
               <li>
                 {{ data.type=="Agency" ? 'Sub-Tier' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
               </li>
-              <li>
+              <li *ngIf="data.code && data.code !== null">
                 {{ data.type=="Agency" ? 'Sub-Tier Code' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency Code' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type+' Code' : '' }} <strong>{{ data.code }}</strong>
               </li>  
               <br/>
