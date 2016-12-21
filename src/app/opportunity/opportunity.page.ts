@@ -52,7 +52,8 @@ export class OpportunityPage implements OnInit {
   currentUrl: string;
   dictionary: any;
   attachment: any;
-  relatedOpportunities:any;
+  relatedOpportunities: any;
+  relatedOpportunitiesMetadata: any;
   logoUrl: string;
 
   constructor(
@@ -121,6 +122,12 @@ export class OpportunityPage implements OnInit {
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       this.relatedOpportunities = data['relatedOpportunities'][0];
+      this.relatedOpportunitiesMetadata = {
+        'count': data['count'],
+        'recipientCount': data['recipientCount'],
+        'totalAwardAmt': data['totalAwardAmt'],
+        'unparseableCount': data['unparseableCount']
+      };
     }, err => {
       console.log('Error loading related opportunities: ', err);
     });
