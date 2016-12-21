@@ -369,7 +369,7 @@
         <div>
           <div>
             <strong>Total Amount Awarded</strong><br>
-            ${{relatedOpportunitiesMetadata.totalAwardAmt}}<br>
+            {{relatedOpportunitiesMetadata.totalAwardAmt | currency:'USD':true:'1.2-2'}}<br>
             <ng-container *ngIf="relatedOpportunitiesMetadata.unparseableCount">(Plus {{relatedOpportunitiesMetadata.unparseableCount}} other variable amounts)</ng-container>
           </div>
 
