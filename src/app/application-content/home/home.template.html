@@ -1,24 +1,40 @@
-<div class="usa-grid-full">
+<div class="usa-grid-full -home">
 
   <!--Introduction to the sam.gov website-->
-  <div class="usa-grid-full m_B-6x" >
-    <p class="m_0 p_T-6x">
-      Bacon ipsum dolor amet picanha frankfurter jerky, cupim tongue
-      drumstick filet mignon ribeye porchetta kevin ground round salami spare ribs.
-    </p>
+  <div class="usa-grid ">
+      <div class="usa-width-one-whole">
+
+        <p class="m_0 p_T-6x centered">
+          SAM.gov is the official U.S. government website for people who make, receive, and track federal awards.
+        </p>
+        <div class="usa-width-three-fourths marginCenter">
+          <div class="usa-width-one-half m_R-0 m_T-1x m_B-6x">
+            <ul>
+              <li>100% Free to Use</li>
+              <li>Free to Register</li>
+            </ul>
+          </div>
+          <div class="usa-width-one-half m_T-1x m_B-6x">
+            <ul>
+              <li>Free to Search</li>
+              <li>Free to Run Reports</li>
+            </ul>
+          </div>
+        </div>
+      </div>
   </div>
 
   <!--search bar-->
 
-  <div class="usa-grid-full marginCenter">
+  <div class="usa-grid-full marginCenter m_T-6x">
     <samSearchbar [size]="'large'" (onSearch)="runSearch($event)"></samSearchbar>
   </div>
 
   <!--Browser topics and the register button-->
-  <div class="usa-grid-full row m_T-6x" *ngIf="false">
+  <div class="usa-grid-full row m_T-6x">
 
-    <!--Browse Topics-->
-    <div class="usa-width-one-whole vertical-line">
+    <!--Temporary Browse Topics-->
+    <div class="usa-width-one-whole">
       <div class="usa-grid-full">
 
         <div class="usa-grid-full">
@@ -28,91 +44,133 @@
         </div>
 
         <!--Origin Format of Four Topics along with images-->
-        <div class="usa-width-one-whole">
-
-          <div class="usa-width-one-fourth">
-            <div class="usa-width-one-half topic-div-marginCenter">
-              <div class="usa-width-one-whole image-wrap topic-image-link">
-                <a (click)="selectTopic('XYZ1')"><img src="src/assets/img/blank_icon.png"></a>
-              </div>
-              <div class="usa-width-one-whole centered">
-                <a (click)="selectTopic('XYZ1')">XYZ1</a>
+        <div class="usa-width-one-whole m_T-3x">
+          <div class="usa-width-one-fourth" *ngFor="let item of topicsData">
+            <div class="usa-width-one-whole">
+              <div class="usa-width-one-half topic-div-marginCenter topic-image-link">
+                <a (click)="selectTopic(item)"><img src="src/assets/img/blank_icon.png" [attr.alt]="item.title"></a>
               </div>
             </div>
-
-          </div>
-
-          <div class="usa-width-one-fourth">
-            <div class="usa-width-one-half topic-div-marginCenter">
-              <div class="usa-width-one-whole image-wrap topic-image-link">
-                <a (click)="selectTopic('XYZ2')"><img src="src/assets/img/blank_icon.png"></a>
-              </div>
-              <div class="usa-width-one-whole centered">
-                <a (click)="selectTopic('XYZ2')">XYZ2</a>
-              </div>
+            <div class="usa-width-one-whole">
+              <h5 class="m_0 centered"><a class="topic-title" (click)="selectTopic(item)">{{item.title}}</a></h5>
             </div>
           </div>
-
-
-          <div class="usa-width-one-fourth">
-            <div class="usa-width-one-half topic-div-marginCenter">
-              <div class="usa-width-one-whole image-wrap topic-image-link">
-                <a (click)="selectTopic('XYZ3')"><img src="src/assets/img/blank_icon.png"></a>
-              </div>
-              <div class="usa-width-one-whole centered">
-                <a (click)="selectTopic('XYZ3')">XYZ3</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="usa-width-one-fourth">
-            <div class="usa-width-one-half topic-div-marginCenter">
-              <div class="usa-width-one-whole image-wrap topic-image-link">
-                <a (click)="selectTopic('XYZ4')"><img src="src/assets/img/blank_icon.png"></a>
-              </div>
-              <div class="usa-width-one-whole centered">
-                <a (click)="selectTopic('XYZ4')">XYZ4</a>
-              </div>
-            </div>
-
-          </div>
-
         </div>
       </div>
     </div>
+
+    <!--Long Term Browse Topics, Hide for now-->
+    <div class="usa-width-one-half" *ngIf="false" >
+      <div class="usa-grid-full">
+
+        <div class="usa-grid-full ">
+            <h2 class="centered">Browse Topics</h2>
+        </div>
+
+        <!--Origin Format of Four Topics along with images-->
+        <div class="usa-width-one-whole m_B-6x vertical-line" *ngIf="!showDetail">
+            <div class="usa-width-one-half m_R-0 m_T-4x" *ngFor="let item of topicsData">
+              <div class="usa-width-one-whole">
+                <div class="usa-width-one-third topic-img-link">
+                  <a (click)="selectTopic(item)"><img src="src/assets/img/blank_icon.png" [attr.alt]="item.title"></a>
+                </div>
+              </div>
+              <div class="usa-width-one-whole">
+                <h5 class="m_0 centered"><a class="topic-title" (click)="selectTopic(item)">{{item.title}}</a></h5>
+              </div>
+            </div>
+        </div>
+
+        <!--Selected Format of Four Topics along with images, shows up when a link is selected-->
+        <div class="usa-width-one-whole m_B-6x vertical-line" *ngIf="showDetail">
+
+          <!--Selected Image with detail explanation shows up-->
+          <div class="usa-grid-full m_T-4x">
+            <div class="usa-width-one-sixth">
+              <div class="usa-width-one-whole">
+                <img src="src/assets/img/blank_icon.png" [attr.alt]="curTopic.title">
+                <h5 class="m_0 centered"><a class="topic-title" (click)="selectTopic(item)">{{curTopic.title}}</a></h5>
+              </div>
+            </div>
+            <div class="usa-width-five-sixths topic-details topic-detail">
+
+              <div class="usa-width-one-whole">
+                <div class="usa-width-five-sixths">
+                  <span >{{curTopic.detail}} <a [routerLink]="[curTopic.url]">here</a>.</span>
+                </div>
+                <div class="usa-width-one-sixth">
+                  <span class="pull-right">
+                    <a (click)="closeTopicDetail()"><i class="fa fa-times-circle"></i></a>
+                  </span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="usa-grid-full m_T-6x">
+            <div class="usa-width-one-third m_R-0" *ngFor="let item of topicsData">
+              <div class="usa-width-one-whole"  *ngIf="item.title != curTopicTitle">
+                <div class="usa-width-one-whole">
+                  <div class="usa-width-one-half topic-img-link">
+                    <a (click)="selectTopic(item)"><img src="src/assets/img/blank_icon.png" [attr.alt]="item.title"></a>
+                  </div>
+                </div>
+                <div class="usa-width-one-whole">
+                  <h5 class="m_0 centered"><a class="topic-title" (click)="selectTopic(item)">{{item.title}}</a></h5>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!--Register Button, Hide for now-->
+    <div class="usa-width-one-half relative" *ngIf="false">
+
+      <div class="usa-width-one-whole register-div m_R-6x">
+        <div class="usa-width-one-whole">
+          <div class="pull-right wrap-content">
+            <button class="usa-button-secondary pull-right">Register</button>
+          </div>
+          <div class="pull-right wrap-content">
+            <h3 class="pull-right m_T-3x m_R-3x">Register your Entity</h3>
+
+          </div>
+        </div>
+        <div class="usa-width-one-whole m_T-3x">
+          <h3 class="pull-right">Update your entity registration &nbsp;<i class="fa fa-angle-double-right"></i></h3>
+        </div>
+        <div class="usa-width-one-whole m_T-3x">
+          <h3 class="pull-right">Check your entity registration status &nbsp;<i class="fa fa-angle-double-right"></i></h3>
+        </div>
+      </div>
+
+    </div>
   </div>
 
-  <!--Selected Format of Four Topics along with images, shows up when a link is selected-->
-  <div class="usa-width-one-whole relative">
+  <!--Temporary Solution for Selected Format of Four Topics along with images, shows up when a link is selected-->
+  <div class="usa-width-one-whole relative m_B-6x" *ngIf = "showDetail">
 
     <!--Triangle div to point out which topic detail is currently showing-->
-    <div class="usa-width-one-whole tri-div" *ngIf = "showDetail">
-      <div class="usa-width-one-fourth" [ngClass]="setClasses('XYZ1')"></div>
-      <div class="usa-width-one-fourth" [ngClass]="setClasses('XYZ2')"></div>
-      <div class="usa-width-one-fourth" [ngClass]="setClasses('XYZ3')"></div>
-      <div class="usa-width-one-fourth" [ngClass]="setClasses('XYZ4')"></div>
+    <div class="usa-width-one-whole tri-div">
+      <div class="usa-width-one-fourth" [ngClass]="setClasses(i)" *ngFor="let item of topicsData; let i = index"></div>
     </div>
     <!--Selected Image with detail explanation shows up-->
-    <div class="usa-width-one-whole m_T-4x topic-detail" *ngIf = "showDetail">
+    <div class="usa-width-one-whole m_T-4x topic-detail">
       <div class="usa-width-one-whole ">
-
         <span class="pull-right"><a (click)="closeTopicDetail()">
           <i class="fa fa-times-circle"></i></a>
         </span>
       </div>
-
       <div class="usa-width-one-whole">
-        <span>{{curTopicDetail}} </span>
-
+        <span>{{curTopic.detail}}<a [routerLink]="[curTopic.url]">here</a>.</span>
       </div>
-
-      <div class="usa-width-one-whole m_T-3x">
-        <span class="pull-right"><a href="#">Learn more..</a></span>
-      </div>
-
     </div>
-
-
   </div>
 
 
