@@ -56,7 +56,7 @@ export class OpportunityPage implements OnInit {
   logoUrl: string;
   opportunityAPI: any;
   private pageNum = 0;
-  private totalPages = 10;
+  private totalPages: number;
   private showPerPage = 20;
 
   constructor(
@@ -365,7 +365,7 @@ export class OpportunityPage implements OnInit {
     }
     let navigationExtras: NavigationExtras = {
       queryParams: {page: this.pageNum},
-      fragment: 'award-summary'
+      fragment: 'opportunity-award-summary'
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);

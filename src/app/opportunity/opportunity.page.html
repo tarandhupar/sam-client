@@ -363,7 +363,7 @@
 
       <samTab *ngIf="relatedOpportunities" tabTitle="Award Notices">
 
-        <h2 id="award-summary">Awards Summary</h2>
+        <h2 id="opportunity-award-summary">Awards Summary</h2>
 
           <div class="card" *ngFor="let element of relatedOpportunities">
 
@@ -437,9 +437,9 @@
               </div>
             </div>
         </div>
+        <samPagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
       </samTab>
     </samTabs>
-    <samPagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
     <br><br>
   </div>
 </div>

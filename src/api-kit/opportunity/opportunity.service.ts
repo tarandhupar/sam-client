@@ -74,7 +74,6 @@ export class OpportunityService{
       },
       method: 'GET'
     };
-    console.log("API Param: ", apiParam);
     return this.oAPIService.call(apiParam);
   }
 }
