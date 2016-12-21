@@ -7,6 +7,12 @@
     text-align: center;
   }
 
+  .usa-button-small{
+    @extend .usa-button;
+    font-size: 15px;
+    padding: 8px 12px;
+  }
+
   /* Segment */
   /*============================*/
   .segment{
@@ -107,23 +113,22 @@
     margin-right: 15px;
   }
 
+  .download-container{
+    position: relative;
+  }
 
-  .card-download{
+  .download-container-header{
+    position: relative;
+    .download-button{
+      top: 0px;
+      right: -8px;
+    }
+  }
+
+  .download-button{
     position: absolute;
-    top: 13px;
-    right: 20px;
-    a{
-      text-decoration: none;
-      span{
-        display: block;
-        margin-top: -2px;
-        font-size: 14px;
-        margin-left: -20px;
-      }
-    }
-    a:visited{
-      color: #003264;
-    }
+    top: 8px;
+    right: 10px;
   }
 
   /* Label List */
