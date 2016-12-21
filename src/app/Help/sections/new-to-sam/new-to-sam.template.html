@@ -1,23 +1,95 @@
-<section>
+<section class="new-to-sam">
   <h2 class="m_T-2x">New to SAM.gov</h2>
   <div class="usa-grid-full">
-    <p class="p_L-8x">
+    <p>
       Everti gloriatur ne mei, at sit accumsan rationibus honestatis. Est an invidunt
       lucilius, pro ex justo labitur nostrum. Ut his dicunt perpetua tractatos, sed
       movet timeam id. Nulla saepe ne nec.
-
     </p>
-    <p class="p_L-8x">
+    <p>
       Exerci pericula inciderint cum ei. His vocent sanctus invidunt te, pri amet
-      oportere et, no sed habeo iriure. Esse case timeam ius an. Id ullum laudem vis,
-      sit an dicam gubergren, modo lorem consetetur pro ea. Duo ad alienum blandit,
-      no option urbanitas vix, eirmod labitur at duo.
-
-      Id explicari accusamus sed, pri postea blandit ei, vis in modo omnis. Et praesent
-      reformidans duo. Discere voluptua adversarium ei sed. Ne veri dolorem eam. Ut
-      laudem tamquam ullamcorper eam, odio reque deleniti usu cu. Vix at probatus
-      deseruisse, te eos senserit efficiantur, cu rebum iudico soleat sit.
-
+      oportere et, no sed habeo iriure. Esse case timeam ius an.
     </p>
+    <hr>
   </div>
+
+  <div class="usa-grid-full" *ngIf="!showImageLibrary">
+    <div class="usa-width-one-whole">
+      <div class="usa-width-one-fourth">&nbsp;</div>
+      <div class="usa-width-three-fourths">
+        <div class="usa-width-one-third">
+          <h5 class="centered">Entity</h5>
+          <p class="m_0 p_T-1x small-text">His vocent sanctus invidunt te, pri ameto portere et, no sed habeo.</p>
+        </div>
+        <div class="usa-width-one-third">
+          <h5 class="centered">Federal Award</h5>
+          <p class="m_0 p_T-1x small-text">His vocent sanctus invidunt te, pri ameto portere et, no sed habeo.</p>
+        </div>
+        <div class="usa-width-one-third">
+          <h5 class="centered">Researcher</h5>
+          <p class="m_0 p_T-1x small-text">His vocent sanctus invidunt te, pri ameto portere et, no sed habeo.</p>
+        </div>
+      </div>
+    </div>
+    <div class="usa-width-one-whole m_T-3x button-row">
+      <div class="usa-width-one-fourth">
+        <div class="usa-width-one-whole square-paragragh-area">
+          <h5 class="centered">Assistance</h5>
+          <p class="m_0 p_T-1x small-text">His vocent sanctus invidunt te, pri ameto portere et, no sed habeo.</p>
+        </div>
+        <div class="usa-width-one-whole square-paragragh-area">
+          <h5 class="centered">Procurements</h5>
+          <p class="m_0 p_T-1x small-text">His vocent sanctus invidunt te, pri ameto portere et, no sed habeo.</p>
+        </div>
+      </div>
+      <div class="usa-width-one-fourth">
+        <div class="usa-width-one-whole square-button" (click)="openImageLibrary('area1')">
+          <h5 class="centered">Lipsum Text1</h5>
+          <h5 class="centered">Learn more</h5>
+        </div>
+        <div class="usa-width-one-whole square-button m_T-3x" (click)="openImageLibrary('area2')">
+          <h5 class="centered">Lipsum Text2</h5>
+          <h5 class="centered">Learn more</h5>
+        </div>
+      </div>
+      <div class="usa-width-one-fourth">
+        <div class="usa-width-one-whole square-button" (click)="openImageLibrary('area3')">
+          <h5 class="centered">Lipsum Text3</h5>
+          <h5 class="centered">Learn more</h5>
+        </div>
+        <div class="usa-width-one-whole square-button m_T-3x" (click)="openImageLibrary('area4')">
+          <h5 class="centered">Lipsum Text4</h5>
+          <h5 class="centered">Learn more</h5>
+        </div>
+      </div>
+      <div class="usa-width-one-fourth long-button" (click)="openImageLibrary('area5')">
+        <h5 class="centered m_T-6x p_T-3x">Lipsum Text5</h5>
+        <h5 class="centered">Learn more</h5>
+      </div>
+    </div>
+    <div class="usa-width-one-whole m_T-6x">
+      <p>
+        Everti gloriatur ne mei, at sit accumsan rationibus honestatis. Est an invidunt
+        lucilius, pro ex justo labitur nostrum. Ut his dicunt perpetua tractatos, sed
+        movet timeam id. Nulla saepe ne nec.
+      </p>
+    </div>
+  </div>
+
+  <div *ngIf="showImageLibrary">
+    <div class="usa-grid-full ">
+      <h3 class="m_0"><a class="new-to-sam-back" (click)="closeImageLibrary()"><span><i class="fa fa-arrow-circle-o-left m_R-1x"></i>Back</span></a></h3>
+      <p>
+        Ad verterem scripserit pro, falli apeirian ad est, vis
+        ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum
+        deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam
+        fuisset convenire an.
+      </p>
+    </div>
+    <div class="usa-grid-full m_T-4x" *ngFor="let row of curImageGroup; let i = index">
+      <imageLibrary [name]="'new-to-sam-'+i" [data]="row" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
+    </div>
+
+  </div>
+
 </section>

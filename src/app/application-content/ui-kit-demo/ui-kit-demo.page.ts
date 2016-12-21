@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild } from '@angular/core';
 import { AlertFooterService } from '../../alerts/alert-footer';
 
 @Component({
@@ -105,6 +105,41 @@ export class UIKitDemoPage {
     year: 2016
   };
 
+  //Image Library
+  imageLibraryData:any =  [
+    {
+      title:"Benefits.gov Learning Center",
+      detail:"Benefits.gov Learning Center: Lipsum content",
+      link:"View Benefits.gov",
+      url:"http://www.Benefits.gov"
+    },
+    {
+      title:"Grants.gov Learning Center",
+      detail:"Details for Grants.gov Learning Center: Lipsum content",
+      link:"View Grants.gov",
+      url:"http://www.grants.gov/web/grants/learn-grants.html"
+    },
+    {
+      title:"Data Element Repository",
+      detail:"Details for Data Element Repository: Lipsum content",
+      link:"View DER",
+      url:"fakeUrl"
+    }
+  ];
+
+  modalAlertTypes = ['success','warning','error','info'];
+  @ViewChild('modal1') vcModal1;
+  @ViewChild('modal2') vcModal2;
+  modalConfig = {
+    type:'success',
+    title:'Sample Title',
+    description:'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'
+  }
+  modalConfig2 = {
+    type:'success',
+    title:'Sample Title'
+  }
+
   constructor(private alertFooterService: AlertFooterService) {  }
 
   onEmptyOptionChanged($event) {
@@ -140,5 +175,14 @@ export class UIKitDemoPage {
   }
   onFooterAlertBtnClick(){
     this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.footerAlertModel)));
+  }
+  onModalInitClick(){
+    this.vcModal1.openModal();
+  }
+  onModalClose(){
+    this.vcModal1.closeModal();
+  }
+  onModalInitClick2(){
+    this.vcModal2.openModal();
   }
 }
