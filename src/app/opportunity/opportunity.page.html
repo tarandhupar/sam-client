@@ -366,16 +366,22 @@
         <h2>Awards Summary</h2>
 
         <!-- Awards Metadata -->
-        <div>
-          <div>
-            <strong>Total Amount Awarded</strong><br>
-            ${{relatedOpportunitiesMetadata.totalAwardAmt}}<br>
-            <ng-container *ngIf="relatedOpportunitiesMetadata.unparseableCount">(Plus {{relatedOpportunitiesMetadata.unparseableCount}} other variable amounts)</ng-container>
+        <div class="usa-grid-full segment usa-text-center">
+          <div class="usa-width-one-third">
+            <strong>Total Amount Awarded</strong>
+            <p>
+              ${{relatedOpportunitiesMetadata.totalAwardAmt}}<br>
+              <em *ngIf="relatedOpportunitiesMetadata.unparseableCount" class="usa-text-small">
+                (Plus {{relatedOpportunitiesMetadata.unparseableCount}} other variable amounts)
+              </em>
+            </p>
           </div>
 
-          <div>
-            <strong>Total Number of Recipients</strong><br>
-            {{relatedOpportunitiesMetadata.recipientCount}}
+          <div class="usa-width-one-third">
+            <strong>Total Number of Recipients</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.recipientCount}}
+            </p>
           </div>
         </div>
 
