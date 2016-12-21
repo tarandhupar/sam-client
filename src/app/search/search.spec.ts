@@ -12,6 +12,8 @@ import { FederalHierarchyResult } from '../organization/search-result/federal-hi
 import { EntitiesResult } from '../entity/search-result/entities-result.component';
 import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.component';
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
+import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
+import { FHService } from "../../api-kit/fh/fh.service";
 
 var fixture;
 
@@ -46,13 +48,28 @@ var searchServiceStub = {
         number: 0
       }
     });
+  },
+  featuredSearch: ()=>{
+    return Observable.of({
+      alternativeNames: null,
+      code: "abcd1234",
+      name: "SAMPLE NAME",
+      description: "",
+      _id: "1234",
+      type: "DEPARTMENT",
+      shortName: "abcd",
+      isActive: true,
+      parentOrganizationHierarchy: null
+    });
   }
 };
+
+var fhServiceStub = {};
 
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult ],
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,FHFeaturedResult ],
       providers: [ ],
       imports: [
         SamUIKitModule,
@@ -65,7 +82,8 @@ describe('SearchPage', () => {
     }).overrideComponent(SearchPage, {
        set: {
          providers: [
-           {provide: SearchService, useValue: searchServiceStub}
+           {provide: SearchService, useValue: searchServiceStub},
+           {provide: FHService, useValue: fhServiceStub}
          ]
       }
     }).compileComponents();
@@ -79,5 +97,14 @@ describe('SearchPage', () => {
       expect(fixture.componentInstance.data.results[0].title).toBe("Dummy Result 1");
     });
 	});
+
+  it('should "run" a featured search', () => {
+    fixture.componentInstance.keyword = "test";
+    fixture.componentInstance.pageNum = 0;
+    fixture.componentInstance.runSearch();
+    fixture.whenStable().then(() => {
+      expect(fixture.componentInstance.featuredData.name).toBe("SAMPLE NAME");
+    });
+  });
 
 });

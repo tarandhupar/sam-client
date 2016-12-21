@@ -13,6 +13,8 @@ describe('Service: ApiService', () => {
     expect(this.oApiService.APIs.federalHierarchy).toBeDefined();
     expect(this.oApiService.APIs.dictionary).toBeDefined();
     expect(this.oApiService.APIs.historicalIndex).toBeDefined();
+    expect(this.oApiService.APIs.suggestions).toBeDefined();
+    expect(this.oApiService.APIs.featuredSearch).toBeDefined();
  });
 
  it('should have APIs property data set', function() {
@@ -21,6 +23,8 @@ describe('Service: ApiService', () => {
     expect(this.oApiService.APIs.federalHierarchy).toBe('/cfda/v1/fh');
     expect(this.oApiService.APIs.dictionary).toBe('/cfda/v1/dictionary');
     expect(this.oApiService.APIs.historicalIndex).toBe('/cfda/v1/historicalIndex');
+    expect(this.oApiService.APIs.suggestions).toBe('/sgs/v1/search/suggestions');
+    expect(this.oApiService.APIs.featuredSearch).toBe('/sgs/v1/search/featured');
  });
 
 });

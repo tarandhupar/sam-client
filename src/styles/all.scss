@@ -13,6 +13,7 @@
 
 @import '~uswds/src/stylesheets/uswds';
 
+@import 'components/accordion';
 @import 'components/footer';
 @import 'components/pagination';
 @import 'components/header';
@@ -25,7 +26,11 @@
 @import 'components/search-header';
 @import 'components/multiselect-dropdown';
 @import 'components/alert-item';
+@import 'components/image-library';
 @import 'components/alert-footer';
+@import 'components/tabs';
+@import 'components/modal';
+
 
 @import 'pages/assistance-listing';
 @import 'pages/help';
@@ -35,6 +40,7 @@
 @import 'pages/search';
 @import 'pages/reference-library';
 @import 'pages/alerts';
+@import 'pages/new-to-sam';
 @import 'pages/help-accounts';
 
 html, body{
@@ -52,6 +58,11 @@ h2{
   letter-spacing: -0.5px;
   line-height: 1.1;
   color: black;
+}
+
+h4 {
+  font-weight: normal;
+  text-align: center;
 }
 
 /* Let content occupy most of the page and show footer when scroll down*/
