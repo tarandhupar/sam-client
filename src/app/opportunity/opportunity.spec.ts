@@ -292,7 +292,7 @@ let MockOpportunityService = {
         self: {
           href: "http://10.98.29.81:122/v1/opportunity/7e5a8c7c4742472a1ac9faef90042e56/attachments"
         }
-      });
+      }});
   }
 };
 
@@ -331,7 +331,6 @@ describe('OpportunityPage', () => {
           deps: [MockBackend, BaseRequestOptions],
         },
         { provide: Location, useClass: Location },
-        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '2c1820ae561f521a499e995f2696052c' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
       ]
     });
