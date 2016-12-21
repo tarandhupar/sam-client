@@ -169,7 +169,7 @@ npm run watch:test
 npm run e2e
 ```
 
-**run webdriver**
+**Run webdriver**
 
 ```bash
 npm run webdriver:update
@@ -183,4 +183,3 @@ npm run webdriver:start
 # in another terminal
 npm run e2e:live
 ```
-
