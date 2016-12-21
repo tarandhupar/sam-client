@@ -56,6 +56,7 @@ export class OpportunityPage implements OnInit {
   relatedOpportunitiesMetadata:any;
   logoUrl: string;
   opportunityAPI: any;
+  currentTab: string = 'Opportunity';
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
@@ -381,6 +382,10 @@ export class OpportunityPage implements OnInit {
 
   public getDownloadFileURL(fileID: string){
     return this.getBaseURL() + '/file/' + fileID + this.getAPIUmbrellaKey();
+  }
+
+  currentTabSelected(tab){
+    this.currentTab = tab.title;
   }
 
   public getDownloadPackageURL(packageID: string) {
