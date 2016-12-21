@@ -21,7 +21,7 @@ export class InputAutocompleteComponent implements OnInit {
   private searchTimer: NodeJS.Timer = null;
   autocompletePreselect = "";
   searchData = [];
-  autocompleteIndex = 0;
+  autocompleteIndex = -1;
   autocompletePage = 0;
   autocompletePageSize = 5;
   autocompleteLazyLoadMarker = 3;
@@ -74,7 +74,7 @@ export class InputAutocompleteComponent implements OnInit {
         'pageNum':this.autocompletePage,
         'pageSize':this.autocompletePageSize
       };
-      this.autocompleteIndex=0;
+      this.autocompleteIndex=-1;
       this.autocompleteLazyLoadMarker = 3;
       this.searchCall(data,false);
     } else {
@@ -105,11 +105,13 @@ export class InputAutocompleteComponent implements OnInit {
       this.resetAutocomplete();
     }
     //up
-    else if(this.autoCompleteToggle && evt['keyCode'] == 38 && this.autocompleteIndex>0){
+    else if(this.autoCompleteToggle && evt['keyCode'] == 38 && this.autocompleteIndex>=0){
       //console.log("up",this.autocompleteIndex);
       evt.preventDefault();
       this.autocompleteIndex-=1;
-      this.autocompletelist.nativeElement.scrollTop = this.autocompletelist.nativeElement.getElementsByTagName("li")[this.autocompleteIndex].offsetTop;
+      if(this.autocompleteIndex>0){
+        this.autocompletelist.nativeElement.scrollTop = this.autocompletelist.nativeElement.getElementsByTagName("li")[this.autocompleteIndex].offsetTop;
+      }
     }
     //down
     else if(this.autoCompleteToggle && evt['keyCode']==40 && this.autocompleteIndex < this.autoComplete.length-1){
