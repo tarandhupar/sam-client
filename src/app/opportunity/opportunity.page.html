@@ -52,8 +52,8 @@
     </section>
 
 
-    <samTabs>
-      <samTab tabTitle="Opportunity">
+    <samTabs (currentSelectedTab)="currentTabSelected($event)">
+      <samTab tabTitle="Opportunity" (tabSelected)="tabSelected($event)">
 
         <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award)">
           <h2>Award Details</h2>
@@ -361,7 +361,7 @@
 
       </samTab>
 
-      <samTab *ngIf="relatedOpportunities" tabTitle="Award Notices">
+      <samTab *ngIf="relatedOpportunities" tabTitle="Award Notices" (tabSelected)="tabSelected($event)">
 
         <h2>Awards Summary</h2>
 

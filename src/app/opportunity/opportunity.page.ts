@@ -343,6 +343,10 @@ export class OpportunityPage implements OnInit {
     return API_UMBRELLA_URL + '/cfda/v1/file/' + fileID + "?api_key=" + API_UMBRELLA_KEY;
   }
 
+  currentTabSelected(tab){
+    console.log(tab);
+  }
+
   toggleAccordion(card){
     card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
   }
