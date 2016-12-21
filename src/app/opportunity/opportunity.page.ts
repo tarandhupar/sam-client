@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, NavigationEnd, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { OpportunityService, FHService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
@@ -55,22 +55,40 @@ export class OpportunityPage implements OnInit {
   relatedOpportunities:any;
   relatedOpportunitiesMetadata:any;
   logoUrl: string;
+  opportunityAPI: any;
+  private pageNum = 0;
+  private totalPages: number;
+  private showPerPage = 20;
 
   constructor(
+    private router: Router,
     private route:ActivatedRoute,
     private opportunityService:OpportunityService,
     private fhService:FHService,
-    private location: Location) {}
+    private location: Location) {
+    router.events.subscribe(s => {
+      if (s instanceof NavigationEnd) {
+        const tree = router.parseUrl(router.url);
+        if (tree.fragment) {
+          const element = document.getElementById(tree.fragment);
+          if (element) { element.scrollIntoView(); }
+        }
+      }
+    });
+    route.queryParams.subscribe(data => {
+      this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
+    });
+  }
 
   ngOnInit() {
     this.currentUrl = this.location.path();
     this.loadDictionary();
     let opportunityAPI = this.loadOpportunity();
+    this.opportunityAPI = opportunityAPI;
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
     this.loadAttachments(opportunityAPI);
-
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
@@ -118,7 +136,7 @@ export class OpportunityPage implements OnInit {
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
     opportunityAPI.subscribe((opportunity => {
-      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a").subscribe(relatedOpportunitiesSubject);
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum).subscribe(relatedOpportunitiesSubject);
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       this.relatedOpportunities = data['relatedOpportunities'][0];
@@ -128,6 +146,7 @@ export class OpportunityPage implements OnInit {
         'totalAwardAmt': data['totalAwardAmt'],
         'unparseableCount': data['unparseableCount']
       };
+      this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
     }, err => {
       console.log('Error loading related opportunities: ', err);
     });
@@ -144,7 +163,6 @@ export class OpportunityPage implements OnInit {
       //organizationId less than 30 character then call Octo's FH End point
       else {
         this.fhService.getOrganizationById(api.data.organizationId).subscribe(organizationSubject);
-        //console.log("Inside opportunity", organizationSubject);
         this.loadLogo(organizationSubject);
       }
     });
@@ -160,7 +178,6 @@ export class OpportunityPage implements OnInit {
 
   private loadLogo(organizationAPI: Observable<any>) {
     organizationAPI.subscribe(org => {
-      //console.log(org);
       if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
         return;
       }
@@ -346,6 +363,22 @@ export class OpportunityPage implements OnInit {
     }
   }
 
+  pageChange(pagenumber){
+    this.pageNum = pagenumber;
+    if (this.pageNum>=0){
+      this.pageNum++;
+    } else {
+      this.pageNum = 1;
+    }
+    let navigationExtras: NavigationExtras = {
+      queryParams: {page: this.pageNum},
+      fragment: 'opportunity-award-summary'
+    };
+    this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
+    this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
+  }
+
+
   public getDownloadFileURL(fileID: string){
     return API_UMBRELLA_URL + '/cfda/v1/file/' + fileID + "?api_key=" + API_UMBRELLA_KEY;
   }
@@ -353,5 +386,6 @@ export class OpportunityPage implements OnInit {
   toggleAccordion(card){
     card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
   }
+
 
 }
