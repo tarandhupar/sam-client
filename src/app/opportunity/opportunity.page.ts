@@ -365,7 +365,7 @@ export class OpportunityPage implements OnInit {
     }
     let navigationExtras: NavigationExtras = {
       queryParams: {page: this.pageNum},
-      fragment: 'card'
+      fragment: 'award-summary'
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
