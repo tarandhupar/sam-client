@@ -107,18 +107,31 @@
     margin-right: 15px;
   }
 
+  .download-container{
+    position: relative;
+  }
 
-  .card-download{
+  .download-container-header{
+    position: relative;
+    .download-button{
+      top: -8px;
+      right: 4px;
+    }
+  }
+
+  .download-button{
     position: absolute;
-    top: 13px;
-    right: 20px;
+    top: 10px;
+    right: 15px;
     a{
+      display: block;
+      padding: 5px;
+      text-align: center;
       text-decoration: none;
       span{
         display: block;
         margin-top: -2px;
         font-size: 14px;
-        margin-left: -20px;
       }
     }
     a:visited{
