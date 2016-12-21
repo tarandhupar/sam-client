@@ -15,10 +15,20 @@
         </button>
       </div>
     </div>
-
   </div>
-  <div class=" m_R-3x align-top m_B-0x"><button class=" white-text header-link sign-in-link">Sign In</button></div>
-  <div class="white-text align-top m_B-0x">|</div>
-  <div class="m_L-3x m_R-3x align-top m_B-0x"><button class=" white-text header-link sign-up-link">Sign Up</button></div>
 
+  <span *ngIf="!states.isSignedIn">
+    <div class=" m_R-3x align-top m_B-0x">
+      <a class="white-text header-link signin-link" routerLink="/signin">Sign In</a>
+    </div>
+    <div class="white-text align-top m_B-0x"><span class="header-item">|</span></div>
+    <div class="m_L-3x m_R-3x align-top m_B-0x">
+      <a class=" white-text header-link signup-link" routerLink="/signup">Sign Up</a>
+    </div>
+  </span>
+  <span *ngIf="states.isSignedIn">
+    <div class=" m_R-3x align-top m_B-0x">
+      <span class="white-text header-link">{{ user.cn }}</span>
+    </div>
+  </span>
 </div>

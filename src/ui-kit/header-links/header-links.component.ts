@@ -1,14 +1,20 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 
+import { IAMService } from 'api-kit';
 
 @Component({
   selector: 'SamHeaderLinks',
-  templateUrl: 'header-links.template.html',
+  templateUrl: 'header-links.component.html',
+  providers: [IAMService]
 })
 export class SamHeaderLinksComponent{
+  private states = {
+    isSignedIn: false
+  };
 
+  private user = null;
 
   @Output()
   onDropdownToggle:EventEmitter<any> = new EventEmitter<any>();
@@ -24,7 +30,25 @@ export class SamHeaderLinksComponent{
     {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/", pageInProgress:true},
   ];
 
-  constructor(private _router:Router) { }
+  constructor(private _router:Router, private zone: NgZone, private api: IAMService) {
+    this.zone.runOutsideAngular(() => {
+      this.checkSession(() => {
+        this.zone.run(() => {
+          // Callback
+        });
+      });
+    });
+  }
+
+  checkSession(cb: () => void) {
+    let vm = this;
+
+    this.api.iam.user.get(function(user) {
+      vm.states.isSignedIn = true;
+      vm.user = user;
+      cb();
+    });
+  }
 
   onMenuClick(){
     this.showDropdown = !this.showDropdown;
@@ -32,7 +56,6 @@ export class SamHeaderLinksComponent{
     setTimeout(()=>{
       this.startCheckOutsideClick = this.showDropdown;
     });
-
   }
 
   dropdownItemClick(item){
@@ -50,7 +73,6 @@ export class SamHeaderLinksComponent{
       this.startCheckOutsideClick = false;
       this.closeDropdown();
     }
-
   }
 
   itemToggle(item){
