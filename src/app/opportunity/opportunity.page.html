@@ -215,14 +215,26 @@
         <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
 
           <h2>Packages</h2>
+          <a *ngIf="hasResources()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">
+            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+            <strong>Download All Packages</strong>
+          </a>
 
           <!-- Header -->
           <div class="card" *ngFor="let package of attachment.packages">
 
             <!-- It's public -->
-            <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" (click)="toggleAccordion(package)">
-              <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
-              <strong>Type: {{ package.type }}</strong>
+            <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" >
+              <div (click)="toggleAccordion(package)">
+                <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
+                <strong>Type: {{ package.type }}</strong>
+              </div>
+              <span class="card-download">
+                <a href="{{getDownloadPackageURL(package.packageId)}}">
+                  <i class="fa fa-cloud-download fa-lg" aria-hidden="true"></i>
+                  <span>Download</span>
+                </a>
+              </span>
             </div>
 
             <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
@@ -234,9 +246,15 @@
                     <!-- Description -->
                     <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
                       {{resource.description}}
+                      <ng-container *ngIf="resource.size && resource.size != 0">
+                        <sup>{{resource.size | filesize}}</sup>
+                      </ng-container>
                     </a>
                     <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
                       {{resource.description}}
+                      <ng-container *ngIf="resource.size && resource.size != 0">
+                        <sup>{{resource.size | filesize}}</sup>
+                      </ng-container>
                     </a>
                   </ng-container>
                 </ng-container>
@@ -364,6 +382,34 @@
       <samTab *ngIf="relatedOpportunities" tabTitle="Award Notices">
 
         <h2 id="opportunity-award-summary">Awards Summary</h2>
+
+        <!-- Awards Metadata -->
+
+        <div class="usa-grid-full segment usa-text-center">
+          <div class="usa-width-one-third">
+            <strong>Total Number of Awards</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.count}}
+            </p>
+          </div>
+
+          <div class="usa-width-one-third">
+            <strong>Total Amount Awarded</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.totalAwardAmt | currency:'USD':true:'1.2-2'}}<br>
+              <em *ngIf="relatedOpportunitiesMetadata.unparsableCount > 0" class="usa-text-small">
+                (Plus {{relatedOpportunitiesMetadata.unparsableCount}} other variable amounts)
+              </em>
+            </p>
+          </div>
+
+          <div class="usa-width-one-third">
+            <strong>Total Number of Recipients</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.recipientCount}}
+            </p>
+          </div>
+        </div>
 
           <div class="card" *ngFor="let element of relatedOpportunities">
 
