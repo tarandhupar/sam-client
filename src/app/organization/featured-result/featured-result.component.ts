@@ -26,15 +26,16 @@ import { ReplaySubject, Observable } from 'rxjs';
 
           <div>
             <ul class="usa-unstyled-list">
+              <li>
+                {{ data.type=="Agency" ? 'Sub-Tier' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
+              </li>
+              <li>
+                {{ data.type=="Agency" ? 'Sub-Tier Code' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency Code' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type+' Code' : '' }} <strong>{{ data.code }}</strong>
+              </li>  
+              <br/>
               <li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
-                <strong>Department: {{ data.name }}</strong>
+                Department: {{ data.parentOrganizationHierarchy?.name }}
               </li>
-              <li>
-                {{ data.type=="Agency" ? 'Sub-Tier' : data.type }}
-              </li>
-              <li>
-                Code <strong>{{ data.code }}</strong>
-              </li>    
             </ul>
           </div>
 

@@ -91,6 +91,12 @@ export class SearchPage implements OnInit{
         keyword: this.keyword
       }).subscribe(
         data => {
+          if(data.parentOrganizationHierarchy) {
+            data.parentOrganizationHierarchy.name = new CapitalizePipe().transform(data.parentOrganizationHierarchy.name.replace(/[_-]/g, " "));
+          }
+          if(data.type) {
+            data.type = new CapitalizePipe().transform(data.type);
+          }
           this.featuredData = data;
         },
         error => {
