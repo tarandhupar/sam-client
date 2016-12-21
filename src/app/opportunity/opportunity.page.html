@@ -10,7 +10,7 @@
         <img class="logo" [src]="logoUrl" alt="HTML5 Icon">
       </ng-container>
       <!--Side Navigation-->
-      <nav>
+      <nav *ngIf="currentTab == 'Opportunity'">
         <ul class="usa-sidenav-list">
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
@@ -19,6 +19,16 @@
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
           <li><a href="{{ currentUrl }}#history">History</a></li>
+        </ul>
+      </nav>
+      <nav *ngIf="currentTab == 'Award Notices'">
+        <ul class="usa-sidenav-list">
+          <li *ngFor="let element of relatedOpportunities">
+            <a>
+              {{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}<br>
+              {{element.data?.award?.number}}
+            </a>
+          </li>
         </ul>
       </nav>
     </div>

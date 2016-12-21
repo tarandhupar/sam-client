@@ -55,6 +55,7 @@ export class OpportunityPage implements OnInit {
   relatedOpportunities:any;
   logoUrl: string;
   opportunityAPI: any;
+  currentTab: string = 'Opportunity';
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
@@ -377,7 +378,7 @@ export class OpportunityPage implements OnInit {
   }
 
   currentTabSelected(tab){
-    console.log(tab);
+    this.currentTab = tab.title;
   }
 
   toggleAccordion(card){
