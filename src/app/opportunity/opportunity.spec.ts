@@ -15,6 +15,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
 import { FixHTMLPipe } from "./pipes/fix-html.pipe";
+import {FilesizePipe} from "./pipes/filesize.pipe";
 import { SamUIKitModule } from 'ui-kit';
 
 let comp: OpportunityPage;
@@ -292,7 +293,7 @@ let MockOpportunityService = {
         self: {
           href: "http://10.98.29.81:122/v1/opportunity/7e5a8c7c4742472a1ac9faef90042e56/attachments"
         }
-      });
+      }});
   }
 };
 
@@ -311,7 +312,7 @@ let MockFHService = {
 describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe], // declare the test component
+      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe], // declare the test component
       imports: [
         PipesModule,
         HttpModule,
@@ -331,7 +332,6 @@ describe('OpportunityPage', () => {
           deps: [MockBackend, BaseRequestOptions],
         },
         { provide: Location, useClass: Location },
-        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '2c1820ae561f521a499e995f2696052c' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
       ]
     });
