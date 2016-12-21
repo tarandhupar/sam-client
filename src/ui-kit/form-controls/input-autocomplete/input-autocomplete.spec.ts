@@ -68,7 +68,7 @@ describe('InputAutocompleteTests', () => {
     comp.searchTerm = "test";
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      component.searchTermEmit.subscribe(searchTerm => {
+      comp.searchTermEmit.subscribe(searchTerm => {
         expect(searchTerm).toBe('test');
       });
     });
