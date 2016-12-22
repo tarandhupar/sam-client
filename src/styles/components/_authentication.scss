@@ -1,0 +1,27 @@
+@import 'authentication/shared/password';
+
+.usa-authentication {
+  margin-top: 80px;
+  margin-bottom: 80px;
+
+  > .usa-grid {
+    margin-top: 30px;
+  }
+
+  legend {
+    line-height: 3rem;
+  }
+
+  hr {
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+  }
+
+  .usa-title {
+    color: #0071BC;
+  }
+
+  .usa-subtitle {
+    font-size: 2.5rem;
+  }
+}
