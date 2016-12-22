@@ -9,15 +9,33 @@ import { globals } from '../../globals.ts';
 })
 export class HomePage {
 
-  topicDetails = {
-    'XYZ1': 'Bacon ipsum dolor amet picanha frankfurter jerky, cupim tongue drumstick filet',
-    'XYZ2': 'Spicy jalapeno bacon ipsum dolor amet ullamco pariatur.',
-    'XYZ3': 'Aliqua andouille aliquip cillum sunt bacon. Turkey pork.',
-    'XYZ4': 'Non duis porchetta fatback prosciutto. Ribeye fatback labore'
-  };
-  curTopicTitle = 'XYZ1';
-  curTopicDetail = this.topicDetails[this.curTopicTitle];
+  topicsData = [
+    {
+      title:'SAM.gov Transition Roadmap',
+      detail:'The new SAM.gov has integrated all ten systems under one unified system. For more information on SAM.gov transition click ',
+      url:''
+    },
+    {
+      title:'Award Data',
+      detail:'Gain access to data in a variety of formats. Perform searches, download extracts, and retrieve data through web services. For more information on award data click ',
+      url:'/help/award'
+    },
+    {
+      title:'New to SAM.gov',
+      detail:'New to the site? For step by step information on the federal award process click ',
+      url:'/help/new'
+    },
+    {
+      title:'User Accounts',
+      detail:'Access information on how to sign up, update registration, and other ways to manage your user account click ',
+      url:'/help/accounts'
+    },
+
+  ];
+
+  curTopic: any;
   showDetail = false;
+
 
   constructor(private _router:Router) {
 
@@ -50,18 +68,17 @@ export class HomePage {
     return false;
   }
 
-  selectTopic(topic){
+  selectTopic(item){
     this.showDetail = true;
-    this.curTopicTitle = topic;
-    this.curTopicDetail = this.topicDetails[this.curTopicTitle];
+    this.curTopic = item;
   }
 
   closeTopicDetail(){
     this.showDetail = false;
   }
 
-  setClasses(topic):any{
-    if(topic === this.curTopicTitle){
+  setClasses(index):any{
+    if(this.topicsData[index].title === this.curTopic.title){
       return {"tri-down":true,"no-tri-down":false};
     }
     return {"tri-down":false,"no-tri-down":true};
