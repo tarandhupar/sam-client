@@ -86,6 +86,10 @@ home {
     font-size: 14px;
   }
 
+  .topic-title:hover,.dismiss-detail:hover{
+    cursor: pointer;
+  }
+
   .topic-img-link{
     margin-left: 33.33%;
   }

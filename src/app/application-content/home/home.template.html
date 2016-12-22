@@ -163,8 +163,11 @@
     <!--Selected Image with detail explanation shows up-->
     <div class="usa-width-one-whole m_T-4x topic-detail">
       <div class="usa-width-one-whole ">
-        <span class="pull-right"><a (click)="closeTopicDetail()">
-          <i class="fa fa-times-circle"></i></a>
+        <span class="pull-right">
+          <a class="dismiss-detail" (click)="closeTopicDetail()">
+            <i class="fa fa-times-circle"></i>
+            <span class="sr-only">dismiss detail</span>
+          </a>
         </span>
       </div>
       <div class="usa-width-one-whole">
