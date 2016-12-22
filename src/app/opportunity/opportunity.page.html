@@ -234,7 +234,7 @@
             </span>
           </div>
 
-          
+
           <!-- Header -->
           <div class="card download-container" *ngFor="let package of attachment.packages">
 
@@ -244,7 +244,8 @@
               <strong>Type: {{ package.type }}</strong>
             </div>
 
-            <span class="download-button">
+
+            <span *ngIf="package.access === 'Public'" class="download-button">
               <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId)}}">
                 <i class="fa fa-cloud-download" aria-hidden="true"></i>
                 <span>Download</span>
