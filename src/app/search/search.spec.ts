@@ -49,17 +49,21 @@ var searchServiceStub = {
       }
     });
   },
-  featuredSearch: ()=>{
+  featuredSearch: ()=> {
     return Observable.of({
-      alternativeNames: null,
-      code: "abcd1234",
-      name: "SAMPLE NAME",
-      description: "",
-      _id: "1234",
-      type: "DEPARTMENT",
-      shortName: "abcd",
-      isActive: true,
-      parentOrganizationHierarchy: null
+      _embedded: {
+        featuredResult: [{
+          alternativeNames: null,
+          code: "abcd1234",
+          name: "SAMPLE NAME",
+          description: "",
+          _id: "1234",
+          type: "DEPARTMENT",
+          shortName: "abcd",
+          isActive: true,
+          parentOrganizationHierarchy: null
+        }]
+      }
     });
   }
 };
@@ -103,7 +107,7 @@ describe('SearchPage', () => {
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.runSearch();
     fixture.whenStable().then(() => {
-      expect(fixture.componentInstance.featuredData.name).toBe("SAMPLE NAME");
+      expect(fixture.componentInstance.featuredData.featuredResult[0].name).toBe("SAMPLE NAME");
     });
   });
 
