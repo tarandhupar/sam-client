@@ -3,6 +3,24 @@
     margin-top: 50px !important;
   }
 
+  .usa-text-center{
+    text-align: center;
+  }
+
+  .usa-button-small{
+    @extend .usa-button;
+    font-size: 15px;
+    padding: 8px 12px;
+  }
+
+  /* Segment */
+  /*============================*/
+  .segment{
+    background-color: #f5f5f5;
+    padding:20px 0px;
+    border-radius: 4px;
+  }
+
   /* Card */
   /*============================*/
   .card h3{
@@ -19,6 +37,11 @@
   .card h3{
     font-weight: 600;
   }*/
+
+  .card-simple{
+    border-bottom: 1px solid #D4D4D5;
+    padding-bottom: 30px;
+  }
 
   .card{
     box-shadow: 0 1px 3px 0 #D4D4D5,0 0 0 1px #D4D4D5;
@@ -57,8 +80,8 @@
     font: normal normal normal 22px/1 FontAwesome;
   }
 
-  .card-header.expanded{
-    opacity: 0.7;
+  .card-header.expanded > div{
+    opacity: 0.8;
   }
 
   .card-header.expanded::before{
@@ -90,6 +113,24 @@
     margin-right: 15px;
   }
 
+  .download-container{
+    position: relative;
+  }
+
+  .download-container-header{
+    position: relative;
+    .download-button{
+      top: 0px;
+      right: -8px;
+    }
+  }
+
+  .download-button{
+    position: absolute;
+    top: 8px;
+    right: 10px;
+  }
+
   /* Label List */
   /*============================*/
   .usa-label-list{
@@ -111,7 +152,9 @@
   }
 
   .usa-label-list li > span:first-child{
-    width: 80px;
+    // width: 80px;
+    font-weight: 700;
+    font-size: 15px;
   }
 
   .usa-label-list li > span:first-child,
@@ -156,4 +199,8 @@
   .usa-zebra-list li a:hover{
     text-decoration: underline;
   }
+
+  /* File Size */
+  /*============================*/
+
 }

@@ -13,13 +13,13 @@
   .square-button:before{
     content: "";
     display: block;
-    padding-top: 26%;
+    padding-top: 43%;
   }
 
   .square-button:after{
     content: "";
     display: block;
-    padding-bottom: 26%;
+    padding-bottom: 43%;
   }
 
   .square-button:hover, .long-button:hover{
@@ -27,6 +27,7 @@
   }
 
   .long-button{
+    padding-top:10%;
     border-radius: 20px;
     background: dodgerblue;
     color: #ffffff;
@@ -54,5 +55,10 @@
 
   .new-to-sam-back:hover{
     cursor: pointer;
+  }
+
+  .new-to-sam-question{
+    font-weight: bold;
+    text-align: left;
   }
 }

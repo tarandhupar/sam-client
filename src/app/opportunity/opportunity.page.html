@@ -10,7 +10,7 @@
         <img class="logo" [src]="logoUrl" alt="HTML5 Icon">
       </ng-container>
       <!--Side Navigation-->
-      <nav>
+      <nav *ngIf="currentTab == 'Opportunity'">
         <ul class="usa-sidenav-list">
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
@@ -19,6 +19,16 @@
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
           <li><a href="{{ currentUrl }}#history">History</a></li>
+        </ul>
+      </nav>
+      <nav *ngIf="currentTab == 'Award Notices'">
+        <ul class="usa-sidenav-list">
+          <li *ngFor="let element of relatedOpportunities">
+            <a>
+              {{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}<br>
+              {{element.data?.award?.number}}
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -52,8 +62,8 @@
     </section>
 
 
-    <samTabs>
-      <samTab tabTitle="Opportunity">
+    <samTabs (currentSelectedTab)="currentTabSelected($event)">
+      <samTab tabTitle="Opportunity" (tabSelected)="tabSelected($event)">
 
         <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award)">
           <h2>Award Details</h2>
@@ -214,16 +224,32 @@
 
         <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && attachment">
 
-          <h2>Packages</h2>
+          <div class="download-container-header">
+            <h2>Packages</h2>
+            <span class="download-button">
+              <a class="usa-button-small usa-button-gray" *ngIf="hasResources()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">
+                <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                <span>Download All Packages</span>
+              </a>
+            </span>
+          </div>
 
+          
           <!-- Header -->
-          <div class="card" *ngFor="let package of attachment.packages">
+          <div class="card download-container" *ngFor="let package of attachment.packages">
 
             <!-- It's public -->
             <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" (click)="toggleAccordion(package)">
               <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
               <strong>Type: {{ package.type }}</strong>
             </div>
+
+            <span class="download-button">
+              <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId)}}">
+                <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                <span>Download</span>
+              </a>
+            </span>
 
             <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
               <li *ngFor="let element of package.attachments">
@@ -234,9 +260,15 @@
                     <!-- Description -->
                     <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
                       {{resource.description}}
+                      <ng-container *ngIf="resource.size && resource.size != 0">
+                        <sup>{{resource.size | filesize}}</sup>
+                      </ng-container>
                     </a>
                     <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
                       {{resource.description}}
+                      <ng-container *ngIf="resource.size && resource.size != 0">
+                        <sup>{{resource.size | filesize}}</sup>
+                      </ng-container>
                     </a>
                   </ng-container>
                 </ng-container>
@@ -361,22 +393,48 @@
 
       </samTab>
 
-      <samTab *ngIf="relatedOpportunities" tabTitle="Award Notices">
+      <samTab *ngIf="relatedOpportunities" tabTitle="Award Notices" (tabSelected)="tabSelected($event)">
 
         <h2 id="opportunity-award-summary">Awards Summary</h2>
 
-          <div class="card" *ngFor="let element of relatedOpportunities">
 
-            <div class="card-header-secure">
-              <h3>{{element.data?.title}}</h3>
-            </div>
+        <!-- Awards Metadata -->
 
-            <div class="card-secure-content">
+        <div class="usa-grid-full segment usa-text-center">
+          <div class="usa-width-one-third">
+            <strong>Total Number of Awards</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.count}}
+            </p>
+          </div>
+
+          <div class="usa-width-one-third">
+            <strong>Total Amount Awarded</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.totalAwardAmt | currency:'USD':true:'1.2-2'}}<br>
+              <em *ngIf="relatedOpportunitiesMetadata.unparsableCount > 0" class="usa-text-small">
+                (Plus {{relatedOpportunitiesMetadata.unparsableCount}} other variable amounts)
+              </em>
+            </p>
+          </div>
+
+          <div class="usa-width-one-third">
+            <strong>Total Number of Recipients</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.recipientCount}}
+            </p>
+          </div>
+        </div>
+
+          <div class="card-simple" *ngFor="let element of relatedOpportunities">
+
+            <h3>{{element.data?.title}}</h3>
+
+            <div class="card-simple-content">
               <div class="usa-grid-full">
                 <div class="usa-width-one-half">
-                  <strong>Contractor Awarded</strong>
                   <ul class="usa-label-list">
-                    <li><span>DUNS</span>
+                    <li><span>Contractor Awarded DUNS / Name: </span>
                       <span>
                         {{element.data?.award?.awardee?.duns}}
                         <ng-container *ngIf="!element.data?.award?.awardee?.duns">
@@ -385,7 +443,7 @@
                       </span>
                     </li>
                     <li>
-                      <span>Address</span>
+                      <span>Contractor Awarded Address: </span>
                       <span>
                         <ng-container *ngIf=" element.data?.award?.awardee?.location?.streetAddress ||
                                               element.data?.award?.awardee?.location?.city ||
@@ -413,11 +471,11 @@
 
                 </div>
                 <div class="usa-width-one-half">
-                  <strong>Contract Award</strong>
                   <ul class="usa-label-list">
-                    <li><span>Amount</span> <span><i class="fa fa-usd" aria-hidden="true"></i> {{element.data?.award?.amount}}</span></li>
-                    <li><span>Number</span> <span>{{element.data?.award?.number}}</span></li>
-                    <li><span>CLIN</span>
+                    <li><span>Contract Award Dollar Amount: </span> <span>{{element.data?.award?.amount}}</span></li>
+                    <li><span>Contract Award Number: </span> <span>{{element.data?.award?.number}}</span></li>
+                    <li><span>Contract Award Date: </span> <span>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span></li>
+                    <li><span>Contract Line Item Number: </span>
                       <span>
                         {{element.data?.award?.lineItemNumber}}
                         <ng-container *ngIf="!element.data?.award?.lineItemNumber">
@@ -430,12 +488,6 @@
               </div>
             </div>
 
-            <div class="card-extra-content">
-              <div class="label-container-inline">
-                <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-                Contract Award Date: <strong>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</strong>
-              </div>
-            </div>
         </div>
         <samPagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
       </samTab>
