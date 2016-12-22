@@ -56,9 +56,11 @@ export class OpportunityPage implements OnInit {
   relatedOpportunitiesMetadata:any;
   logoUrl: string;
   opportunityAPI: any;
+  currentTab: string = 'Opportunity';
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
+
 
   constructor(
     private router: Router,
@@ -178,15 +180,18 @@ export class OpportunityPage implements OnInit {
 
   private loadLogo(organizationAPI: Observable<any>) {
     organizationAPI.subscribe(org => {
+      // Do some basic null checks
       if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
         return;
       }
 
+      // Base case: If logo exists, save it to a variable and exit
       if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
         this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
         return;
       }
 
+      // Recursive case: If parent orgranization exists, recursively try to load its logo
       if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
         this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
       }
@@ -381,6 +386,10 @@ export class OpportunityPage implements OnInit {
 
   public getDownloadFileURL(fileID: string){
     return this.getBaseURL() + '/file/' + fileID + this.getAPIUmbrellaKey();
+  }
+
+  currentTabSelected(tab){
+    this.currentTab = tab.title;
   }
 
   public getDownloadPackageURL(packageID: string) {

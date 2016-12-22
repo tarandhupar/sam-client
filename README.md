@@ -1,5 +1,5 @@
 The following explains how to get set up locally. For instructions regarding branching, merging, and so on; please see the [CONTRIBUTING](https://csp-github.sam.gov/joshuabruce/sam-front-end/blob/comp/CONTRIBUTING.md) documentation.
-   
+
 <ul>
   <li>
     <a href="#getting-started">Getting started</a>
@@ -44,7 +44,7 @@ If you do not see a version number, [install Node.js](https://nodejs.org/en/down
 
 Note: Ensure you are running the latest versions of both. If not, please [update NodeJS and NPM](https://docs.npmjs.com/getting-started/installing-node).
 
-> If you have `nvm` installed, which is highly recommended (`brew install nvm`) you can do a `nvm install --lts && nvm use` in `$` to run with the latest Node LTS. You can also have this `zsh` done for you [automatically](https://github.com/creationix/nvm#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file) 
+> If you have `nvm` installed, which is highly recommended (`brew install nvm`) you can do a `nvm install --lts && nvm use` in `$` to run with the latest Node LTS. You can also have this `zsh` done for you [automatically](https://github.com/creationix/nvm#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
 
 <h3 id="installing-globals">Installing required globals</h3>
 
@@ -95,7 +95,7 @@ Each module is written in a [self-documenting](https://en.wikipedia.org/wiki/Sel
 
 ```
 if (this.hasSelected(config)) {
-  
+
 }
 
 hasSelected = function(config) {
@@ -107,7 +107,7 @@ Instead of:
 
 ```
 if (config.selected !== undefined && config.selected.length > 0) {
-  
+
 }
 ```
 
@@ -169,7 +169,7 @@ npm run watch:test
 npm run e2e
 ```
 
-**Run webdriver**
+**run webdriver**
 
 ```bash
 npm run webdriver:update

@@ -1,4 +1,4 @@
-import { Component, AfterContentInit, ContentChildren, QueryList, Input } from '@angular/core';
+import { Component, AfterContentInit, ContentChildren, QueryList, Input, Output, EventEmitter } from '@angular/core';
 
 // Tab
 @Component({
@@ -29,6 +29,8 @@ export class SamTabComponent {
 export class SamTabsComponent implements AfterContentInit {
   @ContentChildren(SamTabComponent) tabs: QueryList<SamTabComponent>;
 
+  @Output() currentSelectedTab = new EventEmitter(); 
+
   ngAfterContentInit(){
     let activeTabs = this.tabs.filter((tab)=>tab.active);
 
@@ -40,6 +42,7 @@ export class SamTabsComponent implements AfterContentInit {
   selectTab(tab: SamTabComponent){
     this.tabs.toArray().forEach(tab => tab.active = false);
     tab.active = true;
+    this.currentSelectedTab.emit(tab);
   }
 
 }
