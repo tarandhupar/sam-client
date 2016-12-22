@@ -9,10 +9,10 @@ import * as moment from 'moment/moment';
  *
  */
 @Component({
-  selector: 'samDateEntry',
+  selector: 'samDate',
   template: `
-    <labelWrapper [label]="label" [name]="getIdentifer('date')" [errorMessage]="errorMessage" [hint]="hint">
-      <div class="usa-date-of-birth" style="overflow:auto;">
+    <!--<labelWrapper [label]="label" [name]="getIdentifer('date')" [errorMessage]="errorMessage" [hint]="hint">-->
+      <div class="usa-date-of-birth date-group" style="overflow:auto;">
         <div class="usa-form-group usa-form-group-month">
           <label [attr.for]="getIdentifer('date')+'_1'">Month</label>
           <input #month="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.month" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_1" name="date_of_birth_1" pattern="0?[1-9]|1[012]" type="number" min="1" max="12">
@@ -26,10 +26,10 @@ import * as moment from 'moment/moment';
           <input #year="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.year" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_3" name="date_of_birth_3" pattern="[0-9]{4}" type="number" min="1900" max="3000">
         </div>
       </div>
-    </labelWrapper>
+    <!--</labelWrapper>-->
   `,
 })
-export class SamDateEntryComponent implements OnInit{
+export class SamDateComponent implements OnInit{
   model: any = {
     month:"",
     day:"",
@@ -40,9 +40,9 @@ export class SamDateEntryComponent implements OnInit{
   @Input() label: string = "";
   @Input() hint: string = "";
   @Input() prefix: string = "";
-  @Input() init: string = "";
 
-  @Output() modelChange = new EventEmitter<any>();
+  @Input() value: string;
+  @Output() valueChange = new EventEmitter<any>();
 
   @ViewChild('month') month;
   @ViewChild('day') day;
@@ -51,46 +51,49 @@ export class SamDateEntryComponent implements OnInit{
   constructor() { }
 
   ngOnInit() {
-    if (this.init) {
-      let m = moment(this.init);
+    if (this.value) {
+      // use the forgiving format (that doesn't need 0 padding) for inputs
+      let m = moment(this.value, 'Y-M-D');
       if (m.isValid()) {
         this.model.month = m.month() + 1;
         this.model.day = m.date();
         this.model.year = m.year();
       } else {
-        console.error('[init] date is invalid');
+        console.error('[value] for date is invalid');
       }
     }
   }
 
   onBlur(evt){
-    this.validate();
+     this.isValid();
   }
 
-  currentDate() {
+  getDate() {
     return moment([this.model.year, this.model.month-1, this.model.day]);
   }
 
   onChange(){
     if(this.errorMessage){
-      this.validate();
+      this.isValid();
     }
-    if (this.currentDate().isValid()) {
-      var dateString = this.currentDate().format("YYYY-MM-DD");
-      this.modelChange.emit(dateString)
+    if (this.getDate().isValid()) {
+      // use the strict format for outputs
+      let dateString = this.getDate().format("YYYY-MM-DD");
+      this.valueChange.emit(dateString)
     }
   }
 
-  validate(){
-    let isDirty = this.month.dirty || this.day.dirty || this.year.dirty;
-    let dateValid = this.currentDate().isValid();
-
-    console.log(dateValid);
-    if(!dateValid && isDirty){
-      this.errorMessage = "Invalid date";
-    } else {
-      this.errorMessage = "";
-    }
+  isValid() {
+    return this.getDate().isValid();
+    // let isDirty = this.month.dirty || this.day.dirty || this.year.dirty;
+    // let dateValid = this.getDate().isValid();
+    //
+    // console.log(dateValid);
+    // if(!dateValid && isDirty){
+    //   this.errorMessage = "Invalid date";
+    // } else {
+    //   this.errorMessage = "";
+    // }
   }
 
   getIdentifer(str){

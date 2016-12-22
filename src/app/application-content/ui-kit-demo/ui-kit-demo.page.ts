@@ -5,6 +5,12 @@ import { AlertFooterService } from '../../alerts/alert-footer';
   templateUrl: 'ui-kit-demo.template.html'
 })
 export class UIKitDemoPage {
+
+  time: string = "13:01";
+  date: string = "2016-12-12";
+  dateTime: string = "2016-12-12T13:01";
+
+
   // Select Component
   selectModel = '';
   selectConfig = {
@@ -112,16 +118,7 @@ export class UIKitDemoPage {
     timer: 0
   }
 
-  dateModel = {
-    month: null,
-    day: null,
-    year: null
-  };
-  dateModel2 = {
-    month: 12,
-    day: 31,
-    year: 2016
-  };
+  dateModel: string = "2016-02-03";
 
   //Image Library
   imageLibraryData:any =  [

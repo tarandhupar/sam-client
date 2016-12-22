@@ -12,7 +12,6 @@
     </div>
     <div class="pull-right">
       <i class="fa fa-pencil usa-button-icon" (click)="onEditClick()" title="edit"><span class="usa-sr-only">Edit</span></i>
-      <i class="fa fa-trash usa-button-icon" (click)="onDeleteClick()" title="edit"><span class="usa-sr-only">Delete</span></i>
     </div>
   </div>
   <div class="alert-item usa-grid-full">
@@ -30,9 +29,6 @@
       </div>
       <div class="alert-right-item">
         End Date: {{alert.endDate() | dateFormat: 'MMM DD, YYYY'}}
-      </div>
-      <div class="alert-right-item">
-        Status: {{alert.status()}}
       </div>
     </div>
   </div>

@@ -1,11 +1,11 @@
 import { TestBed, async } from '@angular/core/testing';
 
 // Load the implementations that should be tested
-import { SamDateEntryComponent } from './date-entry.component';
+import { SamDateComponent } from './date.component';
 import { SamUIKitModule } from 'ui-kit';
 
 describe('The Sam Date Entry component', () => {
-  let component: SamDateEntryComponent;
+  let component: SamDateComponent;
   let fixture: any;
 
   let model = {
@@ -18,10 +18,10 @@ describe('The Sam Date Entry component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [SamUIKitModule],
-      providers: [SamDateEntryComponent],
+      providers: [SamDateComponent],
     });
 
-    fixture = TestBed.createComponent(SamDateEntryComponent);
+    fixture = TestBed.createComponent(SamDateComponent);
     component = fixture.componentInstance;
     component.model = model;
   });

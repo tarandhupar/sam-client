@@ -28,7 +28,9 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multiselect-dropdown.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
-import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.component";
+import { SamDateComponent } from "./form-controls/date/date.component";
+import { SamTimeComponent } from "./form-controls/time";
+import { SamDateTimeComponent } from "./form-controls/date-time";
 import { SamTextComponent } from "./form-controls/text/text.component";
 import { SamTextareaComponent } from "./form-controls/textarea/textarea.component";
 import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
@@ -61,7 +63,9 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
-    SamDateEntryComponent,
+    SamDateComponent,
+    SamTimeComponent,
+    SamDateTimeComponent,
     SamTextComponent,
     SamTextareaComponent,
     InputAutocompleteComponent,
@@ -96,7 +100,9 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
-    SamDateEntryComponent,
+    SamDateComponent,
+    SamTimeComponent,
+    SamDateTimeComponent,
     SamTextComponent,
     SamTextareaComponent,
     InputAutocompleteComponent,

@@ -71,10 +71,12 @@ export class AlertEditComponent implements OnInit {
   }
 
   onEndDateChange(val) {
+    console.log('ed', val);
     this.alert.setEndDate(val);
   }
 
   onPublishDateChange(val) {
+    console.log('pd', val);
     this.alert.setPublishedDate(val);
   }
 
