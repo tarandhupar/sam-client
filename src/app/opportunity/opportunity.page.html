@@ -233,6 +233,10 @@
               </a>
             </span>
           </div>
+<<<<<<< HEAD
+
+=======
+>>>>>>> GSA-IAE/comp
 
 
           <!-- Header -->
@@ -243,7 +247,6 @@
               <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
               <strong>Type: {{ package.type }}</strong>
             </div>
-
 
             <span *ngIf="package.access === 'Public'" class="download-button">
               <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId)}}">
@@ -418,6 +421,7 @@
               </em>
             </p>
           </div>
+<<<<<<< HEAD
 
           <div class="usa-width-one-third">
             <strong>Total Number of Recipients</strong>
@@ -431,6 +435,21 @@
 
             <h3>{{element.data?.title}}</h3>
 
+=======
+
+          <div class="usa-width-one-third">
+            <strong>Total Number of Recipients</strong>
+            <p>
+              {{relatedOpportunitiesMetadata.recipientCount}}
+            </p>
+          </div>
+        </div>
+
+          <div class="card-simple" *ngFor="let element of relatedOpportunities">
+
+            <h3>{{element.data?.title}}</h3>
+
+>>>>>>> GSA-IAE/comp
             <div class="card-simple-content">
               <div class="usa-grid-full">
                 <div class="usa-width-one-half">
