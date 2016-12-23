@@ -28,7 +28,7 @@ describe("New to Sam.gov page in help page", ()=>{
   it("should open image library when click on big button", ()=>{
     fixture.detectChanges();
     expect(component.showImageLibrary).toBe(false);
-    fixture.nativeElement.querySelector('.square-button').click();
+    fixture.nativeElement.querySelector('.square-button-top').click();
     fixture.whenStable().then(()=>{
       fixture.detectChanges();
       expect(component.showImageLibrary).toBe(true);
