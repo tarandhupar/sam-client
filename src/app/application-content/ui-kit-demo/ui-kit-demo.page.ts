@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild } from '@angular/core';
 import { AlertFooterService } from '../../alerts/alert-footer';
 
 @Component({
@@ -142,6 +142,19 @@ export class UIKitDemoPage {
     }
   ];
 
+  modalAlertTypes = ['success','warning','error','info'];
+  @ViewChild('modal1') vcModal1;
+  @ViewChild('modal2') vcModal2;
+  modalConfig = {
+    type:'success',
+    title:'Sample Title',
+    description:'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'
+  }
+  modalConfig2 = {
+    type:'success',
+    title:'Sample Title'
+  }
+
   constructor(private alertFooterService: AlertFooterService) {  }
 
   onEmptyOptionChanged($event) {
@@ -177,5 +190,14 @@ export class UIKitDemoPage {
   }
   onFooterAlertBtnClick(){
     this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.footerAlertModel)));
+  }
+  onModalInitClick(){
+    this.vcModal1.openModal();
+  }
+  onModalClose(){
+    this.vcModal1.closeModal();
+  }
+  onModalInitClick2(){
+    this.vcModal2.openModal();
   }
 }

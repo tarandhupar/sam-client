@@ -366,14 +366,12 @@
   </div>
 </div>
 <br/>
-<br/>
 <div class="usa-grid">
   <h2 class="usa-width-one">Autocomplete &lt;samPhoneEntry&gt;</h2>
   <div class="usa-width-one">
     <samInputAutocomplete [serviceName]="'suggestions'"></samInputAutocomplete>
   </div>
 </div>
-<br/>
 <br/>
 <div class="usa-grid relative">
   <h2 class="usa-grid-full">Image Library Component &lt;imageLibrary&gt;</h2>
@@ -382,3 +380,30 @@
   </div>
 </div>
 <br/>
+<div class="usa-grid">
+  <h2 class="usa-width-one">Modal &lt;samModal&gt;</h2>
+  <div class="usa-width-one-half">
+    <samModal [showClose]="true" #modal1 [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [submitButtonLabel]="'Yes'" [cancelButtonLabel]="'No'" (onSubmit)="onModalClose()">
+    </samModal>
+    <label>Title</label>
+    <input [(ngModel)]="modalConfig.title" type="text">
+    <label>Description</label>
+    <input [(ngModel)]="modalConfig.description" type="text">
+    <label>Type</label>
+    <select [(ngModel)]="modalConfig.type">
+      <option *ngFor="let type of modalAlertTypes">{{ type }}</option>
+    </select>
+    <button (click)="onModalInitClick()">Show Modal</button>
+    
+    <p>Modal with 'transclude content' and disabled 'close on outside click'</p>
+    <button (click)="onModalInitClick2()">Show Modal 2</button>
+    <samModal #modal2 [title]="modalConfig2.title" [type]="modalConfig2.type" [closeOnOutsideClick]="false">
+      <p>This is a notification...</p>
+      <div style="text-align:center;">
+        <button (click)="modal2.closeModal()">Ok</button>
+      </div>
+    </samModal>
+  </div>
+</div>
+<br/>
+

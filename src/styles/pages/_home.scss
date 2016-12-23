@@ -68,5 +68,45 @@ home {
     border-bottom: 1px solid #aeb0b5;
     background: #fff;
   }
+
+  /*vertical line style between the brose topic div and get started div*/
+  .vertical-line {
+    position: relative;
+  }
+  .vertical-line:after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    border-right: 1px solid #000000;
+    top: 3%;
+    bottom: 3%;
+  }
+
+  .topic-title{
+    font-size: 14px;
+  }
+
+  .topic-title:hover,.dismiss-detail:hover{
+    cursor: pointer;
+  }
+
+  .topic-img-link{
+    margin-left: 33.33%;
+  }
+
+  .register-div{
+    position: absolute;
+    top: 30%;
+    width: 80%;
+  }
+
+  .wrap-content-div{
+    width: auto;
+  }
+
+  .row{
+    display: flex;
+  }
+
 }
 

@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationExtras, Router, NavigationEnd } from '@angula
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { FHService } from 'api-kit';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject, Observable } from 'rxjs';
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 import * as _ from 'lodash';
 
@@ -24,6 +24,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   private pageNum = 1;
   private totalPages: any = 0;
   private showPerPage = 20;
+  public logoUrl: string;
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -64,7 +65,31 @@ export class OrganizationPage implements OnInit, OnDestroy {
       console.log('Error logging', err);
     });
 
+    this.loadLogo(apiSubject);
+
     return apiSubject;
+  }
+
+  private loadLogo(organizationAPI: Observable<any>) {
+    organizationAPI.subscribe(org => {
+      // Do some basic null checks
+      if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
+        return;
+      }
+
+      // Base case: If logo exists, save it to a variable and exit
+      if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
+        this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
+        return;
+      }
+
+      // Recursive case: If parent orgranization exists, recursively try to load its logo
+      if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
+        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
+      }
+    }, err => {
+      console.log('Error loading logo: ', err);
+    });
   }
 
   sortHierarchyAlphabetically(hierarchy){

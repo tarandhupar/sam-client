@@ -33,7 +33,11 @@ import { SamTimeComponent } from "./form-controls/time";
 import { SamDateTimeComponent } from "./form-controls/date-time";
 import { SamTextComponent } from "./form-controls/text/text.component";
 import { SamTextareaComponent } from "./form-controls/textarea/textarea.component";
+import { SamTabComponent } from "./tabs/tabs.component";
+import { SamTabsComponent } from "./tabs/tabs.component";
 import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
+import { SamModalComponent } from "./modal/modal.component";
+
 
 /**
  * A module for reusable SAM Web Design components
@@ -69,8 +73,11 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
     SamTextComponent,
     SamTextareaComponent,
     InputAutocompleteComponent,
+    SamModalComponent,
     LabelWrapper,
     FieldsetWrapper,
+    SamTabsComponent,
+    SamTabComponent
   ],
   imports: [
     BrowserModule,
@@ -106,6 +113,9 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
     SamTextComponent,
     SamTextareaComponent,
     InputAutocompleteComponent,
+    SamTabsComponent,
+    SamTabComponent,
+    SamModalComponent,
   ],
   providers: [ ]
 })

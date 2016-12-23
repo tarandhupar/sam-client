@@ -6,24 +6,30 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
 import { FixHTMLPipe } from "./pipes/fix-html.pipe";
+import { FilesizePipe } from "./pipes/filesize.pipe";
+import { SamUIKitModule } from 'ui-kit';
+
 
 @NgModule({
   imports: [
     PipesModule,
     BrowserModule,
     routing,
+    SamUIKitModule
   ],
   exports: [
     OpportunityPage,
     OpportunityTypeLabelPipe,
     TimezoneLabelPipe,
-    FixHTMLPipe
+    FixHTMLPipe,
+    FilesizePipe
   ],
   declarations: [
     OpportunityPage,
     OpportunityTypeLabelPipe,
     TimezoneLabelPipe,
-    FixHTMLPipe
+    FixHTMLPipe,
+    FilesizePipe
   ],
 })
 export class OpportunityModule { }
