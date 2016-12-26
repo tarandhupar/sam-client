@@ -29,7 +29,7 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
     </labelWrapper>
   `,
 })
-export class SamDateEntryComponent implements OnInit{
+export class SamDateEntryComponent extends LabelWrapper implements OnInit{
   @Input() model: Object = {
     month:"",
     day:"",
@@ -41,9 +41,9 @@ export class SamDateEntryComponent implements OnInit{
   @ViewChild('day') day;
   @ViewChild('year') year;
 
-  errorMsg: string = "";
-
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit() { }
 
@@ -52,7 +52,7 @@ export class SamDateEntryComponent implements OnInit{
   }
 
   onChange(){
-    if(this.errorMsg){
+    if(this.errorMessage){
       this.validate();
     }
     this.emitter.emit(this.model);
@@ -62,23 +62,23 @@ export class SamDateEntryComponent implements OnInit{
     let isValid = true;
     if(this.year.dirty && this.model["year"] != null && this.model["year"]<1900){
       isValid = false;
-    } 
+    }
     if(this.day.dirty &&this.model["day"] != null && (this.model["day"]<1 || this.model["day"] > 31)){
       isValid = false;
-    } 
+    }
     if(this.month.dirty && this.model["month"] != null && (this.model["month"]<1 || this.model["month"] > 12)){
       isValid = false;
-    } 
-    if((this.month.dirty && this.model["month"] == null) || 
-      (this.day.dirty && this.model["day"] == null) || 
+    }
+    if((this.month.dirty && this.model["month"] == null) ||
+      (this.day.dirty && this.model["day"] == null) ||
       (this.year.dirty && this.model["year"] == null)){
       isValid = false;
     }
 
-    if(!isValid){ 
-      this.errorMsg = "Invalid date";
+    if(!isValid){
+      this.errorMessage = "Invalid date";
     } else {
-      this.errorMsg = "";
+      this.errorMessage = "";
     }
   }
 

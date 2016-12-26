@@ -26,20 +26,18 @@ import { OptionsType } from '../types';
       </fieldsetWrapper>
   `,
 })
-export class SamRadioButtonComponent {
+export class SamRadioButtonComponent extends FieldsetWrapper {
   @Input() model: string|number|symbol;
   @Input() options: OptionsType;
-  @Input() label: string;
-  @Input() name: string;
-  @Input() hint: string;
-  @Input() errorMessage: string;
 
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
 
   @ViewChild(FieldsetWrapper)
   public wrapper: FieldsetWrapper;
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
     if (!this.name) {

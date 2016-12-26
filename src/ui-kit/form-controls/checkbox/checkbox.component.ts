@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FieldsetWrapper,  } from '../wrapper/fieldset-wrapper.component';
 import { OptionsType } from '../types';
+import {LabelWrapper} from "../wrapper/label-wrapper.component";
 
 /**
  * The <samCheckbox> component is a set of checkboxes compliant with sam.gov standards
@@ -32,13 +33,9 @@ import { OptionsType } from '../types';
       </fieldsetWrapper>
   `,
 })
-export class SamCheckboxComponent {
+export class SamCheckboxComponent extends FieldsetWrapper {
   @Input() model: any = [];
   @Input() options: OptionsType;
-  @Input() label: string;
-  @Input() name: string;
-  @Input() hint: string;
-  @Input() errorMessage: string;
   @Input() hasSelectAll: boolean;
 
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
@@ -52,7 +49,9 @@ export class SamCheckboxComponent {
    */
   private _ordering: any = {};
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
     if (!this.name) {

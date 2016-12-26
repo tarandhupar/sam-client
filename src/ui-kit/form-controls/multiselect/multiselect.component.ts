@@ -24,16 +24,14 @@ import { OptionsType } from '../types';
   </labelWrapper>
   `
 })
-export class SamMultiSelectComponent {
+export class SamMultiSelectComponent extends LabelWrapper {
   @ViewChild('select') selectElRef;
   @Input() options: OptionsType;
-  @Input() label: string;
-  @Input() name: string;
-  @Input() hint: string;
-  @Input() errorMessage: string;
   @Input() disabled:boolean;
   selectedValues = [];
-  constructor() { console.clear(); }
+  constructor() {
+    super();
+  }
   ngAfterViewInit() {
     this.updateSelectList();
   }

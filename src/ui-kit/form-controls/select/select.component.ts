@@ -24,13 +24,9 @@ import { OptionsType } from '../types';
       </labelWrapper>
   `,
 })
-export class SamSelectComponent {
+export class SamSelectComponent extends LabelWrapper {
   @Input() model: string|number|symbol;
   @Input() options: OptionsType;
-  @Input() label: string;
-  @Input() name: string;
-  @Input() hint: string;
-  @Input() errorMessage: string;
   @Input() disabled: boolean;
 
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
@@ -38,7 +34,9 @@ export class SamSelectComponent {
   @ViewChild(LabelWrapper)
   public wrapper: LabelWrapper;
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnInit() {
     if (!this.name) {
