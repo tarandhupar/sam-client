@@ -3,11 +3,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'samSearchHeader',
   template: `
-    <header>
+    <header id="sam-search-header" class='search-header'>
       <div class="usa-grid align-top">
         <div class="header-container">
-          <a class="hat-img" [routerLink]="['/']">
-            <img class="marginCenter" src="assets/img/sam_hat_logo.jpg">
+          <a class="logo-img" [routerLink]="['/']">
+            <img src="src/assets/img/transition-sam-logo.png" alt="Sam.gov Logo">
           </a>
           <samSearchbar [size]="'small'" (onSearch)="onSearchEvent($event)" 
            [keyword]="keyword" [placeholder]="'#keyword'" [filterValue]="filterValue"></samSearchbar>          
@@ -15,13 +15,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
       </div>
       <div class="m_R-2x align-top pull-right">
         <img title="An official website of the United States Government" class="image-wrap"
-           src="../../assets/img/us_flag_small.png" alt="US Flag Logo"/>
+           src="src/assets/img/us_flag_small.png" alt="US Flag Logo"/>
       </div>
       <SamHeaderLinks (onDropdownToggle)="dropdownEventControl($event)"></SamHeaderLinks>
-      
     </header>
-`,
-  styleUrls: [ 'search-header.css' ],
+`
 })
 export class SamSearchHeaderComponent {
 
@@ -39,6 +37,8 @@ export class SamSearchHeaderComponent {
   }
 
   onSearchEvent($event) {
+    this.keyword=$event.keyword;
+    this.filterValue=$event.searchField;
     this.searchEvent.emit($event);
   }
 

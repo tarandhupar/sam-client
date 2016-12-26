@@ -3,7 +3,7 @@ import {UIKitDemoPage} from "./ui-kit-demo.page";
 
 export let routes: Routes = [];
 
-if (ENV === 'development' || ENV === 'comp' || ENV === 'local') {
+if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
   routes.unshift({ path: 'ui-kit', component: UIKitDemoPage });
 }
 

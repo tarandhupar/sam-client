@@ -1,20 +1,24 @@
-<div class="pull-right align-top relative">
-  <div class="align-top m_B-0x p_R-3x "><a class="usa-nav-link" [ngClass]="{'link-disabled':showDropdown}"(click)="onMenuClick()"><i class="fa fa-bars white-text"></i></a></div>
-  <div class=" m_R-3x align-top m_B-0x"><a class="usa-nav-link white-text sign-in-link">Sign In</a></div>
-  <div class="white-text align-top m_B-0x">|</div>
-  <div class="m_L-3x m_R-3x align-top m_B-0x"><a class="usa-nav-link white-text sign-up-link">Sign Up</a></div>
+<div class="pull-right align-top relative header-links">
+  <div class="align-top m_B-0x p_R-3x " >
+    <button class="menu-link header-link" title="menu" [ngClass]="{'link-disabled':showDropdown}" (click)="onMenuClick()">
+      <i class="fa fa-bars white-text"></i>
+      <span class="usa-sr-only">menu option</span>
+    </button>
+  </div>
   <div class="arrow-up"  *ngIf="showDropdown"></div>
   <div class="dropdown usa-grid-full p_B-2x" *ngIf="showDropdown" samClickOutside (clickOutside)="onClickOutside()">
-    <div class="usa-width-one-half m_R-0 m_T-1x" *ngFor="let item of dropdownData">
-      <div class="item-margin usa-width-one-half m_T-1x">
-        <div class="usa-width-one-whole image-wrap">
-          <a (click)="dropdownItemClick(index)"><i class="fa big-icon centered" [ngClass]="item.linkClass"></i></a>
-        </div>
-        <div class="usa-width-one-whole">
-          <a class="centered usa-nav-link dropdown-link" (click)="dropdownItemClick(index)">{{item.linkTitle}}</a>
-        </div>
+    <div class="usa-width-one-half m_R-0" *ngFor="let item of dropdownData;let i=index" >
+      <div class="item-margin usa-width-one-half m_T-2x"  *ngIf="itemToggle(item)">
+        <button class="usa-width-one-whole dropdown-button" (click)="dropdownItemClick(item)">
+          <i class="fa big-icon" [ngClass]="item.linkClass"></i>
+          <span class="marginCenter dropdown-button-title">{{item.linkTitle}}</span>
+        </button>
       </div>
     </div>
 
   </div>
+  <div class=" m_R-3x align-top m_B-0x"><button class=" white-text header-link sign-in-link">Sign In</button></div>
+  <div class="white-text align-top m_B-0x">|</div>
+  <div class="m_L-3x m_R-3x align-top m_B-0x"><button class=" white-text header-link sign-up-link">Sign Up</button></div>
+
 </div>

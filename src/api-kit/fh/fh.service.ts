@@ -26,6 +26,38 @@ export class FHService{
     return this.oAPIService.call(oApiParam);
   }
 
+  //gets organization with heirarchy data
+  getOrganizationById(id: string) {
+    let oApiParam = {
+      name: 'federalHierarchyV2',
+      suffix: '/'+id,
+      oParam: {
+        'sort': 'name'
+      },
+      method: 'GET'
+    };
+    return this.oAPIService.call(oApiParam);
+  }
+
+  //gets organization WITHOUT heirarchy data (lighter)
+  getSimpleOrganizationById(id: string) {
+    let oApiParam = {
+      name: 'federalOrganization',
+      suffix: '/'+id,
+      method: 'GET'
+    };
+    return this.oAPIService.call(oApiParam);
+  }
+
+  getDepartments() {
+    let oApiParam = {
+      name: 'federalDepartment',
+      suffix: '/',
+      method: 'GET'
+    };
+    return this.oAPIService.call(oApiParam);
+  }
+
   getFederalHierarchyByIds(aIDs, includeParentLevels: boolean, includeChildrenLevels: boolean) {
     let oApiParam = {
       name: 'federalHierarchy',
@@ -67,4 +99,29 @@ export class FHService{
 
     return name;
   };
+
+  search(oData){
+    let oApiParam = {
+      name: 'search',
+      suffix: '/',
+      oParam: {
+        index: "fh",
+        q: oData.keyword
+      },
+      method: 'GET'
+    };
+    if (oData['pageNum']) {
+      oApiParam.oParam['page'] = oData['pageNum'];
+    }
+    if (oData['pageSize']) {
+      oApiParam.oParam['size'] = oData['pageSize'];
+    }
+    if (oData['parentOrganizationId']) {
+      oApiParam.oParam['qFilters'] = {
+        parentOrganizationId: oData['parentOrganizationId']
+      };
+    }
+    return this.oAPIService.call(oApiParam);
+  }
+
 }

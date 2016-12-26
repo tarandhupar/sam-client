@@ -1,7 +1,7 @@
 /*
  * Angular 2 decorators and services
  */
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
@@ -12,10 +12,6 @@ import { SearchService } from 'api-kit';
  */
 @Component({
   selector: 'app',
-  encapsulation: ViewEncapsulation.None,
-  styleUrls: [
-    './app.style.scss'
-  ],
   templateUrl: './app.template.html',
   providers : [SearchService]
 })
@@ -41,6 +37,10 @@ export class App{
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
       });
+    this._router.events.subscribe(
+      val => {
+        this.showOverlay = false;
+      });
   }
 
 
@@ -52,6 +52,8 @@ export class App{
     var qsobj = this.qs;
     if(searchObject.keyword.length>0){
       qsobj['keyword'] = searchObject.keyword;
+    } else {
+      qsobj['keyword'] = '';
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;
@@ -76,5 +78,5 @@ export class App{
     this.showOverlay = value;
 
   }
-  
+
 }

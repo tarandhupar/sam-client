@@ -5,4 +5,7 @@ export { HistoricalIndexService } from './historical-index/historical-index.serv
 export { ProgramService } from './program/program.service';
 export { SystemAlertsService } from './system-alerts/system-alerts.service';
 export { WrapperService } from './wrapper/wrapper.service';
+export { OpportunityService } from './opportunity/opportunity.service';
+export { SuggestionsService } from './search/suggestions.service';
 export { SamAPIKitModule } from './api-kit.module';
+export { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';

@@ -1,59 +1,71 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { WrapperService } from '../wrapper/wrapper.service';
 
 
 @Injectable()
 export class SystemAlertsService {
-    constructor(private oAPIService: WrapperService) {}
+  constructor(private apiService: WrapperService) {}
 
-    getAll() {
+  getActive(limit?: number, offset?: number) {
 
-      /// TODO: Uncomment me when the alert service is ready
-      // let oApiParam = {
-      //   name: 'alerts',
-      //   suffix: '/',
-      //   oParam: {
-      //     size: 5
-      //   },
-      //   method: 'GET'
-      // };
-      //
-      // return this.oAPIService.call(oApiParam);
+    let apiOptions: any = {
+      name: 'alerts',
+      suffix: '',
+      method: 'GET',
+      oParam: { }
+    };
 
-      let error = {
-        "title" : "System Outages",
-        "summary" : "The system will be down for a while. During this time you cannot search for new government opportunities. The system is expected to be back in no more than 2 week and no less then 48 hours. This error will go away where services are restored.",
-        "category" : "outages",
-        "description" : "The systems will be down for a while. During this time you cannot search for new government opportunities. The system is expected to be back in no more than 2 week and no less then 48 hours. This error will go away where services are restored.",
-        "severity" : "ERROR",
-        "begins" : "2016-11-01T20:03:09Z",
-        "expires" : "2016-11-01T20:03:09Z",
-        "published" : "2016-11-01T20:03:09Z"
-      };
+    // specify defaults
+    apiOptions.oParam.limit = limit || 5;
+    apiOptions.oParam.offset = offset || 0;
 
-      let warning = {
-        "title" : "The is an warning",
-        "summary" : "The systems will be slow for a while",
-        "category" : "outages",
-        "description" : "This is the description",
-        "severity" : "WARNING",
-        "begins" : "2016-11-01T20:03:09Z",
-        "expires" : "2016-11-01T20:03:09Z",
-        "published" : "2016-11-01T20:03:09Z"
-      };
+    return this.apiService.call(apiOptions);
+  }
 
-      let info = {
-        "title" : "The is information",
-        "summary" : "The systems will have additional features tomorrow",
-        "category" : "features",
-        "description" : "This is the description",
-        "severity" : "INFO",
-        "begins" : "2016-11-01T20:03:09Z",
-        "expires" : "2016-11-01T20:03:09Z",
-        "published" : "2016-11-01T20:03:09Z"
-      };
+  /**
+   *
+   * @param limit: the number of alerts to fetch
+   * @param offset: for paging, the first page
+   * @param archived: array of statuses to include in the results. Status is Y for active and N for inactive.
+   * @param severity: array of types to include in results. warning|error|informational
+   * @param published: the number of days in the past to include in the result. Valid values: 30d|90d|6m|1y
+   * @param sort: the sort column. offset|severity|published...
+   * @param order: asc or desc
+   * @returns {Observable<>}
+   */
+  getAll(limit?: number, offset?: number, archived?: [string], severity?: [string], published?: string, sort?: string, order?: string) {
 
-      return Observable.of([error, error, warning, info, info]);
+    let apiOptions: any = {
+      name: 'allAlerts',
+      suffix: '',
+      method: 'GET',
+      oParam: { }
+    };
+
+    // specify defaults
+    apiOptions.oParam.limit = limit || 5;
+    apiOptions.oParam.offset = offset || 0;
+
+    if (archived && archived.length) {
+      apiOptions.oParam.archived = archived.join(',');
     }
+
+    if (severity && severity.length) {
+      apiOptions.oParam.severity = severity.join(',');
+    }
+
+    if (published) {
+      apiOptions.oParam.published = published;
+    }
+
+    if (sort) {
+      apiOptions.oParam.sort = sort;
+    }
+
+    if (order) {
+      apiOptions.oParam.order = order;
+    }
+
+    return this.apiService.call(apiOptions);
+  }
 }

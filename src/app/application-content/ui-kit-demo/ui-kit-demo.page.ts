@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component,ViewChild } from '@angular/core';
+import { AlertFooterService } from '../../alerts/alert-footer';
 
 @Component({
-  styleUrls: ['ui-kit-demo.css'],
   templateUrl: 'ui-kit-demo.template.html'
 })
 export class UIKitDemoPage {
@@ -65,8 +65,82 @@ export class UIKitDemoPage {
     totalPages: 1
   };
 
+  pointOfContact = {
+    fullName:"John Doe",
+    address: "1234 Waterway Rd",
+    city: "Norfolk",
+    state: "VA",
+    zip:"12345",
+    email: "jdoe@test.gov",
+    phone: "222-222-2222",
+    website: "www.testsite.gov"
+  };
 
-  constructor() {  }
+  nameModel = {
+    title: "Mr.",
+    firstName: "John",
+    middleName: "",
+    lastName: "Doe",
+    suffix: "Sr."
+  };
+  phoneModel = "";
+  phoneModel2 = "1+(123)456-3366";
+
+  footerAlertTypes = ['success','warning','error','info'];
+  footerAlertModel = {
+    title: "test title",
+    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+    type: "error",
+    timer: 0
+  }
+
+  dateModel = {
+    month: null,
+    day: null,
+    year: null
+  };
+  dateModel2 = {
+    month: 12,
+    day: 31,
+    year: 2016
+  };
+
+  //Image Library
+  imageLibraryData:any =  [
+    {
+      title:"Benefits.gov Learning Center",
+      detail:"Benefits.gov Learning Center: Lipsum content",
+      link:"View Benefits.gov",
+      url:"http://www.Benefits.gov"
+    },
+    {
+      title:"Grants.gov Learning Center",
+      detail:"Details for Grants.gov Learning Center: Lipsum content",
+      link:"View Grants.gov",
+      url:"http://www.grants.gov/web/grants/learn-grants.html"
+    },
+    {
+      title:"Data Element Repository",
+      detail:"Details for Data Element Repository: Lipsum content",
+      link:"View DER",
+      url:"fakeUrl"
+    }
+  ];
+
+  modalAlertTypes = ['success','warning','error','info'];
+  @ViewChild('modal1') vcModal1;
+  @ViewChild('modal2') vcModal2;
+  modalConfig = {
+    type:'success',
+    title:'Sample Title',
+    description:'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'
+  }
+  modalConfig2 = {
+    type:'success',
+    title:'Sample Title'
+  }
+
+  constructor(private alertFooterService: AlertFooterService) {  }
 
   onEmptyOptionChanged($event) {
     if ($event.target.checked) {
@@ -95,5 +169,20 @@ export class UIKitDemoPage {
 
   onDismissAlerts(){
     this.dismissAlerts = true;
+  }
+  phoneModelChange(phoneNum){
+    this.phoneModel = phoneNum;
+  }
+  onFooterAlertBtnClick(){
+    this.alertFooterService.registerFooterAlert(JSON.parse(JSON.stringify(this.footerAlertModel)));
+  }
+  onModalInitClick(){
+    this.vcModal1.openModal();
+  }
+  onModalClose(){
+    this.vcModal1.closeModal();
+  }
+  onModalInitClick2(){
+    this.vcModal2.openModal();
   }
 }

@@ -11,7 +11,7 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
 @Component({
   selector: 'samPagination',
   template: `<nav class="usa-pagination" aria-label="pagination">
-              <ul>
+              <ul class="usa-color-text usa-color-primary-darkest usa-color-text-white">
                 <li *ngIf="showPrevious()"><a class="page-previous" aria-label="previous" (click)="onPreviousClick()">&lsaquo; Prev</a></li>
                 <li><a class="page-button" [ngClass]="textDecoration(1)" (click)="onPageClick(1)" [attr.aria-label]="getAriaLabel(1)">1</a></li>
                 <li *ngIf="showFirstEllipsis()"><span class="first-ellipsis">&hellip;</span></li>
@@ -22,7 +22,6 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
               </ul>
              </nav>    
   `,
-  styleUrls: [ 'pagination.style.css' ],
 })
 export class SamPaginationComponent {
 
@@ -71,7 +70,6 @@ export class SamPaginationComponent {
   onPageClick(pageNumber: number) {
     this.currentPage = pageNumber;
     this.pageChange.emit(this.currentPage);
-    window.scrollTo(0,0);
   }
 
   onNextClick() {

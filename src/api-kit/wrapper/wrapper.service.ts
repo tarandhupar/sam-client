@@ -5,12 +5,19 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class WrapperService {
     private APIs: any = {
+        "opportunity": "/cfda/v1/opportunity",
         "search": "/sgs/v1/search",
+        "featuredSearch": "/sgs/v1/search/featured",
         "program": "/cfda/v1/program",
         "federalHierarchy": "/cfda/v1/fh",
+        "federalHierarchyV2": "/federalorganizations/v1/organizations/hierarchy",
+        "federalOrganization": "/federalorganizations/v1/organizations",
+        "federalDepartment": "/federalorganizations/v1/organizations/departments",
         "dictionary": "/cfda/v1/dictionary",
         "historicalIndex": "/cfda/v1/historicalIndex",
-        "alerts": "/sgs/v1/alerts"
+        "alerts": "/alert/v2/alerts",
+        "allAlerts": "/alert/v2/alerts/allAlerts",
+        "suggestions": "/sgs/v1/search/suggestions"
     };
 
     constructor(private _http: Http){}

@@ -33,7 +33,23 @@ export class SearchService {
 
       return this.oAPIService.call(oApiParam);
     }
-    loadParams(obj){
+
+  featuredSearch(obj) {
+    let oApiParam = {
+      name: 'featuredSearch',
+      suffix: '/',
+      oParam: {
+        q: obj.keyword,
+        qFilters: {}
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+
+  loadParams(obj){
       this.params.next(obj);
     }
 

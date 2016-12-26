@@ -23,12 +23,12 @@ import * as moment from 'moment/moment';
         	<li *ngIf="data.fhNames && data.fhNames[0]"><strong>Department:</strong><a href=""><span>{{data.fhNames[0]}}</span></a></li>
           <li *ngIf="data.fhNames && data.fhNames[1]"><strong>Agency:</strong><a href=""><span>{{data.fhNames[1]}}</span></a></li>
           <li *ngIf="data.fhNames && data.fhNames[2]"><strong>Office:</strong><a href=""><span>{{data.fhNames[2]}}</span></a></li>
-          <li *ngIf="data.contacts!=null"><strong>Headquarters Office:</strong> {{data.contacts[0].fullName}}<br>{{data.contacts[0].address}}&nbsp;{{data.contacts[0].city}}</li>
+          <li *ngIf="data.contacts!=null"><strong>Headquarters Office:</strong> {{data.contacts[0].fullName}}<br>{{data.contacts[0].address}}, {{data.contacts[0].city}}, {{data.contacts[0].state}} {{data.contacts[0].zip}} {{data.contacts[0].country}}</li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-        	<li><strong>FAL Number</strong>
+        	<li><strong>CFDA Number</strong>
           	<ul class="usa-unstyled-list">
               <li class="fal-program-number">{{data.programNumber}}</li>
             </ul>
@@ -45,8 +45,7 @@ import * as moment from 'moment/moment';
           </li>
         </ul>
       </div>
-  `,
-  styleUrls: ['../assistance-listing.style.css']
+  `
 })
 export class AssistanceListingResult implements OnInit {
 	@Input() data: any={};
