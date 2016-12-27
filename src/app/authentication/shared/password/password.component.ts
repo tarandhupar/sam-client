@@ -1,20 +1,20 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, EventEmitter, Input, Output, OnInit, ViewChild } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+
+import { Validators as $Validators } from '../validators';
 
 @Component({
 	selector: 'sam-password',
   templateUrl: 'password.component.html'
 })
 export class PasswordComponent {
-  @Input() password = '';
-  @Input() passwordConfirm = '';
+  @Input() password:FormControl;
 
-  @Output() onValid = new EventEmitter();
-  @Output() onInvalid = new EventEmitter();
+  private passwordConfirm = new FormControl(['']);
 
   protected config = {
     rules: {
-      min: 12,
+      minlength: 12,
       uppercase: 1,
       numeric: 1,
       special: 1
@@ -29,43 +29,72 @@ export class PasswordComponent {
   };
 
   protected states = {
-    valid: false,
     toggle: false,
+    error: '',
     validations: {
-      min: false,
+      minlength: false,
       uppercase: false,
       numeric: false,
       special: false
     }
   };
 
-  constructor(private KeysPipe: KeysPipe) {
+  constructor() {
     this.config.messages = {
-      min: `Be at least <strong>${this.config.rules.min}</strong> characters`,
+      minlength: `Be at least <strong>${this.config.rules.minlength}</strong> characters`,
       uppercase: `Have at least <strong>${this.config.rules.uppercase}</strong> uppercase character`,
       numeric: `Have at least <strong>${this.config.rules.numeric}</strong> numeric digit`,
-      special: `Have at least <strong>${this.config.rules.special}</strong> special character`
+      special: `Have at least <strong>${this.config.rules.special}</strong> special character`,
+      match: "The two passwords don't match"
     };
   }
 
-  validate($event) {
-    let valid = this.states.valid;
+  ngOnInit() {
+    this.password.setValidators([
+      Validators.minLength(this.config.rules.minlength),
+      $Validators.uppercase,
+      $Validators.numeric,
+      $Validators.special,
+      $Validators.match('passwordConfirm')
+    ]);
 
-    this.states.validations.min = (this.password.length >= this.config.rules.min);
-    this.states.validations.uppercase = /[A-Z]/.test(this.password);
-    this.states.validations.numeric = /[0-9]/.test(this.password);
-    this.states.validations.special = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(this.password);
+    this.passwordConfirm.setValidators([
+      Validators.required
+    ]);
 
-    this.states.valid = (
-      this.states.validations.min &&
-      this.states.validations.uppercase &&
-      this.states.validations.numeric &&
-      this.states.validations.special
-    );
+    this.password.updateValueAndValidity();
 
-    // For efficient event-emitting only on valid/invalid state change
-    if(valid !== this.states.valid) {
-      this[this.states.valid ? 'onValid' : 'onInvalid'].emit();
+    this.password.valueChanges.subscribe(data => this.updateState());
+    this.passwordConfirm.valueChanges.subscribe(data => {
+      this.updateState()
+      this.password.updateValueAndValidity();
+    });
+  }
+
+  updateState() {
+    let valid = true,
+        errors = this.password.errors,
+        validator,
+        verifyMatch = (
+          this.passwordConfirm.dirty &&
+          errors !== null &&
+          errors['match'] !== undefined
+        );
+
+    for(validator in this.states.validations) {
+      this.states.validations[validator] = (
+        errors === null ||
+        errors[validator] === undefined
+      );
+    }
+
+    if(verifyMatch) {
+      if(errors['required'])
+        this.states.error = "Don't forget to confirm your password";
+      if(errors['match'])
+        this.states.error = this.config.messages['match'];
+    } else {
+      this.states.error = '';
     }
   }
 };
