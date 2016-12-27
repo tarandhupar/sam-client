@@ -1,0 +1,14 @@
+<!-- includes HTML for app component-->
+<samBanner #banner *ngIf="!isHeaderWithSearch"></samBanner>
+<div [style.height]="!isHeaderWithSearch ? '22px' : '0'">&nbsp;</div>
+<alertHeader></alertHeader>
+<samSearchHeader *ngIf="isHeaderWithSearch" (searchHeaderDropdownControl)="toggleOverlay($event)" (searchEvent)="onHeaderSearchEvent($event)" [keyword]="keyword" [filterValue]="index"></samSearchHeader>
+<samHeader *ngIf="!isHeaderWithSearch" (headerDropdownControl)="toggleOverlay($event)"></samHeader>
+
+<main class="occupy-page relative">
+  <router-outlet></router-outlet>
+  <div  [ngClass]="{'overlay':showOverlay}">
+    </div>
+</main>
+<alertFooter></alertFooter>
+<samFooter labelname = "footer" ></samFooter>

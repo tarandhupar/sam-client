@@ -1,0 +1,87 @@
+.alerts-page {
+  .alerts-toolbar {
+    display: table;
+    margin-bottom: 12px;
+  }
+
+  .alert-count {
+    margin-bottom: 40px;
+  }
+
+  .sort-by-text {
+    display: inline;
+  }
+
+  .sort-column {
+    width: 100%;
+    text-align: right;
+  }
+
+  .toolbar-item {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .toolbar-item:not(.sort-column) {
+    padding-right: 12px;
+  }
+
+  .sort-column select {
+    display: inline;
+    width: 200px;
+  }
+
+  .alert-block {
+    padding-bottom: 12px;
+  }
+
+  .alert-block:not(:last-child) {
+    margin-bottom: 12px;
+    border-bottom: 1px solid grey;
+  }
+
+  .alert-page-title {
+    margin-top: .67em;
+  }
+
+  input {
+    width: auto;
+    max-width: none;
+    display: inline;
+  }
+
+  #datesPublished {
+    width: 150px;
+  }
+
+  .usa-pagination {
+    text-align: center;
+  }
+
+  ul {
+    padding-left: 0;
+  }
+
+  .dropdown-title {
+    white-space: nowrap;
+  }
+
+  samSelect label {
+    display: inline;
+  }
+
+  samSelect select {
+    display: inline;
+  }
+
+  samSelect.publish-select select {
+    border: none;
+  }
+
+  samSelect.sort-select select {
+    width: initial;
+    margin-left: 8px;
+    padding-right: 24px;
+  }
+}
+

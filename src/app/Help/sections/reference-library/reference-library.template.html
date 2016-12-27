@@ -1,0 +1,56 @@
+<section class="reference-library-page">
+  <h2 class="m_T-2x">Reference Library</h2>
+  <p class="p_L-3x">
+    Albucius lobortis ius et, sea debet inimicus ne,
+    nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis
+    ne corpora vivendum.
+  </p>
+  <h3 id="featuredReference" class="p_L-3x">Featured References</h3>
+  <h4 class="p_L-8x">Federal Assistance</h4>
+  <imageLibrary [name]="'federal'" [data]="data.Federal"></imageLibrary>
+
+
+
+  <h4 class="p_L-8x">Contracts</h4>
+  <imageLibrary [name]="'contract'" [data]="data.Contract"></imageLibrary>
+
+  <h3 id="additionalReference" class="p_L-3x">Additional References</h3>
+  <div class="usa-grid-full">
+    <div class="usa-width-one-whole m_L-8x">
+      <div class="usa-width-one-third">
+        <h4>Accessibility Resources</h4>
+        <h5>Federal Accessibility Initiative</h5>
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="http://www.section508.gov/">Section 508</a></li>
+          <li class="m_B"><a class="usa-external_link" href="http://dodcio.defense.gov/DoDSection508.aspx">DoD Section 508</a></li>
+        </ul>
+        <h5 class="m_T-2x">W3C Accessibility Initiative</h5>
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="https://www.w3.org/WAI/">Web Accessibility Initiative</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.w3.org/TR/WCAG10-TECHS/">Web Accessibility Guidelines</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.w3.org/WAI/wcag-curric/oversam.htm/">Web Accessibility Curriculum</a></li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third">
+        <h4>Additional Resources</h4>
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="https://www.digitalgov.gov/resources/required-web-content-and-links/">Digital Gov</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.whitehouse.gov/omb/circulars/a133_compliance_supplement_2016">
+            OMB Compliance Supplement</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.ppirssrng.csd.disa.mil/">PPIRS-SR NG</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://oamp.od.nih.gov/acquisition-offices/contract-tool-box/federal-links">Federal Procurement Links</a></li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third" *ngIf="linkToggle()">
+        <h4>Catagory Three</h4>
+        <h5>SubCatagory</h5>
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+          <li class="m_B"><a class="usa-external_link">Lipsum external link</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</section>
