@@ -9,6 +9,7 @@ import { SamUIKitModule } from '../../ui-kit/ui-kit.module';
 import { AppComponentsModule } from '../../app/app-components/app-components.module';
 
 import { PasswordComponent } from './shared';
+import { LoginComponent } from './login';
 
 @NgModule({
   imports: [
@@ -27,6 +28,11 @@ import { PasswordComponent } from './shared';
      * Shared
      */
     PasswordComponent
+
+    /**
+     * Login
+     */
+    LoginComponent
   ]
 })
 export class AuthenticationModule {

@@ -120,6 +120,18 @@ module.exports = {
      * See: http://webpack.github.io/docs/configuration.html#module-loaders
      */
     loaders: [
+      /**
+       * Babel Loader for ES6 support
+       *
+       * See: https://github.com/babel/babel-loader
+       */
+      {
+        test: /\.js$/,
+        exclude: [/\.ts/, /node_modules/],
+        loaders: [
+          'babel-loader'
+        ]
+      },
 
       /*
        * Font loaders
