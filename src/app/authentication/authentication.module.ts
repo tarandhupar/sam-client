@@ -27,7 +27,7 @@ import { LoginComponent } from './login';
     /**
      * Shared
      */
-    PasswordComponent
+    PasswordComponent,
 
     /**
      * Login
