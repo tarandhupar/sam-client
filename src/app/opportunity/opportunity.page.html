@@ -257,19 +257,25 @@
                 <ng-container *ngFor="let resource of attachment.resources">
                   <!-- Resource -->
                   <ng-container *ngIf="element.resourceId === resource.resourceId">
-                    <!-- Description -->
-                    <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
-                      {{resource.description}}
-                      <ng-container *ngIf="resource.size && resource.size != 0">
-                        <sup>{{resource.size | filesize}}</sup>
-                      </ng-container>
-                    </a>
-                    <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
-                      {{resource.description}}
-                      <ng-container *ngIf="resource.size && resource.size != 0">
-                        <sup>{{resource.size | filesize}}</sup>
-                      </ng-container>
-                    </a>
+                    <!-- Icon and Description -->
+                    <ng-container *ngIf="resource.type === 'link'">
+                      <img src="{{getResourceIcon('link')}}">
+                      <a href="{{resource.uri}}">
+                        {{resource.description}}
+                        <ng-container *ngIf="resource.size && resource.size != 0">
+                          <sup>{{resource.size | filesize}}</sup>
+                        </ng-container>
+                      </a>
+                    </ng-container>
+                    <ng-container *ngIf="resource.type === 'file'">
+                      <img src="{{getResourceIcon(getExtension(resource.name))}}">
+                      <a href="{{getDownloadFileURL(resource.resourceId)}}">
+                        {{resource.description}}
+                        <ng-container *ngIf="resource.size && resource.size != 0">
+                          <sup>{{resource.size | filesize}}</sup>
+                        </ng-container>
+                      </a>
+                    </ng-container>
                   </ng-container>
                 </ng-container>
               </li>

@@ -420,7 +420,13 @@ export class OpportunityPage implements OnInit {
   }
 
   public getExtension(filename: string) {
-    return filename.match(/\.[a-z0-9]+$/i);
+    let ext = filename.match(/\.[a-z0-9]+$/i);
+
+    if(ext != null) {
+      return ext[0];
+    }
+
+    return null;
   }
 
   private static readonly TYPE_UNKNOWN_ICON = 'assets/img/resource-type-icons/unknown.png';
