@@ -438,51 +438,41 @@ export class OpportunityPage implements OnInit {
     switch(type) {
       case 'link':
         return OpportunityPage.TYPE_LINK_ICON;
-        break;
 
       case '.zip':
         return OpportunityPage.TYPE_ZIP_ICON;
-        break;
 
       case '.xls':
       case '.xlsx':
         return OpportunityPage.TYPE_XLS_ICON;
-        break;
 
       case '.ppt':
       case '.pptx':
         return OpportunityPage.TYPE_PPT_ICON;
-        break;
 
       case '.doc':
       case '.docx':
         return OpportunityPage.TYPE_DOC_ICON;
-        break;
 
       case '.txt':
       case '.rtf':
         return OpportunityPage.TYPE_TXT_ICON;
-        break;
 
       case '.pdf':
         return OpportunityPage.TYPE_PDF_ICON;
-        break;
 
       case '.htm':
       case '.html':
         return OpportunityPage.TYPE_HTML_ICON;
-        break;
 
       case '.jpg':
       case '.png':
       case '.jpeg':
       case '.tif':
         return OpportunityPage.TYPE_IMG_ICON;
-        break;
 
       default:
         return OpportunityPage.TYPE_UNKNOWN_ICON;
-        break;
     }
   }
 }
