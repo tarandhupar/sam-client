@@ -419,4 +419,7 @@ export class OpportunityPage implements OnInit {
     return false;
   }
 
+  public getExtension(filename: string) {
+    return filename.match(/\.[a-z0-9]+$/i);
+  }
 }
