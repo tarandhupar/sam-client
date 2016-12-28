@@ -285,9 +285,20 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
+        case 'm': //Todo: Modification/Amendment/Cancel
+        case 'k': //Todo: Combined Synopsis/Solicitation
+          break;
+
         case 'a': // Award Notice
-        case 'm': // Modification/Amendment/Cancel
-        case 'k': // Combined Synopsis/Solicitation
+          this.displayField[OpportunityFields.ResponseDate] = false;
+          this.displayField[OpportunityFields.StatutoryAuthority] = false;
+          this.displayField[OpportunityFields.JustificationAuthority] = false;
+          this.displayField[OpportunityFields.OrderNumber] = false;
+          this.displayField[OpportunityFields.ModificationNumber] = false;
+          this.displayField[OpportunityFields.ClassificationCode] = false;
+          this.displayField[OpportunityFields.NAICSCode] = false;
+          this.displayField[OpportunityFields.POP] = false;
+          this.displayField[OpportunityFields.Contact] = false;
           break;
 
         default:
