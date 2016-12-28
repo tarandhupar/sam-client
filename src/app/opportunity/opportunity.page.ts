@@ -211,10 +211,9 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadAttachments(opportunityAPI: Observable<any>){
-    let attachmentSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
-      opportunityAPI.subscribe(api => {
-        this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
-
+    let attachmentSubject = new ReplaySubject(1); // broadcasts the attachments to multiple subscribers
+    opportunityAPI.subscribe(api => {
+      this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
     });
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
