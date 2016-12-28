@@ -422,4 +422,67 @@ export class OpportunityPage implements OnInit {
   public getExtension(filename: string) {
     return filename.match(/\.[a-z0-9]+$/i);
   }
+
+  private static readonly TYPE_UNKNOWN_ICON = 'assets/img/resource-type-icons/unknown.png';
+  private static readonly TYPE_LINK_ICON = 'assets/img/resource-type-icons/link.png';
+  private static readonly TYPE_ZIP_ICON = 'assets/img/resource-type-icons/zip.png';
+  private static readonly TYPE_XLS_ICON = 'assets/img/resource-type-icons/xls.png';
+  private static readonly TYPE_PPT_ICON = 'assets/img/resource-type-icons/ppt.png';
+  private static readonly TYPE_DOC_ICON = 'assets/img/resource-type-icons/doc.png';
+  private static readonly TYPE_TXT_ICON = 'assets/img/resource-type-icons/txt.png';
+  private static readonly TYPE_PDF_ICON = 'assets/img/resource-type-icons/pdf.png';
+  private static readonly TYPE_HTML_ICON = 'assets/img/resource-type-icons/html.png';
+  private static readonly TYPE_IMG_ICON = 'assets/img/resource-type-icons/img.png';
+
+  public getResourceIcon(type: string) {
+    switch(type) {
+      case 'link':
+        return OpportunityPage.TYPE_LINK_ICON;
+        break;
+
+      case '.zip':
+        return OpportunityPage.TYPE_ZIP_ICON;
+        break;
+
+      case '.xls':
+      case '.xlsx':
+        return OpportunityPage.TYPE_XLS_ICON;
+        break;
+
+      case '.ppt':
+      case '.pptx':
+        return OpportunityPage.TYPE_PPT_ICON;
+        break;
+
+      case '.doc':
+      case '.docx':
+        return OpportunityPage.TYPE_DOC_ICON;
+        break;
+
+      case '.txt':
+      case '.rtf':
+        return OpportunityPage.TYPE_TXT_ICON;
+        break;
+
+      case '.pdf':
+        return OpportunityPage.TYPE_PDF_ICON;
+        break;
+
+      case '.htm':
+      case '.html':
+        return OpportunityPage.TYPE_HTML_ICON;
+        break;
+
+      case '.jpg':
+      case '.png':
+      case '.jpeg':
+      case '.tif':
+        return OpportunityPage.TYPE_IMG_ICON;
+        break;
+
+      default:
+        return OpportunityPage.TYPE_UNKNOWN_ICON;
+        break;
+    }
+  }
 }
