@@ -222,6 +222,9 @@ export class OpportunityPage implements OnInit {
       this.attachment.packages.forEach((key: any) => {
         key.accordionState = 'collapsed';
       });
+      this.attachment.resources.forEach((res: any) => {
+        res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+      });
     }, err => {
       console.log('Error loading attachments: ', err)
     });
@@ -419,7 +422,7 @@ export class OpportunityPage implements OnInit {
     return false;
   }
 
-  public getExtension(filename: string) {
+  private getExtension(filename: string) {
     let ext = filename.match(/\.[a-z0-9]+$/i);
 
     if(ext != null) {
@@ -429,56 +432,56 @@ export class OpportunityPage implements OnInit {
     return null;
   }
 
-  private static readonly TYPE_UNKNOWN_ICON = 'assets/img/resource-type-icons/unknown.png';
-  private static readonly TYPE_LINK_ICON = 'assets/img/resource-type-icons/link.png';
-  private static readonly TYPE_ZIP_ICON = 'assets/img/resource-type-icons/zip.png';
-  private static readonly TYPE_XLS_ICON = 'assets/img/resource-type-icons/xls.png';
-  private static readonly TYPE_PPT_ICON = 'assets/img/resource-type-icons/ppt.png';
-  private static readonly TYPE_DOC_ICON = 'assets/img/resource-type-icons/doc.png';
-  private static readonly TYPE_TXT_ICON = 'assets/img/resource-type-icons/txt.png';
-  private static readonly TYPE_PDF_ICON = 'assets/img/resource-type-icons/pdf.png';
-  private static readonly TYPE_HTML_ICON = 'assets/img/resource-type-icons/html.png';
-  private static readonly TYPE_IMG_ICON = 'assets/img/resource-type-icons/img.png';
+  private static readonly TYPE_UNKNOWN = { name: 'Unknown file type', icon: 'assets/img/resource-type-icons/unknown.png' };
+  private static readonly TYPE_LINK = { name: 'External link', icon: 'assets/img/resource-type-icons/link.png' };
+  private static readonly TYPE_ZIP = { name: 'Zip archive', icon: 'assets/img/resource-type-icons/zip.png' };
+  private static readonly TYPE_XLS = { name: 'Excel spreadsheet', icon: 'assets/img/resource-type-icons/xls.png' };
+  private static readonly TYPE_PPT = { name: 'Powerpoint presentation', icon: 'assets/img/resource-type-icons/ppt.png' };
+  private static readonly TYPE_DOC = { name: 'Word document', icon: 'assets/img/resource-type-icons/doc.png' };
+  private static readonly TYPE_TXT = { name: 'Text file', icon: 'assets/img/resource-type-icons/txt.png' };
+  private static readonly TYPE_PDF = { name: 'PDF document', icon: 'assets/img/resource-type-icons/pdf.png' };
+  private static readonly TYPE_HTML = { name: 'Html document', icon: 'assets/img/resource-type-icons/html.png' };
+  private static readonly TYPE_IMG = { name: 'Image', icon: 'assets/img/resource-type-icons/img.png' };
 
-  public getResourceIcon(type: string) {
+  private getResourceTypeInfo(type: string) {
     switch(type) {
       case 'link':
-        return OpportunityPage.TYPE_LINK_ICON;
+        return OpportunityPage.TYPE_LINK;
 
       case '.zip':
-        return OpportunityPage.TYPE_ZIP_ICON;
+        return OpportunityPage.TYPE_ZIP;
 
       case '.xls':
       case '.xlsx':
-        return OpportunityPage.TYPE_XLS_ICON;
+        return OpportunityPage.TYPE_XLS;
 
       case '.ppt':
       case '.pptx':
-        return OpportunityPage.TYPE_PPT_ICON;
+        return OpportunityPage.TYPE_PPT;
 
       case '.doc':
       case '.docx':
-        return OpportunityPage.TYPE_DOC_ICON;
+        return OpportunityPage.TYPE_DOC;
 
       case '.txt':
       case '.rtf':
-        return OpportunityPage.TYPE_TXT_ICON;
+        return OpportunityPage.TYPE_TXT;
 
       case '.pdf':
-        return OpportunityPage.TYPE_PDF_ICON;
+        return OpportunityPage.TYPE_PDF;
 
       case '.htm':
       case '.html':
-        return OpportunityPage.TYPE_HTML_ICON;
+        return OpportunityPage.TYPE_HTML;
 
       case '.jpg':
       case '.png':
       case '.jpeg':
       case '.tif':
-        return OpportunityPage.TYPE_IMG_ICON;
+        return OpportunityPage.TYPE_IMG;
 
       default:
-        return OpportunityPage.TYPE_UNKNOWN_ICON;
+        return OpportunityPage.TYPE_UNKNOWN;
     }
   }
 }

@@ -259,7 +259,8 @@
                   <ng-container *ngIf="element.resourceId === resource.resourceId">
                     <!-- Icon and Description -->
                     <ng-container *ngIf="resource.type === 'link'">
-                      <img class="m_All-3x" style="vertical-align: middle" src="{{getResourceIcon('link')}}">
+                      <img class="m_All-3x" style="vertical-align: middle" src="{{resource.typeInfo.icon}}">
+                      {{resource.typeInfo.name}}
                       <a class="m_V-3x p_L-1x p_R-1x" style="display: inline; vertical-align: middle" href="{{resource.uri}}">
                         {{resource.description}}
                         <ng-container *ngIf="resource.size && resource.size != 0">
@@ -268,7 +269,8 @@
                       </a>
                     </ng-container>
                     <ng-container *ngIf="resource.type === 'file'">
-                      <img class="m_All-3x" style="vertical-align: middle" src="{{getResourceIcon(getExtension(resource.name))}}">
+                      <img class="m_All-3x" style="vertical-align: middle" src="{{resource.typeInfo.icon}}">
+                      {{resource.typeInfo.name}}
                       <a class="m_V-3x p_L-1x p_R-1x" style="display: inline; vertical-align: middle" href="{{getDownloadFileURL(resource.resourceId)}}">
                         {{resource.description}}
                         <ng-container *ngIf="resource.size && resource.size != 0">
