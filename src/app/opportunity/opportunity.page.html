@@ -259,9 +259,11 @@
                   <ng-container *ngIf="element.resourceId === resource.resourceId">
                     <!-- Icon and Description -->
                     <ng-container *ngIf="resource.type === 'link'">
-                      <img class="m_All-3x" style="vertical-align: middle" src="{{resource.typeInfo.icon}}">
-                      {{resource.typeInfo.name}}
-                      <a class="m_V-3x p_L-1x p_R-1x" style="display: inline; vertical-align: middle" href="{{resource.uri}}">
+                      <figure class="m_V-3x m_L-1x m_R-1x" style="text-align: center; display: inline-block; vertical-align: middle">
+                        <img src="{{resource.typeInfo.icon}}">
+                        <figcaption><small><em>{{resource.typeInfo.name}}</em></small></figcaption>
+                      </figure>
+                      <a class="m_V-3x p_L-1x p_R-1x" style="display: inline-block; vertical-align: middle" href="{{resource.uri}}">
                         {{resource.description}}
                         <ng-container *ngIf="resource.size && resource.size != 0">
                           <sup>{{resource.size | filesize}}</sup>
@@ -269,8 +271,10 @@
                       </a>
                     </ng-container>
                     <ng-container *ngIf="resource.type === 'file'">
-                      <img class="m_All-3x" style="vertical-align: middle" src="{{resource.typeInfo.icon}}">
-                      {{resource.typeInfo.name}}
+                      <figure class="m_V-3x m_L-1x m_R-1x" style="display: inline-block; vertical-align: middle">
+                        <img src="{{resource.typeInfo.icon}}">
+                        <figcaption><small><em>{{resource.typeInfo.name}}</em></small></figcaption>
+                      </figure>
                       <a class="m_V-3x p_L-1x p_R-1x" style="display: inline; vertical-align: middle" href="{{getDownloadFileURL(resource.resourceId)}}">
                         {{resource.description}}
                         <ng-container *ngIf="resource.size && resource.size != 0">
