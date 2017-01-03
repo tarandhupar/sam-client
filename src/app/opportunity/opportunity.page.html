@@ -259,9 +259,9 @@
                   <ng-container *ngIf="element.resourceId === resource.resourceId">
                     <div style="clear: both;">
                       <span style="float: left; width: 80%" class="p_T-3x p_B-3x">
-                        <figure style="float: left; margin: 0;" class="m_L-3x">
-                          <img src="{{resource.typeInfo.icon}}">
-                        </figure>
+                        <span style="margin: 0;" class="m_L-3x">
+                          <i class="{{resource.typeInfo.iconClass}}"></i>
+                        </span>
                         <a *ngIf="resource.type === 'link'" style="display: inline !important; padding: 0;" class="m_L-3x" href="{{resource.uri}}">
                           {{resource.description}}
                           <ng-container *ngIf="resource.size && resource.size != 0">

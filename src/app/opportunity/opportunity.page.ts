@@ -432,16 +432,16 @@ export class OpportunityPage implements OnInit {
     return null;
   }
 
-  private static readonly TYPE_UNKNOWN = { name: 'Unknown file type', icon: 'src/assets/img/resource-type-icons/unknown.png' };
-  private static readonly TYPE_LINK = { name: 'External link', icon: 'src/assets/img/resource-type-icons/link.png' };
-  private static readonly TYPE_ZIP = { name: 'Zip archive', icon: 'src/assets/img/resource-type-icons/zip.png' };
-  private static readonly TYPE_XLS = { name: 'Excel spreadsheet', icon: 'src/assets/img/resource-type-icons/xls.png' };
-  private static readonly TYPE_PPT = { name: 'Powerpoint presentation', icon: 'src/assets/img/resource-type-icons/ppt.png' };
-  private static readonly TYPE_DOC = { name: 'Word document', icon: 'src/assets/img/resource-type-icons/doc.png' };
-  private static readonly TYPE_TXT = { name: 'Text file', icon: 'src/assets/img/resource-type-icons/txt.png' };
-  private static readonly TYPE_PDF = { name: 'PDF document', icon: 'src/assets/img/resource-type-icons/pdf.png' };
-  private static readonly TYPE_HTML = { name: 'Html document', icon: 'src/assets/img/resource-type-icons/html.png' };
-  private static readonly TYPE_IMG = { name: 'Image', icon: 'src/assets/img/resource-type-icons/img.png' };
+  private static readonly TYPE_UNKNOWN = { name: 'Unknown file type', iconClass: 'fa fa-file' };
+  private static readonly TYPE_LINK = { name: 'External link', iconClass: 'fa fa-link' };
+  private static readonly TYPE_ZIP = { name: 'Zip archive', iconClass: 'fa fa-file-archive-o' };
+  private static readonly TYPE_XLS = { name: 'Excel spreadsheet', iconClass: 'fa fa-file-excel-o' };
+  private static readonly TYPE_PPT = { name: 'Powerpoint presentation', iconClass: 'fa fa-file-powerpoint-o' };
+  private static readonly TYPE_DOC = { name: 'Word document', iconClass: 'fa fa-file-word-o' };
+  private static readonly TYPE_TXT = { name: 'Text file', iconClass: 'fa fa-file-text-o' };
+  private static readonly TYPE_PDF = { name: 'PDF document', iconClass: 'fa fa-file-pdf-o' };
+  private static readonly TYPE_HTML = { name: 'Html document', iconClass: 'fa fa-html5' };
+  private static readonly TYPE_IMG = { name: 'Image', iconClass: 'fa fa-file-image-o' };
 
   private getResourceTypeInfo(type: string) {
     switch(type) {
