@@ -257,27 +257,18 @@
                 <ng-container *ngFor="let resource of attachment.resources">
                   <!-- Resource -->
                   <ng-container *ngIf="element.resourceId === resource.resourceId">
-                    <div *ngIf="resource.type === 'link'" style="clear: both;">
-                      <span style="float: left; width: 80%" class="p_T-3x">
+                    <div style="clear: both;">
+                      <span style="float: left; width: 80%" class="p_T-3x p_B-3x">
                         <figure style="float: left; margin: 0;" class="m_L-3x">
                           <img src="{{resource.typeInfo.icon}}">
                         </figure>
-                        <a style="display: inline !important; padding: 0;" class="m_L-3x" href="{{resource.uri}}">
+                        <a *ngIf="resource.type === 'link'" style="display: inline !important; padding: 0;" class="m_L-3x" href="{{resource.uri}}">
                           {{resource.description}}
                           <ng-container *ngIf="resource.size && resource.size != 0">
                             <sup>{{resource.size | filesize}}</sup>
                           </ng-container>
                         </a>
-                      </span><span style="float: right; width: 20%; text-align: right">
-                        <p class="m_R-3x"><em>{{resource.typeInfo.name}}</em></p>
-                      </span>
-                    </div>
-                    <div *ngIf="resource.type === 'file'" style="clear: both;">
-                      <span style="float: left; width: 80%" class="p_T-3x">
-                        <figure style="float: left; margin: 0;" class="m_L-3x">
-                          <img src="{{resource.typeInfo.icon}}">
-                        </figure>
-                        <a style="display: inline !important; padding: 0;" class="m_L-3x" href="{{getDownloadFileURL(resource.resourceId)}}">
+                        <a *ngIf="resource.type === 'file'" style="display: inline !important; padding: 0;" class="m_L-3x" href="{{getDownloadFileURL(resource.resourceId)}}">
                           {{resource.description}}
                           <ng-container *ngIf="resource.size && resource.size != 0">
                             <sup>{{resource.size | filesize}}</sup>
