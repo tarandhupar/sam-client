@@ -160,7 +160,7 @@ export class OpportunityPage implements OnInit {
     opportunityAPI.subscribe(api => {
       //organizationId length >= 30 -> call opportunity org End Point
       if(api.data.organizationId.length >= 30) {
-        this.opportunityService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
+        this.fhService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
       }
       //organizationId less than 30 character then call Octo's FH End point
       else {
