@@ -13,6 +13,7 @@ import { ROUTES } from './app.route';
 // App is our top level component
 import { App } from './app.component';
 import { AppState } from './app.service';
+import { AuthenticationModule } from './authentication';
 import { HomeModule } from './application-content/home';
 import { AlertsModule } from './alerts';
 import { HelpModule } from './Help';
@@ -52,6 +53,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     RouterModule.forRoot(ROUTES, { useHash: useHashValue }),
 
     // Page View Modules
+    AuthenticationModule,
     ProgramModule,
     OpportunityModule,
     OrganizationModule,

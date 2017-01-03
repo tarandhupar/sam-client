@@ -16,6 +16,7 @@
 @import 'components/date-entry';
 @import 'components/label-wrapper';
 @import 'components/accordion';
+@import 'components/authentication';
 @import 'components/footer';
 @import 'components/pagination';
 @import 'components/header';
@@ -93,4 +94,16 @@ h4 {
       width:100%;
     }
   }
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
 }
