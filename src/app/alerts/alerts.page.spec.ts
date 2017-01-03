@@ -11,6 +11,8 @@ import {DateFormatPipe} from "../app-pipes/date-format.pipe";
 // Load test data
 import {error, info, warning} from './alerts-test-data.spec';
 import {By} from "@angular/platform-browser";
+import {AlertEditComponent} from "./alert-edit/alert-edit.component";
+import {FormsModule} from "@angular/forms";
 
 
 class RouterStub {
@@ -29,8 +31,8 @@ describe('The AlertsPage component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AlertsPage,AlertItemComponent,DateFormatPipe],
-      imports: [SamUIKitModule,RouterTestingModule],
+      declarations: [AlertsPage,AlertItemComponent,AlertEditComponent,DateFormatPipe],
+      imports: [SamUIKitModule,RouterTestingModule,FormsModule],
       providers: [
         {provide: Router, useClass: RouterStub},
         {provide: SystemAlertsService, useValue: systemAlertsStub },
@@ -55,7 +57,7 @@ describe('The AlertsPage component', () => {
     });
   }));
 
-  it('should handle out of order responses (perhaps caused by crappy networking hardware)', done => {
+  it('should handle out of order responses', done => {
     done();
     // TODO: Fix this issue so that this test passes
     // fixture.detectChanges();

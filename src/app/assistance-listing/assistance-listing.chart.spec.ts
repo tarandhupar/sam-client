@@ -515,7 +515,7 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
     // Obligation 2
     expect(td[8].innerHTML).toBe('');
     expect(td[9].innerHTML).toBe(nsi);
-    expect(td[10].innerHTML).toBe(ena);
+    expect(td[10].innerHTML).toBe(ana);
     expect(td[11].innerHTML).toBe(nsi);
 
     // Totals

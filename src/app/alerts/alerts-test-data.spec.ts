@@ -1,7 +1,8 @@
-export const error = {
+import {AlertType} from "../../api-kit/system-alerts/system-alerts.service";
+
+export const error: AlertType = {
   content: {
     "title" : "The is an error",
-    "summary" : "The systems will be down for a while",
     "category" : "outages",
     "description" : "This is the description",
     "severity" : "ERROR",
@@ -14,7 +15,6 @@ export const error = {
 export const warning = {
   content: {
     "title": "The is an warning",
-    "summary": "The systems will be slow for a while",
     "category": "outages",
     "description": "This is the description",
     "severity": "WARNING",
@@ -27,7 +27,6 @@ export const warning = {
 export const info = {
   content: {
     "title": "The is information",
-    "summary": "The systems will have additional features tomorrow",
     "category": "features",
     "description": "This is the description",
     "severity": "INFORMATIONAL",

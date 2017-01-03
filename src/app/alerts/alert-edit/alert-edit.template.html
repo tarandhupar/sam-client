@@ -11,8 +11,8 @@
       <samTextarea [name]="'description-input'" [ngModel]="alert.description()" [label]="'Description'" (ngModelChange)="onDescriptionChange($event)"></samTextarea>
     </div>
     <div class="usa-width-one-half">
-      <samDateTime [label]="'Publish Date'" class='publish-date' [name]="'publish-date'" [value]="alert.publishedDate()" (valueChange)="onPublishDateChange($event)"></samDateTime>
-      <samDateTime [label]="'End Date'" [name]="'end-date'" [value]="alert.endDate()" (valueChange)="onEndDateChange($event)"></samDateTime>
+      <samDateTime [label]="'Publish Date'" name='publish-date' [value]="alert.publishedDate()" (valueChange)="onPublishDateChange($event)"></samDateTime>
+      <samDateTime [label]="'End Date'" name='end-date' [value]="alert.endDate()" (valueChange)="onEndDateChange($event)"></samDateTime>
     </div>
   </div>
   <div class="alert-edit-actions clearfix">

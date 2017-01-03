@@ -2,14 +2,7 @@ import { AlertType } from "../../api-kit/system-alerts/system-alerts.service";
 
 export class Alert {
   private _raw: AlertType = {
-    archived: null,
-    content: {
-      title: null,
-      description: null,
-      expires: null,
-      published: null,
-      severity: null,
-    }
+    content: { }
   };
 
   constructor() {  }
@@ -21,15 +14,8 @@ export class Alert {
     this._raw.id = id;
   }
 
-  archived(): boolean {
-    return this._raw.archived.toLowerCase() === 'y';
-  }
-  setArchived(archived: boolean) {
-    this._raw.archived = archived ? 'Y' : 'N';
-  }
-
   status(): string {
-    return this.archived() ? 'Inactive' : 'Active';
+    return this._raw.status;
   }
 
   title(): string {

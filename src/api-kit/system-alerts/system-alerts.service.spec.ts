@@ -7,12 +7,9 @@ import { WrapperService } from "../wrapper/wrapper.service";
 describe('SystemAlertsService', () => {
   let basicAlert: AlertType = {
     id: 1,
-    archived: 'Y',
     content: {
       title: 'Title',
       description: 'Description',
-      summary: 'Summary',
-      category: null,
       expires: '11-11-2011',
       published: '11-11-2011',
       begins: '11-11-2011',

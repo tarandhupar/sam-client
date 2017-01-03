@@ -3,17 +3,22 @@ import { WrapperService } from '../wrapper/wrapper.service';
 
 export type AlertType = {
   content: {
-    title: string,
+    title?: string,
     begins?: string,
-    expires: string,
-    summary?: string,
+    expires?: string,
     category?: string,
-    severity: string,
-    published: string,
-    description: string
+    severity?: string,
+    published?: string,
+    description?: string,
+    isExpiresIndefinite?: string,
   },
-  archived: string,
+  status?: string,
   id?: number,
+  rank?: any,
+  createdDate?: string,
+  createdBy?: any,
+  lastModifiedBy?: string,
+  lastModifiedDate?: string,
 }
 
 @Injectable()

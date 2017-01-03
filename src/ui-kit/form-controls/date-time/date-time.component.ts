@@ -6,7 +6,7 @@ import * as moment from 'moment/moment';
   template: `
     <labelWrapper [label]="label" [name]="name" [errorMessage]="errorMessage" [hint]="hint">
       <samTime #timeComponent [(value)]="time" (valueChange)="onChange($event)"></samTime>
-      <samDate #dateComponent [(value)]="date" (valueChange)="onChange($event) [name]='name'"></samDate>
+      <samDate #dateComponent [(value)]="date" (valueChange)="onChange($event)" [name]='name'></samDate>
     </labelWrapper>
   `,
 })
@@ -42,14 +42,6 @@ export class SamDateTimeComponent implements OnInit {
     if (this.dateComponent.isValid() && this.timeComponent.isValid()) {
       this.valueChange.emit(`${this.date}T${this.time}`);
     }
-    // if(this.errorMessage){
-    //   this.isValid();
-    // }
-    // if (this.getDate().isValid()) {
-    //   // use the strict format for outputs
-    //   let dateString = this.getDate().format("YYYY-MM-DD");
-    //   this.valueChange.emit(dateString)
-    // }
   }
 
 
