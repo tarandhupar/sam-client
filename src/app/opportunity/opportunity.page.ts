@@ -57,6 +57,7 @@ export class OpportunityPage implements OnInit {
   logoUrl: string;
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
+  errorOrganization: any;
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
@@ -173,6 +174,7 @@ export class OpportunityPage implements OnInit {
       this.organization = organization['_embedded'][0]['org'];
     }, err => {
       console.log('Error loading organization: ', err);
+      this.errorOrganization = true;
     });
 
     return organizationSubject;
