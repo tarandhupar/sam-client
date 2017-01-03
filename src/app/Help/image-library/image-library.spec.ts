@@ -10,7 +10,6 @@ describe('Image Library Component', () => {
   let component:ImageLibraryComponent;
   let fixture:any;
   let dataConfig:any;
-  let name:string;
 
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
@@ -26,24 +25,26 @@ describe('Image Library Component', () => {
         title:"Federal Acquisition Regulation",
         detail:"Details for Federal Acquisition Regulation: "+this.detailLipsum,
         link:"View FAR",
-        url:"https://www.acquisition.gov/?q=browsefar"
+        url:"https://www.acquisition.gov/?q=browsefar",
+        img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"SBA Commercial Market Representative",
         detail:"Details for SBA Commercial Market Representative: "+this.detailLipsum,
         link:"View SBA CMR",
-        url:"https://www.sba.gov/contracting/resources-small-businesses/commercial-market-representatives"
+        url:"https://www.sba.gov/contracting/resources-small-businesses/commercial-market-representatives",
+        img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"Request DUNS Number",
         detail:"Details for Request DUNS Number: "+this.detailLipsum,
         link:"View DUNS Number",
-        url:"http://fedgov.dnb.com/webform"
+        url:"http://fedgov.dnb.com/webform",
+        img:"src/assets/img/placeholder.jpg"
       }
     ];
-    name = "contract";
     component.data = dataConfig;
-    component.name = name;
+    component.name = "contract";
   });
 
   it('should open detail when clicking on icon', ()=> {

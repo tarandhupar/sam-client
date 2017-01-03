@@ -34,13 +34,13 @@
     cursor: pointer;
   }
 
-  .reference-content-link{
+  .image-library-content-link{
     position: absolute;
     bottom: 3px;
     right: 10px;
   }
 
-  .reference-image-layer-unselect, .reference-image-layer-select{
+  .image-filter-layer-unselect, .image-filter-layer-select{
     z-index: 100;
     width: 100%;
     height: 100%;
@@ -49,22 +49,29 @@
     left: 0;
   }
 
-  .reference-image-layer-unselect{
+  .image-filter-layer-unselect{
     background: #aaa;
     background-color:rgba(255,255,255,0.8);
   }
 
-  .reference-image-layer-unselect:hover, .reference-image-layer-select{
+  .image-filter-layer-unselect:hover, .image-filter-layer-select{
     cursor: pointer;
     background-color:rgba(32,84,147,0.8);
     color: #ffffff;
   }
 
-  .reference-image:hover{
-    cursor: pointer;
+  .image-div{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .reference-image-container{
+  .images-container{
     padding-right:3px;
   }
 
@@ -127,6 +134,12 @@
 
   .detail-div-large{
     margin-right: 8.33%;
+  }
+
+  .image-library-wrap:before{
+    content: "";
+    display: block;
+    padding-top: 100%;
   }
 
 }
