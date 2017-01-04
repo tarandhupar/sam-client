@@ -79,10 +79,19 @@
               {{ opportunity.data?.award?.number }}
             </li>
             <li [attr.id]="generateID(opportunityFields.AwardedDUNS)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedDUNS)">
-            <strong>Contractor Awarded DUNS / Name: </strong>
+            <strong>Contractor Awarded DUNS: </strong>
               <span>
                 {{ opportunity.data?.award?.awardee?.duns}}
                 <ng-container *ngIf="!opportunity.data?.award?.awardee?.duns">
+                  &mdash;
+                </ng-container>
+              </span>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AwardedName)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedName)">
+            <strong>Contractor Awarded Name: </strong>
+            <span>
+                {{ opportunity.data?.award?.awardee?.name}}
+                <ng-container *ngIf="!opportunity.data?.award?.awardee?.name">
                   &mdash;
                 </ng-container>
               </span>
