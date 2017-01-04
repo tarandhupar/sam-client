@@ -8,7 +8,7 @@ import { ReplaySubject, Observable } from 'rxjs';
   selector: 'fh-featured-result',
   template: `
     <div class="featured-result">
-    <ng-container *ngIf="!data">Organization ID: {{data['_id']}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
+    <ng-container *ngIf="">Organization ID: {{data['_id']}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
 
       <div class="card">
         <div class="card-header-secure">
@@ -63,6 +63,7 @@ export class FHFeaturedResult implements OnInit {
     if(this.data['_id']) {
     this.callOrganizationById(this.data['_id']);
     }
+    console.log("Data: ", this.data);
   }
 
   private callOrganizationById(orgId: string) {
@@ -92,6 +93,9 @@ export class FHFeaturedResult implements OnInit {
       console.log('Error loading logo: ', err);
       this.errorOrganization = true;
     });
+  }
+  isEmptyObject(obj) {
+    return (Object.keys(obj).length === 0);
   }
 
 }
