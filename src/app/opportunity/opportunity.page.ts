@@ -296,9 +296,7 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.OrderNumber] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
           this.displayField[OpportunityFields.ClassificationCode] = false;
-          this.displayField[OpportunityFields.NAICSCode] = false;
           this.displayField[OpportunityFields.POP] = false;
-          this.displayField[OpportunityFields.Contact] = false;
           break;
 
         default:
