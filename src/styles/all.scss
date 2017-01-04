@@ -43,6 +43,7 @@
 @import 'pages/alerts';
 @import 'pages/new-to-sam';
 @import 'pages/help-accounts';
+@import 'pages/help-roadmap';
 
 html, body{
   height: 100%;
@@ -59,11 +60,6 @@ h2{
   letter-spacing: -0.5px;
   line-height: 1.1;
   color: black;
-}
-
-h4 {
-  font-weight: normal;
-  text-align: center;
 }
 
 /* Let content occupy most of the page and show footer when scroll down*/

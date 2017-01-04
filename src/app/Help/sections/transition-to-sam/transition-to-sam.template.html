@@ -1,27 +1,49 @@
-<div class="transition-to-sam">
+<div class="transition-roadmap">
   <section>
-    <h2 class="m_T-2x">SAM.gov Transition</h2>
+    <h2 class="m_T-2x">Modernization Roadmap</h2>
     <p>Essentially, the New SAM.gov has integrate all ten current systems under one unified systematic domain which will act as the entry point for the award process. The ten systems below have been modernized into a cloud based platform that has simplified the federal award process for federal buyer and sellers, and enabling the shared acquisition services.</p>
-    <h3>Ten Legacy Systems</h3>
-    <div class="usa-grid-full">
-      <div class="usa-width-one-half">
-        <ul>
-          <li>System for Award Management (SAM)</li>
-          <li>Federal Procurement Data System – Next Generation (FPDS-NG)</li>
-          <li>Federal Business Opportunities (FBO)</li>
-          <li>Electronic Subcontracting Reporting System (eSRS)</li>
-          <li>Past Performance Information Retrieval System (PPIRS)</li>
-          <li>Wage Determination OnLine (WDOL)</li>
-        </ul>
+    <div class="usa-grid-full roadmap-div row">
+      <div class="usa-width-one-twelfth">
+        <p class="m_T-6x m_L-1x" style="font-size: 11px">Shutdown of legacy website</p>
       </div>
-      <div class="usa-width-one-half">
-        <ul>
-          <li>Federal Funding Accountability and Transparency Act (FFATA) Sub award Reporting System (FSRS)</li>
-          <li>Contractor Performance Assessment Reporting System (CPARS)</li>
-          <li>Federal Awardee Performance and Integrity Information System (FAPIIS)</li>
-          <li>Catalog of Federal Domestic Assistance (CFDA)</li>
-        </ul>
+      <div  class="usa-width-five-sixths">
+        <table>
+          <tr style="border-bottom: 1px solid black ;">
+            <td class="no-border" *ngFor="let releaseItem of releaseData">Release {{releaseItem.releaseNum}} <br> {{releaseItem.releaseDate}}</td>
+          </tr>
+          <tr>
+            <td class="release-feature-cell m_T-0" *ngFor="let releaseItem of releaseData">
+              <div class="relative release-feature-arrow-div" *ngFor="let item of getVerticalRangeArray()">
+                <div class="release-vertical-line"></div>
+                <div class="arrow-right" *ngIf="item < releaseItem.releaseFeature.length"></div>
+                <span class="release-feature-content" *ngIf="item < releaseItem.releaseFeature.length">{{releaseItem.releaseFeature[item]}}</span>
+              </div>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
+    <div class="usa-grid-full m_T-6x">
+      <div class="usa-width-one-whole">
+        <div class="filter-div" [ngClass]="getColorClass('feature')" (click)="selectFilter('feature')">By Features
+        </div>
+        <div class="filter-div m_L-4x" [ngClass]="getColorClass('legacy')" (click)="selectFilter('legacy')">By Legacy Websites
+        </div>
+      </div>
+      <div class="usa-width-one-whole m_T-2x" *ngIf="isCurrentFilter('feature')" >
+        <div class="usa-width-one-whole m_T-4x" *ngFor="let row of featureData;let i = index">
+          <imageLibrary [name]="'transition-by-feature-'+i" [data]="row" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
+        </div>
+      </div>
+      <div class="usa-width-one-whole m_T-2x" *ngIf="isCurrentFilter('legacy')">
+        <div class="usa-width-one-whole m_T-4x" *ngFor="let row of legacyData;let i = index">
+          <imageLibrary [name]="'transition-by-legacy-'+i" [data]="row" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
+        </div>
+      </div>
+    </div>
+    <h3 class="m_T-6x">Design Methodology</h3>
+    <p class="m_L-3x">Omnes inermis ius at, ad assum constituto referrentur eam.
+      Regione deserunt no vis, in his sale aeque. Saepe virtute impedit no nec, elitr
+      decore antiopam cu usu, sit Id labores vivendum vim.</p>
   </section>
 </div>
