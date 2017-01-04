@@ -31,6 +31,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   authorizationIdsGrouped: any[];
   historicalIndex: any;
   alert: any = [];
+  errorOrganization: any;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;

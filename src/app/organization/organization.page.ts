@@ -21,6 +21,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   organizationPerPage: any;
   min: number;
   max: number;
+  errorOrganization: any;
   private pageNum = 1;
   private totalPages: any = 0;
   private showPerPage = 20;
@@ -63,6 +64,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
       this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
     }, err => {
       console.log('Error logging', err);
+      this.errorOrganization = true;
     });
 
     this.loadLogo(apiSubject);
@@ -89,6 +91,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
       }
     }, err => {
       console.log('Error loading logo: ', err);
+      this.errorOrganization = true;
     });
   }
 

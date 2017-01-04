@@ -1,8 +1,12 @@
 <div class="usa-grid" id="organization-page">
+  <ng-container *ngIf="errorOrganization">Organization ID: {{opportunity.data.organizationId}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
   <div class="usa-width-one-whole" *ngIf="organization">
 
     <div class="clearfix">
-      <div class="logo-section" *ngIf="logoUrl">
+      <ng-container *ngIf="errorOrganization">
+        Logo Not Available
+      </ng-container>
+      <div class="logo-section" *ngIf="logoUrl && !errorOrganization">
         <!-- Logo -->
         <img class="logo" [src]="logoUrl" alt="HTML5 Icon">
       </div>
@@ -30,7 +34,7 @@
         </section>
       </div>
     </div>
-    
+
     <!-- Sub-Tier Agencies -->
     <section id="organization-sub-hierarchy" *ngIf="organization.hierarchy.length>0">
       <div class="usa-grid-full m_T-6x">

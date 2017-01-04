@@ -56,7 +56,7 @@
           </strong>
           <ng-container *ngIf="organization.l2Name">{{ organization.l2Name }}</ng-container>
         </li>
-        <ng-container *ngIf="errorOrganization">Organization Cannot Be Loaded. Opportunity ID: {{opportunity.data.organizationId}}</ng-container>
+        <ng-container *ngIf="errorOrganization">Organization ID: {{opportunity.data.organizationId}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
         <li [attr.id]="generateID(opportunityFields.Location, 'header')"
             *ngIf="organization && shouldBeDisplayed(opportunityFields.Location)">
           <strong>Location: </strong>
