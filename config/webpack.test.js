@@ -102,6 +102,18 @@ var conf = {
      * See: http://webpack.github.io/docs/configuration.html#module-loaders
      */
     loaders: [
+      /**
+       * Babel Loader for ES6 support
+       *
+       * See: https://github.com/babel/babel-loader
+       */
+      {
+        test: /\.js$/,
+        exclude: [/\.ts/, /node_modules/],
+        loaders: [
+          'babel-loader'
+        ]
+      },
 
       /**
        * Typescript loader support for .ts and Angular 2 async routes via .async.ts

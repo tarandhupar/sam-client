@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 
 import { FHService } from './fh/fh.service';
+import { IAMService } from './iam/iam.service';
 import { SearchService } from './search/search.service';
 import { SystemAlertsService } from './system-alerts/system-alerts.service';
 import { OpportunityService } from './opportunity/opportunity.service';
@@ -23,6 +24,7 @@ import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.s
   providers: [
     SearchService,
     FHService,
+    IAMService,
     SystemAlertsService,
     OpportunityService,
     WrapperService,
