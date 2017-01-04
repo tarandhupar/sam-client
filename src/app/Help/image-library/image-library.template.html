@@ -3,13 +3,15 @@
     <div class="usa-width-one-whole">
       <div class="usa-width-one-third" *ngFor="let item of data; let i= index">
         <div class="usa-width-three-fourths image-library-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,$event)" [ngClass]="getBorderClass(i)">
-          <div [id]="name+'-div-'+i" [ngClass]="getLayerClass(i)" class="image-filter-layer-unselect" (click)="selectDetail(item,$event)">
+            <div [id]="name+'-div-'+i" [ngClass]="getLayerClass(i)" class="image-filter-layer-unselect" (click)="selectDetail(item,$event)">
                 <span class="image-library-toggle" (click)="selectDetail(item,$event)">
                   <i [id]="name+'-icon-'+i" class="fa fa-plus" [ngClass]="getItemClass(item)"></i>
                 </span>
-            <span [id]="name+'-link-'+i" class="image-library-title" (click)="selectDetail(item,$event)">{{item.title}}</span>
-          </div>
-          <div class="image-div"><img [src]="item.img" alt="{{item.title}}"></div>
+              <span [id]="name+'-link-'+i" class="image-library-title" (click)="selectDetail(item,$event)">{{item.title}}</span>
+            </div>
+            <div class="image-div">
+              <img class="vertical-align" [src]="item.img" alt="{{item.title}}">
+            </div>
         </div>
       </div>
     </div>

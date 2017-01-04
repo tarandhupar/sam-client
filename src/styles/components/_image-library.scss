@@ -66,9 +66,14 @@
     left: 0;
     bottom: 0;
     right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  }
+
+  .vertical-align{
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
   }
 
   .images-container{
