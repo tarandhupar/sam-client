@@ -22,6 +22,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   min: number;
   max: number;
   errorOrganization: any;
+  errorLogo: any;
   private pageNum = 1;
   private totalPages: any = 0;
   private showPerPage = 20;
@@ -91,7 +92,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
       }
     }, err => {
       console.log('Error loading logo: ', err);
-      this.errorOrganization = true;
+      this.errorLogo = true;
     });
   }
 
