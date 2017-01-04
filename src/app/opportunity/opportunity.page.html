@@ -425,6 +425,8 @@
               {{relatedOpportunitiesMetadata.recipientCount}}
             </p>
           </div>
+
+          <samSelect class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></samSelect>
         </div>
 
           <div class="card-simple" *ngFor="let element of relatedOpportunities">

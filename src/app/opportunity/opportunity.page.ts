@@ -57,10 +57,15 @@ export class OpportunityPage implements OnInit {
   logoUrl: string;
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
+  awardSort: string = "awardDate"; //default
+  awardSortOptions = [
+    { label: "Award Date", value: "awardDate" },
+    { label: "Dollar Amount", value: "dollarAmount" },
+    { label: "Company (Awardee) Name", value: "awardeeName" },
+  ];
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
-
 
   constructor(
     private router: Router,
@@ -138,7 +143,7 @@ export class OpportunityPage implements OnInit {
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
     opportunityAPI.subscribe((opportunity => {
-      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum).subscribe(relatedOpportunitiesSubject);
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       this.relatedOpportunities = data['relatedOpportunities'][0];
@@ -152,6 +157,11 @@ export class OpportunityPage implements OnInit {
     }, err => {
       console.log('Error loading related opportunities: ', err);
     });
+  }
+
+  private reloadRelatedOpportunities() {
+    this.pageNum = 0;
+    this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
   }
 
   private loadOrganization(opportunityAPI: Observable<any>) {
