@@ -15,15 +15,15 @@ import * as moment from 'moment/moment';
       <div class="usa-date-of-birth date-group" style="overflow:auto;">
         <div class="usa-form-group usa-form-group-month">
           <label [attr.for]="getIdentifer('date')+'_1'">Month</label>
-          <input #month="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.month" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_1" name="date_of_birth_1" pattern="0?[1-9]|1[012]" type="number" min="1" max="12">
+          <input #month="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.month" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_1" name="date_of_birth_1" pattern="0?[1-9]|1[012]" type="number" min="1" max="12" maxlength="2" [disabled]="disabled">
         </div>
         <div class="usa-form-group usa-form-group-day">
           <label [attr.for]="getIdentifer('date')+'_2'">Day</label>
-          <input #day="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.day" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_2" name="date_of_birth_2" pattern="0?[1-9]|1[0-9]|2[0-9]|3[01]" type="number" min="1" max="31">
+          <input #day="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.day" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_2" name="date_of_birth_2" pattern="0?[1-9]|1[0-9]|2[0-9]|3[01]" type="number" min="1" max="31" maxlength="2" [disabled]="disabled">
         </div>
         <div class="usa-form-group usa-form-group-year">
           <label [attr.for]="getIdentifer('date')+'_3'">Year</label>
-          <input #year="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.year" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_3" name="date_of_birth_3" pattern="[0-9]{4}" type="number" min="1900" max="3000">
+          <input #year="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.year" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_3" name="date_of_birth_3" pattern="[0-9]{4}" type="number" min="1900" max="3000" maxlength="4" [disabled]="disabled">
         </div>
       </div>
     <!--</labelWrapper>-->
@@ -40,6 +40,7 @@ export class SamDateComponent implements OnInit{
   @Input() label: string = "";
   @Input() hint: string = "";
   @Input() prefix: string = "";
+  @Input() disabled: boolean = false;
 
   @Input() value: string;
   @Output() valueChange = new EventEmitter<any>();
@@ -85,15 +86,6 @@ export class SamDateComponent implements OnInit{
 
   isValid() {
     return this.getDate().isValid();
-    // let isDirty = this.month.dirty || this.day.dirty || this.year.dirty;
-    // let dateValid = this.getDate().isValid();
-    //
-    // console.log(dateValid);
-    // if(!dateValid && isDirty){
-    //   this.errorMessage = "Invalid date";
-    // } else {
-    //   this.errorMessage = "";
-    // }
   }
 
   getIdentifer(str){

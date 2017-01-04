@@ -26,6 +26,7 @@ import * as moment from 'moment/moment';
 export class SamTimeComponent implements OnInit{
   @Input() value: string; // must be a 24 hour time and have the format HH:mm
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
+  @Input() disabled: boolean;
 
   hours: number;
   minutes: number;
@@ -56,13 +57,6 @@ export class SamTimeComponent implements OnInit{
   onChange() {
     this.valueChange.emit(this.toString());
   }
-
-  // padDigit(digit: number): any {
-  //   if (digit < 10) {
-  //     return "0"+digit;
-  //   }
-  //   return digit;
-  // }
 
   isValid() {
     return this.getTime().isValid();

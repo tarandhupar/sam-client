@@ -153,14 +153,14 @@
 <div class="usa-grid">
   <h2>Select Text &lt;samTextarea&gt;</h2>
   <div class="usa-width-one-third">
-    <samTextarea
+    <samTextArea
       [(ngModel)]="textareaModel"
       [name]="textareaConfig.name"
       [label]="textareaConfig.label"
       [hint]="textareaConfig.hint"
       [errorMessage]="textareaConfig.errorMessage"
       [disabled]="textareaConfig.disabled">
-    </samTextarea>
+    </samTextArea>
   </div>
   <div class="usa-width-one-third">
     <fieldset class="usa-fieldset-inputs usa-sans">
@@ -394,7 +394,7 @@
       <option *ngFor="let type of modalAlertTypes">{{ type }}</option>
     </select>
     <button (click)="onModalInitClick()">Show Modal</button>
-    
+
     <p>Modal with 'transclude content' and disabled 'close on outside click'</p>
     <button (click)="onModalInitClick2()">Show Modal 2</button>
     <samModal #modal2 [title]="modalConfig2.title" [type]="modalConfig2.type" [closeOnOutsideClick]="false">

@@ -1,4 +1,4 @@
-<div class="alert-item usa-bgcolor-gold-lightest edit">
+<form class="alert-item usa-bgcolor-gold-lightest edit" [formGroup]="form">
   <h2 class="alert-edit-title">
     <span *ngIf="mode === 'edit'">Edit</span>
     <span *ngIf="mode === 'add'">Add</span>
@@ -6,20 +6,29 @@
   </h2>
   <div class="usa-grid-full">
     <div class="usa-width-one-half">
-      <samSelect class='severity-select' [options]="typeOptions" [name]="'alert-types'" [label]="'Type'" [model]="alert.severity()" (modelChange)="onSeverityChange($event)"></samSelect>
-      <samText [name]="'title-input'" [ngModel]="alert.title()" [label]="'Title'" (ngModelChange)="onTitleChange($event)"></samText>
-      <samTextarea [name]="'description-input'" [ngModel]="alert.description()" [label]="'Description'" (ngModelChange)="onDescriptionChange($event)"></samTextarea>
+      <samSelect [required]='true' [control]="form.get('severity')" formControlName="severity" class='severity-select' [options]="typeOptions" [name]="'alert-types'" [label]="'Type'" (modelChange)="onSeverityChange($event)"></samSelect>
+      <samText [maxlength]="8" [control]="form.get('title')" formControlName="title" [required]='true' [name]="'title-input'" [label]="'Title'" (ngModelChange)="onTitleChange($event)"></samText>
+      <samTextArea [maxlength]="350" [control]="form.get('description')" formControlName="description" [required]='true' [name]="'description'" [label]="'Description'" (ngModelChange)="onDescriptionChange($event)"></samTextArea>
     </div>
     <div class="usa-width-one-half">
-      <samDateTime [label]="'Publish Date'" name='publish-date' [value]="alert.publishedDate()" (valueChange)="onPublishDateChange($event)"></samDateTime>
-      <samDateTime [label]="'End Date'" name='end-date' [value]="alert.endDate()" (valueChange)="onEndDateChange($event)"></samDateTime>
+      <samDateTime formControlName="publishedDate" [label]="'Publish Date'" name='publish-date'></samDateTime>
+      <div>
+        <input #publishImmediately id="publish-immediately" type="checkbox" (click)="onPublishImmediatelyClick($event.target.value)">
+        <label for="publish-immediately">Publish Immediately</label>
+      </div>
+      <samDateTime formControlName="endDate" [label]="'End Date'" name='end-date'></samDateTime>
+      <div>
+        <input #endIndefinitely id="end-indefinitely" type="checkbox" (click)="onEndIndefinitelyClick($event.target.value)">
+        <label for="end-indefinitely">End Indefinitely</label>
+      </div>
     </div>
   </div>
   <div class="alert-edit-actions clearfix">
     <div class="pull-right">
-      <div class="usa-button usa-button-primary" (click)="onPublishClick($event)">Publish</div>
-      <div class="usa-button usa-button-gray" (click)="onDraftClick($event)">Draft</div>
-      <div class="usa-button usa-button-gray" (click)="onCancelClick($event)">Cancel</div>
+      <button class="usa-button usa-button-primary" (click)="onAcceptClick($event)">Confirm</button>
+      <button class="usa-button usa-button-gray" (click)="onCancelClick($event)">Cancel</button>
     </div>
   </div>
-</div>
+  <div><pre><code>valid: {{form.valid | json}}</code></pre></div>
+  <div><pre><code>value: {{form.value | json}}</code></pre></div>
+</form>

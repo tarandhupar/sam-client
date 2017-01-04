@@ -13,7 +13,7 @@ export const ALERTS_PER_PAGE: number = 5;
 })
 export class AlertsPage {
 
-  isAdding: boolean = false;
+  alertBeingEdited: Alert = null;
   alerts:Alert[] = [];
   _totalAlerts:number;
 
@@ -29,9 +29,9 @@ export class AlertsPage {
   statuses = {
     label: 'Status',
     options: [
-      { label: 'Published and Active', value: 'N', name: 'active' },
-      { label: 'Published and Inactive', value: 'Y', name: 'inactive' },
-      { label: 'Draft', value: 'X', name: 'draft' }
+      { label: 'Published', value: 'P', name: 'published' },
+      { label: 'Inactive', value: 'I', name: 'inactive' },
+      { label: 'Draft', value: 'D', name: 'draft' }
     ]
   };
 
@@ -73,8 +73,12 @@ export class AlertsPage {
     })
     .subscribe(alerts => {
       this._totalAlerts = alerts.total;
-      this.alerts = alerts.alerts.map(alert => Alert.FromResponse(alert));
-    })
+      if (alerts.length) {
+        this.alerts = alerts.alerts.map(alert => Alert.FromResponse(alert));
+      } else {
+        this.alerts = [];
+      }
+    });
   }
 
   getAlerts() {
@@ -101,7 +105,7 @@ export class AlertsPage {
   }
 
   defaultSort() { return 'pdd'; }
-  defaultStatuses() { return ['N']; }
+  defaultStatuses() { return ['P']; }
   defaultTypes() { return ['Error', 'Informational', 'Warning']; }
   defaultPage() { return 1; }
   defaultDatePublished() { return '30d'; }
@@ -122,14 +126,19 @@ export class AlertsPage {
     return this.alertsStart() + this.alerts.length - 1;
   }
 
-  onAddClick() {
-    this.isAdding = true;
+  onAddAlertClick(alert) {
+    this.alertBeingEdited = new Alert();
   }
 
-  onAddAlertPublish(alert) {
+  onAddAlertCancel() {
+    this.exitEditMode();
+  }
+
+  onAddAlertAccept(alert) {
+    console.log('accept alert', alert);
     this.alertsService.createAlert(alert.raw()).subscribe(
       (data) => {
-        this.isAdding = false;
+        this.exitEditMode();
       },
       (error) => {
         console.error('Error while adding alerts: ', error);
@@ -138,16 +147,11 @@ export class AlertsPage {
     );
   }
 
-  onEditAlertPublish(alert) {
-    //this.alertsService.updateAlert()
+  exitEditMode() {
+    this.alertBeingEdited = null;
   }
 
-  onAddAlertDraft(alert) {
-    this.alertsService.createAlert(alert.raw());
-    this.isAdding = false;
-  }
-
-  onAddAlertCancel() {
-    this.isAdding = false;
+  isNewAlert() {
+    return this.alertBeingEdited && !this.alertBeingEdited.id();
   }
 }

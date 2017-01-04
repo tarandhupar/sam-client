@@ -2,16 +2,16 @@ import { AlertType } from "../../api-kit/system-alerts/system-alerts.service";
 
 export class Alert {
   private _raw: AlertType = {
-    content: { }
+    content: {
+      title: '',
+      description: '',
+    }
   };
 
   constructor() {  }
 
   id(): number {
     return this._raw.id;
-  }
-  setId(id: number) {
-    this._raw.id = id;
   }
 
   status(): string {

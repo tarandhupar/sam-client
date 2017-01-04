@@ -48,7 +48,7 @@ describe('SystemAlertsService', () => {
       expect(connection.request.method).toBe(RequestMethod.Get);
       expect(connection.request.url).toMatch(/allAlerts/);
     });
-    service.getAll(5, 5, ['y', 'n'], ['warning', 'error'], "1d", "published", 'asc');
+    service.getAll(5, 5, ['p', 'i'], ['warning', 'error'], "1d", "published", 'asc');
   })));
 
   it('should update an alert', inject([SystemAlertsService, MockBackend], fakeAsync((service: SystemAlertsService, backend: MockBackend) => {

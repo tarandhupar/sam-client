@@ -8,12 +8,13 @@ import {PipesModule} from "../app-pipes/app-pipes.module";
 import {AlertHeaderComponent} from "./alert-header/alert-header.component";
 import {AlertFooterComponent} from "./alert-footer/alert-footer.component";
 import {AlertFooterService} from "./alert-footer/alert-footer.service";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AlertEditComponent} from "./alert-edit/alert-edit.component";
 
 @NgModule({
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     FormsModule,
     routing,
     SamUIKitModule,

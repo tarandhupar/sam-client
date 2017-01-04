@@ -16,17 +16,17 @@
       <samSelect class="sort-select" [(model)]="sortField" [options]="sortFields" [name]='sortField' (modelChange)="onParamChanged()" [label]="'Sort by:'"></samSelect>
     </div>
   </div>
+  <div class="pull-right" *ngIf="!alertBeingEdited">
+    <button class="alerts-primary-bg" (click)="onAddAlertClick()">Add New Alert</button>
+  </div>
   <div class="alert-count clearfix" *ngIf="alerts.length > 0">
     <div class="pull-left">
       <div class="m_T-2x">
         Showing {{alertsStart()}}-{{alertsEnd()}} of {{totalAlerts()}}
       </div>
     </div>
-    <div class="pull-right">
-      <button class="alerts-primary-bg" (click)="onAddClick()"><i class="fa fa-plus">&nbsp;</i>Add</button>
-    </div>
   </div>
-  <alert-edit *ngIf="isAdding" [mode]="'add'" (cancel)="onAddAlertCancel()" (draft)="onAddAlertDraft($event)" (publish)="onAddAlertPublish($event)"></alert-edit>
+  <alert-edit *ngIf="isNewAlert()" [mode]="'add'" (cancel)="onAddAlertCancel()" (accept)="onAddAlertAccept($event)"></alert-edit>
   <div class="alert-count" *ngIf="alerts.length === 0">
     <em>No results found for selected criteria. Please use filters to expand the search results.</em>
   </div>

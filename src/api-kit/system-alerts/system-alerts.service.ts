@@ -52,7 +52,7 @@ export class SystemAlertsService {
    * @param order: asc or desc
    * @returns {Observable<>}
    */
-  getAll(limit?: number, offset?: number, archived?: [string], severity?: [string], published?: string, sort?: string, order?: string) {
+  getAll(limit?: number, offset?: number, status?: [string], severity?: [string], published?: string, sort?: string, order?: string) {
 
     let apiOptions: any = {
       name: 'allAlerts',
@@ -65,8 +65,8 @@ export class SystemAlertsService {
     apiOptions.oParam.limit = limit || 5;
     apiOptions.oParam.offset = offset || 0;
 
-    if (archived && archived.length) {
-      apiOptions.oParam.archived = archived.join(',');
+    if (status && status.length) {
+      apiOptions.oParam.status = status.join(',');
     }
 
     if (severity && severity.length) {

@@ -1,6 +1,8 @@
 import {Input, Output, Component, OnInit, EventEmitter} from '@angular/core';
 import {Alert} from "../alert.model";
 import {OptionsType} from "ui-kit/form-controls/types";
+import {FormGroup, FormBuilder, AbstractControl} from "@angular/forms";
+import moment = require("moment");
 
 @Component({
   selector: 'alert-edit',
@@ -10,8 +12,7 @@ export class AlertEditComponent implements OnInit {
 
   @Input() alert: Alert;
   @Input() mode: string;
-  @Output() publish: EventEmitter<any> = new EventEmitter<any>();
-  @Output() draft: EventEmitter<any> = new EventEmitter<any>();
+  @Output() accept: EventEmitter<any> = new EventEmitter<any>();
   @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
   typeOptions: OptionsType = [
@@ -20,12 +21,9 @@ export class AlertEditComponent implements OnInit {
     { name: 'warning', label: 'Warning', value: 'Warning'}
   ];
 
-  statusOptions: OptionsType = [
-    { name: 'active', label: 'Active', value: 'active' },
-    { name: 'inactive', label: 'Inactive', value: 'inactive' }
-  ];
+  form: FormGroup;
 
-  constructor() {
+  constructor(private builder: FormBuilder) {
 
   }
 
@@ -42,14 +40,32 @@ export class AlertEditComponent implements OnInit {
     if (!this.alert) {
       this.alert = new Alert();
     }
+
+    this.form = this.builder.group({
+      description: [this.alert.description(), []],
+      title: [this.alert.title(), []],
+      severity: [this.alert.severity(), []],
+      endDate: [this.alert.endDate(), []],
+      publishedDate: [this.alert.publishedDate(), []]
+    });
+
+    this.form.valueChanges.subscribe(val => this.validate(val));
   }
 
-  onPublishClick(event) {
-    this.publish.emit(this.alert);
+  validate(val) {
+
   }
 
-  onDraftClick(event) {
-    this.draft.emit(this.alert);
+  onAcceptClick(event) {
+    console.log('accept clicked, form value: ', this.form.value);
+    let alert = new Alert();
+    let formValue = this.form.value;
+    alert.setDescription(formValue.description);
+    alert.setEndDate(formValue.endDate);
+    alert.setPublishedDate(formValue.publishedDate);
+    alert.setSeverity(formValue.severity);
+    alert.setTitle(formValue.title);
+    this.accept.emit(alert);
   }
 
   onCancelClick(event) {
@@ -74,5 +90,25 @@ export class AlertEditComponent implements OnInit {
 
   onPublishDateChange(val) {
     this.alert.setPublishedDate(val);
+  }
+
+  onPublishImmediatelyClick(val) {
+    let ctrl: AbstractControl = this.form.controls['publishedDate'];
+    if (val) {
+      ctrl.setValue(moment().format('YYYY-MM-DDTHH:mm'));
+      ctrl.disable(true)
+    } else {
+      ctrl.disable(false);
+    }
+  }
+
+  onEndIndefinitelyClick(val) {
+    let ctrl: AbstractControl = this.form.controls['endDate'];
+    if (val) {
+      ctrl.setValue('');
+      ctrl.disable(true)
+    } else {
+      ctrl.disable(false);
+    }
   }
 }
