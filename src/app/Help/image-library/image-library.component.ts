@@ -10,6 +10,7 @@ export class ImageLibraryComponent {
   @Input() data:any;
   @Input() showDetailTitle:boolean = true;
   @Input() isExternalLink:boolean = true;
+  @Input() hasLayer:boolean = true;
 
 
   detailObj: any = {
@@ -53,9 +54,9 @@ export class ImageLibraryComponent {
 
   private getLayerClass(index): string{
     if(this.detailObj.item.title === this.data[index].title){
-      return "reference-image-layer-select";
+      return "image-filter-layer-select";
     }
-    return "reference-image-layer-unselect";
+    return "image-filter-layer-unselect";
   }
 
   private getBorderClass(index): string{
