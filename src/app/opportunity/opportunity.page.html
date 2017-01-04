@@ -264,16 +264,13 @@
                         </span>
                         <a *ngIf="resource.type === 'link'" style="display: inline !important; padding: 0;" class="m_L-3x" href="{{resource.uri}}">
                           {{resource.description}}
-                          <ng-container *ngIf="resource.size && resource.size != 0">
-                            <sup>{{resource.size | filesize}}</sup>
-                          </ng-container>
                         </a>
                         <a *ngIf="resource.type === 'file'" style="display: inline !important; padding: 0;" class="m_L-3x" href="{{getDownloadFileURL(resource.resourceId)}}">
                           {{resource.description}}
-                          <ng-container *ngIf="resource.size && resource.size != 0">
-                            <sup>{{resource.size | filesize}}</sup>
-                          </ng-container>
                         </a>
+                        <ng-container *ngIf="resource.size && resource.size != 0">
+                          <sup>{{resource.size | filesize}}</sup>
+                        </ng-container>
                       </span><span style="float: right; width: 20%; text-align: right">
                         <p class="m_R-3x"><em>{{resource.typeInfo.name}}</em></p>
                       </span>
