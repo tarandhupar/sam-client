@@ -72,27 +72,8 @@ export class AlertEditComponent implements OnInit {
     this.cancel.emit(null);
   }
 
-  onSeverityChange(val) {
-    this.alert.setSeverity(val);
-  }
-
-  onDescriptionChange(val) {
-    this.alert.setDescription(val);
-  }
-
-  onTitleChange(val) {
-    this.alert.setTitle(val);
-  }
-
-  onEndDateChange(val) {
-    this.alert.setEndDate(val);
-  }
-
-  onPublishDateChange(val) {
-    this.alert.setPublishedDate(val);
-  }
-
   onPublishImmediatelyClick(val) {
+    console.log('val is: ', val);
     let ctrl: AbstractControl = this.form.controls['publishedDate'];
     if (val) {
       ctrl.setValue(moment().format('YYYY-MM-DDTHH:mm'));
@@ -110,5 +91,10 @@ export class AlertEditComponent implements OnInit {
     } else {
       ctrl.disable(false);
     }
+  }
+
+  acceptButtonStyle() {
+    //return 'usa-button-disabled';
+    return {'usa-button-primary': this.form.valid, 'usa-button-disabled': !this.form.valid};
   }
 }

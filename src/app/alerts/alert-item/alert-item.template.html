@@ -11,7 +11,7 @@
       <i class="alert-type-icon fa" [ngClass]="alert.iconClass()"></i>{{alert.severity()}}
     </div>
     <div class="pull-right">
-      <i class="fa fa-pencil usa-button-icon" (click)="onEditClick()" title="edit"><span class="usa-sr-only">Edit</span></i>
+      <button class="usa-button-transparent"><span>Edit</span>&nbsp;<i class="fa fa-pencil" (click)="onEditClick()"></i></button>
     </div>
   </div>
   <div class="alert-item usa-grid-full">

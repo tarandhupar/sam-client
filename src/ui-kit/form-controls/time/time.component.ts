@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild,Output, EventEmitter,OnInit } from '@angular/core';
+import {Component, Input, ViewChild, Output, EventEmitter, OnInit, OnChanges} from '@angular/core';
 import * as moment from 'moment/moment';
 
 @Component({
@@ -7,15 +7,15 @@ import * as moment from 'moment/moment';
     <div class="sam-time usa-date-of-birth">
       <div class="usa-form-group usa-form-group-month">
         <label>Hour</label>
-        <input type="number" [(ngModel)]='hours' (ngModelChange)="onChange()" class="usa-form-control" min="1" max="12">
+        <input type="number" [(ngModel)]='hours' (ngModelChange)="onChange()" class="usa-form-control" min="1" max="12" [disabled]="disabled">
       </div>
       <div class="usa-form-group usa-form-group-month">
         <label>Minute</label>
-        <input type="number" [(ngModel)]="minutes" (ngModelChange)="onChange()" class="usa-form-control" min="0" max="59">
+        <input type="number" [(ngModel)]="minutes" (ngModelChange)="onChange()" class="usa-form-control" min="0" max="59" [disabled]="disabled">
       </div>
       <div class="usa-form-group usa-form-group-year">
         <label>AM/PM</label>
-        <select [(ngModel)]='amPm' (ngModelChange)="onChange()">
+        <select [(ngModel)]='amPm' (ngModelChange)="onChange()" [disabled]="disabled">
           <option value="am">AM</option>
           <option value="pm">PM</option>
         </select>
@@ -23,7 +23,7 @@ import * as moment from 'moment/moment';
     </div>
   `,
 })
-export class SamTimeComponent implements OnInit{
+export class SamTimeComponent implements OnInit, OnChanges {
   @Input() value: string; // must be a 24 hour time and have the format HH:mm
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
   @Input() disabled: boolean;
@@ -34,7 +34,7 @@ export class SamTimeComponent implements OnInit{
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnChanges() {
     let m = moment(this.value, 'H:m');
     let hours = m.hours();
     let minutes = m.minutes();
@@ -67,6 +67,8 @@ export class SamTimeComponent implements OnInit{
       return '';
     }
 
+    console.log('hours: ', this.hours, ' minutes: ', this.minutes);
+
     let hours = this.hours;
 
     if (hours === 12) {
@@ -81,7 +83,12 @@ export class SamTimeComponent implements OnInit{
   }
 
   toString() {
-    return this.getTime().format('HH:mm:ss');
+    if (!this.getTime() || !this.getTime().valid()) {
+      return '';
+    } else {
+      return this.getTime().format('HH:mm:ss');
+    }
+
   }
 
 }

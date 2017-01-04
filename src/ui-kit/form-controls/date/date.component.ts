@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild,Output, EventEmitter,OnInit } from '@angular/core';
+import {Component, Input, ViewChild, Output, EventEmitter, OnInit, OnChanges} from '@angular/core';
 import * as moment from 'moment/moment';
 
 /**
@@ -29,7 +29,7 @@ import * as moment from 'moment/moment';
     <!--</labelWrapper>-->
   `,
 })
-export class SamDateComponent implements OnInit{
+export class SamDateComponent implements OnInit, OnChanges {
   model: any = {
     month:"",
     day:"",
@@ -51,7 +51,7 @@ export class SamDateComponent implements OnInit{
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnChanges() {
     if (this.value) {
       // use the forgiving format (that doesn't need 0 padding) for inputs
       let m = moment(this.value, 'Y-M-D');

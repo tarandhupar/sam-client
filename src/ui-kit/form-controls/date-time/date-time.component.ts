@@ -54,6 +54,7 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
         console.error('[value] for samDateTime is invalid');
       }
     }
+    console.log('new time: ', this.time, ' new date: ', this.date);
   }
 
   onInputChange() {

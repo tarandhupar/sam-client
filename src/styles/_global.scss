@@ -130,6 +130,12 @@ hr {
   }
 }
 
+.usa-button-transparent {
+  display: inline-block;
+  background-color: transparent;
+  color: $color-primary-darkest;
+}
+
 .usa-button-dismiss {
   // hit area
   height: 44px;

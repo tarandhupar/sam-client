@@ -29,9 +29,9 @@ export class AlertsPage {
   statuses = {
     label: 'Status',
     options: [
-      { label: 'Published', value: 'P', name: 'published' },
-      { label: 'Inactive', value: 'I', name: 'inactive' },
-      { label: 'Draft', value: 'D', name: 'draft' }
+      { label: 'Active', value: 'Active', name: 'active' },
+      { label: 'Draft', value: 'Draft', name: 'draft' },
+      { label: 'Expired', value: 'Expired', name: 'expired' }
     ]
   };
 
@@ -73,7 +73,7 @@ export class AlertsPage {
     })
     .subscribe(alerts => {
       this._totalAlerts = alerts.total;
-      if (alerts.length) {
+      if (alerts.alerts && alerts.alerts.length) {
         this.alerts = alerts.alerts.map(alert => Alert.FromResponse(alert));
       } else {
         this.alerts = [];
@@ -105,7 +105,7 @@ export class AlertsPage {
   }
 
   defaultSort() { return 'pdd'; }
-  defaultStatuses() { return ['P']; }
+  defaultStatuses() { return ['Active']; }
   defaultTypes() { return ['Error', 'Informational', 'Warning']; }
   defaultPage() { return 1; }
   defaultDatePublished() { return '30d'; }
