@@ -9,8 +9,8 @@
       <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
       <hr *ngIf="data.results" class="m_T-5x"/>
     </div>
-    <fh-featured-result *ngIf="featuredData!==null" [data]="featuredData"></fh-featured-result>
-    <hr *ngIf="featuredData!==null" class="m_T-5x"/>
+    <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row"></fh-featured-result>
+    <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
 		<div *ngFor="let row of data.results">
 			<opportunities-result *ngIf="row._type=='FBO'" class="usa-grid-full" [data]="row"></opportunities-result>
       <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row"></assistance-listing-result>
