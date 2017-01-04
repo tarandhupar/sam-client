@@ -8,7 +8,7 @@ import { ReplaySubject, Observable } from 'rxjs';
   selector: 'fh-featured-result',
   template: `
     <div class="featured-result">
-    <ng-container *ngIf="errorOrganization">Organization ID: {{orgId}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
+    <ng-container *ngIf="errorOrganization">Organization ID: {{data['_id']}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
 
       <div class="card">
         <div class="card-header-secure">
@@ -55,7 +55,6 @@ export class FHFeaturedResult implements OnInit {
   @Input() data: any={};
   logoUrl: string;
   errorOrganization: any;
-  orgId: any;
   constructor(private fhService: FHService) { }
 
   ngOnInit() {}
@@ -87,8 +86,7 @@ export class FHFeaturedResult implements OnInit {
 
       if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
         // this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
-        this.orgId = org['_embedded'][0]['org']['parentOrgKey'];
-        this.callOrganizationById(this.orgId);
+        this.callOrganizationById(org['_embedded'][0]['org']['parentOrgKey']);
       }
     }, err => {
       console.log('Error loading logo: ', err);
