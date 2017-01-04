@@ -8,7 +8,7 @@ import { ReplaySubject, Observable } from 'rxjs';
   selector: 'fh-featured-result',
   template: `
     <div class="featured-result">
-    <ng-container *ngIf="errorOrganization">Organization ID: {{data['_id']}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
+    <ng-container *ngIf="!data">Organization ID: {{data['_id']}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
 
       <div class="card">
         <div class="card-header-secure">
