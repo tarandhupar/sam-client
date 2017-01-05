@@ -35,7 +35,6 @@ import { SamTabsComponent } from "./tabs/tabs.component";
 import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
 import { SamModalComponent } from "./modal/modal.component";
 
-
 /**
  * A module for reusable SAM Web Design components
  * https://gsa.github.io/sam-web-design-standards/
@@ -78,6 +77,7 @@ import { SamModalComponent } from "./modal/modal.component";
     RouterModule
   ],
   exports: [
+    LabelWrapper,
     SamClickOutsideDirective,
     SamHeaderLinksComponent,
     SamPaginationComponent,
