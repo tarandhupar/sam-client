@@ -129,12 +129,6 @@
             <li [attr.id]="generateID(opportunityFields.AwardAmount)" *ngIf="shouldBeDisplayed(opportunityFields.AwardAmount)">
               <strong>Contract Award Dollar Amount: </strong> <span>{{opportunity.data?.award?.amount}}</span>
             </li>
-            <li [attr.id]="generateID(opportunityFields.AwardNumber)" *ngIf="shouldBeDisplayed(opportunityFields.AwardNumber)">
-              <strong>Contract Award Number: </strong> <span>{{opportunity.data?.award?.number}}</span>
-            </li>
-            <li [attr.id]="generateID(opportunityFields.AwardDate)" *ngIf="shouldBeDisplayed(opportunityFields.AwardDate)">
-              <strong>Contract Award Date: </strong> <span>{{opportunity.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span>
-            </li>
             <li [attr.id]="generateID(opportunityFields.LineItemNumber)" *ngIf="shouldBeDisplayed(opportunityFields.LineItemNumber)">
               <strong>Contract Line Item Number: </strong>
               <span>
