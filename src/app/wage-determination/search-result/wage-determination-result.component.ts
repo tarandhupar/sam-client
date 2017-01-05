@@ -19,7 +19,7 @@ import * as moment from 'moment/moment';
         	<li *ngIf="data.locations!==null"><strong>State: </strong>
         	  <span *ngFor="let location of data.locations; let i=index">{{ location.state?.name }}{{ location.state!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
         	</li>
-        	<li *ngIf="data.locations!==null" class="break-word"><strong>County: </strong>
+        	<li *ngIf="data.locations!==null" class="break-word"><strong>County/ies: </strong>
         	  <span *ngFor="let location of data.locations; let i=index">{{ location.counties }}{{ location.counties!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
         	</li>
         </ul>
@@ -41,7 +41,9 @@ import * as moment from 'moment/moment';
               <span>{{ data.constructionTypes }}</span>
             </ul>
           </li>
-          <li><strong>Publish Date</strong>
+          <li>
+              <span *ngIf="data._type=='wdDBRA'"><strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
+              <span *ngIf="data._type=='wdSCA'"><strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
             <ul class="usa-unstyled-list">
               <span>{{ data.publishDate }}</span>
             </ul>

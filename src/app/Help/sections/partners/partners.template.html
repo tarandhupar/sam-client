@@ -1,13 +1,31 @@
 <section>
-  <h2 class="m_T-2x">Our Partners</h2>
+  <h2 class="m_T-2x">External Partners</h2>
+  <h3 id="featuredPartners" class="p_L-3x">Featured Partners</h3>
+  <div class="usa-grid-full m_T-4x" *ngFor="let row of data">
+    <imageLibrary [name]="'external-partners'" [data]="row" [hasLayer]="false"></imageLibrary>
+  </div>
+  <h3 id="additionalPartners" class="p_L-3x">Additional Partners</h3>
   <div class="usa-grid-full">
-    <p class="p_L-8x">
-      Lorem ipsum dolor sit amet, an quo elitr singulis, cu assum simul persius eos,
-      per omittam concludaturque no. Albucius lobortis ius et, sea debet inimicus ne,
-      nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis
-      ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum
-      deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam
-      fuisset convenire an.
-    </p>
+    <div class="usa-width-one-whole m_L-8x">
+      <div class="usa-width-one-third">
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="http://www.dla.mil/">Defense Logistics Agency</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.sba.gov/">Small Business Administration</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.govloans.gov/">Govloans.gov</a></li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third">
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="http://www.mbda.gov/">Minority Business Development Agency</a></li>
+          <li class="m_B"><a class="usa-external_link" href="http://www.census.gov/">US census Bureau</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.dol.gov/">U. S. Department of Labor </a></li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third">
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="https://www.ntis.gov/">National Technical Information Services</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>

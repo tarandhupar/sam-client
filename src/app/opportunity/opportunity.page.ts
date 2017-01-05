@@ -24,6 +24,25 @@ import { trigger, state, style, transition, animate } from '@angular/core';
       })),
       transition('collapsed => expanded', animate('100ms ease-in')),
       transition('expanded => collapsed', animate('100ms ease-out'))
+    ]),
+    trigger('intro', [
+      state('fade', style({
+        opacity: 1,
+        transform: 'translateY(0)'
+      })),
+      transition('void => *', [
+        style({
+          opacity: 0,
+          transform: 'translateY(-30%)'
+        }),
+        animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)')
+      ]),
+      transition('* => void', [
+        animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)', style({
+          opacity: 0,
+          transform: 'translateY(-30%)'
+        }))
+      ])
     ])
   ]
 })
@@ -63,6 +82,7 @@ export class OpportunityPage implements OnInit {
     { label: "Dollar Amount", value: "dollarAmount" },
     { label: "Company (Awardee) Name", value: "awardeeName" },
   ];
+  attachmentError:boolean;
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
@@ -221,10 +241,9 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadAttachments(opportunityAPI: Observable<any>){
-    let attachmentSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
-      opportunityAPI.subscribe(api => {
-        this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
-
+    let attachmentSubject = new ReplaySubject(1); // broadcasts the attachments to multiple subscribers
+    opportunityAPI.subscribe(api => {
+      this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
     });
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
@@ -234,6 +253,7 @@ export class OpportunityPage implements OnInit {
       });
     }, err => {
       console.log('Error loading attachments: ', err)
+        this.attachmentError = true;
     });
 
     return attachmentSubject;
@@ -295,9 +315,18 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
+        case 'm': //Todo: Modification/Amendment/Cancel
+        case 'k': //Todo: Combined Synopsis/Solicitation
+          break;
+
         case 'a': // Award Notice
-        case 'm': // Modification/Amendment/Cancel
-        case 'k': // Combined Synopsis/Solicitation
+          this.displayField[OpportunityFields.ResponseDate] = false;
+          this.displayField[OpportunityFields.StatutoryAuthority] = false;
+          this.displayField[OpportunityFields.JustificationAuthority] = false;
+          this.displayField[OpportunityFields.OrderNumber] = false;
+          this.displayField[OpportunityFields.ModificationNumber] = false;
+          this.displayField[OpportunityFields.ClassificationCode] = false;
+          this.displayField[OpportunityFields.POP] = false;
           break;
 
         default:
