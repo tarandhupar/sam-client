@@ -11,7 +11,7 @@ export class ImageLibraryComponent {
   @Input() showDetailTitle:boolean = true;
   @Input() isExternalLink:boolean = true;
   @Input() hasLayer:boolean = true;
-
+  @Input() isReleaseDetail:boolean = false;
 
   detailObj: any = {
     showDetail: false,
