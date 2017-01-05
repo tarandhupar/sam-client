@@ -54,6 +54,8 @@ export class HomePage {
     var qsobj = {};
     if(searchObject.keyword.length>0){
       qsobj['keyword'] = searchObject.keyword;
+    } else {
+      qsobj['keyword'] = '';
     }
     if(searchObject.searchField.length>0){
       qsobj['index'] = searchObject.searchField;

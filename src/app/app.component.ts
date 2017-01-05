@@ -34,8 +34,8 @@ export class App{
     });
     this.activatedRoute.queryParams.subscribe(
       data => {
-        this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
-        this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
+        this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
+        this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
       });
     this._router.events.subscribe(
       val => {
