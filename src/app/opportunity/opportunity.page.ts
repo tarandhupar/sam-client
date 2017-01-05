@@ -24,6 +24,25 @@ import { trigger, state, style, transition, animate } from '@angular/core';
       })),
       transition('collapsed => expanded', animate('100ms ease-in')),
       transition('expanded => collapsed', animate('100ms ease-out'))
+    ]),
+    trigger('intro', [
+      state('fade', style({
+        opacity: 1,
+        transform: 'translateY(0)'
+      })),
+      transition('void => *', [
+        style({
+          opacity: 0,
+          transform: 'translateY(-30%)'
+        }),
+        animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)')
+      ]),
+      transition('* => void', [
+        animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)', style({
+          opacity: 0,
+          transform: 'translateY(-30%)'
+        }))
+      ])
     ])
   ]
 })
@@ -58,10 +77,16 @@ export class OpportunityPage implements OnInit {
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
   errorOrganization: any;
+  awardSort: string = "awardDate"; //default
+  awardSortOptions = [
+    { label: "Award Date", value: "awardDate" },
+    { label: "Dollar Amount", value: "dollarAmount" },
+    { label: "Company (Awardee) Name", value: "awardeeName" },
+  ];
+  attachmentError:boolean;
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
-
 
   constructor(
     private router: Router,
@@ -139,7 +164,7 @@ export class OpportunityPage implements OnInit {
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
     opportunityAPI.subscribe((opportunity => {
-      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum).subscribe(relatedOpportunitiesSubject);
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       this.relatedOpportunities = data['relatedOpportunities'][0];
@@ -153,6 +178,11 @@ export class OpportunityPage implements OnInit {
     }, err => {
       console.log('Error loading related opportunities: ', err);
     });
+  }
+
+  private reloadRelatedOpportunities() {
+    this.pageNum = 0;
+    this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
   }
 
   private loadOrganization(opportunityAPI: Observable<any>) {
@@ -213,10 +243,9 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadAttachments(opportunityAPI: Observable<any>){
-    let attachmentSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
-      opportunityAPI.subscribe(api => {
-        this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
-
+    let attachmentSubject = new ReplaySubject(1); // broadcasts the attachments to multiple subscribers
+    opportunityAPI.subscribe(api => {
+      this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
     });
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
@@ -224,8 +253,12 @@ export class OpportunityPage implements OnInit {
       this.attachment.packages.forEach((key: any) => {
         key.accordionState = 'collapsed';
       });
+      this.attachment.resources.forEach((res: any) => {
+        res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+      });
     }, err => {
       console.log('Error loading attachments: ', err)
+        this.attachmentError = true;
     });
 
     return attachmentSubject;
@@ -287,9 +320,18 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
+        case 'm': //Todo: Modification/Amendment/Cancel
+        case 'k': //Todo: Combined Synopsis/Solicitation
+          break;
+
         case 'a': // Award Notice
-        case 'm': // Modification/Amendment/Cancel
-        case 'k': // Combined Synopsis/Solicitation
+          this.displayField[OpportunityFields.ResponseDate] = false;
+          this.displayField[OpportunityFields.StatutoryAuthority] = false;
+          this.displayField[OpportunityFields.JustificationAuthority] = false;
+          this.displayField[OpportunityFields.OrderNumber] = false;
+          this.displayField[OpportunityFields.ModificationNumber] = false;
+          this.displayField[OpportunityFields.ClassificationCode] = false;
+          this.displayField[OpportunityFields.POP] = false;
           break;
 
         default:
@@ -421,4 +463,66 @@ export class OpportunityPage implements OnInit {
     return false;
   }
 
+  private getExtension(filename: string) {
+    let ext = filename.match(/\.[a-z0-9]+$/i);
+
+    if(ext != null) {
+      return ext[0];
+    }
+
+    return null;
+  }
+
+  private static readonly TYPE_UNKNOWN = { name: 'Unknown file type', iconClass: 'fa fa-file' };
+  private static readonly TYPE_LINK = { name: 'External link', iconClass: 'fa fa-link' };
+  private static readonly TYPE_ZIP = { name: 'Zip archive', iconClass: 'fa fa-file-archive-o' };
+  private static readonly TYPE_XLS = { name: 'Excel spreadsheet', iconClass: 'fa fa-file-excel-o' };
+  private static readonly TYPE_PPT = { name: 'Powerpoint presentation', iconClass: 'fa fa-file-powerpoint-o' };
+  private static readonly TYPE_DOC = { name: 'Word document', iconClass: 'fa fa-file-word-o' };
+  private static readonly TYPE_TXT = { name: 'Text file', iconClass: 'fa fa-file-text-o' };
+  private static readonly TYPE_PDF = { name: 'PDF document', iconClass: 'fa fa-file-pdf-o' };
+  private static readonly TYPE_HTML = { name: 'Html document', iconClass: 'fa fa-html5' };
+  private static readonly TYPE_IMG = { name: 'Image', iconClass: 'fa fa-file-image-o' };
+
+  private getResourceTypeInfo(type: string) {
+    switch(type) {
+      case 'link':
+        return OpportunityPage.TYPE_LINK;
+
+      case '.zip':
+        return OpportunityPage.TYPE_ZIP;
+
+      case '.xls':
+      case '.xlsx':
+        return OpportunityPage.TYPE_XLS;
+
+      case '.ppt':
+      case '.pptx':
+        return OpportunityPage.TYPE_PPT;
+
+      case '.doc':
+      case '.docx':
+        return OpportunityPage.TYPE_DOC;
+
+      case '.txt':
+      case '.rtf':
+        return OpportunityPage.TYPE_TXT;
+
+      case '.pdf':
+        return OpportunityPage.TYPE_PDF;
+
+      case '.htm':
+      case '.html':
+        return OpportunityPage.TYPE_HTML;
+
+      case '.jpg':
+      case '.png':
+      case '.jpeg':
+      case '.tif':
+        return OpportunityPage.TYPE_IMG;
+
+      default:
+        return OpportunityPage.TYPE_UNKNOWN;
+    }
+  }
 }
