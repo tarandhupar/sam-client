@@ -18,7 +18,7 @@
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
           <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
-          <li><a href="{{ currentUrl }}#history">History</a></li>
+          <!--<li><a href="{{ currentUrl }}#history">History</a></li>-->
         </ul>
       </nav>
       <nav *ngIf="currentTab == 'Award Notices'">
@@ -77,6 +77,66 @@
                 *ngIf="opportunity.data?.award?.number && shouldBeDisplayed(opportunityFields.AwardNumber)">
               <strong>Contract Award Number: </strong>
               {{ opportunity.data?.award?.number }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AwardedDUNS)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedDUNS)">
+            <strong>Contractor Awarded DUNS: </strong>
+              <span>
+                {{ opportunity.data?.award?.awardee?.duns}}
+                <ng-container *ngIf="!opportunity.data?.award?.awardee?.duns">
+                  &mdash;
+                </ng-container>
+              </span>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AwardedName)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedName)">
+            <strong>Contractor Awarded Name: </strong>
+            <span>
+                {{ opportunity.data?.award?.awardee?.name}}
+                <ng-container *ngIf="!opportunity.data?.award?.awardee?.name">
+                  &mdash;
+                </ng-container>
+              </span>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AwardedAddress)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedAddress)">
+              <strong>Contractor Awarded Address: </strong>
+              <span>
+                <ng-container *ngIf=" opportunity.data?.award?.awardee?.location?.streetAddress ||
+                    opportunity.data?.award?.awardee?.location?.city ||
+                    opportunity.data?.award?.awardee?.location?.state ||
+                    opportunity.data?.award?.awardee?.location?.zip ||
+                    opportunity.data?.award?.awardee?.location?.country">
+                    {{opportunity.data?.award?.awardee?.location?.streetAddress}}<br>
+                    {{opportunity.data?.award?.awardee?.location?.city}}
+                <ng-container *ngIf="opportunity.data?.award?.awardee?.location?.city">,</ng-container>
+                    {{opportunity.data?.award?.awardee?.location?.state}}
+                    {{opportunity.data?.award?.awardee?.location?.zip}}<br>
+                    {{opportunity.data?.award?.awardee?.location?.country}}<br>
+                </ng-container>
+                <ng-container *ngIf=" !opportunity.data?.award?.awardee?.location?.streetAddress &&
+                    !opportunity.data?.award?.awardee?.location?.city &&
+                    !opportunity.data?.award?.awardee?.location?.state &&
+                    !opportunity.data?.award?.awardee?.location?.zip &&
+                    !opportunity.data?.award?.awardee?.location?.country">
+                    &mdash;
+                </ng-container>
+              </span>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AwardAmount)" *ngIf="shouldBeDisplayed(opportunityFields.AwardAmount)">
+              <strong>Contract Award Dollar Amount: </strong> <span>{{opportunity.data?.award?.amount}}</span>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AwardNumber)" *ngIf="shouldBeDisplayed(opportunityFields.AwardNumber)">
+              <strong>Contract Award Number: </strong> <span>{{opportunity.data?.award?.number}}</span>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.AwardDate)" *ngIf="shouldBeDisplayed(opportunityFields.AwardDate)">
+              <strong>Contract Award Date: </strong> <span>{{opportunity.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span>
+            </li>
+            <li [attr.id]="generateID(opportunityFields.LineItemNumber)" *ngIf="shouldBeDisplayed(opportunityFields.LineItemNumber)">
+              <strong>Contract Line Item Number: </strong>
+              <span>
+                {{opportunity.data?.award?.lineItemNumber}}
+                <ng-container *ngIf="!opportunity.data?.award?.lineItemNumber">
+                  &mdash;
+                </ng-container>
+              </span>
             </li>
           </ul>
         </section>
