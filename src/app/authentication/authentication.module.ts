@@ -8,11 +8,13 @@ import { SamAPIKitModule } from '../../api-kit/api-kit.module';
 import { SamUIKitModule } from '../../ui-kit/ui-kit.module';
 import { AppComponentsModule } from '../../app/app-components/app-components.module';
 
+import { PasswordComponent } from './shared';
 import { LoginComponent } from './login';
 
 @NgModule({
   imports: [
     BrowserModule,
+    FormsModule,
     ReactiveFormsModule,
     Routing,
     SamAPIKitModule,
@@ -22,6 +24,11 @@ import { LoginComponent } from './login';
 
   providers: [],
   declarations: [
+    /**
+     * Shared
+     */
+    PasswordComponent,
+
     /**
      * Login
      */
