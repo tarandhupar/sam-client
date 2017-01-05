@@ -109,8 +109,13 @@ export class RegisterMainComponent {
     let vm = this;
 
     function onInitSuccess(data) {
-      let userData = _.merge({}, data.user),
+      let userData = _.merge({}, data.user || {}),
           phone;
+
+      userData._id = userData.id || userData._id || '';
+      userData.firstName = userData.firstname || userData.firstName || '';
+      userData.lastName = userData.lastname || userData.lastName || '';
+      userData.workPhone = userData.phone || userData.workPhone || '';
 
       vm.user = {
         _id: '',
