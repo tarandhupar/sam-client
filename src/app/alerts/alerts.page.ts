@@ -135,7 +135,6 @@ export class AlertsPage {
   }
 
   onAddAlertAccept(alert) {
-    console.log('accept alert', alert);
     this.alertsService.createAlert(alert.raw()).subscribe(
       (data) => {
         this.exitEditMode();

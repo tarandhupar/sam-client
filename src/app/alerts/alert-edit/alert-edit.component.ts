@@ -57,7 +57,6 @@ export class AlertEditComponent implements OnInit {
   }
 
   onAcceptClick(event) {
-    console.log('accept clicked, form value: ', this.form.value);
     let alert = new Alert();
     let formValue = this.form.value;
     alert.setDescription(formValue.description);
@@ -73,13 +72,12 @@ export class AlertEditComponent implements OnInit {
   }
 
   onPublishImmediatelyClick(val) {
-    console.log('val is: ', val);
     let ctrl: AbstractControl = this.form.controls['publishedDate'];
     if (val) {
       ctrl.setValue(moment().format('YYYY-MM-DDTHH:mm'));
-      ctrl.disable(true)
+      ctrl.disable()
     } else {
-      ctrl.disable(false);
+      ctrl.enable();
     }
   }
 
@@ -87,14 +85,13 @@ export class AlertEditComponent implements OnInit {
     let ctrl: AbstractControl = this.form.controls['endDate'];
     if (val) {
       ctrl.setValue('');
-      ctrl.disable(true)
+      ctrl.disable();
     } else {
-      ctrl.disable(false);
+      ctrl.enable();
     }
   }
 
   acceptButtonStyle() {
-    //return 'usa-button-disabled';
     return {'usa-button-primary': this.form.valid, 'usa-button-disabled': !this.form.valid};
   }
 }

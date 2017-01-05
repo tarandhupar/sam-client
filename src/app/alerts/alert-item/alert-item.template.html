@@ -1,12 +1,5 @@
-<div *ngIf="!isEditing">
+<div>
   <div>
-    <div *ngIf="isDeleting">
-      <div>
-        Please confirm the deletion of this alert:
-        <button class="usa-button usa-button-secondary" (click)="onDeleteConfirmClick()">Delete</button>
-        <button class="usa-button usa-button-unstyled" (click)="onCancelDeleteClick()"><a>Cancel</a></button>
-      </div>
-    </div>
     <div class="alert-type-indicator" [ngClass]="alert.colorClass()">
       <i class="alert-type-icon fa" [ngClass]="alert.iconClass()"></i>{{alert.severity()}}
     </div>
@@ -33,6 +26,6 @@
     </div>
   </div>
 </div>
-<alert-edit *ngIf="isEditing" [alert]="alert" [mode]="'edit'" (publish)="onEditAlertPublish($event)"
-            (draft)="onEditAlertDraft($event)" (cancel)="onEditAlertCancel()">
-</alert-edit>
+<!--<alert-edit *ngIf="isEditing" [alert]="alert" [mode]="'edit'" (publish)="onEditAlertPublish($event)"-->
+            <!--(draft)="onEditAlertDraft($event)" (cancel)="onEditAlertCancel()">-->
+<!--</alert-edit>-->

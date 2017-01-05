@@ -7,7 +7,7 @@
   <div class="usa-grid-full">
     <div class="usa-width-one-half">
       <samSelect [required]='true' [control]="form.get('severity')" formControlName="severity" class='severity-select' [options]="typeOptions" [name]="'alert-types'" [label]="'Type'"></samSelect>
-      <samText [maxlength]="8" [control]="form.get('title')" formControlName="title" [required]='true' [name]="'title-input'" [label]="'Title'"></samText>
+      <samText [maxlength]="70" [control]="form.get('title')" formControlName="title" [required]='true' [name]="'title-input'" [label]="'Title'"></samText>
       <samTextArea [maxlength]="350" [control]="form.get('description')" formControlName="description" [required]='true' [name]="'description'" [label]="'Description'"></samTextArea>
     </div>
     <div class="usa-width-one-half">

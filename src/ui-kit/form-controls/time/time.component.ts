@@ -23,7 +23,7 @@ import * as moment from 'moment/moment';
     </div>
   `,
 })
-export class SamTimeComponent implements OnInit, OnChanges {
+export class SamTimeComponent implements OnChanges {
   @Input() value: string; // must be a 24 hour time and have the format HH:mm
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
   @Input() disabled: boolean;
@@ -59,15 +59,16 @@ export class SamTimeComponent implements OnInit, OnChanges {
   }
 
   isValid() {
-    return this.getTime().isValid();
+    return !isNaN(this.hours) && !isNaN(this.minutes)
+      && typeof this.hours === 'number' && typeof this.minutes === 'number'
+      && this.hours >= 1 && this.hours <= 12
+      && this.minutes >= 0 && this.minutes <= 59
   }
 
   getTime(): any {
-    if (typeof this.hours !== 'number' || typeof this.minutes !== 'number') {
-      return '';
+    if (!this.isValid()) {
+      return null;
     }
-
-    console.log('hours: ', this.hours, ' minutes: ', this.minutes);
 
     let hours = this.hours;
 
@@ -83,10 +84,10 @@ export class SamTimeComponent implements OnInit, OnChanges {
   }
 
   toString() {
-    if (!this.getTime() || !this.getTime().valid()) {
+    if (!this.isValid()) {
       return '';
     } else {
-      return this.getTime().format('HH:mm:ss');
+      return this.getTime().format('HH:mm');
     }
 
   }

@@ -54,11 +54,9 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
         console.error('[value] for samDateTime is invalid');
       }
     }
-    console.log('new time: ', this.time, ' new date: ', this.date);
   }
 
   onInputChange() {
-    console.log('date: ', this.date, 'value: ', this.time);
     if (this.dateComponent.isValid() && this.timeComponent.isValid()) {
       if (this.date && this.time) {
         this.onChange(`${this.date}T${this.time}`);
@@ -81,7 +79,6 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
   }
 
   writeValue(value) {
-    console.log('writing value: ', value);
     this.value = value;
     this.setDateAndTime();
   }

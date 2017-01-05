@@ -50,7 +50,7 @@ export class SamSelectComponent implements ControlValueAccessor {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInitf() {
     if (!this.name) {
       throw new Error("<samSelect> requires a [name] parameter for 508 compliance");
     }
@@ -92,7 +92,6 @@ export class SamSelectComponent implements ControlValueAccessor {
   }
 
   onChange: any = () => {
-    console.log('control: ', this.control);
     if (this.control && this.control.invalid && this.control.errors) {
       for (let k in this.control.errors) {
         let errorObject = this.control[k];

@@ -29,7 +29,7 @@ import * as moment from 'moment/moment';
     <!--</labelWrapper>-->
   `,
 })
-export class SamDateComponent implements OnInit, OnChanges {
+export class SamDateComponent implements OnChanges {
   model: any = {
     month:"",
     day:"",
