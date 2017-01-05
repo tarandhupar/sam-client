@@ -36,8 +36,8 @@ export class PartnersComponent {
     ],
     [
       {
-        title:"Distaster Assistance",
-        detail:"Details for Distaster Assistance: "+this.detailLipsum,
+        title:"Disaster Assistance",
+        detail:"Details for Disaster Assistance: "+this.detailLipsum,
         link:"View DA",
         url:"https://www.disasterassistance.gov/",
         img:"src/assets/img/placeholder.jpg"
