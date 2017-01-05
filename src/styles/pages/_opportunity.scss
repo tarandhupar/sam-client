@@ -21,6 +21,16 @@
     border-radius: 4px;
   }
 
+  .segment-with-select{
+    strong{
+      margin-top: 20px;
+      display: block;
+    }
+    label{
+      margin: 0;
+    }
+  }
+
   /* Card */
   /*============================*/
   .card h3{
