@@ -5,9 +5,18 @@ import { Router } from '@angular/router';
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent {
+  private states = {
+    route: ''
+  };
+
   constructor(private router: Router) {}
 
   ngOnInit() {
-    console.log(this.router);
+    this.states.route = this.router.url;
+  }
+
+  get activeRouteClass():String {
+    let className = this.states.route.replace(/\//g, '-');
+    return (className.length ? 'usa' : '') + className;
   }
 };

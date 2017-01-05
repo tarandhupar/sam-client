@@ -1,0 +1,78 @@
+.usa-profile-details {
+  h3 {
+    .usa-edit {
+      font-size: 1.5rem;
+      line-height: 1.75em;
+      float: right;
+    }
+  }
+
+  section {
+    margin-bottom: 4rem;
+
+    // Save Toggle`
+    .usa-save {
+      margin-left: 1em;
+      display: none;
+    }
+  }
+
+  // Read State
+  .usa-form-group {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: 1em;
+
+    label {
+      display: inline-block;
+      min-width: 60px;
+      margin-top: 0em;
+      font-weight: 700;
+    }
+
+    .usa-form-control {
+      display: inline-block;
+
+      // Editable Form Inputs
+      input[type="text"] {
+        display: none;
+      }
+    }
+
+    &.kba {
+      label {
+        width: 60%;
+      }
+    }
+  }
+
+  // Write State
+  .usa-editable {
+    // Edit Toggle
+    .usa-edit {
+      display: none;
+    }
+
+    // Save Toggle
+    .usa-save {
+      display: block;
+    }
+
+    .usa-form-control {
+      span {
+        display: none;
+      }
+
+      // Editable Form Inputs
+      input[type="text"] {
+        display: inline-block;
+      }
+    }
+  }
+
+  .usa-alert {
+    position: absolute;
+    width: 100%;
+    top: -80px
+  }
+}

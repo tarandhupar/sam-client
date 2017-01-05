@@ -22,7 +22,6 @@ export class ProfileGuard implements CanActivate, CanActivateChild {
 
   constructor(private router: Router, private cookies: CookieService, private _api: IAMService) {
     this.api = _api.iam;
-console.log(this);
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {

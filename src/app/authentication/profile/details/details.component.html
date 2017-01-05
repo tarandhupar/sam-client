@@ -1,0 +1,68 @@
+<h2>Personal Details</h2>
+<div>
+  <form>
+    <!--============================-->
+    <!--=== Identity Information ===-->
+    <!--============================-->
+    <section [ngClass]="{ 'usa-editable': isEdit('identity') }">
+      <h3>Identifying Information<a class="usa-edit" href="javascript:void(0);" (click)="onEdit('identity')">Edit</a></h3>
+      <div class="usa-form-group">
+        <label>Name:</label>
+        <div class="usa-form-control">
+          <span [innerText]="name"></span>
+        </div>
+      </div>
+      <div class="usa-form-group">
+        <label>Suffix:</label>
+        <div class="usa-form-control">
+          <span [innerText]="user.suffix"></span>
+        </div>
+      </div>
+      <div class="usa-form-group">
+        <label>Email:</label>
+        <div class="usa-form-control">
+          <span [innerText]="user.email"></span>
+        </div>
+      </div>
+      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save"></samButton>
+    </section>
+    <!--============================-->
+    <!--=== Business Information ===-->
+    <!--============================-->
+    <section [ngClass]="{ 'usa-editable': isEdit(business) }">
+      <h3>Business Information<a class="usa-edit" href="javascript:void(0);" (click)="onEdit('business')">Edit</a></h3>
+
+      <div class="usa-form-group">
+        <label>Business Phone:</label>
+        <div class="usa-form-control">
+          <span [innerText]="phone"></span>
+        </div>
+      </div>
+      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save"></samButton>
+    </section>
+    <!--==========================-->
+    <!--=== Security Questions ===-->
+    <!--==========================-->
+    <section [ngClass]="{ 'usa-editable': isEdit(kba) }">
+      <h3>Security Questions<a class="usa-edit" href="javascript:void(0);" (click)="onEdit('kba')">Edit</a></h3>
+
+      <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
+        <label [innerText]="lookups.questions[kbaAnswer.questionId].question"></label>
+        <div class="usa-form-control">
+          <span [innerHtml]="kbaAnswer.answer"></span>
+        </div>
+      </div>
+      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save"></samButton>
+    </section>
+    <section>
+      <h3>Delete Account</h3>
+      <div>
+        Once you delete your account, you will not be able to recover any of your account information or permissions.<br />
+        All your My Access information will permanently be deleted.
+      </div>
+      <samButton buttonType="secondary" buttonText="Deactivate Account"></samButton>
+    </section>
+  </form>
+</div>
+
+<samAlert type="info" title="Information Status" description="If you have legacy accounts of the 10 systems, you can migrate your privileges"></samAlert>
