@@ -17,8 +17,8 @@ import { OptionsType } from '../types';
 @Component({
   selector: 'samSelect',
   template: `
-      <labelWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage">
-        <select [attr.id]="name" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="disabled">
+      <labelWrapper [label]="label" [hint]="hint" [errorMessage]="errorMessage" [required]="required">
+        <select [attr.id]="name" [name]="name" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="disabled">
           <option *ngFor="let option of options" [value]="option.value" [disabled]="option.disabled">{{option.label}}</option>
         </select>
       </labelWrapper>
@@ -31,6 +31,7 @@ export class SamSelectComponent {
   @Input() name: string;
   @Input() hint: string;
   @Input() errorMessage: string;
+  @Input() required: boolean;
   @Input() disabled: boolean;
 
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();

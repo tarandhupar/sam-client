@@ -1,0 +1,56 @@
+.usa-kba {
+  .usa-grid {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  legend + span {
+    display: inline-block;
+    max-width: 80%;
+  }
+
+  .question,
+  .answer {
+    display: inline-block;
+  }
+
+  .question {
+    width: 60%;
+
+    div {
+      padding-right: 2rem;
+    }
+
+    select {
+      position: relative;
+      max-width: none;
+      top: -3px;
+    }
+
+    .usa-input-error {
+      select {
+        // To equalize decrease in padding from border size increase which affects line-height
+        padding-top: 8px;
+        padding-bottom: 8px;
+      }
+    }
+  }
+
+  .answer {
+    width: 30%;
+
+    input {
+      // Oddly, 18F's styles are catered to inline forms. Weird alignment thing.
+      position: relative;
+      top: -2px;
+    }
+
+    .usa-input-error {
+      border-left-width: 0px;
+
+      input {
+
+      }
+    }
+  }
+}
