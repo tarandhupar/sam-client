@@ -6,7 +6,7 @@
     <div sam-sticky limit=1200 container="occupy-page">
       <!--Logo-->
       <ng-container *ngIf="errorOrganization">
-        <img src="src/assets/img/logo-not-available.png" alt="Logo Not Available">
+        <img src="src/assets/img/logo-not-available.png" class="logo" alt="Logo Not Available">
       </ng-container>
       <ng-container *ngIf="federalHierarchyWithParents">
         <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">

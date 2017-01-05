@@ -3,7 +3,7 @@
     <ng-container *ngIf="errorOrganization">Organization ID: {{organization.orgKey}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
     <div class="clearfix">
       <ng-container *ngIf="errorLogo || !logoUrl">
-        <img src="src/assets/img/logo-not-available.png" alt="Logo Not Available">
+        <img src="src/assets/img/logo-not-available.png" class="logo" alt="Logo Not Available">
       </ng-container>
       <div class="logo-section" *ngIf="logoUrl && !errorLogo">
         <!-- Logo -->
