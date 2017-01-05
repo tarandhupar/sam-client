@@ -15,50 +15,64 @@ export class TransitionToSamComponent {
     {releaseNum:8,releaseDate:"Feb 2017",releaseFeature:["CPARS"]},
   ];
 
+  featureReleaseDetail:any = {
+    preRelease:{releaseNum:6, releaseDate:"May 1st, 2016",
+      releaseDetail:[{featureName:"FPDS",description:"Lorem ipsum dolora"},
+                      {featureName:"CFDA",description:"Consesctur odipsing"}]},
+    curRelease:{releaseNum:7, releaseDate:"October 15th, 2016",
+      releaseDetail:[{featureName:"FPDS",description:"Lorem ipsum dolor"},
+                      {featureName:"CFDA",description:"Consesctur odipsing"},
+                      {featureName:"eSRS",description:"Lipsum lorem"}]},
+    nextRelease:{releaseNum:8, releaseDate:"February 1st, 2017",
+      releaseDetail:[{featureName:"FPDS",description:"Lorem ipsum dolor"},
+                      {featureName:"CFDA",description:"Consesctur odipsing"},
+                      {featureName:"eSRS",description:"Lipsum lorem"}]}
+  };
+
   featureData:any = [
     [
       {
         title:"Search/Display",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View Search/Display",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"Reporting",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View Reporting",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"Data Entry",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View Data Entry",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
     ],
     [
       {
         title:"Administration",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View Administration",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"Online Help",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View Online Help",
+        url:"/help",
         img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"APIs",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View APIs",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
     ]
@@ -68,62 +82,62 @@ export class TransitionToSamComponent {
     [
       {
         title:"Federal Assistance(CFDA)",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View CFDA",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"Opportunities(FBO)",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View FBO",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"Awards(FPDS)",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View FPDS",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
     ],
     [
       {
         title:"Sub-Awards(eSRS, FSRS)",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View Sub Awards",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"Past Performance(PPIRS, CPARS, FAPIIS)",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View Performance",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"Wage Determination(WDOL)",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View WDOL",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
     ],
     [
       {
         title:"Entities(SAM.gov)",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View Entities",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
       {
         title:"Exclusions(SAM.gov)",
-        detail:"Benefits.gov Learning Center: ",
-        link:"View Benefits.gov",
-        url:"http://www.Benefits.gov",
+        releaseDetail: this.featureReleaseDetail,
+        link:"View Exclusions",
+        url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       }
     ]

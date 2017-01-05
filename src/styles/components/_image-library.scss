@@ -67,13 +67,6 @@
     left: 0;
     bottom: 0;
     right: 0;
-<<<<<<< HEAD
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-=======
     text-align: center;
   }
 
@@ -86,7 +79,6 @@
     transform: translate(-50%,-50%);
   }
 
->>>>>>> SAM-3094-our-partners
   .images-container{
     padding-right:3px;
   }
@@ -156,6 +148,25 @@
     content: "";
     display: block;
     padding-top: 100%;
+  }
+
+  .release-note-div{
+    border: none;
+    padding-top: 0;
+    margin-top: 0;
+    width: 33%;
+  }
+
+  .vertical-line{
+    border-right: 1px solid black;
+  }
+
+  .release-note{
+    font-size: 13px;
+  }
+
+  .underline{
+    border-bottom: 1px solid black;
   }
 
 }

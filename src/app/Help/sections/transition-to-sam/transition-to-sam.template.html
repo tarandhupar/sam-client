@@ -8,7 +8,7 @@
       </div>
       <div  class="usa-width-five-sixths">
         <table>
-          <tr style="border-bottom: 1px solid black ;">
+          <tr class="underline">
             <td class="no-border" *ngFor="let releaseItem of releaseData">Release {{releaseItem.releaseNum}} <br> {{releaseItem.releaseDate}}</td>
           </tr>
           <tr>
@@ -32,12 +32,12 @@
       </div>
       <div class="usa-width-one-whole m_T-2x" *ngIf="isCurrentFilter('feature')" >
         <div class="usa-width-one-whole m_T-4x" *ngFor="let row of featureData;let i = index">
-          <imageLibrary [name]="'transition-by-feature-'+i" [data]="row" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
+          <imageLibrary [name]="'transition-by-feature-'+i" [data]="row" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></imageLibrary>
         </div>
       </div>
       <div class="usa-width-one-whole m_T-2x" *ngIf="isCurrentFilter('legacy')">
         <div class="usa-width-one-whole m_T-4x" *ngFor="let row of legacyData;let i = index">
-          <imageLibrary [name]="'transition-by-legacy-'+i" [data]="row" [showDetailTitle]="false" [isExternalLink]="false"></imageLibrary>
+          <imageLibrary [name]="'transition-by-legacy-'+i" [data]="row" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></imageLibrary>
         </div>
       </div>
     </div>
