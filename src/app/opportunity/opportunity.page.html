@@ -278,7 +278,10 @@
 
         <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0].content">
           <h2>Synopsis</h2>
-          <h3>Description</h3>
+          <h3>
+            <ng-container *ngIf="opportunity.data?.type === 'i'">Description of Benefits</ng-container>
+            <ng-container *ngIf="opportunity.data?.type !== 'i'">Description</ng-container>
+          </h3>
           <div [innerHTML]="opportunity.data?.descriptions[0].content | fixhtml"></div>
         </section>
 
