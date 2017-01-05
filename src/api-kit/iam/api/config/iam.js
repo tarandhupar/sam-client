@@ -1,7 +1,13 @@
 export default {
   localResource: {
-    comp: 'http://iam.comp.micropaas.io',
-    minc: 'http://iam.minc.micropaas.io',
+    comp: 'http://comp.276.iamservicepipelinetwo.prod',
+    minc: 'https://minc.clp-unified.micropaas.io',
+    prodlike: 'http://iam.prodlike.micropaas.io'
+  },
+
+  remoteResource: {
+    comp: 'http://comp.276.iamservicepipelinetwo.prod',
+    minc: 'https://minc.clp-unified.micropaas.io',
     prodlike: 'http://iam.prodlike.micropaas.io'
   },
 

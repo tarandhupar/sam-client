@@ -1,0 +1,47 @@
+<div class="usa-grid">
+  <div class="usa-width-one-whole">
+    <h1>Complete Sign-Up</h1>
+    <span>Thank you for joining the new SAM.gov. To Complete the process and gain account access, please fill in the information below.</span>
+    <form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="register()" class="usa-form usa-form-register" autocomplete="off">
+      <fieldset class="name">
+        <samNameEntry [model]="user" legend="Your Name"></samNameEntry>
+      </fieldset>
+      <fieldset class="phone">
+        <legend>Business Phone</legend>
+        <samPhoneEntry [model]="user.workPhone" label=""></samPhoneEntry>
+      </fieldset>
+      <fieldset class="office" *ngIf="states.isGov">
+        <legend>Office</legend>
+        <agencyPicker [advancedMode]="true"
+                      [multimode]="false"
+                      [orgRoot]="user.department"
+                      [(orgId)]="user.orgID"
+                      [label]="'Select the office you work for:'"
+                      (department)="setDepartment($event)"
+                      (organization)="setOrganization($event)">
+        </agencyPicker>
+      </fieldset>
+      <fieldset class="password">
+        <sam-password [password]="userForm.controls.userPassword"></sam-password>
+      </fieldset>
+      <fieldset class="kba">
+        <legend>Security Questions</legend>
+        <span>Select 3 unique Challenge Questions and provide an answer for each question. Answers must be at least 8 characters long.</span>
+        <div *ngFor="let kbaAnswer of userForm.controls.kbaAnswerList.controls; let $index = index;">
+          <sam-kba-entry [(questions)]="questions[$index]"
+                         [question]="userForm.controls.kbaAnswerList.controls[$index].controls.questionId"
+                         [(answer)]="userForm.controls.kbaAnswerList.controls[$index].controls.answer"
+                         (onQuestionChange)="changeQuestion($event, $index)"
+                         label="Question {{ $index + 1 }}">
+          </sam-kba-entry>
+        </div>
+      </fieldset>
+      <fieldset>
+        <div class="usa-button-controls">
+          <button type="button" class="usa-button-outline">Cancel</button>
+          <button type="submit">Submit</button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
