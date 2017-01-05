@@ -76,6 +76,7 @@ export class OpportunityPage implements OnInit {
   logoUrl: string;
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
+  attachmentError:boolean;
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
@@ -242,6 +243,9 @@ export class OpportunityPage implements OnInit {
       });
     }, err => {
       console.log('Error loading attachments: ', err)
+      if (err.status == 404) {
+        this.attachmentError = true;
+      }
     });
 
     return attachmentSubject;
