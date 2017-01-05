@@ -72,9 +72,9 @@ export class ImageLibraryComponent {
 
   private getImageContainerClass(): string{
     if(this.largeScreen()){
-      return "reference-image-container"
+      return "images-container"
     }
-    return "reference-image-container-small"
+    return "images-container-small"
 
   }
 

@@ -16,19 +16,22 @@ export class NewToSamComponent {
       title:"Lipsum text title1",
       detail:"Detail Lipsum text1: "+this.detailLipsum,
       link:"Lipsum link",
-      url:"help"
+      url:"help",
+      img:"src/assets/img/placeholder.jpg"
     },
     {
       title:"Lipsum text title2",
       detail:"Detail Lipsum text2: "+this.detailLipsum,
       link:"Lipsum link",
-      url:"help"
+      url:"help",
+      img:"src/assets/img/placeholder.jpg"
     },
     {
       title:"Lipsum text title3",
       detail:"Detail Lipsum text3: "+this.detailLipsum,
       link:"Lipsum link",
-      url:"help"
+      url:"help",
+      img:"src/assets/img/placeholder.jpg"
     }
   ];
 

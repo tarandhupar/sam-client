@@ -21,7 +21,7 @@
     position: absolute;
     top:10px;
     right:10px;
-    z-index: 100;
+    z-index: 200;
   }
 
   .image-library-close{
@@ -31,7 +31,7 @@
     text-decoration: none;
   }
 
-  .image-library-close:hover{
+  .image-library-close:hover, .image-div:hover, .image-library-toggle:hover{
     cursor: pointer;
   }
 
@@ -67,11 +67,26 @@
     left: 0;
     bottom: 0;
     right: 0;
+<<<<<<< HEAD
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
+=======
+    text-align: center;
+  }
+
+  .image-align-center{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+  }
+
+>>>>>>> SAM-3094-our-partners
   .images-container{
     padding-right:3px;
   }

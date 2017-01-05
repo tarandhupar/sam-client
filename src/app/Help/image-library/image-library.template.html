@@ -1,5 +1,5 @@
 <div class="usa-grid image-library">
-  <div class="usa-width-one-whole m_L-8x relative" [ngClass]="getImageContainerClass()">
+  <div class="usa-width-one-whole relative" [ngClass]="getImageContainerClass()">
     <div class="usa-width-one-whole">
       <div class="usa-width-one-third" *ngFor="let item of data; let i= index">
         <div class="usa-width-three-fourths image-library-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,$event)" [ngClass]="getBorderClass(i)">
@@ -9,8 +9,7 @@
           <span class="image-library-toggle" (click)="selectDetail(item,$event)">
             <i [id]="name+'-icon-'+i" class="fa fa-plus" [ngClass]="getItemClass(item)"></i>
           </span>
-          <div class="image-div" (click)="selectDetail(item,$event)"><img [src]="item.img" alt="{{item.title}}"></div>
-
+          <div class="image-div" (click)="selectDetail(item,$event)"><img class="image-align-center" [src]="item.img" alt="{{item.title}}"></div>
         </div>
       </div>
     </div>
@@ -21,7 +20,7 @@
   </div>
 
 
-  <div class="usa-width-one-whole m_L-8x relative" *ngIf = "detailObj.showDetail">
+  <div class="usa-width-one-whole relative" *ngIf = "detailObj.showDetail">
     <div class="relative black-border" [ngClass]="{'detail-div':!largeScreen(),'detail-div-large':largeScreen()}">
       <div class="usa-width-one-whole relative">
 
