@@ -169,4 +169,5 @@ export class TransitionToSamComponent {
   isCurrentFilter(type){
     return this.filter === type;
   }
+  
 }
