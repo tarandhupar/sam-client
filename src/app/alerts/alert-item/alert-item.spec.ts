@@ -12,7 +12,7 @@ import {DateFormatPipe} from "../../app-pipes/date-format.pipe";
 // Load test data
 import {error, info, warning} from '../alerts-test-data.spec';
 import {AlertEditComponent} from "../alert-edit/alert-edit.component";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 let systemAlertsStub: any = {
   getAll: () => Observable.of({total: 5, alerts: [error, error, warning, warning, info]})
@@ -26,7 +26,7 @@ describe('The AlertItem component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AlertItemComponent, AlertEditComponent, DateFormatPipe],
-      imports: [SamUIKitModule,RouterTestingModule,FormsModule],
+      imports: [SamUIKitModule,RouterTestingModule,FormsModule,ReactiveFormsModule],
       providers: [
         {provide: SystemAlertsService, useValue: systemAlertsStub },
       ]

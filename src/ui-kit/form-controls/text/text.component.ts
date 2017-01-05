@@ -1,4 +1,4 @@
-import {Component, Input, Output, ViewChild, EventEmitter, forwardRef} from '@angular/core';
+import {Component, Input, ViewChild, forwardRef} from '@angular/core';
 import { LabelWrapper } from '../wrapper/label-wrapper.component';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validators} from "@angular/forms";
 
@@ -32,29 +32,7 @@ export class SamTextComponent implements ControlValueAccessor {
   @Input() maxlength: number;
 
   onChange: any = () => {
-    if (this.control && this.control.invalid && this.control.errors) {
-      for (let k in this.control.errors) {
-        let errorObject = this.control[k];
-        switch (k) {
-          case 'required':
-            this.errorMessage = 'This field cannot be empty';
-            break;
-          case 'maxLength':
-            this.errorMessage = 'This field has too many letters';
-            break;
-          default:
-            if (errorObject.message) {
-              this.errorMessage = errorObject.message;
-            } else {
-              this.errorMessage = 'Field is invalid';
-            }
-        }
-      }
-    }
-    if (this.control && this.control.valid) {
-      this.errorMessage = '';
-    }
-
+    this.wrapper.formatErrors(this.control);
   };
   onTouched: any = () => { };
 
@@ -83,7 +61,6 @@ export class SamTextComponent implements ControlValueAccessor {
       validators.push(Validators.maxLength(this.maxlength));
     }
 
-    //this.control.validators.push(...validators);
     this.control.setValidators(validators);
     this.control.valueChanges.subscribe(this.onChange);
 

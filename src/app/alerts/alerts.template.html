@@ -26,12 +26,15 @@
       </div>
     </div>
   </div>
-  <alert-edit *ngIf="isNewAlert()" [mode]="'add'" (cancel)="onAddAlertCancel()" (accept)="onAddAlertAccept($event)"></alert-edit>
   <div class="alert-count" *ngIf="alerts.length === 0">
     <em>No results found for selected criteria. Please use filters to expand the search results.</em>
   </div>
+  <div *ngIf="alertBeingEdited && !alertBeingEdited.id()" class="alert-block">
+    <alert-edit [mode]="'add'" (cancel)="onAlertCancel()" (accept)="onAddAlertAccept($event)" [alert]="alertBeingEdited"></alert-edit>
+  </div>
   <div *ngFor="let alert of alerts" class="alert-block">
-    <alert-item [alert]="alert"></alert-item>
+    <alert-edit *ngIf="alertBeingEdited && alertBeingEdited === alert" [mode]="'edit'" (cancel)="onAlertCancel()" (accept)="onEditAlertAccept($event)" [alert]="alertBeingEdited"></alert-edit>
+    <alert-item [alert]="alert" *ngIf="alertBeingEdited !== alert" (edit)="onAlertEdit($event)"></alert-item>
   </div>
   <samPagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()" (pageChange)="onParamChanged($event)"></samPagination>
 </div>

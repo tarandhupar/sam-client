@@ -34,28 +34,7 @@ export class SamTextareaComponent implements ControlValueAccessor {
   @Input() control: FormControl;
 
   onChange: any = () => {
-    if (this.control && this.control.invalid && this.control.errors) {
-      for (let k in this.control.errors) {
-        let errorObject = this.control[k];
-        switch (k) {
-          case 'required':
-            this.errorMessage = 'This field cannot be empty';
-            break;
-          case 'maxLength':
-            this.errorMessage = 'too many letters';
-            break;
-          default:
-            if (errorObject.message) {
-              this.errorMessage = errorObject.message;
-            } else {
-              this.errorMessage = 'Invalid';
-            }
-        }
-      }
-    }
-    if (this.control && this.control.valid) {
-      this.errorMessage = '';
-    }
+    this.wrapper.formatErrors(this.control);
   };
 
   onTouched: any = () => {

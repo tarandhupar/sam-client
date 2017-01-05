@@ -12,7 +12,7 @@ import {DateFormatPipe} from "../app-pipes/date-format.pipe";
 import {error, info, warning} from './alerts-test-data.spec';
 import {By} from "@angular/platform-browser";
 import {AlertEditComponent} from "./alert-edit/alert-edit.component";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 
 class RouterStub {
@@ -32,7 +32,7 @@ describe('The AlertsPage component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AlertsPage,AlertItemComponent,AlertEditComponent,DateFormatPipe],
-      imports: [SamUIKitModule,RouterTestingModule,FormsModule],
+      imports: [SamUIKitModule,RouterTestingModule,FormsModule,ReactiveFormsModule],
       providers: [
         {provide: Router, useClass: RouterStub},
         {provide: SystemAlertsService, useValue: systemAlertsStub },

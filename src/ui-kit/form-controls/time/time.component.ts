@@ -24,6 +24,9 @@ import * as moment from 'moment/moment';
   `,
 })
 export class SamTimeComponent implements OnChanges {
+  INPUT_FORMAT: string = "H:m";
+  OUTPUT_FORMAT: string = "HH:mm";
+
   @Input() value: string; // must be a 24 hour time and have the format HH:mm
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
   @Input() disabled: boolean;
@@ -35,7 +38,7 @@ export class SamTimeComponent implements OnChanges {
   constructor() { }
 
   ngOnChanges() {
-    let m = moment(this.value, 'H:m');
+    let m = moment(this.value, this.INPUT_FORMAT);
     let hours = m.hours();
     let minutes = m.minutes();
 

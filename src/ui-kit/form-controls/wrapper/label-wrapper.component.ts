@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'labelWrapper',
@@ -19,4 +20,32 @@ export class LabelWrapper {
   @Input() errorMessage: string;
 
   constructor() { }
+
+  formatErrors(control: FormControl) {
+    if (!control) {
+      return;
+    }
+
+    if (control.invalid && control.errors) {
+      for (let k in control.errors) {
+        let errorObject = control[k];
+        switch (k) {
+          case 'maxLength':
+            this.errorMessage = `This field has too many characters`;
+            break;
+          case 'required':
+            this.errorMessage = 'This field cannot be empty';
+            break;
+          default:
+            if (errorObject.message) {
+              this.errorMessage = errorObject.message;
+            } else {
+              this.errorMessage = 'Invalid';
+            }
+        }
+      }
+    } else if (control.valid) {
+      this.errorMessage = '';
+    }
+  }
 }

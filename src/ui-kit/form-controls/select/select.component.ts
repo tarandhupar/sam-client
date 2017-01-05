@@ -50,7 +50,7 @@ export class SamSelectComponent implements ControlValueAccessor {
 
   constructor() { }
 
-  ngOnInitf() {
+  ngOnInit() {
     if (!this.name) {
       throw new Error("<samSelect> requires a [name] parameter for 508 compliance");
     }
@@ -92,24 +92,8 @@ export class SamSelectComponent implements ControlValueAccessor {
   }
 
   onChange: any = () => {
-    if (this.control && this.control.invalid && this.control.errors) {
-      for (let k in this.control.errors) {
-        let errorObject = this.control[k];
-        switch (k) {
-          case 'required':
-            this.errorMessage = 'This field cannot be empty';
-            break;
-          default:
-            if (errorObject.message) {
-              this.errorMessage = errorObject.message;
-            } else {
-              this.errorMessage = 'Invalid';
-            }
-        }
-      }
-    }
-    if (this.control && this.control.valid) {
-      this.errorMessage = '';
+    if (this.control) {
+      this.wrapper.formatErrors(this.control);
     }
   };
 

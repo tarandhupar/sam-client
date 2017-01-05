@@ -130,7 +130,7 @@ export class AlertsPage {
     this.alertBeingEdited = new Alert();
   }
 
-  onAddAlertCancel() {
+  onAlertCancel() {
     this.exitEditMode();
   }
 
@@ -150,7 +150,8 @@ export class AlertsPage {
     this.alertBeingEdited = null;
   }
 
-  isNewAlert() {
-    return this.alertBeingEdited && !this.alertBeingEdited.id();
+  onAlertEdit(alert) {
+    console.log('alert', alert)
+    this.alertBeingEdited = alert;
   }
 }

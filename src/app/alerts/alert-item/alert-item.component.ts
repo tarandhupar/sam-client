@@ -6,5 +6,11 @@ import {Alert} from "../alert.model";
   templateUrl: 'alert-item.template.html'
 })
 export class AlertItemComponent {
+
   @Input() alert: Alert;
+  @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
+
+  onEditClick() {
+    this.edit.emit(this.alert);
+  }
 }
