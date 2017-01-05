@@ -70,7 +70,9 @@ export class SearchPage implements OnInit{
 		}
 		if(this.keyword.length>0){
 			qsobj['keyword'] = this.keyword;
-		}
+		} else {
+      qsobj['keyword'] = '';
+    }
 		if(this.index.length>0){
 			qsobj['index'] = this.index;
 		} else {
