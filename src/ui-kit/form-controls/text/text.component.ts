@@ -15,7 +15,7 @@ export const TEXT_VALUE_ACCESSOR: any = {
   selector: 'samText',
   template: `
       <labelWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage" [required]="required">
-        <input [attr.maxlength]="maxlength" type="text" [value]="value" [attr.id]="name" [disabled]="disabled" (change)="onInputChange($event.target.value)">
+        <input type="text" [value]="value" [attr.id]="name" [disabled]="disabled" (change)="onInputChange($event.target.value)">
       </labelWrapper>
   `,
   providers: [ TEXT_VALUE_ACCESSOR ]

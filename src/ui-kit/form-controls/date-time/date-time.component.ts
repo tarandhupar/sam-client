@@ -1,6 +1,7 @@
 import {Component, Input, ViewChild, Output, EventEmitter, OnInit, forwardRef} from '@angular/core';
 import * as moment from 'moment/moment';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
+import {LabelWrapper} from "../wrapper/label-wrapper.component";
 
 
 const MY_VALUE_ACCESSOR: any = {
@@ -25,9 +26,12 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
   @Input() name: string;
   @Input() errorMessage: string;
   @Input() disabled: boolean = false;
+  @Input() control;
 
   onChange = (val) => {
-
+    if (this.control) {
+      this.wrapper.formatErrors(this.control);
+    }
   };
   onTouched = () => { };
 
@@ -36,11 +40,15 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
 
   @ViewChild('dateComponent') dateComponent;
   @ViewChild('timeComponent') timeComponent;
+  @ViewChild(LabelWrapper) wrapper;
 
   constructor() { }
 
   ngOnInit() {
     this.setDateAndTime();
+    if (this.control) {
+      this.control.valueChanges.subscribe(this.onChange);
+    }
   }
 
   setDateAndTime() {

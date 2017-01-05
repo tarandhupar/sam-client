@@ -9,6 +9,7 @@ export class AlertItemComponent {
 
   @Input() alert: Alert;
   @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
+  @Input() editDisabled: boolean = false;
 
   onEditClick() {
     this.edit.emit(this.alert);

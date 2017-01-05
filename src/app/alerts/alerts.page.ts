@@ -66,22 +66,24 @@ export class AlertsPage {
     this.doSearch();
   }
 
+  onNewAlertsReceived(alerts) {
+    this._totalAlerts = alerts.total;
+    if (alerts.alerts && alerts.alerts.length) {
+      this.alerts = alerts.alerts.map(alert => Alert.FromResponse(alert));
+    } else {
+      this.alerts = [];
+    }
+  }
+
   doSearch() {
     this.getAlerts().catch(err => {
       this.router.navigate([ERROR_PAGE_PATH]);
       return Observable.of(err);
     })
-    .subscribe(alerts => {
-      this._totalAlerts = alerts.total;
-      if (alerts.alerts && alerts.alerts.length) {
-        this.alerts = alerts.alerts.map(alert => Alert.FromResponse(alert));
-      } else {
-        this.alerts = [];
-      }
-    });
+    .subscribe((alerts) => this.onNewAlertsReceived(alerts));
   }
 
-  getAlerts() {
+  getAlerts() : Observable<any> {
     let sort, order;
     if (this.sortField === 'pda' || this.sortField === 'pdd') {
       sort = 'published_date';
@@ -135,12 +137,26 @@ export class AlertsPage {
   }
 
   onAddAlertAccept(alert) {
-    this.alertsService.createAlert(alert.raw()).subscribe(
-      (data) => {
+    this.alertsService.createAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
+      (alerts) => {
+        this.onNewAlertsReceived(alerts);
         this.exitEditMode();
       },
       (error) => {
         console.error('Error while adding alerts: ', error);
+        this.router.navigate([ERROR_PAGE_PATH]);
+      }
+    );
+  }
+
+  onEditAlertAccept(alert) {
+    this.alertsService.updateAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
+      (alerts) => {
+        this.onNewAlertsReceived(alerts);
+        this.exitEditMode();
+      },
+      (error) => {
+        console.error('Error while editing alert: ', error);
         this.router.navigate([ERROR_PAGE_PATH]);
       }
     );
@@ -151,7 +167,6 @@ export class AlertsPage {
   }
 
   onAlertEdit(alert) {
-    console.log('alert', alert)
     this.alertBeingEdited = alert;
   }
 }

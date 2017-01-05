@@ -14,6 +14,18 @@ export class Alert {
     return this._raw.id;
   }
 
+  setId(id) {
+    this._raw.id = id;
+  }
+
+  isExpiresIndefinite() {
+    return this._raw.content.isExpiresIndefinite
+  }
+
+  setIsExpiresIndefinite(val: boolean) {
+    this._raw.content.isExpiresIndefinite = val ? 'Y' : 'N';
+  }
+
   status(): string {
     return this._raw.status;
   }

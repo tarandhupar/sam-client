@@ -85,6 +85,10 @@ $alert-primary-color: #0071bc;
   }
 
   samSelect.publish-select select {
+    &:disabled {
+      background-color: transparent;
+      color: #666;
+    }
     border: none;
   }
 

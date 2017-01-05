@@ -93,6 +93,7 @@ export class SystemAlertsService {
       name: 'alerts',
       suffix: '',
       method: 'PUT',
+      id: alert.id,
       body: alert
     };
 

@@ -1,8 +1,20 @@
-import {Input, Output, Component, OnInit, EventEmitter} from '@angular/core';
+import {Input, Output, Component, OnInit, EventEmitter, ViewChild} from '@angular/core';
 import {Alert} from "../alert.model";
 import {OptionsType} from "ui-kit/form-controls/types";
-import {FormGroup, FormBuilder, AbstractControl} from "@angular/forms";
+import {FormGroup, FormBuilder, AbstractControl, FormControl} from "@angular/forms";
 import moment = require("moment");
+import before = testing.before;
+import {SamDateTimeComponent} from "ui-kit";
+
+function isNotBeforeToday(c: FormControl) {
+  let error = {
+    isNotBeforeToday: {
+      message: 'Date must not be before today'
+    }
+  };
+
+  return !moment(c.value).isBefore(moment().startOf('day')) || error;
+}
 
 @Component({
   selector: 'alert-edit',
@@ -14,6 +26,11 @@ export class AlertEditComponent implements OnInit {
   @Input() mode: string;
   @Output() accept: EventEmitter<any> = new EventEmitter<any>();
   @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
+
+  @ViewChild('endDate') public endDate: SamDateTimeComponent;
+  @ViewChild('publishDate') public publishDate: SamDateTimeComponent;
+
+  publishImmediately: boolean;
 
   typeOptions: OptionsType = [
     { name: 'information', label: 'Informational', value: 'Informational'},
@@ -45,15 +62,33 @@ export class AlertEditComponent implements OnInit {
       description: [this.alert.description(), []],
       title: [this.alert.title(), []],
       severity: [this.alert.severity(), []],
-      endDate: [this.alert.endDate(), []],
-      publishedDate: [this.alert.publishedDate(), []]
+      endDate: [this.alert.endDate(), [isNotBeforeToday]],
+      publishedDate: [this.alert.publishedDate(), [isNotBeforeToday]],
+      publishImmediately: [false, []],
+      isExpiresIndefinite: [false, []],
     });
 
-    this.form.valueChanges.subscribe(val => this.validate(val));
+    this.form.valueChanges.subscribe(val => this.validate());
+    this.validate();
   }
 
-  validate(val) {
+  validate() {
+    // let startDate = this.form.value['publishedDate'];
+    // let endDate = this.form.value['endDate'];
+    // if (startDate && endDate && moment(endDate).isBefore(startDate)) {
+    //   this.endDate.wrapper.errorMessage = "Publish date must be after startDate";
+    //   this.form.setErrors({ dateAfter: false});
+    // } else {
+    //   if (this.form.valid) {
+    //     console.log('clear validators');
+    //     this.form.clearValidators();
+    //   }
+    //   this.endDate.wrapper.errorMessage = "";
+    // }
+  }
 
+  isoNow() {
+    return moment().format('YYYY-MM-DDThh:mm:ss');
   }
 
   onAcceptClick(event) {
@@ -61,9 +96,19 @@ export class AlertEditComponent implements OnInit {
     let formValue = this.form.value;
     alert.setDescription(formValue.description);
     alert.setEndDate(formValue.endDate);
-    alert.setPublishedDate(formValue.publishedDate);
+    if (formValue.publishImmediately) {
+      alert.setPublishedDate(this.isoNow());
+    } else {
+      alert.setPublishedDate(formValue.publishedDate);
+    }
     alert.setSeverity(formValue.severity);
     alert.setTitle(formValue.title);
+    alert.setIsExpiresIndefinite(formValue.isExpiresIndefinite);
+
+    if (this.alert.id()) {
+      alert.setId(this.alert.id());
+    }
+
     this.accept.emit(alert);
   }
 
@@ -74,7 +119,7 @@ export class AlertEditComponent implements OnInit {
   onPublishImmediatelyClick(val) {
     let ctrl: AbstractControl = this.form.controls['publishedDate'];
     if (val) {
-      ctrl.setValue(moment().format('YYYY-MM-DDTHH:mm'));
+      ctrl.setValue(this.isoNow());
       ctrl.disable()
     } else {
       ctrl.enable();

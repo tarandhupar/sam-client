@@ -28,13 +28,18 @@ export class LabelWrapper {
 
     if (control.invalid && control.errors) {
       for (let k in control.errors) {
-        let errorObject = control[k];
+        let errorObject = control.errors[k];
         switch (k) {
-          case 'maxLength':
-            this.errorMessage = `This field has too many characters`;
-            break;
+          case 'maxlength':
+            const actualLength = errorObject.actualLength;
+            const requiredLength = errorObject.requiredLength;
+            this.errorMessage = `Too many characters (${actualLength} or ${requiredLength})`;
+            return;
           case 'required':
             this.errorMessage = 'This field cannot be empty';
+            return;
+          case 'isNotBeforeToday':
+            this.errorMessage = "Date must not be before today";
             break;
           default:
             if (errorObject.message) {
@@ -42,6 +47,7 @@ export class LabelWrapper {
             } else {
               this.errorMessage = 'Invalid';
             }
+            return;
         }
       }
     } else if (control.valid) {

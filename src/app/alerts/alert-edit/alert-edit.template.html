@@ -11,14 +11,14 @@
       <samTextArea [maxlength]="350" [control]="form.get('description')" formControlName="description" [required]='true' [name]="'description'" [label]="'Description'"></samTextArea>
     </div>
     <div class="usa-width-one-half">
-      <samDateTime formControlName="publishedDate" [label]="'Publish Date'" name='publish-date'></samDateTime>
+      <samDateTime [control]="form.get('publishedDate')" formControlName="publishedDate" [label]="'Publish Date'" name='publish-date'></samDateTime>
       <div>
-        <input #publishImmediately id="publish-immediately" type="checkbox" (click)="onPublishImmediatelyClick($event.target.checked)">
+        <input id="publish-immediately" type="checkbox" formControlName="publishImmediately" (click)="onPublishImmediatelyClick($event.target.checked)">
         <label for="publish-immediately">Publish Immediately</label>
       </div>
-      <samDateTime formControlName="endDate" [label]="'End Date'" name='end-date'></samDateTime>
+      <samDateTime #endDate [control]="form.get('endDate')" formControlName="endDate" [label]="'End Date'" name='end-date'></samDateTime>
       <div>
-        <input #endIndefinitely id="end-indefinitely" type="checkbox" (click)="onEndIndefinitelyClick($event.target.checked)">
+        <input id="end-indefinitely" type="checkbox" formControlName="isExpiresIndefinite" (click)="onEndIndefinitelyClick($event.target.checked)">
         <label for="end-indefinitely">End Indefinitely</label>
       </div>
     </div>
@@ -29,6 +29,6 @@
       <button type="button" class="usa-button-outline" (click)="onCancelClick($event)">Cancel</button>
     </div>
   </div>
-  <div><pre><code>valid: {{form.valid | json}}</code></pre></div>
-  <div><pre><code>value: {{form.value | json}}</code></pre></div>
+  <!--<div><pre><code>valid: {{form.valid | json}}</code></pre></div>-->
+  <!--<div><pre><code>value: {{form.value | json}}</code></pre></div>-->
 </form>

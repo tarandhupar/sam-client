@@ -50,13 +50,22 @@ export class WrapperService {
         var useReverseProxy = document.getElementsByTagName('html')[0].className == "ie9" ? true : false;
         var baseUrl = useReverseProxy ? "/ie_api" : API_UMBRELLA_URL;
 
+        var fullUrlPath = [baseUrl + this.APIs[oApiParam.name]];
+
+        if (oApiParam.id) {
+          fullUrlPath.push(oApiParam.id);
+        }
+
+        var fullUrlString = fullUrlPath.join('/');
+
         //TODO: Implement Post DATA to request
         let jsonOption = {
             "search": oURLSearchParams,
             "method": RequestMethod.Get,
             "headers": oHeader,
             "body": oApiParam.body,
-            "url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
+            //"url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
+            url: fullUrlString
         };
 
         switch (method.toUpperCase()){
