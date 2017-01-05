@@ -309,36 +309,50 @@
                 <strong>Type: {{ package.type }}</strong>
               </div>
 
-              <span *ngIf="package.access === 'Public'" class="download-button">
-                <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId)}}">
-                  <i class="fa fa-cloud-download" aria-hidden="true"></i>
-                  <span>Download</span>
-                </a>
-              </span>
+            <span *ngIf="package.access === 'Public'" class="download-button">
+              <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId)}}">
+                <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                <span>Download</span>
+              </a>
+            </span>
 
-              <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
-                <li *ngFor="let element of package.attachments">
-                  <!-- Element -->
-                  <ng-container *ngFor="let resource of attachment.resources">
-                    <!-- Resource -->
-                    <ng-container *ngIf="element.resourceId === resource.resourceId">
-                      <!-- Description -->
-                      <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
-                        {{resource.description}}
-                        <ng-container *ngIf="resource.size && resource.size != 0">
-                          <sup>{{resource.size | filesize}}</sup>
-                        </ng-container>
-                      </a>
-                      <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
-                        {{resource.description}}
-                        <ng-container *ngIf="resource.size && resource.size != 0">
-                          <sup>{{resource.size | filesize}}</sup>
-                        </ng-container>
-                      </a>
-                    </ng-container>
+            <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
+              <li *ngFor="let element of package.attachments">
+                <!-- Element -->
+                <ng-container *ngFor="let resource of attachment.resources">
+                  <!-- Resource -->
+                  <ng-container *ngIf="element.resourceId === resource.resourceId">
+                    <div class="download-info">
+
+                      <span class="download-info-icon">
+                        <i class="{{resource.typeInfo.iconClass}}"></i>
+                      </span>
+
+                      <span class="download-info-link">
+                        
+                        <a *ngIf="resource.type === 'link'" href="{{resource.uri}}">
+                          {{resource.description}}
+                          <sup *ngIf="resource.size && resource.size != 0">
+                            {{resource.size | filesize}}
+                          </sup>
+                        </a>
+                        <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
+                          {{resource.description}}
+                          <sup *ngIf="resource.size && resource.size != 0">
+                            {{resource.size | filesize}}
+                          </sup>
+                        </a>
+                        
+                      </span>
+                      
+                      <span class="download-info-type">
+                        {{resource.typeInfo.name}}
+                      </span>
+                    </div>
                   </ng-container>
-                </li>
-              </ul>
+                </ng-container>
+              </li>
+            </ul>
 
               <!-- Its private -->
               <div *ngIf="package.access === 'Private'" class="card-header-secure">

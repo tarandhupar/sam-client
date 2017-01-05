@@ -251,6 +251,9 @@ export class OpportunityPage implements OnInit {
       this.attachment.packages.forEach((key: any) => {
         key.accordionState = 'collapsed';
       });
+      this.attachment.resources.forEach((res: any) => {
+        res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+      });
     }, err => {
       console.log('Error loading attachments: ', err)
         this.attachmentError = true;
@@ -458,4 +461,66 @@ export class OpportunityPage implements OnInit {
     return false;
   }
 
+  private getExtension(filename: string) {
+    let ext = filename.match(/\.[a-z0-9]+$/i);
+
+    if(ext != null) {
+      return ext[0];
+    }
+
+    return null;
+  }
+
+  private static readonly TYPE_UNKNOWN = { name: 'Unknown file type', iconClass: 'fa fa-file' };
+  private static readonly TYPE_LINK = { name: 'External link', iconClass: 'fa fa-link' };
+  private static readonly TYPE_ZIP = { name: 'Zip archive', iconClass: 'fa fa-file-archive-o' };
+  private static readonly TYPE_XLS = { name: 'Excel spreadsheet', iconClass: 'fa fa-file-excel-o' };
+  private static readonly TYPE_PPT = { name: 'Powerpoint presentation', iconClass: 'fa fa-file-powerpoint-o' };
+  private static readonly TYPE_DOC = { name: 'Word document', iconClass: 'fa fa-file-word-o' };
+  private static readonly TYPE_TXT = { name: 'Text file', iconClass: 'fa fa-file-text-o' };
+  private static readonly TYPE_PDF = { name: 'PDF document', iconClass: 'fa fa-file-pdf-o' };
+  private static readonly TYPE_HTML = { name: 'Html document', iconClass: 'fa fa-html5' };
+  private static readonly TYPE_IMG = { name: 'Image', iconClass: 'fa fa-file-image-o' };
+
+  private getResourceTypeInfo(type: string) {
+    switch(type) {
+      case 'link':
+        return OpportunityPage.TYPE_LINK;
+
+      case '.zip':
+        return OpportunityPage.TYPE_ZIP;
+
+      case '.xls':
+      case '.xlsx':
+        return OpportunityPage.TYPE_XLS;
+
+      case '.ppt':
+      case '.pptx':
+        return OpportunityPage.TYPE_PPT;
+
+      case '.doc':
+      case '.docx':
+        return OpportunityPage.TYPE_DOC;
+
+      case '.txt':
+      case '.rtf':
+        return OpportunityPage.TYPE_TXT;
+
+      case '.pdf':
+        return OpportunityPage.TYPE_PDF;
+
+      case '.htm':
+      case '.html':
+        return OpportunityPage.TYPE_HTML;
+
+      case '.jpg':
+      case '.png':
+      case '.jpeg':
+      case '.tif':
+        return OpportunityPage.TYPE_IMG;
+
+      default:
+        return OpportunityPage.TYPE_UNKNOWN;
+    }
+  }
 }
