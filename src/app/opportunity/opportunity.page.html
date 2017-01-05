@@ -473,15 +473,16 @@
 
         <!-- Awards Metadata -->
 
-        <div class="usa-grid-full segment usa-text-center">
-          <div class="usa-width-one-third">
+        <div class="usa-grid-full usa-text-center">
+
+          <div class="usa-width-one-fourth segment">
             <strong>Total Number of Awards</strong>
             <p>
               {{relatedOpportunitiesMetadata.count}}
             </p>
           </div>
 
-          <div class="usa-width-one-third">
+          <div class="usa-width-one-fourth segment">
             <strong>Total Amount Awarded</strong>
             <p>
               {{relatedOpportunitiesMetadata.totalAwardAmt | currency:'USD':true:'1.2-2'}}<br>
@@ -492,14 +493,18 @@
           </div>
 
 
-          <div class="usa-width-one-third">
+          <div class="usa-width-one-fourth segment">
             <strong>Total Number of Recipients</strong>
             <p>
               {{relatedOpportunitiesMetadata.recipientCount}}
             </p>
           </div>
 
-          <samSelect class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></samSelect>
+          <div class="usa-width-one-fourth segment-with-select">
+            <strong>Sort by</strong>
+            <samSelect class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></samSelect>
+          </div>
+
         </div>
 
           <div class="card-simple" *ngFor="let element of relatedOpportunities">
