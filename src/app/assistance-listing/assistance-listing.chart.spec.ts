@@ -470,17 +470,17 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
   it('Should display not available if inconsistent', () => {
     let mockFinancialData = [{
       'values': {
-        '2016': {'flag': 'na'},
-        '2017': {'flag': 'no'},
-        '2018': {'flag': 'na'}
+        '2017': {'flag': 'na'},
+        '2018': {'flag': 'no'},
+        '2019': {'flag': 'na'}
       },
       'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
       'assistanceType': '0003003'
     }, {
       'values': {
-        '2016': {'flag': 'no'},
-        '2017': {'flag': 'na'},
-        '2018': {'flag': 'no'}
+        '2017': {'flag': 'no'},
+        '2018': {'flag': 'na'},
+        '2019': {'flag': 'no'}
       },
       'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
       'assistanceType': '0003003'

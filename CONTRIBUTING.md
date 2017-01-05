@@ -67,3 +67,5 @@ Gitflow Workflow branch names:
 1. User interface components:
   - If the component is for a specific business object or business epic, place them in a folder with the generic component name (ex. `search-result`).
   - If the component is used by two or more business object/epic areas, place them in<br>`/src/ui-kit`
+  - 
+

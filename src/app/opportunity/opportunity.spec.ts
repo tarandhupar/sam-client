@@ -174,7 +174,7 @@ let MockOpportunityService = {
       "state": "TX"
     });
   },
-  getRelatedOpportunitiesByIdAndType(id: string, type:string, page:number){
+  getRelatedOpportunitiesByIdAndType(id: string, type:string, page:number, sort:string){
     return Observable.of({
       recipientCount: "16",
       unparsableCount: "0",
@@ -363,6 +363,8 @@ describe('OpportunityPage', () => {
     expect(comp.organization).toBeDefined();
     expect(comp.attachment).toBeDefined();
     expect(comp.relatedOpportunities).toBeDefined();
+    expect(comp.awardSort).toBeDefined();
+    expect(comp.awardSortOptions).toBeDefined();
     expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
   });
