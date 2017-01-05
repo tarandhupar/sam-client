@@ -527,13 +527,13 @@
 
           <div class="card-simple" *ngFor="let element of relatedOpportunities">
 
-            <h3>{{element.data?.title}}</h3>
+            <h3>{{element.data?.award?.awardee?.name}}</h3>
 
             <div class="card-simple-content">
               <div class="usa-grid-full">
                 <div class="usa-width-one-half">
                   <ul class="usa-label-list">
-                    <li><span>Contractor Awarded DUNS / Name: </span>
+                    <li><span>Contractor Awarded DUNS: </span>
                       <span>
                         {{element.data?.award?.awardee?.duns}}
                         <ng-container *ngIf="!element.data?.award?.awardee?.duns">
