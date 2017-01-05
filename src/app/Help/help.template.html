@@ -72,6 +72,10 @@
         </li>
         <li>
           <a [ngClass]="getSectionClass('partners')" (click)="changeSection('partners')" [routerLink]="['/help/partners']">Our Partners</a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('partners')">
+            <li><a #featuredPartners [ngClass]="getSubSectionClass('featuredPartners')" (click)="changeSubSection('featuredPartners',featuredPartners)" href="{{currentUrl}}#featuredPartners">Featured Partners</a></li>
+            <li><a #additionalPartners [ngClass]="getSubSectionClass('additionalPartners')" (click)="changeSubSection('additionalPartners',additionalPartners)" href="{{currentUrl}}#additionalPartners">Additional Partners</a></li>
+          </ul>
         </li>
         <li>
           <a [ngClass]="getSectionClass('reference')" (click)="changeSection('reference')" [routerLink]="['/help/reference']">Reference Library</a>
