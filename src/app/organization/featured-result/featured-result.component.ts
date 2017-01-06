@@ -19,7 +19,9 @@ import { ReplaySubject, Observable } from 'rxjs';
           </ng-container>
         </div>
         <div class="card-secure-content clearfix">
-
+          <div *ngIf="!logoUrl" class="logo-small"  style="float: left; margin-right: 10px;">
+            <img src="src/assets/img/logo-not-available.png" alt="Logo Not Available">
+          </div>
           <div *ngIf="logoUrl" class="logo-small"  style="float: left; margin-right: 10px;">
             <img [src]="logoUrl" alt="HTML5 Icon">
           </div>
@@ -51,6 +53,7 @@ import { ReplaySubject, Observable } from 'rxjs';
 export class FHFeaturedResult implements OnInit {
   @Input() data: any={};
   logoUrl: string;
+  errorOrganization: any;
   constructor(private fhService: FHService) { }
 
   ngOnInit() {}
@@ -86,7 +89,11 @@ export class FHFeaturedResult implements OnInit {
       }
     }, err => {
       console.log('Error loading logo: ', err);
+      this.errorOrganization = true;
     });
+  }
+  isEmptyObject(obj) {
+    return (Object.keys(obj).length === 0);
   }
 
 }

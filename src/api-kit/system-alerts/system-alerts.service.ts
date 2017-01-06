@@ -1,6 +1,25 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 
+export type AlertType = {
+  content: {
+    title?: string,
+    begins?: string,
+    expires?: string,
+    category?: string,
+    severity?: string,
+    published?: string,
+    description?: string,
+    isExpiresIndefinite?: string,
+  },
+  status?: string,
+  id?: number,
+  rank?: any,
+  createdDate?: string,
+  createdBy?: any,
+  lastModifiedBy?: string,
+  lastModifiedDate?: string,
+}
 
 @Injectable()
 export class SystemAlertsService {
@@ -33,7 +52,7 @@ export class SystemAlertsService {
    * @param order: asc or desc
    * @returns {Observable<>}
    */
-  getAll(limit?: number, offset?: number, archived?: [string], severity?: [string], published?: string, sort?: string, order?: string) {
+  getAll(limit?: number, offset?: number, status?: [string], severity?: [string], published?: string, sort?: string, order?: string) {
 
     let apiOptions: any = {
       name: 'allAlerts',
@@ -46,8 +65,8 @@ export class SystemAlertsService {
     apiOptions.oParam.limit = limit || 5;
     apiOptions.oParam.offset = offset || 0;
 
-    if (archived && archived.length) {
-      apiOptions.oParam.archived = archived.join(',');
+    if (status && status.length) {
+      apiOptions.oParam.status = status.join(',');
     }
 
     if (severity && severity.length) {
@@ -65,6 +84,42 @@ export class SystemAlertsService {
     if (order) {
       apiOptions.oParam.order = order;
     }
+
+    return this.apiService.call(apiOptions);
+  }
+
+  updateAlert(alert: AlertType) {
+    const apiOptions: any = {
+      name: 'alerts',
+      suffix: '',
+      method: 'PUT',
+      id: alert.id,
+      body: alert
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  createAlert(alert: AlertType) {
+    const apiOptions: any = {
+      name: 'alerts',
+      suffix: '',
+      method: 'POST',
+      body: alert
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  deleteAlert(id: number) {
+    const apiOptions: any = {
+      name: 'alerts',
+      suffix: '',
+      method: 'DELETE',
+      body: {
+        id: id
+      }
+    };
 
     return this.apiService.call(apiOptions);
   }
