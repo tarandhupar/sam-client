@@ -1,58 +1,82 @@
 <h2>Personal Details</h2>
 <div>
-  <form>
+  <form [formGroup]="detailsForm">
     <!--============================-->
     <!--=== Identity Information ===-->
     <!--============================-->
     <section [ngClass]="{ 'usa-editable': isEdit('identity') }">
-      <h3>Identifying Information<a class="usa-edit" href="javascript:void(0);" (click)="onEdit('identity')">Edit</a></h3>
+      <h3>Identifying Information<a class="usa-edit" href="javascript:void(0);" (click)="edit('identity')">Edit</a></h3>
       <div class="usa-form-group">
         <label>Name:</label>
-        <div class="usa-form-control">
-          <span [innerText]="name"></span>
-        </div>
+        <div class="usa-form-control" [innerText]="name"></div>
       </div>
       <div class="usa-form-group">
         <label>Suffix:</label>
-        <div class="usa-form-control">
-          <span [innerText]="user.suffix"></span>
-        </div>
+        <div class="usa-form-control" [innerText]="user.suffix"></div>
       </div>
       <div class="usa-form-group">
         <label>Email:</label>
-        <div class="usa-form-control">
-          <span [innerText]="user.email"></span>
-        </div>
+        <div class="usa-form-control" [innerText]="user.email"></div>
       </div>
-      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save"></samButton>
+
+      <samNameEntry class="usa-form-editable" [model]="user" legend=""></samNameEntry>
+
+      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('identity')"></samButton>
     </section>
     <!--============================-->
     <!--=== Business Information ===-->
     <!--============================-->
-    <section [ngClass]="{ 'usa-editable': isEdit(business) }">
-      <h3>Business Information<a class="usa-edit" href="javascript:void(0);" (click)="onEdit('business')">Edit</a></h3>
+    <section [ngClass]="{ 'usa-editable': isEdit('business') }">
+      <h3>Business Information<a class="usa-edit" href="javascript:void(0);" (click)="edit('business')">Edit</a></h3>
 
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Office:</label>
+        <div class="usa-form-control" [innerText]="phone"></div>
+      </div>
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Agency:</label>
+        <div class="usa-form-control" [innerText]="phone"></div>
+      </div>
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Activity Access Code:</label>
+        <div class="usa-form-control" [innerText]="phone"></div>
+      </div>
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Department:</label>
+        <div class="usa-form-control" [innerText]="phone"></div>
+      </div>
       <div class="usa-form-group">
         <label>Business Phone:</label>
-        <div class="usa-form-control">
-          <span [innerText]="phone"></span>
-        </div>
+        <div class="usa-form-control" [innerText]="phone"></div>
       </div>
-      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save"></samButton>
+
+      <agencyPicker class="usa-form-editable"
+                    [advancedMode]="true"
+                    [multimode]="false"
+                    [orgRoot]="user.department"
+                    [(orgId)]="user.orgID"
+                    [label]="'Select the office you work for:'"
+                    (department)="setDepartment($event)"
+                    (organization)="setOrganization($event)"
+                    *ngIf="states.isGov">
+      </agencyPicker>
+      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" label="Business Phone"></samPhoneEntry>
+
+      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('business')"></samButton>
     </section>
     <!--==========================-->
     <!--=== Security Questions ===-->
     <!--==========================-->
-    <section [ngClass]="{ 'usa-editable': isEdit(kba) }">
-      <h3>Security Questions<a class="usa-edit" href="javascript:void(0);" (click)="onEdit('kba')">Edit</a></h3>
+    <section [ngClass]="{ 'usa-editable': isEdit('kba') }">
+      <h3>Security Questions<a class="usa-edit" href="javascript:void(0);" (click)="edit('kba')">Edit</a></h3>
 
       <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
         <label [innerText]="lookups.questions[kbaAnswer.questionId].question"></label>
-        <div class="usa-form-control">
-          <span [innerHtml]="kbaAnswer.answer"></span>
+        <div class="usa-form-control" [innerHtml]="kbaAnswer.answer">
         </div>
       </div>
-      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save"></samButton>
+
+      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('kba')"></samButton>
     </section>
     <section>
       <h3>Delete Account</h3>

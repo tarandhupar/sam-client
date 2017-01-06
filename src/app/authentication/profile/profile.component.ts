@@ -16,7 +16,9 @@ export class ProfileComponent {
   }
 
   get activeRouteClass():String {
-    let className = this.states.route.replace(/\//g, '-');
+    let className = this.states.route
+      .replace(/\//g, '-')
+      .replace(/\?.+/g, '');
     return (className.length ? 'usa' : '') + className;
   }
 };

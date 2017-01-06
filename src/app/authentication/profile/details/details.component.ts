@@ -1,19 +1,32 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import * as _ from 'lodash';
+
+import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { IAMService } from 'api-kit';
-import { Validators as $Validators } from '../shared/validators';
+import { FHService, IAMService } from 'api-kit';
+import { Validators as $Validators } from '../../shared/validators';
+
+import { User } from '../user.interface';
+import { KBA } from '../kba.interface';
 
 @Component({
   templateUrl: './details.component.html',
-  providers: [IAMService]
+  providers: [
+    FHService,
+    IAMService
+  ]
 })
 export class DetailsComponent {
-  public details: FormGroup;
+  private differ;
+  private api = {
+    fh: null,
+    iam: null
+  };
 
   private lookups = {
     questions: [
+      null,
       { 'id': 1,  'question': 'What was the make and model of your first car?' },
       { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
       { 'id': 3,  'question': 'What was your high school mascot?' },
@@ -30,6 +43,7 @@ export class DetailsComponent {
   };
 
   private states = {
+    isGov: false,
     editable: {
       identity: false,
       business: false,
@@ -38,27 +52,138 @@ export class DetailsComponent {
   };
 
   private user = {
-    email: 'doe.john@gsa.gov',
-    suffix: '',
-    firstName: 'John',
-    initials: 'J',
-    lastName: 'Doe',
+    _id: '',
+    email: '',
 
-    workPhone: '2401234568',
+    title: '',
+
+    fullName: '',
+    firstName: '',
+    initials: '',
+    lastName: '',
+
+    suffix: '',
+
+    department: '',
+    orgID: '',
+
+    workPhone: '',
 
     kbaAnswerList: [
-      { questionId: 0, answer: '&bull;' },
-      { questionId: 4, answer: '&bull;' },
-      { questionId: 7, answer: '&bull;' }
-    ]
+      <any>{ questionId: 1, answer: '&bull;' },
+      <any>{ questionId: 5, answer: '&bull;' },
+      <any>{ questionId: 7, answer: '&bull;' }
+    ],
+
+    accountClaimed: true
   };
 
-  ngOnInit() {
-    let intAnswer;
+  private department = '';
+  private agency = '';
+  private office = '';
 
-    for(intAnswer = 0; intAnswer < this.user.kbaAnswerList.length; intAnswer++) {
-      this.user.kbaAnswerList[intAnswer].answer = this.repeater(this.user.kbaAnswerList[intAnswer].answer, 8);
+  public detailsForm: FormGroup;
+
+  constructor(
+    private builder: FormBuilder,
+    private differs: KeyValueDiffers,
+    private zone: NgZone,
+    private _fh: FHService,
+    private _iam: IAMService) {
+      this.differ = differs.find({} ).create(null);
+
+      this.api.iam = _iam.iam;
+      this.api.fh = _fh;
     }
+
+  ngOnInit() {
+    this.zone.runOutsideAngular(() => {
+      this.initUser(() => {
+        this.zone.run(() => {
+          let intAnswer;
+
+          for(intAnswer = 0; intAnswer < this.user.kbaAnswerList.length; intAnswer++) {
+            this.user.kbaAnswerList[intAnswer].answer = this.repeater(this.user.kbaAnswerList[intAnswer].answer, 8);
+          }
+
+          this.detailsForm = this.builder.group({
+            title:           [this.user.title],
+
+            firstName:       [this.user.firstName, Validators.required],
+            middleName:      [this.user.initials],
+            lastName:        [this.user.lastName, Validators.required],
+
+            suffix:          [this.user.suffix],
+
+            workPhone:       [this.user.workPhone],
+
+            department:      [this.user.department],
+            orgID:           [this.user.orgID],
+
+            kbaAnswerList:   this.builder.array([
+              this.initKBAGroup(),
+              this.initKBAGroup(),
+              this.initKBAGroup()
+            ]),
+          });
+
+          if(this.states.isGov) {
+            console.log(this.api.fh.getOrganizationById(this.user.orgID));
+          }
+        });
+      });
+    });
+  }
+
+  ngDoCheck() {
+    let vm = this,
+        changes = this.differ.diff(this.user);
+
+    if(changes) {
+      changes.forEachChangedItem(function(diff) {
+        vm.detailsForm.controls[diff.key].setValue(diff.currentValue);
+      });
+    }
+  }
+
+  initUser(cb) {
+    let vm = this,
+        fn;
+
+    function getSessionUser(promise) {
+      promise({});
+    }
+
+    function getMockUser(promise) {
+      vm.states.isGov = true;
+
+      promise({
+        email: 'doe.john@gsa.gov',
+        suffix: '',
+        firstName: 'John',
+        initials: 'J',
+        lastName: 'Doe',
+
+        department: 10000668,
+        orgId: 100038166,
+
+        workPhone: '2401234568'
+      });
+    };
+
+    fn = this.api.iam.isDebug() ? getMockUser : getSessionUser;
+
+    fn((userData) => {
+      vm.user = _.merge({}, vm.user, userData);
+      cb();
+    });
+  }
+
+  initKBAGroup() {
+    return this.builder.group({
+      questionId: ['', Validators.required],
+      answer:     ['', [Validators.required, Validators.minLength(8), $Validators.unique('answer')]]
+    })
   }
 
   repeater(string, iterations) {
@@ -73,13 +198,29 @@ export class DetailsComponent {
     return repeater;
   }
 
-  get phone():String {
-    return this.user.workPhone
+  get phone():string {
+    let phone = this.user.workPhone
       .replace(/[^0-9]/g, '')
       .replace(/([0-9]{3})([0-9]{3})([0-9]{4})/g, '($1) $2-$3');
+
+    switch(phone.length) {
+      case 14:
+        phone = `1+${phone}`;
+        break;
+    }
+
+    return phone;
   }
 
-  get name():String {
+  setDepartment(department) {
+    this.user.department = department.value;
+  }
+
+  setOrganization(organization) {
+    this.user.orgID = organization.value;
+  }
+
+  get name():string {
     return [
       this.user.firstName || '',
       this.user.initials || '',
@@ -87,11 +228,15 @@ export class DetailsComponent {
     ].join(' ').replace(/\s+/g, ' ');
   }
 
-  onEdit(groupKey) {
+  isEdit(groupKey) {
+    return this.states.editable[groupKey] || false;
+  }
+
+  edit(groupKey) {
     this.states.editable[groupKey] = true;
   }
 
-  isEdit(groupKey) {
-    return this.states.editable[groupKey] || false;
+  save(groupKey) {
+    this.states.editable[groupKey] = false;
   }
 };

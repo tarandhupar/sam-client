@@ -10,8 +10,21 @@
   section {
     margin-bottom: 4rem;
 
+    // Editable Inputs
+    .usa-form-editable {
+      display: none;
+      margin-left: 1em;
+
+      .label-wrapper:nth-child(1) {
+        label {
+          margin-top: 0em;
+        }
+      }
+    }
+
     // Save Toggle`
     .usa-save {
+      margin-top: 1.5em;
       margin-left: 1em;
       display: none;
     }
@@ -32,16 +45,11 @@
 
     .usa-form-control {
       display: inline-block;
-
-      // Editable Form Inputs
-      input[type="text"] {
-        display: none;
-      }
     }
 
     &.kba {
       label {
-        width: 60%;
+        width: 70%;
       }
     }
   }
@@ -58,15 +66,13 @@
       display: block;
     }
 
-    .usa-form-control {
-      span {
-        display: none;
-      }
+    .usa-form-group {
+      display: none;
+    }
 
-      // Editable Form Inputs
-      input[type="text"] {
-        display: inline-block;
-      }
+    // Editable Inputs
+    .usa-form-editable {
+      display: block;
     }
   }
 
