@@ -100,8 +100,11 @@ export class AlertsPage {
   }
 
   onParamChanged(page) {
+    // if this is a page change, the page parameter is > 1
     if (page) {
       this.currentPage = page;
+    } else {
+      this.currentPage = 1;
     }
     this.doSearch();
   }

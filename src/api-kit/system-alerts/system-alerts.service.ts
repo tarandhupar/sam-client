@@ -91,9 +91,8 @@ export class SystemAlertsService {
   updateAlert(alert: AlertType) {
     const apiOptions: any = {
       name: 'alerts',
-      suffix: '',
+      suffix: '/' + alert.id,
       method: 'PUT',
-      id: alert.id,
       body: alert
     };
 
