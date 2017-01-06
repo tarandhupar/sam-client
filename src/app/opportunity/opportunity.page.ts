@@ -76,6 +76,7 @@ export class OpportunityPage implements OnInit {
   logoUrl: string;
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
+  errorOrganization: any;
   awardSort: string = "awardDate"; //default
   awardSortOptions = [
     { label: "Award Date", value: "awardDate" },
@@ -190,7 +191,7 @@ export class OpportunityPage implements OnInit {
     opportunityAPI.subscribe(api => {
       //organizationId length >= 30 -> call opportunity org End Point
       if(api.data.organizationId.length >= 30) {
-        this.opportunityService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
+        this.fhService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
       }
       //organizationId less than 30 character then call Octo's FH End point
       else {
@@ -203,6 +204,7 @@ export class OpportunityPage implements OnInit {
       this.organization = organization['_embedded'][0]['org'];
     }, err => {
       console.log('Error loading organization: ', err);
+      this.errorOrganization = true;
     });
 
     return organizationSubject;
