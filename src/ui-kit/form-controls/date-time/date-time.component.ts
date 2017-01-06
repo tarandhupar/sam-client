@@ -48,6 +48,7 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
     this.setDateAndTime();
     if (this.control) {
       this.control.valueChanges.subscribe(this.onChange);
+      this.wrapper.formatErrors(this.control);
     }
   }
 
@@ -71,6 +72,8 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
       } else {
         this.onChange('');
       }
+    } else {
+      this.onChange('');
     }
   }
 

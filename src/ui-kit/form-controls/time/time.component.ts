@@ -25,7 +25,7 @@ import * as moment from 'moment/moment';
 })
 export class SamTimeComponent implements OnChanges {
   INPUT_FORMAT: string = "H:m";
-  OUTPUT_FORMAT: string = "hh:mm:ss";
+  OUTPUT_FORMAT: string = "HH:mm:ss";
 
   @Input() value: string; // must be a 24 hour time and have the format HH:mm
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
@@ -46,6 +46,8 @@ export class SamTimeComponent implements OnChanges {
     let hours = m.hours();
     let minutes = m.minutes();
 
+    // convert from 24 hour to 12 hour time
+
     if (hours > 12) {
       this.amPm = 'pm';
       hours -= 12;
@@ -62,7 +64,6 @@ export class SamTimeComponent implements OnChanges {
   }
 
   onChange() {
-    console.log('output: ', this.toString());
     this.valueChange.emit(this.toString());
   }
 
@@ -77,6 +78,8 @@ export class SamTimeComponent implements OnChanges {
     if (!this.isValid()) {
       return null;
     }
+
+    // convert from 12 hour to 24 hour times
 
     let hours = this.hours;
 

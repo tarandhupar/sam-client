@@ -66,9 +66,9 @@ export class SamTextareaComponent implements ControlValueAccessor {
       validators.push(Validators.maxLength(this.maxlength));
     }
 
-    //this.control.validators.push(...validators);
     this.control.setValidators(validators);
     this.control.valueChanges.subscribe(this.onChange);
+    this.wrapper.formatErrors(this.control);
   }
 
   onInputChange(value) {

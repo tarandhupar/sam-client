@@ -13,7 +13,9 @@ function isNotBeforeToday(c: FormControl) {
     }
   };
 
-  return !moment(c.value).isBefore(moment().startOf('day')) || error;
+  if (c.value && moment(c.value).isBefore(moment().startOf('day'))) {
+    return error;
+  }
 }
 
 @Component({
@@ -65,26 +67,29 @@ export class AlertEditComponent implements OnInit {
       endDate: [this.alert.endDate(), [isNotBeforeToday]],
       publishedDate: [this.alert.publishedDate(), [isNotBeforeToday]],
       publishImmediately: [false, []],
-      isExpiresIndefinite: [false, []],
+      isExpiresIndefinite: [this.alert.isExpiresIndefinite(), []],
     });
+
+    if (this.alert.isExpiresIndefinite()) {
+      this.form.get('endDate').disable();
+    }
 
     this.form.valueChanges.subscribe(val => this.validate());
     this.validate();
   }
 
   validate() {
-    // let startDate = this.form.value['publishedDate'];
-    // let endDate = this.form.value['endDate'];
-    // if (startDate && endDate && moment(endDate).isBefore(startDate)) {
-    //   this.endDate.wrapper.errorMessage = "Publish date must be after startDate";
-    //   this.form.setErrors({ dateAfter: false});
-    // } else {
-    //   if (this.form.valid) {
-    //     console.log('clear validators');
-    //     this.form.clearValidators();
-    //   }
-    //   this.endDate.wrapper.errorMessage = "";
-    // }
+    let startDate = this.form.value['publishedDate'];
+    let endDate = this.form.value['endDate'];
+    if (startDate && endDate && moment(endDate).isBefore(startDate)) {
+      this.endDate.wrapper.errorMessage = "Publish date must be after startDate";
+      this.form.setErrors({ dateAfter: false});
+    } else {
+      if (this.form.valid) {
+        this.form.clearValidators();
+      }
+      this.endDate.wrapper.errorMessage = "";
+    }
   }
 
   isoNow() {

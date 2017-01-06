@@ -40,7 +40,7 @@ export class LabelWrapper {
             return;
           case 'isNotBeforeToday':
             this.errorMessage = "Date must not be before today";
-            break;
+            return;
           default:
             if (errorObject.message) {
               this.errorMessage = errorObject.message;

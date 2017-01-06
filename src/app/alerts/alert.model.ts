@@ -18,8 +18,8 @@ export class Alert {
     this._raw.id = id;
   }
 
-  isExpiresIndefinite() {
-    return this._raw.content.isExpiresIndefinite
+  isExpiresIndefinite() : boolean {
+    return this._raw.content.isExpiresIndefinite === 'Y';
   }
 
   setIsExpiresIndefinite(val: boolean) {
