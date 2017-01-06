@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { IAMService } from 'api-kit';
-import { emailValidator } from '../shared/validators';
+import { Validators as $Validators } from '../shared/validators';
 
 @Component({
   templateUrl: './login.component.html',
@@ -55,7 +55,7 @@ export class LoginComponent {
   ngOnInit() {
     this.form = this.builder.group({
       'stage1': this.builder.group({
-        username: ['', [Validators.required, emailValidator]],
+        username: ['', [Validators.required, $Validators.email]],
         password: ['', [Validators.required]]
       }),
 
