@@ -12,7 +12,16 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
   selector: 'samPhoneEntry',
   template: `
     <labelWrapper [label]="label" [name]="getIdentifier('phone-number')" [errorMessage]="errorMsg">
-      <input (blur)="check()" maxlength="15" #phoneInput class="" [value]="phoneNumberMirror" (keydown)="process($event)" id="{{getIdentifier('phone-number')}}" name="{{getIdentifier('phone-number')}}" type="text">
+      <input type="text"
+             id="{{getIdentifier('phone-number')}}"
+             name="{{getIdentifier('phone-number')}}"
+             class=""
+             maxlength="15"
+             [value]="phoneNumberMirror"
+             [placeholder]="phoneNumberTemplate"
+             (keydown)="process($event)"
+             (blur)="check()"
+             #phoneInput>
     </labelWrapper>
   `,
 })
