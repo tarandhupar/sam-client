@@ -181,5 +181,5 @@ npm run webdriver:start
 ```bash
 npm run webdriver:start
 # in another terminal
-npm run e2e:live
+npm run e2e:live 
 ```
