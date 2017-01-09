@@ -150,7 +150,7 @@ export class LoginComponent {
         this.api.iam.resetLogin();
       }
 
-      this.api.iam.loginOTP(form.value, function() {
+      this.api.iam.loginOTP(form.value, function(user) {
         vm.states.submitted = false;
 
         switch(vm.states.stage) {
@@ -159,16 +159,7 @@ export class LoginComponent {
             break;
 
           case 2:
-            // vm.router
-            //   .navigate(['/'])
-            //   .then(function() {
-            //     window.location.reload();
-            //   });
-console.log(vm);
-vm.api.iam.user.get(function(userData) {
-  console.log(userData);
-});
-
+            vm.router.navigate(['/profile/details']);
             break;
         }
 

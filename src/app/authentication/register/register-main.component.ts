@@ -367,11 +367,7 @@ export class RegisterMainComponent {
       this.zone.runOutsideAngular(() => {
         this.process(userData, () => {
           this.zone.run(() => {
-            this.router
-              .navigate(['profile'])
-              .then(function() {
-                window.location.reload();
-              });
+            this.router.navigate(['/profile/details']);
           });
         });
       });

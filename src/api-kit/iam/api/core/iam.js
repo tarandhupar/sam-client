@@ -472,13 +472,16 @@ class IAM {
         if(_.isUndefined(data.tokenId)) {
           api.auth.authId = data['authId'];
           api.auth.stage = data['stage'];
+          $success();
         } else {
           api.auth.authId = false;
           api.auth.stage = false;
           Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
-        }
 
-        $success(data);
+          api.checkSession(function(user) {
+            $success(user);
+          });
+        }
       }, function(response) {
         let data = response.response.body,
             error = data.message;
