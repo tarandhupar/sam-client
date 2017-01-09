@@ -158,8 +158,11 @@ export class DetailsComponent {
 
     this.api.iam.user.get(function(userData) {
       vm.user = _.merge({}, vm.user, userData);
+
+      vm.user.email = userData.mail;
       vm.user.firstName = userData.givenName;
       vm.user.lastName = userData.sn;
+      vm.user['middleName'] = userData.initials;
 
       cb();
     }, function() {
@@ -243,7 +246,7 @@ export class DetailsComponent {
             email: 'doe.john@gsa.gov',
             suffix: '',
             firstName: 'John',
-            initials: 'J',
+            middleName: 'J',
             lastName: 'Doe',
 
             department: 100006688,
@@ -307,7 +310,7 @@ export class DetailsComponent {
   get name():string {
     return [
       this.user.firstName || '',
-      this.user.initials || '',
+      this.user['middleName'] || '',
       this.user.lastName || ''
     ].join(' ').replace(/\s+/g, ' ');
   }
@@ -397,10 +400,13 @@ export class DetailsComponent {
     switch(key) {
       case 'identity':
         userData.name = this.name;
+        userData.initials = userData['middleName'];
 
+        delete userData.kbaAnswerList;
         break;
 
       case 'business':
+        delete userData.kbaAnswerList;
         break;
 
       case 'kba':
@@ -417,14 +423,12 @@ export class DetailsComponent {
   }
 
   save(groupKey) {
-    if(this.detailsForm.valid) {
-      this.zone.runOutsideAngular(() => {
-        this.saveGroup(groupKey, () => {
-          this.zone.run(() => {
-            this.states.editable[groupKey] = false;
-          });
+    this.zone.runOutsideAngular(() => {
+      this.saveGroup(groupKey, () => {
+        this.zone.run(() => {
+          this.states.editable[groupKey] = false;
         });
       });
-    }
+    });
   }
 };
