@@ -183,13 +183,6 @@ export class OpportunityPage implements OnInit {
         'totalAwardAmt': data['totalAwardAmt'],
         'unparsableCount': data['unparsableCount']
       };
-      // if (this.pageNum == 0){
-      //   this.min = (this.pageNum + 1) * this.showPerPage - this.showPerPage;
-      //   this.max = (this.pageNum + 1) * this.showPerPage;
-      // } else {
-      //   this.min = this.pageNum * this.showPerPage - this.showPerPage;
-      //   this.max = this.pageNum * this.showPerPage;
-      // }
       this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
     }, err => {
       console.log('Error loading related opportunities: ', err);
