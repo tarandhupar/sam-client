@@ -156,14 +156,9 @@ export class DetailsComponent {
   loadUser(cb) {
     let vm = this;
 
-    this.api.iam.user.get(function(userData) {
-      vm.user = _.merge({}, vm.user, userData);
-
-      vm.user.email = userData.mail;
-      vm.user.firstName = userData.givenName;
-      vm.user.lastName = userData.sn;
-      vm.user['middleName'] = userData.initials;
-
+    this.api.iam.checkSession(function(user) {
+      vm.user = _.merge({}, vm.user, user);
+      vm.user['middleName'] = user.initials;
       cb();
     }, function() {
       vm.router.navigate(['/signin']);

@@ -50,7 +50,15 @@ export class LoginComponent {
     private router: Router,
     private builder: FormBuilder,
     private zone: NgZone,
-    private api: IAMService) {}
+    private api: IAMService) {
+    this.zone.runOutsideAngular(() => {
+      this.authenticate(() => {
+        this.zone.run(() => {
+          // Callback
+        });
+      });
+    });
+  }
 
   ngOnInit() {
     this.form = this.builder.group({
@@ -65,6 +73,16 @@ export class LoginComponent {
     });
 
     this.form.valueChanges.subscribe(data => this.validate());
+  }
+
+  authenticate(cb) {
+    let vm = this;
+
+    this.api.iam.checkSession(function() {
+      vm.router.navigate(['/profile']);
+    }, function() {
+      cb();
+    })
   }
 
   isStage(stage: number) {
@@ -128,6 +146,10 @@ export class LoginComponent {
         credentials;
 
     if(form.valid) {
+      if(this.states.stage == 1) {
+        this.api.iam.resetLogin();
+      }
+
       this.api.iam.loginOTP(form.value, function() {
         vm.states.submitted = false;
 
@@ -137,11 +159,15 @@ export class LoginComponent {
             break;
 
           case 2:
-            vm.router
-              .navigate(['/'])
-              .then(function() {
-                window.location.reload();
-              });
+            // vm.router
+            //   .navigate(['/'])
+            //   .then(function() {
+            //     window.location.reload();
+            //   });
+console.log(vm);
+vm.api.iam.user.get(function(userData) {
+  console.log(userData);
+});
 
             break;
         }

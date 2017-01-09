@@ -5,6 +5,8 @@ import request from 'superagent';
 import config from '../config';
 import utilities from '../utilities';
 
+import User from './user';
+
 const exceptionHandler = function(responseBody) {
   return _.extend({
     status: 'error',
@@ -34,7 +36,7 @@ let user = {
         .get(endpoint)
         .set('iPlanetDirectoryPro', Cookies.get('iPlanetDirectoryPro'))
         .then(function(response) {
-          let user = response.body.sessionToken;
+          let user = new User(response.body.sessionToken);
           $success(user);
         }, function(response) {
           core.$base.removeSession();
@@ -395,14 +397,35 @@ class IAM {
     });
 
     this.debug = false;
+    this.states = {
+      auth: false
+    };
+
     this.user.$base = this;
 
+    this.checkSession();
     this.resetLogin();
 
     // Inject config and utilities into user modules
     for(let module in this.user) {
       this.user[module].$base = this;
     }
+  }
+
+  checkSession($success, $error) {
+    let iam = this;
+
+    $success = $success || function(data) {};
+    $error = $error || function(data) {};
+
+    this.user.get(function(user) {
+      iam.states.auth = true;
+      iam.states.user = user;
+      $success(iam.states.user);
+    }, function() {
+      iam.states.auth = false;
+      $error();
+    });
   }
 
   login(credentials, $success, $error) {
@@ -498,7 +521,6 @@ class IAM {
 
   isDebug() {
     let isDebug = (utils.queryparams.debug !== undefined || false);
-
     return (this.isLocal() && isDebug);
   }
 
