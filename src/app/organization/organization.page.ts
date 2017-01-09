@@ -25,7 +25,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   errorLogo: any;
   private pageNum = 1;
   private totalPages: any = 0;
-  private showPerPage = 20;
+  private showPerPage = 10;
   public logoUrl: string;
 
   constructor(
