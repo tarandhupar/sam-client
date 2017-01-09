@@ -313,10 +313,7 @@ let kba = {
         };
 
         if(!err) {
-          kba.questions = (res.body.kbaQuestionList || []).filter(function(question) {
-            return question.valid;
-          });
-
+          kba.questions = (res.body.kbaQuestionList || []);
           kba.selected = (res.body.kbaAnswerIdList || []).map(function(questionID) {
             return parseInt(questionID);
           });

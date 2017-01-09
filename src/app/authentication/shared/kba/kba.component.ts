@@ -32,6 +32,16 @@ export class KBAComponent implements OnChanges {
   ngOnInit() {
     this.$question = this.question.value;
     this.initQuestions();
+
+    // Process answers
+    if(this.answer.value.length) {
+      let tmpAnswer = this.answer.value;
+
+      this.states.type = 'password';
+      tmpAnswer = tmpAnswer.replace(/&bull;/g, ' ');
+
+      this.answer.setValue(tmpAnswer);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {

@@ -54,6 +54,12 @@
     }
   }
 
+  .business {
+    label {
+      min-width: 180px;
+    }
+  }
+
   // Write State
   .usa-editable {
     // Edit Toggle
@@ -76,9 +82,29 @@
     }
   }
 
+  .usa-kba {
+    .question {
+      width: 70%;
+    }
+
+    .answer {
+      width: 30%;
+    }
+  }
+
+  .usa-button-secondary {
+    margin-top: 20px;
+  }
+
   .usa-alert {
     position: absolute;
     width: 100%;
     top: -80px
+  }
+
+  .modal-content {
+    .usa-alert {
+      position: static;
+    }
   }
 }
