@@ -320,8 +320,11 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
+          break;
+
         case 'm': //Todo: Modification/Amendment/Cancel
         case 'k': //Todo: Combined Synopsis/Solicitation
+          this.displayField[OpportunityFields.Award] = false;
           break;
 
         case 'a': // Award Notice
