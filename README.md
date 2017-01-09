@@ -124,7 +124,7 @@ if (config.selected !== undefined && config.selected.length > 0) {
 ...
 
 <h2 id="helpful-commands">Helpful commands</h2>
-
+ 
 <h3 id="build-files">Build files</h3>
 
 ```bash
