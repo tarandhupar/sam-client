@@ -35,7 +35,6 @@ export class App{
     });
     this.activatedRoute.queryParams.subscribe(
       data => {
-        console.log(data);
         if(typeof data['keyword'] == "string" && typeof data['index'] == "string") {
           this.setCookie(data);
         } else {
@@ -89,7 +88,6 @@ export class App{
   setCookie(data) {
     Cookie.set('keyword', data['keyword']);
     Cookie.set('index', data['index']);
-    console.log(Cookie.getAll());
   }
 
   checkCookie() {
