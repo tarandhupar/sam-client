@@ -84,7 +84,7 @@
               <strong>Contract Award Number: </strong>
               {{ opportunity.data?.award?.number }}
             </li>
-            <li [attr.id]="generateID(opportunityFields.OrderNumber, 'award')"
+            <li [attr.id]="generateID(opportunityFields.OrderNumber)"
                 *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
               <strong>Task/Delivery Order Number: </strong>
               {{ opportunity?.data?.award?.deliveryOrderNumber }}
