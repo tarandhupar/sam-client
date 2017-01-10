@@ -9,7 +9,7 @@
     </samSelect>
   </div>
   <div class="answer">
-  <labelWrapper [errorMessage]="states.errors.answer" required="true">
+  <labelWrapper [errorMessage]="(answer.invalid ? states.errors.answer : '')" required="true">
       <input type="{{ states.type }}"
              name="answer"
              [formControl]="answer"

@@ -74,7 +74,7 @@ export class KBAComponent implements OnChanges {
     }
   }
 
-  updateState(submitted) {
+  updateState(submitted?) {
     let errors;
 
     submitted = submitted || false;
@@ -89,7 +89,7 @@ export class KBAComponent implements OnChanges {
       this.states.errors.question = 'You must select a security question';
     }
 
-    if(this.states.submitted && this.answer.invalid) {
+    if(this.answer.invalid && (this.answer.dirty || this.states.submitted)) {
       errors = this.answer.errors;
 
       if(errors['required'])
@@ -104,13 +104,13 @@ export class KBAComponent implements OnChanges {
   secureAnswer($event) {
     if(this.answer.valid) {
       this.states.type = 'password';
+    } else {
+      this.updateState();
     }
   }
 
   unsecureAnswer($event) {
-    this.states.type = 'text';
-
-    if(!this.answer.value.length) {
+    if(!$event.target.value.length) {
       this.states.type = 'text';
     }
   }
