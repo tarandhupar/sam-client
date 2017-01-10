@@ -113,7 +113,7 @@ export class AlertsPage {
   defaultStatuses() { return ['Active']; }
   defaultTypes() { return ['Error', 'Informational', 'Warning']; }
   defaultPage() { return 1; }
-  defaultDatePublished() { return '30d'; }
+  defaultDatePublished() { return ''; }
 
   totalAlerts(): number {
     return this._totalAlerts;
