@@ -1,4 +1,11 @@
 <div class="usa-grid">
+  <h2>AlphaBet Selector Component &lt;sam-alphabet-selector&gt;</h2>
+  <samLabel [labelType]="'small'" [labelText]="'Data Size'"></samLabel><input [(ngModel)]="searchResultData.size" type="number">
+  <sam-alphabet-selector [sortLabel]="'LastName'" [dataSize]="searchResultData.size" (onDataRangeChange)="onRangeChange($event)"></sam-alphabet-selector>
+  <span *ngIf="curRange !== null">Data Range: {{curRange.start}} - {{curRange.end}}</span>
+</div>
+
+<div class="usa-grid">
   <h2>Accordions Component &lt;samAccordions&gt;</h2>
   <div class="usa-width-one-whole">
     <h3>Accordions without border</h3>

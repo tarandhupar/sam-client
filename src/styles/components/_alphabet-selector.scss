@@ -1,0 +1,14 @@
+.alphabet-selector{
+  .current-range-link{
+    text-decoration: none;
+    color: $color-black;
+  }
+
+  .current-range-link:hover{
+    cursor: auto;
+  }
+
+  .normal-range-link:hover{
+    cursor: pointer;
+  }
+}

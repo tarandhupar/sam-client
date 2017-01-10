@@ -11,6 +11,10 @@ export class UIKitDemoPage {
   dateTime: string = "2016-12-12T13:01";
 
 
+  // Alphabet Selector Component
+  searchResultData: any = {size:0};
+  curRange: any = null;
+
   // Select Component
   selectModel = '';
   selectConfig = {
@@ -199,5 +203,10 @@ export class UIKitDemoPage {
   }
   onModalInitClick2(){
     this.vcModal2.openModal();
+  }
+
+
+  onRangeChange(rangeObj){
+    this.curRange = rangeObj;
   }
 }
