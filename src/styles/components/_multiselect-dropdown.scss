@@ -6,6 +6,14 @@ samMultiSelectDropdown {
 
     .dropdown-title {
       display: inline-block;
+      box-sizing: border-box;
+      min-height: rem(44px);
+      line-height: rem(44px);
+
+      &.disabled {
+        pointer-events: none;
+        color: #666;
+      }
     }
 
     .dropdown-list {
@@ -13,7 +21,7 @@ samMultiSelectDropdown {
       visibility: hidden;
 
       position: absolute;
-      top: 3rem;
+      top: rem(58px);
       left: 0;
 
       background-color: white;

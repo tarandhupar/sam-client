@@ -21,9 +21,11 @@ export class OrganizationPage implements OnInit, OnDestroy {
   organizationPerPage: any;
   min: number;
   max: number;
+  errorOrganization: any;
+  errorLogo: any;
   private pageNum = 1;
   private totalPages: any = 0;
-  private showPerPage = 20;
+  private showPerPage = 10;
   public logoUrl: string;
 
   constructor(
@@ -63,6 +65,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
       this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
     }, err => {
       console.log('Error logging', err);
+      this.errorOrganization = true;
     });
 
     this.loadLogo(apiSubject);
@@ -89,13 +92,14 @@ export class OrganizationPage implements OnInit, OnDestroy {
       }
     }, err => {
       console.log('Error loading logo: ', err);
+      this.errorLogo = true;
     });
   }
 
   sortHierarchyAlphabetically(hierarchy){
     let array = [];
     for (let element of hierarchy){
-      let item = {name: this.getAgencyName(element).toString(), url: "organization/" + element.org.orgKey};
+      let item = {name: this.getAgencyName(element).toString(), orgId: element.org.orgKey};
       array.push(item);
     }
     return _.sortBy(array, ['name']);

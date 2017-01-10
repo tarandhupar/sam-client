@@ -1,28 +1,58 @@
+import { AlertType } from "../../api-kit/system-alerts/system-alerts.service";
+
 export class Alert {
-  private response: any;
+  private _raw: AlertType = {
+    content: {
+      title: '',
+      description: '',
+    }
+  };
 
-  constructor() {
+  constructor() {  }
 
+  id(): number {
+    return this._raw.id;
+  }
+
+  setId(id) {
+    this._raw.id = id;
+  }
+
+  isExpiresIndefinite() : boolean {
+    return this._raw.content.isExpiresIndefinite === 'Y';
+  }
+
+  setIsExpiresIndefinite(val: boolean) {
+    this._raw.content.isExpiresIndefinite = val ? 'Y' : 'N';
   }
 
   status(): string {
-    return this.response.content.archived ? 'Inactive' : 'Active';
+    return this._raw.status;
   }
 
   title(): string {
-    return this.response.content.title;
+    return this._raw.content.title;
+  }
+  setTitle(title: string) {
+    this._raw.content.title = title;
   }
 
   description(): string {
-    return this.response.content.description;
+    return this._raw.content.description;
+  }
+  setDescription(desc: string) {
+    this._raw.content.description = desc;
   }
 
   severity(): string {
-    return this.response.content.severity;
+    return this._raw.content.severity;
+  }
+  setSeverity(severity: string) {
+    this._raw.content.severity = severity;
   }
 
   colorClass(): string {
-    switch (this.response.content.severity.toLowerCase()) {
+    switch (this.severity().toLowerCase()) {
       case 'warning':
         return 'usa-color-warning';
       case 'informational':
@@ -35,7 +65,7 @@ export class Alert {
   }
 
   iconClass(): string {
-    switch (this.response.content.severity.toLowerCase()) {
+    switch (this.severity().toLowerCase()) {
       case 'warning':
         return 'fa-exclamation-circle';
       case 'informational':
@@ -48,7 +78,7 @@ export class Alert {
   }
 
   alertClass(): string {
-    switch (this.response.content.severity.toLowerCase()) {
+    switch (this.severity().toLowerCase()) {
       case 'warning':
         return 'usa-alert-warning';
       case 'informational':
@@ -61,16 +91,26 @@ export class Alert {
   }
 
   publishedDate(): string {
-    return this.response.content.published;
+    return this._raw.content.published;
+  }
+  setPublishedDate(publishedDate: string) {
+    this._raw.content.published = publishedDate;
   }
 
   endDate(): string {
-    return this.response.content.expires;
+    return this._raw.content.expires;
+  }
+  setEndDate(endDate: string) {
+    this._raw.content.expires = endDate;
   }
 
-  static FromResponse(obj: Object): Alert {
+  raw(): AlertType {
+    return this._raw;
+  }
+
+  static FromResponse(res: AlertType): Alert {
     let a = new Alert();
-    a.response = obj;
+    a._raw = res;
     return a;
   }
 }

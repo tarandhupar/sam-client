@@ -150,4 +150,23 @@
     padding-top: 100%;
   }
 
+  .release-note-div{
+    border: none;
+    padding-top: 0;
+    margin-top: 0;
+    width: 33%;
+  }
+
+  .vertical-line{
+    border-right: 1px solid black;
+  }
+
+  .release-note{
+    font-size: 13px;
+  }
+
+  .underline{
+    border-bottom: 1px solid black;
+  }
+
 }

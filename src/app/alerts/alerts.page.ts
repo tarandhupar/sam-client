@@ -13,6 +13,7 @@ export const ALERTS_PER_PAGE: number = 5;
 })
 export class AlertsPage {
 
+  alertBeingEdited: Alert = null;
   alerts:Alert[] = [];
   _totalAlerts:number;
 
@@ -28,8 +29,9 @@ export class AlertsPage {
   statuses = {
     label: 'Status',
     options: [
-      { label: 'Active', value: 'N', name: 'active'},
-      { label: 'Inactive', value: 'Y', name: 'inactive' }
+      { label: 'Active', value: 'Active', name: 'active' },
+      { label: 'Draft', value: 'Draft', name: 'draft' },
+      { label: 'Expired', value: 'Expired', name: 'expired' }
     ]
   };
 
@@ -64,18 +66,24 @@ export class AlertsPage {
     this.doSearch();
   }
 
+  onNewAlertsReceived(alerts) {
+    this._totalAlerts = alerts.total;
+    if (alerts.alerts && alerts.alerts.length) {
+      this.alerts = alerts.alerts.map(alert => Alert.FromResponse(alert));
+    } else {
+      this.alerts = [];
+    }
+  }
+
   doSearch() {
     this.getAlerts().catch(err => {
       this.router.navigate([ERROR_PAGE_PATH]);
       return Observable.of(err);
     })
-    .subscribe(alerts => {
-      this._totalAlerts = alerts.total;
-      this.alerts = alerts.alerts.map(alert => Alert.FromResponse(alert));
-    })
+    .subscribe((alerts) => this.onNewAlertsReceived(alerts));
   }
 
-  getAlerts() {
+  getAlerts() : Observable<any> {
     let sort, order;
     if (this.sortField === 'pda' || this.sortField === 'pdd') {
       sort = 'published_date';
@@ -92,14 +100,17 @@ export class AlertsPage {
   }
 
   onParamChanged(page) {
+    // if this is a page change, the page parameter is > 1
     if (page) {
       this.currentPage = page;
+    } else {
+      this.currentPage = 1;
     }
     this.doSearch();
   }
 
   defaultSort() { return 'pdd'; }
-  defaultStatuses() { return ['N']; }
+  defaultStatuses() { return ['Active']; }
   defaultTypes() { return ['Error', 'Informational', 'Warning']; }
   defaultPage() { return 1; }
   defaultDatePublished() { return '30d'; }
@@ -109,7 +120,7 @@ export class AlertsPage {
   }
 
   totalPages(): number {
-    return Math.floor(this._totalAlerts / ALERTS_PER_PAGE) + 1;
+    return Math.floor((this._totalAlerts-1) / ALERTS_PER_PAGE) + 1;
   }
 
   alertsStart(): number {
@@ -118,5 +129,47 @@ export class AlertsPage {
 
   alertsEnd(): number {
     return this.alertsStart() + this.alerts.length - 1;
+  }
+
+  onAddAlertClick(alert) {
+    this.alertBeingEdited = new Alert();
+  }
+
+  onAlertCancel() {
+    this.exitEditMode();
+  }
+
+  onAddAlertAccept(alert) {
+    this.alertsService.createAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
+      (alerts) => {
+        this.onNewAlertsReceived(alerts);
+        this.exitEditMode();
+      },
+      (error) => {
+        console.error('Error while adding alerts: ', error);
+        this.router.navigate([ERROR_PAGE_PATH]);
+      }
+    );
+  }
+
+  onEditAlertAccept(alert) {
+    this.alertsService.updateAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
+      (alerts) => {
+        this.onNewAlertsReceived(alerts);
+        this.exitEditMode();
+      },
+      (error) => {
+        console.error('Error while editing alert: ', error);
+        this.router.navigate([ERROR_PAGE_PATH]);
+      }
+    );
+  }
+
+  exitEditMode() {
+    this.alertBeingEdited = null;
+  }
+
+  onAlertEdit(alert) {
+    this.alertBeingEdited = alert;
   }
 }

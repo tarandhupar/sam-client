@@ -5,6 +5,12 @@ import { AlertFooterService } from '../../alerts/alert-footer';
   templateUrl: 'ui-kit-demo.template.html'
 })
 export class UIKitDemoPage {
+
+  time: string = "13:01";
+  date: string = "2016-12-12";
+  dateTime: string = "2016-12-12T13:01";
+
+
   // Select Component
   selectModel = '';
   selectConfig = {
@@ -29,6 +35,24 @@ export class UIKitDemoPage {
     ],
     name: 'my-sr-name',
     label: 'Select a region',
+  };
+
+  textModel = 'Some Text';
+  textConfig = {
+    label: "Enter zipcode",
+    hint: "Zipcode can be short or long version",
+    errorMessage: 'Uh-oh, something went wrong',
+    name: 'aria-friendly-name',
+    disabled: false,
+  };
+
+  textareaModel= 'Some Text';
+  textareaConfig = {
+    label: "Enter zipcode",
+    hint: "Zipcode can be short or long version",
+    errorMessage: 'Uh-oh, something went wrong',
+    name: 'aria-friendly-name',
+    disabled: false,
   };
 
   // Radio Component
@@ -94,16 +118,7 @@ export class UIKitDemoPage {
     timer: 0
   }
 
-  dateModel = {
-    month: null,
-    day: null,
-    year: null
-  };
-  dateModel2 = {
-    month: 12,
-    day: 31,
-    year: 2016
-  };
+  dateModel: string = "2016-02-03";
 
   //Image Library
   imageLibraryData:any =  [
