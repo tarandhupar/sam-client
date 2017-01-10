@@ -67,31 +67,14 @@ export class FHFeaturedResult implements OnInit {
   private callOrganizationById(orgId: string) {
     let organizationSubject = new ReplaySubject(1);
     this.fhService.getOrganizationById(orgId, true).subscribe(organizationSubject);
-      this.loadLogo(organizationSubject);
-  }
-
-  private loadLogo(organizationAPI: Observable<any>) {
-    organizationAPI.subscribe(org => {
-      if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
-        return;
-      }
-
-      if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
-        this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
-        return;
-      } else {
-        this.logoUrl = null;
-      }
-
-      if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
-        // this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
-        this.callOrganizationById(org['_embedded'][0]['org']['parentOrgKey']);
-      }
-    }, err => {
-      console.log('Error loading logo: ', err);
+    this.fhService.getOrganizationLogo(organizationSubject, 
+    (logoUrl) => {
+      this.logoUrl = logoUrl;
+    }, (err) => {
       this.errorOrganization = true;
     });
   }
+
   isEmptyObject(obj) {
     return (Object.keys(obj).length === 0);
   }

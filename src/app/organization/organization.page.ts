@@ -68,32 +68,16 @@ export class OrganizationPage implements OnInit, OnDestroy {
       this.errorOrganization = true;
     });
 
-    this.loadLogo(apiSubject);
+    this.fhService.getOrganizationLogo(apiSubject, 
+      (logoUrl) => {
+        console.log('featured result success cb', logoUrl);
+        this.logoUrl = logoUrl;
+      }, (err) => {
+        console.log('eatured result error cb', err);
+        this.errorLogo = true;
+    });
 
     return apiSubject;
-  }
-
-  private loadLogo(organizationAPI: Observable<any>) {
-    organizationAPI.subscribe(org => {
-      // Do some basic null checks
-      if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
-        return;
-      }
-
-      // Base case: If logo exists, save it to a variable and exit
-      if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
-        this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
-        return;
-      }
-
-      // Recursive case: If parent orgranization exists, recursively try to load its logo
-      if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
-        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey'], true));
-      }
-    }, err => {
-      console.log('Error loading logo: ', err);
-      this.errorLogo = true;
-    });
   }
 
   sortHierarchyAlphabetically(hierarchy){
