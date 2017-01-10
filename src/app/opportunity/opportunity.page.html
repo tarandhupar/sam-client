@@ -388,6 +388,12 @@
             </div>
           </div>
 
+          <div class="card" *ngIf="attachmentError" [@intro]="fade">
+            <div class="card-secure-content usa-text-center">
+              <strong>No packages uploaded.</strong>
+            </div>
+          </div>
+
         </section>
 
         <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
