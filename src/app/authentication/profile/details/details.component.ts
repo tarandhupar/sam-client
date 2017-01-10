@@ -105,7 +105,7 @@ export class DetailsComponent {
             title:           [this.user.title],
 
             firstName:       [this.user.firstName, Validators.required],
-            middleName:      [this.user.initials],
+            initials:        [this.user.initials],
             lastName:        [this.user.lastName, Validators.required],
 
             suffix:          [this.user.suffix],
@@ -147,7 +147,7 @@ export class DetailsComponent {
     if(changes) {
       changes.forEachChangedItem(function(diff) {
         if(vm.detailsForm && vm.detailsForm.controls[diff.key]) {
-          vm.detailsForm.controls[diff.key].setValue(diff.currentValue);
+          vm.detailsForm.controls[diff.key == 'middleName' ? 'intiials' : diff.key].setValue(diff.currentValue);
         }
       });
     }
@@ -171,8 +171,8 @@ export class DetailsComponent {
     function processKBAQuestions(data) {
       let intQuestion;
 
+      // Set Questions Lookup
       vm.lookups.questions = data.questions;
-
       vm.lookups.questions = vm.lookups.questions.map(function(question, intQuestion) {
         if(intQuestion) {
           // Crseate reverse lookup while remapping
@@ -189,6 +189,11 @@ export class DetailsComponent {
       }
 
       vm.lookups.questions.unshift(null);
+
+      // Set Selected Answers
+      data.selected.forEach(function(questionID, intQuestion) {
+        vm.user.kbaAnswerList[intQuestion].questionId = questionID;
+      })
 
       cb();
     }
@@ -314,6 +319,9 @@ export class DetailsComponent {
     return this.states.editable[groupKey] || false;
   }
 
+  /**
+   * KBA
+   */
   changeQuestion(questionID, $index) {
     let vm = this,
         items = _.cloneDeep(this.lookups.questions),
@@ -386,29 +394,47 @@ export class DetailsComponent {
     this.states.editable[groupKey] = true;
   }
 
-  saveGroup(key, cb) {
-    let userData;
+  isValid(keys: Array<String>) {
+    let controls = this.detailsForm.controls,
+        valid = true,
+        key,
+        intKey,
+        intArrayKey;
 
-    this.user = _.clone(this.detailsForm.value);
-    userData = _.clone(this.user);
+    for(intKey = 0; intKey < keys.length; intKey++) {
+      key = keys[intKey];
 
-    switch(key) {
-      case 'identity':
-        userData.name = this.name;
-        userData.initials = userData['middleName'];
-
-        delete userData.kbaAnswerList;
-        break;
-
-      case 'business':
-        delete userData.kbaAnswerList;
-        break;
-
-      case 'kba':
-        break;
+      if(controls[key].invalid) {
+        valid = false;
+        return valid
+      }
     }
 
-    console.log(userData);
+    return valid;
+  }
+
+  saveGroup(keys: Array<String>, cb) {
+    let controls = this.detailsForm.controls,
+        userData = {},
+        key,
+        intKey;
+
+    for(intKey = 0; intKey < keys.length; intKey++) {
+      key = keys[intKey];
+      userData[key] = controls[key].value;
+
+      if(key == 'kbaAnswerList') {
+        userData[key] = userData[key].filter(function(item, intItem) {
+          return (item.answer.trim().length > 0)
+        });
+
+        // Abort the update if no answer has been changed
+        if(!userData[key].length) {
+          cb();
+          return;
+        }
+      }
+    }
 
     this.api.iam.user.update(userData, function(data) {
       cb();
@@ -418,8 +444,18 @@ export class DetailsComponent {
   }
 
   save(groupKey) {
+    let controls = this.detailsForm.controls,
+        mappings = {
+          'identity': 'title|firstName|initials|lastName|suffix',
+          'business': 'department|orgID|workPhone',
+          'kba': 'kbaAnswerList'
+        },
+
+        keys = mappings[groupKey].split('|'),
+        valid = this.isValid(keys);
+
     this.zone.runOutsideAngular(() => {
-      this.saveGroup(groupKey, () => {
+      this.saveGroup(keys, () => {
         this.zone.run(() => {
           this.states.editable[groupKey] = false;
         });
