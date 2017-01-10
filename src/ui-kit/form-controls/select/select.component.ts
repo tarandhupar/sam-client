@@ -41,7 +41,6 @@ export class SamSelectComponent implements ControlValueAccessor {
   @Input() errorMessage: string;
   @Input() required: boolean;
   @Input() disabled: boolean;
-  @Input() required: boolean;
   @Input() control: FormControl;
 
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
