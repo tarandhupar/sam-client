@@ -70,10 +70,8 @@ export class OrganizationPage implements OnInit, OnDestroy {
 
     this.fhService.getOrganizationLogo(apiSubject, 
       (logoUrl) => {
-        console.log('featured result success cb', logoUrl);
         this.logoUrl = logoUrl;
       }, (err) => {
-        console.log('eatured result error cb', err);
         this.errorLogo = true;
     });
 
