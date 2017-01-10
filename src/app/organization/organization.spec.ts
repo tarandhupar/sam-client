@@ -167,6 +167,9 @@ let MockFHService = {
         }
       ]
     });
+  }, 
+  getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
+    return Observable.of("");
   }
 };
 
