@@ -9,6 +9,7 @@ import * as moment from 'moment/moment';
 export class AlertItemComponent {
 
   @Input() alert: Alert;
+  @Input() isAdmin: boolean;
   @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
   @Input() editDisabled: boolean = false;
 

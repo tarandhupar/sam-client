@@ -4,6 +4,7 @@ import {Alert} from "./alert.model";
 import {SystemAlertsService} from "../../api-kit/system-alerts/system-alerts.service";
 import {ERROR_PAGE_PATH} from "../application-content/error/error.route";
 import {Observable} from "rxjs";
+import {Cookie} from 'ng2-cookies';
 
 export const ALERTS_PER_PAGE: number = 5;
 
@@ -60,6 +61,22 @@ export class AlertsPage {
 
   constructor(public router: Router, private alertsService: SystemAlertsService) {
 
+  }
+
+  userRole() {
+    return Cookie.get('role') || 'other';
+  }
+
+  onRoleChange(val) {
+    Cookie.set('role', val);
+  }
+
+  isAdmin() {
+    return Cookie.get('role') === 'admin';
+  }
+
+  showClassSelector() {
+    return SHOW_OPTIONAL === 'true';
   }
 
   ngOnInit() {
