@@ -34,7 +34,7 @@ describe('Opportunity Service', () => {
         "organizationLocationId": "100010393",
         "relatedOpportunityId": "Related Opportunity Id goes here",
         "statuses": {
-          "publishStatus": "Statuses publish status goes here",
+          "publishStatus": "Statuses publish archived goes here",
           "isArchived": false,
           "isCanceled": false
         },

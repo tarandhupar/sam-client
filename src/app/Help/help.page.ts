@@ -33,6 +33,7 @@ export class HelpPage {
   }
 
   changeSection(value){
+    window.scrollTo(0,0);
     this.currentSection = value;
     this.currentUrl = this.baseUrl+this.currentSection;
   }

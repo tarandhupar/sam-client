@@ -1,22 +1,31 @@
-<div class="alert-type-indicator" [ngClass]="alert.colorClass()">
-  <i class="alert-type-icon fa" [ngClass]="alert.iconClass()"></i>{{alert.severity()}}
-</div>
-<div class="alert-item usa-grid-full">
-  <div class="usa-width-three-fourths">
-    <h2 class="alert-title">{{alert.title()}}</h2>
-    <div class="alert-body">
-      {{alert.description()}}
+<div>
+  <div>
+    <div class="alert-type-indicator" [ngClass]="alert.colorClass()">
+      <i class="alert-type-icon fa" [ngClass]="alert.iconClass()"></i>{{alert.severity()}}
+    </div>
+    <div class="pull-right">
+      <button class="usa-button-transparent" (click)="onEditClick()" [ngClass]="editDisabled && 'usa-button-transparent-disabled'"><span>Edit</span>&nbsp;<i class="fa fa-pencil"></i></button>
     </div>
   </div>
-  <div class="usa-width-one-fourth">
-    <div class="alert-right-item">
-      Published Date: {{alert.publishedDate() | dateFormat: 'MMM DD, YYYY'}}
+  <div class="alert-item usa-grid-full">
+    <div class="usa-width-three-fourths">
+      <h2 class="alert-title clearfix">
+        {{alert.title()}}
+      </h2>
+      <div class="alert-body">
+        {{alert.description()}}
+      </div>
     </div>
-    <div class="alert-right-item">
-      End Date: {{alert.endDate() | dateFormat: 'MMM DD, YYYY'}}
-    </div>
-    <div class="alert-right-item">
-      Status: {{alert.status()}}
+    <div class="usa-width-one-fourth">
+      <div class="alert-right-item">
+        Published Date: {{publishedDate()}}
+      </div>
+      <div class="alert-right-item">
+        End Date: {{endDate()}}
+      </div>
+      <div class="alert-right-item">
+        Status: {{alert.status()}}
+      </div>
     </div>
   </div>
 </div>

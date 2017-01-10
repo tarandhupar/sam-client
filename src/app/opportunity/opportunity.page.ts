@@ -76,6 +76,7 @@ export class OpportunityPage implements OnInit {
   logoUrl: string;
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
+  errorOrganization: any;
   awardSort: string = "awardDate"; //default
   awardSortOptions = [
     { label: "Award Date", value: "awardDate" },
@@ -86,6 +87,8 @@ export class OpportunityPage implements OnInit {
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
+  min: number;
+  max: number;
 
   constructor(
     private router: Router,
@@ -162,6 +165,8 @@ export class OpportunityPage implements OnInit {
 
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
+      this.min = (this.pageNum + 1) * this.showPerPage - this.showPerPage;
+      this.max = (this.pageNum + 1) * this.showPerPage;
     opportunityAPI.subscribe((opportunity => {
       this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
     }));
@@ -190,7 +195,7 @@ export class OpportunityPage implements OnInit {
     opportunityAPI.subscribe(api => {
       //organizationId length >= 30 -> call opportunity org End Point
       if(api.data.organizationId.length >= 30) {
-        this.opportunityService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
+        this.fhService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
       }
       //organizationId less than 30 character then call Octo's FH End point
       else {
@@ -203,6 +208,7 @@ export class OpportunityPage implements OnInit {
       this.organization = organization['_embedded'][0]['org'];
     }, err => {
       console.log('Error loading organization: ', err);
+      this.errorOrganization = true;
     });
 
     return organizationSubject;
@@ -318,8 +324,11 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
+          break;
+
         case 'm': //Todo: Modification/Amendment/Cancel
         case 'k': //Todo: Combined Synopsis/Solicitation
+          this.displayField[OpportunityFields.Award] = false;
           break;
 
         case 'a': // Award Notice
@@ -412,17 +421,27 @@ export class OpportunityPage implements OnInit {
 
   pageChange(pagenumber){
     this.pageNum = pagenumber;
-    if (this.pageNum>=0){
-      this.pageNum++;
-    } else {
-      this.pageNum = 1;
-    }
+    this.min = (pagenumber + 1)  * this.showPerPage - this.showPerPage;
+    this.max = (pagenumber + 1) * this.showPerPage;
+    var pcobj = this.setupPageChange(false);
     let navigationExtras: NavigationExtras = {
-      queryParams: {page: this.pageNum},
+      queryParams: pcobj,
       fragment: 'opportunity-award-summary'
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
+  }
+
+  setupPageChange(newpagechange){
+    var pcobj = {};
+
+    if(!newpagechange && this.pageNum>=0){
+      pcobj['page'] = this.pageNum+1;
+    }
+    else{
+      pcobj['page'] = 1;
+    }
+    return pcobj;
   }
 
 
