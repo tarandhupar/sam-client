@@ -87,6 +87,8 @@ export class OpportunityPage implements OnInit {
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
+  min: number;
+  max: number;
 
   constructor(
     private router: Router,
@@ -163,6 +165,13 @@ export class OpportunityPage implements OnInit {
 
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
+    if (this.pageNum == 0){
+      this.min = (this.pageNum + 1) * this.showPerPage - this.showPerPage;
+      this.max = (this.pageNum + 1) * this.showPerPage;
+    } else {
+      this.min = this.pageNum * this.showPerPage - this.showPerPage;
+      this.max = this.pageNum * this.showPerPage;
+    }
     opportunityAPI.subscribe((opportunity => {
       this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
     }));
@@ -422,6 +431,8 @@ export class OpportunityPage implements OnInit {
     } else {
       this.pageNum = 1;
     }
+    this.min = pagenumber * this.showPerPage - this.showPerPage;
+    this.max = pagenumber * this.showPerPage;
     let navigationExtras: NavigationExtras = {
       queryParams: {page: this.pageNum},
       fragment: 'opportunity-award-summary'

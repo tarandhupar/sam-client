@@ -522,7 +522,10 @@
           </div>
 
         </div>
-
+            <p class="m_T-2x" style="text-align: right;">
+              <strong>{{min +1}} - {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}</strong>
+              of <strong>{{relatedOpportunitiesMetadata.count}}</strong>
+            </p>
           <div class="card-simple" *ngFor="let element of relatedOpportunities">
 
             <h3>{{element.data?.award?.awardee?.name}}</h3>
