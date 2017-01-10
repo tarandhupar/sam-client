@@ -36,5 +36,5 @@
     <alert-edit *ngIf="alertBeingEdited && alertBeingEdited === alert" [mode]="'edit'" (cancel)="onAlertCancel()" (accept)="onEditAlertAccept($event)" [alert]="alertBeingEdited"></alert-edit>
     <alert-item [alert]="alert" *ngIf="alertBeingEdited !== alert" (edit)="onAlertEdit($event)" [editDisabled]="alertBeingEdited"></alert-item>
   </div>
-  <samPagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()" (pageChange)="onParamChanged($event)"></samPagination>
+  <samPagination [disabled]='alertBeingEdited' *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()" (pageChange)="onParamChanged($event)"></samPagination>
 </div>
