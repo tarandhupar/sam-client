@@ -424,8 +424,9 @@ export class DetailsComponent {
       userData[key] = controls[key].value;
 
       if(key == 'kbaAnswerList') {
-        userData[key] = userData[key].filter(function(item, intItem) {
-          return (item.answer.trim().length > 0)
+        userData[key] = userData[key].map(function(item, intItem) {
+          item.answer = item.answer.trim();
+          return item;
         });
 
         // Abort the update if no answer has been changed
