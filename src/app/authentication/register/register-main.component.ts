@@ -346,11 +346,10 @@ export class RegisterMainComponent {
       vm.api.iam.login(credentials, function() {
         cb();
       }, function() {
-        //TODO
+        // Authentication Error Response
       });
     }, function(err) {
-      vm.api.iam.login({});
-      //TODO
+      // Registraton Error Response
     });
   }
 
