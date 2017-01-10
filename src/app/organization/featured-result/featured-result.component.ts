@@ -66,7 +66,7 @@ export class FHFeaturedResult implements OnInit {
 
   private callOrganizationById(orgId: string) {
     let organizationSubject = new ReplaySubject(1);
-    this.fhService.getOrganizationById(orgId).subscribe(organizationSubject);
+    this.fhService.getOrganizationById(orgId, true).subscribe(organizationSubject);
       this.loadLogo(organizationSubject);
   }
 

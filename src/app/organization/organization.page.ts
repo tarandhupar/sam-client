@@ -54,7 +54,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   private loadOrganization() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.activatedRoute.params.switchMap(params => { // construct a stream of api data
-      return this.fhService.getOrganizationById(params['id']);
+      return this.fhService.getOrganizationById(params['id'], true);
     });
     apiStream.subscribe(apiSubject);
 
@@ -88,7 +88,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
 
       // Recursive case: If parent orgranization exists, recursively try to load its logo
       if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
-        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
+        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey'], true));
       }
     }, err => {
       console.log('Error loading logo: ', err);
