@@ -1,5 +1,5 @@
 The following explains how to get set up locally. For instructions regarding branching, merging, and so on; please see the [CONTRIBUTING](https://csp-github.sam.gov/joshuabruce/sam-front-end/blob/comp/CONTRIBUTING.md) documentation.
-
+  
 <ul>
   <li>
     <a href="#getting-started">Getting started</a>
@@ -124,7 +124,7 @@ if (config.selected !== undefined && config.selected.length > 0) {
 ...
 
 <h2 id="helpful-commands">Helpful commands</h2>
-
+ 
 <h3 id="build-files">Build files</h3>
 
 ```bash

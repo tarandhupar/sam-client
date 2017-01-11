@@ -87,6 +87,8 @@ export class OpportunityPage implements OnInit {
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
+  min: number;
+  max: number;
 
   constructor(
     private router: Router,
@@ -163,6 +165,8 @@ export class OpportunityPage implements OnInit {
 
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
+      this.min = (this.pageNum + 1) * this.showPerPage - this.showPerPage;
+      this.max = (this.pageNum + 1) * this.showPerPage;
     opportunityAPI.subscribe((opportunity => {
       this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
     }));
@@ -320,8 +324,11 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
+          break;
+
         case 'm': //Todo: Modification/Amendment/Cancel
         case 'k': //Todo: Combined Synopsis/Solicitation
+          this.displayField[OpportunityFields.Award] = false;
           break;
 
         case 'a': // Award Notice
@@ -330,7 +337,6 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.JustificationAuthority] = false;
           this.displayField[OpportunityFields.OrderNumber] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
-          this.displayField[OpportunityFields.ClassificationCode] = false;
           this.displayField[OpportunityFields.POP] = false;
           break;
 
@@ -414,17 +420,27 @@ export class OpportunityPage implements OnInit {
 
   pageChange(pagenumber){
     this.pageNum = pagenumber;
-    if (this.pageNum>=0){
-      this.pageNum++;
-    } else {
-      this.pageNum = 1;
-    }
+    this.min = (pagenumber + 1)  * this.showPerPage - this.showPerPage;
+    this.max = (pagenumber + 1) * this.showPerPage;
+    var pcobj = this.setupPageChange(false);
     let navigationExtras: NavigationExtras = {
-      queryParams: {page: this.pageNum},
+      queryParams: pcobj,
       fragment: 'opportunity-award-summary'
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
+  }
+
+  setupPageChange(newpagechange){
+    var pcobj = {};
+
+    if(!newpagechange && this.pageNum>=0){
+      pcobj['page'] = this.pageNum+1;
+    }
+    else{
+      pcobj['page'] = 1;
+    }
+    return pcobj;
   }
 
 

@@ -14,7 +14,8 @@ const exceptionHandler = function(responseBody) {
 
 let $config = _.extend({}, config.endpoints.iam),
     utils = new utilities({
-      localResource: $config.localResource
+      localResource: $config.localResource,
+      remoteResource: $config.remoteResource
     });
 
 /**
@@ -44,7 +45,7 @@ let user = {
     }
   },
 
-  create(email, token, userData, $success, $error) {
+  create(token, userData, $success, $error) {
     let endpoint = utils.getUrl($config.registration.register),
         data = {
           tokenId: token,
@@ -116,19 +117,27 @@ let user = {
  */
 user.registration = {
   init(email, $success, $error) {
-    let endpoint = utils.getUrl($config.registration.init.replace(/\{email\}/g, email));
+    let endpoint = [
+      utils.getUrl($config.registration.init.replace(/\{email\}/g, email)),
+      Date.now().toString()
+    ].join('?');
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
     request
       .get(endpoint)
-      .then(function(response) {
-        $success(response.body);
-      }, $error);
+      .set('X-Requested-With', 'XMLHttpRequest')
+      .end(function(err, response) {
+        if(err) {
+          $error(response.body.message);
+        } else {
+          $success(response.body);
+        }
+      });
   },
 
-  confirm(email, token, code, $success, $error) {
+  confirm(token, $success, $error) {
     let endpoint = utils.getUrl($config.registration.confirm),
         data = {
           tokenId: token
@@ -136,10 +145,6 @@ user.registration = {
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
-
-    if(!_.isUndefined(code) && !_.isNull(code)) {
-      data.confirmationId = code;
-    }
 
     request
       .post(endpoint)
@@ -149,8 +154,8 @@ user.registration = {
       }, $error);
   },
 
-  register(email, token, userData, $success, $error) {
-    this.$base.user.create(email, token, userData, $success, $error);
+  register(token, userData, $success, $error) {
+    this.$base.user.create(token, userData, $success, $error);
   }
 };
 
@@ -392,6 +397,7 @@ class IAM {
       kba: kba
     });
 
+    this.debug = false;
     this.user.$base = this;
 
     this.resetLogin();
@@ -444,11 +450,11 @@ class IAM {
         let data = response.body.authnResponse;
 
         if(_.isUndefined(data.tokenId)) {
-          api.login.authId = data['authId'];
-          api.login.stage = data['stage'];
+          api.auth.authId = data['authId'];
+          api.auth.stage = data['stage'];
         } else {
-          api.login.authId = false;
-          api.login.stage = false;
+          api.auth.authId = false;
+          api.auth.stage = false;
           Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
         }
 
@@ -462,12 +468,12 @@ class IAM {
   }
 
   getStageData() {
-    if(this.login.stage && this.login.authId) {
+    if(this.auth.stage && this.auth.authId) {
       return {
         service: 'LDAPandHOTP',
-        stage: this.login.stage,
+        stage: this.auth.stage,
         otp: '',
-        authId: this.login.authId
+        authId: this.auth.authId
       };
     } else {
       return {
@@ -479,7 +485,7 @@ class IAM {
   }
 
   resetLogin() {
-    this.login = {
+    this.auth = {
       authId: false,
       stage: false
     };
@@ -487,6 +493,20 @@ class IAM {
 
   removeSession() {
     Cookies.remove('iPlanetDirectoryPro', $config.cookies);
+  }
+
+  isLocal() {
+    return utils.isLocal();
+  }
+
+  isDebug() {
+    let isDebug = (utils.queryparams.debug !== undefined || false);
+
+    return (this.isLocal() && isDebug);
+  }
+
+  getEnvironment() {
+    return utils.getEnvironment();
   }
 
   logout() {

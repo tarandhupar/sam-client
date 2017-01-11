@@ -1,4 +1,4 @@
-import { Component,Directive, Input,ElementRef,Renderer,Output,OnInit,EventEmitter,ViewChild } from '@angular/core';
+import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FHService } from 'api-kit';
 
@@ -10,25 +10,31 @@ import { FHService } from 'api-kit';
 /**
 * AgencyPickerComponent - Connects to backend FH services to select a single/multiple organizations
 *
-* @Input multimode: boolean - congfigure to select a single or multiple organizations
+* @Input multimode: boolean - configure to select a single or multiple organizations
+* @Input advancedMode: boolean - configure advanced mode
 * @Input getQSValue: boolean - Looks up a query string value to prepopulate selection
 * @Input() orgId: string - Prepopulate picker with an organization id
 * @Input() hint: string - Hint text that will appear below the label
 * @Input() orgRoot: string - Sets a root organization on the picker, users can only search/browse organizations under this root
-* @Output organization - emits array of selected organizations when user closes the selection area
-*
+* @Output department - emits a single department object with value property (note: in case later we need organization label emitted)
+* @Output organization - emits array/single (Depending on `multimode` setting) of selected organizations when user closes the selection area
 */
 export class AgencyPickerComponent implements OnInit {
   @Input() label: string = "Multiple Organization(s):";
   @Input() multimode: boolean = true;
+  @Input() advancedMode: boolean = false;
   @Input() getQSValue: string = "organizationId";
   @Input() orgId: string = "";
   @Input() hint: string = "";
   @Input() orgRoot = "";
+
+  @Output('department') onDepartmentChange = new EventEmitter<any>();
+  @Output() organization = new EventEmitter<any[]>();
+
   @ViewChild("autocompletelist") autocompletelist;
-	@Output() organization = new EventEmitter<any[]>();
 
   private searchTimer: NodeJS.Timer = null;
+
   autocompletePreselect = "";
   searchTerm = "";
   searchData = [];
@@ -44,7 +50,12 @@ export class AgencyPickerComponent implements OnInit {
   selectedSingleOrganizationName = "";
   lockHierachy = [];
 	organizationId = '';
-  defaultDpmtOption = {value:'', label: 'Please select an Department', name: ''};
+  defaultDpmtOption = {
+    value:'',
+    label: 'Please select an Department',
+    name: ''
+  };
+
   dpmtSelectConfig = {
     options: [
       this.defaultDpmtOption
@@ -55,7 +66,13 @@ export class AgencyPickerComponent implements OnInit {
     type: 'department',
     selectedOrg: ""
   };
-  defaultAgencyOption = {value:'', label: 'Please select an Agency', name: ''};
+
+  defaultAgencyOption = {
+    value:'',
+    label: 'Please select an Agency',
+    name: ''
+  };
+
   agencySelectConfig = {
     options: [
       this.defaultAgencyOption
@@ -66,7 +83,13 @@ export class AgencyPickerComponent implements OnInit {
     type: 'agency',
     selectedOrg: ""
   };
-  defaultOfficeOption = {value:'', label: 'Please select an Office', name: ''};
+
+  defaultOfficeOption = {
+    value:'',
+    label: 'Please select an Office',
+    name: ''
+  };
+
   officeSelectConfig = {
     options: [
       this.defaultOfficeOption
@@ -77,11 +100,17 @@ export class AgencyPickerComponent implements OnInit {
     type: 'office',
     selectedOrg: ""
   };
+
   orgLevels = [
-    this.dpmtSelectConfig, this.agencySelectConfig, this.officeSelectConfig,
-    Object.assign({},this.officeSelectConfig), Object.assign({},this.officeSelectConfig),Object.assign({},this.officeSelectConfig),
+    this.dpmtSelectConfig,
+    this.agencySelectConfig,
+    this.officeSelectConfig,
+    Object.assign({},this.officeSelectConfig),
+    Object.assign({},this.officeSelectConfig),
+    Object.assign({},this.officeSelectConfig),
     Object.assign({},this.officeSelectConfig)
   ];
+
   showAutocompleteMsg = false;
   autocompleteMsg = "";
   searchMessage = "";
@@ -201,15 +230,21 @@ export class AgencyPickerComponent implements OnInit {
 
   //init
 	ngOnInit() {
+    if(this.advancedMode) {
+      this.selectorToggle = true;
+    }
+
     if(this.orgRoot && isNaN(Number(this.orgRoot))){
       console.error("Invalid organization root entered: " + this.orgRoot);
       return;
     }
+
     this.orgLevels[2].label += " (L3)";
     this.orgLevels[3].label += " (L4)";
     this.orgLevels[4].label += " (L5)";
     this.orgLevels[5].label += " (L6)";
     this.orgLevels[6].label += " (L7)";
+
     if(this.orgId.length>0){
       this.organizationId = this.orgId;
     } else {
@@ -514,6 +549,17 @@ export class AgencyPickerComponent implements OnInit {
     var orgLevel = this.orgLevels[lvl];
     var selectionLvl = lvl;
     var dontResetDirectChildLevel = false;
+
+    switch(selectionLvl) {
+      // Department
+      case 0:
+        this.onDepartmentChange.emit({
+          value: orgLevel.selectedOrg
+        });
+
+        break;
+    }
+
     //handle when user selects the empty org option, select parent org
     if(orgLevel.selectedOrg=="" && lvl>0){
       selectionLvl = lvl-1;
@@ -587,7 +633,7 @@ export class AgencyPickerComponent implements OnInit {
    obj['value'] = data['elementId'] ? data['elementId'] : data['orgKey'];
    this.addToSelectedOrganizations(obj);
    this.autoComplete.length = 0;
-   this.organization.emit(this.selectedOrganizations);
+   this.organization.emit(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);
   }
 
   removeOrg(value){
@@ -614,11 +660,11 @@ export class AgencyPickerComponent implements OnInit {
     this.organization.emit(this.selectedOrganizations);
   }
 
-  toggleSelectorArea(){
+  toggleSelectorArea() {
     this.selectorToggle = this.selectorToggle ? false : true;
   }
 
-  close(){
+  close() {
     this.selectorToggle = false;
   }
 
