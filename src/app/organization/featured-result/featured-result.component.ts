@@ -32,7 +32,7 @@ import { ReplaySubject, Observable } from 'rxjs';
                 {{ data.type=="Agency" ? 'Sub-Tier' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
               </li>
               <li>
-                Code <strong>{{ data.code!==null ? data.code : '-' }}</strong>
+                <strong>{{ data.aacCode ? 'AAC Code:' : (data.fpdsOrgId ? 'FPDS Org ID:' : (data.fpdsCode ? 'FPDS Code:' : 'Old FPDS Code:')) }}</strong> {{ data.aacCode ? data.aacCode : (data.fpdsOrgId ? data.fpdsOrgId : (data.fpdsCode ? data.fpdsCode : (data.oldFPDSCode ? data.oldFPDSCode : ''))) }}
               </li>  
               <br/>
               <li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
