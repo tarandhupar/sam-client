@@ -72,6 +72,7 @@ export class SamSelectComponent implements ControlValueAccessor {
     this.model = val;
     this.modelChange.emit(val);
     this.onChange(val);
+    this.wrapper.formatErrors(this.control);
   }
 
   setDisabledState(disabled) {

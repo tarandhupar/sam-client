@@ -62,6 +62,7 @@ export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAcce
   }
 
   emitChanges(val) {
+    this.value = val;
     this.onChange(val);
     this.valueChange.emit(val);
   }

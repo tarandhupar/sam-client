@@ -3,8 +3,10 @@ import {Alert} from "../alert.model";
 import {OptionsType} from "ui-kit/form-controls/types";
 import {FormGroup, FormBuilder, AbstractControl, FormControl} from "@angular/forms";
 import moment = require("moment");
-import before = testing.before;
 import {SamDateTimeComponent} from "ui-kit";
+import {SamSelectComponent} from "ui-kit";
+import {SamTextComponent} from "ui-kit";
+import {SamTextareaComponent} from "../../../ui-kit/form-controls/textarea/textarea.component";
 
 function isNotBeforeToday(c: FormControl) {
   let error = {
@@ -18,6 +20,21 @@ function isNotBeforeToday(c: FormControl) {
   }
 }
 
+function isAfter(before: SamDateTimeComponent) {
+  return (after: FormControl) => {
+    let startDate = before.value;
+    let endDate = after.value;
+    console.log('start', startDate, 'end', endDate);
+    if (startDate && endDate && moment(endDate).isBefore(startDate)) {
+      return {
+        dateAfter: {
+          message: `End date must be after publish date`,
+        }
+      }
+    }
+  };
+}
+
 @Component({
   selector: 'alert-edit',
   templateUrl: 'alert-edit.template.html'
@@ -29,8 +46,11 @@ export class AlertEditComponent implements OnInit {
   @Output() accept: EventEmitter<any> = new EventEmitter<any>();
   @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
-  @ViewChild('endDate') public endDate: SamDateTimeComponent;
-  @ViewChild('publishDate') public publishDate: SamDateTimeComponent;
+  @ViewChild('endDate') endDate: SamDateTimeComponent;
+  @ViewChild('publishedDate') publishedDate: SamDateTimeComponent;
+  @ViewChild('severity') severity: SamSelectComponent;
+  @ViewChild('title') title: SamTextComponent;
+  @ViewChild('description') description: SamTextareaComponent;
 
   publishImmediately: boolean;
 
@@ -64,7 +84,7 @@ export class AlertEditComponent implements OnInit {
       description: [this.alert.description(), []],
       title: [this.alert.title(), []],
       severity: [this.alert.severity(), []],
-      endDate: [this.alert.endDate(), [isNotBeforeToday]],
+      endDate: [this.alert.endDate(), [isNotBeforeToday, isAfter(this.publishedDate)]],
       publishedDate: [this.alert.publishedDate(), [isNotBeforeToday]],
       publishImmediately: [false, []],
       isExpiresIndefinite: [this.alert.isExpiresIndefinite(), []],
@@ -73,23 +93,6 @@ export class AlertEditComponent implements OnInit {
     if (this.alert.isExpiresIndefinite()) {
       this.form.get('endDate').disable();
     }
-
-    this.form.valueChanges.subscribe(val => this.validate());
-    this.validate();
-  }
-
-  validate() {
-    let startDate = this.form.value['publishedDate'];
-    let endDate = this.form.value['endDate'];
-    if (startDate && endDate && moment(endDate).isBefore(startDate)) {
-      this.endDate.wrapper.errorMessage = "Publish date must be after startDate";
-      this.form.setErrors({ dateAfter: false});
-    } else {
-      if (this.form.valid) {
-        this.form.clearValidators();
-      }
-      this.endDate.wrapper.errorMessage = "";
-    }
   }
 
   isoNow() {
@@ -97,6 +100,15 @@ export class AlertEditComponent implements OnInit {
   }
 
   onAcceptClick(event) {
+    if (!this.form.valid) {
+      this.severity.wrapper.formatErrors(<FormControl>this.form.get('severity'));
+      this.title.wrapper.formatErrors(<FormControl>this.form.get('title'));
+      this.description.wrapper.formatErrors(<FormControl>this.form.get('description'));
+      this.publishedDate.wrapper.formatErrors(<FormControl>this.form.get('publishedDate'));
+      this.endDate.wrapper.formatErrors(<FormControl>this.form.get('endDate'));
+      return;
+    }
+
     let alert = new Alert();
     let formValue = this.form.value;
     alert.setDescription(formValue.description);
@@ -125,7 +137,9 @@ export class AlertEditComponent implements OnInit {
     let ctrl: AbstractControl = this.form.controls['publishedDate'];
     if (val) {
       ctrl.setValue(this.isoNow());
-      ctrl.disable()
+      this.publishedDate.wrapper.errorMessage = '';
+      ctrl.disable();
+
     } else {
       ctrl.enable();
     }
@@ -139,9 +153,5 @@ export class AlertEditComponent implements OnInit {
     } else {
       ctrl.enable();
     }
-  }
-
-  acceptButtonStyle() {
-    return {'usa-button-primary': this.form.valid, 'usa-button-disabled': !this.form.valid};
   }
 }
