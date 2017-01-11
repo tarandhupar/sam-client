@@ -17,7 +17,7 @@ import { OptionsType } from '../types';
 @Component({
   selector: 'samCheckbox',
   template: `
-      <fieldsetWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage">
+      <fieldsetWrapper [label]="label" [hint]="hint" [errorMessage]="errorMessage">
         <ul class="usa-unstyled-list">
           <li *ngIf="hasSelectAll">
             <input [attr.id]="checkAllLabelName()" type="checkbox" (change)="onSelectAllChange($event.target.checked)">

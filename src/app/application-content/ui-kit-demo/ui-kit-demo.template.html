@@ -347,18 +347,18 @@
 <br/>
 <div class="usa-grid">
   <h1>DateTime &lt;samDateTime&gt;</h1>
-  <samDateTime [(value)]="dateTime"></samDateTime>
+  <samDateTime name="example-date" [(value)]="dateTime"></samDateTime>
   <p>{{dateTime}}</p>
 </div>
 <div class="usa-grid">
   <h1>Time &lt;samTime&gt;</h1>
-  <samTime [(value)]="time"></samTime>
+  <samTime name="example-time" [(value)]="time"></samTime>
   <p>{{time}}</p>
 </div>
 <div class="usa-grid">
   <h2 class="usa-width-one">Date Entry &lt;samDate&gt;</h2>
   <div class="usa-width-one-half">
-    <samDate [(value)]='dateModel'></samDate>
+    <samDate name="example-date" [(value)]='dateModel'></samDate>
   </div>
   <div class="usa-width-one-half">
     <h3>Model</h3>

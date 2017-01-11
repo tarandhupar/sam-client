@@ -53,6 +53,12 @@ export class SamDateComponent implements OnChanges {
 
   constructor() { }
 
+  ngOnInit() {
+    if (!this.name) {
+      throw new Error('SamTimeComponent required a name for 508 compliance');
+    }
+  }
+
   ngOnChanges() {
     if (this.value) {
       // use the forgiving format (that doesn't need 0 padding) for inputs
@@ -90,15 +96,15 @@ export class SamDateComponent implements OnChanges {
   }
 
   monthName() {
-    return `${name}_month`;
+    return `${this.name}_month`;
   }
 
   dayName() {
-    return `${name}_day`;
+    return `${this.name}_day`;
   }
 
   yearName() {
-    return `${name}_year`;
+    return `${this.name}_year`;
   }
 
 }

@@ -16,7 +16,6 @@ import { FormControl } from "@angular/forms";
 })
 export class FieldsetWrapper {
   @Input() label: string;
-  @Input() name: string;
   @Input() hint: string;
   @Input() errorMessage: string;
 

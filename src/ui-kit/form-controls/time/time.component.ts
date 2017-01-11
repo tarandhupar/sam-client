@@ -23,7 +23,7 @@ import * as moment from 'moment/moment';
     </div>
   `,
 })
-export class SamTimeComponent implements OnChanges {
+export class SamTimeComponent implements OnChanges, OnInit {
   INPUT_FORMAT: string = "H:m";
   OUTPUT_FORMAT: string = "HH:mm:ss";
 
@@ -37,6 +37,12 @@ export class SamTimeComponent implements OnChanges {
   amPm: string;
 
   constructor() { }
+
+  ngOnInit() {
+    if (!this.name) {
+      throw new Error('SamTimeComponent required a [name] for 508 compliance');
+    }
+  }
 
   ngOnChanges() {
     this.parseValue();
@@ -104,15 +110,15 @@ export class SamTimeComponent implements OnChanges {
   }
 
   hourName() {
-    return `${name}_hour`;
+    return `${this.name}_hour`;
   }
 
   minuteName() {
-    return `${name}_minute`;
+    return `${this.name}_minute`;
   }
 
   amPmName() {
-    return `${name}_amPm`;
+    return `${this.name}_amPm`;
   }
 
 }

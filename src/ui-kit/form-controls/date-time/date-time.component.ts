@@ -14,7 +14,7 @@ const MY_VALUE_ACCESSOR: any = {
 @Component({
   selector: 'samDateTime',
   template: `
-    <fieldsetWrapper [label]="label" [name]="name" [errorMessage]="errorMessage" [hint]="hint">
+    <fieldsetWrapper [label]="label" [errorMessage]="errorMessage" [hint]="hint">
       <samTime #timeComponent [(value)]="time" (valueChange)="onInputChange($event)" [name]='name+"_time"' [disabled]="disabled"></samTime>
       <samDate #dateComponent [(value)]="date" (valueChange)="onInputChange($event)" [name]='name+"_date"' [disabled]="disabled"></samDate>
     </fieldsetWrapper>

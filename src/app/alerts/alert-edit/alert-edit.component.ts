@@ -3,10 +3,7 @@ import {Alert} from "../alert.model";
 import {OptionsType} from "ui-kit/form-controls/types";
 import {FormGroup, FormBuilder, AbstractControl, FormControl} from "@angular/forms";
 import moment = require("moment");
-import {SamDateTimeComponent} from "ui-kit";
-import {SamSelectComponent} from "ui-kit";
-import {SamTextComponent} from "ui-kit";
-import {SamTextareaComponent} from "../../../ui-kit/form-controls/textarea/textarea.component";
+import { SamDateTimeComponent, SamSelectComponent, SamTextComponent, SamTextareaComponent } from "ui-kit";
 
 function isNotBeforeToday(c: FormControl) {
   let error = {
