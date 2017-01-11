@@ -68,7 +68,10 @@ export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAcce
 
   emitChanges(val) {
     this.value = val;
-    this.onChange(val);
+    // only when this component is used as a FormControl will change be registered
+    if (this.onChange) {
+      this.onChange(val);
+    }
     this.valueChange.emit(val);
   }
 
