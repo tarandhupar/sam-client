@@ -47,13 +47,20 @@
     }
   }
 
+  .question {
+    float: left;
+    margin-top: 0rem;
+
+    label {
+      line-height: 3rem;
+    }
+  }
+
   .answer {
     width: 38%;
 
-    input {
-      // Oddly, 18F's styles are catered to inline forms. Weird alignment thing.
-      position: relative;
-      top: -3px;
+    label {
+      margin-top: 2rem;
     }
 
     .usa-input-error {

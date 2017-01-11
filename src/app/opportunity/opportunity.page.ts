@@ -38,7 +38,7 @@ import { trigger, state, style, transition, animate } from '@angular/core';
         animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)')
       ]),
       transition('* => void', [
-        animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)', style({
+        animate('.5s cubic-bezier(0.175, 0.885, 0.320, 1.275)', style({
           opacity: 0,
           transform: 'translateY(-30%)'
         }))
@@ -387,7 +387,7 @@ export class OpportunityPage implements OnInit {
   // To hide a field, set the flag displayField[field] to false
   // A field is always displayed by default, unless it is explicitly set not to
   private shouldBeDisplayed(field: OpportunityFields) {
-    return this.displayField[field] !== false;
+    return this.displayField[field] !== false && this.opportunity;
   }
 
   // Given a field name, generates an id for it by adding the correct prefixes
