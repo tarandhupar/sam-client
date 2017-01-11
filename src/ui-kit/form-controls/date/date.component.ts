@@ -11,19 +11,19 @@ import * as moment from 'moment/moment';
 @Component({
   selector: 'samDate',
   template: `
-    <!--<labelWrapper [label]="label" [name]="getIdentifer('date')" [errorMessage]="errorMessage" [hint]="hint">-->
+    <!--<fieldsetWrapper [label]="label" [name]="getIdentifer('date')" [errorMessage]="errorMessage" [hint]="hint">-->
       <div class="usa-date-of-birth date-group" style="overflow:auto;">
         <div class="usa-form-group usa-form-group-month">
-          <label [attr.for]="getIdentifer('date')+'_1'">Month</label>
-          <input #month="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.month" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_1" name="date_of_birth_1" pattern="0?[1-9]|1[012]" type="number" min="1" max="12" maxlength="2" [disabled]="disabled">
+          <label [attr.for]="monthName()">Month</label>
+          <input [attr.id]="monthName()" #month="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.month" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" name="date_of_birth_1" pattern="0?[1-9]|1[012]" type="number" min="1" max="12" maxlength="2" [disabled]="disabled">
         </div>
         <div class="usa-form-group usa-form-group-day">
-          <label [attr.for]="getIdentifer('date')+'_2'">Day</label>
-          <input #day="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.day" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_2" name="date_of_birth_2" pattern="0?[1-9]|1[0-9]|2[0-9]|3[01]" type="number" min="1" max="31" maxlength="2" [disabled]="disabled">
+          <label [attr.for]="dayName()">Day</label>
+          <input [attr.id]="dayName()" #day="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.day" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" name="date_of_birth_2" pattern="0?[1-9]|1[0-9]|2[0-9]|3[01]" type="number" min="1" max="31" maxlength="2" [disabled]="disabled">
         </div>
         <div class="usa-form-group usa-form-group-year">
-          <label [attr.for]="getIdentifer('date')+'_3'">Year</label>
-          <input #year="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.year" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" id="{{getIdentifer('date')}}_3" name="date_of_birth_3" pattern="[0-9]{4}" type="number" min="1900" max="3000" maxlength="4" [disabled]="disabled">
+          <label [attr.for]="yearName()">Year</label>
+          <input [attr.id]="yearName()" #year="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.year" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" name="date_of_birth_3" pattern="[0-9]{4}" type="number" min="1900" max="3000" maxlength="4" [disabled]="disabled">
         </div>
       </div>
     <!--</labelWrapper>-->
@@ -89,11 +89,16 @@ export class SamDateComponent implements OnChanges {
     return this.getDate().isValid();
   }
 
-  getIdentifer(str){
-    if(this.name && this.name.length>0){
-      str = this.name + "-" + str;
-    }
-    return str;
+  monthName() {
+    return `${name}_month`;
+  }
+
+  dayName() {
+    return `${name}_day`;
+  }
+
+  yearName() {
+    return `${name}_year`;
   }
 
 }

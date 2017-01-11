@@ -6,16 +6,16 @@ import * as moment from 'moment/moment';
   template: `
     <div class="sam-time usa-date-of-birth">
       <div class="usa-form-group usa-form-group-month">
-        <label>Hour</label>
-        <input type="number" [(ngModel)]='hours' (ngModelChange)="onChange()" class="usa-form-control" [disabled]="disabled">
+        <label [attr.for]="hourName()">Hour</label>
+        <input [attr.id]="hourName()" type="number" [(ngModel)]='hours' (ngModelChange)="onChange()" class="usa-form-control" [disabled]="disabled">
       </div>
       <div class="usa-form-group usa-form-group-month">
-        <label>Minute</label>
-        <input type="number" [(ngModel)]="minutes" (ngModelChange)="onChange()" class="usa-form-control" [disabled]="disabled">
+        <label [attr.for]="minuteName()">Minute</label>
+        <input [attr.id]="minuteName()" type="number" [(ngModel)]="minutes" (ngModelChange)="onChange()" class="usa-form-control" [disabled]="disabled">
       </div>
       <div class="usa-form-group usa-form-group-year">
-        <label>AM/PM</label>
-        <select [(ngModel)]='amPm' (ngModelChange)="onChange()" [disabled]="disabled">
+        <label [attr.for]="amPmName()">AM/PM</label>
+        <select [attr.id]="amPmName()" [(ngModel)]='amPm' (ngModelChange)="onChange()" [disabled]="disabled">
           <option value="am">AM</option>
           <option value="pm">PM</option>
         </select>
@@ -30,6 +30,7 @@ export class SamTimeComponent implements OnChanges {
   @Input() value: string; // must be a 24 hour time and have the format HH:mm
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
   @Input() disabled: boolean;
+  @Input() name: string;
 
   hours: number;
   minutes: number;
@@ -100,7 +101,18 @@ export class SamTimeComponent implements OnChanges {
     } else {
       return this.getTime().format(this.OUTPUT_FORMAT);
     }
+  }
 
+  hourName() {
+    return `${name}_hour`;
+  }
+
+  minuteName() {
+    return `${name}_minute`;
+  }
+
+  amPmName() {
+    return `${name}_amPm`;
   }
 
 }

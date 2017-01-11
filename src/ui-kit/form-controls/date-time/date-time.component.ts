@@ -2,6 +2,7 @@ import {Component, Input, ViewChild, Output, EventEmitter, OnInit, forwardRef, O
 import * as moment from 'moment/moment';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
 import {LabelWrapper} from "../wrapper/label-wrapper.component";
+import {FieldsetWrapper} from "../wrapper/fieldset-wrapper.component";
 
 
 const MY_VALUE_ACCESSOR: any = {
@@ -13,10 +14,10 @@ const MY_VALUE_ACCESSOR: any = {
 @Component({
   selector: 'samDateTime',
   template: `
-    <labelWrapper [label]="label" [name]="name" [errorMessage]="errorMessage" [hint]="hint">
-      <samTime #timeComponent [(value)]="time" (valueChange)="onInputChange($event)" [disabled]="disabled"></samTime>
-      <samDate #dateComponent [(value)]="date" (valueChange)="onInputChange($event)" [name]='name' [disabled]="disabled"></samDate>
-    </labelWrapper>
+    <fieldsetWrapper [label]="label" [name]="name" [errorMessage]="errorMessage" [hint]="hint">
+      <samTime #timeComponent [(value)]="time" (valueChange)="onInputChange($event)" [name]='name+"_time"' [disabled]="disabled"></samTime>
+      <samDate #dateComponent [(value)]="date" (valueChange)="onInputChange($event)" [name]='name+"_date"' [disabled]="disabled"></samDate>
+    </fieldsetWrapper>
   `,
   providers: [ MY_VALUE_ACCESSOR ]
 })
@@ -34,11 +35,15 @@ export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAcce
 
   @ViewChild('dateComponent') dateComponent;
   @ViewChild('timeComponent') timeComponent;
-  @ViewChild(LabelWrapper) wrapper;
+  @ViewChild(FieldsetWrapper) wrapper;
 
   constructor() { }
 
   ngOnInit() {
+    if (!this.name) {
+      throw new Error('SamDateTimeComponent requires a [name] input for 508 compliance');
+    }
+
     if (this.control) {
       this.wrapper.formatErrors(this.control);
     }
