@@ -9,6 +9,7 @@ import * as moment from 'moment/moment';
 export class AlertItemComponent {
 
   @Input() alert: Alert;
+  @Input() isAdmin: boolean;
   @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
   @Input() editDisabled: boolean = false;
 
@@ -29,6 +30,13 @@ export class AlertItemComponent {
   }
 
   endDate() {
-    return this.formatDate(this.alert.endDate());
+    let dateString = this.alert.endDate();
+    if (dateString) {
+      return moment(dateString).format('MMM DD, YYYY');
+    } else if (this.alert.isExpiresIndefinite()) {
+      return 'Indefinite';
+    } else {
+      return '--';
+    }
   }
 }
