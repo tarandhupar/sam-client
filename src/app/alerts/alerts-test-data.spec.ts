@@ -6,9 +6,9 @@ export const error: AlertType = {
     "category" : "outages",
     "description" : "This is the description",
     "severity" : "ERROR",
-    "begins" : "2016-11-01T20:03:09Z",
-    "expires" : "2016-11-01T20:03:09Z",
-    "published" : "2016-11-01T20:03:09Z"
+    "begins" : "2019-11-01T20:03:09Z",
+    "expires" : "2020-11-01T20:03:09Z",
+    "published" : "2019-11-01T20:03:09Z"
   }
 };
 

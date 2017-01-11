@@ -81,7 +81,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   sortHierarchyAlphabetically(hierarchy){
     let array = [];
     for (let element of hierarchy){
-      let item = {name: this.getAgencyName(element).toString(), url: "organization/" + element.org.orgKey};
+      let item = {name: this.getAgencyName(element).toString(), orgId: element.org.orgKey};
       array.push(item);
     }
     return _.sortBy(array, ['name']);

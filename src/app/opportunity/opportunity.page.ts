@@ -38,7 +38,7 @@ import { trigger, state, style, transition, animate } from '@angular/core';
         animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)')
       ]),
       transition('* => void', [
-        animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)', style({
+        animate('.5s cubic-bezier(0.175, 0.885, 0.320, 1.275)', style({
           opacity: 0,
           transform: 'translateY(-30%)'
         }))
@@ -87,6 +87,8 @@ export class OpportunityPage implements OnInit {
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
+  min: number;
+  max: number;
 
   constructor(
     private router: Router,
@@ -163,6 +165,8 @@ export class OpportunityPage implements OnInit {
 
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
+      this.min = (this.pageNum + 1) * this.showPerPage - this.showPerPage;
+      this.max = (this.pageNum + 1) * this.showPerPage;
     opportunityAPI.subscribe((opportunity => {
       this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
     }));
@@ -295,8 +299,11 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
+          break;
+
         case 'm': //Todo: Modification/Amendment/Cancel
         case 'k': //Todo: Combined Synopsis/Solicitation
+          this.displayField[OpportunityFields.Award] = false;
           break;
 
         case 'a': // Award Notice
@@ -305,7 +312,6 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.JustificationAuthority] = false;
           this.displayField[OpportunityFields.OrderNumber] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
-          this.displayField[OpportunityFields.ClassificationCode] = false;
           this.displayField[OpportunityFields.POP] = false;
           break;
 
@@ -356,7 +362,7 @@ export class OpportunityPage implements OnInit {
   // To hide a field, set the flag displayField[field] to false
   // A field is always displayed by default, unless it is explicitly set not to
   private shouldBeDisplayed(field: OpportunityFields) {
-    return this.displayField[field] !== false;
+    return this.displayField[field] !== false && this.opportunity;
   }
 
   // Given a field name, generates an id for it by adding the correct prefixes
@@ -389,17 +395,27 @@ export class OpportunityPage implements OnInit {
 
   pageChange(pagenumber){
     this.pageNum = pagenumber;
-    if (this.pageNum>=0){
-      this.pageNum++;
-    } else {
-      this.pageNum = 1;
-    }
+    this.min = (pagenumber + 1)  * this.showPerPage - this.showPerPage;
+    this.max = (pagenumber + 1) * this.showPerPage;
+    var pcobj = this.setupPageChange(false);
     let navigationExtras: NavigationExtras = {
-      queryParams: {page: this.pageNum},
+      queryParams: pcobj,
       fragment: 'opportunity-award-summary'
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
+  }
+
+  setupPageChange(newpagechange){
+    var pcobj = {};
+
+    if(!newpagechange && this.pageNum>=0){
+      pcobj['page'] = this.pageNum+1;
+    }
+    else{
+      pcobj['page'] = 1;
+    }
+    return pcobj;
   }
 
 

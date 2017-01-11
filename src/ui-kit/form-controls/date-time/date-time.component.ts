@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild, Output, EventEmitter, OnInit, forwardRef} from '@angular/core';
+import {Component, Input, ViewChild, Output, EventEmitter, OnInit, forwardRef, OnChanges} from '@angular/core';
 import * as moment from 'moment/moment';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
 import {LabelWrapper} from "../wrapper/label-wrapper.component";
@@ -20,20 +20,14 @@ const MY_VALUE_ACCESSOR: any = {
   `,
   providers: [ MY_VALUE_ACCESSOR ]
 })
-export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
+export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAccessor {
   @Input() value: string;
+  @Output() valueChange: EventEmitter<any> = new EventEmitter();
   @Input() label: string;
   @Input() name: string;
   @Input() errorMessage: string;
   @Input() disabled: boolean = false;
   @Input() control;
-
-  onChange = (val) => {
-    if (this.control) {
-      this.wrapper.formatErrors(this.control);
-    }
-  };
-  onTouched = () => { };
 
   time: string = null;
   date: string = null;
@@ -45,11 +39,13 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
   constructor() { }
 
   ngOnInit() {
-    this.setDateAndTime();
     if (this.control) {
-      this.control.valueChanges.subscribe(this.onChange);
       this.wrapper.formatErrors(this.control);
     }
+  }
+
+  ngOnChanges() {
+    this.setDateAndTime();
   }
 
   setDateAndTime() {
@@ -65,17 +61,23 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  emitChanges(val) {
+    this.value = val;
+    this.onChange(val);
+    this.valueChange.emit(val);
+  }
+
   onInputChange() {
-    if (this.dateComponent.isValid() && this.timeComponent.isValid()) {
-      if (this.date && this.time) {
-        this.onChange(`${this.date}T${this.time}`);
-      } else {
-        this.onChange('');
-      }
+    if (this.date && this.time && this.dateComponent.isValid() && this.timeComponent.isValid()) {
+      this.emitChanges(`${this.date}T${this.time}`);
+      this.wrapper.formatErrors(this.control);
     } else {
-      this.onChange('');
+      this.emitChanges(null);
     }
   }
+
+  onChange: Function;
+  onTouched: Function;
 
   registerOnChange(fn) {
     this.onChange = fn;
