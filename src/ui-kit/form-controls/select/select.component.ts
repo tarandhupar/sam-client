@@ -24,8 +24,8 @@ const MY_VALUE_ACCESSOR: any = {
 @Component({
   selector: 'samSelect',
   template: `
-      <labelWrapper [label]="label" [hint]="hint" [errorMessage]="errorMessage" [required]="required">
-        <select [attr.id]="name" [name]="name" [ngModel]="model" (change)="onChange(select.value)" #select [disabled]="disabled">
+      <labelWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage" [required]="required">
+        <select [attr.id]="name" [ngModel]="model" (change)="onSelectChange(select.value)" (blur)="onBlur()" #select [disabled]="disabled">
           <option *ngFor="let option of options" [value]="option.value" [disabled]="option.disabled">{{option.label}}</option>
         </select>
       </labelWrapper>
@@ -66,21 +66,13 @@ export class SamSelectComponent implements ControlValueAccessor {
     }
 
     this.control.setValidators(validators);
-    this.control.valueChanges.subscribe(this.onChange);
   }
 
   onSelectChange(val) {
     this.model = val;
     this.modelChange.emit(val);
     this.onChange(val);
-  }
-
-  registerOnChange(fn) {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn) {
-    this.onTouched = fn;
+    this.wrapper.formatErrors(this.control);
   }
 
   setDisabledState(disabled) {
@@ -91,15 +83,18 @@ export class SamSelectComponent implements ControlValueAccessor {
     this.model = value;
   }
 
-  onChange: any = () => {
-    if (this.control) {
-      this.wrapper.formatErrors(this.control);
-    }
-  };
+  onBlur() {
+    this.onTouched();
+  }
 
-  onTouched: any = () => {
+  registerOnChange(fn) {
+    this.onChange = fn;
+  }
 
-  };
+  registerOnTouched(fn) {
+    this.onTouched = fn;
+  }
 
-
+  onChange: Function;
+  onTouched: Function;
 }

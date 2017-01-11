@@ -41,9 +41,11 @@ export class SamDateComponent implements OnChanges {
   @Input() hint: string = "";
   @Input() prefix: string = "";
   @Input() disabled: boolean = false;
+  @Input() control;
 
   @Input() value: string;
   @Output() valueChange = new EventEmitter<any>();
+  @Output() blurEvent = new EventEmitter<any>();
 
   @ViewChild('month') month;
   @ViewChild('day') day;
@@ -65,22 +67,21 @@ export class SamDateComponent implements OnChanges {
     }
   }
 
-  onBlur(evt){
-     this.isValid();
+  onBlur() {
+     this.blurEvent.emit();
   }
 
   getDate() {
     return moment([this.model.year, this.model.month-1, this.model.day]);
   }
 
-  onChange(){
-    if(this.errorMessage){
-      this.isValid();
-    }
+  onChange() {
     if (this.getDate().isValid()) {
       // use the strict format for outputs
       let dateString = this.getDate().format("YYYY-MM-DD");
-      this.valueChange.emit(dateString)
+      this.valueChange.emit(dateString);
+    } else {
+      this.valueChange.emit(null);
     }
   }
 

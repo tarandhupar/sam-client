@@ -43,7 +43,7 @@ describe('The <alert-edit> component', () => {
 
     it('should emit the modified alert on accept', () => {
       let mySpy = spyOn(component.accept, 'emit');
-      fixture.debugElement.query(By.css('.alert-confirm-button')).nativeElement.click();
+      fixture.debugElement.query(By.css('.usa-button-primary')).nativeElement.click();
       expect(mySpy).toHaveBeenCalled();
     });
   });
