@@ -1,6 +1,7 @@
 /*
  * Angular 2 decorators and services
  */
+import { Cookie } from 'ng2-cookies/ng2-cookies';
 import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
@@ -34,6 +35,11 @@ export class App{
     });
     this.activatedRoute.queryParams.subscribe(
       data => {
+        if(typeof data['keyword'] == "string" && typeof data['index'] == "string") {
+          this.setCookie(data);
+        } else {
+          this.checkCookie();
+        }
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
       });
@@ -77,6 +83,21 @@ export class App{
   toggleOverlay(value){
     this.showOverlay = value;
 
+  }
+
+  setCookie(data) {
+    Cookie.set('keyword', data['keyword']);
+    Cookie.set('index', data['index']);
+  }
+
+  checkCookie() {
+    let cookielist = Cookie.getAll();
+    if(cookielist['keyword']) {
+      this.keyword = cookielist['keyword'];
+    }
+    if(cookielist['index']) {
+      this.index = cookielist['index'];
+    }
   }
 
 }

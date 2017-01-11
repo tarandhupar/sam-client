@@ -27,9 +27,9 @@ describe('The Sam Header Links component', () => {
 
   it('should have sign in and sign up links', function () {
     fixture.detectChanges();
-    let signinLink = fixture.debugElement.query(By.css(".sign-in-link"));
+    let signinLink = fixture.debugElement.query(By.css(".signin-link"));
     expect(signinLink.nativeElement.innerHTML).toBe("Sign In");
-    let signupLink = fixture.debugElement.query(By.css(".sign-up-link"));
+    let signupLink = fixture.debugElement.query(By.css(".signup-link"));
     expect(signupLink.nativeElement.innerHTML).toBe("Sign Up");
   });
 
