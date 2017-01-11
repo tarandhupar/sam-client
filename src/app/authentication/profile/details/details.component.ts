@@ -448,10 +448,6 @@ export class DetailsComponent {
           item.answer = item.answer.trim();
           return item;
         });
-
-
-console.log(userData['kbaAnswerList']);
-cb();return;
       }
     }
 

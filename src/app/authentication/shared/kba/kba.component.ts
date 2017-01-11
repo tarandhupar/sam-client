@@ -126,7 +126,6 @@ export class KBAComponent implements OnChanges {
     let oldCount = this.states.count,
         newCount = $event.target.value.length;
 
-console.log([oldCount, newCount]);
     if(!newCount || (oldCount - newCount) > 1) {
       this.states.type = 'text';
     }
