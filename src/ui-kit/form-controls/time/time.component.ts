@@ -39,6 +39,7 @@ export class SamTimeComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log('what');
     if (!this.name) {
       throw new Error('SamTimeComponent required a [name] for 508 compliance');
     }
@@ -46,12 +47,14 @@ export class SamTimeComponent implements OnInit {
   }
 
   parseValueString() {
-    if (this.value === null) {
+    if (this.isClean()) {
       this.minutes = null;
       this.hours = null;
     }
 
     let m = moment(this.value, this.INPUT_FORMAT);
+
+    console.log('parseValueString', this);
 
     if (!m.isValid()) {
       this.minutes = null;
@@ -76,10 +79,12 @@ export class SamTimeComponent implements OnInit {
 
     this.hours = hours;
     this.minutes = minutes;
+
+    // convert input to iso string if it was not already
+    this.value = this.toString();
   }
 
   onInputChange() {
-    console.log('on time change: ', this);
     this.valueChange.emit(this.toString());
   }
 
@@ -107,7 +112,6 @@ export class SamTimeComponent implements OnInit {
       hours += 12;
     }
 
-    console.log('time::getTime(): ', this);
     return moment({hour: hours, minute: this.minutes});
   }
 

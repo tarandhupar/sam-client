@@ -50,9 +50,9 @@ function isAfter(before: SamDateTimeComponent) {
   };
 }
 
-function invalidDateTime(c: FormControl) {
+function validDateTime(c: FormControl) {
   let error = {
-    invalidDateTime: {
+    validDateTime: {
       message: 'Date is invalid'
     }
   };
@@ -111,8 +111,8 @@ export class AlertEditComponent implements OnInit {
       description: [this.alert.description(), []],
       title: [this.alert.title(), []],
       severity: [this.alert.severity(), []],
-      endDate: [this.alert.endDate(), [isNotBeforeToday, isAfter(this.publishedDate)]],
-      publishedDate: [this.alert.publishedDate(), [isNotBeforeToday]],
+      endDate: [this.alert.endDate(), [isNotBeforeToday, isAfter(this.publishedDate), validDateTime]],
+      publishedDate: [this.alert.publishedDate(), [isNotBeforeToday, validDateTime]],
       publishImmediately: [false, []],
       isExpiresIndefinite: [this.alert.isExpiresIndefinite(), []],
     });

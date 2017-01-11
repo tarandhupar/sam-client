@@ -53,11 +53,12 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
   parseValueString() {
     if (this.value) {
       // use the more forgiving format (that doesn't need 0 padding) for inputs
-      console.log('dateTimeComp::parseValueString()', this);
-      let m = moment(this.value, 'Y-M-DTH:m:s');
+      console.log('parse', this.value);
+      let m = moment(this.value, 'Y-M-DTH:m');
+      console.log(m);
       if (m.isValid()) {
-        this.time = m.format('H:m');
-        this.date = m.format('Y-M-D');
+        this.time = m.format('HH:mm:ss');
+        this.date = m.format('YYYY-MM-DD');
       } else {
         console.error('[value] for samDateTime is invalid');
       }
@@ -74,19 +75,15 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
   }
 
   onInputChange() {
-    console.log('on input change', this);
-
-
-    // if (this.dateComponent.isClean() && this.timeComponent.isClean()) {
-    //   this.emitChanges(null);
-    // } else if (!this.dateComponent.isValid() || !this.timeComponent.isValid()) {
-    //   this.emitChanges('Invalid Date Time');
-    // } else if (this.dateComponent.isValid() && this.timeComponent.isClean()) {
-    //   this.emitChanges(this.date);
-    // } else if (this.dateComponent.isValid() && this.timeComponent.isValid()){
-    //   this.emitChanges(`${this.date}T${this.time}`);
-    // }
-    this.wrapper.formatErrors(this.control);
+    if (this.dateComponent.isClean() && this.timeComponent.isClean()) {
+      this.emitChanges(null);
+    } else if (this.dateComponent.isValid() && this.timeComponent.isClean()) {
+      this.emitChanges(`${this.date}T00:00:00`);
+    } else if (this.dateComponent.isValid() && this.timeComponent.isValid()) {
+      this.emitChanges(`${this.date}T${this.time}`);
+    } else {
+      this.emitChanges('Invalid Date Time');
+    }
   }
 
   onChange: Function;
