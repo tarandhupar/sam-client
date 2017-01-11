@@ -39,7 +39,6 @@ export class SamTimeComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log('what');
     if (!this.name) {
       throw new Error('SamTimeComponent required a [name] for 508 compliance');
     }
@@ -53,8 +52,6 @@ export class SamTimeComponent implements OnInit {
     }
 
     let m = moment(this.value, this.INPUT_FORMAT);
-
-    console.log('parseValueString', this);
 
     if (!m.isValid()) {
       this.minutes = null;

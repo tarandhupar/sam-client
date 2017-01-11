@@ -53,9 +53,7 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
   parseValueString() {
     if (this.value) {
       // use the more forgiving format (that doesn't need 0 padding) for inputs
-      console.log('parse', this.value);
       let m = moment(this.value, 'Y-M-DTH:m');
-      console.log(m);
       if (m.isValid()) {
         this.time = m.format('HH:mm:ss');
         this.date = m.format('YYYY-MM-DD');
