@@ -51,13 +51,15 @@ export class SamAlphabetSelectorComponent {
     /* Logic to calculate the capacity in a group based on data size*/
 
     /* Fake logic for now */
-    let groupCap = 10;
+    let groupCap = 26;
     if(this.dataSize > 100000){
       groupCap = 1;
     } else if(this.dataSize > 10000){
       groupCap = 3;
     } else if(this.dataSize > 1000){
       groupCap = 5;
+    } else if(this.dataSize > 100){
+      groupCap = 10;
     }
     return groupCap;
   }
