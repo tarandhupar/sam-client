@@ -50,6 +50,10 @@
   .question {
     float: left;
     margin-top: 0rem;
+
+    label {
+      line-height: 3rem;
+    }
   }
 
   .answer {
@@ -57,12 +61,6 @@
 
     label {
       margin-top: 2rem;
-    }
-
-    input {
-      // Oddly, 18F's styles are catered to inline forms. Weird alignment thing.
-      position: relative;
-      top: 2.5px;
     }
 
     .usa-input-error {

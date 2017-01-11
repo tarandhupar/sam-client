@@ -72,7 +72,7 @@
       <h3>Security Questions<a class="usa-edit" href="javascript:void(0);" (click)="edit('kba')">Edit</a></h3>
 
       <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
-        <label [innerText]="lookups.questions[kbaAnswer.questionId].question"></label>
+        <label [innerText]="question(kbaAnswer.questionId)"></label>
         <div class="usa-form-control" [innerHtml]="kbaAnswer.answer"></div>
       </div>
 

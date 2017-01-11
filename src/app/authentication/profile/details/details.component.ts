@@ -169,31 +169,43 @@ export class DetailsComponent {
     let vm = this;
 
     function processKBAQuestions(data) {
-      let intQuestion;
+      let questions,
+          selected,
+          intQuestion,
+          intAnswer;
 
-      // Set Questions Lookup
+      // Set Selected Answers
+      vm.user.kbaAnswerList = vm.user.kbaAnswerList.map(function(answer, intAnswer) {
+        selected = (data.selected[intAnswer] || -1);
+
+        answer.questionId = selected;
+        vm.states.selected[intAnswer] = selected;
+
+        return answer;
+      });
+
+      // Set question mapping of questionID => index
       vm.lookups.questions = data.questions;
       vm.lookups.questions = vm.lookups.questions.map(function(question, intQuestion) {
-        if(intQuestion) {
-          // Crseate reverse lookup while remapping
-          vm.lookups.indexes[question.id] = intQuestion;
-          // Update associative array
-          question.disabled = false;
-        }
-
+        // Crseate reverse lookup while remapping
+        vm.lookups.indexes[question.id] = intQuestion;
+        question.disabled = false;
         return question;
       });
 
       for(intQuestion in vm.user.kbaAnswerList) {
-        vm.questions.push(_.clone(vm.lookups.questions));
+        intQuestion = parseInt(intQuestion);
+
+        questions = _.cloneDeep(vm.lookups.questions).map(function(question, index) {
+          intAnswer = _.indexOf(data.selected, question.id);
+          // Update disabled state
+          question.disabled = (intAnswer > -1) && (intAnswer !== intQuestion);
+
+          return question;
+        });
+
+        vm.questions.push(questions);
       }
-
-      vm.lookups.questions.unshift(null);
-
-      // Set Selected Answers
-      data.selected.forEach(function(questionID, intQuestion) {
-        vm.user.kbaAnswerList[intQuestion].questionId = questionID;
-      })
 
       cb();
     }
@@ -322,6 +334,13 @@ export class DetailsComponent {
   /**
    * KBA
    */
+  question(questionID) {
+    const questions = this.lookups.questions,
+          mappings = this.lookups.indexes;
+
+    return questions[mappings[questionID]].question;
+  }
+
   changeQuestion(questionID, $index) {
     let vm = this,
         items = _.cloneDeep(this.lookups.questions),
@@ -414,7 +433,8 @@ export class DetailsComponent {
   }
 
   saveGroup(keys: Array<String>, cb) {
-    let controls = this.detailsForm.controls,
+    let vm = this,
+        controls = this.detailsForm.controls,
         userData = {},
         key,
         intKey;
@@ -429,11 +449,9 @@ export class DetailsComponent {
           return item;
         });
 
-        // Abort the update if no answer has been changed
-        if(!userData[key].length) {
-          cb();
-          return;
-        }
+
+console.log(userData['kbaAnswerList']);
+cb();return;
       }
     }
 
