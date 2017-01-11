@@ -15,6 +15,7 @@ export class SamMultiSelectDropdownComponent implements OnChanges {
     @Input() hint: string;
     @Input() errorMessage: string;
     @Input() hasSelectAll: boolean;
+    @Input() disabled: boolean = false;
 
     @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
 

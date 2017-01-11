@@ -60,7 +60,9 @@
     <samLabel [labelType]="'big'" [labelText]="'Big Label'"></samLabel>
   </div>
   <div class="usa-width-one-sixth">
-    <samLabel [labelType]="'small'" [labelText]="'Small Label'"></samLabel>
+    <samLabel
+      [labelType]="'small'"
+      [labelText]="'Small Label'"></samLabel>
   </div>
 </div>
 <div class="usa-grid">
@@ -106,6 +108,86 @@
   <div class="usa-width-one-third">
     <h3>Model</h3>
     <pre><code>{{selectModel | json}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2>Select Text &lt;samText&gt;</h2>
+  <div class="usa-width-one-third">
+    <samText
+      [(ngModel)]="textModel"
+      [name]="textConfig.name"
+      [label]="textConfig.label"
+      [hint]="textConfig.hint"
+      [errorMessage]="textConfig.errorMessage"
+      [disabled]="textConfig.disabled">
+    </samText>
+  </div>
+  <div class="usa-width-one-third">
+    <fieldset class="usa-fieldset-inputs usa-sans">
+      <legend><h3>Options</h3></legend>
+      <ul class="usa-unstyled-list">
+        <li>
+          <input id="isDisabled" type="checkbox" [(ngModel)]="textConfig.disabled">
+          <label for="isDisabled">Disabled</label>
+        </li>
+        <li>
+          <label>Label text</label>
+          <input type="text" [(ngModel)]="textConfig.label">
+        </li>
+        <li>
+          <label>Error message text</label>
+          <input type="text" [(ngModel)]="textConfig.errorMessage">
+        </li>
+        <li>
+          <label>Hint text</label>
+          <input type="text" [(ngModel)]="textConfig.hint">
+        </li>
+      </ul>
+    </fieldset>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{textModel}}</code></pre>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2>Select Text &lt;samTextarea&gt;</h2>
+  <div class="usa-width-one-third">
+    <samTextArea
+      [(ngModel)]="textareaModel"
+      [name]="textareaConfig.name"
+      [label]="textareaConfig.label"
+      [hint]="textareaConfig.hint"
+      [errorMessage]="textareaConfig.errorMessage"
+      [disabled]="textareaConfig.disabled">
+    </samTextArea>
+  </div>
+  <div class="usa-width-one-third">
+    <fieldset class="usa-fieldset-inputs usa-sans">
+      <legend><h3>Options</h3></legend>
+      <ul class="usa-unstyled-list">
+        <li>
+          <input id="isDisabled" type="checkbox" [(ngModel)]="textareaConfig.disabled">
+          <label for="isDisabled">Disabled</label>
+        </li>
+        <li>
+          <label>Label text</label>
+          <input type="text" [(ngModel)]="textareaConfig.label">
+        </li>
+        <li>
+          <label>Error message text</label>
+          <input type="text" [(ngModel)]="textareaConfig.errorMessage">
+        </li>
+        <li>
+          <label>Hint text</label>
+          <input type="text" [(ngModel)]="textareaConfig.hint">
+        </li>
+      </ul>
+    </fieldset>
+  </div>
+  <div class="usa-width-one-third">
+    <h3>Model</h3>
+    <pre><code>{{textareaModel}}</code></pre>
   </div>
 </div>
 <div class="usa-grid">
@@ -264,12 +346,21 @@
 </div>
 <br/>
 <div class="usa-grid">
-  <h2 class="usa-width-one">Date Entry &lt;samDateEntry&gt;</h2>
-  <div class="usa-width-one-third">
-    <samDateEntry [model]="dateModel"></samDateEntry>
-    <samDateEntry [model]="dateModel2" [prefix]="'example2'"></samDateEntry>
+  <h1>DateTime &lt;samDateTime&gt;</h1>
+  <samDateTime [(value)]="dateTime"></samDateTime>
+  <p>{{dateTime}}</p>
+</div>
+<div class="usa-grid">
+  <h1>Time &lt;samTime&gt;</h1>
+  <samTime [(value)]="time"></samTime>
+  <p>{{time}}</p>
+</div>
+<div class="usa-grid">
+  <h2 class="usa-width-one">Date Entry &lt;samDate&gt;</h2>
+  <div class="usa-width-one-half">
+    <samDate [(value)]='dateModel'></samDate>
   </div>
-  <div class="usa-width-one-third">
+  <div class="usa-width-one-half">
     <h3>Model</h3>
     <pre><code>{{dateModel | json}}</code></pre>
   </div>
@@ -303,7 +394,7 @@
       <option *ngFor="let type of modalAlertTypes">{{ type }}</option>
     </select>
     <button (click)="onModalInitClick()">Show Modal</button>
-    
+
     <p>Modal with 'transclude content' and disabled 'close on outside click'</p>
     <button (click)="onModalInitClick2()">Show Modal 2</button>
     <samModal #modal2 [title]="modalConfig2.title" [type]="modalConfig2.type" [closeOnOutsideClick]="false">

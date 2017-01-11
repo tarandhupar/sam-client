@@ -9,8 +9,7 @@ import { HelpModule } from "../../help.module";
 describe('Reference Library page in online help', () => {
   let component:ReferenceLibraryComponent;
   let fixture:any;
-  let federalItemConfig: any;
-  let contractItemConfig: any;
+  
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -20,19 +19,7 @@ describe('Reference Library page in online help', () => {
     });
     fixture = TestBed.createComponent(ReferenceLibraryComponent);
     component = fixture.componentInstance;
-    federalItemConfig = {
-      title:"Data Element Repository",
-      detail:"Details for Data Element Repository: "+component.detailLipsum,
-      link:"view the e-CFR",
-      url:"fakeUrl"
-    };
 
-    contractItemConfig = {
-      title:"Federal Acquisition Regulation",
-      detail:"Details for Federal Acquisition Regulation: "+component.detailLipsum,
-      link:"view the FAR",
-      url:"fakeUrl"
-    };
   });
 
   it('should compile', () => {
@@ -49,5 +36,5 @@ describe('Reference Library page in online help', () => {
     expect(additionalRef).toBeDefined();
     expect(additionalRef.nativeElement.innerHTML).toBe("Additional References");
   });
-  
+
 });

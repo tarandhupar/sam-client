@@ -1,5 +1,6 @@
-import { Input, Component } from '@angular/core';
+import {Input, Output, Component, EventEmitter} from '@angular/core';
 import {Alert} from "../alert.model";
+import * as moment from 'moment/moment';
 
 @Component({
   selector: 'alert-item',
@@ -8,8 +9,34 @@ import {Alert} from "../alert.model";
 export class AlertItemComponent {
 
   @Input() alert: Alert;
+  @Input() isAdmin: boolean;
+  @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
+  @Input() editDisabled: boolean = false;
 
-  constructor() {
+  onEditClick() {
+    this.edit.emit(this.alert);
+  }
 
+  formatDate(dateString) {
+    if (dateString) {
+      return moment(dateString).format('MMM DD, YYYY');
+    } else {
+      return '--';
+    }
+  }
+
+  publishedDate() {
+    return this.formatDate(this.alert.publishedDate());
+  }
+
+  endDate() {
+    let dateString = this.alert.endDate();
+    if (dateString) {
+      return moment(dateString).format('MMM DD, YYYY');
+    } else if (this.alert.isExpiresIndefinite()) {
+      return 'Indefinite';
+    } else {
+      return '--';
+    }
   }
 }

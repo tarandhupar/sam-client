@@ -31,6 +31,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   authorizationIdsGrouped: any[];
   historicalIndex: any;
   alert: any = [];
+  errorOrganization: any;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -140,6 +141,9 @@ export class ProgramPage implements OnInit, OnDestroy {
       // filter for only the data belonging to this object, without it's parents or children
       this.federalHierarchy = this.filterMultiArrayObjectPipe.transform(
         [oid], [this.federalHierarchyWithParents], 'elementId', true, 'hierarchy')[0];
+    }, err => {
+      console.log('Error loading organization: ', err);
+      this.errorOrganization = true;
     });
 
     return fhWithParentsStream;

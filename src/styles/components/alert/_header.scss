@@ -2,6 +2,8 @@ alertHeader {
   .usa-alert {
     display: block;
     margin-top: 0;
+    padding: 8px;
+    background-position: 0 12px;
   }
 
   .usa-alert-body {
@@ -19,11 +21,11 @@ alertHeader {
   }
 
   .title-and-description:not(:first-child) {
-    margin-top: 28px;
+    margin-top: 12px;
   }
 
   .alert-link {
-    margin-top: 14px;
+    margin-top: 12px;
   }
 
   .usa-button-dismiss {

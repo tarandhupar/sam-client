@@ -9,10 +9,8 @@ export class WrapperService {
         "search": "/sgs/v1/search",
         "featuredSearch": "/sgs/v1/search/featured",
         "program": "/cfda/v1/program",
-        "federalHierarchy": "/cfda/v1/fh",
-        "federalHierarchyV2": "/federalorganizations/v1/organizations/hierarchy",
-        "federalOrganization": "/federalorganizations/v1/organizations",
-        "federalDepartment": "/federalorganizations/v1/organizations/departments",
+        "federalHierarchyIntegration": "/cfda/v1/fh",
+        "federalHierarchy": "/federalorganizations/v1/organizations/",
         "dictionary": "/cfda/v1/dictionary",
         "historicalIndex": "/cfda/v1/historicalIndex",
         "alerts": "/alert/v2/alerts",
@@ -29,6 +27,7 @@ export class WrapperService {
     *          name: '',
     *          suffix: '',
     *          oParam: {},
+    *          body: {},
     *          method: '' (GET|POST|PUT...)
     *      }
     * @returns Observable
@@ -48,13 +47,12 @@ export class WrapperService {
 
         var useReverseProxy = document.getElementsByTagName('html')[0].className == "ie9" ? true : false;
         var baseUrl = useReverseProxy ? "/ie_api" : API_UMBRELLA_URL;
-
         //TODO: Implement Post DATA to request
         let jsonOption = {
             "search": oURLSearchParams,
             "method": RequestMethod.Get,
             "headers": oHeader,
-            "body": "",
+            "body": oApiParam.body,
             "url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
         };
 

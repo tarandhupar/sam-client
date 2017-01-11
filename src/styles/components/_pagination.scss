@@ -1,4 +1,9 @@
 samPagination {
+  .disabled {
+    opacity: .6;
+    pointer-events: none;
+  }
+
   .usa-pagination li {
     display: inline-block;
     vertical-align: middle;

@@ -10,7 +10,7 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
  */
 @Component({
   selector: 'samPagination',
-  template: `<nav class="usa-pagination" aria-label="pagination">
+  template: `<nav class="usa-pagination" aria-label="pagination" [ngClass]="disabled && 'disabled'">
               <ul class="usa-color-text usa-color-primary-darkest usa-color-text-white">
                 <li *ngIf="showPrevious()"><a class="page-previous" aria-label="previous" (click)="onPreviousClick()">&lsaquo; Prev</a></li>
                 <li><a class="page-button" [ngClass]="textDecoration(1)" (click)="onPageClick(1)" [attr.aria-label]="getAriaLabel(1)">1</a></li>
@@ -29,6 +29,7 @@ export class SamPaginationComponent {
   private ellipsisThreshold: number = 6; // The threshold to check whether ellipsis is needed
   private MaxTotalPageWithoutEllipsis: number = 10; // If the total number of pages is less than this threshold, display all pages
 
+  @Input() disabled: boolean = false;
   @Input() currentPage: number;
   @Input() totalPages: number;
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
