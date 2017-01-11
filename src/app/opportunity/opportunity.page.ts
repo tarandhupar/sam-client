@@ -387,7 +387,7 @@ export class OpportunityPage implements OnInit {
   // To hide a field, set the flag displayField[field] to false
   // A field is always displayed by default, unless it is explicitly set not to
   private shouldBeDisplayed(field: OpportunityFields) {
-    return this.displayField[field] !== false;
+    return this.displayField[field] !== false && this.opportunity;
   }
 
   // Given a field name, generates an id for it by adding the correct prefixes
