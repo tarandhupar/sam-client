@@ -84,6 +84,11 @@
               <strong>Contract Award Number: </strong>
               {{ opportunity.data?.award?.number }}
             </li>
+            <li [attr.id]="generateID(opportunityFields.OrderNumber)"
+                *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
+              <strong>Task/Delivery Order Number: </strong>
+              {{ opportunity?.data?.award?.deliveryOrderNumber }}
+            </li>
             <li [attr.id]="generateID(opportunityFields.AwardedDUNS)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedDUNS)">
             <strong>Contractor Awarded DUNS: </strong>
               <span>
@@ -129,7 +134,7 @@
             <li [attr.id]="generateID(opportunityFields.AwardAmount)" *ngIf="shouldBeDisplayed(opportunityFields.AwardAmount)">
               <strong>Contract Award Dollar Amount: </strong> <span>{{opportunity.data?.award?.amount}}</span>
             </li>
-            <li [attr.id]="generateID(opportunityFields.LineItemNumber)" *ngIf="shouldBeDisplayed(opportunityFields.LineItemNumber)">
+            <li [attr.id]="generateID(opportunityFields.LineItemNumber, 'award')" *ngIf="shouldBeDisplayed(opportunityFields.LineItemNumber)">
               <strong>Contract Line Item Number: </strong>
               <span>
                 {{opportunity.data?.award?.lineItemNumber}}
@@ -196,11 +201,6 @@
                 *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && shouldBeDisplayed(opportunityFields.JustificationAuthority) && dictionary">
               <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
               {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:dictionary.fo_justification_authority:'element_id':false:'')[0]?.value }}
-            </li>
-            <li [attr.id]="generateID(opportunityFields.OrderNumber, 'general')"
-                *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
-              <strong>Task/Delivery Order Number: </strong>
-              {{ opportunity?.data?.award?.deliveryOrderNumber }}
             </li>
             <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')"
                 *ngIf="opportunity?.data?.award?.justificationAuthority?.modificationNumber && shouldBeDisplayed(opportunityFields.ModificationNumber)">
