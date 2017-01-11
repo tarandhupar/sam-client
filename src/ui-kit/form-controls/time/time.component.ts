@@ -7,15 +7,15 @@ import * as moment from 'moment/moment';
     <div class="sam-time usa-date-of-birth">
       <div class="usa-form-group usa-form-group-month">
         <label [attr.for]="hourName()">Hour</label>
-        <input [attr.id]="hourName()" type="number" [(ngModel)]='hours' (ngModelChange)="onChange()" class="usa-form-control" [disabled]="disabled">
+        <input [attr.id]="hourName()" type="number" [(ngModel)]='hours' (ngModelChange)="onInputChange()" class="usa-form-control" [disabled]="disabled">
       </div>
       <div class="usa-form-group usa-form-group-month">
         <label [attr.for]="minuteName()">Minute</label>
-        <input [attr.id]="minuteName()" type="number" [(ngModel)]="minutes" (ngModelChange)="onChange()" class="usa-form-control" [disabled]="disabled">
+        <input [attr.id]="minuteName()" type="number" [(ngModel)]="minutes" (ngModelChange)="onInputChange()" class="usa-form-control" [disabled]="disabled">
       </div>
       <div class="usa-form-group usa-form-group-year">
         <label [attr.for]="amPmName()">AM/PM</label>
-        <select [attr.id]="amPmName()" [(ngModel)]='amPm' (ngModelChange)="onChange()" [disabled]="disabled">
+        <select [attr.id]="amPmName()" [(ngModel)]='amPm' (ngModelChange)="onInputChange()" [disabled]="disabled">
           <option value="am">AM</option>
           <option value="pm">PM</option>
         </select>
@@ -23,18 +23,18 @@ import * as moment from 'moment/moment';
     </div>
   `,
 })
-export class SamTimeComponent implements OnChanges, OnInit {
+export class SamTimeComponent implements OnInit {
   INPUT_FORMAT: string = "H:m";
   OUTPUT_FORMAT: string = "HH:mm:ss";
 
-  @Input() value: string; // must be a 24 hour time and have the format HH:mm
+  @Input() value: string = null; // must be a 24 hour time and have the format HH:mm
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
-  @Input() disabled: boolean;
+  @Input() disabled: boolean = false;
   @Input() name: string;
 
-  hours: number;
-  minutes: number;
-  amPm: string;
+  hours: number = null;
+  minutes: number = null;
+  amPm: string = 'am';
 
   constructor() { }
 
@@ -42,14 +42,22 @@ export class SamTimeComponent implements OnChanges, OnInit {
     if (!this.name) {
       throw new Error('SamTimeComponent required a [name] for 508 compliance');
     }
+    this.parseValueString();
   }
 
-  ngOnChanges() {
-    this.parseValue();
-  }
+  parseValueString() {
+    if (this.value === null) {
+      this.minutes = null;
+      this.hours = null;
+    }
 
-  parseValue() {
     let m = moment(this.value, this.INPUT_FORMAT);
+
+    if (!m.isValid()) {
+      this.minutes = null;
+      this.hours = null;
+    }
+
     let hours = m.hours();
     let minutes = m.minutes();
 
@@ -70,15 +78,16 @@ export class SamTimeComponent implements OnChanges, OnInit {
     this.minutes = minutes;
   }
 
-  onChange() {
+  onInputChange() {
+    console.log('on time change: ', this);
     this.valueChange.emit(this.toString());
   }
 
   isValid() {
     return !isNaN(this.hours) && !isNaN(this.minutes)
-      && typeof this.hours === 'number' && typeof this.minutes === 'number'
-      && this.hours >= 1 && this.hours <= 12
-      && this.minutes >= 0 && this.minutes <= 59
+        && typeof this.hours === 'number' && typeof this.minutes === 'number'
+        && this.hours >= 1 && this.hours <= 12
+        && this.minutes >= 0 && this.minutes <= 59;
   }
 
   getTime(): any {
@@ -98,12 +107,19 @@ export class SamTimeComponent implements OnChanges, OnInit {
       hours += 12;
     }
 
+    console.log('time::getTime(): ', this);
     return moment({hour: hours, minute: this.minutes});
   }
 
+  isClean() {
+    return (isNaN(this.hours) || this.hours===null) && (isNaN(this.minutes) || this.minutes===null);
+  }
+
   toString() {
-    if (!this.isValid()) {
+    if (this.isClean()) {
       return null;
+    } else if (!this.isValid()) {
+      return 'Invalid Time';
     } else {
       return this.getTime().format(this.OUTPUT_FORMAT);
     }

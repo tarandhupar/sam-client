@@ -29,11 +29,11 @@ import * as moment from 'moment/moment';
     <!--</labelWrapper>-->
   `,
 })
-export class SamDateComponent implements OnChanges {
+export class SamDateComponent implements OnInit {
   model: any = {
-    month:"",
-    day:"",
-    year:""
+    month: null,
+    day: null,
+    year: null
   };
   @Input() errorMessage: string = "";
   @Input() name: string = "";
@@ -57,9 +57,10 @@ export class SamDateComponent implements OnChanges {
     if (!this.name) {
       throw new Error('SamTimeComponent required a name for 508 compliance');
     }
+    this.parseValueString();
   }
 
-  ngOnChanges() {
+  parseValueString() {
     if (this.value) {
       // use the forgiving format (that doesn't need 0 padding) for inputs
       let m = moment(this.value, 'Y-M-D');
@@ -82,13 +83,21 @@ export class SamDateComponent implements OnChanges {
   }
 
   onChange() {
-    if (this.getDate().isValid()) {
+    if (this.isClean()) {
+      this.valueChange.emit(null);
+    } else if (!this.getDate().isValid()) {
+      this.valueChange.emit('Invalid Date');
+    } else {
       // use the strict format for outputs
       let dateString = this.getDate().format("YYYY-MM-DD");
       this.valueChange.emit(dateString);
-    } else {
-      this.valueChange.emit(null);
     }
+  }
+
+  isClean() {
+    return (isNaN(this.model.day) || this.model.day===null) &&
+      (isNaN(this.model.month) || this.model.month===null) &&
+      (isNaN(this.model.year) || this.model.year===null);
   }
 
   isValid() {

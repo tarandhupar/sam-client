@@ -1,7 +1,6 @@
 import {Component, Input, ViewChild, Output, EventEmitter, OnInit, forwardRef, OnChanges} from '@angular/core';
 import * as moment from 'moment/moment';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
-import {LabelWrapper} from "../wrapper/label-wrapper.component";
 import {FieldsetWrapper} from "../wrapper/fieldset-wrapper.component";
 
 
@@ -21,8 +20,8 @@ const MY_VALUE_ACCESSOR: any = {
   `,
   providers: [ MY_VALUE_ACCESSOR ]
 })
-export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAccessor {
-  @Input() value: string;
+export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
+  @Input() value: string = null;
   @Output() valueChange: EventEmitter<any> = new EventEmitter();
   @Input() label: string;
   @Input() name: string;
@@ -47,15 +46,14 @@ export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAcce
     if (this.control) {
       this.wrapper.formatErrors(this.control);
     }
+
+    this.parseValueString();
   }
 
-  ngOnChanges() {
-    this.setDateAndTime();
-  }
-
-  setDateAndTime() {
+  parseValueString() {
     if (this.value) {
       // use the more forgiving format (that doesn't need 0 padding) for inputs
+      console.log('dateTimeComp::parseValueString()', this);
       let m = moment(this.value, 'Y-M-DTH:m:s');
       if (m.isValid()) {
         this.time = m.format('H:m');
@@ -76,12 +74,19 @@ export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAcce
   }
 
   onInputChange() {
-    if (this.date && this.time && this.dateComponent.isValid() && this.timeComponent.isValid()) {
-      this.emitChanges(`${this.date}T${this.time}`);
-      this.wrapper.formatErrors(this.control);
-    } else {
-      this.emitChanges(null);
-    }
+    console.log('on input change', this);
+
+
+    // if (this.dateComponent.isClean() && this.timeComponent.isClean()) {
+    //   this.emitChanges(null);
+    // } else if (!this.dateComponent.isValid() || !this.timeComponent.isValid()) {
+    //   this.emitChanges('Invalid Date Time');
+    // } else if (this.dateComponent.isValid() && this.timeComponent.isClean()) {
+    //   this.emitChanges(this.date);
+    // } else if (this.dateComponent.isValid() && this.timeComponent.isValid()){
+    //   this.emitChanges(`${this.date}T${this.time}`);
+    // }
+    this.wrapper.formatErrors(this.control);
   }
 
   onChange: Function;
@@ -101,7 +106,7 @@ export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAcce
 
   writeValue(value) {
     this.value = value;
-    this.setDateAndTime();
+    this.parseValueString();
   }
 
 }

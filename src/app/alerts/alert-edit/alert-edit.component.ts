@@ -12,16 +12,35 @@ function isNotBeforeToday(c: FormControl) {
     }
   };
 
-  if (c.value && moment(c.value).isBefore(moment().startOf('day'))) {
+  if (!c.value || c.value.match(/invalid/i)) {
+    return;
+  }
+
+  let m = moment(c.value);
+
+  if (!m.isValid()) {
+    return;
+  }
+
+  if (c.value && m.isBefore(moment().startOf('day'))) {
     return error;
   }
 }
 
 function isAfter(before: SamDateTimeComponent) {
   return (after: FormControl) => {
-    let startDate = before.value;
-    let endDate = after.value;
-    if (startDate && endDate && moment(endDate).isBefore(startDate)) {
+    if (!before.value || before.value.match(/invalid/i) || !after.value || after.value.match(/invalid/i)) {
+      return;
+    }
+
+    let startDate = moment(before.value);
+    let endDate = moment(after.value);
+
+    if (!startDate.isValid() || !endDate.isValid()) {
+      return;
+    }
+
+    if (startDate && endDate && endDate.isBefore(startDate)) {
       return {
         dateAfter: {
           message: `End date must be after publish date`,
@@ -29,6 +48,18 @@ function isAfter(before: SamDateTimeComponent) {
       }
     }
   };
+}
+
+function invalidDateTime(c: FormControl) {
+  let error = {
+    invalidDateTime: {
+      message: 'Date is invalid'
+    }
+  };
+
+  if (c.value === 'Invalid Date Time') {
+    return error;
+  }
 }
 
 @Component({
