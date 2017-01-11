@@ -10,13 +10,13 @@ import {Component, Input} from '@angular/core';
  */
 @Component({
   selector: 'samButton',
-  template: `<button id={{buttonId}} [ngClass]="btnClass()" [disabled]="disabled" type="button">{{buttonText}}</button>`,
+  template: `<button id={{buttonId}} [ngClass]="btnClass" [disabled]="disabled" type="button">{{buttonText}}</button>`,
 })
 export class SamButtonComponent {
-
   @Input() buttonId:string;
   @Input() buttonText:string;
   @Input() buttonType:string;
+  @Input() buttonClass:string = '';
 
   private btnClassMap: any = {
     "default":"",
@@ -31,24 +31,21 @@ export class SamButtonComponent {
 
   disabled: boolean = false;
 
+  get btnClass():String {
+    let classMap = [];
 
-  btnClass():string{
     if(this.btnClassMap.hasOwnProperty(this.buttonType)){
       if(this.buttonType === "disabled"){
         this.disabled = true;
       }
-      return this.btnClassMap[this.buttonType];
+
+      classMap.push(this.btnClassMap[this.buttonType]);
     }
-    return "";
+
+    if(this.buttonClass.length) {
+      classMap.push(this.buttonClass);
+    }
+
+    return classMap.join(' ');
   }
-
-  constructor() {
-  }
-
-  ngOnInit() {
-
-  }
-
-
 }
-

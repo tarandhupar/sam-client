@@ -3,6 +3,7 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
 import { OptionsType } from '../types';
 import {FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor, Validators} from "@angular/forms";
 
+const noop = () => {};
 const MY_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => SamSelectComponent),
@@ -69,9 +70,11 @@ export class SamSelectComponent implements ControlValueAccessor {
   }
 
   onSelectChange(val) {
-    this.model = val;
+    if(this.control !== undefined) {
+      this.model = val;
+    }
+
     this.modelChange.emit(val);
-    this.onChange(val);
     this.wrapper.formatErrors(this.control);
   }
 
@@ -87,14 +90,14 @@ export class SamSelectComponent implements ControlValueAccessor {
     this.onTouched();
   }
 
-  registerOnChange(fn) {
+  registerOnChange(fn: any) {
     this.onChange = fn;
   }
 
-  registerOnTouched(fn) {
+  registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
 
-  onChange: Function;
-  onTouched: Function;
+  private onChange: (_: any) => void = noop;
+  private onTouched: () => void = noop;
 }

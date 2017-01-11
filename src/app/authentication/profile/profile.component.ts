@@ -1,14 +1,24 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-
-import { IAMService } from 'api-kit';
-import { Validators as $Validators } from '../shared/validators';
 
 @Component({
-  templateUrl: './profile.component.html',
-  providers: [IAMService]
+  templateUrl: './profile.component.html'
 })
 export class ProfileComponent {
-  //TODO
+  private states = {
+    route: ''
+  };
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.states.route = this.router.url;
+  }
+
+  get activeRouteClass():String {
+    let className = this.states.route
+      .replace(/\//g, '-')
+      .replace(/\?.+/g, '');
+    return (className.length ? 'usa' : '') + className;
+  }
 };
