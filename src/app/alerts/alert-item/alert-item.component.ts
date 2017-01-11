@@ -20,8 +20,6 @@ export class AlertItemComponent {
   formatDate(dateString) {
     if (dateString) {
       return moment(dateString).format('MMM DD, YYYY');
-    } else if (this.alert.isExpiresIndefinite()) {
-      return 'Indefinite';
     } else {
       return '--';
     }
@@ -32,6 +30,13 @@ export class AlertItemComponent {
   }
 
   endDate() {
-    return this.formatDate(this.alert.endDate());
+    let dateString = this.alert.endDate();
+    if (dateString) {
+      return moment(dateString).format('MMM DD, YYYY');
+    } else if (this.alert.isExpiresIndefinite()) {
+      return 'Indefinite';
+    } else {
+      return '--';
+    }
   }
 }
