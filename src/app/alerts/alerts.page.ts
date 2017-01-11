@@ -76,7 +76,7 @@ export class AlertsPage {
   }
 
   showClassSelector() {
-    return SHOW_OPTIONAL === 'true';
+    return SHOW_OPTIONAL === 'true' || ENV === 'development';
   }
 
   ngOnInit() {

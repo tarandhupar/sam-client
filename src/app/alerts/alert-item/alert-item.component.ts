@@ -20,6 +20,8 @@ export class AlertItemComponent {
   formatDate(dateString) {
     if (dateString) {
       return moment(dateString).format('MMM DD, YYYY');
+    } else if (this.alert.isExpiresIndefinite()) {
+      return 'Indefinite';
     } else {
       return '--';
     }
