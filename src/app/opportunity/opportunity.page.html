@@ -1,7 +1,7 @@
 <div class="usa-grid opportunity-page">
 
   <!--Sidebar-->
-  <aside class="usa-width-one-fourth">
+  <aside *ngIf="ready" class="usa-width-one-fourth">
     <br />
     <br />
     <div sam-sticky limit=1200 container="occupy-page">
@@ -40,7 +40,7 @@
   </aside>
 
   <!--Main Content-->
-  <div class="usa-width-three-fourths" *ngIf="opportunity">
+  <div class="usa-width-three-fourths" *ngIf="opportunity && ready">
     <section [attr.id]="generateID(opportunityFields.Header)" *ngIf="shouldBeDisplayed(opportunityFields.Header)">
       <h1 [attr.id]="generateID(opportunityFields.Title, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Title)">
         {{ opportunity.data?.title }}
