@@ -5,19 +5,11 @@
     <div>&nbsp;</div>
     <div sam-sticky limit=1200 container="occupy-page">
       <!--Logo-->
-      <ng-container *ngIf="errorOrganization">
+      <ng-container *ngIf="errorOrganization || !logoUrl">
         <img src="src/assets/img/logo-not-available.png" class="logo" alt="Logo Not Available">
       </ng-container>
-      <ng-container *ngIf="federalHierarchyWithParents">
-        <div *ngIf="federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href">
-          <img class="logo" id="program-logo" [src]="federalHierarchyWithParents.hierarchy[0].hierarchy[0]._links.logo.href" alt="HTML5 Icon">
-        </div>
-        <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && (federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href)">
-          <img class="logo" id="program-logo" [src]="federalHierarchyWithParents.hierarchy[0]._links.logo.href" alt="HTML5 Icon" >
-        </div>
-        <div *ngIf="!(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0].hierarchy && federalHierarchyWithParents.hierarchy[0]?.hierarchy[0]?._links?.logo?.href) && !(federalHierarchyWithParents.hierarchy && federalHierarchyWithParents.hierarchy[0]._links?.logo?.href) && federalHierarchyWithParents._links?.logo?.href">
-          <img class="logo" id="program-logo" [src]="federalHierarchyWithParents._links.logo.href" alt="HTML5 Icon">
-        </div>
+      <ng-container *ngIf="logoUrl && !errorOrganization">
+        <img class="logo" id="program-logo" [src]="logoUrl" alt="HTML5 Icon">
       </ng-container>
       <!--Side Navigation-->
       <nav>
@@ -53,7 +45,7 @@
       <div class="content-block">
         <ng-container *ngIf="errorOrganization">Organization ID: {{program.data.organizationId}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
         <p class="field" id="program-fh-information" *ngIf="federalHierarchy">
-          <strong class="capitalize">{{federalHierarchy.type}}: </strong>{{federalHierarchy.name}}
+          <strong class="capitalize">{{federalHierarchy.type}}: </strong>{{ federalHierarchy.name || federalHierarchy.agencyName }}
         </p>
         <span class="field" id="program-number"><strong>CFDA Number: </strong>{{program.data?.programNumber}}</span>
 
