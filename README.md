@@ -1,5 +1,5 @@
 The following explains how to get set up locally. For instructions regarding branching, merging, and so on; please see the [CONTRIBUTING](https://csp-github.sam.gov/joshuabruce/sam-front-end/blob/comp/CONTRIBUTING.md) documentation.
-   
+    
 <ul> 
   <li>
     <a href="#getting-started">Getting started</a>
