@@ -89,6 +89,7 @@ export class OpportunityPage implements OnInit {
   private showPerPage = 20;
   min: number;
   max: number;
+  private ready: boolean = false;
 
   constructor(
     private router: Router,
@@ -380,6 +381,8 @@ export class OpportunityPage implements OnInit {
 
         this.displayField[OpportunityFields.OriginalSetAside] = originalSetAsideCondition;
       }
+
+      this.ready = true;
     });
   }
 
@@ -387,7 +390,7 @@ export class OpportunityPage implements OnInit {
   // To hide a field, set the flag displayField[field] to false
   // A field is always displayed by default, unless it is explicitly set not to
   private shouldBeDisplayed(field: OpportunityFields) {
-    return this.displayField[field] !== false && this.opportunity;
+    return this.displayField[field] !== false && this.ready === true;
   }
 
   // Given a field name, generates an id for it by adding the correct prefixes
