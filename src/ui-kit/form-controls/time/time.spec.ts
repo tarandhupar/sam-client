@@ -17,6 +17,7 @@ describe('The Sam Time component', () => {
 
     fixture = TestBed.createComponent(SamTimeComponent);
     component = fixture.componentInstance;
+    component.name = 'test';
   });
 
   it('should compile', () => {
