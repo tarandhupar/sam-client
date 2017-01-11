@@ -38,7 +38,7 @@ import { trigger, state, style, transition, animate } from '@angular/core';
         animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)')
       ]),
       transition('* => void', [
-        animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)', style({
+        animate('.5s cubic-bezier(0.175, 0.885, 0.320, 1.275)', style({
           opacity: 0,
           transform: 'translateY(-30%)'
         }))
