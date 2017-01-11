@@ -18,5 +18,5 @@ localWebServer({
 	'rewrite':[{
 		'from':'/ie_api/*','to':API_UMBRELLA_URL+'/$1'
 	}],
-	'verbose':false
+	'verbose':true
 }).listen(8080)
