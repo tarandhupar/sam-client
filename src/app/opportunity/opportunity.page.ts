@@ -189,15 +189,12 @@ export class OpportunityPage implements OnInit {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
 
     opportunityAPI.subscribe(api => {
-      //organizationId length >= 30 -> call opportunity org End Point
-      if(api.data.organizationId.length >= 30) {
-        this.fhService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
-      }
-      //organizationId less than 30 character then call Octo's FH End point
-      else {
-        this.fhService.getOrganizationById(api.data.organizationId).subscribe(organizationSubject);
-        this.loadLogo(organizationSubject);
-      }
+      this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
+      this.fhService.getOrganizationLogo(organizationSubject, 
+        (logoUrl) => {
+          this.logoUrl = logoUrl;
+        }, (err) => {
+      });
     });
 
     organizationSubject.subscribe(organization => { // do something with the organization api
@@ -208,28 +205,6 @@ export class OpportunityPage implements OnInit {
     });
 
     return organizationSubject;
-  }
-
-  private loadLogo(organizationAPI: Observable<any>) {
-    organizationAPI.subscribe(org => {
-      // Do some basic null checks
-      if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
-        return;
-      }
-
-      // Base case: If logo exists, save it to a variable and exit
-      if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
-        this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
-        return;
-      }
-
-      // Recursive case: If parent orgranization exists, recursively try to load its logo
-      if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
-        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
-      }
-    }, err => {
-      console.log('Error loading logo: ', err);
-    });
   }
 
   private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
