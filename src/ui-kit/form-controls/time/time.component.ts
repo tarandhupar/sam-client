@@ -118,7 +118,7 @@ export class SamTimeComponent implements OnChanges, OnInit {
   }
 
   amPmName() {
-    return `${this.name}_amPm`;
+    return `${this.name}_am_pm`;
   }
 
 }
