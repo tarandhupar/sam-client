@@ -467,14 +467,33 @@ export class FinancialObligationChart {
         .append("td")
         .html(d => {
           let totalAmountIsZero = (d.value.total == 0) ? true : false;
-          let enaANDnsi = (d.value.ena && d.value.nsi) && totalAmountIsZero ? true : false;
-          let enaORnsi = (d.value.ena || d.value.nsi) && totalAmountIsZero ? true : false;
+          let enaANDnsi = (d.value.ena && d.value.nsi) ? true : false;
+          let enaORnsi = (d.value.ena || d.value.nsi) ? true : false;
 
-          if (enaANDnsi) {
+          if (enaANDnsi && totalAmountIsZero) {
             return "Not Available";
           }
-          if (enaORnsi) {
+          if (enaORnsi && totalAmountIsZero) {
             return !d.value.ena ? "Not Separately Identifiable" : actualOrEstimate(d.key);
+          }
+          if (enaORnsi && !totalAmountIsZero) {
+            // Add asterix to the bar chart
+            d3.select(".serie").append("text")
+              .attr("x", function(){
+                if(x(formatYear(d.key, false))){
+                  return x(formatYear(d.key, false)) + (x.bandwidth() / 4) + (x.bandwidth() / 2); 
+                }else{
+                  return x(formatYear(d.key, true)) + (x.bandwidth() / 4) + (x.bandwidth() / 2); 
+                }
+              })
+              .attr("y", function(){
+                return y(d.value.total) + 20;
+              })
+              .text("*")
+              .style("font-size", "40px")
+              .style("color", "black");
+            d3.select("#visualization").append("em").html("<strong>*</strong> The totals shown do not include any amounts that are unidentifiable or unavailable");
+            return d3.format("($,")(d.value.total) + "*";
           }
 
           return d3.format("($,")(d.value.total);
@@ -547,7 +566,7 @@ export class FinancialObligationChart {
     formattedFinancialData.forEach(function (item) {
       item.quantity = obligations.get(item.obligation) / numberOfYears;
     });
-
+ 
     return formattedFinancialData;
   }
 }
