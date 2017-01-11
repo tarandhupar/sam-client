@@ -24,7 +24,6 @@ function isAfter(before: SamDateTimeComponent) {
   return (after: FormControl) => {
     let startDate = before.value;
     let endDate = after.value;
-    console.log('start', startDate, 'end', endDate);
     if (startDate && endDate && moment(endDate).isBefore(startDate)) {
       return {
         dateAfter: {

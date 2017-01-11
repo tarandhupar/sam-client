@@ -22,7 +22,6 @@ export class LabelWrapper {
   constructor() { }
 
   formatErrors(control: FormControl) {
-    console.log('format errors for ', control);
     if (!control) {
       return;
     }
@@ -37,14 +36,12 @@ export class LabelWrapper {
             this.errorMessage = `Too many characters (${actualLength} or ${requiredLength})`;
             return;
           case 'required':
-            console.log('set required');
             this.errorMessage = 'This field cannot be empty';
             return;
           case 'isNotBeforeToday':
             this.errorMessage = "Date must not be before today";
             return;
           default:
-            console.log(errorObject);
             if (errorObject.message) {
               this.errorMessage = errorObject.message;
             } else {
