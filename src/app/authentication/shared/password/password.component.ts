@@ -71,6 +71,36 @@ export class PasswordComponent {
     });
   }
 
+  $formState(validation) {
+    let classes = this.getFormControlStates('password');
+
+    if(validation !== undefined) {
+      classes[this.config.icons.valid] = validation;
+      classes[this.config.icons.invalid] = !validation;
+    }
+
+    return classes;
+  }
+
+  getFormControlStates(controlName) {
+    let control = this[controlName] || false,
+        classes = {},
+        states = ('ng-touched|ng-untouched|ng-dirty|ng-pristine|ng-valid|ng-invalid').split('|'),
+        state,
+        intState,
+        prop;
+
+    if(control) {
+      for(intState = 0; intState < states.length; intState++) {
+        state = states[intState];
+        prop = control[state.replace(/ng-/, '')];
+        classes[state] = prop;
+      }
+    }
+
+    return classes;
+  }
+
   updateState() {
     let valid = true,
         errors = this.password.errors,
