@@ -17,6 +17,7 @@ describe('The Sam Time component', () => {
 
     fixture = TestBed.createComponent(SamTimeComponent);
     component = fixture.componentInstance;
+    component.name = 'test';
   });
 
   it('should compile', () => {
@@ -26,15 +27,14 @@ describe('The Sam Time component', () => {
 
   it('should parse hours and minutes', () => {
     component.value = "14:44";
-    fixture.detectChanges();
-    component.ngOnChanges();
+    component.parseValueString();
     expect(component.hours).toBe(2);
     expect(component.minutes).toBe(44);
     expect(component.amPm).toBe('pm');
 
     component.value = "00:01";
     fixture.detectChanges();
-    component.ngOnChanges();
+    component.parseValueString();
     expect(component.hours).toBe(12);
     expect(component.minutes).toBe(1);
     expect(component.amPm).toBe('am');
