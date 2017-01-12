@@ -492,7 +492,15 @@ export class FinancialObligationChart {
               .text("*")
               .style("font-size", "40px")
               .style("color", "black");
-            d3.select("#visualization").append("em").html("<strong>*</strong> The totals shown do not include any amounts that are unidentifiable or unavailable");
+
+            if(d3.select("#visualization em").empty()){
+              d3.select("#visualization")
+                .append("em")
+                .style("display", "block")
+                .style("text-align", "right")
+                .html("<strong>*</strong> The totals shown do not include any amounts that are unidentifiable or unavailable");
+            }
+            
             return d3.format("($,")(d.value.total) + "*";
           }
 
