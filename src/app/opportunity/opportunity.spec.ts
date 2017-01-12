@@ -134,22 +134,6 @@ let MockOpportunityService = {
       }
     })
   },
-  getOpportunityOrganizationById(id: String) {
-    return Observable.of({
-      _embedded: [
-        {
-          org: {
-            "l2Name": "Naval Supply Systems Command",
-            "l1Name": "Department of the Navy",
-            "name": "DLA Maritime PSNS",
-            "type": "OFFICE",
-            "l3Name": "DLA Maritime PSNS",
-            "agencyName": "DLA Maritime PSNS"
-          }
-        }
-      ]
-    });
-  },
   getOpportunityDictionary(ids: String) {
     return Observable.of({
       classification_code: [
@@ -298,7 +282,7 @@ let MockOpportunityService = {
 };
 
 let MockFHService = {
-  getOrganizationById(id: string) {
+  getOrganizationById(id: string, includeChildren: boolean) {
     return Observable.of({
       "_embedded": [
         {
@@ -306,6 +290,9 @@ let MockFHService = {
         }
       ]
     });
+  }, 
+  getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
+    return Observable.of("");
   }
 };
 

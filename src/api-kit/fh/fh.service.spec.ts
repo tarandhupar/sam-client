@@ -30,8 +30,8 @@ describe('Federal Hierarchy Service', () => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(baseResponse));
   }));
 
-  it('should return response when subscribed to getFederalHierarchyById', inject([FHService], (testService: FHService) => {
-    testService.getFederalHierarchyById("fee2e0e30ce63b7bc136aeff32096c1d", false, false).subscribe((res: Response) => {
+  it('should return response when subscribed to getOrganizationById', inject([FHService], (testService: FHService) => {
+    testService.getOrganizationById("fee2e0e30ce63b7bc136aeff32096c1d", false).subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
       expect(res['response']).toBe('sot response!!');
     });
