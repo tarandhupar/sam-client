@@ -48,7 +48,6 @@
   }
 
   .question {
-    float: left;
     margin-top: 0rem;
 
     label {
@@ -57,11 +56,9 @@
   }
 
   .answer {
+    position: relative;
     width: 38%;
-
-    label {
-      margin-top: 2rem;
-    }
+    top: -2px;
 
     .usa-input-error {
       border-left-width: 0px;

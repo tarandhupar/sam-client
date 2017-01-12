@@ -3,10 +3,7 @@ import {Alert} from "../alert.model";
 import {OptionsType} from "ui-kit/form-controls/types";
 import {FormGroup, FormBuilder, AbstractControl, FormControl} from "@angular/forms";
 import moment = require("moment");
-import {SamDateTimeComponent} from "ui-kit";
-import {SamSelectComponent} from "ui-kit";
-import {SamTextComponent} from "ui-kit";
-import {SamTextareaComponent} from "../../../ui-kit/form-controls/textarea/textarea.component";
+import { SamDateTimeComponent, SamSelectComponent, SamTextComponent, SamTextareaComponent } from "ui-kit";
 
 function isNotBeforeToday(c: FormControl) {
   let error = {
@@ -15,16 +12,35 @@ function isNotBeforeToday(c: FormControl) {
     }
   };
 
-  if (c.value && moment(c.value).isBefore(moment().startOf('day'))) {
+  if (!c.value || c.value.match(/invalid/i)) {
+    return;
+  }
+
+  let m = moment(c.value);
+
+  if (!m.isValid()) {
+    return;
+  }
+
+  if (c.value && m.isBefore(moment().startOf('day'))) {
     return error;
   }
 }
 
 function isAfter(before: SamDateTimeComponent) {
   return (after: FormControl) => {
-    let startDate = before.value;
-    let endDate = after.value;
-    if (startDate && endDate && moment(endDate).isBefore(startDate)) {
+    if (!before.value || before.value.match(/invalid/i) || !after.value || after.value.match(/invalid/i)) {
+      return;
+    }
+
+    let startDate = moment(before.value);
+    let endDate = moment(after.value);
+
+    if (!startDate.isValid() || !endDate.isValid()) {
+      return;
+    }
+
+    if (startDate && endDate && endDate.isBefore(startDate)) {
       return {
         dateAfter: {
           message: `End date must be after publish date`,
@@ -32,6 +48,18 @@ function isAfter(before: SamDateTimeComponent) {
       }
     }
   };
+}
+
+function validDateTime(c: FormControl) {
+  let error = {
+    validDateTime: {
+      message: 'Date is invalid'
+    }
+  };
+
+  if (c.value === 'Invalid Date Time') {
+    return error;
+  }
 }
 
 @Component({
@@ -83,8 +111,8 @@ export class AlertEditComponent implements OnInit {
       description: [this.alert.description(), []],
       title: [this.alert.title(), []],
       severity: [this.alert.severity(), []],
-      endDate: [this.alert.endDate(), [isNotBeforeToday, isAfter(this.publishedDate)]],
-      publishedDate: [this.alert.publishedDate(), [isNotBeforeToday]],
+      endDate: [this.alert.endDate(), [isNotBeforeToday, isAfter(this.publishedDate), validDateTime]],
+      publishedDate: [this.alert.publishedDate(), [isNotBeforeToday, validDateTime]],
       publishImmediately: [false, []],
       isExpiresIndefinite: [this.alert.isExpiresIndefinite(), []],
     });
