@@ -1,7 +1,7 @@
 /*
  * Angular 2 decorators and services
  */
-import { Cookie } from 'ng2-cookies/ng2-cookies';
+import { CookieService } from'angular2-cookie/services/cookies.service';
 import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
@@ -24,7 +24,7 @@ export class App{
 
   showOverlay = false;
 
-  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {
+  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService, private cookieService: CookieService) {
 
   }
 
@@ -35,9 +35,12 @@ export class App{
     });
     this.activatedRoute.queryParams.subscribe(
       data => {
+        //console.log("queryparams", data);
         if(typeof data['keyword'] == "string" && typeof data['index'] == "string") {
+          //console.log("set true");
           this.setCookie(data);
         } else {
+          //console.log("check true");
           this.checkCookie();
         }
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
@@ -48,7 +51,6 @@ export class App{
         this.showOverlay = false;
       });
   }
-
 
   get isHeaderWithSearch() {
     return globals.isDefaultHeader;
@@ -71,6 +73,10 @@ export class App{
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
+
+    //console.log("deleteing cookies");
+    this.cookieService.removeAll();
+    //console.log(this.cookieService.getAll());
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
@@ -86,17 +92,23 @@ export class App{
   }
 
   setCookie(data) {
-    Cookie.set('keyword', data['keyword']);
-    Cookie.set('index', data['index']);
+    this.cookieService.remove("term");
+    this.cookieService.remove("ival");
+    this.cookieService.put("term", data['keyword']);
+    this.cookieService.put("ival", data['index']);
+    //console.log("After setting", this.cookieService.getAll());
   }
 
   checkCookie() {
-    let cookielist = Cookie.getAll();
-    if(cookielist['keyword']) {
-      this.keyword = cookielist['keyword'];
+    let cookielist = this.cookieService.getAll();
+    //console.log("cookielist getAll", cookielist);
+    if(cookielist['term'] && cookielist['term'].length>0) {
+      //console.log("cookie has keyword");
+      this.keyword = cookielist['term'];
     }
-    if(cookielist['index']) {
-      this.index = cookielist['index'];
+    if(cookielist['ival'] && cookielist['ival'].length>0) {
+      //console.log("cookie has index");
+      this.index = cookielist['ival'];
     }
   }
 
