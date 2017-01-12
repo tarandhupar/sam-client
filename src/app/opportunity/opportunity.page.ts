@@ -77,6 +77,7 @@ export class OpportunityPage implements OnInit {
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
   errorOrganization: any;
+  errorLogo: any;
   awardSort: string = "awardDate"; //default
   awardSortOptions = [
     { label: "Award Date", value: "awardDate" },
@@ -198,13 +199,13 @@ export class OpportunityPage implements OnInit {
         (logoUrl) => {
           this.logoUrl = logoUrl;
         }, (err) => {
+          this.errorLogo = true;
       });
     });
 
     organizationSubject.subscribe(organization => { // do something with the organization api
       this.organization = organization['_embedded'][0]['org'];
     }, err => {
-      console.log('Error loading organization: ', err);
       this.errorOrganization = true;
     });
 

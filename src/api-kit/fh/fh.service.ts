@@ -34,21 +34,29 @@ export class FHService {
 
   getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
     organizationAPI.subscribe(org => {
+      // Do some basic null checks
       if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
         cbSuccessFn(null);
         return;
       }
 
+      //base when no logo for a department
+      if(typeof org['_embedded'][0]['_link']['logo'] == 'undefined' && org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['type'] === 'DEPARTMENT') {
+        cbSuccessFn(null);
+        return;
+      }
+
+      // Base case: If logo exists, save it to a variable and exit
       if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
         cbSuccessFn(org['_embedded'][0]['_link']['logo']['href']);
         return;
       }
 
+      // Recursive case: If parent orgranization exists, recursively try to load its logo
       if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
         this.getOrganizationLogo(this.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey'], false), cbSuccessFn, cbErrorFn);
       }
     }, err => {
-      console.log('Error loading logo: ', err);
       cbErrorFn(err);
     });
   }
