@@ -336,8 +336,10 @@ export class RegisterMainComponent {
   process(data, cb) {
     let vm = this;
 
+    _.merge(this.user, data);
+
     this.api.iam.user.registration.register(this.token, data, function(userData) {
-      _.extend(userData, vm.user);
+       vm.user = _.extend({},  vm.user, userData);
 
       let credentials = {
         username: vm.user.email,
