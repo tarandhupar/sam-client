@@ -13,7 +13,7 @@
   </h1>
   <div class="alerts-toolbar">
     <div class="toolbar-item">
-      <samMultiSelectDropdown [disabled]='alertBeingEdited' [(model)]="filters.statuses" [label]="statuses.label" [options]="statuses.options" [name]="'statuses'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
+      <samMultiSelectDropdown [disabled]='alertBeingEdited' [(model)]="filters.statuses" [label]="statuses.label" [options]="isAdmin() ? statusOptionsAdmin : statusOptions" [name]="'statuses'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
     </div>
     <div class="toolbar-item">
       <samMultiSelectDropdown [disabled]='alertBeingEdited' [(model)]="filters.types" [label]="types.label" [options]="types.options" [name]="'types'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
