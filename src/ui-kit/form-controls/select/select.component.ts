@@ -88,7 +88,9 @@ export class SamSelectComponent implements ControlValueAccessor {
 
   onBlur() {
     this.wrapper.formatErrors(this.control);
-    this.onTouched();
+    if (this.onTouched) {
+      this.onTouched();
+    }
   }
 
   registerOnChange(fn: any) {

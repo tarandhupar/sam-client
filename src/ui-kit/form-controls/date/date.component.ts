@@ -29,7 +29,7 @@ import * as moment from 'moment/moment';
     <!--</labelWrapper>-->
   `,
 })
-export class SamDateComponent implements OnInit {
+export class SamDateComponent implements OnInit, OnChanges {
   public INPUT_FORMAT: string = 'Y-M-D';
   public OUTPUT_FORMAT: string = 'YYYY-MM-DD';
 
@@ -60,6 +60,9 @@ export class SamDateComponent implements OnInit {
     if (!this.name) {
       throw new Error('SamTimeComponent required a name for 508 compliance');
     }
+  }
+
+  ngOnChanges() {
     this.parseValueString();
   }
 
@@ -71,8 +74,6 @@ export class SamDateComponent implements OnInit {
         this.model.month = m.month() + 1;
         this.model.day = m.date();
         this.model.year = m.year();
-      } else {
-        console.error('[value] for date is invalid');
       }
     }
   }

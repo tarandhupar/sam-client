@@ -123,7 +123,7 @@ export class AlertEditComponent implements OnInit {
   }
 
   isoNow() {
-    return moment().format('YYYY-MM-DDThh:mm:ss');
+    return moment().format();
   }
 
   onAcceptClick(event) {
@@ -161,7 +161,7 @@ export class AlertEditComponent implements OnInit {
   }
 
   onPublishImmediatelyClick(val) {
-    let ctrl: AbstractControl = this.form.controls['publishedDate'];
+    let ctrl: any = this.form.get('publishedDate');
     if (val) {
       ctrl.setValue(this.isoNow());
       this.publishedDate.wrapper.errorMessage = '';
