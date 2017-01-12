@@ -30,6 +30,9 @@ import * as moment from 'moment/moment';
   `,
 })
 export class SamDateComponent implements OnInit {
+  public INPUT_FORMAT: string = 'Y-M-D';
+  public OUTPUT_FORMAT: string = 'YYYY-MM-DD';
+
   model: any = {
     month: null,
     day: null,
@@ -63,7 +66,7 @@ export class SamDateComponent implements OnInit {
   parseValueString() {
     if (this.value) {
       // use the forgiving format (that doesn't need 0 padding) for inputs
-      let m = moment(this.value, 'Y-M-D');
+      let m = moment(this.value, this.INPUT_FORMAT);
       if (m.isValid()) {
         this.model.month = m.month() + 1;
         this.model.day = m.date();
@@ -89,7 +92,7 @@ export class SamDateComponent implements OnInit {
       this.valueChange.emit('Invalid Date');
     } else {
       // use the strict format for outputs
-      let dateString = this.getDate().format("YYYY-MM-DD");
+      let dateString = this.getDate().format(this.OUTPUT_FORMAT);
       this.valueChange.emit(dateString);
     }
   }

@@ -2,6 +2,8 @@ import {Component, Input, ViewChild, Output, EventEmitter, OnInit, forwardRef, O
 import * as moment from 'moment/moment';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
 import {FieldsetWrapper} from "../wrapper/fieldset-wrapper.component";
+import {SamDateComponent} from "../date/date.component";
+import {SamTimeComponent} from "../time/time.component";
 
 
 const MY_VALUE_ACCESSOR: any = {
@@ -21,6 +23,8 @@ const MY_VALUE_ACCESSOR: any = {
   providers: [ MY_VALUE_ACCESSOR ]
 })
 export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
+  public INPUT_FORMAT: string = 'Y-M-DTH:m';
+
   @Input() value: string = null;
   @Output() valueChange: EventEmitter<any> = new EventEmitter();
   @Input() label: string;
@@ -32,8 +36,8 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
   time: string = null;
   date: string = null;
 
-  @ViewChild('dateComponent') dateComponent;
-  @ViewChild('timeComponent') timeComponent;
+  @ViewChild('dateComponent') dateComponent: SamDateComponent;
+  @ViewChild('timeComponent') timeComponent: SamTimeComponent;
   @ViewChild(FieldsetWrapper) wrapper;
 
   constructor() { }
@@ -53,10 +57,10 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
   parseValueString() {
     if (this.value) {
       // use the more forgiving format (that doesn't need 0 padding) for inputs
-      let m = moment(this.value, 'Y-M-DTH:m');
+      let m = moment(this.value, this.INPUT_FORMAT);
       if (m.isValid()) {
-        this.time = m.format('HH:mm:ss');
-        this.date = m.format('YYYY-MM-DD');
+        this.time = m.format(this.timeComponent.OUTPUT_FORMAT);
+        this.date = m.format(this.dateComponent.OUTPUT_FORMAT);
       } else {
         console.error('[value] for samDateTime is invalid');
       }
