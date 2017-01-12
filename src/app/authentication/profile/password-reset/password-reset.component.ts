@@ -17,6 +17,13 @@ import { KBA } from '../kba.interface';
   ]
 })
 export class PasswordResetComponent {
+  private config = {
+    alert: {
+      sites: 'javascript:void(0)',
+      migrate: 'javascript:void(0)'
+    }
+  };
+
   public passwordForm: FormGroup;
 
   constructor(

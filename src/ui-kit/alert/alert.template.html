@@ -1,11 +1,14 @@
-<div class="usa-alert {{selectedType}}">
+<div class="usa-alert" [ngClass]="[selectedType, class]" [hidden]="!states.show">
+  <span class="usa-alert-close" *ngIf="showClose">
+    <a><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
+  </span>
   <div class="usa-alert-body">
     <h3 class="usa-alert-heading">
       {{title}}
-      <span class="pull-right usa-alert-close" *ngIf="showClose">
-        <a><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
-      </span>
     </h3>
-    <p class="usa-alert-text">{{description}}</p>
+    <p class="usa-alert-text">
+      {{description}}
+      <ng-content></ng-content>
+    </p>
   </div>
 </div>

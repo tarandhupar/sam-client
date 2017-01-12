@@ -20,44 +20,53 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class SamAlertComponent {
   @Input() type: string;
   @Input() title: string;
+  @Input() class: string = '';
   @Input() description: string;
   @Input() showClose: boolean = false;
   @Input() dismissTimer = 0;
   @Output() dismiss: EventEmitter<any> = new EventEmitter<any>();
 
-  types:any = {
-    "success":"usa-alert-success",
-    "warning":"usa-alert-warning",
-    "error":"usa-alert-error",
-    "info":"usa-alert-info"
+  private states = {
+    show: true
   };
+
+  types:any = {
+    'success': 'usa-alert-success',
+    'warning': 'usa-alert-warning',
+    'error': 'usa-alert-error',
+    'info': 'usa-alert-info'
+  };
+
   selectedType: string = this.types['success'];
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit(){
-    if(!this.typeNotDefined()){
+    if(!this.typeNotDefined()) {
       this.selectedType = this.types[this.type];
     }
-    if(this.dismissTimer>0){
-      setTimeout(()=>{
-        this.dismiss.emit();
-      },this.dismissTimer);
+
+    if(this.dismissTimer > 0) {
+      setTimeout(() => {
+        this.onDismissClick();
+      }, this.dismissTimer);
     }
   }
 
-  typeNotDefined(){
-    if(!this.type || this.type.length==0){
+  typeNotDefined() {
+    if(!this.type || this.type.length==0) {
       return true;
     }
-    if(!this.types[this.type]){
+
+    if(!this.types[this.type]) {
       return true;
     }
+
     return false;
   }
 
-  private onDismissClick(){
+  private onDismissClick() {
+    this.states.show = false;
     this.dismiss.emit();
   }
 }

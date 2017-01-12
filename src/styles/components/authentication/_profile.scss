@@ -4,6 +4,18 @@
 .usa-profile {
   position: relative;
 
+  .usa-alert {
+    &.usa-alert-static {
+      position: absolute;
+      width: 100%;
+      top: -80px;
+    }
+
+    a {
+      font-weight: 600;
+    }
+  }
+
   h2 {
     margin-top: 2.2em;
   }
