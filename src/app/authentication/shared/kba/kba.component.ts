@@ -20,6 +20,7 @@ export class KBAComponent implements OnChanges {
   protected states = {
     type: 'text',
     submitted: false,
+    count: 0,
     errors: {
       question: '',
       answer: ''
@@ -32,6 +33,18 @@ export class KBAComponent implements OnChanges {
   ngOnInit() {
     this.$question = this.question.value;
     this.initQuestions();
+
+    // Process answers
+    if(this.answer.value.length) {
+      let tmpAnswer = this.answer.value;
+
+      this.states.count = tmpAnswer.length;
+
+      this.states.type = 'password';
+      tmpAnswer = tmpAnswer.replace(/&bull;/g, ' ');
+
+      this.answer.setValue(tmpAnswer);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -61,9 +74,9 @@ export class KBAComponent implements OnChanges {
     this.states.submitted = true;
   }
 
-  changeQuestion(value) {
-    this.question.setValue(value);
-    this.onQuestionChange.emit(value);
+  changeQuestion($value) {
+    this.question.setValue($value);
+    this.onQuestionChange.emit($value);
     this.updateState(null);
   }
 
@@ -110,9 +123,14 @@ export class KBAComponent implements OnChanges {
   }
 
   unsecureAnswer($event) {
-    if(!$event.target.value.length) {
+    let oldCount = this.states.count,
+        newCount = $event.target.value.length;
+
+    if(!newCount || (oldCount - newCount) > 1) {
       this.states.type = 'text';
     }
+
+    this.states.count = oldCount;
   }
 
   selectAnswer($event) {

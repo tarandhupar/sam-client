@@ -9,17 +9,15 @@ import { IAMService } from 'api-kit';
   templateUrl: 'header-links.component.html',
   providers: [IAMService]
 })
-export class SamHeaderLinksComponent{
+export class SamHeaderLinksComponent {
+  private startCheckOutsideClick: boolean = false;
+  private user = null;
   private states = {
     isSignedIn: false
   };
 
-  private user = null;
+  @Output() onDropdownToggle:EventEmitter<any> = new EventEmitter<any>();
 
-  @Output()
-  onDropdownToggle:EventEmitter<any> = new EventEmitter<any>();
-
-  private startCheckOutsideClick:boolean = false;
   showDropdown:boolean = false;
   dropdownData:any = [
     {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/", pageInProgress:false},
@@ -31,21 +29,27 @@ export class SamHeaderLinksComponent{
   ];
 
   constructor(private _router:Router, private zone: NgZone, private api: IAMService) {
-    this.zone.runOutsideAngular(() => {
-      this.checkSession(() => {
-        this.zone.run(() => {
-          // Callback
+    this._router.events.subscribe((event) => {
+      if(event.constructor.name === 'NavigationStart') {
+        this.zone.runOutsideAngular(() => {
+          this.checkSession(() => {
+            this.zone.run(() => {
+              // Callback
+            });
+          });
         });
-      });
+      }
     });
   }
 
   checkSession(cb: () => void) {
     let vm = this;
 
-    this.api.iam.user.get(function(user) {
+    this.api.iam.checkSession(function(user) {
       vm.states.isSignedIn = true;
       vm.user = user;
+      cb();
+    }, function() {
       cb();
     });
   }
