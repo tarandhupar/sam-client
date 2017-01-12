@@ -75,8 +75,6 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
   onInputChange() {
     if (this.dateComponent.isClean() && this.timeComponent.isClean()) {
       this.emitChanges(null);
-    } else if (this.dateComponent.isValid() && this.timeComponent.isClean()) {
-      this.emitChanges(`${this.date}T00:00:00`);
     } else if (this.dateComponent.isValid() && this.timeComponent.isValid()) {
       this.emitChanges(`${this.date}T${this.time}`);
     } else {
