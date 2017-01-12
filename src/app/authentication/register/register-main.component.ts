@@ -307,6 +307,8 @@ export class RegisterMainComponent {
       .join(' ')
       .replace(/\s+/, ' ');
 
+    userData.workPhone = this.user.workPhone;
+
     userData.kbaAnswerList = [
       { questionId: 1, answer: '12345678' },
       { questionId: 2, answer: '34567890' },
@@ -334,11 +336,13 @@ export class RegisterMainComponent {
   process(data, cb) {
     let vm = this;
 
+    _.merge(this.user, data);
+
     this.api.iam.user.registration.register(this.token, data, function(userData) {
-      _.extend(userData, vm.user);
+       vm.user = _.extend({},  vm.user, userData);
 
       let credentials = {
-        username: vm.user._id,
+        username: vm.user.email,
         password: vm.user.userPassword
       };
 
