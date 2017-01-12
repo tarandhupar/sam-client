@@ -11,12 +11,12 @@ import { User } from '../user.interface';
 import { KBA } from '../kba.interface';
 
 @Component({
-  templateUrl: './password.component.html',
+  templateUrl: './password-reset.component.html',
   providers: [
     IAMService
   ]
 })
-export class PasswordComponent {
+export class PasswordResetComponent {
   public passwordForm: FormGroup;
 
   constructor(

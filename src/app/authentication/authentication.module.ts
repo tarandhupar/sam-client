@@ -16,7 +16,7 @@ import { ProfileGuard } from './profile/profile.guard';
 import { KBAComponent, PasswordComponent } from './shared';
 import { LoginComponent } from './login';
 import { RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
-import { ProfileComponent, DetailsComponent, PasswordComponent } from './profile';
+import { ProfileComponent, DetailsComponent, PasswordResetComponent } from './profile';
 
 @NgModule({
   imports: [
@@ -54,7 +54,7 @@ import { ProfileComponent, DetailsComponent, PasswordComponent } from './profile
      */
     ProfileComponent,
     DetailsComponent,
-    PasswordComponent
+    PasswordResetComponent
   ],
 
   providers: [
