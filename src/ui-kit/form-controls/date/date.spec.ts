@@ -18,6 +18,7 @@ describe('The Sam Date component', () => {
     fixture = TestBed.createComponent(SamDateComponent);
     component = fixture.componentInstance;
     component.value = "2016-12-29";
+    component.name = 'test';
   });
 
   it('Date Check', function () {

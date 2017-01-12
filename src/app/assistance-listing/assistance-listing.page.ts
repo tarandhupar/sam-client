@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
-import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 
 import * as _ from 'lodash';
 
@@ -16,15 +15,13 @@ import { ReplaySubject, Observable, Subscription } from 'rxjs';
     FHService,
     ProgramService,
     DictionaryService,
-    HistoricalIndexService,
-    FilterMultiArrayObjectPipe
+    HistoricalIndexService
   ]
 })
 export class ProgramPage implements OnInit, OnDestroy {
   program: any;
   programID: any;
   federalHierarchy: any;
-  federalHierarchyWithParents: any;
   relatedProgram: any[] = [];
   currentUrl: string;
   dictionaries: any;
@@ -32,6 +29,8 @@ export class ProgramPage implements OnInit, OnDestroy {
   historicalIndex: any;
   alert: any = [];
   errorOrganization: any;
+  logoUrl: any;
+  errorLogo: any;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -46,8 +45,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     private historicalIndexService: HistoricalIndexService,
     private programService: ProgramService,
     private fhService: FHService,
-    private dictionaryService: DictionaryService,
-    private filterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) {}
+    private dictionaryService: DictionaryService) {}
 
   ngOnInit() {
     // Using document.location.href instead of
@@ -127,26 +125,29 @@ export class ProgramPage implements OnInit, OnDestroy {
   }
 
   private loadFederalHierarchy(apiSource: Observable<any>) {
-    let oid = '';
+    let apiSubject = new ReplaySubject(1);
 
     // construct a stream of federal hierarchy data
-    let fhWithParentsStream = apiSource.switchMap(api => {
-      oid = api.data.organizationId;
-      return this.fhService.getFederalHierarchyById(api.data.organizationId, true, false);
+    let apiStream = apiSource.switchMap(api => {
+      return this.fhService.getOrganizationById(api.data.organizationId, false);
     })  ;
 
-    this.federalHierarchySub = fhWithParentsStream.subscribe(res => {
-      // run whenever federal hierarchy data is updated
-      this.federalHierarchyWithParents = res;
-      // filter for only the data belonging to this object, without it's parents or children
-      this.federalHierarchy = this.filterMultiArrayObjectPipe.transform(
-        [oid], [this.federalHierarchyWithParents], 'elementId', true, 'hierarchy')[0];
+    apiStream.subscribe(apiSubject);
+
+    this.federalHierarchySub = apiSubject.subscribe(res => {
+      this.federalHierarchy = res['_embedded'][0]['org'];
+      this.fhService.getOrganizationLogo(apiSubject, 
+        (logoUrl) => {
+          this.logoUrl = logoUrl;
+        }, (err) => {
+          this.errorLogo = true;
+      });
     }, err => {
       console.log('Error loading organization: ', err);
       this.errorOrganization = true;
     });
 
-    return fhWithParentsStream;
+    return apiSubject;
   }
 
   private loadHistoricalIndex(apiSource: Observable<any>) {

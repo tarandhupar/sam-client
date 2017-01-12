@@ -1,7 +1,9 @@
 import {Component, Input, ViewChild, Output, EventEmitter, OnInit, forwardRef, OnChanges} from '@angular/core';
 import * as moment from 'moment/moment';
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
-import {LabelWrapper} from "../wrapper/label-wrapper.component";
+import {FieldsetWrapper} from "../wrapper/fieldset-wrapper.component";
+import {SamDateComponent} from "../date/date.component";
+import {SamTimeComponent} from "../time/time.component";
 
 
 const MY_VALUE_ACCESSOR: any = {
@@ -13,15 +15,17 @@ const MY_VALUE_ACCESSOR: any = {
 @Component({
   selector: 'samDateTime',
   template: `
-    <labelWrapper [label]="label" [name]="name" [errorMessage]="errorMessage" [hint]="hint">
-      <samTime #timeComponent [(value)]="time" (valueChange)="onInputChange($event)" [disabled]="disabled"></samTime>
-      <samDate #dateComponent [(value)]="date" (valueChange)="onInputChange($event)" [name]='name' [disabled]="disabled"></samDate>
-    </labelWrapper>
+    <fieldsetWrapper [label]="label" [errorMessage]="errorMessage" [hint]="hint">
+      <samTime #timeComponent [(value)]="time" (valueChange)="onInputChange($event)" [name]='name+"_time"' [disabled]="disabled"></samTime>
+      <samDate #dateComponent [(value)]="date" (valueChange)="onInputChange($event)" [name]='name+"_date"' [disabled]="disabled"></samDate>
+    </fieldsetWrapper>
   `,
   providers: [ MY_VALUE_ACCESSOR ]
 })
-export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAccessor {
-  @Input() value: string;
+export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
+  public INPUT_FORMAT: string = 'Y-M-DTH:m';
+
+  @Input() value: string = null;
   @Output() valueChange: EventEmitter<any> = new EventEmitter();
   @Input() label: string;
   @Input() name: string;
@@ -32,29 +36,31 @@ export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAcce
   time: string = null;
   date: string = null;
 
-  @ViewChild('dateComponent') dateComponent;
-  @ViewChild('timeComponent') timeComponent;
-  @ViewChild(LabelWrapper) wrapper;
+  @ViewChild('dateComponent') dateComponent: SamDateComponent;
+  @ViewChild('timeComponent') timeComponent: SamTimeComponent;
+  @ViewChild(FieldsetWrapper) wrapper;
 
   constructor() { }
 
   ngOnInit() {
+    if (!this.name) {
+      throw new Error('SamDateTimeComponent requires a [name] input for 508 compliance');
+    }
+
     if (this.control) {
       this.wrapper.formatErrors(this.control);
     }
+
+    this.parseValueString();
   }
 
-  ngOnChanges() {
-    this.setDateAndTime();
-  }
-
-  setDateAndTime() {
+  parseValueString() {
     if (this.value) {
       // use the more forgiving format (that doesn't need 0 padding) for inputs
-      let m = moment(this.value, 'Y-M-DTH:m:s');
+      let m = moment(this.value, this.INPUT_FORMAT);
       if (m.isValid()) {
-        this.time = m.format('H:m');
-        this.date = m.format('Y-M-D');
+        this.time = m.format(this.timeComponent.OUTPUT_FORMAT);
+        this.date = m.format(this.dateComponent.OUTPUT_FORMAT);
       } else {
         console.error('[value] for samDateTime is invalid');
       }
@@ -63,16 +69,20 @@ export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAcce
 
   emitChanges(val) {
     this.value = val;
-    this.onChange(val);
+    // only when this component is used as a FormControl will change be registered
+    if (this.onChange) {
+      this.onChange(val);
+    }
     this.valueChange.emit(val);
   }
 
   onInputChange() {
-    if (this.date && this.time && this.dateComponent.isValid() && this.timeComponent.isValid()) {
-      this.emitChanges(`${this.date}T${this.time}`);
-      this.wrapper.formatErrors(this.control);
-    } else {
+    if (this.dateComponent.isClean() && this.timeComponent.isClean()) {
       this.emitChanges(null);
+    } else if (this.dateComponent.isValid() && this.timeComponent.isValid()) {
+      this.emitChanges(`${this.date}T${this.time}`);
+    } else {
+      this.emitChanges('Invalid Date Time');
     }
   }
 
@@ -93,7 +103,7 @@ export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAcce
 
   writeValue(value) {
     this.value = value;
-    this.setDateAndTime();
+    this.parseValueString();
   }
 
 }

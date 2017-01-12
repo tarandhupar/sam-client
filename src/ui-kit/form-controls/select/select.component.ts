@@ -70,10 +70,10 @@ export class SamSelectComponent implements ControlValueAccessor {
   }
 
   onSelectChange(val) {
-    if(this.control !== undefined) {
-      this.model = val;
+    if (this.onChange) {
+      this.onChange(val);
     }
-
+    this.model = val;
     this.modelChange.emit(val);
     this.wrapper.formatErrors(this.control);
   }
@@ -87,6 +87,7 @@ export class SamSelectComponent implements ControlValueAccessor {
   }
 
   onBlur() {
+    this.wrapper.formatErrors(this.control);
     this.onTouched();
   }
 
@@ -98,6 +99,6 @@ export class SamSelectComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  private onChange: (_: any) => void = noop;
-  private onTouched: () => void = noop;
+  private onChange: (_: any) => void;
+  private onTouched: () => void;
 }
