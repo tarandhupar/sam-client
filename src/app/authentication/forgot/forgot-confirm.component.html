@@ -1,0 +1,35 @@
+<div class="usa-grid">
+  <div class="usa-width-one-whole">
+    <span class="usa-forgot usa-forgot-initial text-center">
+      <legend class="usa-legend">Email Sent.</legend>
+      <div *ngIf="email">We just sent an email to {{ email }}.</div>
+
+      <section>
+        <legend>Your Next Steps</legend>
+        <ul class="steps">
+          <li>Check your inbox for an email</li>
+          <li>Click the password reset link in the email</li>
+          <li>Reset your password</li>
+        </ul>
+
+        <p class="text-center">The password reset link will remain valid for 20 minutes.</p>
+
+        <ul class="links">
+          <li *ngIf="email" class="email">
+            <a href="javascript:void(0);" (click)="resendEmail()">Resend Email</a>
+          </li>
+          <li class="home">
+            <a routerLink="/">Return to SAM.gov Home</a>
+          </li>
+        </ul>
+      </section>
+    </span>
+  </div>
+</div>
+
+<samAlert [type]="states.alert.type"
+          [title]="states.alert.title"
+          [description]="states.alert.description"
+          [showClose]="true"
+          [hidden]="!states.alert.show"
+          (dismiss)="dismissAlert()"></samAlert>

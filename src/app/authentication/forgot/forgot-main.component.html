@@ -1,0 +1,41 @@
+<div class="usa-grid">
+  <div class="usa-width-one-whole">
+    <div class="usa-forgot-init">
+      <form *ngIf="securityForm" [formGroup]="securityForm" (ngSubmit)="submit()" class="usa-form-large" autocomplete="off">
+        <fieldset>
+          <h2>Answer your security questions.</h2>
+          <span>
+            Answer Provide the answer to the following question:
+            7 attempts to answer two security questions correctly before your account is temporarily locked.
+          </span>
+
+          <div [ngClass]="{ 'usa-input-error': states.submitted && (answer.invalid || states.error) }">
+            <label for="answer">Question</label>
+            <span class="usa-input-error-message" *ngIf="states.submitted && (answer.invalid || states.error.length)" role="alert">
+              <span *ngIf="states.error.length">{{ states.error }}</span>
+              <span *ngIf="answer.errors && answer.errors.answer">Enter a valid answer address</span>
+            </span>
+            <input type="text"
+                   id="answer"
+                   autocomplete="off"
+                   readonly="readonly"
+                   onfocus="this.removeAttribute('readonly');"
+                   [formControl]="answer"/>
+          </div>
+
+          <div class="usa-button-controls">
+            <button type="submit">Submit</button>
+          </div>
+
+          <hr />
+
+          <ul class="links">
+            <li class="home">
+              <a routerLink="/">Return to SAM.gov Home</a>
+            </li>
+          </ul>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>

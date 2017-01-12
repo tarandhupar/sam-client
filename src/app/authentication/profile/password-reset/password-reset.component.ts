@@ -8,7 +8,6 @@ import { IAMService } from 'api-kit';
 import { Validators as $Validators } from '../../shared/validators';
 
 import { User } from '../user.interface';
-import { KBA } from '../kba.interface';
 
 @Component({
   templateUrl: './password-reset.component.html',
