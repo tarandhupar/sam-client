@@ -27,8 +27,8 @@ export class ForgotConfirmComponent {
   constructor(private zone: NgZone, private cookies: CookieService, private api: IAMService) {}
 
   ngOnInit() {
-    this.email = (this.cookies.get('iam-signup-email') || '')
-    this.cookies.remove('iam-signup-email')
+    this.email = (this.cookies.get('iam-forgot-email') || '')
+    this.cookies.remove('iam-forgot-email')
   }
 
   alert(type, message?) {
@@ -53,23 +53,17 @@ export class ForgotConfirmComponent {
     this.states.alert.show = false;
   }
 
-  dispatch(cb:() => void) {
+  resendEmail() {
     let vm = this;
 
-    this.api.iam.user.registration.init(this.email, () => {
-      vm.alert('success')
-      cb();
-    }, (error) => {
-      vm.alert('error', error);
-      cb();
-    });
-  }
-
-  resendEmail() {
     this.zone.runOutsideAngular(() => {
-      this.dispatch(() => {
-        this.zone.run(() => {
-          // cb()
+      this.api.iam.user.password.init(this.email, () => {
+        vm.zone.run(() => {
+          this.alert('success')
+        });
+      }, (error) => {
+        vm.zone.run(() => {
+          this.alert('error', error);
         });
       });
     });

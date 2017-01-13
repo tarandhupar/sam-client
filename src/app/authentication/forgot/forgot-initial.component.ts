@@ -20,6 +20,11 @@ export class ForgotInitialComponent {
     error: ''
   };
 
+  private errors = {
+    'required': 'Please enter your email',
+    'email': 'Enter a valid email address'
+  };
+
   email: FormControl;
 
   constructor(
@@ -32,27 +37,40 @@ export class ForgotInitialComponent {
     this.email = new FormControl('', [Validators.required, $Validators.email])
   }
 
-  dispatch(cb:() => void) {
-    let vm = this,
-        email = this.email.value;
+  validate() {
+    let control = this.email,
+        messages = this.errors,
+        result = '',
+        error;
 
-    this.api.iam.user.registration.init(email, () => {
-      vm.cookies.put('iam-signup-email', email);
-      vm.router.navigate(['/signup/confirm']);
-      cb();
-    }, (error) => {
-      vm.states.error = error;
-      cb();
-    });
+    for(error in control.errors) {
+      if(messages[error] !== undefined) {
+        result = messages[error];
+        break;
+      }
+    }
+
+    return result;
   }
 
   init() {
-    this.states.submitted = true;
-    if(this.email.valid) {
+    let vm = this,
+        control = this.email;
+
+    if(control.valid) {
+      this.states.loading = true;
+
       this.zone.runOutsideAngular(() => {
-        this.dispatch(() => {
-          this.zone.run(() => {
-            // cb()
+        this.api.iam.user.password.init(control.value, () => {
+          vm.zone.run(() => {
+            this.states.loading = false;
+            this.cookies.put('iam-forgot-email', control.value);
+            this.router.navigate(['/forgot/confirm']);
+          });
+        }, (error) => {
+          vm.zone.run(() => {
+            this.states.loading = false;
+            this.states.error = error;
           });
         });
       });

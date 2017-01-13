@@ -3,10 +3,10 @@
     <div class="usa-forgot-init">
       <form *ngIf="securityForm" [formGroup]="securityForm" (ngSubmit)="submit()" class="usa-form-large" autocomplete="off">
         <fieldset>
-          <h2>Answer your security questions.</h2>
+          <h2>Answer your security questions</h2>
           <span>
-            Answer Provide the answer to the following question:
-            7 attempts to answer two security questions correctly before your account is temporarily locked.
+            Provide the answer to the following question: You have 7 attempts to answer two security
+            questions correctly before your account is temporarily locked.
           </span>
 
           <div [ngClass]="{ 'usa-input-error': states.submitted && (answer.invalid || states.error) }">
@@ -26,8 +26,6 @@
           <div class="usa-button-controls">
             <button type="submit">Submit</button>
           </div>
-
-          <hr />
 
           <ul class="links">
             <li class="home">
