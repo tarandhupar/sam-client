@@ -123,7 +123,7 @@ export class AlertEditComponent implements OnInit {
   }
 
   isoNow() {
-    return moment().format();
+    return moment().format('YYYY-MM-DDThh:mm:ss');
   }
 
   onAcceptClick(event) {
