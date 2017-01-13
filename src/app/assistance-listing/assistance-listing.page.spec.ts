@@ -21,27 +21,30 @@ let comp: ProgramPage;
 let fixture: ComponentFixture<ProgramPage>;
 
 let MockFHService = {
-  getFederalHierarchyById: (id: string, includeParentLevels: boolean, includeChildrenLevels: boolean) => {
+  getOrganizationById: (id: string, includeChildrenLevels: boolean) => {
     return Observable.of({
-      elementId: '100156642',
-      parentElementId: '100010393',
-      _links: {
-        self: {
-          href: ''
-        },
-        parent: {
-        href: ''
-      },
-        children: {
-          href: ''
+      "_embedded": [
+        {
+          "org": {
+            orgKey: "100156642",
+            parentOrgKey: "100010393",
+            name: 'U.S. FISH AND WILDLIFE SERVICE',
+            type: 'AGENCY',
+          },
+          "_link": {
+            "self": {
+              "href": "URL"
+            },
+            "logo": {
+              "href": "URL"
+            }
+          }
         }
-      },
-      name: 'U.S. FISH AND WILDLIFE SERVICE',
-      type: 'AGENCY',
-      cfdaCode: '15',
-      sourceOrganizationId: '000710afb4d72c15f9fc20a83f7319d0',
-      sourceParentOrganizationId: 'b8765976b02cee3a384dec3de1edf2a0'
+      ]
     });
+  }, 
+  getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
+    return Observable.of("");
   }
 };
 
@@ -272,7 +275,6 @@ describe('ProgramPage', () => {
 
     expect(comp.program).toBeDefined();
     expect(comp.federalHierarchy).toBeDefined();
-    expect(comp.federalHierarchyWithParents).toBeDefined();
     expect(comp.relatedProgram).toBeDefined();
     expect(comp.historicalIndex).toBeDefined();
     expect(comp.alert).toBeDefined();
