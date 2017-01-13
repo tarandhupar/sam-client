@@ -207,6 +207,11 @@
               <strong>Modification Number: </strong>
               {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
             </li>
+            <li [attr.id]="generateID(opportunityFields.SpecialLegislation, 'general')"
+                *ngIf="opportunity?.data?.isRecoveryRelated == true && shouldBeDisplayed(opportunityFields.SpecialLegislation)">
+              <strong>Special Legislation: </strong>
+              Recovery and Reinvestment Act
+            </li>
           </ul>
         </section>
 
