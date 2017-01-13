@@ -315,9 +315,11 @@ export class FinancialObligationChart {
         .data(assistanceTotalsGroupedByYear)
         .enter()
         .append("th")
+        .attr("scope", "col")
         .text(d => d.values[0].value.year);
 
       thead.insert("th", ":first-child")
+        .attr("scope", "col")
         .text("Obligation(s)");
 
       // Table: Assistance Details
@@ -453,13 +455,21 @@ export class FinancialObligationChart {
         .append("td")
         .html(function (d) {
           if (String(d).indexOf("Total") !== -1) {
+            d3.select(this).attr("scope", "row");
             d3.select(this.parentNode).style("font-weight", "700");
           }
           return d;
         });
 
       // Table Totals
-      tbody.append("tr")
+      let totalRow = table.selectAll("tbody")
+        .append("tr");
+
+      totalRow.append("td")
+        .text("Totals")
+        .attr("scope", "row");
+
+      totalRow.style("font-weight", "700")
         .attr("class", "totals")
         .style("font-weight", "700")
         .append("td")
@@ -486,9 +496,9 @@ export class FinancialObligationChart {
             d3.select(".serie").append("text")
               .attr("x", function(){
                 if(x(formatYear(d.key, false))){
-                  return x(formatYear(d.key, false)) + (x.bandwidth() / 4) + (x.bandwidth() / 2); 
+                  return x(formatYear(d.key, false)) + (x.bandwidth() / 4) + (x.bandwidth() / 2);
                 }else{
-                  return x(formatYear(d.key, true)) + (x.bandwidth() / 4) + (x.bandwidth() / 2); 
+                  return x(formatYear(d.key, true)) + (x.bandwidth() / 4) + (x.bandwidth() / 2);
                 }
               })
               .attr("y", function(){
@@ -505,7 +515,7 @@ export class FinancialObligationChart {
                 .style("text-align", "right")
                 .html("<strong>*</strong> The totals shown do not include any amounts that are unidentifiable or unavailable");
             }
-            
+
             return d3.format("($,")(d.value.total) + "*";
           }
 
@@ -579,7 +589,7 @@ export class FinancialObligationChart {
     formattedFinancialData.forEach(function (item) {
       item.quantity = obligations.get(item.obligation) / numberOfYears;
     });
- 
+
     return formattedFinancialData;
   }
 }
