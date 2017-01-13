@@ -39,7 +39,8 @@ export enum OpportunityFields {
   JustificationAuthority = <any>'justification-authority',
   OrderNumber = <any>'order-number',
   ModificationNumber = <any>'modification-number',
-
+  SpecialLegislation = <any>'special-legislation',
+    
     // Classification code section
   Classification = <any>'classification',
   SetAside = <any>'set-aside',
