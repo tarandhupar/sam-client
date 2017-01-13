@@ -28,7 +28,21 @@ export class DetailsComponent {
   };
 
   private lookups = {
-    questions: [],
+    questions: [
+      { 'id': 1,  'question': 'What was the make and model of your first car?' },
+      { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
+      { 'id': 3,  'question': 'What was your high school mascot?' },
+      { 'id': 4,  'question': 'When you were young, what did you want to be when you grew up?' },
+      { 'id': 5,  'question': 'Where were you when you first heard about 9/11?' },
+      { 'id': 6,  'question': 'Where did you spend New Years Eve 2000?' },
+      { 'id': 7,  'question': 'Who was your childhood hero?' },
+      { 'id': 8,  'question': 'What is your favorite vacation spot?' },
+      { 'id': 9,  'question': 'What is the last name of your first grade teacher?' },
+      { 'id': 10, 'question': 'What is your dream job?' },
+      { 'id': 11, 'question': 'If you won the Lotto, what is the first thing you would do?' },
+      { 'id': 12, 'question': 'What is the title of your favorite book?' }
+    ],
+
     indexes: {}
   };
 
@@ -187,9 +201,9 @@ export class DetailsComponent {
       // Set question mapping of questionID => index
       vm.lookups.questions = data.questions;
       vm.lookups.questions = vm.lookups.questions.map(function(question, intQuestion) {
-        // Crseate reverse lookup while remapping
+        // Create reverse lookup while remapping
         vm.lookups.indexes[question.id] = intQuestion;
-        question.disabled = false;
+        question['disabled'] = false;
         return question;
       });
 
@@ -235,24 +249,17 @@ export class DetailsComponent {
           let intQuestion;
 
           vm.states.isGov = true;
-          vm.lookups.questions = [
-            { 'id': 1,  'question': 'What was the make and model of your first car?' },
-            { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
-            { 'id': 3,  'question': 'What was your high school mascot?' },
-            { 'id': 4,  'question': 'When you were young, what did you want to be when you grew up?' },
-            { 'id': 5,  'question': 'Where were you when you first heard about 9/11?' },
-            { 'id': 6,  'question': 'Where did you spend New Years Eve 2000?' },
-            { 'id': 7,  'question': 'Who was your childhood hero?' },
-            { 'id': 8,  'question': 'What is your favorite vacation spot?' },
-            { 'id': 9,  'question': 'What is the last name of your first grade teacher?' },
-            { 'id': 10, 'question': 'What is your dream job?' },
-            { 'id': 11, 'question': 'If you won the Lotto, what is the first thing you would do?' },
-            { 'id': 12, 'question': 'What is the title of your favorite book?' }
-          ];
 
           for(intQuestion in vm.user.kbaAnswerList) {
             vm.questions.push(vm.lookups.questions);
           }
+
+          vm.lookups.questions = vm.lookups.questions.map(function(question, intQuestion) {
+            // Create reverse lookup while remapping
+            vm.lookups.indexes[question.id] = intQuestion;
+            question['disabled'] = false;
+            return question;
+          });
 
           promise({
             email: 'doe.john@gsa.gov',
@@ -264,7 +271,13 @@ export class DetailsComponent {
             department: 100006688,
             orgID: 100173623,
 
-            workPhone: '2401234568'
+            workPhone: '2401234568',
+
+            kbaAnswerList: [
+              { questionId: 1, answer: '' },
+              { questionId: 3, answer: '' },
+              { questionId: 5, answer: '' }
+            ]
           });
         }).bind(this);
 
@@ -337,7 +350,6 @@ export class DetailsComponent {
   question(questionID) {
     const questions = this.lookups.questions,
           mappings = this.lookups.indexes;
-
     return questions[mappings[questionID]].question;
   }
 
@@ -442,14 +454,14 @@ export class DetailsComponent {
 
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
-      controlValue = controls[key].value.toString();
+      controlValue = controls[key].value;
 
-      if(controlValue.length) {
+      if(controlValue.toString().length) {
         userData[key] = controlValue;
       }
 
       if(key == 'kbaAnswerList') {
-        userData[key] = userData[key].map(function(item, intItem) {
+        userData[key] = controlValue.map(function(item, intItem) {
           item.answer = item.answer.trim();
           return item;
         });
