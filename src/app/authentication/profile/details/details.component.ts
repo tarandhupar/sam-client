@@ -437,11 +437,16 @@ export class DetailsComponent {
         controls = this.detailsForm.controls,
         userData = {},
         key,
+        controlValue,
         intKey;
 
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
-      userData[key] = controls[key].value;
+      controlValue = controls[key].value.toString();
+
+      if(controlValue.length) {
+        userData[key] = controlValue;
+      }
 
       if(key == 'kbaAnswerList') {
         userData[key] = userData[key].map(function(item, intItem) {
