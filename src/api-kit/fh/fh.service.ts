@@ -41,7 +41,7 @@ export class FHService {
       }
 
       //base when no logo for a department
-      if(typeof org['_embedded'][0]['_link']['logo'] == 'undefined' && org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['type'] === 'DEPARTMENT') {
+      if(typeof org['_embedded'][0]['_link']['logo'] == 'undefined' && org['_embedded'][0]['org'] != null && typeof org['_embedded'][0]['org']['parentOrgKey'] == 'undefined') {
         cbSuccessFn(null);
         return;
       }

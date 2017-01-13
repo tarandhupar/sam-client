@@ -23,9 +23,11 @@ describe('The Sam Phone Entry component', () => {
   });
 
   it('Phone Num Check', function () {
+    let component = fixture.componentInstance,
+        el = component.phoneInput;
+
     fixture.detectChanges();
-    var el = fixture.nativeElement.querySelector('#phone-number');
-    el.dispatchEvent(new Event('keydown'));//keydown update the model component model value
+    el.nativeElement.dispatchEvent(new Event('keydown'));//keydown update the model component model value
     fixture.detectChanges();
     expect(component.model).toBe("1+(234)213-4213");
   });
