@@ -16,7 +16,7 @@
   .historyDetails {
     float:right;
   }
-
+  
   .designation {
     background-color: #e4e2e0;
     padding: 15px;
@@ -24,6 +24,10 @@
 
   .designation h4 {
     margin-top: 0px;
+  }
+
+  table thead th{
+    min-width: 120px;
   }
 }
 
