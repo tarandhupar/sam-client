@@ -22,7 +22,7 @@ const MY_VALUE_ACCESSOR: any = {
   `,
   providers: [ MY_VALUE_ACCESSOR ]
 })
-export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
+export class SamDateTimeComponent implements OnInit, OnChanges, ControlValueAccessor {
   public INPUT_FORMAT: string = 'Y-M-DTH:m';
 
   @Input() value: string = null;
@@ -50,7 +50,9 @@ export class SamDateTimeComponent implements OnInit, ControlValueAccessor {
     if (this.control) {
       this.wrapper.formatErrors(this.control);
     }
+  }
 
+  ngOnChanges() {
     this.parseValueString();
   }
 
