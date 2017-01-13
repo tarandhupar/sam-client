@@ -29,12 +29,18 @@ export class AlertsPage {
 
   statuses = {
     label: 'Status',
-    options: [
-      { label: 'Active', value: 'Active', name: 'active' },
-      { label: 'Draft', value: 'Draft', name: 'draft' },
-      { label: 'Expired', value: 'Expired', name: 'expired' }
-    ]
   };
+
+  statusOptions = [
+    { label: 'Active', value: 'Active', name: 'active' },
+    { label: 'Expired', value: 'Expired', name: 'expired' }
+  ];
+
+  statusOptionsAdmin = [
+    { label: 'Active', value: 'Active', name: 'active' },
+    { label: 'Draft', value: 'Draft', name: 'draft' },
+    { label: 'Expired', value: 'Expired', name: 'expired' }
+  ];
 
   types = {
     label: 'Types',

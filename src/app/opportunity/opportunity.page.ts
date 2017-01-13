@@ -77,6 +77,7 @@ export class OpportunityPage implements OnInit {
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
   errorOrganization: any;
+  errorLogo: any;
   awardSort: string = "awardDate"; //default
   awardSortOptions = [
     { label: "Award Date", value: "awardDate" },
@@ -89,6 +90,7 @@ export class OpportunityPage implements OnInit {
   private showPerPage = 20;
   min: number;
   max: number;
+  private ready: boolean = false;
 
   constructor(
     private router: Router,
@@ -193,47 +195,22 @@ export class OpportunityPage implements OnInit {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
 
     opportunityAPI.subscribe(api => {
-      //organizationId length >= 30 -> call opportunity org End Point
-      if(api.data.organizationId.length >= 30) {
-        this.fhService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
-      }
-      //organizationId less than 30 character then call Octo's FH End point
-      else {
-        this.fhService.getOrganizationById(api.data.organizationId).subscribe(organizationSubject);
-        this.loadLogo(organizationSubject);
-      }
+      this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
+      this.fhService.getOrganizationLogo(organizationSubject, 
+        (logoUrl) => {
+          this.logoUrl = logoUrl;
+        }, (err) => {
+          this.errorLogo = true;
+      });
     });
 
     organizationSubject.subscribe(organization => { // do something with the organization api
       this.organization = organization['_embedded'][0]['org'];
     }, err => {
-      console.log('Error loading organization: ', err);
       this.errorOrganization = true;
     });
 
     return organizationSubject;
-  }
-
-  private loadLogo(organizationAPI: Observable<any>) {
-    organizationAPI.subscribe(org => {
-      // Do some basic null checks
-      if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
-        return;
-      }
-
-      // Base case: If logo exists, save it to a variable and exit
-      if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
-        this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
-        return;
-      }
-
-      // Recursive case: If parent orgranization exists, recursively try to load its logo
-      if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
-        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
-      }
-    }, err => {
-      console.log('Error loading logo: ', err);
-    });
   }
 
   private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
@@ -380,6 +357,8 @@ export class OpportunityPage implements OnInit {
 
         this.displayField[OpportunityFields.OriginalSetAside] = originalSetAsideCondition;
       }
+
+      this.ready = true;
     });
   }
 
@@ -387,7 +366,7 @@ export class OpportunityPage implements OnInit {
   // To hide a field, set the flag displayField[field] to false
   // A field is always displayed by default, unless it is explicitly set not to
   private shouldBeDisplayed(field: OpportunityFields) {
-    return this.displayField[field] !== false && this.opportunity;
+    return this.displayField[field] !== false; //&& this.ready === true;
   }
 
   // Given a field name, generates an id for it by adding the correct prefixes

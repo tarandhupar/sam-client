@@ -20,7 +20,7 @@ describe('Service: ApiService', () => {
  it('should have APIs property data set', function() {
     expect(this.oApiService.APIs.search).toBe('/sgs/v1/search');
     expect(this.oApiService.APIs.program).toBe('/cfda/v1/program');
-    expect(this.oApiService.APIs.federalHierarchy).toBe('/federalorganizations/v1/organizations/');
+    expect(this.oApiService.APIs.federalHierarchy).toBe('/federalorganizations/v1/organizations');
     expect(this.oApiService.APIs.dictionary).toBe('/cfda/v1/dictionary');
     expect(this.oApiService.APIs.historicalIndex).toBe('/cfda/v1/historicalIndex');
     expect(this.oApiService.APIs.suggestions).toBe('/sgs/v1/search/suggestions');

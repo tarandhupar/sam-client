@@ -16,7 +16,7 @@ let comp:    OrganizationPage;
 let fixture: ComponentFixture<OrganizationPage>;
 
 let MockFHService = {
-  getOrganizationById: (id: string) => {
+  getOrganizationById: (id: string, includeChildren: boolean) => {
     return Observable.of({
       _embedded: [
         {
@@ -167,6 +167,9 @@ let MockFHService = {
         }
       ]
     });
+  }, 
+  getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
+    return Observable.of("");
   }
 };
 
