@@ -28,7 +28,7 @@ export class KBAComponent implements OnChanges {
   };
 
   private $questions = [];
-  private $question;
+  private $question = '';
 
   ngOnInit() {
     this.$question = this.question.value;
