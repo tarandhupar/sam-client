@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
 import { IAMService } from 'api-kit';
@@ -29,11 +29,13 @@ export class ForgotInitialComponent {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private zone: NgZone,
     private cookies: CookieService,
     private api: IAMService) {}
 
   ngOnInit() {
+console.log(this.route.params);
     this.email = new FormControl('', [Validators.required, $Validators.email])
   }
 
