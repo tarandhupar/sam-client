@@ -11,15 +11,13 @@ describe('OrganizationTypeCodePipe', () => {
       alternativeNames: null,
       description: null,
       fpdsCode:null,
-      fpdsOrgId: "2547",
+      fpdsOrgId: '2547',
       oldFPDSCode: null
     };
-    let result1Label = "FPDS Org ID:";
-    let result1Value = "2547";
 
     let result1 = {
-      label: "FPDS Org ID:",
-      value: "2547"
+      label: 'FPDS Org ID:',
+      value: '2547'
     };
 
     let object2 = {
@@ -30,12 +28,10 @@ describe('OrganizationTypeCodePipe', () => {
       fpdsOrgId: null,
       oldFPDSCode: null
     };
-    let result2Label = "Old FPDS Code:";
-    let result2Value = "-"
 
     let result2 = {
-      label: "Old FPDS Code:",
-      value: "-"
+      label: 'Old FPDS Code:',
+      value: '-'
     };
 
 
