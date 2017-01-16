@@ -14,6 +14,7 @@ import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.c
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
 import { FHService } from "../../api-kit/fh/fh.service";
+import { PipesModule } from "../app-pipes/app-pipes.module";
 
 var fixture;
 
@@ -81,7 +82,8 @@ describe('SearchPage', () => {
         AppComponentsModule,
         RouterTestingModule.withRoutes([
           { path: 'search', component: SearchPage }
-        ])
+        ]),
+        PipesModule
       ]
     }).overrideComponent(SearchPage, {
        set: {

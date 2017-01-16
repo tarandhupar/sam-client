@@ -10,7 +10,6 @@ import { SamUIKitModule } from 'ui-kit';
 
 import { OrganizationPage } from './organization.page';
 import { Observable } from 'rxjs';
-import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import { PipesModule } from "../app-pipes/app-pipes.module";
 
 let comp:    OrganizationPage;
@@ -178,7 +177,7 @@ let MockFHService = {
 describe('OrganizationPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizationPage, CapitalizePipe ], // declare the test component
+      declarations: [ OrganizationPage ], // declare the test component
       imports: [
         HttpModule,
         RouterTestingModule,
@@ -198,8 +197,8 @@ describe('OrganizationPage', () => {
         { provide: Location, useClass: Location },
         { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '100035122' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: FHService, useValue: MockFHService },
-        CapitalizePipe
+        { provide: FHService, useValue: MockFHService }
+
       ]
     });
 
