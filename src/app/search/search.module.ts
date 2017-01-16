@@ -16,6 +16,7 @@ import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
 import {FHFeaturedResult} from "../organization/featured-result/featured-result.component";
+import { PipesModule } from "../app-pipes/app-pipes.module";
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import {FHFeaturedResult} from "../organization/featured-result/featured-result.
     HttpModule,
     SamUIKitModule,
     SamAPIKitModule,
-    AppComponentsModule
+    AppComponentsModule,
+    PipesModule
   ],
   exports: [
     SearchPage,
