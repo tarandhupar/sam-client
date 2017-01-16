@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { OrganizationPage }   from './organization.page.ts';
 import { routing } from './organization.route.ts';
 import { SamUIKitModule } from 'ui-kit';
-import { PipesModule } from "../app-pipes/app-pipes.module";
+import { PipesModule } from '../app-pipes/app-pipes.module';
 
 @NgModule({
   imports: [

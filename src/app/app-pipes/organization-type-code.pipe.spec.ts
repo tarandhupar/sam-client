@@ -33,6 +33,5 @@ describe('OrganizationTypeCodePipe', () => {
 
     expect(pipe.transform(object1)).toEqual(result1);
     expect(pipe.transform(object2)).toEqual(result2);
-
   });
 });

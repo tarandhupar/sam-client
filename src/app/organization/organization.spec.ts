@@ -10,7 +10,7 @@ import { SamUIKitModule } from 'ui-kit';
 
 import { OrganizationPage } from './organization.page';
 import { Observable } from 'rxjs';
-import { PipesModule } from "../app-pipes/app-pipes.module";
+import { PipesModule } from '../app-pipes/app-pipes.module';
 
 let comp:    OrganizationPage;
 let fixture: ComponentFixture<OrganizationPage>;
