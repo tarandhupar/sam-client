@@ -452,6 +452,7 @@ export class DetailsComponent {
         controlValue,
         intKey;
 
+
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
       controlValue = controls[key].value;
@@ -465,12 +466,21 @@ export class DetailsComponent {
           item.answer = item.answer.trim();
           return item;
         });
+
+        this.api.iam.kba.update(userData[key], () => {
+          console.log('KBA Q&A successfully saved');
+          cb();
+        }, () => {
+          cb();
+        });
+
+        return;
       }
     }
 
-    this.api.iam.user.update(userData, function(data) {
+    this.api.iam.user.update(userData, (data) => {
       cb();
-    }, function() {
+    }, () => {
       cb();
     });
   }
