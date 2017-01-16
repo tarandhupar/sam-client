@@ -1,8 +1,5 @@
 import { OrganizationTypeCodePipe } from './organization-type-code.pipe';
 
-
-
-
 describe('OrganizationTypeCodePipe', () => {
   let pipe = new OrganizationTypeCodePipe();
   it('transforms a json response object to an object with label and value', () => {
@@ -33,7 +30,6 @@ describe('OrganizationTypeCodePipe', () => {
       label: 'Old FPDS Code:',
       value: '-'
     };
-
 
     expect(pipe.transform(object1)).toEqual(result1);
     expect(pipe.transform(object2)).toEqual(result2);
