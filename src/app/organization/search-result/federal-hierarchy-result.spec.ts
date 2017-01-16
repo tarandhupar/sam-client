@@ -3,6 +3,7 @@ import { By }              from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { FederalHierarchyResult } from './federal-hierarchy-result.component';
+import { PipesModule } from "../../app-pipes/app-pipes.module";
 
 var fixture;
 var comp;
@@ -14,7 +15,8 @@ describe('FederalHierarchyResultComponent', () => {
       imports: [
         RouterTestingModule.withRoutes([
           { path: 'search', component: FederalHierarchyResult }
-        ])
+        ]),
+        PipesModule
       ]
     });
     TestBed.compileComponents().then( ()=>{

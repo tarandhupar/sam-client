@@ -11,6 +11,7 @@ import { SamUIKitModule } from 'ui-kit';
 import { OrganizationPage } from './organization.page';
 import { Observable } from 'rxjs';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
+import { PipesModule } from "../app-pipes/app-pipes.module";
 
 let comp:    OrganizationPage;
 let fixture: ComponentFixture<OrganizationPage>;
@@ -167,7 +168,7 @@ let MockFHService = {
         }
       ]
     });
-  }, 
+  },
   getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
     return Observable.of("");
   }
@@ -181,7 +182,8 @@ describe('OrganizationPage', () => {
       imports: [
         HttpModule,
         RouterTestingModule,
-        SamUIKitModule
+        SamUIKitModule,
+        PipesModule
       ],
       providers: [
         BaseRequestOptions,

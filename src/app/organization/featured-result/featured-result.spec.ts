@@ -6,6 +6,7 @@ import { FHFeaturedResult } from './featured-result.component';
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { SearchService } from "../../../api-kit/search/search.service";
 import { Observable } from "rxjs/Rx";
+import { PipesModule } from "../../app-pipes/app-pipes.module";
 
 var fixture;
 var comp;
@@ -37,7 +38,8 @@ describe('FHFeaturedResultComponent', () => {
       imports: [
         RouterTestingModule.withRoutes([
           {path: 'search', component: FHFeaturedResult}
-        ])
+        ]),
+        PipesModule
       ]
     }).overrideComponent(FHFeaturedResult, {
       set: {
