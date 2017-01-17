@@ -2,7 +2,7 @@ export default {
   localResource: {
     comp: 'http://comp.276.iamservicepipelinetwo.prod',
     minc: 'http://minc.276.iamservicepipelinetwo.prod',
-    prodlike: 'http://minc.276.iamservicepipelinetwo.prod'
+    prodlike: 'http://prodlike.276.iamservicepipelinetwo.prod'
   },
 
   remoteResource: {
