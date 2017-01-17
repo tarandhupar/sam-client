@@ -66,3 +66,9 @@ if ('production' === ENV) {
   require('zone.js/dist/long-stack-trace-zone');
 
 }
+
+// Compatibility implementation of the ECMAScript
+// Internationalization API (ECMA-402) for JavaScript
+// https://github.com/andyearnshaw/Intl.js/
+import 'intl';
+import 'intl/locale-data/jsonp/en.js';

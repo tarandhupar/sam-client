@@ -20,7 +20,10 @@ export class FinancialObligationChart {
   }
 
   ngOnInit() {
-    this.createVisualization(this.prepareVisualizationData());
+    let visualizationData = this.prepareVisualizationData();
+    if(visualizationData.length > 0){
+      this.createVisualization(visualizationData);
+    }
   }
 
   createVisualization(preparedFinancialData): void {

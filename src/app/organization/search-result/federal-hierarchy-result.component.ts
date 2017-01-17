@@ -37,7 +37,7 @@ import 'rxjs/add/operator/map';
             </ul>  
           </li>
           <li>
-            <strong>{{ data.aacCode ? 'AAC Code:' : (data.fpdsOrgId ? 'FPDS Org ID:' : (data.fpdsCode ? 'FPDS Code:' : 'Old FPDS Code:')) }}</strong> {{ data.aacCode ? data.aacCode : (data.fpdsOrgId ? data.fpdsOrgId : (data.fpdsCode ? data.fpdsCode : (data.oldFPDSCode ? data.oldFPDSCode : ''))) }}
+            <strong>{{(data | organizationTypeCode).label}}</strong> {{(data | organizationTypeCode).value}}
           </li>    
         </ul>
       </div>

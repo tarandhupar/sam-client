@@ -11,7 +11,7 @@
         <h1>{{organization.agencyName || organization.name || organization.orgKey}}</h1>
 
         <section>
-          Code {{organization.aacCode || organization.fpdsOrgId || organization.fpdsCode || organization.oldFpdsCode}}
+          <strong>{{(organization | organizationTypeCode).label}}</strong> {{(organization | organizationTypeCode).value}}
           <span class="divider">&nbsp;|&nbsp;</span>
 
           <span class="inactive" *ngIf="isModActive() == false">
