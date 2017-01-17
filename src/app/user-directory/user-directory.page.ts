@@ -8,14 +8,14 @@ export class UserDirectoryPage {
   private orgId: number = 100000028;
   private orgNames: string[];
   private orgTypes: string[];
-  private loadState: string = 'init'; // success, info, init, loading or error
+  private loadState: string = 'closed'; // success, info, init, loading or error
 
   constructor(private fh: FHService) {
 
   }
 
   toggleButtonClass() {
-    return this.loadState === 'init' ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'
+    return this.loadState === 'closed' ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'
   }
 
   isToggleButtonDisabled() {
@@ -23,8 +23,8 @@ export class UserDirectoryPage {
   }
 
   onToggleHierarchyClick() {
-    if (this.loadState !== 'init') {
-      this.loadState = 'init';
+    if (this.loadState !== 'closed') {
+      this.loadState = 'closed';
     } else {
       this.loadState = 'loading';
       this.fh.getOrganizationById('' + this.orgId, false).subscribe(

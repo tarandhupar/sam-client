@@ -2,8 +2,8 @@
   <label>Organization Id:</label>
   <input type="number" [(ngModel)]="orgId">
   <hr>
-  <div class="user-details-row">Adams, Chris</div>
-  <div class="user-details-row">Phone (123) 456-7890</div>
+  <div class="user-details-row"><a href="#">Adams, Chris</a></div>
+  <div class="user-details-row">Phone <a href="tel:+17045024424">(123) 456-7890</a></div>
   <div class="user-details-row">Organization: General Services Administration (GSA)&nbsp;
     <button class="usa-button-transparent org-dropdown-button" (click)="onToggleHierarchyClick()" [disabled]="isToggleButtonDisabled()">
       <span class="sr-only">show hierarchy</span>
