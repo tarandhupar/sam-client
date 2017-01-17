@@ -1,0 +1,18 @@
+<div class="usa-grid user-directory-page">
+  <label>Organization Id:</label>
+  <input type="number" [(ngModel)]="orgId">
+  <hr>
+  <div class="user-details-row">Adams, Chris</div>
+  <div class="user-details-row">Phone (123) 456-7890</div>
+  <div class="user-details-row">Organization: General Services Administration (GSA)&nbsp;
+    <button class="usa-button-transparent org-dropdown-button" (click)="onToggleHierarchyClick()" [disabled]="isToggleButtonDisabled()">
+      <span class="sr-only">show hierarchy</span>
+      <i class="fa" [ngClass]="toggleButtonClass()"></i>
+    </button>
+  </div>
+  <div [ngSwitch]="loadState">
+    <div *ngSwitchCase='"loading"'><sam-spinner></sam-spinner></div>
+    <parent-orgs *ngSwitchCase='"success"' [orgNames]="orgNames" [orgTypes]="orgTypes"></parent-orgs>
+    <samAlert *ngSwitchCase='"error"' type="error" title="Organization not found"></samAlert>
+  </div>
+</div>
