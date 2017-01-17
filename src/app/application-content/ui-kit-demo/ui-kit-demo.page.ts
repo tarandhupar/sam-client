@@ -12,8 +12,7 @@ export class UIKitDemoPage {
 
 
   // Alphabet Selector Component
-  searchResultData: any = {size:0};
-  curRange: any = null;
+
 
   // Select Component
   selectModel = '';
@@ -205,8 +204,4 @@ export class UIKitDemoPage {
     this.vcModal2.openModal();
   }
 
-
-  onRangeChange(rangeObj){
-    this.curRange = rangeObj;
-  }
 }

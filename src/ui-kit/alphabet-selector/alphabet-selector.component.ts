@@ -6,79 +6,65 @@ import { Component, Input, Output, EventEmitter} from "@angular/core";
 })
 export class SamAlphabetSelectorComponent {
 
-  @Input() data:any = {size:2000};
   @Input() sortLabel:string;
-  @Input() dataSize:number = 0;
 
-  @Output() onDataRangeChange: EventEmitter<any> = new EventEmitter<any>();
+  alphabetArr:any;
+  prefixLayerArr:any = [];
+  currentPrefix:string;
 
-  groupCapacity:number;
-  groupArr:any;
-  currentRangeIndex:number = 0;
+  defaultLayerData:any = {A:200, E:200, F:20000, Z:1000};
 
   constructor(){
 
   }
 
   ngOnInit(){
-    this.setGroupArray();
-    this.onDataRangeChange.emit(this.groupArr[this.currentRangeIndex]);
+    this.alphabetArr = this.generateAlphabetArray();
+    this.prefixLayerArr.push(this.alphabetArr);
   }
 
-  ngOnChanges(){
-    this.currentRangeIndex = 0;
-    this.setGroupArray();
-    this.onDataRangeChange.emit(this.groupArr[this.currentRangeIndex]);
+  generateAlphabetArray():any{
+    return Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
   }
 
+  selectPrefix(prefix){
+    let selectedLayer = prefix.length;
+    this.currentPrefix = prefix;
 
-  setGroupArray(){
-    this.groupCapacity = this.generateGroupCapacity();
-    this.groupArr = [];
-    for(let i = 0;i < 26; i = i + this.groupCapacity){
+    //Adjust the prefix tree layers
+    this.prefixLayerArr.length = selectedLayer;
 
-      let startChar = String.fromCharCode(65 + i);
-      let endChar = String.fromCharCode(90);
-      if(i + this.groupCapacity < 26){
-        endChar = String.fromCharCode(65 + i + this.groupCapacity - 1);
-      }
+    //Check with api to see whether drill down is needed
+    
+    
+    //Set up the drill down layer if needed
+    let drillDownArr = this.generateAlphabetArray().map((v)=>{return prefix+(v.toLowerCase());});
+    this.prefixLayerArr.push(drillDownArr);
+  }
 
-      this.groupArr.push({start:startChar,end:endChar});
+  isInCurrentPrefix(prefix){
+    return !!this.currentPrefix && this.currentPrefix.startsWith(prefix);
+  }
+
+  isValidPrefix(prefix){
+    return Object.keys(this.defaultLayerData).indexOf(prefix) != -1;
+  }
+
+  getPrefixClass(prefix){
+    if(!this.isValidPrefix(prefix)){
+      return "disabled-prefix";
     }
-  }
 
-  generateGroupCapacity():number{
-    /* Logic to calculate the capacity in a group based on data size*/
-
-    /* Fake logic for now */
-    let groupCap = 26;
-    if(this.dataSize > 100000){
-      groupCap = 1;
-    } else if(this.dataSize > 10000){
-      groupCap = 3;
-    } else if(this.dataSize > 1000){
-      groupCap = 5;
-    } else if(this.dataSize > 100){
-      groupCap = 10;
+    if(this.isInCurrentPrefix(prefix)){
+      return "current-prefix";
     }
-    return groupCap;
+    return "normal-prefix";
   }
 
-  isLastGroup(rangeObj):boolean{return rangeObj.end !== 'Z';}
-  isSingleCharGroup(rangeObj):boolean{return rangeObj.end === rangeObj.start;}
-
-  getRangeClass(rangeObj):string{
-    if(this.groupArr[this.currentRangeIndex] === rangeObj){
-      return "current-range-link";
+  getVerticalLineClass(prefix){
+    if(this.isInCurrentPrefix(prefix)){
+      return "current-vertical-line";
     }
-    return "normal-range-link";
+    return "normal-vertical-line";
   }
-
-  changeCurRange(index){
-    this.currentRangeIndex = index;
-    /* API call to retrieve related data*/
-    this.onDataRangeChange.emit(this.groupArr[this.currentRangeIndex]);
-  }
-
-
 }

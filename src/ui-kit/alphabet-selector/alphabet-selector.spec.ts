@@ -4,7 +4,7 @@ import { By } from "@angular/platform-Browser";
 // Load the implementations that should be tested
 import { SamAlphabetSelectorComponent } from './alphabet-selector.component';
 
-fdescribe("Sam Alphabet Selector Component", ()=>{
+describe("Sam Alphabet Selector Component", ()=>{
   let component: SamAlphabetSelectorComponent;
   let fixture: any;
 
