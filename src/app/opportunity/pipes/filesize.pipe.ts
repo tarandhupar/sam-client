@@ -6,7 +6,13 @@ import * as filesize from 'filesize';
 export class FilesizePipe implements PipeTransform {
 
   transform(size: number): string {
-    return filesize(size);
+    if(size < 1000) {
+      return "<1 KB";
+    }
+    else {
+      let sizeObj = filesize(size, {round: 0, base: 10, output: 'object'});
+      return Math.trunc(sizeObj.value) + sizeObj.suffix;
+    }
   }
 }
 
