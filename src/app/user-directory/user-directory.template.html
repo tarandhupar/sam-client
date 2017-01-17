@@ -7,7 +7,7 @@
       <a href="#">Adams, Chris</a>
     </h1>
   </div>
-  <div class="user-details-row">Phone <a href="tel:+17045024424">(123) 456-7890</a></div>
+  <div class="user-details-row">Phone <a href="tel:+15555551234">(123) 456-7890</a></div>
   <div class="user-details-row">Organization: <a [routerLink]="['/organization', orgId]">General Services Administration (GSA)</a>&nbsp;
     <button class="usa-button-transparent org-dropdown-button" (click)="onToggleHierarchyClick()" [disabled]="isToggleButtonDisabled()">
       <span class="sr-only">show hierarchy</span>
@@ -16,7 +16,7 @@
   </div>
   <div [ngSwitch]="loadState">
     <div *ngSwitchCase='"loading"'><sam-spinner></sam-spinner></div>
-    <parent-orgs *ngSwitchCase='"success"' [orgNames]="orgNames" [orgTypes]="orgTypes"></parent-orgs>
+    <parent-orgs *ngSwitchCase='"success"' [orgLevels]="orgLevels"></parent-orgs>
     <samAlert *ngSwitchCase='"error"' type="error" title="Organization not found"></samAlert>
   </div>
 </div>
