@@ -7,11 +7,10 @@ export class FilesizePipe implements PipeTransform {
 
   transform(size: number): string {
     if(size < 1000) {
-      return "<1 KB";
+      return "<1 kB";
     }
     else {
-      let sizeObj = filesize(size, {round: 0, base: 10, output: 'object'});
-      return Math.trunc(sizeObj.value) + sizeObj.suffix;
+      return filesize(size, {round: 0, base: 10});
     }
   }
 }
