@@ -13,10 +13,8 @@ export class FilesizePipe implements PipeTransform {
     // 3. round result to the one's digit
     if(size <= 0) { console.log('invalid file size', size) }
     if(size < 1000) { return '<1 kB'; }
-
-    else {
-      return filesize(size, {round: 0, base: 10});
-    }
+    
+    return filesize(size, {round: 0, base: 10});
   }
 }
 
