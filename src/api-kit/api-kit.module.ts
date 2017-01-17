@@ -10,6 +10,7 @@ import { OpportunityService } from './opportunity/opportunity.service';
 import { WrapperService } from './wrapper/wrapper.service';
 import { SuggestionsService } from './search/suggestions.service';
 import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
+import { AlphabetSelectorService } from './alphabet-selector/alphabet-selector.service';
 
 /**
  * A module for reusable SAM Web Design components
@@ -29,7 +30,8 @@ import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.s
     OpportunityService,
     WrapperService,
     SuggestionsService,
-    AutoCompleteWrapper
+    AutoCompleteWrapper,
+    AlphabetSelectorService
   ]
 })
 export class SamAPIKitModule { }
