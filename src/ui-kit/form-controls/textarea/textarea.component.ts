@@ -15,7 +15,7 @@ export const TEXT_VALUE_ACCESSOR: any = {
   selector: 'samTextArea',
   template: `
     <labelWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage" [required]="required">
-      <textarea [attr.required]="required" [value]="value" [attr.id]="name" 
+      <textarea [value]="value" [attr.id]="name" 
         [disabled]="disabled" (change)="onInputChange($event.target.value)">
       </textarea>
     </labelWrapper>

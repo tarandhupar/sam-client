@@ -23,7 +23,7 @@ import * as moment from 'moment/moment';
     </div>
   `,
 })
-export class SamTimeComponent implements OnInit {
+export class SamTimeComponent implements OnInit, OnChanges {
   INPUT_FORMAT: string = "H:m";
   OUTPUT_FORMAT: string = "HH:mm:ss";
 
@@ -42,20 +42,17 @@ export class SamTimeComponent implements OnInit {
     if (!this.name) {
       throw new Error('SamTimeComponent required a [name] for 508 compliance');
     }
+  }
+
+  ngOnChanges(v) {
     this.parseValueString();
   }
 
   parseValueString() {
-    if (this.isClean()) {
-      this.minutes = null;
-      this.hours = null;
-    }
-
     let m = moment(this.value, this.INPUT_FORMAT);
 
     if (!m.isValid()) {
-      this.minutes = null;
-      this.hours = null;
+      return;
     }
 
     let hours = m.hours();
@@ -76,9 +73,6 @@ export class SamTimeComponent implements OnInit {
 
     this.hours = hours;
     this.minutes = minutes;
-
-    // convert input to iso string if it was not already
-    this.value = this.toString();
   }
 
   onInputChange() {

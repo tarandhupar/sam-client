@@ -13,19 +13,17 @@ var fixture;
 var comp;
 var titleEl;
 var fhServiceStub = {
-  getFederalHierarchyById: (id: string, includeParentLevels: boolean, includeChildrenLevels: boolean)=>{
+  getOrganizationById: (id: string, includeChildrenLevels: boolean)=>{
     return Observable.of({
-      _embedded:{
-        hierarchy: [{elementId:"1000000",name:"Test Organization",type:"DEPARTMENT"}]
-      },
-      _links: {
-        self: {
-          href: 'test'
-        },
-        search: {
-          href: 'test'
+      _embedded:[{
+          org: { elementId:"1000000", l1Name:"Test Organization", type:"DEPARTMENT" },
+          _links: {
+            self: {
+              href: 'test'
+            }
+          }
         }
-      }
+      ]
     });
   }
 };

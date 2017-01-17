@@ -462,7 +462,7 @@ export class AgencyPickerComponent implements OnInit {
     } else if (this.searchData.length == 1 || idx !==-1){
       this.searchMessage = "";
       //console.log(idx, this.searchData);
-      this.oFHService.getOrganizationById(this.searchData[idx]['_id']).subscribe(data =>{
+      this.oFHService.getOrganizationById(this.searchData[idx]['_id'], true).subscribe(data =>{
         this.setOrganization(data["_embedded"][0]["org"]);
         this.updateBrowse(data["_embedded"][0]["org"]);
       });
@@ -535,7 +535,7 @@ export class AgencyPickerComponent implements OnInit {
       }
     }
     if(selectedOrg){
-      this.oFHService.getOrganizationById(selectedOrg).subscribe( res => {
+      this.oFHService.getOrganizationById(selectedOrg, true).subscribe( res => {
         this.setOrganization(res["_embedded"][0]['org']);
         this.searchMessage = "";
       });
@@ -676,9 +676,9 @@ export class AgencyPickerComponent implements OnInit {
 		//get Department level of user's organizationId
     if(orgId!=""){
       if(hierarchy){
-        return this.oFHService.getOrganizationById(orgId);
+        return this.oFHService.getOrganizationById(orgId, true);
       } else{
-        return this.oFHService.getSimpleOrganizationById(orgId);
+        return this.oFHService.getOrganizationById(orgId, false);
       }
     } else {
       return this.oFHService.getDepartments();
