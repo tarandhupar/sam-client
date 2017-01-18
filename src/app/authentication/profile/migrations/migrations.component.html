@@ -1,0 +1,116 @@
+<h2>Migrations</h2>
+<div>Select one of our legacy web sites. Then enter your user name and password from that site to move your roles to the new SAM.gov</div>
+<div class="usa-content">
+  <form [formGroup]="migrationForm" (ngSubmit)="migrate()">
+    <div class="usa-grid">
+      <div class="usa-width-one-half">
+        <labelWrapper label="Web Site" [errorMessage]="errors('website')">
+          <select formControlName="website" placeholder="Web Site"></select>
+        </labelWrapper>
+      </div>
+      <div class="usa-width-one-half">
+        <labelWrapper label="Email / User Id" required="true" [errorMessage]="errors('username')">
+          <input type="text" autocomplete="off" formControlName="username" readonly="readonly" onfocus="this.removeAttribute('readonly');" />
+        </labelWrapper>
+        <labelWrapper label="Email / User Id" required="true" [errorMessage]="errors('password')">
+          <input type="password" autocomplete="off" formControlName="password" readonly="readonly" onfocus="this.removeAttribute('readonly');" />
+        </labelWrapper>
+        <div class="button-controls">
+          <button type="submit"
+                  class="usa-primary-button"
+                  [ngClass]="{ 'usa-button-disabled': migrationForm.invalid }"
+                  [disabled]="migrationForm.invalid">Migrate</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <h3>Migration History</h3>
+  <div>You have not migrated any legacy website accounts yet.</div>
+
+  <table class="usa-table-borderless usa-migration-history">
+    <thead>
+      <tr>
+        <th scope="col" class="text-right">Role</th>
+        <th scope="col">&nbsp;</th>
+        <th scope="col" class="text-left">Organization</th>
+        <th scope="col">&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="group">
+        <td class="text-right">
+          <h1>CFDA.gov</h1>
+          <div class="key">Jane Smith</div>
+        </td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>
+          <div class="key">Migrated 12/10/2016</div>
+        </td>
+      </tr>
+      <tr>
+        <td class="text-center" colspan="2">
+          <dl>
+            <dd>Agency User</dd>
+            <dd>Agency User</dd>
+            <dd>Agency Coordinator</dd>
+          </dl>
+        </td>
+        <td>
+          <dl>
+            <dd>Department of Interior</dd>
+            <dd>U.S. Fish and Wildlife Service</dd>
+            <dd>National Parks Service</dd>
+          </dl>
+        </td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 id="legacy-sites">Legacy Websites</h3>
+  <div>The following web sites are being moved to the new SAM.gov. If you currently have a user account in one of these systems you will be able to move it here.</div>
+
+  <table class="usa-table-borderless">
+    <thead>
+      <tr>
+        <th scope="col">Website</th>
+        <th scope="col">Migration Status</th>
+        <th scope="col">System Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="https://www.cfda.gov" target="_blank">CFDA.gov</a></td>
+        <td>Available</td>
+        <td>Shutoff Data TBD</td>
+      </tr>
+      <tr>
+        <td><a href="https://www.fbo.gov" target="_blank">FBO.gov</a></td>
+        <td>Available</td>
+        <td>Shutoff Data TBD</td>
+      </tr>
+      <tr>
+        <td><a href="https://www.sam.gov" target="_blank">SAM.gov</a></td>
+        <td>TBD</td>
+        <td>Shutoff Data TBD</td>
+      </tr>
+      <tr>
+        <td><a href="https//www.fpds.gov" target="_blank">FPDS.gov</a></td>
+        <td>TBD</td>
+        <td>Shutoff Data TBD</td>
+      </tr>
+      <tr>
+        <td><a href="https://www.wdol.gov" target="_blank">WDOL.gov</a></td>
+        <td>Accounts Not Required</td>
+        <td>Shutoff Data TBD</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<samAlert type="info" title="Migrate Your Roles">
+  If you have a user account at any of the <a [routerLink]="migrations" fragment="legacy-sites">web sites</a> that are moving to the new SAM.gov,
+  you may migrate your roles and keep your same permissions. <a [routerLink]="migrations">Begin Now</a>
+</samAlert>
