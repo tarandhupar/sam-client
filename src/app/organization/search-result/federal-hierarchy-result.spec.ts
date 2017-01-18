@@ -3,7 +3,7 @@ import { By }              from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { FederalHierarchyResult } from './federal-hierarchy-result.component';
-import { PipesModule } from "../../app-pipes/app-pipes.module";
+import { PipesModule } from '../../app-pipes/app-pipes.module';
 
 var fixture;
 var comp;

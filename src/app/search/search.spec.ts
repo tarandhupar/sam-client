@@ -13,8 +13,8 @@ import { EntitiesResult } from '../entity/search-result/entities-result.componen
 import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.component';
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
-import { FHService } from "../../api-kit/fh/fh.service";
-import { PipesModule } from "../app-pipes/app-pipes.module";
+import { FHService } from '../../api-kit/fh/fh.service';
+import { PipesModule } from '../app-pipes/app-pipes.module';
 
 var fixture;
 
