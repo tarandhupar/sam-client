@@ -22,8 +22,8 @@ describe('OpportunitiesResultComponent', () => {
       comp = fixture.componentInstance;
       titleEl  = fixture.debugElement.query(By.css('.opportunity-title')); // find title element
       comp.data = {
-        procurementTitle: "SAMPLE TITLE",
-        archive:false
+        title: "SAMPLE TITLE",
+        isActive:true
       };
       fixture.detectChanges();// trigger data binding
     });
