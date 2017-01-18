@@ -30,3 +30,4 @@ export class OrganizationTypeCodePipe implements PipeTransform {
     return response;
   }
 }
+
