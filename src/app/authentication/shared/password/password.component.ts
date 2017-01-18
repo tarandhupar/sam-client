@@ -89,6 +89,33 @@ export class PasswordComponent {
     return classes;
   }
 
+  $currentPasswordErrors() {
+    let errors = [],
+        type;
+
+    if(this.confirmPassword.touched) {
+      for(type in this.currentPassword.errors) {
+        switch(type) {
+          case 'required':
+            errors.push('Your current password must be entered');
+            break;
+          default:
+            if(typeof this.currentPassword.errors[type] == 'string') {
+              errors.push(this.currentPassword.errors[type]);
+            }
+        }
+      }
+    }
+
+    return errors.length ? errors : '';
+  }
+
+  setCustomError(controlName, error) {
+    if(this[controlName] !== undefined) {
+      this[controlName].setErrors(error);
+    }
+  }
+
   getFormControlStates(controlName) {
     let control = this[controlName] || false,
         classes = {},

@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Component, DoCheck, Input, NgZone, OnInit, OnChanges } from '@angular/core';
+import { Component, DoCheck, Input, NgZone, OnInit, OnChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -36,6 +36,8 @@ export class ResetComponent {
 
   public passwordForm: FormGroup;
 
+  @ViewChild('passwordEntry') passwordEntry;
+
   constructor(
     private router: Router,
     private builder: FormBuilder,
@@ -50,7 +52,7 @@ export class ResetComponent {
             email: [''],
             currentPassword: ['', Validators.required],
             newPassword: ['', Validators.required],
-          })
+          });
         });
       });
     });

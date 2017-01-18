@@ -33,3 +33,9 @@
     </div>
   </div>
 </div>
+
+<samAlert [type]="states.notification.type"
+          [title]="states.notification.title"
+          [description]="states.notification.message"
+          [hidden]="states.notification.show"
+          showClose="true"></samAlert>

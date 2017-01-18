@@ -1,3 +1,5 @@
+import { merge } from 'lodash';
+
 import { Component, OnInit, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
@@ -17,7 +19,13 @@ export class ForgotInitialComponent {
   private states = {
     submitted: false,
     loading: false,
-    error: ''
+    error: '',
+    notification: {
+      type: '',
+      title: '',
+      message: '',
+      show: false
+    }
   };
 
   private errors = {
@@ -35,8 +43,27 @@ export class ForgotInitialComponent {
     private api: IAMService) {}
 
   ngOnInit() {
-console.log(this.route.params);
+    this.resetNotifications();
+    merge(this.states.notification, this.route.snapshot.queryParams);
+
+    console.log(this.states.notification);
+
     this.email = new FormControl('', [Validators.required, $Validators.email])
+  }
+
+  resetNotifications() {
+    let prop;
+
+    for(prop in this.states.notification) {
+      switch(typeof this.states.notification[prop]) {
+        case 'boolean':
+          this.states.notification[prop] = '';
+          break;
+        case 'string':
+          this.states.notification[prop] = '';
+          break;
+      }
+    }
   }
 
   validate() {

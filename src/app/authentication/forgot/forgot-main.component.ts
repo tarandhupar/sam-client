@@ -47,6 +47,7 @@ export class ForgotMainComponent {
     private api: IAMService) {}
 
   ngOnInit() {
+this.expire('test');
     this.initForm();
     this.verifyToken();
   }
@@ -90,12 +91,15 @@ export class ForgotMainComponent {
   }
 
   expire(message) {
-    let error = {
-      type: 'error',
-      message: message || 'Your confirmation link has expired. Please start a new session.'
+    let params = {
+      fragment: 'anchor',
+      queryParams: {
+        type: 'error',
+        message: message || 'Your confirmation link has expired. Please start a new session.'
+      }
     };
 
-    this.router.navigate(['/forgot', error]);
+    this.router.navigate(['/forgot', params]);
   }
 
   next(status, token, question, message) {
