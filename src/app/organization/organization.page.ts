@@ -25,7 +25,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   errorLogo: any;
   private pageNum = 1;
   private totalPages: any = 0;
-  private showPerPage = 20;
+  private showPerPage = 10;
   public logoUrl: string;
 
   constructor(
@@ -54,7 +54,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   private loadOrganization() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.activatedRoute.params.switchMap(params => { // construct a stream of api data
-      return this.fhService.getOrganizationById(params['id']);
+      return this.fhService.getOrganizationById(params['id'], true);
     });
     apiStream.subscribe(apiSubject);
 
@@ -68,38 +68,20 @@ export class OrganizationPage implements OnInit, OnDestroy {
       this.errorOrganization = true;
     });
 
-    this.loadLogo(apiSubject);
+    this.fhService.getOrganizationLogo(apiSubject, 
+      (logoUrl) => {
+        this.logoUrl = logoUrl;
+      }, (err) => {
+        this.errorLogo = true;
+    });
 
     return apiSubject;
-  }
-
-  private loadLogo(organizationAPI: Observable<any>) {
-    organizationAPI.subscribe(org => {
-      // Do some basic null checks
-      if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
-        return;
-      }
-
-      // Base case: If logo exists, save it to a variable and exit
-      if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
-        this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
-        return;
-      }
-
-      // Recursive case: If parent orgranization exists, recursively try to load its logo
-      if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
-        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
-      }
-    }, err => {
-      console.log('Error loading logo: ', err);
-      this.errorLogo = true;
-    });
   }
 
   sortHierarchyAlphabetically(hierarchy){
     let array = [];
     for (let element of hierarchy){
-      let item = {name: this.getAgencyName(element).toString(), url: "organization/" + element.org.orgKey};
+      let item = {name: this.getAgencyName(element).toString(), orgId: element.org.orgKey};
       array.push(item);
     }
     return _.sortBy(array, ['name']);

@@ -1,0 +1,21 @@
+<div class="usa-kba">
+  <div class="question">
+    <samSelect name="$question"
+               [(model)]="$question"
+               [options]="$questions"
+               [errorMessage]="states.errors.question"
+               (modelChange)="changeQuestion($event)"
+               [label]="label">
+    </samSelect>
+  </div>
+  <div class="answer">
+  <labelWrapper [errorMessage]="(answer.invalid ? states.errors.answer : '')" required="true">
+      <input type="{{ states.type }}"
+             name="answer"
+             [formControl]="answer"
+             (blur)="secureAnswer($event)"
+             (focus)="selectAnswer($event)"
+             (keyup)="unsecureAnswer($event)" />
+    </labelWrapper>
+  </div>
+</div>

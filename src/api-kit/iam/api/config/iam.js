@@ -1,8 +1,14 @@
 export default {
   localResource: {
-    comp: 'http://iam.comp.micropaas.io',
-    minc: 'http://iam.minc.micropaas.io',
-    prodlike: 'http://iam.prodlike.micropaas.io'
+    comp: 'http://comp.276.iamservicepipelinetwo.prod',
+    minc: 'http://minc.276.iamservicepipelinetwo.prod',
+    prodlike: 'http://prodlike.276.iamservicepipelinetwo.prod'
+  },
+
+  remoteResource: {
+    comp: 'http://comp.276.iamservicepipelinetwo.prod',
+    minc: 'http://minc.276.iamservicepipelinetwo.prod',
+    prodlike: 'http://prodlike.276.iamservicepipelinetwo.prod'
   },
 
   cookies: {

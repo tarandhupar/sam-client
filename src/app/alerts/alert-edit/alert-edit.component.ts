@@ -3,8 +3,7 @@ import {Alert} from "../alert.model";
 import {OptionsType} from "ui-kit/form-controls/types";
 import {FormGroup, FormBuilder, AbstractControl, FormControl} from "@angular/forms";
 import moment = require("moment");
-import before = testing.before;
-import {SamDateTimeComponent} from "ui-kit";
+import { SamDateTimeComponent, SamSelectComponent, SamTextComponent, SamTextareaComponent } from "ui-kit";
 
 function isNotBeforeToday(c: FormControl) {
   let error = {
@@ -13,7 +12,52 @@ function isNotBeforeToday(c: FormControl) {
     }
   };
 
-  if (c.value && moment(c.value).isBefore(moment().startOf('day'))) {
+  if (!c.value || c.value.match(/invalid/i)) {
+    return;
+  }
+
+  let m = moment(c.value);
+
+  if (!m.isValid()) {
+    return;
+  }
+
+  if (c.value && m.isBefore(moment().startOf('day'))) {
+    return error;
+  }
+}
+
+function isAfter(before: SamDateTimeComponent) {
+  return (after: FormControl) => {
+    if (!before.value || before.value.match(/invalid/i) || !after.value || after.value.match(/invalid/i)) {
+      return;
+    }
+
+    let startDate = moment(before.value);
+    let endDate = moment(after.value);
+
+    if (!startDate.isValid() || !endDate.isValid()) {
+      return;
+    }
+
+    if (startDate && endDate && endDate.isBefore(startDate)) {
+      return {
+        dateAfter: {
+          message: `End date must be after publish date`,
+        }
+      }
+    }
+  };
+}
+
+function validDateTime(c: FormControl) {
+  let error = {
+    validDateTime: {
+      message: 'Date is invalid'
+    }
+  };
+
+  if (c.value === 'Invalid Date Time') {
     return error;
   }
 }
@@ -29,8 +73,11 @@ export class AlertEditComponent implements OnInit {
   @Output() accept: EventEmitter<any> = new EventEmitter<any>();
   @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
-  @ViewChild('endDate') public endDate: SamDateTimeComponent;
-  @ViewChild('publishDate') public publishDate: SamDateTimeComponent;
+  @ViewChild('endDate') endDate: SamDateTimeComponent;
+  @ViewChild('publishedDate') publishedDate: SamDateTimeComponent;
+  @ViewChild('severity') severity: SamSelectComponent;
+  @ViewChild('title') title: SamTextComponent;
+  @ViewChild('description') description: SamTextareaComponent;
 
   publishImmediately: boolean;
 
@@ -64,31 +111,14 @@ export class AlertEditComponent implements OnInit {
       description: [this.alert.description(), []],
       title: [this.alert.title(), []],
       severity: [this.alert.severity(), []],
-      endDate: [this.alert.endDate(), [isNotBeforeToday]],
-      publishedDate: [this.alert.publishedDate(), [isNotBeforeToday]],
+      endDate: [this.alert.endDate(), [isNotBeforeToday, isAfter(this.publishedDate), validDateTime]],
+      publishedDate: [this.alert.publishedDate(), [isNotBeforeToday, validDateTime]],
       publishImmediately: [false, []],
       isExpiresIndefinite: [this.alert.isExpiresIndefinite(), []],
     });
 
     if (this.alert.isExpiresIndefinite()) {
       this.form.get('endDate').disable();
-    }
-
-    this.form.valueChanges.subscribe(val => this.validate());
-    this.validate();
-  }
-
-  validate() {
-    let startDate = this.form.value['publishedDate'];
-    let endDate = this.form.value['endDate'];
-    if (startDate && endDate && moment(endDate).isBefore(startDate)) {
-      this.endDate.wrapper.errorMessage = "Publish date must be after startDate";
-      this.form.setErrors({ dateAfter: false});
-    } else {
-      if (this.form.valid) {
-        this.form.clearValidators();
-      }
-      this.endDate.wrapper.errorMessage = "";
     }
   }
 
@@ -97,6 +127,15 @@ export class AlertEditComponent implements OnInit {
   }
 
   onAcceptClick(event) {
+    if (!this.form.valid) {
+      this.severity.wrapper.formatErrors(<FormControl>this.form.get('severity'));
+      this.title.wrapper.formatErrors(<FormControl>this.form.get('title'));
+      this.description.wrapper.formatErrors(<FormControl>this.form.get('description'));
+      this.publishedDate.wrapper.formatErrors(<FormControl>this.form.get('publishedDate'));
+      this.endDate.wrapper.formatErrors(<FormControl>this.form.get('endDate'));
+      return;
+    }
+
     let alert = new Alert();
     let formValue = this.form.value;
     alert.setDescription(formValue.description);
@@ -122,10 +161,12 @@ export class AlertEditComponent implements OnInit {
   }
 
   onPublishImmediatelyClick(val) {
-    let ctrl: AbstractControl = this.form.controls['publishedDate'];
+    let ctrl: any = this.form.get('publishedDate');
     if (val) {
       ctrl.setValue(this.isoNow());
-      ctrl.disable()
+      this.publishedDate.wrapper.errorMessage = '';
+      ctrl.disable();
+
     } else {
       ctrl.enable();
     }
@@ -139,9 +180,5 @@ export class AlertEditComponent implements OnInit {
     } else {
       ctrl.enable();
     }
-  }
-
-  acceptButtonStyle() {
-    return {'usa-button-primary': this.form.valid, 'usa-button-disabled': !this.form.valid};
   }
 }

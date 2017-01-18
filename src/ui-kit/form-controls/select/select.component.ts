@@ -3,6 +3,7 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
 import { OptionsType } from '../types';
 import {FormControl, NG_VALUE_ACCESSOR, ControlValueAccessor, Validators} from "@angular/forms";
 
+const noop = () => {};
 const MY_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
   useExisting: forwardRef(() => SamSelectComponent),
@@ -25,7 +26,7 @@ const MY_VALUE_ACCESSOR: any = {
   selector: 'samSelect',
   template: `
       <labelWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage" [required]="required">
-        <select [attr.id]="name" [ngModel]="model" (change)="onSelectChange(select.value)" #select [disabled]="disabled">
+        <select [attr.id]="name" [ngModel]="model" (change)="onSelectChange(select.value)" (blur)="onBlur()" #select [disabled]="disabled">
           <option *ngFor="let option of options" [value]="option.value" [disabled]="option.disabled">{{option.label}}</option>
         </select>
       </labelWrapper>
@@ -39,8 +40,8 @@ export class SamSelectComponent implements ControlValueAccessor {
   @Input() name: string;
   @Input() hint: string;
   @Input() errorMessage: string;
-  @Input() disabled: boolean;
   @Input() required: boolean;
+  @Input() disabled: boolean;
   @Input() control: FormControl;
 
   @Output() modelChange: EventEmitter<any> = new EventEmitter<any>();
@@ -66,21 +67,15 @@ export class SamSelectComponent implements ControlValueAccessor {
     }
 
     this.control.setValidators(validators);
-    this.control.valueChanges.subscribe(this.onChange);
   }
 
   onSelectChange(val) {
+    if (this.onChange) {
+      this.onChange(val);
+    }
     this.model = val;
     this.modelChange.emit(val);
-    this.onChange(val);
-  }
-
-  registerOnChange(fn) {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn) {
-    this.onTouched = fn;
+    this.wrapper.formatErrors(this.control);
   }
 
   setDisabledState(disabled) {
@@ -91,15 +86,21 @@ export class SamSelectComponent implements ControlValueAccessor {
     this.model = value;
   }
 
-  onChange: any = () => {
-    if (this.control) {
-      this.wrapper.formatErrors(this.control);
+  onBlur() {
+    this.wrapper.formatErrors(this.control);
+    if (this.onTouched) {
+      this.onTouched();
     }
-  };
+  }
 
-  onTouched: any = () => {
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
 
-  };
+  registerOnTouched(fn: any) {
+    this.onTouched = fn;
+  }
 
-
+  private onChange: (_: any) => void;
+  private onTouched: () => void;
 }

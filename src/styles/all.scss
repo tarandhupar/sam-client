@@ -13,9 +13,11 @@
 
 @import '~uswds/src/stylesheets/uswds';
 
+@import 'components/parent-orgs.scss';
 @import 'components/date-entry';
 @import 'components/label-wrapper';
 @import 'components/accordion';
+@import 'components/alert';
 @import 'components/authentication';
 @import 'components/footer';
 @import 'components/button';
@@ -24,18 +26,14 @@
 @import 'components/agency-picker';
 @import 'components/input';
 @import 'components/multiselect';
-@import 'components/alert-header';
 @import 'components/banner';
 @import 'components/searchbar';
 @import 'components/header-links';
 @import 'components/search-header';
 @import 'components/multiselect-dropdown';
-@import 'components/alert-item';
 @import 'components/image-library';
-@import 'components/alert-footer';
 @import 'components/tabs';
 @import 'components/modal';
-
 
 @import 'pages/assistance-listing';
 @import 'pages/help';
@@ -48,6 +46,7 @@
 @import 'pages/new-to-sam';
 @import 'pages/help-accounts';
 @import 'pages/help-roadmap';
+@import 'pages/users-directory';
 
 html, body{
   height: 100%;
@@ -104,4 +103,8 @@ h2{
 
 .text-right {
   text-align: right;
+}
+
+.sidenav-logo {
+  width:160px;
 }

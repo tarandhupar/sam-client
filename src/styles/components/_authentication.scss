@@ -1,5 +1,9 @@
+@import 'authentication/shared/kba';
 @import 'authentication/shared/password';
+
 @import 'authentication/login';
+@import 'authentication/register';
+@import 'authentication/profile';
 
 .usa-authentication {
   margin-top: 80px;
@@ -24,5 +28,11 @@
 
   .usa-subtitle {
     font-size: 2.5rem;
+  }
+
+  a {
+    &:focus {
+      box-shadow: none;
+    }
   }
 }

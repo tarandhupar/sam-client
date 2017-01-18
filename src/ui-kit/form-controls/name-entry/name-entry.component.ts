@@ -12,30 +12,31 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
   selector: 'samNameEntry',
   template: `
     <fieldset>
-      <legend>Name</legend>
-      <labelWrapper [label]="'Title'" [name]="getIdentifer('title')" [errorMessage]="titleErrorMsg">
+      <legend *ngIf="legend.length" [innerText]="legend"></legend>
+      <labelWrapper class="label-wrapper" [label]="'Title'" [name]="getIdentifer('title')" [errorMessage]="titleErrorMsg">
         <input class="usa-input-tiny" [(ngModel)]="model.title" id="{{getIdentifer('title')}}" name="{{getIdentifer('title')}}" type="text">
       </labelWrapper>
 
-      <labelWrapper [label]="'First Name'" [name]="getIdentifer('first-name')" [errorMessage]="fNameErrorMsg" [required]="true">
+      <labelWrapper class="label-wrapper" [label]="'First Name'" [name]="getIdentifer('first-name')" [errorMessage]="fNameErrorMsg" [required]="true">
         <input (blur)="validateFirstName()" (ngModelChange)="validateFirstName()" [(ngModel)]="model.firstName" id="{{getIdentifer('first-name')}}" name="{{getIdentifer('first-name')}}" type="text" required="" aria-required="true">
       </labelWrapper>
 
-      <labelWrapper [label]="'Middle Name'" [name]="getIdentifer('middle-name')" [errorMessage]="mNameErrorMsg">
+      <labelWrapper class="label-wrapper" [label]="'Middle Name'" [name]="getIdentifer('middle-name')" [errorMessage]="mNameErrorMsg">
         <input (ngModelChange)="validateMiddleName()" [(ngModel)]="model.middleName" id="{{getIdentifer('middle-name')}}" name="{{getIdentifer('middle-name')}}" type="text">
       </labelWrapper>
 
-      <labelWrapper [label]="'Last Name'" [name]="getIdentifer('last-name')" [errorMessage]="lNameErrorMsg" [required]="true">
+      <labelWrapper class="label-wrapper" [label]="'Last Name'" [name]="getIdentifer('last-name')" [errorMessage]="lNameErrorMsg" [required]="true">
         <input (blur)="validateLastName()" (ngModelChange)="validateLastName()" [(ngModel)]="model.lastName" id="{{getIdentifer('last-name')}}" name="{{getIdentifer('last-name')}}" type="text" required="" aria-required="true">
       </labelWrapper>
 
-      <labelWrapper [label]="'Suffix'" [name]="getIdentifer('suffix')" [errorMessage]="suffixErrorMsg">
+      <labelWrapper class="label-wrapper" [label]="'Suffix'" [name]="getIdentifer('suffix')" [errorMessage]="suffixErrorMsg">
         <input class="usa-input-tiny" [(ngModel)]="model.suffix" id="{{getIdentifer('suffix')}}" name="{{getIdentifer('suffix')}}" type="text">
       </labelWrapper>
     </fieldset>
   `,
 })
 export class SamNameEntryComponent {
+  @Input() legend: string = "Name"
   @Input() model: any = {
     title: "",
     firstName: "",
@@ -43,7 +44,9 @@ export class SamNameEntryComponent {
     lastName: "",
     suffix: ""
   };
+
   @Input() prefix: string = "";
+
   titleErrorMsg: string = "";
   fNameErrorMsg: string = "";
   mNameErrorMsg: string = "";

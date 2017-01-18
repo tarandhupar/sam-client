@@ -6,21 +6,21 @@
     <br />
     <div sam-sticky limit=1200 container="occupy-page">
       <!--Logo-->
-      <ng-container *ngIf="errorOrganization || !logoUrl">
-        <img src="src/assets/img/logo-not-available.png" class = "logo" alt="Logo Not Available">
+      <ng-container *ngIf="opportunity && (errorOrganization || logoUrl===null || errorLogo)">
+        <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       </ng-container>
-      <ng-container *ngIf="logoUrl && !errorOrganization">
-        <img class="logo" [src]="logoUrl" alt="HTML5 Icon">
+      <ng-container *ngIf="opportunity && logoUrl && !errorOrganization">
+        <img class="sidenav-logo" [src]="logoUrl" alt="HTML5 Icon">
       </ng-container>
       <!--Side Navigation-->
       <nav *ngIf="currentTab == 'Opportunity'">
         <ul class="usa-sidenav-list">
-          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
-          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
-          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
-          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
-          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
-          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
+          <li *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
+          <li *ngIf="shouldBeDisplayed(opportunityFields.General)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
+          <li *ngIf="shouldBeDisplayed(opportunityFields.Classification)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
+          <li *ngIf="shouldBeDisplayed(opportunityFields.Synopsis)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
+          <li *ngIf="shouldBeDisplayed(opportunityFields.Packages)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
+          <li *ngIf="shouldBeDisplayed(opportunityFields.Classification)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
           <!--<li><a href="{{ currentUrl }}#history">History</a></li>-->
         </ul>
       </nav>
@@ -32,7 +32,7 @@
               {{element.data?.award?.number}}
             </a>
           </li>-->
-          <li><a href="{{ currentUrl + '#' + generateID(opportunityFields.AwardSummary) }}">Awards Summary</a></li>
+          <li *ngIf="shouldBeDisplayed(opportunityFields.AwardSummary)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.AwardSummary) }}">Awards Summary</a></li>
           <li>&nbsp;</li>
         </ul>
       </nav>
@@ -71,7 +71,7 @@
     <samTabs (currentSelectedTab)="currentTabSelected($event)">
       <samTab tabTitle="Opportunity" (tabSelected)="tabSelected($event)">
 
-        <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award)">
+        <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
           <h2>Award Details</h2>
           <ul class="usa-unstyled-list">
             <li [attr.id]="generateID(opportunityFields.AwardDate)"
@@ -83,6 +83,11 @@
                 *ngIf="opportunity.data?.award?.number && shouldBeDisplayed(opportunityFields.AwardNumber)">
               <strong>Contract Award Number: </strong>
               {{ opportunity.data?.award?.number }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.OrderNumber)"
+                *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
+              <strong>Task/Delivery Order Number: </strong>
+              {{ opportunity?.data?.award?.deliveryOrderNumber }}
             </li>
             <li [attr.id]="generateID(opportunityFields.AwardedDUNS)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedDUNS)">
             <strong>Contractor Awarded DUNS: </strong>
@@ -129,7 +134,7 @@
             <li [attr.id]="generateID(opportunityFields.AwardAmount)" *ngIf="shouldBeDisplayed(opportunityFields.AwardAmount)">
               <strong>Contract Award Dollar Amount: </strong> <span>{{opportunity.data?.award?.amount}}</span>
             </li>
-            <li [attr.id]="generateID(opportunityFields.LineItemNumber)" *ngIf="shouldBeDisplayed(opportunityFields.LineItemNumber)">
+            <li [attr.id]="generateID(opportunityFields.LineItemNumber, 'award')" *ngIf="shouldBeDisplayed(opportunityFields.LineItemNumber)">
               <strong>Contract Line Item Number: </strong>
               <span>
                 {{opportunity.data?.award?.lineItemNumber}}
@@ -197,15 +202,15 @@
               <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
               {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:dictionary.fo_justification_authority:'element_id':false:'')[0]?.value }}
             </li>
-            <li [attr.id]="generateID(opportunityFields.OrderNumber, 'general')"
-                *ngIf="opportunity?.data?.award?.deliveryOrderNumber && shouldBeDisplayed(opportunityFields.OrderNumber)">
-              <strong>Task/Delivery Order Number: </strong>
-              {{ opportunity?.data?.award?.deliveryOrderNumber }}
-            </li>
             <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')"
                 *ngIf="opportunity?.data?.award?.justificationAuthority?.modificationNumber && shouldBeDisplayed(opportunityFields.ModificationNumber)">
               <strong>Modification Number: </strong>
               {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
+            </li>
+            <li [attr.id]="generateID(opportunityFields.SpecialLegislation, 'general')"
+                *ngIf="opportunity?.data?.isRecoveryRelated == true && shouldBeDisplayed(opportunityFields.SpecialLegislation)">
+              <strong>Special Legislation: </strong>
+              Recovery and Reinvestment Act
             </li>
           </ul>
         </section>
@@ -388,6 +393,12 @@
             </div>
           </div>
 
+          <div class="card" *ngIf="attachmentError" [@intro]="fade">
+            <div class="card-secure-content usa-text-center">
+              <strong>No packages uploaded.</strong>
+            </div>
+          </div>
+
         </section>
 
         <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
@@ -522,7 +533,10 @@
           </div>
 
         </div>
-
+            <p class="m_T-2x" style="text-align: right;">
+              <strong>{{min +1}} - {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}</strong>
+              of <strong>{{relatedOpportunitiesMetadata.count}}</strong>
+            </p>
           <div class="card-simple" *ngFor="let element of relatedOpportunities">
 
             <h3>{{element.data?.award?.awardee?.name}}</h3>
@@ -590,8 +604,8 @@
         </section>
 
         <samPagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
-        
-        
+
+
       </samTab>
     </samTabs>
     <br><br>

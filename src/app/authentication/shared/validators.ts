@@ -1,3 +1,4 @@
+import { indexOf } from 'lodash';
 import { FormControl } from '@angular/forms';
 
 export const Validators = {
@@ -34,6 +35,26 @@ export const Validators = {
       uppercase: {
         valid: false
       }
+    };
+  },
+
+  unique(targetName) {
+    return (c: FormControl) => {
+      let elements = document.querySelectorAll(`input[name="${targetName}"]`),
+          intElement,
+          occurrences = 0;
+
+      for(intElement = 0; intElement < elements.length; intElement++) {
+        if(c.value === (<HTMLInputElement>elements[intElement]).value) {
+          occurrences++;
+        }
+      }
+
+      return occurrences <= 1 ? null : {
+        unique: {
+          valid: false
+        }
+      };
     };
   },
 

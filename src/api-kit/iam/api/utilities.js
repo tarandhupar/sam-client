@@ -70,6 +70,15 @@ function $sprintf(payload, data) {
   return payload;
 }
 
+function parseUrlQuery() {
+  let params = {},
+      query = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
+        params[key] = value.toString().match(/true|false/) ? (/^true$/i).test(value) : value;
+      });
+
+  return params;
+}
+
 class Utilities {
   constructor(options) {
     let params = $params();
@@ -92,6 +101,7 @@ class Utilities {
 
     this.log = this.isLocal() || (!this.isLocal && this.debug) || (params.debug !== undefined && params.debug);
 
+    this.queryparams = parseUrlQuery();
     this.baseUri = this.getBaseUri();
   }
 
@@ -170,7 +180,7 @@ class Utilities {
     // String Interpolations
     url = $sprintf(endpoint, { environment: $environment });
 
-    if(this.isLocal() && this.isRelative(endpoint)) {
+    if(this.isRelative(endpoint)) {
       url = [this.baseUri, endpoint]
         .join('/')
         .replace(/([a-z-]+)\/\/+/g, '$1/');
