@@ -19,6 +19,7 @@ import { SamFooterComponent } from "./footer/footer.component";
 import { SamLabelComponent } from "./label/label.component";
 import { SamHeaderComponent } from "./header/header.component";
 import { SamAlertComponent } from "./alert/alert.component";
+import { SamSpinnerComponent } from './spinner/spinner.component';
 import { SamAccordionComponent, SamAccordionSection } from "./accordion/accordion.component";
 import { SamButtonComponent } from "./form-controls/button/button.component.ts";
 import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.component";
@@ -66,6 +67,7 @@ import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selec
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
+    SamSpinnerComponent,
     SamPhoneEntryComponent,
     SamDateComponent,
     SamTimeComponent,
@@ -104,6 +106,7 @@ import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selec
     SamStickyComponent,
     SamFooterComponent,
     SamHeaderComponent,
+    SamSpinnerComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,

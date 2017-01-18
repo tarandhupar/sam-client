@@ -12,7 +12,7 @@
     <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row"></fh-featured-result>
     <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
 		<div *ngFor="let row of data.results">
-			<opportunities-result *ngIf="row._type=='FBO'" class="usa-grid-full" [data]="row"></opportunities-result>
+			<opportunities-result *ngIf="row._type=='OPP'" class="usa-grid-full" [data]="row"></opportunities-result>
       <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row"></assistance-listing-result>
       <federal-hierarchy-result  *ngIf="row._type=='FH'" class="usa-grid-full" [data]="row"></federal-hierarchy-result>
       <entities-result *ngIf="row._type=='ENT'" class="usa-grid-full" [data]="row"></entities-result>
