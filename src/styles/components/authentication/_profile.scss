@@ -5,15 +5,13 @@
   position: relative;
 
   .usa-alert {
-    &.usa-alert-static {
-      position: absolute;
-      width: 100%;
-      top: -80px;
-    }
-
     a {
       font-weight: 600;
     }
+  }
+
+  .usa-alert-static {
+    width: 100%;
   }
 
   h2 {

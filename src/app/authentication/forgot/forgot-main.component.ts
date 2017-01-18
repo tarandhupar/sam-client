@@ -47,7 +47,6 @@ export class ForgotMainComponent {
     private api: IAMService) {}
 
   ngOnInit() {
-this.expire('test');
     this.initForm();
     this.verifyToken();
   }
@@ -59,13 +58,13 @@ this.expire('test');
 
   verifyToken() {
     let vm = this,
-        token = this.route.queryParams['token'] || '';
+        token = this.route.snapshot.queryParams['token'] || '';
 
     if(token.length) {
       this.token = token;
 
       this.zone.runOutsideAngular(() => {
-        this.api.iam.user.password.verify(this.token, function(newToken, question) {
+        this.api.iam.user.password.verify(this.token, (newToken, question) => {
           vm.zone.run(() => {
             console.info('Confirmation and token verified!');
 
@@ -77,10 +76,10 @@ this.expire('test');
               console.error('No token response from API');
             }
           });
-        }, function(error) {
+        }, (error) => {
           vm.zone.run(() => {
-            if(!vm.api.iam.isDebug()) {
-              this.expire(error);
+            if(!this.api.iam.isDebug()) {
+              this.expire(error.message);
             }
           });
         });
@@ -91,15 +90,14 @@ this.expire('test');
   }
 
   expire(message) {
-    let params = {
-      fragment: 'anchor',
+    let params:NavigationExtras = {
       queryParams: {
         type: 'error',
         message: message || 'Your confirmation link has expired. Please start a new session.'
       }
     };
 
-    this.router.navigate(['/forgot', params]);
+    this.router.navigate(['/forgot'], params);
   }
 
   next(status, token, question, message) {

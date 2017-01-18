@@ -22,7 +22,7 @@ export class ForgotInitialComponent {
     error: '',
     notification: {
       type: '',
-      title: '',
+      title: 'Notification',
       message: '',
       show: false
     }
@@ -44,11 +44,21 @@ export class ForgotInitialComponent {
 
   ngOnInit() {
     this.resetNotifications();
-    merge(this.states.notification, this.route.snapshot.queryParams);
-
-    console.log(this.states.notification);
+    this.dispatchNotiications();
 
     this.email = new FormControl('', [Validators.required, $Validators.email])
+  }
+
+  dispatchNotiications() {
+    this.states.notification = merge(this.states.notification, {
+      title: 'Notifications',
+      message: ''
+    }, this.route.snapshot.queryParams);
+
+    if(this.route.snapshot.queryParams['message'].length) {
+      this.states.notification.show = true;
+    }
+    console.log(this.states.notification)
   }
 
   resetNotifications() {
@@ -57,7 +67,7 @@ export class ForgotInitialComponent {
     for(prop in this.states.notification) {
       switch(typeof this.states.notification[prop]) {
         case 'boolean':
-          this.states.notification[prop] = '';
+          this.states.notification[prop] = false;
           break;
         case 'string':
           this.states.notification[prop] = '';
@@ -99,7 +109,7 @@ export class ForgotInitialComponent {
         }, (error) => {
           vm.zone.run(() => {
             this.states.loading = false;
-            this.states.error = error;
+            this.states.error = error.message;
           });
         });
       });

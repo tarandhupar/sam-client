@@ -19,7 +19,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class SamAlertComponent {
   @Input() type: string;
-  @Input() title: string;
+  @Input() title: string = '';
   @Input() class: string = '';
   @Input() description: string;
   @Input() showClose: boolean = false;

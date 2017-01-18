@@ -3,7 +3,17 @@
     margin-bottom: 94px;
   }
 
+  .usa-alert-static {
+    width: 46rem;
+    max-width: 46rem;
+    top: 0px;
+    left: 50%;
+
+    transform: translate(-50%, -100%);
+  }
+
   .usa-forgot-init {
+    position: relative;
     width: 460px;
     margin: 0 auto;
 
