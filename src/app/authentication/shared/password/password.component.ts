@@ -8,9 +8,10 @@ import { Validators as $Validators } from '../validators';
   templateUrl: 'password.component.html'
 })
 export class PasswordComponent {
+  @Input() currentPassword: FormControl;
   @Input() password:FormControl;
 
-  private passwordConfirm = new FormControl(['']);
+  private confirmPassword = new FormControl(['']);
 
   protected config = {
     rules: {
@@ -55,17 +56,23 @@ export class PasswordComponent {
       $Validators.uppercase,
       $Validators.numeric,
       $Validators.special,
-      $Validators.match('passwordConfirm')
+      $Validators.match('confirmPassword')
     ]);
 
-    this.passwordConfirm.setValidators([
+    if(this.currentPassword !== undefined) {
+      this.currentPassword.setValidators([
+        Validators.required
+      ]);
+    }
+
+    this.confirmPassword.setValidators([
       Validators.required
     ]);
 
     this.password.updateValueAndValidity();
 
     this.password.valueChanges.subscribe(data => this.updateState());
-    this.passwordConfirm.valueChanges.subscribe(data => {
+    this.confirmPassword.valueChanges.subscribe(data => {
       this.updateState()
       this.password.updateValueAndValidity();
     });
@@ -106,7 +113,7 @@ export class PasswordComponent {
         errors = this.password.errors,
         validator,
         verifyMatch = (
-          this.passwordConfirm.dirty &&
+          this.confirmPassword.dirty &&
           errors !== null &&
           errors['match'] !== undefined
         );

@@ -452,7 +452,6 @@ export class DetailsComponent {
         controlValue,
         intKey;
 
-
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
       controlValue = controls[key].value;

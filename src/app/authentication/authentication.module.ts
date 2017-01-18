@@ -17,7 +17,7 @@ import { KBAComponent, PasswordComponent } from './shared';
 import { LoginComponent } from './login';
 import { RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
 import { ForgotComponent, ForgotInitialComponent, ForgotConfirmComponent, ForgotMainComponent } from './forgot';
-import { ProfileComponent, DetailsComponent, PasswordResetComponent } from './profile';
+import { ProfileComponent, DetailsComponent, ResetComponent } from './profile';
 
 @NgModule({
   imports: [
@@ -63,7 +63,7 @@ import { ProfileComponent, DetailsComponent, PasswordResetComponent } from './pr
      */
     ProfileComponent,
     DetailsComponent,
-    PasswordResetComponent
+    ResetComponent
   ],
 
   providers: [

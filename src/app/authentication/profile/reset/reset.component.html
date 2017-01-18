@@ -2,7 +2,7 @@
 <div>
   <form *ngIf="passwordForm" [formGroup]="passwordForm" (ngSubmit)="reset()" class="usa-form-large usa-form-password" autocomplete="off">
     <fieldset>
-      <sam-password [password]="passwordForm.controls.userPassword"></sam-password>
+      <sam-password [currentPassword]="passwordForm.controls.currentPassword" [password]="passwordForm.controls.newPassword"></sam-password>
     </fieldset>
     <fieldset>
       <div class="usa-button-controls">
@@ -17,4 +17,8 @@
   you may migrate your roles and keep your same permissions. <a [href]="config.alert.migrate">Begin Now</a>.
 </samAlert>
 
-<samAlert type="success" title="Password Successfully Reset" showClose="true" [dismissTimer]="1000"></samAlert>
+<samAlert [type]="states.alert.type"
+          [hidden]="states.alert.show"
+          [title]="states.alert.title"
+          [description]="states.alert.message"
+          showClose="true"></samAlert>
