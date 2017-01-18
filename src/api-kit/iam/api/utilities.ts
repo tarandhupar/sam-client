@@ -74,6 +74,7 @@ function parseUrlQuery() {
   let params = {},
       query = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
         params[key] = value.toString().match(/true|false/) ? (/^true$/i).test(value) : value;
+        return undefined;
       });
 
   return params;
@@ -89,7 +90,7 @@ class Utilities {
   log;
   queryparams;
 
-  constructor(options) {
+  constructor(options?) {
     let params = $params();
 
     this.debug = config.debug || false;
@@ -170,7 +171,7 @@ class Utilities {
   }
 
   getLocalEnvironment() {
-    let env = 'local';
+    let env: any = 'local';
 
     if(window.location.hostname.search(/(local|comp|minc|prodlike)/) > -1) {
       env = (/(local|comp|minc|prodlike)/g).exec(window.location.hostname);
