@@ -21,9 +21,9 @@ import * as moment from 'moment/moment';
         <span [innerHTML]="data.description"></span>
       </p>
       <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        <li><strong>Department:</strong> <a href="#">{{ data.organizationHierarchy.name }}</a></li>
-        <li><strong>Office:</strong> <a href="#">{{ data.organizationHierarchy.name }}</a></li>
-        <li><strong>Location:</strong> {{ data.organizationHierarchy.name }}</li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Department:</strong> <a href="#">{{ data.organizationHierarchy[2].name }}</a></li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Office:</strong> <a href="#">{{ data.organizationHierarchy[1].name }}</a></li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Location:</strong> {{ data.organizationHierarchy[0].name }}</li>
       </ul>
     </div>
     <div class="usa-width-one-third">
