@@ -385,8 +385,51 @@ user.cac = {
   }
 };
 
+let $import = {
+  sources() {
+    return ([
+      'SAM',
+      'FPDS',
+      'CFDA',
+      'eSRS/FSRS',
+      'FBO',
+      'PPIRS',
+      'CPARS',
+    ]).map((source) => {
+      return {
+        value: source,
+        text: source
+      };
+    });
+  },
+
+  roles($success, $error) {
+    let endpoint = utils.getUrl($config.import.roles),
+        params = {
+          'legacySystem':'FPDS',
+          'legacyUsername':'',
+          'legacyPassword':''
+        };
+
+    $success = ($success || function(response) {});
+    $error = ($error || function(error) {});
+
+    return;
+
+    request
+      .post(endpoint)
+      .end(function(err, response) {
+        if(!err) {
+          $success(response.body);
+        } else {
+          $success(response.body);
+        }
+      });
+  }
+};
+
 /**
- * [Component] IAM Class
+ * IAM API Class
  */
 class IAM {
   constructor($api) {

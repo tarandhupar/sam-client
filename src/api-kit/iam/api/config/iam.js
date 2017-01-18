@@ -42,5 +42,9 @@ export default {
   kba: {
     questions: 'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/getAnswerIds?api_key=rkkGBk7AU8UQs9LHT6rM0rFkg3A3rGaiBntKSGEC',
     update:    'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/updateAnswers?api_key=rkkGBk7AU8UQs9LHT6rM0rFkg3A3rGaiBntKSGEC'
+  },
+
+  import: {
+    roles: '/import/roles'
   }
 };
