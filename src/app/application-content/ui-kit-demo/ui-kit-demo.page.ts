@@ -12,7 +12,11 @@ export class UIKitDemoPage {
 
 
   // Alphabet Selector Component
-
+  resultList: any = [];
+  alphabetSelectorPageConfig: any = {
+    currentPage:1,
+    totalPages:10
+  };
 
   // Select Component
   selectModel = '';
@@ -202,6 +206,16 @@ export class UIKitDemoPage {
   }
   onModalInitClick2(){
     this.vcModal2.openModal();
+  }
+
+  updateResultList($event){
+    this.resultList = $event;
+  }
+  onAlphabetSelectorPageChange($event){
+    this.alphabetSelectorPageConfig.currentPage = $event;
+  }
+  OnPaginationUpdate($event){
+    this.alphabetSelectorPageConfig = $event;
   }
 
 }

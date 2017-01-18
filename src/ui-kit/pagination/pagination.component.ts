@@ -30,7 +30,7 @@ export class SamPaginationComponent {
   private MaxTotalPageWithoutEllipsis: number = 10; // If the total number of pages is less than this threshold, display all pages
 
   @Input() disabled: boolean = false;
-  @Input() currentPage: number;
+  @Input() currentPage: number = 1;
   @Input() totalPages: number;
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 
@@ -70,6 +70,7 @@ export class SamPaginationComponent {
 
   onPageClick(pageNumber: number) {
     this.currentPage = pageNumber;
+    console.log(pageNumber);
     this.pageChange.emit(this.currentPage);
   }
 
