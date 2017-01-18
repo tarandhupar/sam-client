@@ -9,6 +9,21 @@
   .publish-date label {
     margin-top: 0;
   }
+
+  // The next three group fixes the insanely large checkboxes in the USA design library
+  input-group {
+    display: inline-block;
+  }
+
+  label {
+    display: inline-block;
+    line-height: 44px;
+    margin-top: 8px;
+  }
+
+  input[type=checkbox] {
+    pointer-events: none;
+  }
 }
 
 alert-item {
