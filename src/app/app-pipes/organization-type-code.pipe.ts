@@ -5,13 +5,13 @@ export class OrganizationTypeCodePipe implements PipeTransform {
   transform(data: any) : any {
 
     let response: any = {
-      "label": "Old FPDS Code:",
+      "label": "FPDS Code (Old):",
       "value": "-"
     };
 
     // check if data items exist, if they do return the label and the data value as properties of an object
     if(typeof data.aacCode != 'undefined' && data.aacCode != null && data.aacCode != ''){
-      response.label = "AAC Code:";
+      response.label = "Activity Address Code (AAC):";
       response.value = data.aacCode;
     }
     else if(data.fpdsOrgId){
