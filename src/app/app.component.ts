@@ -71,7 +71,8 @@ export class App{
       queryParams: qsobj
     };
 
-    this.cookieService.removeAll();
+    this.cookieService.remove("term");
+    this.cookieService.remove("ival");
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
