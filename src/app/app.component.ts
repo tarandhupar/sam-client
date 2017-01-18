@@ -35,12 +35,9 @@ export class App{
     });
     this.activatedRoute.queryParams.subscribe(
       data => {
-        //console.log("queryparams", data);
         if(typeof data['keyword'] == "string" && typeof data['index'] == "string") {
-          //console.log("set true");
           this.setCookie(data);
         } else {
-          //console.log("check true");
           this.checkCookie();
         }
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
@@ -74,9 +71,7 @@ export class App{
       queryParams: qsobj
     };
 
-    //console.log("deleteing cookies");
     this.cookieService.removeAll();
-    //console.log(this.cookieService.getAll());
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
@@ -96,18 +91,14 @@ export class App{
     this.cookieService.remove("ival");
     this.cookieService.put("term", data['keyword']);
     this.cookieService.put("ival", data['index']);
-    //console.log("After setting", this.cookieService.getAll());
   }
 
   checkCookie() {
     let cookielist = this.cookieService.getAll();
-    //console.log("cookielist getAll", cookielist);
     if(cookielist['term'] && cookielist['term'].length>0) {
-      //console.log("cookie has keyword");
       this.keyword = cookielist['term'];
     }
     if(cookielist['ival'] && cookielist['ival'].length>0) {
-      //console.log("cookie has index");
       this.index = cookielist['ival'];
     }
   }
