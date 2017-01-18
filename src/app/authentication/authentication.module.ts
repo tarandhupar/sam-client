@@ -11,11 +11,12 @@ import { CookieService } from 'angular2-cookie/services/cookies.service';
 
 import { AuthenticationRouter } from './authentication.route';
 import { RegisterGuard } from './register/register.guard';
+import { ProfileGuard } from './profile/profile.guard';
 
 import { KBAComponent, PasswordComponent } from './shared';
 import { LoginComponent } from './login';
 import { RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
-import { ProfileComponent } from './profile';
+import { ProfileComponent, DetailsComponent } from './profile';
 
 @NgModule({
   imports: [
@@ -51,12 +52,14 @@ import { ProfileComponent } from './profile';
     /**
      * Profile
      */
-    ProfileComponent
+    ProfileComponent,
+    DetailsComponent
   ],
 
   providers: [
     CookieService,
-    RegisterGuard
+    RegisterGuard,
+    ProfileGuard
   ]
 })
 export class AuthenticationModule {

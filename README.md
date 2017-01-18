@@ -1,9 +1,10 @@
 The following explains how to get set up locally. For instructions regarding branching, merging, and so on; please see the [CONTRIBUTING](https://csp-github.sam.gov/joshuabruce/sam-front-end/blob/comp/CONTRIBUTING.md) documentation.
-  
-<ul> 
+
+<ul>
+  <li><a href="#pipeline-workaround">!!!***Pipeline 2.0 workaround***!!!</a></li>
   <li>
     <a href="#getting-started">Getting started</a>
-    <ul>
+    <ul>    
       <li><a href="#check-node">Check NodeJS and NPM</a></li>
       <li><a href="#installing-globals">Installing required globals</a></li>
       <li><a href="#serving-locally">Serving app locally</a></li>
@@ -30,6 +31,26 @@ The following explains how to get set up locally. For instructions regarding bra
   </li>
 </ul>
 
+<h2 id="pipeline-workaround">Pipeline 2.0 workaround</h2>
+
+When the repository was converted to Pipeline 2.0 we discovered multiple use cases based on the way we were initially operating that would no longer work well within the new GitHub workflow given the Jenkins process. The following is the workaround determined by the front-end technical lead, other contributors, and the CSP team working on the pipeline.
+
+1. Create a branch with your epic name and push this branch to `origin`. (ex. Admin, Application Content, and so on.)
+1. Clone the repository locally and create feature branches from the "epic branch".
+1. Submit Pull Requests to the epic branch (this allows you to operate without the Jenkins build process).
+1. At the end of each business day, at least, merge the "epic branch" into `develop` and perform the integrate-merge-deploy process within the 5 or 10 minutes timeout window.
+
+This process should also overcome limitations and issues discovered with other workarounds.
+
+1. You should no longer need to add or remove empty lines to or from other files in order to force the Jenkins build to occur. This can cause "false" merge conflicts, albeit in files that do not change often.
+1. You can update Pull Requests as you were accustomed without being inundated with comments from Jenkins or possibly hitting the "proceed or abort" buttons at the wrong time (allows more streamlined code reviews and reduces the signal to noise ratio).
+
+This process introduces the following limitations:
+
+1. We are, for all intents and purposes, creating a `comp` branch similar to the legacy pipeline. Each "epic branch" becomes *that* concept. Therefore, it can feel like it slows the overall process down.
+
+If you have questions, comments, concerns, and so on regarding this workaround, please go here: [https://csp-github.sam.gov/GSA-IAE/sam-front-end/issues/67](https://csp-github.sam.gov/GSA-IAE/sam-front-end/issues/67)
+
 <h2 id="getting-started">Getting started</h2>
 
 <h3 id="check-node">Check NodeJS and NPM</h3>
@@ -44,7 +65,7 @@ If you do not see a version number, [install Node.js](https://nodejs.org/en/down
 
 Note: Ensure you are running the latest versions of both. If not, please [update NodeJS and NPM](https://docs.npmjs.com/getting-started/installing-node).
 
-> If you have `nvm` installed, which is highly recommended (`brew install nvm`) you can do a `nvm install --lts && nvm use` in `$` to run with the latest Node LTS. You can also have this `zsh` done for you [automatically](https://github.com/creationix/nvm#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file)
+> If you have `nvm` installed, which is highly recommended (`brew install nvm`) you can do a `nvm install --lts && nvm use` in `$` to run with the latest Node LTS. You can also have this `zsh` done for you [automatically](https://github.com/creationix/nvm#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file) 
 
 <h3 id="installing-globals">Installing required globals</h3>
 
@@ -95,7 +116,7 @@ Each module is written in a [self-documenting](https://en.wikipedia.org/wiki/Sel
 
 ```
 if (this.hasSelected(config)) {
-
+  
 }
 
 hasSelected = function(config) {
@@ -107,7 +128,7 @@ Instead of:
 
 ```
 if (config.selected !== undefined && config.selected.length > 0) {
-
+  
 }
 ```
 
@@ -117,11 +138,11 @@ if (config.selected !== undefined && config.selected.length > 0) {
 - Pipes end with Pipe (e.g. `CapitalizePipe`)
 - Components end with Component (e.g. `AssistanceListingResultComponent`)
 - Components with an associated route and module end in Page (e.g. `SearchPage`)
-- Exported components in the ui-kit will be prefixed with Sam (e.g. `SamSelectComponent`) and their selectors will be prefixed as well (e.g. `<samSelect>`)
+- Exported components in the ui-kit will be prefixed with "Sam". Their class names follow the CamelCase standard referenced above (e.g. `SamSelectComponent`). Their selectors, however, will be prefixed and ["kebab-cased"](https://en.wikipedia.org/wiki/Letter_case#Special_case_styles) (e.g. `<sam-select>`).
 
 <h3 id="doc-blocks">Doc-blocks</h2>
 
-...
+[typedoc verbiage...??]
 
 <h2 id="helpful-commands">Helpful commands</h2>
  

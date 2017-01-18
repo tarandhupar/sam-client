@@ -5,6 +5,8 @@ import request from 'superagent';
 import config from '../config';
 import utilities from '../utilities';
 
+import User from './user';
+
 const exceptionHandler = function(responseBody) {
   return _.extend({
     status: 'error',
@@ -34,7 +36,7 @@ let user = {
         .get(endpoint)
         .set('iPlanetDirectoryPro', Cookies.get('iPlanetDirectoryPro'))
         .then(function(response) {
-          let user = response.body.sessionToken;
+          let user = new User(response.body.sessionToken);
           $success(user);
         }, function(response) {
           core.$base.removeSession();
@@ -313,10 +315,7 @@ let kba = {
         };
 
         if(!err) {
-          kba.questions = (res.body.kbaQuestionList || []).filter(function(question) {
-            return question.valid;
-          });
-
+          kba.questions = (res.body.kbaQuestionList || []);
           kba.selected = (res.body.kbaAnswerIdList || []).map(function(questionID) {
             return parseInt(questionID);
           });
@@ -398,14 +397,35 @@ class IAM {
     });
 
     this.debug = false;
+    this.states = {
+      auth: false
+    };
+
     this.user.$base = this;
 
+    this.checkSession();
     this.resetLogin();
 
     // Inject config and utilities into user modules
     for(let module in this.user) {
       this.user[module].$base = this;
     }
+  }
+
+  checkSession($success, $error) {
+    let iam = this;
+
+    $success = $success || function(data) {};
+    $error = $error || function(data) {};
+
+    this.user.get(function(user) {
+      iam.states.auth = true;
+      iam.states.user = user;
+      $success(iam.states.user);
+    }, function() {
+      iam.states.auth = false;
+      $error();
+    });
   }
 
   login(credentials, $success, $error) {
@@ -452,13 +472,16 @@ class IAM {
         if(_.isUndefined(data.tokenId)) {
           api.auth.authId = data['authId'];
           api.auth.stage = data['stage'];
+          $success();
         } else {
           api.auth.authId = false;
           api.auth.stage = false;
           Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
-        }
 
-        $success(data);
+          api.checkSession(function(user) {
+            $success(user);
+          });
+        }
       }, function(response) {
         let data = response.response.body,
             error = data.message;
@@ -501,7 +524,6 @@ class IAM {
 
   isDebug() {
     let isDebug = (utils.queryparams.debug !== undefined || false);
-
     return (this.isLocal() && isDebug);
   }
 

@@ -18,6 +18,7 @@ describe('The Sam Date Time component', () => {
     fixture = TestBed.createComponent(SamDateTimeComponent);
     component = fixture.componentInstance;
     component.value = "2016-12-31T12:01";
+    component.name = 'test';
   });
 
   it('Should compile', function () {
