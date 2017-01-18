@@ -28,6 +28,7 @@ import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.m
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
+import { UserDirectoryModule } from "./user-directory";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -53,6 +54,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     RouterModule.forRoot(ROUTES, { useHash: useHashValue }),
 
     // Page View Modules
+    UserDirectoryModule,
     AuthenticationModule,
     ProgramModule,
     OpportunityModule,
