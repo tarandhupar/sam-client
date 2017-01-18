@@ -8,7 +8,7 @@ import * as moment from 'moment/moment';
   template: `
     <p>
       <span class="usa-label">Opportunity</span>
-      <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
+      <span *ngIf="data.isActive==false" class="usa-label">ARCHIVED</span>
     </p>
     <h3 class="opportunity-title">
       <a [routerLink]="['/opportunities', data._id]">{{ data.title }}</a>
