@@ -30,6 +30,7 @@ import { TimezoneLabelPipe } from "./opportunity/pipes/timezone-label.pipe";
 import { FixHTMLPipe } from "./opportunity/pipes/fix-html.pipe";
 import {FilesizePipe} from "./opportunity/pipes/filesize.pipe";
 import { FHService } from "../api-kit/fh/fh.service";
+import {CookieService} from "angular2-cookie/core";
 
 
 
@@ -48,6 +49,7 @@ var activatedRouteStub = {
 };
 var searchServiceStub = {};
 var fhServiceStub = {};
+var cookieServiceStub = {};
 
 
 describe('App', () => {
@@ -60,7 +62,8 @@ describe('App', () => {
       {provide: Router, useClass: RouterStub},
       {provide: ActivatedRoute, useValue: activatedRouteStub},
       {provide: SearchService, useValue: searchServiceStub},
-      {provide: FHService, useValue: fhServiceStub}
+      {provide: FHService, useValue: fhServiceStub},
+      {provide: CookieService, useValue: cookieServiceStub}
     ]
   }));
 
