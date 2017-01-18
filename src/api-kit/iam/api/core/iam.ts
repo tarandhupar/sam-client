@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import Cookies from 'js-cookie';
-import request from 'superagent';
+import * as _ from 'lodash';
+import * as Cookies from 'js-cookie';
+import * as request from 'superagent';
 
 import config from '../config';
 import utilities from '../utilities';
@@ -23,7 +23,7 @@ let $config = _.extend({}, config.endpoints.iam),
 /**
  * [Component][IAM] User Module
  */
-let user = {
+let user: any = {
   get($success, $error) {
     let core = this,
         endpoint = utils.getUrl($config.session);
@@ -49,7 +49,7 @@ let user = {
 
   create(token, userData, $success, $error) {
     let endpoint = utils.getUrl($config.registration.register),
-        data = {
+        data: any = {
           tokenId: token,
           user: (userData || {})
         };
@@ -389,6 +389,11 @@ user.cac = {
  * [Component] IAM Class
  */
 class IAM {
+  debug;
+  states;
+  user;
+  auth;
+
   constructor($api) {
     _.extend(this, utils, {
       config: config,
@@ -412,7 +417,7 @@ class IAM {
     }
   }
 
-  checkSession($success, $error) {
+  checkSession($success?, $error?) {
     let iam = this;
 
     $success = $success || function(data) {};
@@ -490,7 +495,7 @@ class IAM {
       });
   }
 
-  getStageData() {
+  getStageData(): any {
     if(this.auth.stage && this.auth.authId) {
       return {
         service: 'LDAPandHOTP',
