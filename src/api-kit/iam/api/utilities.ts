@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import config from './config';
 
 function $params() {
@@ -80,6 +80,15 @@ function parseUrlQuery() {
 }
 
 class Utilities {
+  environments;
+  debug;
+  environment;
+  baseUri;
+  localResource;
+  remoteResource;
+  log;
+  queryparams;
+
   constructor(options) {
     let params = $params();
 
@@ -118,7 +127,7 @@ class Utilities {
     return (endpoint.search(/^http/gi) > -1) ? false : true;
   }
 
-  getEnvironment(environments) {
+  getEnvironment(environments?) {
     let environment,
     		hostname = location.host,
     		active = 'local',
