@@ -22,7 +22,7 @@ export class SearchPage implements OnInit{
 	pageNumPaginationPadding = 2;
 	showPerPage = 10;
 	data = [];
-  featuredData: any = null;
+  featuredData = [];
 	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
@@ -70,7 +70,9 @@ export class SearchPage implements OnInit{
 		}
 		if(this.keyword.length>0){
 			qsobj['keyword'] = this.keyword;
-		}
+		} else {
+      qsobj['keyword'] = '';
+    }
 		if(this.index.length>0){
 			qsobj['index'] = this.index;
 		} else {
@@ -91,21 +93,27 @@ export class SearchPage implements OnInit{
         keyword: this.keyword
       }).subscribe(
         data => {
-          if(data.parentOrganizationHierarchy) {
-            data.parentOrganizationHierarchy.name = new CapitalizePipe().transform(data.parentOrganizationHierarchy.name.replace(/[_-]/g, " "));
+          if(data._embedded && data._embedded.featuredResult) {
+            for(var i=0; i<data._embedded.featuredResult.length; i++) {
+              if (data._embedded.featuredResult[i].parentOrganizationHierarchy) {
+                data._embedded.featuredResult[i].parentOrganizationHierarchy.name = new CapitalizePipe().transform(data._embedded.featuredResult[i].parentOrganizationHierarchy.name.replace(/[_-]/g, " "));
+              }
+              if (data._embedded.featuredResult[i].type) {
+                data._embedded.featuredResult[i].type = new CapitalizePipe().transform(data._embedded.featuredResult[i].type);
+              }
+            }
+          this.featuredData = data._embedded;
+        } else {
+          this.featuredData['featuredResult'] = null;
           }
-          if(data.type) {
-            data.type = new CapitalizePipe().transform(data.type);
-          }
-          this.featuredData = data;
         },
         error => {
-          this.featuredData = null;
+          this.featuredData = [];
           console.error("No featured results", error);
         }
       );
     } else {
-      this.featuredData = null;
+      this.featuredData['featuredResult'] = null;
     }
 
 		//make api call
@@ -131,7 +139,7 @@ export class SearchPage implements OnInit{
               }
               data._embedded.results[i].parentOrganizationHierarchy.name = new CapitalizePipe().transform(data._embedded.results[i].parentOrganizationHierarchy.name.replace(/[_-]/g, " "));
             }
-            if(data._embedded.results[i].type) {
+            if(data._embedded.results[i]._type=="FH" && data._embedded.results[i].type) {
               data._embedded.results[i].type = new CapitalizePipe().transform(data._embedded.results[i].type);
             }
 	        }

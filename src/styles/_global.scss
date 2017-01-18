@@ -114,26 +114,19 @@ hr {
   float: right;
 }
 
-.usa-button-dismiss {
-  // hit area
+
+
+// ensure button has a big enough hit box
+.usa-button-icon {
   height: 44px;
   width: 44px;
   display: inline-block;
-
-  // background
-  background-image: url($assets-path + '/img/times_circle.svg'),url($assets-path + '/img/times_circle.png');
   background-color: transparent;
-  background-repeat: no-repeat;
-  background-size: 15px 15px;
-  background-position: center center;
+  text-align: center;
 
   &:hover {
-    background-color: transparent;
+    cursor: pointer;
     opacity: .6;
-  }
-
-  &:active {
-    background-color: transparent;
   }
 }
 

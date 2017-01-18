@@ -6,6 +6,9 @@ export enum OpportunityFields {
   HierarchyName = <any>'hierarchy-level',
   Location = <any>'location',
 
+  // Awards Summary
+  AwardSummary = <any>'award-summary',
+
     // Award details section
   Award = <any>'award',
   AwardAmount = <any>'award-amount',
@@ -36,7 +39,8 @@ export enum OpportunityFields {
   JustificationAuthority = <any>'justification-authority',
   OrderNumber = <any>'order-number',
   ModificationNumber = <any>'modification-number',
-
+  SpecialLegislation = <any>'special-legislation',
+    
     // Classification code section
   Classification = <any>'classification',
   SetAside = <any>'set-aside',

@@ -22,7 +22,7 @@
     <div sam-sticky limit=1200 container="help-content">
       <ul class="usa-sidenav-list">
         <li><a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/help/overview']">Help Center Home</a></li>
-        <li><a [ngClass]="getSectionClass('transition')" (click)="changeSection('transition')" [routerLink]="['/help/transition']">Transition to SAM.gov</a></li>
+        <li><a [ngClass]="getSectionClass('transition')" (click)="changeSection('transition')" [routerLink]="['/help/transition']">Modernization Roadmap</a></li>
         <li>
           <a [ngClass]="getSectionClass('about')" (click)="changeSection('about')" [routerLink]="['/help/about']">About SAM.gov</a>
           <ul class="usa-sidenav-sub_list"  *ngIf="isCurrentSection('about')">
@@ -72,6 +72,10 @@
         </li>
         <li>
           <a [ngClass]="getSectionClass('partners')" (click)="changeSection('partners')" [routerLink]="['/help/partners']">Our Partners</a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('partners')">
+            <li><a #featuredPartners [ngClass]="getSubSectionClass('featuredPartners')" (click)="changeSubSection('featuredPartners',featuredPartners)" href="{{currentUrl}}#featuredPartners">Featured Partners</a></li>
+            <li><a #additionalPartners [ngClass]="getSubSectionClass('additionalPartners')" (click)="changeSubSection('additionalPartners',additionalPartners)" href="{{currentUrl}}#additionalPartners">Additional Partners</a></li>
+          </ul>
         </li>
         <li>
           <a [ngClass]="getSectionClass('reference')" (click)="changeSection('reference')" [routerLink]="['/help/reference']">Reference Library</a>

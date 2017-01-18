@@ -1,3 +1,9 @@
+$alert-primary-color: #0071bc;
+
+.alerts-primary-bg {
+  background-color: $alert-primary-color;
+}
+
 .alerts-page {
   .alerts-toolbar {
     display: table;
@@ -5,7 +11,7 @@
   }
 
   .alert-count {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
 
   .sort-by-text {
@@ -35,9 +41,14 @@
     padding-bottom: 12px;
   }
 
-  .alert-block:not(:last-child) {
-    margin-bottom: 12px;
-    border-bottom: 1px solid grey;
+  .alert-block {
+    padding-top: .67em;
+    margin-bottom: .67px;
+    border-top: 1px solid grey;
+
+    &:last-child {
+      border-bottom: 1px solid grey;
+    }
   }
 
   .alert-page-title {
@@ -45,8 +56,6 @@
   }
 
   input {
-    width: auto;
-    max-width: none;
     display: inline;
   }
 
@@ -75,6 +84,10 @@
   }
 
   samSelect.publish-select select {
+    &:disabled {
+      background-color: transparent;
+      color: #666;
+    }
     border: none;
   }
 

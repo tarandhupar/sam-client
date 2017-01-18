@@ -19,6 +19,7 @@ import { SamFooterComponent } from "./footer/footer.component";
 import { SamLabelComponent } from "./label/label.component";
 import { SamHeaderComponent } from "./header/header.component";
 import { SamAlertComponent } from "./alert/alert.component";
+import { SamSpinnerComponent } from './spinner/spinner.component';
 import { SamAccordionComponent, SamAccordionSection } from "./accordion/accordion.component";
 import { SamButtonComponent } from "./form-controls/button/button.component.ts";
 import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.component";
@@ -28,13 +29,15 @@ import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multiselect-dropdown.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
-import { SamDateEntryComponent } from "./form-controls/date-entry/date-entry.component";
+import { SamDateComponent } from "./form-controls/date/date.component";
+import { SamTimeComponent } from "./form-controls/time";
+import { SamDateTimeComponent } from "./form-controls/date-time";
+import { SamTextComponent } from "./form-controls/text/text.component";
+import { SamTextareaComponent } from "./form-controls/textarea/textarea.component";
 import { SamTabComponent } from "./tabs/tabs.component";
 import { SamTabsComponent } from "./tabs/tabs.component";
-
 import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
 import { SamModalComponent } from "./modal/modal.component";
-
 
 /**
  * A module for reusable SAM Web Design components
@@ -63,8 +66,13 @@ import { SamModalComponent } from "./modal/modal.component";
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
+    SamSpinnerComponent,
     SamPhoneEntryComponent,
-    SamDateEntryComponent,
+    SamDateComponent,
+    SamTimeComponent,
+    SamDateTimeComponent,
+    SamTextComponent,
+    SamTextareaComponent,
     InputAutocompleteComponent,
     SamModalComponent,
     LabelWrapper,
@@ -78,6 +86,7 @@ import { SamModalComponent } from "./modal/modal.component";
     RouterModule
   ],
   exports: [
+    LabelWrapper,
     SamClickOutsideDirective,
     SamHeaderLinksComponent,
     SamPaginationComponent,
@@ -95,16 +104,21 @@ import { SamModalComponent } from "./modal/modal.component";
     SamStickyComponent,
     SamFooterComponent,
     SamHeaderComponent,
+    SamSpinnerComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
     SamPhoneEntryComponent,
-    SamDateEntryComponent,
+    SamDateComponent,
+    SamTimeComponent,
+    SamDateTimeComponent,
+    SamTextComponent,
+    SamTextareaComponent,
     InputAutocompleteComponent,
     SamTabsComponent,
     SamTabComponent,
-    SamModalComponent
+    SamModalComponent,
   ],
   providers: [ ]
 })

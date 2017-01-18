@@ -24,6 +24,25 @@ import { trigger, state, style, transition, animate } from '@angular/core';
       })),
       transition('collapsed => expanded', animate('100ms ease-in')),
       transition('expanded => collapsed', animate('100ms ease-out'))
+    ]),
+    trigger('intro', [
+      state('fade', style({
+        opacity: 1,
+        transform: 'translateY(0)'
+      })),
+      transition('void => *', [
+        style({
+          opacity: 0,
+          transform: 'translateY(-30%)'
+        }),
+        animate('.5s .5s cubic-bezier(0.175, 0.885, 0.320, 1.275)')
+      ]),
+      transition('* => void', [
+        animate('.5s cubic-bezier(0.175, 0.885, 0.320, 1.275)', style({
+          opacity: 0,
+          transform: 'translateY(-30%)'
+        }))
+      ])
     ])
   ]
 })
@@ -57,10 +76,21 @@ export class OpportunityPage implements OnInit {
   logoUrl: string;
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
+  errorOrganization: any;
+  errorLogo: any;
+  awardSort: string = "awardDate"; //default
+  awardSortOptions = [
+    { label: "Award Date", value: "awardDate" },
+    { label: "Dollar Amount", value: "dollarAmount" },
+    { label: "Company (Awardee) Name", value: "awardeeName" },
+  ];
+  attachmentError:boolean;
   private pageNum = 0;
   private totalPages: number;
   private showPerPage = 20;
-
+  min: number;
+  max: number;
+  private ready: boolean = false;
 
   constructor(
     private router: Router,
@@ -137,8 +167,10 @@ export class OpportunityPage implements OnInit {
 
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
+      this.min = (this.pageNum + 1) * this.showPerPage - this.showPerPage;
+      this.max = (this.pageNum + 1) * this.showPerPage;
     opportunityAPI.subscribe((opportunity => {
-      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum).subscribe(relatedOpportunitiesSubject);
+      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       this.relatedOpportunities = data['relatedOpportunities'][0];
@@ -154,50 +186,31 @@ export class OpportunityPage implements OnInit {
     });
   }
 
+  private reloadRelatedOpportunities() {
+    this.pageNum = 0;
+    this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
+  }
+
   private loadOrganization(opportunityAPI: Observable<any>) {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
 
     opportunityAPI.subscribe(api => {
-      //organizationId length >= 30 -> call opportunity org End Point
-      if(api.data.organizationId.length >= 30) {
-        this.opportunityService.getOpportunityOrganizationById(api.data.organizationId).subscribe(organizationSubject);
-      }
-      //organizationId less than 30 character then call Octo's FH End point
-      else {
-        this.fhService.getOrganizationById(api.data.organizationId).subscribe(organizationSubject);
-        this.loadLogo(organizationSubject);
-      }
+      this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
+      this.fhService.getOrganizationLogo(organizationSubject, 
+        (logoUrl) => {
+          this.logoUrl = logoUrl;
+        }, (err) => {
+          this.errorLogo = true;
+      });
     });
 
     organizationSubject.subscribe(organization => { // do something with the organization api
       this.organization = organization['_embedded'][0]['org'];
     }, err => {
-      console.log('Error loading organization: ', err);
+      this.errorOrganization = true;
     });
 
     return organizationSubject;
-  }
-
-  private loadLogo(organizationAPI: Observable<any>) {
-    organizationAPI.subscribe(org => {
-      // Do some basic null checks
-      if(org == null || org['_embedded'] == null || org['_embedded'][0] == null) {
-        return;
-      }
-
-      // Base case: If logo exists, save it to a variable and exit
-      if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
-        this.logoUrl = org['_embedded'][0]['_link']['logo']['href'];
-        return;
-      }
-
-      // Recursive case: If parent orgranization exists, recursively try to load its logo
-      if(org['_embedded'][0]['org'] != null && org['_embedded'][0]['org']['parentOrgKey'] != null) {
-        this.loadLogo(this.fhService.getOrganizationById(org['_embedded'][0]['org']['parentOrgKey']));
-      }
-    }, err => {
-      console.log('Error loading logo: ', err);
-    });
   }
 
   private loadOpportunityLocation(opportunityApiStream: Observable<any>) {
@@ -211,10 +224,9 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadAttachments(opportunityAPI: Observable<any>){
-    let attachmentSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
-      opportunityAPI.subscribe(api => {
-        this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
-
+    let attachmentSubject = new ReplaySubject(1); // broadcasts the attachments to multiple subscribers
+    opportunityAPI.subscribe(api => {
+      this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
     });
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
@@ -222,8 +234,12 @@ export class OpportunityPage implements OnInit {
       this.attachment.packages.forEach((key: any) => {
         key.accordionState = 'collapsed';
       });
+      this.attachment.resources.forEach((res: any) => {
+        res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+      });
     }, err => {
       console.log('Error loading attachments: ', err)
+        this.attachmentError = true;
     });
 
     return attachmentSubject;
@@ -285,9 +301,20 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
+          break;
+
+        case 'm': //Todo: Modification/Amendment/Cancel
+        case 'k': //Todo: Combined Synopsis/Solicitation
+          this.displayField[OpportunityFields.Award] = false;
+          break;
+
         case 'a': // Award Notice
-        case 'm': // Modification/Amendment/Cancel
-        case 'k': // Combined Synopsis/Solicitation
+          this.displayField[OpportunityFields.ResponseDate] = false;
+          this.displayField[OpportunityFields.StatutoryAuthority] = false;
+          this.displayField[OpportunityFields.JustificationAuthority] = false;
+          this.displayField[OpportunityFields.OrderNumber] = false;
+          this.displayField[OpportunityFields.ModificationNumber] = false;
+          this.displayField[OpportunityFields.POP] = false;
           break;
 
         default:
@@ -330,6 +357,8 @@ export class OpportunityPage implements OnInit {
 
         this.displayField[OpportunityFields.OriginalSetAside] = originalSetAsideCondition;
       }
+
+      this.ready = true;
     });
   }
 
@@ -337,7 +366,7 @@ export class OpportunityPage implements OnInit {
   // To hide a field, set the flag displayField[field] to false
   // A field is always displayed by default, unless it is explicitly set not to
   private shouldBeDisplayed(field: OpportunityFields) {
-    return this.displayField[field] !== false;
+    return this.displayField[field] !== false; //&& this.ready === true;
   }
 
   // Given a field name, generates an id for it by adding the correct prefixes
@@ -370,17 +399,27 @@ export class OpportunityPage implements OnInit {
 
   pageChange(pagenumber){
     this.pageNum = pagenumber;
-    if (this.pageNum>=0){
-      this.pageNum++;
-    } else {
-      this.pageNum = 1;
-    }
+    this.min = (pagenumber + 1)  * this.showPerPage - this.showPerPage;
+    this.max = (pagenumber + 1) * this.showPerPage;
+    var pcobj = this.setupPageChange(false);
     let navigationExtras: NavigationExtras = {
-      queryParams: {page: this.pageNum},
+      queryParams: pcobj,
       fragment: 'opportunity-award-summary'
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
+  }
+
+  setupPageChange(newpagechange){
+    var pcobj = {};
+
+    if(!newpagechange && this.pageNum>=0){
+      pcobj['page'] = this.pageNum+1;
+    }
+    else{
+      pcobj['page'] = 1;
+    }
+    return pcobj;
   }
 
 
@@ -419,4 +458,66 @@ export class OpportunityPage implements OnInit {
     return false;
   }
 
+  private getExtension(filename: string) {
+    let ext = filename.match(/\.[a-z0-9]+$/i);
+
+    if(ext != null) {
+      return ext[0];
+    }
+
+    return null;
+  }
+
+  private static readonly TYPE_UNKNOWN = { name: 'Unknown file type', iconClass: 'fa fa-file' };
+  private static readonly TYPE_LINK = { name: 'External link', iconClass: 'fa fa-link' };
+  private static readonly TYPE_ZIP = { name: 'Zip archive', iconClass: 'fa fa-file-archive-o' };
+  private static readonly TYPE_XLS = { name: 'Excel spreadsheet', iconClass: 'fa fa-file-excel-o' };
+  private static readonly TYPE_PPT = { name: 'Powerpoint presentation', iconClass: 'fa fa-file-powerpoint-o' };
+  private static readonly TYPE_DOC = { name: 'Word document', iconClass: 'fa fa-file-word-o' };
+  private static readonly TYPE_TXT = { name: 'Text file', iconClass: 'fa fa-file-text-o' };
+  private static readonly TYPE_PDF = { name: 'PDF document', iconClass: 'fa fa-file-pdf-o' };
+  private static readonly TYPE_HTML = { name: 'Html document', iconClass: 'fa fa-html5' };
+  private static readonly TYPE_IMG = { name: 'Image', iconClass: 'fa fa-file-image-o' };
+
+  private getResourceTypeInfo(type: string) {
+    switch(type) {
+      case 'link':
+        return OpportunityPage.TYPE_LINK;
+
+      case '.zip':
+        return OpportunityPage.TYPE_ZIP;
+
+      case '.xls':
+      case '.xlsx':
+        return OpportunityPage.TYPE_XLS;
+
+      case '.ppt':
+      case '.pptx':
+        return OpportunityPage.TYPE_PPT;
+
+      case '.doc':
+      case '.docx':
+        return OpportunityPage.TYPE_DOC;
+
+      case '.txt':
+      case '.rtf':
+        return OpportunityPage.TYPE_TXT;
+
+      case '.pdf':
+        return OpportunityPage.TYPE_PDF;
+
+      case '.htm':
+      case '.html':
+        return OpportunityPage.TYPE_HTML;
+
+      case '.jpg':
+      case '.png':
+      case '.jpeg':
+      case '.tif':
+        return OpportunityPage.TYPE_IMG;
+
+      default:
+        return OpportunityPage.TYPE_UNKNOWN;
+    }
+  }
 }

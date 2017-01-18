@@ -36,7 +36,7 @@ let MockOpportunityService = {
         "organizationLocationId": "100010393",
         "relatedOpportunityId": "Related Opportunity Id goes here",
         "statuses": {
-          "publishStatus": "Statuses publish status goes here",
+          "publishStatus": "Statuses publish archived goes here",
           "isArchived": false,
           "isCanceled": false
         },
@@ -134,22 +134,6 @@ let MockOpportunityService = {
       }
     })
   },
-  getOpportunityOrganizationById(id: String) {
-    return Observable.of({
-      _embedded: [
-        {
-          org: {
-            "l2Name": "Naval Supply Systems Command",
-            "l1Name": "Department of the Navy",
-            "name": "DLA Maritime PSNS",
-            "type": "OFFICE",
-            "l3Name": "DLA Maritime PSNS",
-            "agencyName": "DLA Maritime PSNS"
-          }
-        }
-      ]
-    });
-  },
   getOpportunityDictionary(ids: String) {
     return Observable.of({
       classification_code: [
@@ -174,7 +158,7 @@ let MockOpportunityService = {
       "state": "TX"
     });
   },
-  getRelatedOpportunitiesByIdAndType(id: string, type:string, page:number){
+  getRelatedOpportunitiesByIdAndType(id: string, type:string, page:number, sort:string){
     return Observable.of({
       recipientCount: "16",
       unparsableCount: "0",
@@ -298,7 +282,7 @@ let MockOpportunityService = {
 };
 
 let MockFHService = {
-  getOrganizationById(id: string) {
+  getOrganizationById(id: string, includeChildren: boolean) {
     return Observable.of({
       "_embedded": [
         {
@@ -306,6 +290,9 @@ let MockFHService = {
         }
       ]
     });
+  }, 
+  getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
+    return Observable.of("");
   }
 };
 
@@ -363,6 +350,8 @@ describe('OpportunityPage', () => {
     expect(comp.organization).toBeDefined();
     expect(comp.attachment).toBeDefined();
     expect(comp.relatedOpportunities).toBeDefined();
+    expect(comp.awardSort).toBeDefined();
+    expect(comp.awardSortOptions).toBeDefined();
     expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
   });

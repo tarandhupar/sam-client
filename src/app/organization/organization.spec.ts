@@ -10,13 +10,13 @@ import { SamUIKitModule } from 'ui-kit';
 
 import { OrganizationPage } from './organization.page';
 import { Observable } from 'rxjs';
-import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
+import { PipesModule } from '../app-pipes/app-pipes.module';
 
 let comp:    OrganizationPage;
 let fixture: ComponentFixture<OrganizationPage>;
 
 let MockFHService = {
-  getOrganizationById: (id: string) => {
+  getOrganizationById: (id: string, includeChildren: boolean) => {
     return Observable.of({
       _embedded: [
         {
@@ -167,6 +167,9 @@ let MockFHService = {
         }
       ]
     });
+  },
+  getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
+    return Observable.of("");
   }
 };
 
@@ -174,11 +177,12 @@ let MockFHService = {
 describe('OrganizationPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizationPage, CapitalizePipe ], // declare the test component
+      declarations: [ OrganizationPage ], // declare the test component
       imports: [
         HttpModule,
         RouterTestingModule,
-        SamUIKitModule
+        SamUIKitModule,
+        PipesModule
       ],
       providers: [
         BaseRequestOptions,
@@ -193,8 +197,8 @@ describe('OrganizationPage', () => {
         { provide: Location, useClass: Location },
         { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '100035122' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: FHService, useValue: MockFHService },
-        CapitalizePipe
+        { provide: FHService, useValue: MockFHService }
+
       ]
     });
 

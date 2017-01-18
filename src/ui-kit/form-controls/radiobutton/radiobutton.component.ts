@@ -16,7 +16,7 @@ import { OptionsType } from '../types';
 @Component({
   selector: 'samRadioButton',
   template: `
-      <fieldsetWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage">
+      <fieldsetWrapper [label]="label" [hint]="hint" [errorMessage]="errorMessage">
         <ul class="usa-unstyled-list">
           <li *ngFor="let option of options; let i = index">
             <input [attr.id]="option.name" type="radio" (change)="onChange(option.value)" [attr.name]="name" [checked]="model === option.value">

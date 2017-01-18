@@ -1,13 +1,31 @@
 <section>
-  <h2 class="m_T-2x">Our Partners</h2>
+  <h2 class="m_T-2x">External Partners</h2>
+  <h3 id="featuredPartners" class="p_L-3x">Featured Partners</h3>
+  <div class="usa-grid m_T-4x m_L-3x" *ngFor="let row of data">
+    <imageLibrary [name]="'external-partners'" [data]="row" [hasLayer]="false"></imageLibrary>
+  </div>
+  <h3 id="additionalPartners" class="p_L-3x">Additional Partners</h3>
   <div class="usa-grid-full">
-    <p class="p_L-8x">
-      Lorem ipsum dolor sit amet, an quo elitr singulis, cu assum simul persius eos,
-      per omittam concludaturque no. Albucius lobortis ius et, sea debet inimicus ne,
-      nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis
-      ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum
-      deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam
-      fuisset convenire an.
-    </p>
+    <div class="usa-width-one-whole m_L-8x">
+      <div class="usa-width-one-third">
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="http://www.dla.mil/" target="Defense Logistics Agency">Defense Logistics Agency</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.sba.gov/" target="Small Business Administration">Small Business Administration</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.govloans.gov/" target="Govloans.gov">Govloans.gov</a></li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third">
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="http://www.mbda.gov/" target="Minority Business Development Agency">Minority Business Development Agency</a></li>
+          <li class="m_B"><a class="usa-external_link" href="http://www.census.gov/" target="US census Bureau">US census Bureau</a></li>
+          <li class="m_B"><a class="usa-external_link" href="https://www.dol.gov/" target="U. S. Department of Labor">U. S. Department of Labor</a></li>
+        </ul>
+      </div>
+      <div class="usa-width-one-third">
+        <ul class="usa-unstyled-list">
+          <li class="m_B"><a class="usa-external_link" href="https://www.ntis.gov/" target="National Technical Information Services">National Technical Information Services</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>

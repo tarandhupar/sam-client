@@ -1,16 +1,18 @@
-body.modal-open{
-  overflow:hidden;
+body.modal-open {
+  overflow: hidden;
 }
-.modal-backdrop{
+
+.modal-backdrop {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: #000;
+  background-color: #000000;
   opacity: .5;
 }
+
 .modal-dialog {
   overflow-x: hidden;
   overflow-y: auto;
@@ -21,26 +23,31 @@ body.modal-open{
   left: 0;
   z-index: 1050;
   outline: 0;
-  .usa-alert-body{
-    display:block;
-  }
-  .usa-alert-heading{
-    margin-top:.7rem;
+
+  .usa-alert-body {
+    display: block;
   }
 
-  .modal-content{
-    background:#fcfcfc;
+  .usa-alert-heading {
+    margin-top: .7rem;
+  }
+
+  .modal-content {
+    position: relative;
+    background: #FCFCFC;
     width: 600px;
     margin: 30px auto;
 
-    .modal-body{
+    .modal-body {
       padding: 15px 30px;
+    }
+
+    .usa-alert {
+      display: block;
     }
   }
 
-  .usa-modal-content-btn-area{
-    text-align:center;
+  .usa-modal-content-btn-area {
+    text-align: center;
   }
 }
-
-

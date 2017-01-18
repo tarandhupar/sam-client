@@ -10,7 +10,8 @@ export class ImageLibraryComponent {
   @Input() data:any;
   @Input() showDetailTitle:boolean = true;
   @Input() isExternalLink:boolean = true;
-
+  @Input() hasLayer:boolean = true;
+  @Input() isReleaseDetail:boolean = false;
 
   detailObj: any = {
     showDetail: false,
@@ -53,9 +54,9 @@ export class ImageLibraryComponent {
 
   private getLayerClass(index): string{
     if(this.detailObj.item.title === this.data[index].title){
-      return "reference-image-layer-select";
+      return "image-filter-layer-select";
     }
-    return "reference-image-layer-unselect";
+    return "image-filter-layer-unselect";
   }
 
   private getBorderClass(index): string{
@@ -71,9 +72,9 @@ export class ImageLibraryComponent {
 
   private getImageContainerClass(): string{
     if(this.largeScreen()){
-      return "reference-image-container"
+      return "images-container"
     }
-    return "reference-image-container-small"
+    return "images-container-small"
 
   }
 

@@ -13,7 +13,8 @@ import { EntitiesResult } from '../entity/search-result/entities-result.componen
 import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.component';
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
-import { FHService } from "../../api-kit/fh/fh.service";
+import { FHService } from '../../api-kit/fh/fh.service';
+import { PipesModule } from '../app-pipes/app-pipes.module';
 
 var fixture;
 
@@ -49,17 +50,21 @@ var searchServiceStub = {
       }
     });
   },
-  featuredSearch: ()=>{
+  featuredSearch: ()=> {
     return Observable.of({
-      alternativeNames: null,
-      code: "abcd1234",
-      name: "SAMPLE NAME",
-      description: "",
-      _id: "1234",
-      type: "DEPARTMENT",
-      shortName: "abcd",
-      isActive: true,
-      parentOrganizationHierarchy: null
+      _embedded: {
+        featuredResult: [{
+          alternativeNames: null,
+          code: "abcd1234",
+          name: "SAMPLE NAME",
+          description: "",
+          _id: "1234",
+          type: "DEPARTMENT",
+          shortName: "abcd",
+          isActive: true,
+          parentOrganizationHierarchy: null
+        }]
+      }
     });
   }
 };
@@ -77,7 +82,8 @@ describe('SearchPage', () => {
         AppComponentsModule,
         RouterTestingModule.withRoutes([
           { path: 'search', component: SearchPage }
-        ])
+        ]),
+        PipesModule
       ]
     }).overrideComponent(SearchPage, {
        set: {
@@ -103,7 +109,7 @@ describe('SearchPage', () => {
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.runSearch();
     fixture.whenStable().then(() => {
-      expect(fixture.componentInstance.featuredData.name).toBe("SAMPLE NAME");
+      expect(fixture.componentInstance.featuredData.featuredResult[0].name).toBe("SAMPLE NAME");
     });
   });
 
