@@ -10,19 +10,19 @@ export class OrganizationTypeCodePipe implements PipeTransform {
     };
 
     // check if data items exist, if they do return the label and the data value as properties of an object
-    if(typeof data.aacCode != 'undefined' && data.aacCode != null && data.aacCode != ''){
+    if(typeof data.aacCode != 'undefined' || data.aacCode != null || data.aacCode != ''){
       response.label = "Activity Address Code (AAC):";
       response.value = data.aacCode;
     }
-    else if(data.fpdsOrgId){
+    else if(typeof data.fpdsOrgId != 'undefined' || data.fpdsOrgId != null || data.fpdsOrgId != ''){
       response.label = "FPDS Org ID:";
       response.value = data.fpdsOrgId;
     }
-    else if(data.fpdsCode){
+    else if(typeof data.fpdsCode != 'undefined' || data.fpdsCode != null || data.fpdsCode != ''){
       response.label = "FPDS Code:";
       response.value = data.fpdsCode;
     }
-    else if(data.oldFPDSCode){
+    else if(typeof data.oldFPDSCode != 'undefined' || data.oldFPDSCode != null || data.oldFPDSCode != ''){
      // don't have to set label since it is this label by default
       response.value = data.oldFPDSCode;
     }
