@@ -70,7 +70,6 @@ export class SamPaginationComponent {
 
   onPageClick(pageNumber: number) {
     this.currentPage = pageNumber;
-    console.log(pageNumber);
     this.pageChange.emit(this.currentPage);
   }
 

@@ -158,6 +158,9 @@ export class SamAlphabetSelectorComponent {
 
 }
 
+/**
+ * Please implement this class to provide api service for the alphabet selector component
+ */
 @Injectable()
 export class AlphabetSelectorService{
 
@@ -167,9 +170,9 @@ export class AlphabetSelectorService{
   /**
    * Get the result data related to input prefix in a specific page with or without suggested next layer of prefix.
    * @param checkPrefix: control whether you need to return the suggested prefix in the next layer.
-   * @param prefix: current prefix string, will be used to fetch data related to this prefix.
-   * @param offset: specific page number you want for the results related to current prefix string
-   * @returns {Observable<>} : Result format expected: { resultSizeByAlphabet:{A:100, B:200...}, resultData:[{},{},{}...]}
+   * @param prefix: current prefix string, will be used to fetch data related to this prefix. Expect prefix to set to empty string to fetch the default result.
+   * @param offset: specific page number you want for the results related to current prefix string.
+   * @returns {Observable<>} : Result format expected - { resultSizeByAlphabet:{A:100, B:200...}, resultData:[{},{},{}...]}
    *
      */
   getData(checkPrefix:boolean, prefix:string, offset:number):any{}
