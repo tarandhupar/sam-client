@@ -1,19 +1,26 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from 'rxjs';
+import { AlphabetSelectorService } from "../../ui-kit/alphabet-selector/alphabet-selector.component";
 
 @Injectable()
-export class AlphabetSelectorService {
+export class UserDirService implements AlphabetSelectorService{
 
-  private drillDownLimitLength: number = 3;
-  private pageCount:number = 4;
-  private firstLayerChars: any;
+  drillDownLimitLength: number = 3; // the limit level of drill down
+  pageCount:number = 4;
+  firstLayerChars: any;
 
   constructor(private apiService: WrapperService) {
     this.firstLayerChars = this.randomAvailableChars('');
   }
 
-  getDefault(offset:number) {
+  getData(checkPrefix:boolean, prefix?:string, offset?:number, ){
+
+    let oParam = {
+      prefix: prefix || '',
+      offset: offset || 1,
+      checkPrefix: checkPrefix
+    }
 
     // TODO: Uncomment when alphabet-selector api service is up
     // let apiOptions: any = {
@@ -25,68 +32,89 @@ export class AlphabetSelectorService {
     //
     // return this.apiService.call(apiOptions);
 
+    let result = {};
+    if(oParam.checkPrefix){
+      if(oParam.prefix === ''){
+        // Get the first layer prefix result size data with first page data
+        result = this.getDefault();
+      }else{
+        result = this.getPrefixData(oParam.prefix);
+      }
+    }else{
+      result = {
+        resultSizeByAlphabet: {},
+        resultData: this.randomPrefixResults(oParam.prefix, oParam.offset)
+      };
+    }
+
+    return Observable.of(result);
+  }
+
+  getDefault() {
     let firstChar = Object.keys(this.firstLayerChars)[0];
     let defaultInfo = {
       resultSizeByAlphabet: this.firstLayerChars,
-      resultData: this.randomPrefixResults(firstChar, offset)
+      resultData: this.randomPrefixResults(firstChar, 1)
     };
-    return Observable.of(defaultInfo);
+    return defaultInfo;
   }
 
   /**
+   * Get the next layer available prefix and the data related to selected prefix
    *
    * @param prefix: the prefix selected to get next layer of alphabet selector
-   * @param offset: the page number under current prefix filter
    * @returns {Observable<>}
    */
-  getPrefixData(prefix:string, offset:number){
+  getPrefixData(prefix:string){
 
     let prefixData: any;
+    let nextLayerPrefix = this.randomAvailableChars(prefix);
     let nextLayerSampleData = {
-      resultSizeByAlphabet:this.randomAvailableChars(prefix),
-      resultData: this.randomPrefixResults(prefix, offset)
+      resultSizeByAlphabet:nextLayerPrefix,
+      resultData: this.randomPrefixResults(prefix, 1)
     };
     let noNextLayerSampleData = {
       resultSizeByAlphabet:{},
-      resultData: this.randomPrefixResults(prefix,offset)
+      resultData: this.randomPrefixResults(prefix,1)
     };
     prefixData = noNextLayerSampleData;
 
     // Each prefix may or may not have a drill down layer
     let drilldown = Math.random() >= 0.5;
-    // let drilldown = true;
 
     // Do not break down too far for now, set the threshold to control it
     if(prefix.length < this.drillDownLimitLength && drilldown){
       prefixData = nextLayerSampleData;
     }
 
-    return Observable.of(prefixData);
+    return prefixData;
   }
 
   randomAvailableChars(prefix){
-    let availableChars = [];
+    let availableChars = {};
     let length = Math.floor(Math.random() * 26) + 1;
     let chars = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     let numToChoose = Array.from( Array(26).keys());
     let nums = [];
+
+    // randomly choose next letters in alphabetic order
     for(var i = 0;i < length;i++){
       let j = Math.floor(Math.random() * numToChoose.length);
       nums.push(j);
       numToChoose.splice(j,1);
     }
     nums = nums.sort((v1,v2)=>{return v1-v2;});
-    
-    // randomly choose next letters in alphabetic order
+
+    // Assign each prefix a number to represent the related number of results
     for(var i=0;i<length;i++){
       availableChars[prefix.toUpperCase()+chars[nums[i]]] = Math.floor(Math.random() * 200) + 1;
-
     }
     return availableChars;
   }
 
   randomPrefixResults(prefix: string, offset:number){
     let resultData = [];
+    // Insert fake result related to the prefix and offset to demo
     for(let i = 0; i < this.pageCount; i++){
       resultData.push({LastName: prefix+String.fromCharCode(i + 65), FirstName: String.fromCharCode(i + 65) + '-' + offset})
     }

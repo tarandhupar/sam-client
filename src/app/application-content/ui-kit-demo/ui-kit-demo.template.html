@@ -1,27 +1,4 @@
 <div class="usa-grid">
-  <h2>AlphaBet Selector Component &lt;sam-alphabet-selector&gt;</h2>
-  <sam-alphabet-selector [sortLabel]="'LastName'" [currentPage]="alphabetSelectorPageConfig.currentPage" (resultUpdate)="updateResultList($event)" (paginationUpdate)="OnPaginationUpdate($event)"></sam-alphabet-selector>
-  <div class="usa-width-one-whole" *ngFor="let resultItem of resultList">
-    <hr>
-    <h2 class="m_T-2x m_B-1x">{{resultItem.LastName}} , {{resultItem.FirstName}}</h2>
-    <div class="usa-width-one-half">
-      <h3 class="m_T-1x m_B-1x">Organization: General Services Administration(GSA)</h3>
-      <span>Last Logged: 12/31/2016</span>
-    </div>
-    <div class="usa-width-one-half">
-      <span>Phone:<a>(123)456-7890</a></span><br>
-      <span>Email:<a>Adams.jones@gsa.gov</a></span>
-    </div>
-  </div>
-  <hr>
-
-  <div class="usa-width-one-half marginCenter">
-    <samPagination [totalPages]="alphabetSelectorPageConfig.totalPages" (pageChange)="onAlphabetSelectorPageChange($event)"></samPagination>
-  </div>
-
-</div>
-
-<div class="usa-grid">
   <h2>Accordions Component &lt;samAccordions&gt;</h2>
   <div class="usa-width-one-whole">
     <h3>Accordions without border</h3>

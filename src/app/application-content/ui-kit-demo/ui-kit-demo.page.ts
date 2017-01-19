@@ -10,14 +10,6 @@ export class UIKitDemoPage {
   date: string = "2016-12-12";
   dateTime: string = "2016-12-12T13:01";
 
-
-  // Alphabet Selector Component
-  resultList: any = [];
-  alphabetSelectorPageConfig: any = {
-    currentPage:1,
-    totalPages:10
-  };
-
   // Select Component
   selectModel = '';
   selectConfig = {
@@ -207,15 +199,4 @@ export class UIKitDemoPage {
   onModalInitClick2(){
     this.vcModal2.openModal();
   }
-
-  updateResultList($event){
-    this.resultList = $event;
-  }
-  onAlphabetSelectorPageChange($event){
-    this.alphabetSelectorPageConfig.currentPage = $event;
-  }
-  OnPaginationUpdate($event){
-    this.alphabetSelectorPageConfig = $event;
-  }
-
 }

@@ -10,4 +10,4 @@ export { OpportunityService } from './opportunity/opportunity.service';
 export { SuggestionsService } from './search/suggestions.service';
 export { SamAPIKitModule } from './api-kit.module';
 export { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
-export { AlphabetSelectorService } from './alphabet-selector/alphabet-selector.service';
+export { UserDirService } from './user-directory/user-directory.service';

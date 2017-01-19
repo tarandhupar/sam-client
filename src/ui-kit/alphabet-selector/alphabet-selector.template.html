@@ -6,7 +6,7 @@
       <hr *ngIf="i !== 0" class="m_L-1x m_R-6x">
       <span class="prefix-span relative" *ngFor="let prefix of prefixLayer;  let j = index">
         <div [ngClass]="getVerticalLineClass(prefix)" *ngIf="i !== prefixLayerArr.length-1 && (j===0 || j===prefixLayer.length-1 || isInCurrentPrefix(prefix))"></div>
-        <a [ngClass]="getPrefixClass(prefix)" (click)="selectPrefix(prefix)"> {{prefix}}</a>
+        <a [ngClass]="getPrefixClass(prefix)" (click)="selectPrefix(prefix)">{{prefix}}</a>
       </span>
       <br>
     </div>

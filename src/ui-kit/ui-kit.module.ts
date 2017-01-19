@@ -39,6 +39,7 @@ import { SamTabsComponent } from "./tabs/tabs.component";
 import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
 import { SamModalComponent } from "./modal/modal.component";
 import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
+import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -80,7 +81,7 @@ import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selec
     FieldsetWrapper,
     SamTabsComponent,
     SamTabComponent,
-    SamAlphabetSelectorComponent,
+    SamAlphabetSelectorComponent
   ],
   imports: [
     BrowserModule,
@@ -123,6 +124,8 @@ import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selec
     SamModalComponent,
     SamAlphabetSelectorComponent,
   ],
-  providers: [ ]
+  providers: [
+    AlphabetSelectorService
+  ]
 })
 export class SamUIKitModule { }

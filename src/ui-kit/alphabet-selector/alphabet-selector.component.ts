@@ -1,5 +1,4 @@
-import { Component, Input, Output, EventEmitter} from "@angular/core";
-import { AlphabetSelectorService } from "api-kit";
+import { Component, Input, Output, EventEmitter, Injectable } from "@angular/core";
 
 @Component({
   selector: 'sam-alphabet-selector',
@@ -7,77 +6,63 @@ import { AlphabetSelectorService } from "api-kit";
 })
 export class SamAlphabetSelectorComponent {
 
-  @Input() sortLabel:string;
+  @Input() sortLabel:string = "";
   @Input() currentPage:number = 1;
+  @Input() alphabetSelectorService: AlphabetSelectorService;
   @Output() resultUpdate:EventEmitter<any> = new EventEmitter<any>();
   @Output() paginationUpdate:EventEmitter<any> = new EventEmitter<any>();
 
-  paginationConfig:any = {};
-  alphabetArr:any;
-  prefixLayerArr:any = [];
+  private paginationConfig:any = {};
+  private prefixLayerArr:any = [];
   currentPrefix:string = '';
   isNextLayerNeeded:boolean = false;
-
-  defaultLayerData:any;
   layersData:any = [];
   resultData:any = [];
 
 
-
-  constructor(private alphabetSelectorService: AlphabetSelectorService){
-
-  }
+  constructor(){}
 
   ngOnInit(){
-    this.fetchDefault(1);
-
-    this.alphabetArr = this.generateAlphabetArray();
-    this.prefixLayerArr.push(this.alphabetArr);
-    this.resultUpdate.emit(this.resultData);
+    this.fetchDefaultLayer();
+    this.prefixLayerArr.push(this.generateAlphabetArray());
   }
 
   ngOnChanges(){
-    console.log("changes");
-    if(this.currentPrefix === '' && this.resultData.length !== 0){
-      console.log("get in");
-      this.fetchDefault(this.currentPage);
-      this.resultUpdate.emit(this.resultData);
-      console.log("get out");
-    }
-
-    // if(this.currentPrefix === '') {
-    //   console.log("in default");
-    //   this.fetchDefault(this.currentPage);
-    //   this.resultUpdate.emit(this.resultData);
-    // }
-    // }else{
-    //   console.log("in prefix");
-    //   this.fetchPrefixData(this.currentPage);
-    //   this.resultUpdate.emit(this.resultData);
-    //
-    // }
+    this.fetchResultData();
   }
 
-  fetchDefault(pageNum:number){
-    this.alphabetSelectorService.getDefault(pageNum).subscribe(data => {
-      this.defaultLayerData = data.resultSizeByAlphabet;
-      this.layersData.push(this.defaultLayerData);
+  fetchDefaultLayer(){
+    this.alphabetSelectorService.getData(true).subscribe(data => {
+      this.layersData.push(data.resultSizeByAlphabet);
       this.resultData = data.resultData;
+      this.resultUpdate.emit(this.resultData);
       this.updatePagination();
     }, error => {
       console.error('Fail to fetch default layer data for alphabet selector: ', error);
     });
   }
 
-  fetchPrefixData(pageNum:number){
-    this.alphabetSelectorService.getPrefixData(this.currentPrefix,pageNum).subscribe(data => {
+  fetchPrefixData(){
+    this.alphabetSelectorService.getData(true, this.currentPrefix).subscribe(data => {
       this.isNextLayerNeeded = false;
+
+      //Check whether the data for the next prefix layer is empty
       if(Object.keys(data.resultSizeByAlphabet).length !== 0){
         this.layersData.push(data.resultSizeByAlphabet);
         this.isNextLayerNeeded = true;
       }
       this.resultData = data.resultData;
+      this.resultUpdate.emit(this.resultData);
       this.updatePagination();
+    }, error => {
+      console.error('Fail to fetch prefix data for alphabet selector: ', error);
+    });
+  }
+
+  fetchResultData(){
+    this.alphabetSelectorService.getData(false, this.currentPrefix, this.currentPage).subscribe(data => {
+      this.resultData = data.resultData;
+      this.resultUpdate.emit(this.resultData);
     }, error => {
       console.error('Fail to fetch prefix data for alphabet selector: ', error);
     });
@@ -85,21 +70,19 @@ export class SamAlphabetSelectorComponent {
 
   updatePagination(){
     let totalFilterResults = 0;
-    if(this.currentPrefix === ''){
-      Object.keys(this.defaultLayerData).forEach(key=>totalFilterResults += this.defaultLayerData[key]);
+
+    // Sum up total results under current prefix
+    if(this.currentPrefix.length < this.layersData.length){
+      let sumUpLayer = this.layersData[this.currentPrefix.length];
+      Object.keys(sumUpLayer).forEach(key => totalFilterResults += sumUpLayer[key]);
     }else{
-      let prefix = this.currentPrefix.toUpperCase();
-      this.layersData.forEach(val=>{
-        if(val.hasOwnProperty(prefix)){
-          totalFilterResults = val[prefix];
-        }
-      });
+      totalFilterResults = this.layersData[this.layersData.length - 1][this.currentPrefix.toUpperCase()];
     }
 
+    // Update pagination based on the pageCount from alphabetSelectorService
     this.paginationConfig.currentPage = 1;
-    this.paginationConfig.totalPages = Math.ceil(totalFilterResults/10);
+    this.paginationConfig.totalPages = Math.ceil(totalFilterResults/this.alphabetSelectorService.pageCount);
     this.paginationUpdate.emit(this.paginationConfig);
-
   }
 
   generateAlphabetArray():any{
@@ -115,28 +98,23 @@ export class SamAlphabetSelectorComponent {
     this.layersData.length = selectedLayer;
 
     //Check with api to see whether drill down is needed
-    this.fetchPrefixData(1);
+    this.fetchPrefixData();
 
     if(this.isNextLayerNeeded){
       //Set up the drill down layer if needed
       let drillDownArr = this.generateAlphabetArray().map((v)=>{return prefix+(v.toLowerCase());});
       this.prefixLayerArr.push(drillDownArr);
     }
-
-    //Update the result list
     this.resultUpdate.emit(this.resultData);
-
   }
 
   getPrefixClass(prefix){
     if(!this.isValidPrefix(prefix)){
       return "disabled-prefix";
     }
-
     if(this.isInCurrentPrefix(prefix)){
       return "current-prefix";
     }
-
     if(this.isPreSelected(prefix)){
       return "pre-selected-prefix";
     }
@@ -163,7 +141,6 @@ export class SamAlphabetSelectorComponent {
         return true;
       }
     }
-
     return false;
   }
 
@@ -175,9 +152,24 @@ export class SamAlphabetSelectorComponent {
   }
 
   isOnEdge(prefix){
-    return prefix.charAt(prefix.length-1).toUpperCase() === 'A' || prefix.charAt(prefix.length-1).toUpperCase() === 'Z';
+    let lastLetter = prefix.charAt(prefix.length-1).toUpperCase();
+    return lastLetter === 'A' || lastLetter === 'Z';
   }
 
+}
 
+@Injectable()
+export class AlphabetSelectorService{
 
+  drillDownLimitLength: number = 3; // the limit level of drill down
+  pageCount:number = 4; // total number of items in per page
+
+  /**
+   * Get the result data related to input prefix in a specific page with or without suggested next layer of prefix
+   * @param checkPrefix: control whether you need to return the suggested prefix in the next layer
+   * @param prefix: current prefix string, will be used to fetch data related to this prefix
+   * @param offset: specific page number you want for the results related to current prefix string
+   * @returns {Observable<>} : Result format expected: { resultSizeByAlphabet:{A:100, B:200...}, resultData:[{},{},{}...]}
+     */
+  getData(checkPrefix:boolean, prefix?:string, offset?:number):any{}
 }
