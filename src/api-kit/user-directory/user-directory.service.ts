@@ -14,11 +14,11 @@ export class UserDirService implements AlphabetSelectorService{
     this.firstLayerChars = this.randomAvailableChars('');
   }
 
-  getData(checkPrefix:boolean, prefix?:string, offset?:number, ){
+  getData(checkPrefix:boolean, prefix:string, offset:number){
 
     let oParam = {
-      prefix: prefix || '',
-      offset: offset || 1,
+      prefix: prefix,
+      offset: offset,
       checkPrefix: checkPrefix
     }
 

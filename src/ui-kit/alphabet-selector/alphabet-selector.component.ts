@@ -32,7 +32,7 @@ export class SamAlphabetSelectorComponent {
   }
 
   fetchDefaultLayer(){
-    this.alphabetSelectorService.getData(true).subscribe(data => {
+    this.alphabetSelectorService.getData(true, this.currentPrefix, 1).subscribe(data => {
       this.layersData.push(data.resultSizeByAlphabet);
       this.resultData = data.resultData;
       this.resultUpdate.emit(this.resultData);
@@ -43,7 +43,7 @@ export class SamAlphabetSelectorComponent {
   }
 
   fetchPrefixData(){
-    this.alphabetSelectorService.getData(true, this.currentPrefix).subscribe(data => {
+    this.alphabetSelectorService.getData(true, this.currentPrefix, 1).subscribe(data => {
       this.isNextLayerNeeded = false;
 
       //Check whether the data for the next prefix layer is empty
@@ -165,11 +165,12 @@ export class AlphabetSelectorService{
   pageCount:number = 4; // total number of items in per page
 
   /**
-   * Get the result data related to input prefix in a specific page with or without suggested next layer of prefix
-   * @param checkPrefix: control whether you need to return the suggested prefix in the next layer
-   * @param prefix: current prefix string, will be used to fetch data related to this prefix
+   * Get the result data related to input prefix in a specific page with or without suggested next layer of prefix.
+   * @param checkPrefix: control whether you need to return the suggested prefix in the next layer.
+   * @param prefix: current prefix string, will be used to fetch data related to this prefix.
    * @param offset: specific page number you want for the results related to current prefix string
    * @returns {Observable<>} : Result format expected: { resultSizeByAlphabet:{A:100, B:200...}, resultData:[{},{},{}...]}
+   *
      */
-  getData(checkPrefix:boolean, prefix?:string, offset?:number):any{}
+  getData(checkPrefix:boolean, prefix:string, offset:number):any{}
 }

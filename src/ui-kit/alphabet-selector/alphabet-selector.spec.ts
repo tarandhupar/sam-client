@@ -12,7 +12,7 @@ class AlphabetServiceStub implements AlphabetSelectorService{
 
   constructor(){}
 
-  getData(checkPrefix:boolean, prefix?:string, offset?:number):any{
+  getData(checkPrefix:boolean, prefix:string, offset:number):any{
     return Observable.of({
       resultSizeByAlphabet:{A:200, E:200, F:20000, Z:1000},
       resultData:[
@@ -24,7 +24,7 @@ class AlphabetServiceStub implements AlphabetSelectorService{
   }
 };
 
-fdescribe("Sam Alphabet Selector Component", ()=>{
+describe("Sam Alphabet Selector Component", ()=>{
 
   let alphabetServiceStub: AlphabetServiceStub = new AlphabetServiceStub();
   let component: SamAlphabetSelectorComponent;
