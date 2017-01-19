@@ -36,7 +36,7 @@ export class SamSearchbarComponent {
   selectConfig = {
     options: [
       {value: '', label: 'All'},
-      {value: 'fbo', label: 'Opportunities'},
+      {value: 'opp', label: 'Opportunities'},
       {value: 'cfda', label: 'Assistance Listings'},
       {value: 'fh', label: 'Federal Hierarchy'},
       {value: 'ent', label: 'Entities'},
