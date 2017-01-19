@@ -111,8 +111,8 @@ export class AlertEditComponent implements OnInit {
       description: [this.alert.description(), []],
       title: [this.alert.title(), []],
       severity: [this.alert.severity(), []],
-      endDate: [this.alert.endDate(), [isNotBeforeToday, isAfter(this.publishedDate), validDateTime]],
-      publishedDate: [this.alert.publishedDate(), [isNotBeforeToday, validDateTime]],
+      endDate: [this.alert.endDate(), [validDateTime]],
+      publishedDate: [this.alert.publishedDate(), [validDateTime]],
       publishImmediately: [false, []],
       isExpiresIndefinite: [this.alert.isExpiresIndefinite(), []],
     });
@@ -123,7 +123,7 @@ export class AlertEditComponent implements OnInit {
   }
 
   isoNow() {
-    return moment().format('YYYY-MM-DDThh:mm:ss');
+    return moment().format('YYYY-MM-DDTHH:mm:ss');
   }
 
   onAcceptClick(event) {
