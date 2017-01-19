@@ -7,7 +7,6 @@ import { ReportComponent } from './sections/report/report.component';
 import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { StaticComponent } from './sections/static/static.component';
 import { SamUIKitModule } from "ui-kit/ui-kit.module";
-import { ImageLibraryComponent } from "./image-library/image-library.component";
 import { IAMService } from 'api-kit';
 import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
@@ -17,14 +16,13 @@ import { globals } from '../../app/globals.ts';
     BrowserModule,
     routing,
   ],
-  exports: [ ImageLibraryComponent ],
+  exports: [ ],
   declarations: [
     ReportsPage,
     OverviewComponent,
     ReportComponent,
     AdhocComponent,
-    StaticComponent,
-    ImageLibraryComponent
+    StaticComponent
   ],
   providers: [IAMService],
 })

@@ -30,8 +30,6 @@ public states = {
         });
       });
     });
-   
-    console.log("user signed in?: "+this.states.isSignedIn);
   }
 checkSession(cb: () => void) {
     let vm = this;
@@ -39,9 +37,7 @@ checkSession(cb: () => void) {
     this.api.iam.user.get(function(user) {
       vm.states.isSignedIn = true;
       vm.states.showSignIn = false;
-      console.log("USER IS SIGNED IN: "+user.cn+"," +user.mail+"," +user.department);
       vm.user = user;
-      console.log("user signed in?: "+vm.states.isSignedIn);
       cb();
     });
   }

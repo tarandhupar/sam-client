@@ -33,8 +33,6 @@ public states = {
         });
       });
     });
-   
-    console.log("user signed in?: "+this.states.isSignedIn);
 }
 
 
@@ -43,7 +41,6 @@ checkSession(cb: () => void) {
 
     this.api.iam.user.get(function(user) {
       vm.states.isSignedIn = true;
-      console.log("USER IS SIGNED IN: "+user.cn+"," +user.mail+"," +user.department);
       vm.user = user;
     if(user.cn == "TEST_Public_User"){
                                         vm.pwd = "Publictest!!123";
