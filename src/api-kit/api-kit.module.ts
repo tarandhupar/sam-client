@@ -4,6 +4,8 @@ import { HttpModule } from '@angular/http';
 
 import { FHService } from './fh/fh.service';
 import { IAMService } from './iam/iam.service';
+import { EntityService } from './entity/entity.service';
+import { ExclusionService } from './exclusion/exclusion.service';
 import { SearchService } from './search/search.service';
 import { SystemAlertsService } from './system-alerts/system-alerts.service';
 import { OpportunityService } from './opportunity/opportunity.service';
@@ -26,6 +28,8 @@ import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.s
     FHService,
     IAMService,
     SystemAlertsService,
+    EntityService,
+    ExclusionService, 
     OpportunityService,
     WrapperService,
     SuggestionsService,
