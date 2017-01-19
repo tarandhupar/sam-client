@@ -51,7 +51,6 @@ export class SamAlphabetSelectorComponent {
         this.layersData.push(data.resultSizeByAlphabet);
         this.isNextLayerNeeded = true;
       }
-      
       this.resultData = data.resultData;
       this.resultUpdate.emit(this.resultData);
       this.updatePagination();
