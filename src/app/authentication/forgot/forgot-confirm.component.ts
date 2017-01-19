@@ -1,8 +1,7 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 
 import { IAMService } from 'api-kit';
-
-import { CookieService } from 'angular2-cookie/core';
+import { Cookie } from 'ng2-cookies';
 
 @Component({
   templateUrl: './forgot-confirm.component.html',
@@ -24,11 +23,11 @@ export class ForgotConfirmComponent {
     error: ''
   };
 
-  constructor(private zone: NgZone, private cookies: CookieService, private api: IAMService) {}
+  constructor(private zone: NgZone, private api: IAMService) {}
 
   ngOnInit() {
-    this.email = (this.cookies.get('iam-forgot-email') || '')
-    this.cookies.remove('iam-forgot-email')
+    this.email = (Cookie.get('iam-forgot-email') || '');
+    Cookie.delete('iam-forgot-email');
   }
 
   alert(type, message?) {

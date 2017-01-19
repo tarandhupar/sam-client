@@ -1,8 +1,7 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 
 import { IAMService } from 'api-kit';
-
-import { CookieService } from 'angular2-cookie/core';
+import { Cookie } from 'ng2-cookies';
 
 @Component({
   templateUrl: './register-confirm.component.html',
@@ -24,11 +23,11 @@ export class RegisterConfirmComponent {
     error: ''
   };
 
-  constructor(private zone: NgZone, private cookies: CookieService, private api: IAMService) {}
+  constructor(private zone: NgZone, private api: IAMService) {}
 
   ngOnInit() {
-    this.email = (this.cookies.get('iam-signup-email') || '')
-    this.cookies.remove('iam-signup-email')
+    this.email = (Cookie.get('iam-signup-email') || '')
+    Cookie.delete('iam-signup-email')
   }
 
   alert(type, message?) {

@@ -7,7 +7,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { IAMService } from 'api-kit';
 import { Validators as $Validators } from '../shared/validators';
 
-import { CookieService } from 'angular2-cookie/core';
+import { Cookie } from 'ng2-cookies';
 
 @Component({
   templateUrl: './forgot-initial.component.html',
@@ -39,7 +39,6 @@ export class ForgotInitialComponent {
     private router: Router,
     private route: ActivatedRoute,
     private zone: NgZone,
-    private cookies: CookieService,
     private api: IAMService) {}
 
   ngOnInit() {
@@ -51,14 +50,13 @@ export class ForgotInitialComponent {
 
   dispatchNotiications() {
     this.states.notification = merge(this.states.notification, {
-      title: 'Notifications',
+      title: 'Notification',
       message: ''
     }, this.route.snapshot.queryParams);
 
-    if(this.route.snapshot.queryParams['message'].length) {
+    if(this.states.notification.message.length) {
       this.states.notification.show = true;
     }
-    console.log(this.states.notification)
   }
 
   resetNotifications() {
@@ -103,7 +101,7 @@ export class ForgotInitialComponent {
         this.api.iam.user.password.init(control.value, () => {
           vm.zone.run(() => {
             this.states.loading = false;
-            this.cookies.put('iam-forgot-email', control.value);
+            Cookie.set('iam-forgot-email', control.value);
             this.router.navigate(['/forgot/confirm']);
           });
         }, (error) => {

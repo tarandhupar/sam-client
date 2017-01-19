@@ -7,7 +7,6 @@ import { SamAPIKitModule } from '../../api-kit/api-kit.module';
 import { SamUIKitModule } from '../../ui-kit/ui-kit.module';
 import { AppComponentsModule } from '../../app/app-components/app-components.module';
 
-import { CookieService } from 'angular2-cookie/services/cookies.service';
 import { AuthenticationService } from './authentication.service.ts';
 
 import { AuthenticationRouter } from './authentication.route';
@@ -69,7 +68,6 @@ import { ProfileComponent, DetailsComponent, ResetComponent } from './profile';
 
   providers: [
     AuthenticationService,
-    CookieService,
     RegisterGuard,
     ProfileGuard
   ]
