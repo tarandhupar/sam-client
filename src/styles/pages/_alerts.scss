@@ -82,9 +82,9 @@ $alert-primary-color: #0071bc;
     white-space: nowrap;
   }
 
-  //samSelect label {
-  //  display: i;
-  //}
+  samSelect label {
+    display: inline;
+  }
 
   samSelect select {
     display: inline;
