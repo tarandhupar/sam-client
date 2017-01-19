@@ -16,7 +16,10 @@
   </div>
   <div [ngSwitch]="loadState">
     <div *ngSwitchCase='"loading"'><sam-spinner></sam-spinner></div>
-    <parent-orgs *ngSwitchCase='"success"' [orgLevels]="orgLevels"></parent-orgs>
-    <samAlert *ngSwitchCase='"error"' type="error" title="Organization not found"></samAlert>
+    <div *ngSwitchCase="'success'">
+      <parent-orgs [orgLevels]="orgLevels" *ngIf="orgLevels"></parent-orgs>
+      <p *ngIf="!orgLevels"><i>Organization information unavailable</i></p>
+    </div>
+    <p *ngSwitchCase='"error"' ><i>Organization information unavailable</i></p>
   </div>
 </div>

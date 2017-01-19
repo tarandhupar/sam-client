@@ -26,7 +26,7 @@ export class Organization {
   }
 
   get ancestorOrganizationTypes() {
-    if (!this.firstResult()) {
+    if (!this.firstResult() || !this.firstResult().orgTypes) {
       return [];
     }
     return this.firstResult().orgTypes.map(org => this.capitalizePipe.transform(org));
