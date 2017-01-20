@@ -1,0 +1,162 @@
+<div class="exclusion">
+<br />
+<div class="usa-grid message-background-color">
+	<div class="usa-width-one-twelfth padding-top-25px height-100px">
+		<i class="fa fa-info-circle fa-3x"></i>
+	</div>
+	<div class="usa-width-eleven-twelfths">
+		<i>There may be instances when an individual or firm has the same or similar name as your search criteria, but is actually a different
+		party. Therefore, it is important that you verify a potential match with the excluding agency identified in th eexclusion's details. To confirm
+		or obtain additional information, contact the federal agency that took the action against the listed party. Agency points of contact,
+		including name and telephone number, may be found by navigating to the Agency Exclusion POCs page within SAM Help.</i>
+	</div>
+</div>
+<div class="usa-grid-full">
+	<h1>Exclusion</h1>
+</div>
+<div *ngIf="exclusion">
+<div class="usa-grid-full">
+	<div class="padding-left-180px">
+		<h2>{{exclusion.identityInfo.prefix}} {{exclusion.identityInfo.firstName}} {{exclusion.identityInfo.middleName}} {{exclusion.identityInfo.lastName}}</h2>
+	</div>
+</div>
+<div class="usa-grid-full bottom-border">
+	<table class="usa-table-borderless">
+	<tr>
+		<td class="padding-left-180px" valign="bottom">
+			<exclusionAddress [address]="exclusion.identityInfo.address"></exclusionAddress>
+			<br />
+			<br />
+			<strong>Excluding Agency:</strong> {{exclusion.excludingAgency}}
+		</td>
+		<td class="width-350px" valign="bottom">
+			<strong>Exclusion Status:</strong> {{exclusion.exclusionStatus}}
+			<br />
+			<strong>Activation Date:</strong> {{exclusion.activateDate}}
+			<br />
+			<strong>Termination Date:</strong> {{exclusion.terminationDate}}
+			<br />
+			<strong>Exclusion Type:</strong> {{exclusion.exclusionType}}
+			</td>
+			<td class="text-align-right width-100px" valign="bottom">
+				<exclusionIcon [classificationType]="exclusion.classificationType"></exclusionIcon>
+			</td>
+	</tr>
+</table>
+</div>
+<div class="usa-grid-full padding-top-10px padding-left-180px">
+	Show
+	<select name="options" id="options" class="drop-down-size display-inline">
+		<option value="value1">Current Record</option>
+	</select>
+</div>
+<div class="usa-grid-full padding-left-180px">
+	<h2>Current Record Details</h2>
+</div>
+<div class="usa-grid-full padding-left-170px">
+	<div class="padding-left-10px message-background-color border-1px-solid">
+		<i class="fa fa-envelope fa-1x" ></i><h3 class="padding-left-5px display-inline">Verify Primary Address</h3>
+		<br />
+		<h4>Match</h4>
+		<br />
+		<strong>Street Address 1</strong>
+		<input #address1 (keyup)="0">
+		<br />
+		<strong>Street Address 2</strong>
+		<input #address2 (keyup)="0">
+		<br />
+		<exclusionAddress [address]="exclusion.identityInfo.address"></exclusionAddress>
+		<br />
+		<button>Submit</button>
+	</div>
+</div>
+<br />
+<div class="usa-grid-full padding-left-180px">
+	<i class="fa fa-ban fa-1x" ></i><h3 class="padding-left-5px display-inline">Exclusion Details</h3>
+	<br />
+	<strong>Exclusion Program: </strong>{{exclusion.exclusionProgram}}
+</div>
+<div class="usa-grid-full">
+<div class="margin-left-170px">
+	<table class="usa-table-borderless">
+		<tr>
+			<td valign="top" class="table-column-width-450px message-background-color">
+				<strong>Nature (Cause):</strong>
+				<br />
+				<i>May be subject to sanctions pursuant to the 
+				conditions imposed by the U.S. Department of the 
+				Treasury (Treasury) Office of Foreign Assets 
+				Control (OFAC), or subject to a sanction, 
+				restriction or partial denial pursuant to the 
+				conditions imposed by the U.S. Department of
+				State (STATE) or Federal agency of the U.S.
+				Government.</i>
+			</td>
+			<td valign="top" class="message-background-color">
+				<strong>Effect:</strong>
+				<i>If you think you have a potential match with an OFAC listing,
+				please visit the following section of OFAC's website for
+				guidance: <a href="http://www.treasury.gov/resource-center/faqs/Sanctions/Pages/directions.aspx">
+				http://www.treasury.gov/resource-center/faqs/Sanctions/Pages/directions.aspx.</a> For all other prohibitions
+				and restrictions, see the agency note in the Additional Comments 
+				field to ascertain the extent or limit on the sanction, restriction
+				or partial denial. If there is no note, contact the agency taking
+				the action for this information.</i>
+			</td>
+		</tr>
+	</table>
+	</div>
+</div>
+<div class="usa-grid-full">
+	<div class="padding-left-180px">
+		<strong>Additional Comments</strong>
+		<br />
+		{{exclusion.additionalComments}}
+		<br />
+		<br />
+		<strong>CT Code:</strong> {{exclusion.ctCode}}
+		<br />
+		Reference CT Codes (from legacy system) at the <a href="">CT Code Help Page.</a>
+		<br />
+		<br />
+		<strong>Record</strong>
+		<br />
+		<strong>Create Date: </strong>{{exclusion.recordCreateDate}}
+		<br />
+		<strong>Update Date: </strong>{{exclusion.recordUpdateDate}}
+		<br />
+		<br />
+		<i class="fa fa-chain fa-1x" ></i><h3 class="padding-left-5px display-inline">Cross References</h3>
+		<br />
+		<ng-container [ngSwitch]="exclusion.crossReferences">
+		<div id="exclusion-cross-reference" *ngIf="exclusion.crossReferences.length">
+			<div id="exclusion-cross-reference" *ngSwitchCase="exclusion.crossReferences">
+				<div *ngFor="let crossReference of exclusion.crossReferences">
+				<exclusionCrossReference [crossReference]="crossReference"></exclusionCrossReference>
+				</div>
+			</div>
+		</div>
+		<div id="exclusion-cross-reference" *ngSwitchDefault>
+			No Cross References
+		</div>
+		</ng-container>
+		<br />
+		<strong>More Locations</strong>
+		<br />
+		<ng-container [ngSwitch]="exclusion.moreLocations">
+		<div id="exclusion-more-locations" *ngIf="exclusion.moreLocations.length">
+			<div id="exclusion-more-locations" *ngSwitchCase="exclusion.moreLocations">
+				<div *ngFor="let location of exclusion.moreLocations">
+				<exclusionCrossReference [crossReference]="location"></exclusionCrossReference>
+				</div>
+			</div>
+		</div>
+		<div id="exclusion-more-locations" *ngSwitchDefault>
+			No Locations
+		</div>
+		</ng-container>
+		<br />
+		<br />
+	</div>
+</div>
+</div>
