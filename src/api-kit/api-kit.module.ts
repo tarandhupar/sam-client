@@ -4,12 +4,15 @@ import { HttpModule } from '@angular/http';
 
 import { FHService } from './fh/fh.service';
 import { IAMService } from './iam/iam.service';
+import { EntityService } from './entity/entity.service';
+import { ExclusionService } from './exclusion/exclusion.service';
 import { SearchService } from './search/search.service';
 import { SystemAlertsService } from './system-alerts/system-alerts.service';
 import { OpportunityService } from './opportunity/opportunity.service';
 import { WrapperService } from './wrapper/wrapper.service';
 import { SuggestionsService } from './search/suggestions.service';
 import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
+import { UserDirService } from './user-directory/user-directory.service';
 
 /**
  * A module for reusable SAM Web Design components
@@ -26,10 +29,13 @@ import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.s
     FHService,
     IAMService,
     SystemAlertsService,
+    EntityService,
+    ExclusionService, 
     OpportunityService,
     WrapperService,
     SuggestionsService,
-    AutoCompleteWrapper
+    AutoCompleteWrapper,
+    UserDirService
   ]
 })
 export class SamAPIKitModule { }
