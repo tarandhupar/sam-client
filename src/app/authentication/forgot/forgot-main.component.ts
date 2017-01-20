@@ -1,4 +1,4 @@
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild } from '@angular/core';
+import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, SimpleChange, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -26,8 +26,7 @@ export class ForgotMainComponent {
       type: 'warning',
       title: 'You have one attempt left',
       message: '',
-      target: '',
-      placement: 'bottom right',
+      placement: 'right',
       show: false
     }
   };
@@ -50,7 +49,8 @@ export class ForgotMainComponent {
     private api: IAMService) {}
 
   ngOnInit() {
-    this.states.alert.target = this.form;
+    this.states.alert.show = true;
+
     this.initForm();
     this.verifyToken();
   }
@@ -153,14 +153,15 @@ export class ForgotMainComponent {
     switch(stage) {
       case 1:
         if(this.answer.valid) {
+
           // this.states.reset = true
           this.zone.runOutsideAngular(() => {
-            this.api.iam.user.password.kba(this.token, this.answer.value, function(status, token, question, message) {
+            this.api.iam.user.password.kba(this.token, this.answer.value, (status, token, question, message) => {
               vm.zone.run(() => {
-                this.answer.reset();
+                this.answer.reset('');
                 this.next(status, token, question, message);
               });
-            }, function(error) {
+            }, (error) => {
               vm.zone.run(() => {
                 this.expire(error.message);
               });

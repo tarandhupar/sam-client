@@ -45,7 +45,8 @@
 <samAlert [type]="states.alert.type"
           [title]="states.alert.title"
           [description]="states.alert.message"
-          [target]='states.alert.target'
+          [target]='form'
           [placement]='states.alert.placement'
-          [hidden]="!states.alert.show"
+          [(hidden)]="!states.alert.show"
+          dismiss
           showClose="true"></samAlert>

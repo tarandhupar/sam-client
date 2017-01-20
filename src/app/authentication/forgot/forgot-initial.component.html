@@ -13,7 +13,7 @@
                    autocomplete="off"
                    readonly="readonly"
                    onfocus="this.removeAttribute('readonly');"
-                   (keyup)="validate"
+                   (keyup)="validate()"
                    [formControl]="email" />
           </labelWrapper>
 
@@ -34,7 +34,7 @@
                 [title]="states.notification.title"
                 [hidden]="!states.notification.show"
                 [target]="form"
-                placement="top right"
+                placement="right"
                 showClose="true"></samAlert>
     </div>
   </div>

@@ -86,12 +86,15 @@ export class ForgotInitialComponent {
       }
     }
 
-    return result;
+    this.states.error = result;
   }
 
   init() {
     let vm = this,
         control = this.email;
+
+    control.markAsTouched();
+    this.validate();
 
     if(control.valid) {
       this.states.loading = true;

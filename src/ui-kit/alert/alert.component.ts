@@ -1,10 +1,9 @@
-import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 export interface Offset {
   top?:  number,
   left?: number
 };
-
 /**
  * The <samAlert> component is designed with sam.gov standards to show that this is an official website
  * https://gsa.github.io/sam-web-design-standards/
@@ -39,41 +38,72 @@ export class SamAlertComponent {
     left: 0
   };
 
+  @Output() hiddenChange = new EventEmitter();
   @Output() dismiss: EventEmitter<any> = new EventEmitter<any>();
 
   @ViewChild('alert') alert;
 
   private states = {
+    loaded: false,
     show: true
   };
 
-  private position: any = {};
-
-  types:any = {
+  private types:any = {
     'success': 'usa-alert-success',
     'warning': 'usa-alert-warning',
     'error': 'usa-alert-error',
     'info': 'usa-alert-info'
   };
 
-  selectedType: string = this.types['success'];
+  private position: any = {};
+  private selectedType: string = this.types['success'];
 
   ngOnInit() {
     if(!this.typeNotDefined()) {
       this.selectedType = this.types[this.type];
     }
-
-    if(this.dismissTimer > 0) {
-      setTimeout(() => {
-        this.onDismissClick();
-      }, this.dismissTimer);
-    }
   }
 
   ngAfterViewInit() {
-    if(this.target !== undefined) {
-      this.setPosition()
+    if(this.states.show && this.target !== undefined) {
+      this.setPosition();
     }
+
+    this.states.loaded = true;
+  }
+
+  @Input()
+  get hidden() {
+    return !this.states.show;
+  }
+
+  set hidden(isHidden) {
+    const open = !isHidden;
+
+    if(open && this.dismissTimer > 0) {
+      this.open();
+
+      setTimeout(() => {
+        this.close();
+      }, this.dismissTimer);
+    } else {
+      open ? this.open() : this.close();
+    }
+  }
+
+  public open() {
+    if(this.states.loaded && this.target !== undefined) {
+      this.setPosition();
+    }
+
+    this.states.show = true;
+    this.hiddenChange.emit(true);
+  }
+
+  private close() {
+    this.states.show = false;
+    this.hiddenChange.emit(false);
+    this.dismiss.emit();
   }
 
   private typeNotDefined() {
@@ -133,6 +163,7 @@ export class SamAlertComponent {
      * Return if Element is not defined
      */
     if(!target) {
+      console.warn('@Input target was not found in the DOM or there was an issue with the object passed in');
       return;
     }
 
@@ -195,6 +226,7 @@ export class SamAlertComponent {
     if(style.left < 0 || style.left > offsets.viewport.width)
       style.left = Math.min(offsets.viewport.width, Math.max(0, style.left)) + (style.left < 0 ? offsets.source.width : -offsets.source.width);
     */
+
     this.position = this.toPx(style);
   }
 
@@ -221,8 +253,8 @@ export class SamAlertComponent {
     while(element) {
       bounds = element.getBoundingClientRect();
 
-      position.top = Math.max(position.top, bounds.y);
-      position.left = Math.max(position.left, bounds.x);
+      position.top = Math.max(position.top, bounds.top);
+      position.left = Math.max(position.left, bounds.left);
 
       element = element.offsetParent;
     }
@@ -244,10 +276,5 @@ export class SamAlertComponent {
     }
 
     return styles
-  }
-
-  private onDismissClick() {
-    this.states.show = false;
-    this.dismiss.emit();
   }
 }
