@@ -49,8 +49,6 @@ export class ForgotMainComponent {
     private api: IAMService) {}
 
   ngOnInit() {
-    this.states.alert.show = true;
-
     this.initForm();
     this.verifyToken();
   }
@@ -182,20 +180,22 @@ export class ForgotMainComponent {
         control = this.password;
 
     if(control.valid) {
-      this.api.iam.user.password.reset(control.value, this.token, () => {
-        vm.zone.run(() => {
-          this.router.navigate(['/forgot'], {
-            queryParams: {
-              type: 'success',
-              title: 'Your password reset was successful.'
-            }
+      this.zone.runOutsideAngular(() => {
+        this.api.iam.user.password.reset(control.value, this.token, () => {
+          vm.zone.run(() => {
+            this.router.navigate(['/forgot'], {
+              queryParams: {
+                type: 'success',
+                title: 'Your password reset was successful.'
+              }
+            });
+          });
+        }, (error) => {
+          vm.zone.run(() => {
+            this.expire(error.message);
           });
         });
-      }, (error) => {
-        vm.zone.run(() => {
-          this.expire(error.message);
-        });
-      });
-    }
+      })
+    };
   }
 };
