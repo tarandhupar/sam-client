@@ -386,7 +386,7 @@ user.cac = {
 };
 
 let $import = {
-  sources() {
+  systems() {
     return ([
       'SAM',
       'FPDS',
@@ -398,26 +398,86 @@ let $import = {
     ]).map((source) => {
       return {
         value: source,
-        text: source
+        text: `${source}.gov`
       };
     });
   },
 
-  roles($success, $error) {
+  history($success, $error) {
     let endpoint = utils.getUrl($config.import.roles),
-        params = {
-          'legacySystem':'FPDS',
-          'legacyUsername':'',
-          'legacyPassword':''
-        };
+        headers = {
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro'),
+          'X-Api-Username': 'hassanriaz@gmail.com'
+        },
+
+        mock = [];
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    return;
+    mock = [
+      {
+        "id": 300001,
+        "email": "rhonda@nostra.gov",
+        "legacyPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+        "phone": "hassanriaz@gmail.com",
+        "sourceLegacySystem": "DoD",
+        "importTimestamp": 1482438998453,
+        "orgKey": 100000000,
+        "loginAttempts": 0,
+        "claimedTimestamp": 1484930796371,
+        "fullName": "Kuame Sanford",
+        "claimed": true
+      },
+      {
+        "id": 300358,
+        "email": "ina@iaculis.us",
+        "legacyPassword": "579356b2d3267d2eaa93b741e17c997a",
+        "phone": "hassanriaz@gmail.com",
+        "sourceLegacySystem": "DoD",
+        "importTimestamp": 1482438998465,
+        "orgKey": 100000357,
+        "loginAttempts": 0,
+        "claimedTimestamp": 1484930761579,
+        "fullName": "Violet Barlow",
+        "claimed": true
+      }
+    ];
+
+    $success(mock);
+
+    // request
+    //   .get(endpoint)
+    //   .set(headers)
+    //   .end(function(err, response) {
+    //     if(!err) {
+    //       $success(response.body);
+    //     } else {
+    //       $success(response.body);
+    //     }
+    //   });
+  },
+
+  create(credentials, $success, $error) {
+    let endpoint = utils.getUrl($config.import.roles),
+        headers = {
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro'),
+          'X-Api-Username': 'hassanriaz@gmail.com'
+        },
+
+        params = _.merge({
+          'legacySystem':'',
+          'legacyUsername':'',
+          'legacyPassword':''
+        }, credentials);
+
+    $success = ($success || function(response) {});
+    $error = ($error || function(error) {});
 
     request
       .post(endpoint)
+      .set(headers)
+      .send(params)
       .end(function(err, response) {
         if(!err) {
           $success(response.body);
@@ -436,7 +496,8 @@ class IAM {
     _.extend(this, utils, {
       config: config,
       user: user,
-      kba: kba
+      kba: kba,
+      import: $import
     });
 
     this.debug = false;

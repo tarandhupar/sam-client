@@ -113,7 +113,9 @@ export class OpportunityPage implements OnInit {
   }
 
   ngOnInit() {
-    this.currentUrl = this.location.path();
+    // Using document.location.href instead of
+    // location.path because of ie9 bug
+    this.currentUrl = document.location.href;
     this.loadDictionary();
     let opportunityAPI = this.loadOpportunity();
     this.opportunityAPI = opportunityAPI;

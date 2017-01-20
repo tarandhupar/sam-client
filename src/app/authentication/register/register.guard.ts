@@ -8,9 +8,6 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 
-import { CookieService } from 'angular2-cookie/core';
-
-
 @Injectable()
 export class RegisterGuard implements CanActivate, CanActivateChild {
   private api;
@@ -22,7 +19,7 @@ export class RegisterGuard implements CanActivate, CanActivateChild {
     query: {}
   };
 
-  constructor(private router: Router, private cookies: CookieService, private _api: IAMService) {
+  constructor(private router: Router, private _api: IAMService) {
     this.api = _api.iam;
     this.states.local = this.api.isLocal();
   }

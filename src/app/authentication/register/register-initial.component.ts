@@ -5,7 +5,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { IAMService } from 'api-kit';
 import { Validators as $Validators } from '../shared/validators';
 
-import { CookieService } from 'angular2-cookie/core';
+import { Cookie } from 'ng2-cookies';
 
 @Component({
   templateUrl: './register-initial.component.html',
@@ -22,11 +22,7 @@ export class RegisterInitialComponent {
 
   email: FormControl;
 
-  constructor(
-    private router: Router,
-    private zone: NgZone,
-    private cookies: CookieService,
-    private api: IAMService) {}
+  constructor(private router: Router, private zone: NgZone, private api: IAMService) {}
 
   ngOnInit() {
     this.email = new FormControl('', [Validators.required, $Validators.email])
@@ -37,7 +33,7 @@ export class RegisterInitialComponent {
         email = this.email.value;
 
     this.api.iam.user.registration.init(email, () => {
-      vm.cookies.put('iam-signup-email', email);
+      Cookie.set('iam-signup-email', email);
       vm.router.navigate(['/signup/confirm']);
       cb();
     }, (error) => {
