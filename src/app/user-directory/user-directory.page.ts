@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FHService } from "api-kit";
 import {Organization} from "../organization/organization.model";
+import { UserDirService } from "api-kit";
+
 
 @Component({
   templateUrl: 'user-directory.template.html'
@@ -10,7 +12,14 @@ export class UserDirectoryPage {
   private orgLevels = [];
   private loadState: string = 'closed'; // success, info, init, loading or error
 
-  constructor(private fh: FHService) {
+  resultList: any = [];
+  alphabetSelectorPageConfig: any = {
+    currentPage:1,
+    totalPages:10
+  };
+
+
+  constructor(private fh: FHService, private userDirService: UserDirService) {
 
   }
 
@@ -49,6 +58,17 @@ export class UserDirectoryPage {
         }
       );
     }
+  }
+
+
+  updateResultList($event){
+    this.resultList = $event;
+  }
+  onAlphabetSelectorPageChange($event){
+    this.alphabetSelectorPageConfig.currentPage = $event;
+  }
+  OnPaginationUpdate($event){
+    this.alphabetSelectorPageConfig = $event;
   }
 
 
