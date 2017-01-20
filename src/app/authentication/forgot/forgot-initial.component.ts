@@ -1,12 +1,11 @@
-import { merge } from 'lodash';
-
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
 import { IAMService } from 'api-kit';
 import { Validators as $Validators } from '../shared/validators';
 
+import { merge } from 'lodash';
 import { Cookie } from 'ng2-cookies';
 
 @Component({
@@ -16,14 +15,15 @@ import { Cookie } from 'ng2-cookies';
   ]
 })
 export class ForgotInitialComponent {
+  @ViewChild('form') form;
+
   private states = {
     submitted: false,
     loading: false,
     error: '',
     notification: {
       type: '',
-      title: 'Notification',
-      message: '',
+      title: '',
       show: false
     }
   };
@@ -50,11 +50,10 @@ export class ForgotInitialComponent {
 
   dispatchNotiications() {
     this.states.notification = merge(this.states.notification, {
-      title: 'Notification',
-      message: ''
+      title: this.route.snapshot.queryParams['message'] || '',
     }, this.route.snapshot.queryParams);
 
-    if(this.states.notification.message.length) {
+    if(this.states.notification.title.length) {
       this.states.notification.show = true;
     }
   }

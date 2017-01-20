@@ -3,23 +3,23 @@
     margin-bottom: 94px;
   }
 
+  .usa-alert-heading {
+    line-height: 2.5rem;
+  }
+
   .usa-alert-static {
     width: 46rem;
     max-width: 46rem;
-    top: 0px;
+    top: -6rem;
     left: 50%;
-
-    transform: translate(-50%, -100%);
+    margin-top: -1rem;
+    transform: translateX(-50%);
   }
 
   .usa-forgot-init {
     position: relative;
     width: 460px;
     margin: 0 auto;
-
-    fieldset {
-      margin-top: 2rem;
-    }
 
     button[type="submit"] {
       margin-bottom: 1.2rem;
@@ -157,11 +157,6 @@
     .email:before {
       content: "\f0e0";
     }
-  }
-
-  .usa-alert {
-    margin-top: 0em;
-    float: right;
   }
 
   .ng-untouched {

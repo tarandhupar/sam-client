@@ -1,6 +1,4 @@
-import * as _ from 'lodash';
-
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChildren } from '@angular/core';
+import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -19,12 +17,17 @@ import { KBA } from '../kba.interface';
   ]
 })
 export class ForgotMainComponent {
+  @ViewChild('form') form;
+
   private states = {
     reset: false,
     lockout: false,
     alert: {
-      type: 'error',
+      type: 'warning',
+      title: 'You have one attempt left',
       message: '',
+      target: '',
+      placement: 'bottom right',
       show: false
     }
   };
@@ -47,13 +50,14 @@ export class ForgotMainComponent {
     private api: IAMService) {}
 
   ngOnInit() {
+    this.states.alert.target = this.form;
     this.initForm();
     this.verifyToken();
   }
 
   initForm() {
-    this.answer = new FormControl(['', Validators.required]);
-    this.password = new FormControl(['']);
+    this.answer = new FormControl('', Validators.required);
+    this.password = new FormControl('');
   }
 
   verifyToken() {
@@ -78,9 +82,7 @@ export class ForgotMainComponent {
           });
         }, (error) => {
           vm.zone.run(() => {
-            if(!this.api.iam.isDebug()) {
-              this.expire(error.message);
-            }
+            this.expire(error.message);
           });
         });
       });
@@ -97,7 +99,12 @@ export class ForgotMainComponent {
       }
     };
 
-    this.router.navigate(['/forgot'], params);
+
+    if(!this.api.iam.isDebug()) {
+      this.router.navigate(['/forgot'], params);
+    } else {
+      console.log(params);
+    }
   }
 
   next(status, token, question, message) {
@@ -116,8 +123,8 @@ export class ForgotMainComponent {
           //--> Warning
           case 'warning':
             this.states.alert.type = 'warn';
+            this.states.alert.title = message;
             this.states.alert.show = true;
-            this.states.alert.message = message;
             break;
         }
 
@@ -155,7 +162,7 @@ export class ForgotMainComponent {
               });
             }, function(error) {
               vm.zone.run(() => {
-                // error.message
+                this.expire(error.message);
               });
             });
           });
@@ -170,14 +177,24 @@ export class ForgotMainComponent {
   }
 
   reset() {
-    // api.iam.user.password.reset($scope.password.new, $scope.token,
-    //   function success() {
-    //     message = '?message=Your password reset was successful.';
-    //     $window.location.href = api.clp.config.CLP_BASE_URL + message;
-    //   },
-    //   function error(error) {
-    //     $ngBootbox.alert(error.message);
-    //   }
-    // );
+    let vm = this,
+        control = this.password;
+
+    if(control.valid) {
+      this.api.iam.user.password.reset(control.value, this.token, () => {
+        vm.zone.run(() => {
+          this.router.navigate(['/forgot'], {
+            queryParams: {
+              type: 'success',
+              title: 'Your password reset was successful.'
+            }
+          });
+        });
+      }, (error) => {
+        vm.zone.run(() => {
+          this.expire(error.message);
+        });
+      });
+    }
   }
 };

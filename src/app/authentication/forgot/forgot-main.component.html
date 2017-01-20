@@ -1,7 +1,7 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
-    <div class="usa-forgot-init">
-      <form *ngIf="securityForm" [formGroup]="securityForm" (ngSubmit)="submit()" class="usa-form-large" autocomplete="off">
+    <div class="usa-forgot-init" #form>
+      <form (ngSubmit)="verify()" class="usa-form-large" autocomplete="off">
         <fieldset>
           <h2>Answer your security questions</h2>
           <span>
@@ -9,8 +9,8 @@
             questions correctly before your account is temporarily locked.
           </span>
 
-          <div [ngClass]="{ 'usa-input-error': states.submitted && (answer.invalid || states.error) }">
-            <label for="answer">Question</label>
+          <div *ngIf="!states.reset" [ngClass]="{ 'usa-input-error': states.submitted && (answer.invalid || states.error) }">
+            <label for="answer" [innerText]="question"></label>
             <span class="usa-input-error-message" *ngIf="states.submitted && (answer.invalid || states.error.length)" role="alert">
               <span *ngIf="states.error.length">{{ states.error }}</span>
               <span *ngIf="answer.errors && answer.errors.answer">Enter a valid answer address</span>
@@ -21,6 +21,10 @@
                    readonly="readonly"
                    onfocus="this.removeAttribute('readonly');"
                    [formControl]="answer"/>
+          </div>
+
+          <div *ngIf="states.reset">
+            <sam-password [password]="password"></sam-password>
           </div>
 
           <div class="usa-button-controls">
@@ -37,3 +41,11 @@
     </div>
   </div>
 </div>
+
+<samAlert [type]="states.alert.type"
+          [title]="states.alert.title"
+          [description]="states.alert.message"
+          [target]='states.alert.target'
+          [placement]='states.alert.placement'
+          [hidden]="!states.alert.show"
+          showClose="true"></samAlert>

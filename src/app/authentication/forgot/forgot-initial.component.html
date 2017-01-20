@@ -1,7 +1,7 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
     <div class="usa-forgot-init">
-      <form class="usa-form-large" autocomplete="off" (ngSubmit)="init($event)">
+      <form class="usa-form-large" autocomplete="off" (ngSubmit)="init($event)" #form>
         <fieldset>
           <h2>Forgot Password?</h2>
           <span>Enter your email address below and we will send you instructions to reset your password.</span>
@@ -29,12 +29,12 @@
             </li>
           </ul>
         </fieldset>
-      </form>{{states.notification.title}}
+      </form>
       <samAlert [type]="states.notification.type"
                 [title]="states.notification.title"
-                [description]="states.notification.message"
                 [hidden]="!states.notification.show"
-                class="usa-alert-static"
+                [target]="form"
+                placement="top right"
                 showClose="true"></samAlert>
     </div>
   </div>

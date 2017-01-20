@@ -11,7 +11,6 @@ import { Cookie } from 'ng2-cookies';
 })
 export class RegisterConfirmComponent {
   private email = '';
-
   private states = {
     alert: {
       show: false,
