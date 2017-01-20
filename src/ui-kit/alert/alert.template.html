@@ -1,4 +1,4 @@
-<div class="usa-alert" [ngClass]="[selectedType, class]" [hidden]="!states.show">
+<div class="usa-alert" [ngClass]="[selectedType, class]" [ngStyle]="position" [hidden]="!states.show" #alert>
   <span class="usa-alert-close" *ngIf="showClose">
     <a><i class="fa fa-times-circle" (click)="onDismissClick()"></i></a>
   </span>
