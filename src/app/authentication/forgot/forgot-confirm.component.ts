@@ -4,13 +4,14 @@ import { IAMService } from 'api-kit';
 import { Cookie } from 'ng2-cookies';
 
 @Component({
-  templateUrl: './register-confirm.component.html',
+  templateUrl: './forgot-confirm.component.html',
   providers: [
     IAMService
   ]
 })
-export class RegisterConfirmComponent {
+export class ForgotConfirmComponent {
   private email = '';
+
   private states = {
     alert: {
       show: false,
@@ -25,8 +26,8 @@ export class RegisterConfirmComponent {
   constructor(private zone: NgZone, private api: IAMService) {}
 
   ngOnInit() {
-    this.email = (Cookie.get('iam-signup-email') || '')
-    Cookie.delete('iam-signup-email')
+    this.email = (Cookie.get('iam-forgot-email') || '');
+    Cookie.delete('iam-forgot-email');
   }
 
   alert(type, message?) {
@@ -51,23 +52,17 @@ export class RegisterConfirmComponent {
     this.states.alert.show = false;
   }
 
-  dispatch(cb:() => void) {
+  resendEmail() {
     let vm = this;
 
-    this.api.iam.user.registration.init(this.email, () => {
-      vm.alert('success')
-      cb();
-    }, (error) => {
-      vm.alert('error', error);
-      cb();
-    });
-  }
-
-  resendEmail() {
     this.zone.runOutsideAngular(() => {
-      this.dispatch(() => {
-        this.zone.run(() => {
-          // cb()
+      this.api.iam.user.password.init(this.email, () => {
+        vm.zone.run(() => {
+          this.alert('success')
+        });
+      }, (error) => {
+        vm.zone.run(() => {
+          this.alert('error', error);
         });
       });
     });

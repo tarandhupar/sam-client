@@ -1,15 +1,25 @@
-.usa-register {
-  &.usa-register {
+.usa-forgot {
+  &.usa-forgot {
     margin-bottom: 94px;
   }
 
-  .usa-register-init {
+  .usa-alert-heading {
+    line-height: 2.5rem;
+  }
+
+  .usa-alert-static {
+    width: 46rem;
+    max-width: 46rem;
+    top: -6rem;
+    left: 50%;
+    margin-top: -1rem;
+    transform: translateX(-50%);
+  }
+
+  .usa-forgot-init {
+    position: relative;
     width: 460px;
     margin: 0 auto;
-
-    fieldset {
-      margin-top: 2rem;
-    }
 
     button[type="submit"] {
       margin-bottom: 1.2rem;
@@ -38,7 +48,6 @@
   }
 
   fieldset {
-    margin-top: 6rem;
     &.phone,
     &.office {
       label:nth-child(1) {
@@ -65,16 +74,16 @@
     }
   }
 
-  .usa-register {
-    &.usa-register-initial {
+  .usa-forgot {
+    &.usa-forgot-initial {
       display: block;
-      width: 440px;
+      width: 420px;
       max-width: 100%;
       margin: 0 auto;
     }
   }
 
-  .usa-form-register {
+  .usa-form-forgot {
     max-width: 100%;
 
     .usa-button-controls {
@@ -84,7 +93,7 @@
   }
 
   section {
-    width: 380px;
+    //width: 380px;
     margin: 0 auto;
   }
 
@@ -147,11 +156,6 @@
     .email:before {
       content: "\f0e0";
     }
-  }
-
-  .usa-alert {
-    margin-top: 0em;
-    float: right;
   }
 
   .ng-untouched {

@@ -1,18 +1,18 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
-    <span class="usa-register usa-register-initial text-center" #test>
-      <legend class="usa-legend">Thank You.</legend>
+    <span class="usa-forgot usa-forgot-initial text-center">
+      <legend class="usa-legend">Email Sent</legend>
       <div *ngIf="email">We just sent an email to {{ email }}.</div>
 
       <section>
         <legend>Your Next Steps</legend>
         <ul class="steps">
           <li>Check your inbox for an email</li>
-          <li>Click the confirmation link in the email</li>
-          <li>Complete your registration</li>
+          <li>Click the password reset link in the email</li>
+          <li>Reset your password</li>
         </ul>
 
-        <p class="text-center">The confirmation link will remain valid for 48 hours.</p>
+        <p>The password reset link will remain valid for 20 minutes.</p>
 
         <ul class="links">
           <li *ngIf="email" class="email">
@@ -32,5 +32,4 @@
           [description]="states.alert.description"
           [showClose]="true"
           [hidden]="!states.alert.show"
-          [target]
           (dismiss)="dismissAlert()"></samAlert>
