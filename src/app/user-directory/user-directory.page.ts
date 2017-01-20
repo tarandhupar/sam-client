@@ -40,15 +40,7 @@ export class UserDirectoryPage {
         res => {
           this.loadState = 'success';
           let org = Organization.FromResponse(res);
-          this.orgLevels = [];
-          let names = org.ancestorOrganizationNames;
-          let types = org.ancestorOrganizationTypes;
-          for (let i = 0; i < org.ancestorOrganizationNames.length; i++) {
-            if (!names[i] || !types[i]) {
-              return;
-            }
-            this.orgLevels.push({name: names[i], type: types[i]});
-          }
+          this.orgLevels = org.parentOrgsAndSelf;
         },
         error => {
           this.loadState = 'error';
