@@ -77,13 +77,13 @@
       </div>
 
       <div class="usa-form-editable" *ngIf="questions.length">
-        <div *ngFor="let kbaAnswer of detailsForm.controls.kbaAnswerList.controls; let $index = index;">
-          <sam-kba-entry [(questions)]="questions[$index]"
-                         [question]="detailsForm.controls.kbaAnswerList.controls[$index].controls.questionId"
-                         [(answer)]="detailsForm.controls.kbaAnswerList.controls[$index].controls.answer"
-                         (onQuestionChange)="changeQuestion($event, $index)"
-                         label="Question {{ $index + 1 }}"></sam-kba-entry>
-        </div>
+        <sam-kba-entry #kba
+                       *ngFor="let kbaAnswer of detailsForm.controls.kbaAnswerList.controls; let $index = index;"
+                       [(questions)]="questions[$index]"
+                       [question]="detailsForm.controls.kbaAnswerList.controls[$index].controls.questionId"
+                       [(answer)]="detailsForm.controls.kbaAnswerList.controls[$index].controls.answer"
+                       (onQuestionChange)="changeQuestion($event, $index)"
+                       label="Question {{ $index + 1 }}"></sam-kba-entry>
       </div>
 
       <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('kba')"></samButton>

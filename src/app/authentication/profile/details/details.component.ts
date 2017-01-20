@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild } from '@angular/core';
+import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -20,6 +20,7 @@ import { KBA } from '../kba.interface';
 export class DetailsComponent {
   @ViewChild('confirmModal') confirmModal;
   @ViewChild('reconfirmModal') reconfirmModal;
+  @ViewChildren('kba') kbaEntries;
 
   private differ;
   private api = {
@@ -433,13 +434,20 @@ export class DetailsComponent {
 
   isValid(keys: Array<String>) {
     let controls = this.detailsForm.controls,
+        entries = this.kbaEntries.toArray(),
         valid = true,
         key,
         intKey,
         intArrayKey;
 
+    for(intKey = 0; intKey < entries.length; intKey++) {
+      entries[intKey].updateState(true);
+    }
+
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
+
+      controls[key].markAsDirty();
 
       if(controls[key].invalid) {
         valid = false;
@@ -472,6 +480,7 @@ export class DetailsComponent {
       if(key == 'kbaAnswerList') {
         userData[key] = controlValue.map(function(item, intItem) {
           item.answer = item.answer.trim();
+          vm.user.kbaAnswerList[intItem] = item;
           return item;
         });
 
@@ -504,12 +513,14 @@ export class DetailsComponent {
         keys = mappings[groupKey].split('|'),
         valid = this.isValid(keys);
 
-    this.zone.runOutsideAngular(() => {
-      this.saveGroup(keys, () => {
-        this.zone.run(() => {
-          this.states.editable[groupKey] = false;
+    if(valid) {
+      this.zone.runOutsideAngular(() => {
+        this.saveGroup(keys, () => {
+          this.zone.run(() => {
+            this.states.editable[groupKey] = false;
+          });
         });
       });
-    });
+    }
   }
 };
