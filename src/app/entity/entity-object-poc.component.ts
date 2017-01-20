@@ -17,7 +17,7 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 	</div>
 	<div *ngIf="poc.pocUSPhone">
 		<strong>U.S. Phone: </strong>{{poc.pocUSPhone}}
-		<div *ngIf="poc.pocUSPhoneExt"> ext. {{poc.pocUSPhoneExt}}</div>
+		<div class="display-inline" *ngIf="poc.pocUSPhoneExt"> ext. {{poc.pocUSPhoneExt}}</div>
 		<br />
 	</div>
 	<div *ngIf="poc.pocNonUSPhone">
