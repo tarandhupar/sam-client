@@ -120,6 +120,7 @@ export class DetailsComponent {
 
             firstName:       [this.user.firstName, Validators.required],
             initials:        [this.user.initials],
+            middleName:      [this.user.initials],
             lastName:        [this.user.lastName, Validators.required],
 
             suffix:          [this.user.suffix],
@@ -156,12 +157,16 @@ export class DetailsComponent {
 
   ngDoCheck() {
     let vm = this,
-        changes = this.differ.diff(this.user);
+        changes = this.differ.diff(this.user),
+        key;
 
     if(changes) {
-      changes.forEachChangedItem(function(diff) {
+      changes.forEachChangedItem((diff) => {
         if(vm.detailsForm && vm.detailsForm.controls[diff.key]) {
-          vm.detailsForm.controls[diff.key == 'middleName' ? 'intiials' : diff.key].setValue(diff.currentValue);
+          key = diff.key.toString().search(/(middleName|initials)/) > -1 ? 'initials' : diff.key;
+
+          vm.detailsForm.controls[key].setValue(diff.currentValue);
+          vm.user[key] = diff.currentValue;
         }
       });
     }
@@ -265,6 +270,7 @@ export class DetailsComponent {
             email: 'doe.john@gsa.gov',
             suffix: '',
             firstName: 'John',
+            initials: 'J',
             middleName: 'J',
             lastName: 'Doe',
 
@@ -335,7 +341,7 @@ export class DetailsComponent {
   get name():string {
     return [
       this.user.firstName || '',
-      this.user['middleName'] || '',
+      this.user.initials || '',
       this.user.lastName || ''
     ].join(' ').replace(/\s+/g, ' ');
   }
@@ -447,7 +453,10 @@ export class DetailsComponent {
   saveGroup(keys: Array<String>, cb) {
     let vm = this,
         controls = this.detailsForm.controls,
-        userData = {},
+        userData = {
+          fullName: this.name
+        },
+
         key,
         controlValue,
         intKey;
