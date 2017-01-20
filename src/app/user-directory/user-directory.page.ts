@@ -44,7 +44,7 @@ export class UserDirectoryPage {
           let names = org.ancestorOrganizationNames;
           let types = org.ancestorOrganizationTypes;
           for (let i = 0; i < org.ancestorOrganizationNames.length; i++) {
-            if (!name[i] || !types[i]) {
+            if (!names[i] || !types[i]) {
               return;
             }
             this.orgLevels.push({name: names[i], type: types[i]});
