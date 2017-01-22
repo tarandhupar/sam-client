@@ -33,7 +33,6 @@ export class ResetComponent {
   }
 
   private user: User;
-
   public passwordForm: FormGroup;
 
   @ViewChild('passwordEntry') passwordEntry;
@@ -46,29 +45,23 @@ export class ResetComponent {
 
   ngOnInit() {
     this.zone.runOutsideAngular(() => {
-      this.checkSession(() => {
+      this.api.iam.checkSession((user) => {
         this.zone.run(() => {
+          this.user = user;
           this.passwordForm = this.builder.group({
-            email: [''],
+            email: [this.user.email],
             currentPassword: ['', Validators.required],
             newPassword: ['', Validators.required],
           });
         });
+      }, (response) => {
+        this.zone.run(() => {
+          if(!this.api.iam.isDebug()) {
+            this.router.navigate(['/signin']);
+          }
+        });
       });
     });
-  }
-
-  checkSession(cb) {
-    if(this.api.iam.isDebug()) {
-      cb();
-    } else {
-      this.api.iam.checkSession((user) => {
-        this.user = user;
-        cb();
-      }, () => {
-        this.router.navigate(['/signin']);
-      });
-    }
   }
 
   setSubmitted() {

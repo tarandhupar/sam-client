@@ -1,6 +1,14 @@
 .usa-profile-migrations {
-  h3 {
+  > h3 {
     margin-top: 5rem !important;
+  }
+
+  .usa-alerts {
+    position: absolute;
+  }
+
+  .usa-alert-text {
+    max-width: inherit !important;
   }
 
   .button-controls {
@@ -66,6 +74,14 @@
       dd {
         margin-left: 0px;
         line-height: 2;
+      }
+    }
+  }
+
+  .usa-legacy-systems {
+    tr {
+      td {
+        width: (100% / 3);
       }
     }
   }

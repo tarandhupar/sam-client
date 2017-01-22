@@ -14,6 +14,11 @@ const exceptionHandler = function(responseBody) {
   }, responseBody);
 };
 
+const isDebug = function() {
+  let isDebug = (utils.queryparams.debug !== undefined || false);
+  return (utils.isLocal() && isDebug);
+};
+
 let $config = _.extend({}, config.endpoints.iam),
     utils = new utilities({
       localResource: $config.localResource,
@@ -397,8 +402,8 @@ let $import = {
       'CPARS',
     ]).map((source) => {
       return {
-        value: source,
-        text: `${source}.gov`
+        label: `${source}.gov`,
+        value: source
       };
     });
   },
@@ -446,30 +451,34 @@ let $import = {
 
     $success(mock);
 
-    // request
-    //   .get(endpoint)
-    //   .set(headers)
-    //   .end(function(err, response) {
-    //     if(!err) {
-    //       $success(response.body);
-    //     } else {
-    //       $success(response.body);
-    //     }
-    //   });
+    request
+      .get(endpoint)
+      .set(headers)
+      .end(function(err, response) {
+        if(!err) {
+          $success(response.body);
+        } else {
+          if(isDebug()) {
+            $error(mock);
+          } else {
+            $error(response.body);
+          }
+        }
+      });
   },
 
-  create(credentials, $success, $error) {
+  create(system, username, password, $success, $error) {
     let endpoint = utils.getUrl($config.import.roles),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro'),
           'X-Api-Username': 'hassanriaz@gmail.com'
         },
 
-        params = _.merge({
-          'legacySystem':'',
-          'legacyUsername':'',
-          'legacyPassword':''
-        }, credentials);
+        params = {
+          'legacySystem': system,
+          'legacyUsername': username,
+          'legacyPassword': password
+        };
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
@@ -504,6 +513,8 @@ class IAM {
     this.states = {
       auth: false
     };
+
+    this.isDebug = isDebug;
 
     this.user.$base = this;
 
@@ -624,11 +635,6 @@ class IAM {
 
   isLocal() {
     return utils.isLocal();
-  }
-
-  isDebug() {
-    let isDebug = (utils.queryparams.debug !== undefined || false);
-    return (this.isLocal() && isDebug);
   }
 
   getEnvironment() {

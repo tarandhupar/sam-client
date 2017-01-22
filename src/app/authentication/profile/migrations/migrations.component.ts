@@ -8,6 +8,7 @@ import { IAMService } from 'api-kit';
 import { Validators as $Validators } from '../../shared/validators';
 
 import { User } from '../user.interface';
+import * as data from './legacy-systems.json';
 
 @Component({
   templateUrl: './migrations.component.html',
@@ -16,21 +17,61 @@ import { User } from '../user.interface';
   ]
 })
 export class MigrationsComponent {
+  @ViewChild('form') form;
+  @ViewChild('title') title;
+
+  private differ;
   private store = {
+    legacy: [],
+    migrations: [],
     systems: [],
-    migrations: []
+    system: ''
   };
+
+  private states = {
+
+    alert: {
+      type: '',
+      message: '',
+      show: false
+    }
+  }
 
   public migrationForm: FormGroup;
 
   constructor(
     private router: Router,
     private builder: FormBuilder,
+    private differs: KeyValueDiffers,
     private zone: NgZone,
-    private api: IAMService) {}
+    private api: IAMService) {
+    this.differ = differs.find({}).create(null);
+    this.store.legacy = data;
+  }
 
   ngOnInit() {
-    this.initForm();
+    this.zone.runOutsideAngular(() => {
+      this.api.iam.checkSession((user) => {
+        this.zone.run(() => {
+          this.initForm();
+        });
+      }, () => {
+        this.zone.run(() => {
+          this.router.navigate(['/signin']);
+        });
+      });
+    });
+  }
+
+  ngDoCheck() {
+    let changes = this.differ.diff(this.store);
+    if(changes) {
+      changes.forEachChangedItem((diff) => {
+        if(diff.key == 'system') {
+          this.migrationForm.controls[diff.key].setValue(diff.currentValue);
+        }
+      });
+    }
   }
 
   get session() {
@@ -59,7 +100,6 @@ export class MigrationsComponent {
       this.api.iam.import.history((migrations) => {
         this.zone.run(() => {
           this.store.migrations = migrations.map((account) => {
-console.log(account);
             return {
               system: account.sourceLegacySystem.toUpperCase() + '.gov',
               username: account.email,
@@ -69,8 +109,8 @@ console.log(account);
               roles: (account.gsaRAC || mock).map((role, intRole) => {
                 let items = role.split('_');
 
-                items[0] = items[0].replace(/([A-Z])/gi, ' $1');
-                items[1] = items[1].replace(/([A-Z])/gi, ' $1');
+                items[0] = items[0].replace(/([A-Z])/g, ' $1');
+                items[1] = items[1].replace(/([A-Z])/g, ' $1');
 
                 return {
                   role: items[0],
@@ -79,32 +119,27 @@ console.log(account);
               })
             }
           });
-
-          // this.store.migrations.forEach((migration, index) => {
-          //
-          //   this.history.push(this.store.migrations);
-          // });
-console.log(this.store.migrations);
         });
       }, () => {
-        console.warn('Endpoint Unavailable')
-        //TODO
+        this.zone.run(() => {
+          console.warn('Endpoint Unavailable')
+          //TODO
+        });
       })
     });
-
-    this.store.systems = this.api.iam.import.systems();
 
     return data;
   }
 
   initForm() {
     const session = this.session;
-
     this.migrationForm = this.builder.group({
       system: [session.system, Validators.required],
       username: [session.username, Validators.required],
       password: [session.password, Validators.required]
     });
+
+    this.store.system = session.system;
   }
 
   errors(controlName) {
@@ -112,14 +147,40 @@ console.log(this.store.migrations);
         errors = [],
         type;
 
+    controlName = controlName.charAt(0).toUpperCase() + controlName.substring(1, controlName.length);
+
     for(type in control.errors) {
-      errors.push(`${controlName} + is ${type}`)
+      errors.push(`${controlName} is ${type}`)
     }
 
-    return (control.touched && control.dirty) ? errors[0] : '';
+    return ((control.touched && control.dirty) || (this.migrationForm.touched && this.migrationForm.dirty)) ? errors[0] : '';
   }
 
   migrate() {
+    this.migrationForm.markAsTouched();
+    this.migrationForm.markAsDirty();
 
+    this.states.alert.show = false;
+
+    if(this.migrationForm.valid) {
+      let data = this.migrationForm.value;
+
+      this.zone.runOutsideAngular(() => {
+        this.api.iam.import.create(data.system, data.username, data.password, (account) => {
+          this.zone.run(() => {
+            this.store.migrations.push(account);
+            this.states.alert.type = 'success';
+            this.states.alert.message = 'Account Successfully Migrated';
+            this.states.alert.show = true;
+          })
+        }, (error) => {
+          this.zone.run(() => {
+            this.states.alert.type = 'error';
+            this.states.alert.message = error.message;
+            this.states.alert.show = true;
+          });
+        });
+      });
+    }
   }
 };
