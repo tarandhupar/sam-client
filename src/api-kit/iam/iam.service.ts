@@ -49,19 +49,19 @@ export interface User {
 
 @Injectable()
 export class IAMService {
-  private _user: BehaviorSubject<User>;
-  private store = {
-
-  };
+  // private _user: BehaviorSubject<User>;
+  // private store = {
+  //
+  // };
 
   public iam;
 
   constructor() {
+    // this._user = <BehaviorSubject<User>>new BehaviorSubject({});
     this.iam = new ApiService().iam;
-    this._user = <BehaviorSubject<User>>new BehaviorSubject({});
   }
 
-  get user() {
-    return this._user.asObservable();
-  }
+  // get user() {
+  //   return this._user.asObservable();
+  // }
 }

@@ -2,7 +2,6 @@
  * Angular 2 decorators and services
  */
 import { Cookie } from 'ng2-cookies';
-
 import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
