@@ -13,7 +13,7 @@ class RouterStub {
   navigate(url: string) { return url; }
 }
 
-describe('Reports Page', () => {
+fdescribe('Reports Page', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
     providers: [
@@ -26,5 +26,5 @@ describe('Reports Page', () => {
     expect(true).toBe(true);
   }));
 
-  
+
 });
