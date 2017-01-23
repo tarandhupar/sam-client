@@ -48,7 +48,7 @@
           <div class="usa-width-one-fourth" *ngFor="let item of topicsData">
             <div class="usa-width-one-whole">
               <div class="usa-width-one-half topic-div-marginCenter topic-image-link">
-                <a (click)="selectTopic(item)"><img src="src/assets/img/blank_icon.png" [attr.alt]="item.title"></a>
+                <a (click)="selectTopic(item)"><img src="src/assets/img/blank_icon.png" [attr.alt]="item.title" [attr.tabindex]="0" (keyup)="myFunction(event)"></a>
               </div>
             </div>
             <div class="usa-width-one-whole">
