@@ -408,8 +408,8 @@ let $import = {
     });
   },
 
-  history($success, $error) {
-    let endpoint = utils.getUrl($config.import.roles),
+  history(email, $success, $error) {
+    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro'),
           'X-Api-Username': 'hassanriaz@gmail.com'
@@ -449,8 +449,6 @@ let $import = {
       }
     ];
 
-    $success(mock);
-
     request
       .get(endpoint)
       .set(headers)
@@ -468,7 +466,7 @@ let $import = {
   },
 
   create(system, username, password, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles),
+    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, username)),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro'),
           'X-Api-Username': 'hassanriaz@gmail.com'

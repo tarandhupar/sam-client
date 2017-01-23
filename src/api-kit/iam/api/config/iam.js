@@ -45,6 +45,6 @@ export default {
   },
 
   import: {
-    roles: '/import/roles'
+    roles: '/import/{email}/roles'
   }
 };
