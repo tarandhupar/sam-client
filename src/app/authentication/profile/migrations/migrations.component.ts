@@ -29,8 +29,8 @@ export class MigrationsComponent {
   };
 
   private states = {
-
-    alert: {
+    alert: false,
+    confirm: {
       type: '',
       message: '',
       show: false
@@ -50,6 +50,8 @@ export class MigrationsComponent {
   }
 
   ngOnInit() {
+    this.states.alert = true;
+
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
@@ -160,7 +162,7 @@ export class MigrationsComponent {
     this.migrationForm.markAsTouched();
     this.migrationForm.markAsDirty();
 
-    this.states.alert.show = false;
+    this.states.confirm.show = false;
 
     if(this.migrationForm.valid) {
       let data = this.migrationForm.value;
@@ -169,15 +171,15 @@ export class MigrationsComponent {
         this.api.iam.import.create(data.system, data.username, data.password, (account) => {
           this.zone.run(() => {
             this.store.migrations.push(account);
-            this.states.alert.type = 'success';
-            this.states.alert.message = 'Account Successfully Migrated';
-            this.states.alert.show = true;
+            this.states.confirm.type = 'success';
+            this.states.confirm.message = 'Account Successfully Migrated';
+            this.states.confirm.show = true;
           })
         }, (error) => {
           this.zone.run(() => {
-            this.states.alert.type = 'error';
-            this.states.alert.message = error.message;
-            this.states.alert.show = true;
+            this.states.confirm.type = 'error';
+            this.states.confirm.message = error.message;
+            this.states.confirm.show = true;
           });
         });
       });

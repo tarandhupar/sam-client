@@ -135,7 +135,9 @@ export class SamAlertComponent {
         style = {
           position: 'relative',
           top: 0,
-          left: 0
+          left: 0,
+          width: 0,
+          height: 0
         };
 
     /**
@@ -191,16 +193,18 @@ export class SamAlertComponent {
     style.top = offsets.source.y;
     style.left = offsets.source.x;
 
+    style.width = dimensions.source.width;
+    style.height = dimensions.source.height;
     /**
      * Line up the top left corner positions of the alert to the target element
      */
-    style.top += offsets.target.top;
-    style.left += offsets.target.left;
+   style.top += offsets.target.top;
+   style.left += offsets.target.left;
 
     /**
      * Determine placement settings and process position adjustments
      */
-    placement = placement.indexOf(' ') > -1 ? placement : `${placement} center`;
+    placement = placement.indexOf(' ') > -1 ? placement : `${placement}`;
 
     if(placement.search(/(^top)|(top$)/) > -1)
       style.top -= dimensions.source.height;
@@ -210,10 +214,11 @@ export class SamAlertComponent {
       style.left -= dimensions.source.width;
     if(placement.search(/(^right)|(right$)/) > -1)
       style.left += dimensions.target.width;
-    if(placement.search(/^(top|bottom)\scenter$/) > -1)
-      style.left += Math.abs(dimensions.source.width - dimensions.target.width) / 2;
-    if(placement.search(/^(left|right)\scenter$/) > -1)
-      style.top += Math.abs(dimensions.source.height - dimensions.target.height) / 2;
+
+    if(placement.search(/^center (top|bottom|auto)$/) > -1)
+      style.left += (dimensions.target.width / 2) - (dimensions.source.width / 2);
+    if(placement.search(/^(left|right|auto) center$/) > -1)
+      style.top += (dimensions.target.height / 2) - (dimensions.source.height / 2);
 
     // Apply @Input offsets
     style.top += this.offset.top || 0;

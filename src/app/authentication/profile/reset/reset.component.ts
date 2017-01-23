@@ -28,7 +28,7 @@ export class ResetComponent {
       type: 'success',
       title: '',
       message: '',
-      show: true
+      show: false
     }
   }
 
@@ -79,24 +79,23 @@ export class ResetComponent {
   }
 
   reset() {
-    let vm = this,
-        params = this.passwordForm.value;
+    let params = this.passwordForm.value;
 
+    this.states.alert.show = false;
     this.setSubmitted();
 
     if(this.passwordForm.valid) {
       this.zone.runOutsideAngular(() => {
         this.api.iam.user.password.change(params.email, params.currentPassword, params.newPassword, () => {
-          vm.zone.run(() => {
+          this.zone.run(() => {
             this.states.alert.type = 'success';
             this.states.alert.title = 'Password Successfully Reset';
             this.states.alert.show = true;
           });
-        }, (error) => {
-          vm.zone.run(() => {
+        }, (response) => {
+          this.zone.run(() => {
             this.states.alert.type = 'error';
-            this.states.alert.title = 'Password Reset Failed';
-            this.states.alert.message = error.message;
+            this.states.alert.title = response.message;
             this.states.alert.show = true;
           });
         });
