@@ -14,7 +14,7 @@ class RouterStub {
   navigate(url: string) { return url; }
 }
 
-fdescribe('Reports Page', () => {
+describe('Reports Page', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
     providers: [

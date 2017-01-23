@@ -36,15 +36,16 @@ describe("New to Sam.gov page in help page", ()=>{
     });
   });
 
-  // fit("should close image library when click on go back link", ()=>{
-  //   component.showImageLibrary = true;
-  //   fixture.detectChanges();
-  //   fixture.whenStable().then(()=>{
-  //     fixture.nativeElement.querySelector('.fa-arrow-circle-o-left').click();
-  //
-  //     fixture.detectChanges();
-  //     expect(component.showImageLibrary).toBe(false);
-  //   });
-  // });
+  it("should close image library when click on go back link", ()=>{
+    component.showImageLibrary = true;
+    component.openImageLibrary('area1');
+    fixture.detectChanges();
+    fixture.whenStable().then(()=>{
+      fixture.nativeElement.querySelector('.fa-arrow-circle-o-left').click();
+
+      fixture.detectChanges();
+      expect(component.showImageLibrary).toBe(false);
+    });
+  });
 
 });
