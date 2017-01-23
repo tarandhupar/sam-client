@@ -1,5 +1,5 @@
 import { TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-Browser";
+import { By } from "@angular/platform-browser";
 import { Observable } from 'rxjs';
 import { RouterTestingModule } from "@angular/router/testing";
 
