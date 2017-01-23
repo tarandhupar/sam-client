@@ -5,9 +5,9 @@ export default {
   debug: false,
 
   environments: {
-    comp: new RegExp('comp\.276\.iamservicepipelinetwo\.prod', 'gi'),
-    minc: new RegExp('(minc\.276\.iamservicepipelinetwo\.prod)|((minc\.)?(^prodlike\.)sam\.micropaas\.io)', 'gi'),
-    prodlike: new RegExp('(prodlike\.276\.iamservicepipelinetwo\.prod)|(prodlike\.sam\.micropaas\.io)', 'gi')
+    comp: new RegExp('comp\.280\.iamservicepipelinetwo\.prod', 'gi'),
+    minc: new RegExp('(minc\.280\.iamservicepipelinetwo\.prod)|((minc\.)?(^prodlike\.)sam\.micropaas\.io)', 'gi'),
+    prodlike: new RegExp('(prodlike\.280\.iamservicepipelinetwo\.prod)|(prodlike\.sam\.micropaas\.io)', 'gi')
   },
 
   endpoints: {
