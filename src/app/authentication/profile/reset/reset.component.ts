@@ -44,8 +44,6 @@ export class ResetComponent {
     private api: IAMService) {}
 
   ngOnInit() {
-    this.states.alert.show = true;
-
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
@@ -94,10 +92,10 @@ export class ResetComponent {
             this.states.alert.title = 'Password Successfully Reset';
             this.states.alert.show = true;
           });
-        }, (error) => {
+        }, (response) => {
           this.zone.run(() => {
             this.states.alert.type = 'error';
-            this.states.alert.title = error.message;
+            this.states.alert.title = response.message;
             this.states.alert.show = true;
           });
         });
