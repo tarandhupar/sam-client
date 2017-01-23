@@ -36,16 +36,11 @@ export class UserDirectoryPage {
       this.loadState = 'closed';
     } else {
       this.loadState = 'loading';
-      this.fh.getOrganizationById('' + this.orgId, false).subscribe(
+      this.fh.getOrganizationById('' + this.orgId, false, true).subscribe(
         res => {
-          let org = Organization.FromResponse(res);
-          this.orgLevels = [];
-          let names = org.ancestorOrganizationNames;
-          let types = org.ancestorOrganizationTypes;
-          for (let i = 0; i < org.ancestorOrganizationNames.length; i++) {
-            this.orgLevels.push({name: names[i], type: types[i]});
-          }
           this.loadState = 'success';
+          let org = Organization.FromResponse(res);
+          this.orgLevels = org.parentOrgsAndSelf;
         },
         error => {
           this.loadState = 'error';

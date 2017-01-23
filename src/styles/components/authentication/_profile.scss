@@ -1,7 +1,19 @@
 @import './profile/details';
+@import './profile/reset';
+@import './profile/migrations';
 
 .usa-profile {
   position: relative;
+
+  .usa-alert {
+    a {
+      font-weight: 600;
+    }
+  }
+
+  .usa-alert-static {
+    width: 100%;
+  }
 
   h2 {
     margin-top: 2.2em;

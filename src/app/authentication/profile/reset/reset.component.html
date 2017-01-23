@@ -1,0 +1,25 @@
+<h2>Reset Password</h2>
+<div>
+  <form *ngIf="passwordForm" [formGroup]="passwordForm" (ngSubmit)="reset()" class="usa-form-large usa-form-password" autocomplete="off">
+    <fieldset>
+      <sam-password #passwordEntry [currentPassword]="passwordForm.controls.currentPassword" [password]="passwordForm.controls.newPassword"></sam-password>
+    </fieldset>
+    <fieldset>
+      <div class="usa-button-controls">
+        <button type="submit">Submit</button>
+      </div>
+    </fieldset>
+  </form>
+</div>
+
+<samAlert [type]="states.alert.type"
+          [title]="states.alert.title"
+          [hidden]="!states.alert.show"
+          [target]="passwordEntry"
+          placement="bottom right"
+          showClose="true"></samAlert>
+
+<samAlert class="usa-alert-static" type="info" title="Migrate Your Roles">
+  If you have a user account at any of the <a [href]="config.alert.sites">websites</a> that are moving to the new SAM.gov,
+  you may migrate your roles and keep your same permissions. <a [href]="config.alert.migrate">Begin Now</a>.
+</samAlert>
