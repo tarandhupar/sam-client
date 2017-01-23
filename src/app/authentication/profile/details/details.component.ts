@@ -459,8 +459,7 @@ export class DetailsComponent {
   }
 
   saveGroup(keys: Array<String>, cb) {
-    let vm = this,
-        controls = this.detailsForm.controls,
+    let controls = this.detailsForm.controls,
         userData = {
           fullName: this.name
         },
@@ -478,9 +477,10 @@ export class DetailsComponent {
       }
 
       if(key == 'kbaAnswerList') {
-        userData[key] = controlValue.map(function(item, intItem) {
+        userData[key] = controlValue.map((item, intItem) => {
           item.answer = item.answer.trim();
-          vm.user.kbaAnswerList[intItem] = item;
+          this.user.kbaAnswerList[intItem] = item;
+          this.user.kbaAnswerList[intItem].answer = item.answer.replace(/./g, '&bull;');
           return item;
         });
 
