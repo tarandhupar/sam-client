@@ -1,11 +1,11 @@
 <div class="usa-alerts">
-  <samAlert [type]="states.alert.type"
-            [title]="states.alert.message"
+  <samAlert [type]="states.confirm.type"
+            [title]="states.confirm.message"
             [target]="form"
-            [(hidden)]="!states.alert.show"
+            [(hidden)]="!states.confirm.show"
             showClose="true"
             placement='bottom center'></samAlert>
-  <samAlert [target]="form" [offset]="{ top: -100, left: 0 }" type="info" placement="top" title="Migrate Your Roles">
+  <samAlert target="body" type="info" placement="center auto" [offset]="{ top: 53, left: 130 }" title="Migrate Your Roles" [hidden]="!states.alert">
     If you have a user account at any of the <a [routerLink]="migrations" fragment="legacy-sites">web sites</a> that are moving to the new SAM.gov,
     you may migrate your roles and keep your same permissions. <a [routerLink]="migrations">Begin Now</a>
   </samAlert>

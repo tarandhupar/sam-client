@@ -28,7 +28,7 @@ export class ResetComponent {
       type: 'success',
       title: '',
       message: '',
-      show: true
+      show: false
     }
   }
 
@@ -44,6 +44,8 @@ export class ResetComponent {
     private api: IAMService) {}
 
   ngOnInit() {
+    this.states.alert.show = true;
+
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
