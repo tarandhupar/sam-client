@@ -37,6 +37,8 @@ export class MigrationsComponent {
     }
   }
 
+  private email = '';
+
   public migrationForm: FormGroup;
 
   constructor(
@@ -55,6 +57,7 @@ export class MigrationsComponent {
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
+          this.email = user.email;
           this.initForm();
         });
       }, () => {
@@ -99,7 +102,7 @@ export class MigrationsComponent {
     ];
 
     this.zone.runOutsideAngular(() => {
-      this.api.iam.import.history((migrations) => {
+      this.api.iam.import.history(this.email, (migrations) => {
         this.zone.run(() => {
           this.store.migrations = migrations.map((account) => {
             return {
