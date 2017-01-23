@@ -27,7 +27,7 @@ describe('OrganizationTypeCodePipe', () => {
     };
 
     let result2 = {
-      label: 'Old FPDS Code:',
+      label: 'FPDS Code (Old):',
       value: '-'
     };
 

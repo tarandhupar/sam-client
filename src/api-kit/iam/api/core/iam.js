@@ -14,6 +14,11 @@ const exceptionHandler = function(responseBody) {
   }, responseBody);
 };
 
+const isDebug = function() {
+  let isDebug = (utils.queryparams.debug !== undefined || false);
+  return (utils.isLocal() && isDebug);
+};
+
 let $config = _.extend({}, config.endpoints.iam),
     utils = new utilities({
       localResource: $config.localResource,
@@ -385,21 +390,129 @@ user.cac = {
   }
 };
 
+let $import = {
+  systems() {
+    return ([
+      'SAM',
+      'FPDS',
+      'CFDA',
+      'eSRS/FSRS',
+      'FBO',
+      'PPIRS',
+      'CPARS',
+    ]).map((source) => {
+      return {
+        label: `${source}.gov`,
+        value: source
+      };
+    });
+  },
+
+  history(email, $success, $error) {
+    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+        headers = {
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro'),
+          'X-Api-Username': 'hassanriaz@gmail.com'
+        },
+
+        mock = [];
+
+    $success = ($success || function(response) {});
+    $error = ($error || function(error) {});
+
+    mock = [
+      {
+        "id": 300001,
+        "email": "rhonda@nostra.gov",
+        "legacyPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+        "phone": "hassanriaz@gmail.com",
+        "sourceLegacySystem": "DoD",
+        "importTimestamp": 1482438998453,
+        "orgKey": 100000000,
+        "loginAttempts": 0,
+        "claimedTimestamp": 1484930796371,
+        "fullName": "Kuame Sanford",
+        "claimed": true
+      },
+      {
+        "id": 300358,
+        "email": "ina@iaculis.us",
+        "legacyPassword": "579356b2d3267d2eaa93b741e17c997a",
+        "phone": "hassanriaz@gmail.com",
+        "sourceLegacySystem": "DoD",
+        "importTimestamp": 1482438998465,
+        "orgKey": 100000357,
+        "loginAttempts": 0,
+        "claimedTimestamp": 1484930761579,
+        "fullName": "Violet Barlow",
+        "claimed": true
+      }
+    ];
+
+    request
+      .get(endpoint)
+      .set(headers)
+      .end(function(err, response) {
+        if(!err) {
+          $success(response.body);
+        } else {
+          if(isDebug()) {
+            $error(mock);
+          } else {
+            $error(response.body);
+          }
+        }
+      });
+  },
+
+  create(system, username, password, $success, $error) {
+    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, username)),
+        headers = {
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro'),
+          'X-Api-Username': 'hassanriaz@gmail.com'
+        },
+
+        params = {
+          'legacySystem': system,
+          'legacyUsername': username,
+          'legacyPassword': password
+        };
+
+    $success = ($success || function(response) {});
+    $error = ($error || function(error) {});
+
+    request
+      .post(endpoint)
+      .set(headers)
+      .send(params)
+      .end(function(err, response) {
+        if(!err) {
+          $success(response.body);
+        } else {
+          $success(response.body);
+        }
+      });
+  }
+};
+
 /**
- * [Component] IAM Class
+ * IAM API Class
  */
 class IAM {
   constructor($api) {
     _.extend(this, utils, {
       config: config,
       user: user,
-      kba: kba
+      kba: kba,
+      import: $import
     });
 
     this.debug = false;
     this.states = {
       auth: false
     };
+
+    this.isDebug = isDebug;
 
     this.user.$base = this;
 
@@ -520,11 +633,6 @@ class IAM {
 
   isLocal() {
     return utils.isLocal();
-  }
-
-  isDebug() {
-    let isDebug = (utils.queryparams.debug !== undefined || false);
-    return (this.isLocal() && isDebug);
   }
 
   getEnvironment() {

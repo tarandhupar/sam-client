@@ -59,8 +59,7 @@ export class SamTimeComponent implements OnInit, OnChanges {
     let minutes = m.minutes();
 
     // convert from 24 hour to 12 hour time
-
-    if (hours > 12) {
+    if (hours > 11) {
       this.amPm = 'pm';
       hours -= 12;
     } else {

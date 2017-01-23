@@ -76,6 +76,8 @@ export class KBAComponent implements OnChanges {
 
   changeQuestion($value) {
     this.question.setValue($value);
+    this.answer.setValue('');
+
     this.onQuestionChange.emit($value);
     this.updateState(null);
   }

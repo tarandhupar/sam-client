@@ -34,7 +34,10 @@
 @import 'components/image-library';
 @import 'components/tabs';
 @import 'components/modal';
+@import 'components/alphabet-selector';
 
+@import 'pages/entity-object-view';
+@import 'pages/exclusion';
 @import 'pages/assistance-listing';
 @import 'pages/help';
 @import 'pages/home';
@@ -107,4 +110,5 @@ h2{
 
 .sidenav-logo {
   width:160px;
+  height: 160px;
 }

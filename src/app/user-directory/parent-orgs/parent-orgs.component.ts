@@ -8,7 +8,7 @@ import {Component, Input} from '@angular/core';
       <label class="org-level-label text-right">{{level.type}}</label>
     </div>
     <div class="usa-width-three-fourths">
-      <span>{{level.name}}</span>  
+      <a [routerLink]="['/organization', level.id]">{{level.name}}</a>  
     </div>
   </div>
   `
