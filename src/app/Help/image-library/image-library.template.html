@@ -1,9 +1,9 @@
-<div class="image-library">
-  <div class="usa-width-one-whole relative" [ngClass]="getImageContainerClass()">
+<div class="image-library" *ngFor="let row of data; let i = index">
+  <div class="usa-width-one-whole relative m_T-4x" [ngClass]="getImageContainerClass()">
     <div class="usa-width-one-whole">
-      <div class="usa-width-one-third" *ngFor="let item of data; let i= index">
-        <div class="usa-width-three-fourths image-library-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,$event)" [ngClass]="getBorderClass(i)">
-          <div *ngIf="hasLayer" [id]="name+'-div-'+i" [ngClass]="getLayerClass(i)" class="reference-image-layer-unselect" (click)="selectDetail(item,$event)">
+      <div class="usa-width-one-third" *ngFor="let item of row; let j = index">
+        <div class="usa-width-three-fourths image-library-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,$event)" [ngClass]="getBorderClass(i, j)">
+          <div *ngIf="hasLayer" [id]="name+'-div-'+i" [ngClass]="getLayerClass(i, j)" class="reference-image-layer-unselect" (click)="selectDetail(item,$event)">
             <span [id]="name+'-link-'+i" class="image-library-title" (click)="selectDetail(item,$event)">{{item.title}}</span>
           </div>
           <span class="image-library-toggle" (click)="selectDetail(item,$event)">
@@ -15,12 +15,12 @@
     </div>
     <!--Triangle div to point out which topic detail is currently showing-->
     <div class="usa-width-one-whole tri-div">
-      <div *ngFor="let item of data; let i = index" class="usa-width-one-third" [ngClass]="getTriClass(i)"></div>
+      <div *ngFor="let item of row; let j = index" class="usa-width-one-third" [ngClass]="getTriClass(i, j)"></div>
     </div>
   </div>
 
 
-  <div class="usa-width-one-whole relative" *ngIf = "detailObj.showDetail">
+  <div class="usa-width-one-whole relative" *ngIf = "toggleDetail(i)">
     <div class="relative black-border" [ngClass]="{'detail-div':!largeScreen(),'detail-div-large':largeScreen()}">
       <div class="usa-width-one-whole relative">
 
