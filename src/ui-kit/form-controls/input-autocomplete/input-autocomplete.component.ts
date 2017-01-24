@@ -129,6 +129,9 @@ export class InputAutocompleteComponent implements OnInit {
     else if (this.autoCompleteToggle && evt['keyCode'] == 13){
       if(this.autoComplete[this.autocompleteIndex]){
         this.autocompleteSelection(this.autoComplete[this.autocompleteIndex]);
+        this.keyEnterEmit.emit();
+      } else {
+        this.keyEnterEmit.emit();
       }
       this.resetAutocomplete();
     }
