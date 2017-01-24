@@ -1,14 +1,14 @@
 export default {
   localResource: {
-    comp:     'http://comp.276.iamservicepipelinetwo.prod',
-    minc:     'http://minc.276.iamservicepipelinetwo.prod',
-    prodlike: 'http://prodlike.276.iamservicepipelinetwo.prod'
+    comp:     'http://csp-api.sam.gov/comp/iam',
+    minc:     'https://csp-api.sam.gov/minc/iam',
+    prodlike: 'https://csp-api.sam.gov/prodlike/iam'
   },
 
   remoteResource: {
-    comp:     'http://comp.276.iamservicepipelinetwo.prod',
-    minc:     'http://minc.276.iamservicepipelinetwo.prod',
-    prodlike: 'http://prodlike.276.iamservicepipelinetwo.prod'
+    comp:     'http://csp-api.sam.gov/comp/iam',
+    minc:     'https://csp-api.sam.gov/minc/iam',
+    prodlike: 'https://csp-api.sam.gov/prodlike/iam'
   },
 
   cookies: {
