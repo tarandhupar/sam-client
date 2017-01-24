@@ -65,7 +65,6 @@ export class InputAutocompleteComponent implements OnInit {
 
   runAutocomplete(){
     if(this.searchTerm){
-      this.autoComplete.length = 0;
       this.autocompleteEnd = false;
       this.autocompletePage = 0;
       var data = {
@@ -195,6 +194,7 @@ export class InputAutocompleteComponent implements OnInit {
     this.autoCompleteWrapper.search(data, this.serviceName).subscribe( res => {
       //console.log(res);
       if(res){
+        this.autoComplete.length = 0;
         this.autocompleteData = res;
       }
       if(this.autocompleteData.length>0){
@@ -211,6 +211,8 @@ export class InputAutocompleteComponent implements OnInit {
         this.showAutocompleteMsg = true;
         this.autocompleteMsg = "No matches found";
       }
+    }, error => {
+      this.autoComplete.length = 0;
     });
   }
 
