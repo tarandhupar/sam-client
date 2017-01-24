@@ -1,5 +1,5 @@
+import { Injectable, NgZone } from '@angular/core';
 import { IAMService } from 'api-kit';
-import { Injectable } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
   CanActivate,
@@ -18,19 +18,16 @@ export class ProfileGuard implements CanActivate, CanActivateChild {
     query: {}
   };
 
-  constructor(private router: Router, private _api: IAMService) {
+  constructor(private router: Router, private zone: NgZone, private _api: IAMService) {
     this.api = _api.iam;
-    console.log(this.states);
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let url = state.url;
 
-    this.states.route = this.router.url;
+    this.states.route = state.url;
     this.states.params = route.params;
     this.states.query = route.queryParams;
-
-console.log(this.states);
 
     return this.verifyRoute();
   }
@@ -40,6 +37,17 @@ console.log(this.states);
   }
 
   verifyRoute() {
+    switch(this.states.route) {
+      case '/signout':
+        this.signout();
+        break;
+    }
+
     return true;
+  }
+
+  signout() {
+    this.api.logout(false);
+    this.router.navigate(['/signin']);
   }
 }
