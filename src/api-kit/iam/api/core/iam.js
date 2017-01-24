@@ -127,7 +127,7 @@ user.registration = {
     let endpoint = [
       utils.getUrl($config.registration.init.replace(/\{email\}/g, email)),
       Date.now().toString()
-    ].join('?');
+    ].join('&');
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
