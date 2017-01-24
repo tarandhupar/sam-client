@@ -12,7 +12,7 @@ import Moment = moment.Moment;
     	  <span *ngIf="data.isActive<0" class="usa-label">INACTIVE</span>
     	</p>
     	<h3 class="entity-title">
-      	<a *ngIf="data.isActive>=0" href="/">{{ data.name }}</a>
+      	<a *ngIf="data.isActive>=0" [routerLink]="['/entity', data.dunsNumber]">{{ data.name }}</a>
       	<span *ngIf="data.isActive<0">{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">

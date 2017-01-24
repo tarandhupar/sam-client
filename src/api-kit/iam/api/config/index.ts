@@ -5,13 +5,9 @@ export default {
   debug: false,
 
   environments: {
-    comp: new RegExp('(iam|clp-unified)\.comp\.micropaas\.io', 'gi'),
-    minc: [
-      new RegExp('(iam|clp-unified)\.minc\.micropaas\.io', 'gi'),
-      new RegExp('minc\.clp-unified\.micropaas\.io', 'gi')
-    ],
-
-    prodlike: new RegExp('(iam|clp-unified)\.prodlike\.micropaas\.io', 'gi')
+    comp: new RegExp('comp\.280\.samfrontendpipelinetwo\.prod', 'gi'),
+    minc: new RegExp('(minc\.280\.samfrontendpipelinetwo\.prod)|((minc\.)?(^prodlike\.)sam\.micropaas\.io)', 'gi'),
+    prodlike: new RegExp('(prodlike\.280\.samfrontendpipelinetwo\.prod)|(prodlike\.sam\.micropaas\.io)', 'gi')
   },
 
   endpoints: {

@@ -201,8 +201,8 @@ module.exports = {
 
       /// Sass Loader
       {
-        //test: /styles\/all\.scss/,
-        test: new RegExp(path.join('src', 'styles', 'all.scss')),
+        // [\\\/] is a platform independent path seperator
+        test: /src[\\\/]styles[\\\/]all\.scss/,
         exclude: /node_modules/,
         loader: ExtractTextPlugin.extract("style","css?sourceMap!sass?sourceMap")
       },
