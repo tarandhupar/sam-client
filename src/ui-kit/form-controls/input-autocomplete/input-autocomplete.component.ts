@@ -127,16 +127,20 @@ export class InputAutocompleteComponent implements OnInit {
     }
     //enter
     else if (this.autoCompleteToggle && evt['keyCode'] == 13){
-      if(this.autoComplete[this.autocompleteIndex]){
-        this.autocompleteSelection(this.autoComplete[this.autocompleteIndex]);
-        this.keyEnterEmit.emit();
-      } else {
-        this.keyEnterEmit.emit();
-      }
+      this.triggerSearch();
       this.resetAutocomplete();
     }
     //enter
     else if (!this.autoCompleteToggle && evt['keyCode'] == 13){
+      this.keyEnterEmit.emit();
+    }
+  }
+
+  triggerSearch() {
+    if(this.autoComplete[this.autocompleteIndex]){
+      this.autocompleteSelection(this.autoComplete[this.autocompleteIndex]);
+      this.keyEnterEmit.emit();
+    } else {
       this.keyEnterEmit.emit();
     }
   }
