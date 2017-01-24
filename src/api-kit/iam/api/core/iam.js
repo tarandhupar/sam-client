@@ -409,7 +409,7 @@ let $import = {
   },
 
   history(email, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+    let endpoint = utils.getUrl($config.import.history.replace(/\{email\}/g, email)),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
@@ -473,7 +473,7 @@ let $import = {
   },
 
   create(email, system, username, password, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+    let endpoint = utils.getUrl($config.import.roles),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
@@ -481,7 +481,8 @@ let $import = {
         params = {
           'legacySystem': system,
           'legacyUsername': username,
-          'legacyPassword': password
+          'legacyPassword': password,
+          'currentUser': email
         };
 
     $success = ($success || function(response) {});
