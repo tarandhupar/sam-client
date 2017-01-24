@@ -16,6 +16,8 @@ export class ImageLibraryComponent {
 
   detailObj: any = {
     showDetail: false,
+    posX: -1,
+    posY: -1,
     item: {}
   };
 
@@ -42,26 +44,27 @@ export class ImageLibraryComponent {
   }
 
 
-  selectDetail(item, event){
-    if(this.detailObj.item.title === item.title){
+  selectDetail(i, j, event){
+    if(this.isCurrent(i,j) && this.detailObj.showDetail){
       this.detailObj.showDetail = false;
-      this.detailObj.item = {};
     }else{
       this.detailObj.showDetail = true;
-      this.detailObj.item = item;
+      this.detailObj.posX = i;
+      this.detailObj.posY = j;
+      this.detailObj.item = this.data[this.detailObj.posX][this.detailObj.posY];
     }
     event.stopPropagation();
   }
 
-  private getItemClass(item){
-    if(this.detailObj.item.title !== item.title){
-      return "fa-plus";
+  private getItemClass(i, j){
+    if(this.isCurrent(i,j) && this.detailObj.showDetail){
+      return "fa-minus";
     }
-    return "fa-minus";
+    return "fa-plus";
   }
 
   private getTriClass(i, j): string{
-    if(this.detailObj.item.title === this.data[i][j].title){
+    if(this.isCurrent(i ,j) && this.detailObj.showDetail){
       return "tri-down";
     }
     return "no-tri-down";
@@ -73,14 +76,14 @@ export class ImageLibraryComponent {
   }
 
   private getLayerClass(i, j): string{
-    if(this.detailObj.item.title === this.data[i][j].title){
+    if(this.isCurrent(i ,j) && this.detailObj.showDetail){
       return "image-filter-layer-select";
     }
     return "image-filter-layer-unselect";
   }
 
   private getBorderClass(i, j): string{
-    if(this.detailObj.item.title === this.data[i][j].title){
+    if(this.isCurrent(i ,j) && this.detailObj.showDetail){
       return "item-border-select";
     }
     return "item-border-unselect";
@@ -103,16 +106,11 @@ export class ImageLibraryComponent {
   }
 
   private toggleDetail(i): boolean{
-    if(!this.detailObj.showDetail){
-      return false;
-    }
+    return this.detailObj.showDetail && this.detailObj.posX === i;
+  }
 
-    for(let item of this.data[i]){
-      if(item.title === this.detailObj.item.title){
-        return true;
-      }
-    }
-    return false;
+  private isCurrent(i,j):boolean{
+    return i === this.detailObj.posX && j === this.detailObj.posY;
   }
 
   @HostListener('window:resize', ['$event'])

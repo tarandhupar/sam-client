@@ -2,14 +2,14 @@
   <div class="usa-width-one-whole relative m_T-4x" [ngClass]="getImageContainerClass()">
     <div class="usa-width-one-whole">
       <div class="usa-width-one-third" *ngFor="let item of row; let j = index">
-        <div class="usa-width-three-fourths image-library-wrap relative" tabindex="0" (keyup.enter)="selectDetail(item,$event)" [ngClass]="getBorderClass(i, j)">
-          <div *ngIf="hasLayer" [id]="name+'-'+item.title.split(' ').join('-')+'-div'" [ngClass]="getLayerClass(i, j)" class="reference-image-layer-unselect" (click)="selectDetail(item,$event)">
-            <span [id]="name+'-'+item.title.split(' ').join('-')+'-link'" class="image-library-title" (click)="selectDetail(item,$event)">{{item.title}}</span>
+        <div class="usa-width-three-fourths image-library-wrap relative" tabindex="0" (keyup.enter)="selectDetail(i,j,$event)" [ngClass]="getBorderClass(i, j)">
+          <div *ngIf="hasLayer" [id]="name+'-'+item.title.split(' ').join('-')+'-div'" [ngClass]="getLayerClass(i, j)" class="reference-image-layer-unselect" (click)="selectDetail(i,j,$event)">
+            <span [id]="name+'-'+item.title.split(' ').join('-')+'-link'" class="image-library-title" (click)="selectDetail(i,j,$event)">{{item.title}}</span>
           </div>
-          <span class="image-library-toggle" (click)="selectDetail(item,$event)">
-            <i [id]="name+'-'+item.title.split(' ').join('-')+'-icon'" class="fa fa-plus" [ngClass]="getItemClass(item)"></i>
+          <span class="image-library-toggle" (click)="selectDetail(i,j,$event)">
+            <i [id]="name+'-'+item.title.split(' ').join('-')+'-icon'" class="fa fa-plus" [ngClass]="getItemClass(i,j)"></i>
           </span>
-          <div class="image-div" (click)="selectDetail(item,$event)"><img class="image-align-center" [src]="item.img" alt="{{item.title}}"></div>
+          <div class="image-div" (click)="selectDetail(i,j,$event)"><img class="image-align-center" [src]="item.img" alt="{{item.title}}"></div>
         </div>
       </div>
     </div>
