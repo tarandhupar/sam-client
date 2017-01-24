@@ -1,12 +1,12 @@
 export default {
   localResource: {
-    comp:     'http://csp-api.sam.gov/comp/iam',
+    comp:     'https://csp-api.sam.gov/comp/iam',
     minc:     'https://csp-api.sam.gov/minc/iam',
     prodlike: 'https://csp-api.sam.gov/prodlike/iam'
   },
 
   remoteResource: {
-    comp:     'http://csp-api.sam.gov/comp/iam',
+    comp:     'https://csp-api.sam.gov/comp/iam',
     minc:     'https://csp-api.sam.gov/minc/iam',
     prodlike: 'https://csp-api.sam.gov/prodlike/iam'
   },
