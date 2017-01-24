@@ -127,20 +127,15 @@ export class InputAutocompleteComponent implements OnInit {
     }
     //enter
     else if (this.autoCompleteToggle && evt['keyCode'] == 13){
-      this.triggerSearch();
+      if(this.autoComplete[this.autocompleteIndex]){
+        this.autocompleteSelection(this.autoComplete[this.autocompleteIndex]);
+      } else {
+        this.keyEnterEmit.emit();
+      }
       this.resetAutocomplete();
     }
     //enter
     else if (!this.autoCompleteToggle && evt['keyCode'] == 13){
-      this.keyEnterEmit.emit();
-    }
-  }
-
-  triggerSearch() {
-    if(this.autoComplete[this.autocompleteIndex]){
-      this.autocompleteSelection(this.autoComplete[this.autocompleteIndex]);
-      this.keyEnterEmit.emit();
-    } else {
       this.keyEnterEmit.emit();
     }
   }
@@ -161,6 +156,7 @@ export class InputAutocompleteComponent implements OnInit {
     //this.emitAutoselect();
     //this.searchTermChange(this.searchTerm);
     this.searchTermEmit.emit(this.searchTerm);
+    this.keyEnterEmit.emit();
   }
 
   searchTermChange(event){
