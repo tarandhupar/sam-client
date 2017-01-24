@@ -20,6 +20,7 @@ export class ProfileGuard implements CanActivate, CanActivateChild {
 
   constructor(private router: Router, private _api: IAMService) {
     this.api = _api.iam;
+    console.log(this.states);
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
@@ -28,6 +29,8 @@ export class ProfileGuard implements CanActivate, CanActivateChild {
     this.states.route = this.router.url;
     this.states.params = route.params;
     this.states.query = route.queryParams;
+
+console.log(this.states);
 
     return this.verifyRoute();
   }
