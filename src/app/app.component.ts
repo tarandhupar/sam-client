@@ -1,7 +1,7 @@
 /*
  * Angular 2 decorators and services
  */
-import { CookieService } from'angular2-cookie/services/cookies.service';
+import { Cookie } from 'ng2-cookies';
 import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
@@ -24,9 +24,7 @@ export class App{
 
   showOverlay = false;
 
-  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService, private cookieService: CookieService) {
-
-  }
+  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
 
   ngOnInit() {
     this.searchService.paramsUpdated$.subscribe(
@@ -71,8 +69,8 @@ export class App{
       queryParams: qsobj
     };
 
-    this.cookieService.remove("term");
-    this.cookieService.remove("ival");
+    Cookie.delete("term");
+    Cookie.delete("ival");
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
@@ -88,14 +86,14 @@ export class App{
   }
 
   setCookie(data) {
-    this.cookieService.remove("term");
-    this.cookieService.remove("ival");
-    this.cookieService.put("term", data['keyword']);
-    this.cookieService.put("ival", data['index']);
+    Cookie.delete("term");
+    Cookie.delete("ival");
+    Cookie.set("term", data['keyword']);
+    Cookie.set("ival", data['index']);
   }
 
   checkCookie() {
-    let cookielist = this.cookieService.getAll();
+    let cookielist = Cookie.getAll();
     if(cookielist['term'] && cookielist['term'].length>0) {
       this.keyword = cookielist['term'];
     }

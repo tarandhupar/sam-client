@@ -1,0 +1,16 @@
+<section class="usa-grid-full">
+<br><br><br>
+
+  <h2 class="m_T-2x">{{name}}</h2>
+
+{{desc}}
+  
+
+<br><br>
+<iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="1024"></iframe>
+  
+<br>
+    <samAccordion>
+      <samAccordionSection [name]="'Appendix'" [headerText]="'Appendix'">{{desc}}</samAccordionSection>
+    </samAccordion>  
+</section>

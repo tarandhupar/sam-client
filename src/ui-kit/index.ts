@@ -22,3 +22,5 @@ export { SamDateTimeComponent } from "./form-controls/date-time/date-time.compon
 export { SamDateComponent } from "./form-controls/date/date.component";
 export { SamTimeComponent } from "./form-controls/time/time.component";
 export { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
+export { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
+export { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";

@@ -12,6 +12,10 @@ export class ProfileComponent {
   constructor(private router: Router) {}
 
   ngOnInit() {
+    this.router.events.subscribe((location) => {
+      this.states.route = location.url;
+    });
+
     this.states.route = this.router.url;
   }
 

@@ -14,6 +14,11 @@ const exceptionHandler = function(responseBody) {
   }, responseBody);
 };
 
+const isDebug = function() {
+  let isDebug = (utils.queryparams.debug !== undefined || false);
+  return (utils.isLocal() && isDebug);
+};
+
 let $config = _.extend({}, config.endpoints.iam),
     utils = new utilities({
       localResource: $config.localResource,
@@ -40,10 +45,10 @@ let user = {
           $success(user);
         }, function(response) {
           core.$base.removeSession();
-          $error();
+          $error(exceptionHandler(response.body));
         });
     } else {
-      $error();
+      $error({ message: 'No user active user session.' });
     }
   },
 
@@ -109,7 +114,7 @@ let user = {
       .then(function(response) {
         $success(response);
       }, function(response) {
-        $error(response);
+        $error(exceptionHandler(response.body));
       });
   }
 };
@@ -385,21 +390,135 @@ user.cac = {
   }
 };
 
+let $import = {
+  systems() {
+    return ([
+      'SAM',
+      'FPDS',
+      'CFDA',
+      'eSRS/FSRS',
+      'FBO',
+      'PPIRS',
+      'CPARS',
+    ]).map((source) => {
+      return {
+        label: `${source}.gov`,
+        value: source
+      };
+    });
+  },
+
+  history(email, $success, $error) {
+    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+        headers = {
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
+        },
+
+        mock = [];
+
+    $success = ($success || function(response) {});
+    $error = ($error || function(error) {});
+
+    mock = [
+      {
+        "id": 300001,
+        "email": "rhonda@nostra.gov",
+        "legacyPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+        "phone": "hassanriaz@gmail.com",
+        "sourceLegacySystem": "DoD",
+        "importTimestamp": 1482438998453,
+        "orgKey": 100000000,
+        "loginAttempts": 0,
+        "claimedTimestamp": 1484930796371,
+        "fullName": "Kuame Sanford",
+        "claimed": true
+      },
+      {
+        "id": 300358,
+        "email": "ina@iaculis.us",
+        "legacyPassword": "579356b2d3267d2eaa93b741e17c997a",
+        "phone": "hassanriaz@gmail.com",
+        "sourceLegacySystem": "DoD",
+        "importTimestamp": 1482438998465,
+        "orgKey": 100000357,
+        "loginAttempts": 0,
+        "claimedTimestamp": 1484930761579,
+        "fullName": "Violet Barlow",
+        "claimed": true
+      }
+    ];
+
+    request
+      .get(endpoint)
+      .set(headers)
+      .end(function(err, response) {
+        let accounts = [];
+        if(!err) {
+          accounts = response.body;
+
+          accounts = accounts.map((account) => {
+            account.role = account.role || [];
+            return account;
+          });
+
+          $success(response.body);
+        } else {
+          if(isDebug()) {
+            $error(mock);
+          } else {
+            $error(exceptionHandler(response));
+          }
+        }
+      });
+  },
+
+  create(email, system, username, password, $success, $error) {
+    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+        headers = {
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
+        },
+
+        params = {
+          'legacySystem': system,
+          'legacyUsername': username,
+          'legacyPassword': password
+        };
+
+    $success = ($success || function(response) {});
+    $error = ($error || function(error) {});
+
+    request
+      .post(endpoint)
+      .set(headers)
+      .send(params)
+      .end(function(err, response) {
+        if(!err) {
+          $success(response.body);
+        } else {
+          $success(response.body);
+        }
+      });
+  }
+};
+
 /**
- * [Component] IAM Class
+ * IAM API Class
  */
 class IAM {
   constructor($api) {
     _.extend(this, utils, {
       config: config,
       user: user,
-      kba: kba
+      kba: kba,
+      import: $import
     });
 
     this.debug = false;
     this.states = {
       auth: false
     };
+
+    this.isDebug = isDebug;
 
     this.user.$base = this;
 
@@ -413,18 +532,16 @@ class IAM {
   }
 
   checkSession($success, $error) {
-    let iam = this;
-
     $success = $success || function(data) {};
     $error = $error || function(data) {};
 
-    this.user.get(function(user) {
-      iam.states.auth = true;
-      iam.states.user = user;
-      $success(iam.states.user);
-    }, function() {
-      iam.states.auth = false;
-      $error();
+    this.user.get((user) => {
+      this.states.auth = true;
+      this.states.user = user;
+      $success(this.states.user);
+    }, (error) => {
+      this.states.auth = false;
+      $error(error);
     });
   }
 
@@ -455,8 +572,7 @@ class IAM {
   }
 
   loginOTP(credentials, $success, $error) {
-    let api = this,
-        endpoint = utils.getUrl($config.session),
+    let endpoint = utils.getUrl($config.session),
         token,
         data = _.extend(this.getStageData(), credentials);
 
@@ -466,27 +582,24 @@ class IAM {
     request
       .post(endpoint)
       .send(data)
-      .then(function(response) {
+      .then((response) => {
         let data = response.body.authnResponse;
 
         if(_.isUndefined(data.tokenId)) {
-          api.auth.authId = data['authId'];
-          api.auth.stage = data['stage'];
+          this.auth.authId = data['authId'];
+          this.auth.stage = data['stage'];
           $success();
         } else {
-          api.auth.authId = false;
-          api.auth.stage = false;
+          this.auth.authId = false;
+          this.auth.stage = false;
           Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
 
-          api.checkSession(function(user) {
+          this.checkSession((user) => {
             $success(user);
           });
         }
-      }, function(response) {
-        let data = response.response.body,
-            error = data.message;
-
-        $error(error);
+      }, (response) => {
+        $error(exceptionHandler(response));
       });
   }
 
@@ -520,11 +633,6 @@ class IAM {
 
   isLocal() {
     return utils.isLocal();
-  }
-
-  isDebug() {
-    let isDebug = (utils.queryparams.debug !== undefined || false);
-    return (this.isLocal() && isDebug);
   }
 
   getEnvironment() {

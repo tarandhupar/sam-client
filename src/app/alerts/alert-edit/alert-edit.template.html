@@ -12,12 +12,12 @@
     </div>
     <div class="usa-width-one-half">
       <samDateTime #publishedDate [control]="form.get('publishedDate')" formControlName="publishedDate" [label]="'Publish Date'" name='publish-date'></samDateTime>
-      <div>
+      <div class="input-group">
         <input id="publish-immediately" type="checkbox" formControlName="publishImmediately" (click)="onPublishImmediatelyClick($event.target.checked)">
         <label for="publish-immediately">Publish Immediately</label>
       </div>
       <samDateTime #endDate [control]="form.get('endDate')" formControlName="endDate" [label]="'End Date'" name='end-date'></samDateTime>
-      <div>
+      <div class="input-group">
         <input id="end-indefinitely" type="checkbox" formControlName="isExpiresIndefinite" (click)="onEndIndefinitelyClick($event.target.checked)">
         <label for="end-indefinitely">End Indefinitely</label>
       </div>

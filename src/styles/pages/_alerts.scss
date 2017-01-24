@@ -5,6 +5,13 @@ $alert-primary-color: #0071bc;
 }
 
 .alerts-page {
+  // this should be changed globally, but i don't want to break anything
+  // the problem is that the hitbox is not center around the inputs
+  input[type=checkbox] {
+    margin-top: -.8em;
+  }
+
+
   .alerts-toolbar {
     display: table;
     margin-bottom: 12px;

@@ -1,4 +1,27 @@
 <div class="usa-grid user-directory-page">
+  <div class="usa-grid-full">
+    <sam-alphabet-selector [sortLabel]="'LastName'" [currentPage]="alphabetSelectorPageConfig.currentPage" [alphabetSelectorService]="userDirService"(resultUpdate)="updateResultList($event)" (paginationUpdate)="OnPaginationUpdate($event)"></sam-alphabet-selector>
+    <div class="usa-width-one-whole" *ngFor="let resultItem of resultList">
+      <h2 class="user-name m_T-2x m_B-1x"><a href="#">{{resultItem.LastName}}, {{resultItem.FirstName}}</a></h2>
+      <div class="usa-width-one-whole">
+        <div class="usa-width-two-thirds">
+          <span>Email:<a>Adams.jones@gsa.gov</a></span><br>
+          <span class="m_T-0 m_B-1x">Organization: General Services Administration(GSA)</span>
+        </div>
+        <div class="usa-width-one-thirds">
+          <span>Last Logged: 12/31/2016</span>
+
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <div class="usa-width-one-whole">
+      <samPagination [currentPage]="alphabetSelectorPageConfig.currentPage" [totalPages]="alphabetSelectorPageConfig.totalPages" (pageChange)="onAlphabetSelectorPageChange($event)"></samPagination>
+    </div>
+
+  </div>
+
   <label>Organization Id:</label>
   <input type="number" [(ngModel)]="orgId">
   <hr>
@@ -8,7 +31,7 @@
     </h1>
   </div>
   <div class="user-details-row">Phone <a href="tel:+15555551234">(123) 456-7890</a></div>
-  <div class="user-details-row">Organization: <a [routerLink]="['/organization', orgId]">General Services Administration (GSA)</a>&nbsp;
+  <div class="user-details-row">Organization: <a [routerLink]="['/organization', orgId]">Usa Engineer District Sacramnto</a>&nbsp;
     <button class="usa-button-transparent org-dropdown-button" (click)="onToggleHierarchyClick()" [disabled]="isToggleButtonDisabled()">
       <span class="sr-only">show hierarchy</span>
       <i class="fa" [ngClass]="toggleButtonClass()"></i>
@@ -16,7 +39,12 @@
   </div>
   <div [ngSwitch]="loadState">
     <div *ngSwitchCase='"loading"'><sam-spinner></sam-spinner></div>
-    <parent-orgs *ngSwitchCase='"success"' [orgLevels]="orgLevels"></parent-orgs>
-    <samAlert *ngSwitchCase='"error"' type="error" title="Organization not found"></samAlert>
+    <div *ngSwitchCase="'success'">
+      <parent-orgs [orgLevels]="orgLevels" *ngIf="orgLevels.length"></parent-orgs>
+      <samAlert *ngIf="!orgLevels.length" [type]="'error'" [title]="'Organization details unavailable'"></samAlert>
+    </div>
+    <p *ngSwitchCase='"error"' >
+      <samAlert [type]="'error'" [title]="'Organization details unavailable'"></samAlert>
+    </p>
   </div>
 </div>

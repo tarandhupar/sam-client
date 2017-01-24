@@ -1,6 +1,6 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
-    <span class="usa-register usa-register-initial text-center">
+    <span class="usa-register usa-register-initial text-center" #test>
       <legend class="usa-legend">Thank You.</legend>
       <div *ngIf="email">We just sent an email to {{ email }}.</div>
 
@@ -32,4 +32,5 @@
           [description]="states.alert.description"
           [showClose]="true"
           [hidden]="!states.alert.show"
+          [target]
           (dismiss)="dismissAlert()"></samAlert>
