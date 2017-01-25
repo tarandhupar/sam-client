@@ -127,7 +127,7 @@ user.registration = {
     let endpoint = [
       utils.getUrl($config.registration.init.replace(/\{email\}/g, email)),
       Date.now().toString()
-    ].join('?');
+    ].join('&');
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
@@ -409,7 +409,7 @@ let $import = {
   },
 
   history(email, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+    let endpoint = utils.getUrl($config.import.history.replace(/\{email\}/g, email)),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
@@ -473,7 +473,7 @@ let $import = {
   },
 
   create(email, system, username, password, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+    let endpoint = utils.getUrl($config.import.roles),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
@@ -481,7 +481,8 @@ let $import = {
         params = {
           'legacySystem': system,
           'legacyUsername': username,
-          'legacyPassword': password
+          'legacyPassword': password,
+          'currentUser': email
         };
 
     $success = ($success || function(response) {});
@@ -582,24 +583,26 @@ class IAM {
     request
       .post(endpoint)
       .send(data)
-      .then((response) => {
-        let data = response.body.authnResponse;
+      .end((err, response) => {
+        if(!err) {
+          let data = response.body.authnResponse;
 
-        if(_.isUndefined(data.tokenId)) {
-          this.auth.authId = data['authId'];
-          this.auth.stage = data['stage'];
-          $success();
+          if(_.isUndefined(data.tokenId)) {
+            this.auth.authId = data['authId'];
+            this.auth.stage = data['stage'];
+            $success();
+          } else {
+            this.auth.authId = false;
+            this.auth.stage = false;
+            Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
+
+            this.checkSession((user) => {
+              $success(user);
+            });
+          }
         } else {
-          this.auth.authId = false;
-          this.auth.stage = false;
-          Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
-
-          this.checkSession((user) => {
-            $success(user);
-          });
+          $error(exceptionHandler(response.body));
         }
-      }, (response) => {
-        $error(exceptionHandler(response));
       });
   }
 
