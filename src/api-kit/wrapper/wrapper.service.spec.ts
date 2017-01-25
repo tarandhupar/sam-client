@@ -42,7 +42,7 @@ it('should have APIs property set', inject([WrapperService], (resource) => {
     expect(resource.APIs.search).toBe('/sgs/v1/search');
     expect(resource.APIs.program).toBe('/fac/v1/programs');
     expect(resource.APIs.federalHierarchy).toBe('/federalorganizations/v1/organizations');
-    expect(resource.APIs.suggestions).toBe('/sgs/v1/search/suggestions');
+    expect(resource.APIs.suggestions).toBe('/sgs/v1/suggestions');
     expect(resource.APIs.featuredSearch).toBe('/sgs/v1/search/featured');
     expect(resource.APIs.opportunity).toBe('/opps/v1/opportunities');
   }));
