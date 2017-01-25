@@ -60,7 +60,7 @@ if(document.getElementsByTagName('html')[0].className == "ie9" && window.locatio
     HttpModule,
 
     // Router
-    RouterModule.forRoot(ROUTES, { useHash: true }),
+    RouterModule.forRoot(ROUTES, { useHash: false }),
 
     // Page View Modules
     UserDirectoryModule,
