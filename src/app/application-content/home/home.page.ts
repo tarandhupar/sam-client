@@ -87,12 +87,4 @@ export class HomePage {
 
   }
 
-  myFunction(event){
-    console.log("made it into the console log");
-    console.log(event);
-    if(event.which == 13){
-      console.log("enter key was pressed");
-    }
-  }
-
 }
