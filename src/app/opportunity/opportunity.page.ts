@@ -445,7 +445,7 @@ export class OpportunityPage implements OnInit {
   }
 
   public getBaseURL() {
-    return API_UMBRELLA_URL + '/cfda/v1';
+    return API_UMBRELLA_URL + '/opps/v1';
   }
 
   public getAPIUmbrellaKey() {
