@@ -16,13 +16,6 @@ import { User } from '../../user.interface';
   ]
 })
 export class ResetComponent {
-  private config = {
-    alert: {
-      sites: 'javascript:void(0)',
-      migrate: 'javascript:void(0)'
-    }
-  };
-
   private states = {
     alert: {
       type: 'success',
@@ -44,6 +37,8 @@ export class ResetComponent {
     private api: IAMService) {}
 
   ngOnInit() {
+    this.states.alert.show = false;
+
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
