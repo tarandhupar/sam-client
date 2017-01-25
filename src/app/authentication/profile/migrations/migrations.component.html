@@ -5,11 +5,12 @@
             [(hidden)]="!states.confirm.show"
             showClose="true"
             placement='bottom center'></samAlert>
-  <samAlert target="body" type="info" placement="center auto" [offset]="{ top: 53, left: 130 }" title="Migrate Your Roles" [hidden]="!states.alert">
-    If you have a user account at any of the <a [routerLink]="migrations" fragment="legacy-sites">web sites</a> that are moving to the new SAM.gov,
-    you may migrate your roles and keep your same permissions. <a [routerLink]="migrations">Begin Now</a>
-  </samAlert>
 </div>
+
+<samAlert type="info" class="usa-alert-static" title="Migrate Your Roles" [hidden]="!states.alert">
+  If you have a user account at any of the <a [routerLink]="migrations" fragment="legacy-sites">web sites</a> that are moving to the new SAM.gov,
+  you may migrate your roles and keep your same permissions. <a [routerLink]="migrations">Begin Now</a>
+</samAlert>
 
 <h2>Migrations</h2>
 <div>Select one of our legacy web sites. Then enter your user name and password from that site to move your roles to the new SAM.gov</div>
@@ -40,7 +41,7 @@
   </form>
   <div>
     <h3>Migration History</h3>
-    <div>You have not migrated any legacy website accounts yet.</div>
+    <div *ngIf="!store.migrations.length">You have not migrated any legacy website accounts yet.</div>
 
     <table class="usa-table-borderless usa-migration-history">
       <thead>
