@@ -4,7 +4,7 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
   selector: 'exclusionCrossReference',
   template: `
 		<div>
-			<a [routerLink]="['/exclusion', crossReference.samNumber]">{{crossReference.identityInfo.companyName}}</a>
+			<a>{{crossReference.identityInfo.companyName}}</a>
 			<br />
 			<strong>Cross Reference Type: </strong>
 			<br />
