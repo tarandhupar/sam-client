@@ -41,6 +41,8 @@ class User {
       }
     }
 
+    data.gsaRAC = data.gsaRAC || [];
+
     for(intItem = 0; intItem < data.gsaRAC.length; intItem++) {
       item = data.gsaRAC[intItem];
 
