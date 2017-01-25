@@ -12,10 +12,9 @@ import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 })
 
 export class SearchPage implements OnInit{
-	indexes = ['', 'cfda', 'fbo', 'fh', 'ent'];
-	index = '';
+  keyword: string = "";
+	index: string = "";
 	organizationId:string = '';
-  sourceOrganizationId:string = '';
 	pageNum = 0;
 	totalCount: any= 0;
 	totalPages: any= 0;
@@ -23,7 +22,6 @@ export class SearchPage implements OnInit{
 	showPerPage = 10;
 	data = [];
   featuredData = [];
-	keyword: string = "";
 	oldKeyword: string = "";
 	initLoad = true;
 	showOptional:any = (SHOW_OPTIONAL=="true");
@@ -32,7 +30,7 @@ export class SearchPage implements OnInit{
 	ngOnInit() {
 		this.activatedRoute.queryParams.subscribe(
 			data => {
-				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
+				this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";

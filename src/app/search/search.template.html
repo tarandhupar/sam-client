@@ -3,7 +3,6 @@
 		<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
 	</div>
   <div class="usa-width-one">
-    <samSearchbar (onSearch)="onSearchClick($event)" [keyword]="keyword" [placeholder]="'#keyword'" *ngIf="false"></samSearchbar>
     <div *ngIf="showOptional" class="usa-width-one">
       <h3>Common Filters:</h3>
       <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
