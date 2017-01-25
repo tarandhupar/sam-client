@@ -459,11 +459,13 @@ export class FinancialObligationChart {
         });
 
       // Table Totals
-      table.selectAll("tbody")
-        .append("tr")
-        .html("<td>Totals</td>")
-        .style("font-weight", "700")
+      tbody.append("tr")
         .attr("class", "totals")
+        .style("font-weight", "700")
+        .append("td")
+        .text("Totals");
+
+      tbody.select("tr:last-child")
         .selectAll("tr")
         .data(vizTotals)
         .enter()

@@ -9,7 +9,7 @@ export class FHService {
   constructor(private oAPIService: WrapperService) { }
 
   //gets organization with heirarchy data
-  getOrganizationById(id: string, includeChildrenLevels: boolean) {
+  getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false) {
     var oApiParam = {
         name: '',
         suffix: '',
@@ -27,6 +27,10 @@ export class FHService {
       oApiParam.oParam = {
         'sort': 'name'
       };
+    }
+
+    if (includeOrgTypes) {
+      oApiParam.oParam['types'] = 'true';
     }
 
     return this.oAPIService.call(oApiParam);

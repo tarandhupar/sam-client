@@ -17,7 +17,10 @@ export { SamPaginationComponent } from "./pagination/pagination.component";
 export { SamClickOutsideDirective } from "./click-outside/click-outside.directive"
 export { SamHeaderLinksComponent } from "./header-links/header-links.component";
 export { SamMultiSelectDropdownComponent } from "./multiselect-dropdown";
+export { SamSpinnerComponent } from './spinner/spinner.component';
 export { SamDateTimeComponent } from "./form-controls/date-time/date-time.component";
 export { SamDateComponent } from "./form-controls/date/date.component";
 export { SamTimeComponent } from "./form-controls/time/time.component";
 export { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
+export { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
+export { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";

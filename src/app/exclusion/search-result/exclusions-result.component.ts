@@ -11,7 +11,7 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive<0" class="usa-label">INACTIVE</span>
     	</p>
     	<h3 class="exclusion-title">
-      	<a *ngIf="data.isActive>=0" href="/">{{ data.name }}</a>
+    	<a *ngIf="data.isActive>=0" [routerLink]="['/exclusion', data.samNumber]">{{ data.name }}</a>
       	<span *ngIf="data.isActive<0">{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
@@ -33,9 +33,9 @@ import * as moment from 'moment/moment';
               <li><span>{{ data.activationDate }}</span></li>
             </ul>
           </li>    
-          <li *ngIf="data.terminationDate!==null"><strong>Termination Date</strong>
+          <li><strong>Termination Date</strong>
             <ul class="usa-unstyled-list">
-              <li><span>{{ data.terminationDate }}</span></li>
+              <li><span>{{ data.terminationDate !== null ? data.terminationDate : 'Indefinite' }}</span></li>
             </ul>
           </li>      
         </ul>

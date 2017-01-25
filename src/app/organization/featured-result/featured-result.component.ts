@@ -31,8 +31,8 @@ import { ReplaySubject, Observable } from 'rxjs';
               <li>
                 {{ data.type=="Agency" ? 'Sub-Tier' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
               </li>
-              <li>
-                <strong>{{ data.aacCode ? 'AAC Code:' : (data.fpdsOrgId ? 'FPDS Org ID:' : (data.fpdsCode ? 'FPDS Code:' : 'Old FPDS Code:')) }}</strong> {{ data.aacCode ? data.aacCode : (data.fpdsOrgId ? data.fpdsOrgId : (data.fpdsCode ? data.fpdsCode : (data.oldFPDSCode ? data.oldFPDSCode : ''))) }}
+              <li *ngIf="data">
+                <strong>{{(data | organizationTypeCode).label}}</strong> {{(data | organizationTypeCode).value}}
               </li>  
               <br/>
               <li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
@@ -67,7 +67,7 @@ export class FHFeaturedResult implements OnInit {
   private callOrganizationById(orgId: string) {
     let organizationSubject = new ReplaySubject(1);
     this.fhService.getOrganizationById(orgId, true).subscribe(organizationSubject);
-    this.fhService.getOrganizationLogo(organizationSubject, 
+    this.fhService.getOrganizationLogo(organizationSubject,
     (logoUrl) => {
       this.logoUrl = logoUrl;
     }, (err) => {

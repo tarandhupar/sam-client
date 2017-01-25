@@ -1,0 +1,41 @@
+<div class="usa-grid">
+  <div class="usa-width-one-whole">
+    <div class="usa-forgot-init">
+      <form class="usa-form-large" autocomplete="off" (ngSubmit)="init($event)" #form>
+        <fieldset>
+          <h2>Forgot Password?</h2>
+          <span>Enter your email address below and we will send you instructions to reset your password.</span>
+
+          <labelWrapper [errorMessage]="email.touched ? states.error : ''" label="Email">
+            <input type="text"
+                   id="email"
+                   name="email"
+                   autocomplete="off"
+                   readonly="readonly"
+                   onfocus="this.removeAttribute('readonly');"
+                   (keyup)="validate()"
+                   [formControl]="email" />
+          </labelWrapper>
+
+          <div class="usa-button-controls">
+            <button type="submit" [disabled]="states.disabled">Submit</button>
+          </div>
+
+          <hr />
+
+          <ul class="links">
+            <li class="home">
+              <a routerLink="/">Return to SAM.gov Home</a>
+            </li>
+          </ul>
+        </fieldset>
+      </form>
+      <samAlert [type]="states.notification.type"
+                [title]="states.notification.title"
+                [hidden]="!states.notification.show"
+                [target]="form"
+                placement="right"
+                showClose="true"></samAlert>
+    </div>
+  </div>
+</div>

@@ -19,6 +19,7 @@ import { SamFooterComponent } from "./footer/footer.component";
 import { SamLabelComponent } from "./label/label.component";
 import { SamHeaderComponent } from "./header/header.component";
 import { SamAlertComponent } from "./alert/alert.component";
+import { SamSpinnerComponent } from './spinner/spinner.component';
 import { SamAccordionComponent, SamAccordionSection } from "./accordion/accordion.component";
 import { SamButtonComponent } from "./form-controls/button/button.component.ts";
 import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.component";
@@ -37,6 +38,8 @@ import { SamTabComponent } from "./tabs/tabs.component";
 import { SamTabsComponent } from "./tabs/tabs.component";
 import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
 import { SamModalComponent } from "./modal/modal.component";
+import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
+import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -65,6 +68,7 @@ import { SamModalComponent } from "./modal/modal.component";
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
     SamNameEntryComponent,
+    SamSpinnerComponent,
     SamPhoneEntryComponent,
     SamDateComponent,
     SamTimeComponent,
@@ -76,7 +80,8 @@ import { SamModalComponent } from "./modal/modal.component";
     LabelWrapper,
     FieldsetWrapper,
     SamTabsComponent,
-    SamTabComponent
+    SamTabComponent,
+    SamAlphabetSelectorComponent
   ],
   imports: [
     BrowserModule,
@@ -102,6 +107,7 @@ import { SamModalComponent } from "./modal/modal.component";
     SamStickyComponent,
     SamFooterComponent,
     SamHeaderComponent,
+    SamSpinnerComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
@@ -116,7 +122,10 @@ import { SamModalComponent } from "./modal/modal.component";
     SamTabsComponent,
     SamTabComponent,
     SamModalComponent,
+    SamAlphabetSelectorComponent,
   ],
-  providers: [ ]
+  providers: [
+    AlphabetSelectorService
+  ]
 })
 export class SamUIKitModule { }

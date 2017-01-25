@@ -6,6 +6,7 @@ import { ReplaySubject, Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 import { OpportunityFields } from "./opportunity.fields";
 import { trigger, state, style, transition, animate } from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
   moduleId: __filename,
@@ -113,7 +114,9 @@ export class OpportunityPage implements OnInit {
   }
 
   ngOnInit() {
-    this.currentUrl = this.location.path();
+    // Using document.location.href instead of
+    // location.path because of ie9 bug
+    this.currentUrl = document.location.href;
     this.loadDictionary();
     let opportunityAPI = this.loadOpportunity();
     this.opportunityAPI = opportunityAPI;
@@ -173,14 +176,16 @@ export class OpportunityPage implements OnInit {
       this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
-      this.relatedOpportunities = data['relatedOpportunities'][0];
-      this.relatedOpportunitiesMetadata = {
-        'count': data['count'],
-        'recipientCount': data['recipientCount'],
-        'totalAwardAmt': data['totalAwardAmt'],
-        'unparsableCount': data['unparsableCount']
-      };
-      this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
+      if (!_.isEmpty(data)) {
+        this.relatedOpportunities = data['relatedOpportunities'][0];
+        this.relatedOpportunitiesMetadata = {
+          'count': data['count'],
+          'recipientCount': data['recipientCount'],
+          'totalAwardAmt': data['totalAwardAmt'],
+          'unparsableCount': data['unparsableCount']
+        };
+        this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
+      }
     }, err => {
       console.log('Error loading related opportunities: ', err);
     });
@@ -196,7 +201,7 @@ export class OpportunityPage implements OnInit {
 
     opportunityAPI.subscribe(api => {
       this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
-      this.fhService.getOrganizationLogo(organizationSubject, 
+      this.fhService.getOrganizationLogo(organizationSubject,
         (logoUrl) => {
           this.logoUrl = logoUrl;
         }, (err) => {

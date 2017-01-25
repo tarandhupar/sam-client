@@ -10,7 +10,6 @@ export class UIKitDemoPage {
   date: string = "2016-12-12";
   dateTime: string = "2016-12-12T13:01";
 
-
   // Select Component
   selectModel = '';
   selectConfig = {

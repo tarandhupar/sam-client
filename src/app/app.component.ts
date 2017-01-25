@@ -1,7 +1,7 @@
 /*
  * Angular 2 decorators and services
  */
-import { Cookie } from 'ng2-cookies/ng2-cookies';
+import { Cookie } from 'ng2-cookies';
 import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
@@ -24,9 +24,7 @@ export class App{
 
   showOverlay = false;
 
-  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {
-
-  }
+  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
 
   ngOnInit() {
     this.searchService.paramsUpdated$.subscribe(
@@ -49,7 +47,6 @@ export class App{
       });
   }
 
-
   get isHeaderWithSearch() {
     return globals.isDefaultHeader;
   }
@@ -71,6 +68,9 @@ export class App{
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
+
+    Cookie.delete("term");
+    Cookie.delete("ival");
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
@@ -86,17 +86,19 @@ export class App{
   }
 
   setCookie(data) {
-    Cookie.set('keyword', data['keyword']);
-    Cookie.set('index', data['index']);
+    Cookie.delete("term");
+    Cookie.delete("ival");
+    Cookie.set("term", data['keyword']);
+    Cookie.set("ival", data['index']);
   }
 
   checkCookie() {
     let cookielist = Cookie.getAll();
-    if(cookielist['keyword']) {
-      this.keyword = cookielist['keyword'];
+    if(cookielist['term'] && cookielist['term'].length>0) {
+      this.keyword = cookielist['term'];
     }
-    if(cookielist['index']) {
-      this.index = cookielist['index'];
+    if(cookielist['ival'] && cookielist['ival'].length>0) {
+      this.index = cookielist['ival'];
     }
   }
 

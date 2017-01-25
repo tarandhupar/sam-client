@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild } from '@angular/core';
+import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -20,6 +20,7 @@ import { KBA } from '../kba.interface';
 export class DetailsComponent {
   @ViewChild('confirmModal') confirmModal;
   @ViewChild('reconfirmModal') reconfirmModal;
+  @ViewChildren('kba') kbaEntries;
 
   private differ;
   private api = {
@@ -120,6 +121,7 @@ export class DetailsComponent {
 
             firstName:       [this.user.firstName, Validators.required],
             initials:        [this.user.initials],
+            middleName:      [this.user.initials],
             lastName:        [this.user.lastName, Validators.required],
 
             suffix:          [this.user.suffix],
@@ -156,12 +158,16 @@ export class DetailsComponent {
 
   ngDoCheck() {
     let vm = this,
-        changes = this.differ.diff(this.user);
+        changes = this.differ.diff(this.user),
+        key;
 
     if(changes) {
-      changes.forEachChangedItem(function(diff) {
+      changes.forEachChangedItem((diff) => {
         if(vm.detailsForm && vm.detailsForm.controls[diff.key]) {
-          vm.detailsForm.controls[diff.key == 'middleName' ? 'intiials' : diff.key].setValue(diff.currentValue);
+          key = diff.key.toString().search(/(middleName|initials)/) > -1 ? 'initials' : diff.key;
+
+          vm.detailsForm.controls[key].setValue(diff.currentValue);
+          vm.user[key] = diff.currentValue;
         }
       });
     }
@@ -265,6 +271,7 @@ export class DetailsComponent {
             email: 'doe.john@gsa.gov',
             suffix: '',
             firstName: 'John',
+            initials: 'J',
             middleName: 'J',
             lastName: 'Doe',
 
@@ -335,7 +342,7 @@ export class DetailsComponent {
   get name():string {
     return [
       this.user.firstName || '',
-      this.user['middleName'] || '',
+      this.user.initials || '',
       this.user.lastName || ''
     ].join(' ').replace(/\s+/g, ' ');
   }
@@ -427,13 +434,20 @@ export class DetailsComponent {
 
   isValid(keys: Array<String>) {
     let controls = this.detailsForm.controls,
+        entries = this.kbaEntries.toArray(),
         valid = true,
         key,
         intKey,
         intArrayKey;
 
+    for(intKey = 0; intKey < entries.length; intKey++) {
+      entries[intKey].updateState(true);
+    }
+
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
+
+      controls[key].markAsDirty();
 
       if(controls[key].invalid) {
         valid = false;
@@ -445,9 +459,11 @@ export class DetailsComponent {
   }
 
   saveGroup(keys: Array<String>, cb) {
-    let vm = this,
-        controls = this.detailsForm.controls,
-        userData = {},
+    let controls = this.detailsForm.controls,
+        userData = {
+          fullName: this.name
+        },
+
         key,
         controlValue,
         intKey;
@@ -461,16 +477,27 @@ export class DetailsComponent {
       }
 
       if(key == 'kbaAnswerList') {
-        userData[key] = controlValue.map(function(item, intItem) {
+        userData[key] = controlValue.map((item, intItem) => {
           item.answer = item.answer.trim();
+          this.user.kbaAnswerList[intItem] = item;
+          this.user.kbaAnswerList[intItem].answer = item.answer.replace(/./g, '&bull;');
           return item;
         });
+
+        this.api.iam.kba.update(userData[key], () => {
+          console.log('KBA Q&A successfully saved');
+          cb();
+        }, () => {
+          cb();
+        });
+
+        return;
       }
     }
 
-    this.api.iam.user.update(userData, function(data) {
+    this.api.iam.user.update(userData, (data) => {
       cb();
-    }, function() {
+    }, () => {
       cb();
     });
   }
@@ -486,12 +513,14 @@ export class DetailsComponent {
         keys = mappings[groupKey].split('|'),
         valid = this.isValid(keys);
 
-    this.zone.runOutsideAngular(() => {
-      this.saveGroup(keys, () => {
-        this.zone.run(() => {
-          this.states.editable[groupKey] = false;
+    if(valid) {
+      this.zone.runOutsideAngular(() => {
+        this.saveGroup(keys, () => {
+          this.zone.run(() => {
+            this.states.editable[groupKey] = false;
+          });
         });
       });
-    });
+    }
   }
 };

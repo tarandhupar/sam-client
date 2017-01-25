@@ -17,10 +17,13 @@ import { AuthenticationModule } from './authentication';
 import { HomeModule } from './application-content/home';
 import { AlertsModule } from './alerts';
 import { HelpModule } from './Help';
+import { ReportsModule } from './Reports';
 import { PageNotFoundErrorPage } from './application-content/404';
 import { ErrorModule } from './application-content/error/error.module';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
+import { EntityModule } from './entity';
+import { ExclusionModule } from './exclusion';
 import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
 import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
@@ -28,6 +31,7 @@ import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.m
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
+import { UserDirectoryModule } from "./user-directory";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -53,13 +57,17 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     RouterModule.forRoot(ROUTES, { useHash: useHashValue }),
 
     // Page View Modules
+    UserDirectoryModule,
     AuthenticationModule,
     ProgramModule,
     OpportunityModule,
+    EntityModule,
+    ExclusionModule,
     OrganizationModule,
     HomeModule,
     AlertsModule,
     HelpModule,
+    ReportsModule,
     SearchModule,
     ErrorModule,
     UIKitDemoModule,

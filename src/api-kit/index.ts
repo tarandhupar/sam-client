@@ -1,4 +1,6 @@
 export { FHService } from './fh/fh.service';
+export { EntityService } from './entity/entity.service';
+export { ExclusionService } from './exclusion/exclusion.service';
 export { SearchService } from './search/search.service';
 export { DictionaryService } from './dictionary/dictionary.service';
 export { HistoricalIndexService } from './historical-index/historical-index.service';
@@ -10,3 +12,4 @@ export { OpportunityService } from './opportunity/opportunity.service';
 export { SuggestionsService } from './search/suggestions.service';
 export { SamAPIKitModule } from './api-kit.module';
 export { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
+export { UserDirService } from './user-directory/user-directory.service';

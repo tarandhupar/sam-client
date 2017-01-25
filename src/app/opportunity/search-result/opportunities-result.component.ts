@@ -8,22 +8,22 @@ import * as moment from 'moment/moment';
   template: `
     <p>
       <span class="usa-label">Opportunity</span>
-      <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
+      <span *ngIf="data.isActive==false" class="usa-label">ARCHIVED</span>
     </p>
     <h3 class="opportunity-title">
-      <a [routerLink]="['/opportunities', data._id]">{{ data.procurementTitle }}</a>
+      <a [routerLink]="['/opportunities', data._id]">{{ data.title }}</a>
     </h3>
     <div class="usa-width-two-thirds">
-      <p class="m_T-2x" *ngIf="data.procurementDescription!=null && data.procurementDescription.length>150">
-        <span [innerHTML]="data.procurementDescription | slice:0:150"></span>...
+      <p class="m_T-2x" *ngIf="data.description!=null && data.description.length>150">
+        <span [innerHTML]="data.description | slice:0:150"></span>...
       </p>
-      <p class="m_T-2x" *ngIf="data.procurementDescription!=null && data.procurementDescription.length<150">
-        <span [innerHTML]="data.procurementDescription"></span>
+      <p class="m_T-2x" *ngIf="data.description!=null && data.description.length<150">
+        <span [innerHTML]="data.description"></span>
       </p>
       <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        <li><strong>Department:</strong> <a href="#">{{ data.parentAgencyName }}</a></li>
-        <li><strong>Office:</strong> <a href="#">{{ data.agencyName }}</a></li>
-        <li><strong>Location:</strong> {{ data.officeName }}</li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Department:</strong> <a href="#">{{ data.organizationHierarchy[2].name }}</a></li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Office:</strong> <a href="#">{{ data.organizationHierarchy[1].name }}</a></li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Location:</strong> {{ data.organizationHierarchy[0].name }}</li>
       </ul>
     </div>
     <div class="usa-width-one-third">
@@ -37,13 +37,13 @@ import * as moment from 'moment/moment';
           <li>
           <strong>Posted Date</strong>
           <ul class="usa-unstyled-list">
-            <li>{{ data.procurementPostedDate  }}</li>
+            <li>{{ data.publishDate  }}</li>
           </ul>
         </li>
         <li>
           <strong>Type</strong>
           <ul class="usa-unstyled-list">
-            <li>{{data.procurementTypeValue}}</li>
+            <li>{{data.type?.value}}</li>
           </ul>
         </li>
       </ul>
@@ -55,6 +55,6 @@ export class OpportunitiesResult implements OnInit{
   constructor() {}
 
   ngOnInit(){
-    this.data.procurementPostedDate = moment(this.data.procurementPostedDate).format("MMM D, Y");
+    this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
   }
 }
