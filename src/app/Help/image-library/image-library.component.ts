@@ -1,4 +1,4 @@
-import { Component, Input, HostListener } from '@angular/core';
+import { Component, Input, HostListener, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'imageLibrary',
@@ -12,7 +12,8 @@ export class ImageLibraryComponent {
   @Input() isExternalLink:boolean = true;
   @Input() hasLayer:boolean = true;
   @Input() isReleaseDetail:boolean = false;
-
+  @Input() closeNotification:string = "";
+  @Output() updateNotification:EventEmitter<any> = new EventEmitter<any>();
 
   detailObj: any = {
     showDetail: false,
@@ -27,20 +28,26 @@ export class ImageLibraryComponent {
   constructor() { }
 
   ngOnInit(){
-    if(!this.formatted){
-      this.formatData();
-      this.formatted = true;
+    this.formatData();
+  }
+
+  ngOnChanges(){
+    if(this.closeNotification !== this.name){
+      this.closeReferenceDetail();
     }
   }
 
   formatData(){
-    let formatData = [];
+    if(!this.formatted) {
+      let formatData = [];
 
-    // Split the data to fit in 3 data item a row
-    while (this.data.length > 0)
-      formatData.push(this.data.splice(0, 3));
+      // Split the data to fit in 3 data item a row
+      while (this.data.length > 0)
+        formatData.push(this.data.splice(0, 3));
 
-    this.data = formatData;
+      this.data = formatData;
+      this.formatted = true;
+    }
   }
 
 
@@ -53,6 +60,8 @@ export class ImageLibraryComponent {
       this.detailObj.posY = j;
       this.detailObj.item = this.data[this.detailObj.posX][this.detailObj.posY];
     }
+    this.closeNotification = this.name;
+    this.updateNotification.emit(this.closeNotification);
     event.stopPropagation();
   }
 
