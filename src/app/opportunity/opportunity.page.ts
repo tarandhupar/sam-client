@@ -429,7 +429,7 @@ export class OpportunityPage implements OnInit {
 
 
   public getDownloadFileURL(fileID: string){
-    return this.getBaseURL() + '/file/' + fileID + this.getAPIUmbrellaKey();
+    return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey();
   }
 
   currentTabSelected(tab){
@@ -437,15 +437,15 @@ export class OpportunityPage implements OnInit {
   }
 
   public getDownloadPackageURL(packageID: string) {
-    return this.getBaseURL() + '/opportunity/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey();
+    return this.getBaseURL() + '/opportunities/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey();
   }
 
   public getDownloadAllPackagesURL(opportunityID: string) {
-    return this.getBaseURL() + '/opportunity/' + opportunityID + '/download/zip' + this.getAPIUmbrellaKey();
+    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey();
   }
 
   public getBaseURL() {
-    return API_UMBRELLA_URL + '/cfda/v1';
+    return API_UMBRELLA_URL + '/opps/v1';
   }
 
   public getAPIUmbrellaKey() {

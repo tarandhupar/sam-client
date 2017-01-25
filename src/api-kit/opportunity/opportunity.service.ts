@@ -32,7 +32,7 @@ export class OpportunityService{
   getOpportunityDictionary(ids: string) {
     let apiParam = {
         name: 'opportunity',
-        suffix: '/dictionary',
+        suffix: '/dictionaries',
         oParam: {
           ids: ids
         },
