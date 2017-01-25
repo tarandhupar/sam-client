@@ -45,10 +45,10 @@ let user = {
           $success(user);
         }, function(response) {
           core.$base.removeSession();
-          $error();
+          $error(exceptionHandler(response.body));
         });
     } else {
-      $error();
+      $error({ message: 'No user active user session.' });
     }
   },
 
@@ -114,7 +114,7 @@ let user = {
       .then(function(response) {
         $success(response);
       }, function(response) {
-        $error(response);
+        $error(exceptionHandler(response.body));
       });
   }
 };
@@ -127,7 +127,7 @@ user.registration = {
     let endpoint = [
       utils.getUrl($config.registration.init.replace(/\{email\}/g, email)),
       Date.now().toString()
-    ].join('?');
+    ].join('&');
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
@@ -409,10 +409,9 @@ let $import = {
   },
 
   history(email, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+    let endpoint = utils.getUrl($config.import.history.replace(/\{email\}/g, email)),
         headers = {
-          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro'),
-          'X-Api-Username': 'hassanriaz@gmail.com'
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
 
         mock = [];
@@ -453,29 +452,37 @@ let $import = {
       .get(endpoint)
       .set(headers)
       .end(function(err, response) {
+        let accounts = [];
         if(!err) {
+          accounts = response.body;
+
+          accounts = accounts.map((account) => {
+            account.role = account.role || [];
+            return account;
+          });
+
           $success(response.body);
         } else {
           if(isDebug()) {
             $error(mock);
           } else {
-            $error(response.body);
+            $error(exceptionHandler(response));
           }
         }
       });
   },
 
-  create(system, username, password, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, username)),
+  create(email, system, username, password, $success, $error) {
+    let endpoint = utils.getUrl($config.import.roles),
         headers = {
-          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro'),
-          'X-Api-Username': 'hassanriaz@gmail.com'
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
 
         params = {
           'legacySystem': system,
           'legacyUsername': username,
-          'legacyPassword': password
+          'legacyPassword': password,
+          'currentUser': email
         };
 
     $success = ($success || function(response) {});
@@ -526,18 +533,16 @@ class IAM {
   }
 
   checkSession($success, $error) {
-    let iam = this;
-
     $success = $success || function(data) {};
     $error = $error || function(data) {};
 
-    this.user.get(function(user) {
-      iam.states.auth = true;
-      iam.states.user = user;
-      $success(iam.states.user);
-    }, function() {
-      iam.states.auth = false;
-      $error();
+    this.user.get((user) => {
+      this.states.auth = true;
+      this.states.user = user;
+      $success(this.states.user);
+    }, (error) => {
+      this.states.auth = false;
+      $error(error);
     });
   }
 
@@ -568,8 +573,7 @@ class IAM {
   }
 
   loginOTP(credentials, $success, $error) {
-    let api = this,
-        endpoint = utils.getUrl($config.session),
+    let endpoint = utils.getUrl($config.session),
         token,
         data = _.extend(this.getStageData(), credentials);
 
@@ -579,27 +583,26 @@ class IAM {
     request
       .post(endpoint)
       .send(data)
-      .then(function(response) {
-        let data = response.body.authnResponse;
+      .end((err, response) => {
+        if(!err) {
+          let data = response.body.authnResponse;
 
-        if(_.isUndefined(data.tokenId)) {
-          api.auth.authId = data['authId'];
-          api.auth.stage = data['stage'];
-          $success();
+          if(_.isUndefined(data.tokenId)) {
+            this.auth.authId = data['authId'];
+            this.auth.stage = data['stage'];
+            $success();
+          } else {
+            this.auth.authId = false;
+            this.auth.stage = false;
+            Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
+
+            this.checkSession((user) => {
+              $success(user);
+            });
+          }
         } else {
-          api.auth.authId = false;
-          api.auth.stage = false;
-          Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
-
-          api.checkSession(function(user) {
-            $success(user);
-          });
+          $error(exceptionHandler(response.body));
         }
-      }, function(response) {
-        let data = response.response.body,
-            error = data.message;
-
-        $error(error);
       });
   }
 

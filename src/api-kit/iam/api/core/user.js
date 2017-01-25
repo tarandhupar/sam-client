@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import { clone, merge } from 'lodash';
 
 const LDAP_MAPPINGS = {
   'dn':               'dn',
@@ -25,6 +25,9 @@ class User {
     let mappings = LDAP_MAPPINGS,
         $key,
         key,
+        items = [],
+        item,
+        intItem,
         data = {};
 
     params = params || {};
@@ -36,6 +39,25 @@ class User {
       } else {
         data[key] = params[key];
       }
+    }
+
+    data.gsaRAC = data.gsaRAC || [];
+
+    for(intItem = 0; intItem < data.gsaRAC.length; intItem++) {
+      item = data.gsaRAC[intItem];
+
+      if(typeof item === 'string') {
+        item = item.split('|');
+        item = {
+          system: item[0] || '',
+          agency: item[1] || '',
+          username: item[2] || '',
+          importTimetamp: item[3] || '',
+          role: item[4] || ''
+        };
+      }
+
+      data.gsaRAC[intItem] = item;
     }
 
     return data;

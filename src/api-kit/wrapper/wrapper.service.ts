@@ -17,7 +17,7 @@ export class WrapperService {
         "historicalIndex": "/cfda/v1/historicalIndex",
         "alerts": "/alert/v2/alerts",
         "allAlerts": "/alert/v2/alerts/allAlerts",
-        "suggestions": "/sgs/v1/search/suggestions"
+        "suggestions": "/sgs/v1/suggestions"
     };
 
     constructor(private _http: Http){}

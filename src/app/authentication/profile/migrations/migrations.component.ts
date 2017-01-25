@@ -25,11 +25,13 @@ export class MigrationsComponent {
     legacy: [],
     migrations: [],
     systems: [],
+    roles: {},
     system: ''
   };
 
   private states = {
     alert: false,
+    submitted: false,
     confirm: {
       type: '',
       message: '',
@@ -57,7 +59,22 @@ export class MigrationsComponent {
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
+          let role,
+              intRole;
+
           this.email = user.email;
+
+          for(intRole = 0; intRole < user.gsaRAC.length; intRole++) {
+            role = user.gsaRAC[intRole];
+
+            if(this.store.roles[role.system] == undefined)
+              this.store.roles[role.system] = {};
+            if(this.store.roles[role.system][role.username] == undefined)
+              this.store.roles[role.system][role.username] = [];
+
+            this.store.roles[role.system][role.username].push(role);
+          }
+
           this.initForm();
         });
       }, () => {
@@ -104,24 +121,25 @@ export class MigrationsComponent {
     this.zone.runOutsideAngular(() => {
       this.api.iam.import.history(this.email, (migrations) => {
         this.zone.run(() => {
-          this.store.migrations = migrations.map((account) => {
+          this.store.migrations = migrations.map((account, index) => {
+            let roles = [];
+
+            if(this.store.roles[account.system] && this.store.roles[account.system][account.username]) {
+              roles = this.store.roles[account.system][account.username].map((role) => {
+                return {
+                  department: role.department,
+                  role: role.role
+                }
+              });
+            }
+
             return {
               system: account.sourceLegacySystem.toUpperCase() + '.gov',
-              username: account.email,
+              username: account.username || '',
               orgKey: account.orgKey,
               name: account.fullName,
               migratedAt: moment(account.claimedTimestamp).format('MM/DD/YYYY'),
-              roles: (account.gsaRAC || mock).map((role, intRole) => {
-                let items = role.split('_');
-
-                items[0] = items[0].replace(/([A-Z])/g, ' $1');
-                items[1] = items[1].replace(/([A-Z])/g, ' $1');
-
-                return {
-                  role: items[0],
-                  department: items[1]
-                };
-              })
+              roles: roles
             }
           });
         });
@@ -158,7 +176,7 @@ export class MigrationsComponent {
       errors.push(`${controlName} is ${type}`)
     }
 
-    return ((control.touched && control.dirty) || (this.migrationForm.touched && this.migrationForm.dirty)) ? errors[0] : '';
+    return ((control.touched && control.dirty) || (this.migrationForm.touched && this.migrationForm.dirty)) && this.states.submitted ? errors[0] : '';
   }
 
   migrate() {
@@ -166,12 +184,13 @@ export class MigrationsComponent {
     this.migrationForm.markAsDirty();
 
     this.states.confirm.show = false;
+    this.states.submitted;
 
     if(this.migrationForm.valid) {
       let data = this.migrationForm.value;
 
       this.zone.runOutsideAngular(() => {
-        this.api.iam.import.create(data.system, data.username, data.password, (account) => {
+        this.api.iam.import.create(this.email, data.system, data.username, data.password, (account) => {
           this.zone.run(() => {
             this.store.migrations.push(account);
             this.states.confirm.type = 'success';
