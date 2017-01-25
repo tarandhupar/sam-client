@@ -9,17 +9,16 @@
         <button type="submit">Submit</button>
       </div>
     </fieldset>
+    <samAlert [type]="states.alert.type"
+              [title]="states.alert.title"
+              [hidden]="!states.alert.show"
+              [target]="passwordEntry"
+              placement="bottom right"
+              showClose="true"></samAlert>
   </form>
 </div>
 
-<samAlert [type]="states.alert.type"
-          [title]="states.alert.title"
-          [hidden]="!states.alert.show"
-          [target]="passwordEntry"
-          placement="bottom right"
-          showClose="true"></samAlert>
-
 <samAlert class="usa-alert-static" type="info" title="Migrate Your Roles">
-  If you have a user account at any of the <a [href]="config.alert.sites">websites</a> that are moving to the new SAM.gov,
-  you may migrate your roles and keep your same permissions. <a [href]="config.alert.migrate">Begin Now</a>.
+  If you have a user account at any of the <a [routerLink]="['/profile/migrations']" fragment="legacy-sites">websites</a> that are moving to the new SAM.gov,
+  you may migrate your roles and keep your same permissions. <a [routerLink]="['/profile/migrations']">Begin Now</a>.
 </samAlert>

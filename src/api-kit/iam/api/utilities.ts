@@ -196,6 +196,11 @@ class Utilities {
         .replace(/([a-z-]+)\/\/+/g, '$1/');
     }
 
+    // Apply API Key
+    if(url.search(/^https?:\/\/csp-api\.sam\.gov/) > -1) {
+      url += '?api_key=rkkGBk7AU8UQs9LHT6rM0rFkg3A3rGaiBntKSGEC';
+    }
+
     return url;
   }
 
