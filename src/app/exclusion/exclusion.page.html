@@ -1,3 +1,4 @@
+<br />
 <div class="exclusion">
 <div class="usa-grid message-background-color">
 	<div class="usa-width-one-twelfth padding-top-25px height-100px">
@@ -5,7 +6,7 @@
 	</div>
 	<div class="usa-width-eleven-twelfths">
 		<i>There may be instances when an individual or firm has the same or similar name as your search criteria, but is actually a different
-		party. Therefore, it is important that you verify a potential match with the excluding agency identified in th eexclusion's details. To confirm
+		party. Therefore, it is important that you verify a potential match with the excluding agency identified in the exclusion's details. To confirm
 		or obtain additional information, contact the federal agency that took the action against the listed party. Agency points of contact,
 		including name and telephone number, may be found by navigating to the Agency Exclusion POCs page within SAM Help.</i>
 	</div>
@@ -15,14 +16,26 @@
 </div>
 <div *ngIf="exclusion">
 <div class="usa-grid-full">
-	<div class="padding-left-180px">
+	<div class="padding-left-180px" *ngIf="exclusion.classificationType=='Individual'">
 		<h2>{{exclusion.identityInfo.prefix}} {{exclusion.identityInfo.firstName}} {{exclusion.identityInfo.middleName}} {{exclusion.identityInfo.lastName}}</h2>
+	</div>
+	<div class="padding-left-180px" *ngIf="exclusion.classificationType!='Individual'">
+		<h2>{{exclusion.identityInfo.companyName}}</h2>
 	</div>
 </div>
 <div class="usa-grid-full bottom-border">
 	<table class="usa-table-borderless">
 	<tr>
 		<td class="padding-left-180px" valign="bottom">
+			<div *ngIf="exclusion.classificationType!='Individual'">
+				<strong>DUNS:</strong> {{exclusion.identityInfo.duns}}
+				<br />
+				<strong>+4:</strong> 
+				<br />
+				<strong>CAGE Code:</strong>
+				<br />
+				<br /> 
+			</div>
 			<exclusionAddress [address]="exclusion.identityInfo.address"></exclusionAddress>
 			<br />
 			<br />
@@ -52,7 +65,7 @@
 <div class="usa-grid-full padding-left-180px">
 	<h2>Current Record Details</h2>
 </div>
-<div class="usa-grid-full padding-left-170px">
+<div class="usa-grid-full padding-left-170px" *ngIf="exclusion.classificationType=='Individual'">
 	<div class="padding-left-10px message-background-color border-1px-solid">
 		<i class="fa fa-envelope fa-1x" ></i><h3 class="padding-left-5px display-inline">Verify Primary Address</h3>
 		<br />
@@ -68,50 +81,35 @@
 		<br />
 		<button>Submit</button>
 	</div>
+	<br />
 </div>
-<br />
 <div class="usa-grid-full padding-left-180px">
 	<i class="fa fa-ban fa-1x" ></i><h3 class="padding-left-5px display-inline">Exclusion Details</h3>
 	<br />
+	<div *ngIf="exclusion.classificationType=='Firm'">
+		<strong>NPI:</strong>
+	</div>
 	<strong>Exclusion Program: </strong>{{exclusion.exclusionProgram}}
 </div>
 <div class="usa-grid-full">
 <div class="margin-left-170px">
-	<table class="usa-table-borderless">
-		<tr>
-			<td valign="top" class="table-column-width-450px message-background-color">
-				<strong>Nature (Cause):</strong>
-				<br />
-				<i>May be subject to sanctions pursuant to the 
-				conditions imposed by the U.S. Department of the 
-				Treasury (Treasury) Office of Foreign Assets 
-				Control (OFAC), or subject to a sanction, 
-				restriction or partial denial pursuant to the 
-				conditions imposed by the U.S. Department of
-				State (STATE) or Federal agency of the U.S.
-				Government.</i>
-			</td>
-			<td valign="top" class="message-background-color">
-				<strong>Effect:</strong>
-				<i>If you think you have a potential match with an OFAC listing,
-				please visit the following section of OFAC's website for
-				guidance: <a target="_blank" href="http://www.treasury.gov/resource-center/faqs/Sanctions/Pages/directions.aspx">
-				http://www.treasury.gov/resource-center/faqs/Sanctions/Pages/directions.aspx.</a> For all other prohibitions
-				and restrictions, see the agency note in the Additional Comments 
-				field to ascertain the extent or limit on the sanction, restriction
-				or partial denial. If there is no note, contact the agency taking
-				the action for this information.</i>
-			</td>
-		</tr>
-	</table>
+	<exclusionNatureEffect [classificationType]="exclusion.classificationType"></exclusionNatureEffect>
 	</div>
 </div>
 <div class="usa-grid-full">
 	<div class="padding-left-180px">
 		<strong>Additional Comments</strong>
 		<br />
-		{{exclusion.additionalComments}}
-		<br />
+		<ng-container [ngSwitch]="exclusion.additionalComments">
+		<div id="exclusion-comments" *ngIf="exclusion.additionalComments">
+			<div id="exclusion-comments" *ngSwitchCase="exclusion.additionalComments">
+				{{exclusion.additionalComments}}
+			</div>
+		</div>
+		<div id="exclusion-comments" *ngSwitchDefault>
+			None provided
+		</div>
+		</ng-container>
 		<br />
 		<strong>CT Code:</strong> {{exclusion.ctCode}}
 		<br />
@@ -139,7 +137,6 @@
 			No Cross References
 		</div>
 		</ng-container>
-		<br />
 		<strong>More Locations</strong>
 		<br />
 		<ng-container [ngSwitch]="exclusion.moreLocations">

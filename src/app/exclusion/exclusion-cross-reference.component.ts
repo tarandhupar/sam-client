@@ -4,9 +4,9 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
   selector: 'exclusionCrossReference',
   template: `
 		<div>
-			<a href="">{{crossReference.excludingAgency}}</a>
+			<a [routerLink]="['/exclusion', crossReference.samNumber]">{{crossReference.identityInfo.companyName}}</a>
 			<br />
-			<strong>Cross Reference Type: </strong>{{crossReference.classificationType}}
+			<strong>Cross Reference Type: </strong>
 			<br />
 			<strong>Excluding Agency: </strong>{{crossReference.excludingAgency}}
 			<br />
@@ -15,6 +15,8 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 			<strong>Active Date: </strong>{{crossReference.activateDate}}
 			<br />
 			<strong>Termination Date: </strong>{{crossReference.terminationDate}}
+			<br />
+			<br />
 		</div>
   `
 })
