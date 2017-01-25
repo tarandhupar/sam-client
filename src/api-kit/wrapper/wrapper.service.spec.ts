@@ -45,7 +45,7 @@ it('should have APIs property set', inject([WrapperService], (resource) => {
     expect(resource.APIs.federalHierarchy).toBe('/federalorganizations/v1/organizations');
     expect(resource.APIs.dictionary).toBe('/cfda/v1/dictionary');
     expect(resource.APIs.historicalIndex).toBe('/cfda/v1/historicalIndex');
-    expect(resource.APIs.suggestions).toBe('/sgs/v1/search/suggestions');
+    expect(resource.APIs.suggestions).toBe('/sgs/v1/suggestions');
     expect(resource.APIs.featuredSearch).toBe('/sgs/v1/search/featured');
   }));
 });
