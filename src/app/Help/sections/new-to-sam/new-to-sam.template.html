@@ -16,54 +16,41 @@
   </div>
 
   <div class="usa-grid-full" *ngIf="!showImageLibrary">
-    <div class="usa-width-one-whole">
-      <div class="usa-width-one-fourth">&nbsp;</div>
-      <div class="usa-width-three-fourths">
-        <div class="usa-width-one-third">
-          <h5 class="centered">Entity</h5>
+    <table class="usa-width-one-whole m_T-0" cellspacing="5">
+      <tr>
+        <td class="table-cell-one-forth no-border p_T-0">&nbsp;</td>
+        <td class="table-cell-one-forth no-border p_T-0" valign="top">
+          <h5 class="centered m_T-0">Entity</h5>
           <p class="m_0 p_T-1x small-text">A Corporation, limited liability company, public/private business, or sole proprietorship.</p>
-        </div>
-        <div class="usa-width-one-third">
-          <h5 class="centered">Federal Hierarchy</h5>
+        </td>
+        <td class="table-cell-one-forth no-border p_T-0" valign="top">
+          <h5 class="centered m_T-0">Federal Hierarchy</h5>
           <p class="m_0 p_T-1x small-text">Federal Award and Funding Organization.</p>
-        </div>
-        <div class="usa-width-one-third">
-          <h5 class="centered">Researcher/Report</h5>
+        </td>
+        <td class="table-cell-one-forth no-border p_T-0" valign="top">
+          <h5 class="centered m_T-0">Researcher/Report</h5>
           <p class="m_0 p_T-1x small-text">Search awards data for evaluation and reporting.</p>
-        </div>
-      </div>
-    </div>
-    <div class="usa-width-one-whole m_T-3x button-row">
-      <div class="usa-width-one-fourth">
-        <div class="usa-width-one-whole square-paragragh-area">
-          <h5 class="centered">Federal Assistance</h5>
+        </td>
+      </tr>
+      <tr>
+        <td  class="table-cell-one-forth no-border p_T-0">
+          <h5 class="centered m_T-1x">Federal Assistance</h5>
           <p class="m_0 p_T-1x small-text">Government contracts providing funds, resources, grants or information for an entity.</p>
-        </div>
-        <div class="usa-width-one-whole square-paragragh-area">
-          <h5 class="centered">Federal Procurements</h5>
+        </td>
+        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area1')">learn more</td>
+        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area2')">learn more</td>
+        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area3')" rowspan="2">learn more</td>
+      </tr>
+      <tr class="relative">
+        <td  class="table-cell-one-forth no-border p_T-0" >
+          <h5 class="centered m_T-1x">Federal Procurements</h5>
           <p class="m_0 p_T-1x small-text">Buying goods and services from the Federal Government, Intra-Governmental Transactions (IGT). </p>
-        </div>
-      </div>
-      <div class="usa-width-one-fourth relative">
-        <div class="usa-width-one-whole square-button-top" (click)="openImageLibrary('area1')">
-          <h5 class="centered">Learn more</h5>
-        </div>
-        <div class="usa-width-one-whole square-button-bottom m_T-3x" (click)="openImageLibrary('area2')">
-          <h5 class="centered">Learn more</h5>
-        </div>
-      </div>
-      <div class="usa-width-one-fourth relative">
-        <div class="usa-width-one-whole square-button-top" (click)="openImageLibrary('area3')">
-          <h5 class="centered">Learn more</h5>
-        </div>
-        <div class="usa-width-one-whole square-button-bottom m_T-3x" (click)="openImageLibrary('area4')">
-          <h5 class="centered">Learn more</h5>
-        </div>
-      </div>
-      <div class="usa-width-one-fourth long-button" (click)="openImageLibrary('area5')">
-        <h5 class="centered">Learn more</h5>
-      </div>
-    </div>
+        </td>
+        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area4')">learn more</td>
+        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area5')">learn more</td>
+
+      </tr>
+    </table>
 
   </div>
 
