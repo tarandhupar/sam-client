@@ -465,15 +465,12 @@ export class FinancialObligationChart {
       let totalRow = table.selectAll("tbody")
         .append("tr");
 
-      totalRow.append("td")
-        .text("Totals")
-        .attr("scope", "row");
-
       totalRow.style("font-weight", "700")
         .attr("class", "totals")
         .style("font-weight", "700")
         .append("td")
-        .text("Totals");
+        .text("Totals")
+        .attr("scope", "row");
 
       tbody.select("tr:last-child")
         .selectAll("tr")
