@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import config from './config';
 import utilities from './utilities';
 import core from './core';
@@ -6,6 +6,8 @@ import core from './core';
 let utils = new utilities();
 
 export class ApiService {
+  iam;
+
   constructor() {
     _.extend(this, {
       config: config
@@ -25,4 +27,4 @@ export class ApiService {
   getEnvironment() {
     return utils.getEnvironment();
   }
-};
+}
