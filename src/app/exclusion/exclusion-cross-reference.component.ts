@@ -6,7 +6,7 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 		<div>
 			<a>{{crossReference.identityInfo.companyName}}</a>
 			<br />
-			<strong>Cross Reference Type: </strong>
+			<strong>Cross Reference Type: </strong> {{crossReference.crossReferenceType}}
 			<br />
 			<strong>Excluding Agency: </strong>{{crossReference.excludingAgency}}
 			<br />

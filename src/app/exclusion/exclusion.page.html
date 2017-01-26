@@ -30,9 +30,9 @@
 			<div *ngIf="exclusion.classificationType!='Individual'">
 				<strong>DUNS:</strong> {{exclusion.identityInfo.duns}}
 				<br />
-				<strong>+4:</strong> 
+				<strong>+4:</strong> {{exclusion.identityInfo.duns4}}
 				<br />
-				<strong>CAGE Code:</strong>
+				<strong>CAGE Code:</strong> {{exclusion.identityInfo.cageCode}}
 				<br />
 				<br /> 
 			</div>
@@ -87,7 +87,7 @@
 	<i class="fa fa-ban fa-1x" ></i><h3 class="padding-left-5px display-inline">Exclusion Details</h3>
 	<br />
 	<div *ngIf="exclusion.classificationType=='Firm'">
-		<strong>NPI:</strong>
+		<strong>NPI:</strong> {{exclusion.identityInfo.npi}}
 	</div>
 	<strong>Exclusion Program: </strong>{{exclusion.exclusionProgram}}
 </div>
@@ -135,6 +135,8 @@
 		</div>
 		<div id="exclusion-cross-reference" *ngSwitchDefault>
 			No Cross References
+			<br />
+			<br />
 		</div>
 		</ng-container>
 		<strong>More Locations</strong>

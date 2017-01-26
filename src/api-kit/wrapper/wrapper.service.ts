@@ -11,8 +11,7 @@ export class WrapperService {
         "program": "/cfda/v1/program",
         "federalHierarchy": "/federalorganizations/v1/organizations",
         "entities": "/entities",
-        "exclusion": "http://localhost:8020/msam/v1/exclusions/S4MR3RCZN",
-        //S4MR3R7D6
+        "exclusions": "/exclusions",
         "dictionary": "/cfda/v1/dictionary",
         "historicalIndex": "/cfda/v1/historicalIndex",
         "alerts": "/alert/v2/alerts",
