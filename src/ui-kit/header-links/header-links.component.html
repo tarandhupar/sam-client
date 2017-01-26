@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <span *ngIf="!states.isSignedIn">
+  <span [hidden]="states.isSignedIn">
     <div class=" m_R-3x align-top m_B-0x">
       <a class="white-text header-link signin-link" routerLink="/signin">Sign In</a>
     </div>
