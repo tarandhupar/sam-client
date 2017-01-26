@@ -13,8 +13,7 @@ export class SamHeaderLinksComponent {
   private startCheckOutsideClick: boolean = false;
   private user = null;
   private states = {
-    isSignedIn: false,
-    test: false
+    isSignedIn: false
   };
 
   @Output() onDropdownToggle:EventEmitter<any> = new EventEmitter<any>();
@@ -83,5 +82,4 @@ export class SamHeaderLinksComponent {
     }
     return true;
   }
-
 }
