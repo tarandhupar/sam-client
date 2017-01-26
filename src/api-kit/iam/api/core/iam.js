@@ -39,7 +39,9 @@ let user = {
     if(Cookies.get('iPlanetDirectoryPro')) {
       request
         .get(endpoint)
-        .set('iPlanetDirectoryPro', Cookies.get('iPlanetDirectoryPro'))
+        .set({
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
+        })
         .then(function(response) {
           let user = new User(response.body.sessionToken);
           $success(user);
@@ -594,6 +596,7 @@ class IAM {
           } else {
             this.auth.authId = false;
             this.auth.stage = false;
+
             Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
 
             this.checkSession((user) => {
