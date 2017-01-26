@@ -11,7 +11,6 @@ export class PartnersComponent {
     decore antiopam cu usu, sit Id labores vivendum vim.`;
 
   private data:any = [
-    [
       {
         title:"USASpending.gov",
         detail:"The official government searchable website to give the American public access on how tax dollars are spent within their communities and all over the US.  SAM.gov provides the wide range of programs and funding opportunities financed by tax dollars.",
@@ -32,9 +31,7 @@ export class PartnersComponent {
         link:"View Grants.gov",
         url:"http://www.grants.gov/",
         img:"src/assets/img/logos/Grants-Gov-Logo.png"
-      }
-    ],
-    [
+      },
       {
         title:"Disaster Assistance",
         detail:"A user-friendly website provides assistance on how to prepare for, respond to, and recover from disasters. SAM.gov contains information on other forms of federal assistance pertaining to government services.",
@@ -56,7 +53,6 @@ export class PartnersComponent {
         url:"https://www.benefits.gov/",
         img:"src/assets/img/logos/benefits-logo.png"
       }
-    ],
   ];
 
   constructor() { }

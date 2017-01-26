@@ -1,7 +1,7 @@
+
 /*
  * Angular 2 decorators and services
  */
-import { Cookie } from 'ng2-cookies';
 import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
@@ -30,14 +30,16 @@ export class App{
     this.searchService.paramsUpdated$.subscribe(
       obj => {
         this.setQS(obj);
-    });
+      });
     this.activatedRoute.queryParams.subscribe(
       data => {
-        if(typeof data['keyword'] == "string" && typeof data['index'] == "string") {
-          this.setCookie(data);
-        } else {
-          this.checkCookie();
+        if(typeof data['keyword'] === "string") {
+          window.localStorage.setItem("keyword", decodeURI(data['keyword']));
         }
+        if(typeof data['index'] === "string") {
+          window.localStorage.setItem("index", decodeURI(data['index']));
+        }
+        this.checkCookie();
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
       });
@@ -69,8 +71,9 @@ export class App{
       queryParams: qsobj
     };
 
-    Cookie.delete("term");
-    Cookie.delete("ival");
+    window.localStorage.setItem("keyword", qsobj['keyword']);
+    window.localStorage.setItem("index", qsobj['index']);
+
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
@@ -85,20 +88,12 @@ export class App{
 
   }
 
-  setCookie(data) {
-    Cookie.delete("term");
-    Cookie.delete("ival");
-    Cookie.set("term", data['keyword']);
-    Cookie.set("ival", data['index']);
-  }
-
   checkCookie() {
-    let cookielist = Cookie.getAll();
-    if(cookielist['term'] && cookielist['term'].length>0) {
-      this.keyword = cookielist['term'];
+    if(window.localStorage.getItem("keyword")!==null) {
+      this.keyword = window.localStorage.getItem("keyword");
     }
-    if(cookielist['ival'] && cookielist['ival'].length>0) {
-      this.index = cookielist['ival'];
+    if(window.localStorage.getItem("index")!==null) {
+      this.index = window.localStorage.getItem("index");
     }
   }
 

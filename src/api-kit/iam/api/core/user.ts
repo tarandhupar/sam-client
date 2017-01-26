@@ -28,7 +28,7 @@ class User {
         items = [],
         item,
         intItem,
-        data = {};
+        data: any = {};
 
     params = params || {};
 
