@@ -309,7 +309,7 @@
             <div class="card download-container" *ngFor="let package of attachment.packages" [@intro]="fade">
 
               <!-- It's public -->
-              <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" (click)="toggleAccordion(package)">
+              <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" (click)="toggleAccordion(package)" tabindex="0" (keyup.enter)="toggleAccordion(package)">
                 <h3>{{ package.name }} ({{ package.attachments?.length }})</h3>
                 <strong>Type: {{ package.type }}</strong>
               </div>
