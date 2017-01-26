@@ -5,7 +5,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   template: `
     <header id="sam-search-header" class='search-header'>
       <div class="usa-width-one-whole">
-        <div class="usa-width-two-thirds align-top">
+        <div class="usa-width-two-thirds align-top m_R-0">
           <div class="header-container usa-width-one-whole">
             <a class="logo-img m_R-0" [routerLink]="['/']">
               <img src="src/assets/img/transition-sam-logo.png" alt="Sam.gov Logo">
@@ -16,9 +16,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
             </div>
           </div>   
         </div>
-        <div class="usa-width-one-third p_R-1x"> 
+        <div class="usa-width-one-third m_L-2x"> 
           <div class="pull-right">
-            <img title="An official website of the United States Government" class="image-wrap"
+            <img title="An official website of the United States Government"
                src="src/assets/img/us_flag_small.png" alt="US Flag Logo"/>
           </div>
           <SamHeaderLinks (onDropdownToggle)="dropdownEventControl($event)"></SamHeaderLinks>
