@@ -158,9 +158,9 @@ export class AlertsPage {
   }
 
   onAddAlertAccept(alert) {
-    this.currentPage = 1;
     this.alertsService.createAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
       (alerts) => {
+        this.currentPage = 1;
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
       }
@@ -168,9 +168,9 @@ export class AlertsPage {
   }
 
   onEditAlertAccept(alert) {
-    this.currentPage = 1;
     this.alertsService.updateAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
       (alerts) => {
+        this.currentPage = 1;
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
       }
