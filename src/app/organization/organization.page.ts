@@ -58,11 +58,10 @@ export class OrganizationPage implements OnInit, OnDestroy {
       this.errorOrgId = params['id'];
       return this.fhService.getOrganizationById(params['id'], true);
     });
-    console.log("API STREAM", apiStream);
+
     apiStream.subscribe(apiSubject);
-    console.log("API SUBJECT", apiSubject);
+
     this.subscription = apiSubject.subscribe(api => { // run whenever api data is updated
-      console.log("API", api);
       let jsonData:any = api;
       this.organization = jsonData._embedded[0].org;
       this.totalPages = Math.ceil(this.organization.hierarchy.length / this.showPerPage);
