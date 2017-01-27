@@ -430,7 +430,6 @@ export class AgencyPickerComponent implements OnInit {
       if(this.orgRoot){
         data['parentOrganizationId'] = this.orgRoot;
       }
-      console.log("uhh",data);
       this.oFHService.search(data).subscribe( res => {
         this.searchData = res["_embedded"]["results"];
         this.searchResponseHandler();
@@ -465,7 +464,6 @@ export class AgencyPickerComponent implements OnInit {
       this.searchMessage = "";
       //console.log(idx, this.searchData);
       this.oFHService.getOrganizationById(this.searchData[idx]['_id'], true).subscribe(data =>{
-        console.log("urk",data["_embedded"][0]["org"]);
         this.setOrganization(data["_embedded"][0]["org"]);
         this.updateBrowse(data["_embedded"][0]["org"]);
       });
