@@ -47,7 +47,7 @@ describe("Sam Alphabet Selector Component", ()=>{
     expect(true).toBe(true);
   });
 
-  it("should be able to click a prefix to make it selected", async(()=>{
+  it("should be able to click a prefix to make it selected", done =>{
     fixture.detectChanges();
     fixture.nativeElement.querySelector('.pre-selected-prefix').click();
     fixture.whenStable().then(() => {
@@ -57,8 +57,9 @@ describe("Sam Alphabet Selector Component", ()=>{
       
       let currentPrefix = fixture.debugElement.query(By.css(".current-prefix"));
       expect(currentPrefix.nativeElement.innerHTML).toBe("A");
-    });
-  }));
+      done();
+    }).catch(e => {done.fail(e)});
+  });
 
   it("should have correct valid prefix and pre selected prefix", ()=>{
     fixture.detectChanges();

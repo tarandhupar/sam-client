@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -49,7 +49,7 @@ describe('Image Library Component', () => {
     component.name = "contract";
   });
 
-  it('should open detail when clicking on icon', async(()=> {
+  it('should open detail when clicking on icon', done => {
     fixture.detectChanges();
     expect(component.detailObj.showDetail).toBe(false);
     fixture.nativeElement.querySelectorAll('.fa-plus')[2].click();
@@ -58,10 +58,11 @@ describe('Image Library Component', () => {
       let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
       expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       expect(component.detailObj.showDetail).toBe(true);
-    }).catch(e => console.log("reject: " + e));
-  }));
+      done();
+    }).catch(e => {done.fail(e)});
+  });
 
-  it('should open detail when clicking on link', ()=> {
+  it('should open detail when clicking on link', done => {
     fixture.detectChanges();
     expect(component.detailObj.showDetail).toBe(false);
     fixture.nativeElement.querySelector('#contract-02-link').click();
@@ -70,7 +71,8 @@ describe('Image Library Component', () => {
       let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
       expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       expect(component.detailObj.showDetail).toBe(true);
-    }).catch(e => console.log("reject: " + e));
+      done();
+    }).catch(e => {done.fail(e)});
   });
 
   it('should open detail when clicking on semi-transparent div', ()=> {
@@ -82,10 +84,10 @@ describe('Image Library Component', () => {
       let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
       expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       expect(component.detailObj.showDetail).toBe(true);
-    }).catch(e => console.log("reject: " + e));
+    });
   });
 
-  it('should hide detail when clicking on the same icon while the corresponding detail is open', ()=> {
+  it('should hide detail when clicking on the same icon while the corresponding detail is open', done => {
     fixture.detectChanges();
     component.detailObj.showDetail = true;
     component.detailObj.posX = 0;
@@ -100,10 +102,11 @@ describe('Image Library Component', () => {
 
       fixture.detectChanges();
       expect(component.detailObj.showDetail).toBe(false);
-    }).catch(e => console.log("reject: " + e));
+      done();
+    }).catch(e => {done.fail(e)});
   });
 
-  it('should hide detail when clicking on the close link while the corresponding detail is open', ()=> {
+  it('should hide detail when clicking on the close link while the corresponding detail is open', done => {
     fixture.detectChanges();
     component.detailObj.showDetail = true;
     component.detailObj.posX = 0;
@@ -118,6 +121,7 @@ describe('Image Library Component', () => {
 
       fixture.detectChanges();
       expect(component.detailObj.showDetail).toBe(false);
-    }).catch(e => console.log("reject: " + e));
+      done();
+    }).catch(e => {done.fail(e)});
   });
 });
