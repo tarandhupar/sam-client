@@ -34,7 +34,7 @@ export class WrapperService {
     *      }
     * @returns Observable
     */
-    call(oApiParam: any, alertOnError: boolean = true) {
+    call(oApiParam: any, alertOnError: boolean = false) {
         let method: string = oApiParam.method;
         let oHeader = new Headers({});
         let oURLSearchParams = new URLSearchParams();

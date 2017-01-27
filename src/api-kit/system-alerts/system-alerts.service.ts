@@ -38,7 +38,7 @@ export class SystemAlertsService {
     apiOptions.oParam.limit = limit || 5;
     apiOptions.oParam.offset = offset || 0;
 
-    return this.apiService.call(apiOptions, false);
+    return this.apiService.call(apiOptions);
   }
 
   /**
@@ -85,7 +85,7 @@ export class SystemAlertsService {
       apiOptions.oParam.order = order;
     }
 
-    return this.apiService.call(apiOptions, false);
+    return this.apiService.call(apiOptions, true);
   }
 
   updateAlert(alert: AlertType) {
@@ -96,7 +96,7 @@ export class SystemAlertsService {
       body: alert
     };
 
-    return this.apiService.call(apiOptions, false);
+    return this.apiService.call(apiOptions, true);
   }
 
   createAlert(alert: AlertType) {
@@ -107,19 +107,6 @@ export class SystemAlertsService {
       body: alert
     };
 
-    return this.apiService.call(apiOptions, false);
-  }
-
-  deleteAlert(id: number) {
-    const apiOptions: any = {
-      name: 'alerts',
-      suffix: '',
-      method: 'DELETE',
-      body: {
-        id: id
-      }
-    };
-
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, true);
   }
 }

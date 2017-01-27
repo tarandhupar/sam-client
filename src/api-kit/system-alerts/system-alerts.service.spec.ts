@@ -67,12 +67,4 @@ describe('SystemAlertsService', () => {
     });
     service.createAlert(basicAlert);
   })));
-
-  it('should delete an alert', inject([SystemAlertsService, MockBackend], fakeAsync((service: SystemAlertsService, backend: MockBackend) => {
-    backend.connections.subscribe((connection: MockConnection) => {
-      expect(connection.request.method).toBe(RequestMethod.Delete);
-      expect(connection.request.url).toMatch(/alerts/);
-    });
-    service.deleteAlert(1);
-  })));
 });

@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import {Router} from "@angular/router";
-import {Alert} from "./alert.model";
-import {SystemAlertsService} from "../../api-kit/system-alerts/system-alerts.service";
-import {ERROR_PAGE_PATH} from "../application-content/error/error.route";
-import {Observable} from "rxjs";
-import {Cookie} from 'ng2-cookies';
+import { Router } from "@angular/router";
+import { Alert } from "./alert.model";
+import { SystemAlertsService } from "../../api-kit/system-alerts/system-alerts.service";
+import { Observable } from "rxjs";
+import { Cookie } from 'ng2-cookies';
 
 export const ALERTS_PER_PAGE: number = 5;
 
@@ -99,11 +98,7 @@ export class AlertsPage {
   }
 
   doSearch() {
-    this.getAlerts().catch(err => {
-      this.router.navigate([ERROR_PAGE_PATH]);
-      return Observable.of(err);
-    })
-    .subscribe((alerts) => this.onNewAlertsReceived(alerts));
+    this.getAlerts().subscribe((alerts) => this.onNewAlertsReceived(alerts));
   }
 
   getAlerts() : Observable<any> {
@@ -168,10 +163,6 @@ export class AlertsPage {
       (alerts) => {
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
-      },
-      (error) => {
-        console.error('Error while adding alerts: ', error);
-        this.router.navigate([ERROR_PAGE_PATH]);
       }
     );
   }
@@ -182,10 +173,6 @@ export class AlertsPage {
       (alerts) => {
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
-      },
-      (error) => {
-        console.error('Error while editing alert: ', error);
-        this.router.navigate([ERROR_PAGE_PATH]);
       }
     );
   }
