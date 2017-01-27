@@ -38,7 +38,7 @@ export class SystemAlertsService {
     apiOptions.oParam.limit = limit || 5;
     apiOptions.oParam.offset = offset || 0;
 
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, false);
   }
 
   /**
@@ -85,7 +85,7 @@ export class SystemAlertsService {
       apiOptions.oParam.order = order;
     }
 
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, false);
   }
 
   updateAlert(alert: AlertType) {
@@ -96,7 +96,7 @@ export class SystemAlertsService {
       body: alert
     };
 
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, false);
   }
 
   createAlert(alert: AlertType) {
@@ -107,7 +107,7 @@ export class SystemAlertsService {
       body: alert
     };
 
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, false);
   }
 
   deleteAlert(id: number) {

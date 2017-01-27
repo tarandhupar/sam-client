@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSearchParams} from '@angular/http';
 import 'rxjs/add/operator/map';
+import {AlertFooterService} from "../../app/alerts/alert-footer/alert-footer.service";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class WrapperService {
@@ -18,7 +20,7 @@ export class WrapperService {
         "suggestions": "/sgs/v1/suggestions"
     };
 
-    constructor(private _http: Http){}
+    constructor(private _http: Http, private _alertFooter: AlertFooterService){}
 
   /**
     * common function to perform an API CALL
@@ -32,7 +34,7 @@ export class WrapperService {
     *      }
     * @returns Observable
     */
-    call(oApiParam: any) {
+    call(oApiParam: any, alertOnError: boolean = true) {
         let method: string = oApiParam.method;
         let oHeader = new Headers({});
         let oURLSearchParams = new URLSearchParams();
@@ -74,6 +76,22 @@ export class WrapperService {
         let oRequestOptions = new RequestOptions(jsonOption);
         let oRequest = new Request(oRequestOptions);
 
-        return this._http.request(oRequest).map((res: Response) => { return res.json() } );
+        let req = this._http.request(oRequest).map((res: Response) => { return res.json() } );
+
+        if (alertOnError) {
+          return req.catch(() => this.showFooter());
+        } else {
+          return req;
+        }
+    }
+
+    showFooter(): any {
+      this._alertFooter.registerFooterAlert({
+        title:"A required service is unavailable",
+        description:"",
+        type:'error',
+        timer:0
+      });
+      return Observable.throw(new Error("api error"));
     }
 }
