@@ -54,6 +54,7 @@ describe("Sam Alphabet Selector Component", ()=>{
 
       fixture.detectChanges();
       expect(component.currentPrefix).toBe("A");
+      
       let currentPrefix = fixture.debugElement.query(By.css(".current-prefix"));
       expect(currentPrefix.nativeElement.innerHTML).toBe("A");
     });
