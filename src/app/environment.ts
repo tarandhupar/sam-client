@@ -14,7 +14,6 @@ let _decorateModuleRef = function identity(value) { return value; };
 
 if ('production' === ENV) {
   // Production
-  disableDebugTools();
   enableProdMode();
 
   PROVIDERS = [

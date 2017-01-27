@@ -49,8 +49,6 @@ export class SamSelectComponent implements ControlValueAccessor {
   @ViewChild(LabelWrapper)
   public wrapper: LabelWrapper;
 
-  constructor() { }
-
   ngOnInit() {
     if (!this.name) {
       throw new Error("<samSelect> requires a [name] parameter for 508 compliance");

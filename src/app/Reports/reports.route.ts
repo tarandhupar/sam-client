@@ -11,7 +11,7 @@ export const routes: Routes = [
     path: 'reports',
     component: ReportsPage,
     children: [
-      { path: '', redirectTo: 'overview' },
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: OverviewComponent },
       { path: 'static', component: StaticComponent },
       { path: 'adhoc', component: AdhocComponent },

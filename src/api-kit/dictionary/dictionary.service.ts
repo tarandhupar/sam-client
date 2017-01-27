@@ -9,8 +9,8 @@ export class DictionaryService {
 
   public getDictionaryById(id: string) {
     let oApiParam = {
-        name: 'dictionary',
-        suffix: '',
+        name: 'program',
+        suffix: '/dictionaries',
         oParam: {
             ids: id
         },

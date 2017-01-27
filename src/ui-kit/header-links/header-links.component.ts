@@ -21,7 +21,7 @@ export class SamHeaderLinksComponent {
   showDropdown:boolean = false;
   dropdownData:any = [
     {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/", pageInProgress:false},
-    {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/reports/overview", pageInProgress:false},
+    {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/reports/overview", pageInProgress:true},
     {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/", pageInProgress:true},
     {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview", pageInProgress:false},
     {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/", pageInProgress:true},
@@ -31,26 +31,23 @@ export class SamHeaderLinksComponent {
   constructor(private _router:Router, private zone: NgZone, private api: IAMService) {
     this._router.events.subscribe((event) => {
       if(event.constructor.name === 'NavigationStart') {
-        this.zone.runOutsideAngular(() => {
-          this.checkSession(() => {
-            this.zone.run(() => {
-              // Callback
-            });
-          });
-        });
+        this.checkSession();
       }
     });
   }
 
-  checkSession(cb: () => void) {
-    let vm = this;
+  ngOnInit() {
+    this.checkSession();
+  }
 
-    this.api.iam.checkSession(function(user) {
-      vm.states.isSignedIn = true;
-      vm.user = user;
-      cb();
-    }, function() {
-      cb();
+  checkSession() {
+    this.zone.runOutsideAngular(() => {
+      this.api.iam.checkSession((user) => {
+        this.zone.run(() => {
+          this.states.isSignedIn = true;
+          this.user = user;
+        });
+      });
     });
   }
 
@@ -85,5 +82,4 @@ export class SamHeaderLinksComponent {
     }
     return true;
   }
-
 }

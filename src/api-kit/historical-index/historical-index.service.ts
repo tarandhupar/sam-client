@@ -9,8 +9,8 @@ export class HistoricalIndexService{
 
   getHistoricalIndexByProgramNumber(id: string, programNumber: string) {
     let oApiParam = {
-      name: 'historicalIndex',
-      suffix: '/' + id,
+      name: 'program',
+      suffix: '/historicalIndexes/' + id,
       oParam: {
           'programNumber': programNumber
       },

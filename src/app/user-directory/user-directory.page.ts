@@ -24,7 +24,7 @@ export class UserDirectoryPage {
   }
 
   toggleButtonClass() {
-    return this.loadState === 'closed' ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'
+    return this.loadState !== 'closed' ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'
   }
 
   isToggleButtonDisabled() {
