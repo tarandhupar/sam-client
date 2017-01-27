@@ -42,7 +42,7 @@ let MockFHService = {
         }
       ]
     });
-  }, 
+  },
   getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
     return Observable.of("");
   }
@@ -421,7 +421,7 @@ let MockDictionaryService = {
         element_id: '0003002',
         value: 'Cooperative Agreements (Discretionary Grants)'
       }
-    ], 
+    ],
     'applicant_types': [
       {
         code: '11',
