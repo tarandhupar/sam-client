@@ -3,6 +3,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { HistoricalIndexService } from './historical-index.service';
 import { WrapperService } from '../wrapper/wrapper.service'
+import { AlertFooterService } from "../../app/alerts/alert-footer/alert-footer.service";
 
 describe('HistoricalIndexService unit tests TestBed', () => {
   beforeEach(() => {
@@ -10,6 +11,7 @@ describe('HistoricalIndexService unit tests TestBed', () => {
       providers: [
         HistoricalIndexService,
         WrapperService,
+        AlertFooterService,
         BaseRequestOptions,
         MockBackend,
         {

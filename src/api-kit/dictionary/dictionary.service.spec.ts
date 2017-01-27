@@ -3,6 +3,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { DictionaryService } from './dictionary.service';
 import { WrapperService } from '../wrapper/wrapper.service';
+import {AlertFooterService} from "../../app/alerts/alert-footer/alert-footer.service";
 
 describe('DictionaryService unit tests using TestBed', () => {
 
@@ -13,6 +14,7 @@ describe('DictionaryService unit tests using TestBed', () => {
       providers: [
         DictionaryService,
         WrapperService,
+        AlertFooterService,
         BaseRequestOptions,
         MockBackend,
         {

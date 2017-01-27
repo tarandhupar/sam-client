@@ -1,14 +1,9 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { MockBackend } from '@angular/http/testing';
-import {
-  BaseRequestOptions,
-  HttpModule,
-  Http,
-  Response,
-  ResponseOptions
-} from '@angular/http';
+import { BaseRequestOptions, Http } from '@angular/http';
 
 import { WrapperService } from '../wrapper/wrapper.service'
+import { AlertFooterService } from "../../app/alerts/alert-footer/alert-footer.service";
 
 describe('Service: ApiService', () => {
   beforeEach(() => {
@@ -16,6 +11,7 @@ describe('Service: ApiService', () => {
       providers: [
         WrapperService,
         BaseRequestOptions,
+        AlertFooterService,
         MockBackend,
         {
           provide: Http,

@@ -3,13 +3,14 @@ import { RouterTestingModule} from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import { SamSearchHeaderComponent } from './search-header.component';
-import {SamUIKitModule} from "ui-kit";
-import {AutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/autoCompleteWrapper.service";
-import {SuggestionsService} from "../../api-kit/search/suggestions.service";
-import {WrapperService} from "../../api-kit/wrapper/wrapper.service";
-import {FHService} from "../../api-kit/fh/fh.service";
+import { SamUIKitModule } from "ui-kit";
+import { AutoCompleteWrapper}  from "../../api-kit/autoCompleteWrapper/autoCompleteWrapper.service";
+import { SuggestionsService } from "../../api-kit/search/suggestions.service";
+import { WrapperService } from "../../api-kit/wrapper/wrapper.service";
+import { FHService } from "../../api-kit/fh/fh.service";
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
+import { AlertFooterService } from "../../app/alerts/alert-footer/alert-footer.service";
 
 
 describe('The Sam Search Header component', () => {
@@ -31,6 +32,7 @@ describe('The Sam Search Header component', () => {
                   WrapperService,
                   FHService,
                   BaseRequestOptions,
+                  AlertFooterService,
                   MockBackend,
                   {
                     provide: Http,

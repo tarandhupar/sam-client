@@ -6,10 +6,11 @@ import { SamSearchbarComponent } from './searchbar.component.ts';
 import { SamUIKitModule } from 'ui-kit';
 import { AutoCompleteWrapper } from '../../../api-kit/autoCompleteWrapper/autoCompleteWrapper.service';
 import { FHService } from "../../../api-kit/fh/fh.service";
-import {SuggestionsService} from "../../../api-kit/search/suggestions.service";
-import {WrapperService} from "../../../api-kit/wrapper/wrapper.service";
+import { SuggestionsService } from "../../../api-kit/search/suggestions.service";
+import { WrapperService } from "../../../api-kit/wrapper/wrapper.service";
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
+import { AlertFooterService } from "../../../app/alerts/alert-footer/alert-footer.service";
 
 describe('The Sam Search Bar component', () => {
   let component: SamSearchbarComponent;
@@ -30,19 +31,22 @@ describe('The Sam Search Bar component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [BaseRequestOptions,
-                  MockBackend,
-                  {
-                    provide: Http,
-                    useFactory: function (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
-                      return new Http(backend, defaultOptions);
-                    },
-                    deps: [MockBackend, BaseRequestOptions]
-                  },
-                  AutoCompleteWrapper,
-                  FHService,
-                  SuggestionsService,
-                  WrapperService],
+      providers: [
+        BaseRequestOptions,
+        MockBackend,
+        {
+          provide: Http,
+          useFactory: function (backend: ConnectionBackend, defaultOptions: BaseRequestOptions) {
+            return new Http(backend, defaultOptions);
+          },
+          deps: [MockBackend, BaseRequestOptions]
+        },
+        AutoCompleteWrapper,
+        FHService,
+        SuggestionsService,
+        WrapperService,
+        AlertFooterService,
+      ],
       imports: [SamUIKitModule]
     }).overrideComponent(SamSearchbarComponent, {
       set: {

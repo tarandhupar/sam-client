@@ -3,6 +3,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { SystemAlertsService, AlertType } from "./system-alerts.service";
 import { TestBed, fakeAsync, inject } from "@angular/core/testing";
 import { WrapperService } from "../wrapper/wrapper.service";
+import { AlertFooterService } from "../../app/alerts/alert-footer/alert-footer.service";
 
 describe('SystemAlertsService', () => {
   let basicAlert: AlertType = {
@@ -22,6 +23,7 @@ describe('SystemAlertsService', () => {
       providers: [
         SystemAlertsService,
         WrapperService,
+        AlertFooterService,
         BaseRequestOptions,
         MockBackend,
         {
