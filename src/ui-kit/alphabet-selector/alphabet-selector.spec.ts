@@ -1,4 +1,4 @@
-import { TestBed } from "@angular/core/testing";
+import { TestBed, async } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from 'rxjs';
 import { RouterTestingModule } from "@angular/router/testing";
@@ -47,24 +47,22 @@ describe("Sam Alphabet Selector Component", ()=>{
     expect(true).toBe(true);
   });
 
-  it("should be able to click a prefix to make it selected", ()=>{
+  it("should be able to click a prefix to make it selected", async(()=>{
     fixture.detectChanges();
     fixture.nativeElement.querySelector('.pre-selected-prefix').click();
     fixture.whenStable().then(() => {
+
       fixture.detectChanges();
-      let selectedPrefix = fixture.debugElement.query(By.css(".selected-prefix"));
-      expect(selectedPrefix.nativeElement.innerHTML).toBe("A");
+      expect(component.currentPrefix).toBe("A");
     });
-  });
+  }));
 
   it("should have correct valid prefix and pre selected prefix", ()=>{
     fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      let normalPrefixs = fixture.debugElement.queryAll(By.css(".normal-prefix"));
-      let preSelectedPrefix = fixture.debugElement.query(By.css(".pre-selected-prefix"));
-      expect(normalPrefixs.length).toBe(3);
-      expect(preSelectedPrefix.nativeElement.innerHTML).toBe("A");
-    });
+    let normalPrefixs = fixture.debugElement.queryAll(By.css(".normal-prefix"));
+    let preSelectedPrefix = fixture.debugElement.query(By.css(".pre-selected-prefix"));
+    expect(normalPrefixs.length).toBe(3);
+    expect(preSelectedPrefix.nativeElement.innerHTML).toBe("A");
   });
 
   it("should get the default layer set up", ()=>{

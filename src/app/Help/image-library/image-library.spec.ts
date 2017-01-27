@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -9,32 +9,35 @@ import { ImageLibraryComponent } from "./image-library.component";
 describe('Image Library Component', () => {
   let component:ImageLibraryComponent;
   let fixture:any;
-  let dataConfig = [
-    {
-      title:"Federal Acquisition Regulation",
-      detail:"Details for Federal Acquisition Regulation: ",
-      link:"View FAR",
-      url:"https://www.acquisition.gov/?q=browsefar",
-      img:"src/assets/img/placeholder.jpg"
-    },
-    {
-      title:"SBA Commercial Market Representative",
-      detail:"Details for SBA Commercial Market Representative: ",
-      link:"View SBA CMR",
-      url:"https://www.sba.gov/contracting/resources-small-businesses/commercial-market-representatives",
-      img:"src/assets/img/placeholder.jpg"
-    },
-    {
-      title:"Request DUNS Number",
-      detail:"Details for Request DUNS Number: ",
-      link:"View DUNS Number",
-      url:"http://fedgov.dnb.com/webform",
-      img:"src/assets/img/placeholder.jpg"
-    }
-  ];
+  let dataConfig:any;
+
 
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
+    dataConfig = [
+      {
+        title:"Federal Acquisition Regulation",
+        detail:"Details for Federal Acquisition Regulation: ",
+        link:"View FAR",
+        url:"https://www.acquisition.gov/?q=browsefar",
+        img:"src/assets/img/placeholder.jpg"
+      },
+      {
+        title:"SBA Commercial Market Representative",
+        detail:"Details for SBA Commercial Market Representative: ",
+        link:"View SBA CMR",
+        url:"https://www.sba.gov/contracting/resources-small-businesses/commercial-market-representatives",
+        img:"src/assets/img/placeholder.jpg"
+      },
+      {
+        title:"Request DUNS Number",
+        detail:"Details for Request DUNS Number: ",
+        link:"View DUNS Number",
+        url:"http://fedgov.dnb.com/webform",
+        img:"src/assets/img/placeholder.jpg"
+      }
+    ];
+
     TestBed.configureTestingModule({
       providers: [ImageLibraryComponent],
       imports: [HelpModule, RouterTestingModule]
@@ -46,70 +49,75 @@ describe('Image Library Component', () => {
     component.name = "contract";
   });
 
-  it('should open detail when clicking on icon', ()=> {
+  it('should open detail when clicking on icon', async(()=> {
     fixture.detectChanges();
+    expect(component.detailObj.showDetail).toBe(false);
+    fixture.nativeElement.querySelectorAll('.fa-plus')[2].click();
     fixture.whenStable().then(() =>{
-      expect(component.detailObj.showDetail).toBe(false);
-      fixture.nativeElement.querySelector('#contract-Request-DUNS-Number-icon').click();
-
       fixture.detectChanges();
-      let contractDetail = fixture.debugElement.query(By.css("#detail-text-2"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[2].detail);
+      let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       expect(component.detailObj.showDetail).toBe(true);
-    });
-  });
+    }).catch(e => console.log("reject: " + e));
+  }));
 
   it('should open detail when clicking on link', ()=> {
     fixture.detectChanges();
+    expect(component.detailObj.showDetail).toBe(false);
+    fixture.nativeElement.querySelector('#contract-02-link').click();
     fixture.whenStable().then(() => {
-      expect(component.detailObj.showDetail).toBe(false);
-      fixture.nativeElement.querySelector('#contract-Request-DUNS-Number-link').click();
-
       fixture.detectChanges();
-      let contractDetail = fixture.debugElement.query(By.css("#detail-text-2"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[2].detail);
+      let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       expect(component.detailObj.showDetail).toBe(true);
-    });
+    }).catch(e => console.log("reject: " + e));
   });
 
   it('should open detail when clicking on semi-transparent div', ()=> {
     fixture.detectChanges();
+    expect(component.detailObj.showDetail).toBe(false);
+    fixture.nativeElement.querySelectorAll('.image-layers')[2].click();
     fixture.whenStable().then(() => {
-      expect(component.detailObj.showDetail).toBe(false);
-      fixture.nativeElement.querySelector('#contract-Request-DUNS-Number-div').click();
-
       fixture.detectChanges();
-      let contractDetail = fixture.debugElement.query(By.css("#detail-text-2"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[2].detail);
+      let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       expect(component.detailObj.showDetail).toBe(true);
-    });
+    }).catch(e => console.log("reject: " + e));
   });
 
   it('should hide detail when clicking on the same icon while the corresponding detail is open', ()=> {
-    component.detailObj.showDetail = true;
-    component.detailObj.item = dataConfig[2];
     fixture.detectChanges();
+    component.detailObj.showDetail = true;
+    component.detailObj.posX = 0;
+    component.detailObj.posY = 2;
+    component.detailObj.item = component.data[0][2];
+
     fixture.whenStable().then(() => {
-      let contractDetail = fixture.debugElement.query(By.css("#detail-text-2"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[2].detail);
-      fixture.nativeElement.querySelector('#contract-Request-DUNS-Number-icon').click();
+      fixture.detectChanges();
+      let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
+      fixture.nativeElement.querySelector('#contract-02-icon').click();
 
       fixture.detectChanges();
       expect(component.detailObj.showDetail).toBe(false);
-    });
+    }).catch(e => console.log("reject: " + e));
   });
 
   it('should hide detail when clicking on the close link while the corresponding detail is open', ()=> {
-    component.detailObj.showDetail = true;
-    component.detailObj.item = dataConfig[2];
     fixture.detectChanges();
+    component.detailObj.showDetail = true;
+    component.detailObj.posX = 0;
+    component.detailObj.posY = 2;
+    component.detailObj.item = component.data[0][2];
+
     fixture.whenStable().then(() => {
-      let contractDetail = fixture.debugElement.query(By.css("#detail-text-2"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[2].detail);
+      fixture.detectChanges();
+      let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       fixture.nativeElement.querySelector('.image-library-close').click();
 
       fixture.detectChanges();
       expect(component.detailObj.showDetail).toBe(false);
-    });
+    }).catch(e => console.log("reject: " + e));
   });
 });
