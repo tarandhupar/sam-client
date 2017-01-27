@@ -67,6 +67,7 @@ describe('Image Library Component', () => {
     expect(component.detailObj.showDetail).toBe(false);
     fixture.nativeElement.querySelector('#contract-02-link').click();
     fixture.whenStable().then(() => {
+      
       fixture.detectChanges();
       let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
       expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
