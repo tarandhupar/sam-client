@@ -1,0 +1,123 @@
+<h2>Personal Details</h2>
+<div>
+  <form *ngIf="detailsForm" [formGroup]="detailsForm">
+    <!--============================-->
+    <!--=== Identity Information ===-->
+    <!--============================-->
+    <section class="identity" [ngClass]="{ 'usa-editable': isEdit('identity') }">
+      <h3>Identifying Information<a class="usa-edit" href="javascript:void(0);" (click)="edit('identity')">Edit</a></h3>
+      <div class="usa-form-group">
+        <label>Name:</label>
+        <div class="usa-form-control" [innerText]="name"></div>
+      </div>
+      <div class="usa-form-group">
+        <label>Suffix:</label>
+        <div class="usa-form-control" [innerText]="user.suffix"></div>
+      </div>
+      <div class="usa-form-group">
+        <label>Email:</label>
+        <div class="usa-form-control" [innerText]="user.email"></div>
+      </div>
+
+      <samNameEntry class="usa-form-editable" [model]="user" legend=""></samNameEntry>
+
+      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('identity')"></samButton>
+    </section>
+    <!--============================-->
+    <!--=== Business Information ===-->
+    <!--============================-->
+    <section class="business" [ngClass]="{ 'usa-editable': isEdit('business') }">
+      <h3>Business Information<a class="usa-edit" href="javascript:void(0);" (click)="edit('business')">Edit</a></h3>
+
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Department:</label>
+        <div class="usa-form-control" [innerText]="department"></div>
+      </div>
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Agency:</label>
+        <div class="usa-form-control" [innerText]="agency"></div>
+      </div>
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Office:</label>
+        <div class="usa-form-control" [innerText]="office"></div>
+      </div>
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Activity Access Code:</label>
+        <div class="usa-form-control" [innerText]="aac"></div>
+      </div>
+
+      <div class="usa-form-group">
+        <label>Business Phone:</label>
+        <div class="usa-form-control" [innerText]="phone"></div>
+      </div>
+
+      <agencyPicker class="usa-form-editable"
+                    [advancedMode]="true"
+                    [multimode]="false"
+                    [orgRoot]="user.department"
+                    [(orgId)]="user.orgID"
+                    [label]="'Select the office you work for:'"
+                    (department)="setDepartment($event)"
+                    (organization)="setOrganization($event)"
+                    *ngIf="states.isGov">
+      </agencyPicker>
+      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" label="Business Phone"></samPhoneEntry>
+
+      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('business')"></samButton>
+    </section>
+    <!--==========================-->
+    <!--=== Security Questions ===-->
+    <!--==========================-->
+    <section class="kba" [ngClass]="{ 'usa-editable': isEdit('kba') }">
+      <h3>Security Questions<a class="usa-edit" href="javascript:void(0);" (click)="edit('kba')">Edit</a></h3>
+
+      <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
+        <label [innerText]="question(kbaAnswer.questionId)"></label>
+        <div class="usa-form-control" [innerHtml]="kbaAnswer.answer"></div>
+      </div>
+
+      <div class="usa-form-editable" *ngIf="questions.length">
+        <sam-kba-entry #kba
+                       *ngFor="let kbaAnswer of detailsForm.controls.kbaAnswerList.controls; let $index = index;"
+                       [(questions)]="questions[$index]"
+                       [question]="detailsForm.controls.kbaAnswerList.controls[$index].controls.questionId"
+                       [(answer)]="detailsForm.controls.kbaAnswerList.controls[$index].controls.answer"
+                       (onQuestionChange)="changeQuestion($event, $index)"
+                       label="Question {{ $index + 1 }}"></sam-kba-entry>
+      </div>
+
+      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('kba')"></samButton>
+    </section>
+    <section>
+      <h3>Delete Account</h3>
+      <div>
+        Once you delete your account, you will not be able to recover any of your account information or permissions.<br />
+        All your My Access information will permanently be deleted.
+      </div>
+      <samButton buttonType="secondary" buttonText="Deactivate Account" (click)="confirmDeactivation()"></samButton>
+    </section>
+  </form>
+</div>
+
+<samAlert class="usa-alert-static"
+          type="info"
+          title="Information Status"
+          description="If you have legacy accounts of the 10 systems, you can migrate your privileges"></samAlert>
+
+<samModal #confirmModal
+          type="warning"
+          title="Are you sure you want to deactivate your account?"
+          description="If you deactivate your account it cannot be reactivated for future use and you will be immediately logged out of the system. Are you sure you want to deactivate your account?"
+          showClose="true"
+          submitButtonLabel="Yes, deactivate my account"
+          cancelButtonLabel="No, cancel account deactivation"
+          (onSubmit)="reconfirmDeactivation()"></samModal>
+
+<samModal #reconfirmModal
+          type="warning"
+          title="Warning"
+          description="Proceeding with this edit will result in the loss of privileged access to IAE applications. You will have to re-request access in order to restore your roles. Please press yes to continue editing or cancel the edit below."
+          showClose="true"
+          submitButtonLabel="Yes, continue with edit"
+          cancelButtonLabel="No, cancel my edit"
+          (onSubmit)="deactivate()"></samModal>

@@ -1,0 +1,35 @@
+<div class="usa-grid search-page">
+	<div class="usa-width-one">
+		<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
+	</div>
+  <div class="usa-width-one">
+    <samSearchbar (onSearch)="onSearchClick($event)" [keyword]="keyword" [placeholder]="'#keyword'" *ngIf="false"></samSearchbar>
+    <div *ngIf="showOptional" class="usa-width-one">
+      <h3>Common Filters:</h3>
+      <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
+      <hr *ngIf="data.results" class="m_T-5x"/>
+    </div>
+    <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row"></fh-featured-result>
+    <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
+		<div *ngFor="let row of data.results">
+			<opportunities-result *ngIf="row._type=='OPP'" class="usa-grid-full" [data]="row"></opportunities-result>
+      <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row"></assistance-listing-result>
+      <federal-hierarchy-result  *ngIf="row._type=='FH'" class="usa-grid-full" [data]="row"></federal-hierarchy-result>
+      <entities-result *ngIf="row._type=='ENT'" class="usa-grid-full" [data]="row"></entities-result>
+      <exclusions-result *ngIf="row._type=='EX'" class="usa-grid-full" [data]="row"></exclusions-result>
+      <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
+      <hr class="m_T-5x"/>
+  	</div>
+    <div *ngIf="!initLoad && !data.results">
+      <br/>
+      <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
+      <div style="height:300px;"></div>
+    </div>
+	</div>
+  <div *ngIf="data.results">
+    <div class="usa-width-one-whole">
+      <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
+    </div>
+  </div>
+  <br/><br/>
+</div>

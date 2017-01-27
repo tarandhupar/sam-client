@@ -1,0 +1,22 @@
+<div class="usa-grid-full usa-authentication">
+  <aside class="usa-width-one-fourth">
+    <h1>My Profile</h1>
+    <ul class="usa-sidenav-list">
+      <li>
+        <a [routerLink]="['details']" [routerLinkActive]="['usa-current']">Personal Details</a>
+      </li>
+      <li>
+        <a [routerLink]="['password']" [routerLinkActive]="['usa-current']">Reset Password</a>
+      </li>
+      <li>
+        <a href="javascript:void(0);" [routerLinkActive]="['usa-current']">My Access</a>
+      </li>
+      <li>
+        <a [routerLink]="['migrations']" [routerLinkActive]="['usa-current']">Migrations</a>
+      </li>
+    </ul>
+  </aside>
+  <section class="usa-width-three-fourths usa-profile" [ngClass]="[activeRouteClass]">
+     <router-outlet></router-outlet>
+  </section>
+</div>

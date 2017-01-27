@@ -1,0 +1,39 @@
+<div class="usa-grid">
+  <div class="usa-width-one-whole">
+    <div class="usa-register-init">
+      <form class="usa-form-large" autocomplete="off" (ngSubmit)="init($event)">
+        <fieldset>
+          <h2>Sign Up</h2>
+          <span>Hello! Please sign up below to create your account here.</span>
+
+          <div [ngClass]="{ 'usa-input-error': states.submitted && (email.invalid || states.error) }">
+            <label for="email">Email</label>
+            <span class="usa-input-error-message" *ngIf="states.submitted && (email.invalid || states.error.length)" role="alert">
+              <span *ngIf="states.error.length">{{ states.error }}</span>
+              <span *ngIf="email.errors && email.errors.email">Enter a valid email address</span>
+            </span>
+            <input type="text"
+                   id="email"
+                   name="email"
+                   autocomplete="off"
+                   readonly="readonly"
+                   onfocus="this.removeAttribute('readonly');"
+                   [formControl]="email"/>
+          </div>
+
+          <div class="usa-button-controls">
+            <button type="submit">Submit</button>
+          </div>
+
+          <hr />
+
+          <h3>Already have an account</h3>
+
+          <div class="usa-button-controls">
+            <a class="usa-button usa-button-outline" routerLink="/signin">Sign In</a>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+<div class="usa-grid alerts-page">
+  <!-- the first child cannot have a margin or the overlay breaks -->
+  <div style="height: 1px"></div>
+  <div *ngIf="showClassSelector()" class="pull-right">
+    <label>Select Role:</label>
+    <select class='pull-right' [ngModel]="userRole()" (change)="onRoleChange($event.target.value)">
+      <option value="admin">Admin</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+  <h1 class="alert-page-title">System Alerts
+
+  </h1>
+  <div class="alerts-toolbar">
+    <div class="toolbar-item">
+      <samMultiSelectDropdown [disabled]='alertBeingEdited' [(model)]="filters.statuses" [label]="statuses.label" [options]="isAdmin() ? statusOptionsAdmin : statusOptions" [name]="'statuses'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
+    </div>
+    <div class="toolbar-item">
+      <samMultiSelectDropdown [disabled]='alertBeingEdited' [(model)]="filters.types" [label]="types.label" [options]="types.options" [name]="'types'" (modelChange)="onParamChanged()"></samMultiSelectDropdown>
+    </div>
+    <div class="toolbar-item">
+      <samSelect [disabled]='alertBeingEdited' class='publish-select' [(model)]="filters.datePublished" [options]="datesPublished" [name]="'datesPublished'" (modelChange)="onParamChanged()"></samSelect>
+    </div>
+    <div class="toolbar-item sort-column">
+      <samSelect [disabled]="alertBeingEdited" class="sort-select" [(model)]="sortField" [options]="sortFields" [name]='sortField' (modelChange)="onParamChanged()" [label]="'Sort by:'"></samSelect>
+    </div>
+  </div>
+  <div class="pull-right" *ngIf="!alertBeingEdited">
+    <button *ngIf="isAdmin()" class="alerts-primary-bg" (click)="onAddAlertClick()">Add New Alert</button>
+  </div>
+  <div class="alert-count clearfix" *ngIf="alerts.length > 0">
+    <div class="pull-left">
+      <div class="m_T-2x">
+        Showing {{alertsStart()}}-{{alertsEnd()}} of {{totalAlerts()}}
+      </div>
+    </div>
+  </div>
+  <div class="alert-count" *ngIf="alerts.length === 0">
+    <em>No results found for selected criteria. Please use filters to expand the search results.</em>
+  </div>
+  <div *ngIf="alertBeingEdited && !alertBeingEdited.id()" class="alert-block">
+    <alert-edit [mode]="'add'" (cancel)="onAlertCancel()" (accept)="onAddAlertAccept($event)" [alert]="alertBeingEdited"></alert-edit>
+  </div>
+  <div *ngFor="let alert of alerts" class="alert-block">
+    <alert-edit *ngIf="alertBeingEdited && alertBeingEdited === alert" [mode]="'edit'" (cancel)="onAlertCancel()" (accept)="onEditAlertAccept($event)" [alert]="alertBeingEdited"></alert-edit>
+    <alert-item [isAdmin]="isAdmin()" [alert]="alert" *ngIf="alertBeingEdited !== alert" (edit)="onAlertEdit($event)" [editDisabled]="alertBeingEdited"></alert-item>
+  </div>
+  <samPagination [disabled]='alertBeingEdited' *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()" (pageChange)="onParamChanged($event)"></samPagination>
+</div>
