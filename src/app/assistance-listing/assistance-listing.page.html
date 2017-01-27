@@ -76,9 +76,9 @@
 
       <div class="content-block" [ngSwitch]="program.data?.projects?.flag">
         <ng-container *ngSwitchCase="'yes'">
-          <span *ngFor="let item of program.data.projects?.list | keys; let i = index">
-            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.value?.content?.actual">
-              Fiscal Year {{item.key}}: {{item.value.content.actual}}
+          <span *ngFor="let item of program.data.projects?.list; let i = index">
+            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.content?.actual">
+              Fiscal Year {{item.year}}: {{item.content.actual}}
             </span>
             <!--          <span *ngIf="item.value.content.projection">
                       , Projection: {{item.value.content.projection}}
@@ -121,9 +121,9 @@
 
       <div class="content-block" [ngSwitch]="program.data?.postAward?.accomplishments?.flag">
         <ng-container *ngSwitchCase="'yes'">
-          <ng-container *ngFor="let item of program.data.postAward.accomplishments?.list | keys; let i = index">
-            <span class="m_B-2x field" [attr.id]="'program-accomplishments-actual-' + i" *ngIf="item.value?.content?.actual && item.value.content.actual != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.actual}}</span>
-            <span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.value?.content?.projection && item.value.content.projection != ''"><strong>Fiscal Year {{item.key}}:</strong> {{item.value.content.projection}}</span>
+          <ng-container *ngFor="let item of program.data.postAward.accomplishments?.list; let i = index">
+            <span class="m_B-2x field" [attr.id]="'program-accomplishments-actual-' + i" *ngIf="item.content?.actual && item.content?.actual != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.actual}}</span>
+            <span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.content?.projection && item.content?.projection != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.projection}}</span>
           </ng-container>
         </ng-container>
 
@@ -158,14 +158,17 @@
         <ng-container [ngSwitch]="program.data?.eligibility?.documentation?.flag">
           <ng-container *ngSwitchCase="'yes'">
             <span class="field" id="program-elegibility-documentation">{{program.data.eligibility.documentation.content}}</span>
-            <ng-container [ngSwitch]="program.data.eligibility.documentation.questions?.OMBCircularA87?.flag">
-              <span class="field" id="program-elegibility-question-a87" *ngSwitchCase="'yes'">
-                2 CFR 200, Subpart E - Cost Principles applies to this program.
-              </span>
+            <ng-container *ngFor="let item of program.data.eligibility.documentation.questions">
+              <ng-container *ngIf="item.questionCode === 'OMBCircularA87'">
+                <span *ngIf="item.flag === 'yes'" class="field" id="program-elegibility-question-a87">
+                  2 CFR 200, Subpart E - Cost Principles applies to this program.
+                </span>
 
-              <span class="field" id="program-elegibility-question-a87" *ngSwitchDefault>
-                This program is excluded from coverage under 2 CFR 200, Subpart E - Cost Principles.
-              </span>
+                <!-- flag can be both 'no' or null -->
+                <span *ngIf="item.flag !== 'yes'" class="field" id="program-elegibility-question-a87">
+                  This program is excluded from coverage under 2 CFR 200, Subpart E - Cost Principles.
+                </span>
+              </ng-container>
             </ng-container>
           </ng-container>
 
@@ -267,29 +270,31 @@
             <!-- Environmental statements-->
             <ng-container [ngSwitch]="program.data.preApplication.coordination.environmentalImpact?.flag ">
               <ng-container *ngSwitchCase="'yes'">
-                <ng-container *ngFor="let entry of program.data.preApplication.coordination.environmentalImpact.reports | keys; let i = index">
-                  <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.value?.flag === 'yes'">
-                    An environmental impact {{entry.key}} is required for this program.
+                <ng-container *ngFor="let entry of program.data.preApplication.coordination.environmentalImpact?.reports; let i = index">
+                  <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.flag === 'yes'">
+                    An environmental impact {{entry.reportCode}} is required for this program.
                   </span>
                 </ng-container>
               </ng-container>
 
-              <span class="field" id="program-preapplication-coorindation-environmental-na" *ngSwitchDefault>
+              <span *ngSwitchDefault class="field" id="program-preapplication-coorindation-environmental-na">
                 Environmental impact information is not required for this program.
               </span>
             </ng-container>
 
             <!-- Executive Order  -->
-            <ng-container [ngSwitch]="program.data.preApplication.coordination.questions?.ExecutiveOrder12372?.flag">
-              <span class="field" id="program-preapplication-coordination-executive-order" *ngSwitchCase="'yes'">
-                This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
-                An applicant should consult the office or official designated as the single point of contact in his or her State for more
-                information on the process the State requires to be followed in applying for assistance, if the State has selected the program forreview.
-              </span>
+            <ng-container *ngFor="let entry of program.data.preApplication.coordination.questions; let i = index">
+              <ng-container *ngIf="entry.questionCode === 'ExecutiveOrder12372'">
+                <span *ngIf="entry.flag === 'yes'" class="field" id="program-preapplication-coordination-executive-order">
+                  This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
+                  An applicant should consult the office or official designated as the single point of contact in his or her State for more
+                  information on the process the State requires to be followed in applying for assistance, if the State has selected the program forreview.
+                </span>
 
-              <span class="field" id="program-preapplication-coordination-executive-order" *ngSwitchDefault>
-                This program is excluded from coverage under E.O. 12372.
-              </span>
+                <span *ngIf="entry.flag !== 'yes'" class="field" id="program-preapplication-coordination-executive-order">
+                  This program is excluded from coverage under E.O. 12372.
+                </span>
+              </ng-container>
             </ng-container>
 
             <!-- additional content-->
@@ -308,15 +313,17 @@
       <h3>Application Procedures:</h3>
 
       <p>
-        <ng-container [ngSwitch]="program.data?.application?.procedures?.questions?.OMBCircularA102?.flag">
-          <span class="field" id="program-application-procedures-a102" *ngSwitchCase="'yes'">
-            2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards applies to this program.
-          </span>
+        <ng-container *ngFor="let item of program.data?.application?.procedures?.questions">
+          <ng-container *ngIf="item.questionCode === 'OMBCircularA102'">
+            <span *ngIf="item.flag === 'yes'" class="field" id="program-application-procedures-a102">
+              2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards applies to this program.
+            </span>
 
-          <span class="field" id="program-application-procedures-a102" *ngSwitchDefault>
-            This program is excluded from coverage under 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit
-            Requirements for Federal Awards.
-          </span>
+            <span *ngIf="item.flag !== 'yes'" class="field" id="program-application-procedures-a102">
+              This program is excluded from coverage under 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit
+              Requirements for Federal Awards.
+            </span>
+          </ng-container>
         </ng-container>
 
         <!-- additional content-->
@@ -366,7 +373,7 @@
         <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
         <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
         <span class="field" id="program-application-approval">
-          {{program.data?.application?.deadlines?.approval?.otherInfo?.content}}
+          {{program.data?.application?.deadlines?.approval?.additionalInfo?.content}}
         </span>
       </p>
 
@@ -384,7 +391,7 @@
         <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
         <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
         <span class="field" id="program-application-renewal">
-          {{program.data?.application?.deadlines?.renewal?.otherInfo?.content}}
+          {{program.data?.application?.deadlines?.renewal?.additionalInfo?.content}}
         </span>
       </p>
 
@@ -402,7 +409,7 @@
         <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
         <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
         <span class="field" id="program-application-appeal">
-          {{program.data?.application?.deadlines?.appeal?.otherInfo?.content}}
+          {{program.data?.application?.deadlines?.appeal?.additionalInfo?.content}}
         </span>
       </p>
     </section>
@@ -417,11 +424,9 @@
       <div>
         <ng-container [ngSwitch]="program.data?.postAward?.reports?.flag">
           <p class="field" id="program-postaward-reports" *ngSwitchCase="'yes'">
-            <span class="field" id="program-postaward-reports-program" *ngIf="program.data.postAward.reports.list?.program?.flag == 'yes'">{{program.data.postAward.reports.list.program.content}}</span>
-            <span class="field" id="program-postaward-reports-cash" *ngIf="program.data.postAward.reports.list?.cash?.flag == 'yes'">{{program.data.postAward.reports.list.cash.content}}</span>
-            <span class="field" id="program-postaward-reports-progress" *ngIf="program.data.postAward.reports.list?.progress?.flag == 'yes'">{{program.data.postAward.reports.list.progress.content}}</span>
-            <span class="field" id="program-postaward-reports-expenditure" *ngIf="program.data.postAward.reports.list?.expenditure?.flag == 'yes'">{{program.data.postAward.reports.list.expenditure.content}}</span>
-            <span class="field" id="program-postaward-reports-performance" *ngIf="program.data.postAward.reports.list?.performanceMonitoring?.flag == 'yes'">{{program.data.postAward.reports.list.performanceMonitoring.content}}</span>
+            <ng-contianer *ngFor="let item of program.data.postAward.reports.list">
+              <span *ngIf="item.flag === 'yes'" class="field" [attr.id]="'program-postaward-reports-' + item.reportCode">{{item.content}}</span>
+            </ng-contianer>
           </p>
 
           <p class="m-a-0 field" id="program-postaward-reports" *ngSwitchCase="'no'">
@@ -439,18 +444,20 @@
       <div>
         <ng-container [ngSwitch]="program.data?.postAward?.audit?.flag">
           <p *ngSwitchCase="'yes'">
-            <ng-container [ngSwitch]="program.data.postAward.audit.questions?.OMBCircularA133?.flag">
-              <span class="field" id="program-postaward-audit-a133" *ngSwitchCase="'yes'">
-                In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
-                nonfederal entities that expend financial assistance of $750,000 or more in Federal
-                awards will have a single or a program-specific audit conducted for that year. Non-Federal
-                entities that expend less than $750,000 a year in Federal awards are exempt from Federal
-                audit requirements for that year, except as noted in 2 CFR 200.503
-              </span>
+            <ng-container *ngFor="let item of program.data.postAward.audit.questions">
+              <ng-container *ngIf="item.questionCodes === 'OMBCircularA133'">
+                <span *ngIf="item.flag === 'yes'" class="field" id="program-postaward-audit-a133">
+                  In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
+                  nonfederal entities that expend financial assistance of $750,000 or more in Federal
+                  awards will have a single or a program-specific audit conducted for that year. Non-Federal
+                  entities that expend less than $750,000 a year in Federal awards are exempt from Federal
+                  audit requirements for that year, except as noted in 2 CFR 200.503
+                </span>
 
-              <span class="field" id="program-postaward-audit-a133" *ngSwitchDefault>
-                This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
-              </span>
+                <span *ngIf="item.flag !== 'yes'" class="field" id="program-postaward-audit-a133">
+                  This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
+                </span>
+              </ng-container>
             </ng-container>
 
             <span class="field" id="program-postaward-audit">{{program.data.postAward.audit.content}}</span>
@@ -507,7 +514,7 @@
       <ng-container [ngSwitch]="program.data?.assistance?.matching?.flag">
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="'yes'">
           Matching Requirements: <ng-container *ngIf="program.data.assistance.matching?.percent > 0">Percent: {{program.data.assistance.matching.percent}}</ng-container>
-          {{program.data.assistance.matching.otherInfo?.content}}
+          {{program.data.assistance.matching.additionalInfo?.content}}
         </div>
 
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="'no'">
@@ -564,11 +571,11 @@
       <h2 id="history">History</h2><br>
       <ng-container *ngFor="let item of historicalIndex; let i = index">
         <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">
-        <!--<p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
-          {{item.fiscalYear}} ({{item.statusCode}})
-          <span class="historyDetails">{{item.actionType | historicalIndexLabel}}</span>
-        </p>
-        <p id="fiscalYear" *ngIf="!item.statusCode">-->
+          <!--<p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
+            {{item.fiscalYear}} ({{item.statusCode}})
+            <span class="historyDetails">{{item.actionType | historicalIndexLabel}}</span>
+          </p>
+          <p id="fiscalYear" *ngIf="!item.statusCode">-->
           <p class="field" [attr.id]="'program-historical-' + i">
             {{item.fiscalYear}}
             <span class="historyDetails" [attr.id]="'program-historical-details-' + i">{{item.actionType | historicalIndexLabel}}</span>
