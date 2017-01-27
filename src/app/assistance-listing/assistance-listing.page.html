@@ -424,9 +424,9 @@
       <div>
         <ng-container [ngSwitch]="program.data?.postAward?.reports?.flag">
           <p class="field" id="program-postaward-reports" *ngSwitchCase="'yes'">
-            <ng-contianer *ngFor="let item of program.data.postAward.reports.list">
+            <ng-container *ngFor="let item of program.data.postAward.reports.list">
               <span *ngIf="item.flag === 'yes'" class="field" [attr.id]="'program-postaward-reports-' + item.reportCode">{{item.content}}</span>
-            </ng-contianer>
+            </ng-container>
           </p>
 
           <p class="m-a-0 field" id="program-postaward-reports" *ngSwitchCase="'no'">
