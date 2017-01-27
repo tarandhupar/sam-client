@@ -3,7 +3,7 @@
     <div class="usa-width-one-whole">
       <div class="usa-width-one-third" *ngFor="let item of row; let j = index">
         <div class="usa-width-three-fourths image-library-wrap relative" tabindex="0" (keyup.enter)="selectDetail(i,j,$event)" [ngClass]="getBorderClass(i, j)">
-          <div *ngIf="hasLayer" [id]="name+'-'+i+j+'-div'" [ngClass]="getLayerClass(i, j)" class="reference-image-layer-unselect" (click)="selectDetail(i,j,$event)">
+          <div *ngIf="hasLayer" [id]="name+'-'+i+j+'-div'" [ngClass]="getLayerClass(i, j)" class="reference-image-layer-unselect image-layers" (click)="selectDetail(i,j,$event)">
             <span [id]="name+'-'+i+j+'-link'" class="image-library-title" (click)="selectDetail(i,j,$event)">{{item.title}}</span>
           </div>
           <span class="image-library-toggle" (click)="selectDetail(i,j,$event)">
@@ -27,7 +27,7 @@
         <a class="image-library-close" (click)="closeReferenceDetail()">Close</a>
         <div class="usa-width-one-whole m_T-4x">
           <h3 class="p_L-2x" *ngIf="showDetailTitle">{{detailObj.item.title}}</h3>
-          <p class="p_L-5x p_R-2x p_B-1x" [id]="'detail-text-'+i" *ngIf="!isReleaseDetail">{{detailObj.item.detail}}</p>
+          <p class="p_L-5x p_R-2x p_B-1x detail-text" *ngIf="!isReleaseDetail">{{detailObj.item.detail}}</p>
           <table class="usa-grid-full p_L-5x p_R-2x m_B-3x" *ngIf="isReleaseDetail" style="table-layout: fixed;">
             <tr >
               <td class="m_R-0 release-note-div vertical-line" valign="top">
