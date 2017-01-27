@@ -43,16 +43,9 @@ export class SearchPage implements OnInit{
 		this.searchService.loadParams(qsobj);
 	}
 
-	onOrganizationChange(orgId:any[]){
+	onOrganizationChange(orgId:any){
 
-		//we take only first element, incase multiple are sent back
-    this.organizationId = orgId.reduce(function(finalStr,val,idx){
-    	if(idx==0){
-    		return ""+val.value;
-    	} else {
-    		return finalStr;// + "," + val.value;
-    	}
-    },"");
+		this.organizationId = ""+orgId.value;
     this.loadParams();
 	}
 
