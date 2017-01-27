@@ -455,20 +455,25 @@ export class FinancialObligationChart {
         .append("td")
         .html(function (d) {
           if (String(d).indexOf("Total") !== -1) {
-            d3.select(this).attr("scope", "row");
             d3.select(this.parentNode).style("font-weight", "700");
+            d3.select(this.parentNode).insert("th",":first-child")
+              .attr("scope", "row")
+              .html(d);
+            d3.select(this).remove();
+          } else {
+            return d;
           }
-          return d;
         });
 
       // Table Totals
       let totalRow = table.selectAll("tbody")
         .append("tr");
 
-      totalRow.style("font-weight", "700")
+      totalRow.style("font-weight", "700");
+      tbody.append("tr")
         .attr("class", "totals")
         .style("font-weight", "700")
-        .append("td")
+        .append("th")
         .text("Totals")
         .attr("scope", "row");
 
