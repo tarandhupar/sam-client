@@ -86,6 +86,9 @@
 <div class="usa-grid-full padding-left-180px">
 	<i class="fa fa-ban fa-1x" ></i><h3 class="padding-left-5px display-inline">Exclusion Details</h3>
 	<br />
+	<div *ngIf="exclusion.classificationType=='Special Entity Designation'">
+		<strong>D&amp;B Investigation Status:</strong> {{exclusion.dnbInvestigationStatus}}
+	</div>
 	<div *ngIf="exclusion.classificationType=='Firm'">
 		<strong>NPI:</strong> {{exclusion.identityInfo.npi}}
 	</div>

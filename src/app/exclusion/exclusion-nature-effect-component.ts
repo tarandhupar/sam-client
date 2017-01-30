@@ -26,6 +26,22 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 					based on other regulation, statute, executive
 					order or other legal authority.</i>
 				</div>
+				<div *ngIf="classificationType=='Special Entity Designation'">
+					<i>Preliminary ineligible based upon adequate
+					evidence of conduct indicating a lack of
+					business honesty or integrity, or a lack of
+					business integrity, or regulation, statute,
+					executive order or other legal authority,
+					pending completion of an investigation and/or
+					legal proceedings; or based upon initiation of
+					proceedings to determine final ineligibility
+					based upon regulation, statue, executive
+					order or other legal authority or a lack of
+					business integrity or a preponderance of the
+					evidence of any other cause of a serious and
+					compelling nature that it affects present
+					responsibility.</i>
+				</div>
 			</td>
 			<td valign="top" class="message-background-color">
 				<strong>Effect:</strong>
@@ -57,16 +73,45 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 					determined ineligible unless the head of the awarding agency grants a 
 					compelling reasons exception in writing. Additionally, agencies shall not 
 					make awards under certain discretionary Federal assistance, loans,
-					benefits (or contracts there under), nor shall an ineligible person 
+					benefits (or contracts there under); nor shall an ineligible person 
 					participate as a principal, including but not limited to, agent, consultant, 
-					or other person in a position to handle, influence or ocntral Federal
+					or other person in a position to handle, influence or contral Federal
 					funds, or occupying a technical or professional position capable of 
 					substantially influencing the development or outcome of a funded
-					activity, nor act as an agent or representative of other participants in 
+					activity; nor act as an agent or representative of other participants in 
 					Federal assistance, loans and benefits programs. Contact the award
 					agency for questions regarding the extent of Nonprocurement
 					transaction award ineligibillity. The period of ineligibillity is specified by
 					the termination date.</i>
+				</div>
+				<div *ngIf="classificationType=='Special Entity Designation'">
+					Procurement:
+					<br />
+					<i>Agencies shall not solicit offers from, award contracts to renew, place
+					new orders with, or otherwise extend the duration of current contracts,
+					or consent to subcontracts in excess of $30,000 (other than 
+					commercially available off-the-shelf items (COTS)), with these 
+					contractors unless the agency head (or designee) determines in 
+					writing there is a compelling reason to do so.</i>
+					<br />
+					<br />
+					Nonprocurement:
+					<br />
+					<i>No agency in the Executive Branch shall enter into, renew, or extend 
+					primary or lower tier covered transactions to a participant or principal
+					determined preliminarily ineligible unless the head of the awarding agency grants a 
+					compelling reasons exception in writing. Additionally, agencies shall not 
+					make awards under certain discretionary Federal assistance, loans,
+					benefits (or contracts there under); nor shall an ineligible person 
+					participate as a principal, including but not limited to, agent, consultant, 
+					or other person in a position to handle, influence or control Federal
+					funds, or occupying a technical or professional position capable of 
+					substantially influencing the development or outcome of a funded
+					activity; nor act as an agent or representative of other participants in 
+					Federal assistance, loans and benefits programs. Contact the award
+					agency for questions regarding the extent of Nonprocurement
+					transaction award ineligibillity. The termination date will
+					be listed as "Indefinite" (Indef.) unless otherwise specified.</i>
 				</div>
 			</td>
 		</tr>
