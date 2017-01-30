@@ -118,3 +118,11 @@ h2{
 .usa-sidenav-list > li{
   border-top: 1px solid #f1f1f1;
 }
+
+// Make sidenav use all availabe horizontal space on medium screen
+@media screen and (min-width: $medium-screen) and (max-width: 1200px) {
+  aside.usa-width-one-fourth{
+    margin-right: 0;
+    width: 100%;
+  }
+}
