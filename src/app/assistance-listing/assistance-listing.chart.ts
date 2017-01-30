@@ -3,6 +3,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 
 import * as d3 from 'd3';
 import * as _ from 'lodash';
+import {start} from "repl";
 
 @Component({
   moduleId: __filename,
@@ -315,9 +316,11 @@ export class FinancialObligationChart {
         .data(assistanceTotalsGroupedByYear)
         .enter()
         .append("th")
+        .attr("scope", "col")
         .text(d => d.values[0].value.year);
 
       thead.insert("th", ":first-child")
+        .attr("scope", "col")
         .text("Obligation(s)");
 
       // Table: Assistance Details
@@ -450,20 +453,26 @@ export class FinancialObligationChart {
         .selectAll("tr")
         .data(d => d)
         .enter()
-        .append("td")
-        .html(function (d) {
-          if (String(d).indexOf("Total") !== -1) {
+        .append(function(d, i) {
+          if (i === 0) {
+            return document.createElement("th");
+          }
+          return document.createElement("td");
+        })
+        .html(function (d, i) {
+          if (i === 0) {
+            d3.select(this).attr("scope", "row");
             d3.select(this.parentNode).style("font-weight", "700");
           }
           return d;
         });
 
-      // Table Totals
       tbody.append("tr")
         .attr("class", "totals")
         .style("font-weight", "700")
-        .append("td")
-        .text("Totals");
+        .append("th")
+        .text("Totals")
+        .attr("scope", "row");
 
       tbody.select("tr:last-child")
         .selectAll("tr")
