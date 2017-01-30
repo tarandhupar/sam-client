@@ -445,7 +445,7 @@
         <ng-container [ngSwitch]="program.data?.postAward?.audit?.flag">
           <p *ngSwitchCase="'yes'">
             <ng-container *ngFor="let item of program.data.postAward.audit.questions">
-              <ng-container *ngIf="item.questionCodes === 'OMBCircularA133'">
+              <ng-container *ngIf="item.questionCode === 'OMBCircularA133'">
                 <span *ngIf="item.flag === 'yes'" class="field" id="program-postaward-audit-a133">
                   In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
                   nonfederal entities that expend financial assistance of $750,000 or more in Federal
