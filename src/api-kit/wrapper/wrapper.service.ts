@@ -11,7 +11,7 @@ export class WrapperService {
         "program": "/fac/v1/programs",
         "federalHierarchy": "/federalorganizations/v1/organizations",
         "entities": "/entities",
-        "exclusions": "/exclusions"
+        "exclusions": "/exclusions",
         "alerts": "/alert/v2/alerts",
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions"
