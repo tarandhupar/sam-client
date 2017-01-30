@@ -55,7 +55,7 @@ export class OrganizationDisplayPageDemoPage implements OnInit, OnDestroy {
   private loadOrganization() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.activatedRoute.params.switchMap(params => { // construct a stream of api data
-      return this.fhService.getOrganizationById(params['id'], true);
+      return this.fhService.getOrganizationById("100044959", true);
     });
     apiStream.subscribe(apiSubject);
 

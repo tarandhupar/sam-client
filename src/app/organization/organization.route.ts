@@ -4,12 +4,12 @@ import { OrganizationDisplayPageDemoPage } from './display-template-demo/display
 
 export const routes: Routes = [
   {
-    path: 'organization/:id',
-    component: OrganizationPage
+    path: 'organization/demo',
+    component: OrganizationDisplayPageDemoPage
   },
   {
-    path: 'organization/demo/:id',
-    component: OrganizationDisplayPageDemoPage
+    path: 'organization/:id',
+    component: OrganizationPage
   },
 ];
 
