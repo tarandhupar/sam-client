@@ -50,8 +50,9 @@ export class EntitiesResult implements OnInit {
 
   ngOnInit(){
     if(this.data.registrationExpirationDate!==null) {
-      this.data.registrationExpirationDate = moment(this.data.registrationExpirationDate).format("MMM D, Y");
-      this.data["isActive"] = moment(this.data.registrationExpirationDate).diff(moment(new Date()));
+      let exp = moment(this.data.registrationExpirationDate);
+      this.data.registrationExpirationDate = exp.format("MMM D, Y");
+      this.data["isActive"] = exp.diff(moment());
     } else {
       this.data["isActive"] = 0;
     }
