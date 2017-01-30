@@ -1,0 +1,29 @@
+<div class="usa-grid">
+	<aside *ngIf="sidebarToggle" class="usa-width-one-fourth">
+		<div sam-sticky container="occupy-page" limit="1200">
+			<ng-container *ngIf="logoSrc===null">
+	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+	    </ng-container>
+	    <ng-container *ngIf="logoSrc">
+	      <img class="sidenav-logo" [src]="logoSrc" alt="">
+	    </ng-container>
+	    <!--nav>
+	      <ul class="usa-sidenav-list">
+	        <li><a href="#">Award Details</a></li>
+	        <li><a href="#">General Information</a></li>
+	        <li><a href="#">Classification</a></li>
+	        <li><a href="#">Synopsis/Description</a></li>
+	        <li><a href="#">Packages</a></li>
+	        <li><a href="#">Contact Information</a></li>
+	      </ul>
+	    </nav-->
+	    <ng-content select="[display-sidenav]"></ng-content>
+    </div>
+    &nbsp;
+	</aside>
+	<div [attr.class]="contentClass">
+		<ng-content select="[display-alert]"></ng-content>
+		<ng-content select="[display-title]"></ng-content>
+		<ng-content select="[display-content]"></ng-content>
+	</div>
+</div>
