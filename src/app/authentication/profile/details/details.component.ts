@@ -75,11 +75,7 @@ export class DetailsComponent {
 
     workPhone: '',
 
-    kbaAnswerList: [
-      <any>{ questionId: 1, answer: '&bull;' },
-      <any>{ questionId: 5, answer: '&bull;' },
-      <any>{ questionId: 7, answer: '&bull;' }
-    ],
+    kbaAnswerList: [],
 
     accountClaimed: true
   };
@@ -131,11 +127,13 @@ export class DetailsComponent {
             department:      [this.user.department],
             orgID:           [this.user.orgID],
 
-            kbaAnswerList:   this.builder.array([
-              this.initKBAGroup(0),
-              this.initKBAGroup(1),
-              this.initKBAGroup(2)
-            ]),
+            kbaAnswerList:   this.builder.array(
+              this.user.kbaAnswerList.length ? [
+                this.initKBAGroup(0),
+                this.initKBAGroup(1),
+                this.initKBAGroup(2)
+              ] : []
+            ),
           });
 
           if(this.states.isGov) {
@@ -194,6 +192,11 @@ export class DetailsComponent {
           intQuestion,
           intAnswer;
 
+      // Prepopulate kbaAnswerList
+      for(intAnswer = 0; intAnswer < data.selected.length; intAnswer++) {
+        vm.user.kbaAnswerList.push({ questionId: 0, answer: '&bull;' });
+      }
+
       // Set Selected Answers
       vm.user.kbaAnswerList = vm.user.kbaAnswerList.map(function(answer, intAnswer) {
         selected = (data.selected[intAnswer] || -1);
@@ -230,7 +233,11 @@ export class DetailsComponent {
       cb();
     }
 
-    this.api.iam.kba.questions(processKBAQuestions, processKBAQuestions);
+    function cancelKBAQuestions(error) {
+      cb();
+    }
+
+    this.api.iam.kba.questions(processKBAQuestions, cancelKBAQuestions);
   }
 
   initUser(cb) {
@@ -247,8 +254,6 @@ export class DetailsComponent {
               });
             });
           });
-
-
         }).bind(this),
 
         getMockUser = (function(promise) {
