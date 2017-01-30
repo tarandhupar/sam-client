@@ -151,7 +151,7 @@ export class FinancialObligationChart {
 
     // Axis Domain
     let yDomainMax = d3.max(vizTotals, item => item.value.total);
-    x.domain(assistanceTotalsGroupedByYear.map(d => { d.values[0].value.year; }));
+    x.domain(assistanceTotalsGroupedByYear.map(d => d.values[0].value.year));
     y.domain([0, yDomainMax]).nice();
     z.domain(stackKeys);
 
@@ -178,7 +178,7 @@ export class FinancialObligationChart {
         .data(d => d)
         .enter()
         .append("rect")
-        .attr("x", d => { x(d.data.values[0].value.year) + (x.bandwidth() / 4); } )
+        .attr("x", d => x(d.data.values[0].value.year) + (x.bandwidth() / 4))
         .attr("y", d => y(d[1]))
         .style("cursor", "pointer")
         .attr("height", d => y(d[0]) - y(d[1]))
