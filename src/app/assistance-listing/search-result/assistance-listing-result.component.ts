@@ -23,7 +23,7 @@ import * as moment from 'moment/moment';
         	<li *ngIf="data.organizationHierarchy && data.organizationHierarchy[0]?.level==1"><strong>Department:</strong><a href=""><span>{{data.organizationHierarchy[0].name}}</span></a></li>
           <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[1]?.level==2"><strong>Agency:</strong><a href=""><span>{{data.organizationHierarchy[1].name}}</span></a></li>
           <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[2]?.level==3"><strong>Office:</strong><a href=""><span>{{data.organizationHierarchy[2].name}}</span></a></li>
-          <!--<li *ngIf="data.contacts!=null"><strong>Headquarters Office:</strong> {{data.contacts[0].fullName}}<br>{{data.contacts[0].address}}, {{data.contacts[0].city}}, {{data.contacts[0].state}} {{data.contacts[0].zip}} {{data.contacts[0].country}}</li>-->
+          <li *ngIf="data.contacts!=null"><strong>Headquarters Office:</strong> {{data.contacts[0].name}}<br>{{data.contacts[0].address?.streetAddress}}, {{data.contacts[0].address?.city}}, {{data.contacts[0].address?.state}} {{data.contacts[0].address?.zip}} {{data.contacts[0].address?.country}}</li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
