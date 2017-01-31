@@ -35,7 +35,7 @@ import * as moment from 'moment/moment';
           </li>
           <li><strong>Date Published</strong>
             <ul class="usa-unstyled-list">
-              <li>{{data.publishedDate}}</li>
+              <li>{{data.publishDate}}</li>
             </ul>
           </li>
           <li><strong>Type</strong>
@@ -52,7 +52,7 @@ export class AssistanceListingResult implements OnInit {
 	constructor() { }
 
   ngOnInit(){
-    this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y");
+    this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
   }
 
   printFALLink(){
