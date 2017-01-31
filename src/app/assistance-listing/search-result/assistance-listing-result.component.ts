@@ -9,11 +9,11 @@ import * as moment from 'moment/moment';
   template: `
       <p>
     	  <span class="usa-label">Federal Assistance Listing</span>
-    	  <span *ngIf="data.archive==true" class="usa-label">ARCHIVED</span>
+    	  <span *ngIf="data.isActive==false" class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="assistance-listing-title">
-      	<a *ngIf="data.archive==false" [routerLink]="[printFALLink()]">{{data.title}}</a>
-      	<span *ngIf="data.archive==true">{{data.title}}</span>
+      	<a *ngIf="data.isActive==true" [routerLink]="[printFALLink()]">{{data.title}}</a>
+      	<span *ngIf="data.isActive==false">{{data.title}}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<p class="m_T-2x">
@@ -40,7 +40,7 @@ import * as moment from 'moment/moment';
           </li>
           <li><strong>Type</strong>
             <ul class="usa-unstyled-list">
-              <li>{{data.assistanceTypes}}</li>
+              <li><span *ngFor="let assistanceTypes of data.assistanceTypes; let i=index">{{ assistanceTypes.code }} {{ assistanceTypes.code!==null ? '-' : '' }} {{ assistanceTypes.value }}{{ assistanceTypes.value!==null && i!==data.assistanceTypes.length-1 ? ',' : '' }}</span></li>
             </ul>
           </li>
         </ul>
