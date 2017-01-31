@@ -66,6 +66,5 @@ export class NewToSamComponent {
     this.curImageGroup = {};
   }
 
-
-
+  
 }
