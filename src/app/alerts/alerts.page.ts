@@ -4,6 +4,7 @@ import { Alert } from "./alert.model";
 import { SystemAlertsService } from "../../api-kit/system-alerts/system-alerts.service";
 import { Observable } from "rxjs";
 import { Cookie } from 'ng2-cookies';
+import { AlertFooterService } from "./alert-footer/alert-footer.service";
 
 export const ALERTS_PER_PAGE: number = 5;
 
@@ -64,7 +65,7 @@ export class AlertsPage {
     {label: 'End date (oldest first)', value: 'eda'},
   ];
 
-  constructor(public router: Router, private alertsService: SystemAlertsService) {
+  constructor(private router: Router, private alertsService: SystemAlertsService, private alertFooterService: AlertFooterService) {
 
   }
 
@@ -163,7 +164,8 @@ export class AlertsPage {
         this.currentPage = 1;
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
-      }
+      },
+      () => this.showFooter()
     );
   }
 
@@ -173,8 +175,19 @@ export class AlertsPage {
         this.currentPage = 1;
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
-      }
+      },
+      () => this.showFooter()
     );
+  }
+
+  showFooter() {
+    this.alertFooterService.registerFooterAlert({
+      title:"A required service is unavailable",
+      description:"",
+      type:'error',
+      timer:0
+    });
+    return Observable.throw(new Error("api error"));
   }
 
   exitEditMode() {

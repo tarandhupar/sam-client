@@ -3,7 +3,6 @@ import { inject, TestBed } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { ProgramService } from './program.service';
 import { WrapperService } from '../wrapper/wrapper.service'
-import { AlertFooterService } from "../../app/alerts/alert-footer/alert-footer.service";
 
 describe('Program Service', () => {
   beforeEach(() => {
@@ -11,7 +10,6 @@ describe('Program Service', () => {
       providers: [
         ProgramService,
         WrapperService,
-        AlertFooterService,
         BaseRequestOptions,
         MockBackend,
         {

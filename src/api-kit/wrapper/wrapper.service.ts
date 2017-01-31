@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSearchParams} from '@angular/http';
 import 'rxjs/add/operator/map';
-import {AlertFooterService} from "../../app/alerts/alert-footer/alert-footer.service";
-import {Observable} from "rxjs";
 
 @Injectable()
 export class WrapperService {
@@ -13,14 +11,13 @@ export class WrapperService {
         "program": "/fac/v1/programs",
         "federalHierarchy": "/federalorganizations/v1/organizations",
         "entities": "/entities",
-        "exclusion": "http://localhost:8020/msam/v1/exclusions/S4MR3RCZN",
-        //S4MR3R7D6
+        "exclusions": "/exclusions",
         "alerts": "/alert/v2/alerts",
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions"
     };
 
-    constructor(private _http: Http, private _alertFooter: AlertFooterService){}
+    constructor(private _http: Http){}
 
   /**
     * common function to perform an API CALL
@@ -34,7 +31,7 @@ export class WrapperService {
     *      }
     * @returns Observable
     */
-    call(oApiParam: any, alertOnError: boolean = false) {
+    call(oApiParam: any) {
         let method: string = oApiParam.method;
         let oHeader = new Headers({});
         let oURLSearchParams = new URLSearchParams();
@@ -76,22 +73,6 @@ export class WrapperService {
         let oRequestOptions = new RequestOptions(jsonOption);
         let oRequest = new Request(oRequestOptions);
 
-        let req = this._http.request(oRequest).map((res: Response) => { return res.json() } );
-
-        if (alertOnError) {
-          return req.catch(() => this.showFooter());
-        } else {
-          return req;
-        }
-    }
-
-    showFooter(): any {
-      this._alertFooter.registerFooterAlert({
-        title:"A required service is unavailable",
-        description:"",
-        type:'error',
-        timer:0
-      });
-      return Observable.throw(new Error("api error"));
+        return this._http.request(oRequest).map((res: Response) => { return res.json() } );
     }
 }

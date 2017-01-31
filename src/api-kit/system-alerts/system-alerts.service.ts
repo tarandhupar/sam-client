@@ -85,7 +85,7 @@ export class SystemAlertsService {
       apiOptions.oParam.order = order;
     }
 
-    return this.apiService.call(apiOptions, true);
+    return this.apiService.call(apiOptions);
   }
 
   updateAlert(alert: AlertType) {
@@ -96,7 +96,7 @@ export class SystemAlertsService {
       body: alert
     };
 
-    return this.apiService.call(apiOptions, true);
+    return this.apiService.call(apiOptions);
   }
 
   createAlert(alert: AlertType) {
@@ -107,6 +107,19 @@ export class SystemAlertsService {
       body: alert
     };
 
-    return this.apiService.call(apiOptions, true);
+    return this.apiService.call(apiOptions);
+  }
+
+  deleteAlert(id: number) {
+    const apiOptions: any = {
+      name: 'alerts',
+      suffix: '',
+      method: 'DELETE',
+      body: {
+        id: id
+      }
+    };
+
+    return this.apiService.call(apiOptions);
   }
 }

@@ -3,7 +3,6 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { SystemAlertsService, AlertType } from "./system-alerts.service";
 import { TestBed, fakeAsync, inject } from "@angular/core/testing";
 import { WrapperService } from "../wrapper/wrapper.service";
-import { AlertFooterService } from "../../app/alerts/alert-footer/alert-footer.service";
 
 describe('SystemAlertsService', () => {
   let basicAlert: AlertType = {
@@ -23,7 +22,6 @@ describe('SystemAlertsService', () => {
       providers: [
         SystemAlertsService,
         WrapperService,
-        AlertFooterService,
         BaseRequestOptions,
         MockBackend,
         {
@@ -68,5 +66,13 @@ describe('SystemAlertsService', () => {
       expect(connection.request.url).toMatch(/alerts/);
     });
     service.createAlert(basicAlert);
+  })));
+
+  it('should delete an alert', inject([SystemAlertsService, MockBackend], fakeAsync((service: SystemAlertsService, backend: MockBackend) => {
+    backend.connections.subscribe((connection: MockConnection) => {
+      expect(connection.request.method).toBe(RequestMethod.Delete);
+      expect(connection.request.url).toMatch(/alerts/);
+    });
+    service.deleteAlert(1);
   })));
 });

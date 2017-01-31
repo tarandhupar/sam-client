@@ -3,7 +3,6 @@ import { inject, TestBed } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { WrapperService } from '../wrapper/wrapper.service'
 import { OpportunityService } from './opportunity.service';
-import { AlertFooterService } from "../../app/alerts/alert-footer/alert-footer.service";
 
 describe('Opportunity Service', () => {
   beforeEach(() => {
@@ -11,7 +10,6 @@ describe('Opportunity Service', () => {
       providers: [
         OpportunityService,
         WrapperService,
-        AlertFooterService,
         BaseRequestOptions,
         MockBackend,
         {
@@ -29,7 +27,7 @@ describe('Opportunity Service', () => {
     let mockData = {
       "opportunityId": "213ji321hu3jk123",
       "data": {
-        "type": "Type Goes here",
+        "type": "i",
         "solicitationNumber": "Solicitation Number goes here",
         "title": "Title Goes here",
         "organizationId": "100010393",

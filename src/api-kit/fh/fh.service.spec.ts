@@ -1,9 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
-import { Http, Response, BaseRequestOptions, ResponseOptions } from '@angular/http';
+import {Http, Response, BaseRequestOptions, ResponseOptions } from '@angular/http';
 import { FHService } from './fh.service';
 import { WrapperService } from '../wrapper/wrapper.service'
-import { AlertFooterService } from "../../app/alerts/alert-footer/alert-footer.service";
 
 describe('Federal Hierarchy Service', () => {
 
@@ -14,7 +13,6 @@ describe('Federal Hierarchy Service', () => {
         FHService,
         WrapperService,
         BaseRequestOptions,
-        AlertFooterService,
         MockBackend,
         {
           provide: Http,
