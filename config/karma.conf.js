@@ -26,8 +26,14 @@ module.exports = function(config) {
      * we are building the test environment in ./spec-bundle.js
      */
     files: [
-      { pattern: './config/spec-bundle.js', watched: false }
+      { pattern: './config/spec-bundle.js', watched: false },
+      { pattern: './src/assets/**/*.jpg', watched: false, included: false, served: true },
+      { pattern: './src/assets/**/*.png', watched: false, included: false, served: true },
     ],
+
+    proxies: {
+      '/src/assets': '/base/src/assets'
+    },
 
     /*
      * preprocess matching files before serving them to the browser

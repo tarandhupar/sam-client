@@ -88,7 +88,6 @@ describe('AgencyPickerTests', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       let nativeElement = fixture.nativeElement;
-      console.log(nativeElement.querySelector('.usa-form-hint').textContent);
       expect(nativeElement.querySelector('.usa-form-hint').textContent).toEqual("dummy text");
     });
 	});
@@ -98,7 +97,6 @@ describe('AgencyPickerTests', () => {
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       let nativeElement = fixture.nativeElement;
-      console.log(nativeElement.querySelector('.organization-container > label').textContent);
       expect(nativeElement.querySelector('.organization-container > label').textContent).toEqual("dummy label");
     });
   });
