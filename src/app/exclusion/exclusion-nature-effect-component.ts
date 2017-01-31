@@ -7,7 +7,7 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 		<tr>
 			<td valign="top" class="table-column-width-450px message-background-color">
 				<strong>Nature (Cause):</strong>
-				<div *ngIf="classificationType=='Individual'">
+				<div *ngIf="classificationType=='Individual' || classificationType=='Vessel'">
 					<i>May be subject to sanctions pursuant to the 
 					conditions imposed by the U.S. Department of the 
 					Treasury (Treasury) Office of Foreign Assets 
@@ -45,7 +45,7 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 			</td>
 			<td valign="top" class="message-background-color">
 				<strong>Effect:</strong>
-				<div *ngIf="classificationType=='Individual'">
+				<div *ngIf="classificationType=='Individual' || classificationType=='Vessel'">
 					<i>If you think you have a potential match with an OFAC listing,
 					please visit the following section of OFAC's website for
 					guidance: <a target="_blank" href="http://www.treasury.gov/resource-center/faqs/Sanctions/Pages/directions.aspx">

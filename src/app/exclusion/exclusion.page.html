@@ -27,7 +27,7 @@
 	<table class="usa-table-borderless">
 	<tr>
 		<td class="padding-left-180px" valign="bottom">
-			<div *ngIf="exclusion.classificationType!='Individual'">
+			<div *ngIf="exclusion.classificationType!='Individual' && exclusion.classificationType!='Vessel'">
 				<strong>DUNS:</strong> {{exclusion.identityInfo.duns}}
 				<br />
 				<strong>+4:</strong> {{exclusion.identityInfo.duns4}}
@@ -83,6 +83,40 @@
 	</div>
 	<br />
 </div>
+<div class="usa-grid-full padding-left-180px" *ngIf="exclusion.classificationType=='Vessel'">
+	<div class="usa-width-one-half">
+		<i class="fa fa-ship fa-1x" ></i><h3 class="padding-left-5px display-inline">Vessel Details</h3>
+		<br />
+		<strong>Call Sign:</strong> {{exclusion.vesselDetails.callSign}}
+		<br />
+		<strong>Type:</strong> {{exclusion.vesselDetails.type}}
+		<br />
+		<strong>Tonnage:</strong> {{exclusion.vesselDetails.tonnage}}
+		<br />
+		<strong>GRT:</strong> {{exclusion.vesselDetails.grt}}
+		<br />
+		<strong>Flag:</strong> {{exclusion.vesselDetails.flag}}
+		<br />
+		<strong>Owner:</strong> {{exclusion.vesselDetails.owner}}
+	</div>
+	<div class="usa-width-one-half">
+	<strong>Secondary Address:</strong>
+	<br />
+	<ng-container [ngSwitch]="exclusion.vesselDetails.secondaryAddress">
+		<div id="exclusion-secondary-address" *ngIf="exclusion.vesselDetails.secondaryAddress">
+			<div id="exclusion-secondary-address" *ngSwitchCase="exclusion.vesselDetails.secondaryAddress">
+				<div *ngFor="let address of exclusion.vesselDetails.secondaryAddress">
+				<exclusionAddress [address]="address"></exclusionAddress>
+				</div>
+			</div>
+		</div>
+		<div id="exclusion-secondary-address" *ngSwitchDefault>
+			none provided
+		</div>
+		</ng-container>
+	</div>
+</div>
+<br />
 <div class="usa-grid-full padding-left-180px">
 	<i class="fa fa-ban fa-1x" ></i><h3 class="padding-left-5px display-inline">Exclusion Details</h3>
 	<br />
