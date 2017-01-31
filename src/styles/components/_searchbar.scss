@@ -15,12 +15,32 @@
     color: #2D2D2D;
   }
 
-  .filter-select{
-    min-width: 180px;
-    opacity: 0;
+  // .filter-select{
+  //   min-width: 180px;
+  //   opacity: 0;
+  //   position: absolute;
+  //   left: 0;
+  //   top: -30px;
+  // }
+  labelWrapper{
+    position: relative;
+    display: block;
+  }
+  .label-wrapper:after{
+    content: "arrow";
     position: absolute;
-    left: 0;
-    top: -30px;
+    right: 0;
+    top:0;
+  }
+  select{
+    color: #777;
+    background-color: #e2e1e1;
+    font-weight: 700;
+    border: none;
+    border-radius: 5px 0 0 5px;
+    padding: 8px 10px 8px 10px;
+    height: 3.3rem;
+    line-height: 1;
   }
 
   .search-btn{
