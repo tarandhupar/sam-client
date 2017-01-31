@@ -13,7 +13,7 @@ var fixture;
 var comp;
 var titleEl;
 
-describe('AgencyPickerTests', () => {
+describe('DisplayPageTests', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ DisplayPageComponent ],
