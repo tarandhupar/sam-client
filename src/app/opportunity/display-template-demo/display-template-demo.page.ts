@@ -120,7 +120,7 @@ export class OpportunityDisplayPageDemoPage implements OnInit {
     let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
 
     this.route.params.subscribe((params: Params) => { // construct a stream of opportunity data
-      this.opportunityService.getOpportunityById("54174d838f82d99d74c50589ef709d6f").subscribe(opportunitySubject); // attach subject to stream
+      this.opportunityService.getOpportunityById("575779edb30fb028e58d56927630af5f").subscribe(opportunitySubject); // attach subject to stream
     });
 
     opportunitySubject.subscribe(api => { // do something with the opportunity api

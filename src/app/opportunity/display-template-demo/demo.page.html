@@ -9,7 +9,13 @@
       <li *ngIf="shouldBeDisplayed(opportunityFields.Synopsis)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
       <li *ngIf="shouldBeDisplayed(opportunityFields.Packages)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
       <li *ngIf="shouldBeDisplayed(opportunityFields.Contact)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Contact) }}">Contact Information</a></li>
-      <!--<li><a href="{{ currentUrl }}#history">History</a></li>-->
+    </ul>
+  </nav>
+  
+  <nav *ngIf="currentTab == 'Award Notices'">
+    <ul class="usa-sidenav-list">
+      <li *ngIf="shouldBeDisplayed(opportunityFields.AwardSummary)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.AwardSummary) }}">Awards Summary</a></li>
+      <li>&nbsp;</li>
     </ul>
   </nav>
 </div>
