@@ -11,8 +11,33 @@ describe('Image Library Component', () => {
   let fixture:any;
   let dataConfig:any;
 
+
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
+    dataConfig = [
+      {
+        title:"Federal Acquisition Regulation",
+        detail:"Details for Federal Acquisition Regulation: ",
+        link:"View FAR",
+        url:"https://www.acquisition.gov/?q=browsefar",
+        img:"src/assets/img/placeholder.jpg"
+      },
+      {
+        title:"SBA Commercial Market Representative",
+        detail:"Details for SBA Commercial Market Representative: ",
+        link:"View SBA CMR",
+        url:"https://www.sba.gov/contracting/resources-small-businesses/commercial-market-representatives",
+        img:"src/assets/img/placeholder.jpg"
+      },
+      {
+        title:"Request DUNS Number",
+        detail:"Details for Request DUNS Number: ",
+        link:"View DUNS Number",
+        url:"http://fedgov.dnb.com/webform",
+        img:"src/assets/img/placeholder.jpg"
+      }
+    ];
+
     TestBed.configureTestingModule({
       providers: [ImageLibraryComponent],
       imports: [HelpModule, RouterTestingModule]
@@ -20,92 +45,84 @@ describe('Image Library Component', () => {
     });
     fixture = TestBed.createComponent(ImageLibraryComponent);
     component = fixture.componentInstance;
-    dataConfig = [
-      {
-        title:"Federal Acquisition Regulation",
-        detail:"Details for Federal Acquisition Regulation: "+this.detailLipsum,
-        link:"View FAR",
-        url:"https://www.acquisition.gov/?q=browsefar",
-        img:"src/assets/img/placeholder.jpg"
-      },
-      {
-        title:"SBA Commercial Market Representative",
-        detail:"Details for SBA Commercial Market Representative: "+this.detailLipsum,
-        link:"View SBA CMR",
-        url:"https://www.sba.gov/contracting/resources-small-businesses/commercial-market-representatives",
-        img:"src/assets/img/placeholder.jpg"
-      },
-      {
-        title:"Request DUNS Number",
-        detail:"Details for Request DUNS Number: "+this.detailLipsum,
-        link:"View DUNS Number",
-        url:"http://fedgov.dnb.com/webform",
-        img:"src/assets/img/placeholder.jpg"
-      }
-    ];
     component.data = dataConfig;
     component.name = "contract";
   });
 
-  it('should open detail when clicking on icon', ()=> {
+  it('should open detail when clicking on icon', done => {
     fixture.detectChanges();
     expect(component.detailObj.showDetail).toBe(false);
-    fixture.nativeElement.querySelector('#contract-icon-0').click();
-    fixture.whenStable().then(() => {
+    fixture.nativeElement.querySelectorAll('.fa-plus')[2].click();
+    fixture.whenStable().then(() =>{
       fixture.detectChanges();
       let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[0].detail);
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       expect(component.detailObj.showDetail).toBe(true);
-    });
+      done();
+    }).catch(e => {done.fail(e)});
   });
 
-  it('should open detail when clicking on link', ()=> {
+  it('should open detail when clicking on link', done => {
     fixture.detectChanges();
     expect(component.detailObj.showDetail).toBe(false);
-    fixture.nativeElement.querySelector('#contract-link-0').click();
+    fixture.nativeElement.querySelector('#contract-02-link').click();
     fixture.whenStable().then(() => {
+      
       fixture.detectChanges();
       let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[0].detail);
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       expect(component.detailObj.showDetail).toBe(true);
-    });
+      done();
+    }).catch(e => {done.fail(e)});
   });
 
   it('should open detail when clicking on semi-transparent div', ()=> {
     fixture.detectChanges();
     expect(component.detailObj.showDetail).toBe(false);
-    fixture.nativeElement.querySelector('#contract-div-0').click();
+    fixture.nativeElement.querySelectorAll('.image-layers')[2].click();
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
-      expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[0].detail);
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
       expect(component.detailObj.showDetail).toBe(true);
     });
   });
 
-  it('should hide detail when clicking on the same icon while the corresponding detail is open', ()=> {
-    component.detailObj.showDetail = true;
-    component.detailObj.item = dataConfig[0];
+  it('should hide detail when clicking on the same icon while the corresponding detail is open', done => {
     fixture.detectChanges();
-    let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
-    expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[0].detail);
-    fixture.nativeElement.querySelector('#contract-icon-0').click();
+    component.detailObj.showDetail = true;
+    component.detailObj.posX = 0;
+    component.detailObj.posY = 2;
+    component.detailObj.item = component.data[0][2];
+
     fixture.whenStable().then(() => {
       fixture.detectChanges();
+      let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
+      fixture.nativeElement.querySelector('#contract-02-icon').click();
+
+      fixture.detectChanges();
       expect(component.detailObj.showDetail).toBe(false);
-    });
+      done();
+    }).catch(e => {done.fail(e)});
   });
 
-  it('should hide detail when clicking on the close link while the corresponding detail is open', ()=> {
-    component.detailObj.showDetail = true;
-    component.detailObj.item = dataConfig[0];
+  it('should hide detail when clicking on the close link while the corresponding detail is open', done => {
     fixture.detectChanges();
-    let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
-    expect(contractDetail.nativeElement.innerHTML).toBe(dataConfig[0].detail);
-    fixture.nativeElement.querySelector('.image-library-close').click();
+    component.detailObj.showDetail = true;
+    component.detailObj.posX = 0;
+    component.detailObj.posY = 2;
+    component.detailObj.item = component.data[0][2];
+
     fixture.whenStable().then(() => {
       fixture.detectChanges();
+      let contractDetail = fixture.debugElement.query(By.css(".detail-text"));
+      expect(contractDetail.nativeElement.innerHTML).toBe(component.data[0][2].detail);
+      fixture.nativeElement.querySelector('.image-library-close').click();
+
+      fixture.detectChanges();
       expect(component.detailObj.showDetail).toBe(false);
-    });
+      done();
+    }).catch(e => {done.fail(e)});
   });
 });

@@ -120,19 +120,6 @@ module.exports = {
      * See: http://webpack.github.io/docs/configuration.html#module-loaders
      */
     loaders: [
-      /**
-       * Babel Loader for ES6 support
-       *
-       * See: https://github.com/babel/babel-loader
-       */
-      {
-        test: /\.js$/,
-        exclude: [/\.ts/, /node_modules/],
-        loaders: [
-          'babel-loader'
-        ]
-      },
-
       /*
        * Font loaders
        */
@@ -214,8 +201,8 @@ module.exports = {
 
       /// Sass Loader
       {
-        //test: /styles\/all\.scss/,
-        test: new RegExp(path.join('src', 'styles', 'all.scss')),
+        // [\\\/] is a platform independent path seperator
+        test: /src[\\\/]styles[\\\/]all\.scss/,
         exclude: /node_modules/,
         loader: ExtractTextPlugin.extract("style","css?sourceMap!sass?sourceMap")
       },

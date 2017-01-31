@@ -8,9 +8,10 @@ import { Validators as $Validators } from '../validators';
   templateUrl: 'password.component.html'
 })
 export class PasswordComponent {
+  @Input() currentPassword: FormControl;
   @Input() password:FormControl;
 
-  private passwordConfirm = new FormControl(['']);
+  private confirmPassword = new FormControl(['']);
 
   protected config = {
     rules: {
@@ -55,20 +56,83 @@ export class PasswordComponent {
       $Validators.uppercase,
       $Validators.numeric,
       $Validators.special,
-      $Validators.match('passwordConfirm')
+      $Validators.match('confirmPassword')
     ]);
 
-    this.passwordConfirm.setValidators([
+    if(this.currentPassword !== undefined) {
+      this.currentPassword.setValidators([
+        Validators.required
+      ]);
+    }
+
+    this.confirmPassword.setValidators([
       Validators.required
     ]);
 
     this.password.updateValueAndValidity();
 
     this.password.valueChanges.subscribe(data => this.updateState());
-    this.passwordConfirm.valueChanges.subscribe(data => {
+    this.confirmPassword.valueChanges.subscribe(data => {
       this.updateState()
       this.password.updateValueAndValidity();
     });
+  }
+
+  $formState(validation) {
+    let classes = this.getFormControlStates('password');
+
+    if(validation !== undefined) {
+      classes[this.config.icons.valid] = validation;
+      classes[this.config.icons.invalid] = !validation;
+    }
+
+    return classes;
+  }
+
+  $currentPasswordErrors() {
+    let errors = [],
+        type;
+
+    if(this.confirmPassword.touched) {
+      for(type in this.currentPassword.errors) {
+        switch(type) {
+          case 'required':
+            errors.push('Your current password must be entered');
+            break;
+          default:
+            if(typeof this.currentPassword.errors[type] == 'string') {
+              errors.push(this.currentPassword.errors[type]);
+            }
+        }
+      }
+    }
+
+    return errors.length ? errors : '';
+  }
+
+  setCustomError(controlName, error) {
+    if(this[controlName] !== undefined) {
+      this[controlName].setErrors(error);
+    }
+  }
+
+  getFormControlStates(controlName) {
+    let control = this[controlName] || false,
+        classes = {},
+        states = ('ng-touched|ng-untouched|ng-dirty|ng-pristine|ng-valid|ng-invalid').split('|'),
+        state,
+        intState,
+        prop;
+
+    if(control) {
+      for(intState = 0; intState < states.length; intState++) {
+        state = states[intState];
+        prop = control[state.replace(/ng-/, '')];
+        classes[state] = prop;
+      }
+    }
+
+    return classes;
   }
 
   updateState() {
@@ -76,7 +140,7 @@ export class PasswordComponent {
         errors = this.password.errors,
         validator,
         verifyMatch = (
-          this.passwordConfirm.dirty &&
+          this.confirmPassword.dirty &&
           errors !== null &&
           errors['match'] !== undefined
         );

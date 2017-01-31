@@ -2,6 +2,7 @@
 @import 'authentication/shared/password';
 
 @import 'authentication/login';
+@import 'authentication/forgot';
 @import 'authentication/register';
 @import 'authentication/profile';
 
@@ -34,5 +35,9 @@
     &:focus {
       box-shadow: none;
     }
+  }
+
+  .usa-alert-static {
+    position: absolute;
   }
 }

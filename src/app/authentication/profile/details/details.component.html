@@ -68,7 +68,7 @@
     <!--==========================-->
     <!--=== Security Questions ===-->
     <!--==========================-->
-    <section class="kba" [ngClass]="{ 'usa-editable': isEdit('kba') }">
+    <section *ngIf="user.kbaAnswerList.length" class="kba" [ngClass]="{ 'usa-editable': isEdit('kba') }">
       <h3>Security Questions<a class="usa-edit" href="javascript:void(0);" (click)="edit('kba')">Edit</a></h3>
 
       <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
@@ -77,13 +77,13 @@
       </div>
 
       <div class="usa-form-editable" *ngIf="questions.length">
-        <div *ngFor="let kbaAnswer of detailsForm.controls.kbaAnswerList.controls; let $index = index;">
-          <sam-kba-entry [(questions)]="questions[$index]"
-                         [question]="detailsForm.controls.kbaAnswerList.controls[$index].controls.questionId"
-                         [(answer)]="detailsForm.controls.kbaAnswerList.controls[$index].controls.answer"
-                         (onQuestionChange)="changeQuestion($event, $index)"
-                         label="Question {{ $index + 1 }}"></sam-kba-entry>
-        </div>
+        <sam-kba-entry #kba
+                       *ngFor="let kbaAnswer of detailsForm.controls.kbaAnswerList.controls; let $index = index;"
+                       [(questions)]="questions[$index]"
+                       [question]="detailsForm.controls.kbaAnswerList.controls[$index].controls.questionId"
+                       [(answer)]="detailsForm.controls.kbaAnswerList.controls[$index].controls.answer"
+                       (onQuestionChange)="changeQuestion($event, $index)"
+                       label="Question {{ $index + 1 }}"></sam-kba-entry>
       </div>
 
       <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('kba')"></samButton>
@@ -99,7 +99,10 @@
   </form>
 </div>
 
-<samAlert type="info" title="Information Status" description="If you have legacy accounts of the 10 systems, you can migrate your privileges"></samAlert>
+<samAlert class="usa-alert-static"
+          type="info"
+          title="Information Status"
+          description="If you have legacy accounts of the 10 systems, you can migrate your privileges"></samAlert>
 
 <samModal #confirmModal
           type="warning"

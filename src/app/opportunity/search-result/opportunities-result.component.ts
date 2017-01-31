@@ -55,6 +55,6 @@ export class OpportunitiesResult implements OnInit{
   constructor() {}
 
   ngOnInit(){
-    this.data.procurementPostedDate = moment(this.data.publishDate).format("MMM D, Y");
+    this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
   }
 }

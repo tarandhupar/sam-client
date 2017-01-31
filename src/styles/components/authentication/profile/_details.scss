@@ -96,15 +96,13 @@
     margin-top: 20px;
   }
 
-  .usa-alert {
-    position: absolute;
-    width: 100%;
-    top: -80px
-  }
-
   .modal-content {
     .usa-alert {
       position: static;
     }
+  }
+
+  .usa-alert-static {
+    top: -40px;
   }
 }

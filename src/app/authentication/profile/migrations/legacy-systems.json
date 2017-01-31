@@ -1,0 +1,42 @@
+[
+ {
+   "name": "CFDA.gov",
+   "target": "https://www.cfda.gov",
+   "statuses": {
+     "migration": "Available",
+     "system": "Shutoff Data TBD"
+   }
+ },
+ {
+   "name": "FBO.gov",
+   "target": "https://www.fbo.gov",
+   "statuses": {
+     "migration": "Available",
+     "system": "Shutoff Data TBD"
+   }
+ },
+ {
+   "name": "SAM.gov",
+   "target": "https://www.sam.gov",
+   "statuses": {
+     "migration": "TBD",
+     "system": "Shutoff Data TBD"
+   }
+ },
+ {
+   "name": "FPDS.gov",
+   "target": "https//www.fpds.gov",
+   "statuses": {
+     "migration": "TBD",
+     "system": "Shutoff Data TBD"
+   }
+ },
+ {
+   "name": "WDOL.gov",
+   "target": "https://www.wdol.gov",
+   "statuses": {
+     "migration": "Accounts Not Required",
+     "system": "Shutoff Data TBD"
+   }
+ }
+]

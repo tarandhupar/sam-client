@@ -31,13 +31,13 @@
         </div>
       </div>
       <div class="usa-width-one-whole m_T-2x" *ngIf="isCurrentFilter('feature')" >
-        <div class="usa-width-one-whole m_T-4x" *ngFor="let row of featureData;let i = index">
-          <imageLibrary [name]="'transition-by-feature-'+i" [data]="row" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></imageLibrary>
+        <div class="usa-width-one-whole m_T-4x">
+          <imageLibrary [name]="'transition-by-feature'" [data]="featureData" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></imageLibrary>
         </div>
       </div>
       <div class="usa-width-one-whole m_T-2x" *ngIf="isCurrentFilter('legacy')">
-        <div class="usa-width-one-whole m_T-4x" *ngFor="let row of legacyData;let i = index">
-          <imageLibrary [name]="'transition-by-legacy-'+i" [data]="row" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></imageLibrary>
+        <div class="usa-width-one-whole m_T-4x">
+          <imageLibrary [name]="'transition-by-legacy'" [data]="legacyData" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></imageLibrary>
         </div>
       </div>
     </div>

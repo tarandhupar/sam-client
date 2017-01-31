@@ -10,7 +10,6 @@ export class UIKitDemoPage {
   date: string = "2016-12-12";
   dateTime: string = "2016-12-12T13:01";
 
-
   // Select Component
   selectModel = '';
   selectConfig = {
@@ -126,19 +125,22 @@ export class UIKitDemoPage {
       title:"Benefits.gov Learning Center",
       detail:"Benefits.gov Learning Center: Lipsum content",
       link:"View Benefits.gov",
-      url:"http://www.Benefits.gov"
+      url:"http://www.Benefits.gov",
+      img:"src/assets/img/placeholder.jpg"
     },
     {
       title:"Grants.gov Learning Center",
       detail:"Details for Grants.gov Learning Center: Lipsum content",
       link:"View Grants.gov",
-      url:"http://www.grants.gov/web/grants/learn-grants.html"
+      url:"http://www.grants.gov/web/grants/learn-grants.html",
+      img:"src/assets/img/placeholder.jpg"
     },
     {
       title:"Data Element Repository",
       detail:"Details for Data Element Repository: Lipsum content",
       link:"View DER",
-      url:"fakeUrl"
+      url:"fakeUrl",
+      img:"src/assets/img/placeholder.jpg"
     }
   ];
 

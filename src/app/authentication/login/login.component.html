@@ -39,7 +39,7 @@
 
           <div class="usa-grid usa-links">
             <div class="usa-width-one-half text-center">
-              <a href="javascript:void(0);" title="Forgot Password?">Forgot Password?</a>
+              <a title="Forgot Password?" routerLink="/forgot">Forgot Password?</a>
             </div>
             <div class="usa-width-one-half text-center">
               <a title="Sign Up" routerLink="/signup">Sign Up</a>
@@ -56,6 +56,8 @@
         <legend class="usa-title">One time password</legend>
         <p>We take security seriously. We have sent you a one-time access code by email.</p>
         <fieldset>
+          <div class="usa-input-error-message" *ngIf="isErrors() && states.submitted">{{ errors.global[0] }}</div>
+
           <div formGroupName="stage2" [ngClass]="{ 'usa-input-error': states.submitted && isStage(2) && form.controls.stage2.invalid }">
             <label>Enter your one-time access code</label>
             <span class="usa-input-error-message" *ngIf="states.submitted && isStage(2) && form.controls.stage2.invalid" role="alert">

@@ -28,11 +28,8 @@ import { PipesModule } from "./app-pipes/app-pipes.module";
 import { OpportunityTypeLabelPipe } from "./opportunity/pipes/opportunity-type-label.pipe";
 import { TimezoneLabelPipe } from "./opportunity/pipes/timezone-label.pipe";
 import { FixHTMLPipe } from "./opportunity/pipes/fix-html.pipe";
-import {FilesizePipe} from "./opportunity/pipes/filesize.pipe";
+import { FilesizePipe} from "./opportunity/pipes/filesize.pipe";
 import { FHService } from "../api-kit/fh/fh.service";
-import {CookieService} from "angular2-cookie/core";
-
-
 
 class RouterStub {
   navigate(url:string) {
@@ -47,10 +44,9 @@ var activatedRouteStub = {
     }
   }
 };
+
 var searchServiceStub = {};
 var fhServiceStub = {};
-var cookieServiceStub = {};
-
 
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector
@@ -62,8 +58,7 @@ describe('App', () => {
       {provide: Router, useClass: RouterStub},
       {provide: ActivatedRoute, useValue: activatedRouteStub},
       {provide: SearchService, useValue: searchServiceStub},
-      {provide: FHService, useValue: fhServiceStub},
-      {provide: CookieService, useValue: cookieServiceStub}
+      {provide: FHService, useValue: fhServiceStub}
     ]
   }));
 

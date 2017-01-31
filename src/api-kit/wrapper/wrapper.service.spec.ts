@@ -1,30 +1,49 @@
-import {WrapperService} from './wrapper.service';
+import { TestBed, inject } from '@angular/core/testing';
+import { MockBackend } from '@angular/http/testing';
+import {
+  BaseRequestOptions,
+  HttpModule,
+  Http,
+  Response,
+  ResponseOptions
+} from '@angular/http';
+
+import { WrapperService } from '../wrapper/wrapper.service'
 
 describe('Service: ApiService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [
+        WrapperService,
+        BaseRequestOptions,
+        MockBackend,
+        {
+          provide: Http,
+          useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
+            return new Http(backend, defaultOptions);
+          },
+          deps: [MockBackend, BaseRequestOptions],
+        },
+      ],
+    });
+  });
 
- beforeEach(function() {
-   this.oApiService = new WrapperService();
- });
+it('should have APIs property set', inject([WrapperService], (resource) => {
+    expect(resource.APIs).toBeDefined();
+    expect(resource.APIs.search).toBeDefined();
+    expect(resource.APIs.program).toBeDefined();
+    expect(resource.APIs.federalHierarchy).toBeDefined();
+    expect(resource.APIs.suggestions).toBeDefined();
+    expect(resource.APIs.featuredSearch).toBeDefined();
+    expect(resource.APIs.opportunity).toBeDefined();
+  }));
 
- it('should have APIs property set', function() {
-    expect(this.oApiService.APIs).toBeDefined();
-    expect(this.oApiService.APIs.search).toBeDefined();
-    expect(this.oApiService.APIs.program).toBeDefined();
-    expect(this.oApiService.APIs.federalHierarchy).toBeDefined();
-    expect(this.oApiService.APIs.dictionary).toBeDefined();
-    expect(this.oApiService.APIs.historicalIndex).toBeDefined();
-    expect(this.oApiService.APIs.suggestions).toBeDefined();
-    expect(this.oApiService.APIs.featuredSearch).toBeDefined();
- });
-
- it('should have APIs property data set', function() {
-    expect(this.oApiService.APIs.search).toBe('/sgs/v1/search');
-    expect(this.oApiService.APIs.program).toBe('/cfda/v1/program');
-    expect(this.oApiService.APIs.federalHierarchy).toBe('/federalorganizations/v1/organizations');
-    expect(this.oApiService.APIs.dictionary).toBe('/cfda/v1/dictionary');
-    expect(this.oApiService.APIs.historicalIndex).toBe('/cfda/v1/historicalIndex');
-    expect(this.oApiService.APIs.suggestions).toBe('/sgs/v1/search/suggestions');
-    expect(this.oApiService.APIs.featuredSearch).toBe('/sgs/v1/search/featured');
- });
-
+  it('should have APIs property data set', inject([WrapperService], (resource) => {
+    expect(resource.APIs.search).toBe('/sgs/v1/search');
+    expect(resource.APIs.program).toBe('/fac/v1/programs');
+    expect(resource.APIs.federalHierarchy).toBe('/federalorganizations/v1/organizations');
+    expect(resource.APIs.suggestions).toBe('/sgs/v1/suggestions');
+    expect(resource.APIs.featuredSearch).toBe('/sgs/v1/search/featured');
+    expect(resource.APIs.opportunity).toBe('/opps/v1/opportunities');
+  }));
 });

@@ -1,7 +1,7 @@
+
 /*
  * Angular 2 decorators and services
  */
-import { CookieService } from'angular2-cookie/services/cookies.service';
 import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
@@ -24,22 +24,15 @@ export class App{
 
   showOverlay = false;
 
-  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService, private cookieService: CookieService) {
-
-  }
+  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
 
   ngOnInit() {
     this.searchService.paramsUpdated$.subscribe(
       obj => {
         this.setQS(obj);
-    });
+      });
     this.activatedRoute.queryParams.subscribe(
       data => {
-        if(typeof data['keyword'] == "string" && typeof data['index'] == "string") {
-          this.setCookie(data);
-        } else {
-          this.checkCookie();
-        }
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
       });
@@ -71,8 +64,6 @@ export class App{
       queryParams: qsobj
     };
 
-    this.cookieService.remove("term");
-    this.cookieService.remove("ival");
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
@@ -85,23 +76,6 @@ export class App{
   toggleOverlay(value){
     this.showOverlay = value;
 
-  }
-
-  setCookie(data) {
-    this.cookieService.remove("term");
-    this.cookieService.remove("ival");
-    this.cookieService.put("term", data['keyword']);
-    this.cookieService.put("ival", data['index']);
-  }
-
-  checkCookie() {
-    let cookielist = this.cookieService.getAll();
-    if(cookielist['term'] && cookielist['term'].length>0) {
-      this.keyword = cookielist['term'];
-    }
-    if(cookielist['ival'] && cookielist['ival'].length>0) {
-      this.index = cookielist['ival'];
-    }
   }
 
 }
