@@ -20,8 +20,8 @@ import * as moment from 'moment/moment';
           {{data.objective | slice:0:150}}{{data.objective && data.objective.length > 150 ? ' ...' : ''}}
         </p>
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li *ngIf="data.organizationHierarchy && data.organizationHierarchy[0].level==1"><strong>Department:</strong><a href=""><span>{{data.organizationHierarchy[0].name}}</span></a></li>
-          <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[1].level==2"><strong>Agency:</strong><a href=""><span>{{data.organizationHierarchy[1].name}}</span></a></li>
+        	<li *ngIf="data.organizationHierarchy && data.organizationHierarchy[0]?.level==1"><strong>Department:</strong><a href=""><span>{{data.organizationHierarchy[0].name}}</span></a></li>
+          <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[1]?.level==2"><strong>Agency:</strong><a href=""><span>{{data.organizationHierarchy[1].name}}</span></a></li>
           <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[2]?.level==3"><strong>Office:</strong><a href=""><span>{{data.organizationHierarchy[2].name}}</span></a></li>
           <!--<li *ngIf="data.contacts!=null"><strong>Headquarters Office:</strong> {{data.contacts[0].fullName}}<br>{{data.contacts[0].address}}, {{data.contacts[0].city}}, {{data.contacts[0].state}} {{data.contacts[0].zip}} {{data.contacts[0].country}}</li>-->
         </ul>
