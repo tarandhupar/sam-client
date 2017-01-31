@@ -5,21 +5,26 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class WrapperService {
     private APIs: any = {
-        "opportunity": "/opps/v1/opportunities",
+        "opportunity": "/cfda/v1/opportunity",
         "search": "/sgs/v1/search",
         "featuredSearch": "/sgs/v1/search/featured",
-        "program": "/fac/v1/programs",
+        "program": "/cfda/v1/program",
         "federalHierarchy": "/federalorganizations/v1/organizations",
         "entities": "/entities",
 <<<<<<< HEAD
         "exclusions": "/exclusions",
+<<<<<<< HEAD
+        "dictionary": "/cfda/v1/dictionary",
+        "historicalIndex": "/cfda/v1/historicalIndex",
+=======
 =======
         "exclusion": "http://localhost:8020/msam/v1/exclusions/S4MR3RCZN",
         //S4MR3R7D6
 >>>>>>> branch 'develop' of https://csp-github.sam.gov/GSA-IAE/sam-front-end.git
+>>>>>>> develop
         "alerts": "/alert/v2/alerts",
         "allAlerts": "/alert/v2/alerts/allAlerts",
-        "suggestions": "/sgs/v1/suggestions"
+        "suggestions": "/sgs/v1/search/suggestions"
     };
 
     constructor(private _http: Http){}

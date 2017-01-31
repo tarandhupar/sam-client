@@ -40,10 +40,11 @@ export class ImageLibraryComponent {
   formatData(){
     if(!this.formatted) {
       let formatData = [];
+      let tempData = this.data.slice(0);
 
       // Split the data to fit in 3 data item a row
-      while (this.data.length > 0)
-        formatData.push(this.data.splice(0, 3));
+      while (tempData.length > 0)
+        formatData.push(tempData.splice(0, 3));
 
       this.data = formatData;
       this.formatted = true;
