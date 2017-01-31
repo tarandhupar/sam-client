@@ -27,10 +27,12 @@
     display: block;
   }
   .label-wrapper:after{
-    content: "arrow";
+    content: "\F0D7";
+    color: #777;
+    font: normal normal normal 17px/1 FontAwesome;
     position: absolute;
-    right: 0;
-    top:0;
+    right: 10px;
+    top:10px;
   }
   select{
     color: #777;
@@ -41,6 +43,7 @@
     padding: 8px 10px 8px 10px;
     height: 3.3rem;
     line-height: 1;
+    background-image: none;
   }
 
   .search-btn{
