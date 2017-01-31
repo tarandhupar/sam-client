@@ -31,11 +31,11 @@ export class EntityPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentUrl = this.location.path();
-    this.loadCoreData();
+    this.loadEntityData();
 
   }
 
-   private loadCoreData() {
+   private loadEntityData() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.activatedRoute.params.switchMap(params => { // construct a stream of api data
       return this.EntityService.getCoreDataById(params['id']);

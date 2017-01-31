@@ -6,6 +6,7 @@ import { SamUIKitModule } from 'ui-kit';
 import { CommonModule } from '@angular/common';
 import { ExclusionAddress } from './exclusion-address.component.ts';
 import { ExclusionIcon } from './exclusion-icon.component.ts';
+import { ExclusionNatureEffect } from './exclusion-nature-effect-component';
 import { ExclusionCrossReference } from './exclusion-cross-reference.component.ts';
 
 @NgModule({
@@ -21,6 +22,7 @@ import { ExclusionCrossReference } from './exclusion-cross-reference.component.t
     CommonModule,
     ExclusionAddress,
     ExclusionIcon,
+    ExclusionNatureEffect,
     ExclusionCrossReference,
     
   ],
@@ -28,6 +30,7 @@ import { ExclusionCrossReference } from './exclusion-cross-reference.component.t
     ExclusionsPage,
     ExclusionAddress,
     ExclusionIcon,
+    ExclusionNatureEffect,
     ExclusionCrossReference,
   ],
 })
