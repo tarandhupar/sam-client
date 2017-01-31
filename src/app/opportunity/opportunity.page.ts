@@ -6,6 +6,7 @@ import { ReplaySubject, Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 import { OpportunityFields } from "./opportunity.fields";
 import { trigger, state, style, transition, animate } from '@angular/core';
+import * as _ from 'lodash';
 
 @Component({
   moduleId: __filename,
@@ -113,7 +114,9 @@ export class OpportunityPage implements OnInit {
   }
 
   ngOnInit() {
-    this.currentUrl = this.location.path();
+    // Using document.location.href instead of
+    // location.path because of ie9 bug
+    this.currentUrl = document.location.href;
     this.loadDictionary();
     let opportunityAPI = this.loadOpportunity();
     this.opportunityAPI = opportunityAPI;
@@ -173,14 +176,16 @@ export class OpportunityPage implements OnInit {
       this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
     }));
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
-      this.relatedOpportunities = data['relatedOpportunities'][0];
-      this.relatedOpportunitiesMetadata = {
-        'count': data['count'],
-        'recipientCount': data['recipientCount'],
-        'totalAwardAmt': data['totalAwardAmt'],
-        'unparsableCount': data['unparsableCount']
-      };
-      this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
+      if (!_.isEmpty(data)) {
+        this.relatedOpportunities = data['relatedOpportunities'][0];
+        this.relatedOpportunitiesMetadata = {
+          'count': data['count'],
+          'recipientCount': data['recipientCount'],
+          'totalAwardAmt': data['totalAwardAmt'],
+          'unparsableCount': data['unparsableCount']
+        };
+        this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
+      }
     }, err => {
       console.log('Error loading related opportunities: ', err);
     });
@@ -196,7 +201,7 @@ export class OpportunityPage implements OnInit {
 
     opportunityAPI.subscribe(api => {
       this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
-      this.fhService.getOrganizationLogo(organizationSubject, 
+      this.fhService.getOrganizationLogo(organizationSubject,
         (logoUrl) => {
           this.logoUrl = logoUrl;
         }, (err) => {
@@ -424,7 +429,7 @@ export class OpportunityPage implements OnInit {
 
 
   public getDownloadFileURL(fileID: string){
-    return this.getBaseURL() + '/file/' + fileID + this.getAPIUmbrellaKey();
+    return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey();
   }
 
   currentTabSelected(tab){
@@ -432,15 +437,15 @@ export class OpportunityPage implements OnInit {
   }
 
   public getDownloadPackageURL(packageID: string) {
-    return this.getBaseURL() + '/opportunity/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey();
+    return this.getBaseURL() + '/opportunities/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey();
   }
 
   public getDownloadAllPackagesURL(opportunityID: string) {
-    return this.getBaseURL() + '/opportunity/' + opportunityID + '/download/zip' + this.getAPIUmbrellaKey();
+    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey();
   }
 
   public getBaseURL() {
-    return API_UMBRELLA_URL + '/cfda/v1';
+    return API_UMBRELLA_URL + '/opps/v1';
   }
 
   public getAPIUmbrellaKey() {

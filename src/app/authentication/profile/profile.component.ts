@@ -9,16 +9,30 @@ export class ProfileComponent {
     route: ''
   };
 
-  constructor(private router: Router) {}
+  activeRouteClass = '';
 
-  ngOnInit() {
-    this.states.route = this.router.url;
+  constructor(private router: Router) {
+    this.router.events.subscribe((event) => {
+      if(event.constructor.name === 'NavigationStart') {
+        this.checkRoute();
+      }
+    });
   }
 
-  get activeRouteClass():String {
+  ngOnInit() {
+    this.checkRoute();
+  }
+
+  checkRoute() {
+    this.states.route = this.router.url;
+    this.setActiveRoute();
+  }
+
+  setActiveRoute() {
     let className = this.states.route
       .replace(/\//g, '-')
       .replace(/\?.+/g, '');
-    return (className.length ? 'usa' : '') + className;
+
+    this.activeRouteClass = (className.length ? 'usa' : '') + className;
   }
 };

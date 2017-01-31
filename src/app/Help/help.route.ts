@@ -16,7 +16,7 @@ export const routes: Routes = [
     path: 'help',
     component: HelpPage,
     children: [
-      { path: '', redirectTo: 'overview' },
+      { path: '', pathMatch: 'full', redirectTo: 'overview' },
       { path: 'overview', component: OverviewComponent },
       { path: 'transition', component: TransitionToSamComponent },
       { path: 'about', component: AboutSamComponent },

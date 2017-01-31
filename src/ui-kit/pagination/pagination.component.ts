@@ -12,13 +12,13 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
   selector: 'samPagination',
   template: `<nav class="usa-pagination" aria-label="pagination" [ngClass]="disabled && 'disabled'">
               <ul class="usa-color-text usa-color-primary-darkest usa-color-text-white">
-                <li *ngIf="showPrevious()"><a class="page-previous" aria-label="previous" (click)="onPreviousClick()">&lsaquo; Prev</a></li>
-                <li><a class="page-button" [ngClass]="textDecoration(1)" (click)="onPageClick(1)" [attr.aria-label]="getAriaLabel(1)">1</a></li>
+                <li *ngIf="showPrevious()"><a class="page-previous" aria-label="previous" (click)="onPreviousClick()" tabindex="0" (keyup.enter)="onPreviousClick()">&lsaquo; Prev</a></li>
+                <li><a class="page-button" [ngClass]="textDecoration(1)" (click)="onPageClick(1)" [attr.aria-label]="getAriaLabel(1)" tabindex="0" (keyup.enter)="onPageClick(1)">1</a></li>
                 <li *ngIf="showFirstEllipsis()"><span class="first-ellipsis">&hellip;</span></li>
-                <li *ngFor="let i of consecutivePageRange()"><a class="page-button" [ngClass]="textDecoration(i)" (click)="onPageClick(i)" [attr.aria-label]="getAriaLabel(i)">{{i}}</a></li>
+                <li *ngFor="let i of consecutivePageRange()"><a class="page-button" [ngClass]="textDecoration(i)" (click)="onPageClick(i)" [attr.aria-label]="getAriaLabel(i)" tabindex="0" (keyup.enter)="onPageClick(i)">{{i}}</a></li>
                 <li *ngIf="showLastEllipsis()"><span class="last-ellipsis">&hellip;</span></li>
-                <li *ngIf="showLastButton()"><a class="page-button" [ngClass]="textDecoration(totalPages)" (click)="onPageClick(totalPages)" [attr.aria-label]="getAriaLabel(totalPages)">{{totalPages}}</a></li>
-                <li *ngIf="showNext()"><a class="page-next" aria-label="next" (click)="onNextClick()">Next &rsaquo;</a></li>
+                <li *ngIf="showLastButton()"><a class="page-button" [ngClass]="textDecoration(totalPages)" (click)="onPageClick(totalPages)" [attr.aria-label]="getAriaLabel(totalPages)" tabindex="0" (keyup.enter)="onPageClick(totalPages)">{{totalPages}}</a></li>
+                <li *ngIf="showNext()"><a class="page-next" aria-label="next" (click)="onNextClick()" tabindex="0" (keyup.enter)="onNextClick()">Next &rsaquo;</a></li>
               </ul>
              </nav>    
   `,
@@ -30,7 +30,7 @@ export class SamPaginationComponent {
   private MaxTotalPageWithoutEllipsis: number = 10; // If the total number of pages is less than this threshold, display all pages
 
   @Input() disabled: boolean = false;
-  @Input() currentPage: number;
+  @Input() currentPage: number = 1;
   @Input() totalPages: number;
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
 

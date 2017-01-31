@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import config from './config';
 
 function $params() {
@@ -74,13 +74,23 @@ function parseUrlQuery() {
   let params = {},
       query = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
         params[key] = value.toString().match(/true|false/) ? (/^true$/i).test(value) : value;
+        return undefined;
       });
 
   return params;
 }
 
 class Utilities {
-  constructor(options) {
+  environments;
+  debug;
+  environment;
+  baseUri;
+  localResource;
+  remoteResource;
+  log;
+  queryparams;
+
+  constructor(options?) {
     let params = $params();
 
     this.debug = config.debug || false;
@@ -118,7 +128,7 @@ class Utilities {
     return (endpoint.search(/^http/gi) > -1) ? false : true;
   }
 
-  getEnvironment(environments) {
+  getEnvironment(environments?) {
     let environment,
     		hostname = location.host,
     		active = 'local',
@@ -161,7 +171,7 @@ class Utilities {
   }
 
   getLocalEnvironment() {
-    let env = 'local';
+    let env: any = 'local';
 
     if(window.location.hostname.search(/(local|comp|minc|prodlike)/) > -1) {
       env = (/(local|comp|minc|prodlike)/g).exec(window.location.hostname);
@@ -184,6 +194,11 @@ class Utilities {
       url = [this.baseUri, endpoint]
         .join('/')
         .replace(/([a-z-]+)\/\/+/g, '$1/');
+    }
+
+    // Apply API Key
+    if(url.search(/^https?:\/\/csp-api\.sam\.gov/) > -1) {
+      url += '?api_key=rkkGBk7AU8UQs9LHT6rM0rFkg3A3rGaiBntKSGEC';
     }
 
     return url;

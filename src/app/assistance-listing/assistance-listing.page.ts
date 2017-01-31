@@ -170,7 +170,7 @@ export class ProgramPage implements OnInit, OnDestroy {
       if (api.data.relatedPrograms.flag !== 'na') {
         return Observable.from(api.data.relatedPrograms.relatedTo);
       }
-      return Observable.empty(); // if there are no related programs, don't trigger an update
+      return Observable.empty<string>(); // if there are no related programs, don't trigger an update
     });
 
     // construct a stream that contains all related programs from related program ids

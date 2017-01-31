@@ -36,6 +36,7 @@ export class HelpPage {
     window.scrollTo(0,0);
     this.currentSection = value;
     this.currentUrl = this.baseUrl+this.currentSection;
+    this.currentSubSection = "";
   }
 
   getSectionClass(value){

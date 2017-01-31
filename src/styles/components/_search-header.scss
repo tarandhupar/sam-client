@@ -6,19 +6,29 @@
   background-color:#112e51;
   padding-top: 2px;
   padding-bottom: 2px;
+  min-height:40px;
+
+  .search-bar-container{
+    height: 100%;
+    width: 60%;
+    display: inline-block;
+  }
 
   .logo-img {
-    margin-top:12px;
-    width:20rem;
-    height:37px;
+    width: 140px;
+    height: 25px;
     float: left;
+    margin-left: 15px;
+    padding-right: 10px;
+    padding-top: 8px;
   }
 
   samSearchbar {
-    width: 500px;
-    margin-top: 8px;
+    min-width: 290px;
+    max-width: 550px;
+    width:100%;
+    margin-top: 2px;
     float: left;
-    margin-left: 30px;
   }
 
   .search-btn {

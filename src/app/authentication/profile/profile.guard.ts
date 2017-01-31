@@ -8,8 +8,6 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 
-import { CookieService } from 'angular2-cookie/core';
-
 @Injectable()
 export class ProfileGuard implements CanActivate, CanActivateChild {
   private api;
@@ -20,7 +18,7 @@ export class ProfileGuard implements CanActivate, CanActivateChild {
     query: {}
   };
 
-  constructor(private router: Router, private cookies: CookieService, private _api: IAMService) {
+  constructor(private router: Router, private _api: IAMService) {
     this.api = _api.iam;
   }
 
