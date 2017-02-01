@@ -271,8 +271,8 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
 
     let mockFinancialData = [{
       'values': [
-        { 'year': "2016", 'estimate': 22 },
-        { 'year': "2017", 'estimate': 12 },
+        { 'year': 2016, 'estimate': 22 },
+        { 'year': 2017, 'estimate': 12 },
       ],
       'questions': [
         { 'questionCode': 'recovery', 'flag': 'na' },
@@ -282,9 +282,9 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
       'assistanceType': '0003003'
     }, {
       'values': [
-        { 'year': "2016", 'flag': 'yes', 'actual': 20 },
-        { 'year': "2017", 'flag': 'yes', 'estimate': 40 },
-        { 'year': "2018", 'flag': 'yes', 'estimate': 62 }
+        { 'year': 2016, 'flag': 'yes', 'actual': 20 },
+        { 'year': 2017, 'flag': 'yes', 'estimate': 40 },
+        { 'year': 2018, 'flag': 'yes', 'estimate': 62 }
       ],
       'questions': [
         { 'questionCode': 'recovery', 'flag': 'na' },
@@ -294,9 +294,9 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
       'assistanceType': '0003003'
     }, {
       'values': [
-        { 'year': "2016", 'flag': 'yes', 'actual': 0 },
-        { 'year': "2017", 'flag': 'yes', 'estimate': 20 },
-        { 'year': "2018", 'flag': 'yes', 'estimate': 25 }
+        { 'year': 2016, 'flag': 'yes', 'actual': 0 },
+        { 'year': 2017, 'flag': 'yes', 'estimate': 20 },
+        { 'year': 2018, 'flag': 'yes', 'estimate': 25 }
       ],
       'questions': [
         { 'questionCode': 'recovery', 'flag': 'na' },
