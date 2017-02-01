@@ -4,11 +4,6 @@
   <div *ngIf="searchMessage">
     <span class="usa-input-error-message">{{ searchMessage }}</span>
   </div>
-  <div class="usa-agency-picker-readonly-area">
-    <ul>
-      <li *ngFor="let org of selectedOrganizations"><span (click)="removeOrg(org.value)"><i class="fa fa-times" aria-hidden="true"></i></span> {{org.name}}</li>
-    </ul>
-  </div>
   <div class="usa-agency-picker-dropdown-area usa-grid">
     <div class="usa-agency-picker-search-area" *ngIf="!orgRoot">
       <div class="usa-agency-picker-search-input-wrapper">
@@ -42,5 +37,11 @@
       <button (click)="setOrganizationFromBrowse()">Add</button>
       <button (click)="resetBrowse()">Clear</button>
     </div>
+  </div>
+  
+  <div class="usa-agency-picker-readonly-area">
+    <ul>
+      <li *ngFor="let org of selectedOrganizations"><span (click)="removeOrg(org.value)"><i class="fa fa-times" aria-hidden="true"></i></span> {{org.name}}</li>
+    </ul>
   </div>
 </div>
