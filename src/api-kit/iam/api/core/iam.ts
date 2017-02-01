@@ -1,6 +1,6 @@
-import _ from 'lodash';
-import Cookies from 'js-cookie';
-import request from 'superagent';
+import * as _ from 'lodash';
+import * as Cookies from 'js-cookie';
+import * as request from 'superagent';
 
 import config from '../config';
 import utilities from '../utilities';
@@ -28,7 +28,7 @@ let $config = _.extend({}, config.endpoints.iam),
 /**
  * [Component][IAM] User Module
  */
-let user = {
+let user: any = {
   get($success, $error) {
     let core = this,
         endpoint = utils.getUrl($config.session);
@@ -39,7 +39,9 @@ let user = {
     if(Cookies.get('iPlanetDirectoryPro')) {
       request
         .get(endpoint)
-        .set('iPlanetDirectoryPro', Cookies.get('iPlanetDirectoryPro'))
+        .set({
+          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
+        })
         .then(function(response) {
           let user = new User(response.body.sessionToken);
           $success(user);
@@ -54,7 +56,7 @@ let user = {
 
   create(token, userData, $success, $error) {
     let endpoint = utils.getUrl($config.registration.register),
-        data = {
+        data: any = {
           tokenId: token,
           user: (userData || {})
         };
@@ -127,7 +129,7 @@ user.registration = {
     let endpoint = [
       utils.getUrl($config.registration.init.replace(/\{email\}/g, email)),
       Date.now().toString()
-    ].join('?');
+    ].join('&');
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
@@ -409,7 +411,7 @@ let $import = {
   },
 
   history(email, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+    let endpoint = utils.getUrl($config.import.history.replace(/\{email\}/g, email)),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
@@ -473,7 +475,7 @@ let $import = {
   },
 
   create(email, system, username, password, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles.replace(/\{email\}/g, email)),
+    let endpoint = utils.getUrl($config.import.roles),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
@@ -481,7 +483,8 @@ let $import = {
         params = {
           'legacySystem': system,
           'legacyUsername': username,
-          'legacyPassword': password
+          'legacyPassword': password,
+          'currentUser': email
         };
 
     $success = ($success || function(response) {});
@@ -505,6 +508,12 @@ let $import = {
  * IAM API Class
  */
 class IAM {
+  debug;
+  states;
+  user;
+  auth;
+  isDebug;
+
   constructor($api) {
     _.extend(this, utils, {
       config: config,
@@ -531,7 +540,7 @@ class IAM {
     }
   }
 
-  checkSession($success, $error) {
+  checkSession($success?, $error?) {
     $success = $success || function(data) {};
     $error = $error || function(data) {};
 
@@ -593,6 +602,7 @@ class IAM {
           } else {
             this.auth.authId = false;
             this.auth.stage = false;
+
             Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
 
             this.checkSession((user) => {
@@ -605,7 +615,7 @@ class IAM {
       });
   }
 
-  getStageData() {
+  getStageData(): any {
     if(this.auth.stage && this.auth.authId) {
       return {
         service: 'LDAPandHOTP',

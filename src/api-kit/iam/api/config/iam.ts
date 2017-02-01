@@ -1,12 +1,12 @@
 export default {
   localResource: {
-    comp:     'http://csp-api.sam.gov/comp/iam',
+    comp:     'https://csp-api.sam.gov/comp/iam',
     minc:     'https://csp-api.sam.gov/minc/iam',
     prodlike: 'https://csp-api.sam.gov/prodlike/iam'
   },
 
   remoteResource: {
-    comp:     'http://csp-api.sam.gov/comp/iam',
+    comp:     'https://csp-api.sam.gov/comp/iam',
     minc:     'https://csp-api.sam.gov/minc/iam',
     prodlike: 'https://csp-api.sam.gov/prodlike/iam'
   },
@@ -15,7 +15,7 @@ export default {
     path: '/'
   },
 
-  session:   'https://csp-api.sam.gov/{environment}/IdentityandAccess/v3/auth/session/?api_key=rkkGBk7AU8UQs9LHT6rM0rFkg3A3rGaiBntKSGEC',
+  session:   'https://csp-api.sam.gov/{environment}/IdentityandAccess/v3/auth/session',
   mergeWith: '/users/v3/mergeWith/{email}',
 
   registration: {
@@ -40,11 +40,12 @@ export default {
   },
 
   kba: {
-    questions: 'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/getAnswerIds?api_key=rkkGBk7AU8UQs9LHT6rM0rFkg3A3rGaiBntKSGEC',
-    update:    'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/updateAnswers?api_key=rkkGBk7AU8UQs9LHT6rM0rFkg3A3rGaiBntKSGEC'
+    questions: 'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/getAnswerIds',
+    update:    'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/updateAnswers'
   },
 
   import: {
-    roles: '/import/{email}/roles'
+    history: '/import/{email}/roles',
+    roles: '/import/roles'
   }
 };

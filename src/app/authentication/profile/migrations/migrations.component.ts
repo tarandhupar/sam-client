@@ -135,7 +135,7 @@ export class MigrationsComponent {
 
             return {
               system: account.sourceLegacySystem.toUpperCase() + '.gov',
-              username: account.email,
+              username: account.username || '',
               orgKey: account.orgKey,
               name: account.fullName,
               migratedAt: moment(account.claimedTimestamp).format('MM/DD/YYYY'),

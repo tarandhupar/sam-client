@@ -27,9 +27,10 @@ describe("New to Sam.gov page in help page", ()=>{
 
   it("should open image library when click on big button", ()=>{
     fixture.detectChanges();
-    expect(component.showImageLibrary).toBe(false);
-    fixture.nativeElement.querySelector('.square-button-top').click();
     fixture.whenStable().then(()=>{
+      expect(component.showImageLibrary).toBe(false);
+      fixture.nativeElement.querySelector('.square-button').click();
+
       fixture.detectChanges();
       expect(component.showImageLibrary).toBe(true);
     });
@@ -37,9 +38,11 @@ describe("New to Sam.gov page in help page", ()=>{
 
   it("should close image library when click on go back link", ()=>{
     component.showImageLibrary = true;
+    component.openImageLibrary('area1');
     fixture.detectChanges();
-    fixture.nativeElement.querySelector('.fa-arrow-circle-o-left').click();
     fixture.whenStable().then(()=>{
+      fixture.nativeElement.querySelector('.fa-arrow-circle-o-left').click();
+
       fixture.detectChanges();
       expect(component.showImageLibrary).toBe(false);
     });

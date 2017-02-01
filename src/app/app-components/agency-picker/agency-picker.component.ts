@@ -137,7 +137,7 @@ export class AgencyPickerComponent implements OnInit {
       this.resetAutocomplete();
     }
     this.cancelBlur = false;
-    this.searchMessage = "";
+    //this.searchMessage = "";
   }
 
   cancelBlurMethod(){
@@ -408,6 +408,7 @@ export class AgencyPickerComponent implements OnInit {
     if(this.autocompletePreselect.length>0){
       this.serviceCall(this.autocompletePreselect,false).subscribe(res=>{
         this.setOrganization(res["_embedded"][0]["org"]);
+        this.updateBrowse(res["_embedded"][0]["org"]);
       });
       return;
     }
@@ -631,6 +632,7 @@ export class AgencyPickerComponent implements OnInit {
    var obj = {};
    obj['name'] = data['name'] + this.levelFormatter(level);
    obj['value'] = data['elementId'] ? data['elementId'] : data['orgKey'];
+   this.searchMessage = "";
    this.addToSelectedOrganizations(obj);
    this.autoComplete.length = 0;
    this.organization.emit(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);

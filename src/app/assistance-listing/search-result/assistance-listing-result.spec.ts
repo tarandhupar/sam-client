@@ -22,7 +22,7 @@ describe('AssistanceListingResultComponent', () => {
       comp.data = {
         title: "ABCDEFG",
         programNumber: "12345",
-        archive: false,
+        isActive: false,
         _links: {
           self:{
             href: "http://www.sam.gov"

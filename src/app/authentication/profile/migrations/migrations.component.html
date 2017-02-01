@@ -41,7 +41,7 @@
   </form>
   <div>
     <h3>Migration History</h3>
-    <div>You have not migrated any legacy website accounts yet.</div>
+    <div *ngIf="!store.migrations.length">You have not migrated any legacy website accounts yet.</div>
 
     <table class="usa-table-borderless usa-migration-history">
       <thead>

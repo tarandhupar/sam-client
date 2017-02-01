@@ -68,7 +68,7 @@
     <!--==========================-->
     <!--=== Security Questions ===-->
     <!--==========================-->
-    <section class="kba" [ngClass]="{ 'usa-editable': isEdit('kba') }">
+    <section *ngIf="user.kbaAnswerList.length" class="kba" [ngClass]="{ 'usa-editable': isEdit('kba') }">
       <h3>Security Questions<a class="usa-edit" href="javascript:void(0);" (click)="edit('kba')">Edit</a></h3>
 
       <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
