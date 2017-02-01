@@ -8,6 +8,7 @@
     background-color: #e2e1e1;
     color: #777;
     height: 3.3rem;
+    display: none;
   }
 
   .filter-btn:hover{
@@ -25,6 +26,9 @@
   labelWrapper{
     position: relative;
     display: block;
+    & label{
+      display: none;
+    }
   }
   .label-wrapper:after{
     content: "\F0D7";
@@ -32,7 +36,7 @@
     font: normal normal normal 17px/1 FontAwesome;
     position: absolute;
     right: 10px;
-    top:10px;
+    top:8px;
   }
   select{
     color: #777;
@@ -40,10 +44,17 @@
     font-weight: 700;
     border: none;
     border-radius: 5px 0 0 5px;
-    padding: 8px 10px 8px 10px;
-    height: 3.3rem;
-    line-height: 1;
+    padding: 3px 24px 8px 10px;
+    height: 33px;
     background-image: none;
+    cursor: pointer;
+    width: auto;
+    line-height: 1.5;
+    margin: 0;
+  }
+  select:hover{
+    background-color:#d9d9d9;
+    color: #2D2D2D;
   }
 
   .search-btn{

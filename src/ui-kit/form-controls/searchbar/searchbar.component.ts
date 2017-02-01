@@ -74,6 +74,20 @@ export class SamSearchbarComponent {
 
   onSelect(value):void {
     this.filterValue = value;
+    this.findSelectedOption(value);
+  }
+  
+  findSelectedOption(value): void {
+    function getOption(option){
+      return option.value === value;
+    }
+    let selectedOption = this.selectConfig.options.find(getOption);
+    this.adjustSelectWidth(selectedOption);
+  }
+  
+  adjustSelectWidth(option): void{
+    let charLength = option.label.length;
+    console.log(charLength * 10);
   }
 
   callSearch(searchTerm):void {
