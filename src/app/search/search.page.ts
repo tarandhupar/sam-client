@@ -24,7 +24,7 @@ export class SearchPage implements OnInit{
   featuredData = [];
 	oldKeyword: string = "";
 	initLoad = true;
-	showOptional:any = (SHOW_OPTIONAL=="true");
+	showOptional:any = true; //(SHOW_OPTIONAL=="true");
 
 	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
@@ -48,7 +48,7 @@ export class SearchPage implements OnInit{
 		this.organizationId = ""+orgId.value;
     this.loadParams();
 	}
-  
+
   setupQS(newsearch){
   	var qsobj = {};
   	if(this.organizationId.length>0){
