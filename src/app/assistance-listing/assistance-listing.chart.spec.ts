@@ -359,10 +359,9 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
     expect(td.length).toBe(15);
 
     // Formula Grants Total
-
-    expect(td[13].innerHTML).toBe('$0');
-    expect(td[14].innerHTML).toBe('$20');
-    expect(td[15].innerHTML).toBe('$25');
+    expect(td[9].innerHTML).toBe('$0');
+    expect(td[10].innerHTML).toBe('$20');
+    expect(td[11].innerHTML).toBe('$25');
   });
 
   /**
