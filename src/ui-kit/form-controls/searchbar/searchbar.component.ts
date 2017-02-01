@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewChild, Renderer} from '@angular/core';
 
 /**
  * The <samSearchbar> component(filter,input bar and search button) can automatically change it size according to the div the wrap it.
@@ -30,18 +30,24 @@ export class SamSearchbarComponent {
 
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
+  
+  @ViewChild("filterSelect")
+  public filterSelect: any;
 
   searchBtnText:string = "Search";
-
+  
+  // Added "width" as a temporary solution to find width of selected text
+  // Ideally select width needs to be calculated automatically based on
+  // character length and character width of selected text;
   selectConfig = {
     options: [
-      {value: '', label: 'All'},
-      {value: 'opp', label: 'Opportunities'},
-      {value: 'cfda', label: 'Assistance Listings'},
-      {value: 'fh', label: 'Federal Hierarchy'},
-      {value: 'ent', label: 'Entities'},
-      {value: 'ex', label: 'Exclusions'},
-      {value: 'wd', label: 'Wage Determinations'}
+      {value: '', label: 'All', width: '60px'},
+      {value: 'opp', label: 'Opportunities', width: '140px'},
+      {value: 'cfda', label: 'Assistance Listings', width: '180px'},
+      {value: 'fh', label: 'Federal Hierarchy', width: '170px'},
+      {value: 'ent', label: 'Entities', width: '100px'},
+      {value: 'ex', label: 'Exclusions', width: '120px'},
+      {value: 'wd', label: 'Wage Determinations', width: '200px'}
     ],
     disabled: false,
     label: '',
@@ -51,13 +57,14 @@ export class SamSearchbarComponent {
   resetIconClass:string = "reset-icon";
   // resetDisabled:boolean = true;
 
-  constructor() {
+  constructor(private _renderer: Renderer) {
   }
 
   ngOnInit() {
     if(this.isSizeSmall()){
       this.searchBtnText = "";
     }
+    this.findSelectedOption('');
   }
 
   // ngDoCheck(){
@@ -77,6 +84,9 @@ export class SamSearchbarComponent {
     this.findSelectedOption(value);
   }
   
+  // Makes "all" the default value for select
+  selectModel = ""; 
+  
   findSelectedOption(value): void {
     function getOption(option){
       return option.value === value;
@@ -86,8 +96,8 @@ export class SamSearchbarComponent {
   }
   
   adjustSelectWidth(option): void{
-    let charLength = option.label.length;
-    console.log(charLength * 10);
+    let widthString = 'width:' + option.width;
+    this._renderer.setElementAttribute(this.filterSelect.select.nativeElement, 'style', widthString);
   }
 
   callSearch(searchTerm):void {

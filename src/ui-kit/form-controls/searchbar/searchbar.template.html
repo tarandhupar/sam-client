@@ -6,7 +6,7 @@
       <button class="filter-btn pull-right">
         <span class="usa-search-submit-text">{{getLabelForValue(filterValue)}}&nbsp;&nbsp;<i class="fa fa-caret-down"></i></span>
       </button>
-      <samSelect class="filter-select"
+      <samSelect #filterSelect class="filter-select"
                  [(model)]="selectModel"
                  [name]="selectConfig.name"
                  [options]="selectConfig.options"
