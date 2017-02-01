@@ -27,6 +27,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   private totalPages: any = 0;
   private showPerPage = 10;
   public logoUrl: string;
+  errorOrgId: string;
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -54,8 +55,10 @@ export class OrganizationPage implements OnInit, OnDestroy {
   private loadOrganization() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.activatedRoute.params.switchMap(params => { // construct a stream of api data
+      this.errorOrgId = params['id'];
       return this.fhService.getOrganizationById(params['id'], true);
     });
+
     apiStream.subscribe(apiSubject);
 
     this.subscription = apiSubject.subscribe(api => { // run whenever api data is updated
@@ -68,7 +71,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
       this.errorOrganization = true;
     });
 
-    this.fhService.getOrganizationLogo(apiSubject, 
+    this.fhService.getOrganizationLogo(apiSubject,
       (logoUrl) => {
         this.logoUrl = logoUrl;
       }, (err) => {

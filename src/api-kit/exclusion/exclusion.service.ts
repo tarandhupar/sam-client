@@ -9,8 +9,8 @@ export class ExclusionService{
   
   getExclusion(id: string) {
     let oApiParam = {
-      name: 'exclusion',
-      suffix: '/',
+      name: 'exclusions',
+      suffix: '/' + id,
       oParam: {
         'sort': 'name'
       },
