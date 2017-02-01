@@ -29,7 +29,7 @@ let MockOpportunityService = {
         "opportunityId": "0000b08b003c3a28ae6f9dd254e4a9c8"
       },
       "data": {
-        "type": "Type Goes here",
+        "type": "l",
         "solicitationNumber": "Solicitation Number goes here",
         "title": "Title Goes here",
         "organizationId": "100010393",
@@ -290,7 +290,7 @@ let MockFHService = {
         }
       ]
     });
-  }, 
+  },
   getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
     return Observable.of("");
   }

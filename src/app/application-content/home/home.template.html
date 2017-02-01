@@ -48,7 +48,7 @@
           <div class="usa-width-one-fourth" *ngFor="let item of topicsData">
             <div class="usa-width-one-whole">
               <div class="usa-width-one-half topic-div-marginCenter topic-image-link">
-                <a (click)="selectTopic(item)"><img src="src/assets/img/blank_icon.png" [attr.alt]="item.title"></a>
+                <a (click)="selectTopic(item)"><img src="src/assets/img/blank_icon.png" [attr.alt]="item.title" [attr.tabindex]="0" (keyup.enter)="selectTopic(item)"></a>
               </div>
             </div>
             <div class="usa-width-one-whole">
@@ -164,7 +164,7 @@
     <div class="usa-width-one-whole m_T-4x topic-detail">
       <div class="usa-width-one-whole ">
         <span class="pull-right">
-          <a class="dismiss-detail" (click)="closeTopicDetail()">
+          <a class="dismiss-detail" (click)="closeTopicDetail()" (keyup.enter)="closeTopicDetail()" tabindex="0">
             <i class="fa fa-times-circle"></i>
             <span class="sr-only">dismiss detail</span>
           </a>

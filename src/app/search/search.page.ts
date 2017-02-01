@@ -48,12 +48,7 @@ export class SearchPage implements OnInit{
 		this.organizationId = ""+orgId.value;
     this.loadParams();
 	}
-
-	onSearchClick($event) {
-      this.keyword = $event.keyword;
-      this.index = $event.searchField;
-      this.runSearch();
-    }
+  
   setupQS(newsearch){
   	var qsobj = {};
   	if(this.organizationId.length>0){
