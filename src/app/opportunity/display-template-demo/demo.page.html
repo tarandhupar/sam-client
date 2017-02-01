@@ -1,27 +1,4 @@
-<display-page [attr.class]="'opportunity-page usa-grid'" [logoSrc]="logoUrl">
-
-<div display-sidenav>
-   <nav *ngIf="currentTab == 'Opportunity'">
-    <ul class="usa-sidenav-list">
-      <li *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Award) }}">Award Details</a></li>
-      <li *ngIf="shouldBeDisplayed(opportunityFields.General)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.General) }}">General Information</a></li>
-      <li *ngIf="shouldBeDisplayed(opportunityFields.Classification)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Classification</a></li>
-      <li *ngIf="shouldBeDisplayed(opportunityFields.Synopsis)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
-      <li *ngIf="shouldBeDisplayed(opportunityFields.Packages)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
-      <li *ngIf="shouldBeDisplayed(opportunityFields.Contact)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Contact) }}">Contact Information</a></li>
-    </ul>
-  </nav>
-  
-  <nav *ngIf="currentTab == 'Award Notices'">
-    <ul class="usa-sidenav-list">
-      <li *ngIf="shouldBeDisplayed(opportunityFields.AwardSummary)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.AwardSummary) }}">Awards Summary</a></li>
-      <li>&nbsp;</li>
-    </ul>
-  </nav>
-</div>
-
-<div display-alert>
-</div>
+<display-page [attr.class]="'opportunity-page usa-grid'" [logoSrc]="logoUrl" [sidenavConfig]="sidenavModel">
 
 <div display-title>
   <ng-container *ngIf="opportunity">

@@ -1,5 +1,5 @@
 import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
-
+import { Router,NavigationExtras } from '@angular/router';
 /**
 * DisplayPageComponent - template component for generating display page
 *
@@ -19,7 +19,7 @@ export class DisplayPageComponent implements OnInit {
 	showCustomSidebar = true;
 	showGeneratedSidebar = false;
 
-  constructor(){}
+  constructor(private router: Router){}
 
   ngOnInit(){
   	if(!this.sidebarToggle){
@@ -31,4 +31,14 @@ export class DisplayPageComponent implements OnInit {
 			this.showGeneratedSidebar = true;
 		}
   }
+	
+	sidenavDataEvtHandler(data){
+	}
+	sidenavPathEvtHandler(data){
+		if(data.charAt(0)=="#"){
+			this.router.navigate([], { fragment: data.substring(1) });
+		} else {
+			this.router.navigate([data] );
+		}
+	}
 }

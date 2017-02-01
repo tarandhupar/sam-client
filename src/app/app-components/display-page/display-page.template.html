@@ -21,7 +21,12 @@
     </div>
     &nbsp;
 	</aside>
-	<ng-container *ngIf="showGeneratedSidebar">generated sidenav here</ng-container>
+	<div class="usa-width-one-fourth" *ngIf="showGeneratedSidebar">
+		<div container="occupy-page" limit="1200" sam-sticky>
+			<samSidenav [model]="sidenavConfig" (data)="sidenavDataEvtHandler($event)" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+		</div>
+    &nbsp;
+	</div>
 	<div [attr.class]="contentClass">
 		<ng-content select="[display-alert]"></ng-content>
 		<ng-content select="[display-title]"></ng-content>

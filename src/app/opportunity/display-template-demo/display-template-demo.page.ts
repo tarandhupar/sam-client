@@ -48,6 +48,35 @@ import * as _ from 'lodash';
   ]
 })
 export class OpportunityDisplayPageDemoPage implements OnInit {
+  sidenavModel = {
+    "label": "stuff",
+    "children": [
+      {
+        "label": "Award Details",
+        "route": "#opportunity-award",
+      },
+      {
+        "label": "General Information",
+        "route": "#opportunity-general",
+      },
+      {
+        "label": "Classification",
+        "route": "#opportunity-classification"
+      },
+      {
+        "label": "Synopsis/Description",
+        "route": "#opportunity-synopsis"
+      },
+      {
+        "label": "Packages",
+        "route": "#opportunity-packages"
+      },
+      {
+        "label": "Contact Information",
+        "route": "#opportunity-contact-info"
+      }
+    ]
+  };
   public opportunityFields = OpportunityFields; // expose the OpportunityFields enum for use in html template
   public displayField = {}; // object containing boolean flags for whether fields should be displayed
 
