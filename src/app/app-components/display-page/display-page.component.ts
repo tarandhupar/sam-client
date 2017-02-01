@@ -16,12 +16,19 @@ export class DisplayPageComponent implements OnInit {
   @Input() logoSrc: string;
   @Input() sidebarToggle = true;
   contentClass = "usa-width-three-fourths";
+	showCustomSidebar = true;
+	showGeneratedSidebar = false;
 
   constructor(){}
 
   ngOnInit(){
   	if(!this.sidebarToggle){
   		this.contentClass = "usa-width-one-whole";
-  	}
+			this.showCustomSidebar = false;
+			this.showGeneratedSidebar = false;
+  	} else if (this.sidenavConfig){
+			this.showCustomSidebar = false;
+			this.showGeneratedSidebar = true;
+		}
   }
 }

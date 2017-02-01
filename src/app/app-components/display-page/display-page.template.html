@@ -1,5 +1,5 @@
 <div class="usa-grid">
-	<aside *ngIf="sidebarToggle" class="usa-width-one-fourth">
+	<aside *ngIf="showCustomSidebar" class="usa-width-one-fourth">
 		<div sam-sticky container="occupy-page" limit="1200">
 			<ng-container *ngIf="logoSrc===null">
 	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
@@ -21,6 +21,7 @@
     </div>
     &nbsp;
 	</aside>
+	<ng-container *ngIf="showGeneratedSidebar">generated sidenav here</ng-container>
 	<div [attr.class]="contentClass">
 		<ng-content select="[display-alert]"></ng-content>
 		<ng-content select="[display-title]"></ng-content>
