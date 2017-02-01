@@ -359,8 +359,10 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
     expect(td.length).toBe(15);
 
     // Formula Grants Total
-    expect(td[13].innerHTML).toBe('$72');
-    expect(td[14].innerHTML).toBe('$87');
+
+    expect(td[13].innerHTML).toBe('$0');
+    expect(td[14].innerHTML).toBe('$20');
+    expect(td[15].innerHTML).toBe('$25');
   });
 
   /**
@@ -379,11 +381,9 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
     expect(td.length).toBe(15);
 
     // All Totals
-    /*
-    expect(td[17].innerHTML).toBe('$42'); // 22 + 20 + 0
-    expect(td[18].innerHTML).toBe('$72'); // 12 + 40 + 20
-    expect(td[19].innerHTML).toBe('$87'); // [null] + 62 + 25
-    */
+    expect(td[12].innerHTML).toBe('$42'); // 22 + 20 + 0
+    expect(td[13].innerHTML).toBe('$72'); // 12 + 40 + 20
+    expect(td[14].innerHTML).toBe('$87'); // [null] + 62 + 25
   });
 });
 
@@ -466,29 +466,25 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
     let td = tbody.item(0).getElementsByTagName('td');
     expect(td.length).toBe(12);
 
-    /*
+
     let ana = 'Actual Not Available';
     let nsi = 'Not Separately Identifiable';
     let ena = 'Estimate Not Available';
 
     // Obligation 1
-    expect(td[4].innerHTML).toBe('');
-    expect(td[5].innerHTML).toBe(ana);
-    expect(td[6].innerHTML).toBe(nsi);
-    expect(td[7].innerHTML).toBe(ena);
+    expect(td[3].innerHTML).toBe(ana);
+    expect(td[4].innerHTML).toBe(nsi);
+    expect(td[5].innerHTML).toBe(ena);
 
     // Obligation 2
-    expect(td[8].innerHTML).toBe('');
-    expect(td[9].innerHTML).toBe(ana);
-    expect(td[10].innerHTML).toBe(nsi);
-    expect(td[11].innerHTML).toBe(ena);
+    expect(td[6].innerHTML).toBe(ana);
+    expect(td[7].innerHTML).toBe(nsi);
+    expect(td[8].innerHTML).toBe(ena);
 
     // Totals
-    expect(td[12].innerHTML).toContain('Totals');
-    expect(td[13].innerHTML).toBe(ana); // ana + ana = ana
-    expect(td[14].innerHTML).toBe(nsi); // nsi + nsi = nsi
-    expect(td[15].innerHTML).toBe(ena); // ena + ena = ena
-    */
+    expect(td[9].innerHTML).toBe(ana); // ana + ana = ana
+    expect(td[10].innerHTML).toBe(nsi); // nsi + nsi = nsi
+    expect(td[11].innerHTML).toBe(ena); // ena + ena = ena
   });
 
   /**
@@ -539,29 +535,25 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
     let td = tbody.item(0).getElementsByTagName('td');
     expect(td.length).toBe(12);
 
-    /*
+
     let na = 'Not Available';
     let ana = 'Actual Not Available';
     let nsi = 'Not Separately Identifiable';
     let ena = 'Estimate Not Available';
 
     // Obligation 1
-    expect(td[4].innerHTML).toBe('');
-    expect(td[5].innerHTML).toBe(ana);
-    expect(td[6].innerHTML).toBe(nsi);
-    expect(td[7].innerHTML).toBe(ena);
+    expect(td[3].innerHTML).toBe(ana);
+    expect(td[4].innerHTML).toBe(nsi);
+    expect(td[5].innerHTML).toBe(ena);
 
     // Obligation 2
-    expect(td[8].innerHTML).toBe('');
-    expect(td[9].innerHTML).toBe(nsi);
-    expect(td[10].innerHTML).toBe(ena);
-    expect(td[11].innerHTML).toBe(nsi);
+    expect(td[6].innerHTML).toBe(nsi);
+    expect(td[7].innerHTML).toBe(ena);
+    expect(td[8].innerHTML).toBe(nsi);
 
     // Totals
-    expect(td[12].innerHTML).toContain('Totals');
-    expect(td[13].innerHTML).toBe(na); // ana + nsi = na
-    expect(td[14].innerHTML).toBe(na); // nsi + ena = na
-    expect(td[15].innerHTML).toBe(na); // ena + nsi = na
-    */
+    expect(td[9].innerHTML).toBe(na); // ana + nsi = na
+    expect(td[10].innerHTML).toBe(na); // nsi + ena = na
+    expect(td[11].innerHTML).toBe(na); // ena + nsi = na
   });
 });
