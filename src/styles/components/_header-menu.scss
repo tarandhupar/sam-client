@@ -1,0 +1,21 @@
+$menu-background: #112E51;
+$menu-divider-color: #333333;
+$menu-inner-divider-color: #FFFFFF;
+
+$menu-item-height: 40px;
+
+.sam-header-menu {
+  border-top-width: 2px;
+  border-top-style: solid ;
+  border-top-color: $menu-divider-color;
+
+  .sam-menu-item {
+    height: $menu-item-height;
+    background-color: $menu-background;
+    border-bottom-width: 1px;
+    border-bottom-style: 'solid';
+    border-bottom-color: $menu-inner-divider-color;;
+    font-size: 1rem;
+    line-height: $menu-item-height;
+  }
+}

@@ -28,7 +28,9 @@
   </span>
   <span *ngIf="states.isSignedIn">
     <div class=" m_R-3x align-top m_B-0x">
-      <a class="white-text header-link" routerLink="/profile">{{ user.fullName }}</a>
+      <div class="white-text header-link" (click)="states.menu = !states.menu">{{ user.fullName }}</div>
     </div>
   </span>
+
+  <sam-header-menu *ngIf="states.isSignedIn" [items]="store.menus" [(open)]="states.menu"></sam-header-menu>
 </div>
