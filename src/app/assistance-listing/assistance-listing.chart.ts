@@ -551,7 +551,8 @@ export class FinancialObligationChart {
         existingYears.push(value.year);
       }
       if(existingYears.length < numberOfYears){
-        missingYears = _.difference(allYears.values(), existingYears);
+        let allYearsFound = allYears.values().map(item => +item);
+        missingYears = _.difference(allYearsFound, existingYears);
         missingYears.forEach(missingYear => {
           item.values.push({ flag: 'empty', 'year': missingYear });
         });
