@@ -1,4 +1,4 @@
-<div class="sam-header-menu" [hidden]="!states.open" (click)="toggle($event)" (hover)="toggle($event)">
+<div class="sam-header-menu" [hidden]="!states.open">
   <ul>
     <li *ngFor="let item of items; let $index = index;" class="menu-item">
       <a [routerLink]=item.routerLink (click)="dispatch($event)" [innerText]="item.text"></a>

@@ -1,14 +1,15 @@
+$search-header-height: 40px;
+$search-input-height: $search-header-height - 4;
+
 #search-div {
   margin-bottom: 0 !important;
 }
 
 .search-header {
-  background-color:#112e51;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  min-height:40px;
+  background-color: $color-primary-darkest;
+  min-height: $search-header-height;
 
-  .search-bar-container{
+  .search-bar-container {
     height: 100%;
     width: 60%;
     display: inline-block;
@@ -16,23 +17,49 @@
 
   .logo-img {
     width: 140px;
-    height: 25px;
-    float: left;
+    height: $search-header-height;
     margin-left: 15px;
-    padding-right: 10px;
-    padding-top: 8px;
+    margin-right: 15px;
+    font: 0/0 a;        /* Hide the characters like spaces */
+    text-align: center; /* Align center inline elements */
+    float: left;
+
+    &:before {
+      content: ' ';
+      display: inline-block;
+      vertical-align: middle;
+      height: 100%;
+    }
+
+    img {
+      display: inline-block;
+      vertical-align: middle;
+    }
   }
 
   samSearchbar {
     min-width: 290px;
     max-width: 550px;
-    width:100%;
+    width: 100%;
     margin-top: 2px;
     float: left;
   }
 
+  .filter-btn,
+  .search-inputbar,
   .search-btn {
-    background-color: #02bfe7;
+    height: $search-input-height;
+    line-height: $search-input-height;
+  }
+
+  .filter-btn,
+  .search-btn {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
+  .search-btn {
+    background-color: $color-primary-alt;
   }
 
   .search-inputbar {
@@ -40,12 +67,31 @@
   }
 
   select {
-    background-color: #e4e2e0;
+    background-color: $color-gray-warm-light;
   }
 
-  .align-top{
+  .align-top {
     display: inline-block;
     vertical-align: top;
   }
-}
 
+  .usa-width-one-third {
+    > .pull-right {
+      height: $search-header-height;
+      font: 0/0 a;        /* Hide the characters like spaces */
+      text-align: center; /* Align center inline elements */
+
+      &:before {
+        content: ' ';
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+      }
+
+      img {
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
+  }
+}

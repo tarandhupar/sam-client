@@ -16,22 +16,31 @@ export class SamHeaderMenuComponent {
     open: false
   };
 
+  private fnFocus = (event) => {
+    this.openChange.emit(false);
+  };
+
   @Input()
   set open(open) {
+
     this.states.open = open;
     this.openChange.emit(this.states.open);
 
     this.states.open ? this.onOpen.emit() : this.onClose.emit();
-  }
-
-  toggle($event) {
-console.log($event);
-    switch($event) {
-
-    }
+    this.states.open ?  this.bind() : this.unbind();
   }
 
   dispatch($event) {
     this.onSelect.emit($event);
+  }
+
+  bind() {
+    const target = document.getElementById('main-container');
+    target.addEventListener('click', this.fnFocus, false);
+  }
+
+  unbind() {
+    const target = document.getElementById('main-container');
+    target.removeEventListener('click', this.fnFocus, false);
   }
 }

@@ -1,10 +1,12 @@
 samHeader {
+  $header-height: 65px;
+
   header {
     background-color: $color-primary-darkest;
     box-shadow: 0 2px 4px rgba(1, 2, 2, 0.1);
     padding: 3px 0;
     text-align: center;
-    height: 65px;
+    height: $header-height;
   }
 
   .align-top {
@@ -18,9 +20,17 @@ samHeader {
     height: 3rem;
   }
 
-  .logo-link{
-    margin-top:0.5rem !important;
+  .logo-link {
+    margin-top: 0.5rem !important;
     height: auto;
     display: inline-block;
+  }
+
+  .header-links {
+    .header-item,
+    .header-link {
+      //height: $header-height - 6;      // compensate for padding
+      line-height: $header-height - 6; // compensate for padding
+    }
   }
 }
