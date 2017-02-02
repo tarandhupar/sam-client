@@ -29,7 +29,7 @@ describe("New to Sam.gov page in help page", ()=>{
     fixture.detectChanges();
     fixture.whenStable().then(()=>{
       expect(component.showImageLibrary).toBe(false);
-      fixture.nativeElement.querySelector('.square-button-top').click();
+      fixture.nativeElement.querySelector('.square-button').click();
 
       fixture.detectChanges();
       expect(component.showImageLibrary).toBe(true);
