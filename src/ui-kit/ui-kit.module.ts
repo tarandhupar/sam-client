@@ -41,6 +41,7 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
 import { SamModalComponent } from "./modal/modal.component";
 import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
 import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
+import { SamSidenavModule } from './sidenav';
 
 /**
  * A module for reusable SAM Web Design components
@@ -88,7 +89,8 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    SamSidenavModule
   ],
   exports: [
     LabelWrapper,
@@ -126,6 +128,7 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
     SamTabComponent,
     SamModalComponent,
     SamAlphabetSelectorComponent,
+    SamSidenavModule
   ],
   providers: [
     AlphabetSelectorService
