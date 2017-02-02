@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import {Router} from "@angular/router";
-import {Alert} from "./alert.model";
-import {SystemAlertsService} from "../../api-kit/system-alerts/system-alerts.service";
-import {ERROR_PAGE_PATH} from "../application-content/error/error.route";
-import {Observable} from "rxjs";
-import {Cookie} from 'ng2-cookies';
+import { Router } from "@angular/router";
+import { Alert } from "./alert.model";
+import { SystemAlertsService } from "../../api-kit/system-alerts/system-alerts.service";
+import { Observable } from "rxjs";
+import { Cookie } from 'ng2-cookies';
+import { AlertFooterService } from "./alert-footer/alert-footer.service";
 
 export const ALERTS_PER_PAGE: number = 5;
 
@@ -65,7 +65,7 @@ export class AlertsPage {
     {label: 'End date (oldest first)', value: 'eda'},
   ];
 
-  constructor(public router: Router, private alertsService: SystemAlertsService) {
+  constructor(private router: Router, private alertsService: SystemAlertsService, private alertFooterService: AlertFooterService) {
 
   }
 
@@ -99,11 +99,7 @@ export class AlertsPage {
   }
 
   doSearch() {
-    this.getAlerts().catch(err => {
-      this.router.navigate([ERROR_PAGE_PATH]);
-      return Observable.of(err);
-    })
-    .subscribe((alerts) => this.onNewAlertsReceived(alerts));
+    this.getAlerts().subscribe((alerts) => this.onNewAlertsReceived(alerts));
   }
 
   getAlerts() : Observable<any> {
@@ -163,31 +159,34 @@ export class AlertsPage {
   }
 
   onAddAlertAccept(alert) {
-    this.currentPage = 1;
     this.alertsService.createAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
       (alerts) => {
+        this.currentPage = 1;
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
       },
-      (error) => {
-        console.error('Error while adding alerts: ', error);
-        this.router.navigate([ERROR_PAGE_PATH]);
-      }
+      () => this.showFooter()
     );
   }
 
   onEditAlertAccept(alert) {
-    this.currentPage = 1;
     this.alertsService.updateAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
       (alerts) => {
+        this.currentPage = 1;
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
       },
-      (error) => {
-        console.error('Error while editing alert: ', error);
-        this.router.navigate([ERROR_PAGE_PATH]);
-      }
+      () => this.showFooter()
     );
+  }
+
+  showFooter() {
+    this.alertFooterService.registerFooterAlert({
+      title:"The alerts service encountered an error.",
+      description:"",
+      type:'error',
+      timer:0
+    });
   }
 
   exitEditMode() {
