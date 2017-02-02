@@ -5,7 +5,6 @@ import { UserDirectoryPage } from "./user-directory.page";
 import { ParentOrgsComponent } from "./parent-orgs/parent-orgs.component";
 import { FormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
-import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 
 describe('User Directory Page', () => {
   let fixture;
@@ -17,9 +16,7 @@ describe('User Directory Page', () => {
         UserDirectoryPage,
         ParentOrgsComponent,
       ],
-      providers: [
-        AlertFooterService
-      ],
+      providers: [ ],
       imports: [
         RouterTestingModule,
         FormsModule,

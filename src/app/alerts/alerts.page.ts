@@ -182,12 +182,11 @@ export class AlertsPage {
 
   showFooter() {
     this.alertFooterService.registerFooterAlert({
-      title:"A required service is unavailable",
+      title:"The alerts service encountered an error.",
       description:"",
       type:'error',
       timer:0
     });
-    return Observable.throw(new Error("api error"));
   }
 
   exitEditMode() {
