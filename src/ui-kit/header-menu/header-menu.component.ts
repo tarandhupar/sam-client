@@ -1,11 +1,33 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
+/**
+ * The MenuItem interface is designed with sam.gov standards to show that this is an official website
+ *
+ * @property text: Text content for menu item
+ * @property routerLink: Valid route through Angular2's routing module
+ */
+interface MenuItem {
+  text: string,
+  routerLink?: string
+}
+
+/**
+ * The <sam-header-menu> component is designed with sam.gov standards to show that this is an official website
+ * https://gsa.github.io/sam-web-design-standards/
+ *
+ * @Input items: Array of `MenuItem` objects
+ * @Input open: Boolean for setting menu open/close states (2-way binding)
+ *
+ * @Output onOpen: Menu open callback
+ * @Output onClose: Menu close callback
+ * @Output onSelect: Menu item click callback
+ */
 @Component({
   selector: 'sam-header-menu',
   templateUrl: 'header-menu.component.html'
 })
 export class SamHeaderMenuComponent {
-  @Input() items: any = [];
+  @Input() items: MenuItem[] = [];
 
   @Output() openChange = new EventEmitter();
   @Output() onOpen:EventEmitter<any> = new EventEmitter<any>();
