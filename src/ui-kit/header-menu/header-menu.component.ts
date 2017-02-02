@@ -16,6 +16,7 @@ export class SamHeaderMenuComponent {
     open: false
   };
 
+  @Input()
   set open(open) {
     this.states.open = open;
     this.openChange.emit(this.states.open);

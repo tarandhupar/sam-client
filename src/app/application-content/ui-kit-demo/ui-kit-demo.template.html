@@ -1,409 +1,432 @@
-<div class="usa-grid">
-  <h2>Accordions Component &lt;samAccordions&gt;</h2>
-  <div class="usa-width-one-whole">
-    <h3>Accordions without border</h3>
-    <samAccordion>
-      <samAccordionSection headerText="Section title 1" name="aria-friendly-section-name">
-        <a href>A link</a>
-      </samAccordionSection>
-      <samAccordionSection headerText="Section title 2" name="aria-friendly-section-name-2">
-        <a href>A second link</a>
-      </samAccordionSection>
-    </samAccordion>
-  </div>
-  <div class="usa-width-one-whole">
-    <h3>Accordions with border, and initial selected tab</h3>
-    <samAccordion [expandIndex]="1" [bordered]="true">
-      <samAccordionSection headerText="Section title 1" name="aria-friendly-section-name">
-        <a href>A link</a>
-      </samAccordionSection>
-      <samAccordionSection headerText="Section title 2" name="aria-friendly-section-name-2">
-        <a href>A second link</a>
-      </samAccordionSection>
-    </samAccordion>
-  </div>
-</div>
-<div class="usa-grid">
-  <h2>Button Component &lt;samButton&gt;</h2>
-  <div class="usa-width-one-whole">
-    <div class="usa-width-one-fourth">
-      <samButton [buttonId]="'defaultBtn'" [buttonText]="'Default'" [buttonType]="btnType" (click)="onDefaultBtnClick()"></samButton>
+<div class="sam-ui-kit">
+  <div class="usa-grid">
+    <h2>Accordions Component &lt;samAccordions&gt;</h2>
+    <div class="usa-width-one-whole">
+      <h3>Accordions without border</h3>
+      <samAccordion>
+        <samAccordionSection headerText="Section title 1" name="aria-friendly-section-name">
+          <a href>A link</a>
+        </samAccordionSection>
+        <samAccordionSection headerText="Section title 2" name="aria-friendly-section-name-2">
+          <a href>A second link</a>
+        </samAccordionSection>
+      </samAccordion>
     </div>
-    <div class="usa-width-one-fourth">
-      <samButton [buttonId]="'altBtn'" [buttonText]="'Alt'" [buttonType]="'alt'"></samButton>
-    </div>
-    <div class="usa-width-one-fourth">
-      <samButton [buttonId]="'secondaryBtn'" [buttonText]="'Secondary'" [buttonType]="'secondary'"></samButton>
-    </div>
-    <div class="usa-width-one-fourth">
-      <samButton [buttonId]="'grayBtn'" [buttonText]="'Gray'" [buttonType]="'gray'"></samButton>
+    <div class="usa-width-one-whole">
+      <h3>Accordions with border, and initial selected tab</h3>
+      <samAccordion [expandIndex]="1" [bordered]="true">
+        <samAccordionSection headerText="Section title 1" name="aria-friendly-section-name">
+          <a href>A link</a>
+        </samAccordionSection>
+        <samAccordionSection headerText="Section title 2" name="aria-friendly-section-name-2">
+          <a href>A second link</a>
+        </samAccordionSection>
+      </samAccordion>
     </div>
   </div>
-  <div class="usa-width-one-whole">
-    <div class="usa-width-one-fourth">
-      <samButton [buttonId]="'outlineBtn'" [buttonText]="'Outline'" [buttonType]="'outline'"></samButton>
-    </div>
-    <div class="usa-width-one-fourth">
-      <samButton [buttonId]="'invertedBtn'" [buttonText]="'Inverted'" [buttonType]="'inverted'"></samButton>
-    </div>
-    <div class="usa-width-one-fourth">
-      <samButton [buttonId]="'disabledBtn'" [buttonText]="'Disabled'" [buttonType]="'disabled'"></samButton>
-    </div>
-    <div class="usa-width-one-fourth">
-      <samButton [buttonId]="'bigBtn'" [buttonText]="'Big'" [buttonType]="'big'"></samButton>
-    </div>
-  </div>
-</div>
-<div class="usa-grid">
-  <h2>Label Component &lt;samLabel&gt;</h2>
-  <div class="usa-width-one-sixth">
-    <samLabel [labelType]="'big'" [labelText]="'Big Label'"></samLabel>
-  </div>
-  <div class="usa-width-one-sixth">
-    <samLabel
-      [labelType]="'small'"
-      [labelText]="'Small Label'"></samLabel>
-  </div>
-</div>
-<div class="usa-grid">
-  <h2>Select Component &lt;samSelect&gt;</h2>
-  <div class="usa-width-one-third">
-    <samSelect
-      [(model)]="selectModel"
-      [name]="selectConfig.name"
-      [options]="selectConfig.options"
-      [label]="selectConfig.label"
-      [hint]="selectConfig.hint"
-      [errorMessage]="selectConfig.errorMessage"
-      [disabled]="selectConfig.disabled">
-    </samSelect>
-  </div>
-  <div class="usa-width-one-third">
-    <fieldset class="usa-fieldset-inputs usa-sans">
-      <legend><h3>Options</h3></legend>
-      <ul class="usa-unstyled-list">
-        <li>
-          <input id="hasEmptyOption" type="checkbox" (change)="onEmptyOptionChanged($event)">
-          <label for="hasEmptyOption">Add an empty option</label>
-        </li>
-        <li>
-          <input id="isDisabled" type="checkbox" [(ngModel)]="selectConfig.disabled">
-          <label for="isDisabled">Disabled</label>
-        </li>
-        <li>
-          <label>Label text</label>
-          <input type="text" [(ngModel)]="selectConfig.label">
-        </li>
-        <li>
-          <label>Error message text</label>
-          <input type="text" [(ngModel)]="selectConfig.errorMessage">
-        </li>
-        <li>
-          <label>Hint text</label>
-          <input type="text" [(ngModel)]="selectConfig.hint">
-        </li>
-      </ul>
-    </fieldset>
-  </div>
-  <div class="usa-width-one-third">
-    <h3>Model</h3>
-    <pre><code>{{selectModel | json}}</code></pre>
-  </div>
-</div>
-<div class="usa-grid">
-  <h2>Select Text &lt;samText&gt;</h2>
-  <div class="usa-width-one-third">
-    <samText
-      [(ngModel)]="textModel"
-      [name]="textConfig.name"
-      [label]="textConfig.label"
-      [hint]="textConfig.hint"
-      [errorMessage]="textConfig.errorMessage"
-      [disabled]="textConfig.disabled">
-    </samText>
-  </div>
-  <div class="usa-width-one-third">
-    <fieldset class="usa-fieldset-inputs usa-sans">
-      <legend><h3>Options</h3></legend>
-      <ul class="usa-unstyled-list">
-        <li>
-          <input id="isDisabled" type="checkbox" [(ngModel)]="textConfig.disabled">
-          <label for="isDisabled">Disabled</label>
-        </li>
-        <li>
-          <label>Label text</label>
-          <input type="text" [(ngModel)]="textConfig.label">
-        </li>
-        <li>
-          <label>Error message text</label>
-          <input type="text" [(ngModel)]="textConfig.errorMessage">
-        </li>
-        <li>
-          <label>Hint text</label>
-          <input type="text" [(ngModel)]="textConfig.hint">
-        </li>
-      </ul>
-    </fieldset>
-  </div>
-  <div class="usa-width-one-third">
-    <h3>Model</h3>
-    <pre><code>{{textModel}}</code></pre>
-  </div>
-</div>
-<div class="usa-grid">
-  <h2>Select Text &lt;samTextarea&gt;</h2>
-  <div class="usa-width-one-third">
-    <samTextArea
-      [(ngModel)]="textareaModel"
-      [name]="textareaConfig.name"
-      [label]="textareaConfig.label"
-      [hint]="textareaConfig.hint"
-      [errorMessage]="textareaConfig.errorMessage"
-      [disabled]="textareaConfig.disabled">
-    </samTextArea>
-  </div>
-  <div class="usa-width-one-third">
-    <fieldset class="usa-fieldset-inputs usa-sans">
-      <legend><h3>Options</h3></legend>
-      <ul class="usa-unstyled-list">
-        <li>
-          <input id="isDisabled" type="checkbox" [(ngModel)]="textareaConfig.disabled">
-          <label for="isDisabled">Disabled</label>
-        </li>
-        <li>
-          <label>Label text</label>
-          <input type="text" [(ngModel)]="textareaConfig.label">
-        </li>
-        <li>
-          <label>Error message text</label>
-          <input type="text" [(ngModel)]="textareaConfig.errorMessage">
-        </li>
-        <li>
-          <label>Hint text</label>
-          <input type="text" [(ngModel)]="textareaConfig.hint">
-        </li>
-      </ul>
-    </fieldset>
-  </div>
-  <div class="usa-width-one-third">
-    <h3>Model</h3>
-    <pre><code>{{textareaModel}}</code></pre>
-  </div>
-</div>
-<div class="usa-grid">
-  <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
-  <div class="usa-width-one-third">
-    <samCheckbox
-      [(model)]="checkboxModel"
-      [name]="checkboxConfig.name"
-      [options]="checkboxConfig.options"
-      [label]="checkboxConfig.label"
-      [hint]="checkboxConfig.hint"
-      [errorMessage]="checkboxConfig.errorMessage"
-      [hasSelectAll]="checkboxConfig.hasSelectAll">
-    </samCheckbox>
-  </div>
-  <div class="usa-width-one-third">
-    <fieldset class="usa-fieldset-inputs usa-sans">
-      <legend><h3>Options</h3></legend>
-      <ul class="usa-unstyled-list">
-        <li>
-          <input id="hasSelectAll" type="checkbox" [(ngModel)]="checkboxConfig.hasSelectAll">
-          <label for="hasSelectAll">Add a select all button</label>
-        </li>
-        <li>
-          <label>Label text</label>
-          <input type="text" [(ngModel)]="checkboxConfig.label">
-        </li>
-        <li>
-          <label>Error message text</label>
-          <input type="text" [(ngModel)]="checkboxConfig.errorMessage">
-        </li>
-        <li>
-          <label>Hint text</label>
-          <input type="text" [(ngModel)]="checkboxConfig.hint">
-        </li>
-      </ul>
-    </fieldset>
-  </div>
-  <div class="usa-width-one-third">
-    <h3>Model</h3>
-    <pre><code>{{checkboxModel | json}}</code></pre>
-  </div>
-</div>
-<div class="usa-grid">
-  <h2>Radiobuttons Component &lt;samRadioButtons&gt;</h2>
-  <div class="usa-width-one-third">
-    <samRadioButton
-      [(model)]="radioModel"
-      [options]="radioConfig.options"
-      [label]="radioConfig.label"
-      [hint]="radioConfig.hint"
-      [name]="radioConfig.name"
-      [errorMessage]="radioConfig.errorMessage">
-    </samRadioButton>
-  </div>
-  <div class="usa-width-one-third">
-    <fieldset class="usa-fieldset-inputs usa-sans">
-      <legend><h3>Options</h3></legend>
-      <ul class="usa-unstyled-list">
-        <li>
-          <label>Label text</label>
-          <input type="text" [(ngModel)]="radioConfig.label">
-        </li>
-        <li>
-          <label>Error message text</label>
-          <input type="text" [(ngModel)]="radioConfig.errorMessage">
-        </li>
-        <li>
-          <label>Hint text</label>
-          <input type="text" [(ngModel)]="radioConfig.hint">
-        </li>
-      </ul>
-    </fieldset>
-  </div>
-  <div class="usa-width-one-third">
-    <h3>Model</h3>
-    <pre><code>{{radioModel | json}}</code></pre>
-  </div>
-</div>
-<div class="usa-grid">
-  <div class="usa-width-one-whole">
-    <h2>Alert Component &lt;samAlert&gt;</h2>
-    <samAlert [type]="'success'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
-    <samAlert [type]="'warning'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
-    <samAlert [type]="'error'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
-    <samAlert [type]="'info'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
-    <samAlert [type]="'infovv'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
-  </div>
-</div>
 
-
-<div class="usa-grid">
-  <div class="usa-width-one">
-    <h2>Pagination &lt;samPagination&gt;</h2>
-    <samLabel [labelType]="'small'" [labelText]="'Current Page'"></samLabel><input [(ngModel)]="paginationConfig.currentPage" type="number">
-    <samLabel [labelType]="'small'" [labelText]="'Total Page'"></samLabel><input [(ngModel)]="paginationConfig.totalPages" type="number">
-    <samPagination [currentPage]="paginationConfig.currentPage" [totalPages]="paginationConfig.totalPages"></samPagination>
-  </div>
-</div>
-
-<div class="usa-grid">
-
-  <div class="usa-width-one">
-    <h2>Point of Contact &lt;samPOC&gt;</h2>
-    <samPOC [data]="pointOfContact"></samPOC>
-  </div>
-</div>
-<br/>
-<div class="usa-grid">
-  <h2 class="usa-width-one">Name Entry &lt;samNameEntry&gt;</h2>
-  <div class="usa-width-one-half">
-    <samNameEntry [model]="nameModel" [prefix]="'ui-kit'"></samNameEntry>
-  </div>
-  <div class="usa-width-one-half">
-    <h3>Model</h3>
-    <pre><code>{{nameModel | json}}</code></pre>
-  </div>
-</div>
-<br/>
-<div class="usa-grid">
-  <div class="usa-width-one-whole">
-    <h2>Agency picker &lt;agencyPicker&gt;</h2>
-    <agencyPicker [hint]="'Please select one or more organization filters'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker>
-    <agencyPicker [hint]="'Please select one organization'" [label]="'Filter by Organization:'" [multimode]="false"></agencyPicker>
-    <agencyPicker [orgRoot]="100006688" [hint]="'Please select one or more organization filters under GSA'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker>
-  </div>
-</div>
-<br/>
-<div class="usa-grid">
-  <h2 class="usa-width-one">Phone Entry &lt;samPhoneEntry&gt;</h2>
-  <div class="usa-width-one-third">
-    <samPhoneEntry [(model)]="phoneModel" (emitter)="phoneModelChange($event)"></samPhoneEntry>
-    <samPhoneEntry [(model)]="phoneModel2" (emitter)="phoneModelChange($event)"></samPhoneEntry>
-  </div>
-  <div class="usa-width-one-third">
-    <h3>Model</h3>
-    <pre><code>{{phoneModel | json}}</code></pre>
-  </div>
-</div>
-<br/>
-<div class="usa-grid">
-  <h2 class="usa-width-one">Alert Footer</h2>
-  <div>
-    <label>Title</label>
-    <input [(ngModel)]="footerAlertModel.title" type="text">
-    <label>Description</label>
-    <input [(ngModel)]="footerAlertModel.description" type="text">
-    <label>Type</label>
-    <select [(ngModel)]="footerAlertModel.type">
-      <option *ngFor="let type of footerAlertTypes">{{ type }}</option>
-    </select>
-    <label>Dismiss Timer (in milliseconds, 0 is infinite)</label>
-    <input [(ngModel)]="footerAlertModel.timer" type="number" min="0">
-    <button (click)="onFooterAlertBtnClick()">Add Footer alert</button>
-  </div>
-</div>
-<br/>
-<div class="usa-grid">
-  <h1>DateTime &lt;samDateTime&gt;</h1>
-  <samDateTime name="example-date" [(value)]="dateTime"></samDateTime>
-  <p>{{dateTime | json}}</p>
-</div>
-<div class="usa-grid">
-  <h1>Time &lt;samTime&gt;</h1>
-  <samTime name="example-time" [(value)]="time"></samTime>
-  <p>{{time | json}}</p>
-</div>
-<div class="usa-grid">
-  <h2 class="usa-width-one">Date Entry &lt;samDate&gt;</h2>
-  <div class="usa-width-one-half">
-    <samDate name="example-date" [(value)]='dateModel'></samDate>
-  </div>
-  <div class="usa-width-one-half">
-    <h3>Model</h3>
-    <pre><code>{{dateModel | json}}</code></pre>
-  </div>
-</div>
-<br/>
-<div class="usa-grid">
-  <h2 class="usa-width-one">Autocomplete &lt;samPhoneEntry&gt;</h2>
-  <div class="usa-width-one">
-    <samInputAutocomplete [serviceName]="'suggestions'"></samInputAutocomplete>
-  </div>
-</div>
-<br/>
-<div class="usa-grid relative">
-  <h2 class="usa-grid-full">Image Library Component &lt;imageLibrary&gt;</h2>
-  <div class="usa-grid-full">
-    <imageLibrary [name]="'ImageLibrarySample'" [data]="imageLibraryData"></imageLibrary>
-  </div>
-</div>
-<br/>
-<div class="usa-grid">
-  <h2 class="usa-width-one">Modal &lt;samModal&gt;</h2>
-  <div class="usa-width-one-half">
-    <samModal [showClose]="true" #modal1 [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [submitButtonLabel]="'Yes'" [cancelButtonLabel]="'No'" (onSubmit)="onModalClose()">
-    </samModal>
-    <label>Title</label>
-    <input [(ngModel)]="modalConfig.title" type="text">
-    <label>Description</label>
-    <input [(ngModel)]="modalConfig.description" type="text">
-    <label>Type</label>
-    <select [(ngModel)]="modalConfig.type">
-      <option *ngFor="let type of modalAlertTypes">{{ type }}</option>
-    </select>
-    <button (click)="onModalInitClick()">Show Modal</button>
-
-    <p>Modal with 'transclude content' and disabled 'close on outside click'</p>
-    <button (click)="onModalInitClick2()">Show Modal 2</button>
-    <samModal #modal2 [title]="modalConfig2.title" [type]="modalConfig2.type" [closeOnOutsideClick]="false">
-      <p>This is a notification...</p>
-      <div style="text-align:center;">
-        <button (click)="modal2.closeModal()">Ok</button>
+  <div class="usa-grid">
+    <h2>Button Component &lt;samButton&gt;</h2>
+    <div class="usa-width-one-whole">
+      <div class="usa-width-one-fourth">
+        <samButton [buttonId]="'defaultBtn'" [buttonText]="'Default'" [buttonType]="btnType" (click)="onDefaultBtnClick()"></samButton>
       </div>
-    </samModal>
+      <div class="usa-width-one-fourth">
+        <samButton [buttonId]="'altBtn'" [buttonText]="'Alt'" [buttonType]="'alt'"></samButton>
+      </div>
+      <div class="usa-width-one-fourth">
+        <samButton [buttonId]="'secondaryBtn'" [buttonText]="'Secondary'" [buttonType]="'secondary'"></samButton>
+      </div>
+      <div class="usa-width-one-fourth">
+        <samButton [buttonId]="'grayBtn'" [buttonText]="'Gray'" [buttonType]="'gray'"></samButton>
+      </div>
+    </div>
+    <div class="usa-width-one-whole">
+      <div class="usa-width-one-fourth">
+        <samButton [buttonId]="'outlineBtn'" [buttonText]="'Outline'" [buttonType]="'outline'"></samButton>
+      </div>
+      <div class="usa-width-one-fourth">
+        <samButton [buttonId]="'invertedBtn'" [buttonText]="'Inverted'" [buttonType]="'inverted'"></samButton>
+      </div>
+      <div class="usa-width-one-fourth">
+        <samButton [buttonId]="'disabledBtn'" [buttonText]="'Disabled'" [buttonType]="'disabled'"></samButton>
+      </div>
+      <div class="usa-width-one-fourth">
+        <samButton [buttonId]="'bigBtn'" [buttonText]="'Big'" [buttonType]="'big'"></samButton>
+      </div>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2>Label Component &lt;samLabel&gt;</h2>
+    <div class="usa-width-one-sixth">
+      <samLabel [labelType]="'big'" [labelText]="'Big Label'"></samLabel>
+    </div>
+    <div class="usa-width-one-sixth">
+      <samLabel
+        [labelType]="'small'"
+        [labelText]="'Small Label'"></samLabel>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2>Select Component &lt;samSelect&gt;</h2>
+    <div class="usa-width-one-third">
+      <samSelect
+        [(model)]="selectModel"
+        [name]="selectConfig.name"
+        [options]="selectConfig.options"
+        [label]="selectConfig.label"
+        [hint]="selectConfig.hint"
+        [errorMessage]="selectConfig.errorMessage"
+        [disabled]="selectConfig.disabled">
+      </samSelect>
+    </div>
+    <div class="usa-width-one-third">
+      <fieldset class="usa-fieldset-inputs usa-sans">
+        <legend><h3>Options</h3></legend>
+        <ul class="usa-unstyled-list">
+          <li>
+            <input id="hasEmptyOption" type="checkbox" (change)="onEmptyOptionChanged($event)">
+            <label for="hasEmptyOption">Add an empty option</label>
+          </li>
+          <li>
+            <input id="isDisabled" type="checkbox" [(ngModel)]="selectConfig.disabled">
+            <label for="isDisabled">Disabled</label>
+          </li>
+          <li>
+            <label>Label text</label>
+            <input type="text" [(ngModel)]="selectConfig.label">
+          </li>
+          <li>
+            <label>Error message text</label>
+            <input type="text" [(ngModel)]="selectConfig.errorMessage">
+          </li>
+          <li>
+            <label>Hint text</label>
+            <input type="text" [(ngModel)]="selectConfig.hint">
+          </li>
+        </ul>
+      </fieldset>
+    </div>
+    <div class="usa-width-one-third">
+      <h3>Model</h3>
+      <pre><code>{{selectModel | json}}</code></pre>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2>Select Text &lt;samText&gt;</h2>
+    <div class="usa-width-one-third">
+      <samText
+        [(ngModel)]="textModel"
+        [name]="textConfig.name"
+        [label]="textConfig.label"
+        [hint]="textConfig.hint"
+        [errorMessage]="textConfig.errorMessage"
+        [disabled]="textConfig.disabled">
+      </samText>
+    </div>
+    <div class="usa-width-one-third">
+      <fieldset class="usa-fieldset-inputs usa-sans">
+        <legend><h3>Options</h3></legend>
+        <ul class="usa-unstyled-list">
+          <li>
+            <input id="isDisabled" type="checkbox" [(ngModel)]="textConfig.disabled">
+            <label for="isDisabled">Disabled</label>
+          </li>
+          <li>
+            <label>Label text</label>
+            <input type="text" [(ngModel)]="textConfig.label">
+          </li>
+          <li>
+            <label>Error message text</label>
+            <input type="text" [(ngModel)]="textConfig.errorMessage">
+          </li>
+          <li>
+            <label>Hint text</label>
+            <input type="text" [(ngModel)]="textConfig.hint">
+          </li>
+        </ul>
+      </fieldset>
+    </div>
+    <div class="usa-width-one-third">
+      <h3>Model</h3>
+      <pre><code>{{textModel}}</code></pre>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2>Select Text &lt;samTextarea&gt;</h2>
+    <div class="usa-width-one-third">
+      <samTextArea
+        [(ngModel)]="textareaModel"
+        [name]="textareaConfig.name"
+        [label]="textareaConfig.label"
+        [hint]="textareaConfig.hint"
+        [errorMessage]="textareaConfig.errorMessage"
+        [disabled]="textareaConfig.disabled">
+      </samTextArea>
+    </div>
+    <div class="usa-width-one-third">
+      <fieldset class="usa-fieldset-inputs usa-sans">
+        <legend><h3>Options</h3></legend>
+        <ul class="usa-unstyled-list">
+          <li>
+            <input id="isDisabled" type="checkbox" [(ngModel)]="textareaConfig.disabled">
+            <label for="isDisabled">Disabled</label>
+          </li>
+          <li>
+            <label>Label text</label>
+            <input type="text" [(ngModel)]="textareaConfig.label">
+          </li>
+          <li>
+            <label>Error message text</label>
+            <input type="text" [(ngModel)]="textareaConfig.errorMessage">
+          </li>
+          <li>
+            <label>Hint text</label>
+            <input type="text" [(ngModel)]="textareaConfig.hint">
+          </li>
+        </ul>
+      </fieldset>
+    </div>
+    <div class="usa-width-one-third">
+      <h3>Model</h3>
+      <pre><code>{{textareaModel}}</code></pre>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
+    <div class="usa-width-one-third">
+      <samCheckbox
+        [(model)]="checkboxModel"
+        [name]="checkboxConfig.name"
+        [options]="checkboxConfig.options"
+        [label]="checkboxConfig.label"
+        [hint]="checkboxConfig.hint"
+        [errorMessage]="checkboxConfig.errorMessage"
+        [hasSelectAll]="checkboxConfig.hasSelectAll">
+      </samCheckbox>
+    </div>
+    <div class="usa-width-one-third">
+      <fieldset class="usa-fieldset-inputs usa-sans">
+        <legend><h3>Options</h3></legend>
+        <ul class="usa-unstyled-list">
+          <li>
+            <input id="hasSelectAll" type="checkbox" [(ngModel)]="checkboxConfig.hasSelectAll">
+            <label for="hasSelectAll">Add a select all button</label>
+          </li>
+          <li>
+            <label>Label text</label>
+            <input type="text" [(ngModel)]="checkboxConfig.label">
+          </li>
+          <li>
+            <label>Error message text</label>
+            <input type="text" [(ngModel)]="checkboxConfig.errorMessage">
+          </li>
+          <li>
+            <label>Hint text</label>
+            <input type="text" [(ngModel)]="checkboxConfig.hint">
+          </li>
+        </ul>
+      </fieldset>
+    </div>
+    <div class="usa-width-one-third">
+      <h3>Model</h3>
+      <pre><code>{{checkboxModel | json}}</code></pre>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2>Radiobuttons Component &lt;samRadioButtons&gt;</h2>
+    <div class="usa-width-one-third">
+      <samRadioButton
+        [(model)]="radioModel"
+        [options]="radioConfig.options"
+        [label]="radioConfig.label"
+        [hint]="radioConfig.hint"
+        [name]="radioConfig.name"
+        [errorMessage]="radioConfig.errorMessage">
+      </samRadioButton>
+    </div>
+    <div class="usa-width-one-third">
+      <fieldset class="usa-fieldset-inputs usa-sans">
+        <legend><h3>Options</h3></legend>
+        <ul class="usa-unstyled-list">
+          <li>
+            <label>Label text</label>
+            <input type="text" [(ngModel)]="radioConfig.label">
+          </li>
+          <li>
+            <label>Error message text</label>
+            <input type="text" [(ngModel)]="radioConfig.errorMessage">
+          </li>
+          <li>
+            <label>Hint text</label>
+            <input type="text" [(ngModel)]="radioConfig.hint">
+          </li>
+        </ul>
+      </fieldset>
+    </div>
+    <div class="usa-width-one-third">
+      <h3>Model</h3>
+      <pre><code>{{radioModel | json}}</code></pre>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <div class="usa-width-one-whole">
+      <h2>Alert Component &lt;samAlert&gt;</h2>
+      <samAlert [type]="'success'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+      <samAlert [type]="'warning'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+      <samAlert [type]="'error'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+      <samAlert [type]="'info'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+      <samAlert [type]="'infovv'" [title]="'Sample Title'" [description]="'lorem ipsum lorem ipsum lorem ipsum lorem ipsum.'"></samAlert>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <div class="usa-width-one">
+      <h2>Pagination &lt;samPagination&gt;</h2>
+      <samLabel [labelType]="'small'" [labelText]="'Current Page'"></samLabel><input [(ngModel)]="paginationConfig.currentPage" type="number">
+      <samLabel [labelType]="'small'" [labelText]="'Total Page'"></samLabel><input [(ngModel)]="paginationConfig.totalPages" type="number">
+      <samPagination [currentPage]="paginationConfig.currentPage" [totalPages]="paginationConfig.totalPages"></samPagination>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <div class="usa-width-one">
+      <h2>Point of Contact &lt;samPOC&gt;</h2>
+      <samPOC [data]="pointOfContact"></samPOC>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Name Entry &lt;samNameEntry&gt;</h2>
+    <div class="usa-width-one-half">
+      <samNameEntry [model]="nameModel" [prefix]="'ui-kit'"></samNameEntry>
+    </div>
+    <div class="usa-width-one-half">
+      <h3>Model</h3>
+      <pre><code>{{nameModel | json}}</code></pre>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <div class="usa-width-one-whole">
+      <h2>Agency picker &lt;agencyPicker&gt;</h2>
+      <agencyPicker [hint]="'Please select one or more organization filters'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker>
+      <agencyPicker [hint]="'Please select one organization'" [label]="'Filter by Organization:'" [multimode]="false"></agencyPicker>
+      <agencyPicker [orgRoot]="100006688" [hint]="'Please select one or more organization filters under GSA'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Phone Entry &lt;samPhoneEntry&gt;</h2>
+    <div class="usa-width-one-third">
+      <samPhoneEntry [(model)]="phoneModel" (emitter)="phoneModelChange($event)"></samPhoneEntry>
+      <samPhoneEntry [(model)]="phoneModel2" (emitter)="phoneModelChange($event)"></samPhoneEntry>
+    </div>
+    <div class="usa-width-one-third">
+      <h3>Model</h3>
+      <pre><code>{{phoneModel | json}}</code></pre>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Alert Footer</h2>
+    <div>
+      <label>Title</label>
+      <input [(ngModel)]="footerAlertModel.title" type="text">
+      <label>Description</label>
+      <input [(ngModel)]="footerAlertModel.description" type="text">
+      <label>Type</label>
+      <select [(ngModel)]="footerAlertModel.type">
+        <option *ngFor="let type of footerAlertTypes">{{ type }}</option>
+      </select>
+      <label>Dismiss Timer (in milliseconds, 0 is infinite)</label>
+      <input [(ngModel)]="footerAlertModel.timer" type="number" min="0">
+      <button (click)="onFooterAlertBtnClick()">Add Footer alert</button>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2>DateTime &lt;samDateTime&gt;</h2>
+    <samDateTime name="example-date" [(value)]="dateTime"></samDateTime>
+    <p>{{dateTime | json}}</p>
+  </div>
+
+  <div class="usa-grid">
+    <h2>Time &lt;samTime&gt;</h2>
+    <samTime name="example-time" [(value)]="time"></samTime>
+    <p>{{time | json}}</p>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Date Entry &lt;samDate&gt;</h2>
+    <div class="usa-width-one-half">
+      <samDate name="example-date" [(value)]='dateModel'></samDate>
+    </div>
+    <div class="usa-width-one-half">
+      <h3>Model</h3>
+      <pre><code>{{dateModel | json}}</code></pre>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Autocomplete &lt;samPhoneEntry&gt;</h2>
+    <div class="usa-width-one">
+      <samInputAutocomplete [serviceName]="'suggestions'"></samInputAutocomplete>
+    </div>
+  </div>
+
+  <div class="usa-grid relative">
+    <h2 class="usa-grid-full">Image Library Component &lt;imageLibrary&gt;</h2>
+    <div class="usa-grid-full">
+      <imageLibrary [name]="'ImageLibrarySample'" [data]="imageLibraryData"></imageLibrary>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Modal &lt;samModal&gt;</h2>
+    <div class="usa-width-one-half">
+      <samModal [showClose]="true" #modal1 [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [submitButtonLabel]="'Yes'" [cancelButtonLabel]="'No'" (onSubmit)="onModalClose()">
+      </samModal>
+      <label>Title</label>
+      <input [(ngModel)]="modalConfig.title" type="text">
+      <label>Description</label>
+      <input [(ngModel)]="modalConfig.description" type="text">
+      <label>Type</label>
+      <select [(ngModel)]="modalConfig.type">
+        <option *ngFor="let type of modalAlertTypes">{{ type }}</option>
+      </select>
+      <button (click)="onModalInitClick()">Show Modal</button>
+
+      <p>Modal with 'transclude content' and disabled 'close on outside click'</p>
+      <button (click)="onModalInitClick2()">Show Modal 2</button>
+      <samModal #modal2 [title]="modalConfig2.title" [type]="modalConfig2.type" [closeOnOutsideClick]="false">
+        <p>This is a notification...</p>
+        <div style="text-align:center;">
+          <button (click)="modal2.closeModal()">Ok</button>
+        </div>
+      </samModal>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Header Menu &lt;sam-header-menu&gt;</h2>
+    <div class="usa-width-one-third">
+      <div>
+        <input type="checkbox" id="toggle-menu" (change)="store.menu.open = !store.menu.open">
+        <label for="toggle-menu" [innerText]="store.menu.open ? 'Close Menu' : 'Open Menu'"></label>
+      </div>
+      <sam-header-menu [items]="store.menu.items" [(open)]="store.menu.open"></sam-header-menu>
+    </div>
+    <div class="usa-width-one-third">
+      <h3>Model</h3>
+      <pre><code>{{ store.menu | json }}</code></pre>
+    </div>
   </div>
 </div>
-<br/>
-

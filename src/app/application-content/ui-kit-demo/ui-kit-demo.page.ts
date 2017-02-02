@@ -157,6 +157,16 @@ export class UIKitDemoPage {
     title:'Sample Title'
   }
 
+  store = {
+    menu: {
+      open: false,
+      items: [
+        { text: 'Menu Item 1', routerLink: '/ui-kit' },
+        { text: 'Menu Item 2', routerLink: '/ui-kit' }
+      ]
+    }
+  };
+
   constructor(private alertFooterService: AlertFooterService) {  }
 
   onEmptyOptionChanged($event) {
