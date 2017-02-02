@@ -73,7 +73,7 @@ export class OpportunityDisplayPageDemoPage implements OnInit {
       },
       {
         "label": "Contact Information",
-        "route": "#opportunity-contact-info"
+        "route": "#opportunity-contact"
       }
     ]
   };

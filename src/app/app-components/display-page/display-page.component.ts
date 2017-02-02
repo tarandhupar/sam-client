@@ -1,5 +1,5 @@
 import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
-import { Router,NavigationExtras } from '@angular/router';
+import { Router,NavigationExtras,NavigationEnd } from '@angular/router';
 /**
 * DisplayPageComponent - template component for generating display page
 *
@@ -19,7 +19,18 @@ export class DisplayPageComponent implements OnInit {
 	showCustomSidebar = true;
 	showGeneratedSidebar = false;
 
-  constructor(private router: Router){}
+  constructor(private router: Router){
+		//needed for fragment navigations
+		router.events.subscribe(s => {
+			if (s instanceof NavigationEnd) {
+				const tree = router.parseUrl(router.url);
+				if (tree.fragment) {
+					const element = document.getElementById(tree.fragment);
+					if (element) { element.scrollIntoView(); }
+				}
+			}
+		});
+	}
 
   ngOnInit(){
   	if(!this.sidebarToggle){
@@ -32,11 +43,11 @@ export class DisplayPageComponent implements OnInit {
 		}
   }
 	
-	sidenavDataEvtHandler(data){
-	}
 	sidenavPathEvtHandler(data){
 		if(data.charAt(0)=="#"){
+			//this.router.navigate([], { fragment: data });
 			this.router.navigate([], { fragment: data.substring(1) });
+			//window.location.hash = data.substring(1);
 		} else {
 			this.router.navigate([data] );
 		}

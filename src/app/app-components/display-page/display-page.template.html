@@ -7,23 +7,19 @@
 	    <ng-container *ngIf="logoSrc">
 	      <img class="sidenav-logo" [src]="logoSrc" alt="">
 	    </ng-container>
-	    <!--nav>
-	      <ul class="usa-sidenav-list">
-	        <li><a href="#">Award Details</a></li>
-	        <li><a href="#">General Information</a></li>
-	        <li><a href="#">Classification</a></li>
-	        <li><a href="#">Synopsis/Description</a></li>
-	        <li><a href="#">Packages</a></li>
-	        <li><a href="#">Contact Information</a></li>
-	      </ul>
-	    </nav-->
 	    <ng-content select="[display-sidenav]"></ng-content>
     </div>
     &nbsp;
 	</aside>
 	<div class="usa-width-one-fourth" *ngIf="showGeneratedSidebar">
 		<div container="occupy-page" limit="1200" sam-sticky>
-			<samSidenav [model]="sidenavConfig" (data)="sidenavDataEvtHandler($event)" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+			<ng-container *ngIf="logoSrc===null">
+	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+	    </ng-container>
+	    <ng-container *ngIf="logoSrc">
+	      <img class="sidenav-logo" [src]="logoSrc" alt="">
+	    </ng-container>
+			<samSidenav [model]="sidenavConfig" (path)="sidenavPathEvtHandler($event)"></samSidenav>
 		</div>
     &nbsp;
 	</div>

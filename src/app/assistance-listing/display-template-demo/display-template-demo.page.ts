@@ -20,6 +20,44 @@ import { ReplaySubject, Observable, Subscription } from 'rxjs';
   ]
 })
 export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
+  sidenavModel = {
+    "label": "stuff",
+    "children": [
+      {
+        "label": "Overview",
+        "route": "#overview",
+      },
+      {
+        "label": "Authorizations",
+        "route": "#authorizations",
+      },
+      {
+        "label": "Financial Information",
+        "route": "#financial-information"
+      },
+      {
+        "label": "Criteria for Applying",
+        "route": "#criteria-for-applying"
+      },
+      {
+        "label": "Applying for Assistance",
+        "route": "#applying-for-assistance"
+      },
+      {
+        "label": "Compliance Requirements",
+        "route": "#compliance-requirements"
+      },
+      {
+        "label": "Contact Information",
+        "route": "#contact-information"
+      },
+      {
+        "label": "History",
+        "route": "#history"
+      }
+    ]
+  };
+  
   program: any;
   programID: any;
   federalHierarchy: any;
