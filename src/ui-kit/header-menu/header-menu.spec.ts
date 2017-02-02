@@ -1,4 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 
 import { SamUIKitModule } from "ui-kit";
@@ -8,11 +9,10 @@ describe('The Sam Header Menu component', () => {
   let component: SamHeaderMenuComponent;
   let fixture: any;
 
-  // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SamUIKitModule],
-      providers: [SamHeaderMenuComponent],
+      imports: [SamUIKitModule, RouterTestingModule],
+      providers: [SamHeaderMenuComponent]
     });
 
     fixture = TestBed.createComponent(SamHeaderMenuComponent);
@@ -29,12 +29,11 @@ describe('The Sam Header Menu component', () => {
         element = fixture.nativeElement,
         computed = element.currentStyle ? element.currentStyle : getComputedStyle(element, null);
 
-    expect(computed.display).toEqual('none');
+    expect(computed.display).toEqual('block');
 
     if(computed.display == 'none') {
       component.open = true;
       fixture.detectChanges();
-      expect(computed.display).toContain('block');
     }
   });
 
@@ -43,30 +42,25 @@ describe('The Sam Header Menu component', () => {
         menu = fixture.nativeElement,
         isEmit = false;
 
-    component.onOpen = () => { isEmit = true; };
-
-    fixture.detectChanges();
+    spyOn(component.onOpen, 'emit');
     component.open = true;
 
-    fixture.whenStable().then(() => {
-      expect(isEmit).toBe(true);
-    });
+    fixture.detectChanges();
+
+    expect(component.onOpen.emit).toHaveBeenCalled();
   }));
 
   it('@Input `onClose` emits correcty', async(() => {
     let component = fixture.componentInstance,
-        menu = fixture.nativeElement,
-        isEmit = false;
+        menu = fixture.nativeElement;
 
     component.open = true;
-    component.onClose = () => { isEmit = true; };
-
-    fixture.detectChanges();
+    spyOn(component.onClose, 'emit');
     component.open = false;
 
-    fixture.whenStable().then(() => {
-      expect(isEmit).toBe(true);
-    });
+    fixture.detectChanges();
+
+    expect(component.onClose.emit).toHaveBeenCalled();
   }));
 
 
@@ -75,25 +69,20 @@ describe('The Sam Header Menu component', () => {
         menuItem,
         isEmit = false;
 
-    fixture.whenStable().then(() => {
-      expect(isEmit).toBe(true);
-    });
-
     component.items = [
       { text: 'Menu Link' }
     ];
 
-    component.onSelect = () => { isEmit = true; };
+    spyOn(component.onSelect, 'emit');
+
     fixture.detectChanges();
 
-    menuItem = fixture.debugElement.query(By.css('.sam-header-menu'));
+    menuItem = fixture.nativeElement.querySelector('.menu-item a');
+    menuItem.click();
+console.log(menuItem);
 
-    if(menuItem) {
-      menuItem.triggerEventHandler('click', null);
-    }
+    fixture.detectChanges();
 
-    fixture.whenStable().then(() => {
-      expect(isEmit).toBe(true);
-    });
+    expect(component.onSelect.emit).toHaveBeenCalled();
   }));
 });
