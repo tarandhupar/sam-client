@@ -48,6 +48,9 @@ export class SamSelectComponent implements ControlValueAccessor {
 
   @ViewChild(LabelWrapper)
   public wrapper: LabelWrapper;
+  
+  @ViewChild("select")
+  public select: any;
 
   ngOnInit() {
     if (!this.name) {

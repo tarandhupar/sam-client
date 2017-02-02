@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import {FormControl} from "@angular/forms";
 
 @Component({
@@ -18,6 +18,9 @@ export class LabelWrapper {
   @Input() hint: string;
   @Input() required: boolean = false;
   @Input() errorMessage: string;
+
+  @ViewChild('labelDiv')
+  public labelDiv: any;
 
   constructor() { }
 
