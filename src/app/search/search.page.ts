@@ -24,8 +24,7 @@ export class SearchPage implements OnInit{
   featuredData = [];
 	oldKeyword: string = "";
 	initLoad = true;
-	  // making this true allows filter box to be seen on local environments, previous code shown commented below
-	showOptional:any = true; //(SHOW_OPTIONAL=="true");
+	showOptional:any = (SHOW_OPTIONAL=="true");
 
 	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
