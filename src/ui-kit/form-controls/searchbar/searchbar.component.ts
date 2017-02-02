@@ -36,18 +36,18 @@ export class SamSearchbarComponent {
 
   searchBtnText:string = "Search";
   
-  // Added "width" as a temporary solution to find width of selected text
-  // Ideally select width needs to be calculated automatically based on
-  // character length and character width of selected text;
+  // Added "width" (in pixels) as a temporary solution to find width of selected text
+  // Ideally select element width needs to be calculated automatically based on
+  // character width of selected text;
   selectConfig = {
     options: [
-      {value: '', label: 'All', width: '60px'},
-      {value: 'opp', label: 'Opportunities', width: '140px'},
-      {value: 'cfda', label: 'Assistance Listings', width: '180px'},
-      {value: 'fh', label: 'Federal Hierarchy', width: '170px'},
-      {value: 'ent', label: 'Entities', width: '100px'},
-      {value: 'ex', label: 'Exclusions', width: '120px'},
-      {value: 'wd', label: 'Wage Determinations', width: '200px'}
+      {value: '', label: 'All', width: '60'},
+      {value: 'opp', label: 'Opportunities', width: '145'},
+      {value: 'cfda', label: 'Assistance Listings', width: '180'},
+      {value: 'fh', label: 'Federal Hierarchy', width: '175'},
+      {value: 'ent', label: 'Entities', width: '100'},
+      {value: 'ex', label: 'Exclusions', width: '120'},
+      {value: 'wd', label: 'Wage Determinations', width: '200'}
     ],
     disabled: false,
     label: '',
@@ -71,12 +71,12 @@ export class SamSearchbarComponent {
   //   this.setResetIconClass();
   // }
 
-  getLabelForValue(value) {
-    let option = this.selectConfig.options.find(o => o.value === value);
-    if (option) {
-      return option.label;
-    }
-  }
+  // getLabelForValue(value) {
+  //   let option = this.selectConfig.options.find(o => o.value === value);
+  //   if (option) {
+  //     return option.label;
+  //   }
+  // }
 
 
   onSelect(value):void {
@@ -96,8 +96,11 @@ export class SamSearchbarComponent {
   }
   
   adjustSelectWidth(option): void{
-    let widthString = 'width:' + option.width;
-    this._renderer.setElementAttribute(this.filterSelect.select.nativeElement, 'style', widthString);
+    let containerWidthString = 'width:' + option.width + "px";
+    let selectWidth = +option.width + 50;
+    let selectWidthString = 'width:' + selectWidth + "px";
+    this._renderer.setElementAttribute(this.filterSelect.wrapper.labelDiv.nativeElement, 'style', containerWidthString);
+    this._renderer.setElementAttribute(this.filterSelect.select.nativeElement, 'style', selectWidthString);
   }
 
   callSearch(searchTerm):void {
