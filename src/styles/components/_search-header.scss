@@ -45,14 +45,14 @@ $search-input-height: $search-header-height - 4;
     float: left;
   }
 
-  .filter-btn,
+  .filter-select select,
   .search-inputbar,
   .search-btn {
     height: $search-input-height;
     line-height: $search-input-height;
   }
 
-  .filter-btn,
+  .filter-select select,
   .search-btn {
     padding-top: 0px;
     padding-bottom: 0px;
