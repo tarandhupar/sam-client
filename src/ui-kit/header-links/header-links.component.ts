@@ -67,6 +67,9 @@ export class SamHeaderLinksComponent {
   closeDropdown(){
     this.showDropdown = false;
     this.onDropdownToggle.emit(this.showDropdown);
+    setTimeout(()=>{
+      this.startCheckOutsideClick = this.showDropdown;
+    });
   }
 
   onClickOutside(){
