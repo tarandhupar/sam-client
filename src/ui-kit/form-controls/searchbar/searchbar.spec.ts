@@ -78,5 +78,9 @@ describe('The Sam Search Bar component', () => {
     searchBtn.triggerEventHandler('click',null);
 
   });
+  
+  it('should be able to access select component',function(){
+    expect(component.filterSelect.select).toBeDefined();
+  });
 
 });
