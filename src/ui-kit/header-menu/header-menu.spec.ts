@@ -79,7 +79,6 @@ describe('The Sam Header Menu component', () => {
 
     menuItem = fixture.nativeElement.querySelector('.menu-item a');
     menuItem.click();
-console.log(menuItem);
 
     fixture.detectChanges();
 
