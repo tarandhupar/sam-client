@@ -120,7 +120,7 @@ h2{
 }
 
 // Make sidenav use all availabe horizontal space on medium screen
-@media screen and (min-width: $medium-screen) and (max-width: 1200px) {
+@media screen and (min-width: $medium-screen) and (max-width: $large-screen - 1) {
   aside.usa-width-one-fourth{
     margin-right: 0;
     width: 100%;
