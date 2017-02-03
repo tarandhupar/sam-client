@@ -48,7 +48,7 @@ export class SearchPage implements OnInit{
 		this.organizationId = ""+orgId.value;
     this.loadParams();
 	}
-  
+
   setupQS(newsearch){
   	var qsobj = {};
   	if(this.organizationId.length>0){

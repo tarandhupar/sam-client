@@ -5,7 +5,7 @@ import {FormControl} from "@angular/forms";
   selector: 'labelWrapper',
   template: `
     <div #labelDiv class='label-wrapper' [class.usa-input-error]="!!errorMessage">
-      <label [attr.for]="name" [class.usa-input-error-label]="errorMessage">{{label}}<span *ngIf="required" class="usa-additional_text">Required</span></label>
+      <label *ngIf="label" [attr.for]="name" [class.usa-input-error-label]="errorMessage">{{label}}<span *ngIf="required" class="usa-additional_text">Required</span></label>
       <span *ngIf="errorMessage" class="usa-input-error-message">{{errorMessage}}</span>
       <span *ngIf="hint" class="usa-form-hint">{{hint}}</span>
       <ng-content></ng-content>
@@ -18,7 +18,7 @@ export class LabelWrapper {
   @Input() hint: string;
   @Input() required: boolean = false;
   @Input() errorMessage: string;
-  
+
   @ViewChild('labelDiv')
   public labelDiv: any;
 
