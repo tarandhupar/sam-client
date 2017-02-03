@@ -42,7 +42,7 @@ let MockFHService = {
         }
       ]
     });
-  }, 
+  },
   getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
     return Observable.of("");
   }
@@ -51,24 +51,346 @@ let MockFHService = {
 let MockProgramService = {
   getProgramById: (id: string) => {
     return Observable.of({
-      'id':'3077ea1df409265fb4378e0e844b8811',
-      'data':{'award':{'procedures':{'content':'Applications are evaluated by the FWC Program Administrator, Science Advisor, or designee, based on authorizing legislation and program goals.  Awards will be issued in a manner consistent with specific Congressional action, authorizing legislation, and/or Agency award notification and issuance procedures, 43 CFR Part12.'}},'title':'Fish and Wildlife Coordination and Assistance Programs','usage':{'rules':{'content':'To fulfill the intent of Congress as specified in legislation authorizing the Agency to obligate and manage financial assistance funds; special appropriations projects; and awards for purposes consistent with the mission, expertise, and goals of the Agency.'},'loanTerms':{'flag':'na'},'restrictions':{'flag':'na'},'discretionaryFund':{'flag':'na'}},'contacts':{'list':[{'zip':'20240','city':'Washington','type':'headquarter','phone':'(202) 208-3100.','state':'DC','address':'Science Advisor, Fish & Wildlife Service, Rm 3258, MIB, 1849 C Street NW\r\n','country':'US','fullName':'Office of the Director and/or '}],'local':{'flag':'none'}},'projects':{'flag':'yes','list':{'2009':{'content':{'actual':'Not available'}},'2010':{'content':{'projection':'FY10: Climate Change Initiatives, including Landscape Conservation Cooperatives '}},'2011':{'content':{'projection':'Not available'}}}},'financial':{'accounts':[{'code':'14-1611-0-4-517'}],'obligations':[{'values':{'2009':{'actual':0},'2010':{'estimate':0},'2011':{'estimate':0}},'questions':{'recovery':{'flag':'na'},'salary_or_expense':{'flag':'na'}},'additionalInfo':{'content':'New Program - Data Not Yet Available.'},'assistanceType':'0003001'}],'additionalInfo':{'content':'(Estimate) $5,000 to 15M'}},'objective':'To implement: a) legislation mandating specific conservation and/or environmental project activity(ies), including, but not limited to, financial assistance funding for special appropriations projects to a designated recipient(s); and/or b) unfunded Congressional mandates, i.e., funding limited to costs associated with actual program/project implementation, not administrative costs.','postAward':{'audit':{'flag':'yes','questions':{'OMBCircularA133':{'flag':'yes'}}},'records':{'content':'Recipients will maintain records in accordance with the provisions of 43 CFR Part 12, Subpart C, \'Uniform Administrative Requirements for Grants and Cooperative Agreements to State and Local Governments” and 43 CFR Part 12, Subpart F, \'Uniform Administrative Requirements for Grants and Agreements With Institutions of Higher Education, Hospitals, and Other Nonprofit Organizations.\'  \r\n'},'reports':{'flag':'yes','list':{'cash':{'flag':'na'},'program':{'flag':'na'},'progress':{'flag':'na'},'expenditure':{'flag':'yes','content':'As specified by the authorizing legislation, Congressional action, and/or consistent with Agency reporting policy, 43 CFR Part 12.  Generally, this means monthly submission of  Progress and Financial Reports, including Standard Form (SF)-270, Request for Advance or Reimbursement and Federal Financial Reports (SF-425); at least annually or no more frequently than quarterly; and a final progress/outcomes/ accomplishments report  and SF-425 due 90 days after the end date of the award performance period.'},'performanceMonitoring':{'flag':'na'}}},'documents':{'flag':'na'},'accomplishments':{'flag':'yes','list':{'2009':{'content':{'actual':'FY 09 - Data Not Yet Available       \r\n\r\n'}},'2010':{'content':{'projection':'FY 10 actual/anticipated - Data Not Yet Available       '}},'2011':{'content':{'projection':'FY 11 anticipated - Data Not Yet Available       \r\n'}}}}},'assistance':{'moe':{'flag':'na'},'formula':{'flag':'na'},'matching':{'flag':'yes','percent':'0','otherInfo':{'content':'As specified by the authorizing legislation or Congressional action.'}},'limitation':{'awarded':'other','content':'As specified by the authorizing legislation or Congressional action.'}},'fiscalYear':2010,'application':{'deadlines':{'appeal':{'interval':'8','otherInfo':{'content':'None'}},'renewal':{'interval':'9','otherInfo':{'content':'As specified by the authorizing legislation or Congressional action.'}},'approval':{'interval':'9','otherInfo':{'content':'Applicant(s) will be notified as specified by the authorizing legislation or in a manner consistent with Agency award notification procedures, 43CFR Part12.'}},'submission':{'flag':'contact'}},'procedures':{'questions':{'OMBCircularA102':{'flag':'yes'},'OMBCircularA110':{'flag':'no'}},'additionalInfo':{'content':'At a minimum, an application package must include an Application for Federal Assistance (SF-424), a description of project activity(ies), an estimated budget, and relevant and signed Assurances forms (SF 424A and SF 424B – Non-construction; or SF 424C and SF 424D – Construction).'}},'selectionCriteria':{'flag':'yes','content':'As specified by the authorizing legislation or Congressional action.'}},'eligibility':{'applicant':{'types':['0009'],'additionalInfo':{'content':'Eligibility is limited to entity(ies) designated by the authorizing legislation.'},'assistanceUsageTypes':['14']},'beneficiary':{'types':['19'],'additionalInfo':{'content':'The general public benefits from the conservation and environmental efforts as identified by the authorizing legislation.'}},'documentation':{'flag':'yes','content':'Applicant(s) must have financial and internal controls systems in place to manage/segregate Federal funds and report expenditures under the terms and conditions of the award(s).','questions':{'OMBCircularA87':{'flag':'no'}}}},'programNumber':'15.664','authorizations':[{'act':{'description':'Legislative authority based on U. S. Fish and Wildlife Coordination Act of 1958, 16 U.S.C. 661-666; Fish and Wildlife Act of 1956, as amended, 16 U.S.C. 742a; Fish and Wildlife Conservation Act, 16 US.C. 2901-2911; and/or specific Congressional action, generally through the annual Appropriations Act, i.e., The Department of the Interior, Environment, and Related Agencies Appropriations Act, that cites new or relevant environmental and/or conservation statutes and activities for a defined purpose consistent with the mission, expertise, and goals of the Agency.'},'version':1,'authorizationId':'4a0d601e58c5611f2be6204e3cb6d76d','authorizationType':'act'}],'organizationId':'100156642','preApplication':{'coordination':{'flag':'no'}},'assistanceTypes':['0003001'],'relatedPrograms':{'flag':'yes', 'relatedTo': [ '39403d91bb81e9893cf57a2d53609a2f', '4fe03fb513d07749420618ff190d2ded' ]},'alternativeNames':['FWCA Programs'],'_id':'3077ea1df409265fb4378e0e844b8811','status':'Published','archived':false},
-      'parentProgramId':null,
-      'latest':false,
-      'fiscalYearLatest':true,
-      'publishedDate':1292585293000,
-      'modifiedDate':1292585293000,
-      'submittedDate':1291738815000,
-      'status': {
-          'code':'published',
-          'value':'Published'
+      "data": {
+        "award": {
+          "procedures": {
+            "content": "Grants, if appropriated funds are provided, will generally be nationally competitive and merit-based. Technical Assistance request will be prioritized based on Tribal, state, or national forestry issues such as insect, disease, catastrophic events, and economic adjustments.\r\n"
+          }
+        },
+        "title": "Wood Utilization Assistance",
+        "usage": {
+          "rules": {
+            "content": "Technical assistance or limited project grants to achieve long-term forest health through local enterprises that support forest management. No land acquisition or construction. "
+          },
+          "loanTerms": {
+            "flag": "na"
+          },
+          "restrictions": {
+            "flag": "na"
+          },
+          "discretionaryFund": {
+            "flag": "na"
+          }
+        },
+        "website": "http://www.na.fs.fed.us/werc/",
+        "contacts": {
+          "list": [
+            {
+              "zip": "20250",
+              "city": "Washington",
+              "type": "headquarter",
+              "email": "melissaljenkins@fs.fed.us",
+              "phone": "703-605-5346",
+              "state": "DC",
+              "address": "1400 Independence Ave SW",
+              "country": "US",
+              "fullName": "Melissa Jenkins"
+            }
+          ],
+          "local": {
+            "flag": "appendix"
+          }
+        },
+        "projects": {
+          "flag": "yes",
+          "list": [
+            {
+              "year": "2015",
+              "content": {
+                "actual": "Establishment of statewide wood energy teams that are public-private partnerships setup to educate, inform, and promote the sustainable use of woody biomass for energy purposes; feasibility assessments for woody biomass energy systems; design of institutional building using cross laminated timber. "
+              }
+            },
+            {
+              "year": "2017",
+              "content": {
+
+              }
+            },
+            {
+              "year": "2016",
+              "content": {
+                "projection": "Establishment of statewide wood energy and wood utilization teams; feasibility assessments for woody biomass energy systems; addressing issues related to building with wood and cross-laminated timber (CLT), such as using beetle-killed trees for CLT manufacture, assessing seismic resiliency and wind performance of CLT, and overcoming building code barriers for tall wood buildings. "
+              }
+            }
+          ]
+        },
+        "financial": {
+          "accounts": [
+            {
+              "code": "12-1115-0-1-302"
+            }
+          ],
+          "treasury": {
+            "tafs": [
+              {
+                "accountCode": "12-1115",
+                "departmentCode": "12"
+              }
+            ]
+          },
+          "obligations": [
+            {
+              "values": [
+                {
+                  "year": "2015",
+                  "actual": 9069061,
+                  "estimate": 9000000
+                },
+                {
+                  "year": "2016",
+                  "estimate": 8596085
+                },
+                {
+                  "year": "2017",
+                  "estimate": 5000000
+                }
+              ],
+              "questions": [
+                {
+                  "flag": "na",
+                  "questionCode": "recovery"
+                },
+                {
+                  "flag": "na",
+                  "questionCode": "salary_or_expense"
+                }
+              ],
+              "obligationId": "53889143d2c4586749b5a8af0888c051",
+              "additionalInfo": {
+
+              },
+              "assistanceType": "0009"
+            }
+          ],
+          "additionalInfo": {
+            "content": "Typical awards are $50,000 to $500,000 per award.  Exceptions may be made for special circumstances."
+          }
+        },
+        "objective": "Provide direct technical assistance  to Forest Service, state foresters, tribes, public and private organizations regarding new and emerging clean technologies   to effectively manage forests and extend the most efficient and effective economic opportunities to forest landowners. The State & Private Forestry staff provides  expertise in  science-based management decisions concerning forest products utilization, biofuels production, and woody biomass utilization that uses material removed to meet forest landowner goals. Program may include: (1) development of potential new products; (2) projects that showcase innovative uses for small diameter and low-valued hardwoods and softwoods;  (3) reducing the challenge to economic and market barriers to the use of wood (4) provide seed money and gap funding for demonstration projects and (5) facilitate the creation/expansion of harvesting/processing/transporting enterprises around wildland urban interface areas threatened by catastrophic wildfires.\r\n",
+        "postAward": {
+          "audit": {
+            "flag": "yes",
+            "content": "Grant recipients may be subject to audit by the Office of Inspector General, USDA.",
+            "questions": [
+              {
+                "flag": "yes",
+                "questionCode": "OMBCircularA133"
+              }
+            ]
+          },
+          "records": {
+            "content": "Grant records will be maintained for 3 years after submission of final documents.   Technical Assistance record will be maintained for 3 years from the close of the assistance.  Government Technical Report (GTR) maybe developed to share the results of Technical Assistance collaborative efforts."
+          },
+          "reports": {
+            "flag": "yes",
+            "list": [
+              {
+                "flag": "yes",
+                "content": "Performance reports are required, and the frequency will be negotiated between the Forest Service and recipient.",
+                "reportCode": "program"
+              },
+              {
+                "flag": "na",
+                "reportCode": "cash"
+              },
+              {
+                "flag": "na",
+                "reportCode": "progress"
+              },
+              {
+                "flag": "yes",
+                "content": "Financial reporting on SF-425 is required on financial assistance ",
+                "reportCode": "expenditure"
+              },
+              {
+                "flag": "yes",
+                "content": "Forest Service program managers will provide overall program monitoring.",
+                "reportCode": "performanceMonitoring"
+              }
+            ]
+          },
+          "documents": {
+            "flag": "na"
+          },
+          "accomplishments": {
+            "flag": "yes",
+            "list": [
+              {
+                "year": "2015",
+                "content": {
+                  "actual": "43 nationally competed grants and agreements were funded totaling approximately $9 million.",
+                  "projection": " Fiscal Year 2015: 43 nationally competed grants and agreements were funded totaling approximately $9 million."
+                }
+              },
+              {
+                "year": "2017",
+                "content": {
+
+                }
+              },
+              {
+                "year": "2016",
+                "content": {
+                  "projection": "42 nationally competed grants and agreements were funded totaling approximately $8.6 million."
+                }
+              }
+            ]
+          }
+        },
+        "assistance": {
+          "moe": {
+            "flag": "na"
+          },
+          "formula": {
+            "flag": "na"
+          },
+          "matching": {
+            "flag": "yes",
+            "percent": "35",
+            "additionalInfo": {
+              "content": "Letters for specific request from non-profits, local, state, and Tribal governments, business, companies, corporation, (for profit), special purpose districts, (public utilities districts, fire districts, conservation districts, or port) are encouraged to demonstrate collaboration and the role this federal assistance program can leverage accomplishing local projects. Matching will be required only for financial assistance and will be stated in Request For Proposal, and in accordance with Congressional direction."
+            }
+          },
+          "limitation": {
+            "awarded": "other",
+            "content": "As determined by project, no longer than 5 years on grants or cooperative agreements. Technical assistance is limited to one year unless negotiated due to tribal, state or national priorities.  ",
+            "additionalInfo": {
+              "content": "Payments are made based on authorization and negotiation of provisions with cooperator. "
+            }
+          }
+        },
+        "fiscalYear": 2016,
+        "application": {
+          "deadlines": {
+            "appeal": {
+              "interval": "8"
+            },
+            "renewal": {
+              "interval": "8",
+              "additionalInfo": {
+                "content": "None"
+              }
+            },
+            "approval": {
+              "interval": "6",
+              "additionalInfo": {
+                "content": "Range of Approval/Disapproval Time: 160 days after the date of closure on a Request for Proposals or Technical Assistance."
+              }
+            },
+            "submission": {
+              "flag": "contact"
+            }
+          },
+          "procedures": {
+            "questions": [
+              {
+                "flag": "yes",
+                "questionCode": "OMBCircularA102"
+              },
+              {
+                "flag": "yes",
+                "questionCode": "OMBCircularA110"
+              }
+            ],
+            "additionalInfo": {
+              "content": "Procedures for submitting technical assistance or grant applications can be found on www.fpl.fs.fed.us/tmu or contact the Program Manager as listed under Information Contacts. ."
+            }
+          },
+          "selectionCriteria": {
+            "flag": "yes",
+            "content": "Financial grants are approved on the basis of a nationwide review and are based on technical and financial merits of the project as evaluated by a panel of Federal experts or their designees "
+          }
+        },
+        "eligibility": {
+          "applicant": {
+            "types": [
+              "0009",
+              "0011",
+              "0031",
+              "0033",
+              "0035"
+            ],
+            "additionalInfo": {
+              "content": "Entities eligible include: Non-profits, local, state, and Tribal governments, business, companies, corporations (for Profit), special purpose districts, (public utilities districts, fire districts, conservation districts, or ports).  "
+            },
+            "assistanceUsageTypes": [
+              "2"
+            ]
+          },
+          "beneficiary": {
+            "types": [
+              "11",
+              "14",
+              "4",
+              "5"
+            ],
+            "additionalInfo": {
+              "content": "Not applicable."
+            }
+          },
+          "documentation": {
+            "flag": "yes",
+            "content": "No credentials or documentation are required.",
+            "questions": [
+              {
+                "flag": "yes",
+                "questionCode": "OMBCircularA87"
+              }
+            ]
+          }
+        },
+        "programNumber": "10.674",
+        "authorizations": [
+          {
+            "act": {
+              "description": "Rural Revitalization Through Forestry, Public Law 101–624,  Section (d) Rural Revitalization Technologies (1990); P.L. 108-148 title II, Section 202 (2003); P. L. 110– 234, title VII (2008); P.L. 110-246 title VII (2008); and P.L. 113-79, title VIII, Section 8201 (2014) extending the program through 2018. "
+            },
+            "version": 1,
+            "authorizationId": "0e5d451f58ce9053ba16159c9321e8ba",
+            "authorizationType": "act"
+          }
+        ],
+        "organizationId": "100013241",
+        "preApplication": {
+          "coordination": {
+            "flag": "no"
+          }
+        },
+        "assistanceTypes": [
+          "0003001",
+          "0003003"
+        ],
+        "relatedPrograms": {
+          "flag": "yes",
+          "relatedTo": [
+            '39403d91bb81e9893cf57a2d53609a2f',
+            '4fe03fb513d07749420618ff190d2ded'
+          ]
+        },
+        "alternativeNames": [
+          "State and Private Forestry Technology, Marketing Assistance Program"
+        ],
+        "_id": "6671e24f7d157c9ebeaaface56cd44f9",
+        "status": "Published",
+        "archived": false
       },
-      'archived':false,
-      '_links':{
-        'self':{
-          'href':''
+      "parentProgramId": "09d3e5c197a84300cd2c6e351a786211",
+      "latest": true,
+      "fiscalYearLatest": true,
+      "publishedDate": 1470978048000,
+      "modifiedDate": 1475589895000,
+      "submittedDate": 1241197352000,
+      "status": {
+        "code": "published",
+        "value": "Published"
+      },
+      "archived": false,
+      "_links": {
+        "self": {
+          "href": "http://10.98.29.81:82/fac/v1/programs/6671e24f7d157c9ebeaaface56cd44f9"
         }
-      }
+      },
+      "id": "3077ea1df409265fb4378e0e844b8811"
     });
   },
   getLatestProgramById: (id: string) => {
@@ -99,7 +421,7 @@ let MockDictionaryService = {
         element_id: '0003002',
         value: 'Cooperative Agreements (Discretionary Grants)'
       }
-    ], 
+    ],
     'applicant_types': [
       {
         code: '11',
@@ -280,7 +602,7 @@ describe('ProgramPage', () => {
     expect(comp.alert).toBeDefined();
     expect(comp.dictionaries).toBeDefined();
 
-    expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Fish and Wildlife Coordination and Assistance Programs')
+    expect(fixture.debugElement.query(By.css('#program-title')).nativeElement.innerHTML).toContain('Wood Utilization Assistance')
   });
 
   it('Should show the alert for updated since YYYY', () => {
