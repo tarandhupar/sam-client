@@ -485,7 +485,11 @@ export class DetailsComponent {
         userData[key] = controlValue.map((item, intItem) => {
           item.answer = item.answer.trim();
           this.user.kbaAnswerList[intItem] = item;
-          this.user.kbaAnswerList[intItem].answer = item.answer.replace(/./g, '&bull;');
+
+          this.user.kbaAnswerList[intItem].answer = item.answer.length ?
+            item.answer.replace(/./g, '&bull;') :
+            this.repeater('&bull;', 8);
+
           return item;
         });
 
