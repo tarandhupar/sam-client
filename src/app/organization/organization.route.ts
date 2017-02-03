@@ -4,13 +4,11 @@ import { OrganizationDisplayPageDemoPage } from './display-template-demo/display
 
 export const routes: Routes = [
   {
-    path: 'organization/demo',
-    component: OrganizationDisplayPageDemoPage
-  },
-  {
     path: 'organization/:id',
     component: OrganizationPage
   },
 ];
-
+if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
+  routes.unshift({ path: 'organization/demo', component: OrganizationDisplayPageDemoPage });
+}
 export const routing = RouterModule.forChild(routes);

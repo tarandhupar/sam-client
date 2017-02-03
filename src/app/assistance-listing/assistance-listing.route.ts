@@ -5,7 +5,8 @@ import { ProgramDisplayPageDemoPage } from './display-template-demo/display-temp
 export const routes: Routes = [
   { path: 'programs/:id/view', component: ProgramPage },
   { path: 'programs',  component: ProgramPage },
-  { path: 'programs/demo',  component: ProgramDisplayPageDemoPage },
 ];
-
+if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
+  routes.unshift({ path: 'programs/demo', component: ProgramDisplayPageDemoPage });
+}
 export const routing = RouterModule.forChild(routes);

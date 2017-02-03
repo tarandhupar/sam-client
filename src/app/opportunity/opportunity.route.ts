@@ -6,11 +6,10 @@ export const routes: Routes = [
   {
     path: 'opportunities/:id',
     component: OpportunityPage
-  },
-  {
-  	path: 'opportunity/demo',
-  	component: OpportunityDisplayPageDemoPage
   }
 ];
 
+if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
+  routes.unshift({ path: 'opportunity/demo', component: OpportunityDisplayPageDemoPage });
+}
 export const routing = RouterModule.forChild(routes);
