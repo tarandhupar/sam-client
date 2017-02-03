@@ -32,8 +32,6 @@
 
 <div display-content>
   <ng-container *ngIf="opportunity">
-    <samTabs (currentSelectedTab)="currentTabSelected($event)">
-      <samTab tabTitle="Opportunity" (tabSelected)="tabSelected($event)">
 
         <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
           <h2>Award Details</h2>
@@ -452,126 +450,6 @@
             </div>
           </div>
         </section>
-
-      </samTab>
-
-      <samTab *ngIf="relatedOpportunities" tabTitle="Award Notices" (tabSelected)="tabSelected($event)">
-
-        <section [attr.id]="generateID(opportunityFields.AwardSummary)" *ngIf="shouldBeDisplayed(opportunityFields.AwardSummary)">
-
-        <h2 id="opportunity-award-summary">Awards Summary</h2>
-
-
-        <!-- Awards Metadata -->
-
-        <div class="usa-grid-full usa-text-center">
-
-          <div class="usa-width-one-fourth segment">
-            <strong>Total Number of Awards</strong>
-            <p>
-              {{relatedOpportunitiesMetadata.count}}
-            </p>
-          </div>
-
-          <div class="usa-width-one-fourth segment">
-            <strong>Total Amount Awarded</strong>
-            <p>
-              {{relatedOpportunitiesMetadata.totalAwardAmt | currency:'USD':true:'1.2-2'}}<br>
-              <em *ngIf="relatedOpportunitiesMetadata.unparsableCount > 0" class="usa-text-small">
-                (Plus {{relatedOpportunitiesMetadata.unparsableCount}} other variable amounts)
-              </em>
-            </p>
-          </div>
-
-
-          <div class="usa-width-one-fourth segment">
-            <strong>Total Number of Recipients</strong>
-            <p>
-              {{relatedOpportunitiesMetadata.recipientCount}}
-            </p>
-          </div>
-
-          <div class="usa-width-one-fourth segment-with-select">
-            <strong>Sort by</strong>
-            <samSelect class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></samSelect>
-          </div>
-
-        </div>
-            <p class="m_T-2x" style="text-align: right;">
-              <strong>{{min +1}} - {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}</strong>
-              of <strong>{{relatedOpportunitiesMetadata.count}}</strong>
-            </p>
-          <div class="card-simple" *ngFor="let element of relatedOpportunities">
-
-            <h3>{{element.data?.award?.awardee?.name}}</h3>
-
-            <div class="card-simple-content">
-              <div class="usa-grid-full">
-                <div class="usa-width-one-half">
-                  <ul class="usa-label-list">
-                    <li><span>Contractor Awarded DUNS: </span>
-                      <span>
-                        {{element.data?.award?.awardee?.duns}}
-                        <ng-container *ngIf="!element.data?.award?.awardee?.duns">
-                          &mdash;
-                        </ng-container>
-                      </span>
-                    </li>
-                    <li>
-                      <span>Contractor Awarded Address: </span>
-                      <span style="display: block;">
-                        <ng-container *ngIf=" element.data?.award?.awardee?.location?.streetAddress ||
-                                              element.data?.award?.awardee?.location?.city ||
-                                              element.data?.award?.awardee?.location?.state ||
-                                              element.data?.award?.awardee?.location?.zip ||
-                                              element.data?.award?.awardee?.location?.country">
-                          {{element.data?.award?.awardee?.location?.streetAddress}}<br>
-                          {{element.data?.award?.awardee?.location?.city}}
-                          <ng-container *ngIf="element.data?.award?.awardee?.location?.city">,</ng-container>
-                          {{element.data?.award?.awardee?.location?.state}}
-                          {{element.data?.award?.awardee?.location?.zip}}<br>
-                          {{element.data?.award?.awardee?.location?.country}}<br>
-                        </ng-container>
-                        <ng-container *ngIf=" !element.data?.award?.awardee?.location?.streetAddress &&
-                                              !element.data?.award?.awardee?.location?.city &&
-                                              !element.data?.award?.awardee?.location?.state &&
-                                              !element.data?.award?.awardee?.location?.zip &&
-                                              !element.data?.award?.awardee?.location?.country">
-                          &mdash;
-                        </ng-container>
-                      </span>
-                    </li>
-                  </ul>
-
-
-                </div>
-                <div class="usa-width-one-half">
-                  <ul class="usa-label-list">
-                    <li><span>Contract Award Dollar Amount: </span> <span>{{element.data?.award?.amount}}</span></li>
-                    <li><span>Contract Award Number: </span> <span>{{element.data?.award?.number}}</span></li>
-                    <li><span>Contract Award Date: </span> <span>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span></li>
-                    <!--<li><span>Contract Line Item Number: </span>
-                      <span>
-                        {{element.data?.award?.lineItemNumber}}
-                        <ng-container *ngIf="!element.data?.award?.lineItemNumber">
-                          &mdash;
-                        </ng-container>
-                      </span>
-                    </li>-->
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-        </div>
-
-        </section>
-
-        <samPagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
-
-
-      </samTab>
-    </samTabs>
     <br><br>
   </ng-container>
 </div>
