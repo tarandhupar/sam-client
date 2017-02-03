@@ -5,7 +5,7 @@
 <samSearchHeader *ngIf="isHeaderWithSearch" (searchHeaderDropdownControl)="toggleOverlay($event)" (searchEvent)="onHeaderSearchEvent($event)" [keyword]="keyword" [filterValue]="index"></samSearchHeader>
 <samHeader *ngIf="!isHeaderWithSearch" (headerDropdownControl)="toggleOverlay($event)"></samHeader>
 
-<main class="occupy-page relative">
+<main id="main-container" class="occupy-page relative">
   <router-outlet></router-outlet>
   <div  [ngClass]="{'overlay':showOverlay}">
     </div>
