@@ -7,7 +7,7 @@
   <div class="usa-agency-picker-dropdown-area usa-grid">
     <div class="usa-agency-picker-search-area" *ngIf="!orgRoot">
       <div class="usa-agency-picker-search-input-wrapper">
-        <input type="text" class="usa-agency-picker-search-input" (blur)="autocompleteBlur($event)" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
+        <input title="search text box" type="text" class="usa-agency-picker-search-input" (blur)="autocompleteBlur($event)" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
         <span [ngClass]="resetIconClass"><i class="fa fa-times-circle" (click)="onResetClick()" tabindex="0" (keyup.enter)="onResetClick()"></i></span>
       </div>
       <ul (blur)="autocompleteBlur($event)" #autocompletelist tabindex="0" *ngIf="autoCompleteToggle" class="usa-agency-picker-autocomplete" (mousedown)="cancelBlurMethod()">
