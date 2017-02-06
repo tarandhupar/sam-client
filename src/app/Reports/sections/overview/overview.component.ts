@@ -222,6 +222,16 @@ checkSession(cb: () => void) {
                                         id: '63AAC2FE47DB4E0515AAD48BAE7C8872',
                                         name: 'Workload Report',
                                         desc: 'This report displays actions and dollars for all the federal government contracts for various dollar ranges, thus displaying the workload. It also drills down to the workload by Type of Contract and displays actions and dollars for each contract type.'
+                                },
+				{
+                                        id: 'F93C7D5846D6FFF1002156A8927700C0',
+                                        name: 'Competition Report - OLD',
+                                        desc: 'NOT THE OFFICIAL REPORT FOR COMPETITION. This is the old competition report and does not provide as accurate a representation as the Competition Report.'
+                                },
+								{
+                                        id: '7AB734B64A8650C22912479CD9DA8A3B',
+                                        name: 'Buying Through Government Acquisition Vehicles Report',
+                                        desc: 'The Buying Through Government Acquisition Vehicles report displays actions and dollars for all contract actions (Awards, IDVs, and Modifications) based on Who Can Use on the IDV and based on Department ID for Awards referencing an IDV.'
                                 }
                                 ];
         }
@@ -351,6 +361,16 @@ checkSession(cb: () => void) {
                                         id: 'C14899804687687D40568A98753E4F80',
                                         name: 'IDVs whose Orders are over the Ceiling Amount Report',
                                         desc: 'This report displays EPA Designated Product and Recovered Materials/Sustainability data for the specified date range and PSC range.'
+                                },
+				{
+                                        id: 'F93C7D5846D6FFF1002156A8927700C0',
+                                        name: 'Competition Report - OLD',
+                                        desc: 'NOT THE OFFICIAL REPORT FOR COMPETITION. This is the old competition report and does not provide as accurate a representation as the Competition Report.'
+                                },
+								{
+                                        id: '7AB734B64A8650C22912479CD9DA8A3B',
+                                        name: 'Buying Through Government Acquisition Vehicles Report',
+                                        desc: 'The Buying Through Government Acquisition Vehicles report displays actions and dollars for all contract actions (Awards, IDVs, and Modifications) based on Who Can Use on the IDV and based on Department ID for Awards referencing an IDV.'
                                 }
                                 ];
           }
