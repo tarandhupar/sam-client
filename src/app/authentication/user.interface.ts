@@ -16,7 +16,6 @@ export interface User {
 
   homePhone?: string,
   workPhone?: string,
-  telephoneNumber?: string,
   mobile?: string,
   phoneExtension?: string,
 

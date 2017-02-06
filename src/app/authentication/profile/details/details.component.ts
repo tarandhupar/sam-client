@@ -325,7 +325,7 @@ export class DetailsComponent {
   get phone():string {
     let phone = this.user.workPhone
       .replace(/[^0-9]/g, '')
-      .replace(/([0-9]{3})([0-9]{3})([0-9]{4})/g, '($1) $2-$3');
+      .replace(/([0-9]{1})([0-9]{3})([0-9]{3})([0-9]{4})/g, '$1+($2) $3-$4');
 
     switch(phone.length) {
       case 14:
@@ -334,6 +334,10 @@ export class DetailsComponent {
     }
 
     return phone;
+  }
+
+  updatePhoneNumber(phoneNumber) {
+    this.user.workPhone = phoneNumber;
   }
 
   setDepartment(department) {
@@ -473,12 +477,19 @@ export class DetailsComponent {
         controlValue,
         intKey;
 
+console.log();userData
+console.log(this.user.workPhone);
+
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
       controlValue = controls[key].value;
 
       if(controlValue.toString().length) {
         userData[key] = controlValue;
+      }
+
+      if(key == 'workPhone') {
+        userData[key] = this.user.workPhone;
       }
 
       if(key == 'kbaAnswerList') {

@@ -8,7 +8,7 @@
       </fieldset>
       <fieldset class="phone">
         <legend>Business Phone</legend>
-        <samPhoneEntry [model]="user.telephoneNumber" label=""></samPhoneEntry>
+        <samPhoneEntry [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" label=""></samPhoneEntry>
       </fieldset>
       <fieldset class="office" *ngIf="states.isGov">
         <legend>Office</legend>

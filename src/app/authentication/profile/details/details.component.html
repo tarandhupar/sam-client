@@ -61,7 +61,7 @@
                     (organization)="setOrganization($event)"
                     *ngIf="states.isGov">
       </agencyPicker>
-      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" label="Business Phone"></samPhoneEntry>
+      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" label="Business Phone"></samPhoneEntry>
 
       <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('business')"></samButton>
     </section>

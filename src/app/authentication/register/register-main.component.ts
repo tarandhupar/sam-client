@@ -66,7 +66,7 @@ export class RegisterMainComponent {
             lastName:        [this.user.lastName, Validators.required],
             suffix:          [this.user.suffix],
 
-            telephoneNumber:       [this.user.telephoneNumber],
+            workPhone:       [this.user.workPhone],
 
             department:      [this.user.department],
             orgID:           [this.user.orgID],
@@ -114,7 +114,7 @@ export class RegisterMainComponent {
       userData._id = userData.id || userData._id || '';
       userData.firstName = userData.firstname || userData.firstName || '';
       userData.lastName = userData.lastname || userData.lastName || '';
-      userData.telephoneNumber = userData.phone || userData.telephoneNumber || '';
+      userData.workPhone = userData.phone || userData.workPhone || '';
 
       vm.user = {
         _id: '',
@@ -128,7 +128,7 @@ export class RegisterMainComponent {
         department: '',
         orgID: '',
 
-        telephoneNumber: '',
+        workPhone: '',
 
         suffix: '',
 
@@ -163,9 +163,9 @@ export class RegisterMainComponent {
         orgID: data.orgID
       });
 
-      phone = (vm.user.telephoneNumber || '').split('x');
+      phone = (vm.user.workPhone || '').split('x');
 
-      vm.user.telephoneNumber = phone[0];
+      vm.user.workPhone = phone[0];
 
       if(phone.length > 1) {
         vm.user.phoneExtension = phone[1];
@@ -202,7 +202,7 @@ export class RegisterMainComponent {
       lastName:      ['Doe', Validators.required],
       suffix:        [''],
 
-      telephoneNumber:       ['12401234567'],
+      workPhone:       ['12401234567'],
 
       department:      [''],
       orgID:           [''],
@@ -297,6 +297,10 @@ export class RegisterMainComponent {
     });
   }
 
+  updatePhoneNumber(phoneNumber) {
+      this.user.workPhone = phoneNumber;
+  }
+
   prepareData() {
     let userData = this.userForm.value,
         propKey,
@@ -307,7 +311,7 @@ export class RegisterMainComponent {
       .join(' ')
       .replace(/\s+/, ' ');
 
-    userData.telephoneNumber = this.user.telephoneNumber;
+    userData.workPhone = this.user.workPhone;
 
     userData.kbaAnswerList = [
       { questionId: 1, answer: '12345678' },
