@@ -66,7 +66,7 @@ export class RegisterMainComponent {
             lastName:        [this.user.lastName, Validators.required],
             suffix:          [this.user.suffix],
 
-            workPhone:       [this.user.workPhone],
+            telephoneNumber:       [this.user.telephoneNumber],
 
             department:      [this.user.department],
             orgID:           [this.user.orgID],
@@ -114,7 +114,7 @@ export class RegisterMainComponent {
       userData._id = userData.id || userData._id || '';
       userData.firstName = userData.firstname || userData.firstName || '';
       userData.lastName = userData.lastname || userData.lastName || '';
-      userData.workPhone = userData.phone || userData.workPhone || '';
+      userData.telephoneNumber = userData.phone || userData.telephoneNumber || '';
 
       vm.user = {
         _id: '',
@@ -128,7 +128,7 @@ export class RegisterMainComponent {
         department: '',
         orgID: '',
 
-        workPhone: '',
+        telephoneNumber: '',
 
         suffix: '',
 
@@ -163,9 +163,9 @@ export class RegisterMainComponent {
         orgID: data.orgID
       });
 
-      phone = (vm.user.workPhone || '').split('x');
+      phone = (vm.user.telephoneNumber || '').split('x');
 
-      vm.user.workPhone = phone[0];
+      vm.user.telephoneNumber = phone[0];
 
       if(phone.length > 1) {
         vm.user.phoneExtension = phone[1];
@@ -202,7 +202,7 @@ export class RegisterMainComponent {
       lastName:      ['Doe', Validators.required],
       suffix:        [''],
 
-      workPhone:       ['12401234567'],
+      telephoneNumber:       ['12401234567'],
 
       department:      [''],
       orgID:           [''],
@@ -307,7 +307,7 @@ export class RegisterMainComponent {
       .join(' ')
       .replace(/\s+/, ' ');
 
-    userData.workPhone = this.user.workPhone;
+    userData.telephoneNumber = this.user.telephoneNumber;
 
     userData.kbaAnswerList = [
       { questionId: 1, answer: '12345678' },
