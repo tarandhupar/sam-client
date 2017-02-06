@@ -524,7 +524,6 @@ export class FinancialObligationChart {
   }
 
   prepareVisualizationData() {
-    console.log(this.financialData);
     let self = this;
     let formattedFinancialData = [];
     let obligations = d3.map();
