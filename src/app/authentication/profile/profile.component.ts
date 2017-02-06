@@ -13,7 +13,7 @@ export class ProfileComponent {
 
   constructor(private router: Router) {
     this.router.events.subscribe((event) => {
-      if(event.constructor.name === 'NavigationStart') {
+      if(event.constructor.name === 'NavigationEnd') {
         this.checkRoute();
       }
     });

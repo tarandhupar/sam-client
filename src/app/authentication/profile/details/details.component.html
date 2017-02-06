@@ -61,7 +61,7 @@
                     (organization)="setOrganization($event)"
                     *ngIf="states.isGov">
       </agencyPicker>
-      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" label="Business Phone"></samPhoneEntry>
+      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" label="Business Phone"></samPhoneEntry>
 
       <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('business')"></samButton>
     </section>
@@ -107,7 +107,6 @@
 <samModal #confirmModal
           type="warning"
           title="Are you sure you want to deactivate your account?"
-          description="If you deactivate your account it cannot be reactivated for future use and you will be immediately logged out of the system. Are you sure you want to deactivate your account?"
           showClose="true"
           submitButtonLabel="Yes, deactivate my account"
           cancelButtonLabel="No, cancel account deactivation"
@@ -116,7 +115,7 @@
 <samModal #reconfirmModal
           type="warning"
           title="Warning"
-          description="Proceeding with this edit will result in the loss of privileged access to IAE applications. You will have to re-request access in order to restore your roles. Please press yes to continue editing or cancel the edit below."
+          description="If you deactivate your account it cannot be reactivated for future use and you will be immediately logged out of the system. Are you sure you want to deactivate your account?"
           showClose="true"
           submitButtonLabel="Yes, continue with edit"
           cancelButtonLabel="No, cancel my edit"
