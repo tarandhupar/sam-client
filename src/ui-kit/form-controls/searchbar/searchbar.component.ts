@@ -59,12 +59,12 @@ export class SamSearchbarComponent {
 
   constructor(private _renderer: Renderer) {
   }
-
+  
   ngOnInit() {
     if(this.isSizeSmall()){
       this.searchBtnText = "";
     }
-    this.findSelectedOption('');
+    this.findSelectedOption(this.filterValue);
   }
 
   // ngDoCheck(){
@@ -83,9 +83,6 @@ export class SamSearchbarComponent {
     this.filterValue = value;
     this.findSelectedOption(value);
   }
-  
-  // Makes "all" the default value for select
-  selectModel = ""; 
   
   findSelectedOption(value): void {
     function getOption(option){
