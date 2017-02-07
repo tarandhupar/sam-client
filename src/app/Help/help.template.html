@@ -27,7 +27,6 @@
           <a [ngClass]="getSectionClass('about')" (click)="changeSection('about')" [routerLink]="['/help/about']">About SAM.gov</a>
           <ul class="usa-sidenav-sub_list"  *ngIf="isCurrentSection('about')">
             <li><a #whoWeAre [ngClass]="getSubSectionClass('whoWeAre')" (click)="changeSubSection('whoWeAre',whoWeAre)" href="{{currentUrl}}#whoWeAre">Who we are</a></li>
-            <li><a #alerts [ngClass]="getSubSectionClass('alerts')" (click)="changeSubSection('alerts',alerts)" href="{{currentUrl}}#alerts">System Alerts</a></li>
           </ul>
         </li>
         <li>
