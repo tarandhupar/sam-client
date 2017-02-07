@@ -92,6 +92,9 @@ export class OpportunityPage implements OnInit {
   min: number;
   max: number;
   private ready: boolean = false;
+  sidenavModel = {
+    label: 'test'
+  };
 
   constructor(
     private router: Router,
