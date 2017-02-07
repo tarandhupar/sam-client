@@ -35,34 +35,34 @@
     height: 3.3rem;
   }
 
-  .usa-search{
-    display:table;
+  .usa-search {
+    display: table;
   }
 
   /** Adjust the width of the input search bar**/
-  .div-fill{
+  .div-fill {
     display: table-cell;
     width: 100%;
     overflow: visible;
     height: 3.3rem;
-    vertical-align:top;
+    vertical-align: top;
   }
 
-  .div-left{
-    vertical-align:top;
+  .div-left {
+    vertical-align: top;
   }
 
-  .div-right{
-    vertical-align:top;
+  .div-right {
+    vertical-align: top;
   }
 
-  .div-left, .div-right{
+  .div-left, .div-right {
     width: auto;
     display: table-cell;
   }
 
-  .search-inputbar{
-    top:0;
+  .search-inputbar {
+    top: 0;
     left: 0;
     max-width: 800px;
     width: 100%;
@@ -70,66 +70,66 @@
     margin: 0rem;
   }
 
-  .reset-icon,.reset-icon-active{
+  .reset-icon,.reset-icon-active {
     position: absolute;;
-    top:20%;
-    right:10px;
+    top: 20%;
+    right: 10px;
     z-index: 10;
   }
 
-  .reset-icon{
+  .reset-icon {
     color: #d9d9d9;
   }
 
-  .reset-icon-active{
+  .reset-icon-active {
     color: #777;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
-  .reset-icon-active:hover{
-    cursor: pointer;
+  .usa-search-submit-text {
+    white-space: nowrap;
   }
 
-  .usa-search-submit-text{
-    white-space:nowrap;
-  }
-
-  .usa-search-autocomplete{
+  .usa-search-autocomplete {
     width: calc(100%);
   }
 }
 
-.usa-search-autocomplete{
-  position:absolute;
-  //top:44px;
-  background:#fff;
-  margin-top:0;
+.usa-search-autocomplete {
+  position: absolute;
+  background: $color-white;
+  margin-top: 0;
   margin-left: 0;
   margin-right: 0;
-  padding:0;
-  border:1px solid #5b616b;
-  border-top:none;
+  padding: 0;
+  border: 1px solid $color-gray;
+  border-top: none;
   width: inherit;
   z-index: 10;
-  max-height:300px;
-  overflow:auto;
+  max-height: 300px;
+  overflow: auto;
 
-  li{
-    list-style:none;
+  li {
+    list-style: none;
     padding: 0 10px;
     margin: 0;
-    max-width:inherit;
-  }
-  li:hover{
-    cursor:pointer;
-    background:#e1f3f8;
-  }
+    max-width: inherit;
 
-  /*IE9 bugfix*/
-  li:focus{
-    outline:none;
-  }
+    &:hover {
+      cursor: pointer;
+      background: $color-primary-alt-lightest;
+    }
 
-  li.autocomplete-selected{
-    background:#e1f3f8;
+    /*IE9 bugfix*/
+    &:focus {
+      outline: none;
+    }
+
+    &.autocomplete-selected {
+      background: $color-primary-alt-lightest;
+    }
   }
 }
