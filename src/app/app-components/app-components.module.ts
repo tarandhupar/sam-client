@@ -5,6 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
+import { DisplayPageComponent } from './display-page/display-page.component';
 
 
 
@@ -14,7 +15,8 @@ import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
  */
 @NgModule({
   declarations: [
-    AgencyPickerComponent
+    AgencyPickerComponent,
+    DisplayPageComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +25,8 @@ import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
     SamAPIKitModule
   ],
   exports: [
-    AgencyPickerComponent
+    AgencyPickerComponent,
+    DisplayPageComponent
   ],
   providers: [ ]
 })
