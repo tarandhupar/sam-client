@@ -53,7 +53,7 @@
           <strong>Related Federal Assistance: </strong>
           <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.flag != 'na' && relatedProgram.length > 0">
             <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
-              <a class="field" [attr.id]="'program-related-' + i" [routerLink]="['/programs', item.id, 'view']">{{item.programNumber}}</a>{{isLast ? '' : ', '}}
+              <a class="field" [attr.id]="'program-related-' + i" href="/programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}
             </ng-container>
           </ng-container>
 
