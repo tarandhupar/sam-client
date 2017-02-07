@@ -30,12 +30,12 @@ export class SamSearchbarComponent implements OnChanges{
 
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
-  
+
   @ViewChild("filterSelect")
   public filterSelect: any;
 
   searchBtnText:string = "Search";
-  
+
   // Added "width" (in pixels) as a temporary solution to find width of selected text
   // Ideally select element width needs to be calculated automatically based on
   // character width of selected text;
@@ -59,14 +59,14 @@ export class SamSearchbarComponent implements OnChanges{
 
   constructor(private _renderer: Renderer) {
   }
-  
+
   ngOnInit() {
     if(this.isSizeSmall()){
       this.searchBtnText = "";
     }
   }
-  
-  ngOnChanges(changes){ 
+
+  ngOnChanges(changes){
     if(changes && changes.filterValue && changes.filterValue.currentValue){
       this.findSelectedOption(changes.filterValue.currentValue);
     }else{
@@ -90,15 +90,17 @@ export class SamSearchbarComponent implements OnChanges{
     this.filterValue = value;
     this.findSelectedOption(value);
   }
-  
+
   findSelectedOption(value): void {
     function getOption(option){
       return option.value === value;
     }
     let selectedOption = this.selectConfig.options.find(getOption);
-    this.adjustSelectWidth(selectedOption);
+    if(selectedOption) {
+      this.adjustSelectWidth(selectedOption);
+    }
   }
-  
+
   adjustSelectWidth(option): void{
     let containerWidthString = 'width:' + option.width + "px";
     let selectWidth = +option.width + 50;
