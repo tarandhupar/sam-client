@@ -2,7 +2,7 @@
 
 <div display-alert>
   <ng-container *ngIf="alert.length > 0">
-    <samAlert id="program-alert" *ngFor="let alert of alert" labelname="alert.labelname" [type]="alert.config.type" [title]="alert.config.title" [description]="alert.config.description"></samAlert>
+    <samAlert id="program-alert" *ngFor="let alertitem of alert" labelname="alertitem.labelname" [type]="alertitem.config.type" [title]="alertitem.config.title" [description]="alertitem.config.description"></samAlert>
   </ng-container>
 </div>
 
