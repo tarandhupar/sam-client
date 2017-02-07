@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, ViewChild, Renderer} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewChild, Renderer, OnChanges} from '@angular/core';
 
 /**
  * The <samSearchbar> component(filter,input bar and search button) can automatically change it size according to the div the wrap it.
@@ -13,7 +13,7 @@ import {Component, Input, Output, EventEmitter, ViewChild, Renderer} from '@angu
   templateUrl: 'searchbar.template.html',
 
 })
-export class SamSearchbarComponent {
+export class SamSearchbarComponent implements OnChanges{
 
 
   @Input()
@@ -64,7 +64,14 @@ export class SamSearchbarComponent {
     if(this.isSizeSmall()){
       this.searchBtnText = "";
     }
-    this.findSelectedOption(this.filterValue);
+  }
+  
+  ngOnChanges(changes){ 
+    if(changes && changes.filterValue && changes.filterValue.currentValue){
+      this.findSelectedOption(changes.filterValue.currentValue);
+    }else{
+      this.findSelectedOption(this.filterValue);
+    }
   }
 
   // ngDoCheck(){
