@@ -278,6 +278,46 @@ let MockOpportunityService = {
           href: "http://10.98.29.81:122/v1/opportunity/7e5a8c7c4742472a1ac9faef90042e56/attachments"
         }
       }});
+  },
+  getOpportunityHistoryById(id: String){
+    return Observable.of({
+      content: {
+        history: [
+          {
+            cancel_notice: "0",
+            procurement_type: "p",
+            authoritative: "0",
+            parent_notice: null,
+            index: "1",
+            notice_id: "6a3618f68f95542fa075fe97baab1fd4",
+            posted_date: "2012-04-13 19:07:05+00"
+          },
+          {
+            cancel_notice: "0",
+            procurement_type: "m",
+            authoritative: "0",
+            parent_notice: "6a3618f68f95542fa075fe97baab1fd4",
+            index: "2",
+            notice_id: "9e14590f674ab3ffbf8da6b85ddc8581",
+            posted_date: "2012-04-13 19:30:51+00"
+          },
+          {
+            cancel_notice: "0",
+            procurement_type: "m",
+            authoritative: "1",
+            parent_notice: "6a3618f68f95542fa075fe97baab1fd4",
+            index: "3",
+            notice_id: "a2c630c37084d373200cc1bc6121bdf6",
+            posted_date: "2012-04-13 19:36:13+00"
+          }
+        ]
+      },
+      _links: {
+        self: {
+          href: "http://10.98.29.81:122/opps/v1/opportunities/a2c630c37084d373200cc1bc6121bdf6/history"
+        }
+      }
+    });
   }
 };
 

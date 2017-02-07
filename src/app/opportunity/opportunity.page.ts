@@ -68,6 +68,7 @@ export class OpportunityPage implements OnInit {
   originalOpportunity: any;
   opportunityLocation: any;
   opportunity: any;
+  history: any;
   organization: any;
   currentUrl: string;
   dictionary: any;
@@ -124,6 +125,7 @@ export class OpportunityPage implements OnInit {
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
     this.loadAttachments(opportunityAPI);
+    this.loadHistory(opportunityAPI);
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
@@ -258,6 +260,17 @@ export class OpportunityPage implements OnInit {
       console.log('Error loading dictionaries: ', err);
     });
   }
+
+  private loadHistory(opportunityAPI: Observable<any>) {
+    opportunityAPI.subscribe(opAPI => {
+      if(opAPI.opportunityId != '' && typeof opAPI.opportunityId !== 'undefined') {
+        this.opportunityService.getOpportunityHistoryById(opAPI.opportunityId).subscribe(historyAPI => {
+          this.history = historyAPI;
+        });
+      }
+    });
+  }
+
 
   // Sets the correct displayField flags for this opportunity type
   private setDisplayFields(combinedOpportunityAPI: Observable<any>) {
