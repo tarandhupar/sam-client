@@ -13,7 +13,7 @@ export class HomePage {
     {
       title:'SAM.gov Transition Roadmap',
       detail:'The new SAM.gov has integrated all ten systems under one unified system. For more information on SAM.gov transition click ',
-      url:'',
+      url:'/help/transition',
       pageInProgress: true,
       inProgressDetail:'The new SAM.gov has integrated all ten systems under one unified system.'
     },
