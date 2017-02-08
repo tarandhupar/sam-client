@@ -44,8 +44,7 @@ export class WrapperService {
             oURLSearchParams.set(key, (typeof oApiParam.oParam[key] === 'object') ? JSON.stringify(oApiParam.oParam[key]) : oApiParam.oParam[key]);
         }
 
-        var useReverseProxy = document.getElementsByTagName('html')[0].className == "ie9" ? true : false;
-        var baseUrl = useReverseProxy ? "/ie_api" : API_UMBRELLA_URL;
+        var baseUrl = API_UMBRELLA_URL;
         //TODO: Implement Post DATA to request
         let jsonOption = {
             "search": oURLSearchParams,
