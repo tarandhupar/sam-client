@@ -31,7 +31,7 @@ import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.m
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
-import { UserDirectoryModule } from "./user-directory";
+import { UserDirectoryModule } from "./users";
 
 // Application wide providers
 const APP_PROVIDERS = [

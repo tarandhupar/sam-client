@@ -4,11 +4,15 @@ import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from "@angular/forms";
 
-import { routing } from './user-directory.route';
+import { routing } from './users.route';
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
-import { UserDirectoryPage } from "./user-directory.page";
+import { UserDirectoryPage } from "./user-directory/user-directory.page";
 import { ParentOrgsComponent } from "./parent-orgs/parent-orgs.component";
+import { UserAccessPage } from "./public/access/access.page";
+import { UserViewComponent } from "./public/public.component";
+import { UserMigrationsPage } from "./public/migrations/migrations.page";
+import { UserProfilePage } from "./public/profile/profile.page";
 
 
 @NgModule({
@@ -25,6 +29,10 @@ import { ParentOrgsComponent } from "./parent-orgs/parent-orgs.component";
 
   ],
   declarations: [
+    UserViewComponent,
+    UserMigrationsPage,
+    UserAccessPage,
+    UserProfilePage,
     UserDirectoryPage,
     ParentOrgsComponent
   ],
