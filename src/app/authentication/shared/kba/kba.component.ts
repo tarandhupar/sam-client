@@ -19,6 +19,7 @@ export class KBAComponent implements OnChanges {
 
   protected states = {
     type: 'text',
+    uid: Math.floor(Math.random() * 89999 + 10000),
     submitted: false,
     count: 0,
     errors: {
