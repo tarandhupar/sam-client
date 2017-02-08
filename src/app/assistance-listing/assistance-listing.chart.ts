@@ -565,7 +565,7 @@ export class FinancialObligationChart {
         let obligation = "No Obligation";
         if (item.assistanceType && item.assistanceType.length > 0) {
           obligation = getAssistanceType(item.assistanceType);
-        } else {
+        } else if(item.questions) {
           for (let question of item.questions) {
             if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
               obligation = "Salary or Expense";
