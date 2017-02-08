@@ -195,21 +195,29 @@ export class OpportunityPage implements OnInit {
 
     let self = this;
     
-    this.sidenavModel.children.push(content);
+    // Items in first level (pages) have to have a unique name
+    let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
     
-    let children = _.map(this.sidenavModel.children, function(possiblePage){
+    // If page has a unique name added to the sidenav
+    if(repeatedItem === -1){
       
-      possiblePage.children = _.map(possiblePage.children, function(possibleSection){
-        if(self.shouldBeDisplayed(possibleSection.field)){
-          possibleSection.route = "#" + self.generateID(possibleSection.field);
-          return possibleSection;
-        }
-      })
-      return possiblePage;
+      this.sidenavModel.children.push(content);
       
-    });
-    
-    this.sidenavModel.children = children;
+      let children = _.map(this.sidenavModel.children, function(possiblePage){
+        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
+          if(self.shouldBeDisplayed(possibleSection.field)){
+            possibleSection.route = "#" + self.generateID(possibleSection.field);
+            return possibleSection;
+          }
+        });
+        _.remove(possiblePagechildren, _.isUndefined);
+        possiblePage.children = possiblePagechildren;
+        return possiblePage;
+        
+      });
+
+      this.sidenavModel.children = children;
+    }
     
   }
 
@@ -251,6 +259,7 @@ export class OpportunityPage implements OnInit {
           'unparsableCount': data['unparsableCount']
         };
         this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
+        
         let awardSideNavContent = {
           "label": "Award Notices",
           "route": this.pageRoute,
@@ -262,6 +271,7 @@ export class OpportunityPage implements OnInit {
           ]
         };
         this.updateSideNav(awardSideNavContent);
+        
       }
     }, err => {
       console.log('Error loading related opportunities: ', err);
@@ -345,7 +355,7 @@ export class OpportunityPage implements OnInit {
       }
 
       this.displayField = {}; // for safety, clear any existing values
-
+      
       switch (opportunity.data.type) {
         // Base opportunity types
         // These types are a superset of 'j', using case fallthrough
