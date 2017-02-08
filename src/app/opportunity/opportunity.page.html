@@ -21,7 +21,7 @@
           <li *ngIf="shouldBeDisplayed(opportunityFields.Synopsis)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Synopsis) }}">Synopsis/Description</a></li>
           <li *ngIf="shouldBeDisplayed(opportunityFields.Packages)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Packages) }}">Packages</a></li>
           <li *ngIf="shouldBeDisplayed(opportunityFields.Classification)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.Classification) }}">Contact Information</a></li>
-          <!--<li><a href="{{ currentUrl }}#history">History</a></li>-->
+          <li *ngIf="shouldBeDisplayed(opportunityFields.History)"><a href="{{ currentUrl + '#' + generateID(opportunityFields.History) }}">History</a></li>
         </ul>
       </nav>
       <nav *ngIf="currentTab == 'Award Notices'">
@@ -488,6 +488,8 @@
             </div>
           </div>
         </section>
+
+        <history [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History) && history" [data]="history"></history>
 
       </samTab>
 
