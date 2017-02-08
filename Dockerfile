@@ -9,5 +9,6 @@ COPY . /usr/src/app/
 RUN npm install
 
 EXPOSE 8080
-CMD git submodule update --recursive --remote
+
+CMD git clone -b develop https://csp-github.sam.gov/GSA-IAE/sam-ui-elements.git src/sam-ui-elements
 CMD npm run prod
