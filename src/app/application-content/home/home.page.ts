@@ -28,7 +28,8 @@ export class HomePage {
       title:'New to SAM.gov',
       detail:'New to the site? For step by step information on the federal award process click ',
       url:'/help/new',
-      pageInProgress: false
+      pageInProgress: true,
+      inProgressDetail: 'New to the site? See step by step information on the federal award process.'
     },
     {
       title:'User Accounts',

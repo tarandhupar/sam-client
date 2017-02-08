@@ -30,7 +30,7 @@
           </ul>
         </li>
         <li>
-          <a [ngClass]="getSectionClass('new')" (click)="changeSection('new')" [routerLink]="['/help/new']">New to SAM.gov</a>
+          <a [ngClass]="getSectionClass('new')" (click)="changeSection('new')" [routerLink]="['/help/new']" *ngIf="linkToggle()">New to SAM.gov</a>
         </li>
         <li>
           <a [ngClass]="getSectionClass('accounts')" (click)="changeSection('accounts')" [routerLink]="['/help/accounts']">User Accounts</a>
