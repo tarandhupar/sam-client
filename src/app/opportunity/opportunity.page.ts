@@ -7,6 +7,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 import { OpportunityFields } from "./opportunity.fields";
 import { trigger, state, style, transition, animate } from '@angular/core';
 import * as _ from 'lodash';
+import {OpportunityTypeLabelPipe} from "./pipes/opportunity-type-label.pipe";
 
 @Component({
   moduleId: __filename,
@@ -104,8 +105,6 @@ export class OpportunityPage implements OnInit {
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
-        console.log(tree);
-        console.log(router);
         if (tree.fragment) {
           const element = document.getElementById(tree.fragment);
           if (element) { element.scrollIntoView(); }
@@ -128,12 +127,12 @@ export class OpportunityPage implements OnInit {
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
     this.loadAttachments(opportunityAPI);
+    this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.loadHistory(opportunityAPI);
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
-    let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
-    this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
-    this.setDisplayFields(combinedOpportunityAPI);
+    let parentAndOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
+    this.setDisplayFields(parentAndOpportunityAPI);
   }
 
   private loadOpportunity() {
@@ -264,33 +263,70 @@ export class OpportunityPage implements OnInit {
     });
   }
 
-  private loadHistory(opportunityAPI: Observable<any>) {
-    opportunityAPI.subscribe(opAPI => {
-      if(opAPI.opportunityId != '' && typeof opAPI.opportunityId !== 'undefined') {
-        this.opportunityService.getOpportunityHistoryById(opAPI.opportunityId).subscribe(historyAPI => {
-          this.history = historyAPI;
-          this.processedHistory = historyAPI.content.history.map(function(historyItem) {
-            let processedHistoryItem = {};
-            processedHistoryItem['id'] = historyItem.notice_id;
-            processedHistoryItem['title'] = ''; // todo
-            processedHistoryItem['description'] = ''; // not implemented yet
-            processedHistoryItem['date'] = historyItem.posted_date;
-            processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
-            processedHistoryItem['index'] = historyItem.index;
-            processedHistoryItem['isTagged'] = (historyItem.notice_id === opAPI.opportunityId);
-            return processedHistoryItem;
-          });
-        });
+  private loadHistory(opportunity: Observable<any>) {
+    opportunity.subscribe(opportunityAPI => {
+      if(opportunityAPI.opportunityId == '' || typeof opportunityAPI.opportunityId === 'undefined') {
+        console.log('Error loading history');
+        return;
       }
+
+      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historyAPI => {
+        this.history = historyAPI; // save original history information in case it is needed
+
+        // process history into a form usable by history component
+        this.processedHistory = historyAPI.content.history.map(function(historyItem) {
+          let processedHistoryItem = {};
+          processedHistoryItem['id'] = historyItem.notice_id;
+          processedHistoryItem['title'] = (function makeTitle(){
+            let prefix = '';
+            if(historyItem.cancel_notice === '1') {
+              prefix += 'Canceled';
+            }
+            if(historyItem.index === '1') {
+              prefix += 'Original';
+            } else {
+              prefix += 'Updated';
+            }
+
+            let type = historyItem.procurement_type;
+            let title = new OpportunityTypeLabelPipe().transform(type);
+
+            switch(type) {
+                // For these types, show title as prefix and opportunity type
+              case 'p': // Presolicitation
+              case 'r': // Sources Sought
+              case 's': // Special Notice
+              case 'g': // Sale of Surplus Property
+              case 'f': // Foreign Government Standard
+              case 'k': // Combined Synopsis/Solicitation
+                return prefix + ' ' + title;
+
+                // For these types, show the opportunity type as the title with no prefix
+              case 'a': // Award Notice
+              case 'j': // Justification and Approval (J&A)
+              case 'i': // Intent to Bundle Requirements (DoD-Funded)
+              case 'l': // Fair Opportunity / Limited Sources Justification
+                return title;
+
+                // For modifications or cancellations, just show the prefix
+              case 'm': // Modification/Amendment/Cancel
+                return prefix;
+
+              // Unrecognized type
+              default:
+                return prefix + ' Opportunity';
+            }
+          })();
+          processedHistoryItem['description'] = ''; // not implemented yet
+          processedHistoryItem['date'] = historyItem.posted_date;
+          processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
+          processedHistoryItem['index'] = historyItem.index;
+          processedHistoryItem['isTagged'] = (historyItem.notice_id === opportunityAPI.opportunityId);
+          return processedHistoryItem;
+        });
+      });
     });
   }
-
-//   cancel_notice :   "0"
-//   index:   "1"
-//   notice_id:   "6a3618f68f95542fa075fe97baab1fd4"
-//   parent_notice:   null
-//   posted_date:   "2012-04-13 19:07:05+00"
-//   procurement_type:   "p"
 
   // Sets the correct displayField flags for this opportunity type
   private setDisplayFields(combinedOpportunityAPI: Observable<any>) {
