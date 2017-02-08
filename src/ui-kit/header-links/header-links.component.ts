@@ -10,13 +10,22 @@ import { IAMService } from 'api-kit';
   providers: [IAMService]
 })
 export class SamHeaderLinksComponent {
+  @Output() onDropdownToggle:EventEmitter<any> = new EventEmitter<any>();
+
   private startCheckOutsideClick: boolean = false;
   private user = null;
+
   private states = {
-    isSignedIn: false
+    isSignedIn: false,
+    menu: false
   };
 
-  @Output() onDropdownToggle:EventEmitter<any> = new EventEmitter<any>();
+  private store = {
+    menu: [
+      { text: 'Profile',  routerLink: '/profile' },
+      { text: 'Sign Out', routerLink: '/signout' }
+    ]
+  };
 
   showDropdown:boolean = false;
   dropdownData:any = [

@@ -203,7 +203,6 @@ export class FinancialObligationChart {
         .tickSizeInner(-width)
         .tickSizeOuter(0)
         .tickPadding(5);
-      ;
 
       let gX = axis.append("g")
         .attr("class", "axis--x")
@@ -540,32 +539,39 @@ export class FinancialObligationChart {
 
     // Find all available years
     this.financialData.map(function(item){
-      for(let year in item.values){
-        allYears.add(year);
+      for(let value of item.values){
+        allYears.add(value.year);
       }
     });
 
     // If a year its missing
     this.financialData.map(function(item){
       existingYears = [];
-      for(let year in item.values){
-        existingYears.push(year);
+      for(let value of item.values){
+        existingYears.push(value.year);
       }
       if(existingYears.length < numberOfYears){
-        missingYears = _.difference(allYears.values(), existingYears);
+        let allYearsFound = allYears.values().map(item => +item);
+        missingYears = _.difference(allYearsFound, existingYears);
         missingYears.forEach(missingYear => {
-          item.values[missingYear] = { flag: "empty" };
+          item.values.push({ flag: 'empty', 'year': missingYear });
         });
       }
     });
 
     this.financialData.map(function (item) {
-      for (let year in item.values) {
+      for (let value of item.values) {
+        let year = value.year;
         let obligation = "No Obligation";
         if (item.assistanceType && item.assistanceType.length > 0) {
           obligation = getAssistanceType(item.assistanceType);
-        } else if (item.questions.salary_or_expense.flag === "yes") {
-          obligation = "Salary or Expense";
+        } else if(item.questions) {
+          for (let question of item.questions) {
+            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
+              obligation = "Salary or Expense";
+              break;
+            }
+          }
         }
 
         obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
@@ -574,12 +580,12 @@ export class FinancialObligationChart {
           "obligation": obligation,
           "info": item.additionalInfo ? item.additionalInfo.content || "" : "",
           "year": +year,
-          "amount": item.values[year]["actual"] || item.values[year]["estimate"] || 0,
-          "estimate": !!!item.values[year]["actual"],
-          "ena": item.values[year].flag == "ena" || item.values[year].flag == "na" ? true : false,
-          "nsi": item.values[year].flag == "nsi" || item.values[year].flag == "no" ? true : false,
-          "empty": item.values[year].flag == "empty" ? true : false,
-          "explanation": item.values[year].explanation || ""
+          "amount": value["actual"] || value["estimate"] || 0,
+          "estimate": !value["actual"],
+          "ena": value.flag == "ena" || value.flag == "na" ? true : false,
+          "nsi": value.flag == "nsi" || value.flag == "no" ? true : false,
+          "empty": value.flag == "empty" ? true : false,
+          "explanation": value.explanation || ""
         };
         formattedFinancialData.push(financialItem);
       }

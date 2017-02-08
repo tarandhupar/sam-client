@@ -6,6 +6,7 @@
         <li><a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/reports/overview']">Dynamic Reports</a></li>
 	<li><a [ngClass]="getSectionClass('static')" (click)="changeSection('static')" [routerLink]="['/reports/static']">Static Reports</a></li>
 	<li><a [ngClass]="getSectionClass('adhoc')" (click)="changeSection('adhoc')" [routerLink]="['/reports/adhoc']">Ad-hoc Reports</a></li>
+	<span *ngIf="states.isSignedIn">
         <li>
           <a [ngClass]="getSectionClass('favorites')" (click)="changeSection('favorites')" >Favorites</a>
           <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('favorites')">
@@ -16,6 +17,7 @@
             <li><a #placeholder5 [ngClass]="getSubSectionClass('placeholder5')" (click)="changeSubSection('placeholder5',placeholder5)"><button type="button" class="usa-button-outline">More Favorites</button></a></li>
           </ul>
         </li>
+	</span>
       </ul>
 
     </div>

@@ -297,6 +297,10 @@ export class RegisterMainComponent {
     });
   }
 
+  updatePhoneNumber(phoneNumber) {
+      this.user.workPhone = phoneNumber;
+  }
+
   prepareData() {
     let userData = this.userForm.value,
         propKey,

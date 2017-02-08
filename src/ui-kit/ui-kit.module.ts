@@ -18,6 +18,8 @@ import { SamStickyComponent } from "./sticky/sticky.component";
 import { SamFooterComponent } from "./footer/footer.component";
 import { SamLabelComponent } from "./label/label.component";
 import { SamHeaderComponent } from "./header/header.component";
+import { SamHeaderLinksComponent } from "./header-links/header-links.component";
+import { SamHeaderMenuComponent } from './header-menu';
 import { SamAlertComponent } from "./alert/alert.component";
 import { SamSpinnerComponent } from './spinner/spinner.component';
 import { SamAccordionComponent, SamAccordionSection } from "./accordion/accordion.component";
@@ -25,7 +27,6 @@ import { SamButtonComponent } from "./form-controls/button/button.component.ts";
 import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.component";
 import { SamPaginationComponent } from "./pagination/pagination.component";
 import { SamClickOutsideDirective } from "./click-outside/click-outside.directive";
-import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multiselect-dropdown.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
@@ -49,7 +50,6 @@ import { SamSidenavModule } from './sidenav';
 @NgModule({
   declarations: [
     SamClickOutsideDirective,
-    SamHeaderLinksComponent,
     SamPaginationComponent,
     SamAccordionComponent,
     SamAccordionSection,
@@ -65,6 +65,8 @@ import { SamSidenavModule } from './sidenav';
     SamStickyComponent,
     SamFooterComponent,
     SamHeaderComponent,
+    SamHeaderLinksComponent,
+    SamHeaderMenuComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
@@ -93,7 +95,9 @@ import { SamSidenavModule } from './sidenav';
   exports: [
     LabelWrapper,
     SamClickOutsideDirective,
+    SamHeaderComponent,
     SamHeaderLinksComponent,
+    SamHeaderMenuComponent,
     SamPaginationComponent,
     SamAccordionComponent,
     SamAccordionSection,
@@ -108,7 +112,6 @@ import { SamSidenavModule } from './sidenav';
     SamSearchHeaderComponent,
     SamStickyComponent,
     SamFooterComponent,
-    SamHeaderComponent,
     SamSpinnerComponent,
     SamAlertComponent,
     SamPointOfContactComponent,

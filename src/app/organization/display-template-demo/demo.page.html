@@ -1,0 +1,76 @@
+<display-page [attr.id]="'organization-page'" [attr.class]="'usa-grid'" [sidebarToggle]="false">
+  <div display-alert>
+    <ng-container *ngIf="errorOrganization">Organization ID: {{organization.orgKey}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
+  </div>
+  
+  <div display-title>
+    <div class="clearfix">
+      <div class="logo-section">
+        <!-- Logo -->
+        <img *ngIf="organization && logoUrl && !errorLogo" class="sidenav-logo" [src]="logoUrl" alt="HTML5 Icon">
+        <img *ngIf="organization && (errorOrganization || errorLogo || logoUrl===null)" src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+      </div>
+      <div class="intro-section" *ngIf="organization" >
+        <h1>{{organization.agencyName || organization.name || organization.orgKey}}</h1>
+
+        <section>
+          <strong>{{(organization | organizationTypeCode).label}}</strong> {{(organization | organizationTypeCode).value}}
+          <span class="divider">&nbsp;|&nbsp;</span>
+
+          <span class="inactive" *ngIf="isModActive() == false">
+            <i class="fa fa-circle-thin" aria-hidden="true"></i>
+            <em>Status Inactive</em>
+          </span>
+
+          <span class="active" *ngIf="isModActive() == true">
+            <i class="fa fa-circle" aria-hidden="true"></i>
+            <em>Status Active</em>
+          </span>
+        </section>
+
+        <!-- Description -->
+        <section *ngIf="organization.summary">
+          <p id="orgDescription" [innerHTML]="organization.summary"></p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div display-content>
+    <!-- Sub-Tier Agencies -->
+    <ng-container *ngIf="organization">
+      <section id="organization-sub-hierarchy" *ngIf="organization.hierarchy.length>0">
+        <div class="usa-grid-full m_T-6x">
+          <div class="usa-width-two-thirds"[ngSwitch]="organization.type">
+            <ng-container *ngSwitchCase="'DEPARTMENT'"><h2>Sub-Tier Agencies</h2></ng-container>
+            <ng-container *ngSwitchCase="'AGENCY'"><h2>Offices</h2></ng-container>
+          </div>
+          <div class="usa-width-one-third">
+            <p class="m_T-2x" style="text-align: right;">
+              <strong>{{min +1}} - {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}}</strong>
+              of <strong>{{organization.hierarchy.length}}</strong>
+            </p>
+          </div>
+        </div>
+        <ul class="usa-zebra-list">
+          <li *ngFor = "let element of organizationPerPage">
+            <a [routerLink]="['/organization', element.orgId]">{{ element.name }} </a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- No Sub-Tier Agencies found -->
+      <section [ngSwitch]="organization.type" *ngIf="organization.hierarchy.length==0 && organization.type != 'OFFICE'">
+        <ng-container *ngSwitchCase="'DEPARTMENT'"><h2>Sub-Tier Agencies</h2></ng-container>
+        <ng-container *ngSwitchCase="'AGENCY'"><h2>Offices</h2></ng-container>
+        <p class="inactive">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          &nbsp;
+          <ng-container *ngSwitchCase="'DEPARTMENT'"><em>No Sub-Tier Agencies Found.</em></ng-container>
+          <ng-container *ngSwitchCase="'AGENCY'"><em>No Offices Agencies Found.</em></ng-container>
+        </p>
+      </section>
+      <samPagination *ngIf = "organization.type != 'OFFICE'" (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></samPagination>
+    </ng-container>
+  </div>
+</display-page>

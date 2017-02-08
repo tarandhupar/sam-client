@@ -14,7 +14,7 @@ export class LoginComponent {
 
   private store = {
     redirect: {
-      route: '/profile/details',
+      route: '/',
       params: {}
     }
   };

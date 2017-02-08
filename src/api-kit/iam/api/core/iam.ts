@@ -651,9 +651,13 @@ class IAM {
     return utils.getEnvironment();
   }
 
-  logout() {
+  logout(refresh) {
+    refresh = refresh || true;
     this.removeSession();
-    window.location.reload(true);
+
+    if(refresh) {
+      window.location.reload(true);
+    }
   }
 }
 

@@ -26,7 +26,7 @@ const MY_VALUE_ACCESSOR: any = {
   selector: 'samSelect',
   template: `
       <labelWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage" [required]="required">
-        <select [attr.id]="name" [ngModel]="model" (change)="onSelectChange(select.value)" (blur)="onBlur()" #select [disabled]="disabled">
+        <select title="filter options" [attr.id]="name" [ngModel]="model" (change)="onSelectChange(select.value)" (blur)="onBlur()" #select [disabled]="disabled">
           <option *ngFor="let option of options" [value]="option.value" [disabled]="option.disabled">{{option.label}}</option>
         </select>
       </labelWrapper>
@@ -48,6 +48,9 @@ export class SamSelectComponent implements ControlValueAccessor {
 
   @ViewChild(LabelWrapper)
   public wrapper: LabelWrapper;
+  
+  @ViewChild("select")
+  public select: any;
 
   ngOnInit() {
     if (!this.name) {

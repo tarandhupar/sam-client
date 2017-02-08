@@ -48,12 +48,15 @@ describe('FinancialObligationChart Create Visualization', () => {
     };
 
     let mockFinancialData = [{
-      'values': {
-        '2013': {'actual': 14853701},
-        '2014': {'estimate': 16305218},
-        '2015': {'estimate': 21300000}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2013, 'actual': 14853701 },
+        { 'year': 2014, 'estimate': 16305218 },
+        { 'year': 2015, 'estimate': 21300000 }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
       'additionalInfo': {},
       'assistanceType': '0003003'
     }];
@@ -135,12 +138,15 @@ describe('FinancialObligationChart Prepare Visualization', () => {
    */
   it('Should prepare basic data', () => {
     let mockFinancialData = [{
-      'values': {
-        '2013': {'actual': 14853701},
-        '2014': {'estimate': 16305218},
-        '2015': {'estimate': 21300000}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2013, 'actual': 14853701 },
+        { 'year': 2014, 'estimate': 16305218 },
+        { 'year': 2015, 'estimate': 21300000 }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
       'additionalInfo': {},
       'assistanceType': '0001001'
     }];
@@ -174,24 +180,30 @@ describe('FinancialObligationChart Prepare Visualization', () => {
    * Condition: False if data is from previous FY AND nsi and ena are False, otherwise True
    */
   it('Should set flags correctly', () => {
+
     let mockFinancialData = [{
-      'values': {
-        '2016': {'flag': 'na'},
-        '2017': {'flag': 'na'},
-        '2018': {'flag': 'yes', 'estimate': 1000}
-      },
-      'questions': {
-        'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}
-      },
+      'values': [
+        { 'year': 2016, 'flag': 'na' },
+        { 'year': 2017, 'flag': 'na' },
+        { 'year': 2018, 'flag': 'yes', 'estimate': 1000 }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
       'additionalInfo': {},
       'assistanceType': '0001001'
     }, {
-      'values': {
-        '2016': {'flag': 'yes', 'actual': 6000},
-        '2017': {'flag': 'no'},
-        '2018': {'flag': 'yes', 'estimate': 4000}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2016, 'flag': 'yes', 'actual': 6000 },
+        { 'year': 2017, 'flag': 'no' },
+        { 'year': 2018, 'flag': 'yes', 'estimate': 4000 }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
+      'additionalInfo': {},
       'assistanceType': '0001001'
     }];
 
@@ -258,28 +270,39 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
     };
 
     let mockFinancialData = [{
-      'values': {
-        '2016': {'estimate': 22},
-        '2017': {'estimate': 12}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2016, 'estimate': 22 },
+        { 'year': 2017, 'estimate': 12 },
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
       'additionalInfo': {},
       'assistanceType': '0003003'
     }, {
-      'values': {
-        '2016': {'flag': 'yes', 'actual': 20},
-        '2017': {'flag': 'yes', 'estimate': 40},
-        '2018': {'flag': 'yes', 'estimate': 62}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2016, 'flag': 'yes', 'actual': 20 },
+        { 'year': 2017, 'flag': 'yes', 'estimate': 40 },
+        { 'year': 2018, 'flag': 'yes', 'estimate': 62 }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
+      'additionalInfo': {},
       'assistanceType': '0003003'
     }, {
-      'values': {
-        '2016': {'flag': 'yes', 'actual': 0},
-        '2017': {'flag': 'yes', 'estimate': 20},
-        '2018': {'flag': 'yes', 'estimate': 25}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2016, 'flag': 'yes', 'actual': 0 },
+        { 'year': 2017, 'flag': 'yes', 'estimate': 20 },
+        { 'year': 2018, 'flag': 'yes', 'estimate': 25 }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
+      'additionalInfo': {},
       'assistanceType': '0001001'
     }];
 
@@ -336,8 +359,9 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
     expect(td.length).toBe(15);
 
     // Formula Grants Total
-    expect(td[13].innerHTML).toBe('$72');
-    expect(td[14].innerHTML).toBe('$87');
+    expect(td[9].innerHTML).toBe('$0');
+    expect(td[10].innerHTML).toBe('$20');
+    expect(td[11].innerHTML).toBe('$25');
   });
 
   /**
@@ -356,11 +380,9 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
     expect(td.length).toBe(15);
 
     // All Totals
-    /*
-    expect(td[17].innerHTML).toBe('$42'); // 22 + 20 + 0
-    expect(td[18].innerHTML).toBe('$72'); // 12 + 40 + 20
-    expect(td[19].innerHTML).toBe('$87'); // [null] + 62 + 25
-    */
+    expect(td[12].innerHTML).toBe('$42'); // 22 + 20 + 0
+    expect(td[13].innerHTML).toBe('$72'); // 12 + 40 + 20
+    expect(td[14].innerHTML).toBe('$87'); // [null] + 62 + 25
   });
 });
 
@@ -403,20 +425,28 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
    */
   it('Should display special case if consistent', () => {
     let mockFinancialData = [{
-      'values': {
-        '2016': {'flag': 'na'},
-        '2017': {'flag': 'no'},
-        '2018': {'flag': 'na'}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2016, 'flag': 'na' },
+        { 'year': 2017, 'flag': 'no' },
+        { 'year': 2018, 'flag': 'na' }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
+      'additionalInfo': {},
       'assistanceType': '0003003'
     }, {
-      'values': {
-        '2016': {'flag': 'na'},
-        '2017': {'flag': 'no'},
-        '2018': {'flag': 'na'}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2016, 'flag': 'na' },
+        { 'year': 2017, 'flag': 'no' },
+        { 'year': 2018, 'flag': 'na' }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
+      'additionalInfo': {},
       'assistanceType': '0003003'
     }];
 
@@ -435,29 +465,25 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
     let td = tbody.item(0).getElementsByTagName('td');
     expect(td.length).toBe(12);
 
-    /*
+
     let ana = 'Actual Not Available';
     let nsi = 'Not Separately Identifiable';
     let ena = 'Estimate Not Available';
 
     // Obligation 1
-    expect(td[4].innerHTML).toBe('');
-    expect(td[5].innerHTML).toBe(ana);
-    expect(td[6].innerHTML).toBe(nsi);
-    expect(td[7].innerHTML).toBe(ena);
+    expect(td[3].innerHTML).toBe(ana);
+    expect(td[4].innerHTML).toBe(nsi);
+    expect(td[5].innerHTML).toBe(ena);
 
     // Obligation 2
-    expect(td[8].innerHTML).toBe('');
-    expect(td[9].innerHTML).toBe(ana);
-    expect(td[10].innerHTML).toBe(nsi);
-    expect(td[11].innerHTML).toBe(ena);
+    expect(td[6].innerHTML).toBe(ana);
+    expect(td[7].innerHTML).toBe(nsi);
+    expect(td[8].innerHTML).toBe(ena);
 
     // Totals
-    expect(td[12].innerHTML).toContain('Totals');
-    expect(td[13].innerHTML).toBe(ana); // ana + ana = ana
-    expect(td[14].innerHTML).toBe(nsi); // nsi + nsi = nsi
-    expect(td[15].innerHTML).toBe(ena); // ena + ena = ena
-    */
+    expect(td[9].innerHTML).toBe(ana); // ana + ana = ana
+    expect(td[10].innerHTML).toBe(nsi); // nsi + nsi = nsi
+    expect(td[11].innerHTML).toBe(ena); // ena + ena = ena
   });
 
   /**
@@ -466,21 +492,30 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
    * then the total for that FY should show 'Not Available'.
    */
   it('Should display not available if inconsistent', () => {
+
     let mockFinancialData = [{
-      'values': {
-        '2017': {'flag': 'na'},
-        '2018': {'flag': 'no'},
-        '2019': {'flag': 'na'}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2017, 'flag': 'na' },
+        { 'year': 2018, 'flag': 'no' },
+        { 'year': 2019, 'flag': 'na' }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
+      'additionalInfo': {},
       'assistanceType': '0003003'
     }, {
-      'values': {
-        '2017': {'flag': 'no'},
-        '2018': {'flag': 'na'},
-        '2019': {'flag': 'no'}
-      },
-      'questions': {'recovery': {'flag': 'na'}, 'salary_or_expense': {'flag': 'na'}},
+      'values': [
+        { 'year': 2017, 'flag': 'no' },
+        { 'year': 2018, 'flag': 'na' },
+        { 'year': 2019, 'flag': 'no' }
+      ],
+      'questions': [
+        { 'questionCode': 'recovery', 'flag': 'na' },
+        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
+      ],
+      'additionalInfo': {},
       'assistanceType': '0003003'
     }];
 
@@ -499,29 +534,25 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
     let td = tbody.item(0).getElementsByTagName('td');
     expect(td.length).toBe(12);
 
-    /*
+
     let na = 'Not Available';
     let ana = 'Actual Not Available';
     let nsi = 'Not Separately Identifiable';
     let ena = 'Estimate Not Available';
 
     // Obligation 1
-    expect(td[4].innerHTML).toBe('');
-    expect(td[5].innerHTML).toBe(ana);
-    expect(td[6].innerHTML).toBe(nsi);
-    expect(td[7].innerHTML).toBe(ena);
+    expect(td[3].innerHTML).toBe(ana);
+    expect(td[4].innerHTML).toBe(nsi);
+    expect(td[5].innerHTML).toBe(ena);
 
     // Obligation 2
-    expect(td[8].innerHTML).toBe('');
-    expect(td[9].innerHTML).toBe(nsi);
-    expect(td[10].innerHTML).toBe(ena);
-    expect(td[11].innerHTML).toBe(nsi);
+    expect(td[6].innerHTML).toBe(nsi);
+    expect(td[7].innerHTML).toBe(ena);
+    expect(td[8].innerHTML).toBe(nsi);
 
     // Totals
-    expect(td[12].innerHTML).toContain('Totals');
-    expect(td[13].innerHTML).toBe(na); // ana + nsi = na
-    expect(td[14].innerHTML).toBe(na); // nsi + ena = na
-    expect(td[15].innerHTML).toBe(na); // ena + nsi = na
-    */
+    expect(td[9].innerHTML).toBe(na); // ana + nsi = na
+    expect(td[10].innerHTML).toBe(na); // nsi + ena = na
+    expect(td[11].innerHTML).toBe(na); // ena + nsi = na
   });
 });
