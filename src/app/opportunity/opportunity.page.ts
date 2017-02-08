@@ -69,6 +69,7 @@ export class OpportunityPage implements OnInit {
   opportunityLocation: any;
   opportunity: any;
   history: any;
+  processedHistory: any;
   organization: any;
   currentUrl: string;
   dictionary: any;
@@ -266,6 +267,7 @@ export class OpportunityPage implements OnInit {
       if(opAPI.opportunityId != '' && typeof opAPI.opportunityId !== 'undefined') {
         this.opportunityService.getOpportunityHistoryById(opAPI.opportunityId).subscribe(historyAPI => {
           this.history = historyAPI;
+          this.processedHistory = historyAPI;
         });
       }
     });

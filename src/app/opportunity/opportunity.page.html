@@ -489,7 +489,7 @@
           </div>
         </section>
 
-        <history [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History) && history" [data]="history"></history>
+        <history [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History) && history" [data]="processedHistory"></history>
 
       </samTab>
 
