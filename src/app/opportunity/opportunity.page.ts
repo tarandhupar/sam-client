@@ -314,7 +314,7 @@ export class OpportunityPage implements OnInit {
               case 'm': // Modification/Amendment/Cancel
                 return prefix;
 
-              // Unrecognized type
+              // Unrecognized type, show generic message
               default:
                 return prefix + ' Opportunity';
             }
