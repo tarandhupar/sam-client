@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { SearchPage }   from './search.page';
+import { SearchTemplateDemoPage }   from './search-template-demo/search-template-demo.page';
 import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
 import { FederalHierarchyResult } from '../organization/search-result/federal-hierarchy-result.component';
@@ -42,6 +43,7 @@ import { PipesModule } from '../app-pipes/app-pipes.module';
   ],
   declarations: [
     SearchPage,
+    SearchTemplateDemoPage,
     AssistanceListingResult,
     OpportunitiesResult,
     FederalHierarchyResult,

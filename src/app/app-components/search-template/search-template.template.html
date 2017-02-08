@@ -1,0 +1,11 @@
+<div class="usa-grid">
+	<aside *ngIf="showCustomSidebar" class="usa-width-one-fourth">
+		<ng-content select="[search-sidebar]"></ng-content>
+    &nbsp;
+	</aside>
+	<div [attr.class]="contentClass">
+		<ng-content select="[search-title]"></ng-content>
+		<ng-content select="[search-content]"></ng-content>
+    <ng-content select="[search-pagination-area]"></ng-content>
+	</div>
+</div>
