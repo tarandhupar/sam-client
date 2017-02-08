@@ -104,6 +104,8 @@ export class OpportunityPage implements OnInit {
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
+        console.log(tree);
+        console.log(router);
         if (tree.fragment) {
           const element = document.getElementById(tree.fragment);
           if (element) { element.scrollIntoView(); }
@@ -246,8 +248,8 @@ export class OpportunityPage implements OnInit {
         res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
       });
     }, err => {
-      console.log('Error loading attachments: ', err)
-        this.attachmentError = true;
+      console.log('Error loading attachments: ', err);
+      this.attachmentError = true;
     });
 
     return attachmentSubject;
@@ -267,12 +269,28 @@ export class OpportunityPage implements OnInit {
       if(opAPI.opportunityId != '' && typeof opAPI.opportunityId !== 'undefined') {
         this.opportunityService.getOpportunityHistoryById(opAPI.opportunityId).subscribe(historyAPI => {
           this.history = historyAPI;
-          this.processedHistory = historyAPI;
+          this.processedHistory = historyAPI.content.history.map(function(historyItem) {
+            let processedHistoryItem = {};
+            processedHistoryItem['id'] = historyItem.notice_id;
+            processedHistoryItem['title'] = ''; // todo
+            processedHistoryItem['description'] = ''; // not implemented yet
+            processedHistoryItem['date'] = historyItem.posted_date;
+            processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
+            processedHistoryItem['index'] = historyItem.index;
+            processedHistoryItem['isTagged'] = (historyItem.notice_id === opAPI.opportunityId);
+            return processedHistoryItem;
+          });
         });
       }
     });
   }
 
+//   cancel_notice :   "0"
+//   index:   "1"
+//   notice_id:   "6a3618f68f95542fa075fe97baab1fd4"
+//   parent_notice:   null
+//   posted_date:   "2012-04-13 19:07:05+00"
+//   procurement_type:   "p"
 
   // Sets the correct displayField flags for this opportunity type
   private setDisplayFields(combinedOpportunityAPI: Observable<any>) {
