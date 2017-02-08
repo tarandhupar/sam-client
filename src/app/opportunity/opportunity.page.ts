@@ -279,13 +279,15 @@ export class OpportunityPage implements OnInit {
           processedHistoryItem['id'] = historyItem.notice_id;
           processedHistoryItem['title'] = (function makeTitle(){
             let prefix = '';
-            if(historyItem.cancel_notice === '1') {
-              prefix += 'Canceled';
-            }
             if(historyItem.index === '1') {
               prefix += 'Original';
             } else {
               prefix += 'Updated';
+            }
+
+            // Canceled prefix takes precedence over all other prefixes
+            if(historyItem.cancel_notice === '1') {
+              prefix = 'Canceled';
             }
 
             let type = historyItem.procurement_type;
