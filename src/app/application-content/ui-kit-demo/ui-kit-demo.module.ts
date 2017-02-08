@@ -21,7 +21,7 @@ import { HelpModule } from "../../Help/help.module";
     SamAPIKitModule,
     AppComponentsModule,
     AlertsModule,
-    HelpModule
+    HelpModule,
   ],
   exports: [],
   declarations: [
