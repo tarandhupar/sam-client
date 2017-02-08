@@ -488,9 +488,12 @@
             </div>
           </div>
         </section>
-
-        <history [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History) && history" [data]="processedHistory"></history>
-
+        
+        <section [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History) && history">
+          <h2>History</h2>
+          <history [data]="processedHistory" [currentId]="opportunity.opportunityId"></history>
+        </section>
+      
       </samTab>
 
       <samTab *ngIf="relatedOpportunities" tabTitle="Award Notices" (tabSelected)="tabSelected($event)">
