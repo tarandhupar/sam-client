@@ -289,13 +289,17 @@ export class OpportunityPage implements OnInit {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
 
     opportunityAPI.subscribe(api => {
-      this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
-      this.fhService.getOrganizationLogo(organizationSubject,
-        (logoUrl) => {
-          this.logoUrl = logoUrl;
-        }, (err) => {
-          this.errorLogo = true;
-      });
+      if(api.data.organizationId != null) {
+        this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
+        this.fhService.getOrganizationLogo(organizationSubject,
+          (logoUrl) => {
+            this.logoUrl = logoUrl;
+          }, (err) => {
+            this.errorLogo = true;
+          });
+      } else {
+        this.errorOrganization = true;
+      }
     });
 
     organizationSubject.subscribe(organization => { // do something with the organization api
@@ -365,7 +369,7 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.SpecialLegislation] = false;
         // These types are a superset of j, using case fallthrough
         case 'p': // Presolicitation
-        case 'm': // Modification/Amendment/Cancel
+        case 'k': // Combined Synopsis/Solicitation
         case 'r': // Sources Sought
         case 's': // Special Notice
           this.displayField[OpportunityFields.Award] = false;
@@ -399,7 +403,7 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
           break;
 
-        case 'k': //Todo: Combined Synopsis/Solicitation
+        case 'm': // Todo: Modification/Amendment/Cancel
           this.displayField[OpportunityFields.Award] = false;
           break;
 
