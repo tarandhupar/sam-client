@@ -68,6 +68,7 @@ export class OpportunityPage implements OnInit {
   public opportunityFields = OpportunityFields; // expose the OpportunityFields enum for use in html template
   public displayField = {}; // object containing boolean flags for whether fields should be displayed
 
+  alert: any = [];
   originalOpportunity: any;
   opportunityLocation: any;
   opportunity: any;
@@ -141,7 +142,7 @@ export class OpportunityPage implements OnInit {
     this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.loadHistory(opportunityAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
-    
+
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
     let parentAndOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
@@ -379,7 +380,7 @@ export class OpportunityPage implements OnInit {
         })[0].procurement_type); // filter through history to find original opportunity, and save its type label
 
         // process history into a form usable by history component
-        this.processedHistory = historyAPI.content.history.map(function(historyItem) {
+        this.processedHistory = historyAPI.content.history.map(historyItem => {
           let processedHistoryItem = {};
           processedHistoryItem['id'] = historyItem.notice_id;
           processedHistoryItem['title'] = (function makeTitle(){
@@ -427,8 +428,29 @@ export class OpportunityPage implements OnInit {
           processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
           processedHistoryItem['index'] = historyItem.index;
           processedHistoryItem['isTagged'] = false; // todo: decide on logic for which opportunities are tagged
+          processedHistoryItem['authoritative'] = historyItem.authoritative;
+
           return processedHistoryItem;
         });
+
+        // Alert if not latest version
+        let tagged = _.filter(this.processedHistory, historyItem => {
+          return historyItem.isTagged;
+        })[0];
+
+        let authoritative = _.filter(this.processedHistory, historyItem => {
+          return historyItem.authoritative === '1';
+        })[0];
+
+        if(tagged.id !== authoritative.id) {
+          this.alert.push({
+            config: {
+              type: 'info',
+              title: 'Not Latest Version',
+              description: 'Note: There have been updates to this opportunity. To view the most recent update/amendment, click <a href="' + authoritative.url + '">here</a>'
+            }
+          });
+        }
       });
     });
   }
