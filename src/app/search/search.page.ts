@@ -25,6 +25,7 @@ export class SearchPage implements OnInit{
 	oldKeyword: string = "";
 	initLoad = true;
 	showOptional:any = (SHOW_OPTIONAL=="true");
+  qParams:any = {};
 
 	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
@@ -144,6 +145,9 @@ export class SearchPage implements OnInit{
         console.error("Error!!", error);
       }
     );
+    //construct qParams to pass parameters to object view pages
+    this.qParams['keyword'] = this.keyword;
+    this.qParams['index'] = this.index;
 	}
 
 	pageChange(pagenumber){
