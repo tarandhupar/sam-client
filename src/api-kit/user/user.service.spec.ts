@@ -29,7 +29,7 @@ describe('UserService', () => {
       expect(connection.request.method).toBe(RequestMethod.Get);
       expect(connection.request.url).toMatch(/access/);
     });
-    service.getAccess(1);
+    service.getAccess("bob@gmail.com");
   })));
 
 });

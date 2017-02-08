@@ -10,7 +10,7 @@ export class UserService {
 
   }
 
-  getAccess(userId: number): Observable<UserAccess> {
+  getAccess(userId: string): Observable<UserAccess> {
     let apiOptions: any = {
       name: 'access',
       suffix: '/' + userId,
