@@ -49,7 +49,7 @@
         </div>
         <ul class="usa-zebra-list">
           <li *ngFor = "let element of organizationPerPage">
-            <a [routerLink]="['/organization', element.orgId]">{{ element.name }} </a>
+            <a [routerLink]="['/organization', element.orgId]" [queryParams]="qParams">{{ element.name }} </a>
           </li>
         </ul>
       </section>

@@ -195,7 +195,7 @@ describe('OrganizationPage', () => {
           deps: [MockBackend, BaseRequestOptions],
         },
         { provide: Location, useClass: Location },
-        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '100035122' }]) } },
+        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '100035122' }]), 'queryParams': Observable.from([{}]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: FHService, useValue: MockFHService }
 
