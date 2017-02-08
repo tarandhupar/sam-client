@@ -9,4 +9,5 @@ COPY . /usr/src/app/
 RUN npm install
 
 EXPOSE 8080
+CMD git submodule update --recursive --remote
 CMD npm run prod
