@@ -12,7 +12,7 @@ import { ReplaySubject, Observable } from 'rxjs';
       <div class="card">
         <div class="card-header-secure">
           <h3>
-            <a [routerLink]="['/organization', data._id]">{{ data.name }}</a>
+            <a [routerLink]="['/organization', data._id]" [queryParams]="qParams">{{ data.name }}</a>
           </h3>
           <ng-container *ngIf="data.alternativeNames && data.alternativeNames !== null">
               Also known as <strong><em>{{ data.alternativeNames }}</em></strong>
@@ -52,6 +52,7 @@ import { ReplaySubject, Observable } from 'rxjs';
 })
 export class FHFeaturedResult implements OnInit {
   @Input() data: any={};
+  @Input() qParams:any = {};
   logoUrl: string;
   errorOrganization: any;
   constructor(private fhService: FHService) { }
