@@ -7,7 +7,8 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 import { OpportunityFields } from "./opportunity.fields";
 import { trigger, state, style, transition, animate } from '@angular/core';
 import * as _ from 'lodash';
-import {OpportunityTypeLabelPipe} from "./pipes/opportunity-type-label.pipe";
+import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
+import { DateFormatPipe } from "../app-pipes/date-format.pipe";
 
 @Component({
   moduleId: __filename,
@@ -273,6 +274,9 @@ export class OpportunityPage implements OnInit {
       this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historyAPI => {
         this.history = historyAPI; // save original history information in case it is needed
 
+        let typeLabel = new OpportunityTypeLabelPipe();
+        let dateFormat = new DateFormatPipe();
+
         // process history into a form usable by history component
         this.processedHistory = historyAPI.content.history.map(function(historyItem) {
           let processedHistoryItem = {};
@@ -291,7 +295,7 @@ export class OpportunityPage implements OnInit {
             }
 
             let type = historyItem.procurement_type;
-            let title = new OpportunityTypeLabelPipe().transform(type);
+            let title = typeLabel.transform(type);
 
             switch(type) {
                 // For these types, show title as prefix and opportunity type
@@ -320,7 +324,7 @@ export class OpportunityPage implements OnInit {
             }
           })();
           processedHistoryItem['description'] = ''; // not implemented yet
-          processedHistoryItem['date'] = historyItem.posted_date;
+          processedHistoryItem['date'] = dateFormat.transform(historyItem.posted_date, 'MMM DD, YYYY h:mma Z');
           processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
           processedHistoryItem['index'] = historyItem.index;
           processedHistoryItem['isTagged'] = (historyItem.notice_id === opportunityAPI.opportunityId);
