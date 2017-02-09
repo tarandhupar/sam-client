@@ -15,10 +15,10 @@ export interface UserAccess {
 
 export interface UserRole {
   "role"?: number, //1,
-  "roleData"?: UserDomain[]
+  "roleData"?: UserDomainOrg[]
 }
 
-export interface UserDomain {
+export interface UserDomainOrg {
   "organizationContent"?: UserOrganization
   "domain"?: number,
   "email"?: string,

@@ -1,4 +1,4 @@
-import { UserAccess, UserDomain, UserRole, UserOrganization, UserFunction } from "../../api-kit/user/user.interface";
+import { UserAccess, UserDomainOrg, UserRole, UserOrganization, UserFunction } from "../../api-kit/user/user.interface";
 import * as _ from 'lodash';
 
 export class UserAccessModel {
