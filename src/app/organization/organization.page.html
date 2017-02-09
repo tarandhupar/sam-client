@@ -11,7 +11,7 @@
         <h1>{{organization.agencyName || organization.name || organization.orgKey}}</h1>
 
         <section>
-          <strong>{{(organization | organizationTypeCode).label}}</strong> {{(organization | organizationTypeCode).value}}
+          <strong>{{(organization | organizationTypeCode).label}}</strong>
           <span class="divider">&nbsp;|&nbsp;</span>
 
           <span class="inactive" *ngIf="isModActive() == false">
@@ -23,6 +23,12 @@
             <i class="fa fa-circle" aria-hidden="true"></i>
             <em>Status Active</em>
           </span>
+        </section>
+
+        <section>
+          <div *ngFor="let org of hierarchy">
+            <strong>{{org.type}}: </strong> <a [routerLink]="['/organization', org.orgKey]" [queryParams]="qParams"> {{org.name}} </a>
+          </div>
         </section>
 
         <!-- Description -->
