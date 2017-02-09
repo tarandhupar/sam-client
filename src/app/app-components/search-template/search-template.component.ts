@@ -2,20 +2,31 @@ import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, Even
 import { Router,NavigationExtras,NavigationEnd } from '@angular/router';
 /**
 * SearchTemplateComponent - template component for generating a search page
-*
-* @Input sidenavConfig: any - configuration for generating a sidenav
-* @Input sidebarToggle: boolean - toggles the sidenav in the layout, defaults to true
 */
 @Component({
 	selector: 'search-template',
 	templateUrl:'search-template.template.html'
 })
 export class SearchTemplateComponent implements OnInit {
-  @Input() sidenavConfig: any;
-  @Input() sidebarToggle = true;
+  @Input() totalPages: number;
+	@Input() currentPage: number;
+  @Input() totalElements: number;
+	@Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
   contentClass = "usa-width-three-fourths";
 	showCustomSidebar = true;
 	showGeneratedSidebar = false;
+	displayNumber = 10;
+	sortConfig = {
+    options: [
+      {value:'', label: 'Relevant', name: 'relevant'},
+      {value: 'latest', label: 'Latest', name: 'latest'},
+      {value: 'oldest', label: 'Oldest', name: 'oldest'}
+    ],
+    disabled: false,
+    label: 'Sort',
+    name: 'sort'
+  };
+	sortModel = "";
 
   constructor(private router: Router){
 		//needed for fragment navigations
@@ -29,7 +40,9 @@ export class SearchTemplateComponent implements OnInit {
 			}
 		});
 	}
-
+	pageChangeHandler(event){
+		this.pageChange.emit(event);
+	}
   ngOnInit(){
   	if(!this.sidebarToggle){
   		this.contentClass = "usa-width-one-whole";

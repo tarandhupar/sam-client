@@ -1,4 +1,4 @@
-<search-template>
+<search-template [attr.class]="'search-page'" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages" [totalElements]="totalCount">
 	<div search-sidebar>
 		<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
 	</div>
@@ -7,9 +7,10 @@
 			<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
 		</div>
 	</div>
-	<div search-content>
+	<div search-featured-result>
 		<fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
-    <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
+	</div>
+	<div search-content>
 		<div *ngFor="let row of data.results">
 			<opportunities-result *ngIf="row._type=='OPP'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
       <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
@@ -24,10 +25,5 @@
       <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
       <div style="height:300px;"></div>
     </div>
-	</div>
-	<div search-pagination-area>
-		<div *ngIf="data.results">
-      <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
-	  </div>
 	</div>
 </search-template>
