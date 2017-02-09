@@ -11,7 +11,7 @@ import * as moment from 'moment/moment';
       <span *ngIf="data.isActive==false" class="usa-label">ARCHIVED</span>
     </p>
     <h3 class="opportunity-title">
-      <a [routerLink]="['/opportunities', data._id]">{{ data.title }}</a>
+      <a [routerLink]="['/opportunities', data._id]" [queryParams]="qParams">{{ data.title }}</a>
     </h3>
     <div class="usa-width-two-thirds">
       <p class="m_T-2x" *ngIf="data.description!=null && data.description.length>150">
@@ -52,6 +52,7 @@ import * as moment from 'moment/moment';
 })
 export class OpportunitiesResult implements OnInit{
   @Input() data: any;
+  @Input() qParams:any = {};
   constructor() {}
 
   ngOnInit(){

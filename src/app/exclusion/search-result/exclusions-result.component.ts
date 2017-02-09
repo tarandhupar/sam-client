@@ -11,7 +11,7 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive<0" class="usa-label">INACTIVE</span>
     	</p>
     	<h3 class="exclusion-title">
-    	<a *ngIf="data.isActive>=0" [routerLink]="['/exclusions', data.samNumber]">{{ data.name }}</a>
+    	<a *ngIf="data.isActive>=0" [routerLink]="['/exclusions', data.samNumber]" [queryParams]="qParams">{{ data.name }}</a>
       	<span *ngIf="data.isActive<0">{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
@@ -44,6 +44,7 @@ import * as moment from 'moment/moment';
 })
 export class ExclusionsResult implements OnInit {
   @Input() data: any={};
+  @Input() qParams:any = {};
   constructor() { }
 
   ngOnInit(){

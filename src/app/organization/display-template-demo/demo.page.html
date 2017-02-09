@@ -1,6 +1,9 @@
-<div class="usa-grid" id="organization-page">
-  <div class="usa-width-one-whole">
-    <ng-container *ngIf="errorOrganization">Organization ID: {{errorOrgId}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
+<display-page [attr.id]="'organization-page'" [attr.class]="'usa-grid'" [sidebarToggle]="false">
+  <div display-alert>
+    <ng-container *ngIf="errorOrganization">Organization ID: {{organization.orgKey}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
+  </div>
+  
+  <div display-title>
     <div class="clearfix">
       <div class="logo-section">
         <!-- Logo -->
@@ -31,7 +34,9 @@
         </section>
       </div>
     </div>
+  </div>
 
+  <div display-content>
     <!-- Sub-Tier Agencies -->
     <ng-container *ngIf="organization">
       <section id="organization-sub-hierarchy" *ngIf="organization.hierarchy.length>0">
@@ -49,7 +54,7 @@
         </div>
         <ul class="usa-zebra-list">
           <li *ngFor = "let element of organizationPerPage">
-            <a [routerLink]="['/organization', element.orgId]" [queryParams]="qParams">{{ element.name }} </a>
+            <a [routerLink]="['/organization', element.orgId]">{{ element.name }} </a>
           </li>
         </ul>
       </section>
@@ -68,4 +73,4 @@
       <samPagination *ngIf = "organization.type != 'OFFICE'" (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></samPagination>
     </ng-container>
   </div>
-</div>
+</display-page>

@@ -4,17 +4,18 @@ import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { FHService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
-import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
+import { CapitalizePipe } from "../../app-pipes/capitalize.pipe";
 import * as _ from 'lodash';
+
 
 @Component({
   moduleId: __filename,
-  templateUrl: 'organization.page.html',
+  templateUrl: 'demo.page.html',
   providers: [
     FHService
   ]
 })
-export class OrganizationPage implements OnInit, OnDestroy {
+export class OrganizationDisplayPageDemoPage implements OnInit, OnDestroy {
   subscription: Subscription;
   currentUrl: string;
   organization: any;
@@ -27,8 +28,6 @@ export class OrganizationPage implements OnInit, OnDestroy {
   private totalPages: any = 0;
   private showPerPage = 10;
   public logoUrl: string;
-  errorOrgId: string;
-  qParams: any = {};
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -48,11 +47,6 @@ export class OrganizationPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.activatedRoute.queryParams.subscribe(data => {
-      this.qParams['keyword'] = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
-      this.qParams['index'] = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
-      this.pageNum = typeof data['page'] === "string" ? parseInt(data['page']) : this.pageNum;
-    });
     this.currentUrl = this.location.path();
     this.loadOrganization();
 
@@ -61,10 +55,8 @@ export class OrganizationPage implements OnInit, OnDestroy {
   private loadOrganization() {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.activatedRoute.params.switchMap(params => { // construct a stream of api data
-      this.errorOrgId = params['id'];
-      return this.fhService.getOrganizationById(params['id'], true);
+      return this.fhService.getOrganizationById("100044959", true);
     });
-
     apiStream.subscribe(apiSubject);
 
     this.subscription = apiSubject.subscribe(api => { // run whenever api data is updated
@@ -77,7 +69,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
       this.errorOrganization = true;
     });
 
-    this.fhService.getOrganizationLogo(apiSubject,
+    this.fhService.getOrganizationLogo(apiSubject, 
       (logoUrl) => {
         this.logoUrl = logoUrl;
       }, (err) => {
@@ -106,9 +98,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
     this.pageNum = pagenumber;
     this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
     let navigationExtras: NavigationExtras = {
-      queryParams: {keyword: this.qParams['keyword'],
-                    index: this.qParams['index'],
-                    page: this.pageNum},
+      queryParams: {page: this.pageNum},
       fragment: 'organization-sub-hierarchy'
     };
     this.router.navigate(['/organization',this.organization.orgKey],navigationExtras);

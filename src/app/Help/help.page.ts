@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { globals } from '../../app/globals.ts';
 
 @Component({
   providers: [ ],
@@ -62,6 +63,10 @@ export class HelpPage {
 
   isCurrentSubSection(value){
     return this.currentSubSection === value;
+  }
+
+  private linkToggle():boolean{
+    return globals.showOptional;
   }
 
 }

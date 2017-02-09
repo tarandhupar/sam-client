@@ -7,12 +7,15 @@ import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { SamUIKitModule } from 'ui-kit';
 import { PipesModule } from "../app-pipes/app-pipes.module";
+import { ProgramDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
+import { AppComponentsModule } from "../app-components/app-components.module";
 
 @NgModule({
   imports: [
     PipesModule,
     BrowserModule,
     SamUIKitModule,
+    AppComponentsModule,
     routing
   ],
   exports: [
@@ -24,6 +27,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
   declarations: [
     AuthorizationPipe,
     ProgramPage,
+    ProgramDisplayPageDemoPage,
     FinancialObligationChart,
     HistoricalIndexLabelPipe,
   ],
