@@ -13,3 +13,4 @@ export { SuggestionsService } from './search/suggestions.service';
 export { SamAPIKitModule } from './api-kit.module';
 export { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
 export { UserDirService } from './user-directory/user-directory.service';
+export { WageDeterminationService } from './wage-determination/wage-determination.service';

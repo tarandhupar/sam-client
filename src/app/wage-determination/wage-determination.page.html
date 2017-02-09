@@ -1,0 +1,24 @@
+<div class="usa-grid" id="wage-determination-page">
+  <div class="usa-width-one-whole">
+    <ng-container *ngIf = "wageDetermination">
+        <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+      <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+      <strong>State/States: </strong>
+      <ng-container *ngFor = "let element of wageDetermination?.location?.state">
+        {{element}}
+      </ng-container>
+      <strong>County/ties: </strong>
+      <ng-container *ngFor = "let element of wageDetermination?.location?.counties">
+        {{element}}
+      </ng-container>
+      <strong>Revision: </strong>
+      {{wageDetermination.revisionNumber}}
+      <strong>Services: </strong>
+      <ng-container *ngFor = "let element of wageDetermination?.services">
+        {{element}}
+      </ng-container>
+      <strong>Published Date: </strong>
+      {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
+    </ng-container>
+  </div>
+</div>
