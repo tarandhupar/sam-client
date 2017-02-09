@@ -325,7 +325,7 @@ export class OpportunityPage implements OnInit {
             }
           })();
           processedHistoryItem['description'] = ''; // not implemented yet
-          processedHistoryItem['date'] = dateFormat.transform(historyItem.posted_date, 'MMM DD, YYYY h:mma Z');
+          processedHistoryItem['date'] = dateFormat.transform(historyItem.posted_date, 'MMM DD, YYYY h:mma');
           processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
           processedHistoryItem['index'] = historyItem.index;
           processedHistoryItem['isTagged'] = false; // todo: decide on logic for which opportunities are tagged
