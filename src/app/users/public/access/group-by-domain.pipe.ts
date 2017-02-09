@@ -8,7 +8,7 @@ export class GroupByDomainPipe implements PipeTransform {
       const domainId = orgDomainEmail.domain;
       if (!domains.has(domainId)) {
         let newDomain = {
-          domain: { id: domainId },
+          id: domainId,
           organizations: [ orgDomainEmail.organizationContent ]
         };
         domains.set(domainId, newDomain);

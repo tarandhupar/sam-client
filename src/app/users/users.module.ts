@@ -13,6 +13,7 @@ import { UserAccessPage } from "./public/access/access.page";
 import { UserViewComponent } from "./public/public.component";
 import { UserMigrationsPage } from "./public/migrations/migrations.page";
 import { UserProfilePage } from "./public/profile/profile.page";
+import { GroupByDomainPipe } from "./public/access/group-by-domain.pipe";
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { UserProfilePage } from "./public/profile/profile.page";
     UserAccessPage,
     UserProfilePage,
     UserDirectoryPage,
-    ParentOrgsComponent
+    ParentOrgsComponent,
+    GroupByDomainPipe,
   ],
   providers: [],
 })

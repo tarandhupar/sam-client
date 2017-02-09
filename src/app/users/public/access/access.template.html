@@ -1,8 +1,34 @@
 <h1>Access</h1>
 <br>
-<samMultiSelectDropdown [options]="filters.organizations.options"></samMultiSelectDropdown>
-<samMultiSelectDropdown [options]="filters.roles.options"></samMultiSelectDropdown>
-<samMultiSelectDropdown [options]="filters.domains.options"></samMultiSelectDropdown>
-<samMultiSelectDropdown [options]="filters.objects.options"></samMultiSelectDropdown>
-<samMultiSelectDropdown [options]="filters.permissions.options"></samMultiSelectDropdown>
+<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [(model)]="filters.organizations.value"></samMultiSelectDropdown>
+<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [(model)]="filters.roles.value"></samMultiSelectDropdown>
+<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [(model)]="filters.domains.value"></samMultiSelectDropdown>
+<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [(model)]="filters.objects.value"></samMultiSelectDropdown>
+<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [(model)]="filters.permissions.value"></samMultiSelectDropdown>
 
+<ul *ngIf="userAccessModel">
+  There is user
+  <li *ngFor="let role of userAccessModel.raw().roleMapContent">
+    Role id: {{role.role}}
+    <ul>
+      <li *ngFor="let domain of role.roleData | groupByDomain">
+        Domain id: {{domain.id}}
+        <ul>
+          <li *ngFor="let org of domain.organizations">
+            Org id: {{org.orgKey}}
+            <ul>
+              <li *ngFor="let func of org.FunctionContent">
+                Function Id: {{func.function}}
+                <ul>
+                  <li *ngFor="let perm of func.permission">
+                    Permission Id: {{perm}}
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
