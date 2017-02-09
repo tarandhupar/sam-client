@@ -191,19 +191,23 @@ export class OpportunityPage implements OnInit {
     return opportunitySubject;
   }
   
-  private updateSideNav(content){
+  private updateSideNav(content?){
 
     let self = this;
     
-    // Items in first level (pages) have to have a unique name
-    let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
+    if(content){
+      // Items in first level (pages) have to have a unique name
+      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
+      // If page has a unique name added to the sidenav
+      if(repeatedItem === -1){
+        this.sidenavModel.children.push(content);
+      }
+    }
     
-    // If page has a unique name added to the sidenav
-    if(repeatedItem === -1){
-      
-      this.sidenavModel.children.push(content);
-      
-      let children = _.map(this.sidenavModel.children, function(possiblePage){
+    updateContent();
+    
+    function updateContent(){
+      let children = _.map(self.sidenavModel.children, function(possiblePage){
         let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
           if(self.shouldBeDisplayed(possibleSection.field)){
             possibleSection.route = "#" + self.generateID(possibleSection.field);
@@ -213,10 +217,8 @@ export class OpportunityPage implements OnInit {
         _.remove(possiblePagechildren, _.isUndefined);
         possiblePage.children = possiblePagechildren;
         return possiblePage;
-        
       });
-
-      this.sidenavModel.children = children;
+      self.sidenavModel.children = children;
     }
     
   }
@@ -356,7 +358,7 @@ export class OpportunityPage implements OnInit {
 
       this.displayField = {}; // for safety, clear any existing values
       
-      switch (opportunity.data.type) {
+      switch (opportunity.data.type) {  
         // Base opportunity types
         // These types are a superset of 'j', using case fallthrough
         case 'p': // Presolicitation
@@ -451,6 +453,8 @@ export class OpportunityPage implements OnInit {
       }
 
       this.ready = true;
+      
+      this.updateSideNav();
     });
   }
 
