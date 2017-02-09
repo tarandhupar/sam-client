@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService, UserAccessFilterOptions} from "api-kit/user/user.service";
 import { UserAccessModel } from "../../access.model";
+import {ActivatedRoute} from "@angular/router";
 
 
 @Component({
@@ -9,6 +10,7 @@ import { UserAccessModel } from "../../access.model";
 export class UserAccessPage implements OnInit {
 
   private userAccessModel: UserAccessModel;
+  private userName: string;
 
   private filters = {
     organizations: { label: 'Organizations', options: [ ], value: [] },
@@ -18,16 +20,22 @@ export class UserAccessPage implements OnInit {
     objects: { label: 'Objects', options: [ ], value: [] }
   };
 
-  constructor(private userService: UserService) { }
+  private orgData;
+
+  constructor(private userService: UserService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.userService.getAccess('00.T.BRENDAN.MCDONOUGH@GSA.GOV').subscribe(res => {
-      this.userAccessModel = UserAccessModel.FromResponse(res);
-      this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
-      this.filters.organizations.options = this.userAccessModel.allOrganizations().map(this.mapLabelAndName);
-      this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
-      this.filters.permissions.options = this.userAccessModel.allPermissions().map(this.mapLabelAndName);
-      this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
+    this.route.params.subscribe(params => {
+      console.log(params);
+      this.userName = params['id'];
+      this.userService.getAccess(this.userName).subscribe(res => {
+        this.userAccessModel = UserAccessModel.FromResponse(res);
+        this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
+        this.filters.organizations.options = this.userAccessModel.allOrganizations().map(this.mapLabelAndName);
+        this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
+        this.filters.permissions.options = this.userAccessModel.allPermissions().map(this.mapLabelAndName);
+        this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
+      });
     });
   }
 
@@ -53,5 +61,9 @@ export class UserAccessPage implements OnInit {
     this.userService.getAccess('00.T.BRENDAN.MCDONOUGH@GSA.GOV', filterOptions).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
     });
+  }
+
+  orgLevel(orgId) {
+    return "USA Department of Agriculture";
   }
 }

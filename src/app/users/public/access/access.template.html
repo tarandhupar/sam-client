@@ -4,31 +4,58 @@
 <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [(model)]="filters.roles.value"></samMultiSelectDropdown>
 <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [(model)]="filters.domains.value"></samMultiSelectDropdown>
 <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [(model)]="filters.objects.value"></samMultiSelectDropdown>
-<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [(model)]="filters.permissions.value"></samMultiSelectDropdown>
+<!--<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [(model)]="filters.permissions.value"></samMultiSelectDropdown>-->
 
-<ul *ngIf="userAccessModel">
-  There is user
-  <li *ngFor="let role of userAccessModel.raw().roleMapContent">
-    Role id: {{role.role}}
-    <ul>
-      <li *ngFor="let domain of role.roleData | groupByDomain">
-        Domain id: {{domain.id}}
-        <ul>
-          <li *ngFor="let org of domain.organizations">
-            Org id: {{org.orgKey}}
-            <ul>
-              <li *ngFor="let func of org.FunctionContent">
-                Function Id: {{func.function}}
-                <ul>
-                  <li *ngFor="let perm of func.permission">
-                    Permission Id: {{perm}}
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
+<ng-container *ngIf="userAccessModel">
+  <div *ngFor="let role of userAccessModel.raw().roleMapContent">
+    <h2>Role: {{role.role}}</h2>
+    <div *ngFor="let domain of role.roleData | groupByDomain">
+      <h3>Domain: {{domain.id}}</h3>
+      <div class="usa-grid-full permissions-table-header">
+        <div class="usa-width-one-sixth">Organization:</div>
+        <div class="usa-width-one-third">Org Level:</div>
+        <div class="usa-width-one-sixth">Object:</div>
+        <div class="usa-width-one-third">Permissions:</div>
+      </div>
+      <ng-container *ngFor="let org of domain.organizations">
+        <ng-container *ngFor="let func of org.FunctionContent; let firstFunction = first">
+          <div class="usa-grid-full permissions-table-row">
+            <div class="usa-width-one-sixth org-col">{{firstFunction ? org.orgKey : ''}}&nbsp;</div>
+            <div class="usa-width-one-third org-level-col">{{firstFunction ? orgLevel(org.id) : ''}}&nbsp;</div>
+            <div class="usa-width-one-sixth object-col">{{func.function}}</div>
+            <div class="usa-width-one-third permissions-col">
+              <span *ngFor="let perm of func.permission">{{perm}}&nbsp;</span>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</ng-container>
+
+<!--<ul *ngIf="userAccessModel">-->
+  <!--There is user-->
+  <!--<li *ngFor="let role of userAccessModel.raw().roleMapContent">-->
+    <!--Role id: {{role.role}}-->
+    <!--<ul>-->
+      <!--<li *ngFor="let domain of role.roleData | groupByDomain">-->
+        <!--Domain id: {{domain.id}}-->
+        <!--<ul>-->
+          <!--<li *ngFor="let org of domain.organizations">-->
+            <!--Org id: {{org.orgKey}}-->
+            <!--<ul>-->
+              <!--<li *ngFor="let func of org.FunctionContent">-->
+                <!--Function Id: {{func.function}}-->
+                <!--<ul>-->
+                  <!--<li *ngFor="let perm of func.permission">-->
+                    <!--Permission Id: {{perm}}-->
+                  <!--</li>-->
+                <!--</ul>-->
+              <!--</li>-->
+            <!--</ul>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</li>-->
+    <!--</ul>-->
+  <!--</li>-->
+<!--</ul>-->
