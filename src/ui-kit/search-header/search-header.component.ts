@@ -41,7 +41,6 @@ export class SamSearchHeaderComponent {
   constructor() { }
 
   ngOnInit(){
-
   }
 
   onSearchEvent($event) {

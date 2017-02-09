@@ -28,6 +28,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   private showPerPage = 10;
   public logoUrl: string;
   errorOrgId: string;
+  qParams: any = {};
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -47,6 +48,11 @@ export class OrganizationPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(data => {
+      this.qParams['keyword'] = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : "";
+      this.qParams['index'] = typeof data['index'] === "string" ? decodeURI(data['index']) : "";
+      this.pageNum = typeof data['page'] === "string" ? parseInt(data['page']) : this.pageNum;
+    });
     this.currentUrl = this.location.path();
     this.loadOrganization();
 
@@ -100,7 +106,9 @@ export class OrganizationPage implements OnInit, OnDestroy {
     this.pageNum = pagenumber;
     this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
     let navigationExtras: NavigationExtras = {
-      queryParams: {page: this.pageNum},
+      queryParams: {keyword: this.qParams['keyword'],
+                    index: this.qParams['index'],
+                    page: this.pageNum},
       fragment: 'organization-sub-hierarchy'
     };
     this.router.navigate(['/organization',this.organization.orgKey],navigationExtras);

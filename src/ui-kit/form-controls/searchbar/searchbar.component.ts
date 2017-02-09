@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, ViewChild, Renderer} from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewChild, Renderer, OnChanges} from '@angular/core';
 
 /**
  * The <samSearchbar> component(filter,input bar and search button) can automatically change it size according to the div the wrap it.
@@ -13,7 +13,7 @@ import {Component, Input, Output, EventEmitter, ViewChild, Renderer} from '@angu
   templateUrl: 'searchbar.template.html',
 
 })
-export class SamSearchbarComponent {
+export class SamSearchbarComponent implements OnChanges{
 
 
   @Input()
@@ -30,12 +30,12 @@ export class SamSearchbarComponent {
 
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
-  
+
   @ViewChild("filterSelect")
   public filterSelect: any;
 
   searchBtnText:string = "Search";
-  
+
   // Added "width" (in pixels) as a temporary solution to find width of selected text
   // Ideally select element width needs to be calculated automatically based on
   // character width of selected text;
@@ -64,7 +64,14 @@ export class SamSearchbarComponent {
     if(this.isSizeSmall()){
       this.searchBtnText = "";
     }
-    this.findSelectedOption('');
+  }
+
+  ngOnChanges(changes){
+    if(changes && changes.filterValue && changes.filterValue.currentValue){
+      this.findSelectedOption(changes.filterValue.currentValue);
+    }else{
+      this.findSelectedOption(this.filterValue);
+    }
   }
 
   // ngDoCheck(){
@@ -83,18 +90,17 @@ export class SamSearchbarComponent {
     this.filterValue = value;
     this.findSelectedOption(value);
   }
-  
-  // Makes "all" the default value for select
-  selectModel = ""; 
-  
+
   findSelectedOption(value): void {
     function getOption(option){
       return option.value === value;
     }
     let selectedOption = this.selectConfig.options.find(getOption);
-    this.adjustSelectWidth(selectedOption);
+    if(selectedOption) {
+      this.adjustSelectWidth(selectedOption);
+    }
   }
-  
+
   adjustSelectWidth(option): void{
     let containerWidthString = 'width:' + option.width + "px";
     let selectWidth = +option.width + 50;
