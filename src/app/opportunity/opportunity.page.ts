@@ -170,7 +170,7 @@ export class OpportunityPage implements OnInit {
             "field": this.opportunityFields.Classification,
           },
           {
-            "label": "Sypnosis/Description",
+            "label": "Synopsis/Description",
             "field": this.opportunityFields.Synopsis,
           },
           {
