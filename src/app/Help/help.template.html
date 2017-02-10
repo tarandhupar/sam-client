@@ -22,7 +22,7 @@
     <div sam-sticky limit=1200 container="help-content">
       <ul class="usa-sidenav-list">
         <li><a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/help/overview']">Help Center Home</a></li>
-        <li><a [ngClass]="getSectionClass('transition')" (click)="changeSection('transition')" [routerLink]="['/help/transition']">Modernization Roadmap</a></li>
+        <li><a [ngClass]="getSectionClass('transition')" (click)="changeSection('transition')" [routerLink]="['/help/transition']" *ngIf="linkToggle()">Modernization Roadmap</a></li>
         <li>
           <a [ngClass]="getSectionClass('about')" (click)="changeSection('about')" [routerLink]="['/help/about']">About SAM.gov</a>
           <ul class="usa-sidenav-sub_list"  *ngIf="isCurrentSection('about')">
@@ -30,7 +30,7 @@
           </ul>
         </li>
         <li>
-          <a [ngClass]="getSectionClass('new')" (click)="changeSection('new')" [routerLink]="['/help/new']">New to SAM.gov</a>
+          <a [ngClass]="getSectionClass('new')" (click)="changeSection('new')" [routerLink]="['/help/new']" *ngIf="linkToggle()">New to SAM.gov</a>
         </li>
         <li>
           <a [ngClass]="getSectionClass('accounts')" (click)="changeSection('accounts')" [routerLink]="['/help/accounts']">User Accounts</a>
@@ -40,7 +40,7 @@
           </ul>
         </li>
         <li>
-          <a [ngClass]="getSectionClass('features')" (click)="changeSection('features')" [routerLink]="['/help/features']">Features</a>
+          <a [ngClass]="getSectionClass('features')" (click)="changeSection('features')" [routerLink]="['/help/features']" *ngIf="linkToggle()">Features</a>
           <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('features')">
             <li><a #workspace [ngClass]="getSubSectionClass('workspace')" (click)="changeSubSection('workspace',workspace)" href="{{currentUrl}}#workspace">Workspace</a></li>
             <li><a #search [ngClass]="getSubSectionClass('search')" (click)="changeSubSection('search',search)" href="{{currentUrl}}#search">Search</a></li>
@@ -49,7 +49,7 @@
           </ul>
         </li>
         <li>
-          <a [ngClass]="getSectionClass('award')" (click)="changeSection('award')" [routerLink]="['/help/award']">Award Data</a>
+          <a [ngClass]="getSectionClass('award')" (click)="changeSection('award')" [routerLink]="['/help/award']" *ngIf="linkToggle()">Award Data</a>
           <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('award')">
             <li><a #opportunities [ngClass]="getSubSectionClass('opportunities')" (click)="changeSubSection('opportunities',opportunities)" href="{{currentUrl}}#opportunities">Opportunities</a></li>
             <li><a #awards [ngClass]="getSubSectionClass('awards')" (click)="changeSubSection('awards',awards)" href="{{currentUrl}}#awards">Awards</a></li>
@@ -61,7 +61,7 @@
           </ul>
         </li>
         <li>
-          <a [ngClass]="getSectionClass('policies')" (click)="changeSection('policies')" [routerLink]="['/help/policies']">Policies</a>
+          <a [ngClass]="getSectionClass('policies')" (click)="changeSection('policies')" [routerLink]="['/help/policies']" *ngIf="linkToggle()">Policies</a>
           <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('policies')">
             <li><a #accessibility [ngClass]="getSubSectionClass('accessibility')" (click)="changeSubSection('accessibility',accessibility)" href="{{currentUrl}}#accessibility">Accessibility</a></li>
             <li><a #legal [ngClass]="getSubSectionClass('legal')" (click)="changeSubSection('legal',legal)" href="{{currentUrl}}#legal">Legal</a></li>
