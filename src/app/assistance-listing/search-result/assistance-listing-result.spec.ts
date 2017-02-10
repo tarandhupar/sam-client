@@ -42,8 +42,4 @@ describe('AssistanceListingResultComponent', () => {
     expect(programNumberEl.nativeElement.textContent).toContain("12345");
   });
 
-  // it('should display have a FAL url', () => {
-  //   expect(comp.printFALLink()).toEqual("http://www.sam.gov");
-  // });
-
 });
