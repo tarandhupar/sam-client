@@ -1,2 +1,2 @@
-export { KBAComponent } from './kba'
-export { PasswordComponent } from './password';
+export { SamKBAComponent } from './kba'
+export { SamPasswordComponent } from './password';
