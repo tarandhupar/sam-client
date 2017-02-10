@@ -17,6 +17,7 @@ import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
 import { FixHTMLPipe } from "./pipes/fix-html.pipe";
 import {FilesizePipe} from "./pipes/filesize.pipe";
 import { SamUIKitModule } from 'ui-kit';
+import { HistoryComponent } from "../app-components/history/history.component";
 
 let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
@@ -339,7 +340,7 @@ let MockFHService = {
 describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe], // declare the test component
+      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe, HistoryComponent], // declare the test component
       imports: [
         PipesModule,
         HttpModule,
