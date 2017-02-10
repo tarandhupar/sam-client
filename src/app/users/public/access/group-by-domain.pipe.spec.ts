@@ -16,9 +16,9 @@ describe('GroupByDomainPipe', () => {
         "email":"brendan.mcdonough@gsa.gov"
       }
     ];
-    let newDat = pipe.transform(dat);
-    expect(newDat.length).toEqual(1);
-    expect(newDat[0].domain.id === 1);
+    let domains = pipe.transform(dat);
+    expect(domains.length).toEqual(1);
+    expect(domains[0].id === 1);
   });
 
   it('should not group together roleData items if all the domains are distinct', () => {

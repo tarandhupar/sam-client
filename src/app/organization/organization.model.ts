@@ -10,6 +10,7 @@ export class Organization {
     return this._raw && this._raw._embedded && this._raw._embedded[0];
   }
 
+  // Finds the organization object on the response.
   private org() {
     return this.firstResult() && this._raw._embedded[0].org;
   }
@@ -53,6 +54,14 @@ export class Organization {
       orgLevels.push({name: names[i], type: types[i], id: ids[i]});
     }
     return orgLevels;
+  }
+
+  get orgLevel() {
+    return this.org().type;
+  }
+
+  get id() {
+    return this.org().orgKey;
   }
 
   static FromResponse(res: any): Organization {

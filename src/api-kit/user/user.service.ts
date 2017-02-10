@@ -19,6 +19,9 @@ export class UserService {
   }
 
   getAccess(userId: string, filterOptions?: UserAccessFilterOptions): Observable<UserAccess> {
+    if (typeof userId === 'undefined') {
+      throw new Error('userId is required');
+    }
     let apiOptions: any = {
       name: 'access',
       suffix: '/' + userId + '/',

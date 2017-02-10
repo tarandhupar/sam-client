@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService, UserAccessFilterOptions} from "api-kit/user/user.service";
+import { UserService, UserAccessFilterOptions } from "api-kit/user/user.service";
 import { UserAccessModel } from "../../access.model";
-import {ActivatedRoute} from "@angular/router";
+import { ActivatedRoute} from "@angular/router";
+import { FHService } from "api-kit/fh/fh.service";
+import { Organization } from "../../../organization/organization.model";
+import { Observable } from "rxjs";
 
 
 @Component({
@@ -10,7 +13,6 @@ import {ActivatedRoute} from "@angular/router";
 export class UserAccessPage implements OnInit {
 
   private userAccessModel: UserAccessModel;
-  private userName: string;
 
   private filters = {
     organizations: { label: 'Organizations', options: [ ], value: [] },
@@ -20,22 +22,27 @@ export class UserAccessPage implements OnInit {
     objects: { label: 'Objects', options: [ ], value: [] }
   };
 
-  private orgData;
+  private userName: string;
+  private organizations: Organization[];
 
-  constructor(private userService: UserService, private route: ActivatedRoute) { }
+  constructor(
+    private userService: UserService,
+    private route: ActivatedRoute,
+    private fhService: FHService,
+  ) { }
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      console.log(params);
-      this.userName = params['id'];
-      this.userService.getAccess(this.userName).subscribe(res => {
-        this.userAccessModel = UserAccessModel.FromResponse(res);
-        this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
-        this.filters.organizations.options = this.userAccessModel.allOrganizations().map(this.mapLabelAndName);
-        this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
-        this.filters.permissions.options = this.userAccessModel.allPermissions().map(this.mapLabelAndName);
-        this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
-      });
+    this.userName = this.route.parent.snapshot.params['id'];
+
+    this.userService.getAccess(this.userName).subscribe(res => {
+      this.userAccessModel = UserAccessModel.FromResponse(res);
+      this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
+      this.filters.organizations.options = this.userAccessModel.allOrganizations().map(this.mapLabelAndName);
+      this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
+      this.filters.permissions.options = this.userAccessModel.allPermissions().map(this.mapLabelAndName);
+      this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
+
+      this.getOrganizationData(this.userAccessModel.allOrganizations());
     });
   }
 
@@ -58,12 +65,29 @@ export class UserAccessPage implements OnInit {
       functionIds: objects,
     };
 
-    this.userService.getAccess('00.T.BRENDAN.MCDONOUGH@GSA.GOV', filterOptions).subscribe(res => {
+    this.userService.getAccess(this.userName, filterOptions).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
     });
   }
 
   orgLevel(orgId) {
-    return "USA Department of Agriculture";
+    if (this.organizations) {
+      let orgNumber = parseInt(orgId);
+      if (isNaN(orgNumber)) {
+        return;
+      }
+      let org: Organization = this.organizations.find(org => orgNumber === org.id);
+      if (org) {
+        return org.orgLevel;
+      }
+    }
+  }
+
+  // call the endpoint for all organizations in parallel, wait for each to finish and assign to this.organizations
+  getOrganizationData(orgIds: any[]) {
+    let sources = orgIds.map(orgId => this.fhService.getOrganizationById(orgId, false, true));
+    Observable.forkJoin(sources).subscribe(orgs => {
+      this.organizations = orgs.map(org => Organization.FromResponse(org));
+    });
   }
 }
