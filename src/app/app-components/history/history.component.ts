@@ -8,8 +8,5 @@ export class HistoryComponent implements OnInit {
   @Input() data: any;
   @Input() currentId: any;
 
-  ngOnInit(): void {
-    console.log(this.currentId);
-    console.log(this.data);
-  }
+  ngOnInit(): void {}
 }
