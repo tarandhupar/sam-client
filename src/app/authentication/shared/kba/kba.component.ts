@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 	selector: 'sam-kba-entry',
 	templateUrl: './kba.component.html'
 })
-export class KBAComponent implements OnChanges {
+export class SamKBAComponent implements OnChanges {
   @Input('label') label: string = '';
 
   @Input('questions') questions: any[] = [];

@@ -10,9 +10,6 @@ import {UIKitDemoPage} from "./ui-kit-demo.page";
 import { AppComponentsModule } from "../../app-components/app-components.module";
 import { AlertsModule } from "../../alerts/alerts.module";
 import { HelpModule } from "../../Help/help.module";
-import { SamPipesModule } from "../../../sam-ui-elements/src/ui-kit/pipes";
-
-console.log('pipes imported sucessfully');
 
 @NgModule({
   imports: [
@@ -25,7 +22,6 @@ console.log('pipes imported sucessfully');
     AppComponentsModule,
     AlertsModule,
     HelpModule,
-    SamPipesModule,
   ],
   exports: [],
   declarations: [
