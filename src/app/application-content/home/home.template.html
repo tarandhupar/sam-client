@@ -27,7 +27,15 @@
   <!--search bar-->
 
   <div class="usa-grid-full marginCenter m_T-6x">
-    <samSearchbar [size]="'large'" (onSearch)="runSearch($event)"></samSearchbar>
+    <samSearchbar #searchbar [size]="'large'" (onSearch)="runSearch($event)">
+      <div custom-input>
+        <samInputAutocomplete 
+          [serviceName]="'suggestions'"
+          (searchTermEmit)="searchbar.callSearch($event)"
+          (keyEnterEmit)="searchbar.onSearchClick()">
+        </samInputAutocomplete>
+      </div>
+    </samSearchbar>
   </div>
 
   <!--Browser topics and the register button-->

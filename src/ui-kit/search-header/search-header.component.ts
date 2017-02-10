@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter,ViewChild } from '@angular/core';
+import { SamSearchbarComponent } from '../form-controls/searchbar/searchbar.component';
 
 @Component({
   selector: 'samSearchHeader',
@@ -11,8 +12,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
               <img src="src/assets/img/transition-sam-logo.png" alt="Sam.gov Logo">
             </a>
             <div class="search-bar-container">
-              <samSearchbar [size]="'small'" (onSearch)="onSearchEvent($event)"
-             [keyword]="keyword" [placeholder]="'#keyword'" [filterValue]="filterValue"></samSearchbar>
+              <samSearchbar #searchbar
+                [size]="'small'" 
+                (onSearch)="onSearchEvent($event)"
+                [filterValue]="filterValue">
+                <div custom-input>
+                  <ng-content select="[header-search-input]"></ng-content>
+                </div>
+              </samSearchbar>
             </div>
           </div>
         </div>
@@ -21,11 +28,9 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
             <img title="An official website of the United States Government"
                src="src/assets/img/us_flag_small.png" alt="US Flag Logo"/>
           </div>
-          <SamHeaderLinks (onDropdownToggle)="dropdownEventControl($event)"></SamHeaderLinks>
-
+          <ng-content select="[header-links]"></ng-content>
         </div>
       </div>
-
     </header>
 `
 })
@@ -36,8 +41,8 @@ export class SamSearchHeaderComponent {
   @Input() filterValue: string;
 
   @Output() searchEvent: EventEmitter<any> = new EventEmitter<any>();
-  @Output() searchHeaderDropdownControl: EventEmitter<any> = new EventEmitter<any>();
 
+  @ViewChild('searchbar') searchbar: SamSearchbarComponent;
   constructor() { }
 
   ngOnInit(){
@@ -49,7 +54,4 @@ export class SamSearchHeaderComponent {
     this.searchEvent.emit($event);
   }
 
-  dropdownEventControl(value){
-    this.searchHeaderDropdownControl.emit(value);
-  }
 }
