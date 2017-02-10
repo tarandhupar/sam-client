@@ -13,9 +13,6 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
   template: `
     <fieldset>
       <legend *ngIf="legend.length" [innerText]="legend"></legend>
-      <labelWrapper class="label-wrapper" [label]="'Title'" [name]="getIdentifer('title')" [errorMessage]="titleErrorMsg">
-        <input class="usa-input-tiny" [(ngModel)]="model.title" id="{{getIdentifer('title')}}" name="{{getIdentifer('title')}}" type="text">
-      </labelWrapper>
 
       <labelWrapper class="label-wrapper" [label]="'First Name'" [name]="getIdentifer('first-name')" [errorMessage]="fNameErrorMsg" [required]="true">
         <input (blur)="validateFirstName()" (ngModelChange)="validateFirstName()" [(ngModel)]="model.firstName" id="{{getIdentifer('first-name')}}" name="{{getIdentifer('first-name')}}" type="text" required="" aria-required="true">
@@ -38,7 +35,6 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
 export class SamNameEntryComponent {
   @Input() legend: string = "Name"
   @Input() model: any = {
-    title: "",
     firstName: "",
     middleName: "",
     lastName: "",
@@ -47,7 +43,6 @@ export class SamNameEntryComponent {
 
   @Input() prefix: string = "";
 
-  titleErrorMsg: string = "";
   fNameErrorMsg: string = "";
   mNameErrorMsg: string = "";
   lNameErrorMsg: string = "";
