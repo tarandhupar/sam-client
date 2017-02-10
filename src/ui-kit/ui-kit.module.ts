@@ -44,7 +44,7 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
 import { SamSidenavModule } from './sidenav';
 
 import { SamCollapsibleComponent } from './collapsible';
-import { SamSearchFiltersContainerComponent } from '../app/search-layout/search-filters-container';
+import { SamFiltersContainerComponent } from './filters-container';
 
 /**
  * A module for reusable SAM Web Design components
@@ -89,7 +89,7 @@ import { SamSearchFiltersContainerComponent } from '../app/search-layout/search-
     SamTabComponent,
     SamAlphabetSelectorComponent,
     SamCollapsibleComponent,
-    SamSearchFiltersContainerComponent
+    SamFiltersContainerComponent
   ],
   imports: [
     BrowserModule,
@@ -135,7 +135,7 @@ import { SamSearchFiltersContainerComponent } from '../app/search-layout/search-
     SamAlphabetSelectorComponent,
     SamSidenavModule,
     SamCollapsibleComponent,
-    SamSearchFiltersContainerComponent
+    SamFiltersContainerComponent
   ],
   providers: [
     AlphabetSelectorService
