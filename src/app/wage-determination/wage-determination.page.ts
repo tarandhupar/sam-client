@@ -27,7 +27,6 @@ export class WageDeterminationPage implements OnInit {
     private router: Router,
     private route:ActivatedRoute,
     private wgService:WageDeterminationService) {
-    console.log("constructor2!");
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
@@ -42,7 +41,6 @@ export class WageDeterminationPage implements OnInit {
   ngOnInit() {
     // Using document.location.href instead of
     // location.path because of ie9 bug
-    console.log("constructor!");
     this.currentUrl = document.location.href;
     this.loadWageDetermination();
   }

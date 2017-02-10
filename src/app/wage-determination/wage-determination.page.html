@@ -3,6 +3,7 @@
     <ng-container *ngIf = "wageDetermination">
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+      <ng-container *ngIf = "wageDetermination">
       <strong>State/States: </strong>
       <ng-container *ngFor = "let element of wageDetermination?.location?.state">
         {{element}}
@@ -10,6 +11,7 @@
       <strong>County/ties: </strong>
       <ng-container *ngFor = "let element of wageDetermination?.location?.counties">
         {{element}}
+      </ng-container>
       </ng-container>
       <strong>Revision: </strong>
       {{wageDetermination.revisionNumber}}

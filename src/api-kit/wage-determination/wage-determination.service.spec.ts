@@ -90,7 +90,7 @@ describe('Wage Determination Service', () => {
       expect(res['fullReferenceNumber']).toBeDefined();
       expect(res['revisionNumber']).toBeDefined();
       expect(res['fullReferenceNumber']).toBe('2002-0261');
-      expect(res['fullReferenceNumber']).toBe(8);
+      expect(res['revisionNumber']).toBe(8);
     });
   }));
 });
