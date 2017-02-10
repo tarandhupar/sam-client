@@ -78,6 +78,18 @@ export class PasswordComponent {
     });
   }
 
+  ngAfterViewInit() {
+    let $body = document.body,
+        $inputs = $body.querySelectorAll('input[readonly]'),
+        $input,
+        intInput;
+
+    for(intInput = 0; intInput < $inputs.length; intInput++) {
+      $input = $inputs[intInput];
+      $input.removeAttribute('readonly');
+    }
+  }
+
   $formState(validation) {
     let classes = this.getFormControlStates('password');
 
