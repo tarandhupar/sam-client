@@ -1,1 +1,1 @@
-export { KBAComponent } from './kba.component.ts';
+export { SamKBAComponent } from './kba.component.ts';

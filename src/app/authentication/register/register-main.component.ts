@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChildren } from '@angular/core';
+import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { KBAComponent } from '../shared/kba';
+import { SamPhoneEntryComponent } from 'ui-kit/form-controls/phone-entry';
+import { SamKBAComponent, SamPasswordComponent } from '../shared';
 
 import { IAMService } from 'api-kit';
 
@@ -20,7 +21,11 @@ import { KBA } from '../kba.interface';
 })
 export class RegisterMainComponent {
   @Input() user: User;
-  @ViewChildren(KBAComponent) kbaComponents:QueryList<any>;
+
+  @ViewChild(SamPhoneEntryComponent) phoneEntry: SamPhoneEntryComponent;
+  @ViewChild(SamPasswordComponent) passwordComponent: SamPasswordComponent;
+
+  @ViewChildren(SamKBAComponent) kbaComponents:QueryList<any>;
 
   public userForm: FormGroup;
   public states = {
@@ -202,7 +207,7 @@ export class RegisterMainComponent {
       lastName:      ['Doe', Validators.required],
       suffix:        [''],
 
-      workPhone:       ['12401234567'],
+      workPhone:       [''],
 
       department:      [''],
       orgID:           [''],
@@ -298,7 +303,8 @@ export class RegisterMainComponent {
   }
 
   updatePhoneNumber(phoneNumber) {
-      this.user.workPhone = phoneNumber;
+    this.user.workPhone = phoneNumber;
+    console.log(phoneNumber);
   }
 
   prepareData() {
@@ -364,6 +370,9 @@ export class RegisterMainComponent {
   register() {
     let userData,
         kbaAnswerList = this.userForm.value['kbaAnswerList'];
+
+    this.phoneEntry.check();
+    this.passwordComponent.setSubmitted();
 
     this.kbaComponents.forEach(function(kbaComponent, index) {
       kbaComponent.updateState(true);
