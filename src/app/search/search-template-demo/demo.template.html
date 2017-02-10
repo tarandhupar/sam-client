@@ -1,4 +1,4 @@
-<search-template [attr.class]="'search-page'" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages" [totalElements]="totalCount">
+<search-layout [attr.class]="'search-page'" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages" [totalElements]="totalCount">
 	<div search-sidebar>
 		<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
 	</div>
@@ -26,4 +26,4 @@
       <div style="height:300px;"></div>
     </div>
 	</div>
-</search-template>
+</search-layout>

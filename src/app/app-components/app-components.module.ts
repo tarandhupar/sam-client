@@ -6,7 +6,7 @@ import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
 import { DisplayPageComponent } from './display-page/display-page.component';
-import { SearchTemplateComponent } from './search-template/search-template.component';
+import { SearchLayoutComponent } from './search-layout/search-layout.component';
 
 
 
@@ -17,7 +17,7 @@ import { SearchTemplateComponent } from './search-template/search-template.compo
   declarations: [
     AgencyPickerComponent,
     DisplayPageComponent,
-    SearchTemplateComponent
+    SearchLayoutComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +28,7 @@ import { SearchTemplateComponent } from './search-template/search-template.compo
   exports: [
     AgencyPickerComponent,
     DisplayPageComponent,
-    SearchTemplateComponent
+    SearchLayoutComponent
   ],
   providers: [ ]
 })
