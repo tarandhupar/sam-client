@@ -17,7 +17,7 @@ export class SamCollapsibleComponent implements OnChanges {
 
   /**
    * The startOpened input intializes the component in the open state if set to true
-   * Otherwise, the component defaults to closed
+   * Otherwise, the component defaults to closed.
    */
   @Input() public startOpened: boolean;
 
