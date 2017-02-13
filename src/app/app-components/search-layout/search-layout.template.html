@@ -1,7 +1,8 @@
 <div class="usa-grid search-template">
 	<aside class="usa-width-one-fourth">
-		<ng-content select="[search-sidebar]"></ng-content>
-    &nbsp;
+		<sam-filters-container>
+			<ng-content select="[search-sidebar]"></ng-content>
+		</sam-filters-container>
 	</aside>
 	<div class="usa-width-three-fourths" >
 		<ng-content select="[search-title]"></ng-content>

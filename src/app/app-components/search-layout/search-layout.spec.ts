@@ -7,7 +7,7 @@ import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { Observable } from 'rxjs';
 import { SamUIKitModule } from 'ui-kit';
 import { RouterTestingModule } from '@angular/router/testing';
-import {By} from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 
 import { SearchTemplateComponent } from './search-template.component';
 
