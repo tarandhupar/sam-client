@@ -29,7 +29,7 @@ $usa-btn-big-width:     4.5rem;
 .usa-agency-picker-autocomplete{
   position:absolute;
   top:44px;
-  background:#fff;
+  background:$color-white;
   margin-top:0;
   margin-left: 0;
   margin-right: 0;
@@ -69,6 +69,7 @@ $usa-btn-big-width:     4.5rem;
   width: 100%;
   margin-left:0;
   min-height:55px;
+  background:#FFF;
 
   span:hover{
     cursor:pointer;
@@ -79,8 +80,8 @@ $usa-btn-big-width:     4.5rem;
     margin:0;
     padding:0;
   }
-  @include media($small-screen) {
-    width: 460px;
+  @include media($medium-screen) {
+    width: 100%;
   }
 }
 .usa-agency-picker-dropdown-area{
@@ -98,8 +99,8 @@ $usa-btn-big-width:     4.5rem;
     overflow:visible;
   }
 
-  @include media($small-screen) {
-    width: 460px;
+  @include media($medium-screen) {
+    width: 100%;
   }
 }
 
