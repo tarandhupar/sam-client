@@ -107,7 +107,8 @@ export class UIKitDemoPage {
     suffix: "Sr."
   };
   phoneModel = "";
-  phoneModel2 = "1+(123)456-3366";
+  phoneModel2 = "123-456-3366";
+  phoneTemplate2 = "___-___-____";
 
   footerAlertTypes = ['success','warning','error','info'];
   footerAlertModel = {
