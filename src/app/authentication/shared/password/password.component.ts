@@ -86,6 +86,18 @@ export class SamPasswordComponent {
     });
   }
 
+  ngAfterViewInit() {
+    let $body = document.body,
+        $inputs = $body.querySelectorAll('input[readonly]'),
+        $input,
+        intInput;
+
+    for(intInput = 0; intInput < $inputs.length; intInput++) {
+      $input = $inputs[intInput];
+      $input.removeAttribute('readonly');
+    }
+  }
+
   setSubmitted() {
     this.states.submitted = true;
     this.updateState();

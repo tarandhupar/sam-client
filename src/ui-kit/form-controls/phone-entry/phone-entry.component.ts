@@ -13,15 +13,15 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
   template: `
     <labelWrapper [label]="label" [name]="getIdentifier('phone-number')" [errorMessage]="errorMsg" [required]="required">
       <input type="text"
-             id=" { {getIdentifier('phone-number')}}"
-             name=" { {getIdentifier('phone-number')}}"
-             class=""
-             maxlength="15"
+             [id]="getIdentifier('phone-number')"
+             [name]="getIdentifier('phone-number')"
              [value]="phoneNumberMirror"
              [placeholder]="phoneNumberTemplate"
              (keydown)="process($event)"
              (blur)="check()"
-             #phoneInput>
+             #phoneInput
+             class=""
+             maxlength="15">
     </labelWrapper>
   `,
 })
