@@ -5,8 +5,12 @@
   <div class="usa-width-one">
     <div *ngIf="showOptional" class="usa-width-one">
       <h3>Common Filters:</h3>
-      <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
-      <hr *ngIf="data.results" class="m_T-5x"/>
+			<div class="usa-grid-full">
+				<div class="usa-width-one-third">
+	      	<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
+				</div>
+			</div>
+      <hr *ngIf="data.results" class="usa-width-one m_T-5x"/>
     </div>
     <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
     <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
