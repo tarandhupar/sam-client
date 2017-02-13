@@ -555,7 +555,7 @@ export class OpportunityPage implements OnInit {
     card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
   }
 
-  public hasResources(){
+  public hasPublicPackages(){
     for(let pkg of this.attachment['packages']) {
       if(pkg['access'] === 'Public') { return true; }
     }
