@@ -366,8 +366,12 @@ export class OpportunityPage implements OnInit {
       this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historyAPI => {
         this.history = historyAPI; // save original history information in case it is needed
 
+        // setup necessary items for processing history
         let typeLabel = new OpportunityTypeLabelPipe();
         let dateFormat = new DateFormatPipe();
+        let originalType = typeLabel.transform(_.filter(historyAPI.content.history, historyItem => {
+          return historyItem.parent_notice == null;
+        })[0].procurement_type); // filter through history to find original opportunity, and save its type label
 
         // process history into a form usable by history component
         this.processedHistory = historyAPI.content.history.map(function(historyItem) {
@@ -375,19 +379,17 @@ export class OpportunityPage implements OnInit {
           processedHistoryItem['id'] = historyItem.notice_id;
           processedHistoryItem['title'] = (function makeTitle(){
             let prefix = '';
-            if(historyItem.index === '1') {
-              prefix += 'Original';
-            } else {
-              prefix += 'Updated';
-            }
 
-            // Canceled prefix takes precedence over all other prefixes
-            if(historyItem.cancel_notice === '1') {
-              prefix = 'Canceled';
-            }
+            if(historyItem.parent_notice != null) { prefix = 'Updated'; }
+
+            // Canceled prefix takes precedence over updated
+            if(historyItem.cancel_notice === '1') { prefix = 'Canceled'; }
+
+            // Original prefix takes precedence over all others
+            if(historyItem.parent_notice == null) { prefix = 'Original';}
 
             let type = historyItem.procurement_type;
-            let title = typeLabel.transform(type);
+            let currentType = typeLabel.transform(type); // label for type of current history item
 
             switch(type) {
                 // For these types, show title as prefix and opportunity type
@@ -397,18 +399,18 @@ export class OpportunityPage implements OnInit {
               case 'g': // Sale of Surplus Property
               case 'f': // Foreign Government Standard
               case 'k': // Combined Synopsis/Solicitation
-                return prefix + ' ' + title;
+                return prefix + ' ' + currentType;
 
                 // For these types, show the opportunity type as the title with no prefix
               case 'a': // Award Notice
               case 'j': // Justification and Approval (J&A)
               case 'i': // Intent to Bundle Requirements (DoD-Funded)
               case 'l': // Fair Opportunity / Limited Sources Justification
-                return title;
+                return currentType;
 
-                // For modifications or cancellations, just show the prefix
+                // For modifications or cancellations, show the appropriate prefix plus original opportunity type
               case 'm': // Modification/Amendment/Cancel
-                return prefix;
+                return prefix + ' ' + originalType;
 
               // Unrecognized type, show generic message
               default:
