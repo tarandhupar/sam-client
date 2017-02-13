@@ -17,15 +17,33 @@ import * as suffixes from './suffixes.json';
       <legend *ngIf="legend.length" [innerText]="legend"></legend>
 
       <labelWrapper class="label-wrapper" [label]="'First Name'" [name]="getIdentifer('first-name')" [errorMessage]="fNameErrorMsg" [required]="true">
-        <input (blur)="validateFirstName()" (ngModelChange)="validateFirstName()" [(ngModel)]="model.firstName" id="{{getIdentifer('first-name')}}" name="{{getIdentifer('first-name')}}" type="text" required="" aria-required="true">
+        <input (blur)="validateFirstName()"
+               (ngModelChange)="validateFirstName()"
+               [(ngModel)]="model.firstName"
+               type="text"
+               id="{{getIdentifer('first-name')}}"
+               name="{{getIdentifer('first-name')}}"
+               required=""
+               aria-required="true">
       </labelWrapper>
 
       <labelWrapper class="label-wrapper" [label]="'Middle Name'" [name]="getIdentifer('middle-name')" [errorMessage]="mNameErrorMsg">
-        <input (ngModelChange)="validateMiddleName()" [(ngModel)]="model.middleName" id="{{getIdentifer('middle-name')}}" name="{{getIdentifer('middle-name')}}" type="text">
+        <input (ngModelChange)="validateMiddleName()"
+               [(ngModel)]="model.middleName"
+               type="text"
+               id="{{getIdentifer('middle-name')}}"
+               name="{{getIdentifer('middle-name')}}">
       </labelWrapper>
 
       <labelWrapper class="label-wrapper" [label]="'Last Name'" [name]="getIdentifer('last-name')" [errorMessage]="lNameErrorMsg" [required]="true">
-        <input (blur)="validateLastName()" (ngModelChange)="validateLastName()" [(ngModel)]="model.lastName" id="{{getIdentifer('last-name')}}" name="{{getIdentifer('last-name')}}" type="text" required="" aria-required="true">
+        <input (blur)="validateLastName()"
+               (ngModelChange)="validateLastName()"
+               [(ngModel)]="model.lastName"
+               type="text"
+               id="{{getIdentifer('last-name')}}"
+               name="{{getIdentifer('last-name')}}"
+               required=""
+               aria-required="true">
       </labelWrapper>
 
       <samSelect [(model)]="model.suffix"
@@ -61,6 +79,11 @@ export class SamNameEntryComponent {
       };
     })
   };
+
+  setSubmitted() {
+    this.validateFirstName();
+    this.validateLastName();
+  }
 
   getIdentifer(str) {
     if(this.prefix.length > 0) {
