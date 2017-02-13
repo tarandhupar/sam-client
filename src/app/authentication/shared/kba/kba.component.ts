@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 	selector: 'sam-kba-entry',
 	templateUrl: './kba.component.html'
 })
-export class KBAComponent implements OnChanges {
+export class SamKBAComponent implements OnChanges {
   @Input('label') label: string = '';
 
   @Input('questions') questions: any[] = [];
@@ -19,6 +19,7 @@ export class KBAComponent implements OnChanges {
 
   protected states = {
     type: 'text',
+    uid: Math.floor(Math.random() * 89999 + 10000),
     submitted: false,
     count: 0,
     errors: {

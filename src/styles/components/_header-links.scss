@@ -1,17 +1,18 @@
 $header-link-height: 40px - 1; /* Compensate for Header border */
 
 .header-links {
+
   .white-text {
     color: $color-white;
   }
 
   .dropdown {
     position: absolute;
-    top: 35px;
-    left: -45%;
-    right: 45%;
+    top: 44px;
+    left: -80px;
     background: $color-white;
     z-index: 2000;
+    width: 180px;
   }
 
   .item-margin {
@@ -42,7 +43,7 @@ $header-link-height: 40px - 1; /* Compensate for Header border */
   .arrow-up {
     position: absolute;
     margin: 0;
-    top: 27px;
+    top: 36px;
     left: 0;
     width: 0;
     height: 0;

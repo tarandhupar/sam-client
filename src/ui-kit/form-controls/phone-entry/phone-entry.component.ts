@@ -11,17 +11,17 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
 @Component( {
   selector: 'samPhoneEntry',
   template: `
-    <labelWrapper [label]="label" [name]="getIdentifier('phone-number')" [errorMessage]="errorMsg">
+    <labelWrapper [label]="label" [name]="getIdentifier('phone-number')" [errorMessage]="errorMsg" [required]="required">
       <input type="text"
-             id=" { {getIdentifier('phone-number')}}"
-             name=" { {getIdentifier('phone-number')}}"
-             class=""
-             maxlength="15"
+             [id]="getIdentifier('phone-number')"
+             [name]="getIdentifier('phone-number')"
              [value]="phoneNumberMirror"
              [placeholder]="phoneNumberTemplate"
              (keydown)="process($event)"
              (blur)="check()"
-             #phoneInput>
+             #phoneInput
+             class=""
+             maxlength="15">
     </labelWrapper>
   `,
 })
@@ -29,6 +29,7 @@ export class SamPhoneEntryComponent implements OnInit {
   @Input() label: string = 'Phone Number';
   @Input() model: string = "";
   @Input() prefix: string = "";
+  @Input() required: boolean = false;
 
   @ViewChild("phoneInput") phoneInput;
   @Output() emitter = new EventEmitter<string>();
