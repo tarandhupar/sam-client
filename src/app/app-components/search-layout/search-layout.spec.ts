@@ -9,7 +9,7 @@ import { SamUIKitModule } from 'ui-kit';
 import { RouterTestingModule } from '@angular/router/testing';
 import {By} from '@angular/platform-browser';
 
-import { SearchTemplateComponent } from './search-template.component';
+import { SearchLayoutComponent } from './search-layout.component';
 
 var fixture;
 var comp;
@@ -18,7 +18,7 @@ var titleEl;
 describe('SearchTemplateTests', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchTemplateComponent ],
+      declarations: [ SearchLayoutComponent ],
       providers: [//start - Mocks HTTP provider
         BaseRequestOptions,
         MockBackend,
@@ -34,7 +34,7 @@ describe('SearchTemplateTests', () => {
       imports: [FormsModule,SamUIKitModule,RouterTestingModule]
     });
     TestBed.compileComponents().then( ()=>{
-      fixture = TestBed.createComponent(SearchTemplateComponent);
+      fixture = TestBed.createComponent(SearchLayoutComponent);
       comp = fixture.componentInstance;
     });
   }));
