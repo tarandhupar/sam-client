@@ -5,13 +5,12 @@ import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../../app-pipes/capitalize.pipe';
 
 @Component({
-  moduleId: __filename,
   selector: 'search',
   providers: [CapitalizePipe],
   templateUrl: 'demo.template.html'
 })
 
-export class SearchTemplateDemoPage implements OnInit{
+export class SearchLayoutDemoPage implements OnInit{
   keyword: string = "";
 	index: string = "";
 	organizationId:string = '';
