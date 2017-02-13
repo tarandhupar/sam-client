@@ -6,7 +6,7 @@ export enum OpportunityFields {
   HierarchyName = <any>'hierarchy-level',
   Location = <any>'location',
 
-  // Awards Summary
+    // Awards Summary
   AwardSummary = <any>'award-summary',
 
     // Award details section
@@ -59,7 +59,7 @@ export enum OpportunityFields {
   Description = <any>'description',
   BenefitsDescription = <any>'benefits-description',
 
-  // Packages
+    // Packages
   Packages = <any>'packages',
 
     // Contact information section

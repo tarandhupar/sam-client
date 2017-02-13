@@ -184,6 +184,10 @@ export class OpportunityPage implements OnInit {
           {
             "label": "Contact Information",
             "field": this.opportunityFields.Contact,
+          },
+          {
+            "label": "History",
+            "field": this.opportunityFields.History,
           }
         ]
       };
