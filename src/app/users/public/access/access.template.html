@@ -1,33 +1,67 @@
-<h1>Access</h1>
-<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [(model)]="filters.organizations.value"></samMultiSelectDropdown>
-<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [(model)]="filters.roles.value"></samMultiSelectDropdown>
-<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [(model)]="filters.domains.value"></samMultiSelectDropdown>
-<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [(model)]="filters.objects.value"></samMultiSelectDropdown>
-<!--<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [(model)]="filters.permissions.value"></samMultiSelectDropdown>-->
+<div class="access-page">
+  <h1 class="m_T-0">Access</h1>
+  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [(model)]="filters.organizations.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [(model)]="filters.roles.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [(model)]="filters.domains.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [(model)]="filters.objects.value"></samMultiSelectDropdown>
+  <!--<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [(model)]="filters.permissions.value"></samMultiSelectDropdown>-->
 
-<ng-container *ngIf="userAccessModel">
-  <div *ngFor="let role of userAccessModel.raw().roleMapContent">
-    <h2>Role: {{role.role}}</h2>
-    <div *ngFor="let domain of role.roleData | groupByDomain">
-      <h3>Domain: {{domain.id}}</h3>
-      <div class="usa-grid-full permissions-table-header">
-        <div class="usa-width-one-sixth">Organization:</div>
-        <div class="usa-width-one-third">Org Level:</div>
-        <div class="usa-width-one-sixth">Object:</div>
-        <div class="usa-width-one-third">Permissions:</div>
-      </div>
-      <ng-container *ngFor="let org of domain.organizations">
-        <ng-container *ngFor="let func of org.FunctionContent; let firstFunction = first">
-          <div class="usa-grid-full permissions-table-row">
-            <div class="usa-width-one-sixth org-col">{{firstFunction ? org.orgKey : ''}}&nbsp;</div>
-            <div class="usa-width-one-third org-level-col">{{firstFunction ? orgLevel(org.orgKey) : ''}}&nbsp;</div>
-            <div class="usa-width-one-sixth object-col">{{func.function}}</div>
-            <div class="usa-width-one-third permissions-col">
-              <span *ngFor="let perm of func.permission">{{perm}}&nbsp;</span>
-            </div>
+  <ng-container *ngIf="userAccessModel">
+    <div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">
+      <h2>Role: {{role.role}}
+        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapsed All</a>
+        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
+      </h2>
+      <samAccordion *ngFor="let domain of role.roleData | groupByDomain" [bordered]="true">
+        <samAccordionSection [headerText]="'Domain: '+domain.id" [name]="'Domain'+domain.id">
+          <div class="usa-grid-full permissions-table-header">
+            <div class="usa-width-one-sixth">Organization:</div>
+            <div class="usa-width-one-sixth">Level:</div>
+            <div class="usa-width-one-sixth">Object:</div>
+            <div class="usa-width-one-third">Permissions:</div>
+            <div class="usa-width-one-sixth">&nbsp;</div>
           </div>
-        </ng-container>
-      </ng-container>
+          <ng-container *ngFor="let org of domain.organizations">
+            <ng-container *ngFor="let func of org.FunctionContent; let firstFunction = first">
+              <div class="usa-grid-full permissions-table-row" [class.first-function]="firstFunction">
+                <div class="usa-width-one-sixth org-col access-cell">
+                  <span *ngIf="firstFunction">
+                    <a [routerLink]="['/organization', org.orgKey]">{{org.orgKey}}</a>
+                  </span>
+                </div>
+                <div class="usa-width-one-sixth org-level-col access-cell">{{firstFunction ? orgLevel(org.orgKey) : ''}}&nbsp;</div>
+                <div class="usa-width-one-half background-grey access-cell">
+                  <div class="usa-grid-full grey-group">
+                    <div class="pip-left" *ngIf="firstFunction">&nbsp;</div>
+                    <div class="usa-width-one-third object-col">{{func.function}}</div>
+                    <div class="usa-width-two-thirds permissions-col">
+                      <span *ngFor="let perm of func.permission">{{perm}}&nbsp;</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="usa-width-one-sixth">
+                  <span class="pull-right" *ngIf="firstFunction">
+                    <button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-pencil"></i></button>
+                    &nbsp;
+                    <button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-trash"></i></button>
+                  </span>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+        </samAccordionSection>
+      </samAccordion>
     </div>
-  </div>
-</ng-container>
+  </ng-container>
+
+<!--<fieldset>-->
+  <!--<div class="clearfix">-->
+    <!--<legend class="pull-left">Collapsible</legend>-->
+    <!--<button class="usa-button-transparent pull-right m_0" (click)="collapsed = !collapsed"><i class="fa" [ngClass]="collapsed ? 'fa-plus' : 'fa-minus'"></i></button>-->
+  <!--</div>-->
+  <!--<div class="usa-grid-full" [hidden]="collapsed">-->
+    <!--<div class="usa-width-one-half">Half</div>-->
+    <!--<div class="usa-width-one-half">Half</div>-->
+  <!--</div>-->
+<!--</fieldset>-->
+</div>

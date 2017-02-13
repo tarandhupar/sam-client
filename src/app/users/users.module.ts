@@ -14,6 +14,7 @@ import { UserViewComponent } from "./public/public.component";
 import { UserMigrationsPage } from "./public/migrations/migrations.page";
 import { UserProfilePage } from "./public/profile/profile.page";
 import { GroupByDomainPipe } from "./public/access/group-by-domain.pipe";
+import { PipesModule } from "../app-pipes/app-pipes.module";
 
 
 @NgModule({
@@ -24,7 +25,7 @@ import { GroupByDomainPipe } from "./public/access/group-by-domain.pipe";
     HttpModule,
     FormsModule,
     SamUIKitModule,
-    SamAPIKitModule
+    SamAPIKitModule,
   ],
   exports: [
 
@@ -38,6 +39,7 @@ import { GroupByDomainPipe } from "./public/access/group-by-domain.pipe";
     ParentOrgsComponent,
     GroupByDomainPipe,
   ],
-  providers: [],
+  providers: [
+  ],
 })
 export class UserDirectoryModule { }

@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { UserService, UserAccessFilterOptions } from "api-kit/user/user.service";
 import { UserAccessModel } from "../../access.model";
 import { ActivatedRoute} from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 import { Organization } from "../../../organization/organization.model";
 import { Observable } from "rxjs";
+import { SamAccordionComponent } from "ui-kit/accordion/accordion.component";
+import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 
 
 @Component({
@@ -24,6 +26,11 @@ export class UserAccessPage implements OnInit {
 
   private userName: string;
   private organizations: Organization[];
+
+  @ViewChildren(SamAccordionComponent) allAccordions: QueryList<SamAccordionComponent>;
+
+  private showCollapse = false;
+  private capitalize = new CapitalizePipe();
 
   constructor(
     private userService: UserService,
@@ -78,7 +85,7 @@ export class UserAccessPage implements OnInit {
       }
       let org: Organization = this.organizations.find(org => orgNumber === org.id);
       if (org) {
-        return org.orgLevel;
+        return this.capitalize.transform(org.orgLevel);
       }
     }
   }
@@ -86,8 +93,23 @@ export class UserAccessPage implements OnInit {
   // call the endpoint for all organizations in parallel, wait for each to finish and assign to this.organizations
   getOrganizationData(orgIds: any[]) {
     let sources = orgIds.map(orgId => this.fhService.getOrganizationById(orgId, false, true));
-    Observable.forkJoin(sources).subscribe(orgs => {
-      this.organizations = orgs.map(org => Organization.FromResponse(org));
-    });
+    Observable.forkJoin(sources).subscribe(
+      orgs => {
+        this.organizations = orgs.map(org => Organization.FromResponse(org));
+      },
+      err => {
+        console.error('Unabled to fetch org data. Error', err);
+      }
+    );
+  }
+
+  collapseAll() {
+    this.allAccordions.forEach(acc => acc.setExpandIndex(-1));
+    this.showCollapse = false;
+  }
+
+  expandAll() {
+    this.allAccordions.forEach(acc => acc.setExpandIndex(0));
+    this.showCollapse = true;
   }
 }
