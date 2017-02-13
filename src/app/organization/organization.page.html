@@ -8,7 +8,7 @@
         <img *ngIf="organization && (errorOrganization || errorLogo || logoUrl===null)" src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       </div>
       <div class="intro-section" *ngIf="organization" >
-        <h1>{{organization.agencyName || organization.name || organization.orgKey}}</h1>
+        <h1>{{organization.agencyName || organization.name || organization.orgKey}} {{(organization.shortName == '' || organization.shortName == null) ?  '': '('+organization.shortName+')'}}</h1>
 
         <section>
           <strong>{{(organization | organizationTypeCode).label}}</strong> {{(organization | organizationTypeCode).value}}
