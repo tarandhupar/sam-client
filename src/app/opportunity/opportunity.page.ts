@@ -9,6 +9,7 @@ import { trigger, state, style, transition, animate } from '@angular/core';
 import * as _ from 'lodash';
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
 import { DateFormatPipe } from "../app-pipes/date-format.pipe";
+import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
 
 @Component({
   moduleId: __filename,
@@ -80,7 +81,7 @@ export class OpportunityPage implements OnInit {
   relatedOpportunitiesMetadata:any;
   logoUrl: string;
   opportunityAPI: any;
-  currentTab: string = 'Opportunity';
+
   errorOrganization: any;
   errorLogo: any;
   awardSort: string = "awardDate"; //default
@@ -97,7 +98,16 @@ export class OpportunityPage implements OnInit {
   max: number;
   private ready: boolean = false;
 
+  // On load select first item on sidenav component
+  selectedPage: number = 0;
+  pageRoute: string;
+  sidenavModel = {
+    "label": "Opportunities",
+    "children": []
+  };
+
   constructor(
+    private sidenavService: SidenavService,
     private router: Router,
     private route:ActivatedRoute,
     private opportunityService:OpportunityService,
@@ -130,6 +140,7 @@ export class OpportunityPage implements OnInit {
     this.loadAttachments(opportunityAPI);
     this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.loadHistory(opportunityAPI);
+    this.sidenavService.updateData(this.selectedPage, 0);
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
     let parentAndOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
@@ -145,12 +156,75 @@ export class OpportunityPage implements OnInit {
 
     opportunitySubject.subscribe(api => { // do something with the opportunity api
       this.opportunity = api;
-      console.log(this.opportunity);
+      this.pageRoute = "opportunities/" + this.opportunity.opportunityId;
+      let opportunitySideNavContent = {
+        "label": "Opportunity",
+        "route": this.pageRoute,
+        "children": [
+          {
+            "label": "Award Details",
+            "field": this.opportunityFields.Award,
+          },
+          {
+            "label": "General Information",
+            "field": this.opportunityFields.General,
+          },
+          {
+            "label": "Classification",
+            "field": this.opportunityFields.Classification,
+          },
+          {
+            "label": "Synopsis/Description",
+            "field": this.opportunityFields.Synopsis,
+          },
+          {
+            "label": "Packages",
+            "field": this.opportunityFields.Packages,
+          },
+          {
+            "label": "Contact Information",
+            "field": this.opportunityFields.Contact,
+          }
+        ]
+      };
+      this.updateSideNav(opportunitySideNavContent);
     }, err => {
       console.log('Error loading opportunity: ', err);
     });
 
     return opportunitySubject;
+  }
+
+  private updateSideNav(content?){
+
+    let self = this;
+
+    if(content){
+      // Items in first level (pages) have to have a unique name
+      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
+      // If page has a unique name added to the sidenav
+      if(repeatedItem === -1){
+        this.sidenavModel.children.push(content);
+      }
+    }
+
+    updateContent();
+
+    function updateContent(){
+      let children = _.map(self.sidenavModel.children, function(possiblePage){
+        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
+          if(self.shouldBeDisplayed(possibleSection.field)){
+            possibleSection.route = "#" + self.generateID(possibleSection.field);
+            return possibleSection;
+          }
+        });
+        _.remove(possiblePagechildren, _.isUndefined);
+        possiblePage.children = possiblePagechildren;
+        return possiblePage;
+      });
+      self.sidenavModel.children = children;
+    }
+
   }
 
   private loadParentOpportunity(opportunityAPI: Observable<any>){
@@ -191,6 +265,19 @@ export class OpportunityPage implements OnInit {
           'unparsableCount': data['unparsableCount']
         };
         this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
+
+        let awardSideNavContent = {
+          "label": "Award Notices",
+          "route": this.pageRoute,
+          "children": [
+            {
+              "label": "Award Summary",
+              "field": this.opportunityFields.AwardSummary,
+            },
+          ]
+        };
+        this.updateSideNav(awardSideNavContent);
+
       }
     }, err => {
       console.log('Error loading related opportunities: ', err);
@@ -440,6 +527,8 @@ export class OpportunityPage implements OnInit {
       }
 
       this.ready = true;
+
+      this.updateSideNav();
     });
   }
 
@@ -503,14 +592,22 @@ export class OpportunityPage implements OnInit {
     return pcobj;
   }
 
-
   public getDownloadFileURL(fileID: string){
     return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey();
   }
 
-  currentTabSelected(tab){
-    this.currentTab = tab.title;
+  selectedItem(item){
+    this.selectedPage = this.sidenavService.getData()[0];
   }
+
+  sidenavPathEvtHandler(data){
+    data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
+		if(data.charAt(0)=="#"){
+			this.router.navigate([], { fragment: data.substring(1) });
+		} else {
+			this.router.navigate([data]);
+		}
+	}
 
   public getDownloadPackageURL(packageID: string) {
     return this.getBaseURL() + '/opportunities/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey();
