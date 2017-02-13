@@ -45,3 +45,4 @@ export class SearchLayoutComponent implements OnInit {
 	}
   ngOnInit(){}
 }
+

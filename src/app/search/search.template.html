@@ -1,22 +1,19 @@
-<div class="search-page">
-	<div class="usa-grid">
-		<div class="usa-width-one">
-			<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
-		</div>
+<div class="usa-grid search-page">
+	<div class="usa-width-one">
+		<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
 	</div>
-	<div *ngIf="showOptional" class="usa-grid">
-    <h3>Common Filters:</h3>
-		<div class='usa-width-one-third'>
-      <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
-		</div>
-    <div class=""></div>
-		<hr *ngIf="data.results" class="usa-width-one-whole m_T-5x"/>
-	</div>
-	<div class="usa-grid">
-	    <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
-	    <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
-	</div>
-	<div class="usa-grid">
+  <div class="usa-width-one">
+    <div *ngIf="showOptional" class="usa-width-one">
+      <h3>Common Filters:</h3>
+			<div class="usa-grid-full">
+				<div class="usa-width-one-third">
+	      	<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
+				</div>
+			</div>
+      <hr *ngIf="data.results" class="usa-width-one m_T-5x"/>
+    </div>
+    <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
+    <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
 		<div *ngFor="let row of data.results">
 			<opportunities-result *ngIf="row._type=='OPP'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
       <assistance-listing-result  *ngIf="row._type=='ASSISTANCE_LISTING'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
@@ -32,12 +29,10 @@
       <div style="height:300px;"></div>
     </div>
 	</div>
-	<div class="usa-grid">
-	  <div *ngIf="data.results">
-	    <div class="usa-width-one-whole">
-	      <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
-	    </div>
-	  </div>
-	  <br/><br/>
-	</div>
+  <div *ngIf="data.results">
+    <div class="usa-width-one-whole">
+      <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
+    </div>
+  </div>
+  <br/><br/>
 </div>
