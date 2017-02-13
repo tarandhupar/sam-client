@@ -5,7 +5,6 @@ import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../../app-pipes/capitalize.pipe';
 
 @Component({
-  moduleId: __filename,
   selector: 'search',
   providers: [CapitalizePipe],
   templateUrl: 'demo.template.html'
