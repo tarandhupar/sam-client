@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { globals } from '../../../globals';
 
 @Component({
   providers: [ ],
@@ -54,10 +55,12 @@ export class NewToSamComponent {
   constructor() { }
 
   openImageLibrary(type){
-    this.showImageLibrary = true;
-    this.curImageGroup = [];
-    for(let index of this.imageGroupIndexData[type]){
-      this.curImageGroup.push(this.imageGroupData[index]);
+    if(this.linkToggle()){
+      this.showImageLibrary = true;
+      this.curImageGroup = [];
+      for(let index of this.imageGroupIndexData[type]){
+        this.curImageGroup.push(this.imageGroupData[index]);
+      }
     }
   }
 
@@ -66,5 +69,7 @@ export class NewToSamComponent {
     this.curImageGroup = {};
   }
 
-  
+  linkToggle():boolean{
+    return globals.showOptional;
+  }
 }
