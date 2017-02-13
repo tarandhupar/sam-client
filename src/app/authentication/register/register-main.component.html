@@ -8,7 +8,7 @@
       </fieldset>
       <fieldset class="phone">
         <legend>Business Phone</legend>
-        <samPhoneEntry [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" label=""></samPhoneEntry>
+        <samPhoneEntry [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" [label]="' '" [required]="true" #phoneEntry></samPhoneEntry>
       </fieldset>
       <fieldset class="office" *ngIf="states.isGov">
         <legend>Office</legend>
@@ -22,7 +22,7 @@
         </agencyPicker>
       </fieldset>
       <fieldset class="password">
-        <sam-password [password]="userForm.controls.userPassword"></sam-password>
+        <sam-password [password]="userForm.controls.userPassword" #passwordComponent></sam-password>
       </fieldset>
       <fieldset class="kba">
         <legend>Security Questions</legend>

@@ -38,7 +38,7 @@ import { UserDirectoryModule } from "./user-directory";
 const APP_PROVIDERS = [
   AppState
 ];
-var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ? true : false;
+
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
@@ -55,7 +55,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     HttpModule,
 
     // Router
-    RouterModule.forRoot(ROUTES, { useHash: useHashValue }),
+    RouterModule.forRoot(ROUTES),
 
     // Page View Modules
     UserDirectoryModule,
