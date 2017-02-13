@@ -40,6 +40,9 @@ import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selec
 import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
 import { SamSidenavModule } from './sidenav';
 
+import { SamCollapsibleComponent } from './collapsible';
+import { SamFiltersContainerComponent } from './filters-container';
+
 /**
  * A module for reusable SAM Web Design components
  * https://gsa.github.io/sam-web-design-standards/
@@ -78,7 +81,9 @@ import { SamSidenavModule } from './sidenav';
     FieldsetWrapper,
     SamTabsComponent,
     SamTabComponent,
-    SamAlphabetSelectorComponent
+    SamAlphabetSelectorComponent,
+    SamCollapsibleComponent,
+    SamFiltersContainerComponent
   ],
   imports: [
     BrowserModule,
@@ -119,7 +124,9 @@ import { SamSidenavModule } from './sidenav';
     SamTabComponent,
     SamModalComponent,
     SamAlphabetSelectorComponent,
-    SamSidenavModule
+    SamSidenavModule,
+    SamCollapsibleComponent,
+    SamFiltersContainerComponent
   ],
   providers: [
     AlphabetSelectorService
