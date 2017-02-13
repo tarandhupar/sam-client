@@ -12,7 +12,7 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive==false" class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="assistance-listing-title">
-      	<a *ngIf="data.isActive==true" [routerLink]="[printFALLink()]" [queryParams]="qParams">{{data.title}}</a>
+      	<a *ngIf="data.isActive==true" [routerLink]="['/programs', data._id, 'view']" [queryParams]="qParams">{{data.title}}</a>
       	<span *ngIf="data.isActive==false">{{data.title}}</span>
     	</h3>
     	<ul class="usa-unstyled-list">    
@@ -63,8 +63,5 @@ export class AssistanceListingResult implements OnInit {
   ngOnInit(){
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
   }
-
-  printFALLink(){
-    return this.data.hasOwnProperty('_links') ? _.get(this.data, ['_links','self','href']):'';
-  }
+  
 }
