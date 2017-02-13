@@ -435,7 +435,7 @@ export class OpportunityPage implements OnInit {
 
         // Alert if not latest version
         let tagged = _.filter(this.processedHistory, historyItem => {
-          return historyItem.isTagged;
+          return historyItem.id === opportunityAPI.opportunityId;
         })[0];
 
         let authoritative = _.filter(this.processedHistory, historyItem => {
