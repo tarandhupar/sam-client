@@ -17,4 +17,17 @@ export class WageDeterminationService{
 
     return this.oAPIService.call(apiParam);
   }
+
+  getWageDeterminationDictionary(ids: string) {
+    let apiParam = {
+      name: 'wageDetermination',
+      suffix: '/dictionaries',
+      oParam: {
+        ids: ids
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
 }

@@ -19,6 +19,7 @@ export class WageDeterminationPage implements OnInit {
   referenceNumber: any;
   revisionNumber:any;
   currentUrl: string;
+  dictionary: any;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -42,6 +43,7 @@ export class WageDeterminationPage implements OnInit {
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
+    this.loadDictionary();
     this.loadWageDetermination();
   }
 
@@ -63,6 +65,16 @@ export class WageDeterminationPage implements OnInit {
     });
 
     return apiSubject;
+  }
+
+  private loadDictionary() {
+    this.wgService.getWageDeterminationDictionary('state, county').subscribe(data => {
+      // do something with the dictionary api
+      this.dictionary = data;
+      console.log("Dictionary:", this.dictionary);
+    }, err => {
+      console.log('Error loading dictionaries: ', err);
+    });
   }
 
 }
