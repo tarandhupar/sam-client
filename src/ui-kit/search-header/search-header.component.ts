@@ -12,14 +12,7 @@ import { SamSearchbarComponent } from '../form-controls/searchbar/searchbar.comp
               <img src="src/assets/img/transition-sam-logo.png" alt="Sam.gov Logo">
             </a>
             <div class="search-bar-container">
-              <samSearchbar #searchbar
-                [size]="'small'" 
-                (onSearch)="onSearchEvent($event)"
-                [filterValue]="filterValue">
-                <div custom-input>
-                  <ng-content select="[header-search-input]"></ng-content>
-                </div>
-              </samSearchbar>
+              <ng-content select="[header-searchbar]"></ng-content>
             </div>
           </div>
         </div>

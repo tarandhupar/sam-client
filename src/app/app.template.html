@@ -6,14 +6,21 @@
   <div header-links>
     <SamHeaderLinks (onDropdownToggle)="toggleOverlay($event)"></SamHeaderLinks>
   </div>
-  <div header-search-input>
-    <samInputAutocomplete 
-      [serviceName]="'suggestions'"
-      [index]="index"
-      (searchTermEmit)="searchheader.searchbar.callSearch($event)"
-      [searchTerm]="keyword"
-      (keyEnterEmit)="searchheader.searchbar.onSearchClick()">
-    </samInputAutocomplete>
+  <div header-searchbar>
+    <samSearchbar #searchbar
+      [size]="'small'" 
+      (onSearch)="onHeaderSearchEvent($event)"
+      [filterValue]="index">
+      <div custom-input>
+        <samInputAutocomplete 
+          [serviceName]="'suggestions'"
+          [index]="index"
+          (searchTermEmit)="searchbar.callSearch($event)"
+          [searchTerm]="keyword"
+          (keyEnterEmit)="searchbar.onSearchClick()">
+        </samInputAutocomplete>
+      </div>
+    </samSearchbar>
   </div>
 </samSearchHeader>
 <samHeader *ngIf="!isHeaderWithSearch" (headerDropdownControl)="toggleOverlay($event)">
@@ -24,8 +31,7 @@
 
 <main id="main-container" class="occupy-page relative">
   <router-outlet></router-outlet>
-  <div  [ngClass]="{'overlay':showOverlay}">
-    </div>
+  <div [ngClass]="{'overlay':showOverlay}"></div>
 </main>
 <alertFooter></alertFooter>
 <samFooter labelname = "footer" ></samFooter>
