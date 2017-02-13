@@ -315,7 +315,7 @@ let MockOpportunityService = {
       },
       _links: {
         self: {
-          href: "http://10.98.29.81:122/opps/v1/opportunities/a2c630c37084d373200cc1bc6121bdf6/history"
+          href: "not a real link"
         }
       }
     });
