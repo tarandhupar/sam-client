@@ -13,7 +13,7 @@ import { AuthenticationRouter } from './authentication.route';
 import { RegisterGuard } from './register/register.guard';
 import { ProfileGuard } from './profile/profile.guard';
 
-import { KBAComponent, PasswordComponent } from './shared';
+import { SamKBAComponent, SamPasswordComponent } from './shared';
 import { LoginComponent } from './login';
 import { RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
 import { ForgotComponent, ForgotInitialComponent, ForgotConfirmComponent, ForgotMainComponent } from './forgot';
@@ -34,8 +34,8 @@ import { ProfileComponent, DetailsComponent, ResetComponent, MigrationsComponent
     /**
      * Shared
      */
-    KBAComponent,
-    PasswordComponent,
+    SamKBAComponent,
+    SamPasswordComponent,
 
     /**
      * Login
