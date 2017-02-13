@@ -13,22 +13,29 @@ export class HomePage {
     {
       title:'SAM.gov Transition Roadmap',
       detail:'The new SAM.gov has integrated all ten systems under one unified system. For more information on SAM.gov transition click ',
-      url:''
+      url:'/help/transition',
+      pageInProgress: true,
+      inProgressDetail:'The new SAM.gov has integrated all ten systems under one unified system.'
     },
     {
       title:'Award Data',
       detail:'Gain access to data in a variety of formats. Perform searches, download extracts, and retrieve data through web services. For more information on award data click ',
-      url:'/help/award'
+      url:'/help/award',
+      pageInProgress: true,
+      inProgressDetail:'Gain access to data in a variety of formats. Perform searches, download extracts, and retrieve data through web services.'
     },
     {
       title:'New to SAM.gov',
       detail:'New to the site? For step by step information on the federal award process click ',
-      url:'/help/new'
+      url:'/help/new',
+      pageInProgress: true,
+      inProgressDetail: 'New to the site? See step by step information on the federal award process.'
     },
     {
       title:'User Accounts',
       detail:'Access information on how to sign up, update registration, and other ways to manage your user account click ',
-      url:'/help/accounts'
+      url:'/help/accounts',
+      pageInProgress: false
     },
 
   ];
@@ -38,7 +45,6 @@ export class HomePage {
 
 
   constructor(private _router:Router) {
-
   }
 
   ngOnInit() {
@@ -85,6 +91,10 @@ export class HomePage {
     }
     return {"tri-down":false,"no-tri-down":true};
 
+  }
+
+  linkToggle():boolean{
+    return globals.showOptional;
   }
 
 }

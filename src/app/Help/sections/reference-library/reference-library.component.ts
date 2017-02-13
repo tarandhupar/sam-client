@@ -64,4 +64,8 @@ export class ReferenceLibraryComponent {
     this.imageLibraryNotification = val;
   }
 
+  private linkToggle():boolean{
+    return globals.showOptional;
+  }
+
 }
