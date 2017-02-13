@@ -430,3 +430,30 @@
     </div>
   </div>
 </div>
+
+<div class="usa-grid">
+  <h2 class="usa-width-one">Sam Collapsible</h2>
+  <div class="usa-width-one-fourth">
+    <sam-collapsible [label]="collapsibleLabel">
+      <h1>I got projected in here</h1>
+    </sam-collapsible>
+  </div>
+</div>
+<br/>
+
+<div class="usa-grid">
+  <h2 class="usa-width-one">Sam Filter Container</h2>
+  <div class="usa-width-one-fourth">
+    <sam-filters-container>
+      <sam-collapsible [label]="'Test 1'" [startOpened]="true">
+        <h4>Filter 1</h4>
+      </sam-collapsible>
+      <sam-collapsible [label]="'Test 2'">
+        <samDate name="example-date" [(value)]='dateModel'></samDate>
+      </sam-collapsible>
+      <sam-collapsible label="'Test 3'">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate ex aliquam, molestiae tempora. Nihil alias blanditiis excepturi architecto rerum repellendus adipisci ducimus minus, modi porro nostrum repudiandae perferendis placeat et.</p>
+      </sam-collapsible>
+    </sam-filters-container>
+  </div>
+</div>
