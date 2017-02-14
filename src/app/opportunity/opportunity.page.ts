@@ -446,7 +446,6 @@ export class OpportunityPage implements OnInit {
           this.alert.push({
             config: {
               type: 'info',
-              title: 'Not Latest Version',
               description: 'Note: There have been updates to this opportunity. To view the most recent update/amendment, click <a href="' + authoritative.url + '">here</a>'
             }
           });
