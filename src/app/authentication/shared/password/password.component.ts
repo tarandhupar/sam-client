@@ -15,7 +15,7 @@ export class SamPasswordComponent {
 
   protected config = {
     rules: {
-      minLength: 12,
+      minlength: 12,
       uppercase: 1,
       numeric: 1,
       special: 1
@@ -38,7 +38,7 @@ export class SamPasswordComponent {
 
     submitted: false,
     validations: {
-      minLength: false,
+      minlength: false,
       uppercase: false,
       numeric: false,
       special: false
@@ -47,7 +47,7 @@ export class SamPasswordComponent {
 
   constructor() {
     this.config.messages = {
-      minLength: `Be at least <strong>${this.config.rules.minLength}</strong> characters`,
+      minlength: `Be at least <strong>${this.config.rules.minlength}</strong> characters`,
       uppercase: `Have at least <strong>${this.config.rules.uppercase}</strong> uppercase character`,
       numeric: `Have at least <strong>${this.config.rules.numeric}</strong> numeric digit`,
       special: `Have at least <strong>${this.config.rules.special}</strong> special character`,
@@ -57,7 +57,7 @@ export class SamPasswordComponent {
 
   ngOnInit() {
     this.password.setValidators([
-      Validators.minLength(this.config.rules.minLength),
+      Validators.minLength(this.config.rules.minlength),
       $Validators.uppercase,
       $Validators.numeric,
       $Validators.special,
@@ -155,9 +155,9 @@ export class SamPasswordComponent {
         prop = control[state.replace(/ng-/, '')];
         classes[state] = prop;
       }
-
-      classes['ng-submitted'] = this.states.submitted;
     }
+
+    classes['ng-submitted'] = this.states.submitted;
 
     return classes;
   }
@@ -168,7 +168,10 @@ export class SamPasswordComponent {
         validator,
         verifyMatch = (
           (this.states.submitted && this.confirmPassword.dirty) &&
-          (!(this.password.errors['required'] || false) && !(this.confirmPassword.errors['required'] || false)) &&
+          (
+            !(this.password.errors && (this.password.errors['required'] || false)) &&
+            !(this.confirmPassword.errors && (this.confirmPassword.errors['required'] || false))
+          ) &&
           errors !== null &&
           errors['match'] !== undefined
         );

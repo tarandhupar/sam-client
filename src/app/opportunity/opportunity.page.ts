@@ -7,6 +7,8 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 import { OpportunityFields } from "./opportunity.fields";
 import { trigger, state, style, transition, animate } from '@angular/core';
 import * as _ from 'lodash';
+import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
+import { DateFormatPipe } from "../app-pipes/date-format.pipe";
 import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
 
 @Component({
@@ -69,6 +71,8 @@ export class OpportunityPage implements OnInit {
   originalOpportunity: any;
   opportunityLocation: any;
   opportunity: any;
+  history: any;
+  processedHistory: any;
   organization: any;
   currentUrl: string;
   dictionary: any;
@@ -134,13 +138,14 @@ export class OpportunityPage implements OnInit {
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
     this.loadAttachments(opportunityAPI);
+    this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
+    this.loadHistory(opportunityAPI);
+    this.sidenavService.updateData(this.selectedPage, 0);
+
     // Construct a new observable that emits both opportunity and its parent as a tuple
     // Combined observable will not trigger until both APIs have emitted at least one value
-    let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
-    this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
-    this.setDisplayFields(combinedOpportunityAPI);
-
-    this.sidenavService.updateData(this.selectedPage, 0);
+    let parentAndOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
+    this.setDisplayFields(parentAndOpportunityAPI);
   }
 
   private loadOpportunity() {
@@ -180,6 +185,10 @@ export class OpportunityPage implements OnInit {
           {
             "label": "Contact Information",
             "field": this.opportunityFields.Contact,
+          },
+          {
+            "label": "History",
+            "field": this.opportunityFields.History,
           }
         ]
       };
@@ -289,13 +298,17 @@ export class OpportunityPage implements OnInit {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
 
     opportunityAPI.subscribe(api => {
-      this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
-      this.fhService.getOrganizationLogo(organizationSubject,
-        (logoUrl) => {
-          this.logoUrl = logoUrl;
-        }, (err) => {
-          this.errorLogo = true;
-      });
+      if(api.data.organizationId != null) {
+        this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
+        this.fhService.getOrganizationLogo(organizationSubject,
+          (logoUrl) => {
+            this.logoUrl = logoUrl;
+          }, (err) => {
+            this.errorLogo = true;
+          });
+      } else {
+        this.errorOrganization = true;
+      }
     });
 
     organizationSubject.subscribe(organization => { // do something with the organization api
@@ -332,8 +345,8 @@ export class OpportunityPage implements OnInit {
         res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
       });
     }, err => {
-      console.log('Error loading attachments: ', err)
-        this.attachmentError = true;
+      console.log('Error loading attachments: ', err);
+      this.attachmentError = true;
     });
 
     return attachmentSubject;
@@ -348,6 +361,78 @@ export class OpportunityPage implements OnInit {
     });
   }
 
+  private loadHistory(opportunity: Observable<any>) {
+    opportunity.subscribe(opportunityAPI => {
+      if(opportunityAPI.opportunityId == '' || typeof opportunityAPI.opportunityId === 'undefined') {
+        console.log('Error loading history');
+        return;
+      }
+
+      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historyAPI => {
+        this.history = historyAPI; // save original history information in case it is needed
+
+        // setup necessary items for processing history
+        let typeLabel = new OpportunityTypeLabelPipe();
+        let dateFormat = new DateFormatPipe();
+        let originalType = typeLabel.transform(_.filter(historyAPI.content.history, historyItem => {
+          return historyItem.parent_notice == null;
+        })[0].procurement_type); // filter through history to find original opportunity, and save its type label
+
+        // process history into a form usable by history component
+        this.processedHistory = historyAPI.content.history.map(function(historyItem) {
+          let processedHistoryItem = {};
+          processedHistoryItem['id'] = historyItem.notice_id;
+          processedHistoryItem['title'] = (function makeTitle(){
+            let prefix = '';
+
+            if(historyItem.parent_notice != null) { prefix = 'Updated'; }
+
+            // Canceled prefix takes precedence over updated
+            if(historyItem.cancel_notice === '1') { prefix = 'Canceled'; }
+
+            // Original prefix takes precedence over all others
+            if(historyItem.parent_notice == null) { prefix = 'Original';}
+
+            let type = historyItem.procurement_type;
+            let currentType = typeLabel.transform(type); // label for type of current history item
+
+            switch(type) {
+                // For these types, show title as prefix and opportunity type
+              case 'p': // Presolicitation
+              case 'r': // Sources Sought
+              case 's': // Special Notice
+              case 'g': // Sale of Surplus Property
+              case 'f': // Foreign Government Standard
+              case 'k': // Combined Synopsis/Solicitation
+                return prefix + ' ' + currentType;
+
+                // For these types, show the opportunity type as the title with no prefix
+              case 'a': // Award Notice
+              case 'j': // Justification and Approval (J&A)
+              case 'i': // Intent to Bundle Requirements (DoD-Funded)
+              case 'l': // Fair Opportunity / Limited Sources Justification
+                return currentType;
+
+                // For modifications or cancellations, show the appropriate prefix plus original opportunity type
+              case 'm': // Modification/Amendment/Cancel
+                return prefix + ' ' + originalType;
+
+              // Unrecognized type, show generic message
+              default:
+                return prefix + ' Opportunity';
+            }
+          })();
+          processedHistoryItem['description'] = ''; // not implemented yet
+          processedHistoryItem['date'] = dateFormat.transform(historyItem.posted_date, 'MMM DD, YYYY h:mma');
+          processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
+          processedHistoryItem['index'] = historyItem.index;
+          processedHistoryItem['isTagged'] = false; // todo: decide on logic for which opportunities are tagged
+          return processedHistoryItem;
+        });
+      });
+    });
+  }
+
   // Sets the correct displayField flags for this opportunity type
   private setDisplayFields(combinedOpportunityAPI: Observable<any>) {
     combinedOpportunityAPI.subscribe(([opportunity, parent]) => {
@@ -359,17 +444,18 @@ export class OpportunityPage implements OnInit {
       this.displayField = {}; // for safety, clear any existing values
 
       switch (opportunity.data.type) {
-        // Base opportunity types
-        // These types are a superset of 'j', using case fallthrough
-        case 'p': // Presolicitation
-        case 'r': // Sources Sought
-        case 's': // Special Notice
+        // These types are a superset of p/m/r/s, using case fallthrough
         case 'g': // Sale of Surplus Property
         case 'f': // Foreign Government Standard
+          this.displayField[OpportunityFields.SpecialLegislation] = false;
+        // These types are a superset of j, using case fallthrough
+        case 'p': // Presolicitation
+        case 'k': // Combined Synopsis/Solicitation
+        case 'r': // Sources Sought
+        case 's': // Special Notice
           this.displayField[OpportunityFields.Award] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
-        // Other types
         case 'j': // Justification and Approval (J&A)
           this.displayField[OpportunityFields.AwardAmount] = false;
           this.displayField[OpportunityFields.LineItemNumber] = false;
@@ -382,11 +468,12 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.OrderNumber] = false;
           break;
 
-        // Type 'i' is a superset of 'l', using case fallthrough
+        // Type i is a superset of l, using case fallthrough
         case 'i': // Intent to Bundle Requirements (DoD-Funded)
           this.displayField[OpportunityFields.AwardDate] = false;
           this.displayField[OpportunityFields.JustificationAuthority] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
+          this.displayField[OpportunityFields.SpecialLegislation] = false;
         case 'l': // Fair Opportunity / Limited Sources Justification
           this.displayField[OpportunityFields.AwardAmount] = false;
           this.displayField[OpportunityFields.LineItemNumber] = false;
@@ -397,8 +484,7 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
           break;
 
-        case 'm': //Todo: Modification/Amendment/Cancel
-        case 'k': //Todo: Combined Synopsis/Solicitation
+        case 'm': // Todo: Modification/Amendment/Cancel
           this.displayField[OpportunityFields.Award] = false;
           break;
 
@@ -555,7 +641,7 @@ export class OpportunityPage implements OnInit {
     card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
   }
 
-  public hasResources(){
+  public hasPublicPackages(){
     for(let pkg of this.attachment['packages']) {
       if(pkg['access'] === 'Public') { return true; }
     }
