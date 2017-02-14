@@ -25,16 +25,10 @@ import * as moment from 'moment/moment';
         </ul>
         <!--History section to be displayed only for historical records-->
         <div *ngIf="data.isActive==false">
-        <strong class=usa-external_link (click)="toggleHistory()">History</strong>
-        <div *ngIf="toggleField">
-        <ul>
-          <li *ngFor="let item of history" class="current">
-            <span>  
-            <strong>{{item.createdDate | date:"yyyy"}}</strong>: <span>{{item.body}}</span>
-            </span>
-          </li>
-        </ul>
-        </div>
+          <h4 (click)="toggleHistory()" class="collapsible" [class.expanded]="toggleField">History</h4>
+          <div *ngIf="toggleField">
+            <history [data]="history"></history>
+          </div>
         </div>
     	</div>
     	<div class="usa-width-one-third">
@@ -62,7 +56,15 @@ export class AssistanceListingResult implements OnInit {
 
   ngOnInit(){
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
-    this.history = this.data.historicalIndex;
+    this.history = _.map(this.data.historicalIndex, function(value){
+      return {
+        "id": value.historicalIndexId,
+        "index": value.index,
+        "date": moment(value.createdDate).format("MMM D, Y h:mm a"),
+        "title": value.body,
+      }
+    });
+    this.history = _.sortBy(this.history, ['index']);    
   }
 
   toggleHistory() {
