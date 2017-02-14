@@ -434,7 +434,7 @@ export class OpportunityPage implements OnInit {
         });
 
         // Alert if not latest version
-        let tagged = _.filter(this.processedHistory, historyItem => {
+        let current = _.filter(this.processedHistory, historyItem => {
           return historyItem.id === opportunityAPI.opportunityId;
         })[0];
 
@@ -442,7 +442,7 @@ export class OpportunityPage implements OnInit {
           return historyItem.authoritative === '1';
         })[0];
 
-        if(tagged.id !== authoritative.id) {
+        if(authoritative && current.id !== authoritative.id) {
           this.alert.push({
             config: {
               type: 'info',
