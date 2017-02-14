@@ -93,7 +93,7 @@ export class OpportunityPage implements OnInit {
   min: number;
   max: number;
   private ready: boolean = false;
-  
+
   // On load select first item on sidenav component
   selectedPage: number = 0;
   pageRoute: string;
@@ -101,7 +101,7 @@ export class OpportunityPage implements OnInit {
     "label": "Opportunities",
     "children": []
   };
-  
+
   constructor(
     private sidenavService: SidenavService,
     private router: Router,
@@ -139,7 +139,7 @@ export class OpportunityPage implements OnInit {
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
     this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.setDisplayFields(combinedOpportunityAPI);
-    
+
     this.sidenavService.updateData(this.selectedPage, 0);
   }
 
@@ -194,11 +194,11 @@ export class OpportunityPage implements OnInit {
 
     return opportunitySubject;
   }
-  
+
   private updateSideNav(content?){
 
     let self = this;
-    
+
     if(content){
       // Items in first level (pages) have to have a unique name
       let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
@@ -207,9 +207,9 @@ export class OpportunityPage implements OnInit {
         this.sidenavModel.children.push(content);
       }
     }
-    
+
     updateContent();
-    
+
     function updateContent(){
       let children = _.map(self.sidenavModel.children, function(possiblePage){
         let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
@@ -224,7 +224,7 @@ export class OpportunityPage implements OnInit {
       });
       self.sidenavModel.children = children;
     }
-    
+
   }
 
   private loadParentOpportunity(opportunityAPI: Observable<any>){
@@ -265,7 +265,7 @@ export class OpportunityPage implements OnInit {
           'unparsableCount': data['unparsableCount']
         };
         this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
-        
+
         let awardSideNavContent = {
           "label": "Award Notices",
           "route": this.pageRoute,
@@ -277,7 +277,7 @@ export class OpportunityPage implements OnInit {
           ]
         };
         this.updateSideNav(awardSideNavContent);
-        
+
       }
     }, err => {
       console.log('Error loading related opportunities: ', err);
@@ -293,13 +293,17 @@ export class OpportunityPage implements OnInit {
     let organizationSubject = new ReplaySubject(1); // broadcasts the organization to multiple subscribers
 
     opportunityAPI.subscribe(api => {
-      this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
-      this.fhService.getOrganizationLogo(organizationSubject,
-        (logoUrl) => {
-          this.logoUrl = logoUrl;
-        }, (err) => {
-          this.errorLogo = true;
-      });
+      if(api.data.organizationId != null) {
+        this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
+        this.fhService.getOrganizationLogo(organizationSubject,
+          (logoUrl) => {
+            this.logoUrl = logoUrl;
+          }, (err) => {
+            this.errorLogo = true;
+          });
+      } else {
+        this.errorOrganization = true;
+      }
     });
 
     organizationSubject.subscribe(organization => { // do something with the organization api
@@ -361,19 +365,20 @@ export class OpportunityPage implements OnInit {
       }
 
       this.displayField = {}; // for safety, clear any existing values
-      
-      switch (opportunity.data.type) {  
-        // Base opportunity types
-        // These types are a superset of 'j', using case fallthrough
-        case 'p': // Presolicitation
-        case 'r': // Sources Sought
-        case 's': // Special Notice
+
+      switch (opportunity.data.type) {
+        // These types are a superset of p/m/r/s, using case fallthrough
         case 'g': // Sale of Surplus Property
         case 'f': // Foreign Government Standard
+          this.displayField[OpportunityFields.SpecialLegislation] = false;
+        // These types are a superset of j, using case fallthrough
+        case 'p': // Presolicitation
+        case 'k': // Combined Synopsis/Solicitation
+        case 'r': // Sources Sought
+        case 's': // Special Notice
           this.displayField[OpportunityFields.Award] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
-        // Other types
         case 'j': // Justification and Approval (J&A)
           this.displayField[OpportunityFields.AwardAmount] = false;
           this.displayField[OpportunityFields.LineItemNumber] = false;
@@ -386,11 +391,12 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.OrderNumber] = false;
           break;
 
-        // Type 'i' is a superset of 'l', using case fallthrough
+        // Type i is a superset of l, using case fallthrough
         case 'i': // Intent to Bundle Requirements (DoD-Funded)
           this.displayField[OpportunityFields.AwardDate] = false;
           this.displayField[OpportunityFields.JustificationAuthority] = false;
           this.displayField[OpportunityFields.ModificationNumber] = false;
+          this.displayField[OpportunityFields.SpecialLegislation] = false;
         case 'l': // Fair Opportunity / Limited Sources Justification
           this.displayField[OpportunityFields.AwardAmount] = false;
           this.displayField[OpportunityFields.LineItemNumber] = false;
@@ -401,8 +407,7 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
           break;
 
-        case 'm': //Todo: Modification/Amendment/Cancel
-        case 'k': //Todo: Combined Synopsis/Solicitation
+        case 'm': // Todo: Modification/Amendment/Cancel
           this.displayField[OpportunityFields.Award] = false;
           break;
 
@@ -457,7 +462,7 @@ export class OpportunityPage implements OnInit {
       }
 
       this.ready = true;
-      
+
       this.updateSideNav();
     });
   }
@@ -525,11 +530,11 @@ export class OpportunityPage implements OnInit {
   public getDownloadFileURL(fileID: string){
     return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey();
   }
-  
+
   selectedItem(item){
     this.selectedPage = this.sidenavService.getData()[0];
   }
-  
+
   sidenavPathEvtHandler(data){
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
 		if(data.charAt(0)=="#"){
@@ -559,7 +564,7 @@ export class OpportunityPage implements OnInit {
     card.accordionState = card.accordionState == 'expanded' ? 'collapsed' : 'expanded';
   }
 
-  public hasResources(){
+  public hasPublicPackages(){
     for(let pkg of this.attachment['packages']) {
       if(pkg['access'] === 'Public') { return true; }
     }
