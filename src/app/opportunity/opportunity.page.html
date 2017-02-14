@@ -420,7 +420,14 @@
           </div>
         </div>
       </section>
-    </div>
+
+
+      <section [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History) && history">
+        <h2>History</h2>
+        <history [data]="processedHistory" [currentId]="opportunity.opportunityId"></history>
+      </section>
+     </div>
+
 
     <div [class.hide]="selectedPage !== 1">
 
@@ -511,5 +518,6 @@
     </div>
 
     <br><br>
+
   </div>
 </div>
