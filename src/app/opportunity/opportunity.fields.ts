@@ -75,5 +75,8 @@ export enum OpportunityFields {
   POCFullName = <any>'poc-full-name',
   POCEmail = <any>'poc-email',
   POCPhone = <any>'poc-phone',
-  POCFax = <any>'poc-fax'
+  POCFax = <any>'poc-fax',
+  
+  // History section
+  History = <any>'history'
 }
