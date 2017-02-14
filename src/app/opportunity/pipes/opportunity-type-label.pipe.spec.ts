@@ -36,4 +36,7 @@ describe('OpportunityLabelPipe', () => {
   it('transforms "l" to "Fair Opportunity / Limited Sources Justification"', () => {
     expect(pipe.transform('l')).toBe('Fair Opportunity / Limited Sources Justification');
   });
+  it('transforms null to ""', () => {
+    expect(pipe.transform(null)).toBe('');
+  });
 });
