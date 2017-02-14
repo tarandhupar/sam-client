@@ -4,7 +4,7 @@ import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, 
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { SamPhoneEntryComponent } from 'ui-kit/form-controls/phone-entry';
+import { SamNameEntryComponent, SamPhoneEntryComponent } from 'ui-kit';
 import { SamKBAComponent, SamPasswordComponent } from '../shared';
 
 import { IAMService } from 'api-kit';
@@ -22,8 +22,9 @@ import { KBA } from '../kba.interface';
 export class RegisterMainComponent {
   @Input() user: User;
 
-  @ViewChild(SamPhoneEntryComponent) phoneEntry: SamPhoneEntryComponent;
-  @ViewChild(SamPasswordComponent) passwordComponent: SamPasswordComponent;
+  @ViewChild('nameEntry') nameEntry: SamNameEntryComponent;
+  @ViewChild('phoneEntry') phoneEntry: SamPhoneEntryComponent;
+  @ViewChild('passwordComponent') passwordComponent: SamPasswordComponent;
 
   @ViewChildren(SamKBAComponent) kbaComponents:QueryList<any>;
 
@@ -304,7 +305,6 @@ export class RegisterMainComponent {
 
   updatePhoneNumber(phoneNumber) {
     this.user.workPhone = phoneNumber;
-    console.log(phoneNumber);
   }
 
   prepareData() {
@@ -371,6 +371,7 @@ export class RegisterMainComponent {
     let userData,
         kbaAnswerList = this.userForm.value['kbaAnswerList'];
 
+    this.nameEntry.setSubmitted();
     this.phoneEntry.check();
     this.passwordComponent.setSubmitted();
 

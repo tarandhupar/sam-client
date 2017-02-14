@@ -2,9 +2,9 @@
   <div class="usa-width-one-whole">
     <h1>Complete Sign-Up</h1>
     <span>Thank you for joining the new SAM.gov. To Complete the process and gain account access, please fill in the information below.</span>
-    <form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="register()" class="usa-form usa-form-register" autocomplete="off">
+    <form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="register()" class="usa-form usa-form-register" autocomplete="off" novalidate>
       <fieldset class="name">
-        <samNameEntry [model]="user" legend="Your Name"></samNameEntry>
+        <samNameEntry [model]="user" legend="Your Name" #nameEntry></samNameEntry>
       </fieldset>
       <fieldset class="phone">
         <legend>Business Phone</legend>
