@@ -19,6 +19,8 @@ export { SamSpinnerComponent } from './spinner/spinner.component';
 export { SamDateTimeComponent } from "./form-controls/date-time/date-time.component";
 export { SamDateComponent } from "./form-controls/date/date.component";
 export { SamTimeComponent } from "./form-controls/time/time.component";
+export { SamNameEntryComponent } from './form-controls/name-entry';
+export { SamPhoneEntryComponent } from './form-controls/phone-entry';
 export { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
 export { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
 export { SamSidenavModule } from './sidenav';
