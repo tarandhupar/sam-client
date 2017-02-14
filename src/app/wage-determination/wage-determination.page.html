@@ -1,24 +1,44 @@
 <div class="usa-grid" id="wage-determination-page">
   <div class="usa-width-one-whole">
-    <ng-container *ngIf = "wageDetermination">
+    <ng-container *ngIf = "wageDetermination && dictionary">
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
-      <ng-container *ngIf = "wageDetermination">
-      <strong>State/States: </strong>
-      <ng-container *ngFor = "let element of wageDetermination?.location?.state">
-        {{element}}
+
+      <ng-container *ngIf="wageDetermination?.location && dictionary">
+        <ng-container *ngFor = "let element of wageDetermination?.location ">
+          <ng-container>{{ element.state }}</ng-container>
+        </ng-container>
       </ng-container>
-      <strong>County/ties: </strong>
-      <ng-container *ngFor = "let element of wageDetermination?.location?.counties">
-        {{element}}
-      </ng-container>
-      </ng-container>
-      <strong>Revision: </strong>
-      {{wageDetermination.revisionNumber}}
-      <strong>Services: </strong>
-      <ng-container *ngFor = "let element of wageDetermination?.services">
-        {{element}}
-      </ng-container>
+
+      <!--<strong>State/States: </strong>-->
+      <!--&lt;!&ndash;<ng-container *ngFor = "let element of wageDetermination?.location?.state">&ndash;&gt;-->
+        <!--&lt;!&ndash;{{element}}&ndash;&gt;-->
+      <!--&lt;!&ndash;</ng-container>&ndash;&gt;-->
+      <!--<ng-container *ngIf="wageDetermination?.location?.state && dictionary">-->
+        <!--<ng-container *ngFor = "let element of [wageDetermination?.location?.state] | filterMultiArrayObject:dictionary.state:'element_id':false:''">-->
+          <!--<ng-container>{{ element.value }}</ng-container>-->
+        <!--</ng-container>-->
+      <!--</ng-container>-->
+      <!--<strong>County/ties: </strong>-->
+      <!--&lt;!&ndash;<ng-container *ngFor = "let element of wageDetermination?.location?.counties">&ndash;&gt;-->
+        <!--&lt;!&ndash;{{element}}&ndash;&gt;-->
+      <!--&lt;!&ndash;</ng-container>&ndash;&gt;-->
+      <!--<ng-container *ngIf="wageDetermination?.location?.county && dictionary">-->
+        <!--<ng-container *ngFor = "let element of [wageDetermination?.location?.county] | filterMultiArrayObject:dictionary.county:'element_id':false:''">-->
+          <!--<ng-container>{{ element.value }}</ng-container>-->
+        <!--</ng-container>-->
+      <!--</ng-container>-->
+      <!--<strong>Revision: </strong>-->
+      <!--{{wageDetermination.revisionNumber}}-->
+      <!--<strong>Services: </strong>-->
+      <!--&lt;!&ndash;<ng-container *ngFor = "let element of wageDetermination?.services">&ndash;&gt;-->
+        <!--&lt;!&ndash;{{element}}&ndash;&gt;-->
+      <!--&lt;!&ndash;</ng-container>&ndash;&gt;-->
+      <!--<ng-container *ngIf="wageDetermination?.location?.services && dictionary">-->
+        <!--<ng-container *ngFor = "let element of [wageDetermination?.location?.services] | filterMultiArrayObject:dictionary.county:'element_id':false:''">-->
+          <!--<ng-container>{{ element.value }}</ng-container>-->
+        <!--</ng-container>-->
+      <!--</ng-container>-->
       <strong>Published Date: </strong>
       {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
     </ng-container>
