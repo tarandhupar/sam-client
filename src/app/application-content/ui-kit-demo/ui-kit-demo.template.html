@@ -328,6 +328,7 @@
     <div class="usa-width-one-third">
       <samPhoneEntry [(model)]="phoneModel" (emitter)="phoneModelChange($event)"></samPhoneEntry>
       <samPhoneEntry [phoneNumberTemplate]="phoneTemplate2" [(model)]="phoneModel2" (emitter)="phoneModelChange($event)"></samPhoneEntry>
+      <samPhoneEntry [phoneNumberTemplate]="phoneTemplate3" [numbersOnly]="true" [(model)]="phoneModel3" (emitter)="phoneModelChange($event)"></samPhoneEntry>
     </div>
     <div class="usa-width-one-third">
       <h3>Model</h3>

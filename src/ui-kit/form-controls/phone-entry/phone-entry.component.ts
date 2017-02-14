@@ -42,10 +42,12 @@ export class SamPhoneEntryComponent implements OnInit {
   * Prefix name/id attribute values
   */
   @Input() prefix: string = "";
+  
+  @Input() required: boolean;
+  @Input() numbersOnly: boolean;
   /**
   * Event emitter when model changes, outputs a string
   */
-  @Input() required: boolean;
   @Output() emitter = new EventEmitter<string>();
 
   @ViewChild("phoneInput") phoneInput;
@@ -67,9 +69,28 @@ export class SamPhoneEntryComponent implements OnInit {
     }
     
     if(this.model.length>0) {
-      this.phoneNumberMirror = this.model;
-      this.phoneNumber = this.model;
+      var phoneNum = this.model;
+      if(this.numbersOnly){
+        phoneNum = this.formatWithTemplate(phoneNum);
+      }
+      this.phoneNumberMirror = phoneNum;
+      this.phoneNumber = phoneNum;
     }
+  }
+  
+  formatWithTemplate(numberStr:string){
+    var loop = true;
+    var templateStr = this.phoneNumberTemplate;
+    var idx = 0;
+    while(loop){
+      if(templateStr.indexOf("_")!=-1 || idx < numberStr.length){
+        templateStr = this.replaceAt(templateStr.indexOf("_"),numberStr.charAt(idx),templateStr);
+        idx++;
+      } else {
+        loop = false;
+      }
+    }
+    return templateStr;
   }
 
   getIdentifier(str) {
@@ -105,12 +126,11 @@ export class SamPhoneEntryComponent implements OnInit {
       this.phoneInput.nativeElement.value = updatedPhoneNumber.substr(0,this.phoneNumberTemplate.length);
       this.phoneNumber = updatedPhoneNumber.substr(0,this.phoneNumberTemplate.length);
       this.phoneInput.nativeElement.setSelectionRange(positionIncrement,positionIncrement);
-    } else if(event.key=="Backspace") {
+    } else if(event.key=="Backspace" && start>0){
       let positionDecrement = this.getPositionDecrement(start);
-
       event.preventDefault();
-
       if(start!=end) {
+        //for selections
         for(let idx=start; idx < end; idx++) {
           if(this.badIndex.indexOf(idx)==-1) {
             this.phoneNumber = this.replaceAt(idx,"_",this.phoneNumber);
@@ -118,6 +138,7 @@ export class SamPhoneEntryComponent implements OnInit {
         }
         positionDecrement = start;
       } else {
+        //single characters
         this.phoneNumber = this.replaceAt(positionDecrement,"_",this.phoneNumber).substr(0,16);
       }
       this.phoneInput.nativeElement.value = this.phoneNumber;
@@ -130,17 +151,15 @@ export class SamPhoneEntryComponent implements OnInit {
       this.phoneInput.nativeElement.setSelectionRange(start,start);
     }
     
-    /*
-    let updateModel = this.phoneNumber.replace(/\(/g,'');
-    updateModel = updateModel.replace(/\)/g,'-');
-    updateModel = updateModel.replace(/\+/g,'-');
-    updateModel = updateModel.replace(/_/g,'');
-    updateModel = updateModel.replace(/^\D+/g,'');
-    this.model = updateModel;
-    */
     let updateModel = this.phoneNumber;
-
-    this.model = updateModel;
+    if(this.numbersOnly){
+      for(var idx in this.badIndex){
+        updateModel = this.replaceAt(this.badIndex[idx],"_",updateModel);
+      }
+      this.model = updateModel.replace(/\_/g,"");
+    } else {
+      this.model = updateModel;
+    }
     this.emitter.emit(this.model);
   }
 
@@ -159,10 +178,7 @@ export class SamPhoneEntryComponent implements OnInit {
         return i;
       }
     }
-    if(pos-1>0){
-      return pos-1;  
-    }
-    return 0;
+    return this.phoneNumberTemplate.indexOf("_");
   }
 
   check() {
@@ -184,4 +200,5 @@ export class SamPhoneEntryComponent implements OnInit {
   replaceAt(index, character, str) {
     return str.substr(0, index) + character + str.substr(index+character.length);
   }
+  
 }
