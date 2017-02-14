@@ -22,7 +22,7 @@ describe('AssistanceListingResultComponent', () => {
       comp.data = {
         title: "ABCDEFG",
         programNumber: "12345",
-        archive: false,
+        isActive: false,
         _links: {
           self:{
             href: "http://www.sam.gov"
@@ -40,10 +40,6 @@ describe('AssistanceListingResultComponent', () => {
 
   it('should display a programNumber', () => {
     expect(programNumberEl.nativeElement.textContent).toContain("12345");
-  });
-
-  it('should display have a FAL url', () => {
-    expect(comp.printFALLink()).toEqual("http://www.sam.gov");
   });
 
 });

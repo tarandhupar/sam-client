@@ -21,14 +21,16 @@
 @import 'components/authentication';
 @import 'components/footer';
 @import 'components/button';
+@import 'components/collapsible';
 @import 'components/pagination';
 @import 'components/header';
+@import 'components/header-links';
+@import 'components/header-menu';
 @import 'components/agency-picker';
 @import 'components/input';
 @import 'components/multiselect';
 @import 'components/banner';
 @import 'components/searchbar';
-@import 'components/header-links';
 @import 'components/search-header';
 @import 'components/multiselect-dropdown';
 @import 'components/image-library';
@@ -50,6 +52,7 @@
 @import 'pages/help-accounts';
 @import 'pages/help-roadmap';
 @import 'pages/users-directory';
+@import 'pages/ui-kit-demo';
 
 html, body{
   height: 100%;
@@ -113,4 +116,27 @@ h2{
   height: 160px;
   display: block;
   margin: 0 auto;
+}
+
+.usa-sidenav-list > li{
+  border-top: 1px solid #f1f1f1;
+}
+
+// Make sidenav use all availabe horizontal space on medium screen
+@media screen and (min-width: $medium-screen) and (max-width: $large-screen - 1) {
+  aside.usa-width-one-fourth{
+    margin-right: 0;
+    width: 100%;
+  }
+}
+
+.search-layout{
+  .showing-results-meta{
+    margin-top:3rem!important;  
+  }
+  samselect{
+    label{
+      margin-top:0;
+    }
+  }
 }

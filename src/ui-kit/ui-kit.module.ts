@@ -18,6 +18,8 @@ import { SamStickyComponent } from "./sticky/sticky.component";
 import { SamFooterComponent } from "./footer/footer.component";
 import { SamLabelComponent } from "./label/label.component";
 import { SamHeaderComponent } from "./header/header.component";
+import { SamHeaderLinksComponent } from "./header-links/header-links.component";
+import { SamHeaderMenuComponent } from './header-menu';
 import { SamAlertComponent } from "./alert/alert.component";
 import { SamSpinnerComponent } from './spinner/spinner.component';
 import { SamAccordionComponent, SamAccordionSection } from "./accordion/accordion.component";
@@ -25,7 +27,6 @@ import { SamButtonComponent } from "./form-controls/button/button.component.ts";
 import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.component";
 import { SamPaginationComponent } from "./pagination/pagination.component";
 import { SamClickOutsideDirective } from "./click-outside/click-outside.directive";
-import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multiselect-dropdown.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
@@ -40,6 +41,10 @@ import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/i
 import { SamModalComponent } from "./modal/modal.component";
 import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
 import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
+import { SamSidenavModule } from './sidenav';
+
+import { SamCollapsibleComponent } from './collapsible';
+import { SamFiltersContainerComponent } from './filters-container';
 
 /**
  * A module for reusable SAM Web Design components
@@ -48,7 +53,6 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
 @NgModule({
   declarations: [
     SamClickOutsideDirective,
-    SamHeaderLinksComponent,
     SamPaginationComponent,
     SamAccordionComponent,
     SamAccordionSection,
@@ -64,6 +68,8 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
     SamStickyComponent,
     SamFooterComponent,
     SamHeaderComponent,
+    SamHeaderLinksComponent,
+    SamHeaderMenuComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
@@ -81,17 +87,22 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
     FieldsetWrapper,
     SamTabsComponent,
     SamTabComponent,
-    SamAlphabetSelectorComponent
+    SamAlphabetSelectorComponent,
+    SamCollapsibleComponent,
+    SamFiltersContainerComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    SamSidenavModule
   ],
   exports: [
     LabelWrapper,
     SamClickOutsideDirective,
+    SamHeaderComponent,
     SamHeaderLinksComponent,
+    SamHeaderMenuComponent,
     SamPaginationComponent,
     SamAccordionComponent,
     SamAccordionSection,
@@ -106,7 +117,6 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
     SamSearchHeaderComponent,
     SamStickyComponent,
     SamFooterComponent,
-    SamHeaderComponent,
     SamSpinnerComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
@@ -123,6 +133,9 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
     SamTabComponent,
     SamModalComponent,
     SamAlphabetSelectorComponent,
+    SamSidenavModule,
+    SamCollapsibleComponent,
+    SamFiltersContainerComponent
   ],
   providers: [
     AlphabetSelectorService

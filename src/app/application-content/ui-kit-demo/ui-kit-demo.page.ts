@@ -1,4 +1,4 @@
-import { Component,ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AlertFooterService } from '../../alerts/alert-footer';
 
 @Component({
@@ -156,6 +156,18 @@ export class UIKitDemoPage {
     type:'success',
     title:'Sample Title'
   }
+
+  store = {
+    menu: {
+      open: false,
+      items: [
+        { text: 'Menu Item 1', routerLink: '/ui-kit' },
+        { text: 'Menu Item 2', routerLink: '/ui-kit' }
+      ]
+    }
+  };
+
+  collapsibleLabel = 'Test Label';
 
   constructor(private alertFooterService: AlertFooterService) {  }
 

@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
-import {Router} from "@angular/router";
-import {Alert} from "./alert.model";
-import {SystemAlertsService} from "../../api-kit/system-alerts/system-alerts.service";
-import {ERROR_PAGE_PATH} from "../application-content/error/error.route";
-import {Observable} from "rxjs";
-import {Cookie} from 'ng2-cookies';
+import { Component, NgZone } from '@angular/core';
+import { Router } from "@angular/router";
+import { Alert } from "./alert.model";
+import { SystemAlertsService } from "../../api-kit/system-alerts/system-alerts.service";
+import { Observable } from "rxjs";
+import { Cookie } from 'ng2-cookies';
+import { AlertFooterService } from "./alert-footer/alert-footer.service";
+import { IAMService } from "api-kit";
 
 export const ALERTS_PER_PAGE: number = 5;
 
 @Component({
-  providers: [ ],
+  providers: [ IAMService ],
   templateUrl: 'alerts.template.html'
 })
 export class AlertsPage {
@@ -65,20 +66,36 @@ export class AlertsPage {
     {label: 'End date (oldest first)', value: 'eda'},
   ];
 
-  constructor(public router: Router, private alertsService: SystemAlertsService) {
+  user = null;
 
+  states = {
+    isSignedIn: false,
+    menu: false
+  };
+
+  constructor(private router: Router,
+              private alertsService: SystemAlertsService,
+              private alertFooterService: AlertFooterService,
+              private zone: NgZone,
+              private api: IAMService) {
   }
 
-  userRole() {
-    return Cookie.get('role') || 'other';
+  checkSession() {
+    //Get the sign in info
+    this.zone.runOutsideAngular(() => {
+      this.api.iam.checkSession((user) => {
+        this.zone.run(() => {
+          this.states.isSignedIn = true;
+          this.user = user;
+        });
+      });
+    });
   }
 
-  onRoleChange(val) {
-    Cookie.set('role', val);
-  }
 
   isAdmin() {
-    return Cookie.get('role') === 'admin';
+    // Will leverage to admin role later when the RM service is ready
+    return this.states.isSignedIn;
   }
 
   showClassSelector() {
@@ -86,6 +103,7 @@ export class AlertsPage {
   }
 
   ngOnInit() {
+    this.checkSession();
     this.doSearch();
   }
 
@@ -99,11 +117,7 @@ export class AlertsPage {
   }
 
   doSearch() {
-    this.getAlerts().catch(err => {
-      this.router.navigate([ERROR_PAGE_PATH]);
-      return Observable.of(err);
-    })
-    .subscribe((alerts) => this.onNewAlertsReceived(alerts));
+    this.getAlerts().subscribe((alerts) => this.onNewAlertsReceived(alerts));
   }
 
   getAlerts() : Observable<any> {
@@ -163,31 +177,34 @@ export class AlertsPage {
   }
 
   onAddAlertAccept(alert) {
-    this.currentPage = 1;
     this.alertsService.createAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
       (alerts) => {
+        this.currentPage = 1;
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
       },
-      (error) => {
-        console.error('Error while adding alerts: ', error);
-        this.router.navigate([ERROR_PAGE_PATH]);
-      }
+      () => this.showFooter()
     );
   }
 
   onEditAlertAccept(alert) {
-    this.currentPage = 1;
     this.alertsService.updateAlert(alert.raw()).switchMap(() => this.getAlerts()).subscribe(
       (alerts) => {
+        this.currentPage = 1;
         this.onNewAlertsReceived(alerts);
         this.exitEditMode();
       },
-      (error) => {
-        console.error('Error while editing alert: ', error);
-        this.router.navigate([ERROR_PAGE_PATH]);
-      }
+      () => this.showFooter()
     );
+  }
+
+  showFooter() {
+    this.alertFooterService.registerFooterAlert({
+      title:"The alerts service encountered an error.",
+      description:"",
+      type:'error',
+      timer:0
+    });
   }
 
   exitEditMode() {
