@@ -6,12 +6,14 @@ import { WageDeterminationService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 import * as _ from 'lodash';
+import {FilterMultiArrayObjectPipe} from "../app-pipes/filter-multi-array-object.pipe";
 
 @Component({
   moduleId: __filename,
   templateUrl: 'wage-determination.page.html',
   providers: [
-    WageDeterminationService
+    WageDeterminationService,
+    FilterMultiArrayObjectPipe
   ]
 })
 export class WageDeterminationPage implements OnInit {
@@ -19,12 +21,16 @@ export class WageDeterminationPage implements OnInit {
   referenceNumber: any;
   revisionNumber:any;
   currentUrl: string;
-  dictionary: any;
+  dictionaries: any;
+  states: string;
+  counties: string;
+  services: string;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
 
   constructor(
+    private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe,
     private router: Router,
     private route:ActivatedRoute,
     private wgService:WageDeterminationService) {
@@ -59,7 +65,6 @@ export class WageDeterminationPage implements OnInit {
     this.apiSubjectSub = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.wageDetermination = api;
-      console.log("Wage Determination: ", this.wageDetermination);
     }, err => {
       console.log('Error logging', err);
     });
@@ -68,13 +73,53 @@ export class WageDeterminationPage implements OnInit {
   }
 
   private loadDictionary() {
-    this.wgService.getWageDeterminationDictionary('state, county').subscribe(data => {
+    this.wgService.getWageDeterminationDictionary('state, county, services').subscribe(data => {
       // do something with the dictionary api
-      this.dictionary = data;
-      console.log("Dictionary:", this.dictionary);
+      this.dictionaries = data;
     }, err => {
       console.log('Error loading dictionaries: ', err);
     });
   }
 
+  private getStatesAndCounties(){
+
+    let statesString = "";
+    let countiesString = "";
+    let county:string;
+    let resultCounty:any;
+    for (let location of this.wageDetermination.location){
+      let state:string;
+      let resultState = this.FilterMultiArrayObjectPipe.transform([location.state], this.dictionaries.state, 'element_id', false, "");
+      state = (resultState instanceof Array && resultState.length > 0) ? resultState[0].value : [];
+      statesString = statesString.concat(state + ", ");
+      countiesString = countiesString.concat(state + " - ");
+      for (let countyElement of location.counties){
+        county = null;
+        (countyElement == null) ? (county = "Statewide") : (resultCounty = this.FilterMultiArrayObjectPipe.transform([countyElement.toString()], this.dictionaries.county, 'element_id', false, ""));
+        if (county == null){
+          county = (resultCounty instanceof Array && resultCounty.length > 0) ? resultCounty[0].value : [];
+        }
+        }
+      countiesString = countiesString.concat(county + ", ");
+      }
+    countiesString = countiesString.substring(0, countiesString.length - 2);
+    countiesString = countiesString.concat("\n");
+    statesString = statesString.substring(0, statesString.length - 2);
+    this.states = statesString;
+    this.counties = countiesString;
+
+
+    return true;
+  }
+  private getServices(){
+    let servicesString = "";
+    for (let element of this.wageDetermination.services){
+      let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], this.dictionaries.services, 'element_id', false, "");
+      let services = (result instanceof Array && result.length > 0) ? result[0].value : [];
+      servicesString = servicesString.concat(services + ", ");
+    }
+    servicesString = servicesString.substring(0, servicesString.length - 2);
+    this.services = servicesString;
+    return true;
+  }
 }

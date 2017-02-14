@@ -93,7 +93,7 @@ export class OpportunityPage implements OnInit {
   min: number;
   max: number;
   private ready: boolean = false;
-  
+
   // On load select first item on sidenav component
   selectedPage: number = 0;
   pageRoute: string;
@@ -101,7 +101,7 @@ export class OpportunityPage implements OnInit {
     "label": "Opportunities",
     "children": []
   };
-  
+
   constructor(
     private sidenavService: SidenavService,
     private router: Router,
@@ -139,7 +139,7 @@ export class OpportunityPage implements OnInit {
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
     this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.setDisplayFields(combinedOpportunityAPI);
-    
+
     this.sidenavService.updateData(this.selectedPage, 0);
   }
 
@@ -194,11 +194,11 @@ export class OpportunityPage implements OnInit {
 
     return opportunitySubject;
   }
-  
+
   private updateSideNav(content?){
 
     let self = this;
-    
+
     if(content){
       // Items in first level (pages) have to have a unique name
       let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
@@ -207,9 +207,9 @@ export class OpportunityPage implements OnInit {
         this.sidenavModel.children.push(content);
       }
     }
-    
+
     updateContent();
-    
+
     function updateContent(){
       let children = _.map(self.sidenavModel.children, function(possiblePage){
         let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
@@ -224,7 +224,7 @@ export class OpportunityPage implements OnInit {
       });
       self.sidenavModel.children = children;
     }
-    
+
   }
 
   private loadParentOpportunity(opportunityAPI: Observable<any>){
@@ -265,7 +265,7 @@ export class OpportunityPage implements OnInit {
           'unparsableCount': data['unparsableCount']
         };
         this.totalPages = Math.ceil(parseInt(data['count']) / this.showPerPage);
-        
+
         let awardSideNavContent = {
           "label": "Award Notices",
           "route": this.pageRoute,
@@ -277,7 +277,7 @@ export class OpportunityPage implements OnInit {
           ]
         };
         this.updateSideNav(awardSideNavContent);
-        
+
       }
     }, err => {
       console.log('Error loading related opportunities: ', err);
@@ -361,8 +361,8 @@ export class OpportunityPage implements OnInit {
       }
 
       this.displayField = {}; // for safety, clear any existing values
-      
-      switch (opportunity.data.type) {  
+
+      switch (opportunity.data.type) {
         // Base opportunity types
         // These types are a superset of 'j', using case fallthrough
         case 'p': // Presolicitation
@@ -457,7 +457,7 @@ export class OpportunityPage implements OnInit {
       }
 
       this.ready = true;
-      
+
       this.updateSideNav();
     });
   }
@@ -525,11 +525,11 @@ export class OpportunityPage implements OnInit {
   public getDownloadFileURL(fileID: string){
     return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey();
   }
-  
+
   selectedItem(item){
     this.selectedPage = this.sidenavService.getData()[0];
   }
-  
+
   sidenavPathEvtHandler(data){
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
 		if(data.charAt(0)=="#"){
