@@ -18,6 +18,18 @@
   .logo-small {
     width:15%;
   }
+  
+  .collapsible{
+    cursor: pointer;
+    &:before{
+      content: "\f067";
+      font: normal normal normal 12px/1 FontAwesome;
+      padding-right: 2px;
+    }
+    &.expanded:before{
+      content: "\f068";
+    }
+  }
 
 
 }
