@@ -21,6 +21,7 @@
 @import 'components/authentication';
 @import 'components/footer';
 @import 'components/button';
+@import 'components/collapsible';
 @import 'components/pagination';
 @import 'components/header';
 @import 'components/header-links';
@@ -126,5 +127,16 @@ h2{
   aside.usa-width-one-fourth{
     margin-right: 0;
     width: 100%;
+  }
+}
+
+.search-layout{
+  .showing-results-meta{
+    margin-top:3rem!important;  
+  }
+  samselect{
+    label{
+      margin-top:0;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component,ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AlertFooterService } from '../../alerts/alert-footer';
 
 @Component({
@@ -166,6 +166,8 @@ export class UIKitDemoPage {
       ]
     }
   };
+
+  collapsibleLabel = 'Test Label';
 
   constructor(private alertFooterService: AlertFooterService) {  }
 
