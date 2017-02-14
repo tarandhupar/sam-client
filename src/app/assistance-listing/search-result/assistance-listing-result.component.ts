@@ -25,7 +25,7 @@ import * as moment from 'moment/moment';
         </ul>
         <!--History section to be displayed only for historical records-->
         <div *ngIf="data.isActive==false">
-          <h4 (click)="toggleHistory()" class="collapsible" [class.expanded]="toggleField">History</h4>
+          <h4 (click)="toggleHistory()" class="collapsible" [class.expanded]="toggleField"><span class="history">History</span></h4>
           <div *ngIf="toggleField">
             <history [data]="history"></history>
           </div>
@@ -64,7 +64,7 @@ export class AssistanceListingResult implements OnInit {
         "title": value.body,
       }
     });
-    this.history = _.sortBy(this.history, ['index']);    
+    this.history = _.sortBy(this.history, ['index']);
   }
 
   toggleHistory() {

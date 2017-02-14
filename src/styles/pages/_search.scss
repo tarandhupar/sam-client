@@ -18,7 +18,7 @@
   .logo-small {
     width:15%;
   }
-  
+
   .collapsible{
     cursor: pointer;
     &:before{
@@ -29,6 +29,10 @@
     &.expanded:before{
       content: "\f068";
     }
+  }
+
+  .history{
+    text-decoration: underline;
   }
 
 
