@@ -8,21 +8,21 @@
 
   <ng-container *ngIf="userAccessModel">
     <div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">
-      <h2>Role: {{role.role}}
+      <h2>{{role.role.val}}
         <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapsed All</a>
         <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
       </h2>
       <samAccordion *ngFor="let domain of role.roleData | groupByDomain" [bordered]="true">
-        <samAccordionSection [headerText]="'Domain: '+domain.id" [name]="'Domain'+domain.id">
+        <samAccordionSection [headerText]="domain.val" [name]="'domain-'+domain.val">
           <div class="usa-grid-full permissions-table-header">
-            <div class="usa-width-one-sixth">Organization:</div>
-            <div class="usa-width-one-sixth">Level:</div>
-            <div class="usa-width-one-sixth">Object:</div>
-            <div class="usa-width-one-third">Permissions:</div>
+            <div class="usa-width-one-sixth"><strong>Organization:</strong></div>
+            <div class="usa-width-one-sixth"><strong>Level:</strong></div>
+            <div class="usa-width-one-sixth"><strong>Object:</strong></div>
+            <div class="usa-width-one-third"><strong>Permissions:</strong></div>
             <div class="usa-width-one-sixth">&nbsp;</div>
           </div>
           <ng-container *ngFor="let org of domain.organizations">
-            <ng-container *ngFor="let func of org.FunctionContent; let firstFunction = first">
+            <ng-container *ngFor="let func of org.functionMapContent; let firstFunction = first">
               <div class="usa-grid-full permissions-table-row" [class.first-function]="firstFunction">
                 <div class="usa-width-one-sixth org-col access-cell">
                   <span *ngIf="firstFunction">
@@ -33,9 +33,10 @@
                 <div class="usa-width-one-half background-grey access-cell">
                   <div class="usa-grid-full grey-group">
                     <div class="pip-left" *ngIf="firstFunction">&nbsp;</div>
-                    <div class="usa-width-one-third object-col">{{func.function}}</div>
+                    <div class="usa-width-one-third object-col">{{func.function.val | capitalize}}</div>
                     <div class="usa-width-two-thirds permissions-col">
-                      <span *ngFor="let perm of func.permission">{{perm}}&nbsp;</span>
+                      <span class="pull-left" *ngFor="let perm of func.permission">{{perm.val | capitalize}},&nbsp;</span>
+                      &nbsp;
                     </div>
                   </div>
                 </div>
@@ -53,15 +54,4 @@
       </samAccordion>
     </div>
   </ng-container>
-
-<!--<fieldset>-->
-  <!--<div class="clearfix">-->
-    <!--<legend class="pull-left">Collapsible</legend>-->
-    <!--<button class="usa-button-transparent pull-right m_0" (click)="collapsed = !collapsed"><i class="fa" [ngClass]="collapsed ? 'fa-plus' : 'fa-minus'"></i></button>-->
-  <!--</div>-->
-  <!--<div class="usa-grid-full" [hidden]="collapsed">-->
-    <!--<div class="usa-width-one-half">Half</div>-->
-    <!--<div class="usa-width-one-half">Half</div>-->
-  <!--</div>-->
-<!--</fieldset>-->
 </div>

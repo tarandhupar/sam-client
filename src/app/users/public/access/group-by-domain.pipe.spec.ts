@@ -7,12 +7,12 @@ describe('GroupByDomainPipe', () => {
     let dat = [
       {
         "organizationContent": { "orgKey":"100186605", },
-        "domain":1,
+        "domain": { id: 1, val: 'My Domain'},
         "email":"brendan.mcdonough@gsa.gov"
       },
       {
         "organizationContent": { "orgKey":"100186605", },
-        "domain":1,
+        "domain": { id: 1, val: 'My Domain'},
         "email":"brendan.mcdonough@gsa.gov"
       }
     ];
@@ -25,12 +25,12 @@ describe('GroupByDomainPipe', () => {
     let dat = [
       {
         "organizationContent": { "orgKey":"100186605", },
-        "domain":1,
+        "domain": { id: 1, val: 'My Domain'},
         "email":"brendan.mcdonough@gsa.gov"
       },
       {
         "organizationContent": { "orgKey":"100186605", },
-        "domain":2,
+        "domain": { id: 2, val: 'My Domain 2'},
         "email":"brendan.mcdonough@gsa.gov"
       }
     ];

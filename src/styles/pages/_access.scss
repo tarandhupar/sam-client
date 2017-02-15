@@ -1,7 +1,10 @@
 .access-page {
+  .fieldset-wrapper {
+   min-width: 250px;
+  }
+
   .access-cell {
     color: black;
-
     padding: 10px 0;
   }
 
@@ -18,6 +21,10 @@
     padding-left: .5em;
     padding-right: .5em;
     position: relative;
+  }
+
+  .object-col {
+    word-break: break-all;
   }
 
   .first-function {

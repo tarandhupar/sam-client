@@ -1,35 +1,32 @@
+export interface IdVal {
+  id: string|number,
+  val: string|number
+}
+
 export interface UserAccess {
   "userAccessId"?: number,
-  "user"?: string, //"00.T.BRENDAN.MCDONOUGH@GSA.GOV",
-  "createdBy"?: string, //"FTS-ADMIN",
-  "createdDate"?: string, //"01/23/2008",
-  "updatedBy"?: string, //"00.T.BRENDAN.MCDONOUGH@GSA.GOV",
-  "updatedDate"?: string, //"08/25/2015",
-  "roleMapContent"?: UserRole[],
+  "user"?: string,
+  "createdBy"?: string,
+  "createdDate"?: string,
+  "updatedBy"?: string,
+  "updatedDate"?: string,
+  "roleMapContent"?: Array<{
+    "role"?: IdVal, //1,
+    "roleData"?: Array<{
+      "organizationMapContent"?: {
+        "orgKey"?: string,
+        "functionMapContent"?: Array<{
+          "function"?: IdVal,
+          "permission"?: Array<IdVal>
+        }>
+      }
+      "domain"?: IdVal,
+      "email"?: string,
+    }>,
+  }>,
   "_links"?: {
     "self"?: {
       "href"?: string
     }
   }
-}
-
-export interface UserRole {
-  "role"?: number, //1,
-  "roleData"?: UserDomainOrg[]
-}
-
-export interface UserDomainOrg {
-  "organizationContent"?: UserOrganization
-  "domain"?: number,
-  "email"?: string,
-}
-
-export interface UserOrganization {
-  "orgKey"?: string,
-  "FunctionContent"?: UserFunction[]
-}
-
-export interface UserFunction {
-  "function"?: number,
-  "permission"?: number[]
 }

@@ -44,7 +44,9 @@ export class UserAccessPage implements OnInit {
     this.userService.getAccess(this.userName).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
       this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
-      this.filters.organizations.options = this.userAccessModel.allOrganizations().map(this.mapLabelAndName);
+      this.filters.organizations.options = this.userAccessModel.allOrganizations().map(org => {
+        return { label: org, value: org};
+      });
       this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
       this.filters.permissions.options = this.userAccessModel.allPermissions().map(this.mapLabelAndName);
       this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
@@ -54,7 +56,7 @@ export class UserAccessPage implements OnInit {
   }
 
   mapLabelAndName(val) {
-    return { label: val, value: val };
+    return { label: val.val, value: val.id };
   }
 
   filterChanged() {

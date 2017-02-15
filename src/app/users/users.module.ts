@@ -26,6 +26,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
     FormsModule,
     SamUIKitModule,
     SamAPIKitModule,
+    PipesModule
   ],
   exports: [
 
