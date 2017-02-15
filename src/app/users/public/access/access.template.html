@@ -26,7 +26,7 @@
               <div class="usa-grid-full permissions-table-row" [class.first-function]="firstFunction">
                 <div class="usa-width-one-sixth org-col access-cell">
                   <span *ngIf="firstFunction">
-                    <a [routerLink]="['/organization', org.orgKey]">{{org.orgKey}}</a>
+                    <a [routerLink]="['/organization', org.orgKey.trim()]">{{orgName(org.orgKey)}}</a>
                   </span>
                 </div>
                 <div class="usa-width-one-sixth org-level-col access-cell">{{firstFunction ? orgLevel(org.orgKey) : ''}}&nbsp;</div>

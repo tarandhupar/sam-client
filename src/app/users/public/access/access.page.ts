@@ -44,9 +44,9 @@ export class UserAccessPage implements OnInit {
     this.userService.getAccess(this.userName).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
       this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
-      this.filters.organizations.options = this.userAccessModel.allOrganizations().map(org => {
-        return { label: org, value: org};
-      });
+      // this.filters.organizations.options = this.userAccessModel.allOrganizations().map(org => {
+      //   return { label: org, value: org};
+      // });
       this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
       this.filters.permissions.options = this.userAccessModel.allPermissions().map(this.mapLabelAndName);
       this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
@@ -76,12 +76,13 @@ export class UserAccessPage implements OnInit {
 
     this.userService.getAccess(this.userName, filterOptions).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
+      this.expandAll();
     });
   }
 
   orgLevel(orgId) {
-    if (this.organizations) {
-      let orgNumber = parseInt(orgId);
+    if (this.organizations && orgId && orgId.trim()) {
+      let orgNumber = parseInt(orgId.trim());
       if (isNaN(orgNumber)) {
         return;
       }
@@ -92,12 +93,28 @@ export class UserAccessPage implements OnInit {
     }
   }
 
+  orgName(orgId) {
+    if (this.organizations && orgId && orgId.trim) {
+      let orgNumber = parseInt(orgId.trim());
+      if (isNaN(orgNumber)) {
+        return;
+      }
+      let org: Organization = this.organizations.find(org => orgNumber === org.id);
+      if (org) {
+        return org.orgName;
+      }
+    }
+  }
+
   // call the endpoint for all organizations in parallel, wait for each to finish and assign to this.organizations
   getOrganizationData(orgIds: any[]) {
     let sources = orgIds.map(orgId => this.fhService.getOrganizationById(orgId, false, true));
     Observable.forkJoin(sources).subscribe(
       orgs => {
         this.organizations = orgs.map(org => Organization.FromResponse(org));
+        this.filters.organizations.options = this.organizations.map(o => {
+          return { label: o.orgName, value: o.id }
+        });
       },
       err => {
         console.error('Unabled to fetch org data. Error', err);

@@ -14,7 +14,6 @@ export class GroupByDomainPipe implements PipeTransform {
           val: domainValue,
           organizations: [ orgDomainEmail.organizationMapContent ]
         };
-        console.log('insert', domainId, 'val: ', newDomain);
         domains.set(domainId, newDomain);
       } else {
         domains.get(domainId).organizations.push(orgDomainEmail.organizationMapContent);

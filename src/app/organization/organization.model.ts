@@ -60,6 +60,10 @@ export class Organization {
     return this.org().type;
   }
 
+  get orgName() {
+    return this.org().name;
+  }
+
   get id() {
     return this.org().orgKey;
   }
