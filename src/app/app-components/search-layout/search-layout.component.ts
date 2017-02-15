@@ -62,17 +62,11 @@ export class SearchLayoutComponent implements OnInit {
 
   toggleFilters(event: Event): void {
     this._displayFilters = !this._displayFilters;
-    this.changeFocus(event);
     return;
   }
 
   toggleFilterLabel(): string {
     return this._displayFilters ? 'fa fa-minus' : 'fa fa-plus';
-  }
-
-  private changeFocus(event: Event): void {
-    console.log(event);
-    return;
   }
 }
 

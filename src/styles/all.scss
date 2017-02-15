@@ -11,6 +11,7 @@
 @import 'margin-padding';
 @import 'global';
 @import 'typography';
+@import 'grid-offsets';
 
 @import '~uswds/src/stylesheets/uswds';
 
@@ -122,10 +123,6 @@ h2{
 
 .usa-sidenav-list > li{
   border-top: 1px solid #f1f1f1;
-}
-
-.usa-offset-one-fourth {
-  @include shift(3 of 12);
 }
 
 // Make sidenav use all availabe horizontal space on medium screen

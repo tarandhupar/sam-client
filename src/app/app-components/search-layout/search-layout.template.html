@@ -18,7 +18,7 @@
 			<ng-content select="[search-featured-result]"></ng-content>
 			<div class="usa-grid-full">
 				<div class="usa-width-three-fourths">
-					<button type="button" class="usa-button-link" (click)="toggleFilters(this)"><i [ngClass]="toggleFilterLabel()"></i>&nbsp;Filters</button>
+					<button type="button" class="usa-button-link" (click)="toggleFilters($event)"><i [ngClass]="toggleFilterLabel()"></i>&nbsp;Filters</button>
 					<p class="showing-results-meta usa-color-text usa-color-text-gray">
 						{{totalElements}} results
 					</p>
