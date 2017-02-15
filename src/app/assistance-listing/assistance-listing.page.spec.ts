@@ -393,9 +393,9 @@ let MockProgramService = {
   getLatestProgramById: (id: string) => {
     //return object that has attribute 'program' -> considered as published program
     return Observable.of({
+        'id':'',
         'data': {
           'programNumber': '',
-          '_id': ''
         },
     });
   }
