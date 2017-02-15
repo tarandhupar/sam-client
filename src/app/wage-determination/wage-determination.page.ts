@@ -7,6 +7,7 @@ import { ReplaySubject, Observable } from 'rxjs';
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 import * as _ from 'lodash';
 import {FilterMultiArrayObjectPipe} from "../app-pipes/filter-multi-array-object.pipe";
+import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
 
 @Component({
   moduleId: __filename,
@@ -25,11 +26,20 @@ export class WageDeterminationPage implements OnInit {
   states: string;
   counties: string;
   services: string;
+  
+  // On load select first item on sidenav component
+  selectedPage: number = 0;
+  pageRoute: string;
+  sidenavModel = {
+    "label": "Wage Determination",
+    "children": []
+  };
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
 
   constructor(
+    private sidenavService: SidenavService,
     private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe,
     private router: Router,
     private route:ActivatedRoute,
@@ -51,6 +61,7 @@ export class WageDeterminationPage implements OnInit {
     this.currentUrl = document.location.href;
     this.loadDictionary();
     this.loadWageDetermination();
+    this.sidenavService.updateData(this.selectedPage, 0);
   }
 
   private loadWageDetermination() {
@@ -65,11 +76,53 @@ export class WageDeterminationPage implements OnInit {
     this.apiSubjectSub = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.wageDetermination = api;
+      
+      let wageDeterminationSideNavContent = {
+        "label": "Wage Determination",
+        "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
+        "children": [
+          {
+            "label": "SCA WD #" + this.wageDetermination.fullReferenceNumber,
+            "field": "wage-determination",
+          }
+        ]
+      };
+      this.updateSideNav(wageDeterminationSideNavContent);
     }, err => {
       console.log('Error logging', err);
     });
 
     return apiSubject;
+  }
+  
+  private updateSideNav(content?){
+
+    let self = this;
+
+    if(content){
+      // Items in first level (pages) have to have a unique name
+      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
+      // If page has a unique name added to the sidenav
+      if(repeatedItem === -1){
+        this.sidenavModel.children.push(content);
+      }
+    }
+
+    updateContent();
+
+    function updateContent(){
+      let children = _.map(self.sidenavModel.children, function(possiblePage){
+        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
+          possibleSection.route = "#" + possibleSection.field;
+          return possibleSection;
+        });
+        _.remove(possiblePagechildren, _.isUndefined);
+        possiblePage.children = possiblePagechildren;
+        return possiblePage;
+      });
+      self.sidenavModel.children = children;
+    }
+
   }
 
   private loadDictionary() {
@@ -80,6 +133,15 @@ export class WageDeterminationPage implements OnInit {
       console.log('Error loading dictionaries: ', err);
     });
   }
+  
+  sidenavPathEvtHandler(data){
+    data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
+		if(data.charAt(0)=="#"){
+			this.router.navigate([], { fragment: data.substring(1) });
+		} else {
+			this.router.navigate([data]);
+		}
+	}
 
   private getStatesAndCounties(){
 

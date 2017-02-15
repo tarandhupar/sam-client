@@ -1,44 +1,66 @@
-<div class="usa-grid" id="wage-determination-page">
-  <div class="usa-width-one-whole">
-    <ng-container *ngIf = "wageDetermination">
-        <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+<div class="usa-grid wage-determination-page">
+  
+  <!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <br />
+    <br />
+    <div sam-sticky limit=1200 container="occupy-page">
+      <!--Logo-->
+      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+
+      <!--Side Navigation-->
+      <samSidenav class="m_T-3x" *ngIf="sidenavModel" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+
+    </div>
+  </aside>
+  
+  <div class="usa-width-three-fourths">
+    
+    <section id="wage-determination" *ngIf="wageDetermination">
+
       <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
-
-      <ng-container *ngIf = "wageDetermination && dictionaries && getStatesAndCounties()">
-        <div><strong>State/States: </strong>
-          {{states}}
+      
+      <div class="usa-grid-full">
+        
+        <div class="usa-width-one-half" *ngIf="wageDetermination && dictionaries && getStatesAndCounties()">
+          <ul class="usa-unstyled-list">
+            <li>
+              <strong>State/States: </strong> 
+              {{states}}
+            </li>
+            <li>
+              <strong>County/ties: </strong> 
+              {{counties}}
+            </li>
+          </ul>
         </div>
-
-          <div>
-        <strong>County/ties: </strong>
-          {{counties}}
-          </div>
-      </ng-container>
-
-      <ng-container *ngIf = "wageDetermination && dictionaries && getServices()">
-        <div>
-          <strong>Service/Services: </strong>
-            {{services}}
-       </div>
-      </ng-container>
-      <ng-container *ngIf = "wageDetermination.revisionNumber">
-        <div>
-        <strong>Revision: </strong>
-        {{wageDetermination.revisionNumber}}
+        
+        <div class="usa-width-one-half">
+          <ul class="usa-unstyled-list">
+            <li *ngIf = "wageDetermination.revisionNumber">
+              <strong>Revision: </strong>
+              {{wageDetermination.revisionNumber}}
+            </li>
+            <li *ngIf = "wageDetermination && dictionaries && getServices()">
+              <strong>Service/Services: </strong> 
+              {{services}}
+            </li>
+            <li *ngIf = "wageDetermination.publishDate">
+              <strong>Published Date: </strong>
+              {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
+            </li>
+          </ul>
         </div>
-      </ng-container>
-      <ng-container *ngIf = "wageDetermination.publishDate">
-        <div>
-          <strong>Published Date: </strong>
-          {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
-        </div>
-      </ng-container>
-      <ng-container *ngIf = "wageDetermination.document">
-      <textarea rows="15" cols="100">
+        
+      </div>
+      
+      <!-- Document -->
+      <textarea *ngIf = "wageDetermination.document" rows="50" cols="100">
         {{ wageDetermination.document }}
       </textarea>
-      </ng-container>
-    </ng-container>
+      
+    </section>
 
   </div>
+  
 </div>
