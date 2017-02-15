@@ -183,7 +183,7 @@ export class ProgramPage implements OnInit, OnDestroy {
       if(typeof relatedProgram !== 'undefined') {
         this.relatedProgram.push({ // store the related program
           'programNumber': relatedProgram.data.programNumber,
-          'id': relatedProgram.data._id
+          'id': relatedProgram.id
         });
       }
     });

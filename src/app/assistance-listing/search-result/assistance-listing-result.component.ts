@@ -31,7 +31,7 @@ import * as moment from 'moment/moment';
         </ul>
         <!--History section to be displayed only for historical records-->
         <div *ngIf="data.isActive==false">
-          <h4 (click)="toggleHistory()" class="collapsible" [class.expanded]="toggleField"><span class="history">History</span></h4>
+          <h4 tabindex="0" (keyup.enter)="toggleHistory()" (click)="toggleHistory()" class="collapsible" [class.expanded]="toggleField"><span class="history">History</span></h4>
           <div *ngIf="toggleField">
             <history [data]="history"></history>
           </div>
