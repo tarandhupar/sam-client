@@ -28,7 +28,7 @@ var apiServiceStub = {
 describe('InputAutocompleteTests', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ],
+      declarations: [InputAutocompleteComponent],
       providers: [//start - Mocks HTTP provider
         BaseRequestOptions,
         MockBackend,

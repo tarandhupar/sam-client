@@ -290,7 +290,7 @@ let MockOpportunityService = {
             authoritative: "0",
             parent_notice: null,
             index: "1",
-            notice_id: "6a3618f68f95542fa075fe97baab1fd4",
+            notice_id: "213ji321hu3jk123",
             posted_date: "2012-04-13 19:07:05+00"
           },
           {

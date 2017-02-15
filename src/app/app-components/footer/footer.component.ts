@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { globals } from '../../app/globals.ts';
-import { SYSTEM_ALERTS_PAGE_PATH } from "../../app/alerts/alerts.route";
+import { globals } from '../../globals.ts';
+import { SYSTEM_ALERTS_PAGE_PATH } from "../../alerts/alerts.route";
 
 
 @Component({
