@@ -15,11 +15,9 @@ import { SamSearchHeaderComponent } from './search-header/search-header.componen
 import { SamSearchbarComponent } from "./form-controls/searchbar/searchbar.component";
 import { SamBannerComponent } from "./banner/banner.component";
 import { SamStickyComponent } from "./sticky/sticky.component";
-import { SamFooterComponent } from "./footer/footer.component";
 import { SamLabelComponent } from "./label/label.component";
 import { SamHeaderComponent } from "./header/header.component";
-import { SamHeaderLinksComponent } from "./header-links/header-links.component";
-import { SamHeaderMenuComponent } from './header-menu';
+import { SamHeaderMenuComponent } from './header-menu/header-menu.component';
 import { SamAlertComponent } from "./alert/alert.component";
 import { SamSpinnerComponent } from './spinner/spinner.component';
 import { SamAccordionComponent, SamAccordionSection } from "./accordion/accordion.component";
@@ -37,7 +35,6 @@ import { SamTextComponent } from "./form-controls/text/text.component";
 import { SamTextareaComponent } from "./form-controls/textarea/textarea.component";
 import { SamTabComponent } from "./tabs/tabs.component";
 import { SamTabsComponent } from "./tabs/tabs.component";
-import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
 import { SamModalComponent } from "./modal/modal.component";
 import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
 import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
@@ -66,9 +63,7 @@ import { SamFiltersContainerComponent } from './filters-container';
     SamBannerComponent,
     SamSearchHeaderComponent,
     SamStickyComponent,
-    SamFooterComponent,
     SamHeaderComponent,
-    SamHeaderLinksComponent,
     SamHeaderMenuComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
@@ -81,7 +76,6 @@ import { SamFiltersContainerComponent } from './filters-container';
     SamDateTimeComponent,
     SamTextComponent,
     SamTextareaComponent,
-    InputAutocompleteComponent,
     SamModalComponent,
     LabelWrapper,
     FieldsetWrapper,
@@ -101,7 +95,6 @@ import { SamFiltersContainerComponent } from './filters-container';
     LabelWrapper,
     SamClickOutsideDirective,
     SamHeaderComponent,
-    SamHeaderLinksComponent,
     SamHeaderMenuComponent,
     SamPaginationComponent,
     SamAccordionComponent,
@@ -116,7 +109,6 @@ import { SamFiltersContainerComponent } from './filters-container';
     SamBannerComponent,
     SamSearchHeaderComponent,
     SamStickyComponent,
-    SamFooterComponent,
     SamSpinnerComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
@@ -128,7 +120,6 @@ import { SamFiltersContainerComponent } from './filters-container';
     SamDateTimeComponent,
     SamTextComponent,
     SamTextareaComponent,
-    InputAutocompleteComponent,
     SamTabsComponent,
     SamTabComponent,
     SamModalComponent,

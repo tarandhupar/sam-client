@@ -2,13 +2,36 @@
 <samBanner #banner *ngIf="!isHeaderWithSearch"></samBanner>
 <div [style.height]="!isHeaderWithSearch ? '22px' : '0'">&nbsp;</div>
 <alertHeader></alertHeader>
-<samSearchHeader *ngIf="isHeaderWithSearch" (searchHeaderDropdownControl)="toggleOverlay($event)" (searchEvent)="onHeaderSearchEvent($event)" [keyword]="keyword" [filterValue]="index"></samSearchHeader>
-<samHeader *ngIf="!isHeaderWithSearch" (headerDropdownControl)="toggleOverlay($event)"></samHeader>
+<samSearchHeader #searchheader *ngIf="isHeaderWithSearch" [filterValue]="index" (searchEvent)="onHeaderSearchEvent($event)">
+  <div header-links>
+    <SamHeaderLinks (onDropdownToggle)="toggleOverlay($event)"></SamHeaderLinks>
+  </div>
+  <div header-searchbar>
+    <samSearchbar #searchbar
+      [size]="'small'" 
+      (onSearch)="onHeaderSearchEvent($event)"
+      [filterValue]="index">
+      <div custom-input>
+        <samInputAutocomplete 
+          [serviceName]="'suggestions'"
+          [index]="index"
+          (searchTermEmit)="searchbar.callSearch($event)"
+          [searchTerm]="keyword"
+          (keyEnterEmit)="searchbar.onSearchClick()">
+        </samInputAutocomplete>
+      </div>
+    </samSearchbar>
+  </div>
+</samSearchHeader>
+<samHeader *ngIf="!isHeaderWithSearch" (headerDropdownControl)="toggleOverlay($event)">
+  <div header-links>
+    <SamHeaderLinks (onDropdownToggle)="toggleOverlay($event)"></SamHeaderLinks>
+  </div>
+</samHeader>
 
 <main id="main-container" class="occupy-page relative">
   <router-outlet></router-outlet>
-  <div  [ngClass]="{'overlay':showOverlay}">
-    </div>
+  <div [ngClass]="{'overlay':showOverlay}"></div>
 </main>
 <alertFooter></alertFooter>
 <samFooter labelname = "footer" ></samFooter>
