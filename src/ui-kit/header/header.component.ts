@@ -9,24 +9,14 @@ import { Component, Output, EventEmitter } from '@angular/core';
                     <li><a class="logo-link" tabindex="0" (click)="refreshPage()" (keyup.enter)="refreshPage()"><img src="src/assets/img/transition-sam-logo.png"  alt="Transition.sam.gov Logo"></a></li>
                   </ul>
                 </div>
-                <SamHeaderLinks (onDropdownToggle)="dropdownEventControl($event)"></SamHeaderLinks>
+                <ng-content select="[header-links]"></ng-content>
               </nav>
             </header>`,
 })
 export class SamHeaderComponent {
-
-
-  @Output()
-  headerDropdownControl:EventEmitter<any> = new EventEmitter<any>();
-
   constructor() { }
-
-  dropdownEventControl(value){
-    this.headerDropdownControl.emit(value);
-  }
 
   refreshPage(){
     window.location.reload();
   }
-
 }
