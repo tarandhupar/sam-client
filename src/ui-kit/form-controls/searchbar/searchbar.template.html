@@ -16,12 +16,7 @@
     </div>
 
     <div class="relative div-fill">
-      <samInputAutocomplete [serviceName]="'suggestions'"
-                            [index]="filterValue"
-                            (searchTermEmit)="callSearch($event)"
-                            [searchTerm]="keyword"
-                            (keyEnterEmit)="onSearchClick()">
-      </samInputAutocomplete>
+      <ng-content select="[custom-input]"></ng-content>
     </div>
 
     <div class="relative div-right">

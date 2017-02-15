@@ -21,6 +21,9 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths" *ngIf="opportunity">
+    <ng-container *ngIf="alert.length > 0">
+      <samAlert *ngFor="let alert of alert" [type]="alert.config.type" [title]="alert.config.title"><div [innerHTML]="alert.config.description"></div></samAlert>
+    </ng-container>
 
     <section [attr.id]="generateID(opportunityFields.Header)" *ngIf="shouldBeDisplayed(opportunityFields.Header)">
       <h1 [attr.id]="generateID(opportunityFields.Title, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Title)">
