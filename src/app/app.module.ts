@@ -22,6 +22,7 @@ import { PageNotFoundErrorPage } from './application-content/404';
 import { ErrorModule } from './application-content/error/error.module';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
+import { WageDeterminationModule } from './wage-determination';
 import { EntityModule } from './entity';
 import { ExclusionModule } from './exclusion';
 import { OrganizationModule } from './organization';
@@ -71,6 +72,7 @@ const APP_PROVIDERS = [
     SearchModule,
     ErrorModule,
     UIKitDemoModule,
+    WageDeterminationModule,
 
     // Other Modules
     SamUIKitModule,
