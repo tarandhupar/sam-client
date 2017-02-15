@@ -14,8 +14,9 @@ describe('The Sam Header Links component', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({
+      declarations: [SamHeaderLinksComponent],
       imports: [SamUIKitModule,RouterTestingModule],
-      providers: [SamHeaderLinksComponent, IAMService],
+      providers: [IAMService],
     });
     fixture = TestBed.createComponent(SamHeaderLinksComponent);
     component = fixture.componentInstance;
