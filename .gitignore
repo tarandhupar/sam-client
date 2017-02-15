@@ -1,5 +1,6 @@
 # @AngularClass
 
+
 # Logs
 logs
 *.log
@@ -66,5 +67,7 @@ api-config.json
 # Use this configuration name to create custome webpack configurations that are ignored by git
 config/webpack.local.js
 
+# For git submodules
+src/sam-ui-elements
 
 

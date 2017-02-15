@@ -6,17 +6,20 @@ import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
 import { DisplayPageComponent } from './display-page/display-page.component';
+import { HistoryComponent } from "./history/history.component";
+import { SearchLayoutComponent } from './search-layout/search-layout.component';
 
 
 
 /**
  * A module for reusable SAM Web Design components
- * https://gsa.github.io/sam-web-design-standards/
  */
 @NgModule({
   declarations: [
     AgencyPickerComponent,
-    DisplayPageComponent
+    DisplayPageComponent,
+    HistoryComponent,
+    SearchLayoutComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +29,9 @@ import { DisplayPageComponent } from './display-page/display-page.component';
   ],
   exports: [
     AgencyPickerComponent,
-    DisplayPageComponent
+    DisplayPageComponent,
+    HistoryComponent,
+    SearchLayoutComponent
   ],
   providers: [ ]
 })
