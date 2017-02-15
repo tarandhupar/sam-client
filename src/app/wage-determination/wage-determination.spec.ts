@@ -2,7 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BaseRequestOptions, Http, HttpModule } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { PipeTransform } from '@angular/core';
 import { By }              from '@angular/platform-browser';
+import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { WageDeterminationService } from 'api-kit';
@@ -10,12 +12,28 @@ import { SamUIKitModule } from 'ui-kit';
 
 import { WageDeterminationPage } from './wage-determination.page';
 import { Observable } from 'rxjs';
-import { PipesModule } from '../app-pipes/app-pipes.module';
+//import { PipesModule } from '../app-pipes/app-pipes.module';
+import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 
 let comp:    WageDeterminationPage;
 let fixture: ComponentFixture<WageDeterminationPage>;
 
 let MockWageDeterminationService = {
+  getWageDeterminationDictionary(ids: String) {
+    return Observable.of({
+      classification_code: [
+        {
+          dictionary_name: "classification_code",
+          code: "10",
+          parent_element_id: null,
+          description: null,
+          element_id: "1",
+          sort_index: "1",
+          value: "10 -- Weapons"
+        }
+      ]
+    });
+  },
   getWageDeterminationByReferenceNumberAndRevisionNumber: (referenceNumber: string, revisionNumber: number) => {
     return Observable.of({
       "fullReferenceNumber": "1998-0642",
@@ -302,13 +320,29 @@ let MockWageDeterminationService = {
   }
 };
 
+export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
+  transform(value: any[], data: any[], fieldName: string, isNested: boolean, nestedFieldName: string): any[] {
+    // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE DICTIONARY
+    return [{
+      code: 'B',
+      elements: null,
+      description: null,
+      element_id: '0003001',
+      value: 'Cooperative Agreements',
+      displayValue: 'B - Cooperative Agreements'
+    }];
+    // END TODO
+  }
+}
 
-fdescribe('WageDeterminationPage', () => {
+describe('WageDeterminationPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ WageDeterminationPage ], // declare the test component
+      declarations: [ WageDeterminationPage,
+        FilterMultiArrayObjectPipe,
+        DateFormatPipe
+      ], // declare the test component
       imports: [
-        PipesModule,
         HttpModule,
         RouterTestingModule,
         SamUIKitModule
@@ -316,6 +350,7 @@ fdescribe('WageDeterminationPage', () => {
       providers: [
         BaseRequestOptions,
         MockBackend,
+        DateFormatPipe,
         {
           provide: Http,
           useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
@@ -325,7 +360,8 @@ fdescribe('WageDeterminationPage', () => {
         },
         { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'referenceNumber': '2002-0261' }, {'revisionNumber': '8'}]), 'queryParams': Observable.from([{}]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: WageDeterminationService, useValue: MockWageDeterminationService }
+        { provide: WageDeterminationService, useValue: MockWageDeterminationService },
+        { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectCustomPipe }
 
       ]
     });
@@ -344,7 +380,6 @@ fdescribe('WageDeterminationPage', () => {
   });
 
   it('Should init & load data', () => {
-    console.log("Comp: ", comp);
     expect(comp.wageDetermination).toBeDefined();
   });
 });
