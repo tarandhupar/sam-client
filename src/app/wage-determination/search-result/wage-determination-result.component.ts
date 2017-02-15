@@ -8,11 +8,17 @@ import * as moment from 'moment/moment';
   selector: 'wage-determination-result',
   template: `
       <p>
-    	  <span class="usa-label">{{ data._type=='SCA' ? 'SCA WAGE DETERMINATION' : 'DBA WAGE DETERMINATION' }}</span>
+    	  <span class="usa-label">{{ data._type=='wdSCA' ? 'SCA WAGE DETERMINATION' : 'DBA WAGE DETERMINATION' }}</span>
     	  <span *ngIf="data.isActive==false" class="usa-label">Inactive</span>
     	</p>
     	<h3 class="wage-determination-number">
-      	<span>{{ data._type=='SCA' ? 'SCA Wage Determination #: ' : 'DBA Wage Determination #: ' }}</span><a>{{ data.fullReferenceNumber }}</a>
+
+    	<!--Commented out until Sprint 2 when DBA View Page is introduced-->
+      	<!--<span>{{ data._type=='SCA' ? 'SCA Wage Determination #: ' : 'DBA Wage Determination #: ' }}</span><a>{{ data.fullReferenceNumber }}</a>-->
+      	<span *ngIf = "data._type=='SCA'">SCA Wage Determination #: </span><a *ngIf = "data._type=='SCA'" [routerLink]="['/wage-determination', data.fullReferenceNumber, data.revisionNumber]" [queryParams]="qParams">{{ data.fullReferenceNumber }}</a>
+      	<span *ngIf = "data._type=='DBRA'">DBA Wage Determination #: </span><a *ngIf = "data._type=='DBRA'" >{{ data.fullReferenceNumber }}</a>
+
+
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
@@ -31,19 +37,19 @@ import * as moment from 'moment/moment';
       	     <span>{{ data.revisionNumber }}</span>
             </ul>
           </li>
-          <li *ngIf="data._type=='SCA'"><strong>Service</strong>
+          <li *ngIf="data._type=='wdSCA'"><strong>Service</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.services }}</span>
             </ul>
           </li>
-          <li *ngIf="data._type=='DBRA'"><strong>Construction Type</strong>
+          <li *ngIf="data._type=='wdDBRA'"><strong>Construction Type</strong>
             <ul class="usa-unstyled-list">
               <span>{{ data.constructionTypes }}</span>
             </ul>
           </li>
           <li>
-              <span *ngIf="data._type=='DBRA'"><strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
-              <span *ngIf="data._type=='SCA'"><strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
+              <span *ngIf="data._type=='wdDBRA'"><strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
+              <span *ngIf="data._type=='wdSCA'"><strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
             <ul class="usa-unstyled-list">
               <span>{{ data.publishDate }}</span>
             </ul>

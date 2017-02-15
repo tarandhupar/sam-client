@@ -80,6 +80,7 @@ export class AlertEditComponent implements OnInit {
   @ViewChild('description') description: SamTextareaComponent;
 
   publishImmediately: boolean;
+  expireAlert: boolean = false;
 
   typeOptions: OptionsType = [
     { name: 'information', label: 'Informational', value: 'Informational'},
@@ -120,11 +121,20 @@ export class AlertEditComponent implements OnInit {
     if (this.alert.isExpiresIndefinite()) {
       this.form.get('endDate').disable();
     }
+
+    if (this.isActiveAlert()){
+      this.form.get('publishedDate').disable();
+      this.form.get('publishImmediately').disable();
+    }
   }
 
   isoNow() {
     return moment().format('YYYY-MM-DDTHH:mm:ss');
   }
+
+  isEditMode():boolean{return this.mode === 'edit';}
+  isActiveAlert():boolean{return this.alert.status() === 'Active';}
+  getLabelColor():string{return this.expireAlert? "gray-label":"";}
 
   onAcceptClick(event) {
     if (!this.form.valid) {
@@ -140,17 +150,27 @@ export class AlertEditComponent implements OnInit {
     let formValue = this.form.value;
     alert.setDescription(formValue.description);
     alert.setEndDate(formValue.endDate);
-    if (formValue.publishImmediately) {
-      alert.setPublishedDate(this.isoNow());
+
+    if (this.isActiveAlert()) {
+      alert.setPublishedDate(this.alert.publishedDate());
     } else {
-      alert.setPublishedDate(formValue.publishedDate);
+      if (formValue.publishImmediately) {
+        alert.setPublishedDate(this.isoNow());
+      } else {
+        alert.setPublishedDate(formValue.publishedDate);
+      }
     }
+
     alert.setSeverity(formValue.severity);
     alert.setTitle(formValue.title);
     alert.setIsExpiresIndefinite(formValue.isExpiresIndefinite);
 
     if (this.alert.id()) {
       alert.setId(this.alert.id());
+    }
+
+    if (this.expireAlert) {
+      alert.setEndDate(this.isoNow());
     }
 
     this.accept.emit(alert);
@@ -180,5 +200,20 @@ export class AlertEditComponent implements OnInit {
     } else {
       ctrl.enable();
     }
+  }
+
+  onExpireAlertClick(val) {
+    this.expireAlert = val;
+    let expireIndefinitelyCbx = this.form.get('isExpiresIndefinite');
+    let endDateCtrl = this.form.get('endDate');
+    this.expireAlert ? expireIndefinitelyCbx.disable(): expireIndefinitelyCbx.enable();
+    if(this.expireAlert){
+      endDateCtrl.setValue(this.isoNow());
+      endDateCtrl.disable();
+    } else{
+      endDateCtrl.setValue(this.alert.endDate());
+      endDateCtrl.enable();
+    }
+
   }
 }

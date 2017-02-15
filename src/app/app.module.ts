@@ -22,6 +22,7 @@ import { PageNotFoundErrorPage } from './application-content/404';
 import { ErrorModule } from './application-content/error/error.module';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
+import { WageDeterminationModule } from './wage-determination';
 import { EntityModule } from './entity';
 import { ExclusionModule } from './exclusion';
 import { OrganizationModule } from './organization';
@@ -37,7 +38,7 @@ import { UserDirectoryModule } from "./users";
 const APP_PROVIDERS = [
   AppState
 ];
-var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ? true : false;
+
 /**
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
@@ -54,7 +55,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     HttpModule,
 
     // Router
-    RouterModule.forRoot(ROUTES, { useHash: useHashValue }),
+    RouterModule.forRoot(ROUTES),
 
     // Page View Modules
     UserDirectoryModule,
@@ -71,6 +72,7 @@ var useHashValue = document.getElementsByTagName('html')[0].className == "ie9" ?
     SearchModule,
     ErrorModule,
     UIKitDemoModule,
+    WageDeterminationModule,
 
     // Other Modules
     SamUIKitModule,

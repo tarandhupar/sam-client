@@ -15,3 +15,4 @@ export { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.s
 export { UserDirService } from './user-directory/user-directory.service';
 export { UserAccess } from './user/user.interface';
 export { UserService } from './user/user.service';
+export { WageDeterminationService } from './wage-determination/wage-determination.service';

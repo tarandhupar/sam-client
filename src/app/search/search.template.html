@@ -5,18 +5,22 @@
   <div class="usa-width-one">
     <div *ngIf="showOptional" class="usa-width-one">
       <h3>Common Filters:</h3>
-      <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
-      <hr *ngIf="data.results" class="m_T-5x"/>
+			<div class="usa-grid-full">
+				<div class="usa-width-one-third">
+	      	<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
+				</div>
+			</div>
+      <hr *ngIf="data.results" class="usa-width-one m_T-5x"/>
     </div>
     <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
     <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
 		<div *ngFor="let row of data.results">
-			<opportunities-result *ngIf="row._type=='OPP'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
-      <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
-      <federal-hierarchy-result  *ngIf="row._type=='FH'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
-      <entities-result *ngIf="row._type=='ENT'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
-      <exclusions-result *ngIf="row._type=='EX'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
-      <wage-determination-result *ngIf="row._type=='SCA'|| row._type=='DBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
+			<opportunities-result *ngIf="row._type=='opportunity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
+      <assistance-listing-result  *ngIf="row._type=='assistanceListing'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
+      <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
+      <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
+      <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
+      <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
       <hr class="m_T-5x"/>
   	</div>
     <div *ngIf="!initLoad && !data.results">
