@@ -113,7 +113,7 @@ export class AlertEditComponent implements OnInit {
       title: [this.alert.title(), []],
       severity: [this.alert.severity(), []],
       endDate: [this.alert.endDate(), [validDateTime]],
-      publishedDate: [this.alert.publishedDate(), [validDateTime,isNotBeforeToday]],
+      publishedDate: [this.alert.publishedDate(), [validDateTime, isNotBeforeToday]],
       publishImmediately: [false, []],
       isExpiresIndefinite: [this.alert.isExpiresIndefinite(), []],
     });
