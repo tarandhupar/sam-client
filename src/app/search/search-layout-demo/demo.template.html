@@ -1,5 +1,5 @@
 <search-layout [attr.class]="'search-page'" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages" [totalElements]="totalCount">
-	<div search-sidebar style="margin-top: 4rem;">
+	<div search-sidebar>
 		<sam-collapsible [label]="'Filter By Agency'">
 			<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
 		</sam-collapsible>
@@ -8,7 +8,7 @@
 		</sam-collapsible>
 	</div>
 	<div search-title>
-		<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
+		<h1>SAM.gov Search Results</h1>
 	</div>
 	<div search-featured-result>
 		<fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>

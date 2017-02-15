@@ -27,6 +27,7 @@ export class SearchLayoutComponent implements OnInit {
     name: 'sort'
   };
   public sortModel: string = '';
+  private _displayFilters: boolean = false;
 
   constructor(private router: Router) {
 		// needed for fragment navigations
@@ -40,10 +41,39 @@ export class SearchLayoutComponent implements OnInit {
       }
     });
   }
+
   pageChangeHandler(event): void {
     this.pageChange.emit(event);
   }
+
   ngOnInit() { }
+
+  setMainWidth(): string {
+    return this._displayFilters ? 'usa-width-three-fourths' : 'usa-width-one-whole';
+  }
+
+  setAsideWidth(): string {
+    return this._displayFilters ? 'usa-width-one-fourth' : 'hidden';
+  }
+
+  setOffset(): string {
+    return this._displayFilters ? 'usa-offset-one-fourth' : '';
+  }
+
+  toggleFilters(event: Event): void {
+    this._displayFilters = !this._displayFilters;
+    this.changeFocus(event);
+    return;
+  }
+
+  toggleFilterLabel(): string {
+    return this._displayFilters ? 'fa fa-minus' : 'fa fa-plus';
+  }
+
+  private changeFocus(event: Event): void {
+    console.log(event);
+    return;
+  }
 }
 
 export interface SortConfig {
