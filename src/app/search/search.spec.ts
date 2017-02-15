@@ -23,22 +23,22 @@ var searchServiceStub = {
     return Observable.of({
       _embedded: {
         results: [{
-          _type:"CFDA",
+          _type:"assistanceListing",
           title:"Dummy Result 1"
         },{
-          _type:"FBO",
+          _type:"opportunity",
           procurementTitle:"Dummy Result 2"
         },{
-          _type:"FH",
+          _type:"federalorganization",
           title:"Dummy Result 3"
         },{
-          _type:"ENT",
+          _type:"entity",
           title:"Dummy Result 4"
         },{
-          _type:"EX",
+          _type:"exclusion",
           title:"Dummy Result 5"
         },{
-          _type:"WD",
+          _type:"wdSCA",
           title:"Dummy Result 6"
         }],
       },
