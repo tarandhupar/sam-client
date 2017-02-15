@@ -118,6 +118,7 @@ export class UserAccessPage implements OnInit {
   }
 
   collapseAll() {
+    console.log('collapse all');
     this.allAccordions.forEach(acc => acc.setExpandIndex(-1));
     this.showCollapse = false;
   }

@@ -17,10 +17,13 @@
     background-color: $color-gray-lightest;
   }
 
-  .grey-group {
+  .functions-row {
     padding-left: .5em;
     padding-right: .5em;
-    position: relative;
+  }
+
+  .functions-row:not(:last-child) {
+    margin-bottom: 1em;
   }
 
   .object-col {
@@ -29,6 +32,10 @@
 
   .first-function {
     margin-top: 1em;
+  }
+
+  .functions-col {
+    position: relative;
   }
 
   .pip-left {
