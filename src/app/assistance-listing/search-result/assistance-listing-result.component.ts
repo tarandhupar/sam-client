@@ -15,8 +15,14 @@ import * as moment from 'moment/moment';
       	<a *ngIf="data.isActive==true" [routerLink]="['/programs', data._id, 'view']" [queryParams]="qParams">{{data.title}}</a>
       	<span *ngIf="data.isActive==false">{{data.title}}</span>
     	</h3>
+    	<ul class="usa-unstyled-list">    
+    	    <li>
+    	      <strong>CFDA Number: </strong><span class="fal-program-number">{{data.programNumber}}</span>
+          </li>
+      </ul>
+    	
     	<div class="usa-width-two-thirds">
-      	<p class="m_T-2x">
+      	<p *ngIf="data.isActive==true" class="m_T-2x">
           {{data.objective | slice:0:150}}{{data.objective && data.objective.length > 150 ? ' ...' : ''}}
         </p>
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
