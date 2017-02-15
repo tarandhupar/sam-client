@@ -3,6 +3,7 @@
 // Vendor main
 @import '~font-awesome/scss/font-awesome';
 @import '~uswds/src/stylesheets/lib/bourbon';
+@import '~uswds/src/stylesheets/lib/neat';
 
 // Internal variable should be declared before uswds variable to take higher precendence
 @import 'variables';
@@ -120,6 +121,10 @@ h2{
 
 .usa-sidenav-list > li{
   border-top: 1px solid #f1f1f1;
+}
+
+.usa-offset-one-fourth {
+  @include shift(3 of 12);
 }
 
 // Make sidenav use all availabe horizontal space on medium screen
