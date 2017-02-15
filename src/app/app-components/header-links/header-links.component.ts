@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { globals } from '../../app/globals.ts';
+import { globals } from '../../globals.ts';
 
 import { IAMService } from 'api-kit';
 
