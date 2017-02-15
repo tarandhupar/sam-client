@@ -3,6 +3,7 @@ import { By }              from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AssistanceListingResult } from './assistance-listing-result.component';
+import { HistoryComponent } from "../../app-components/history/history.component";
 
 var fixture;
 var comp;
@@ -12,7 +13,7 @@ describe('AssistanceListingResultComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      declarations: [ AssistanceListingResult ],
+      declarations: [ AssistanceListingResult, HistoryComponent ],
     });
     TestBed.compileComponents().then( ()=>{
       fixture = TestBed.createComponent(AssistanceListingResult);

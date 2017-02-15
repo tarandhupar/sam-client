@@ -1,0 +1,11 @@
+<ul>
+  <li *ngFor="let item of data" [class.current]="item.id == currentId">
+    <span>  
+      <strong>{{item.date}}</strong>
+      <a *ngIf="item.url" href="{{ item.url }}">{{ item.title }}</a>
+      <ng-container *ngIf="!item.url">{{ item.title }}</ng-container>
+      <em *ngIf="item.description">{{ item.description }}</em>
+      <i *ngIf="item.isTagged" class="fa fa-certificate" aria-hidden="true"></i>
+    </span>
+  </li>
+</ul>
