@@ -35,7 +35,7 @@ describe('SamCollapsibleComponent', () => {
   it('should change button text to collapse after collapse area opened', () => {
     toggleButton.click();
     fixture.detectChanges();
-    expect(toggleButton.innerText).toBe('collapse');
+    expect(toggleButton.innerHTML).toContain('fa-minus');
   });
 
   it('should be open if startOpened is true', () => {
