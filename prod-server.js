@@ -15,8 +15,9 @@ localWebServer({
 		'root':'dist/'
 	},
 	'spa':'index.html',
-	'rewrite':[{
-		'from':'/ie_api/*','to':API_UMBRELLA_URL+'/$1'
-	}],
+	'rewrite':[
+	  { 'from':'/ie_api/*','to':API_UMBRELLA_URL+'/$1'},
+    { 'from':'/users/*','to':'/'}
+  ],
 	'verbose':true
 }).listen(8080)

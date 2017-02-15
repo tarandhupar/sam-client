@@ -4,7 +4,7 @@
   <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [(model)]="filters.roles.value"></samMultiSelectDropdown>
   <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [(model)]="filters.domains.value"></samMultiSelectDropdown>
   <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [(model)]="filters.objects.value"></samMultiSelectDropdown>
-  <!--<samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [(model)]="filters.permissions.value"></samMultiSelectDropdown>-->
+  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [(model)]="filters.permissions.value"></samMultiSelectDropdown>
 
   <ng-container *ngIf="userAccessModel">
     <div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">

@@ -44,9 +44,6 @@ export class UserAccessPage implements OnInit {
     this.userService.getAccess(this.userName).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
       this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
-      // this.filters.organizations.options = this.userAccessModel.allOrganizations().map(org => {
-      //   return { label: org, value: org};
-      // });
       this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
       this.filters.permissions.options = this.userAccessModel.allPermissions().map(this.mapLabelAndName);
       this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
@@ -80,29 +77,27 @@ export class UserAccessPage implements OnInit {
     });
   }
 
-  orgLevel(orgId) {
+  findOrg(orgId): Organization {
     if (this.organizations && orgId && orgId.trim()) {
       let orgNumber = parseInt(orgId.trim());
       if (isNaN(orgNumber)) {
         return;
       }
-      let org: Organization = this.organizations.find(org => orgNumber === org.id);
-      if (org) {
-        return this.capitalize.transform(org.orgLevel);
-      }
+      return this.organizations.find(org => orgNumber === org.id);
+    }
+  }
+
+  orgLevel(orgId) {
+    let org: Organization = this.findOrg(orgId);
+    if (org) {
+      return this.capitalize.transform(org.orgLevel);
     }
   }
 
   orgName(orgId) {
-    if (this.organizations && orgId && orgId.trim) {
-      let orgNumber = parseInt(orgId.trim());
-      if (isNaN(orgNumber)) {
-        return;
-      }
-      let org: Organization = this.organizations.find(org => orgNumber === org.id);
-      if (org) {
-        return org.orgName;
-      }
+    let org: Organization = this.findOrg(orgId);
+    if (org) {
+      return org.orgName;
     }
   }
 
