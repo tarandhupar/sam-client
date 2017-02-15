@@ -47,7 +47,7 @@ export class UserService {
       }
 
       if (filterOptions.permissionIds && filterOptions.permissionIds.length) {
-        apiOptions.oParam.permKey = filterOptions.permissionIds.join(',');
+        apiOptions.oParam.permissionKey = filterOptions.permissionIds.join(',');
       }
     }
 

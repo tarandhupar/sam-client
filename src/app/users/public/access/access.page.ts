@@ -56,19 +56,38 @@ export class UserAccessPage implements OnInit {
     return { label: val.val, value: val.id };
   }
 
-  filterChanged() {
-    const orgs = this.filters.organizations.value;
-    const domains = this.filters.domains.value;
-    const roles = this.filters.roles.value;
-    const permissions = this.filters.permissions.value;
-    const objects = this.filters.objects.value;
+  orgsChanged(orgs) {
+    this.filters.organizations.value = orgs;
+    this.filterChanged();
+  }
 
+  rolesChanged(roles) {
+    this.filters.roles.value = roles;
+    this.filterChanged();
+  }
+
+  domainsChanged(domains) {
+    this.filters.domains.value = domains;
+    this.filterChanged();
+  }
+
+  objectsChanged(objects) {
+    this.filters.objects.value = objects;
+    this.filterChanged();
+  }
+
+  permissionsChanged(perms) {
+    this.filters.permissions.value = perms;
+    this.filterChanged();
+  }
+
+  filterChanged() {
     const filterOptions: UserAccessFilterOptions = {
-      organizationIds: orgs,
-      domainIds: domains,
-      roleIds: roles,
-      permissionIds: permissions,
-      functionIds: objects,
+      organizationIds: this.filters.organizations.value,
+      domainIds: this.filters.domains.value,
+      roleIds: this.filters.roles.value,
+      permissionIds: this.filters.permissions.value,
+      functionIds: this.filters.objects.value,
     };
 
     this.userService.getAccess(this.userName, filterOptions).subscribe(res => {

@@ -1,10 +1,10 @@
 <div class="access-page">
   <h1 class="m_T-0">Access</h1>
-  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [(model)]="filters.organizations.value"></samMultiSelectDropdown>
-  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [(model)]="filters.roles.value"></samMultiSelectDropdown>
-  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [(model)]="filters.domains.value"></samMultiSelectDropdown>
-  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [(model)]="filters.objects.value"></samMultiSelectDropdown>
-  <samMultiSelectDropdown (modelChange)="filterChanged()" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [(model)]="filters.permissions.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="orgsChanged($event)" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [model]="filters.organizations.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="rolesChanged($event)" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [model]="filters.roles.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="objectsChanged($event)" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [model]="filters.objects.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="permissionsChanged($event)" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [model]="filters.permissions.value"></samMultiSelectDropdown>
 
   <ng-container *ngIf="userAccessModel">
     <div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">
