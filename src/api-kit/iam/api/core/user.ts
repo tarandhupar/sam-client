@@ -47,7 +47,7 @@ class User {
       item = data.gsaRAC[intItem];
 
       if(typeof item === 'string') {
-        item = item.split('|');
+        item = item.split(' ');
         item = {
           system: item[0] || '',
           agency: item[1] || '',

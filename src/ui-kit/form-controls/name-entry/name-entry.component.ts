@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { LabelWrapper } from '../wrapper/label-wrapper.component';
 
+import * as suffixes from './suffixes.json';
+
 /**
  * The <samNameInput> component is a Name entry portion of a form
  *
@@ -13,32 +15,49 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
   template: `
     <fieldset>
       <legend *ngIf="legend.length" [innerText]="legend"></legend>
-      <labelWrapper class="label-wrapper" [label]="'Title'" [name]="getIdentifer('title')" [errorMessage]="titleErrorMsg">
-        <input class="usa-input-tiny" [(ngModel)]="model.title" id="{{getIdentifer('title')}}" name="{{getIdentifer('title')}}" type="text">
-      </labelWrapper>
 
       <labelWrapper class="label-wrapper" [label]="'First Name'" [name]="getIdentifer('first-name')" [errorMessage]="fNameErrorMsg" [required]="true">
-        <input (blur)="validateFirstName()" (ngModelChange)="validateFirstName()" [(ngModel)]="model.firstName" id="{{getIdentifer('first-name')}}" name="{{getIdentifer('first-name')}}" type="text" required="" aria-required="true">
+        <input (blur)="validateFirstName()"
+               (ngModelChange)="validateFirstName()"
+               [(ngModel)]="model.firstName"
+               type="text"
+               id="{{getIdentifer('first-name')}}"
+               name="{{getIdentifer('first-name')}}"
+               required=""
+               aria-required="true">
       </labelWrapper>
 
       <labelWrapper class="label-wrapper" [label]="'Middle Name'" [name]="getIdentifer('middle-name')" [errorMessage]="mNameErrorMsg">
-        <input (ngModelChange)="validateMiddleName()" [(ngModel)]="model.middleName" id="{{getIdentifer('middle-name')}}" name="{{getIdentifer('middle-name')}}" type="text">
+        <input (ngModelChange)="validateMiddleName()"
+               [(ngModel)]="model.middleName"
+               type="text"
+               id="{{getIdentifer('middle-name')}}"
+               name="{{getIdentifer('middle-name')}}">
       </labelWrapper>
 
       <labelWrapper class="label-wrapper" [label]="'Last Name'" [name]="getIdentifer('last-name')" [errorMessage]="lNameErrorMsg" [required]="true">
-        <input (blur)="validateLastName()" (ngModelChange)="validateLastName()" [(ngModel)]="model.lastName" id="{{getIdentifer('last-name')}}" name="{{getIdentifer('last-name')}}" type="text" required="" aria-required="true">
+        <input (blur)="validateLastName()"
+               (ngModelChange)="validateLastName()"
+               [(ngModel)]="model.lastName"
+               type="text"
+               id="{{getIdentifer('last-name')}}"
+               name="{{getIdentifer('last-name')}}"
+               required=""
+               aria-required="true">
       </labelWrapper>
 
-      <labelWrapper class="label-wrapper" [label]="'Suffix'" [name]="getIdentifer('suffix')" [errorMessage]="suffixErrorMsg">
-        <input class="usa-input-tiny" [(ngModel)]="model.suffix" id="{{getIdentifer('suffix')}}" name="{{getIdentifer('suffix')}}" type="text">
-      </labelWrapper>
+      <samSelect [(model)]="model.suffix"
+                 [name]="getIdentifer('suffix')"
+                 [options]="store.suffixes"
+                 [errorMessage]="suffixErrorMsg"
+                 label="Suffix">
+      </samSelect>
     </fieldset>
   `,
 })
 export class SamNameEntryComponent {
   @Input() legend: string = "Name"
   @Input() model: any = {
-    title: "",
     firstName: "",
     middleName: "",
     lastName: "",
@@ -47,60 +66,79 @@ export class SamNameEntryComponent {
 
   @Input() prefix: string = "";
 
-  titleErrorMsg: string = "";
   fNameErrorMsg: string = "";
   mNameErrorMsg: string = "";
   lNameErrorMsg: string = "";
   suffixErrorMsg: string = "";
 
-  constructor() { }
+  private store = {
+    suffixes: suffixes.map((item) => {
+      return {
+        label: item.suffix,
+        value: item.suffix
+      };
+    })
+  };
 
-  ngOnInit() {
+  setSubmitted() {
+    this.validateFirstName();
+    this.validateLastName();
   }
 
-  getIdentifer(str){
-    if(this.prefix.length>0){
-      str = this.prefix + "-" + str;
+  getIdentifer(str) {
+    if(this.prefix.length > 0) {
+      str = `${this.prefix}-${str}`;
     }
+
     return str;
   }
-  validateFirstName(){
+
+  validateFirstName() {
     var error = false;
-    if(/^[0-9]+$/.test(this.model.firstName)){
+
+    if(/^[0-9]+$/.test(this.model.firstName)) {
       error = true;
       this.fNameErrorMsg = "Please enter a valid name";
     }
-    if(this.model.firstName.length==0){
+
+    if(this.model.firstName.length == 0) {
       error = true;
       this.fNameErrorMsg = "This field is required";
     }
-    if(!error){
+
+    if(!error) {
       this.fNameErrorMsg = "";
     }
   }
-  validateMiddleName(){
+
+  validateMiddleName() {
     var error = false;
-    if(/^[0-9]+$/.test(this.model.middleName)){
+
+    if(/^[0-9]+$/.test(this.model.middleName)) {
       error = true;
       this.mNameErrorMsg = "Please enter a valid name";
     }
-    if(!error){
+
+    if(!error) {
       this.mNameErrorMsg = "";
     }
   }
+
   validateLastName(){
     var error = false;
-    if(/^[0-9]+$/.test(this.model.lastName)){
+
+    if(/^[0-9]+$/.test(this.model.lastName)) {
       error = true;
       this.lNameErrorMsg = "Please enter a valid name";
     }
-    if(this.model.lastName.length==0){
+
+    if(this.model.lastName.length == 0) {
       error = true;
       this.lNameErrorMsg = "This field is required";
     }
-    if(!error){
+
+    if(!error) {
       this.lNameErrorMsg = "";
     }
   }
-
 }
