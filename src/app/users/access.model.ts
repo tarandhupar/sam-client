@@ -1,13 +1,17 @@
 import { UserAccess } from "api-kit/user/user.interface";
+import { PropertyCollector } from "../app-utils/property-collector";
+import * as _ from 'lodash';
 
 export class UserAccessModel {
   private _raw: UserAccess;
+  private collector: PropertyCollector;
 
   private constructor() {  }
 
   static FromResponse(res: UserAccess): UserAccessModel {
     let a = new UserAccessModel();
     a._raw = res;
+    a.collector = new PropertyCollector(res);
     return a;
   }
 
@@ -20,25 +24,8 @@ export class UserAccessModel {
   }
 
   public allOrganizations() {
-    if (!this._raw.roleMapContent.length) {
-      return [];
-    }
-
-    let orgs = new Set();
-
-    this._raw.roleMapContent
-      .filter(role => role.roleData && role.roleData.length)
-      .forEach(role => {
-        role.roleData
-          .filter(domainOrgEmail => domainOrgEmail.organizationMapContent && domainOrgEmail.organizationMapContent.orgKey && domainOrgEmail.organizationMapContent.orgKey.length)
-          .forEach(domainOrgEmail => {
-            let id = domainOrgEmail.organizationMapContent.orgKey.trim();
-            if (!orgs.has(id)) {
-              orgs.add(id);
-            }
-          });
-      });
-    return Array.from(orgs.keys());
+    let orgKeys = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'orgKey']);
+    return _.uniq(orgKeys);
   }
 
   public allRoles() {
@@ -49,80 +36,25 @@ export class UserAccessModel {
   }
 
   public allDomains() {
-    if (!this._raw.roleMapContent.length) {
-      return [];
-    }
-
-    let domains = new Map();
-
-    this._raw.roleMapContent
-      .filter(role => role.roleData && role.roleData.length)
-      .forEach(role => {
-        role.roleData
-          .filter(domainOrgEmail => domainOrgEmail.organizationMapContent && domainOrgEmail.organizationMapContent.orgKey)
-          .forEach(domainOrgEmail => {
-            let id = domainOrgEmail.domain.id;
-            if (!domains.has(id)) {
-              let domain = domainOrgEmail.domain;
-              domains.set(id, domain);
-            }
-          });
-      });
-    return Array.from(domains.values());
+    let domains = this.collector.collect(['roleMapContent', [], 'roleData', [], 'domain']);
+    let map = new Map();
+    domains.forEach(dom => map.set(dom.id, dom));
+    return Array.from(map.values());
   }
 
   // a.k.a functions
   public allObjects() {
-    if (!this._raw.roleMapContent.length) {
-      return [];
-    }
-
-    let objects = new Map();
-    this._raw.roleMapContent
-      .filter(role => role.roleData && role.roleData.length)
-      .forEach(role => {
-        role.roleData
-          .filter(domainOrgEmail => domainOrgEmail.organizationMapContent && domainOrgEmail.organizationMapContent.functionMapContent && domainOrgEmail.organizationMapContent.functionMapContent.length)
-          .forEach(domainOrgEmail => {
-            domainOrgEmail.organizationMapContent.functionMapContent
-              .filter(func => func.function)
-              .forEach(func => {
-                let id = func.function.id;
-                if (!objects.has(id)) {
-                  objects.set(id, func.function);
-                }
-              });
-          });
-      });
-    return Array.from(objects.values());
+    let objects = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'functionMapContent', [], 'function']);
+    let map = new Map();
+    objects.forEach(obj => map.set(obj.id, obj));
+    return Array.from(map.values());
   }
 
   public allPermissions() {
-    let ret = [];
-
-    if (!this.hasRoleMapContent()) {
-      return [];
-    }
-
-    let permissions = new Map();
-    this._raw.roleMapContent
-      .filter(role => role.roleData && role.roleData.length)
-      .forEach(role => {
-        role.roleData
-          .filter(domain => domain.organizationMapContent && domain.organizationMapContent.functionMapContent && domain.organizationMapContent.functionMapContent.length)
-          .forEach(domain => {
-            domain.organizationMapContent.functionMapContent
-              .filter(func => func.permission && func.permission.length)
-              .forEach(func => {
-                func.permission.forEach(perm => {
-                  if (!permissions.has(perm)) {
-                    permissions.set(perm.id, perm);
-                  }
-                });
-              });
-          });
-      });
-    return Array.from(permissions.values());
+    let perms = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'functionMapContent', [], 'permission', []]);
+    let map = new Map();
+    perms.forEach(perm => map.set(perm.id, perm));
+    return Array.from(map.values());
   }
 
   private hasRoleMapContent() {
