@@ -48,6 +48,31 @@ export class SamAlertComponent {
     show: true
   };
 
+  private store = {
+    target: {
+      position: {},
+      size: {}
+    },
+
+    source: {
+      position: {},
+      size: {}
+    }
+  };
+
+  private debug = {
+    enabled: false,
+    style: {
+      'position':        'fixed',
+      'left':            '20px',
+      'bottom':          '20px',
+      'padding':         '10px',
+      'backgroundColor': 'rgba(255,255,255,0.9)',
+      'fontSize':        '1.2rem',
+      'fontWeight':      '700'
+    }
+  }
+
   private types:any = {
     'success': 'usa-alert-success',
     'warning': 'usa-alert-warning',
@@ -59,6 +84,8 @@ export class SamAlertComponent {
   private selectedType: string = this.types['success'];
 
   ngOnInit() {
+    this.debug.enabled = this.debug.enabled && (this.target !== undefined);
+
     if(!this.typeNotDefined()) {
       this.selectedType = this.types[this.type];
     }
@@ -123,6 +150,11 @@ export class SamAlertComponent {
         target = this.target,
         source = this.alert.nativeElement,
         type = target.constructor.name,
+        viewport = {
+          width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+          height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+        },
+
         placement = (this.placement || 'top').replace(/\s+/, ' '),
         offsets,
         dimensions,
@@ -133,11 +165,13 @@ export class SamAlertComponent {
         },
 
         style = {
-          position: 'relative',
+          position: 'absolute',
+          width: 0,
+          height: 0,
           top: 0,
           left: 0,
-          width: 0,
-          height: 0
+          margin: 0,
+          zIndex: '1337'
         };
 
     /**
@@ -195,11 +229,12 @@ export class SamAlertComponent {
 
     style.width = dimensions.source.width;
     style.height = dimensions.source.height;
+
     /**
      * Line up the top left corner positions of the alert to the target element
      */
-   style.top += offsets.target.top;
-   style.left += offsets.target.left;
+    style.top += offsets.target.top;
+    style.left += offsets.target.left;
 
     /**
      * Determine placement settings and process position adjustments
@@ -220,17 +255,27 @@ export class SamAlertComponent {
     if(placement.search(/^(left|right|auto) center$/) > -1)
       style.top += (dimensions.target.height / 2) - (dimensions.source.height / 2);
 
+    /**
+     * Viewport Collision Support
+     */
+    offsets.source.x += Math.abs(style.left);
+    offsets.source.y += Math.abs(style.top);
+
+    style.left = Math.max(0, Math.min(viewport.width - style.width, offsets.source.x + style.width));
+    style.top = Math.max(0, Math.min(viewport.height - style.height, offsets.source.y + style.height));
+
     // Apply @Input offsets
     style.top += this.offset.top || 0;
     style.left += this.offset.left || 0;
 
-    // Adjust offsets if off viewport (Should happen if target is body)
-    /*
-    if(style.top < 0 || style.top > offsets.viewport.height)
-      style.top = Math.min(offsets.viewport.height, Math.max(0, style.top)) + (style.top < 0 ? offsets.source.height : -offsets.source.height);
-    if(style.left < 0 || style.left > offsets.viewport.width)
-      style.left = Math.min(offsets.viewport.width, Math.max(0, style.left)) + (style.left < 0 ? offsets.source.width : -offsets.source.width);
-    */
+    /**
+     * Debugging Data for Positiong
+     */
+    this.store.target.position = this.getPosition(target);
+    this.store.source.position = this.getPosition(source);
+
+    this.store.target.size = this.getDimensions(target);
+    this.store.source.size = this.getDimensions(source);
 
     this.position = this.toPx(style);
   }
@@ -253,13 +298,22 @@ export class SamAlertComponent {
           y:    0
         },
 
+        styles = element.style,
         bounds;
+
+    if(element.tagName !== 'BODY') {
+      element.style = 'position:fixed;margin:0px;visibility:visible;display:block;';
+    }
 
     while(element) {
       bounds = element.getBoundingClientRect();
 
       position.top = Math.max(position.top, bounds.top);
       position.left = Math.max(position.left, bounds.left);
+
+      if(element.tagName !== 'BODY') {
+        element.style = styles;
+      }
 
       element = element.offsetParent;
     }

@@ -1,6 +1,7 @@
 // Angular Dependencies
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+// import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
@@ -87,6 +88,7 @@ import { SamFiltersContainerComponent } from './filters-container';
   ],
   imports: [
     BrowserModule,
+    // CommonModule,
     FormsModule,
     RouterModule,
     SamSidenavModule
