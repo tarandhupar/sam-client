@@ -33,7 +33,7 @@
                   <div class="usa-grid-full functions-row">
                     <div class="usa-width-one-third object-col">{{func.function.val | capitalize}}</div>
                     <div class="usa-width-two-thirds permissions-col">
-                      <span class="pull-left" *ngFor="let perm of func.permission">{{perm.val | capitalize}},&nbsp;</span>
+                      <span class="pull-left" *ngFor="let perm of func.permission; let lastPermission = last">{{perm.val | capitalize}}<span *ngIf="!lastPermission">,&nbsp;</span></span>
                     </div>
                   </div>
                 </ng-container>
