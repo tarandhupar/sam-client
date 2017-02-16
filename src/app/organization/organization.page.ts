@@ -137,6 +137,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
                     page: this.pageNum},
       fragment: 'organization-sub-hierarchy'
     };
+    document.getElementById('org-pagination').getElementsByTagName('li')[0].focus();
     this.router.navigate(['/organization',this.organization.orgKey],navigationExtras);
   }
 
