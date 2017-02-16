@@ -27,7 +27,7 @@ import * as moment from 'moment/moment';
         </p>
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li *ngIf="data.organizationHierarchy && data.organizationHierarchy[0]?.level==1"><strong>Department/Ind. Agency:</strong><a href=""><span>{{data.organizationHierarchy[0].name}}</span></a></li>
-          <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[2]?.level==3"><strong>Office:</strong><a href=""><span>{{data.organizationHierarchy[2].name}}</span></a></li>
+          <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[2]?.level==3"><strong>Office:</strong><span>{{data.organizationHierarchy[2].name}}</span></li>
         </ul>
         <!--History section to be displayed only for historical records-->
         <div *ngIf="data.isActive==false">
@@ -50,7 +50,7 @@ import * as moment from 'moment/moment';
               <li>{{data.publishDate}}</li>
             </ul>
           </li>
-          <li *ngIf="data.isActive==true"><strong>Type</strong>
+          <li *ngIf="data.isActive==true"><strong>Type Of Assistance</strong>
             <ul class="usa-unstyled-list">
               <li><span *ngFor="let assistanceTypes of data.assistanceTypes; let i=index">{{ assistanceTypes.code }} {{ assistanceTypes.code!==null ? '-' : '' }} {{ assistanceTypes.value }}{{ assistanceTypes.value!==null && i!==data.assistanceTypes.length-1 ? ',' : '' }}</span></li>
             </ul>
