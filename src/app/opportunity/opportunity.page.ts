@@ -611,6 +611,7 @@ export class OpportunityPage implements OnInit {
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
+    document.getElementById('awards-list').focus();
   }
 
   setupPageChange(newpagechange){
