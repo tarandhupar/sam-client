@@ -1,4 +1,4 @@
-import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Directive, Input, ElementRef, Renderer, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
 /**
  * SearchLayoutComponent - template component for generating a search page
@@ -7,7 +7,7 @@ import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
   selector: 'search-layout',
   templateUrl: 'search-layout.template.html'
 })
-export class SearchLayoutComponent implements OnInit {
+export class SearchLayoutComponent {
   @Input() totalPages: number;
   @Input() currentPage: number;
   @Input() totalElements: number;
@@ -29,31 +29,16 @@ export class SearchLayoutComponent implements OnInit {
   public sortModel: string = '';
   private _displayFilters: boolean = false;
 
-  constructor(private router: Router) {
-		// needed for fragment navigations
-    router.events.subscribe(s => {
-      if (s instanceof NavigationEnd) {
-        const tree = router.parseUrl(router.url);
-        if (tree.fragment) {
-          const element = document.getElementById(tree.fragment);
-          if (element) { element.scrollIntoView(); }
-        }
-      }
-    });
-  }
-
   pageChangeHandler(event): void {
     this.pageChange.emit(event);
   }
-
-  ngOnInit() { }
 
   setMainWidth(): string {
     return this._displayFilters ? 'usa-width-three-fourths' : 'usa-width-one-whole';
   }
 
   setAsideWidth(): string {
-    return this._displayFilters ? 'usa-width-one-fourth' : 'hidden';
+    return this._displayFilters ? 'usa-width-one-fourth' : 'hide';
   }
 
   setOffset(): string {

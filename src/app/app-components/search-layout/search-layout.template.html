@@ -1,15 +1,9 @@
-<style>
- aside.hidden {
-	 display: none;
- }
-</style>
-
 <div class="usa-grid">
 	<header class="usa-width-one-whole" [ngClass]="setOffset()">
 		<ng-content select="[search-title]"></ng-content>
 	</header>
 	<main>
-		<aside [ngClass]="setAsideWidth()">
+		<aside class="side-filters"[ngClass]="setAsideWidth()">
 			<sam-filters-container reset-label-margin=".5rem">
 				<ng-content select="[search-sidebar]"></ng-content>
 			</sam-filters-container>
