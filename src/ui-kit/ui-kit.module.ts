@@ -40,6 +40,7 @@ import { SamModalComponent } from "./modal/modal.component";
 import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
 import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
 import { SamSidenavModule } from './sidenav';
+import { ResetLabelMarginDirective } from './reset-label-margin/reset-label-margin.directive';
 
 import { SamCollapsibleComponent } from './collapsible';
 import { SamFiltersContainerComponent } from './filters-container';
@@ -84,7 +85,8 @@ import { SamFiltersContainerComponent } from './filters-container';
     SamTabComponent,
     SamAlphabetSelectorComponent,
     SamCollapsibleComponent,
-    SamFiltersContainerComponent
+    SamFiltersContainerComponent,
+    ResetLabelMarginDirective
   ],
   imports: [
     BrowserModule,
@@ -128,7 +130,8 @@ import { SamFiltersContainerComponent } from './filters-container';
     SamAlphabetSelectorComponent,
     SamSidenavModule,
     SamCollapsibleComponent,
-    SamFiltersContainerComponent
+    SamFiltersContainerComponent,
+    ResetLabelMarginDirective
   ],
   providers: [
     AlphabetSelectorService

@@ -15,8 +15,8 @@ import * as moment from 'moment/moment';
 
     	<!--Commented out until Sprint 2 when DBA View Page is introduced-->
       	<!--<span>{{ data._type=='SCA' ? 'SCA Wage Determination #: ' : 'DBA Wage Determination #: ' }}</span><a>{{ data.fullReferenceNumber }}</a>-->
-      	<span *ngIf = "data._type=='SCA'">SCA Wage Determination #: </span><a *ngIf = "data._type=='SCA'" [routerLink]="['/wage-determination', data.fullReferenceNumber, data.revisionNumber]" [queryParams]="qParams">{{ data.fullReferenceNumber }}</a>
-      	<span *ngIf = "data._type=='DBRA'">DBA Wage Determination #: </span><a *ngIf = "data._type=='DBRA'" >{{ data.fullReferenceNumber }}</a>
+      	<span *ngIf = "data._type=='wdSCA'">SCA Wage Determination #: </span><a *ngIf = "data._type=='wdSCA'" [routerLink]="['/wage-determination', data.fullReferenceNumber, data.revisionNumber]" [queryParams]="qParams">{{ data.fullReferenceNumber }}</a>
+      	<span *ngIf = "data._type=='wdDBRA'">DBA Wage Determination #: </span><a *ngIf = "data._type=='wdDBRA'" >{{ data.fullReferenceNumber }}</a>
 
 
     	</h3>

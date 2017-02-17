@@ -1,5 +1,5 @@
 <div class="usa-grid wage-determination-page">
-  
+
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <br />
@@ -13,36 +13,36 @@
 
     </div>
   </aside>
-  
+
   <div class="usa-width-three-fourths">
-    
+
     <section id="wage-determination" *ngIf="wageDetermination">
 
       <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
-      
+
       <div class="usa-grid-full">
-        
-        <div class="usa-width-one-half" *ngIf="wageDetermination && dictionaries && getStatesAndCounties()">
+
+        <div class="usa-width-one-half" *ngIf="states && counties">
           <ul class="usa-unstyled-list">
             <li>
-              <strong>State/States: </strong> 
+              <strong>State/States: </strong>
               {{states}}
             </li>
             <li>
-              <strong>County/ties: </strong> 
+              <strong>County/ies: </strong>
               {{counties}}
             </li>
           </ul>
         </div>
-        
+
         <div class="usa-width-one-half">
           <ul class="usa-unstyled-list">
             <li *ngIf = "wageDetermination.revisionNumber">
-              <strong>Revision: </strong>
+              <strong>Revision #: </strong>
               {{wageDetermination.revisionNumber}}
             </li>
-            <li *ngIf = "wageDetermination && dictionaries && getServices()">
-              <strong>Service/Services: </strong> 
+            <li *ngIf = "services">
+              <strong>Service/Services: </strong>
               {{services}}
             </li>
             <li *ngIf = "wageDetermination.publishDate">
@@ -51,16 +51,16 @@
             </li>
           </ul>
         </div>
-        
+
       </div>
-      
+
       <!-- Document -->
       <textarea *ngIf = "wageDetermination.document" rows="50" cols="100">
         {{ wageDetermination.document }}
       </textarea>
-      
+
     </section>
 
   </div>
-  
+
 </div>
