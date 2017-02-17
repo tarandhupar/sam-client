@@ -9,7 +9,7 @@
   <ng-container *ngIf="userAccessModel">
     <div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">
       <h2>{{role.role.val}}
-        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapsed All</a>
+        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapse All</a>
         <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
       </h2>
       <samAccordion *ngFor="let domain of role.roleData | groupByDomain" [bordered]="true" [expandIndex]="showCollapse ? 0 : -1">
