@@ -26,6 +26,13 @@
   </div>
 
   <div class="usa-grid">
+    <h2>Toggle Switch Component &lt;sam-toggle-switch&gt;</h2>
+    <sam-toggle-switch (switchStatusChange)="OnSwitchChange($event)" [disableSwitch]="switchDisable"></sam-toggle-switch>
+    <label>Switch Status: {{switch_status}}</label>
+    <input type="checkbox" (click)="disableSwitchClick($event.target.checked)"><label>Disable Switch</label>
+  </div>
+
+  <div class="usa-grid">
     <h2>Button Component &lt;samButton&gt;</h2>
     <div class="usa-width-one-whole">
       <div class="usa-width-one-fourth">
