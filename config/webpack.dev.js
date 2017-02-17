@@ -163,7 +163,16 @@ module.exports = webpackMerge(commonConfig, {
   devServer: {
     port: METADATA.port,
     host: METADATA.host,
-    historyApiFallback: true,
+    historyApiFallback: {
+      rewrites: [
+        {
+          from: /^\/users\/.*$/,
+          to: function() {
+            return '/';
+          }
+        }
+      ]
+    },
     watchOptions: {
       aggregateTimeout: 300,
       poll: 1000

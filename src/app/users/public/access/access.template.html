@@ -1,0 +1,54 @@
+<div class="access-page">
+  <h1 class="m_T-0">Access</h1>
+  <samMultiSelectDropdown (modelChange)="orgsChanged($event)" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [model]="filters.organizations.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="rolesChanged($event)" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [model]="filters.roles.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="objectsChanged($event)" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [model]="filters.objects.value"></samMultiSelectDropdown>
+  <samMultiSelectDropdown (modelChange)="permissionsChanged($event)" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [model]="filters.permissions.value"></samMultiSelectDropdown>
+
+  <ng-container *ngIf="userAccessModel">
+    <div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">
+      <h2>{{role.role.val}}
+        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapsed All</a>
+        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
+      </h2>
+      <samAccordion *ngFor="let domain of role.roleData | groupByDomain" [bordered]="true" [expandIndex]="showCollapse ? 0 : -1">
+        <samAccordionSection [headerText]="domain.val" [name]="'domain-'+domain.val">
+          <div class="usa-grid-full permissions-table-header">
+            <div class="usa-width-one-sixth"><strong>Organization:</strong></div>
+            <div class="usa-width-one-sixth"><strong>Level:</strong></div>
+            <div class="usa-width-one-sixth"><strong>Object:</strong></div>
+            <div class="usa-width-one-third"><strong>Permissions:</strong></div>
+            <div class="usa-width-one-sixth">&nbsp;</div>
+          </div>
+          <ng-container *ngFor="let org of domain.organizations">
+            <div class="usa-grid-full permissions-table-row">
+              <div class="usa-width-one-sixth org-col access-cell">
+                <a [routerLink]="['/organization', org.orgKey.trim()]">{{orgName(org.orgKey)}}</a>
+              </div>
+              <div class="usa-width-one-sixth org-level-col access-cell">{{orgLevel(org.orgKey)}}&nbsp;</div>
+              <div class="usa-width-one-half functions-col background-grey access-cell">
+                <div class="pip-left">&nbsp;</div>
+                <ng-container *ngFor="let func of org.functionMapContent">
+                  <div class="usa-grid-full functions-row">
+                    <div class="usa-width-one-third object-col">{{func.function.val | capitalize}}</div>
+                    <div class="usa-width-two-thirds permissions-col">
+                      <span class="pull-left" *ngFor="let perm of func.permission; let lastPermission = last">{{perm.val | capitalize}}<span *ngIf="!lastPermission">,&nbsp;</span></span>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="usa-width-one-sixth">
+                <span class="pull-right">
+                  <button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-pencil"></i></button>
+                  &nbsp;
+                  <button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-trash"></i></button>
+                </span>
+              </div>
+            </div>
+          </ng-container>
+        </samAccordionSection>
+      </samAccordion>
+    </div>
+  </ng-container>
+</div>

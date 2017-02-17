@@ -3,6 +3,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 @Pipe({name: 'capitalize'})
 export class CapitalizePipe implements PipeTransform {
   transform(word:string) : any {
+    if (!word || !word.length) {
+      return '';
+    }
     let array		= word.split(' '); // split on spaces
     let capitalized	= '';
     let doNotCapitalize	= ["a", "an", "and", "as", "at", "but", "by", "etc", "for", "in", "into", "is", "nor", "of", "off", "on", "onto", "or", "so", "the", "to", "unto", "via"];

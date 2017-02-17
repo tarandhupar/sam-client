@@ -56,6 +56,8 @@
 @import 'pages/help-roadmap';
 @import 'pages/users-directory';
 @import 'pages/ui-kit-demo';
+@import 'pages/access';
+@import 'pages/public-profile';
 @import 'pages/wage-determination';
 
 html, body{
@@ -136,7 +138,7 @@ h2{
 
 .search-layout{
   .showing-results-meta{
-    margin-top:3rem!important;  
+    margin-top:3rem!important;
   }
   samselect{
     label{
