@@ -37,28 +37,17 @@ export class UserAccessModel {
 
   public allDomains() {
     let domains = this.collector.collect(['roleMapContent', [], 'roleData', [], 'domain']);
-    let map = new Map();
-    domains.forEach(dom => map.set(dom.id, dom));
-    return Array.from(map.values());
+    return _.uniqBy(domains, dom => dom.id);
   }
 
   // a.k.a functions
   public allObjects() {
     let objects = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'functionMapContent', [], 'function']);
-    let map = new Map();
-    objects.forEach(obj => map.set(obj.id, obj));
-    return Array.from(map.values());
+    return _.uniqBy(objects, obj => obj.id);
   }
 
   public allPermissions() {
     let perms = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'functionMapContent', [], 'permission', []]);
-    let map = new Map();
-    perms.forEach(perm => map.set(perm.id, perm));
-    return Array.from(map.values());
+    return _.uniqBy(perms, perm => perm.id);
   }
-
-  private hasRoleMapContent() {
-    return this._raw.roleMapContent && this._raw.roleMapContent.length;
-  }
-
 }
