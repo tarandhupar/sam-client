@@ -3,6 +3,7 @@
 // Vendor main
 @import '~font-awesome/scss/font-awesome';
 @import '~uswds/src/stylesheets/lib/bourbon';
+@import '~uswds/src/stylesheets/lib/neat';
 
 // Internal variable should be declared before uswds variable to take higher precendence
 @import 'variables';
@@ -10,6 +11,7 @@
 @import 'margin-padding';
 @import 'global';
 @import 'typography';
+@import 'grid-offsets';
 
 @import '~uswds/src/stylesheets/uswds';
 
