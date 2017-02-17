@@ -71,10 +71,20 @@ checkSession(cb: () => void) {
       vm.states.isSignedIn = true;
       vm.states.showSignIn = false;
       vm.userRoles = user.gsaRAC;
+      
+    var isReportsUser = false;
+	var isReportsAdmin = false;
+	
+	for (var _i = 0; _i < vm.userRoles.length; _i++) { 
 
-      for (let role of vm.userRoles) {
-        var isReportsUser = role.includes("GSA_REPORT_R");
-        var isReportsAdmin = role.includes("ADMIN");
+    if (vm.userRoles[_i].role.indexOf("GSA_REPORT_R") >= 0){
+	isReportsUser = true;
+	}
+
+	if (vm.userRoles[_i].role.indexOf("ADMIN") >= 0){
+	isReportsAdmin = true;
+	}
+
         if(isReportsUser  && isReportsAdmin  ){
           //User is an Admin user
           vm.states.isAdmin = true;
