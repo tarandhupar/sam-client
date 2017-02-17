@@ -72,7 +72,7 @@ export class AssistanceListingResult implements OnInit {
       return {
         "id": value.historicalIndexId,
         "index": value.index,
-        "date": moment(value.createdDate).format("MMM D, Y h:mm a"),
+        "date": value.fiscalYear,
         "title": value.body,
       }
     });
