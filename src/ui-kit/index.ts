@@ -24,3 +24,4 @@ export { SamPhoneEntryComponent } from './form-controls/phone-entry';
 export { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
 export { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
 export { SamSidenavModule } from './sidenav';
+export { SamToggleSwitchComponent } from './form-controls/toggle-switch/toggle-switch.component';
