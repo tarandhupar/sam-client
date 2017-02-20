@@ -153,7 +153,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   private loadHistoricalIndex(apiSource: Observable<any>) {
     // construct a stream of historical index data
     let historicalIndexStream = apiSource.switchMap(api => {
-      return this.historicalIndexService.getHistoricalIndexByProgramNumber(api.data._id, api.data.programNumber);
+      return this.historicalIndexService.getHistoricalIndexByProgramNumber(api.id, api.data.programNumber);
     });
 
     this.historicalIndexSub = historicalIndexStream.subscribe(res => {
@@ -183,7 +183,7 @@ export class ProgramPage implements OnInit, OnDestroy {
       if(typeof relatedProgram !== 'undefined') {
         this.relatedProgram.push({ // store the related program
           'programNumber': relatedProgram.data.programNumber,
-          'id': relatedProgram.data._id
+          'id': relatedProgram.id
         });
       }
     });

@@ -22,6 +22,7 @@ import { PageNotFoundErrorPage } from './application-content/404';
 import { ErrorModule } from './application-content/error/error.module';
 import { ProgramModule } from './assistance-listing';
 import { OpportunityModule } from './opportunity';
+import { WageDeterminationModule } from './wage-determination';
 import { EntityModule } from './entity';
 import { ExclusionModule } from './exclusion';
 import { OrganizationModule } from './organization';
@@ -31,7 +32,7 @@ import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.m
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
-import { UserDirectoryModule } from "./user-directory";
+import { UserDirectoryModule } from "./users";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -71,6 +72,7 @@ const APP_PROVIDERS = [
     SearchModule,
     ErrorModule,
     UIKitDemoModule,
+    WageDeterminationModule,
 
     // Other Modules
     SamUIKitModule,

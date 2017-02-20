@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { FHService } from "api-kit";
-import {Organization} from "../organization/organization.model";
-import { UserDirService } from "api-kit";
-
+import { Organization } from "../../organization/organization.model";
+import { UserDirService } from "api-kit/user-directory/user-directory.service";
 
 @Component({
   templateUrl: 'user-directory.template.html'

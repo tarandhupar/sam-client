@@ -1,0 +1,66 @@
+<div class="usa-grid wage-determination-page">
+
+  <!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <br />
+    <br />
+    <div sam-sticky limit=1200 container="occupy-page">
+      <!--Logo-->
+      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+
+      <!--Side Navigation-->
+      <samSidenav class="m_T-3x" *ngIf="sidenavModel" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+
+    </div>
+  </aside>
+
+  <div class="usa-width-three-fourths">
+
+    <section id="wage-determination" *ngIf="wageDetermination">
+
+      <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+
+      <div class="usa-grid-full">
+
+        <div class="usa-width-one-half" *ngIf="states && counties">
+          <ul class="usa-unstyled-list">
+            <li>
+              <strong>State/States: </strong>
+              {{states}}
+            </li>
+            <li>
+              <strong>County/ies: </strong>
+              {{counties}}
+            </li>
+          </ul>
+        </div>
+
+        <div class="usa-width-one-half">
+          <ul class="usa-unstyled-list">
+            <li *ngIf = "wageDetermination.revisionNumber">
+              <strong>Revision #: </strong>
+              {{wageDetermination.revisionNumber}}
+            </li>
+            <li *ngIf = "services">
+              <strong>Service/Services: </strong>
+              {{services}}
+            </li>
+            <li *ngIf = "wageDetermination.publishDate">
+              <strong>Published Date: </strong>
+              {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Document -->
+      <textarea *ngIf = "wageDetermination.document" rows="50" cols="100">
+        {{ wageDetermination.document }}
+      </textarea>
+
+    </section>
+
+  </div>
+
+</div>
