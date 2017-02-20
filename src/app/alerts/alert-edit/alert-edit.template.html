@@ -15,25 +15,17 @@
         <samDateTime #publishedDate [control]="form.get('publishedDate')" formControlName="publishedDate" [label]="'Publish Date'" name='publish-date'></samDateTime>
         <div class="input-group abs-top-right">
           <input id="publish-immediately" type="checkbox" formControlName="publishImmediately" (click)="onPublishImmediatelyClick($event.target.checked)">
-          <label for="publish-immediately" [ngClass]="getLabelColor()">Publish Now</label>
+          <label for="publish-immediately">Publish Now</label>
         </div>
       </div>
       <div class="usa-width-one-whole relative">
         <samDateTime #endDate [control]="form.get('endDate')" formControlName="endDate" [label]="'End Date'" name='end-date'></samDateTime>
         <div class="input-group abs-top-right">
           <input id="end-indefinitely" type="checkbox" formControlName="isExpiresIndefinite" (click)="onEndIndefinitelyClick($event.target.checked)">
-          <label for="end-indefinitely" [ngClass]="getLabelColor()">No End Date</label>
+          <label for="end-indefinitely">No End Date</label>
         </div>
       </div>
-      <div class="usa-width-one-whole" *ngIf="isEditMode() && isActiveAlert()">
-        <div class="alert-type-indicator usa-color-warning expire-alert-note m_T-3x" *ngIf="expireAlert">
-          <i class="alert-type-icon fa fa-exclamation-triangle"></i>This action is permanent!
-        </div>
-        <div class="input-group m_T-0">
-          <input id="expire-alert" type="checkbox" (click)="onExpireAlertClick($event.target.checked)">
-          <label for="expire-alert">Expire Alert</label>
-        </div>
-      </div>
+
     </div>
   </div>
   <div class="alert-edit-actions clearfix">
