@@ -40,6 +40,7 @@
 @import 'components/modal';
 @import 'components/alphabet-selector';
 @import 'components/history';
+@import 'components/toggle-switch';
 
 @import 'pages/entity-object-view';
 @import 'pages/exclusion';
@@ -56,6 +57,8 @@
 @import 'pages/help-roadmap';
 @import 'pages/users-directory';
 @import 'pages/ui-kit-demo';
+@import 'pages/access';
+@import 'pages/public-profile';
 @import 'pages/wage-determination';
 
 html, body{
@@ -136,7 +139,7 @@ h2{
 
 .search-layout{
   .showing-results-meta{
-    margin-top:3rem!important;  
+    margin-top:3rem!important;
   }
   samselect{
     label{

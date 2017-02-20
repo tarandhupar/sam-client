@@ -1,0 +1,67 @@
+.access-page {
+  .fieldset-wrapper {
+   min-width: 250px;
+  }
+
+  .access-cell {
+    color: black;
+    padding: 10px 0;
+  }
+
+  .dropdown-list {
+    // should this be global?
+    z-index: 10;
+  }
+
+  .background-grey {
+    background-color: $color-gray-lightest;
+  }
+
+  .functions-row {
+    padding-left: .5em;
+    padding-right: .5em;
+  }
+
+  .functions-row:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  .object-col {
+    word-break: break-all;
+  }
+
+  .first-function {
+    margin-top: 1em;
+  }
+
+  .functions-col {
+    position: relative;
+  }
+
+  .pip-left {
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -10px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right:10px solid $color-gray-lightest;
+  }
+
+  .usa-accordion-button {
+    padding: 1em;
+  }
+
+  .usa-accordion-content {
+    padding: 1em;
+  }
+
+  .row-action-button {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .underline {
+    text-decoration: underline;
+  }
+}
