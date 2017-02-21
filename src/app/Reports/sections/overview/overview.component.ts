@@ -233,7 +233,7 @@ checkSession(cb: () => void) {
                                         name: 'Workload Report',
                                         desc: 'This report displays actions and dollars for all the federal government contracts for various dollar ranges, thus displaying the workload. It also drills down to the workload by Type of Contract and displays actions and dollars for each contract type.'
                                 },
-				{
+								{
                                         id: 'F93C7D5846D6FFF1002156A8927700C0',
                                         name: 'Competition Report - OLD',
                                         desc: 'NOT THE OFFICIAL REPORT FOR COMPETITION. This is the old competition report and does not provide as accurate a representation as the Competition Report.'
@@ -242,6 +242,16 @@ checkSession(cb: () => void) {
                                         id: '7AB734B64A8650C22912479CD9DA8A3B',
                                         name: 'Buying Through Government Acquisition Vehicles Report',
                                         desc: 'The Buying Through Government Acquisition Vehicles report displays actions and dollars for all contract actions (Awards, IDVs, and Modifications) based on Who Can Use on the IDV and based on Department ID for Awards referencing an IDV.'
+                                },
+								{
+                                        id: '1E843D294B046BC4DFBF9C993853B76F',
+                                        name: 'Competitive Procedures, but one Offer Report',
+                                        desc: 'This report displays Competed (Competed Under SAP, Full and Open Competition, Full and Open Competition after Exclusion of Sources and Fair Opportunity) data that has only one offer.'
+                                },
+								{
+                                        id: '338E9AB44BC3E6A2BA6BC5B923CF9965',
+                                        name: 'Performance Based Acquisition Report',
+                                        desc: 'This report displays the actions, dollars and percentages for the performance based acquisition contracts for the specified date range. It also provides drill down capability to view specific report details, including field values for the contract.'
                                 }
                                 ];
         }
@@ -372,7 +382,7 @@ checkSession(cb: () => void) {
                                         name: 'IDVs whose Orders are over the Ceiling Amount Report',
                                         desc: 'This report displays EPA Designated Product and Recovered Materials/Sustainability data for the specified date range and PSC range.'
                                 },
-				{
+								{
                                         id: 'F93C7D5846D6FFF1002156A8927700C0',
                                         name: 'Competition Report - OLD',
                                         desc: 'NOT THE OFFICIAL REPORT FOR COMPETITION. This is the old competition report and does not provide as accurate a representation as the Competition Report.'
@@ -381,6 +391,16 @@ checkSession(cb: () => void) {
                                         id: '7AB734B64A8650C22912479CD9DA8A3B',
                                         name: 'Buying Through Government Acquisition Vehicles Report',
                                         desc: 'The Buying Through Government Acquisition Vehicles report displays actions and dollars for all contract actions (Awards, IDVs, and Modifications) based on Who Can Use on the IDV and based on Department ID for Awards referencing an IDV.'
+                                },
+								{
+                                        id: '1E843D294B046BC4DFBF9C993853B76F',
+                                        name: 'Competitive Procedures, but one Offer Report',
+                                        desc: 'This report displays Competed (Competed Under SAP, Full and Open Competition, Full and Open Competition after Exclusion of Sources and Fair Opportunity) data that has only one offer.'
+                                },
+								{
+                                        id: '338E9AB44BC3E6A2BA6BC5B923CF9965',
+                                        name: 'Performance Based Acquisition Report',
+                                        desc: 'This report displays the actions, dollars and percentages for the performance based acquisition contracts for the specified date range. It also provides drill down capability to view specific report details, including field values for the contract.'
                                 }
                                 ];
           }
