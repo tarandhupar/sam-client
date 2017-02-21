@@ -100,7 +100,8 @@
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
             <strong>Opportunity Type: </strong>
-            {{ opportunity.data?.type | opportunityTypeLabel }}
+            <ng-container *ngIf="opportunity.data?.type !== 'm'">{{ opportunity.data?.type | opportunityTypeLabel }}</ng-container>
+            <ng-container *ngIf="opportunity.data?.type === 'm'">{{ originalOpportunity?.data?.type | opportunityTypeLabel}} (Update/Amendment)</ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.PostedDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.PostedDate)">
             <strong>Posted Date: </strong>
