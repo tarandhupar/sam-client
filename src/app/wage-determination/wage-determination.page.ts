@@ -189,4 +189,9 @@ export class WageDeterminationPage implements OnInit {
       }
     })
   }
+
+  public openDocumentPrintPage() {
+    var win = window.open('', 'Document');
+    win.document.body.innerHTML = '<pre>' + this.wageDetermination.document + '</pre>';
+  }
 }
