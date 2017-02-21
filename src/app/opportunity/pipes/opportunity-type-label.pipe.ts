@@ -13,7 +13,7 @@ export class OpportunityTypeLabelPipe implements PipeTransform {
         label = 'Award Notice';
         break;
       case 'm':
-        label = 'Modification/Amendment/Cancel';
+        label = 'Update/Amendment';
         break;
       case 'r':
         label = 'Sources Sought';
