@@ -75,23 +75,24 @@ export class WageDeterminationPage implements OnInit {
       this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(this.referenceNumber,this.revisionNumber).subscribe(wgSubject);
       // run whenever api data is updated
       wgSubject.subscribe(api => { // do something with the wg api
-      this.wageDetermination = api;
+        this.wageDetermination = api;
 
-      let wageDeterminationSideNavContent = {
-        "label": "Wage Determination",
-        "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
-        "children": [
-          {
-            "label": "SCA WD #" + this.wageDetermination.fullReferenceNumber,
-            "field": "wage-determination",
-          }
-        ]
-      };
-      this.updateSideNav(wageDeterminationSideNavContent);
-    }, err => {
-      console.log('Error logging', err);
+        let wageDeterminationSideNavContent = {
+          "label": "Wage Determination",
+          "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
+          "children": [
+            {
+              "label": "SCA WD #" + this.wageDetermination.fullReferenceNumber,
+              "field": "wage-determination",
+            }
+          ]
+        };
+        this.updateSideNav(wageDeterminationSideNavContent);
+      }, err => {
+        console.log('Error logging', err);
+      });
     });
-    })
+
     return wgSubject;
   }
 
