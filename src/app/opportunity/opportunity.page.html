@@ -177,8 +177,7 @@
             </ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.SetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.SetAside)">
-            <ng-container *ngIf="opportunity.data?.solicitation?.setAside
-            && (opportunity.data.solicitation.setAside != originalOpportunity?.data?.solicitation?.setAside) && dictionary">
+            <ng-container *ngIf="(opportunity.data?.solicitation?.setAside != originalOpportunity?.data?.solicitation?.setAside) && dictionary">
               <strong>Update/Amendment Set Aside: </strong>
               <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
                 <ng-container> {{ element.value }}</ng-container>
