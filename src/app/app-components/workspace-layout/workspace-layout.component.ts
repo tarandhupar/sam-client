@@ -8,6 +8,7 @@ import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
   templateUrl: 'workspace-layout.template.html'
 })
 export class WorkspaceLayoutComponent {
+  @Input() titleText: string;
   @Input() totalPages: number;
   @Input() currentPage: number;
   @Input() totalElements: number;
