@@ -1,4 +1,4 @@
-import { Component, NgZone } from '@angular/core';
+import { Component, NgZone, ViewChild} from '@angular/core';
 import { Router } from "@angular/router";
 import { Alert } from "./alert.model";
 import { SystemAlertsService } from "../../api-kit/system-alerts/system-alerts.service";
@@ -73,6 +73,16 @@ export class AlertsPage {
     menu: false
   };
 
+  showModalWindow: boolean = false;
+  modalWindowConfig = {
+    type: "warning",
+    description: "Are you sure you want to expire this alerts? This action effective immediately and cannot be undone",
+    title: "Confirm Expiration"
+  };
+  @ViewChild('expireModal') expireModal;
+
+
+
   constructor(private router: Router,
               private alertsService: SystemAlertsService,
               private alertFooterService: AlertFooterService,
@@ -95,7 +105,8 @@ export class AlertsPage {
 
   isAdmin() {
     // Will leverage to admin role later when the RM service is ready
-    return this.states.isSignedIn;
+    // return this.states.isSignedIn;
+    return true;
   }
 
   showClassSelector() {
@@ -213,5 +224,17 @@ export class AlertsPage {
 
   onAlertEdit(alert) {
     this.alertBeingEdited = alert;
+  }
+
+  onShowExpireModal(alert) {
+    this.expireModal.openModal();
+  }
+
+  onExpireConfirm(){
+    
+  }
+
+  onExpireCancel(){
+
   }
 }

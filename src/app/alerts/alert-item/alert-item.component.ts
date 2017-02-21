@@ -10,8 +10,12 @@ export class AlertItemComponent {
 
   @Input() alert: Alert;
   @Input() isAdmin: boolean;
-  @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
   @Input() editDisabled: boolean = false;
+  @Input() switchDisable: boolean = false;
+
+  @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
+  @Output() showExpireModal: EventEmitter<Alert> = new EventEmitter<Alert>();
+
 
   onEditClick() {
     this.edit.emit(this.alert);
@@ -38,5 +42,14 @@ export class AlertItemComponent {
     } else {
       return '--';
     }
+  }
+
+  isActiveAlert():boolean{return this.alert.status() === 'Active';}
+
+
+  OnSwitchChange(val){
+    this.showExpireModal.emit(this.alert);
+  }
+  disableSwitchClick(){
   }
 }
