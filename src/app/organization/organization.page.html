@@ -55,7 +55,8 @@
         </div>
         <ul class="usa-zebra-list">
           <li *ngFor = "let element of organizationPerPage">
-            <a [routerLink]="['/organization', element.orgId]" [queryParams]="qParams">{{ element.name }} </a>
+            <div *ngIf="organization.categoryDesc == 'DEPARTMENT'"><a [routerLink]="['/organization', element.orgId]" [queryParams]="qParams">{{ element.name }} </a></div>
+            <div *ngIf="organization.categoryDesc == 'AGENCY'">{{ element.name }}</div>
           </li>
         </ul>
       </section>
