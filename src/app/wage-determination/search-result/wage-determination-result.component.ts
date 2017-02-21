@@ -21,12 +21,12 @@ import * as moment from 'moment/moment';
 
     	</h3>
     	<div class="usa-width-two-thirds">
-      	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li *ngIf="data.locations!==null"><strong>State: </strong>
-        	  <span *ngFor="let location of data.locations; let i=index">{{ location.state?.name }}{{ location.state!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
+      	<ul *ngFor="let location of data.locations; let i=index" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
+        	<li><strong>State: </strong>
+        	  <span>{{ location.state?.name }}</span>
         	</li>
-        	<li *ngIf="data.locations!==null" class="break-word"><strong>County/ies: </strong>
-        	  <span *ngFor="let location of data.locations; let i=index">{{ location.counties }}{{ location.counties!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
+        	<li class="break-word"><strong>County/ies: </strong>
+        	  <span>{{ location.counties }}</span>
         	</li>
         </ul>
     	</div>
@@ -65,6 +65,11 @@ export class WageDeterminationResult implements OnInit {
   ngOnInit(){
     if(this.data.publishDate!==null) {
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+    }
+    if(this.data.locations!==null) {
+      for(var i=0; i<this.data.locations.length; i++) {
+          this.data.locations[i].counties = this.data.locations[i].counties.sort();
+      }
     }
   }
 
