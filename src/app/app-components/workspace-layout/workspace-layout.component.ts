@@ -1,14 +1,14 @@
-import { Component, Directive, Input, ElementRef, Renderer, Output, EventEmitter, ViewChild } from '@angular/core';
-import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { SortConfig } from '../interfaces';
 /**
- * SearchLayoutComponent - template component for generating a search page
+ * WorkspaceLayoutComponent - template component for generating a workspace page
  */
 @Component({
-  selector: 'search-layout',
-  templateUrl: 'search-layout.template.html'
+  selector: 'workspace-layout',
+  templateUrl: 'workspace-layout.template.html'
 })
-export class SearchLayoutComponent {
+export class WorkspaceLayoutComponent {
+  @Input() titleText: string;
   @Input() totalPages: number;
   @Input() currentPage: number;
   @Input() totalElements: number;
@@ -50,3 +50,4 @@ export class SearchLayoutComponent {
     return this._displayFilters ? 'fa fa-minus' : 'fa fa-plus';
   }
 }
+
