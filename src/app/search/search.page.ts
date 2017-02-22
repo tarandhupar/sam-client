@@ -126,7 +126,7 @@ export class SearchPage implements OnInit{
               }
               data._embedded.results[i].parentOrganizationHierarchy.name = new CapitalizePipe().transform(data._embedded.results[i].parentOrganizationHierarchy.name.replace(/[_-]/g, " "));
             }
-            if(data._embedded.results[i]._type=="FH" && data._embedded.results[i].type) {
+            if(data._embedded.results[i]._type=="federalOrganization" && data._embedded.results[i].type) {
               data._embedded.results[i].type = new CapitalizePipe().transform(data._embedded.results[i].type);
             }
 	        }
