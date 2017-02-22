@@ -2,7 +2,7 @@
   <!-- the first child cannot have a margin or the overlay breaks -->
   <div style="height: 1px"></div>
 
-  <samModal #expireModal [type]="modalWindowConfig.type" [description]="modalWindowConfig.description" [title]="modalWindowConfig.title" [cancelButtonLabel]="'Cancel'" [submitButtonLabel]="'Expire'" (onSubmit)="onExpireConfirm()" (onClose)="onExpireCancel()"></samModal>
+  <samModal #expireModal [type]="modalWindowConfig.type" [description]="modalWindowConfig.description" [title]="modalWindowConfig.title" [cancelButtonLabel]="'Cancel'" [submitButtonLabel]="'Expire'" (onSubmit)="onExpireConfirm()" (onClose)="onExpireCancel()" [closeOnOutsideClick]="false" [closeOnEscape]="false"></samModal>
 
 
   <h1 class="alert-page-title">System Alerts</h1>
@@ -36,9 +36,9 @@
   <div *ngIf="alertBeingEdited && !alertBeingEdited.id()" class="alert-block">
     <alert-edit [mode]="'add'" (cancel)="onAlertCancel()" (accept)="onAddAlertAccept($event)" [alert]="alertBeingEdited"></alert-edit>
   </div>
-  <div *ngFor="let alert of alerts" class="alert-block">
+  <div *ngFor="let alert of alerts; let i = index" class="alert-block">
     <alert-edit *ngIf="alertBeingEdited && alertBeingEdited === alert" [mode]="'edit'" (cancel)="onAlertCancel()" (accept)="onEditAlertAccept($event)" [alert]="alertBeingEdited"></alert-edit>
-    <alert-item [isAdmin]="isAdmin()" [alert]="alert" *ngIf="alertBeingEdited !== alert" (edit)="onAlertEdit($event)" (showExpireModal)="onShowExpireModal($event)" [editDisabled]="alertBeingEdited"></alert-item>
+    <alert-item #alertItem [isAdmin]="isAdmin()" [alert]="alert" [alertIndex]="i" *ngIf="alertBeingEdited !== alert" (edit)="onAlertEdit($event)" (showExpireModal)="onShowExpireModal($event)" [editDisabled]="alertBeingEdited"></alert-item>
   </div>
   <samPagination [disabled]='alertBeingEdited' *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()" (pageChange)="onParamChanged($event)"></samPagination>
 

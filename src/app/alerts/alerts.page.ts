@@ -1,10 +1,12 @@
-import { Component, NgZone, ViewChild} from '@angular/core';
+import { Component, NgZone, ViewChild, ViewChildren, QueryList} from '@angular/core';
 import { Router } from "@angular/router";
 import { Alert } from "./alert.model";
 import { SystemAlertsService } from "../../api-kit/system-alerts/system-alerts.service";
 import { Observable } from "rxjs";
 import { Cookie } from 'ng2-cookies';
+import moment = require("moment");
 import { AlertFooterService } from "./alert-footer/alert-footer.service";
+import { AlertItemComponent } from "./alert-item/alert-item.component"
 import { IAMService } from "api-kit";
 
 export const ALERTS_PER_PAGE: number = 5;
@@ -79,8 +81,10 @@ export class AlertsPage {
     description: "Are you sure you want to expire this alerts? This action effective immediately and cannot be undone",
     title: "Confirm Expiration"
   };
+  curAlertIndex: number;
+  expireModalConfirm: boolean = false;
   @ViewChild('expireModal') expireModal;
-
+  @ViewChildren('alertItem') alertComponents: QueryList<AlertItemComponent>;
 
 
   constructor(private router: Router,
@@ -105,8 +109,7 @@ export class AlertsPage {
 
   isAdmin() {
     // Will leverage to admin role later when the RM service is ready
-    // return this.states.isSignedIn;
-    return true;
+    return this.states.isSignedIn;
   }
 
   showClassSelector() {
@@ -218,6 +221,10 @@ export class AlertsPage {
     });
   }
 
+  isoNow() {
+    return moment().format('YYYY-MM-DDTHH:mm:ss');
+  }
+
   exitEditMode() {
     this.alertBeingEdited = null;
   }
@@ -226,15 +233,26 @@ export class AlertsPage {
     this.alertBeingEdited = alert;
   }
 
-  onShowExpireModal(alert) {
+  onShowExpireModal(alertIndex) {
+    this.curAlertIndex = alertIndex;
     this.expireModal.openModal();
   }
 
   onExpireConfirm(){
-    
+    this.expireModalConfirm = true;
+    this.expireModal.closeModal();
+
+    let alert = this.alerts[this.curAlertIndex];
+    alert.setEndDate(this.isoNow());
+    this.onEditAlertAccept(alert);
+
   }
 
   onExpireCancel(){
-
+    if(!this.expireModalConfirm){
+      this.alertComponents.toArray()[this.curAlertIndex].resetExpireSwitch();
+    }else{
+      this.expireModalConfirm = false;
+    }
   }
 }
