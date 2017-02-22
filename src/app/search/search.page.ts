@@ -176,25 +176,6 @@ export class SearchPage implements OnInit{
     this.router.navigate(['/search'],navigationExtras);
 	}
 
-	createRange(number){
-	  var items: number[] = [];
-	  for(var i = 1; i <= number; i++){
-	     items.push(i);
-	  }
-	  return items;
-	}
-
-	showPageButton(idx){
-		var retVal = false;
-		if(idx==0 || idx==this.totalPages-1){
-			retVal = true;
-		} else {
-			retVal = Math.abs(this.pageNum-idx)<=this.pageNumPaginationPadding;
-		}
-
-		return retVal;
-	}
-
   activeFilter(event) {
     this.isActive = !this.isActive;
     var qsobj = this.setupQS(false);
