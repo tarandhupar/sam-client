@@ -10,7 +10,7 @@
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       </ng-container>
       <ng-container *ngIf="opportunity && logoUrl && !errorOrganization">
-        <img class="sidenav-logo" [src]="logoUrl" alt="{{organization.agencyName || organization.name || organization.orgKey || 'Organization'}} Logo" title="{{organization.agencyName || organization.name || organization.orgKey || 'Organization'}} Logo">
+        <img class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
       </ng-container>
 
       <!--Side Navigation-->

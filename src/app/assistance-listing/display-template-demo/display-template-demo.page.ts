@@ -57,7 +57,7 @@ export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
       }
     ]
   };
-  
+
   program: any;
   programID: any;
   federalHierarchy: any;
@@ -68,7 +68,7 @@ export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
   historicalIndex: any;
   alert: any = [];
   errorOrganization: any;
-  logoUrl: any;
+  public logoData: any;
   errorLogo: any;
 
   private apiSubjectSub: Subscription;
@@ -175,9 +175,9 @@ export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
 
     this.federalHierarchySub = apiSubject.subscribe(res => {
       this.federalHierarchy = res['_embedded'][0]['org'];
-      this.fhService.getOrganizationLogo(apiSubject, 
-        (logoUrl) => {
-          this.logoUrl = logoUrl;
+      this.fhService.getOrganizationLogo(apiSubject,
+        (logoData) => {
+          this.logoData = logoData;
         }, (err) => {
           this.errorLogo = true;
       });
