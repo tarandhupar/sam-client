@@ -115,14 +115,14 @@ export class OpportunityPage implements OnInit {
     private opportunityService:OpportunityService,
     private fhService:FHService,
     private location: Location) {
-      
+
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
         this.pageFragment = tree.fragment;
         if (this.pageFragment) {
           const element = document.getElementById(tree.fragment);
-          if (element) { 
+          if (element) {
             element.scrollIntoView();
           }
         }
@@ -152,26 +152,26 @@ export class OpportunityPage implements OnInit {
     // Combined observable will not trigger until both APIs have emitted at least one value
     let parentAndOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
     this.setDisplayFields(parentAndOpportunityAPI);
-    
+
     // Assumes DOM its ready when opportunites, packages and related opportutnies API calls are done
     // Observable triggers when each API has emitted at least one value or error
     // and waits for 2 seconds for package's animation to finish
     let DOMReady$ = Observable.zip(opportunityAPI, relatedOpportunities, packagesOpportunities).delay(2000);
     this.DOMComplete(DOMReady$);
   }
-  
+
   private DOMComplete(observable){
     observable.subscribe(
       success => {
-        if (this.pageFragment && document.getElementById(this.pageFragment)) { 
-          document.getElementById(this.pageFragment).scrollIntoView(); 
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
         }
-      }, 
+      },
       error => {
         // Sometimes api calls return an error
-        // we still need to check if dom element exist on page 
-        if (this.pageFragment && document.getElementById(this.pageFragment))  { 
-          document.getElementById(this.pageFragment).scrollIntoView(); 
+        // we still need to check if dom element exist on page
+        if (this.pageFragment && document.getElementById(this.pageFragment))  {
+          document.getElementById(this.pageFragment).scrollIntoView();
         }
       }
     );
@@ -493,7 +493,10 @@ export class OpportunityPage implements OnInit {
 
       this.displayField = {}; // for safety, clear any existing values
 
-      switch (opportunity.data.type) {
+      // if type is Update/Amendment then display like original type
+      let type = opportunity.data.type === 'm' ? parent.data.type : opportunity.data.type;
+
+      switch (type) {
         // These types are a superset of p/m/r/s, using case fallthrough
         case 'g': // Sale of Surplus Property
         case 'f': // Foreign Government Standard
@@ -532,10 +535,6 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.AwardedAddress] = false;
           this.displayField[OpportunityFields.Contractor] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
-          break;
-
-        case 'm': // Todo: Modification/Amendment/Cancel
-          this.displayField[OpportunityFields.Award] = false;
           break;
 
         case 'a': // Award Notice
@@ -664,13 +663,13 @@ export class OpportunityPage implements OnInit {
 
   sidenavPathEvtHandler(data){
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
-    
-    if (this.pageFragment == data.substring(1)) { 
-      document.getElementById(this.pageFragment).scrollIntoView(); 
+
+    if (this.pageFragment == data.substring(1)) {
+      document.getElementById(this.pageFragment).scrollIntoView();
     }
     else if(data.charAt(0)=="#"){
 			this.router.navigate([], { fragment: data.substring(1) });
-		} 
+		}
     else {
 			this.router.navigate([data]);
 		}
