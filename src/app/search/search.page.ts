@@ -85,9 +85,7 @@ export class SearchPage implements OnInit{
 		else {
       qsobj['page'] = 1;
     }
-    if(this.isActive==true) {
     qsobj['isActive'] = this.isActive;
-    }
 
 		return qsobj;
   }
