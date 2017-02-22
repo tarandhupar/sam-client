@@ -55,10 +55,14 @@
       </div>
 
       <!-- Document -->
-      <textarea *ngIf = "wageDetermination.document" rows="50" cols="100">
+      <textarea *ngIf="wageDetermination?.document" rows="50" cols="100">
         {{ wageDetermination.document }}
       </textarea>
 
+      <!-- Print Link -->
+      <div *ngIf="wageDetermination?.document" class="centered m_B-5x m_T-5x">
+        <a tabindex="0" (click)="openDocumentPrintPage()" (keyup.enter)="openDocumentPrintPage()">Printer Friendly Version</a>
+      </div>
     </section>
 
   </div>
