@@ -178,6 +178,7 @@ export class SearchPage implements OnInit{
 
   activeFilter(event) {
     this.isActive = !this.isActive;
+    this.pageNum = 0;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
