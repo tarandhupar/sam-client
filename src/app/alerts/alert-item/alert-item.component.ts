@@ -10,8 +10,18 @@ export class AlertItemComponent {
 
   @Input() alert: Alert;
   @Input() isAdmin: boolean;
-  @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
   @Input() editDisabled: boolean = false;
+  @Input() alertIndex: number;
+
+  @Output() edit: EventEmitter<Alert> = new EventEmitter<Alert>();
+  @Output() showExpireModal: EventEmitter<number> = new EventEmitter<number>();
+
+
+  expireAlert: boolean = false;
+
+  resetExpireSwitch() {
+    this.expireAlert = false;
+  }
 
   onEditClick() {
     this.edit.emit(this.alert);
@@ -39,4 +49,14 @@ export class AlertItemComponent {
       return '--';
     }
   }
+
+  isActiveAlert():boolean{return this.alert.status() === 'Active';}
+  isExpiredAlert():boolean{return this.alert.status() === 'Expired';}
+
+  OnSwitchChange(val){
+    // There is only switch on for expire alert
+    this.expireAlert = true;
+    this.showExpireModal.emit(this.alertIndex);
+  }
+
 }
