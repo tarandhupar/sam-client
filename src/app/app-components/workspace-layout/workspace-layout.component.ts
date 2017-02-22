@@ -13,8 +13,6 @@ export class WorkspaceLayoutComponent {
   @Input() currentPage: number;
   @Input() totalElements: number;
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
-  public contentClass: string = 'usa-width-three-fourths';
-  public displayNumber: number = 10;
   public sortConfig: SortConfig = {
     options: [
       {value: '', label: 'Relevant', name: 'relevant'},
@@ -25,7 +23,6 @@ export class WorkspaceLayoutComponent {
     label: 'Sort',
     name: 'sort'
   };
-  public sortModel: string = '';
   private _displayFilters: boolean = false;
 
   pageChangeHandler(event): void {
