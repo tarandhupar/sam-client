@@ -53,5 +53,6 @@ export class ExclusionsResult implements OnInit {
     }
     if(this.data.terminationDate!==null) {
       this.data.terminationDate = moment(this.data.terminationDate).format("MMM D, Y");
+    }
   }
 }
