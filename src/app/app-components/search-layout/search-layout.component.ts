@@ -1,5 +1,6 @@
 import { Component, Directive, Input, ElementRef, Renderer, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
+import { SortConfig } from '../interfaces';
 /**
  * SearchLayoutComponent - template component for generating a search page
  */
@@ -54,17 +55,3 @@ export class SearchLayoutComponent {
     return this._displayFilters ? 'fa fa-minus' : 'fa fa-plus';
   }
 }
-
-export interface SortConfig {
-  options: Array<SortOption>;
-  disabled: boolean;
-  label: string;
-  name: string;
-}
-
-export interface SortOption {
-  value: string;
-  label: string;
-  name: string;
-}
-

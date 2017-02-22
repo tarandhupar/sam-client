@@ -1,5 +1,5 @@
-import { Component, Directive, Input, ElementRef, Renderer, Output, EventEmitter, ViewChild } from '@angular/core';
-import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { SortConfig } from '../interfaces';
 /**
  * WorkspaceLayoutComponent - template component for generating a workspace page
  */
@@ -14,8 +14,6 @@ export class WorkspaceLayoutComponent {
   @Input() totalElements: number;
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
   public contentClass: string = 'usa-width-three-fourths';
-  public showCustomSidebar: boolean = true;
-  public showGeneratedSidebar: boolean = false;
   public displayNumber: number = 10;
   public sortConfig: SortConfig = {
     options: [
@@ -54,18 +52,5 @@ export class WorkspaceLayoutComponent {
   toggleFilterLabel(): string {
     return this._displayFilters ? 'fa fa-minus' : 'fa fa-plus';
   }
-}
-
-export interface SortConfig {
-  options: Array<SortOption>;
-  disabled: boolean;
-  label: string;
-  name: string;
-}
-
-export interface SortOption {
-  value: string;
-  label: string;
-  name: string;
 }
 
