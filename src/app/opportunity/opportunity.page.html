@@ -101,7 +101,10 @@
           <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
             <strong>Opportunity Type: </strong>
             <ng-container *ngIf="opportunity.data?.type !== 'm'">{{ opportunity.data?.type | opportunityTypeLabel }}</ng-container>
-            <ng-container *ngIf="opportunity.data?.type === 'm'">{{ originalOpportunity?.data?.type | opportunityTypeLabel}} (Update/Amendment)</ng-container>
+            <ng-container *ngIf="opportunity.data?.type === 'm'">{{ originalOpportunity?.data?.type | opportunityTypeLabel}}
+              <ng-container *ngIf="opportunity.data?.statuses?.isCanceled">(Canceled)</ng-container>
+              <ng-container *ngIf="!opportunity.data?.statuses?.isCanceled">(Update/Amendment)</ng-container>
+            </ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.PostedDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.PostedDate)">
             <strong>Update/Amendment Posted Date: </strong>
