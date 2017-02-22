@@ -68,7 +68,9 @@ export class WageDeterminationResult implements OnInit {
     }
     if(this.data.locations!==null) {
       for(var i=0; i<this.data.locations.length; i++) {
+        if(this.data.locations[i].counties != null) {
           this.data.locations[i].counties = this.data.locations[i].counties.sort();
+        }
       }
     }
   }
