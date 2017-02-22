@@ -18,18 +18,18 @@ export class SearchService {
           index: obj.index,
           q: obj.keyword,
           page: obj.pageNum,
-          qFilters: {}
+          is_active: obj.isActive
         },
         method: 'GET'
       };
 
       if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null) {
-        oApiParam.oParam.qFilters['organizationId'] = obj.organizationId;
+        oApiParam.oParam['organization_id'] = obj.organizationId;
       }
 
-      if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
-        oApiParam.oParam.qFilters['noticeId'] = obj.noticeId;
-      }
+       if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
+         oApiParam.oParam['noticeId'] = obj.noticeId;
+       }
 
       return this.oAPIService.call(oApiParam);
     }
