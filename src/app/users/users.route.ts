@@ -1,5 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
-import { UserDirectoryPage } from './user-directory/user-directory.page';
+import { UserDirectoryPage } from './directory/user-directory.page';
 import { UserAccessPage } from './public/access/access.page';
 import { UserViewComponent } from "./public/public.component";
 import { UserMigrationsPage } from './public/migrations/migrations.page';
