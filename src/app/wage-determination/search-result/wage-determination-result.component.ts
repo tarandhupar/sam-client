@@ -26,7 +26,9 @@ import * as moment from 'moment/moment';
         	  <span>{{ location.state?.name }}</span>
         	</li>
         	<li class="break-word"><strong>County/ies: </strong>
-        	  <span>{{ location.counties }}</span>
+            <ng-container *ngFor="let county of location.counties; let isLast=last">
+              {{county}}{{ isLast ? '' : ', '}}
+            </ng-container>
         	</li>
         </ul>
     	</div>
@@ -67,9 +69,11 @@ export class WageDeterminationResult implements OnInit {
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
     }
     if(this.data.locations!==null) {
+      console.log(this.data.locations);
       for(var i=0; i<this.data.locations.length; i++) {
         if(this.data.locations[i].counties != null) {
           this.data.locations[i].counties = this.data.locations[i].counties.sort();
+          
         }
       }
     }
