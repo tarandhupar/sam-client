@@ -551,40 +551,11 @@ export class OpportunityPage implements OnInit {
           break;
       }
 
-      /**
-       * TODO: Check conditional logic with PO
-       * TODO: Check if original archive date condition is needed (not mentioned in excel spreadsheet)
-       * TODO: Find ways to refactor or simplify this logic
-       */
-      if(parent != null) {
-        let originalPostedDateCondition = opportunity.postedDate != null
-          && parent.postedDate != null
-          && opportunity.postedDate !== parent.postedDate;
-
-        this.displayField[OpportunityFields.OriginalPostedDate] = originalPostedDateCondition;
-
-        let originalResponseDateCondition = opportunity.data != null
-          && opportunity.data.solicitation != null && opportunity.data.solicitation.deadlines != null
-          && opportunity.data.solicitation.deadlines.response != null && parent.data != null
-          && parent.data.solicitation != null && parent.data.solicitation.deadlines != null
-          && parent.data.solicitation.deadlines.response != null
-          && opportunity.data.solicitation.deadlines.response !== parent.data.solicitation.deadlines.response;
-
-        this.displayField[OpportunityFields.OriginalResponseDate] = originalResponseDateCondition;
-
-        let originalArchiveDateCondition = opportunity.data != null && opportunity.data.archive != null
-          && opportunity.data.archive.date != null && parent.data != null && parent.data.archive != null
-          && parent.data.archive.date != null
-          && opportunity.data.archive.date !== parent.data.archive.date;
-
-        this.displayField[OpportunityFields.OriginalArchiveDate] = originalArchiveDateCondition;
-
-        let originalSetAsideCondition = opportunity.data != null && opportunity.data.solicitation != null
-          && opportunity.data.solicitation.setAside != null && parent.data != null
-          && parent.data.solicitation != null && parent.data.solicitation.setAside != null
-          && opportunity.data.solicitation.setAside !== parent.data.solicitation.setAside;
-
-        this.displayField[OpportunityFields.OriginalSetAside] = originalSetAsideCondition;
+      if(parent == null) {
+        this.displayField[OpportunityFields.PostedDate] = false;
+        this.displayField[OpportunityFields.ResponseDate] = false;
+        this.displayField[OpportunityFields.ArchiveDate] = false;
+        this.displayField[OpportunityFields.SetAside] = false;
       }
 
       this.ready = true;
