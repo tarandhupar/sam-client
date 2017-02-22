@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router, NavigationEnd } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router, NavigationEnd, Params } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { WageDeterminationService } from 'api-kit';
@@ -26,7 +26,7 @@ export class WageDeterminationPage implements OnInit {
   states: string;
   counties: string;
   services: string;
-  
+
   // On load select first item on sidenav component
   selectedPage: number = 0;
   pageRoute: string;
@@ -59,42 +59,43 @@ export class WageDeterminationPage implements OnInit {
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
-    this.loadDictionary();
-    this.loadWageDetermination();
+    let dictionariesAPI = this.loadDictionary();
+    let wdAPI = this.loadWageDetermination();
+    let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
+    this.getServices(wgAndDictionariesAPI);
+    this.getStatesAndCounties(wgAndDictionariesAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
 
   private loadWageDetermination() {
-    let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
-    let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
+      let wgSubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
+    this.route.params.subscribe((params: Params) => { // construct a stream of wg data
       this.referenceNumber = params['referencenumber'];
       this.revisionNumber = params['revisionnumber'];
-      return this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(params['referencenumber'],params['revisionnumber']);
-    });
-    this.apiStreamSub = apiStream.subscribe(apiSubject);
-
-    this.apiSubjectSub = apiSubject.subscribe(api => {
+      this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(this.referenceNumber,this.revisionNumber).subscribe(wgSubject);
       // run whenever api data is updated
-      this.wageDetermination = api;
-      
-      let wageDeterminationSideNavContent = {
-        "label": "Wage Determination",
-        "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
-        "children": [
-          {
-            "label": "SCA WD #" + this.wageDetermination.fullReferenceNumber,
-            "field": "wage-determination",
-          }
-        ]
-      };
-      this.updateSideNav(wageDeterminationSideNavContent);
-    }, err => {
-      console.log('Error logging', err);
+      wgSubject.subscribe(api => { // do something with the wg api
+        this.wageDetermination = api;
+
+        let wageDeterminationSideNavContent = {
+          "label": "Wage Determination",
+          "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
+          "children": [
+            {
+              "label": "SCA WD #" + this.wageDetermination.fullReferenceNumber,
+              "field": "wage-determination",
+            }
+          ]
+        };
+        this.updateSideNav(wageDeterminationSideNavContent);
+      }, err => {
+        console.log('Error logging', err);
+      });
     });
 
-    return apiSubject;
+    return wgSubject;
   }
-  
+
   private updateSideNav(content?){
 
     let self = this;
@@ -126,14 +127,17 @@ export class WageDeterminationPage implements OnInit {
   }
 
   private loadDictionary() {
-    this.wgService.getWageDeterminationDictionary('state, county, services').subscribe(data => {
+    let dictionariesSubject = new ReplaySubject(1);
+    this.wgService.getWageDeterminationDictionary('state, county, services').subscribe(dictionariesSubject);
+    dictionariesSubject.subscribe(data => {
       // do something with the dictionary api
       this.dictionaries = data;
     }, err => {
       console.log('Error loading dictionaries: ', err);
     });
+    return dictionariesSubject;
   }
-  
+
   sidenavPathEvtHandler(data){
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
 		if(data.charAt(0)=="#"){
@@ -143,45 +147,51 @@ export class WageDeterminationPage implements OnInit {
 		}
 	}
 
-  private getStatesAndCounties(){
-
-    let statesString = "";
-    let countiesString = "";
-    let county:string;
-    let resultCounty:any;
-    for (let location of this.wageDetermination.location){
-      let state:string;
-      let resultState = this.FilterMultiArrayObjectPipe.transform([location.state], this.dictionaries.state, 'element_id', false, "");
-      state = (resultState instanceof Array && resultState.length > 0) ? resultState[0].value : [];
-      statesString = statesString.concat(state + ", ");
-      countiesString = countiesString.concat(state + " - ");
-      for (let countyElement of location.counties){
-        county = null;
-        (countyElement == null) ? (county = "Statewide") : (resultCounty = this.FilterMultiArrayObjectPipe.transform([countyElement.toString()], this.dictionaries.county, 'element_id', false, ""));
-        if (county == null){
-          county = (resultCounty instanceof Array && resultCounty.length > 0) ? resultCounty[0].value : [];
+  private getStatesAndCounties(combinedAPI: Observable<any>){
+    combinedAPI.subscribe(([wageDeterminaton, dictionaries]) => {
+      let statesString = "";
+      let countiesString = "";
+      let county:string;
+      let resultCounty:any;
+      for (let location of wageDeterminaton.location) {
+        let state:string;
+        let resultState = this.FilterMultiArrayObjectPipe.transform([location.state], dictionaries.state, 'element_id', false, "");
+        state = (resultState instanceof Array && resultState.length > 0) ? resultState[0].value : [];
+        statesString = statesString.concat(state + ", ");
+        countiesString = countiesString.concat(state + " - ");
+        for (let countyElement of location.counties) {
+          county = null;
+          (countyElement == null) ? (county = "Statewide") : (resultCounty = this.FilterMultiArrayObjectPipe.transform([countyElement.toString()], dictionaries.county, 'element_id', false, ""));
+          if (county == null) {
+            county = (resultCounty instanceof Array && resultCounty.length > 0) ? resultCounty[0].value : [];
+          }
+          countiesString = countiesString.concat(county + ", ");
         }
-        }
-      countiesString = countiesString.concat(county + ", ");
       }
-    countiesString = countiesString.substring(0, countiesString.length - 2);
-    countiesString = countiesString.concat("\n");
-    statesString = statesString.substring(0, statesString.length - 2);
-    this.states = statesString;
-    this.counties = countiesString;
-
-
-    return true;
+      countiesString = countiesString.substring(0, countiesString.length - 2);
+      countiesString = countiesString.concat("\n");
+      statesString = statesString.substring(0, statesString.length - 2);
+      this.states = statesString;
+      this.counties = countiesString;
+    })
   }
-  private getServices(){
-    let servicesString = "";
-    for (let element of this.wageDetermination.services){
-      let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], this.dictionaries.services, 'element_id', false, "");
-      let services = (result instanceof Array && result.length > 0) ? result[0].value : [];
-      servicesString = servicesString.concat(services + ", ");
-    }
-    servicesString = servicesString.substring(0, servicesString.length - 2);
-    this.services = servicesString;
-    return true;
+  private getServices(combinedAPI: Observable<any>) {
+    combinedAPI.subscribe(([wageDeterminaton, dictionaries]) => {
+      if (wageDeterminaton.services != null){
+          let servicesString = "";
+        for (let element of wageDeterminaton.services) {
+          let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], dictionaries.services, 'element_id', false, "");
+          let services = (result instanceof Array && result.length > 0) ? result[0].value : [];
+          servicesString = servicesString.concat(services + ", ");
+        }
+        servicesString = servicesString.substring(0, servicesString.length - 2);
+        this.services = servicesString;
+      }
+    })
+  }
+
+  public openDocumentPrintPage() {
+    var win = window.open('', 'Document');
+    win.document.body.innerHTML = '<pre>' + this.wageDetermination.document + '</pre>';
   }
 }
