@@ -8,11 +8,7 @@
 
 <div display-title>
   <ng-container *ngIf="program">
-  <section id="program-information">
-      <h1>
-        <span class="field" id="program-title">{{program?.data?.title}}</span>
-      </h1>
-
+    <sam-title-section id="program-information" [title]="program?.data?.title" [titleId]="program-title">
       <p class="field" id="program-alternative-names" *ngIf="program.data?.alternativeNames && program.data?.alternativeNames[0] != null">
         <strong>Popular Name:</strong> {{program.data.alternativeNames[0]}}
       </p>
@@ -35,23 +31,20 @@
           <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.flag == 'na' || relatedProgram.length == 0">Not Applicable.</span>
         </span>
       </div>
-    </section>
+    </sam-title-section>
   </ng-container>
 </div>
 
 <div display-content>
   <ng-container *ngIf="program">
-    <section id="program-overview">
-      <a name="#/programs/{{programID}}/view#overview"></a>
-      <h2 id="overview">Overview</h2>
-
-      <sam-section title="Objectives">
+    <sam-section id="program-overview" title="Overview" titleId="overview">
+      <sam-subsection title="Objectives">
         <p class="field" id="program-objective">
           {{program.data?.objective}}
         </p>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Examples of Funded Projects">
+      <sam-subsection title="Examples of Funded Projects">
         <div class="content-block" [ngSwitch]="program.data?.projects?.flag">
           <ng-container *ngSwitchCase="'yes'">
             <span *ngFor="let item of program.data.projects?.list | keys; let i = index">
@@ -62,26 +55,20 @@
           </ng-container>
           <p class="field" id="program-project-example-na" *ngSwitchDefault>Not Applicable</p>
         </div>
-      </sam-section>
-    </section>
+      </sam-subsection>
+    </sam-section>
 
-    <section id="program-authorizations">
-      <a name="#/programs/{{programID}}/view#authorizations"></a>
-      <sam-section headTag="h2" title="Authorizations">
-        <div *ngFor="let item of authorizationIdsGrouped; let i = index">
-          <p class="field" [attr.id]="'program-authorization-' + i">{{ item | authorization }}</p>
-        </div>
-      </sam-section>
-    </section>
+    <sam-section id="program-authorizations" title="Authorizations" titleId="authorizations">
+      <div *ngFor="let item of authorizationIdsGrouped; let i = index">
+        <p class="field" [attr.id]="'program-authorization-' + i">{{ item | authorization }}</p>
+      </div>
+    </sam-section>
 
     <!--Financials-->
-    <section id="program-financials">
-      <a name="#/programs/{{programID}}/view#financial-information"></a>
-      <h2 id="financial-information">Financial Information</h2>
-
+    <sam-section id="program-financials" title="Financial Information" titleId="financial-information">
       <financial-obligation-chart *ngIf='dictionaries && program.data?.financial?.obligations' [financialData]='program.data?.financial?.obligations' [dictionaries]='dictionaries'></financial-obligation-chart>
 
-      <sam-section title="Range and Average of Financial Assistance">
+      <sam-subsection title="Range and Average of Financial Assistance">
         <p class="field" id="program-financial-additional-info" *ngIf="(program.data?.financial?.additionalInfo?.content) && (program.data?.financial?.additionalInfo?.content != '')">
           {{program.data.financial.additionalInfo.content}}
         </p>
@@ -89,9 +76,9 @@
         <p class="field" id="program-financial-additional-info" *ngIf="!(program.data?.financial?.additionalInfo?.content) || (program.data?.financial?.additionalInfo?.content == '')">
           No Data Available.
         </p>
-      </sam-section>
+      </sam-subsection>
       
-      <sam-section title="Accomplishments">
+      <sam-subsection title="Accomplishments">
         <div class="content-block" [ngSwitch]="program.data?.postAward?.accomplishments?.flag">
           <ng-container *ngSwitchCase="'yes'">
             <ng-container *ngFor="let item of program.data.postAward.accomplishments?.list | keys; let i = index">
@@ -102,30 +89,29 @@
 
           <p *ngSwitchDefault>Not Applicable.</p>
         </div>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Account Identification">
+      <sam-subsection title="Account Identification">
         <p *ngFor="let account of program.data?.financial?.accounts; let i = index">
           <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="account.description">{{account.code}}-{{account.description}};</span>
           <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="!account.description">{{account.code}}</span>
         </p>
-      </sam-section>
-    </section>
+      </sam-subsection>
+    </sam-section>
 
     <!--Should I apply?-->
-    <section id="program-application-criteria">
+    <sam-section id="program-application-criteria" title="Criteria for Applying" titleId="criteria-for-applying">
       <a name="#/programs/{{programID}}/view#criteria-for-applying"></a>
-      <h2 id="criteria-for-applying">Criteria for Applying</h2>
 
-      <sam-section title="Types of Assistance">
+      <sam-subsection title="Types of Assistance">
         <p *ngIf="dictionaries && dictionaries.assistance_type">
           <ng-container *ngFor="let item of program.data?.assistanceTypes | filterMultiArrayObject:dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-assistance-type-' + i">{{ item.displayValue }}{{isLast ? '' : ', '}}</span>
           </ng-container>
         </p>
-      </sam-section>
+      </sam-subsection>
       
-      <sam-section title="Credentials and Documentation">
+      <sam-subsection title="Credentials and Documentation">
         <p>
           <ng-container [ngSwitch]="program.data?.eligibility?.documentation?.flag">
             <ng-container *ngSwitchCase="'yes'">
@@ -144,9 +130,9 @@
             <ng-container *ngSwitchDefault>None</ng-container>
           </ng-container>
         </p>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Applicant Eligibility">
+      <sam-subsection title="Applicant Eligibility">
         <sam-well title="Designations" *ngIf="program.data && dictionaries && dictionaries.applicant_types">
           <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.types | filterMultiArrayObject:dictionaries.applicant_types:'element_id':false:''; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-applicant-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
@@ -155,9 +141,9 @@
         <p>
           <span class="field" id="program-applicant-eligibility">{{program.data?.eligibility?.applicant?.additionalInfo?.content}}</span>
         </p>
-      </sam-section>
+      </sam-subsection>
       
-      <sam-section title="Beneficiary Eligibility">
+      <sam-subsection title="Beneficiary Eligibility">
         <sam-well title="Designations" *ngIf="program.data && dictionaries && dictionaries.beneficiary_types">
           <ng-container *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-beneficiary-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
@@ -167,18 +153,18 @@
         <p>
           <span class="field" id="program-beneficiary-eligibility">{{program.data?.eligibility?.beneficiary?.additionalInfo?.content}}</span>
         </p>
-      </sam-section>
+      </sam-subsection>
       
-      <sam-section title="Length and Time Phasing of Assistance">
+      <sam-subsection title="Length and Time Phasing of Assistance">
         <p>
           <span class="field" id="program-assistance-lengthtime">{{program.data?.assistance?.limitation?.content}}</span>
           <span class="field" id="program-assistance-method" *ngIf="program.data?.assistance?.limitation?.awarded">
             Method of awarding/releasing assistance: {{program.data.assistance?.limitation?.awarded}}
           </span>
         </p>
-      </sam-section>
+      </sam-subsection>
       
-      <sam-section title="Use of Assistance">
+      <sam-subsection title="Use of Assistance">
         <sam-well title="Designations" *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
           <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.assistanceUsageTypes | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-usage-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
@@ -191,15 +177,12 @@
           <span class="field" id="program-usage-discretionary-fund" *ngIf="program.data.usage?.discretionaryFund?.flag=='yes'">{{ program.data.usage.discretionaryFund.content }}</span>
           <span class="field" id="program-usage-loan-terms" *ngIf="program.data.usage?.loanTerms?.flag=='yes'">{{ program.data.usage.loanTerms.content }}</span>
         </p>
-      </sam-section>
-    </section>
+      </sam-subsection>
+    </sam-section>
 
     <!--How do I apply?-->
-    <section id="program-application-information">
-      <a name="#/programs/{{programID}}/view#applying-for-assistance"></a>
-      <h2 id="applying-for-assistance">Applying for Assistance</h2>
-
-      <sam-section title="Deadlines">
+    <sam-section id="program-application-information" title="Applying for Assistance" titleId="applying-for-assistance">
+      <sam-subsection title="Deadlines">
         <div class="content-block" [ngSwitch]="program.data?.application?.deadlines?.submission?.flag">
           <ng-container *ngSwitchCase="'yes'">
             <!-- repeat over all deadlines. -->
@@ -221,9 +204,9 @@
             Not Applicable.
           </span>
         </div>
-      </sam-section>
+      </sam-subsection>
       
-      <sam-section title="Preapplication Coordination">
+      <sam-subsection title="Preapplication Coordination">
         <div>
           <ng-container [ngSwitch]="program.data?.preApplication?.coordination?.flag">
             <p *ngSwitchCase="'yes'">
@@ -268,9 +251,9 @@
             </p>
           </ng-container>
         </div>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Application Procedures">
+      <sam-subsection title="Application Procedures">
         <p>
           <ng-container [ngSwitch]="program.data?.application?.procedures?.questions?.OMBCircularA102?.flag">
             <span class="field" id="program-application-procedures-a102" *ngSwitchCase="'yes'">
@@ -288,9 +271,9 @@
             {{program.data?.application?.procedures?.additionalInfo?.content}}
           </span>
         </p>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Criteria for Selecting Proposals">
+      <sam-subsection title="Criteria for Selecting Proposals">
         <p>
           <ng-container [ngSwitch]="program.data?.application?.selectionCriteria?.flag">
             <span class="field" id="program-selection-criteria" *ngSwitchCase="'yes'">
@@ -306,15 +289,15 @@
             </span>
           </ng-container>
         </p>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Award Procedure">
+      <sam-subsection title="Award Procedure">
         <p class="field" id="program-award-procedure">
           {{program.data?.award?.procedures?.content}}
         </p>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Date Range for Approval/Disapproval">
+      <sam-subsection title="Date Range for Approval/Disapproval">
         <p class="field" id="program-application-approval-interval" [ngSwitch]="program.data?.application?.deadlines?.approval?.interval">
           <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
           <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
@@ -329,9 +312,9 @@
             {{program.data?.application?.deadlines?.approval?.otherInfo?.content}}
           </span>
         </p>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Renewals">
+      <sam-subsection title="Renewals">
         <p class="field" id="program-application-renewal-interval" [ngSwitch]="program.data?.application?.deadlines?.renewal?.interval">
           <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
           <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
@@ -346,9 +329,9 @@
             {{program.data?.application?.deadlines?.renewal?.otherInfo?.content}}
           </span>
         </p>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Renewals">
+      <sam-subsection title="Renewals">
         <p class="field" id="program-application-renewal-interval" [ngSwitch]="program.data?.application?.deadlines?.renewal?.interval">
           <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
           <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
@@ -363,9 +346,9 @@
             {{program.data?.application?.deadlines?.renewal?.otherInfo?.content}}
           </span>
         </p>
-      </sam-section>
+      </sam-subsection>
       
-      <sam-section title="Appeals">
+      <sam-subsection title="Appeals">
         <p class="field" id="program-application-appeal-interval" [ngSwitch]="program.data?.application?.deadlines?.appeal?.interval">
           <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
           <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
@@ -380,15 +363,12 @@
             {{program.data?.application?.deadlines?.appeal?.otherInfo?.content}}
           </span>
         </p>
-      </sam-section>
-    </section>
+      </sam-subsection>
+    </sam-section>
 
     <!--Compliance requirements-->
-    <section id="program-compliance-requirements">
-      <a name="#/programs/{{programID}}/view#compliance-requirements"></a>
-      <h2 id="compliance-requirements">Compliance Requirements</h2>
-
-      <sam-section title="Reports">
+    <sam-section id="program-compliance-requirements" title="Compliance Requirements" titleId="compliance-requirements">
+      <sam-subsection title="Reports">
         <div>
           <ng-container [ngSwitch]="program.data?.postAward?.reports?.flag">
             <p class="field" id="program-postaward-reports" *ngSwitchCase="'yes'">
@@ -408,9 +388,9 @@
             </p>
           </ng-container>
         </div>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Audits">
+      <sam-subsection title="Audits">
         <div>
           <ng-container [ngSwitch]="program.data?.postAward?.audit?.flag">
             <p *ngSwitchCase="'yes'">
@@ -440,9 +420,9 @@
             </p>
           </ng-container>
         </div>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Records">
+      <sam-subsection title="Records">
         <p class="field" id="program-postaward-records" *ngIf="(program.data?.postAward.records?.content) && (program.data.postAward.records.content != '')">
           {{program.data.postAward.records.content}}
         </p>
@@ -450,18 +430,18 @@
         <p class="field" id="program-postaward-records" *ngIf="!(program.data?.postAward.records?.content) || (program.data.postAward.records.content == '')">
           No Data Available.
         </p>
-      </sam-section>
+      </sam-subsection>
       
-      <sam-section title="Regulations, Guidelines, and Literature">
+      <sam-subsection title="Regulations, Guidelines, and Literature">
         <p>
           <ng-container [ngSwitch]="program.data?.postAward?.documents?.flag">
             <span class="field" id="program-postaward-documents" *ngSwitchCase="'yes'"> {{program.data.postAward.documents.content}}</span>
             <span class="field" id="program-postaward-documents" *ngSwitchDefault> Not Applicable.</span>
           </ng-container>
         </p>
-      </sam-section>
+      </sam-subsection>
 
-      <sam-section title="Formula and Matching Requirements">
+      <sam-subsection title="Formula and Matching Requirements">
         <!-- statutory formula-->
         <ng-container [ngSwitch]="program.data?.assistance?.formula?.flag">
           <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="'yes'">
@@ -510,46 +490,40 @@
             MOE requirements are not applicable to this federal assistance listing.
           </div>
         </ng-container>
-      </sam-section>
-    </section>
+      </sam-subsection>
+    </sam-section>
 
     <!--Contact information-->
-    <section id="program-contact-information">
-      <a name="#/programs/{{programID}}/view#contact-information"></a>
-      <h2 id="contact-information">Contact Information</h2>
-
+    <sam-section id="program-contact-information" title="Contact Information" titleId="contact-information">
       <address>
-        <sam-section title="Regional or Local Office">
+        <sam-subsection title="Regional or Local Office">
           <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.additionalInfo?.content}}</span>
           <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.additionalInfo?.content}}</span>
-        </sam-section>
+        </sam-subsection>
         
-        <sam-section title="Headquarters Office">
+        <sam-subsection title="Headquarters Office">
           <div *ngFor="let item of program.data.contacts?.list; let i = index">
             <samPOC [attr.id]="'program-contacts-poc-' + i" [data]="item"></samPOC>
           </div>
           <strong>Website: </strong>
           <ng-container *ngIf="!program.data?.website || program.data?.website == null ">No Data Available</ng-container>
           <ng-container *ngIf="program.data?.website">{{program.data.website}}</ng-container>
-        </sam-section>
+        </sam-subsection>
       </address>
-    </section>
+    </sam-section>
 
     <!--History Section-->
-    <section id="program-history" *ngIf="historicalIndex">
-      <a name="#/programs/{{programID}}/view#history"></a>
-      <sam-section title="History" headTag="h2">
-        <ng-container *ngFor="let item of historicalIndex; let i = index">
-          <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">
-            <p class="field" [attr.id]="'program-historical-' + i">
-              {{item.fiscalYear}}
-              <span class="historyDetails" [attr.id]="'program-historical-details-' + i">{{item.actionType | historicalIndexLabel}}</span>
-            </p>
-            <p id="changeDescription">{{item.changeDescription}}</p>
-          </div>
-        </ng-container>
-      </sam-section>
-    </section>
+    <sam-section id="program-history" *ngIf="historicalIndex" title="History" titleId="history">
+      <ng-container *ngFor="let item of historicalIndex; let i = index">
+        <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">
+          <p class="field" [attr.id]="'program-historical-' + i">
+            {{item.fiscalYear}}
+            <span class="historyDetails" [attr.id]="'program-historical-details-' + i">{{item.actionType | historicalIndexLabel}}</span>
+          </p>
+          <p id="changeDescription">{{item.changeDescription}}</p>
+        </div>
+      </ng-container>
+    </sam-section>
   </ng-container>
 </div>
 </display-page>

@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { SamSectionComponent } from './section.component';
+import { SamTitleSectionComponent } from './title-section.component';
 
 var fixture;
 var comp;
@@ -8,11 +8,11 @@ var comp;
 describe('Sam Section Component Tests', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SamSectionComponent ],
+      declarations: [ SamTitleSectionComponent ],
       imports: []
     });
     TestBed.compileComponents().then( ()=>{
-      fixture = TestBed.createComponent(SamSectionComponent);
+      fixture = TestBed.createComponent(SamTitleSectionComponent);
       comp = fixture.componentInstance;
     });
   }));
@@ -22,7 +22,7 @@ describe('Sam Section Component Tests', () => {
     comp.title = "test title";
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect( fixture.debugElement.query( By.css('h2') ).nativeElement.innerHTML() ).toEqual(comp.title);
+      expect( fixture.debugElement.query( By.css('h1') ).nativeElement.innerHTML() ).toEqual(comp.title);
     });
 	});
 

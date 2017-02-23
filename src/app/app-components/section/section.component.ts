@@ -1,22 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 /**
-* SectionComponent - template component for generating display page
-*
-* @Input sidenavConfig: any - configuration for generating a sidenav
-* @Input logoSrc: string - source path for adding a logo image on the sidenav
-* @Input sidebarToggle: boolean - toggles the sidenav in the layout, defaults to true
+* SectionComponent - section component with an h3 title
 */
 @Component({
 	selector: 'sam-section',
 	templateUrl:'section.template.html'
 })
-export class SamSectionComponent implements OnInit {
+export class SamSectionComponent {
   @Input() title: string;
+  @Input() titleId: string;
   @Input() helpText: string;
-  @Input() headTag = "h3";
-
-  constructor(){ }
-
-  ngOnInit(){ }
 }
