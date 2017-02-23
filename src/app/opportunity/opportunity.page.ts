@@ -80,7 +80,8 @@ export class OpportunityPage implements OnInit {
   attachment: any;
   relatedOpportunities:any;
   relatedOpportunitiesMetadata:any;
-  logoUrl: string;
+  public logoUrl: string;
+  public logoInfo: any;
   opportunityAPI: any;
 
   errorOrganization: any;
@@ -331,8 +332,9 @@ export class OpportunityPage implements OnInit {
       if(api.data.organizationId != null) {
         this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
         this.fhService.getOrganizationLogo(organizationSubject,
-          (logoUrl) => {
-            this.logoUrl = logoUrl;
+          (logoData) => {
+            this.logoUrl = logoData.logo;
+            this.logoInfo = logoData.info;
           }, (err) => {
             this.errorLogo = true;
           });
@@ -610,6 +612,7 @@ export class OpportunityPage implements OnInit {
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
+    document.getElementById('awards-list').focus();
   }
 
   setupPageChange(newpagechange){
