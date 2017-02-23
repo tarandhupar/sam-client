@@ -62,6 +62,7 @@ import * as moment from 'moment/moment';
 })
 export class WageDeterminationResult implements OnInit {
   @Input() data: any={};
+  @Input() data: any={};
   constructor() { }
 
   ngOnInit(){
