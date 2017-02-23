@@ -10,20 +10,23 @@
   .permission-label {
     display: inline-block;
     margin: 0 1em 0 0;
-    height: 32px;
+    height: $hit-area;
+  }
+
+  .permission-control-group {
+    display:inline-block;
+    height: $hit-area;
+    line-height: $hit-area;
   }
 
   .permission-input {
     display: inline-block;
     width: initial;
-    margin: 1em 1em 0 0;
+    margin: 0 1em 0 0;
+    height: $hit-area;
   }
 
   .object-item:not(:first-child) {
     margin-top: 1.5em;
-  }
-
-  .object-title {
-    margin-bottom: 1em;
   }
 }

@@ -38,7 +38,7 @@ export class GrantAccessPage implements OnInit {
   }
 
   permissionId(permission, object) {
-    return permission.value + '_' + object.value;
+    return permission.label + '_' + object.label;
   }
 
   mapLabelAndName(val) {
