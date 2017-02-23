@@ -9,6 +9,7 @@
   <div header-searchbar>
     <samSearchbar #searchbar
       [size]="'small'" 
+      [keyword]="keyword"
       (onSearch)="onHeaderSearchEvent($event)"
       [filterValue]="index">
       <div custom-input>

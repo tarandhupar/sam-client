@@ -12,7 +12,7 @@ import * as moment from 'moment/moment';
   selector: 'samDate',
   template: `
     <!--<fieldsetWrapper [label]="label" [name]="getIdentifer('date')" [errorMessage]="errorMessage" [hint]="hint">-->
-      <div class="usa-date-of-birth date-group" style="overflow:auto;">
+      <div class="usa-date-of-birth date-group">
         <div class="usa-form-group usa-form-group-month">
           <label [attr.for]="monthName()">Month</label>
           <input [attr.id]="monthName()" #month="ngModel" (blur)="onBlur($event)" [(ngModel)]="model.month" (ngModelChange)="onChange()" class="usa-input-inline" aria-describedby="dobHint" class="usa-form-control" name="date_of_birth_1" pattern="0?[1-9]|1[012]" type="number" min="1" max="12" maxlength="2" [disabled]="disabled">

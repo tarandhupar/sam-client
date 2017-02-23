@@ -1,38 +1,68 @@
 <div class="usa-grid search-page">
-	<div class="usa-width-one">
-		<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
-	</div>
-  <div class="usa-width-one">
-    <div *ngIf="showOptional" class="usa-width-one">
-      <h3>Common Filters:</h3>
-			<div class="usa-grid-full">
-				<div class="usa-width-one-third">
-	      	<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
-				</div>
-			</div>
-      <hr *ngIf="data.results" class="usa-width-one m_T-5x"/>
+
+  <aside class="usa-width-one-fourth">
+    <div>&nbsp;</div>
+    <div sam-sticky limit=1200 container="occupy-page">
+      <nav>
+        <ul class="usa-sidenav-list">
+          <li>
+            <sam-filters-container>
+              <sam-collapsible [label]="'Status'" [startOpened]="true">
+                <samCheckbox
+                [(model)]="checkboxModel"
+                [name]="checkboxConfig.name"
+                [options]="checkboxConfig.options"
+                [label]="checkboxConfig.label"
+                [hint]="checkboxConfig.hint"
+                [errorMessage]="checkboxConfig.errorMessage"
+                [hasSelectAll]="checkboxConfig.hasSelectAll"
+                (modelChange)="activeFilter($event)">
+                </samCheckbox>
+              </sam-collapsible>
+            </sam-filters-container>
+          </li>
+        </ul>
+      </nav>
     </div>
-    <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
-    <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
-		<div *ngFor="let row of data.results">
-			<opportunities-result *ngIf="row._type=='opportunity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
-      <assistance-listing-result  *ngIf="row._type=='assistanceListing'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
-      <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
-      <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
-      <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
-      <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
-      <hr class="m_T-5x"/>
+  </aside>
+
+  <div class="usa-width-three-fourths">
+  	<div class="usa-width-one">
+  		<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
   	</div>
-    <div *ngIf="!initLoad && !data.results">
-      <br/>
-      <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
-      <div style="height:300px;"></div>
+    <div class="usa-width-one">
+      <div *ngIf="showOptional" class="usa-width-one">
+        <h3>Common Filters:</h3>
+  			<div class="usa-grid-full">
+  				<div class="usa-width-one-third">
+  	      	<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
+  				</div>
+  			</div>
+        <hr *ngIf="data.results" class="usa-width-one m_T-5x"/>
+      </div>
+      <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
+      <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
+  		<div *ngFor="let row of data.results">
+  			<opportunities-result *ngIf="row._type=='opportunity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
+        <assistance-listing-result  *ngIf="row._type=='assistanceListing'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
+        <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
+        <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
+        <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
+        <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
+        <hr class="m_T-5x"/>
+    	</div>
+      <div *ngIf="!initLoad && !data.results">
+        <br/>
+        <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
+        <div style="height:300px;"></div>
+      </div>
+  	</div>
+    <div *ngIf="data.results">
+      <div class="usa-width-one-whole">
+        <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
+      </div>
     </div>
-	</div>
-  <div *ngIf="data.results">
-    <div class="usa-width-one-whole">
-      <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
-    </div>
+    <br/><br/>
   </div>
-  <br/><br/>
+
 </div>

@@ -104,20 +104,22 @@
             <ng-container *ngIf="opportunity.data?.type === 'm'">{{ originalOpportunity?.data?.type | opportunityTypeLabel}} (Update/Amendment)</ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.PostedDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.PostedDate)">
-            <strong>Posted Date: </strong>
+            <strong>Update/Amendment Posted Date: </strong>
             {{ opportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}
           </li>
           <li [attr.id]="generateID(opportunityFields.OriginalPostedDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalPostedDate)">
             <strong>Original Posted Date: </strong>
-            {{ originalOpportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}
+            <ng-container *ngIf="opportunity.parent != null">{{ originalOpportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+            <ng-container *ngIf="opportunity.parent == null">{{ opportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}</ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ResponseDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ResponseDate)">
-            <strong>Response Date: </strong>
+            <strong>Update/Amendment Response Date: </strong>
             {{ opportunity.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
           </li>
           <li [attr.id]="generateID(opportunityFields.OriginalResponseDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalResponseDate)">
             <strong>Original Response Date: </strong>
-            {{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
+            <ng-container *ngIf="opportunity.parent != null">{{ originalOpportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+            <ng-container *ngIf="opportunity.parent == null">{{ opportunity?.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}</ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ArchivePolicy, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchivePolicy)"
               [ngSwitch]="opportunity.data?.archive?.type">
@@ -127,12 +129,13 @@
             <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchiveDate)">
-            <strong>Archive Date: </strong>
+            <strong>Update/Amendment Archive Date: </strong>
             {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
           </li>
           <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalArchiveDate)">
             <strong>Original Archive Date: </strong>
-            {{ originalOpportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
+            <ng-container *ngIf="opportunity.parent != null">{{ originalOpportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</ng-container>
+            <ng-container *ngIf="opportunity.parent == null">{{ opportunity?.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}</ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.StatutoryAuthority, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.StatutoryAuthority)">
             <strong>J&A Statutory Authority: </strong>
@@ -162,15 +165,20 @@
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalSetAside)">
             <strong> Original Set Aside: </strong>
-            <ng-container *ngIf="originalOpportunity?.data?.solicitation?.setAside && dictionary">
+            <ng-container *ngIf="opportunity.parent != null && originalOpportunity?.data?.solicitation?.setAside && dictionary">
               <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+                <ng-container>{{ element.value }}</ng-container>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="opportunity.parent == null && opportunity?.data?.solicitation?.setAside && dictionary">
+              <ng-container *ngFor = "let element of [opportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
                 <ng-container>{{ element.value }}</ng-container>
               </ng-container>
             </ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.SetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.SetAside)">
-            <strong>Set Aside: </strong>
-            <ng-container *ngIf="opportunity.data?.solicitation?.setAside && dictionary">
+            <ng-container *ngIf="(opportunity.data?.solicitation?.setAside != originalOpportunity?.data?.solicitation?.setAside) && dictionary">
+              <strong>Update/Amendment Set Aside: </strong>
               <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
                 <ng-container> {{ element.value }}</ng-container>
               </ng-container>
