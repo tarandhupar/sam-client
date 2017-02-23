@@ -1,1 +1,1 @@
-export {UserDirService} from "./user.service.ts";
+export {UserDirService} from "./access.service.ts";

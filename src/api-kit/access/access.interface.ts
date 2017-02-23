@@ -3,7 +3,7 @@ export interface IdVal {
   val: string|number
 }
 
-export interface UserAccess {
+export interface UserAccessInterface {
   "userAccessId"?: number,
   "user"?: string,
   "createdBy"?: string,

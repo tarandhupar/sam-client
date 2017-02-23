@@ -1,21 +1,26 @@
-import { UserAccess } from "api-kit/user/user.interface";
+import { UserAccessInterface } from "api-kit/access/access.interface";
 import { PropertyCollector } from "../app-utils/property-collector";
 import * as _ from 'lodash';
 
 export class UserAccessModel {
-  private _raw: UserAccess;
+  private _raw: UserAccessInterface;
   private collector: PropertyCollector;
 
   private constructor() {  }
 
-  static FromResponse(res: UserAccess): UserAccessModel {
+  static FromResponse(res: UserAccessInterface): UserAccessModel {
     let a = new UserAccessModel();
     a._raw = res;
     a.collector = new PropertyCollector(res);
     return a;
   }
 
-  public raw(): UserAccess {
+  static FormInputToAccessObject(user, role, domain, orgs: any[], functions): UserAccessInterface {
+
+    return {};
+  }
+
+  public raw(): UserAccessInterface {
     return this._raw;
   }
 

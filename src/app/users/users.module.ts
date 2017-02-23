@@ -17,7 +17,7 @@ import { GroupByDomainPipe } from "./public/access/group-by-domain.pipe";
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { GrantAccessPage } from "./public/grant-access/grant-access.page";
 import { AppComponentsModule } from "../app-components/app-components.module";
-
+import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 
 @NgModule({
   imports: [
@@ -45,6 +45,7 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     GroupByDomainPipe,
   ],
   providers: [
+    AlertFooterService
   ],
 })
 export class UserDirectoryModule { }

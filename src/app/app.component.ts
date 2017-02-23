@@ -21,7 +21,7 @@ export class App{
   keyword: string = "";
   index: string = "";
   qs: any = {};
-
+q
   showOverlay = false;
 
   constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
