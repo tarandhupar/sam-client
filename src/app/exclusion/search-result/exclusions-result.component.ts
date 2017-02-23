@@ -16,14 +16,14 @@ import * as moment from 'moment/moment';
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li *ngIf="data.dunsNumber!==''"><strong>DUNS: </strong><span>{{ data.dunsNumber }}</span></li>
-          <li *ngIf="data.cageCode!==''"><strong>CAGE Code: </strong><span>{{ data.cageCode }}</span></li>
+        	<li *ngIf="data.dunsNumber!==null && data.dunsNumber!==''"><strong>DUNS: </strong><span>{{ data.dunsNumber }}</span></li>
+          <li *ngIf="data.cageCode!==null && data.cageCode!==''"><strong>CAGE Code: </strong><span>{{ data.cageCode }}</span></li>
           <li><strong>Address: </strong><span>{{ data.address.streetAddress }}{{data.address.city=="" || data.address.streetAddress=="" ? '' : ','}} {{ data.address.city }}{{data.address.state=="" || data.address.city=="" ? '' : ','}} {{ data.address.state}} {{data.address.zip}}</span></li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">   
-          <li *ngIf="data.classification.code!==null || data.classification.code!==''"><strong>Classification</strong>
+          <li *ngIf="data.classification.code!==null && data.classification.code!==''"><strong>Classification</strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.classification.code }}</span></li>
             </ul>
