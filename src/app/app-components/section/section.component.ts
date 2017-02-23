@@ -11,7 +11,7 @@ import { Component, Input, OnInit } from '@angular/core';
 	selector: 'sam-section',
 	templateUrl:'section.template.html'
 })
-export class SectionComponent implements OnInit {
+export class SamSectionComponent implements OnInit {
   @Input() title: string;
   @Input() helpText: string;
   @Input() headTag = "h3";

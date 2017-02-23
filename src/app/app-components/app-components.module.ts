@@ -7,7 +7,7 @@ import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
 import { SamWellComponent } from './well/well.component';
-import { SectionComponent } from './section/section.component';
+import { SamSectionComponent } from './section/section.component';
 import { DisplayPageComponent } from './display-page/display-page.component';
 import { HistoryComponent } from "./history/history.component";
 import { SearchLayoutComponent } from './search-layout/search-layout.component';
@@ -26,7 +26,7 @@ import { InputAutocompleteComponent } from './input-autocomplete/input-autocompl
   declarations: [
     AgencyPickerComponent,
     SamWellComponent,
-    SectionComponent,
+    SamSectionComponent,
     DisplayPageComponent,
     HistoryComponent,
     SearchLayoutComponent,
@@ -45,7 +45,7 @@ import { InputAutocompleteComponent } from './input-autocomplete/input-autocompl
   exports: [
     AgencyPickerComponent,
     SamWellComponent,
-    SectionComponent,
+    SamSectionComponent,
     DisplayPageComponent,
     HistoryComponent,
     SearchLayoutComponent,

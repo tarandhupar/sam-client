@@ -41,6 +41,7 @@
 @import 'components/alphabet-selector';
 @import 'components/history';
 @import 'components/toggle-switch';
+@import 'components/well';
 
 @import 'pages/entity-object-view';
 @import 'pages/exclusion';
@@ -145,14 +146,5 @@ h2{
     label{
       margin-top:0;
     }
-  }
-}
-
-.well{
-  background-color: #e4e2e0;
-  padding: 15px;
-  
-  h4{
-    margin-top:0;
   }
 }
