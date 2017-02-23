@@ -18,7 +18,6 @@ export class SearchPage implements OnInit{
 	pageNum = 0;
 	totalCount: any= 0;
 	totalPages: any= 0;
-	pageNumPaginationPadding = 2;
 	showPerPage = 10;
 	data = [];
   featuredData = [];
@@ -48,10 +47,6 @@ export class SearchPage implements OnInit{
         this.runSearch();
 		});
 	}
-
-  ngOnChange(changes) {
-    this.runSearch();
-  }
 
 	loadParams(){
 		var qsobj = this.setupQS(false);
@@ -89,6 +84,7 @@ export class SearchPage implements OnInit{
 
 		return qsobj;
   }
+  
 	runSearch(){
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
