@@ -163,8 +163,7 @@ export class SearchPage implements OnInit{
       }
     );
     //construct qParams to pass parameters to object view pages
-    this.qParams['keyword'] = this.keyword;
-    this.qParams['index'] = this.index;
+    this.qParams = this.setupQS(false);
 	}
 
 	pageChange(pagenumber){
