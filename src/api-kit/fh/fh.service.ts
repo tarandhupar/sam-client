@@ -52,7 +52,12 @@ export class FHService {
 
       // Base case: If logo exists, save it to a variable and exit
       if(org['_embedded'][0]['_link'] != null && org['_embedded'][0]['_link']['logo'] != null && org['_embedded'][0]['_link']['logo']['href'] != null) {
-        cbSuccessFn(org['_embedded'][0]['_link']['logo']['href']);
+        let response = {};
+        let data = org['_embedded'][0]['org'];
+        response['logo'] = org['_embedded'][0]['_link']['logo']['href'];
+        response['info'] = (data['agencyName'] || data['name'] || data['orgKey'] || 'Organization') + ' Logo';
+
+        cbSuccessFn(response);
         return;
       }
 

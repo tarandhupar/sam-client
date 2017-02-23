@@ -172,6 +172,8 @@ export class SearchPage implements OnInit{
 		let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
+
+    document.getElementById('search-results').getElementsByTagName('div')[0].focus();
     this.router.navigate(['/search'],navigationExtras);
 	}
 
