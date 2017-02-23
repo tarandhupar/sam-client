@@ -68,6 +68,7 @@ export class HomePage {
     } else {
       qsobj['index'] = '';
     }
+    qsobj['isActive'] = true;
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
