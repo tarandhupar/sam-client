@@ -100,7 +100,7 @@
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
             <strong>Opportunity Type: </strong>
-            <ng-container *ngIf="opportunity.data?.type !== 'm'">{{ opportunity.data?.type | opportunityTypeLabel }}</ng-container>
+            <ng-container *ngIf="opportunity.data?.type !== 'm'">Original {{ opportunity.data?.type | opportunityTypeLabel }}</ng-container>
             <ng-container *ngIf="opportunity.data?.type === 'm'">
               <ng-container *ngIf="opportunity.data?.statuses?.isCanceled">Canceled </ng-container>
               <ng-container *ngIf="!opportunity.data?.statuses?.isCanceled">Updated </ng-container>
