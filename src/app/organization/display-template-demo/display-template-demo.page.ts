@@ -28,6 +28,7 @@ export class OrganizationDisplayPageDemoPage implements OnInit, OnDestroy {
   private totalPages: any = 0;
   private showPerPage = 10;
   public logoUrl: string;
+  public logoInfo: any;
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -69,9 +70,10 @@ export class OrganizationDisplayPageDemoPage implements OnInit, OnDestroy {
       this.errorOrganization = true;
     });
 
-    this.fhService.getOrganizationLogo(apiSubject, 
-      (logoUrl) => {
-        this.logoUrl = logoUrl;
+    this.fhService.getOrganizationLogo(apiSubject,
+      (logoData) => {
+        this.logoUrl = logoData.logo;
+        this.logoInfo = logoData.info;
       }, (err) => {
         this.errorLogo = true;
     });

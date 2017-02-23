@@ -13,7 +13,7 @@ import { Router,NavigationExtras,NavigationEnd } from '@angular/router';
 })
 export class DisplayPageComponent implements OnInit {
   @Input() sidenavConfig: any;
-  @Input() logoSrc: string;
+  @Input() logoData: any;
   @Input() sidebarToggle = true;
   contentClass = "usa-width-three-fourths";
 	showGeneratedSidebar = false;
@@ -39,7 +39,7 @@ export class DisplayPageComponent implements OnInit {
 			this.showGeneratedSidebar = true;
 		}
   }
-	
+
 	sidenavPathEvtHandler(data){
 		if(data.charAt(0)=="#"){
 			//this.router.navigate([], { fragment: data });

@@ -1,11 +1,12 @@
 <div class="usa-grid">
+
 	<aside class="usa-width-one-fourth" *ngIf="showGeneratedSidebar">
 		<div container="occupy-page" limit="1200" sam-sticky>
-			<ng-container *ngIf="logoSrc===null">
+			<ng-container *ngIf="logoData===null">
 	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
 	    </ng-container>
-	    <ng-container *ngIf="logoSrc">
-	      <img class="sidenav-logo" [src]="logoSrc" alt="">
+	    <ng-container *ngIf="logoData">
+	      <img class="sidenav-logo" [src]="logoData.logo" [alt]="logoData.info" [title]="logoData.info">
 	    </ng-container>
 			<samSidenav [model]="sidenavConfig" (path)="sidenavPathEvtHandler($event)"></samSidenav>
 		</div>

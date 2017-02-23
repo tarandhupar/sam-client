@@ -42,15 +42,17 @@
       </div>
       <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
       <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
-  		<div *ngFor="let row of data.results">
-  			<opportunities-result *ngIf="row._type=='opportunity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
-        <assistance-listing-result  *ngIf="row._type=='assistanceListing'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
-        <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
-        <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
-        <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
-        <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
-        <hr class="m_T-5x"/>
-    	</div>
+      <div id="search-results">
+        <div tabindex="-1" *ngFor="let row of data.results">
+          <opportunities-result *ngIf="row._type=='opportunity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
+          <assistance-listing-result  *ngIf="row._type=='assistanceListing'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
+          <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
+          <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
+          <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
+          <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
+          <hr class="m_T-5x"/>
+    	  </div>
+      </div>
       <div *ngIf="!initLoad && !data.results">
         <br/>
         <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
@@ -66,3 +68,4 @@
   </div>
 
 </div>
+
