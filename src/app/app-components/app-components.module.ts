@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
+import { SamWellComponent } from './well/well.component';
+import { SectionComponent } from './section/section.component';
 import { DisplayPageComponent } from './display-page/display-page.component';
 import { HistoryComponent } from "./history/history.component";
 import { SearchLayoutComponent } from './search-layout/search-layout.component';
@@ -23,6 +25,8 @@ import { InputAutocompleteComponent } from './input-autocomplete/input-autocompl
 @NgModule({
   declarations: [
     AgencyPickerComponent,
+    SamWellComponent,
+    SectionComponent,
     DisplayPageComponent,
     HistoryComponent,
     SearchLayoutComponent,
@@ -40,6 +44,8 @@ import { InputAutocompleteComponent } from './input-autocomplete/input-autocompl
   ],
   exports: [
     AgencyPickerComponent,
+    SamWellComponent,
+    SectionComponent,
     DisplayPageComponent,
     HistoryComponent,
     SearchLayoutComponent,

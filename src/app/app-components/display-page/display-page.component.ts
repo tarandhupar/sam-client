@@ -16,7 +16,6 @@ export class DisplayPageComponent implements OnInit {
   @Input() logoSrc: string;
   @Input() sidebarToggle = true;
   contentClass = "usa-width-three-fourths";
-	showCustomSidebar = true;
 	showGeneratedSidebar = false;
 
   constructor(private router: Router){
@@ -35,10 +34,8 @@ export class DisplayPageComponent implements OnInit {
   ngOnInit(){
   	if(!this.sidebarToggle){
   		this.contentClass = "usa-width-one-whole";
-			this.showCustomSidebar = false;
 			this.showGeneratedSidebar = false;
-  	} else if (this.sidenavConfig){
-			this.showCustomSidebar = false;
+  	} else if (this.sidenavConfig){ 
 			this.showGeneratedSidebar = true;
 		}
   }

@@ -1,17 +1,5 @@
 <div class="usa-grid">
-	<aside *ngIf="showCustomSidebar" class="usa-width-one-fourth">
-		<div sam-sticky container="occupy-page" limit="1200">
-			<ng-container *ngIf="logoSrc===null">
-	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
-	    </ng-container>
-	    <ng-container *ngIf="logoSrc">
-	      <img class="sidenav-logo" [src]="logoSrc" alt="">
-	    </ng-container>
-	    <ng-content select="[display-sidenav]"></ng-content>
-    </div>
-    &nbsp;
-	</aside>
-	<div class="usa-width-one-fourth" *ngIf="showGeneratedSidebar">
+	<aside class="usa-width-one-fourth" *ngIf="showGeneratedSidebar">
 		<div container="occupy-page" limit="1200" sam-sticky>
 			<ng-container *ngIf="logoSrc===null">
 	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
@@ -22,9 +10,8 @@
 			<samSidenav [model]="sidenavConfig" (path)="sidenavPathEvtHandler($event)"></samSidenav>
 		</div>
     &nbsp;
-	</div>
+	</aside>
 	<div [attr.class]="contentClass">
-		<ng-content select="[display-alert]"></ng-content>
 		<ng-content select="[display-title]"></ng-content>
 		<ng-content select="[display-content]"></ng-content>
 	</div>
