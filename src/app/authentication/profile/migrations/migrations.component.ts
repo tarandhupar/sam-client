@@ -79,10 +79,20 @@ export class MigrationsComponent {
         });
       }, () => {
         this.zone.run(() => {
-          this.router.navigate(['/signin']);
+          if(!this.api.iam.isDebug()) {
+            this.router.navigate(['/signin']);
+          }
         });
       });
     });
+  }
+
+  ngAfterViewInit() {
+    let fragment = window.location.hash;
+    if(fragment) {
+      this.anchorTo('');
+      this.anchorTo(fragment);
+    }
   }
 
   ngDoCheck() {
@@ -177,6 +187,10 @@ export class MigrationsComponent {
     }
 
     return ((control.touched && control.dirty) || (this.migrationForm.touched && this.migrationForm.dirty)) && this.states.submitted ? errors[0] : '';
+  }
+
+  anchorTo(id) {
+    window.location.hash = id;
   }
 
   migrate() {
