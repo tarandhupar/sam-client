@@ -163,8 +163,7 @@ export class SearchPage implements OnInit{
       }
     );
     //construct qParams to pass parameters to object view pages
-    this.qParams['keyword'] = this.keyword;
-    this.qParams['index'] = this.index;
+    this.qParams = this.setupQS(false);
 	}
 
 	pageChange(pagenumber){
@@ -173,6 +172,8 @@ export class SearchPage implements OnInit{
 		let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
+
+    document.getElementById('search-results').getElementsByTagName('div')[0].focus();
     this.router.navigate(['/search'],navigationExtras);
 	}
 

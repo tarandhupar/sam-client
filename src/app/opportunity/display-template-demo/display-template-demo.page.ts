@@ -89,7 +89,7 @@ export class OpportunityDisplayPageDemoPage implements OnInit {
   attachment: any;
   relatedOpportunities:any;
   relatedOpportunitiesMetadata:any;
-  logoUrl: string;
+  public logoData: any;
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
   errorOrganization: any;
@@ -216,8 +216,8 @@ export class OpportunityDisplayPageDemoPage implements OnInit {
     opportunityAPI.subscribe(api => {
       this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
       this.fhService.getOrganizationLogo(organizationSubject,
-        (logoUrl) => {
-          this.logoUrl = logoUrl;
+        (logoData) => {
+          this.logoData = logoData;
         }, (err) => {
           this.errorLogo = true;
       });
