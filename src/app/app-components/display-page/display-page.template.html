@@ -4,8 +4,8 @@
 			<ng-container *ngIf="logoSrc===null">
 	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
 	    </ng-container>
-	    <ng-container *ngIf="logoSrc">
-	      <img class="sidenav-logo" [src]="logoSrc" alt="">
+	    <ng-container *ngIf="logoData">
+	      <img class="sidenav-logo" [src]="logoData.logo" [alt]="logoData.info" [title]="logoData.info">
 	    </ng-container>
 	    <ng-content select="[display-sidenav]"></ng-content>
     </div>
@@ -17,7 +17,7 @@
 	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
 	    </ng-container>
 	    <ng-container *ngIf="logoSrc">
-	      <img class="sidenav-logo" [src]="logoSrc" alt="">
+	      <img class="sidenav-logo" [src]="logoData.logo" [alt]="logoData.info" [title]="logoData.info">
 	    </ng-container>
 			<samSidenav [model]="sidenavConfig" (path)="sidenavPathEvtHandler($event)"></samSidenav>
 		</div>
