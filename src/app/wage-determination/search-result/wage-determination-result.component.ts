@@ -26,7 +26,9 @@ import * as moment from 'moment/moment';
         	  <span>{{ location.state?.name }}</span>
         	</li>
         	<li class="break-word"><strong>County/ies: </strong>
-        	  <span>{{ location.counties }}</span>
+            <ng-container *ngFor="let county of location.counties; let isLast=last">
+              {{county}}{{ isLast ? '' : ', '}}
+            </ng-container>
         	</li>
         </ul>
     	</div>
