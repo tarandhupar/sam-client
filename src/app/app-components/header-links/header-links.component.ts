@@ -27,6 +27,7 @@ export class SamHeaderLinksComponent {
     ]
   };
 
+  
   showDropdown:boolean = false;
   dropdownData:any = [
     {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/", pageInProgress:false},
