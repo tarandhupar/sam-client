@@ -4,7 +4,7 @@
     <div class="clearfix">
       <div class="logo-section">
         <!-- Logo -->
-        <img *ngIf="organization && logoUrl && !errorLogo" class="sidenav-logo" [src]="logoUrl" alt="HTML5 Icon">
+        <img *ngIf="organization && logoUrl && !errorLogo" class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
         <img *ngIf="organization && (errorOrganization || errorLogo || logoUrl===null)" src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       </div>
       <div class="intro-section" *ngIf="organization" >
@@ -53,9 +53,10 @@
             </p>
           </div>
         </div>
-        <ul class="usa-zebra-list">
-          <li *ngFor = "let element of organizationPerPage">
-            <a [routerLink]="['/organization', element.orgId]" [queryParams]="qParams">{{ element.name }} </a>
+        <ul id="org-pagination" class="usa-zebra-list">
+          <li tabindex="-1" *ngFor = "let element of organizationPerPage">
+            <div *ngIf="organization.categoryDesc == 'DEPARTMENT'"><a [routerLink]="['/organization', element.orgId]" [queryParams]="qParams">{{ element.name }} </a></div>
+            <div *ngIf="organization.categoryDesc == 'AGENCY'">{{ element.name }}</div>
           </li>
         </ul>
       </section>

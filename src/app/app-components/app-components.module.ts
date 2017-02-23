@@ -9,6 +9,7 @@ import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
 import { DisplayPageComponent } from './display-page/display-page.component';
 import { HistoryComponent } from "./history/history.component";
 import { SearchLayoutComponent } from './search-layout/search-layout.component';
+import { WorkspaceLayoutComponent } from './workspace-layout/workspace-layout.component';
 import { SamFooterComponent } from './footer/footer.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
 import { InputAutocompleteComponent } from './input-autocomplete/input-autocomplete.component';
@@ -25,6 +26,7 @@ import { InputAutocompleteComponent } from './input-autocomplete/input-autocompl
     DisplayPageComponent,
     HistoryComponent,
     SearchLayoutComponent,
+    WorkspaceLayoutComponent,
     SamFooterComponent,
     SamHeaderLinksComponent,
     InputAutocompleteComponent,
@@ -41,6 +43,7 @@ import { InputAutocompleteComponent } from './input-autocomplete/input-autocompl
     DisplayPageComponent,
     HistoryComponent,
     SearchLayoutComponent,
+    WorkspaceLayoutComponent,
     SamFooterComponent,
     SamHeaderLinksComponent,
     InputAutocompleteComponent

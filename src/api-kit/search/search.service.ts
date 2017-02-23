@@ -17,19 +17,22 @@ export class SearchService {
         oParam: {
           index: obj.index,
           q: obj.keyword,
-          page: obj.pageNum,
-          qFilters: {}
+          page: obj.pageNum
         },
         method: 'GET'
       };
 
-      if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null) {
-        oApiParam.oParam.qFilters['organizationId'] = obj.organizationId;
+      if(obj.isActive === true) {
+        oApiParam.oParam['is_active'] = obj.isActive;
       }
 
-      if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
-        oApiParam.oParam.qFilters['noticeId'] = obj.noticeId;
+      if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null) {
+        oApiParam.oParam['organization_id'] = obj.organizationId;
       }
+
+       if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
+         oApiParam.oParam['noticeId'] = obj.noticeId;
+       }
 
       return this.oAPIService.call(oApiParam);
     }
