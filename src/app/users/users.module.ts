@@ -15,6 +15,8 @@ import { UserMigrationsPage } from "./public/migrations/migrations.page";
 import { UserProfilePage } from "./public/profile/profile.page";
 import { GroupByDomainPipe } from "./public/access/group-by-domain.pipe";
 import { PipesModule } from "../app-pipes/app-pipes.module";
+import { GrantAccessPage } from "./public/grant-access/grant-access.page";
+import { AppComponentsModule } from "../app-components/app-components.module";
 
 
 @NgModule({
@@ -26,7 +28,8 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
     FormsModule,
     SamUIKitModule,
     SamAPIKitModule,
-    PipesModule
+    PipesModule,
+    AppComponentsModule,
   ],
   exports: [
 
@@ -35,6 +38,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
     UserViewComponent,
     UserMigrationsPage,
     UserAccessPage,
+    GrantAccessPage,
     UserProfilePage,
     UserDirectoryPage,
     ParentOrgsComponent,

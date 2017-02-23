@@ -4,6 +4,7 @@ import { UserAccessPage } from './public/access/access.page';
 import { UserViewComponent } from "./public/public.component";
 import { UserMigrationsPage } from './public/migrations/migrations.page';
 import { UserProfilePage } from './public/profile/profile.page';
+import { GrantAccessPage } from "./public/grant-access/grant-access.page";
 
 export const routes: Routes = [];
 
@@ -17,6 +18,7 @@ if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
       { path: 'profile',  component: UserProfilePage },
       { path: 'migrations',  component: UserMigrationsPage },
       { path: 'access',  component: UserAccessPage },
+      { path: 'grant-access',  component: GrantAccessPage }
     ]
   });
 }

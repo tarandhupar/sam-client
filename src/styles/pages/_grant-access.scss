@@ -1,0 +1,29 @@
+.grant-access-page {
+  .organization-container {
+    min-width: 380px;
+  }
+
+  .background-light {
+    background-color: $color-gray-lightest;
+  }
+
+  .permission-label {
+    display: inline-block;
+    margin: 0 1em 0 0;
+    height: 32px;
+  }
+
+  .permission-input {
+    display: inline-block;
+    width: initial;
+    margin: 1em 1em 0 0;
+  }
+
+  .object-item:not(:first-child) {
+    margin-top: 1.5em;
+  }
+
+  .object-title {
+    margin-bottom: 1em;
+  }
+}
