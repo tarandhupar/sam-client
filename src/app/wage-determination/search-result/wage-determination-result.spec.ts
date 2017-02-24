@@ -20,7 +20,12 @@ describe('WageDeterminationResultComponent', () => {
       comp.data = {
         fullReferenceNumber: "12345678",
         _type:"wdSCA",
-        services: "SAMPLE SERVICE",
+        services: [
+          {
+            "code": 8,
+            "value": "SAMPLE SERVICE"
+          }
+        ],
         constructionTypes: "CONSTRUCTION TYPES",
         isActive:true,
         locations:[
