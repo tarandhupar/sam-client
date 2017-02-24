@@ -21,7 +21,7 @@
 
       <samNameEntry class="usa-form-editable" [model]="user" legend=""></samNameEntry>
 
-      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('identity')"></samButton>
+      <samButton [buttonType]="(states.submitted ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('identity')"></samButton>
     </section>
     <!--============================-->
     <!--=== Business Information ===-->
@@ -61,9 +61,10 @@
                     (organization)="setOrganization($event)"
                     *ngIf="states.isGov">
       </agencyPicker>
+
       <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" label="Business Phone"></samPhoneEntry>
 
-      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('business')"></samButton>
+      <samButton [buttonType]="(states.submitted ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('business')"></samButton>
     </section>
     <!--==========================-->
     <!--=== Security Questions ===-->
@@ -73,7 +74,7 @@
 
       <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
         <label [innerText]="question(kbaAnswer.questionId)"></label>
-        <div class="usa-form-control" [innerHtml]="kbaAnswer.answer"></div>
+        <div class="usa-form-control" [innerHtml]="getHashedAnswer(kbaAnswer.answer)"></div>
       </div>
 
       <div class="usa-form-editable" *ngIf="questions.length">
@@ -86,7 +87,7 @@
                        label="Question {{ $index + 1 }}"></sam-kba-entry>
       </div>
 
-      <samButton buttonType="default" buttonClass="usa-save" buttonText="Save" (click)="save('kba')"></samButton>
+      <samButton [buttonType]="(states.submitted ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('kba')"></samButton>
     </section>
     <section>
       <h3>Deactivate Account</h3>
@@ -95,7 +96,7 @@
         Once you delete your account, you will not be able to recover any of your account information or permissions.<br /><br />
         Your account will be permanently inaccessible and you will need to re-register to access SAM.gov.
       </div>
-      <samButton buttonType="secondary" buttonText="Deactivate Account" (click)="confirmDeactivation()"></samButton>
+      <samButton [buttonType]="(states.submitted ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></samButton>
     </section>
   </form>
 </div>

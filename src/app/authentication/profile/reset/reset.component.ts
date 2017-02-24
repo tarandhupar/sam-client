@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Component, DoCheck, Input, NgZone, OnInit, OnChanges, ViewChild } from '@angular/core';
+import { Component, DoCheck, Input, NgZone, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -16,6 +16,8 @@ import { User } from '../../user.interface';
   ]
 })
 export class ResetComponent {
+  @ViewChild('formControl') formControl;
+
   private states = {
     alert: {
       type: 'success',
@@ -27,8 +29,6 @@ export class ResetComponent {
 
   private user: User;
   public passwordForm: FormGroup;
-
-  @ViewChild('passwordEntry') passwordEntry;
 
   constructor(
     private router: Router,
@@ -42,20 +42,28 @@ export class ResetComponent {
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
+          this.initForm();
           this.user = user;
-          this.passwordForm = this.builder.group({
-            email: [this.user.email],
-            currentPassword: ['', Validators.required],
-            newPassword: ['', Validators.required],
-          });
         });
       }, (response) => {
         this.zone.run(() => {
           if(!this.api.iam.isDebug()) {
             this.router.navigate(['/signin']);
+          } else {
+            this.initForm();
           }
         });
       });
+    });
+  }
+
+  initForm() {
+    let isDebug = (this.api.iam.isDebug() && this.user == undefined);
+
+    this.passwordForm = this.builder.group({
+      email: [!isDebug ? this.user.email : ''],
+      currentPassword: ['', Validators.required],
+      newPassword: ['', Validators.required],
     });
   }
 
