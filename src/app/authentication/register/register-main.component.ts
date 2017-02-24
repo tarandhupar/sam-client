@@ -367,6 +367,10 @@ export class RegisterMainComponent {
     });
   }
 
+  cancel() {
+    this.router.navigate(['/signup']);
+  }
+
   register() {
     let userData,
         kbaAnswerList = this.userForm.value['kbaAnswerList'];

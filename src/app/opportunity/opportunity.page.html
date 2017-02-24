@@ -10,7 +10,7 @@
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       </ng-container>
       <ng-container *ngIf="opportunity && logoUrl && !errorOrganization">
-        <img class="sidenav-logo" [src]="logoUrl" alt="Program Logo">
+        <img class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
       </ng-container>
 
       <!--Side Navigation-->
@@ -100,8 +100,12 @@
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
             <strong>Opportunity Type: </strong>
-            <ng-container *ngIf="opportunity.data?.type !== 'm'">{{ opportunity.data?.type | opportunityTypeLabel }}</ng-container>
-            <ng-container *ngIf="opportunity.data?.type === 'm'">{{ originalOpportunity?.data?.type | opportunityTypeLabel}} (Update/Amendment)</ng-container>
+            <ng-container *ngIf="opportunity.data?.type !== 'm'">Original {{ opportunity.data?.type | opportunityTypeLabel }}</ng-container>
+            <ng-container *ngIf="opportunity.data?.type === 'm'">
+              <ng-container *ngIf="opportunity.data?.statuses?.isCanceled">Canceled </ng-container>
+              <ng-container *ngIf="!opportunity.data?.statuses?.isCanceled">Updated </ng-container>
+              {{ originalOpportunity?.data?.type | opportunityTypeLabel}}
+            </ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.PostedDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.PostedDate)">
             <strong>Update/Amendment Posted Date: </strong>
@@ -486,41 +490,42 @@
           of <strong>{{relatedOpportunitiesMetadata.count}}</strong>
         </p>
 
-        <div class="card-simple" *ngFor="let element of relatedOpportunities">
+        <div id="awards-list" tabindex="-1">
+          <div class="card-simple" *ngFor="let element of relatedOpportunities">
 
-          <h3>{{element.data?.award?.awardee?.name}}</h3>
+            <h3>{{element.data?.award?.awardee?.name}}</h3>
 
-          <div class="card-simple-content">
-            <div class="usa-grid-full">
-              <div class="usa-width-one-half">
-                <ul class="usa-label-list">
-                  <li><span>Contractor Awarded DUNS: </span>
-                    <span>
-                      {{element.data?.award?.awardee?.duns}}
-                    </span>
-                  </li>
-                  <li>
-                    <span>Contractor Awarded Address: </span>
-                    <span style="display: block;">
-                      {{element.data?.award?.awardee?.location?.streetAddress}}<br>
-                      {{element.data?.award?.awardee?.location?.city}}
-                      {{element.data?.award?.awardee?.location?.state}}
-                      {{element.data?.award?.awardee?.location?.zip}}<br>
-                      {{element.data?.award?.awardee?.location?.country}}<br>
-                    </span>
-                  </li>
-                </ul>
-              </div>
-              <div class="usa-width-one-half">
-                <ul class="usa-label-list">
-                  <li><span>Contract Award Dollar Amount: </span> <span>{{element.data?.award?.amount}}</span></li>
-                  <li><span>Contract Award Number: </span> <span>{{element.data?.award?.number}}</span></li>
-                  <li><span>Contract Award Date: </span> <span>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span></li>
-                </ul>
+            <div class="card-simple-content">
+              <div class="usa-grid-full">
+                <div class="usa-width-one-half">
+                  <ul class="usa-label-list">
+                    <li><span>Contractor Awarded DUNS: </span>
+                      <span>
+                        {{element.data?.award?.awardee?.duns}}
+                      </span>
+                    </li>
+                    <li>
+                      <span>Contractor Awarded Address: </span>
+                      <span style="display: block;">
+                        {{element.data?.award?.awardee?.location?.streetAddress}}<br>
+                        {{element.data?.award?.awardee?.location?.city}}
+                        {{element.data?.award?.awardee?.location?.state}}
+                        {{element.data?.award?.awardee?.location?.zip}}<br>
+                        {{element.data?.award?.awardee?.location?.country}}<br>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="usa-width-one-half">
+                  <ul class="usa-label-list">
+                    <li><span>Contract Award Dollar Amount: </span> <span>{{element.data?.award?.amount}}</span></li>
+                    <li><span>Contract Award Number: </span> <span>{{element.data?.award?.number}}</span></li>
+                    <li><span>Contract Award Date: </span> <span>{{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}</span></li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
-
         </div>
 
       </section>

@@ -28,6 +28,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
   private totalPages: any = 0;
   private showPerPage = 10;
   public logoUrl: string;
+  public logoInfo: any;
   errorOrgId: string;
   qParams: any = {};
   private hierarchySubscription;
@@ -79,8 +80,13 @@ export class OrganizationPage implements OnInit, OnDestroy {
     });
 
     this.fhService.getOrganizationLogo(orgSubject,
-      (logoUrl) => {
-        this.logoUrl = logoUrl;
+      (logoData) => {
+        if (logoData != null) {
+          this.logoUrl = logoData.logo;
+          this.logoInfo = logoData.info;
+        } else {
+          this.errorLogo = true;
+        }
       }, (err) => {
         this.errorLogo = true;
     });
@@ -137,6 +143,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
                     page: this.pageNum},
       fragment: 'organization-sub-hierarchy'
     };
+    document.getElementById('org-pagination').getElementsByTagName('li')[0].focus();
     this.router.navigate(['/organization',this.organization.orgKey],navigationExtras);
   }
 
