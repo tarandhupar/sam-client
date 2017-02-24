@@ -69,6 +69,8 @@ export class OrganizationPage implements OnInit, OnDestroy {
     }).subscribe(orgSubject); // orgSubject contains a stream of organization api data
 
     this.subscription = orgSubject.subscribe(jsonData => { // whenever the api data is updated
+      console.log(orgSubject);
+      console.log("Json", jsonData);
       this.organization = jsonData['_embedded'][0]['org'];
       this.totalPages = Math.ceil(this.organization.hierarchy.length / this.showPerPage);
       this.organizationPerPage = this.filterHierarchy(this.pageNum, this.sortHierarchyAlphabetically(this.organization.hierarchy));
