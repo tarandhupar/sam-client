@@ -18,7 +18,6 @@ export class SearchPage implements OnInit{
 	pageNum = 0;
 	totalCount: any= 0;
 	totalPages: any= 0;
-	pageNumPaginationPadding = 2;
 	showPerPage = 10;
 	data = [];
   featuredData = [];
@@ -26,7 +25,7 @@ export class SearchPage implements OnInit{
 	initLoad = true;
 	showOptional:any = (SHOW_OPTIONAL=="true");
   qParams:any = {};
-  isActive: boolean = true;
+  isActive: boolean = false;
   checkboxModel: any = ['true'];
   checkboxConfig = {
     options: [
@@ -43,15 +42,11 @@ export class SearchPage implements OnInit{
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.isActive = data['isActive'] && data['isActive'] === "false" ? false : this.isActive;
+        this.isActive = data['isActive'] && data['isActive'] === "true" ? true : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.runSearch();
 		});
 	}
-
-  ngOnChange(changes) {
-    this.runSearch();
-  }
 
 	loadParams(){
 		var qsobj = this.setupQS(false);
