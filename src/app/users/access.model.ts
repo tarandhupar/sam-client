@@ -15,9 +15,37 @@ export class UserAccessModel {
     return a;
   }
 
-  static FormInputToAccessObject(user, role, domain, orgs: any[], functions): UserAccessInterface {
+  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions): UserAccessInterface {
+    let functionMapContent = functions.map(fun => {
+      return {
+        function: fun.id,
+        permission: fun.permissions,
+      };
+    }).filter(fun => {
+      return !!fun.permission.length;
+    });
 
-    return {};
+    let organizationMapContent = orgIds.map(orgId => {
+      return {
+        orgKey: orgId,
+        functionMapContent: functionMapContent
+      };
+    });
+
+    return {
+      user: user,
+      roleMapContent: [
+        {
+          role: roleId,
+          roleData: [
+            {
+              domain: domainId,
+              organizationMapContent: organizationMapContent
+            }
+          ]
+        }
+      ]
+    };
   }
 
   public raw(): UserAccessInterface {
