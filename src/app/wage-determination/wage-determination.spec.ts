@@ -19,7 +19,7 @@ let comp:    WageDeterminationPage;
 let fixture: ComponentFixture<WageDeterminationPage>;
 
 let MockWageDeterminationService = {
-  getWageDeterminationDictionary(ids: String) {
+  getWageDeterminationDictionary(ids:String) {
     return Observable.of({
       classification_code: [
         {
@@ -33,7 +33,7 @@ let MockWageDeterminationService = {
         }
       ]
     });
-  },
+},
   getWageDeterminationByReferenceNumberAndRevisionNumber: (referenceNumber: string, revisionNumber: number) => {
     return Observable.of({
       "fullReferenceNumber": "1998-0642",
@@ -98,7 +98,7 @@ describe('WageDeterminationPage', () => {
           },
           deps: [MockBackend, BaseRequestOptions],
         },
-        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'referenceNumber': '2002-0261' }, {'revisionNumber': '8'}]), 'queryParams': Observable.from([{}]) } },
+        { provide: ActivatedRoute, useValue: { 'params': Observable.of({ 'referencenumber': '2002-0261', 'revisionnumber': '8'}), 'queryParams': Observable.from([{}]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: WageDeterminationService, useValue: MockWageDeterminationService },
         { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectCustomPipe }
@@ -121,5 +121,14 @@ describe('WageDeterminationPage', () => {
 
   it('Should init & load data', () => {
     expect(comp.wageDetermination).toBeDefined();
+    expect(comp.isSCA).toBeDefined();
+    expect(comp.referenceNumber).toBeDefined();
+    expect(comp.revisionNumber).toBeDefined();
+    expect(comp.currentUrl).toBeDefined();
+    expect(comp.dictionaries).toBeDefined();
+    expect(comp.states).toBeDefined();
+    expect(comp.counties).toBeDefined();
+    expect(comp.services).toBeDefined();
+
   });
 });
