@@ -5,7 +5,7 @@
     <div>&nbsp;</div>
     <div sam-sticky limit=1200 container="occupy-page">
       <!--Logo-->
-      <ng-container *ngIf="program && (errorOrganization || logoUrl==null || errorLogo)">
+      <ng-container *ngIf="program && (errorOrganization || logoUrl===null || errorLogo)">
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       </ng-container>
       <ng-container *ngIf="program && logoUrl && !errorOrganization">

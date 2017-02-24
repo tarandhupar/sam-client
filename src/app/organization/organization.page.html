@@ -5,7 +5,7 @@
       <div class="logo-section">
         <!-- Logo -->
         <img *ngIf="organization && logoUrl && !errorLogo" class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
-        <img *ngIf="organization && (errorOrganization || errorLogo || logoUrl==null)" src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+        <img *ngIf="organization && (errorOrganization || errorLogo || logoUrl===null)" src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       </div>
       <div class="intro-section" *ngIf="organization" >
         <h1>{{organization.agencyName || organization.name || organization.orgKey}} {{(organization.shortName == '' || organization.shortName == null) ?  '': '('+organization.shortName+')'}}</h1>
