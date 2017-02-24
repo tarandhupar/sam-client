@@ -42,8 +42,8 @@ export class ResetComponent {
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
-          this.initForm();
           this.user = user;
+          this.initForm();
         });
       }, (response) => {
         this.zone.run(() => {
