@@ -21,6 +21,7 @@ import { StatesCountiesPipe } from "./pipes/states-counties.pipe";
 })
 export class WageDeterminationPage implements OnInit {
   wageDetermination: any;
+  isSCA: boolean;
   referenceNumber: any;
   revisionNumber:any;
   currentUrl: string;
@@ -28,6 +29,7 @@ export class WageDeterminationPage implements OnInit {
   states: string;
   counties: string;
   services: string;
+  constructionTypes: string;
 
   // On load select first item on sidenav component
   selectedPage: number = 0;
@@ -64,7 +66,7 @@ export class WageDeterminationPage implements OnInit {
     let dictionariesAPI = this.loadDictionary();
     let wdAPI = this.loadWageDetermination();
     let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
-    this.getServices(wgAndDictionariesAPI);
+    this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
     this.getStatesAndCounties(wgAndDictionariesAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
@@ -72,12 +74,14 @@ export class WageDeterminationPage implements OnInit {
   private loadWageDetermination() {
       let wgSubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
     this.route.params.subscribe((params: Params) => { // construct a stream of wg data
-      this.referenceNumber = params['referencenumber'];
+      this.referenceNumber = params['referencenumber'].toUpperCase();
+      this.isSCA = this.referenceNumber.indexOf('-') > -1
       this.revisionNumber = params['revisionnumber'];
       this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(this.referenceNumber,this.revisionNumber).subscribe(wgSubject);
       // run whenever api data is updated
       wgSubject.subscribe(api => { // do something with the wg api
         this.wageDetermination = api;
+        console.log("Revision Number: ", this.wageDetermination.revisionNumber)
 
         let wageDeterminationSideNavContent = {
           "label": "Wage Determination",
@@ -169,6 +173,19 @@ export class WageDeterminationPage implements OnInit {
         }
         servicesString = servicesString.substring(0, servicesString.length - 2);
         this.services = servicesString;
+      }
+    })
+  }
+
+  private getConstructionTypes(wdAPI) {
+    wdAPI.subscribe((wageDeterminaton) => {
+      if (wageDeterminaton.constructionType != null){
+        let constructionTypeString = "";
+        for (let element of wageDeterminaton.constructionType) {
+          constructionTypeString = constructionTypeString.concat(element + ", ");
+        }
+        constructionTypeString = constructionTypeString.substring(0, constructionTypeString.length - 2);
+        this.constructionTypes = constructionTypeString;
       }
     })
   }
