@@ -5,7 +5,7 @@ import { SamSubSectionComponent } from './subsection.component';
 var fixture;
 var comp;
 
-describe('Sam Section Component Tests', () => {
+describe('Sam SubSection Component Tests', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SamSubSectionComponent ],
@@ -18,11 +18,10 @@ describe('Sam Section Component Tests', () => {
   }));
 
   it('title test', ()  => {
-
     comp.title = "test title";
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect( fixture.debugElement.query( By.css('h3') ).nativeElement.innerHTML() ).toEqual(comp.title);
+      expect( fixture.debugElement.query( By.css('h3') ).nativeElement.innerHTML ).toContain(comp.title);
     });
 	});
 

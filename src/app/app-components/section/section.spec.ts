@@ -22,7 +22,7 @@ describe('Sam Section Component Tests', () => {
     comp.title = "test title";
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect( fixture.debugElement.query( By.css('h2') ).nativeElement.innerHTML() ).toEqual(comp.title);
+      expect( fixture.debugElement.query( By.css('h2') ).nativeElement.innerHTML ).toContain(comp.title);
     });
 	});
 

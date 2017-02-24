@@ -20,7 +20,7 @@ describe('Search Layout Tests', () => {
     });
   }));
 
-  it('logo test', ()  => {
+  it('basic test', ()  => {
     comp.totalPages = 14;
     comp.currentPage = 2;
     comp.totalElements = 140;

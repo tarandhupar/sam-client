@@ -22,7 +22,7 @@ describe('Well Component Tests', () => {
     comp.title = "test title";
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect( fixture.debugElement.query( By.css('.samWell h4') ).nativeElement.innerHTML() ).toEqual(comp.title);
+      expect( fixture.debugElement.query( By.css('.samWell h4') ).nativeElement.innerHTML ).toEqual(comp.title);
     });
 	});
 

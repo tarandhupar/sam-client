@@ -5,7 +5,7 @@ import { SamTitleSectionComponent } from './title-section.component';
 var fixture;
 var comp;
 
-describe('Sam Section Component Tests', () => {
+describe('Sam Title Section Component Tests', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SamTitleSectionComponent ],
@@ -22,7 +22,7 @@ describe('Sam Section Component Tests', () => {
     comp.title = "test title";
     fixture.detectChanges();
     fixture.whenStable().then(() => {
-      expect( fixture.debugElement.query( By.css('h1') ).nativeElement.innerHTML() ).toEqual(comp.title);
+      expect( fixture.debugElement.query( By.css('h1') ).nativeElement.innerHTML ).toEqual(comp.title);
     });
 	});
 
