@@ -1,6 +1,6 @@
 import { StatesCountiesPipe } from "./states-counties.pipe";
 
-fdescribe('StatesCountiesPipe', () => {
+describe('StatesCountiesPipe', () => {
   let pipe = new StatesCountiesPipe();
   let dictionaries = {county: [{dictionary_name:"county",element_id:"14343",value:"Navajo"}],
     state: [{dictionary_name:"state",element_id:"AL",value:"Alabama"}]};
