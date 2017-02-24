@@ -8,7 +8,6 @@ export class StatesCountiesPipe implements PipeTransform {
 
 
   transform(wdLocation: any, dictionaries:any): any {
-    console.log("dictionaries: ",dictionaries);
     let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
     let statesString = "";
     let countiesString = "";
@@ -25,20 +24,14 @@ export class StatesCountiesPipe implements PipeTransform {
       } else if (location.statewideFlag && location.hasOwnProperty('counties')){
         countiesString = countiesString.concat("All Counties except: ");
         for (let countyElement of location.counties) {
-          county = null;
           resultCounty = filterMultiArrayObjectPipe.transform([countyElement.toString()], dictionaries.county, 'element_id', false, "");
-          if (county == null) {
             county = (resultCounty instanceof Array && resultCounty.length > 0) ? resultCounty[0].value : [];
-          }
           countiesString = countiesString.concat(county + ", ");
         }
       } else if(!location.statewideFlag)
         for (let countyElement of location.counties) {
-          county = null;
           resultCounty = filterMultiArrayObjectPipe.transform([countyElement.toString()], dictionaries.county, 'element_id', false, "");
-          if (county == null) {
             county = (resultCounty instanceof Array && resultCounty.length > 0) ? resultCounty[0].value : [];
-          }
           countiesString = countiesString.concat(county + ", ");
         }
     }
