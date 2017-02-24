@@ -20,6 +20,7 @@ export class App{
 
   keyword: string = "";
   index: string = "";
+  isActive: boolean = false;
   qs: any = {};
 
   showOverlay = false;
@@ -35,6 +36,7 @@ export class App{
       data => {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
+        this.isActive = this.qs['isActive'] === true ? true : this.isActive;
       });
     this._router.events.subscribe(
       val => {
@@ -60,6 +62,7 @@ export class App{
     }
 
     qsobj['page'] = 1;
+    qsobj['isActive'] = this.qs['isActive'];
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
