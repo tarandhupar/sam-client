@@ -1,7 +1,7 @@
 <div class="usa-grid">
 	<aside *ngIf="showCustomSidebar" class="usa-width-one-fourth">
 		<div sam-sticky container="occupy-page" limit="1200">
-			<ng-container *ngIf="logoData===null">
+			<ng-container *ngIf="logoData==null">
 	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
 	    </ng-container>
 	    <ng-container *ngIf="logoData">
@@ -13,7 +13,7 @@
 	</aside>
 	<div class="usa-width-one-fourth" *ngIf="showGeneratedSidebar">
 		<div container="occupy-page" limit="1200" sam-sticky>
-			<ng-container *ngIf="logoData===null">
+			<ng-container *ngIf="logoData==null">
 	      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
 	    </ng-container>
 	    <ng-container *ngIf="logoData">

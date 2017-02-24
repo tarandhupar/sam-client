@@ -19,7 +19,7 @@ import { ReplaySubject, Observable } from 'rxjs';
           </ng-container>
         </div>
         <div class="card-secure-content clearfix">
-          <div *ngIf="errorOrganization || logoUrl===null" class="logo-small"  style="float: left; margin-right: 10px;">
+          <div *ngIf="errorOrganization || logoUrl==null" class="logo-small"  style="float: left; margin-right: 10px;">
             <img src="src/assets/img/logo-not-available.png" alt="Logo Not Available">
           </div>
           <div *ngIf="logoUrl && !errorOrganization" class="logo-small"  style="float: left; margin-right: 10px;">
