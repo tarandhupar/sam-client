@@ -13,7 +13,7 @@
   ></agencyPicker>
   <samSelect name="role" label="Role" (modelChange)="onRoleChange($event)" [options]="roleOptions"></samSelect>
   <samSelect name="domain" label="Domain" (modelChange)="onDomainChange($event)" [options]="domainOptions"></samSelect>
-  <ng-container *ngIf="true || role && domain && orgs.length">
+  <ng-container *ngIf="arePermissionsFetched()">
     <div class="m_B-1x"><label>Permissions</label></div>
     <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
       <li  *ngFor="let object of objects" class="object-item">
@@ -27,13 +27,13 @@
       </li>
     </ul>
   </ng-container>
-  <p *ngIf="!(role && domain && orgs.length)"><em>Select an organization role and domain</em></p>
+  <p *ngIf="!arePermissionsFetched()"><em>Select an organization role and domain</em></p>
   <samTextArea name="options-response" label="Messages:" placeholder="(Optional) Include a message with your response" [(value)]="messages"></samTextArea>
   <div>
     <p class="pull-right">
       <a [routerLink]="['../access']"><button class="usa-button usa-button-outline">Cancel</button></a>
       &nbsp;
-      <button class="usa-button usa-button-primary" (click)="onGrantClick()">Grant</button>
+      <button class="usa-button usa-button-primary" (click)="onGrantClick()" (disabled)="isGrantDisabled()">Grant</button>
     </p>
   </div>
 </div>

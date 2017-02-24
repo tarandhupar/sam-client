@@ -2,6 +2,11 @@ import { UserAccessInterface } from "api-kit/access/access.interface";
 import { PropertyCollector } from "../app-utils/property-collector";
 import * as _ from 'lodash';
 
+export interface FunctionInterface {
+  id: string|number,
+  permissions: Array<string|number>
+}
+
 export class UserAccessModel {
   private _raw: UserAccessInterface;
   private collector: PropertyCollector;
@@ -15,7 +20,7 @@ export class UserAccessModel {
     return a;
   }
 
-  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions): UserAccessInterface {
+  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>): UserAccessInterface {
     let functionMapContent = functions.map(fun => {
       return {
         function: fun.id,

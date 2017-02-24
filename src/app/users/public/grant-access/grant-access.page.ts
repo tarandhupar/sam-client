@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { UserAccessService } from "../../../../api-kit/access/access.service";
 import { UserAccessModel } from "../../access.model";
 import { ActivatedRoute } from "@angular/router";
-import {Observable} from "rxjs";
-import {AlertFooterService} from "../../../alerts/alert-footer/alert-footer.service";
+import { Observable } from "rxjs";
+import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.service";
+import {UserAccessInterface} from "../../../../api-kit/access/access.interface";
 
 
 @Component({
@@ -22,6 +23,9 @@ export class GrantAccessPage implements OnInit {
   // these two will be replaced with real data on the access object
   private permissions = [];
   private objects = [];
+
+  // the form model for functions and permissions
+  private functions = [];
 
   private messages: string = "";
 
@@ -84,7 +88,24 @@ export class GrantAccessPage implements OnInit {
     }
   }
 
+  arePermissionsFetched() {
+    return this.role && this.domain && this.orgs.length;
+  }
+
+  isGrantDisabled() {
+    return !this.arePermissionsFetched();
+  }
+
   onGrantClick() {
+    let orgIds = this.orgs.map(org => org.value);
+    let funcs = this.functions;
+
+    let access: UserAccessInterface = UserAccessModel.FormInputToAccessObject(
+      this.userName,
+      this.role,
+      this.domain,
+      orgIds,
+      funcs);
 
   }
 }
