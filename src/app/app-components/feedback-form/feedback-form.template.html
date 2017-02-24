@@ -1,0 +1,75 @@
+<div *ngIf="showFeedback" class="feedback-backdrop"></div>
+<div #feedbackRoot class="sam-feedback">
+  <div *ngIf="!showFeedback" class="feedback-icon-div" (click)="toggleFeedback()">
+    <span>Feedback</span> <br>
+    <span class="feedback-icon-font"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+  </div>
+
+  <div *ngIf="showFeedback" class="feedback-form-div relative">
+    <h4 class="m_B-2x">What you think matters!</h4>
+    <span class="feedback-icon-font"><i class="fa fa-angle-double-right hide-form-icon" aria-hidden="true" (click)="toggleFeedback()"></i></span>
+    <div class="feedback-question-div usa-grid-full m_B-3x m_R-4x">
+      <span>{{curQueIndex+1}}. {{curQuestion.description}}</span>
+
+       <!--Rating Question-->
+      <div class="feedback-question-rating m_T-2x" *ngIf="isCurrentQType('rating')">
+        <span class="usa-width-one-half m_R-0 feedback-icon-font"><i class="fa {{ratingThumbUpClass}} thumb" aria-hidden="true" (click)="onRatingClick(true)"></i></span>
+        <span class="usa-width-one-half feedback-icon-font"><i class="fa {{ratingThumbDownClass}} thumb" aria-hidden="true" (click)="onRatingClick(false)"></i></span>
+      </div>
+
+      <!--Checkbox Question-->
+      <div class="feedback-question-checkbox m_T-2x usa-grid" *ngIf="isCurrentQType('multiSelection')">
+        <div class="usa-width-one-half m_R-0 m_B-1x" *ngFor="let option of curQuestion.selections">
+          <input class="usa-width-one-half" type="checkbox" (change)="onCbxChange($event.target.checked, option)"><label class="m_T-0">{{option}}</label>
+        </div>
+      </div>
+
+      <!--Radio Button Question-->
+      <div class="feedback-question-radio m_T-2x usa-grid" *ngIf="isCurrentQType('singleSelection')">
+        <div class="usa-width-one-half m_B-1x p_L-4x m_R-0">
+          <input class="usa-width-one-fourth" type="radio" (change)="onRadioBtnChange('Yes')" [checked]="radioBtnValue === 'Yes'"><label class="m_T-0 marginCenter" (click)="onRadioBtnChange('Yes')">Yes</label>
+        </div>
+        <div class="usa-width-one-half m_B-1x p_L-4x">
+          <input class="usa-width-one-fourth" type="radio" (change)="onRadioBtnChange('No')" [checked]="radioBtnValue === 'No'"><label class="m_T-0 marginCenter" (click)="onRadioBtnChange('No')">No</label>
+        </div>
+
+      </div>
+
+      <!--TextBox Question-->
+      <div class="feedback-question-textarea m_T-2x" *ngIf="isCurrentQType('text')">
+        <textarea class="usa-width-one-whole" name="text" rows="3" placeholder="Leave a comment" (change)="onTextAreaChange()" [(ngModel)]="textareaModel"></textarea>
+      </div>
+
+      <!--Last Question-->
+      <div class="feedback-question-fin m_T-2x m_B-2x usa-grid" *ngIf="isCurrentQType('last')">
+        <div class="usa-width-one-half m_B-1x p_L-4x m_R-0">
+          <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('Yes')" [checked]="emailRadioBtnValue === 'Yes'"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('Yes')">Yes</label>
+        </div>
+        <div class="usa-width-one-half m_B-1x p_L-4x">
+          <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('No')" [checked]="emailRadioBtnValue === 'No'"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('No')">No</label>
+        </div>
+        <div class="usa-width-one-whole m_T-2x" *ngIf="emailRadioBtnValue === 'Yes'">
+          <input class="usa-width-two-thirds m_L-3x " style="height: 36px;" name="text" placeholder="Please provide your email">
+          <button class="usa-button-primary m_0">Submit</button>
+        </div>
+        <div class="usa-width-one-whole m_T-2x" *ngIf="emailRadioBtnValue === 'No'" style="text-align: center">
+          <h4>Thanks!</h4>
+        </div>
+      </div>
+
+      <div class="usa-width-one-whole">
+        <button class="usa-button-transparent pull-left m_0" style="padding-left: 0" (click)="onPreviousClick()" *ngIf="isPrevButtonOn()"><span><i class="fa fa-angle-left"></i>Previous</span></button>
+        <button class="usa-button-transparent pull-right m_0" style="padding-right: 0" (click)="onNextClick()" *ngIf="isNextButtonOn()"><span>Next<i class="fa fa-angle-right"></i></span></button>
+      </div>
+      <div class="feedback-pagination">
+        <span>
+          <span class="feedback-page" *ngFor="let page of getPaginationArray()" [ngClass]="getPageClass(page)">
+            <span *ngIf="!isPageEdited(page) || isCurrentPage(page)">{{page+1}}</span>
+            <i class="fa fa-check" *ngIf="isPageEdited(page) && !isCurrentPage(page)"></i>
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+</div>
