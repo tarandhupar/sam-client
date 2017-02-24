@@ -89,6 +89,14 @@ export class MigrationsComponent {
     });
   }
 
+  ngAfterViewInit() {
+    let fragment = window.location.hash;
+    if(fragment) {
+      this.anchorTo('');
+      this.anchorTo(fragment);
+    }
+  }
+
   ngDoCheck() {
     let changes = this.differ.diff(this.store);
     if(changes) {
@@ -182,6 +190,10 @@ export class MigrationsComponent {
     }
 
     return ((control.touched && control.dirty) || (this.migrationForm.touched && this.migrationForm.dirty)) && this.states.submitted ? errors[0] : '';
+  }
+
+  anchorTo(id) {
+    window.location.hash = id;
   }
 
   migrate() {
