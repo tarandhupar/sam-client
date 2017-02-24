@@ -1,8 +1,8 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
-    <div class="usa-forgot-init" #form>
+    <div class="usa-forgot-init">
       <form (ngSubmit)="verify()" class="usa-form-large" autocomplete="off">
-        <fieldset>
+        <fieldset #form>
           <h2>Answer your security questions</h2>
           <span>
             Provide the answer to the following question: You have 7 attempts to answer two security
@@ -37,15 +37,14 @@
             </li>
           </ul>
         </fieldset>
+        <samAlert [type]="states.alert.type"
+                  [title]="states.alert.title"
+                  [description]="states.alert.message"
+                  [target]="form"
+                  [placement]="states.alert.placement"
+                  [(hidden)]="!states.alert.show"
+                  showClose="true"></samAlert>
       </form>
     </div>
   </div>
 </div>
-
-<samAlert [type]="states.alert.type"
-          [title]="states.alert.title"
-          [description]="states.alert.message"
-          [target]='form'
-          [placement]='states.alert.placement'
-          [(hidden)]="!states.alert.show"
-          showClose="true"></samAlert>

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export interface Offset {
   top?:  number,
@@ -14,8 +15,8 @@ export interface Offset {
  * @Input class: Sets additional classes
  * @Input showClose: Shows close button
  * @Input dismissTimer: Auto-dismiss timer (ms)
- * @Input target: Element to position alert against
- * @Input placement: Position against element '<vertical> <horizontal>' [top|right|bottom|center]
+ * @Input target: Element to position alert against (Either native HTMLElement/selector/ElementRef)
+ * @Input placement: Position against element '<vertical> <horizontal>' or '<horizontal> <vertical>' [top|right|bottom|center]
  * @Input offset: Any additional { top: 0, left: 0 } offsets after x, y has been applied
  *
  * @Output dismiss: dismiss event emitter
@@ -32,7 +33,7 @@ export class SamAlertComponent {
   @Input() showClose: boolean = false;
   @Input() dismissTimer = 0;
   @Input() target: any;
-  @Input() placement: string = 'top';
+  @Input() placement: string;
   @Input() offset: Offset = {
     top: 0,
     left: 0
@@ -48,6 +49,32 @@ export class SamAlertComponent {
     show: true
   };
 
+  private store = {
+    target: {
+      position: {},
+      size: {}
+    },
+
+    source: {
+      position: {},
+      size: {},
+      isOutOfViewport: false
+    }
+  };
+
+  private debug = {
+    enabled: false,
+    style: {
+      'position':        'fixed',
+      'left':            '20px',
+      'bottom':          '20px',
+      'padding':         '10px',
+      'backgroundColor': 'rgba(255,255,255,0.9)',
+      'fontSize':        '1.2rem',
+      'fontWeight':      '700'
+    }
+  }
+
   private types:any = {
     'success': 'usa-alert-success',
     'warning': 'usa-alert-warning',
@@ -57,6 +84,8 @@ export class SamAlertComponent {
 
   private position: any = {};
   private selectedType: string = this.types['success'];
+
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     if(!this.typeNotDefined()) {
@@ -70,6 +99,12 @@ export class SamAlertComponent {
     }
 
     this.states.loaded = true;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(this.states.show && changes['target'] !== undefined ) {
+      this.setPosition();
+    }
   }
 
   @Input()
@@ -119,11 +154,20 @@ export class SamAlertComponent {
   }
 
   private setPosition() {
+    if(this.target == undefined) {
+      return;
+    }
+
     let body = document.body,
         target = this.target,
         source = this.alert.nativeElement,
         type = target.constructor.name,
-        placement = (this.placement || 'top').replace(/\s+/, ' '),
+        viewport = {
+          width: Math.max(document.documentElement.clientWidth, window.innerWidth || 0),
+          height: Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+        },
+
+        placement = (this.placement || '').replace(/\s+/, ' '),
         offsets,
         dimensions,
 
@@ -133,12 +177,16 @@ export class SamAlertComponent {
         },
 
         style = {
-          position: 'relative',
+          position: 'absolute',
+          width: 0,
+          height: 0,
           top: 0,
           left: 0,
-          width: 0,
-          height: 0
-        };
+          margin: 0,
+          zIndex: '1337'
+        },
+
+        isOutOfViewport;
 
     /**
      * Select DOM Target
@@ -173,9 +221,9 @@ export class SamAlertComponent {
      * Get Elements' offset positions
      */
     offsets = {
-      body: this.getPosition(body),
-      target: this.getPosition(target),
-      source: this.getPosition(source)
+      body: this.getPosition(body, false),
+      target: this.getPosition(target, false),
+      source: this.getPosition(source, true)
     };
 
     /**
@@ -195,16 +243,17 @@ export class SamAlertComponent {
 
     style.width = dimensions.source.width;
     style.height = dimensions.source.height;
+
     /**
      * Line up the top left corner positions of the alert to the target element
      */
-   style.top += offsets.target.top;
-   style.left += offsets.target.left;
+    style.top += offsets.target.top;
+    style.left += offsets.target.left;
 
     /**
      * Determine placement settings and process position adjustments
      */
-    placement = placement.indexOf(' ') > -1 ? placement : `${placement}`;
+    placement = (placement.indexOf(' ') > -1 ? placement : `${placement}`) || '';
 
     if(placement.search(/(^top)|(top$)/) > -1)
       style.top -= dimensions.source.height;
@@ -215,37 +264,70 @@ export class SamAlertComponent {
     if(placement.search(/(^right)|(right$)/) > -1)
       style.left += dimensions.target.width;
 
-    if(placement.search(/^center (top|bottom|auto)$/) > -1)
+    if(placement.search(/^(center (top|bottom))|((top|bottom) center)$/) > -1)
       style.left += (dimensions.target.width / 2) - (dimensions.source.width / 2);
-    if(placement.search(/^(left|right|auto) center$/) > -1)
+    if(placement.search(/^(center (left|right))|((left|right) center)/) > -1)
       style.top += (dimensions.target.height / 2) - (dimensions.source.height / 2);
+
+    /**
+     * Viewport Collision Support
+     */
+    isOutOfViewport = (
+      (style.left + style.width) > viewport.width ||
+      style.left < 0 ||
+      (style.top + style.height) > viewport.height ||
+      style.top < 0
+    );
+
+    if(isOutOfViewport) {
+      offsets.source.x += Math.abs(style.left);
+      offsets.source.y += Math.abs(style.top);
+
+      //style.left = Math.max(0, Math.min(viewport.width - style.width, offsets.source.x + style.width));
+      //style.top = Math.max(0, Math.min(viewport.height - style.height, offsets.source.y + style.height));
+    }
 
     // Apply @Input offsets
     style.top += this.offset.top || 0;
     style.left += this.offset.left || 0;
 
-    // Adjust offsets if off viewport (Should happen if target is body)
-    /*
-    if(style.top < 0 || style.top > offsets.viewport.height)
-      style.top = Math.min(offsets.viewport.height, Math.max(0, style.top)) + (style.top < 0 ? offsets.source.height : -offsets.source.height);
-    if(style.left < 0 || style.left > offsets.viewport.width)
-      style.left = Math.min(offsets.viewport.width, Math.max(0, style.left)) + (style.left < 0 ? offsets.source.width : -offsets.source.width);
-    */
+    // Adjust for scroll
+    style.top -= window.pageYOffset;
+    style.left -= window.pageXOffset;
 
-    this.position = this.toPx(style);
+    /**
+     * Debugging Data for Positiong
+     */
+    this.store.target.position = this.getPosition(target, false);
+    this.store.source.position = this.getPosition(source, false);
+
+    this.store.target.size = this.getDimensions(target);
+    this.store.source.size = this.getDimensions(source);
+
+    this.store.source.isOutOfViewport = isOutOfViewport;
+
+    source.style = this.toPx(style);
   }
 
   private getDimensions(element) {
-    let computed = window.getComputedStyle(element),
-        dimensions = {
-          width: +parseFloat(computed.width).toFixed(1),
-          height: +parseFloat(computed.height).toFixed(1)
-        };
+    let computed,
+        dimensions,
+        display;
+
+    display = element.style.display;
+    element.style.display = 'inline-block';
+    computed = window.getComputedStyle(element),
+    dimensions = {
+      width: +parseFloat(computed.width || 0).toFixed(1),
+      height: +parseFloat(computed.height || 0).toFixed(1)
+    };
+
+    element.style.display = display;
 
     return dimensions;
   }
 
-  private getPosition(element) {
+  private getPosition(element, reset: boolean) {
     let position = {
           top:  0,
           left: 0,
@@ -253,7 +335,21 @@ export class SamAlertComponent {
           y:    0
         },
 
-        bounds;
+        styles = element.style,
+        newStyles = 'position:fixed;margin:0px;visibility:visible;display:block;',
+        bounds,
+
+        intLevel = 0;
+
+    reset = reset || false;
+
+    if(element.tagName !== 'BODY') {
+      if(reset) {
+        newStyles += 'top:0px;left:0px;';
+      }
+
+      element.style = newStyles;
+    }
 
     while(element) {
       bounds = element.getBoundingClientRect();
@@ -261,7 +357,13 @@ export class SamAlertComponent {
       position.top = Math.max(position.top, bounds.top);
       position.left = Math.max(position.left, bounds.left);
 
+      if(element.tagName !== 'BODY' && !intLevel) {
+        element.style = styles;
+      }
+
       element = element.offsetParent;
+
+      intLevel++;
     }
 
     position.x = position.left * -1;
@@ -272,14 +374,17 @@ export class SamAlertComponent {
 
   private toPx(styles) {
     const px = (value) => `${value}px`;
-    let style;
+    let inlineStyles = '',
+        style;
 
     for(style in styles) {
       if(typeof styles[style] == 'number') {
         styles[style] = px(styles[style]);
       }
+
+      inlineStyles += `${style}: ${styles[style]};`;
     }
 
-    return styles
+    return inlineStyles;
   }
 }
