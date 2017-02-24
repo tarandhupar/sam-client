@@ -43,13 +43,13 @@ describe('DisplayPageTests', () => {
   it('logo test', ()  => {
     let fakepath = "/this/is/a/fake/path.png";
     //comp.sidenavConfig = {};
-    comp.logoSrc = fakepath;
+    comp.logoData = {logo: fakepath, info: ""};
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       expect( fixture.debugElement.query( By.css('.sidenav-logo') ).nativeElement.getAttribute("src") ).toEqual(fakepath);
     });
 	});
-  
+
   it('sidenav test', ()  => {
     comp.sidenavConfig = {
       label: "test",
@@ -80,7 +80,7 @@ describe('DisplayPageTests', () => {
         }
       ]
     };
-    
+
     fixture.detectChanges();
     fixture.whenStable().then(() => {
       //console.log(fixture.debugElement.query( By.css('.usa-sidenav-list li:first-child a') ).nativeElement.innerHTML);
