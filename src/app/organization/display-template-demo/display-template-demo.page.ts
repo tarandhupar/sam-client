@@ -72,8 +72,10 @@ export class OrganizationDisplayPageDemoPage implements OnInit, OnDestroy {
 
     this.fhService.getOrganizationLogo(apiSubject,
       (logoData) => {
-        this.logoUrl = logoData.logo;
-        this.logoInfo = logoData.info;
+        if (logoData != null) {
+          this.logoUrl = logoData.logo;
+          this.logoInfo = logoData.info;
+        }
       }, (err) => {
         this.errorLogo = true;
     });

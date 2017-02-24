@@ -71,8 +71,10 @@ export class FHFeaturedResult implements OnInit {
     this.fhService.getOrganizationById(orgId, true).subscribe(organizationSubject);
     this.fhService.getOrganizationLogo(organizationSubject,
     (logoData) => {
-      this.logoUrl = logoData.logo;
-      this.logoInfo = logoData.info;
+      if (logoData != null) {
+        this.logoUrl = logoData.logo;
+        this.logoInfo = logoData.info;
+      }
     }, (err) => {
       this.errorOrganization = true;
     });

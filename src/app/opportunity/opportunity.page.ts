@@ -333,8 +333,10 @@ export class OpportunityPage implements OnInit {
         this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
         this.fhService.getOrganizationLogo(organizationSubject,
           (logoData) => {
-            this.logoUrl = logoData.logo;
-            this.logoInfo = logoData.info;
+            if (logoData != null) {
+              this.logoUrl = logoData.logo;
+              this.logoInfo = logoData.info;
+            }
           }, (err) => {
             this.errorLogo = true;
           });
