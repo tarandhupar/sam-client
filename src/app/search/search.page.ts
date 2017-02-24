@@ -45,6 +45,7 @@ export class SearchPage implements OnInit{
         this.isActive = data['isActive'] && data['isActive'] === "true" ? true : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.runSearch();
+        this.loadParams();
 		});
 	}
 
