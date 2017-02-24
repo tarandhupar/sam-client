@@ -74,6 +74,8 @@ export class FHFeaturedResult implements OnInit {
       if (logoData != null) {
         this.logoUrl = logoData.logo;
         this.logoInfo = logoData.info;
+      } else {
+        this.errorOrganization = true;
       }
     }, (err) => {
       this.errorOrganization = true;

@@ -336,6 +336,8 @@ export class OpportunityPage implements OnInit {
             if (logoData != null) {
               this.logoUrl = logoData.logo;
               this.logoInfo = logoData.info;
+            } else {
+              this.errorLogo = true;
             }
           }, (err) => {
             this.errorLogo = true;
