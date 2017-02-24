@@ -12,7 +12,7 @@ export class StaticComponent {
   data: Object;
   totalReportCount: number = 0;
     constructor(private http: Http) {
-      http.get('assets/staticReports.json')
+      http.get('src/assets/staticReports.json')
         .map(res => res.json())
         .subscribe(data => this.data = data,
                     err => console.log(err),
