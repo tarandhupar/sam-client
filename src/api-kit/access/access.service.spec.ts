@@ -48,8 +48,6 @@ describe('UserAccessService', () => {
     service.getPermissions(1);
   })));
 
-
-
   it('should get roles', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
     backend.connections.subscribe((connection: MockConnection) => {
       expect(connection.request.method).toBe(RequestMethod.Get);
