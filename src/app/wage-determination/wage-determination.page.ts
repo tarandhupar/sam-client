@@ -158,8 +158,8 @@ export class WageDeterminationPage implements OnInit {
 
   private getServices(combinedAPI: Observable<any>) {
     combinedAPI.subscribe(([wageDeterminaton, dictionaries]) => {
-      if (wageDeterminaton.services != null){
-          let servicesString = "";
+      if (wageDeterminaton.services != null) {
+        let servicesString = "";
         for (let element of wageDeterminaton.services) {
           let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], dictionaries.services, 'element_id', false, "");
           let services = (result instanceof Array && result.length > 0) ? result[0].value : [];
