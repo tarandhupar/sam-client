@@ -4,7 +4,7 @@ import { Router,NavigationExtras,NavigationEnd } from '@angular/router';
 * DisplayPageComponent - template component for generating display page
 *
 * @Input sidenavConfig: any - configuration for generating a sidenav
-* @Input logoSrc: string - source path for adding a logo image on the sidenav
+* @Input logoData: any - data for adding a logo image on the sidenav
 * @Input sidebarToggle: boolean - toggles the sidenav in the layout, defaults to true
 */
 @Component({
@@ -13,7 +13,7 @@ import { Router,NavigationExtras,NavigationEnd } from '@angular/router';
 })
 export class DisplayPageComponent implements OnInit {
   @Input() sidenavConfig: any;
-  @Input() logoSrc: string;
+  @Input() logoData: any;
   @Input() sidebarToggle = true;
   contentClass = "usa-width-three-fourths";
 	showCustomSidebar = true;
@@ -42,7 +42,7 @@ export class DisplayPageComponent implements OnInit {
 			this.showGeneratedSidebar = true;
 		}
   }
-	
+
 	sidenavPathEvtHandler(data){
 		if(data.charAt(0)=="#"){
 			//this.router.navigate([], { fragment: data });

@@ -1,5 +1,6 @@
 import { Component, Directive, Input, ElementRef, Renderer, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
+import { SortConfig } from '../interfaces';
 /**
  * SearchLayoutComponent - template component for generating a search page
  */
@@ -12,10 +13,6 @@ export class SearchLayoutComponent {
   @Input() currentPage: number;
   @Input() totalElements: number;
   @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
-  public contentClass: string = 'usa-width-three-fourths';
-  public showCustomSidebar: boolean = true;
-  public showGeneratedSidebar: boolean = false;
-  public displayNumber: number = 10;
   public sortConfig: SortConfig = {
     options: [
       {value: '', label: 'Relevant', name: 'relevant'},
@@ -26,7 +23,6 @@ export class SearchLayoutComponent {
     label: 'Sort',
     name: 'sort'
   };
-  public sortModel: string = '';
   private _displayFilters: boolean = false;
 
   pageChangeHandler(event): void {
@@ -54,17 +50,3 @@ export class SearchLayoutComponent {
     return this._displayFilters ? 'fa fa-minus' : 'fa fa-plus';
   }
 }
-
-export interface SortConfig {
-  options: Array<SortOption>;
-  disabled: boolean;
-  label: string;
-  name: string;
-}
-
-export interface SortOption {
-  value: string;
-  label: string;
-  name: string;
-}
-

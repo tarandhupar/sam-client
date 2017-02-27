@@ -9,8 +9,8 @@ describe('OpportunityLabelPipe', () => {
   it('transforms "a" to "Award Notice"', () => {
     expect(pipe.transform('a')).toBe('Award Notice');
   });
-  it('transforms "m" to "Modification/Amendment/Cancel"', () => {
-    expect(pipe.transform('m')).toBe('Modification/Amendment/Cancel');
+  it('transforms "m" to "Update/Amendment"', () => {
+    expect(pipe.transform('m')).toBe('Update/Amendment');
   });
   it('transforms "r" to "Sources Sought"', () => {
     expect(pipe.transform('r')).toBe('Sources Sought');

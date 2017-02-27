@@ -6,8 +6,10 @@ import { WageDeterminationService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 import * as _ from 'lodash';
-import {FilterMultiArrayObjectPipe} from "../app-pipes/filter-multi-array-object.pipe";
+import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-object.pipe";
 import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
+import { StatesCountiesPipe } from "./pipes/states-counties.pipe";
+
 
 @Component({
   moduleId: __filename,
@@ -75,23 +77,24 @@ export class WageDeterminationPage implements OnInit {
       this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(this.referenceNumber,this.revisionNumber).subscribe(wgSubject);
       // run whenever api data is updated
       wgSubject.subscribe(api => { // do something with the wg api
-      this.wageDetermination = api;
+        this.wageDetermination = api;
 
-      let wageDeterminationSideNavContent = {
-        "label": "Wage Determination",
-        "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
-        "children": [
-          {
-            "label": "SCA WD #" + this.wageDetermination.fullReferenceNumber,
-            "field": "wage-determination",
-          }
-        ]
-      };
-      this.updateSideNav(wageDeterminationSideNavContent);
-    }, err => {
-      console.log('Error logging', err);
+        let wageDeterminationSideNavContent = {
+          "label": "Wage Determination",
+          "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
+          "children": [
+            {
+              "label": "SCA WD #" + this.wageDetermination.fullReferenceNumber,
+              "field": "wage-determination",
+            }
+          ]
+        };
+        this.updateSideNav(wageDeterminationSideNavContent);
+      }, err => {
+        console.log('Error logging', err);
+      });
     });
-    })
+
     return wgSubject;
   }
 
@@ -148,32 +151,13 @@ export class WageDeterminationPage implements OnInit {
 
   private getStatesAndCounties(combinedAPI: Observable<any>){
     combinedAPI.subscribe(([wageDeterminaton, dictionaries]) => {
-      let statesString = "";
-      let countiesString = "";
-      let county:string;
-      let resultCounty:any;
-      for (let location of wageDeterminaton.location) {
-        let state:string;
-        let resultState = this.FilterMultiArrayObjectPipe.transform([location.state], dictionaries.state, 'element_id', false, "");
-        state = (resultState instanceof Array && resultState.length > 0) ? resultState[0].value : [];
-        statesString = statesString.concat(state + ", ");
-        countiesString = countiesString.concat(state + " - ");
-        for (let countyElement of location.counties) {
-          county = null;
-          (countyElement == null) ? (county = "Statewide") : (resultCounty = this.FilterMultiArrayObjectPipe.transform([countyElement.toString()], dictionaries.county, 'element_id', false, ""));
-          if (county == null) {
-            county = (resultCounty instanceof Array && resultCounty.length > 0) ? resultCounty[0].value : [];
-          }
-          countiesString = countiesString.concat(county + ", ");
-        }
-      }
-      countiesString = countiesString.substring(0, countiesString.length - 2);
-      countiesString = countiesString.concat("\n");
-      statesString = statesString.substring(0, statesString.length - 2);
-      this.states = statesString;
-      this.counties = countiesString;
+      let statesCountiesPipe = new StatesCountiesPipe();
+      let strings = statesCountiesPipe.transform(wageDeterminaton.location, dictionaries);
+      this.states = strings.states;
+      this.counties = strings.counties;
     })
   }
+
   private getServices(combinedAPI: Observable<any>) {
     combinedAPI.subscribe(([wageDeterminaton, dictionaries]) => {
       if (wageDeterminaton.services != null){
@@ -187,5 +171,10 @@ export class WageDeterminationPage implements OnInit {
         this.services = servicesString;
       }
     })
+  }
+
+  public openDocumentPrintPage() {
+    var win = window.open('', 'Document');
+    win.document.body.innerHTML = '<pre>' + this.wageDetermination.document + '</pre>';
   }
 }

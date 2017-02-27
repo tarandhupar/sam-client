@@ -18,7 +18,6 @@ export class SearchPage implements OnInit{
 	pageNum = 0;
 	totalCount: any= 0;
 	totalPages: any= 0;
-	pageNumPaginationPadding = 2;
 	showPerPage = 10;
 	data = [];
   featuredData = [];
@@ -26,6 +25,14 @@ export class SearchPage implements OnInit{
 	initLoad = true;
 	showOptional:any = (SHOW_OPTIONAL=="true");
   qParams:any = {};
+  isActive: boolean = false;
+  checkboxModel: any = ['true'];
+  checkboxConfig = {
+    options: [
+      {value: 'true', label: 'Active', name: 'checkbox-active'},
+    ],
+    name: 'active-filter'
+  };
 
 	constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
 	ngOnInit() {
@@ -35,7 +42,10 @@ export class SearchPage implements OnInit{
 				this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
 				this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
+        this.isActive = data['isActive'] && data['isActive'] === "true" ? true : this.isActive;
+        this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.runSearch();
+        this.loadParams();
 		});
 	}
 
@@ -68,11 +78,14 @@ export class SearchPage implements OnInit{
 		if(!newsearch && this.pageNum>=0){
 			qsobj['page'] = this.pageNum+1;
 		}
-		else{
-			qsobj['page'] = 1;
-		}
+		else {
+      qsobj['page'] = 1;
+    }
+    qsobj['isActive'] = this.isActive;
+
 		return qsobj;
   }
+  
 	runSearch(){
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
@@ -108,7 +121,8 @@ export class SearchPage implements OnInit{
 			keyword: this.keyword,
 			index: this.index,
 			pageNum: this.pageNum,
-      organizationId: this.organizationId
+      organizationId: this.organizationId,
+      isActive: this.isActive
 		}).subscribe(
 			data => {
 	      if(data._embedded && data._embedded.results){
@@ -126,7 +140,7 @@ export class SearchPage implements OnInit{
               }
               data._embedded.results[i].parentOrganizationHierarchy.name = new CapitalizePipe().transform(data._embedded.results[i].parentOrganizationHierarchy.name.replace(/[_-]/g, " "));
             }
-            if(data._embedded.results[i]._type=="FH" && data._embedded.results[i].type) {
+            if(data._embedded.results[i]._type=="federalOrganization" && data._embedded.results[i].type) {
               data._embedded.results[i].type = new CapitalizePipe().transform(data._embedded.results[i].type);
             }
 	        }
@@ -146,8 +160,7 @@ export class SearchPage implements OnInit{
       }
     );
     //construct qParams to pass parameters to object view pages
-    this.qParams['keyword'] = this.keyword;
-    this.qParams['index'] = this.index;
+    this.qParams = this.setupQS(false);
 	}
 
 	pageChange(pagenumber){
@@ -156,25 +169,18 @@ export class SearchPage implements OnInit{
 		let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
+
+    document.getElementById('search-results').getElementsByTagName('div')[0].focus();
     this.router.navigate(['/search'],navigationExtras);
 	}
 
-	createRange(number){
-	  var items: number[] = [];
-	  for(var i = 1; i <= number; i++){
-	     items.push(i);
-	  }
-	  return items;
-	}
-
-	showPageButton(idx){
-		var retVal = false;
-		if(idx==0 || idx==this.totalPages-1){
-			retVal = true;
-		} else {
-			retVal = Math.abs(this.pageNum-idx)<=this.pageNumPaginationPadding;
-		}
-
-		return retVal;
-	}
+  activeFilter(event) {
+    this.isActive = !this.isActive;
+    this.pageNum = 0;
+    var qsobj = this.setupQS(false);
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/search'], navigationExtras);
+  }
 }

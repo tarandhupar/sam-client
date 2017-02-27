@@ -80,7 +80,8 @@ export class OpportunityPage implements OnInit {
   attachment: any;
   relatedOpportunities:any;
   relatedOpportunitiesMetadata:any;
-  logoUrl: string;
+  public logoUrl: string;
+  public logoInfo: any;
   opportunityAPI: any;
 
   errorOrganization: any;
@@ -115,14 +116,14 @@ export class OpportunityPage implements OnInit {
     private opportunityService:OpportunityService,
     private fhService:FHService,
     private location: Location) {
-      
+
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
         this.pageFragment = tree.fragment;
         if (this.pageFragment) {
           const element = document.getElementById(tree.fragment);
-          if (element) { 
+          if (element) {
             element.scrollIntoView();
           }
         }
@@ -152,26 +153,26 @@ export class OpportunityPage implements OnInit {
     // Combined observable will not trigger until both APIs have emitted at least one value
     let parentAndOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
     this.setDisplayFields(parentAndOpportunityAPI);
-    
+
     // Assumes DOM its ready when opportunites, packages and related opportutnies API calls are done
     // Observable triggers when each API has emitted at least one value or error
     // and waits for 2 seconds for package's animation to finish
     let DOMReady$ = Observable.zip(opportunityAPI, relatedOpportunities, packagesOpportunities).delay(2000);
     this.DOMComplete(DOMReady$);
   }
-  
+
   private DOMComplete(observable){
     observable.subscribe(
       success => {
-        if (this.pageFragment && document.getElementById(this.pageFragment)) { 
-          document.getElementById(this.pageFragment).scrollIntoView(); 
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
         }
-      }, 
+      },
       error => {
         // Sometimes api calls return an error
-        // we still need to check if dom element exist on page 
-        if (this.pageFragment && document.getElementById(this.pageFragment))  { 
-          document.getElementById(this.pageFragment).scrollIntoView(); 
+        // we still need to check if dom element exist on page
+        if (this.pageFragment && document.getElementById(this.pageFragment))  {
+          document.getElementById(this.pageFragment).scrollIntoView();
         }
       }
     );
@@ -331,8 +332,13 @@ export class OpportunityPage implements OnInit {
       if(api.data.organizationId != null) {
         this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
         this.fhService.getOrganizationLogo(organizationSubject,
-          (logoUrl) => {
-            this.logoUrl = logoUrl;
+          (logoData) => {
+            if (logoData != null) {
+              this.logoUrl = logoData.logo;
+              this.logoInfo = logoData.info;
+            } else {
+              this.errorLogo = true;
+            }
           }, (err) => {
             this.errorLogo = true;
           });
@@ -493,7 +499,10 @@ export class OpportunityPage implements OnInit {
 
       this.displayField = {}; // for safety, clear any existing values
 
-      switch (opportunity.data.type) {
+      // if type is Update/Amendment then display like original type
+      let type = opportunity.data.type === 'm' ? parent.data.type : opportunity.data.type;
+
+      switch (type) {
         // These types are a superset of p/m/r/s, using case fallthrough
         case 'g': // Sale of Surplus Property
         case 'f': // Foreign Government Standard
@@ -534,10 +543,6 @@ export class OpportunityPage implements OnInit {
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
           break;
 
-        case 'm': // Todo: Modification/Amendment/Cancel
-          this.displayField[OpportunityFields.Award] = false;
-          break;
-
         case 'a': // Award Notice
           this.displayField[OpportunityFields.ResponseDate] = false;
           this.displayField[OpportunityFields.StatutoryAuthority] = false;
@@ -552,40 +557,11 @@ export class OpportunityPage implements OnInit {
           break;
       }
 
-      /**
-       * TODO: Check conditional logic with PO
-       * TODO: Check if original archive date condition is needed (not mentioned in excel spreadsheet)
-       * TODO: Find ways to refactor or simplify this logic
-       */
-      if(parent != null) {
-        let originalPostedDateCondition = opportunity.postedDate != null
-          && parent.postedDate != null
-          && opportunity.postedDate !== parent.postedDate;
-
-        this.displayField[OpportunityFields.OriginalPostedDate] = originalPostedDateCondition;
-
-        let originalResponseDateCondition = opportunity.data != null
-          && opportunity.data.solicitation != null && opportunity.data.solicitation.deadlines != null
-          && opportunity.data.solicitation.deadlines.response != null && parent.data != null
-          && parent.data.solicitation != null && parent.data.solicitation.deadlines != null
-          && parent.data.solicitation.deadlines.response != null
-          && opportunity.data.solicitation.deadlines.response !== parent.data.solicitation.deadlines.response;
-
-        this.displayField[OpportunityFields.OriginalResponseDate] = originalResponseDateCondition;
-
-        let originalArchiveDateCondition = opportunity.data != null && opportunity.data.archive != null
-          && opportunity.data.archive.date != null && parent.data != null && parent.data.archive != null
-          && parent.data.archive.date != null
-          && opportunity.data.archive.date !== parent.data.archive.date;
-
-        this.displayField[OpportunityFields.OriginalArchiveDate] = originalArchiveDateCondition;
-
-        let originalSetAsideCondition = opportunity.data != null && opportunity.data.solicitation != null
-          && opportunity.data.solicitation.setAside != null && parent.data != null
-          && parent.data.solicitation != null && parent.data.solicitation.setAside != null
-          && opportunity.data.solicitation.setAside !== parent.data.solicitation.setAside;
-
-        this.displayField[OpportunityFields.OriginalSetAside] = originalSetAsideCondition;
+      if(parent == null) {
+        this.displayField[OpportunityFields.PostedDate] = false;
+        this.displayField[OpportunityFields.ResponseDate] = false;
+        this.displayField[OpportunityFields.ArchiveDate] = false;
+        this.displayField[OpportunityFields.SetAside] = false;
       }
 
       this.ready = true;
@@ -640,6 +616,7 @@ export class OpportunityPage implements OnInit {
     };
     this.router.navigate(['/opportunities',this.opportunity.opportunityId],navigationExtras);
     this.loadRelatedOpportunitiesByIdAndType(this.opportunityAPI);
+    document.getElementById('awards-list').focus();
   }
 
   setupPageChange(newpagechange){
@@ -664,13 +641,13 @@ export class OpportunityPage implements OnInit {
 
   sidenavPathEvtHandler(data){
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
-    
-    if (this.pageFragment == data.substring(1)) { 
-      document.getElementById(this.pageFragment).scrollIntoView(); 
+
+    if (this.pageFragment == data.substring(1)) {
+      document.getElementById(this.pageFragment).scrollIntoView();
     }
     else if(data.charAt(0)=="#"){
 			this.router.navigate([], { fragment: data.substring(1) });
-		} 
+		}
     else {
 			this.router.navigate([data]);
 		}

@@ -2,12 +2,12 @@
   <div display-alert>
     <ng-container *ngIf="errorOrganization">Organization ID: {{organization.orgKey}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
   </div>
-  
+
   <div display-title>
     <div class="clearfix">
       <div class="logo-section">
         <!-- Logo -->
-        <img *ngIf="organization && logoUrl && !errorLogo" class="sidenav-logo" [src]="logoUrl" alt="HTML5 Icon">
+        <img *ngIf="organization && logoUrl && !errorLogo" class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
         <img *ngIf="organization && (errorOrganization || errorLogo || logoUrl===null)" src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
       </div>
       <div class="intro-section" *ngIf="organization" >

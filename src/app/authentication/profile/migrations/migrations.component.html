@@ -1,23 +1,14 @@
-<div class="usa-alerts">
-  <samAlert [type]="states.confirm.type"
-            [title]="states.confirm.message"
-            [target]="form"
-            [(hidden)]="!states.confirm.show"
-            showClose="true"
-            placement='bottom center'></samAlert>
-</div>
-
 <samAlert type="info" class="usa-alert-static" title="Migrate Your Roles" [hidden]="!states.alert">
-  If you have a user account at any of the <a [routerLink]="migrations" fragment="legacy-sites">web sites</a> that are moving to the new SAM.gov,
-  you may migrate your roles and keep your same permissions. <a [routerLink]="migrations">Begin Now</a>
+  If you have a user account at any of the <a (click)="anchorTo('legacy-sites')">web sites</a> that are moving to the new SAM.gov,
+  you may migrate your roles and keep your same permissions. <a (click)="anchorTo('top')">Begin Now</a>
 </samAlert>
 
-<h2>Migrations</h2>
+<h2 id="top">Migrations</h2>
 <div>Select one of our legacy web sites. Then enter your user name and password from that site to move your roles to the new SAM.gov</div>
 
-<div class="usa-content" #form>
+<div class="usa-content">
   <form *ngIf="migrationForm" [formGroup]="migrationForm" (ngSubmit)="migrate()">
-    <div class="usa-grid">
+    <div class="usa-grid" #form>
       <div class="usa-width-one-half">
         <samSelect label="Web Site"
                    name="system"
@@ -35,6 +26,16 @@
         </labelWrapper>
         <div class="button-controls">
           <button type="submit" class="usa-primary-button">Migrate</button>
+        </div>
+
+        <div class="usa-alerts">
+          <samAlert [type]="states.confirm.type"
+                    [title]="states.confirm.message"
+                    [target]="form"
+                    [(hidden)]="!states.confirm.show"
+                    [offset]="{ top: -10 }"
+                    showClose="true"
+                    placement='bottom right'></samAlert>
         </div>
       </div>
     </div>
