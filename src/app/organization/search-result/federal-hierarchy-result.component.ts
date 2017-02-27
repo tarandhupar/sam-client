@@ -48,6 +48,6 @@ export class FederalHierarchyResult implements OnInit {
   @Input() qParams:any = {};
   constructor() { }
 
-  ngOnInit(){ console.log(this.data);}
+  ngOnInit(){}
 
 }
