@@ -74,7 +74,6 @@ export class WageDeterminationPage implements OnInit {
   private loadWageDetermination() {
       let wgSubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
     this.route.params.subscribe((params: Params) => { // construct a stream of wg data
-      console.log("Params: ", params);
       this.referenceNumber = params['referencenumber'];
       this.isSCA = this.referenceNumber.indexOf('-') > -1;
       this.revisionNumber = params['revisionnumber'];
@@ -82,8 +81,7 @@ export class WageDeterminationPage implements OnInit {
       // run whenever api data is updated
       wgSubject.subscribe(api => { // do something with the wg api
         this.wageDetermination = api;
-        console.log("Revision Number: ", this.wageDetermination.revisionNumber)
-
+      
         let wageDeterminationSideNavContent = {
           "label": "Wage Determination",
           "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
