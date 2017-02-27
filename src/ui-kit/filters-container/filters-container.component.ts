@@ -8,7 +8,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'sam-filters-container',
   templateUrl: 'filters-container.template.html',
-  styles: [`:host >>> .filters-container * {margin-bottom: 0.5rem;}`]
+  styles: [`:host >>> .filters-container * {margin-bottom: 0.5rem;}
+            :host >>> .collapsible-content{position: relative;}`] // Solves checkbox click area outside of container issue
 })
 export class SamFiltersContainerComponent {
   
