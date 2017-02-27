@@ -2,24 +2,33 @@ import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, Even
 import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
 /**
  * DisplayPageComponent - template component for generating display page
- *
- * @Input sidenavConfig: any - configuration for generating a sidenav
- * @Input logoData: any - data for adding a logo image on the sidenav
- * @Input sidebarToggle: boolean - toggles the sidenav in the layout, defaults to true
  */
 @Component({
   selector: 'display-page',
   templateUrl:'display-page.template.html'
 })
 export class DisplayPageComponent implements OnInit {
-  @Input() sidenavConfig: any;
-  @Input() logoData: any;
-  @Input() sidebarToggle = true;
-  contentClass = "usa-width-three-fourths";
-  showGeneratedSidebar = false;
+	/**
+	* configuration for generating a sidenav
+	*/
+  @Input() public sidenavConfig: any;
+	/**
+	* data for adding a logo image on the sidenav
+	*/
+  @Input() public logoData: any;
+	/**
+	* toggles the sidenav in the layout, defaults to true
+	*/
+  @Input() public sidebarToggle = true;
+	/**
+	* list of alerts to populate into template
+	*/
+  @Input() public alerts: [any];//update with an alert interface once sam-ui-elements is imported
+  private contentClass = "usa-width-three-fourths";
+  private showGeneratedSidebar = false;
 
   constructor(private router: Router){
-		// needed for fragment navigations
+    // needed for fragment navigations
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
@@ -42,9 +51,7 @@ export class DisplayPageComponent implements OnInit {
 
   sidenavPathEvtHandler(data) {
     if (data.charAt(0) == "#") {
-			// this.router.navigate([], { fragment: data });
       this.router.navigate([], { fragment: data.substring(1) });
-			// window.location.hash = data.substring(1);
     } else {
       this.router.navigate([data] );
     }
