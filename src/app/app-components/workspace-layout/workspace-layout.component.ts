@@ -8,11 +8,11 @@ import { SortConfig } from '../interfaces';
   templateUrl: 'workspace-layout.template.html'
 })
 export class WorkspaceLayoutComponent {
-  @Input() titleText: string;
-  @Input() totalPages: number;
-  @Input() currentPage: number;
-  @Input() totalElements: number;
-  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
+  @Input() public titleText: string;
+  @Input() public totalPages: number;
+  @Input() public currentPage: number;
+  @Input() public totalElements: number;
+  @Output() public pageChange: EventEmitter<number> = new EventEmitter<number>();
   public sortConfig: SortConfig = {
     options: [
       {value: '', label: 'Relevant', name: 'relevant'},
