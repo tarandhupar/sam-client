@@ -23,7 +23,7 @@ export class DisplayPageComponent implements OnInit {
 	/**
 	* list of alerts to populate into template
 	*/
-  @Input() public alerts: [any];//update with an alert interface once sam-ui-elements is imported
+  @Input() public alerts = [];//update with an alert interface once sam-ui-elements is imported
   private contentClass = "usa-width-three-fourths";
   private showGeneratedSidebar = false;
 
