@@ -1,34 +1,34 @@
 <div class="usa-grid">
-	<header class="usa-width-one-whole" [ngClass]="setOffset()">
-		<h1>{{titleText}}</h1>
-	</header>
-	<main>
-		<aside class="side-filters" [ngClass]="setAsideWidth()">
-			<sam-filters-container reset-label-margin=".5rem">
-				<ng-content select="[workspace-sidebar]"></ng-content>
-			</sam-filters-container>
-		</aside>
-		<div [ngClass]="setMainWidth()">
-			<div class="usa-grid-full">
-				<div class="usa-width-three-fourths" *ngIf="loadFlag">
-					<button *ngIf="false" type="button" class="usa-button-link" (click)="toggleFilters($event)"><i [ngClass]="toggleFilterLabel()"></i>&nbsp;Filters</button>
-					<p class="showing-results-meta usa-color-text usa-color-text-gray">
-						<list-results-message [total]="totalElements" [currentPage]="currentPage" [showing]="10"></list-results-message>
-					</p>
-				</div>
-				<div class="usa-width-one-fourth" *ngIf="false">
-					<samSelect [(model)]="sortModel" 
-										[name]="sortConfig.name"
-										[options]="sortConfig.options"
-										[label]="sortConfig.label"
-										reset-label-margin>
-					</samSelect>
-				</div>
-			</div>
-			<ng-content select="[workspace-content]"></ng-content>
-			<div *ngIf="loadFlag">
-				<samPagination (pageChange)="pageChangeHandler($event)" [currentPage]="currentPage" [totalPages]="totalPages"></samPagination>
-			</div>
-		</div>
-	</main>
+  <header class="usa-width-one-whole" [ngClass]="setOffset()">
+    <h1>{{titleText}}</h1>
+  </header>
+  <main>
+    <aside class="side-filters" [ngClass]="setAsideWidth()">
+      <sam-filters-container reset-label-margin=".5rem">
+        <ng-content select="[workspace-sidebar]"></ng-content>
+      </sam-filters-container>
+    </aside>
+    <div [ngClass]="setMainWidth()">
+      <div class="usa-grid-full">
+        <div class="usa-width-one" *ngIf="loadFlag">
+          <button *ngIf="false" type="button" class="usa-button-link" (click)="toggleFilters($event)"><i [ngClass]="toggleFilterLabel()"></i>&nbsp;Filters</button>
+          <p class="showing-results-meta usa-color-text usa-color-text-gray text-right">
+            <list-results-message [total]="totalElements" [currentPage]="currentPage" [showing]="10"></list-results-message>
+          </p>
+        </div>
+        <div class="usa-width-one-fourth" *ngIf="false">
+          <samSelect [(model)]="sortModel" 
+                    [name]="sortConfig.name"
+                    [options]="sortConfig.options"
+                    [label]="sortConfig.label"
+                    reset-label-margin>
+          </samSelect>
+        </div>
+      </div>
+      <ng-content select="[workspace-content]"></ng-content>
+      <div *ngIf="loadFlag">
+        <samPagination (pageChange)="pageChangeHandler($event)" [currentPage]="currentPage" [totalPages]="totalPages"></samPagination>
+      </div>
+    </div>
+  </main>
 </div>
