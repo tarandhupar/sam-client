@@ -8,6 +8,12 @@ import { Component, Input } from '@angular/core';
 	templateUrl:'title-section.template.html'
 })
 export class SamTitleSectionComponent{
-  @Input() title: string;
-  @Input() titleId: string;
+	/**
+	* title text to be populated in header tag
+	*/
+  @Input() public title: string;
+	/**
+	* title id string to be populated in header's id attribute
+	*/
+  @Input() public titleId: string;
 }
