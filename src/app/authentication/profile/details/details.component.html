@@ -1,3 +1,8 @@
+<samAlert class="usa-alert-static"
+          type="info"
+          title="Information Status"
+          description="If you have legacy accounts of the 10 systems, you can migrate your privileges"></samAlert>
+
 <h2>Personal Details</h2>
 <div>
   <form *ngIf="detailsForm" [formGroup]="detailsForm">
@@ -100,11 +105,6 @@
     </section>
   </form>
 </div>
-
-<samAlert class="usa-alert-static"
-          type="info"
-          title="Information Status"
-          description="If you have legacy accounts of the 10 systems, you can migrate your privileges"></samAlert>
 
 <samModal #confirmModal
           type="warning"
