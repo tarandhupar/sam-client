@@ -7,10 +7,10 @@ import { Component, Input, OnChanges  } from '@angular/core';
 	templateUrl:'list-results-message.template.html'
 })
 export class ListResultsMessageComponent implements OnChanges{
-  @Input() total: number;
-  @Input() currentPage: number;
-  @Input() showing: number;
-  message: string;
+  @Input() public total: number;
+  @Input() public currentPage: number;
+  @Input() public showing: number;
+  private message: string;
   
   ngOnChanges(){
     let total = this.total;
