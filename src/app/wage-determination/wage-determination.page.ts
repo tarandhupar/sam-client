@@ -181,16 +181,17 @@ export class WageDeterminationPage implements OnInit {
       .map(county => { return county.toString(); }); // convert from number ids to strings
 
     /** Look up county names in dictionary **/
-    var filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
+    let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
     let resultCounties = filterMultiArrayObjectPipe.transform(countiesList, countyDictionary, 'element_id', false, '');
 
-    // if any county is not found, return a warning message
+    // if any county is not found, show a warning message
+    let warning = '';
     if (resultCounties.length !== counties.length) {
-      return 'One or more unknown counties';
+      warning += '(' + (counties.length - resultCounties.length).toString() + ' unknown counties)';
     }
 
     // otherwise take the names of all the found counties and join them into a comma separated string
-    return resultCounties.map(county => { return county.value }).join(', ');
+    return resultCounties.map(county => { return county.value }).join(', ') + warning;
   }
 
   private getServices(combinedAPI: Observable<any>) {
