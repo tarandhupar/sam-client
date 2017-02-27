@@ -16,7 +16,7 @@
 
         <ul class="links">
           <li *ngIf="email" class="email">
-            <a href="javascript:void(0);" (click)="resendEmail()">Resend Email</a>
+            <a href="javascript:void(0);" (click)="resendEmail()" #target>Resend Email</a>
           </li>
           <li class="home">
             <a routerLink="/">Return to SAM.gov Home</a>
@@ -29,7 +29,9 @@
 
 <samAlert [type]="states.alert.type"
           [title]="states.alert.title"
-          [description]="states.alert.description"
           [showClose]="true"
           [hidden]="!states.alert.show"
+          [target]="target"
+          [offset]="{ left: 100 }"
+          placement="right"
           (dismiss)="dismissAlert()"></samAlert>

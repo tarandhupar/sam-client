@@ -45,6 +45,7 @@ export class SearchPage implements OnInit{
         this.isActive = data['isActive'] && data['isActive'] === "true" ? true : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.runSearch();
+        this.loadParams();
 		});
 	}
 
@@ -84,6 +85,7 @@ export class SearchPage implements OnInit{
 
 		return qsobj;
   }
+  
 	runSearch(){
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {

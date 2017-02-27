@@ -65,6 +65,20 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
+  getPermissions(roleId) {
+    let apiOptions: any = {
+      name: 'permissions',
+      method: 'GET',
+      suffix: '/'+roleId,
+      oParam: {
+        fetchNames: 'true',
+        roleKey: roleId
+      }
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
   putAccess(access: UserAccessInterface) {
     if (!access.user) {
       throw new Error('access.user is required');

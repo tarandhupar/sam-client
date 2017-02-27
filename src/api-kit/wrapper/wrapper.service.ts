@@ -17,6 +17,7 @@ export class WrapperService {
         "suggestions": "/sgs/v1/suggestions",
         "access": "/rms/v1/access",
         "roles": "/rms/v1/roles",
+        "permissions": "/rms/v1/uiroles",
         "wageDetermination": "/wdol/v1/wd",
     };
 

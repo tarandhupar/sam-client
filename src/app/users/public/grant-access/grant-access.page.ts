@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UserAccessService } from "../../../../api-kit/access/access.service";
 import { UserAccessModel } from "../../access.model";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.service";
-import {UserAccessInterface} from "../../../../api-kit/access/access.interface";
+import { UserAccessInterface } from "../../../../api-kit/access/access.interface";
 
 
 @Component({
@@ -29,7 +29,12 @@ export class GrantAccessPage implements OnInit {
 
   private messages: string = "";
 
-  constructor(private userService: UserAccessService, private route: ActivatedRoute, private footerAlert: AlertFooterService) { }
+  constructor(
+    private userService: UserAccessService,
+    private route: ActivatedRoute,
+    private footerAlert: AlertFooterService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
@@ -50,7 +55,7 @@ export class GrantAccessPage implements OnInit {
       },
       error => {
         this.footerAlert.registerFooterAlert({
-          title:"Unable to fetch role access information.",
+          title:"Unable to fetch access information. A required service may be down.",
           description:"",
           type:'error',
           timer:0
@@ -84,7 +89,21 @@ export class GrantAccessPage implements OnInit {
 
   updatePermissions() {
     if (this.orgs.length && this.domain && this.role) {
+      this.userService.getPermissions(this.role).subscribe(
+        perms => {
+          /*
 
+           */
+        },
+        err => {
+          this.footerAlert.registerFooterAlert({
+            title:"Unable to fetch permission information. A required service may be down.",
+            description:"",
+            type:'error',
+            timer:0
+          });
+        }
+      );
     }
   }
 
@@ -96,16 +115,42 @@ export class GrantAccessPage implements OnInit {
     return !this.arePermissionsFetched();
   }
 
+  grantButtonStyle() {
+    return {
+      "usa-button-disabled": this.isGrantDisabled(),
+      "usa-button-primary": !this.isGrantDisabled()
+    };
+  }
+
   onGrantClick() {
     let orgIds = this.orgs.map(org => org.value);
-    let funcs = this.functions;
+    let funcs = this.objects.map(obj => {
+      return {
+        id: obj.value,
+        permissions: this.permissions.filter(perm => perm.isChecked).map(perm => perm.id)
+      }
+    });
 
     let access: UserAccessInterface = UserAccessModel.FormInputToAccessObject(
       this.userName,
       this.role,
       this.domain,
       orgIds,
-      funcs);
+      funcs
+    );
 
+    this.userService.putAccess(access).subscribe(
+      res => {
+        this.router.navigate(['../access']);
+      },
+      error => {
+        this.footerAlert.registerFooterAlert({
+          title:"Unable to save access information. A required service may be down.",
+          description:"",
+          type:'error',
+          timer:0
+        });
+      }
+    )
   }
 }

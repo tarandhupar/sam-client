@@ -455,15 +455,16 @@ let $import = {
       .set(headers)
       .end(function(err, response) {
         let accounts = [];
+
         if(!err) {
-          accounts = response.body;
+          accounts = response.body || [];
 
           accounts = accounts.map((account) => {
             account.role = account.role || [];
             return account;
           });
 
-          $success(response.body);
+          $success(accounts);
         } else {
           if(isDebug()) {
             $error(mock);
