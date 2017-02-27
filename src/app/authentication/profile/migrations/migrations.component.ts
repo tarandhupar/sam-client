@@ -33,9 +33,9 @@ export class MigrationsComponent {
     alert: false,
     submitted: false,
     confirm: {
-      type: '',
-      message: '',
-      show: false
+      type: 'success',
+      message: 'Account Successfully Migrated',
+      show: true
     }
   }
 
@@ -79,10 +79,22 @@ export class MigrationsComponent {
         });
       }, () => {
         this.zone.run(() => {
-          this.router.navigate(['/signin']);
+          if(this.api.iam.isDebug()) {
+            this.initForm();
+          } else {
+            this.router.navigate(['/signin']);
+          }
         });
       });
     });
+  }
+
+  ngAfterViewInit() {
+    let fragment = window.location.hash;
+    if(fragment) {
+      this.anchorTo('');
+      this.anchorTo(fragment);
+    }
   }
 
   ngDoCheck() {
@@ -156,6 +168,7 @@ export class MigrationsComponent {
 
   initForm() {
     const session = this.session;
+
     this.migrationForm = this.builder.group({
       system: [session.system, Validators.required],
       username: [session.username, Validators.required],
@@ -177,6 +190,10 @@ export class MigrationsComponent {
     }
 
     return ((control.touched && control.dirty) || (this.migrationForm.touched && this.migrationForm.dirty)) && this.states.submitted ? errors[0] : '';
+  }
+
+  anchorTo(id) {
+    window.location.hash = id;
   }
 
   migrate() {
