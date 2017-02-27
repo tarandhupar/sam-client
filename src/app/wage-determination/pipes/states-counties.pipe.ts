@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {FilterMultiArrayObjectPipe} from "../../app-pipes/filter-multi-array-object.pipe";
+import { FilterMultiArrayObjectPipe } from "../../app-pipes/filter-multi-array-object.pipe";
 
 
 @Pipe({name: 'statesCounties'})

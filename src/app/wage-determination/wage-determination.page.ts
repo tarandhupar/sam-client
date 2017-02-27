@@ -1,11 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router, NavigationEnd, Params } from '@angular/router';
-import { Location } from '@angular/common';
-import { Subscription } from 'rxjs/Subscription';
-import { WageDeterminationService } from 'api-kit';
-import { ReplaySubject, Observable } from 'rxjs';
-import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
-import * as _ from 'lodash';
+import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute, Router, NavigationEnd, Params } from "@angular/router";
+import { Subscription } from "rxjs/Subscription";
+import { WageDeterminationService } from "api-kit";
+import { ReplaySubject, Observable } from "rxjs";
+import * as _ from "lodash";
 import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-object.pipe";
 import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
 import { StatesCountiesPipe } from "./pipes/states-counties.pipe";
