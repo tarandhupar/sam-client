@@ -41,7 +41,7 @@ import * as moment from 'moment/moment';
           </li>
           <li *ngIf="data._type=='wdSCA'"><strong>Service</strong>
             <ul class="usa-unstyled-list">
-              <span>{{ data.services }}</span>
+              <span *ngFor="let service of data.services; let isLast=last">{{ service.value }}{{ isLast ? '' : ', ' }}</span>
             </ul>
           </li>
           <li *ngIf="data._type=='wdDBRA'"><strong>Construction Type</strong>

@@ -85,6 +85,7 @@ export class SearchPage implements OnInit{
 
 		return qsobj;
   }
+  
 	runSearch(){
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
