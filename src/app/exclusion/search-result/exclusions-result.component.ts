@@ -18,7 +18,7 @@ import * as moment from 'moment/moment';
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li *ngIf="data.dunsNumber!==null && data.dunsNumber!==''"><strong>DUNS: </strong><span>{{ data.dunsNumber }}</span></li>
           <li *ngIf="data.cageCode!==null && data.cageCode!==''"><strong>CAGE Code: </strong><span>{{ data.cageCode }}</span></li>
-          <li><strong>Address: </strong><span>{{ data.address.streetAddress }}{{data.address.city=="" || data.address.streetAddress=="" ? '' : ','}} {{ data.address.city }}{{data.address.state=="" || data.address.city=="" ? '' : ','}} {{ data.address.state}} {{data.address.zip}}</span></li>
+          <li><strong>Address: </strong><span>{{ data.address.streetAddress }}<ng-container *ngIf="data.address?.city && data.address?.streetAddress">,</ng-container> {{ data.address.city }}<ng-container *ngIf="data.address?.state && data.address?.city">,</ng-container> {{ data.address.state}} {{data.address.zip}}</span></li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
