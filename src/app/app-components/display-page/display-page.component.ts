@@ -4,7 +4,7 @@ import { Router,NavigationExtras,NavigationEnd } from '@angular/router';
 * DisplayPageComponent - template component for generating display page
 *
 * @Input sidenavConfig: any - configuration for generating a sidenav
-* @Input logoSrc: string - source path for adding a logo image on the sidenav
+* @Input logoData: any - data for adding a logo image on the sidenav
 * @Input sidebarToggle: boolean - toggles the sidenav in the layout, defaults to true
 */
 @Component({

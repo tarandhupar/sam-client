@@ -12,6 +12,7 @@
     &nbsp;
 	</aside>
 	<div [attr.class]="contentClass">
+		<ng-content select="[display-alert]"></ng-content>
 		<ng-content select="[display-title]"></ng-content>
 		<ng-content select="[display-content]"></ng-content>
 	</div>
