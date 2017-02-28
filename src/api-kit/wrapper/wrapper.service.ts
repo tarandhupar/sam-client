@@ -17,6 +17,7 @@ export class WrapperService {
         "suggestions": "/sgs/v1/suggestions",
         "access": "/rms/v1/access",
         "wageDetermination": "/wdol/v1/wd",
+        "dictionaries": "/sgs/v1/dictionaries"
     };
 
     constructor(private _http: Http){}

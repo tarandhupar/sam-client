@@ -1,14 +1,16 @@
 import { Component,OnInit } from '@angular/core';
 import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
-import 'rxjs/add/operator/map';
+//import { Operator } from 'rxjs';
 import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import { SearchDictionaryService } from "../../api-kit/search/dictionary.service";
+import 'rxjs/add/operator/map';
+
 
 @Component({
   moduleId: __filename,
   selector: 'search',
-  providers: [CapitalizePipe, SearchDictionaryService],
+  providers: [CapitalizePipe],
   templateUrl: 'search.template.html'
 })
 
@@ -28,7 +30,6 @@ export class SearchPage implements OnInit{
   showOptional:any = (SHOW_OPTIONAL=="true");
   qParams:any = {};
   isActive: boolean = true;
-  stateData = [];
 
   // Active Checkbox config
   checkboxModel: any = ['true'];
@@ -100,10 +101,12 @@ export class SearchPage implements OnInit{
         this.isActive = data['isActive'] && data['isActive'] === "false" ? false : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : this.wdTypeModel;
+        this.selectStateModel = data['state'] && data['state'] !== null ? data['state'] : this.selectStateModel;
+        this.selectCountyModel = data['county'] && data['county'] !== null ? data['county'] : this.selectCountyModel;
+        this.selectConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : this.selectConstructModel;
         this.runSearch();
         this.getDictionaryData('dbraStates');
-        //this.getDictionaryData('dbraCounties');
-        //this.getDictionaryData('dbraConstructionTypes');
+
       });
   }
 
@@ -149,12 +152,15 @@ export class SearchPage implements OnInit{
       qsobj['wdType'] = this.wdTypeModel;
     }
     if(this.selectConstructModel.length>0){
-      qsobj['conType'] = this.selectConstructModel
+      qsobj['conType'] = this.selectConstructModel;
     }
 
     if(this.selectStateModel.length>0){
-      console.log('this is inside setupQS func ' + this.selectStateModel);
-      qsobj['state'] = this.selectStateModel
+      qsobj['state'] = this.selectStateModel;
+    }
+
+    if(this.selectCountyModel.length>0){
+      qsobj['county'] = this.selectCountyModel;
     }
 
     return qsobj;
@@ -242,25 +248,22 @@ export class SearchPage implements OnInit{
 
   // get dictionary data from dictionary API for samselects
   getDictionaryData(id){
-    let tempLabel: '';
-    let tempValue: '';
-    let newObj: {Label:'', Value:''};
     this.dictionaryService.getDictionaryDataById({
         ids: id
       }).subscribe(
         data => {
-          console.log('here is our data ' + data);
 
           // if returned data is states rearrange the data so it can be correctly assigned as samselect options
           if(id === 'scaStates' || id === 'dbraStates'){
-            var reformattedArray = data.map(function(x){
-              tempLabel = x.value;
-              tempValue = x.key;
-              newObj.Label = tempLabel;
-              newObj.Value = tempValue;
+            var reformattedArray = data._embedded.dictionaryList[0].dbraStates.map(function(stateItem){
+              let newObj = {Label:'', Value:''};
+
+              newObj.Label = stateItem.value;
+              newObj.Value = stateItem.key;
               return newObj;
             });
-            this.stateData = reformattedArray;
+
+            this.selectStateConfig.options = reformattedArray;
           }
         },
       error => {
