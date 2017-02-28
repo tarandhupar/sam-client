@@ -3,11 +3,12 @@ import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
+import { SearchDictionaryService } from "../../api-kit/search/dictionary.service";
 
 @Component({
   moduleId: __filename,
   selector: 'search',
-  providers: [CapitalizePipe],
+  providers: [CapitalizePipe, SearchDictionaryService],
   templateUrl: 'search.template.html'
 })
 
@@ -27,6 +28,7 @@ export class SearchPage implements OnInit{
   showOptional:any = (SHOW_OPTIONAL=="true");
   qParams:any = {};
   isActive: boolean = true;
+  stateData = [];
 
   // Active Checkbox config
   checkboxModel: any = ['true'];
@@ -40,7 +42,7 @@ export class SearchPage implements OnInit{
   // Wage Determination Radio Component
   wdTypeModel: any = null;
   wdTypeConfig = {
-    options: [
+    options:  [
       {value: 'sca', label: 'Service Contract Act (SCA)', name: 'radio-sca'},
       {value: 'dbra', label: 'Davis-Bacon Act (DBA)', name: 'radio-dba'}
     ],
@@ -55,64 +57,6 @@ export class SearchPage implements OnInit{
   selectStateConfig = {
     options: [
       {value:'', label: 'Default option', name: 'empty', disabled: true},
-      {label: 'Alabama',value: 'AL'},
-      {label: 'Alaska',value: 'AK'},
-      {label: 'Arizona',value: 'AZ'},
-      {label: 'Arkansas',value: 'AR'},
-      {label: 'California',value: 'CA'},
-      {label: 'Colorado',value: 'CO'},
-      {label: 'Connecticut',value: 'CT'},
-      {label: 'Delaware',value: 'DE'},
-      {label: 'District of Columbia',value: 'DC'},
-      {label: 'Florida',value: 'FL'},
-      {label: 'Georgia',value: 'GA'},
-      {label: 'Hawaii',value: 'HI'},
-      {label: 'Idaho',value: 'ID'},
-      {label: 'Illinois',value: 'IL'},
-      {label: 'Indiana',value: 'IN'},
-      {label: 'Iowa',value: 'IA'},
-      {label: 'Kansas',value: 'KS'},
-      {label: 'Kentucky',value: 'KY'},
-      {label: 'Louisiana',value: 'LA'},
-      {label: 'Maine',value: 'ME'},
-      {label: 'Maryland',value: 'MD'},
-      {label: 'Massachusetts',value: 'MA'},
-      {label: 'Michigan',value: 'MI'},
-      {label: 'Minnesota',value: 'MN'},
-      {label: 'Mississippi',value: 'MS'},
-      {label: 'Missouri',value: 'MO'},
-      {label: 'Montana',value: 'MT'},
-      {label: 'Nebraska',value: 'NE'},
-      {label: 'Nevada',value: 'NV'},
-      {label: 'New Hampshire',value: 'NH'},
-      {label: 'New Jersey',value: 'NJ'},
-      {label: 'New Mexico',value: 'NM'},
-      {label: 'New York',value: 'NY'},
-      {label: 'North Carolina',value: 'NC'},
-      {label: 'North Dakota',value: 'ND'},
-      {label: 'Ohio',value: 'OH'},
-      {label: 'Oklahoma',value: 'OK'},
-      {label: 'Oregon',value: 'OR'},
-      {label: 'Pennsylvania',value: 'PA'},
-      {label: 'Rhode Island',value: 'RI'},
-      {label: 'South Carolina',value: 'SC'},
-      {label: 'South Dakota',value: 'SD'},
-      {label: 'Tennessee',value: 'TN'},
-      {label: 'Texas',value: 'TX'},
-      {label: 'Utah',value: 'UT'},
-      {label: 'Vermont',value: 'VT'},
-      {label: 'Virginia',value: 'VA'},
-      {label: 'Washington',value: 'WA'},
-      {label: 'West Virginia',value: 'WV'},
-      {label: 'Wisconsin',value: 'WI'},
-      {label: 'Wyoming',value: 'WY'},
-      {label: 'Puerto Rico',value: 'PR'},
-      {label: 'Virgin Islands',value: 'VI'},
-      {label: 'American Samoa',value: 'AS'},
-      {label: 'Northern Marianas',value: 'CM'},
-      {label: 'Guam',value: 'GU'},
-      {label: 'Johnston Island',value: '2'},
-      {label: 'Wake Island',value: '6'},
     ],
     disabled: false,
     label: 'Select State',
@@ -124,9 +68,6 @@ export class SearchPage implements OnInit{
   selectCountyConfig = {
     options: [
       {value:'', label: 'Default option', name: 'empty', disabled: true},
-      {label: 'County1',value: '1'},
-      {label: 'County2',value: '2'},
-      {label: 'County3',value: '3'},
     ],
     disabled: false,
     label: 'Select County',
@@ -148,7 +89,7 @@ export class SearchPage implements OnInit{
     name: 'constructionType',
   };
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService) { }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService, private dictionaryService: SearchDictionaryService) { }
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       data => {
@@ -160,6 +101,9 @@ export class SearchPage implements OnInit{
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : this.wdTypeModel;
         this.runSearch();
+        this.getDictionaryData('dbraStates');
+        //this.getDictionaryData('dbraCounties');
+        //this.getDictionaryData('dbraConstructionTypes');
       });
   }
 
@@ -254,7 +198,8 @@ export class SearchPage implements OnInit{
       isActive: this.isActive,
       wdType : this.wdTypeModel,
       conType : this.selectConstructModel,
-      state: this.selectStateModel
+      state: this.selectStateModel,
+      county: this.selectCountyModel
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -293,6 +238,37 @@ export class SearchPage implements OnInit{
     );
     //construct qParams to pass parameters to object view pages
     this.qParams = this.setupQS(false);
+  }
+
+  // get dictionary data from dictionary API for samselects
+  getDictionaryData(id){
+    let tempLabel: '';
+    let tempValue: '';
+    let newObj: {Label:'', Value:''};
+    this.dictionaryService.getDictionaryDataById({
+        ids: id
+      }).subscribe(
+        data => {
+          console.log('here is our data ' + data);
+
+          // if returned data is states rearrange the data so it can be correctly assigned as samselect options
+          if(id === 'scaStates' || id === 'dbraStates'){
+            var reformattedArray = data.map(function(x){
+              tempLabel = x.value;
+              tempValue = x.key;
+              newObj.Label = tempLabel;
+              newObj.Value = tempValue;
+              return newObj;
+            });
+            this.stateData = reformattedArray;
+          }
+        },
+      error => {
+        console.error("Error!!", error);
+      }
+    );
+
+
   }
 
   pageChange(pagenumber){
@@ -336,13 +312,23 @@ export class SearchPage implements OnInit{
 
   // event for state change
   stateChange(event){
-    console.log('state event here!!');
-    console.log(this.selectStateModel);
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
     this.router.navigate(['/search'], navigationExtras);
   }
+
+  countyChange(event){
+    console.log('county event here!!');
+    console.log(this.selectCountyModel);
+    var qsobj = this.setupQS(false);
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/search'], navigationExtras);
+  }
+
+
 
 }

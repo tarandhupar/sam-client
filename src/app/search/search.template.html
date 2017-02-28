@@ -42,7 +42,8 @@
                   [label]="selectCountyConfig.label"
                   [hint]="selectCountyConfig.hint"
                   [errorMessage]="selectCountyConfig.errorMessage"
-                  [disabled]="selectCountyConfig.disabled">
+                  [disabled]="selectCountyConfig.disabled"
+                  (modelChange)="countyChange($event)">
                 </samSelect>
               </sam-collapsible>
 

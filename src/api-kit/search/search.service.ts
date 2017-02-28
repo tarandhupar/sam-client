@@ -39,6 +39,10 @@ export class SearchService {
       oApiParam.oParam['state'] = obj.state;
     }
 
+    if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
+      oApiParam.oParam['county'] = obj.county;
+    }
+
     // is active filter
     if(obj.isActive === true) {
       oApiParam.oParam['is_active'] = obj.isActive;
