@@ -13,21 +13,21 @@
   ></agencyPicker>
   <samSelect name="role" label="Role" (modelChange)="onRoleChange($event)" [options]="roleOptions"></samSelect>
   <samSelect name="domain" label="Domain" (modelChange)="onDomainChange($event)" [options]="domainOptions"></samSelect>
-  <ng-container *ngIf="arePermissionsFetched()">
+  <ng-container *ngIf="domain">
     <div class="m_B-1x"><label>Permissions</label></div>
     <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
       <li  *ngFor="let object of objects" class="object-item">
-        <div class="object-title"><strong>{{object.label}}</strong></div>
+        <div class="object-title"><strong>{{object.function.val}}</strong></div>
         <div class="p_L-4x permission-list">
-          <span *ngFor="let permission of permissions" class="permission-control-group">
-            <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="permission.isChecked" [(ngModel)]="permission.isChecked">
-            <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.label}}</label>
+          <span *ngFor="let permission of object.permission" class="permission-control-group">
+            <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [(ngModel)]="permission.isChecked">
+            <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
           </span>
         </div>
       </li>
     </ul>
   </ng-container>
-  <p *ngIf="!arePermissionsFetched()"><em>Select an organization role and domain</em></p>
+  <p *ngIf="!domain"><em>Select a domain</em></p>
   <samTextArea name="options-response" label="Messages:" placeholder="(Optional) Include a message with your response" [(value)]="messages"></samTextArea>
   <div>
     <p class="pull-right">
