@@ -1,19 +1,16 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { BaseRequestOptions, Http, HttpModule } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { PipeTransform } from '@angular/core';
-import { By }              from '@angular/platform-browser';
-import { DateFormatPipe } from '../app-pipes/date-format.pipe';
-import { ActivatedRoute } from '@angular/router';
-import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { WageDeterminationService } from 'api-kit';
-import { SamUIKitModule } from 'ui-kit';
-
-import { WageDeterminationPage } from './wage-determination.page';
-import { Observable } from 'rxjs';
-//import { PipesModule } from '../app-pipes/app-pipes.module';
-import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { BaseRequestOptions, Http, HttpModule } from "@angular/http";
+import { MockBackend } from "@angular/http/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { PipeTransform } from "@angular/core";
+import { DateFormatPipe } from "../app-pipes/date-format.pipe";
+import { ActivatedRoute } from "@angular/router";
+import { LocationStrategy, HashLocationStrategy } from "@angular/common";
+import { WageDeterminationService } from "api-kit";
+import { SamUIKitModule } from "ui-kit";
+import { WageDeterminationPage } from "./wage-determination.page";
+import { Observable } from "rxjs";
+import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-object.pipe";
 
 let comp:    WageDeterminationPage;
 let fixture: ComponentFixture<WageDeterminationPage>;
@@ -98,7 +95,7 @@ describe('WageDeterminationPage', () => {
           },
           deps: [MockBackend, BaseRequestOptions],
         },
-        { provide: ActivatedRoute, useValue: { 'params': Observable.of({ 'referencenumber': '2002-0261', 'revisionnumber': '8'}), 'queryParams': Observable.from([{}]) } },
+        { provide: ActivatedRoute, useValue: { 'params': Observable.of({'referencenumber': '2002-0261', 'revisionnumber': '8'}), 'queryParams': Observable.from([{}]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: WageDeterminationService, useValue: MockWageDeterminationService },
         { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectCustomPipe }
@@ -126,9 +123,7 @@ describe('WageDeterminationPage', () => {
     expect(comp.revisionNumber).toBeDefined();
     expect(comp.currentUrl).toBeDefined();
     expect(comp.dictionaries).toBeDefined();
-    expect(comp.states).toBeDefined();
-    expect(comp.counties).toBeDefined();
+    expect(comp.locations).toBeDefined();
     expect(comp.services).toBeDefined();
-
   });
 });

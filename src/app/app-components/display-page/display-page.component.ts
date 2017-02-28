@@ -1,55 +1,59 @@
 import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
-import { Router,NavigationExtras,NavigationEnd } from '@angular/router';
+import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
 /**
-* DisplayPageComponent - template component for generating display page
-*
-* @Input sidenavConfig: any - configuration for generating a sidenav
-* @Input logoSrc: string - source path for adding a logo image on the sidenav
-* @Input sidebarToggle: boolean - toggles the sidenav in the layout, defaults to true
-*/
+ * DisplayPageComponent - template component for generating display page
+ */
 @Component({
-	selector: 'display-page',
-	templateUrl:'display-page.template.html'
+  selector: 'display-page',
+  templateUrl:'display-page.template.html'
 })
 export class DisplayPageComponent implements OnInit {
-  @Input() sidenavConfig: any;
-  @Input() logoData: any;
-  @Input() sidebarToggle = true;
-  contentClass = "usa-width-three-fourths";
-	showCustomSidebar = true;
-	showGeneratedSidebar = false;
+	/**
+	* configuration for generating a sidenav
+	*/
+  @Input() public sidenavConfig: any;
+	/**
+	* data for adding a logo image on the sidenav
+	*/
+  @Input() public logoData: any;
+	/**
+	* toggles the sidenav in the layout, defaults to true
+	*/
+  @Input() public sidebarToggle = true;
+	/**
+	* list of alerts to populate into template
+	*/
+  @Input() public alerts = [];//update with an alert interface once sam-ui-elements is imported
+  private contentClass = "usa-width-three-fourths";
+  private showGeneratedSidebar = false;
 
   constructor(private router: Router){
-		//needed for fragment navigations
-		router.events.subscribe(s => {
-			if (s instanceof NavigationEnd) {
-				const tree = router.parseUrl(router.url);
-				if (tree.fragment) {
-					const element = document.getElementById(tree.fragment);
-					if (element) { element.scrollIntoView(); }
-				}
-			}
-		});
-	}
-
-  ngOnInit(){
-  	if(!this.sidebarToggle){
-  		this.contentClass = "usa-width-one-whole";
-			this.showCustomSidebar = false;
-			this.showGeneratedSidebar = false;
-  	} else if (this.sidenavConfig){
-			this.showCustomSidebar = false;
-			this.showGeneratedSidebar = true;
-		}
+    // needed for fragment navigations
+    router.events.subscribe(s => {
+      if (s instanceof NavigationEnd) {
+        const tree = router.parseUrl(router.url);
+        if (tree.fragment) {
+          const element = document.getElementById(tree.fragment);
+          if (element) { element.scrollIntoView(); }
+        }
+      }
+    });
   }
 
-	sidenavPathEvtHandler(data){
-		if(data.charAt(0)=="#"){
-			//this.router.navigate([], { fragment: data });
-			this.router.navigate([], { fragment: data.substring(1) });
-			//window.location.hash = data.substring(1);
-		} else {
-			this.router.navigate([data] );
-		}
-	}
+  ngOnInit() {
+    if (!this.sidebarToggle) {
+      this.contentClass = "usa-width-one-whole";
+      this.showGeneratedSidebar = false;
+    } else if (this.sidenavConfig) {
+      this.showGeneratedSidebar = true;
+    }
+  }
+
+  sidenavPathEvtHandler(data) {
+    if (data.charAt(0) == "#") {
+      this.router.navigate([], { fragment: data.substring(1) });
+    } else {
+      this.router.navigate([data] );
+    }
+  }
 }

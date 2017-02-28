@@ -1,9 +1,9 @@
 <samAlert type="info" class="usa-alert-static" title="Migrate Your Roles" [hidden]="!states.alert">
-  If you have a user account at any of the <a [routerLink]="migrations" fragment="legacy-sites">web sites</a> that are moving to the new SAM.gov,
-  you may migrate your roles and keep your same permissions. <a [routerLink]="migrations">Begin Now</a>
+  If you have a user account at any of the <a (click)="anchorTo('legacy-sites')">web sites</a> that are moving to the new SAM.gov,
+  you may migrate your roles and keep your same permissions. <a (click)="anchorTo('top')">Begin Now</a>
 </samAlert>
 
-<h2>Migrations</h2>
+<h2 id="top">Migrations</h2>
 <div>Select one of our legacy web sites. Then enter your user name and password from that site to move your roles to the new SAM.gov</div>
 
 <div class="usa-content">

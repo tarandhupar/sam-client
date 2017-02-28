@@ -26,8 +26,15 @@ import * as moment from 'moment/moment';
           {{data.objective | slice:0:150}}{{data.objective && data.objective.length > 150 ? ' ...' : ''}}
         </p>
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li *ngIf="data.organizationHierarchy && data.organizationHierarchy[0]?.level==1"><strong>Department/Ind. Agency:</strong><a href=""><span>{{data.organizationHierarchy[0].name}}</span></a></li>
-          <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[2]?.level==3"><strong>Office:</strong><span>{{data.organizationHierarchy[2].name}}</span></li>
+        	<li *ngIf="data.organizationHierarchy && data.organizationHierarchy[0]?.level==1">
+        	  <strong>Department/Ind. Agency:</strong>
+        	  <a *ngIf="data.isActive==true" [routerLink]="['/organization', data.organizationHierarchy[0].organizationId]" [queryParams]="qParams">{{data.organizationHierarchy[0].name}}</a>
+        	  <span *ngIf="data.isActive==false">{{data.organizationHierarchy[0].name}}</span>
+        	</li>
+          <li *ngIf="data.organizationHierarchy && data.organizationHierarchy[2]?.level==3">
+            <strong>Office:</strong>
+            <span>{{data.organizationHierarchy[2].name}}</span>
+          </li>
         </ul>
         <!--History section to be displayed only for historical records-->
         <div *ngIf="data.isActive==false">

@@ -24,7 +24,9 @@ export class ProfileComponent {
   }
 
   checkRoute() {
-    this.states.route = this.router.url;
+    this.states.route = this.router.url
+      .replace(/#.+/, '')
+      .replace(/\?.+/, '');
     this.setActiveRoute();
   }
 
