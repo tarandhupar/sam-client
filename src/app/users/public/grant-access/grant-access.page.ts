@@ -13,11 +13,11 @@ import { PropertyCollector } from "../../../app-utils/property-collector";
 export class GrantAccessPage implements OnInit {
 
   private userName: string = "";
-  private orgs = [];
+  public orgs = [];
   private domain;
   private domainOptions = [];
   private role;
-  private roleOptions = [];
+  public roleOptions = [];
 
   // these two will be replaced with real data on the access object
   private permissions: any;
@@ -29,7 +29,7 @@ export class GrantAccessPage implements OnInit {
     private userService: UserAccessService,
     private route: ActivatedRoute,
     private footerAlert: AlertFooterService,
-    private router: Router
+    public router: Router
   ) { }
 
   ngOnInit() {
@@ -147,6 +147,7 @@ export class GrantAccessPage implements OnInit {
           timer:0
         });
       }
-    )
+    );
+    console.log('you made it');
   }
 }

@@ -33,7 +33,7 @@
     <p class="pull-right">
       <a [routerLink]="['../access']"><button class="usa-button usa-button-outline">Cancel</button></a>
       &nbsp;
-      <button class="usa-button" [ngClass]="grantButtonStyle()" (click)="onGrantClick()" (disabled)="isGrantDisabled()">Grant</button>
+      <button id="grant-button" class="usa-button" [ngClass]="grantButtonStyle()" (click)="onGrantClick()" (disabled)="isGrantDisabled()">Grant</button>
     </p>
   </div>
 </div>
