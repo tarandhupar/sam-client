@@ -4,12 +4,12 @@ import { Location } from '@angular/common';
 import { OpportunityService, FHService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
-import { OpportunityFields } from "./opportunity.fields";
+import { OpportunityFields } from './opportunity.fields';
 import { trigger, state, style, transition, animate } from '@angular/core';
 import * as _ from 'lodash';
-import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
-import { DateFormatPipe } from "../app-pipes/date-format.pipe";
-import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
+import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
+import { DateFormatPipe } from '../app-pipes/date-format.pipe';
+import { SidenavService } from 'samComponents/sidenav/services/sidenav.service';
 
 @Component({
   moduleId: __filename,

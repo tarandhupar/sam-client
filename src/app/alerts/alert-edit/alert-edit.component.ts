@@ -1,9 +1,9 @@
-import {Input, Output, Component, OnInit, EventEmitter, ViewChild} from '@angular/core';
-import {Alert} from "../alert.model";
-import {OptionsType} from "ui-kit/form-controls/types";
-import {FormGroup, FormBuilder, AbstractControl, FormControl} from "@angular/forms";
-import moment = require("moment");
-import { SamDateTimeComponent, SamSelectComponent, SamTextComponent, SamTextareaComponent } from "ui-kit";
+import { Input, Output, Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
+import { Alert } from '../alert.model';
+import { OptionsType } from 'samFormControls/types';
+import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
+import moment from 'moment';
+import { SamDateTimeComponent, SamSelectComponent, SamTextComponent, SamTextareaComponent } from 'samUIKit';
 
 function isNotBeforeToday(c: FormControl) {
   let error = {

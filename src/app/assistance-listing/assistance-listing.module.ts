@@ -5,10 +5,10 @@ import { FinancialObligationChart } from './assistance-listing.chart';
 import { routing } from './assistance-listing.route';
 import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
-import { SamUIKitModule } from 'ui-kit';
-import { PipesModule } from "../app-pipes/app-pipes.module";
+import { SamUIKitModule } from 'samUIKit';
+import { PipesModule } from '../app-pipes/app-pipes.module';
 import { ProgramDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
-import { AppComponentsModule } from "../app-components/app-components.module";
+import { AppComponentsModule } from '../app-components/app-components.module';
 
 @NgModule({
   imports: [

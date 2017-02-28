@@ -5,14 +5,14 @@ import { MockBackend } from '@angular/http/testing';
 import { WrapperService, FHService } from 'api-kit';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { Observable } from 'rxjs';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'samUIKit';
 
 import { AgencyPickerComponent } from './agency-picker.component';
 
-var fixture;
-var comp;
-var titleEl;
-var fhServiceStub = {
+let fixture;
+let comp;
+let titleEl;
+let fhServiceStub = {
   getOrganizationById: (id: string, includeChildrenLevels: boolean)=>{
     return Observable.of({
       _embedded:[{
@@ -27,12 +27,12 @@ var fhServiceStub = {
     });
   }
 };
-var apiServiceStub = {
+let apiServiceStub = {
   call: (oApiParam)=>{
     return {};
   }
 };
-var activatedRouteStub = {
+let activatedRouteStub = {
   queryParams: {
     subscribe: () =>{
       return {};

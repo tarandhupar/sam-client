@@ -4,11 +4,11 @@ import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { WageDeterminationService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
-import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
+import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import * as _ from 'lodash';
-import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-object.pipe";
-import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
-import { StatesCountiesPipe } from "./pipes/states-counties.pipe";
+import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
+import { SidenavService } from 'samComponents/sidenav/services/sidenav.service';
+import { StatesCountiesPipe } from './pipes/states-counties.pipe';
 
 
 @Component({
@@ -22,7 +22,7 @@ import { StatesCountiesPipe } from "./pipes/states-counties.pipe";
 export class WageDeterminationPage implements OnInit {
   wageDetermination: any;
   referenceNumber: any;
-  revisionNumber:any;
+  revisionNumber: any;
   currentUrl: string;
   dictionaries: any;
   states: string;

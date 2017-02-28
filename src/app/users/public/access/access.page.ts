@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { UserService, UserAccessFilterOptions } from "api-kit/user/user.service";
-import { UserAccessModel } from "../../access.model";
-import { ActivatedRoute} from "@angular/router";
-import { FHService } from "api-kit/fh/fh.service";
-import { Organization } from "../../../organization/organization.model";
-import { Observable } from "rxjs";
-import { SamAccordionComponent } from "ui-kit/accordion/accordion.component";
-import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
+import { UserService, UserAccessFilterOptions } from 'api-kit/user/user.service';
+import { UserAccessModel } from '../../access.model';
+import { ActivatedRoute } from '@angular/router';
+import { FHService } from 'api-kit/fh/fh.service';
+import { Organization } from '../../../organization/organization.model';
+import { Observable } from 'rxjs';
+import { SamAccordionComponent } from 'samComponents/accordion/accordion.component';
+import { CapitalizePipe } from '../../../app-pipes/capitalize.pipe';
 
 
 @Component({

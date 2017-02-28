@@ -1,11 +1,11 @@
 import { TestBed, async } from '@angular/core/testing';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'samUIKit';
 import { By } from '@angular/platform-browser';
 
 import { WorkspaceLayoutComponent } from './workspace-layout.component';
 
-var fixture;
-var comp;
+let fixture;
+let comp;
 
 describe('WorkspaceLayoutTests', () => {
   beforeEach(async(() => {

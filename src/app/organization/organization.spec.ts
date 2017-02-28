@@ -6,7 +6,7 @@ import { By }              from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FHService } from 'api-kit';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'samUIKit';
 
 import { OrganizationPage } from './organization.page';
 import { Observable } from 'rxjs';

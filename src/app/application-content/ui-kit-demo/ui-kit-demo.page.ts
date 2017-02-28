@@ -6,15 +6,15 @@ import { AlertFooterService } from '../../alerts/alert-footer';
 })
 export class UIKitDemoPage {
 
-  time: string = "13:01";
-  date: string = "2016-12-12";
-  dateTime: string = "2016-12-12T13:01";
+  time: string = '13:01';
+  date: string = '2016-12-12';
+  dateTime: string = '2016-12-12T13:01';
 
   // Select Component
   selectModel = '';
   selectConfig = {
     options: [
-      {value:'', label: 'Default option', name: 'empty', disabled: true},
+      {value: '', label: 'Default option', name: 'empty', disabled: true},
       {value: 'dc', label: 'Washington DC', name: 'dc'},
       {value: 'ma', label: 'Maryland', name: 'maryland'},
       {value: 'va', label: 'Virginia', name: 'virginia'},

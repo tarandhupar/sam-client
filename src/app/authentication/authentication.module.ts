@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 import { SamAPIKitModule } from '../../api-kit/api-kit.module';
-import { SamUIKitModule } from '../../ui-kit/ui-kit.module';
+import { SamUIKitModule } from 'samUIKit';
 import { AppComponentsModule } from '../../app/app-components/app-components.module';
 
 import { AuthenticationService } from './authentication.service.ts';

@@ -8,11 +8,10 @@ import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { Location, LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { WageDeterminationService } from 'api-kit';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'samUIKit';
 
 import { WageDeterminationPage } from './wage-determination.page';
 import { Observable } from 'rxjs';
-//import { PipesModule } from '../app-pipes/app-pipes.module';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 
 let comp:    WageDeterminationPage;

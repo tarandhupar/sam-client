@@ -3,13 +3,13 @@ import { FormsModule } from '@angular/forms';
 import { MockBackend } from '@angular/http/testing';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { Observable } from 'rxjs';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'samUIKit';
 
 import { InputAutocompleteComponent } from './input-autocomplete.component';
 import { AutoCompleteWrapper } from 'api-kit/autoCompleteWrapper/autoCompleteWrapper.service'
-import { SuggestionsService } from "api-kit/search/suggestions.service";
-import { WrapperService } from "api-kit/wrapper/wrapper.service";
-import { FHService } from "api-kit/fh/fh.service";
+import { SuggestionsService } from 'api-kit/search/suggestions.service';
+import { WrapperService } from 'api-kit/wrapper/wrapper.service';
+import { FHService } from 'api-kit/fh/fh.service';
 
 var fixture;
 var comp;
@@ -47,7 +47,7 @@ describe('InputAutocompleteTests', () => {
         SuggestionsService,
         FHService
       ],
-      imports: [FormsModule,SamUIKitModule]
+      imports: [FormsModule, SamUIKitModule]
     });
     TestBed.overrideComponent(InputAutocompleteComponent, {
       set: {

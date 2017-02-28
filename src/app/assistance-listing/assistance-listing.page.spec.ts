@@ -13,7 +13,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'samUIKit';
 import { Observable } from 'rxjs';
 import { FinancialObligationChart } from './assistance-listing.chart';
 
