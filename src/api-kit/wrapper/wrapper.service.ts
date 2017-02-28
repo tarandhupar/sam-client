@@ -76,6 +76,6 @@ export class WrapperService {
         let oRequestOptions = new RequestOptions(jsonOption);
         let oRequest = new Request(oRequestOptions);
 
-        return this._http.request(oRequest).map((res: Response) => { return res.json() } );
+        return this._http.request(oRequest).map((res: Response) => { return res.json() } ).concat();
     }
 }

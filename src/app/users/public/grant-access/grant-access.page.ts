@@ -113,13 +113,13 @@ export class GrantAccessPage implements OnInit {
 
   onGrantClick() {
     let orgIds = this.orgs.map(org => org.value);
-    let funcs = this.objects.map(obj => {
+    let funcs: any = this.objects.map(obj => {
+      let perms = obj.permission.filter(p => p.isChecked).map(p => p.id);
       return {
-        id: obj.value,
-        permissions: this.permissions.filter(perm => perm.isChecked).map(perm => perm.id)
+        id: obj.function.id,
+        permissions: perms
       }
     });
-
     let access: UserAccessInterface = UserAccessModel.FormInputToAccessObject(
       this.userName,
       this.role,
@@ -130,6 +130,13 @@ export class GrantAccessPage implements OnInit {
 
     this.userService.putAccess(access).subscribe(
       res => {
+        this.footerAlert.registerFooterAlert({
+          title:"Access updated.",
+          description:"",
+          type:'success',
+          timer:0
+        });
+
         this.router.navigate(['../access']);
       },
       error => {
