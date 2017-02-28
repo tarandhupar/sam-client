@@ -1,5 +1,5 @@
 import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
-import { FormGroup, FormControl,  Validators } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { ProgramService } from 'api-kit';
@@ -25,15 +25,9 @@ export class ProgramPageOperations implements OnInit {
     console.log(id);
 
     this.programForm = new FormGroup({
-      title: new FormControl('', Validators.compose([
-      Validators.required,
-      Validators.maxLength(144)
-    ])),
+      title: new FormControl(''),
       popularName: new FormControl(''),
-      falNo: new FormControl('', Validators.compose([
-        Validators.required,
-        Validators.maxLength(3)
-      ])),
+      falNo: new FormControl(''),
     });
   }
 

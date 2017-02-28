@@ -16,22 +16,32 @@
   <div class="usa-width-three-fourths">
 
     <form [formGroup] = "programForm">
-      <label for="title"><strong>Title</strong> &nbsp;&nbsp;<i>Required</i></label>
-      <span>Spell out any acronyms and limit to 144 characters.</span>
-      <input type="text" name="title" id="title" formControlName="title">
+      <samText [maxlength]="144"
+               [hint]="'Spell out any acronyms and limit to 144 characters.'"
+               [control]="programForm.get('title')"
+               formControlName="title"
+               [name]="'title-input'"
+               [label]="'Title'"
+               [required]="true"></samText>
 
-      <label for="popularName"><strong>Popular Name</strong></label>
-      <span>The Popular Name should be different than the Program Title.</span>
-      <input type="text" name="popularName" id="popularName" formControlName="popularName">
+      <samText [hint]="'The Popular Name should be different than the Program Title.'"
+               [control]="programForm.get('popularName')"
+               formControlName="popularName"
+               [name]="'popularName-input'"
+               [label]="'Popular Name'"></samText>
 
-      <label for="falNo"><strong>FAL Number</strong></label>
-      <span>Provide a unique three digit program number (for example, enter "244" for CFDA number 10.244)</span>
-      <input type="text" name="falno" id="falNo" formControlName="falNo">
+      <samText [maxlength]="3"
+               [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
+               [control]="programForm.get('falNo')"
+               formControlName="falNo"
+               [name]="'falNo-input'"
+               [label]="'FAL Number'"
+               [required]="true"></samText>
 
       <div>
         <div class="pull-left">
-          <button type="button" class="usa-button-outline" (click)="onCancelClick($event)">Cancel</button>
-          <button class="usa-button-primary" type="button" (click)="addProgram($event)" [disabled]="!programForm.valid">Save</button>
+          <samButton [buttonType]="'default'" buttonClass="'outline'" buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+          <samButton [buttonType]="(!programForm.valid ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="addProgram($event)"></samButton>
         </div>
       </div>
 
