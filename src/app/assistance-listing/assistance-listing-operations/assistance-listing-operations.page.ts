@@ -24,6 +24,7 @@ export class ProgramPageOperations implements OnInit {
     let id = this.route.snapshot.params['id'];
     console.log(id);
 
+
     this.programForm = new FormGroup({
       title: new FormControl(''),
       popularName: new FormControl(''),
@@ -45,9 +46,18 @@ export class ProgramPageOperations implements OnInit {
       "programNumber": this.programForm.value.falNo
     };
 
-    this.programService.saveProgram(null, data).subscribe(id => {
+    this.programService.saveProgram(null, data)
+      .subscribe(id => {
       console.log('AJAX Completed', id);
-    })
-  }
+      this.programForm.reset();
+    });
 
+    /*if(this.programForm.valid){
+      for(var name in this.programForm.controls) {
+        (<FormControl>this.programForm.controls[name]).setValue(''); //this should work in RC4 if `Control` is not working, working same in my case
+        this.programForm.controls[name].setErrors(null);
+      }
+    }*/
+
+  }
 }

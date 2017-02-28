@@ -6,7 +6,7 @@ import { ProgramPageOperations } from './assistance-listing-operations/assistanc
 export const routes: Routes = [
   { path: 'programs/:id/view', component: ProgramPage },
   { path: 'programs',  component: ProgramPage },
-  { path: 'programs/new', component:ProgramPageOperations },
+  { path: 'programs/add', component:ProgramPageOperations },
   { path: 'programs/:id/edit', component:ProgramPageOperations },
 ];
 if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
