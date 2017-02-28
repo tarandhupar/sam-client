@@ -20,9 +20,11 @@
 
       <ng-container *ngIf = "isSCA">
         <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p class="subtitle">Service Contract Act</p>
       </ng-container>
       <ng-container *ngIf = "!isSCA">
         <h1>DBA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p class="subtitle">Davis-Bacon Act</p>
       </ng-container>
 
       <div class="usa-grid-full">

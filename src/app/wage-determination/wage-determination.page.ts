@@ -84,8 +84,8 @@ export class WageDeterminationPage implements OnInit {
           "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
           "children": [
             {
-              "label": "SCA WD #" + this.wageDetermination.fullReferenceNumber,
-              "field": "wage-determination",
+              "label": (this.isSCA ? "SCA WD # " : "DBA WD # ") + this.wageDetermination.fullReferenceNumber,
+              "field": "wage-determination"
             }
           ]
         };
