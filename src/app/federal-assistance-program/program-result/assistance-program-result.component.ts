@@ -10,7 +10,7 @@ import * as moment from 'moment/moment';
   </div>
   
   <h3 class="assistance-program-title">
-    <span>{{data.data.title}}</span>
+    <a>{{data.data.title}}</a>
   </h3> 
   <div class="usa-grid-full">
     <div class="usa-width-one-half">
