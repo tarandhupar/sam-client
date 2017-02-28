@@ -1,0 +1,40 @@
+<div class="usa-grid assistance-listing-page">
+
+  <!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <div>&nbsp;</div>
+    <div sam-sticky limit=1200 container="occupy-page">
+      <!--Side Navigation-->
+      <nav>
+        <ul class="usa-sidenav-list">
+          <li><a href="{{currentUrl}}#headerInfo">Header Information</a></li>
+        </ul>
+      </nav>
+    </div>
+  </aside>
+
+  <div class="usa-width-three-fourths">
+
+    <form [formGroup] = "programForm">
+      <label for="title"><strong>Title</strong> &nbsp;&nbsp;<i>Required</i></label>
+      <span>Spell out any acronyms and limit to 144 characters.</span>
+      <input type="text" name="title" id="title" formControlName="title">
+
+      <label for="popularName"><strong>Popular Name</strong></label>
+      <span>The Popular Name should be different than the Program Title.</span>
+      <input type="text" name="popularName" id="popularName" formControlName="popularName">
+
+      <label for="falNo"><strong>FAL Number</strong></label>
+      <span>Provide a unique three digit program number (for example, enter "244" for CFDA number 10.244)</span>
+      <input type="text" name="falno" id="falNo" formControlName="falNo">
+
+      <div>
+        <div class="pull-left">
+          <button type="button" class="usa-button-outline" (click)="onCancelClick($event)">Cancel</button>
+          <button class="usa-button-primary" type="button" (click)="addProgram($event)" [disabled]="!programForm.valid">Save</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
