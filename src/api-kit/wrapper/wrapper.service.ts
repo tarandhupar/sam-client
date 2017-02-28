@@ -33,10 +33,17 @@ export class WrapperService {
     *      }
     * @returns Observable
     */
-    call(oApiParam: any) {
+    call(oApiParam: any, convertToJSON: boolean = true) {
         let method: string = oApiParam.method;
         let oHeader = new Headers({});
         let oURLSearchParams = new URLSearchParams();
+
+        //add Headers
+        if(typeof oApiParam.headers !== undefined && typeof oApiParam.headers === "object") {
+          for (var key in oApiParam.headers) {
+            oHeader.append(key, oApiParam.headers[key]);
+          }
+        }
 
         //add API-Umbrella key
         oURLSearchParams.set("api_key", API_UMBRELLA_KEY);
@@ -74,6 +81,7 @@ export class WrapperService {
         let oRequestOptions = new RequestOptions(jsonOption);
         let oRequest = new Request(oRequestOptions);
 
-        return this._http.request(oRequest).map((res: Response) => { return res.json() } );
+        return this._http.request(oRequest).map((res: Response) => { return (convertToJSON) ? res.json() : res; } );
     }
 }
+ 
