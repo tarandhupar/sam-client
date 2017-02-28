@@ -30,7 +30,7 @@ var workspaceServiceStub = {
 };
 
 
-fdescribe('WorkspacePage', () => {
+describe('WorkspacePage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [WorkspacePage, AssistanceProgramResult],
