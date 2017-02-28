@@ -29,9 +29,22 @@ export class WorkspaceLayoutComponent {
   */
   @Input() public loadFlag: any = true; 
   /**
+  * Suffix string for list results message
+  */
+  @Input() public listMessageSuffix: string;
+  /**
+  * Add button text string
+  */
+  @Input() public addBtnText: string;
+  /**
   * Event emitter when user navigates to a different page
   */
   @Output() public pageChange: EventEmitter<number> = new EventEmitter<number>();
+  /**
+  * Event emitter when user navigates to a different page
+  */
+  @Output() public addBtnClick: EventEmitter<any> = new EventEmitter<any>();
+  
   public sortConfig: SortConfig = {
     options: [
       {value: '', label: 'Relevant', name: 'relevant'},
@@ -46,6 +59,10 @@ export class WorkspaceLayoutComponent {
   
   pageChangeHandler(event): void {
     this.pageChange.emit(event);
+  }
+  
+  addBtnClickHandler(event): void {
+    this.addBtnClick.emit(event);
   }
 
   setMainWidth(): string {
