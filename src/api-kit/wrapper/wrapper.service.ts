@@ -39,7 +39,7 @@ export class WrapperService {
         let oURLSearchParams = new URLSearchParams();
 
         //add Headers
-        if(typeof oApiParam.headers !== undefined && typeof oApiParam.headers === "object") {
+        if(typeof oApiParam.headers !== undefined && typeof oApiParam.headers === "object" && oApiParam.headers !== null) {
           for (var key in oApiParam.headers) {
             oHeader.append(key, oApiParam.headers[key]);
           }
