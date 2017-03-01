@@ -2,7 +2,7 @@
   <header class="usa-width-one-whole" [ngClass]="setOffset()">
     <h1>{{titleText}}</h1>
   </header>
-  <main>
+  <main id="workspace-target" tabindex="-1">
     <aside class="side-filters" [ngClass]="setAsideWidth()">
       <sam-filters-container reset-label-margin=".5rem">
         <ng-content select="[workspace-sidebar]"></ng-content>
