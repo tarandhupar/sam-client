@@ -155,7 +155,7 @@ export class WageDeterminationPage implements OnInit {
         /** Process States **/
         // given a state code, look up the dictionary entry for that state (returns array of matches)
         let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
-        let stateDictionary = _.find(dictionaries._embedded['dictionaryList'], { id: 'wdStates' }).elements;
+        let stateDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdStates' }).elements;
         let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
 
         // if a matching state was found, display its name otherwise display a warning message
@@ -169,7 +169,7 @@ export class WageDeterminationPage implements OnInit {
         } else if (eachLocation.counties != null) {
           // if there are any exceptions, display 'All counties except' before the list of counties
           let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
-          let countiesDictionary = _.find(dictionaries._embedded['dictionaryList'], { id: 'wdCounties' }).elements;
+          let countiesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdCounties' }).elements;
           eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
         }
       }
@@ -204,7 +204,7 @@ export class WageDeterminationPage implements OnInit {
       if (wageDeterminaton.services != null) {
         let servicesString = "";
         for (let element of wageDeterminaton.services) {
-          let servicesDictionary = _.find(dictionaries._embedded['dictionaryList'], { id: 'scaServices' }).elements;
+          let servicesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'scaServices' }).elements;
           let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], servicesDictionary, 'elementId', false, "");
           let services = (result instanceof Array && result.length > 0) ? result[0].value : [];
           servicesString = servicesString.concat(services + ", ");
