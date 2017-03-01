@@ -59,9 +59,13 @@ export class GrantAccessPage implements OnInit {
     this.orgs = orgs;
   }
 
+  showDomains() {
+    this.role && this.domainOptions && this.domainOptions.length;
+  }
+
   onRoleChange(role) {
     this.role = role;
-    delete this.domain;
+    this.domain = null;
     this.domainOptions = [];
     this.objects = [];
 

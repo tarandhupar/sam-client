@@ -27,6 +27,7 @@ export class AgencyPickerComponent implements OnInit {
   @Input() orgId: string = "";
   @Input() hint: string = "";
   @Input() orgRoot = "";
+  @Input() required = false;
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
   @Output() organization = new EventEmitter<any[]>();
