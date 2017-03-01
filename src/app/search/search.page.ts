@@ -105,6 +105,7 @@ export class SearchPage implements OnInit{
         this.runSearch();
         this.getDictionaryData('wdStates');
         this.getDictionaryData('dbraConstructionTypes');
+        this.getCountyByState(this.wdStateModel);
       });
   }
 
@@ -252,7 +253,7 @@ export class SearchPage implements OnInit{
         data => {
 
           let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: true};
-          //scaServices, scaStates, scaCounties, dbraConstructionTypes, dbraStates, dbraCounties
+
           // formatting the array data according to api type to match what UI elements expect
           // state data
           if(id === 'wdStates'){
@@ -267,7 +268,20 @@ export class SearchPage implements OnInit{
             reformattedArray.unshift(defaultSelection);
             this.selectStateConfig.options = reformattedArray;
           }
-          // TODO: add other mappings for different dictionaries here
+
+          // construction type data
+          else if(id === 'dbraConstructionTypes'){
+            var reformattedArray = data._embedded.dictionaryList[0].elements.map(function(constructionItem){
+              let newObj = {label:'', value:''};
+
+              newObj.label = constructionItem.value;
+              newObj.value = constructionItem.value;
+              return newObj;
+            });
+            // adding the default selection row to the array
+            reformattedArray.unshift(defaultSelection);
+            this.selectConstructConfig.options = reformattedArray;
+          }
         },
       error => {
         console.error("Error!!", error);
@@ -288,8 +302,6 @@ export class SearchPage implements OnInit{
 
         var reformattedArray = data._embedded.dictionaryList[0].elements.map(function(countyItem){
           let newObj = {label:'', value:''};
-          // console.log('here is each state item ', countyItem);
-          // console.log('state name ', countyItem.value);
           newObj.label = countyItem.value;
           newObj.value = countyItem.value;
           return newObj;
@@ -347,7 +359,6 @@ export class SearchPage implements OnInit{
 
   // event for state change
   stateChange(event){
-    console.log('state change event here!');
     // call method to get county data per state
     this.getCountyByState(this.wdStateModel);
 
