@@ -16,7 +16,7 @@ export class WrapperService {
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions",
         "access": "/rms/v1/access",
-        "wageDetermination": "/wdol/v1/wd",
+        "wageDetermination": "/wdol/v1",
     };
 
     constructor(private _http: Http){}
