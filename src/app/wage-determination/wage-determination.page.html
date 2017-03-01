@@ -22,16 +22,16 @@
 
       <div class="usa-grid-full">
 
-        <div class="usa-width-one-half" *ngIf="states && counties">
+        <div class="usa-width-one-half">
           <ul class="usa-unstyled-list">
-            <li>
-              <strong>State/States: </strong>
-              {{states}}
-            </li>
-            <li>
-              <strong>County/ies: </strong>
-              {{counties}}
-            </li>
+            <div class="m_T-3x m_B-3x" *ngFor="let location of locations">
+              <li>
+                <strong>State: </strong> {{location.stateString}}
+              </li>
+              <li>
+                <strong>Counties: </strong> {{location.countiesString}}
+              </li>
+            </div>
           </ul>
         </div>
 
