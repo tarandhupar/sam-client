@@ -124,11 +124,12 @@ export class GrantAccessPage implements OnInit {
     });
     let access: UserAccessInterface = UserAccessModel.FormInputToAccessObject(
       this.userName,
-      this.role,
-      this.domain,
+      parseInt(this.role),
+      parseInt(this.domain),
       orgIds,
       funcs
     );
+    console.log(access);
 
     this.userService.putAccess(access).subscribe(
       res => {
