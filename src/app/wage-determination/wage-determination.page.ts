@@ -63,7 +63,6 @@ export class WageDeterminationPage implements OnInit {
     let wdAPI = this.loadWageDetermination();
     let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
     this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
-    this.getServices(wgAndDictionariesAPI);
     this.getLocations(wgAndDictionariesAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
