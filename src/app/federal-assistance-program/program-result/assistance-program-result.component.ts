@@ -13,7 +13,7 @@ import * as moment from 'moment/moment';
     <a>{{data.data.title}}</a>
   </h3> 
   <div class="usa-grid-full">
-    <div class="usa-width-one-half">
+    <div class="usa-width-two-thirds">
       <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x"> 
      <li>
         <strong>Date Modified: </strong><span>{{data.modifiedDate}}</span>
@@ -23,15 +23,15 @@ import * as moment from 'moment/moment';
       </li>
       </ul>
     </div>
-    <div class="usa-width-one-half">
+    <div class="usa-width-one-third">
        <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x"> 
      
       <li>
-        <div><strong>CFDA #: </strong></div>
+        <strong>CFDA #: </strong>
         <span class="fal-program-number">{{data.data.programNumber}}</span>
       </li>
       <li>
-        <div><strong>Date Published: </strong></div>
+        <strong>Date Published: </strong>
         <span>{{data.publishedDate}}</span>
       </li>
   </ul>
@@ -57,8 +57,12 @@ export class AssistanceProgramResult implements OnInit {
   }
 
   ngOnInit() {
-    this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y H:mm a");
-    this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y H:mm a");
+    if(this.data.publishedDate !== null) {
+      this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y H:mm a");
+    }
+    if(this.data.modifiedDate !== null) {
+      this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y H:mm a");
+    }
     if (this.data.status.code !== 'published') {
       this.showhideStatus = true;
     }
