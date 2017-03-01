@@ -19,7 +19,6 @@ export class GrantAccessPage implements OnInit {
   private role;
   public roleOptions = [];
 
-  // these two will be replaced with real data on the access object
   private permissions: any;
   private objects = [];
 
@@ -100,22 +99,21 @@ export class GrantAccessPage implements OnInit {
     }
   }
 
-  isGrantDisabled() {
-    return !this.domain || !this.orgs.length;
-  }
-
-  grantButtonStyle() {
-    return {
-      "usa-button-disabled": this.isGrantDisabled(),
-      "usa-button-primary": !this.isGrantDisabled()
-    };
-  }
-
   goToAccessPage() {
     this.router.navigate(['../access']);
   }
 
   onGrantClick() {
+    if (!this.orgs || !this.orgs.length || !this.domain) {
+      this.footerAlert.registerFooterAlert({
+        title:"Select organization(s) and a domain.",
+        description:"",
+        type:'warning',
+        timer:0
+      });
+      return;
+    }
+
     let orgIds = this.orgs.map(org => org.value);
     let funcs: any = this.objects.map(obj => {
       let perms = obj.permission.filter(p => p.isChecked).map(p => p.id);
@@ -134,7 +132,6 @@ export class GrantAccessPage implements OnInit {
 
     this.userService.putAccess(access).subscribe(
       res => {
-        console.log('we here');
         this.footerAlert.registerFooterAlert({
           title:"Access updated.",
           description:"",
