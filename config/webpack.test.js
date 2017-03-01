@@ -48,7 +48,17 @@ var conf = {
      * Make sure root is src
      */
     root: helpers.root('src'),
-
+    // aliases
+    alias: {
+      samUIKit: helpers.root('src') + '/sam-ui-elements/src/ui-kit',
+      samDirectives: helpers.root('src') + '/sam-ui-elments/src/ui-kit/directives',
+      samComponents: helpers.root('src') + '/sam-ui-elements/src/ui-kit/components',
+      samElements: helpers.root('src') + '/sam-ui-elements/src/ui-kit/elements',
+      samFormControls: helpers.root('src') + '/sam-ui-elements/src/ui-kit/form-controls',
+      samFormTemplates: helpers.root('src') + '/sam-ui-elements/src/ui-kit/form-templates',
+      samPipes: helpers.root('src') + '/sam-ui-elements/src/ui-kit/pipes',
+      samWrappers: helpers.root('src') + '/sam-ui-elements/src/ui-kit/wrappers'
+    },
   },
 
   /**
@@ -73,7 +83,7 @@ var conf = {
       {
         test: /\.ts$/,
         loader: 'tslint-loader',
-        exclude: [helpers.root('node_modules')]
+        exclude: [helpers.root('node_modules'),helpers.root('src/sam-ui-elements')]
       },
 
       /**

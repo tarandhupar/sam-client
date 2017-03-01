@@ -3,7 +3,7 @@ import { RouterTestingModule} from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import { SamSearchHeaderComponent } from './search-header.component';
-import {SamUIKitModule} from "ui-kit";
+import {SamUIKitModule} from "samUIKit";
 import {AutoCompleteWrapper} from "api-kit/autoCompleteWrapper/autoCompleteWrapper.service";
 import {SuggestionsService} from "api-kit/search/suggestions.service";
 import {WrapperService} from "api-kit/wrapper/wrapper.service";
@@ -25,8 +25,8 @@ describe('The Sam Search Header component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [SamUIKitModule,RouterTestingModule],
-      providers: [SamSearchHeaderComponent,
-                  AutoCompleteWrapper,
+      declarations: [SamSearchHeaderComponent],
+      providers: [AutoCompleteWrapper,
                   SuggestionsService,
                   WrapperService,
                   FHService,

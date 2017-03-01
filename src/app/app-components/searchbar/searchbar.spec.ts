@@ -2,12 +2,12 @@ import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
-import { SamSearchbarComponent } from './searchbar.component.ts';
+import { SamSearchbarComponent } from './searchbar.component';
 import { SamUIKitModule } from 'samUIKit';
-import { AutoCompleteWrapper } from '../../../api-kit/autoCompleteWrapper/autoCompleteWrapper.service';
-import { FHService } from '../../../api-kit/fh/fh.service';
-import { SuggestionsService } from '../../../api-kit/search/suggestions.service';
-import { WrapperService } from '../../../api-kit/wrapper/wrapper.service';
+import { AutoCompleteWrapper } from 'api-kit/autoCompleteWrapper/autoCompleteWrapper.service';
+import { FHService } from 'api-kit/fh/fh.service';
+import { SuggestionsService } from 'api-kit/search/suggestions.service';
+import { WrapperService } from 'api-kit/wrapper/wrapper.service';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
@@ -30,6 +30,7 @@ describe('The Sam Search Bar component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      declarations: [SamSearchbarComponent],
       providers: [BaseRequestOptions,
                   MockBackend,
                   {
