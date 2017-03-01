@@ -301,7 +301,7 @@ export class SearchPage implements OnInit{
         var reformattedArray = data._embedded.dictionaryList[0].elements.map(function(countyItem){
           let newObj = {label:'', value:''};
           newObj.label = countyItem.value;
-          newObj.value = countyItem.value;
+          newObj.value = countyItem.elementId;
           return newObj;
         });
 
