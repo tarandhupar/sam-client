@@ -305,6 +305,20 @@ export class SearchPage implements OnInit{
           return newObj;
         });
 
+        reformattedArray.sort(function (a, b){
+          var nameA = a.label.toUpperCase(); // ignore upper and lowercase
+          var nameB = b.label.toUpperCase(); // ignore upper and lowercase
+          if (nameA < nameB) {
+            return -1;
+          }
+          if (nameA > nameB) {
+            return 1;
+          }
+
+          // names must be equal
+          return 0;
+        });
+
         // adding the default selection row to the array
         reformattedArray.unshift(defaultSelection);
         this.selectCountyConfig.options = reformattedArray;
