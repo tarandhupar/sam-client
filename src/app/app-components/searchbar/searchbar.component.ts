@@ -13,8 +13,7 @@ import {Component, Input, Output, EventEmitter, ViewChild, Renderer, OnChanges} 
   templateUrl: 'searchbar.template.html',
 
 })
-export class SamSearchbarComponent implements OnChanges{
-
+export class SamSearchbarComponent {
 
   @Input()
   size: string;
@@ -66,7 +65,7 @@ export class SamSearchbarComponent implements OnChanges{
     }
   }
 
-  ngOnChanges(changes){
+  ngAfterViewChecked(changes){
     if(changes && changes.filterValue && changes.filterValue.currentValue){
       this.findSelectedOption(changes.filterValue.currentValue);
     }else{

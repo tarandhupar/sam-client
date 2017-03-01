@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { SamUIKitModule } from 'samUIKit';
 import { SamAPIKitModule } from 'api-kit';
 import { AgencyPickerComponent } from './agency-picker/agency-picker.component';
+import { SamSearchHeaderComponent } from './search-header/search-header.component';
 import { SamWellComponent } from './well/well.component';
 import { SamSectionComponent } from './section/section.component';
 import { SamSubSectionComponent } from './subsection/subsection.component';
@@ -29,6 +30,7 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
 @NgModule({
   declarations: [
     AgencyPickerComponent,
+    SamSearchHeaderComponent,
     SamWellComponent,
     SamSectionComponent,
     SamSubSectionComponent,
@@ -52,6 +54,7 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
   ],
   exports: [
     AgencyPickerComponent,
+    SamSearchHeaderComponent,
     SamWellComponent,
     SamSectionComponent,
     SamSubSectionComponent,
