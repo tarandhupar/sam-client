@@ -55,7 +55,7 @@ export class WorkspaceLayoutComponent {
     label: 'Sort',
     name: 'sort'
   };
-  private _displayFilters: boolean = false;  
+  private _displayFilters: boolean = true;  
   
   pageChangeHandler(event): void {
     document.getElementById('workspace-target').focus();
