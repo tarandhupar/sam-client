@@ -33,8 +33,8 @@ export class WageDeterminationService{
 
   getWageDeterminationFilterData(obj){
     let apiParam = {
-      name: 'dictionaries',
-      suffix: '',
+      name: 'wageDetermination',
+      suffix: '/dictionaries',
       oParam: {
         ids: obj.ids
       },
@@ -46,8 +46,8 @@ export class WageDeterminationService{
 
   getWageDeterminationFilterCountyData(obj){
     let apiParam = {
-      name: 'dictionaries',
-      suffix: '/wdCounties',
+      name: 'wageDetermination',
+      suffix: '/dictionaries/wdCounties',
       oParam: {
         state: obj.state
       },
@@ -56,5 +56,4 @@ export class WageDeterminationService{
 
     return this.oAPIService.call(apiParam);
   }
-
 }
