@@ -10,6 +10,7 @@ export class ListResultsMessageComponent implements OnChanges{
   @Input() public total: number;
   @Input() public currentPage: number;
   @Input() public showing: number;
+  @Input() public suffix: string;
   private message: string;
   
   ngOnChanges(){
@@ -20,15 +21,17 @@ export class ListResultsMessageComponent implements OnChanges{
       currentPage = 1;
       showing = total;
     }
-    if(currentPage>1){
-      let numberA = (currentPage-1) * showing;
-      let numberB = numberA + showing;
-      if(numberB > total){
-        numberB = total;
-      }
-      this.message = "Showing " + numberA + " - " + numberB + " of " + total + " results";
-    } else {
-      this.message = "Showing " + showing + " of " + total + " results";
-    }
+		let numberA = (currentPage-1) * showing;
+		let numberB = numberA + showing;
+		numberA += 1;
+		if(numberB > total){
+			numberB = total;
+		}
+		this.message = "Showing " + numberA + " - " + numberB + " of " + total;
+		if(this.suffix){
+			this.message += " " + this.suffix;
+		} else {
+			this.message += " results";
+		}
   }
 }

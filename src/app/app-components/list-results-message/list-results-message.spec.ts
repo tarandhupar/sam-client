@@ -25,7 +25,7 @@ describe('ListResultsMessage', () => {
 
   it('message test 1', ()  => {
     fixture.whenStable().then(() => {
-      expect( fixture.nativeElement.innerHTML ).toEqual("Showing 10 of 100 results");
+      expect( fixture.nativeElement.innerHTML ).toEqual("Showing 1 - 10 of 100 results");
     });
 	});
   
@@ -35,7 +35,7 @@ describe('ListResultsMessage', () => {
     fixture.detectChanges();
     //console.log(fixture);
     fixture.whenStable().then(() => {
-      expect( fixture.nativeElement.innerHTML ).toEqual("Showing 20 - 30 of 100 results");
+      expect( fixture.nativeElement.innerHTML ).toEqual("Showing 21 - 30 of 100 results");
     });
 	});
   
@@ -45,7 +45,7 @@ describe('ListResultsMessage', () => {
     fixture.detectChanges();
     //console.log(fixture);
     fixture.whenStable().then(() => {
-      expect( fixture.nativeElement.innerHTML ).toEqual("Showing 5 of 5 results");
+      expect( fixture.nativeElement.innerHTML ).toEqual("Showing 1 - 5 of 5 results");
     });
 	});
 });
