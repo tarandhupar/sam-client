@@ -111,6 +111,10 @@ export class GrantAccessPage implements OnInit {
     };
   }
 
+  goToAccessPage() {
+    this.router.navigate(['../access']);
+  }
+
   onGrantClick() {
     let orgIds = this.orgs.map(org => org.value);
     let funcs: any = this.objects.map(obj => {
@@ -130,6 +134,7 @@ export class GrantAccessPage implements OnInit {
 
     this.userService.putAccess(access).subscribe(
       res => {
+        console.log('we here');
         this.footerAlert.registerFooterAlert({
           title:"Access updated.",
           description:"",
@@ -137,7 +142,7 @@ export class GrantAccessPage implements OnInit {
           timer:0
         });
 
-        this.router.navigate(['../access']);
+        this.goToAccessPage();
       },
       error => {
         this.footerAlert.registerFooterAlert({
@@ -148,6 +153,5 @@ export class GrantAccessPage implements OnInit {
         });
       }
     );
-    console.log('you made it');
   }
 }

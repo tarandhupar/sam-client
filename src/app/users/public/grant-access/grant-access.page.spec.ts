@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { Observable } from "rxjs";
 import { SamUIKitModule } from 'ui-kit';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 
 import { FormsModule } from "@angular/forms";
@@ -13,6 +13,9 @@ import { AppComponentsModule } from "app/app-components/app-components.module";
 import { routes } from '../../users.route';
 import {UserAccessInterface} from "api-kit/access/access.interface";
 import {By} from "@angular/platform-browser";
+import {UserAccessPage} from "../access/access.page";
+import {PipesModule} from "../../../app-pipes/app-pipes.module";
+import {GroupByDomainPipe} from "../access/group-by-domain.pipe";
 
 
 let userAccessStub = {
@@ -25,7 +28,7 @@ let userAccessStub = {
   },
 
   putAccess: function(access: UserAccessInterface) {
-    return Observable.throw(new Error());
+    return Observable.of({});
   }
 };
 
@@ -50,10 +53,11 @@ fdescribe('The GrantAccessPage component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GrantAccessPage],
-      imports: [SamUIKitModule,RouterTestingModule.withRoutes(routes),FormsModule,AppComponentsModule],
+      declarations: [GrantAccessPage, UserAccessPage, GroupByDomainPipe],
+      imports: [SamUIKitModule,RouterTestingModule.withRoutes(routes),FormsModule,AppComponentsModule, PipesModule],
       providers: [
         AlertFooterService,
+        // { provide: Router, useClass: RouterStub },
         { provide: UserAccessService, useValue: userAccessStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
       ]
@@ -90,8 +94,8 @@ fdescribe('The GrantAccessPage component', () => {
       fixture.detectChanges();
       expect(true).toBe(true);
       // FIXME: onGrantClick attempts to change the route and crashes tests
-      //component.onGrantClick();
-      //expect(svc.putAccess).toHaveBeenCalled();
+      // component.onGrantClick();
+      // expect(svc.putAccess).toHaveBeenCalled();
     });
 
   }));
