@@ -1,9 +1,8 @@
 import { Component,OnInit } from '@angular/core';
 import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
-//import { Operator } from 'rxjs';
+import 'rxjs/add/operator/map';
 import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
-import 'rxjs/add/operator/map';
 import {WageDeterminationService} from "../../api-kit/wage-determination/wage-determination.service";
 import {data} from "../../ui-kit/sidenav/services/testdata";
 import wrapDriver = protractor.wrapDriver;
@@ -23,7 +22,6 @@ export class SearchPage implements OnInit{
   pageNum = 0;
   totalCount: any= 0;
   totalPages: any= 0;
-  pageNumPaginationPadding = 2;
   showPerPage = 10;
   data = [];
   featuredData = [];
@@ -96,22 +94,15 @@ export class SearchPage implements OnInit{
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.isActive = data['isActive'] && data['isActive'] === "false" ? false : this.isActive;
+        this.isActive = data['isActive'] && data['isActive'] === "true" ? true : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : this.wdTypeModel;
         this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : this.wdStateModel;
         this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : this.wdCountyModel;
         this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : this.wdConstructModel;
         this.runSearch();
-        this.getDictionaryData('wdStates');
-        this.getDictionaryData('dbraConstructionTypes');
-        this.getCountyByState(this.wdStateModel);
-        this.determineEnableCountySelect();
+        this.loadParams();
       });
-  }
-
-  ngOnChange(changes) {
-    this.runSearch();
   }
 
   loadParams(){
@@ -165,7 +156,13 @@ export class SearchPage implements OnInit{
 
     return qsobj;
   }
-  runSearch(){
+
+	runSearch(){
+    if(this.index === 'wd') {
+      this.getDictionaryData('wdStates');
+      this.getCountyByState(this.wdStateModel);
+      this.determineEnableCountySelect();
+    }
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
       this.searchService.featuredSearch({
@@ -342,6 +339,7 @@ export class SearchPage implements OnInit{
 
   // event for wdFilter Change
   wdFilterChange(event){
+    this.getDictionaryData('dbraConstructionTypes');
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj

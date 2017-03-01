@@ -17,16 +17,10 @@ describe('The Sam Footer component', () => {
 
     fixture = TestBed.createComponent(SamFooterComponent);
     component = fixture.componentInstance;
-
   });
 
   it('should compile sam footer', function () {
     fixture.detectChanges();
     expect(true).toBe(true);
-
   });
-
-
-
-
 });
