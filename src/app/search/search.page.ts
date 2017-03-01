@@ -3,8 +3,10 @@ import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
 //import { Operator } from 'rxjs';
 import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
-import { SearchDictionaryService } from "../../api-kit/search/dictionary.service";
 import 'rxjs/add/operator/map';
+import {WageDeterminationService} from "../../api-kit/wage-determination/wage-determination.service";
+import {data} from "../../ui-kit/sidenav/services/testdata";
+import wrapDriver = protractor.wrapDriver;
 
 
 @Component({
@@ -54,7 +56,7 @@ export class SearchPage implements OnInit{
   };
 
   // Select State Component
-  selectStateModel = '';
+  wdStateModel = '';
   selectStateConfig = {
     options: [
       {value:'', label: 'Default option', name: 'empty', disabled: true},
@@ -65,7 +67,7 @@ export class SearchPage implements OnInit{
   };
 
   // Select County Component
-  selectCountyModel = '';
+  wdCountyModel = '';
   selectCountyConfig = {
     options: [
       {value:'', label: 'Default option', name: 'empty', disabled: true},
@@ -76,21 +78,17 @@ export class SearchPage implements OnInit{
   };
 
   // Select Construct Type Component
-  selectConstructModel = '';
+  wdConstructModel = '';
   selectConstructConfig = {
     options: [
       {value:'', label: 'Default option', name: 'empty', disabled: true},
-      {label: 'Heavy',value: 'Heavy'},
-      {label: 'Residential',value: 'Residential'},
-      {label: 'Building',value: 'Building'},
-      {label: 'Highway',value: 'Highway'},
     ],
     disabled: false,
     label: 'Select Construction Type',
     name: 'constructionType',
   };
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService, private dictionaryService: SearchDictionaryService) { }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService, private wageDeterminationService: WageDeterminationService) { }
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       data => {
@@ -101,12 +99,12 @@ export class SearchPage implements OnInit{
         this.isActive = data['isActive'] && data['isActive'] === "false" ? false : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : this.wdTypeModel;
-        this.selectStateModel = data['state'] && data['state'] !== null ? data['state'] : this.selectStateModel;
-        this.selectCountyModel = data['county'] && data['county'] !== null ? data['county'] : this.selectCountyModel;
-        this.selectConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : this.selectConstructModel;
+        this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : this.wdStateModel;
+        this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : this.wdCountyModel;
+        this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : this.wdConstructModel;
         this.runSearch();
-        this.getDictionaryData('dbraStates');
-
+        this.getDictionaryData('wdStates');
+        this.getDictionaryData('dbraConstructionTypes');
       });
   }
 
@@ -151,16 +149,16 @@ export class SearchPage implements OnInit{
     if(this.wdTypeModel!=null) {
       qsobj['wdType'] = this.wdTypeModel;
     }
-    if(this.selectConstructModel.length>0){
-      qsobj['conType'] = this.selectConstructModel;
+    if(this.wdConstructModel.length>0){
+      qsobj['conType'] = this.wdConstructModel;
     }
 
-    if(this.selectStateModel.length>0){
-      qsobj['state'] = this.selectStateModel;
+    if(this.wdStateModel.length>0){
+      qsobj['state'] = this.wdStateModel;
     }
 
-    if(this.selectCountyModel.length>0){
-      qsobj['county'] = this.selectCountyModel;
+    if(this.wdCountyModel.length>0){
+      qsobj['county'] = this.wdCountyModel;
     }
 
     return qsobj;
@@ -203,9 +201,9 @@ export class SearchPage implements OnInit{
       organizationId: this.organizationId,
       isActive: this.isActive,
       wdType : this.wdTypeModel,
-      conType : this.selectConstructModel,
-      state: this.selectStateModel,
-      county: this.selectCountyModel
+      conType : this.wdConstructModel,
+      state: this.wdStateModel,
+      county: this.wdCountyModel
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -248,30 +246,64 @@ export class SearchPage implements OnInit{
 
   // get dictionary data from dictionary API for samselects
   getDictionaryData(id){
-    this.dictionaryService.getDictionaryDataById({
-        ids: id
-      }).subscribe(
+    this.wageDeterminationService.getWageDeterminationFilterData({
+     ids: id
+    }).subscribe(
         data => {
 
-          // if returned data is states rearrange the data so it can be correctly assigned as samselect options
-          if(id === 'scaStates' || id === 'dbraStates'){
-            var reformattedArray = data._embedded.dictionaryList[0].dbraStates.map(function(stateItem){
-              let newObj = {Label:'', Value:''};
+          let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: true};
+          //scaServices, scaStates, scaCounties, dbraConstructionTypes, dbraStates, dbraCounties
+          // formatting the array data according to api type to match what UI elements expect
+          // state data
+          if(id === 'wdStates'){
+            var reformattedArray = data._embedded.dictionaryList[0].elements.map(function(stateItem){
+              let newObj = {label:'', value:''};
 
-              newObj.Label = stateItem.value;
-              newObj.Value = stateItem.key;
+              newObj.label = stateItem.value;
+              newObj.value = stateItem.elementId;
               return newObj;
             });
-
+            // adding the default selection row to the array
+            reformattedArray.unshift(defaultSelection);
             this.selectStateConfig.options = reformattedArray;
           }
+          // TODO: add other mappings for different dictionaries here
         },
       error => {
         console.error("Error!!", error);
       }
     );
+  }
+
+  // gets county data back depending on state provided
+  getCountyByState(state){
 
 
+    this.wageDeterminationService.getWageDeterminationFilterCountyData({
+      state: state
+    }).subscribe(
+      data => {
+        // county data
+        let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: true};
+
+        var reformattedArray = data._embedded.dictionaryList[0].elements.map(function(countyItem){
+          let newObj = {label:'', value:''};
+          // console.log('here is each state item ', countyItem);
+          // console.log('state name ', countyItem.value);
+          newObj.label = countyItem.value;
+          newObj.value = countyItem.value;
+          return newObj;
+        });
+
+        // adding the default selection row to the array
+        reformattedArray.unshift(defaultSelection);
+        this.selectCountyConfig.options = reformattedArray;
+      },
+      error => {
+        console.error("Error!!", error);
+      }
+
+    );
   }
 
   pageChange(pagenumber){
@@ -315,6 +347,10 @@ export class SearchPage implements OnInit{
 
   // event for state change
   stateChange(event){
+    console.log('state change event here!');
+    // call method to get county data per state
+    this.getCountyByState(this.wdStateModel);
+
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
@@ -323,8 +359,6 @@ export class SearchPage implements OnInit{
   }
 
   countyChange(event){
-    console.log('county event here!!');
-    console.log(this.selectCountyModel);
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
