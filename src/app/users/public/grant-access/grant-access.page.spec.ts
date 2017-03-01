@@ -47,7 +47,7 @@ let activatedRouteStub = {
   }
 };
 
-fdescribe('The GrantAccessPage component', () => {
+describe('The GrantAccessPage component', () => {
   let component:GrantAccessPage;
   let fixture:any;
 
