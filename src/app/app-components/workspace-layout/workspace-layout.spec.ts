@@ -3,6 +3,7 @@ import { SamUIKitModule } from 'samUIKit';
 import { By } from '@angular/platform-browser';
 
 import { WorkspaceLayoutComponent } from './workspace-layout.component';
+import { ListResultsMessageComponent } from '../list-results-message/list-results-message.component';
 
 let fixture;
 let comp;
@@ -10,7 +11,7 @@ let comp;
 describe('WorkspaceLayoutTests', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WorkspaceLayoutComponent ],
+      declarations: [ WorkspaceLayoutComponent,ListResultsMessageComponent ],
       imports: [SamUIKitModule]
     });
     TestBed.compileComponents().then( ()=>{
@@ -19,7 +20,7 @@ describe('WorkspaceLayoutTests', () => {
     });
   }));
 
-  it('logo test', ()  => {
+  it('result list message test', ()  => {
     comp.totalPages = 14;
     comp.currentPage = 2;
     comp.totalElements = 140;

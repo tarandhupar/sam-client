@@ -17,6 +17,7 @@ describe('ListResultsMessage', () => {
       comp.total = 100;
       comp.currentPage = 1;
       comp.showing = 10;
+      comp.ngOnChanges();
       fixture.detectChanges();
     });
 
@@ -24,23 +25,27 @@ describe('ListResultsMessage', () => {
 
   it('message test 1', ()  => {
     fixture.whenStable().then(() => {
-      expect( fixture.debugElement.query( By.css('list-results-message') ).nativeElement.innerHTML ).toEqual("Showing 10 of 100 results");
+      expect( fixture.nativeElement.innerHTML ).toEqual("Showing 10 of 100 results");
     });
 	});
   
   it('message test 2', ()  => {
+    comp.currentPage = 3;
+    comp.ngOnChanges();
+    fixture.detectChanges();
+    //console.log(fixture);
     fixture.whenStable().then(() => {
-      comp.currentPage = 3;
-      fixture.detectChanges();
-      expect( fixture.debugElement.query( By.css('list-results-message') ).nativeElement.innerHTML ).toEqual("Showing 20 - 30 of 100 results");
+      expect( fixture.nativeElement.innerHTML ).toEqual("Showing 20 - 30 of 100 results");
     });
 	});
   
   it('message test 3', ()  => {
+    comp.total = 5;
+    comp.ngOnChanges();
+    fixture.detectChanges();
+    //console.log(fixture);
     fixture.whenStable().then(() => {
-      comp.total = 5;
-      fixture.detectChanges();
-      expect( fixture.debugElement.query( By.css('list-results-message') ).nativeElement.innerHTML ).toEqual("Showing 20 - 30 of 100 results");
+      expect( fixture.nativeElement.innerHTML ).toEqual("Showing 5 of 5 results");
     });
 	});
 });
