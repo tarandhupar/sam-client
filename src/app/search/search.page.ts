@@ -162,6 +162,7 @@ export class SearchPage implements OnInit{
       this.getDictionaryData('wdStates');
       this.getCountyByState(this.wdStateModel);
       this.determineEnableCountySelect();
+      this.getDictionaryData('dbraConstructionTypes');
     }
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
@@ -373,6 +374,9 @@ export class SearchPage implements OnInit{
   // event for state change
   stateChange(event){
 
+    // reset county model on state change
+    this.wdCountyModel = '';
+
     // enable county select if needed
     this.determineEnableCountySelect();
 
@@ -402,6 +406,36 @@ export class SearchPage implements OnInit{
     else{
       this.selectCountyConfig.disabled = true;
     }
+  }
+
+  wdStateClear(){
+    this.wdStateModel = '';
+
+    var qsobj = this.setupQS(false);
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/search'], navigationExtras);
+  }
+
+  wdCountyClear(){
+    this.wdCountyModel = '';
+
+    var qsobj = this.setupQS(false);
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/search'], navigationExtras);
+  }
+
+  wdConstructionClear(){
+    this.wdConstructModel = '';
+
+    var qsobj = this.setupQS(false);
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/search'], navigationExtras);
   }
 
 }

@@ -33,6 +33,7 @@
                   [disabled]="selectStateConfig.disabled"
                   (modelChange)="stateChange($event)">
                 </samSelect>
+                <button (click)='wdStateClear()'>Clear</button>
 
                 <!--county drop down-->
                 <samSelect
@@ -45,6 +46,7 @@
                   [disabled]="selectCountyConfig.disabled"
                   (modelChange)="countyChange($event)">
                 </samSelect>
+                <button (click)='wdCountyClear()'>Clear</button>
               </sam-collapsible>
 
 
@@ -64,6 +66,7 @@
               </sam-collapsible>
               <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra'">
 
+
                 <!--construction type drop down-->
                 <samSelect
                   [(model)]="wdConstructModel"
@@ -75,6 +78,7 @@
                   [disabled]="selectConstructConfig.disabled"
                   (modelChange)="constructionTypeChange($event)">>
                 </samSelect>
+                <button (click)='wdConstructionClear()'>Clear</button>
               </sam-collapsible>
             </sam-filters-container>
           </li>
