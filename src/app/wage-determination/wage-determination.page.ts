@@ -129,7 +129,7 @@ export class WageDeterminationPage implements OnInit {
 
   private loadDictionary() {
     let dictionariesSubject = new ReplaySubject(1);
-    this.wgService.getWageDeterminationDictionary('state, county, services').subscribe(dictionariesSubject);
+    this.wgService.getWageDeterminationDictionary('wdStates, wdCounties, scaServices').subscribe(dictionariesSubject);
     dictionariesSubject.subscribe(data => {
       // do something with the dictionary api
       this.dictionaries = data;
@@ -155,7 +155,8 @@ export class WageDeterminationPage implements OnInit {
         /** Process States **/
         // given a state code, look up the dictionary entry for that state (returns array of matches)
         let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
-        let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], dictionaries.state, 'element_id', false, '');
+        let stateDictionary = _.find(dictionaries._embedded['dictionaryList'], { id: 'wdStates' }).elements;
+        let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
 
         // if a matching state was found, display its name otherwise display a warning message
         eachLocation.stateString = (resultStates.length > 0) ? resultStates[0].value : 'Unknown state';
@@ -168,7 +169,8 @@ export class WageDeterminationPage implements OnInit {
         } else if (eachLocation.counties != null) {
           // if there are any exceptions, display 'All counties except' before the list of counties
           let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
-          eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, dictionaries.county);
+          let countiesDictionary = _.find(dictionaries._embedded['dictionaryList'], { id: 'wdCounties' }).elements;
+          eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
         }
       }
 
@@ -185,7 +187,7 @@ export class WageDeterminationPage implements OnInit {
 
     /** Look up county names in dictionary **/
     let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
-    let resultCounties = filterMultiArrayObjectPipe.transform(countiesList, countyDictionary, 'element_id', false, '');
+    let resultCounties = filterMultiArrayObjectPipe.transform(countiesList, countyDictionary, 'elementId', false, '');
 
     // if any county is not found, show a warning message
     let warning = '';
@@ -202,7 +204,8 @@ export class WageDeterminationPage implements OnInit {
       if (wageDeterminaton.services != null) {
         let servicesString = "";
         for (let element of wageDeterminaton.services) {
-          let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], dictionaries.services, 'element_id', false, "");
+          let servicesDictionary = _.find(dictionaries._embedded['dictionaryList'], { id: 'scaServices' }).elements;
+          let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], servicesDictionary, 'elementId', false, "");
           let services = (result instanceof Array && result.length > 0) ? result[0].value : [];
           servicesString = servicesString.concat(services + ", ");
         }
