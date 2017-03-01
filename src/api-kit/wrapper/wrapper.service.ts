@@ -12,6 +12,7 @@ export class WrapperService {
         "federalHierarchy": "/federalorganizations/v1/organizations",
         "entities": "/entities",
         "exclusions": "/exclusions",
+        "awards": "/awards",
         "alerts": "/alert/v2/alerts",
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions",
