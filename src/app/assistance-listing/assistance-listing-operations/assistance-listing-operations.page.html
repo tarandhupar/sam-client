@@ -1,50 +1,59 @@
-<div class="usa-grid assistance-listing-page">
+<div class="assistance-listing-operations">
 
-  <!--Sidebar-->
-  <aside class="usa-width-one-fourth">
-    <div>&nbsp;</div>
-    <div sam-sticky limit=1200 container="occupy-page">
-      <!--Side Navigation-->
-      <nav>
-        <ul class="usa-sidenav-list">
-          <li><a href="{{currentUrl}}#headerInfo">Header Information</a></li>
-        </ul>
-      </nav>
+  <div class="usa-grid" *ngIf="submitted">
+    <div class="usa-width-one-whole">
+      <samAlert [type]="'success'" [title]="'Success!!'" [description]="'New Assistance Listing is successfully added.'"></samAlert>
     </div>
-  </aside>
-
-  <div class="usa-width-three-fourths">
-
-    <form [formGroup] = "programForm">
-      <samText [maxlength]="144"
-               [hint]="'Spell out any acronyms and limit to 144 characters.'"
-               [control]="programForm.get('title')"
-               formControlName="title"
-               [name]="'title-input'"
-               [label]="'Title'"
-               [required]="true"></samText>
-
-      <samText [hint]="'The Popular Name should be different than the Program Title.'"
-               [control]="programForm.get('popularName')"
-               formControlName="popularName"
-               [name]="'popularName-input'"
-               [label]="'Popular Name'"></samText>
-
-      <samText [maxlength]="3"
-               [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
-               [control]="programForm.get('falNo')"
-               formControlName="falNo"
-               [name]="'falNo-input'"
-               [label]="'FAL Number'"
-               [required]="true"></samText>
-
-      <div>
-        <div class="pull-left">
-          <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-          <samButton [buttonType]="(!programForm.valid ? 'disabled' : 'default')" buttonText="Save" (onClick)="addProgram($event)"></samButton>
-        </div>
-      </div>
-
-    </form>
   </div>
+
+  <div class="usa-grid">
+    <!--Sidebar-->
+    <aside class="usa-width-one-fourth">
+      <div>&nbsp;</div>
+      <div sam-sticky limit=1200 container="occupy-page">
+        <!--Side Navigation-->
+        <nav>
+          <ul class="usa-sidenav-list">
+            <li><a href="{{currentUrl}}#headerInfo">Header Information</a></li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <div class="usa-width-three-fourths">
+
+      <form [formGroup] = "programForm">
+        <samText [maxlength]="144"
+                 [hint]="'Spell out any acronyms and limit to 144 characters.'"
+                 [control]="programForm.get('title')"
+                 formControlName="title"
+                 [name]="'title-input'"
+                 [label]="'Title'"
+                 [required]="true"></samText>
+
+        <samText [hint]="'The Popular Name should be different than the Program Title.'"
+                 [control]="programForm.get('popularName')"
+                 formControlName="popularName"
+                 [name]="'popularName-input'"
+                 [label]="'Popular Name'"></samText>
+
+        <samText [maxlength]="3"
+                 [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
+                 [control]="programForm.get('falNo')"
+                 formControlName="falNo"
+                 [name]="'falNo-input'"
+                 [label]="'FAL Number'"
+                 [required]="true"></samText>
+
+        <div>
+          <div class="pull-left">
+            <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+            <samButton [buttonType]="(!programForm.valid ? 'disabled' : 'default')" buttonText="Save" (onClick)="addProgram($event)"></samButton>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
 </div>

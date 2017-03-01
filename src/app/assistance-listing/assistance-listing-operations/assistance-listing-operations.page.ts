@@ -1,4 +1,4 @@
-import {Component, OnInit, EventEmitter, Output, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -10,31 +10,45 @@ import { ProgramService } from 'api-kit';
   providers: [ProgramService]
 })
 
-export class ProgramPageOperations implements OnInit {
+export class ProgramPageOperations implements OnInit, OnDestroy {
 
-  //@Input() program:Program;
-  //@Output() add: EventEmitter<any> = new EventEmitter<any>();
-  //@Output() cancel: EventEmitter<any> = new EventEmitter<any>();
   programForm;
+  public submitted: boolean;
+  program: any;
+  newProgSub: any;
+  getProgSub:any;
 
   constructor(private route: ActivatedRoute, private router: Router, private programService: ProgramService){}
 
   ngOnInit(){
 
-    let id = this.route.snapshot.params['id'];
-    console.log(id);
+    let programId = this.route.snapshot.params['id'];
 
+    this.getProgSub = this.programService.getProgramById(programId)
+      .subscribe(api => {
+        console.log('AJAX Completed', api);
+        let title = api.data.title;
+        let popularName = (api.data.alternativeNames?api.data.alternativeNames[0]:'');
+        let falNo = (api.data.programNumber?api.data.programNumber.slice(3,6):'');
+        this.programForm.patchValue({title: title, popularName:popularName, falNo:falNo});
+      });
 
     this.programForm = new FormGroup({
       title: new FormControl(''),
       popularName: new FormControl(''),
       falNo: new FormControl(''),
     });
+
+
+  }
+
+  ngOnDestroy(){
+    this.newProgSub.unsubscribe();
+    this.getProgSub.unsubscribe();
   }
 
   onCancelClick(event) {
-    let link = ['/programs'];
-    //this.cancel.emit(null);
+    let link = ['/workspace'];
     this.router.navigate(link);
   }
 
@@ -46,18 +60,12 @@ export class ProgramPageOperations implements OnInit {
       "programNumber": this.programForm.value.falNo
     };
 
-    this.programService.saveProgram(null, data)
+    this.newProgSub = this.programService.saveProgram(null, data)
       .subscribe(id => {
       console.log('AJAX Completed', id);
-      this.programForm.reset();
+      //this.programForm.reset();
+        this.submitted = true;
     });
-
-    /*if(this.programForm.valid){
-      for(var name in this.programForm.controls) {
-        (<FormControl>this.programForm.controls[name]).setValue(''); //this should work in RC4 if `Control` is not working, working same in my case
-        this.programForm.controls[name].setErrors(null);
-      }
-    }*/
 
   }
 }
