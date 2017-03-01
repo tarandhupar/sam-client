@@ -27,7 +27,7 @@ import * as moment from 'moment/moment';
         	</li>
         	<li class="break-word"><strong>County/ies: </strong>
             <ng-container *ngFor="let county of location.counties; let isLast=last">
-              {{county}}{{ isLast ? '' : ', '}}
+              {{county?.value}}{{ isLast ? '' : ', '}}
             </ng-container>
         	</li>
         </ul>
@@ -72,7 +72,19 @@ export class WageDeterminationResult implements OnInit {
     if(this.data.locations!==null) {
       for(var i=0; i<this.data.locations.length; i++) {
         if(this.data.locations[i].counties != null) {
-          this.data.locations[i].counties = this.data.locations[i].counties.sort();
+          this.data.locations[i].counties = this.data.locations[i].counties.sort(function (a, b) {
+            var nameA = a.value.toUpperCase(); // ignore upper and lowercase
+            var nameB = b.value.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+
+            // names must be equal
+            return 0;
+          });
         }
       }
     }
