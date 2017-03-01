@@ -106,6 +106,7 @@ export class SearchPage implements OnInit{
         this.getDictionaryData('wdStates');
         this.getDictionaryData('dbraConstructionTypes');
         this.getCountyByState(this.wdStateModel);
+        this.determineEnableCountySelect();
       });
   }
 
@@ -359,6 +360,10 @@ export class SearchPage implements OnInit{
 
   // event for state change
   stateChange(event){
+
+    // enable county select if needed
+    this.determineEnableCountySelect();
+
     // call method to get county data per state
     this.getCountyByState(this.wdStateModel);
 
@@ -377,6 +382,14 @@ export class SearchPage implements OnInit{
     this.router.navigate(['/search'], navigationExtras);
   }
 
-
+  // determines if state is populated and if not disables county select
+  determineEnableCountySelect(){
+    if(this.wdStateModel !== ''){
+      this.selectCountyConfig.disabled = false;
+    }
+    else{
+      this.selectCountyConfig.disabled = true;
+    }
+  }
 
 }
