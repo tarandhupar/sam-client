@@ -59,9 +59,10 @@ describe('AccessModel', () => {
       { id: 5, permissions: [6, 7] },
       { id: 8, permissions: [9]}
     ];
-    let access = UserAccessModel.FormInputToAccessObject("sumit@aol.com", 1, 2, [3, 4], funcs);
+    let access = UserAccessModel.FormInputToAccessObject("sumit@aol.com", 1, 2, [3, 4], funcs, 'hi');
 
     let expected = {
+      messages: 'hi',
       user: "sumit@aol.com",
       roleMapContent: [
         {
@@ -111,9 +112,10 @@ describe('AccessModel', () => {
       { id: 4, permissions: [6] },
       { id: 5, permissions: []}
     ];
-    let access = UserAccessModel.FormInputToAccessObject("sumit@aol.com", 1, 2, [3], funcs);
+    let access = UserAccessModel.FormInputToAccessObject("sumit@aol.com", 1, 2, [3], funcs, 'hi');
 
     let expected = {
+      messages: 'hi',
       user: "sumit@aol.com",
       roleMapContent: [
         {
