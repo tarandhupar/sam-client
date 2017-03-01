@@ -5,7 +5,7 @@ import { WageDeterminationService } from "api-kit";
 import { ReplaySubject, Observable } from "rxjs";
 import * as _ from 'lodash';
 import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-object.pipe";
-import { SidenavService } from "samComponents/sidenav/services/sidenav.service";
+import { SidenavService } from "sam-ui-elements/src/ui-kit/components/sidenav/services/sidenav.service";
 
 
 @Component({

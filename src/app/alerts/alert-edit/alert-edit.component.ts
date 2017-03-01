@@ -1,9 +1,12 @@
 import { Input, Output, Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
 import { Alert } from '../alert.model';
-import { OptionsType } from 'samFormControls/types';
+import { OptionsType } from 'sam-ui-elements/src/ui-kit/types';
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
 import moment from 'moment';
-import { SamDateTimeComponent, SamSelectComponent, SamTextComponent, SamTextareaComponent } from 'samUIKit';
+import { SamDateTimeComponent } from 'sam-ui-elements/src/ui-kit/form-controls/date-time';
+import { SamSelectComponent } from 'sam-ui-elements/src/ui-kit/form-controls/select/select.component';
+import { SamTextComponent } from 'sam-ui-elements/src/ui-kit/form-controls/text/text.component';
+import { SamTextareaComponent } from 'sam-ui-elements/src/ui-kit/form-controls/textarea/textarea.component';
 
 function isNotBeforeToday(c: FormControl) {
   let error = {
@@ -81,7 +84,7 @@ export class AlertEditComponent implements OnInit {
 
   publishImmediately: boolean;
 
-  typeOptions: OptionsType = [
+  typeOptions: OptionsType[] = [
     { name: 'information', label: 'Informational', value: 'Informational'},
     { name: 'error', label: 'Error', value: 'Error'},
     { name: 'warning', label: 'Warning', value: 'Warning'}

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from 'rxjs';
-import { AlphabetSelectorService } from 'samComponents/alphabet-selector/alphabet-selector.component';
+import { AlphabetSelectorService } from 'sam-ui-elements/src/ui-kit/components/alphabet-selector/alphabet-selector.component';
+
 
 @Injectable()
 export class UserDirService implements AlphabetSelectorService {
