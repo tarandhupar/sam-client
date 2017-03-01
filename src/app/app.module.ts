@@ -25,6 +25,7 @@ import { OpportunityModule } from './opportunity';
 import { WageDeterminationModule } from './wage-determination';
 import { EntityModule } from './entity';
 import { ExclusionModule } from './exclusion';
+import { AwardsModule } from './awards';
 import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
 import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
@@ -64,6 +65,7 @@ const APP_PROVIDERS = [
     OpportunityModule,
     EntityModule,
     ExclusionModule,
+    AwardsModule,
     OrganizationModule,
     HomeModule,
     AlertsModule,
