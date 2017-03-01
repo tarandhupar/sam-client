@@ -127,9 +127,9 @@ export class GrantAccessPage implements OnInit {
       parseInt(this.role),
       parseInt(this.domain),
       orgIds,
-      funcs
+      funcs,
+      this.messages,
     );
-    console.log(access);
 
     this.userService.putAccess(access).subscribe(
       res => {

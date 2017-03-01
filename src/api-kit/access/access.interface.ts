@@ -4,6 +4,7 @@ export interface IdVal {
 }
 
 export interface UserAccessInterface {
+  "messages"?: string,
   "userAccessId"?: number,
   "user"?: string,
   "createdBy"?: string,
