@@ -46,6 +46,6 @@ it('should have APIs property set', inject([WrapperService], (resource) => {
     expect(resource.APIs.suggestions).toBe('/sgs/v1/suggestions');
     expect(resource.APIs.featuredSearch).toBe('/sgs/v1/search/featured');
     expect(resource.APIs.opportunity).toBe('/opps/v1/opportunities');
-    expect(resource.APIs.wageDetermination).toBe('/wdol/v1/wd');
+    expect(resource.APIs.wageDetermination).toBe('/wdol/v1');
   }));
 });

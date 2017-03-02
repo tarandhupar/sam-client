@@ -46,21 +46,20 @@ import * as moment from 'moment/moment';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-        	<li><strong>Funded:</strong>
-          	<ul class="usa-unstyled-list">
-              <li *ngIf="data.isFunded">Yes</li>
-              <li *ngIf="!data.isFunded">No</li>
-            </ul>
+        	<li>
+            <strong>Funded:</strong><br>
+            <ng-container *ngIf="data.isFunded">Yes</ng-container>
+            <ng-container *ngIf="!data.isFunded">No</ng-container>
           </li>
-          <li><strong>Last Date Modified</strong>
-            <ul class="usa-unstyled-list">
-              <li>{{data.publishDate}}</li>
-            </ul>
+          <li>
+            <strong>Last Date Modified</strong><br>
+            {{data.publishDate}}
           </li>
-          <li *ngIf="data.isActive==true"><strong>Type Of Assistance</strong>
-            <ul class="usa-unstyled-list">
-              <li><span *ngFor="let assistanceTypes of data.assistanceTypes; let i=index">{{ assistanceTypes.code }} {{ assistanceTypes.code!==null ? '-' : '' }} {{ assistanceTypes.value }}{{ assistanceTypes.value!==null && i!==data.assistanceTypes.length-1 ? ',' : '' }}</span></li>
-            </ul>
+          <li *ngIf="data.isActive==true">
+            <strong>Type Of Assistance</strong><br>
+            <ng-container *ngFor="let assistanceTypes of data.assistanceTypes; let i=index">
+              {{ assistanceTypes.code }} {{ assistanceTypes.code!==null ? '-' : '' }} {{ assistanceTypes.value }}{{ assistanceTypes.value!==null && i!==data.assistanceTypes.length-1 ? ',' : '' }}
+            </ng-container>
           </li>
         </ul>
       </div>
