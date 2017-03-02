@@ -30,6 +30,7 @@ export class SamPasswordComponent {
   };
 
   protected states = {
+    uid: Math.floor(Math.random() * 89999 + 10000),
     toggle: false,
     error: {
       password: '',

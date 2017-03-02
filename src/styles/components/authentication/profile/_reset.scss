@@ -3,6 +3,14 @@
     top: 16px;
   }
 
+  .usa-form-container {
+    > labelwrapper:nth-child(1) {
+      label {
+        margin-top: 0px;
+      }
+    }
+  }
+
   button[type="submit"] {
     margin-top: 0px;
   }
