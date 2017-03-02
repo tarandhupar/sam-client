@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 
@@ -42,6 +42,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private location: Location,
     private historicalIndexService: HistoricalIndexService,
     private programService: ProgramService,
@@ -87,7 +88,10 @@ export class ProgramPage implements OnInit, OnDestroy {
       this.checkCurrentFY();
       this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations, 'authorizationId'));
     }, err => {
-      console.log('Error logging', err);
+      console.log('Error loading program', err);
+      if (err.status === 403) {
+        this.router.navigate(['/404']);
+      }
     });
 
     return apiSubject;
@@ -186,7 +190,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     this.relatedProgramsSub = relatedProgramsStream.subscribe(relatedProgram => {
       // run whenever related programs are updated
-      if(typeof relatedProgram !== 'undefined') {
+      if (typeof relatedProgram !== 'undefined') {
         this.relatedProgram.push({ // store the related program
           'programNumber': relatedProgram.data.programNumber,
           'id': relatedProgram.id
