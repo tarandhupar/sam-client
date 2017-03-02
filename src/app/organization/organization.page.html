@@ -47,6 +47,9 @@
             <ng-container *ngSwitchCase="'AGENCY'"><h2>Offices</h2></ng-container>
           </div>
           <div class="usa-width-one-third">
+            <div class="usa-sr-only">
+              Showing results {{min +1}} through {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}} of {{organization.hierarchy.length}}
+            </div>
             <p class="m_T-2x" style="text-align: right;">
               <strong>{{min +1}} - {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}}</strong>
               of <strong>{{organization.hierarchy.length}}</strong>
