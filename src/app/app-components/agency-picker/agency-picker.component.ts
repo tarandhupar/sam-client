@@ -27,6 +27,7 @@ export class AgencyPickerComponent implements OnInit {
   @Input() orgId: string = "";
   @Input() hint: string = "";
   @Input() orgRoot = "";
+  @Input() required = false;
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
   @Output() organization = new EventEmitter<any[]>();
@@ -642,6 +643,11 @@ export class AgencyPickerComponent implements OnInit {
     this.selectedOrganizations = this.selectedOrganizations.filter(function(obj){
       return obj.value != value;
     });
+    if (this.multimode) {
+      this.organization.emit(this.selectedOrganizations);
+    }
+    // Should we do this to allow the single select mode hosts to know when an org is removed?
+    // this.organization.emit(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);
   }
 
   addToSelectedOrganizations(data){

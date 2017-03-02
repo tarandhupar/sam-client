@@ -1,5 +1,5 @@
 <div class='organization-container' [class.usa-input-error]="searchMessage">
-  <label [class.usa-input-error-label]="searchMessage">{{label}}</label>
+  <label [class.usa-input-error-label]="searchMessage">{{label}}<span *ngIf="required" class="usa-additional_text">Required</span></label>
   <span *ngIf="hint" class="usa-form-hint">{{hint}}</span>
   <div *ngIf="searchMessage">
     <span class="usa-input-error-message">{{ searchMessage }}</span>
