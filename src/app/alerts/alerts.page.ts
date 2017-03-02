@@ -8,11 +8,13 @@ import moment = require("moment");
 import { AlertFooterService } from "./alert-footer/alert-footer.service";
 import { AlertItemComponent } from "./alert-item/alert-item.component"
 import { IAMService } from "api-kit";
+import { UserAccessService } from "../../api-kit/access/access.service";
+import { UserAccessModel } from "../../app/users/access.model";
 
 export const ALERTS_PER_PAGE: number = 5;
 
 @Component({
-  providers: [ IAMService ],
+  providers: [ IAMService, UserAccessService ],
   templateUrl: 'alerts.template.html'
 })
 export class AlertsPage {
@@ -20,6 +22,8 @@ export class AlertsPage {
   alertBeingEdited: Alert = null;
   alerts:Alert[] = [];
   _totalAlerts:number;
+
+  private userAccessModel: UserAccessModel;
 
   currentPage: number = this.defaultPage();
   sortField = this.defaultSort();
@@ -72,7 +76,9 @@ export class AlertsPage {
 
   states = {
     isSignedIn: false,
-    menu: false
+    menu: false,
+    isCreate: false,
+    isEdit: false
   };
 
   showModalWindow: boolean = false;
@@ -91,7 +97,8 @@ export class AlertsPage {
               private alertsService: SystemAlertsService,
               private alertFooterService: AlertFooterService,
               private zone: NgZone,
-              private api: IAMService) {
+              private api: IAMService,
+              private role: UserAccessService) {
   }
 
   checkSession() {
@@ -101,6 +108,36 @@ export class AlertsPage {
         this.zone.run(() => {
           this.states.isSignedIn = true;
           this.user = user;
+          if(this.user !== null){
+            this.role.getAccess(this.user._id).subscribe(
+              res => {
+                this.userAccessModel = UserAccessModel.FromResponse(res);
+                let raw = this.userAccessModel.raw();
+                let roleData = [];
+                roleData = this.userAccessModel.checkRoles(raw,"SUPERUSER");
+                let functionMap = [];
+                if(roleData.length !== 0){
+                  functionMap = this.userAccessModel.checkDomain(roleData,"ADMIN");
+                  if(functionMap.length !== 0){
+                    let permission = [];
+                    permission = this.userAccessModel.checkFunction(functionMap,"ALERTS");
+                    if(permission.length !== 0){
+                      permission.forEach(
+                        perm => {
+                          if(perm.val === "CREATE"){
+                            this.states.isCreate = true;
+                          }
+                          else if(perm.val === "EDIT "){
+                            this.states.isEdit = true;
+                          }
+                        }
+                      )
+                    }
+                  }
+                }
+              }
+            )
+          }
         });
       });
     });
@@ -110,6 +147,14 @@ export class AlertsPage {
   isAdmin() {
     // Will leverage to admin role later when the RM service is ready
     return this.states.isSignedIn;
+  }
+
+  isCreate(){
+    return this.states.isCreate;
+  }
+
+  isEdit(){
+    return this.states.isEdit;
   }
 
   showClassSelector() {

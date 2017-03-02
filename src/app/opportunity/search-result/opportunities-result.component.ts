@@ -29,22 +29,16 @@ import * as moment from 'moment/moment';
     <div class="usa-width-one-third">
       <ul class="usa-text-small m_B-0">
         <li>
-          <strong>Solicitation Number</strong>
-          <ul class="usa-unstyled-list">
-            <li class='solicitation-number'>{{ data.solicitationNumber }}</li>
-          </ul>
-        </li>
-          <li>
-          <strong>Posted Date</strong>
-          <ul class="usa-unstyled-list">
-            <li>{{ data.publishDate  }}</li>
-          </ul>
+          <strong>Solicitation Number</strong><br>
+          {{ data.solicitationNumber }}
         </li>
         <li>
-          <strong>Type</strong>
-          <ul class="usa-unstyled-list">
-            <li>{{data.type?.value}}</li>
-          </ul>
+          <strong>Posted Date</strong><br>
+          {{ data.publishDate  }}
+        </li>
+        <li>
+          <strong>Type</strong><br>
+          {{data.type?.value}}
         </li>
       </ul>
     </div>
