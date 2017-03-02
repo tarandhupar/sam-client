@@ -36,12 +36,9 @@ export class ProgramService{
       oParam: {},
       body: data,
       method: (id == null) ? 'POST' : 'PATCH'
-      /*headers: {
-        'X-Auth-Token': 'GSA_CFDA_R_cfda_agency_coord',
-        'Content-Type': 'application/json'
-      }*/
     };
 
     return this.oAPIService.call(oApiParam, false);
+
   }
 }

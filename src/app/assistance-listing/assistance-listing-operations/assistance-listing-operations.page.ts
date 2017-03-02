@@ -15,7 +15,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   programForm;
   successMsg: string;
   submitted: boolean;
-  program: any;
+  //program: any;
   saveProgSub: any;
   getProgSub:any;
   programId: string = null;
