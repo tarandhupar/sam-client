@@ -28,6 +28,7 @@ import { ExclusionModule } from './exclusion';
 import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
 import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
+import { WorkspaceModule } from './workspace'
 
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
@@ -73,6 +74,7 @@ const APP_PROVIDERS = [
     ErrorModule,
     UIKitDemoModule,
     WageDeterminationModule,
+    WorkspaceModule,
 
     // Other Modules
     SamUIKitModule,
