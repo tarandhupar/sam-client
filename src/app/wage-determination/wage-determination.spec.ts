@@ -19,7 +19,7 @@ let MockWageDeterminationService = {
   getWageDeterminationDictionary(ids:String) {
     return Observable.of({
       _embedded: {
-        dictionaryList: [
+        dictionaries: [
           {
             elements: [
               {
