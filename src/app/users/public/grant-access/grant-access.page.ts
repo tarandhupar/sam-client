@@ -12,6 +12,12 @@ import { PropertyCollector } from "../../../app-utils/property-collector";
 })
 export class GrantAccessPage implements OnInit {
 
+  private errors = {
+    role: '',
+    domain: '',
+    orgs: ''
+  };
+
   private userName: string = "";
   public orgs = [];
   private domain;
@@ -64,6 +70,10 @@ export class GrantAccessPage implements OnInit {
   }
 
   onRoleChange(role) {
+    if (role) {
+      this.errors.role = '';
+    }
+
     this.role = role;
     this.domain = null;
     this.domainOptions = [];
@@ -91,6 +101,9 @@ export class GrantAccessPage implements OnInit {
   }
 
   onDomainChange(domain) {
+    if (domain) {
+      this.errors.domain = '';
+    }
     this.domain = domain;
 
     let d = this.permissions.DomainContent.find(dom => {
@@ -107,14 +120,27 @@ export class GrantAccessPage implements OnInit {
     this.router.navigate(['../access'], { relativeTo: this.route });
   }
 
+  isFormValid() {
+    return this.orgs && this.orgs.length && this.domain && this.role;
+  }
+
+  showErrors() {
+    if (!this.orgs || !this.orgs.length) {
+      this.errors.orgs = 'Organization is required';
+    }
+
+    if (!this.role) {
+      this.errors.role = 'Role is required';
+    }
+
+    if (!this.domain) {
+      this.errors.domain = 'Domain is required';
+    }
+  }
+
   onGrantClick() {
-    if (!this.orgs || !this.orgs.length || !this.domain) {
-      this.footerAlert.registerFooterAlert({
-        title:"Select organization(s) and a domain.",
-        description:"",
-        type:'warning',
-        timer:0
-      });
+    if (!this.isFormValid()) {
+      this.showErrors();
       return;
     }
 
