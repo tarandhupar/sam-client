@@ -18,7 +18,14 @@
 
     <section id="wage-determination" *ngIf="wageDetermination">
 
-      <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+      <ng-container *ngIf = "isSCA">
+        <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p class="usa-font-lead">Service Contract Act</p>
+      </ng-container>
+      <ng-container *ngIf = "!isSCA">
+        <h1>DBA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p class="usa-font-lead">Davis-Bacon Act</p>
+      </ng-container>
 
       <div class="usa-grid-full">
 
@@ -37,13 +44,17 @@
 
         <div class="usa-width-one-half">
           <ul class="usa-unstyled-list">
-            <li *ngIf = "wageDetermination.revisionNumber">
+            <li *ngIf = "revisionNumber">
               <strong>Revision #: </strong>
-              {{wageDetermination.revisionNumber}}
+              {{revisionNumber}}
             </li>
             <li *ngIf = "services">
               <strong>Service/Services: </strong>
               {{services}}
+            </li>
+            <li *ngIf = "constructionTypes">
+              <strong>Construction: </strong>
+              {{constructionTypes}}
             </li>
             <li *ngIf = "wageDetermination.publishDate">
               <strong>Published Date: </strong>
