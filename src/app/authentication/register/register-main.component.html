@@ -1,7 +1,7 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
     <h1>Complete Sign-Up</h1>
-    <span>Thank you for joining the new SAM.gov. To Complete the process and gain account access, please fill in the information below.</span>
+    <span>Thank you for joining the new SAM.gov. To complete the sign-up process and gain account access, please complete the following information.</span>
     <form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="register()" class="usa-form usa-form-register" autocomplete="off" novalidate>
       <fieldset class="name">
         <samNameEntry [model]="user" legend="Your Name" #nameEntry></samNameEntry>
@@ -26,7 +26,7 @@
       </fieldset>
       <fieldset class="kba">
         <legend>Security Questions</legend>
-        <span>Select 3 unique Challenge Questions and provide an answer for each question. Answers must be at least 8 characters long.</span>
+        <span>Select 3 unique questions and provide an answer for each question. Answers must be at least 8 characters long.</span>
         <div *ngFor="let kbaAnswer of userForm.controls.kbaAnswerList.controls; let $index = index;">
           <sam-kba-entry [(questions)]="questions[$index]"
                          [question]="userForm.controls.kbaAnswerList.controls[$index].controls.questionId"
