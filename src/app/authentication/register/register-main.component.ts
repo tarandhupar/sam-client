@@ -319,12 +319,6 @@ export class RegisterMainComponent {
 
     userData.workPhone = this.user.workPhone;
 
-    userData.kbaAnswerList = [
-      { questionId: 1, answer: '12345678' },
-      { questionId: 2, answer: '34567890' },
-      { questionId: 3, answer: '23456789' }
-    ];
-
     // Clean up empty properties
     for(propKey in userData) {
       if(propKey !== 'kbaAnswerList') {
