@@ -10,7 +10,7 @@ import * as moment from 'moment/moment';
   </p>
   
   <h3 class="assistance-program-title">
-    <a href="/programs/d3d470ea123d420380b9c9afa3873d72/edit">{{data.data.title}}</a>
+    <a [routerLink]="['/programs', data.id, 'edit']">{{data.data.title}}</a>
   </h3> 
   <div class="usa-grid-full">
     <div class="usa-width-two-thirds">
