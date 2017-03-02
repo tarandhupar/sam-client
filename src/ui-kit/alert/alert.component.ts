@@ -88,7 +88,6 @@ export class SamAlertComponent {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
-    console.log('timer', this.dismissTimer)
     if(!this.typeNotDefined()) {
       this.selectedType = this.types[this.type];
     }
