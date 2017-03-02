@@ -13,23 +13,28 @@ import { ProgramService } from 'api-kit';
 export class ProgramPageOperations implements OnInit, OnDestroy {
 
   programForm;
-  public submitted: boolean;
+  successMsg: string;
+  submitted: boolean;
   program: any;
-  newProgSub: any;
+  saveProgSub: any;
   getProgSub:any;
+  programId: string = null;
 
   constructor(private route: ActivatedRoute, private router: Router, private programService: ProgramService){}
 
   ngOnInit(){
 
-    let programId = this.route.snapshot.params['id'];
+    this.programId = this.route.snapshot.params['id'];
 
-    this.getProgSub = this.programService.getProgramById(programId)
+    this.getProgSub = this.programService.getProgramById(this.programId)
       .subscribe(api => {
         console.log('AJAX Completed', api);
         let title = api.data.title;
         let popularName = (api.data.alternativeNames?api.data.alternativeNames[0]:'');
-        let falNo = (api.data.programNumber?api.data.programNumber.slice(3,6):'');
+        let falNo = (api.data.programNumber?api.data.programNumber:'');
+
+        if(falNo.trim().length == 6 )
+          falNo = falNo.slice(3,6);
         this.programForm.patchValue({title: title, popularName:popularName, falNo:falNo});
       });
 
@@ -38,12 +43,10 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       popularName: new FormControl(''),
       falNo: new FormControl(''),
     });
-
-
   }
 
   ngOnDestroy(){
-    this.newProgSub.unsubscribe();
+    this.saveProgSub.unsubscribe();
     this.getProgSub.unsubscribe();
   }
 
@@ -52,7 +55,8 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
     this.router.navigate(link);
   }
 
-  addProgram(event){
+  saveProgram(event){
+    console.log(this.programId);
 
     let data = {
       "title": this.programForm.value.title,
@@ -60,10 +64,16 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       "programNumber": this.programForm.value.falNo
     };
 
-    this.newProgSub = this.programService.saveProgram(null, data)
+    this.saveProgSub = this.programService.saveProgram(this.programId, data)
       .subscribe(id => {
-      console.log('AJAX Completed', id);
-      //this.programForm.reset();
+        console.log('AJAX Completed', id);
+        if(this.programId == null) {
+          this.programForm.reset();
+          this.successMsg = "New Assistance Listing is successfully added.";
+        }
+        else
+          this.successMsg = "Assistance Listing is successfully updated.";
+
         this.submitted = true;
     });
 

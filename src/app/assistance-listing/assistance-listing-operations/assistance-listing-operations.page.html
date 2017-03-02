@@ -2,7 +2,7 @@
 
   <div class="usa-grid" *ngIf="submitted">
     <div class="usa-width-one-whole">
-      <samAlert [type]="'success'" [title]="'Success!!'" [description]="'New Assistance Listing is successfully added.'"></samAlert>
+      <samAlert [type]="'success'" [title]="'Success!!'" [description]="successMsg"></samAlert>
     </div>
   </div>
 
@@ -48,7 +48,7 @@
         <div>
           <div class="pull-left">
             <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-            <samButton [buttonType]="(!programForm.valid ? 'disabled' : 'default')" buttonText="Save" (onClick)="addProgram($event)"></samButton>
+            <samButton [buttonType]="(!programForm.valid ? 'disabled' : 'default')" buttonText="Save" (onClick)="saveProgram($event)"></samButton>
           </div>
         </div>
 
