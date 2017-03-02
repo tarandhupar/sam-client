@@ -485,19 +485,16 @@
           </div>
         </div>
         
-        <ng-container *ngIf="relatedOpportunitiesMetadata">
-          <div class="usa-sr-only">
-            Showing results {{min +1}} through {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}} of {{relatedOpportunitiesMetadata.count}}
-          </div>
-          <p class="m_T-2x" style="text-align: right;">
-            <strong>
-              {{min +1}} - 
-              {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
-            </strong>
-            of 
-            <strong>{{relatedOpportunitiesMetadata.count}}</strong>
-          </p>
-        </ng-container>
+        <p class="m_T-2x" style="text-align: right;" *ngIf="relatedOpportunitiesMetadata">
+          <span class="usa-sr-only">Showing results</span> 
+          <strong>
+            {{min +1}} 
+            <span class="usa-sr-only">through</span> -
+            {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
+          </strong>
+          of 
+          <strong>{{relatedOpportunitiesMetadata.count}}</strong>
+        </p>
         
 
         <div id="awards-list" tabindex="-1">
