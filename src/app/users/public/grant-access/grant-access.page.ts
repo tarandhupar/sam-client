@@ -133,7 +133,7 @@ export class GrantAccessPage implements OnInit {
       this.errors.role = 'Role is required';
     }
 
-    if (!this.domain) {
+    if (!this.domain && this.domainOptions.length) {
       this.errors.domain = 'Domain is required';
     }
   }
