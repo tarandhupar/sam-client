@@ -28,7 +28,11 @@ export class LabelWrapper {
     if (!control) {
       return;
     }
-
+    if(control.pristine){
+      this.errorMessage = "";
+      return;
+    }
+    
     if (control.invalid && control.errors) {
       for (let k in control.errors) {
         let errorObject = control.errors[k];

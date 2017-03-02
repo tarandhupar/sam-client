@@ -7,10 +7,10 @@
     <div sam-sticky limit=1200 container="occupy-page">
       <!--Logo-->
       <ng-container *ngIf="opportunity && (errorOrganization || logoUrl===null || errorLogo)">
-        <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+        <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
       </ng-container>
       <ng-container *ngIf="opportunity && logoUrl && !errorOrganization">
-        <img class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
+        <img class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
       </ng-container>
 
       <!--Side Navigation-->
@@ -484,14 +484,21 @@
             <samSelect class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></samSelect>
           </div>
         </div>
-
-        <p *ngIf="relatedOpportunitiesMetadata" class="m_T-2x" style="text-align: right;">
-          <strong>{{min +1}} - {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}</strong>
-          of <strong>{{relatedOpportunitiesMetadata.count}}</strong>
+        
+        <p class="m_T-2x" style="text-align: right;" *ngIf="relatedOpportunitiesMetadata">
+          <span class="usa-sr-only">Showing results</span> 
+          <strong>
+            {{min +1}} 
+            <span class="usa-sr-only">through</span> -
+            {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
+          </strong>
+          of 
+          <strong>{{relatedOpportunitiesMetadata.count}}</strong>
         </p>
+        
 
         <div id="awards-list" tabindex="-1">
-          <div class="card-simple" *ngFor="let element of relatedOpportunities">
+          <div class="card-simple" *ngFor="let element of relatedOpportunities" tabindex="0">
 
             <h3>{{element.data?.award?.awardee?.name}}</h3>
 
