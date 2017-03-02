@@ -89,4 +89,41 @@ export class UserAccessModel {
     let perms = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'functionMapContent', [], 'permission', []]);
     return _.uniqBy(perms, perm => perm.id);
   }
+
+  public checkRoles(useraccess,validate: string) {
+    let res = [];
+    useraccess.roleMapContent.forEach(
+      value =>{
+        if(value.role.val === validate){
+          res = value.roleData;
+        }
+      }
+    )
+    return res;
+  }
+
+  public checkDomain(useraccess,validate:string){
+    let res = [];
+    useraccess.forEach(
+      role => {
+        if(role.domain.val === validate){
+          res = role.organizationMapContent.functionMapContent;
+        }
+      }
+    )
+    return res;
+  }
+
+  public checkFunction(useraccess,validate:string){
+    let res = [];
+    useraccess.forEach(
+      funct => {
+        if(funct.function.val === "ALERTS"){
+          res = funct.permission;
+        }
+      }
+    )
+    return res;
+  }
+
 }
