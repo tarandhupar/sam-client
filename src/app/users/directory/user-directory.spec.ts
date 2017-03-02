@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
-import { SamUIKitModule } from 'samUIKit';
-import { SamAPIKitModule } from 'api-kit';
-import { UserDirectoryPage } from './user-directory.page';
-import { ParentOrgsComponent } from '../parent-orgs/parent-orgs.component';
-import { FormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
+import { SamUIKitModule } from "samUIKit";
+import { SamAPIKitModule } from "api-kit";
+import { UserDirectoryPage } from "./user-directory.page";
+import { ParentOrgsComponent } from "./parent-orgs/parent-orgs.component";
+import { FormsModule } from "@angular/forms";
+import { RouterTestingModule } from "@angular/router/testing";
 
 describe('User Directory Page', () => {
   let fixture;

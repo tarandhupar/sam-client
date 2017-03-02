@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { UserService, UserAccessFilterOptions } from 'api-kit/user/user.service';
-import { UserAccessModel } from '../../access.model';
-import { ActivatedRoute } from '@angular/router';
-import { FHService } from 'api-kit/fh/fh.service';
-import { Organization } from '../../../organization/organization.model';
-import { Observable } from 'rxjs';
-import { SamAccordionComponent } from 'sam-ui-elements/src/ui-kit/components/accordion/accordion.component';
-import { CapitalizePipe } from '../../../app-pipes/capitalize.pipe';
+import { UserAccessService, UserAccessFilterOptions } from "api-kit/access/access.service";
+import { UserAccessModel } from "../../access.model";
+import { ActivatedRoute} from "@angular/router";
+import { FHService } from "api-kit/fh/fh.service";
+import { Organization } from "../../../organization/organization.model";
+import { Observable } from "rxjs";
+import { SamAccordionComponent } from "sam-ui-elements/src/ui-kit/components/accordion/accordion.component";
+import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 
 
 @Component({
@@ -33,7 +33,7 @@ export class UserAccessPage implements OnInit {
   private capitalize = new CapitalizePipe();
 
   constructor(
-    private userService: UserService,
+    private userService: UserAccessService,
     private route: ActivatedRoute,
     private fhService: FHService,
   ) { }
