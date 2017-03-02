@@ -88,12 +88,19 @@ export class SamAlertComponent {
   constructor(private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
+    console.log('timer', this.dismissTimer)
     if(!this.typeNotDefined()) {
       this.selectedType = this.types[this.type];
     }
   }
 
   ngAfterViewInit() {
+    if (this.dismissTimer > 0) {
+      setTimeout(() => {
+        this.close();
+      }, this.dismissTimer);
+    }
+
     if(this.states.show && this.target !== undefined) {
       this.setPosition();
     }

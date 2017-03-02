@@ -142,7 +142,7 @@ export class GrantAccessPage implements OnInit {
 
     let orgIds = this.orgs.map(org => org.value);
     let funcs: any = this.objects.map(obj => {
-      let perms = obj.permission.filter(p => p.isChecked).map(p => p.id);
+      let perms = obj.permission.filter(p => !p.notChecked).map(p => p.id);
       return {
         id: obj.function.id,
         permissions: perms
@@ -163,7 +163,7 @@ export class GrantAccessPage implements OnInit {
           title:"Access updated.",
           description:"",
           type:'success',
-          timer:0
+          timer:3000
         });
 
         this.goToAccessPage();
@@ -177,5 +177,9 @@ export class GrantAccessPage implements OnInit {
         });
       }
     );
+  }
+
+  onPermissionClick(perm) {
+    perm.notChecked = !perm.notChecked;
   }
 }
