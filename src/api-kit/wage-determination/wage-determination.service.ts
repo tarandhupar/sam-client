@@ -10,7 +10,7 @@ export class WageDeterminationService{
   getWageDeterminationByReferenceNumberAndRevisionNumber(referenceNumber: string, revisionNumber: number) {
     let apiParam = {
       name: 'wageDetermination',
-      suffix: '/' + referenceNumber + '/' + revisionNumber,
+      suffix: '/wd/' + referenceNumber + '/' + revisionNumber,
       oParam: {},
       method: 'GET'
     };
