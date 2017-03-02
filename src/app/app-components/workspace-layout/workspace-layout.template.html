@@ -1,12 +1,12 @@
 <div class="usa-grid">
-  <main id="workspace-target" tabindex="-1">
+  <main id="workspace-target">
     <aside class="side-filters" [ngClass]="setAsideWidth()">
       <sam-filters-container reset-label-margin=".5rem">
         <ng-content select="[workspace-sidebar]"></ng-content>
       </sam-filters-container>
     </aside>
     <div [ngClass]="setMainWidth()">
-      <header class="usa-width-one-whole">
+      <header class="usa-width-one-whole" id="focusTitle" tabindex="-1">
         <h1>{{titleText}}</h1>
       </header>
       <div class="usa-grid-full">
@@ -17,7 +17,7 @@
           </p>
         </div>
         <div class="usa-width-one-fourth" *ngIf="false">
-          <samSelect [(model)]="sortModel" 
+          <samSelect [(model)]="sortModel"
                     [name]="sortConfig.name"
                     [options]="sortConfig.options"
                     [label]="sortConfig.label"
@@ -31,7 +31,8 @@
       </div>
       <div class="usa-grid-full" *ngIf="addBtnText">
         <div class="usa-width-one-whole">
-          <samButton buttonId="test" [buttonText]="addBtnText" (click)="addBtnClickHandler($event)"></samButton>
+          <!--Temporary fix of FALCreatePage navigation, should be removed later-->
+          <a href="/programs/add"><samButton buttonId="test" [buttonText]="addBtnText" (click)="addBtnClickHandler($event)"></samButton></a>
         </div>
       </div>
     </div>
