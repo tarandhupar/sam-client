@@ -31,27 +31,28 @@ import * as moment from 'moment/moment';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-      	  <li><strong>Revision #</strong>
-      	    <ul class="usa-unstyled-list">
-      	     <span>{{ data.revisionNumber }}</span>
-            </ul>
+      	  <li>
+            <strong>Revision #</strong><br>
+      	    {{ data.revisionNumber }}
           </li>
-          <li *ngIf="data._type=='wdSCA'"><strong>Service</strong>
-            <ul class="usa-unstyled-list">
-              <span *ngFor="let service of data.services; let isLast=last">{{ service.value }}{{ isLast ? '' : ', ' }}</span>
-            </ul>
+          <li *ngIf="data._type=='wdSCA'">
+            <strong>Service</strong><br>
+            <span *ngFor="let service of data.services; let isLast=last">
+              {{ service.value }}{{ isLast ? '' : ', ' }}
+            </span>
           </li>
-          <li *ngIf="data._type=='wdDBRA'"><strong>Construction Type</strong>
-            <ul class="usa-unstyled-list">
-              <span>{{ data.constructionTypes }}</span>
-            </ul>
+          <li *ngIf="data._type=='wdDBRA'">
+            <strong>Construction Type</strong><br>
+            {{ data.constructionTypes }}
           </li>
           <li>
-              <span *ngIf="data._type=='wdDBRA'"><strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
-              <span *ngIf="data._type=='wdSCA'"><strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
-            <ul class="usa-unstyled-list">
-              <span>{{ data.publishDate }}</span>
-            </ul>
+            <ng-container *ngIf="data._type=='wdDBRA'">
+              <strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong>
+            </ng-container>
+            <ng-container *ngIf="data._type=='wdSCA'">
+              <strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong>
+            </ng-container>
+            <br>{{ data.publishDate }}
           </li>
         </ul>
       </div>
