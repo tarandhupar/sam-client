@@ -30,6 +30,7 @@ export class SamPasswordComponent {
   };
 
   protected states = {
+    uid: Math.floor(Math.random() * 89999 + 10000),
     toggle: false,
     error: {
       password: '',
@@ -57,7 +58,7 @@ export class SamPasswordComponent {
 
   ngOnInit() {
     this.password.setValidators([
-      Validators.minLength(this.config.rules.minlength),
+      $Validators.minlength(this.config.rules.minlength),
       $Validators.uppercase,
       $Validators.numeric,
       $Validators.special,

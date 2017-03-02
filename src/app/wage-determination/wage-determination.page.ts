@@ -18,11 +18,13 @@ import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
 })
 export class WageDeterminationPage implements OnInit {
   wageDetermination: any;
+  isSCA: boolean;
   referenceNumber: any;
   revisionNumber:any;
   currentUrl: string;
   dictionaries: any;
   services: string;
+  constructionTypes: string;
   public locations: any;
 
   // On load select first item on sidenav component
@@ -60,7 +62,7 @@ export class WageDeterminationPage implements OnInit {
     let dictionariesAPI = this.loadDictionary();
     let wdAPI = this.loadWageDetermination();
     let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
-    this.getServices(wgAndDictionariesAPI);
+    this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
     this.getLocations(wgAndDictionariesAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
@@ -69,6 +71,7 @@ export class WageDeterminationPage implements OnInit {
       let wgSubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
     this.route.params.subscribe((params: Params) => { // construct a stream of wg data
       this.referenceNumber = params['referencenumber'];
+      this.isSCA = this.referenceNumber.indexOf('-') > -1;
       this.revisionNumber = params['revisionnumber'];
       this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(this.referenceNumber,this.revisionNumber).subscribe(wgSubject);
       // run whenever api data is updated
@@ -80,8 +83,8 @@ export class WageDeterminationPage implements OnInit {
           "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
           "children": [
             {
-              "label": "SCA WD #" + this.wageDetermination.fullReferenceNumber,
-              "field": "wage-determination",
+              "label": (this.isSCA ? "SCA WD # " : "DBA WD # ") + this.wageDetermination.fullReferenceNumber,
+              "field": "wage-determination"
             }
           ]
         };
@@ -126,7 +129,7 @@ export class WageDeterminationPage implements OnInit {
 
   private loadDictionary() {
     let dictionariesSubject = new ReplaySubject(1);
-    this.wgService.getWageDeterminationDictionary('state, county, services').subscribe(dictionariesSubject);
+    this.wgService.getWageDeterminationDictionary('wdStates, wdCounties, scaServices').subscribe(dictionariesSubject);
     dictionariesSubject.subscribe(data => {
       // do something with the dictionary api
       this.dictionaries = data;
@@ -152,7 +155,8 @@ export class WageDeterminationPage implements OnInit {
         /** Process States **/
         // given a state code, look up the dictionary entry for that state (returns array of matches)
         let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
-        let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], dictionaries.state, 'element_id', false, '');
+        let stateDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdStates' }).elements;
+        let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
 
         // if a matching state was found, display its name otherwise display a warning message
         eachLocation.stateString = (resultStates.length > 0) ? resultStates[0].value : 'Unknown state';
@@ -165,7 +169,8 @@ export class WageDeterminationPage implements OnInit {
         } else if (eachLocation.counties != null) {
           // if there are any exceptions, display 'All counties except' before the list of counties
           let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
-          eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, dictionaries.county);
+          let countiesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdCounties' }).elements;
+          eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
         }
       }
 
@@ -182,7 +187,7 @@ export class WageDeterminationPage implements OnInit {
 
     /** Look up county names in dictionary **/
     let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
-    let resultCounties = filterMultiArrayObjectPipe.transform(countiesList, countyDictionary, 'element_id', false, '');
+    let resultCounties = filterMultiArrayObjectPipe.transform(countiesList, countyDictionary, 'elementId', false, '');
 
     // if any county is not found, show a warning message
     let warning = '';
@@ -199,12 +204,26 @@ export class WageDeterminationPage implements OnInit {
       if (wageDeterminaton.services != null) {
         let servicesString = "";
         for (let element of wageDeterminaton.services) {
-          let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], dictionaries.services, 'element_id', false, "");
+          let servicesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'scaServices' }).elements;
+          let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], servicesDictionary, 'elementId', false, "");
           let services = (result instanceof Array && result.length > 0) ? result[0].value : [];
           servicesString = servicesString.concat(services + ", ");
         }
         servicesString = servicesString.substring(0, servicesString.length - 2);
         this.services = servicesString;
+      }
+    })
+  }
+
+  private getConstructionTypes(wdAPI) {
+    wdAPI.subscribe((wageDeterminaton) => {
+      if (wageDeterminaton.constructionType != null){
+        let constructionTypeString = "";
+        for (let element of wageDeterminaton.constructionType) {
+          constructionTypeString = constructionTypeString.concat(element + ", ");
+        }
+        constructionTypeString = constructionTypeString.substring(0, constructionTypeString.length - 2);
+        this.constructionTypes = constructionTypeString;
       }
     })
   }
