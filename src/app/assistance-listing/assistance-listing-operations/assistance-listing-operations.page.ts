@@ -46,13 +46,18 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
-    this.saveProgSub.unsubscribe();
-    this.getProgSub.unsubscribe();
+    console.log(this.saveProgSub);
+    console.log(this.getProgSub);
+
+    if(this.saveProgSub)
+      this.saveProgSub.unsubscribe();
+
+    if(this.getProgSub)
+      this.getProgSub.unsubscribe();
   }
 
   onCancelClick(event) {
-    let link = ['/workspace'];
-    this.router.navigate(link);
+     this.router.navigate(['/workspace']);
   }
 
   saveProgram(event){
