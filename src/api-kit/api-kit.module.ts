@@ -14,7 +14,7 @@ import { WrapperService } from './wrapper/wrapper.service';
 import { SuggestionsService } from './search/suggestions.service';
 import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
 import { UserDirService } from './user-directory/user-directory.service';
-import {UserService} from "./user/user.service";
+import {UserAccessService} from "./access/access.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -38,7 +38,7 @@ import {UserService} from "./user/user.service";
     SuggestionsService,
     AutoCompleteWrapper,
     UserDirService,
-    UserService,
+    UserAccessService,
     WageDeterminationService
   ]
 })

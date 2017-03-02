@@ -1,14 +1,14 @@
 <div class="usa-grid">
-  <header class="usa-width-one-whole" [ngClass]="setOffset()">
-    <h1>{{titleText}}</h1>
-  </header>
-  <main>
+  <main id="workspace-target" tabindex="-1">
     <aside class="side-filters" [ngClass]="setAsideWidth()">
       <sam-filters-container reset-label-margin=".5rem">
         <ng-content select="[workspace-sidebar]"></ng-content>
       </sam-filters-container>
     </aside>
     <div [ngClass]="setMainWidth()">
+      <header class="usa-width-one-whole">
+        <h1>{{titleText}}</h1>
+      </header>
       <div class="usa-grid-full">
         <div class="usa-width-one" *ngIf="loadFlag">
           <button *ngIf="false" type="button" class="usa-button-link" (click)="toggleFilters($event)"><i [ngClass]="toggleFilterLabel()"></i>&nbsp;Filters</button>
