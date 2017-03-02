@@ -32,6 +32,7 @@ import { SamDateComponent } from "./form-controls/date/date.component";
 import { SamTimeComponent } from "./form-controls/time";
 import { SamDateTimeComponent } from "./form-controls/date-time";
 import { SamTextComponent } from "./form-controls/text/text.component";
+import { SamNumberComponent } from "./form-controls/number/number.component";
 import { SamTextareaComponent } from "./form-controls/textarea/textarea.component";
 import { SamTabComponent } from "./tabs/tabs.component";
 import { SamTabsComponent } from "./tabs/tabs.component";
@@ -76,6 +77,7 @@ import { SamFiltersContainerComponent } from './filters-container';
     SamDateComponent,
     SamTimeComponent,
     SamDateTimeComponent,
+    SamNumberComponent,
     SamTextComponent,
     SamTextareaComponent,
     SamModalComponent,
@@ -122,6 +124,7 @@ import { SamFiltersContainerComponent } from './filters-container';
     SamDateComponent,
     SamTimeComponent,
     SamDateTimeComponent,
+    SamNumberComponent,
     SamTextComponent,
     SamTextareaComponent,
     SamTabsComponent,
