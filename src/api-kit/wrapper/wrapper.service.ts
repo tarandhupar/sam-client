@@ -16,6 +16,8 @@ export class WrapperService {
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions",
         "access": "/rms/v1/access",
+        "roles": "/rms/v1/roles",
+        "permissions": "/rms/v1/uiroles",
         "wageDetermination": "/wdol/v1"
     };
 
@@ -84,4 +86,3 @@ export class WrapperService {
         return this._http.request(oRequest).map((res: Response) => { return (convertToJSON) ? res.json() : res; } );
     }
 }
- 
