@@ -48,8 +48,14 @@
           </div>
           <div class="usa-width-one-third">
             <p class="m_T-2x" style="text-align: right;">
-              <strong>{{min +1}} - {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}}</strong>
-              of <strong>{{organization.hierarchy.length}}</strong>
+              <span class="usa-sr-only">Showing results</span> 
+              <strong>
+                {{min +1}} 
+                <span class="usa-sr-only">through</span> - 
+                {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}}
+              </strong>
+              of 
+              <strong>{{organization.hierarchy.length}}</strong>
             </p>
           </div>
         </div>

@@ -13,10 +13,7 @@ import * as moment from 'moment/moment';
     	</p>
     	<h3 class="wage-determination-number">
 
-    	<!--Commented out until Sprint 2 when DBA View Page is introduced-->
-      	<!--<span>{{ data._type=='SCA' ? 'SCA Wage Determination #: ' : 'DBA Wage Determination #: ' }}</span><a>{{ data.fullReferenceNumber }}</a>-->
-      	<span *ngIf = "data._type=='wdSCA'">SCA Wage Determination #: </span><a *ngIf = "data._type=='wdSCA'" [routerLink]="['/wage-determination', data.fullReferenceNumber, data.revisionNumber]" [queryParams]="qParams">{{ data.fullReferenceNumber }}</a>
-      	<span *ngIf = "data._type=='wdDBRA'">DBA Wage Determination #: </span><a *ngIf = "data._type=='wdDBRA'" >{{ data.fullReferenceNumber }}</a>
+      	<span>{{ data._type=='wdSCA' ? 'SCA Wage Determination #: ' : 'DBA Wage Determination #: ' }}</span><a [routerLink]="['/wage-determination', data.fullReferenceNumber, data.revisionNumber]" [queryParams]="qParams" >{{ data.fullReferenceNumber }}</a>
 
 
     	</h3>
@@ -34,27 +31,28 @@ import * as moment from 'moment/moment';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-      	  <li><strong>Revision #</strong>
-      	    <ul class="usa-unstyled-list">
-      	     <span>{{ data.revisionNumber }}</span>
-            </ul>
+      	  <li>
+            <strong>Revision #</strong><br>
+      	    {{ data.revisionNumber }}
           </li>
-          <li *ngIf="data._type=='wdSCA'"><strong>Service</strong>
-            <ul class="usa-unstyled-list">
-              <span *ngFor="let service of data.services; let isLast=last">{{ service.value }}{{ isLast ? '' : ', ' }}</span>
-            </ul>
+          <li *ngIf="data._type=='wdSCA'">
+            <strong>Service</strong><br>
+            <span *ngFor="let service of data.services; let isLast=last">
+              {{ service.value }}{{ isLast ? '' : ', ' }}
+            </span>
           </li>
-          <li *ngIf="data._type=='wdDBRA'"><strong>Construction Type</strong>
-            <ul class="usa-unstyled-list">
-              <span>{{ data.constructionTypes }}</span>
-            </ul>
+          <li *ngIf="data._type=='wdDBRA'">
+            <strong>Construction Type</strong><br>
+            {{ data.constructionTypes }}
           </li>
           <li>
-              <span *ngIf="data._type=='wdDBRA'"><strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
-              <span *ngIf="data._type=='wdSCA'"><strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
-            <ul class="usa-unstyled-list">
-              <span>{{ data.publishDate }}</span>
-            </ul>
+            <ng-container *ngIf="data._type=='wdDBRA'">
+              <strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong>
+            </ng-container>
+            <ng-container *ngIf="data._type=='wdSCA'">
+              <strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong>
+            </ng-container>
+            <br>{{ data.publishDate }}
           </li>
         </ul>
       </div>

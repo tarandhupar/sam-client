@@ -37,6 +37,7 @@ export class FinancialObligationChart {
     d3.select("#visualization")
       .insert("svg")
       .attr("id", "chart")
+      .attr("aria-hidden", "true")
       .attr("style", "width: 100%; height:300px;");
 
     d3.select("#visualization")
@@ -316,6 +317,7 @@ export class FinancialObligationChart {
         .enter()
         .append("th")
         .attr("scope", "col")
+        .attr("aria-label", "Fiscal Year")
         .text(d => d.values[0].value.year);
 
       thead.insert("th", ":first-child")
