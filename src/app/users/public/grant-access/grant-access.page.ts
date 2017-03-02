@@ -104,7 +104,7 @@ export class GrantAccessPage implements OnInit {
   }
 
   goToAccessPage() {
-    this.router.navigate(['../access']);
+    this.router.navigate(['../access'], { relativeTo: this.route });
   }
 
   onGrantClick() {
