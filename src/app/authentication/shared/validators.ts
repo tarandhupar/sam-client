@@ -73,5 +73,15 @@ export const Validators = {
         }
       };
     };
+  },
+
+  minlength(min) {
+    return (c: FormControl) => {
+      return (c.value || '').trim().length >= min ? null : {
+        minlength: {
+          valid: false
+        }
+      }
+    };
   }
 }

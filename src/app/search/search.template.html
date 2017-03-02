@@ -3,26 +3,20 @@
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
     <div sam-sticky limit=1200 container="occupy-page">
-      <nav>
-        <ul class="usa-sidenav-list">
-          <li>
-            <sam-filters-container>
-              <sam-collapsible [label]="'Status'" [startOpened]="true">
-                <samCheckbox
-                [(model)]="checkboxModel"
-                [name]="checkboxConfig.name"
-                [options]="checkboxConfig.options"
-                [label]="checkboxConfig.label"
-                [hint]="checkboxConfig.hint"
-                [errorMessage]="checkboxConfig.errorMessage"
-                [hasSelectAll]="checkboxConfig.hasSelectAll"
-                (modelChange)="activeFilter($event)">
-                </samCheckbox>
-              </sam-collapsible>
-            </sam-filters-container>
-          </li>
-        </ul>
-      </nav>
+      <sam-filters-container>
+        <sam-collapsible [label]="'Status'" [startOpened]="true">
+          <samCheckbox
+          [(model)]="checkboxModel"
+          [name]="checkboxConfig.name"
+          [options]="checkboxConfig.options"
+          [label]="checkboxConfig.label"
+          [hint]="checkboxConfig.hint"
+          [errorMessage]="checkboxConfig.errorMessage"
+          [hasSelectAll]="checkboxConfig.hasSelectAll"
+          (modelChange)="activeFilter($event)">
+          </samCheckbox>
+        </sam-collapsible>
+      </sam-filters-container>
     </div>
   </aside>
 

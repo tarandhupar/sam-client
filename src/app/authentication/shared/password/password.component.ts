@@ -58,7 +58,7 @@ export class SamPasswordComponent {
 
   ngOnInit() {
     this.password.setValidators([
-      Validators.minLength(this.config.rules.minlength),
+      $Validators.minlength(this.config.rules.minlength),
       $Validators.uppercase,
       $Validators.numeric,
       $Validators.special,

@@ -16,6 +16,7 @@ import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { SamUIKitModule } from 'ui-kit';
 import { Observable } from 'rxjs';
 import { FinancialObligationChart } from './assistance-listing.chart';
+import {RouterTestingModule} from "@angular/router/testing";
 
 let comp: ProgramPage;
 let fixture: ComponentFixture<ProgramPage>;
@@ -516,6 +517,7 @@ describe('ProgramPage', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpModule,
+        RouterTestingModule,
         CommonModule,
         SamUIKitModule
       ],
