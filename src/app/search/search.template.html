@@ -33,7 +33,7 @@
                   [disabled]="selectStateConfig.disabled"
                   (modelChange)="stateChange($event)">
                 </samSelect>
-                <button (click)='wdStateClear()'>Clear</button>
+                <!--<button (click)='wdStateClear()'>Clear</button>-->
 
                 <!--county drop down-->
                 <samSelect
@@ -46,7 +46,7 @@
                   [disabled]="selectCountyConfig.disabled"
                   (modelChange)="countyChange($event)">
                 </samSelect>
-                <button (click)='wdCountyClear()'>Clear</button>
+                <!--<button (click)='wdCountyClear()'>Clear</button>-->
               </sam-collapsible>
 
 
@@ -78,7 +78,7 @@
                   [disabled]="selectConstructConfig.disabled"
                   (modelChange)="constructionTypeChange($event)">>
                 </samSelect>
-                <button (click)='wdConstructionClear()'>Clear</button>
+                <!--<button (click)='wdConstructionClear()'>Clear</button>-->
               </sam-collapsible>
             </sam-filters-container>
           </li>
@@ -90,6 +90,7 @@
   <div class="usa-width-three-fourths">
 
     <div class="usa-width-one">
+      <samAlert *ngIf="wdTypeModel" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'" [description]="'The Wage Determination filter asks a serires of questions to determine if a WDOL is avaialbe based on your selected criteria. Please note that using the keyword search with these WD type-specific filters may limit your search results. If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result.'"></samAlert>
       <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
     </div>
     <div class="usa-width-one">

@@ -251,7 +251,7 @@ export class SearchPage implements OnInit{
     }).subscribe(
         data => {
 
-          let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: true};
+          let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: false};
 
           // formatting the array data according to api type to match what UI elements expect
           // state data
@@ -297,7 +297,7 @@ export class SearchPage implements OnInit{
     }).subscribe(
       data => {
         // county data
-        let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: true};
+        let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: false};
 
         var reformattedArray = data._embedded.dictionaries[0].elements.map(function(countyItem){
           let newObj = {label:'', value:''};
