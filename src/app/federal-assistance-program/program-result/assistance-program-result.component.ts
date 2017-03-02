@@ -4,13 +4,13 @@ import * as moment from 'moment/moment';
 @Component({
   moduleId: __filename,
   selector: 'assistance-program-result',
-  template: `<div>
+  template: `<p>
   <span class="usa-label">Federal Assistance Listing</span>
       <span class="usa-label" [ngStyle]="{display:showHideStatusText}"  [style.background-color]="randomColor">{{data.status.value}}</span>
-  </div>
+  </p>
   
   <h3 class="assistance-program-title">
-    <a>{{data.data.title}}</a>
+    <a href="/programs/d3d470ea123d420380b9c9afa3873d72/edit">{{data.data.title}}</a>
   </h3> 
   <div class="usa-grid-full">
     <div class="usa-width-two-thirds">
@@ -46,21 +46,21 @@ export class AssistanceProgramResult implements OnInit {
   showhideStatus: boolean;
   showHideStatusText: string;
   randomColor: string;
-  statusCodeBgColorArray = [
-    'red',
-    'green',
-    'blue',
-    'orange',
+  statusCodeBgColor = [
+    '#2e8540',
+    '#cd2026',
+    'orange'
   ];
 
   constructor() {
+
   }
 
   ngOnInit() {
-    if(this.data.publishedDate !== null) {
+    if (this.data.publishedDate !== null) {
       this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y H:mm a");
     }
-    if(this.data.modifiedDate !== null) {
+    if (this.data.modifiedDate !== null) {
       this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y H:mm a");
     }
     if (this.data.status.code !== 'published') {
@@ -71,14 +71,14 @@ export class AssistanceProgramResult implements OnInit {
   }
 
   toggleBgColor() {
-    if (this.data.status.code == 'rejected') {
-      this.randomColor = this.statusCodeBgColorArray[0];
-    } else if (this.data.status.code == 'draft') {
-      this.randomColor = this.statusCodeBgColorArray[1];
-    } else if (this.data.status.code == 'pending') {
-      this.randomColor = this.statusCodeBgColorArray[2];
-    } else if (this.data.status.code == 'received') {
-      this.randomColor = this.statusCodeBgColorArray[3];
+    if (this.data.status !== null && (typeof this.data.status.code !== 'undefined' && this.data.status.code !== null)) {
+      if (this.data.status.code === 'draft' || this.data.status.code === 'revised') {
+        this.randomColor = this.statusCodeBgColor[0];
+      } else if (this.data.status.code === 'rejected') {
+        this.randomColor = this.statusCodeBgColor[1];
+      } else if (this.data.status.code === 'pending') {
+        this.randomColor = this.statusCodeBgColor[2];
+      }
     }
   }
 }
