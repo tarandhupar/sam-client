@@ -72,14 +72,15 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
     this.saveProgSub = this.programService.saveProgram(this.programId, data)
       .subscribe(id => {
         console.log('AJAX Completed', id);
-        if(this.programId == null) {
+        /*if(this.programId == null) {
           this.programForm.reset();
           this.successMsg = "New Assistance Listing is successfully added.";
         }
         else
           this.successMsg = "Assistance Listing is successfully updated.";
 
-        this.submitted = true;
+        this.submitted = true;*/
+        this.router.navigate(['/workspace']);
     });
 
   }
