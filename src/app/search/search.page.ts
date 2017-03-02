@@ -256,7 +256,7 @@ export class SearchPage implements OnInit{
           // formatting the array data according to api type to match what UI elements expect
           // state data
           if(id === 'wdStates'){
-            var reformattedArray = data._embedded.dictionaryList[0].elements.map(function(stateItem){
+            var reformattedArray = data._embedded.dictionaries[0].elements.map(function(stateItem){
               let newObj = {label:'', value:''};
 
               newObj.label = stateItem.value;
@@ -270,7 +270,7 @@ export class SearchPage implements OnInit{
 
           // construction type data
           else if(id === 'dbraConstructionTypes'){
-            var reformattedArray = data._embedded.dictionaryList[0].elements.map(function(constructionItem){
+            var reformattedArray = data._embedded.dictionaries[0].elements.map(function(constructionItem){
               let newObj = {label:'', value:''};
 
               newObj.label = constructionItem.value;
@@ -299,7 +299,7 @@ export class SearchPage implements OnInit{
         // county data
         let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: true};
 
-        var reformattedArray = data._embedded.dictionaryList[0].elements.map(function(countyItem){
+        var reformattedArray = data._embedded.dictionaries[0].elements.map(function(countyItem){
           let newObj = {label:'', value:''};
           newObj.label = countyItem.value;
           newObj.value = countyItem.elementId;
