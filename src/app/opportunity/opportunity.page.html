@@ -484,14 +484,24 @@
             <samSelect class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></samSelect>
           </div>
         </div>
-
-        <p *ngIf="relatedOpportunitiesMetadata" class="m_T-2x" style="text-align: right;">
-          <strong>{{min +1}} - {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}</strong>
-          of <strong>{{relatedOpportunitiesMetadata.count}}</strong>
-        </p>
+        
+        <ng-container *ngIf="relatedOpportunitiesMetadata">
+          <div class="usa-sr-only">
+            Showing results {{min +1}} through {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}} of {{relatedOpportunitiesMetadata.count}}
+          </div>
+          <p class="m_T-2x" style="text-align: right;">
+            <strong>
+              {{min +1}} - 
+              {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
+            </strong>
+            of 
+            <strong>{{relatedOpportunitiesMetadata.count}}</strong>
+          </p>
+        </ng-container>
+        
 
         <div id="awards-list" tabindex="-1">
-          <div class="card-simple" *ngFor="let element of relatedOpportunities">
+          <div class="card-simple" *ngFor="let element of relatedOpportunities" tabindex="0">
 
             <h3>{{element.data?.award?.awardee?.name}}</h3>
 
