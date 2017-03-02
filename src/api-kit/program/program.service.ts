@@ -29,6 +29,19 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam);
   }
 
+  runProgram(obj) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/',
+      oParam: {
+        page: obj.pageNum
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
   saveProgram(id: String = null, data: any) {
     let oApiParam = {
       name: 'program',

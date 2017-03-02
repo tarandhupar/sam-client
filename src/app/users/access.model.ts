@@ -1,21 +1,60 @@
-import { UserAccess } from "api-kit/user/user.interface";
+import { UserAccessInterface } from "api-kit/access/access.interface";
 import { PropertyCollector } from "../app-utils/property-collector";
 import * as _ from 'lodash';
 
+export interface FunctionInterface {
+  id: string|number,
+  permissions: Array<string|number>
+}
+
 export class UserAccessModel {
-  private _raw: UserAccess;
+  private _raw: UserAccessInterface;
   private collector: PropertyCollector;
 
   private constructor() {  }
 
-  static FromResponse(res: UserAccess): UserAccessModel {
+  static FromResponse(res: UserAccessInterface): UserAccessModel {
     let a = new UserAccessModel();
     a._raw = res;
     a.collector = new PropertyCollector(res);
     return a;
   }
 
-  public raw(): UserAccess {
+  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>, messages: string): UserAccessInterface {
+    let functionMapContent = functions.map(fun => {
+      return {
+        function: fun.id,
+        permission: fun.permissions,
+      };
+    }).filter(fun => {
+      return !!fun.permission.length;
+    });
+
+    let organizationMapContent = orgIds.map(orgId => {
+      return {
+        orgKey: orgId,
+        functionMapContent: functionMapContent
+      };
+    });
+
+    return {
+      messages: messages,
+      user: user,
+      roleMapContent: [
+        {
+          role: roleId,
+          roleData: [
+            {
+              domain: domainId,
+              organizationMapContent: organizationMapContent
+            }
+          ]
+        }
+      ]
+    };
+  }
+
+  public raw(): UserAccessInterface {
     return this._raw;
   }
 
