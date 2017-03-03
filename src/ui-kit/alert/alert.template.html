@@ -7,8 +7,7 @@
   </span>
   <div class="usa-alert-body">
     <h3 *ngIf="title" class="usa-alert-heading" [innerText]="title"></h3>
-    <p class="usa-alert-text">
-      {{description}}
+    <p class="usa-alert-text" [innerHTML]="description">
       <ng-content></ng-content>
     </p>
   </div>

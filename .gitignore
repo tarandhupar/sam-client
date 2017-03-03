@@ -57,6 +57,7 @@ npm-debug.log
 # IDE #
 .idea/
 *.swp
+*.iml
 
 /nbproject/
 api-config.json

@@ -21,6 +21,7 @@ export class WorkspacePage implements OnInit {
   initLoad = true;
   qParams: any = {};
   size: any = {};
+  addFALButtonText: string = 'Add Federal Assistance Listing';
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {
   }
@@ -44,7 +45,7 @@ export class WorkspacePage implements OnInit {
     return qsobj;
   }
 
- runProgram() {
+  runProgram() {
     // make api call
     this.programService.runProgram({
       pageNum: this.pageNum
@@ -77,6 +78,10 @@ export class WorkspacePage implements OnInit {
       queryParams: qsobj
     };
     this.router.navigate(['workspace/'], navigationExtras);
+  }
+
+  addBtnClick() {
+    this.router.navigate(['programs/add']);
   }
 }
 

@@ -12,13 +12,14 @@ export class WrapperService {
         "federalHierarchy": "/federalorganizations/v1/organizations",
         "entities": "/entities",
         "exclusions": "/exclusions",
+        "awards": "/awards",
         "alerts": "/alert/v2/alerts",
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions",
         "access": "/rms/v1/access",
-        "wageDetermination": "/wdol/v1",
         "roles": "/rms/v1/roles",
         "permissions": "/rms/v1/uiroles",
+        "wageDetermination": "/wdol/v1"
     };
 
     constructor(private _http: Http){}

@@ -27,7 +27,7 @@ export class WorkspaceLayoutComponent {
   /**
   * Flag to hide content until list is fully loaded
   */
-  @Input() public loadFlag: any = true; 
+  @Input() public loadFlag: any = true;
   /**
   * Suffix string for list results message
   */
@@ -44,7 +44,7 @@ export class WorkspaceLayoutComponent {
   * Event emitter when user navigates to a different page
   */
   @Output() public addBtnClick: EventEmitter<any> = new EventEmitter<any>();
-  
+
   public sortConfig: SortConfig = {
     options: [
       {value: '', label: 'Relevant', name: 'relevant'},
@@ -55,13 +55,13 @@ export class WorkspaceLayoutComponent {
     label: 'Sort',
     name: 'sort'
   };
-  private _displayFilters: boolean = true;  
-  
+  private _displayFilters: boolean = true;
+
   pageChangeHandler(event): void {
-    document.getElementById('workspace-target').focus();
+    document.getElementById('focusTitle').focus();
     this.pageChange.emit(event);
   }
-  
+
   addBtnClickHandler(event): void {
     this.addBtnClick.emit(event);
   }
