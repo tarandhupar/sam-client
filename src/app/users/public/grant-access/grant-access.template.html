@@ -5,7 +5,7 @@
     [multimode]="true"
     (organization)="onOrganizationsChange($event)"
     required="true"
-    [searchMessage]="errors.orgs"
+    [searchMessage]="orgError"
   ></agencyPicker>
   <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
   <div *ngIf="role && domainOptions">
@@ -14,7 +14,7 @@
       <div class="m_B-1x"><label>Permissions</label></div>
       <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
         <li  *ngFor="let object of objects" class="object-item">
-          <div class="object-title"><strong>{{object.function.val}}</strong></div>
+          <div class="object-title"><strong>{{object.function.val}}</strong>&nbsp;<i class="fa fa-info-circle" aria-hidden="true"></i></div>
           <div class="p_L-4x permission-list">
           <span *ngFor="let permission of object.permission" class="permission-control-group">
             <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
@@ -30,7 +30,7 @@
     <p class="pull-right">
       <a [routerLink]="['../access']"><button class="usa-button usa-button-outline">Cancel</button></a>
       &nbsp;
-      <button id="grant-button" class="usa-button usa-button-primary" (click)="onGrantClick()">Grant</button>
+      <button id="grant-button" class="usa-button usa-button-primary" (click)="onGrantClick()">Submit</button>
     </p>
   </div>
 </div>
