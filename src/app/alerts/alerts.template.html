@@ -21,7 +21,7 @@
     </div>
   </div>
   <div class="pull-right" *ngIf="!alertBeingEdited">
-    <button *ngIf="isAdmin()" class="alerts-primary-bg" (click)="onAddAlertClick()">Add New Alert</button>
+    <button *ngIf="isAdmin() && isCreate()" class="alerts-primary-bg" (click)="onAddAlertClick()">Add New Alert</button>
   </div>
   <div class="alert-count clearfix" *ngIf="alerts.length > 0">
     <div class="pull-left">
@@ -38,7 +38,7 @@
   </div>
   <div *ngFor="let alert of alerts; let i = index" class="alert-block">
     <alert-edit *ngIf="alertBeingEdited && alertBeingEdited === alert" [mode]="'edit'" (cancel)="onAlertCancel()" (accept)="onEditAlertAccept($event)" [alert]="alertBeingEdited"></alert-edit>
-    <alert-item #alertItem [isAdmin]="isAdmin()" [alert]="alert" [alertIndex]="i" *ngIf="alertBeingEdited !== alert" (edit)="onAlertEdit($event)" (showExpireModal)="onShowExpireModal($event)" [editDisabled]="alertBeingEdited"></alert-item>
+    <alert-item #alertItem [isAdmin]="isAdmin()" [isEdit] = "isEdit()" [alert]="alert" [alertIndex]="i" *ngIf="alertBeingEdited !== alert" (edit)="onAlertEdit($event)" (showExpireModal)="onShowExpireModal($event)" [editDisabled]="alertBeingEdited"></alert-item>
   </div>
   <samPagination [disabled]='alertBeingEdited' *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()" (pageChange)="onParamChanged($event)"></samPagination>
 

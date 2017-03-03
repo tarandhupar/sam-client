@@ -28,6 +28,7 @@ export class AgencyPickerComponent implements OnInit {
   @Input() hint: string = "";
   @Input() orgRoot = "";
   @Input() required = false;
+  @Input() searchMessage = "";
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
   @Output() organization = new EventEmitter<any[]>();
@@ -114,7 +115,6 @@ export class AgencyPickerComponent implements OnInit {
 
   showAutocompleteMsg = false;
   autocompleteMsg = "";
-  searchMessage = "";
   selectorToggle = false;
   browseToggle=false;
   autocompleting = false;

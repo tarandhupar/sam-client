@@ -21,6 +21,7 @@ export class WorkspacePage implements OnInit {
   initLoad = true;
   qParams: any = {};
   size: any = {};
+  addFALButtonText: string = 'Add Federal Assistance Listing';
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {
   }

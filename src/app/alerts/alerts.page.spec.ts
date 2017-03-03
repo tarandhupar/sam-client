@@ -8,10 +8,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AlertsPage } from './alerts.page';
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 
-import { By } from '@angular/platform-browser';
-import { AlertEditComponent } from './alert-edit/alert-edit.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AlertFooterService } from './alert-footer/alert-footer.service';
+import { By } from "@angular/platform-browser";
+import { HttpModule } from '@angular/http';
+import { AlertEditComponent } from "./alert-edit/alert-edit.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AlertFooterService } from "./alert-footer/alert-footer.service";
+import { UserAccessService } from "../../api-kit/access/access.service";
+import { WrapperService } from "../../api-kit/wrapper/wrapper.service";
 
 // load test data
 import { error, info, warning } from './alerts-test-data.spec';
@@ -33,9 +36,10 @@ describe('The AlertsPage component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AlertsPage,AlertItemComponent,AlertEditComponent,DateFormatPipe],
-      imports: [SamUIKitModule,RouterTestingModule,FormsModule,ReactiveFormsModule],
+      imports: [SamUIKitModule,RouterTestingModule,FormsModule,ReactiveFormsModule,HttpModule],
       providers: [
         AlertFooterService,
+        WrapperService,
         { provide: Router, useClass: RouterStub },
         { provide: SystemAlertsService, useValue: systemAlertsStub },
       ]
