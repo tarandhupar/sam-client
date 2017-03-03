@@ -26,7 +26,7 @@ export class SearchPage implements OnInit{
   initLoad = true;
   showOptional:any = (SHOW_OPTIONAL=="true");
   qParams:any = {};
-  isActive: boolean = true;
+  isActive: boolean = false;
 
   // Active Checkbox config
   checkboxModel: any = ['true'];
@@ -93,10 +93,10 @@ export class SearchPage implements OnInit{
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
         this.isActive = data['isActive'] && data['isActive'] === "true" ? true : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
-        this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : this.wdTypeModel;
-        this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : this.wdStateModel;
-        this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : this.wdCountyModel;
-        this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : this.wdConstructModel;
+        this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : null;
+        this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : '';
+        this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : '';
+        this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : '';
         this.runSearch();
         this.loadParams();
       });
@@ -133,9 +133,6 @@ export class SearchPage implements OnInit{
     }
     qsobj['isActive'] = this.isActive;
 
-    if(this.organizationId.length>0){
-      qsobj['organizationId'] = this.organizationId;
-    }
     if(this.wdTypeModel!=null) {
       qsobj['wdType'] = this.wdTypeModel;
     }
