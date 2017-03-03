@@ -30,4 +30,30 @@ export class WageDeterminationService{
 
     return this.oAPIService.call(apiParam);
   }
+
+  getWageDeterminationFilterData(obj){
+    let apiParam = {
+      name: 'wageDetermination',
+      suffix: '/dictionaries',
+      oParam: {
+        ids: obj.ids
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
+
+  getWageDeterminationFilterCountyData(obj){
+    let apiParam = {
+      name: 'wageDetermination',
+      suffix: '/dictionaries/wdCounties',
+      oParam: {
+        state: obj.state
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
 }
