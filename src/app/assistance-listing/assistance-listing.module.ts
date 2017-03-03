@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ProgramPage }   from './assistance-listing.page';
 import { FinancialObligationChart } from './assistance-listing.chart';
 import { routing } from './assistance-listing.route';
@@ -9,6 +10,8 @@ import { SamUIKitModule } from 'ui-kit';
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { ProgramDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
 import { AppComponentsModule } from "../app-components/app-components.module";
+import { ProgramPageOperations } from './assistance-listing-operations/assistance-listing-operations.page';
+
 
 @NgModule({
   imports: [
@@ -16,7 +19,8 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     BrowserModule,
     SamUIKitModule,
     AppComponentsModule,
-    routing
+    routing,
+    ReactiveFormsModule
   ],
   exports: [
     AuthorizationPipe,
@@ -30,6 +34,7 @@ import { AppComponentsModule } from "../app-components/app-components.module";
     ProgramDisplayPageDemoPage,
     FinancialObligationChart,
     HistoricalIndexLabelPipe,
+    ProgramPageOperations,
   ],
   providers: [],
 })
