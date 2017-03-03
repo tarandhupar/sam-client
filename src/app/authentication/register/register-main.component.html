@@ -36,12 +36,16 @@
           </sam-kba-entry>
         </div>
       </fieldset>
-      <fieldset>
+      <div class="usa-button-controls">
+        <samAlert [type]="states.alert.type"
+                  [title]="states.alert.message"
+                  [(hidden)]="!states.alert.show"
+                  showClose="true"></samAlert>
         <div class="usa-button-controls">
           <button type="button" class="usa-button-outline" (click)="cancel()">Cancel</button>
-          <button type="submit">Submit</button>
+          <button type="submit" [disabled]="states.submitted" #controls>Submit</button>
         </div>
-      </fieldset>
+      </div>
     </form>
   </div>
 </div>
