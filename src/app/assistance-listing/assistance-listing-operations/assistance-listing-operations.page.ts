@@ -18,32 +18,47 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   saveProgSub: any;
   getProgSub:any;
   programId: string = null;
+  currentUrl: string;
+  mode: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private programService: ProgramService){}
 
   ngOnInit(){
 
+    this.currentUrl = document.location.href;
     this.programId = this.route.snapshot.params['id'];
 
-    this.getProgSub = this.programService.getProgramById(this.programId)
-      .subscribe(api => {
-        console.log('AJAX Completed', api);
-        let title = api.data.title;
-        let popularName = (api.data.alternativeNames?api.data.alternativeNames[0]:'');
-        let falNo = (api.data.programNumber?api.data.programNumber:'');
+    if(this.programId == null)
+      this.mode = 'add';
+    else
+      this.mode = 'edit';
 
-        if(falNo.trim().length == 6 )
-          falNo = falNo.slice(3,6);
-        this.programForm.patchValue({title: title, popularName:popularName, falNo:falNo});
-      });
+    this.programForm = this.createFormGrp();
 
-    this.programForm = new FormGroup({
+    if(this.mode == 'edit'){
+      this.getProgSub = this.programService.getProgramById(this.programId)
+        .subscribe(api => {
+          console.log('AJAX Completed', api);
+          let title = api.data.title;
+          let popularName = (api.data.alternativeNames?api.data.alternativeNames[0]:'');
+          let falNo = (api.data.programNumber?api.data.programNumber:'');
+
+          if(falNo.trim().length == 6 )
+            falNo = falNo.slice(3,6);
+          this.programForm.patchValue({title: title, popularName:popularName, falNo:falNo});
+        });
+    }
+
+  }
+
+  createFormGrp(){
+    return( new FormGroup({
       title: new FormControl(''),
       popularName: new FormControl(''),
       falNo: new FormControl(''),
-    });
-
+    }));
   }
+
 
   ngOnDestroy(){
 
@@ -54,12 +69,12 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       this.getProgSub.unsubscribe();
   }
 
+
   onCancelClick(event) {
      this.router.navigate(['/workspace']);
   }
 
   saveProgram(event){
-    console.log(this.programId);
 
     let data = {
       "title": this.programForm.value.title,
@@ -70,6 +85,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
     this.saveProgSub = this.programService.saveProgram(this.programId, data)
       .subscribe(id => {
         console.log('AJAX Completed', id);
+        this.programId = id;
         /*if(this.programId == null) {
           this.programForm.reset();
           this.successMsg = "New Assistance Listing is successfully added.";
@@ -80,6 +96,5 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
         this.submitted = true;*/
         this.router.navigate(['/workspace']);
     });
-
   }
 }
