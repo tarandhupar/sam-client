@@ -18,10 +18,13 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   saveProgSub: any;
   getProgSub:any;
   programId: string = null;
+  currentUrl: string;
+
 
   constructor(private route: ActivatedRoute, private router: Router, private programService: ProgramService){}
 
   ngOnInit(){
+    this.currentUrl = document.location.href;
 
     this.programId = this.route.snapshot.params['id'];
 
