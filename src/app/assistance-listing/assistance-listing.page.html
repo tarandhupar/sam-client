@@ -6,10 +6,10 @@
     <div sam-sticky limit=1200 container="occupy-page">
       <!--Logo-->
       <ng-container *ngIf="program && (errorOrganization || logoUrl===null || errorLogo)">
-        <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+        <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
       </ng-container>
       <ng-container *ngIf="program && logoUrl && !errorOrganization">
-        <img class="sidenav-logo" id="program-logo" [src]="logoUrl" alt="Program Logo">
+        <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
       </ng-container>
       <!--Side Navigation-->
       <nav>

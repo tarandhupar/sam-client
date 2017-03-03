@@ -4,7 +4,9 @@
       <i class="alert-type-icon fa" [ngClass]="alert.iconClass()"></i>{{alert.severity()}}
     </div>
     <div class="pull-right">
-      <button *ngIf="isAdmin" class="usa-button-transparent" (click)="onEditClick()" [ngClass]="editDisabled && 'usa-button-transparent-disabled'"><span>Edit</span>&nbsp;<i class="fa fa-pencil"></i></button>
+      <span *ngIf="isAdmin && isActiveAlert() && isEdit" class="expire-alert-text">Expire</span>
+      <sam-toggle-switch *ngIf="isAdmin && isActiveAlert() && isEdit" (switchStatusChange)="OnSwitchChange($event)" [isSwitchOn]="expireAlert"></sam-toggle-switch>
+      <button *ngIf="isAdmin && !isExpiredAlert() && isEdit" class="usa-button-transparent" (click)="onEditClick()" [ngClass]="editDisabled && 'usa-button-transparent-disabled'"><span>Edit</span>&nbsp;<i class="fa fa-pencil"></i></button>
     </div>
   </div>
   <div class="alert-item usa-grid-full">

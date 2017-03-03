@@ -71,8 +71,10 @@
     -ms-transition: background-color 300ms ease-out;
     transition: background-color 300ms ease-out;
   }
-  .usa-zebra-list li a{
+  .usa-zebra-list li div{
     padding: 8px 14px;
+  }
+  .usa-zebra-list li a{
     display: block;
     text-decoration: none;
   }

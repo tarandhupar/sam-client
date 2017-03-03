@@ -50,6 +50,7 @@ export class DetailsComponent {
   private states = {
     isGov: false,
     selected: ['','',''],
+    submitted: false,
     editable: {
       identity: false,
       business: false,
@@ -194,7 +195,7 @@ export class DetailsComponent {
 
       // Prepopulate kbaAnswerList
       for(intAnswer = 0; intAnswer < data.selected.length; intAnswer++) {
-        vm.user.kbaAnswerList.push({ questionId: 0, answer: '&bull;' });
+        vm.user.kbaAnswerList.push({ questionId: 0, answer: ' ' });
       }
 
       // Set Selected Answers
@@ -363,6 +364,10 @@ export class DetailsComponent {
   /**
    * KBA
    */
+  getHashedAnswer(answer) {
+    return (answer.length ? answer : this.repeater(' ', 8)).replace(/./g, '&bull;');
+  }
+
   question(questionID) {
     const questions = this.lookups.questions,
           mappings = this.lookups.indexes;
@@ -477,9 +482,6 @@ export class DetailsComponent {
         controlValue,
         intKey;
 
-console.log();userData
-console.log(this.user.workPhone);
-
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
       controlValue = controls[key].value;
@@ -496,10 +498,6 @@ console.log(this.user.workPhone);
         userData[key] = controlValue.map((item, intItem) => {
           item.answer = item.answer.trim();
           this.user.kbaAnswerList[intItem] = item;
-
-          this.user.kbaAnswerList[intItem].answer = item.answer.length ?
-            item.answer.replace(/./g, '&bull;') :
-            this.repeater('&bull;', 8);
 
           return item;
         });
@@ -534,10 +532,13 @@ console.log(this.user.workPhone);
         valid = this.isValid(keys);
 
     if(valid) {
+      this.states.submitted = true;
+
       this.zone.runOutsideAngular(() => {
         this.saveGroup(keys, () => {
           this.zone.run(() => {
             this.states.editable[groupKey] = false;
+            this.states.submitted = false;
           });
         });
       });

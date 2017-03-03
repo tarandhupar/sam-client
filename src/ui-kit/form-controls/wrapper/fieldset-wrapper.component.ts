@@ -4,7 +4,7 @@ import { FormControl } from "@angular/forms";
 @Component({
   selector: 'fieldsetWrapper',
   template: `
-    <div [class.usa-input-error]="!!errorMessage">
+    <div class='fieldset-wrapper' [class.usa-input-error]="!!errorMessage">
       <fieldset class="usa-fieldset-inputs usa-sans">
         <legend [class.usa-input-error-label]="!!errorMessage">{{label}}</legend>
         <span *ngIf="errorMessage" class="usa-input-error-message">{{errorMessage}}</span>
@@ -23,6 +23,10 @@ export class FieldsetWrapper {
 
   formatErrors(control: FormControl) {
     if (!control) {
+      return;
+    }
+    if(control.pristine){
+      this.errorMessage = "";
       return;
     }
 

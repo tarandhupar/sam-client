@@ -35,7 +35,7 @@
     "server:dev": "webpack-dev-server --config config/webpack.dev.js --progress --profile --watch --content-base src/",
     "server:local": "webpack-dev-server --config config/webpack.local.js --progress --profile --watch --content-base src/",
     "server:dev:hmr": "npm run server:dev -- --inline --hot",
-    "server:prod": "node prod-server.js",
+    "server:prod": "node prod-server",
     "prod": "npm run build:prod && npm run server:prod",
     "webdriver:update": "npm run webdriver-manager update",
     "webdriver:start": "npm run webdriver-manager start",

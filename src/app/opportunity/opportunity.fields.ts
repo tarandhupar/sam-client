@@ -6,7 +6,7 @@ export enum OpportunityFields {
   HierarchyName = <any>'hierarchy-level',
   Location = <any>'location',
 
-  // Awards Summary
+    // Awards Summary
   AwardSummary = <any>'award-summary',
 
     // Award details section
@@ -40,7 +40,7 @@ export enum OpportunityFields {
   OrderNumber = <any>'order-number',
   ModificationNumber = <any>'modification-number',
   SpecialLegislation = <any>'special-legislation',
-    
+
     // Classification code section
   Classification = <any>'classification',
   SetAside = <any>'set-aside',
@@ -59,7 +59,7 @@ export enum OpportunityFields {
   Description = <any>'description',
   BenefitsDescription = <any>'benefits-description',
 
-  // Packages
+    // Packages
   Packages = <any>'packages',
 
     // Contact information section
@@ -75,5 +75,8 @@ export enum OpportunityFields {
   POCFullName = <any>'poc-full-name',
   POCEmail = <any>'poc-email',
   POCPhone = <any>'poc-phone',
-  POCFax = <any>'poc-fax'
+  POCFax = <any>'poc-fax',
+
+    // History section
+  History = <any>'history'
 }

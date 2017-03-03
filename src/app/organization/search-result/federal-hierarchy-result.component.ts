@@ -29,15 +29,15 @@ import 'rxjs/add/operator/map';
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
         	<li>
-        	  <span><strong>{{ data.type=="Agency" ? 'Sub-Tier' : data.type }}</strong></span>
+        	  <strong>{{ data.type=="Agency" ? 'Sub-Tier' : data.type }}</strong>
           </li>
-          <li *ngIf="data.alternativeNames && data.alternativeNames !== null"><strong>Also Known As</strong>
-            <ul class="usa-unstyled-list">
-              <li><span>{{ data.alternativeNames }}</span></li>
-            </ul>  
+          <li *ngIf="data.alternativeNames && data.alternativeNames !== null">
+            <strong>Also Known As</strong>
+            {{ data.alternativeNames }}
           </li>
           <li>
-            <strong>{{(data | organizationTypeCode).label}}</strong> {{(data | organizationTypeCode).value}}
+            <strong>{{(data | organizationTypeCode).label}}</strong>
+            {{(data | organizationTypeCode).value}}
           </li>    
         </ul>
       </div>
@@ -48,6 +48,6 @@ export class FederalHierarchyResult implements OnInit {
   @Input() qParams:any = {};
   constructor() { }
 
-  ngOnInit(){ }
+  ngOnInit(){}
 
 }

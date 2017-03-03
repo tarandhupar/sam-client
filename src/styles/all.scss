@@ -3,6 +3,7 @@
 // Vendor main
 @import '~font-awesome/scss/font-awesome';
 @import '~uswds/src/stylesheets/lib/bourbon';
+@import '~uswds/src/stylesheets/lib/neat';
 
 // Internal variable should be declared before uswds variable to take higher precendence
 @import 'variables';
@@ -10,6 +11,7 @@
 @import 'margin-padding';
 @import 'global';
 @import 'typography';
+@import 'grid-offsets';
 
 @import '~uswds/src/stylesheets/uswds';
 
@@ -37,6 +39,9 @@
 @import 'components/tabs';
 @import 'components/modal';
 @import 'components/alphabet-selector';
+@import 'components/history';
+@import 'components/toggle-switch';
+@import 'components/well';
 
 @import 'pages/entity-object-view';
 @import 'pages/exclusion';
@@ -53,6 +58,10 @@
 @import 'pages/help-roadmap';
 @import 'pages/users-directory';
 @import 'pages/ui-kit-demo';
+@import 'pages/access';
+@import 'pages/grant-access';
+@import 'pages/public-profile';
+@import 'pages/wage-determination';
 
 html, body{
   height: 100%;
@@ -132,7 +141,7 @@ h2{
 
 .search-layout{
   .showing-results-meta{
-    margin-top:3rem!important;  
+    margin-top:3rem!important;
   }
   samselect{
     label{

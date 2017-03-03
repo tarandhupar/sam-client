@@ -1,0 +1,19 @@
+<div class="public-profile-page usa-grid-full usa-authentication">
+  <aside class="usa-width-one-fourth">
+    <h1 class="user-name">{{userName}}</h1>
+    <ul class="usa-sidenav-list">
+      <li>
+        <a [routerLink]="['profile']" [routerLinkActive]="['usa-current']">Profile</a>
+      </li>
+      <li>
+        <a [routerLink]="['access']" [routerLinkActive]="['usa-current']">Access</a>
+      </li>
+      <li>
+        <a [routerLink]="['migrations']" [routerLinkActive]="['usa-current']">Migrations</a>
+      </li>
+    </ul>
+  </aside>
+  <section class="usa-width-three-fourths">
+     <router-outlet></router-outlet>
+  </section>
+</div>

@@ -172,6 +172,10 @@ export class UIKitDemoPage {
 
   collapsibleLabel = 'Test Label';
 
+  // Toggle switch component
+  switch_status = "off";
+  switchDisable = false;
+
   constructor(private alertFooterService: AlertFooterService) {  }
 
   onEmptyOptionChanged($event) {
@@ -216,5 +220,12 @@ export class UIKitDemoPage {
   }
   onModalInitClick2(){
     this.vcModal2.openModal();
+  }
+
+  OnSwitchChange(val){
+    val? this.switch_status = "on": this.switch_status = "off";
+  }
+  disableSwitchClick(){
+    this.switchDisable = !this.switchDisable;
   }
 }

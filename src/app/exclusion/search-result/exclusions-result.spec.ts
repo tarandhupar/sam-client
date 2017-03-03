@@ -7,6 +7,7 @@ import { ExclusionsResult } from './exclusions-result.component';
 var fixture;
 var comp;
 var titleEl;
+var labelEl;
 describe('ExclusionsResultComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -17,6 +18,7 @@ describe('ExclusionsResultComponent', () => {
       fixture = TestBed.createComponent(ExclusionsResult);
       comp = fixture.componentInstance;
       titleEl  = fixture.debugElement.query(By.css('.exclusion-title')); // find title element
+      labelEl = fixture.debugElement.query(By.css('.usa-label'));
       comp.data = {
         name: "SAMPLE NAME",
         cageCode: "1234",
@@ -40,5 +42,8 @@ describe('ExclusionsResultComponent', () => {
 
   it('should display an exclusion name', () => {
     expect(titleEl.nativeElement.textContent).toContain("SAMPLE NAME");
+  });
+  it('should display Exclusion label', () => {
+    expect(labelEl.nativeElement.textContent).toContain("Exclusion");
   });
 });

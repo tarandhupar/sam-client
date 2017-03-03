@@ -1,0 +1,37 @@
+<div class="grant-access-page">
+  <agencyPicker
+    id="form-top"
+    [label]="'Organizations'"
+    [multimode]="true"
+    (organization)="onOrganizationsChange($event)"
+    required="true"
+    [searchMessage]="errors.orgs"
+  ></agencyPicker>
+  <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
+  <div *ngIf="role && domainOptions">
+    <samSelect name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
+    <ng-container *ngIf="objects && objects.length">
+      <div class="m_B-1x"><label>Permissions</label></div>
+      <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
+        <li  *ngFor="let object of objects" class="object-item">
+          <div class="object-title"><strong>{{object.function.val}}</strong></div>
+          <div class="p_L-4x permission-list">
+          <span *ngFor="let permission of object.permission" class="permission-control-group">
+            <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+            <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
+          </span>
+          </div>
+        </li>
+      </ul>
+    </ng-container>
+  </div>
+  <samTextArea name="options-response" label="Messages:" placeholder="(Optional) Include a message with your response" [(value)]="messages"></samTextArea>
+  <div>
+    <p class="pull-right">
+      <a [routerLink]="['../access']"><button class="usa-button usa-button-outline">Cancel</button></a>
+      &nbsp;
+      <button id="grant-button" class="usa-button usa-button-primary" (click)="onGrantClick()">Grant</button>
+    </p>
+  </div>
+</div>
+

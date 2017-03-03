@@ -26,6 +26,13 @@
   </div>
 
   <div class="usa-grid">
+    <h2>Toggle Switch Component &lt;sam-toggle-switch&gt;</h2>
+    <sam-toggle-switch (switchStatusChange)="OnSwitchChange($event)" [disableSwitch]="switchDisable"></sam-toggle-switch>
+    <label>Switch Status: {{switch_status}}</label>
+    <input type="checkbox" (click)="disableSwitchClick($event.target.checked)"><label>Disable Switch</label>
+  </div>
+
+  <div class="usa-grid">
     <h2>Button Component &lt;samButton&gt;</h2>
     <div class="usa-width-one-whole">
       <div class="usa-width-one-fourth">
@@ -155,7 +162,7 @@
       <pre><code>{{textModel}}</code></pre>
     </div>
   </div>
-
+  
   <div class="usa-grid">
     <h2>Select Text &lt;samTextarea&gt;</h2>
     <div class="usa-width-one-third">
@@ -197,6 +204,47 @@
     </div>
   </div>
 
+  <div class="usa-grid">
+    <h2>SAM Number &lt;samNumber&gt;</h2>
+    <div class="usa-width-one-third">
+      <samNumber
+        [value]="2"
+        [name]="textConfig.name"
+        [label]="textConfig.label"
+        [hint]="textConfig.hint"
+        [errorMessage]="textConfig.errorMessage"
+        [disabled]="textConfig.disabled">
+      </samNumber>
+    </div>
+    <!--div class="usa-width-one-third">
+      <fieldset class="usa-fieldset-inputs usa-sans">
+        <legend><h3>Options</h3></legend>
+        <ul class="usa-unstyled-list">
+          <li>
+            <input id="isDisabled" type="checkbox" [(ngModel)]="textConfig.disabled">
+            <label for="isDisabled">Disabled</label>
+          </li>
+          <li>
+            <label>Label text</label>
+            <input type="text" [(ngModel)]="textConfig.label">
+          </li>
+          <li>
+            <label>Error message text</label>
+            <input type="text" [(ngModel)]="textConfig.errorMessage">
+          </li>
+          <li>
+            <label>Hint text</label>
+            <input type="text" [(ngModel)]="textConfig.hint">
+          </li>
+        </ul>
+      </fieldset>
+    </div>
+    <div class="usa-width-one-third">
+      <h3>Model</h3>
+      <pre><code>{{textModel}}</code></pre>
+    </div-->
+  </div>
+  
   <div class="usa-grid">
     <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
     <div class="usa-width-one-third">

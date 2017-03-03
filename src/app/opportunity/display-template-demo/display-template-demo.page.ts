@@ -89,7 +89,7 @@ export class OpportunityDisplayPageDemoPage implements OnInit {
   attachment: any;
   relatedOpportunities:any;
   relatedOpportunitiesMetadata:any;
-  logoUrl: string;
+  public logoData: any;
   opportunityAPI: any;
   currentTab: string = 'Opportunity';
   errorOrganization: any;
@@ -149,7 +149,7 @@ export class OpportunityDisplayPageDemoPage implements OnInit {
     let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
 
     this.route.params.subscribe((params: Params) => { // construct a stream of opportunity data
-      this.opportunityService.getOpportunityById("575779edb30fb028e58d56927630af5f").subscribe(opportunitySubject); // attach subject to stream
+      this.opportunityService.getOpportunityById("2f0d74d27c07225ad0ca8028f185162b").subscribe(opportunitySubject); // attach subject to stream
     });
 
     opportunitySubject.subscribe(api => { // do something with the opportunity api
@@ -216,8 +216,8 @@ export class OpportunityDisplayPageDemoPage implements OnInit {
     opportunityAPI.subscribe(api => {
       this.fhService.getOrganizationById(api.data.organizationId, false).subscribe(organizationSubject);
       this.fhService.getOrganizationLogo(organizationSubject,
-        (logoUrl) => {
-          this.logoUrl = logoUrl;
+        (logoData) => {
+          this.logoData = logoData;
         }, (err) => {
           this.errorLogo = true;
       });

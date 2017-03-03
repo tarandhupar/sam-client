@@ -1,0 +1,11 @@
+<workspace-layout (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"
+                  [totalElements]="totalCount" [loadFlag]="data.length > 0"
+                  titleText="Sam.gov Assistance Listings Workspace" [addBtnText]="addFALButtonText">
+  <div workspace-sidebar></div>
+  <div workspace-content>
+    <div *ngFor="let row of data" tabindex="0">
+      <assistance-program-result [data]="row" [qParams]="qParams"></assistance-program-result>
+      <hr class="m_T-5x"/>
+    </div>
+  </div>
+</workspace-layout>

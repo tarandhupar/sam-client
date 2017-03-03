@@ -16,6 +16,7 @@ import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { SamUIKitModule } from 'ui-kit';
 import { Observable } from 'rxjs';
 import { FinancialObligationChart } from './assistance-listing.chart';
+import {RouterTestingModule} from "@angular/router/testing";
 
 let comp: ProgramPage;
 let fixture: ComponentFixture<ProgramPage>;
@@ -369,10 +370,7 @@ let MockProgramService = {
         },
         "alternativeNames": [
           "State and Private Forestry Technology, Marketing Assistance Program"
-        ],
-        "_id": "6671e24f7d157c9ebeaaface56cd44f9",
-        "status": "Published",
-        "archived": false
+        ]
       },
       "parentProgramId": "09d3e5c197a84300cd2c6e351a786211",
       "latest": true,
@@ -396,9 +394,9 @@ let MockProgramService = {
   getLatestProgramById: (id: string) => {
     //return object that has attribute 'program' -> considered as published program
     return Observable.of({
+        'id':'',
         'data': {
           'programNumber': '',
-          '_id': ''
         },
     });
   }
@@ -519,6 +517,7 @@ describe('ProgramPage', () => {
     TestBed.configureTestingModule({
       imports: [
         HttpModule,
+        RouterTestingModule,
         CommonModule,
         SamUIKitModule
       ],

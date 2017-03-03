@@ -1,8 +1,5 @@
 import { CapitalizePipe } from './capitalize.pipe';
 
-
-
-
 describe('AuthorizationPipe', () => {
   let pipe = new CapitalizePipe();
   it('transforms a string to a string with words capitalized', () => {

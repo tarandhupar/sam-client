@@ -1,4 +1,4 @@
-<section>
+<section class="usa-grid-full">
 <br><br><br>
   <h2 class="m_T-2x">Reports</h2>
   <p class="p_L-8x">
@@ -11,8 +11,33 @@
 	Static Reports are published reports that have been prepared on a fiscal year basis for the public and aggregate data across the Federal Government.  These reports are available for download.
 	<br>
 	<br>
-      </p>
-<div class="centered">Coming Soon ...</div>
 </div>
+
 <section class="usa-grid-full">
+
+ <div *ngIf="data">
+  
+<ul style="list-style-type: none;">
+  <li *ngFor="let item of data.reports;let i=index">
+    <b><a href="{{item.loc}}" target="_blank">{{item.name}}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;<i>last run on {{item.date}}</i>
+    <br>
+    {{item.desc}}
+    <br>
+    <div *ngIf="item.previousDates">
+    <samAccordion>
+      <samAccordionSection [name]="'Other Years'" [headerText]="'Other Years'">
+	  <ul style="list-style-type: none;">
+	  	<li *ngFor="let previousReport of item.previousDates;let j=index"> <a href="{{previousReport.loc}}" target="_blank">{{previousReport.name}}</a>&nbsp;&nbsp;&nbsp;&nbsp;<i>{{previousReport.year}}</i></li>
+	  </ul>
+	</samAccordionSection>
+    </samAccordion>
+    </div>
+    <br>
+    </li>
+  </ul>
+</div>
+   
+</section>
+
+
 

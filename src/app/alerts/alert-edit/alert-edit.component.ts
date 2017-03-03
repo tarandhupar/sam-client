@@ -120,11 +120,19 @@ export class AlertEditComponent implements OnInit {
     if (this.alert.isExpiresIndefinite()) {
       this.form.get('endDate').disable();
     }
+
+    if (this.isActiveAlert()){
+      this.form.get('publishedDate').disable();
+      this.form.get('publishImmediately').disable();
+    }
   }
 
   isoNow() {
     return moment().format('YYYY-MM-DDTHH:mm:ss');
   }
+
+  isEditMode():boolean{return this.mode === 'edit';}
+  isActiveAlert():boolean{return this.alert.status() === 'Active';}
 
   onAcceptClick(event) {
     if (!this.form.valid) {
@@ -140,11 +148,17 @@ export class AlertEditComponent implements OnInit {
     let formValue = this.form.value;
     alert.setDescription(formValue.description);
     alert.setEndDate(formValue.endDate);
-    if (formValue.publishImmediately) {
-      alert.setPublishedDate(this.isoNow());
+
+    if (this.isActiveAlert()) {
+      alert.setPublishedDate(this.alert.publishedDate());
     } else {
-      alert.setPublishedDate(formValue.publishedDate);
+      if (formValue.publishImmediately) {
+        alert.setPublishedDate(this.isoNow());
+      } else {
+        alert.setPublishedDate(formValue.publishedDate);
+      }
     }
+
     alert.setSeverity(formValue.severity);
     alert.setTitle(formValue.title);
     alert.setIsExpiresIndefinite(formValue.isExpiresIndefinite);
@@ -181,4 +195,5 @@ export class AlertEditComponent implements OnInit {
       ctrl.enable();
     }
   }
+  
 }

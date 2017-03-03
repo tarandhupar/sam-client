@@ -1,24 +1,21 @@
-import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
-import { Router,NavigationExtras,NavigationEnd } from '@angular/router';
+import { Component, Directive, Input, ElementRef, Renderer, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Router, NavigationExtras, NavigationEnd } from '@angular/router';
+import { SortConfig } from '../interfaces';
 /**
-* SearchLayoutComponent - template component for generating a search page
-*/
+ * SearchLayoutComponent - template component for generating a search page
+ */
 @Component({
-	selector: 'search-layout',
-	templateUrl:'search-layout.template.html'
+  selector: 'search-layout',
+  templateUrl: 'search-layout.template.html'
 })
-export class SearchLayoutComponent implements OnInit {
+export class SearchLayoutComponent {
   @Input() totalPages: number;
-	@Input() currentPage: number;
+  @Input() currentPage: number;
   @Input() totalElements: number;
-	@Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
-  contentClass = "usa-width-three-fourths";
-	showCustomSidebar = true;
-	showGeneratedSidebar = false;
-	displayNumber = 10;
-	sortConfig = {
+  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
+  public sortConfig: SortConfig = {
     options: [
-      {value:'', label: 'Relevant', name: 'relevant'},
+      {value: '', label: 'Relevant', name: 'relevant'},
       {value: 'latest', label: 'Latest', name: 'latest'},
       {value: 'oldest', label: 'Oldest', name: 'oldest'}
     ],
@@ -26,22 +23,30 @@ export class SearchLayoutComponent implements OnInit {
     label: 'Sort',
     name: 'sort'
   };
-	sortModel = "";
+  private _displayFilters: boolean = false;
 
-  constructor(private router: Router){
-		//needed for fragment navigations
-		router.events.subscribe(s => {
-			if (s instanceof NavigationEnd) {
-				const tree = router.parseUrl(router.url);
-				if (tree.fragment) {
-					const element = document.getElementById(tree.fragment);
-					if (element) { element.scrollIntoView(); }
-				}
-			}
-		});
-	}
-	pageChangeHandler(event){
-		this.pageChange.emit(event);
-	}
-  ngOnInit(){}
+  pageChangeHandler(event): void {
+    this.pageChange.emit(event);
+  }
+
+  setMainWidth(): string {
+    return this._displayFilters ? 'usa-width-three-fourths' : 'usa-width-one-whole';
+  }
+
+  setAsideWidth(): string {
+    return this._displayFilters ? 'usa-width-one-fourth' : 'hide';
+  }
+
+  setOffset(): string {
+    return this._displayFilters ? 'usa-offset-one-fourth' : '';
+  }
+
+  toggleFilters(event: Event): void {
+    this._displayFilters = !this._displayFilters;
+    return;
+  }
+
+  toggleFilterLabel(): string {
+    return this._displayFilters ? 'fa fa-minus' : 'fa fa-plus';
+  }
 }

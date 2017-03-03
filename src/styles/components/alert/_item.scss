@@ -25,7 +25,22 @@
     }
   }
 
+  .abs-top-right{
+    position: absolute;
+    right: 20%;
+    top: -10px;
+  }
 
+
+  .expire-alert-note{
+    width: 47%;
+    border: 1px solid $color-black;
+    padding: 3px 5px;
+  }
+
+  .gray-label{
+    color: $color-gray-light;
+  }
 }
 
 alert-item {
@@ -50,6 +65,14 @@ alert-item {
     display: inline-block;
     padding: 4px;
     border: 1px solid black;
+  }
+
+  .expire-alert-text {
+    display: inline-block;
+    color: rgb(17, 46, 81);
+    font-size: 1.7rem;
+    font-weight: 700;
+    line-height: 1;
   }
 
 }
