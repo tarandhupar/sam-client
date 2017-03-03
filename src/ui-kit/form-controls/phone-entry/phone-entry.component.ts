@@ -11,11 +11,10 @@ import { LabelWrapper } from '../wrapper/label-wrapper.component';
 @Component( {
   selector: 'samPhoneEntry',
   template: `
-  <labelWrapper [label]="label" [name]="getIdentifier('phone-number')" [errorMessage]="errorMsg">
+  <labelWrapper [label]="label" [name]="getIdentifier('phone-number')" [errorMessage]="errorMsg" [required]="required">
     <input type="text"
-    id=" {{getIdentifier('phone-number')}}"
-    name=" {{getIdentifier('phone-number')}}"
-    class=""
+    [attr.id]="getIdentifier('phone-number')"
+    [attr.name]="getIdentifier('phone-number')"
     [attr.maxlength]="phoneNumberTemplateLength"
     [value]="phoneNumberMirror"
     [placeholder]="phoneNumberTemplate"
