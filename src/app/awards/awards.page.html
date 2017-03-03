@@ -76,41 +76,18 @@
 			</div>
 			<div class="usa-grid-full">
 				<h2 id="">General Information</h2>
-				<h3 id="transactionInforation" class="display-inline">Transaction Information</h3>
-				<table class="table-borderless">
-					<tr>
-						<td class="align-bottom">
-							<div [ngSwitch]="awardData.templateType">
-								<ng-container *ngSwitchCase="'AWARD'">Award Type: {{awardData.transactionInformation.type}}</ng-container>
-								<ng-container *ngSwitchCase="'OTA'">Award Type: {{awardData.transactionInformation.type}}</ng-container>
-								<ng-container *ngSwitchCase="'IDV'">IDV Type: {{awardData.transactionInformation.type}}</ng-container>
-								<ng-container *ngSwitchCase="'OTI'">IDV Type: {{awardData.transactionInformation.type}}</ng-container>
-							</div>
-						</td>
-						<td class="align-bottom">
-							Prepared Date: {{awardData.transactionInformation.preparedDate}}
-						</td>
-						<td class="align-bottom">
-							Prepared User: {{awardData.transactionInformation.preparedUser}}
-						</td>
-					</tr>
-					<tr>
-						<td class="align-top">
-							<div [ngSwitch]="awardData.templateType">
-								<ng-container *ngSwitchCase="'AWARD'">Award Status: {{awardData.transactionInformation.status}}</ng-container>
-								<ng-container *ngSwitchCase="'OTA'">Award Status: {{awardData.transactionInformation.status}}</ng-container>
-								<ng-container *ngSwitchCase="'IDV'">IDV Status: {{awardData.transactionInformation.status}}</ng-container>
-								<ng-container *ngSwitchCase="'OTI'">IDV Status: {{awardData.transactionInformation.status}}</ng-container>
-							</div>
-						</td>
-						<td class="align-top">
-							Last Modified Date: {{awardData.transactionInformation.lastModifiedDate}}
-						</td>
-						<td class="align-top">
-							Last Modified User: {{awardData.transactionInformation.lastModifiedUser}}
-						</td>
-					</tr>
-				</table>
+				<h3 id="transactionInforation">Transaction Information</h3>
+				<div class="usa-width-one-half">
+					IDV Type: {{awardData.transactionInformation.type}}<br />
+					Prepared Date: {{awardData.transactionInformation.preparedDate}}<br />
+					Prepared User: {{awardData.transactionInformation.preparedUser}}
+				</div>
+				<div class="usa-width-one-half">
+					IDV Status: {{awardData.transactionInformation.status}}<br />
+					Last Modified Date: {{awardData.transactionInformation.lastModifiedDate}}<br />
+					Last Modified User: {{awardData.transactionInformation.lastModifiedUser}}
+				</div>
+				
 			</div>
 			<div class="usa-grid-full">
 				<h3 id="documentInformation">Document Information</h3>
