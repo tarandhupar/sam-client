@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Inject } from '@angular/core';
 import { UserAccessService } from "api-kit/access/access.service";
 import { UserAccessModel } from "../../access.model";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.service";
 import { UserAccessInterface } from "api-kit/access/access.interface";
 import { PropertyCollector } from "../../../app-utils/property-collector";
+import { PageScrollService, PageScrollInstance, PageScrollConfig } from "ng2-page-scroll";
 
 @Component({
   templateUrl: 'grant-access.template.html'
@@ -14,9 +15,9 @@ export class GrantAccessPage implements OnInit {
 
   private errors = {
     role: '',
-    domain: '',
-    orgs: ''
+    domain: ''
   };
+  private orgError = '';
 
   private userName: string = "";
   public orgs = [];
@@ -34,8 +35,11 @@ export class GrantAccessPage implements OnInit {
     private userService: UserAccessService,
     private route: ActivatedRoute,
     private footerAlert: AlertFooterService,
-    public router: Router
-  ) { }
+    public router: Router,
+    private pageScrollService: PageScrollService,
+  ) {
+    PageScrollConfig.defaultDuration = 500;
+  }
 
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
@@ -56,6 +60,11 @@ export class GrantAccessPage implements OnInit {
       }
     );
   }
+
+  public goToHead(): void {
+    let pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, '#form-top');
+    this.pageScrollService.start(pageScrollInstance);
+  };
 
   permissionId(permission, object) {
     return permission.val + '_' + object.function.val;
@@ -122,7 +131,7 @@ export class GrantAccessPage implements OnInit {
 
   showErrors() {
     if (!this.orgs || !this.orgs.length) {
-      this.errors.orgs = 'Organization is required';
+      this.orgError = 'Organization is required';
     }
 
     if (!this.role) {
@@ -132,6 +141,7 @@ export class GrantAccessPage implements OnInit {
     if (!this.domain && this.domainOptions.length) {
       this.errors.domain = 'Domain is required';
     }
+    this.goToHead();
   }
 
   onGrantClick() {

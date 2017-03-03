@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from "@angular/forms";
 
+import {Ng2PageScrollModule} from 'ng2-page-scroll';
+
 import { routing } from './users.route';
 import { SamUIKitModule } from 'ui-kit';
 import { SamAPIKitModule } from 'api-kit';
@@ -30,6 +32,7 @@ import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service"
     SamAPIKitModule,
     PipesModule,
     AppComponentsModule,
+    Ng2PageScrollModule.forRoot()
   ],
   exports: [
 
