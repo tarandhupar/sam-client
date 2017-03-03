@@ -4,9 +4,6 @@ import 'rxjs/add/operator/map';
 import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import {WageDeterminationService} from "../../api-kit/wage-determination/wage-determination.service";
-import {data} from "../../ui-kit/sidenav/services/testdata";
-import wrapDriver = protractor.wrapDriver;
-
 
 @Component({
   moduleId: __filename,
