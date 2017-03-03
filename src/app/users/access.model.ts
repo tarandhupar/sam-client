@@ -32,7 +32,7 @@ export class UserAccessModel {
 
     let organizationMapContent = orgIds.map(orgId => {
       return {
-        orgKey: orgId,
+        orgKey: ""+orgId,
         functionMapContent: functionMapContent
       };
     });
