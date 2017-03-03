@@ -11,11 +11,15 @@ import { GrantAccessPage } from "./grant-access.page";
 import { UserAccessService } from "api-kit/access/access.service";
 import { AppComponentsModule } from "app/app-components/app-components.module";
 import { routes } from '../../users.route';
-import {UserAccessInterface} from "api-kit/access/access.interface";
-import {By} from "@angular/platform-browser";
-import {UserAccessPage} from "../access/access.page";
-import {PipesModule} from "../../../app-pipes/app-pipes.module";
-import {GroupByDomainPipe} from "../access/group-by-domain.pipe";
+import { UserAccessInterface } from "api-kit/access/access.interface";
+import { By } from "@angular/platform-browser";
+import { UserAccessPage } from "../access/access.page";
+import { PipesModule } from "../../../app-pipes/app-pipes.module";
+import { GroupByDomainPipe } from "../access/group-by-domain.pipe";
+import { UserViewComponent } from "../public.component";
+import { UserProfilePage } from "../profile/profile.page";
+import { UserMigrationsPage } from "../migrations/migrations.page";
+import { PageScrollService } from "ng2-page-scroll";
 
 
 let userAccessStub = {
@@ -53,10 +57,18 @@ describe('The GrantAccessPage component', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GrantAccessPage, UserAccessPage, GroupByDomainPipe],
+      declarations: [
+        GrantAccessPage,
+        UserAccessPage,
+        GroupByDomainPipe,
+        UserViewComponent,
+        UserProfilePage,
+        UserMigrationsPage
+      ],
       imports: [SamUIKitModule,RouterTestingModule.withRoutes(routes),FormsModule,AppComponentsModule, PipesModule],
       providers: [
         AlertFooterService,
+        PageScrollService,
         // { provide: Router, useClass: RouterStub },
         { provide: UserAccessService, useValue: userAccessStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
