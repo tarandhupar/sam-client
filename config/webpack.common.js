@@ -81,14 +81,7 @@ module.exports = {
 
     // aliases
     alias: {
-      samUIKit: helpers.root('src') + '/sam-ui-elements/src/ui-kit',
-      samDirectives: helpers.root('src') + '/sam-ui-elments/src/ui-kit/directives',
-      samComponents: helpers.root('src') + '/sam-ui-elements/src/ui-kit/components',
-      samElements: helpers.root('src') + '/sam-ui-elements/src/ui-kit/elements',
-      samFormControls: helpers.root('src') + '/sam-ui-elements/src/ui-kit/form-controls',
-      samFormTemplates: helpers.root('src') + '/sam-ui-elements/src/ui-kit/form-templates',
-      samPipes: helpers.root('src') + '/sam-ui-elements/src/ui-kit/pipes',
-      samWrappers: helpers.root('src') + '/sam-ui-elements/src/ui-kit/wrappers'
+      samUIKit: helpers.root('src/sam-ui-elements/src/ui-kit')
     },
 
     // remove other default values

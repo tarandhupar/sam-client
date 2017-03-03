@@ -10,8 +10,9 @@
     "noEmitHelpers": true,
     "strictNullChecks": false,
     "baseUrl": "./src",
-    "paths": [
-    ],
+    "paths": {
+      "samUIKit/*": ["sam-ui-elements/src/ui-kit/*"]
+    },
     "lib": [
       "dom",
       "es6"
@@ -29,6 +30,7 @@
   },
   "exclude": [
     "node_modules",
+    "src/sam-ui-elements/node_modules",
     "dist"
   ],
   "awesomeTypescriptLoaderOptions": {

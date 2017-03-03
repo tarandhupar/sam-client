@@ -5,7 +5,7 @@ import { ActivatedRoute} from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 import { Organization } from "../../../organization/organization.model";
 import { Observable } from "rxjs";
-import { SamAccordionComponent } from "sam-ui-elements/src/ui-kit/components/accordion/accordion.component";
+import { SamAccordionComponent } from "samUIKit/components/accordion/accordion.component";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 
 
