@@ -45,7 +45,7 @@ export class WorkspacePage implements OnInit {
     return qsobj;
   }
 
- runProgram() {
+  runProgram() {
     // make api call
     this.programService.runProgram({
       pageNum: this.pageNum
@@ -78,6 +78,10 @@ export class WorkspacePage implements OnInit {
       queryParams: qsobj
     };
     this.router.navigate(['workspace/'], navigationExtras);
+  }
+
+  addBtnClick() {
+    this.router.navigate(['programs/add']);
   }
 }
 
