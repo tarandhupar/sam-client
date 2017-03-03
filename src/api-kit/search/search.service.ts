@@ -6,36 +6,58 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class SearchService {
-    private params = new Subject<Object>();
-    paramsUpdated$ = this.params.asObservable();
-    constructor(private oAPIService: WrapperService) {}
+  private params = new Subject<Object>();
+  paramsUpdated$ = this.params.asObservable();
+  constructor(private oAPIService: WrapperService) {}
 
-    runSearch(obj) {
-      let oApiParam = {
-        name: 'search',
-        suffix: '/',
-        oParam: {
-          index: obj.index,
-          q: obj.keyword,
-          page: obj.pageNum
-        },
-        method: 'GET'
-      };
+  runSearch(obj) {
+    let oApiParam = {
+      name: 'search',
+      suffix: '/',
+      oParam: {
+        index: obj.index,
+        q: obj.keyword,
+        page: obj.pageNum
+      },
+      method: 'GET'
+    };
 
-      if(obj.isActive === true) {
-        oApiParam.oParam['is_active'] = obj.isActive;
-      }
-
-      if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null) {
-        oApiParam.oParam['organization_id'] = obj.organizationId;
-      }
-
-       if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
-         oApiParam.oParam['noticeId'] = obj.noticeId;
-       }
-
-      return this.oAPIService.call(oApiParam);
+    // wage determination type filter
+    if(typeof obj.wdType !== 'undefined' && obj.wdType !== null) {
+      oApiParam.oParam['index'] = obj.wdType;
+    } else {
+      oApiParam.oParam['index'] = obj.index;
     }
+
+    // construction type filter
+    if(typeof obj.conType !== 'undefined' && obj.conType !== null && obj.conType !== '') {
+      oApiParam.oParam['construction_type'] = obj.conType;
+    }
+
+    // selectStateModel
+    if(typeof obj.state !== 'undefined' && obj.state !== null && obj.state !== '') {
+      oApiParam.oParam['state'] = obj.state;
+    }
+
+    if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
+      oApiParam.oParam['county'] = obj.county;
+    }
+
+    // is active filter
+    if(obj.isActive === true) {
+      oApiParam.oParam['is_active'] = obj.isActive;
+    }
+
+    if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null) {
+      oApiParam.oParam['organization_id'] = obj.organizationId;
+    }
+
+    if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
+      oApiParam.oParam['noticeId'] = obj.noticeId;
+    }
+
+    return this.oAPIService.call(oApiParam);
+  }
 
   featuredSearch(obj) {
     let oApiParam = {
@@ -53,7 +75,7 @@ export class SearchService {
 
 
   loadParams(obj){
-      this.params.next(obj);
-    }
+    this.params.next(obj);
+  }
 
 }

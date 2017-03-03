@@ -121,7 +121,7 @@ describe('AccessModel', () => {
               domain: 2,
               organizationMapContent: [
                 {
-                  orgKey: 3,
+                  orgKey: '3',
                   functionMapContent: [
                     {
                       function: 5,
@@ -134,7 +134,7 @@ describe('AccessModel', () => {
                   ]
                 },
                 {
-                  orgKey: 4,
+                  orgKey: '4',
                   functionMapContent: [
                     {
                       function: 5,
@@ -174,7 +174,7 @@ describe('AccessModel', () => {
               domain: 2,
               organizationMapContent: [
                 {
-                  orgKey: 3,
+                  orgKey: '3',
                   functionMapContent: [
                     {
                       function: 4,
