@@ -10,18 +10,17 @@ export const routes: Routes = [];
 
 if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
   routes.unshift({ path: 'users',  component: UserDirectoryPage });
+  routes.unshift({
+    path: 'users/:id',
+    component: UserViewComponent,
+    children: [
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      { path: 'profile',  component: UserProfilePage },
+      { path: 'migrations',  component: UserMigrationsPage },
+      { path: 'access',  component: UserAccessPage },
+      { path: 'grant-access',  component: GrantAccessPage }
+    ]
+  });
 }
-
-routes.unshift({
-  path: 'users/:id',
-  component: UserViewComponent,
-  children: [
-    { path: '', redirectTo: 'profile', pathMatch: 'full' },
-    { path: 'profile',  component: UserProfilePage },
-    { path: 'migrations',  component: UserMigrationsPage },
-    { path: 'access',  component: UserAccessPage },
-    { path: 'grant-access',  component: GrantAccessPage }
-  ]
-});
 
 export const routing = RouterModule.forChild(routes);
