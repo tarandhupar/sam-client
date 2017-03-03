@@ -351,6 +351,9 @@ export class SearchPage implements OnInit{
 
   // event for wdFilter Change
   wdFilterChange(event){
+    if(this.wdTypeModel === 'sca'){
+      this.wdConstructModel = '';
+    }
     this.pageNum = 0;
     this.getDictionaryData('dbraConstructionTypes');
     var qsobj = this.setupQS(false);
