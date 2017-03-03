@@ -15,8 +15,15 @@ var workspaceServiceStub = {
     return Observable.of({
       _embedded: {
         program: [{
-          _type: "data",
-          title: "Dummy Result 1"
+          "data": {
+            "title": "Yukon River Salmon Research and Management Assistance",
+            "programNumber": "15.671",
+            "organizationId": '1'
+          },
+          "status": {
+            "code": "published",
+            "value": "Published"
+          }
         }],
       },
       page: {
@@ -54,23 +61,10 @@ describe('WorkspacePage', () => {
     fixture = TestBed.createComponent(WorkspacePage);
   });
 
-  /*it('should "run" a search', () => {
+  it('should "run" a search', () => {
     fixture.componentInstance.runProgram();
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(fixture.componentInstance.data.results[0].title).toBe("Dummy Result 1");
-    });
+      expect(fixture.componentInstance.data[0].data.title).toBe("Yukon River Salmon Research and Management Assistance");
   });
-
-  it('should "run" a featured search', () => {
-    fixture.componentInstance.keyword = "test";
-    fixture.componentInstance.pageNum = 0;
-    fixture.componentInstance.runProgram();
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect(fixture.componentInstance.featuredData.featuredResult[0].name).toBe("SAMPLE NAME");
-    });
-  });*/
 
 });
 

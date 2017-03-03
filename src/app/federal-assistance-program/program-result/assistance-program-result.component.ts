@@ -6,11 +6,11 @@ import * as moment from 'moment/moment';
   selector: 'assistance-program-result',
   template: `<p>
   <span class="usa-label">Federal Assistance Listing</span>
-      <span class="usa-label" [ngStyle]="{display:showHideStatusText}"  [style.background-color]="randomColor">{{data.status.value}}</span>
+      <span class="usa-label toggleStatusCode" [ngStyle]="{display:showHideStatusText}"  [style.background-color]="randomColor">{{data.status.value}}</span>
   </p>
   
   <h3 class="assistance-program-title">
-    <a href="/programs/d3d470ea123d420380b9c9afa3873d72/edit">{{data.data.title}}</a>
+    <a [routerLink]="['/programs', data.id, 'edit']">{{data.data.title}}</a>
   </h3> 
   <div class="usa-grid-full">
     <div class="usa-width-two-thirds">
@@ -49,7 +49,7 @@ export class AssistanceProgramResult implements OnInit {
   statusCodeBgColor = [
     '#2e8540',
     '#cd2026',
-    'orange'
+    '#aeb0b5'
   ];
 
   constructor() {
@@ -58,10 +58,10 @@ export class AssistanceProgramResult implements OnInit {
 
   ngOnInit() {
     if (this.data.publishedDate !== null) {
-      this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y H:mm a");
+      this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y h:mm a");
     }
     if (this.data.modifiedDate !== null) {
-      this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y H:mm a");
+      this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y h:mm a");
     }
     if (this.data.status.code !== 'published') {
       this.showhideStatus = true;
