@@ -63,7 +63,7 @@ describe('AssistanceProgramResultComponent', () => {
   });
 
   it('should have published Date component', () => {
-    expect(comp.data.publishedDate).toEqual(moment(new Date()).format("MMM D, Y H:mm a"));
+    expect(comp.data.publishedDate).toEqual(moment(new Date()).format("MMM D, Y h:mm a"));
   });
 
   it('should have color component', () => {

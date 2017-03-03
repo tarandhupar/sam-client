@@ -58,7 +58,7 @@ export class WorkspaceLayoutComponent {
   private _displayFilters: boolean = true;
 
   pageChangeHandler(event): void {
-    document.getElementById('focusTitle').focus();
+    document.getElementsByClassName("workspace-content")[0].getElementsByTagName("div")[0].focus();
     this.pageChange.emit(event);
   }
 
