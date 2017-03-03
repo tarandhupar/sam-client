@@ -58,10 +58,10 @@ export class AssistanceProgramResult implements OnInit {
 
   ngOnInit() {
     if (this.data.publishedDate !== null) {
-      this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y H:mm a");
+      this.data.publishedDate = moment(this.data.publishedDate).format("MMM D, Y h:mm a");
     }
     if (this.data.modifiedDate !== null) {
-      this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y H:mm a");
+      this.data.modifiedDate = moment(this.data.modifiedDate).format("MMM D, Y h:mm a");
     }
     if (this.data.status.code !== 'published') {
       this.showhideStatus = true;
