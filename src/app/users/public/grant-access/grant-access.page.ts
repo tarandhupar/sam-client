@@ -12,6 +12,12 @@ import { PropertyCollector } from "../../../app-utils/property-collector";
 })
 export class GrantAccessPage implements OnInit {
 
+  private errors = {
+    role: '',
+    domain: '',
+    orgs: ''
+  };
+
   private userName: string = "";
   public orgs = [];
   private domain;
@@ -59,11 +65,11 @@ export class GrantAccessPage implements OnInit {
     this.orgs = orgs;
   }
 
-  showDomains() {
-    this.role && this.domainOptions && this.domainOptions.length;
-  }
-
   onRoleChange(role) {
+    if (role) {
+      this.errors.role = '';
+    }
+
     this.role = role;
     this.domain = null;
     this.domainOptions = [];
@@ -91,6 +97,9 @@ export class GrantAccessPage implements OnInit {
   }
 
   onDomainChange(domain) {
+    if (domain) {
+      this.errors.domain = '';
+    }
     this.domain = domain;
 
     let d = this.permissions.DomainContent.find(dom => {
@@ -104,23 +113,36 @@ export class GrantAccessPage implements OnInit {
   }
 
   goToAccessPage() {
-    this.router.navigate(['../access']);
+    this.router.navigate(['../access'], { relativeTo: this.route });
+  }
+
+  isFormValid() {
+    return this.orgs && this.orgs.length && this.domain && this.role;
+  }
+
+  showErrors() {
+    if (!this.orgs || !this.orgs.length) {
+      this.errors.orgs = 'Organization is required';
+    }
+
+    if (!this.role) {
+      this.errors.role = 'Role is required';
+    }
+
+    if (!this.domain && this.domainOptions.length) {
+      this.errors.domain = 'Domain is required';
+    }
   }
 
   onGrantClick() {
-    if (!this.orgs || !this.orgs.length || !this.domain) {
-      this.footerAlert.registerFooterAlert({
-        title:"Select organization(s) and a domain.",
-        description:"",
-        type:'warning',
-        timer:0
-      });
+    if (!this.isFormValid()) {
+      this.showErrors();
       return;
     }
 
     let orgIds = this.orgs.map(org => org.value);
     let funcs: any = this.objects.map(obj => {
-      let perms = obj.permission.filter(p => p.isChecked).map(p => p.id);
+      let perms = obj.permission.filter(p => !p.notChecked).map(p => p.id);
       return {
         id: obj.function.id,
         permissions: perms
@@ -141,7 +163,7 @@ export class GrantAccessPage implements OnInit {
           title:"Access updated.",
           description:"",
           type:'success',
-          timer:0
+          timer:3000
         });
 
         this.goToAccessPage();
@@ -155,5 +177,9 @@ export class GrantAccessPage implements OnInit {
         });
       }
     );
+  }
+
+  onPermissionClick(perm) {
+    perm.notChecked = !perm.notChecked;
   }
 }

@@ -94,6 +94,12 @@ export class SamAlertComponent {
   }
 
   ngAfterViewInit() {
+    if (this.dismissTimer > 0) {
+      setTimeout(() => {
+        this.close();
+      }, this.dismissTimer);
+    }
+
     if(this.states.show && this.target !== undefined) {
       this.setPosition();
     }
