@@ -170,8 +170,8 @@ export class GrantAccessPage implements OnInit {
     this.userService.putAccess(access).subscribe(
       res => {
         this.footerAlert.registerFooterAlert({
-          title:"Access updated.",
-          description:"",
+          title:"Access Granted.",
+          description:'You have successfully granted this user access',
           type:'success',
           timer:3000
         });
