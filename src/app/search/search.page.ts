@@ -351,6 +351,7 @@ export class SearchPage implements OnInit{
 
   // event for wdFilter Change
   wdFilterChange(event){
+    this.pageNum = 0;
     this.getDictionaryData('dbraConstructionTypes');
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
@@ -361,6 +362,7 @@ export class SearchPage implements OnInit{
 
   // event for construction type change
   constructionTypeChange(event){
+    this.pageNum = 0;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
@@ -373,6 +375,7 @@ export class SearchPage implements OnInit{
 
     // reset county model on state change
     this.wdCountyModel = '';
+    this.pageNum = 0;
 
     // enable county select if needed
     this.determineEnableCountySelect();
@@ -388,6 +391,7 @@ export class SearchPage implements OnInit{
   }
 
   countyChange(event){
+    this.pageNum = 0;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
@@ -407,6 +411,7 @@ export class SearchPage implements OnInit{
 
   wdStateClear(){
     this.wdStateModel = '';
+    this.pageNum = 0;
 
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
@@ -417,6 +422,7 @@ export class SearchPage implements OnInit{
 
   wdCountyClear(){
     this.wdCountyModel = '';
+    this.pageNum = 0;
 
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
@@ -427,6 +433,7 @@ export class SearchPage implements OnInit{
 
   wdConstructionClear(){
     this.wdConstructModel = '';
+    this.pageNum = 0;
 
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
