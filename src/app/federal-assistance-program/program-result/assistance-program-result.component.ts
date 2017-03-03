@@ -6,7 +6,7 @@ import * as moment from 'moment/moment';
   selector: 'assistance-program-result',
   template: `<p>
   <span class="usa-label">Federal Assistance Listing</span>
-      <span class="usa-label" [ngStyle]="{display:showHideStatusText}"  [style.background-color]="randomColor">{{data.status.value}}</span>
+      <span class="usa-label toggleStatusCode" [ngStyle]="{display:showHideStatusText}"  [style.background-color]="randomColor">{{data.status.value}}</span>
   </p>
   
   <h3 class="assistance-program-title">
@@ -49,7 +49,7 @@ export class AssistanceProgramResult implements OnInit {
   statusCodeBgColor = [
     '#2e8540',
     '#cd2026',
-    'orange'
+    '#aeb0b5'
   ];
 
   constructor() {
