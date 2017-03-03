@@ -26,7 +26,7 @@ export class SearchPage implements OnInit{
   initLoad = true;
   showOptional:any = (SHOW_OPTIONAL=="true");
   qParams:any = {};
-  isActive: boolean = true;
+  isActive: boolean = false;
 
   // Active Checkbox config
   checkboxModel: any = ['true'];
@@ -83,6 +83,8 @@ export class SearchPage implements OnInit{
     name: 'constructionType',
   };
 
+  wdSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result."
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService, private wageDeterminationService: WageDeterminationService) { }
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
@@ -93,10 +95,10 @@ export class SearchPage implements OnInit{
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
         this.isActive = data['isActive'] && data['isActive'] === "true" ? true : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
-        this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : this.wdTypeModel;
-        this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : this.wdStateModel;
-        this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : this.wdCountyModel;
-        this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : this.wdConstructModel;
+        this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : null;
+        this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : '';
+        this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : '';
+        this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : '';
         this.runSearch();
         this.loadParams();
       });
@@ -133,9 +135,6 @@ export class SearchPage implements OnInit{
     }
     qsobj['isActive'] = this.isActive;
 
-    if(this.organizationId.length>0){
-      qsobj['organizationId'] = this.organizationId;
-    }
     if(this.wdTypeModel!=null) {
       qsobj['wdType'] = this.wdTypeModel;
     }
