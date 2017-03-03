@@ -37,13 +37,13 @@
                  [name]="'popularName-input'"
                  [label]="'Popular Name'"></samText>
 
-        <samText [maxlength]="3"
+        <samNumber [maxlength]="3"
                  [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
                  [control]="programForm.get('falNo')"
                  formControlName="falNo"
                  [name]="'falNo-input'"
                  [label]="'FAL Number'"
-                 [required]="true"></samText>
+                 [errorMessage]= "programForm.controls['falNo'].valid ? '': 'This number falls outside the range defined for this organization.'"></samNumber>
 
         <div>
           <div class="pull-left">

@@ -15,7 +15,6 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   programForm;
   successMsg: string;
   submitted: boolean;
-  //program: any;
   saveProgSub: any;
   getProgSub:any;
   programId: string = null;
@@ -43,11 +42,10 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       popularName: new FormControl(''),
       falNo: new FormControl(''),
     });
+
   }
 
   ngOnDestroy(){
-    console.log(this.saveProgSub);
-    console.log(this.getProgSub);
 
     if(this.saveProgSub)
       this.saveProgSub.unsubscribe();
