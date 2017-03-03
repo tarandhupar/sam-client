@@ -83,6 +83,8 @@ export class SearchPage implements OnInit{
     name: 'constructionType',
   };
 
+  wdSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result."
+
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService, private wageDeterminationService: WageDeterminationService) { }
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
