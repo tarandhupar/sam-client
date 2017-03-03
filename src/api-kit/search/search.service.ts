@@ -25,8 +25,6 @@ export class SearchService {
     // wage determination type filter
     if(typeof obj.wdType !== 'undefined' && obj.wdType !== null) {
       oApiParam.oParam['index'] = obj.wdType;
-    } else {
-      oApiParam.oParam['index'] = obj.index;
     }
 
     // construction type filter
@@ -46,10 +44,6 @@ export class SearchService {
     // is active filter
     if(obj.isActive === true) {
       oApiParam.oParam['is_active'] = obj.isActive;
-    }
-
-    if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null) {
-      oApiParam.oParam['organization_id'] = obj.organizationId;
     }
 
     if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
