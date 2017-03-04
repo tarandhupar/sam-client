@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from "rxjs";
-import { UserAccess } from './user.interface';
+import { UserAccessInterface } from './access.interface';
+import {RoleInterface} from "./roles.interface";
 
 export interface UserAccessFilterOptions {
   domainIds?: (string|number)[],
@@ -12,13 +13,13 @@ export interface UserAccessFilterOptions {
 }
 
 @Injectable()
-export class UserService {
+export class UserAccessService {
 
   constructor(private apiService: WrapperService) {
 
   }
 
-  getAccess(userId: string, filterOptions?: UserAccessFilterOptions): Observable<UserAccess> {
+  getAccess(userId: string, filterOptions?: UserAccessFilterOptions): Observable<UserAccessInterface> {
     if (typeof userId === 'undefined') {
       throw new Error('userId is required');
     }
@@ -52,5 +53,44 @@ export class UserService {
     }
 
     return this.apiService.call(apiOptions);
+  }
+
+  getRoles(): Observable< Array<RoleInterface> > {
+    let apiOptions: any = {
+      name: 'roles',
+      method: 'GET',
+      suffix: '',
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  getPermissions(roleId) {
+    let apiOptions: any = {
+      name: 'permissions',
+      method: 'GET',
+      suffix: '/'+roleId,
+      oParam: {
+        fetchNames: 'true',
+        roleKey: roleId
+      }
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  putAccess(access: UserAccessInterface) {
+    if (!access.user) {
+      throw new Error('access.user is required');
+    }
+
+    let apiOptions: any = {
+      name: 'access',
+      suffix: '/' + access.user + '/',
+      method: 'PUT',
+      body: access
+    };
+
+    return this.apiService.call(apiOptions, false);
   }
 }

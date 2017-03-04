@@ -3,12 +3,12 @@
     <div class="usa-forgot-init">
       <form class="usa-form-large" autocomplete="off" (ngSubmit)="init($event)" #form>
         <fieldset>
-          <h2>Forgot Password?</h2>
+          <legend>Forgot Password?</legend>
           <span>Enter your email address below and we will send you instructions to reset your password.</span>
 
-          <labelWrapper [errorMessage]="email.touched ? states.error : ''" label="Email">
+          <labelWrapper name="email-forget" [errorMessage]="email.touched ? states.error : ''" label="Email">
             <input type="text"
-                   id="email"
+                   id="email-forget"
                    name="email"
                    autocomplete="off"
                    readonly="readonly"

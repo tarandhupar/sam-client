@@ -30,12 +30,11 @@ export class MigrationsComponent {
   };
 
   private states = {
-    alert: false,
     submitted: false,
     confirm: {
       type: 'success',
       message: 'Account Successfully Migrated',
-      show: true
+      show: false
     }
   }
 
@@ -54,8 +53,6 @@ export class MigrationsComponent {
   }
 
   ngOnInit() {
-    this.states.alert = true;
-
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
@@ -87,6 +84,14 @@ export class MigrationsComponent {
         });
       });
     });
+  }
+
+  ngAfterViewInit() {
+    let fragment = window.location.hash;
+    if(fragment) {
+      this.anchorTo('');
+      this.anchorTo(fragment);
+    }
   }
 
   ngDoCheck() {
@@ -182,6 +187,10 @@ export class MigrationsComponent {
     }
 
     return ((control.touched && control.dirty) || (this.migrationForm.touched && this.migrationForm.dirty)) && this.states.submitted ? errors[0] : '';
+  }
+
+  anchorTo(id) {
+    window.location.hash = id;
   }
 
   migrate() {

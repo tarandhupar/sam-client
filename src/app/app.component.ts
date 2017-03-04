@@ -63,6 +63,13 @@ export class App{
 
     qsobj['page'] = 1;
     qsobj['isActive'] = this.qs['isActive'];
+    if(searchObject.searchField !== 'wd') {
+      qsobj['wdType'] = null;
+      qsobj['state'] = null;
+      qsobj['county'] = null;
+      qsobj['conType'] = null;
+    }
+
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };

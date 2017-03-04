@@ -8,11 +8,43 @@ import { SortConfig } from '../interfaces';
   templateUrl: 'workspace-layout.template.html'
 })
 export class WorkspaceLayoutComponent {
-  @Input() titleText: string;
-  @Input() totalPages: number;
-  @Input() currentPage: number;
-  @Input() totalElements: number;
-  @Output() pageChange: EventEmitter<number> = new EventEmitter<number>();
+  /**
+  * Title text displayed at the top
+  */
+  @Input() public titleText: string;
+  /**
+  * Total number of pages, value passed to generate list results message and pagination
+  */
+  @Input() public totalPages: number;
+  /**
+  * Current page number, value passed to generate list results message and pagination
+  */
+  @Input() public currentPage: number;
+  /**
+  * Total number of results, value passed to generate list results message and pagination
+  */
+  @Input() public totalElements: number;
+  /**
+  * Flag to hide content until list is fully loaded
+  */
+  @Input() public loadFlag: any = true;
+  /**
+  * Suffix string for list results message
+  */
+  @Input() public listMessageSuffix: string;
+  /**
+  * Add button text string
+  */
+  @Input() public addBtnText: string;
+  /**
+  * Event emitter when user navigates to a different page
+  */
+  @Output() public pageChange: EventEmitter<number> = new EventEmitter<number>();
+  /**
+  * Event emitter when user navigates to a different page
+  */
+  @Output() public addBtnClick: EventEmitter<any> = new EventEmitter<any>();
+
   public sortConfig: SortConfig = {
     options: [
       {value: '', label: 'Relevant', name: 'relevant'},
@@ -23,10 +55,15 @@ export class WorkspaceLayoutComponent {
     label: 'Sort',
     name: 'sort'
   };
-  private _displayFilters: boolean = false;
+  private _displayFilters: boolean = true;
 
   pageChangeHandler(event): void {
+    document.getElementsByClassName("workspace-content")[0].getElementsByTagName("div")[0].focus();
     this.pageChange.emit(event);
+  }
+
+  addBtnClickHandler(event): void {
+    this.addBtnClick.emit(event);
   }
 
   setMainWidth(): string {

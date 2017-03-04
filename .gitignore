@@ -57,6 +57,7 @@ npm-debug.log
 # IDE #
 .idea/
 *.swp
+*.iml
 
 /nbproject/
 api-config.json
@@ -66,4 +67,5 @@ config/webpack.local.js
 
 # For git submodules
 src/sam-ui-elements
+
 

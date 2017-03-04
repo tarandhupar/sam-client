@@ -6,14 +6,13 @@ import { Observable } from 'rxjs';
 import { SamUIKitModule } from 'ui-kit';
 
 import { InputAutocompleteComponent } from './input-autocomplete.component';
-import { AutoCompleteWrapper } from '../../../api-kit/autoCompleteWrapper/autoCompleteWrapper.service'
-import { SuggestionsService } from "../../../api-kit/search/suggestions.service";
-import { WrapperService } from "../../../api-kit/wrapper/wrapper.service";
-import { FHService } from "../../../api-kit/fh/fh.service";
+import { AutoCompleteWrapper } from 'api-kit/autoCompleteWrapper/autoCompleteWrapper.service'
+import { SuggestionsService } from "api-kit/search/suggestions.service";
+import { WrapperService } from "api-kit/wrapper/wrapper.service";
+import { FHService } from "api-kit/fh/fh.service";
 
 var fixture;
 var comp;
-var titleEl;
 var suggestionsServiceStub = {
   autosearch: (oData: any)=>{
     return Observable.of(["testVal1", "testVal2", "testVal3", "testVal4", "testVal5"]);

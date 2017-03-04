@@ -6,7 +6,7 @@
     <br />
     <div sam-sticky limit=1200 container="occupy-page">
       <!--Logo-->
-      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
 
       <!--Side Navigation-->
       <samSidenav class="m_T-3x" *ngIf="sidenavModel" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
@@ -18,32 +18,43 @@
 
     <section id="wage-determination" *ngIf="wageDetermination">
 
-      <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+      <ng-container *ngIf = "isSCA">
+        <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p class="usa-font-lead">Service Contract Act</p>
+      </ng-container>
+      <ng-container *ngIf = "!isSCA">
+        <h1>DBA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p class="usa-font-lead">Davis-Bacon Act</p>
+      </ng-container>
 
       <div class="usa-grid-full">
 
-        <div class="usa-width-one-half" *ngIf="states && counties">
+        <div class="usa-width-one-half">
           <ul class="usa-unstyled-list">
-            <li>
-              <strong>State/States: </strong>
-              {{states}}
-            </li>
-            <li>
-              <strong>County/ies: </strong>
-              {{counties}}
-            </li>
+            <div class="m_T-3x m_B-3x" *ngFor="let location of locations">
+              <li>
+                <strong>State: </strong> {{location.stateString}}
+              </li>
+              <li>
+                <strong>Counties: </strong> {{location.countiesString}}
+              </li>
+            </div>
           </ul>
         </div>
 
         <div class="usa-width-one-half">
           <ul class="usa-unstyled-list">
-            <li *ngIf = "wageDetermination.revisionNumber">
+            <li *ngIf = "revisionNumber">
               <strong>Revision #: </strong>
-              {{wageDetermination.revisionNumber}}
+              {{revisionNumber}}
             </li>
             <li *ngIf = "services">
               <strong>Service/Services: </strong>
               {{services}}
+            </li>
+            <li *ngIf = "constructionTypes">
+              <strong>Construction: </strong>
+              {{constructionTypes}}
             </li>
             <li *ngIf = "wageDetermination.publishDate">
               <strong>Published Date: </strong>

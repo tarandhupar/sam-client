@@ -165,7 +165,7 @@
       <pre><code>{{textModel}}</code></pre>
     </div>
   </div>
-
+  
   <div class="usa-grid">
     <h2>Select Text &lt;samTextarea&gt;</h2>
     <div class="usa-width-one-third">
@@ -207,6 +207,47 @@
     </div>
   </div>
 
+  <div class="usa-grid">
+    <h2>SAM Number &lt;samNumber&gt;</h2>
+    <div class="usa-width-one-third">
+      <samNumber
+        [value]="2"
+        [name]="textConfig.name"
+        [label]="textConfig.label"
+        [hint]="textConfig.hint"
+        [errorMessage]="textConfig.errorMessage"
+        [disabled]="textConfig.disabled">
+      </samNumber>
+    </div>
+    <!--div class="usa-width-one-third">
+      <fieldset class="usa-fieldset-inputs usa-sans">
+        <legend><h3>Options</h3></legend>
+        <ul class="usa-unstyled-list">
+          <li>
+            <input id="isDisabled" type="checkbox" [(ngModel)]="textConfig.disabled">
+            <label for="isDisabled">Disabled</label>
+          </li>
+          <li>
+            <label>Label text</label>
+            <input type="text" [(ngModel)]="textConfig.label">
+          </li>
+          <li>
+            <label>Error message text</label>
+            <input type="text" [(ngModel)]="textConfig.errorMessage">
+          </li>
+          <li>
+            <label>Hint text</label>
+            <input type="text" [(ngModel)]="textConfig.hint">
+          </li>
+        </ul>
+      </fieldset>
+    </div>
+    <div class="usa-width-one-third">
+      <h3>Model</h3>
+      <pre><code>{{textModel}}</code></pre>
+    </div-->
+  </div>
+  
   <div class="usa-grid">
     <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
     <div class="usa-width-one-third">
@@ -327,17 +368,18 @@
   <div class="usa-grid">
     <div class="usa-width-one-whole">
       <h2>Agency picker &lt;agencyPicker&gt;</h2>
-      <agencyPicker [hint]="'Please select one or more organization filters'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker>
-      <agencyPicker [hint]="'Please select one organization'" [label]="'Filter by Organization:'" [multimode]="false"></agencyPicker>
-      <agencyPicker [orgRoot]="100006688" [hint]="'Please select one or more organization filters under GSA'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker>
     </div>
+    <div class="usa-width-one-third"><agencyPicker [hint]="'Please select one or more organization filters'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker></div>
+    <div class="usa-width-one-third"><agencyPicker [hint]="'Please select one organization'" [label]="'Filter by Organization:'" [multimode]="false"></agencyPicker></div>
+    <div class="usa-width-one-third"><agencyPicker [orgRoot]="100006688" [hint]="'Please select one or more organization filters under GSA'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker></div>
   </div>
 
   <div class="usa-grid">
     <h2 class="usa-width-one">Phone Entry &lt;samPhoneEntry&gt;</h2>
     <div class="usa-width-one-third">
       <samPhoneEntry [(model)]="phoneModel" (emitter)="phoneModelChange($event)"></samPhoneEntry>
-      <samPhoneEntry [(model)]="phoneModel2" (emitter)="phoneModelChange($event)"></samPhoneEntry>
+      <samPhoneEntry [phoneNumberTemplate]="phoneTemplate2" [(model)]="phoneModel2" (emitter)="phoneModelChange($event)"></samPhoneEntry>
+      <samPhoneEntry [phoneNumberTemplate]="phoneTemplate3" [numbersOnly]="true" [(model)]="phoneModel3" (emitter)="phoneModelChange($event)"></samPhoneEntry>
     </div>
     <div class="usa-width-one-third">
       <h3>Model</h3>

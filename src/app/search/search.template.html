@@ -8,16 +8,77 @@
           <li>
             <sam-filters-container>
               <sam-collapsible [label]="'Status'" [startOpened]="true">
+                <!--active checkbox-->
                 <samCheckbox
-                [(model)]="checkboxModel"
-                [name]="checkboxConfig.name"
-                [options]="checkboxConfig.options"
-                [label]="checkboxConfig.label"
-                [hint]="checkboxConfig.hint"
-                [errorMessage]="checkboxConfig.errorMessage"
-                [hasSelectAll]="checkboxConfig.hasSelectAll"
-                (modelChange)="activeFilter($event)">
+                  [(model)]="checkboxModel"
+                  [name]="checkboxConfig.name"
+                  [options]="checkboxConfig.options"
+                  [label]="checkboxConfig.label"
+                  [hint]="checkboxConfig.hint"
+                  [errorMessage]="checkboxConfig.errorMessage"
+                  [hasSelectAll]="checkboxConfig.hasSelectAll"
+                  (modelChange)="activeFilter($event)">
                 </samCheckbox>
+              </sam-collapsible>
+              <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">
+
+                <!--state drop down-->
+                <samSelect
+                  [(model)]="wdStateModel"
+                  [name]="selectStateConfig.name"
+                  [options]="selectStateConfig.options"
+                  [label]="selectStateConfig.label"
+                  [hint]="selectStateConfig.hint"
+                  [errorMessage]="selectStateConfig.errorMessage"
+                  [disabled]="selectStateConfig.disabled"
+                  (modelChange)="stateChange($event)">
+                </samSelect>
+                <!--<button (click)='wdStateClear()'>Clear</button>-->
+
+                <!--county drop down-->
+                <samSelect
+                  [(model)]="wdCountyModel"
+                  [name]="selectCountyConfig.name"
+                  [options]="selectCountyConfig.options"
+                  [label]="selectCountyConfig.label"
+                  [hint]="selectCountyConfig.hint"
+                  [errorMessage]="selectCountyConfig.errorMessage"
+                  [disabled]="selectCountyConfig.disabled"
+                  (modelChange)="countyChange($event)">
+                </samSelect>
+                <!--<button (click)='wdCountyClear()'>Clear</button>-->
+              </sam-collapsible>
+
+
+              <sam-collapsible [label]="'Wage Determination Type'" [startOpened]="true" *ngIf="index === 'wd'">
+
+                <!--wage determination radio buttons-->
+                <samRadioButton
+                  [(model)]="wdTypeModel"
+                  [options]="wdTypeConfig.options"
+                  [label]="wdTypeConfig.label"
+                  [hint]="wdTypeConfig.hint"
+                  [name]="wdTypeConfig.name"
+                  [errorMessage]="wdTypeConfig.errorMessage"
+                  (modelChange)="wdFilterChange($event)">
+                </samRadioButton>
+
+              </sam-collapsible>
+              <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra'">
+
+
+                <!--construction type drop down-->
+                <samSelect
+                  [(model)]="wdConstructModel"
+                  [name]="selectConstructConfig.name"
+                  [options]="selectConstructConfig.options"
+                  [label]="selectConstructConfig.label"
+                  [hint]="selectConstructConfig.hint"
+                  [errorMessage]="selectConstructConfig.errorMessage"
+                  [disabled]="selectConstructConfig.disabled"
+                  (modelChange)="constructionTypeChange($event)">>
+                </samSelect>
+                <button (click)='wdConstructionClear()'>Clear</button>
               </sam-collapsible>
             </sam-filters-container>
           </li>
@@ -27,17 +88,19 @@
   </aside>
 
   <div class="usa-width-three-fourths">
-  	<div class="usa-width-one">
-  		<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
-  	</div>
+    <div class="usa-width-one">
+      <samAlert *ngIf="wdTypeModel" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
+      <samAlert *ngIf="wdConstructModel" [type]="'success'" [dismissTimer]="'5000'" [title]="'Search Criteria Complete'"></samAlert>
+      <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
+    </div>
     <div class="usa-width-one">
       <div *ngIf="showOptional" class="usa-width-one">
         <h3>Common Filters:</h3>
-  			<div class="usa-grid-full">
-  				<div class="usa-width-one-third">
-  	      	<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
-  				</div>
-  			</div>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-third">
+            <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
+          </div>
+        </div>
         <hr *ngIf="data.results" class="usa-width-one m_T-5x"/>
       </div>
       <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
@@ -49,16 +112,16 @@
           <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
           <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
           <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
-          <wage-determination-result *ngIf="row._type=='wdSCA' || row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
+          <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
           <hr class="m_T-5x"/>
-    	  </div>
+        </div>
       </div>
       <div *ngIf="!initLoad && !data.results">
         <br/>
         <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
         <div style="height:300px;"></div>
       </div>
-  	</div>
+    </div>
     <div *ngIf="data.results">
       <div class="usa-width-one-whole">
         <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
@@ -68,4 +131,3 @@
   </div>
 
 </div>
-

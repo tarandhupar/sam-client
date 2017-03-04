@@ -41,8 +41,13 @@
 @import 'components/alphabet-selector';
 @import 'components/history';
 @import 'components/toggle-switch';
+<<<<<<< HEAD
 @import 'components/feedback-form';
+=======
+@import 'components/well';
+>>>>>>> develop
 
+@import 'pages/awards';
 @import 'pages/entity-object-view';
 @import 'pages/exclusion';
 @import 'pages/assistance-listing';
@@ -59,8 +64,10 @@
 @import 'pages/users-directory';
 @import 'pages/ui-kit-demo';
 @import 'pages/access';
+@import 'pages/grant-access';
 @import 'pages/public-profile';
 @import 'pages/wage-determination';
+@import 'pages/assistance-listing-operations';
 
 html, body{
   height: 100%;

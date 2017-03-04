@@ -10,6 +10,7 @@ export class AlertItemComponent {
 
   @Input() alert: Alert;
   @Input() isAdmin: boolean;
+  @Input() isEdit: boolean;
   @Input() editDisabled: boolean = false;
   @Input() alertIndex: number;
 
