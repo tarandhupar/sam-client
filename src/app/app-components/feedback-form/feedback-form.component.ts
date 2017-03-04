@@ -30,7 +30,7 @@ export class SamFeedbackComponent {
 
   emailRadioBtnValue: string = "";
 
-  textareaModel: string = "";
+  textAreaModel: string = "";
 
   @ViewChild("feedbackRoot") feedbackRoot;
 
@@ -99,8 +99,8 @@ export class SamFeedbackComponent {
   }
 
   onTextAreaChange(){
-    if(this.textareaModel !== ""){
-      this.setCurQAnswer(this.textareaModel);
+    if(this.textAreaModel !== ""){
+      this.setCurQAnswer(this.textAreaModel);
     }else{
       this.resetCurQAnswer();
     }
