@@ -18,6 +18,7 @@ import { WorkspaceLayoutComponent } from './workspace-layout/workspace-layout.co
 import { SamFooterComponent } from './footer/footer.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
 import { InputAutocompleteComponent } from './input-autocomplete/input-autocomplete.component';
+import { SamFeedbackComponent } from "./feedback-form/feedback-form.component";
 
 
 
@@ -39,6 +40,7 @@ import { InputAutocompleteComponent } from './input-autocomplete/input-autocompl
     SamFooterComponent,
     SamHeaderLinksComponent,
     InputAutocompleteComponent,
+    SamFeedbackComponent,
     ListResultsMessageComponent,
   ],
   imports: [
@@ -61,6 +63,7 @@ import { InputAutocompleteComponent } from './input-autocomplete/input-autocompl
     SamFooterComponent,
     SamHeaderLinksComponent,
     InputAutocompleteComponent,
+    SamFeedbackComponent,
     ListResultsMessageComponent,
   ],
   providers: [ ]
