@@ -1,0 +1,112 @@
+body.feedback-open {
+  overflow: hidden;
+}
+
+.feedback-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  background-color: #000000;
+  opacity: .5;
+}
+
+.sam-feedback{
+  position: fixed;
+  right: 0;
+  top: 40%;
+  z-index: 1050;
+
+  h4{
+    margin: 0;
+  }
+
+  .feedback-icon-div{
+    padding: 10px;
+    width: auto;
+    border: 2px solid black;
+    border-radius: 50%;
+    text-align: center;
+  }
+
+
+  .feedback-form-div{
+    margin-top: 10px;
+    padding: 10px;
+    width: 500px;
+    border: 2px solid black;
+    background: $color-white;
+  }
+
+  .hide-form-icon{
+    position: absolute;
+    right: 0;
+    top: 50%;
+  }
+
+  .feedback-question-div{
+    margin-right: 10px;
+    margin-left: 20px;
+    padding: 10px;
+    width: auto;
+    border: 2px solid black;
+  }
+
+  .feedback-question-rating{
+    text-align: center;
+  }
+
+  .feedback-question-checkbox{
+
+  }
+
+  .feedback-question-radio{
+
+  }
+
+  .feedback-pagination{
+    position: absolute;
+    bottom: 13px;
+    left: 17%;
+    text-align: center;
+  }
+
+  .feedback-page, .feedback-current-page{
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 2px solid $color-primary;
+    margin: 0 15px;
+    text-align: center;
+  }
+
+  .feedback-page{
+    color: $color-primary;
+    background-color: $color-white;
+
+  }
+
+  .feedback-current-page{
+    background-color: $color-primary;
+    color: $color-white;
+  }
+
+  .feedback-page:first-child{
+    margin-left: 0;
+  }
+
+  .feedback-page:last-child{
+    margin-right: 0;
+  }
+
+  .feedback-icon-div:hover, .hide-form-icon:hover, .thumb:hover{
+    cursor: pointer;
+  }
+
+  .feedback-icon-font{
+    font-size: 175%;
+  }
+}
