@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { FHService, IAMService } from 'api-kit';
-import { Validators as $Validators } from '../../shared/validators';
 
 import { User } from '../user.interface';
 import { KBA } from '../kba.interface';
@@ -307,7 +306,7 @@ export class DetailsComponent {
 
     return this.builder.group({
       questionId: [kbaAnswer.questionId, Validators.required],
-      answer:     [kbaAnswer.answer, [Validators.required, Validators.minLength(8), $Validators.unique('answer')]]
+      answer:     [kbaAnswer.answer]
     })
   }
 

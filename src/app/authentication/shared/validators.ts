@@ -44,9 +44,11 @@ export const Validators = {
           intElement,
           occurrences = 0;
 
-      for(intElement = 0; intElement < elements.length; intElement++) {
-        if(c.value === (<HTMLInputElement>elements[intElement]).value && c.value !== '        ') {
-          occurrences++;
+      if(c.dirty) {
+        for(intElement = 0; intElement < elements.length; intElement++) {
+          if(c.value === (<HTMLInputElement>elements[intElement]).value) {
+            occurrences++;
+          }
         }
       }
 

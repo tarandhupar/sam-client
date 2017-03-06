@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output,  OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators} from '@angular/forms';
+
+import { Validators as $Validators } from '../validators';
 
 @Component({
 	selector: 'sam-kba-entry',
@@ -17,9 +19,18 @@ export class SamKBAComponent implements OnChanges {
 
   @Output('onQuestionChange') onQuestionChange = new EventEmitter();
 
+  private store = {
+    question: {
+      name: 'sam-kba-question'
+    },
+
+    answer: {
+      name: 'sam-kba-answer'
+    }
+  }
+
   protected states = {
     type: 'text',
-    uid: Math.floor(Math.random() * 89999 + 10000),
     submitted: false,
     count: 0,
     errors: {
@@ -34,6 +45,12 @@ export class SamKBAComponent implements OnChanges {
   ngOnInit() {
     this.$question = this.question.value;
     this.initQuestions();
+
+    this.answer.setValidators([
+      Validators.required,
+      $Validators.minlength(8),
+      $Validators.unique(this.store.answer.name)
+    ]);
 
     // Process answers
     if(this.answer.value.length) {
