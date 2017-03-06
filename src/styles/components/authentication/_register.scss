@@ -57,11 +57,24 @@
   }
 
   .usa-button-controls {
-    margin-top: 1rem;
+    position: relative;
+    margin-top: 2.5rem !important;
     text-align: center;
 
     button[type="submit"] {
       display: inline-block;
+    }
+
+    .usa-alert {
+      position: relative;
+      top: 0px;
+      left: 50%;
+      transform: translateX(-50%);
+      float: left;
+    }
+
+    .usa-button-controls {
+      clear: both;
     }
   }
 

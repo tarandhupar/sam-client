@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { FHService, IAMService } from 'api-kit';
-import { Validators as $Validators } from '../../shared/validators';
 
 import { User } from '../user.interface';
 import { KBA } from '../kba.interface';
@@ -284,7 +283,7 @@ export class DetailsComponent {
             department: 100006688,
             orgID: 100173623,
 
-            workPhone: '2401234568',
+            workPhone: '12401234568',
 
             kbaAnswerList: [
               { questionId: 1, answer: '' },
@@ -298,6 +297,8 @@ export class DetailsComponent {
 
     fn((userData) => {
       vm.user = _.merge({}, vm.user, userData);
+      vm.user.workPhone = vm.user.workPhone.replace(/[^0-9]/g, '');
+      vm.user.workPhone = (vm.user.workPhone.length < 11 ? '1' : '' ) + vm.user.workPhone;
       cb();
     });
   }
@@ -307,7 +308,7 @@ export class DetailsComponent {
 
     return this.builder.group({
       questionId: [kbaAnswer.questionId, Validators.required],
-      answer:     [kbaAnswer.answer, [Validators.required, Validators.minLength(8), $Validators.unique('answer')]]
+      answer:     [kbaAnswer.answer]
     })
   }
 

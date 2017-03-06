@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
+import { Component, DoCheck, ElementRef, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -10,7 +10,6 @@ import { SamKBAComponent, SamPasswordComponent } from '../shared';
 
 import { IAMService } from 'api-kit';
 
-import { Validators as $Validators } from '../shared/validators';
 import { User } from '../user.interface';
 import { KBA } from '../kba.interface';
 
@@ -26,13 +25,20 @@ export class RegisterMainComponent {
   @ViewChild('nameEntry') nameEntry: SamNameEntryComponent;
   @ViewChild('phoneEntry') phoneEntry: SamPhoneEntryComponent;
   @ViewChild('passwordComponent') passwordComponent: SamPasswordComponent;
+  @ViewChild('controls') controls: ElementRef;
 
   @ViewChildren(SamKBAComponent) kbaComponents:QueryList<any>;
 
   public userForm: FormGroup;
   public states = {
     isGov: true,
-    selected: ['','','']
+    submitted: false,
+    selected: ['','',''],
+    alert: {
+      show: false,
+      type: 'error',
+      message: ''
+    }
   };
 
   private token = '';
@@ -266,7 +272,7 @@ export class RegisterMainComponent {
   initKBAGroup() {
     return this.builder.group({
       questionId: ['', Validators.required],
-      answer:     ['', [Validators.required, Validators.minLength(8), $Validators.unique('answer')]]
+      answer:     ['']
     })
   }
 
@@ -308,6 +314,16 @@ export class RegisterMainComponent {
     this.user.workPhone = phoneNumber;
   }
 
+  hideAlert() {
+    this.states.alert.show = false;
+  }
+
+  showAlert(type:string, message:string) {
+    this.states.alert.type = type || 'error';
+    this.states.alert.message = message || '';
+    this.states.alert.show = true;
+  }
+
   prepareData() {
     let userData = this.userForm.value,
         propKey,
@@ -338,12 +354,15 @@ export class RegisterMainComponent {
     return userData;
   }
 
-  process(data, cb) {
+  process(data, fnSuccess, fnError) {
     let vm = this;
 
     _.merge(this.user, data);
 
-    this.api.iam.user.registration.register(this.token, data, function(userData) {
+    fnSuccess = fnSuccess || (() => {});
+    fnError = fnError || (() => {});
+
+    this.api.iam.user.registration.register(this.token, data, (userData) => {
        vm.user = _.extend({},  vm.user, userData);
 
       let credentials = {
@@ -352,13 +371,13 @@ export class RegisterMainComponent {
       };
 
       // Automatically authenticate the user and start a session
-      vm.api.iam.login(credentials, function() {
-        cb();
-      }, function() {
-        // Authentication Error Response
+      vm.api.iam.login(credentials, () => {
+        fnSuccess();
+      }, (error) => {
+        fnError(error);
       });
-    }, function(err) {
-      // Registraton Error Response
+    }, (error) => {
+      fnError(error);
     });
   }
 
@@ -370,6 +389,7 @@ export class RegisterMainComponent {
     let userData,
         kbaAnswerList = this.userForm.value['kbaAnswerList'];
 
+    this.hideAlert();
     this.nameEntry.setSubmitted();
     this.phoneEntry.check();
     this.passwordComponent.setSubmitted();
@@ -379,11 +399,20 @@ export class RegisterMainComponent {
     });
 
     if(this.userForm.valid) {
+      this.states.submitted = true;
+
       userData = this.prepareData();
       this.zone.runOutsideAngular(() => {
         this.process(userData, () => {
+          // Success Promise
           this.zone.run(() => {
             this.router.navigate(['/profile/details']);
+          });
+        }, (error) => {
+          // Error Promise
+          this.zone.run(() => {
+            this.showAlert('error', error);
+            this.states.submitted = false;
           });
         });
       });

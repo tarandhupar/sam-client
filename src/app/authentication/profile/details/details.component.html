@@ -1,7 +1,7 @@
-<samAlert class="usa-alert-static"
-          type="info"
-          title="Information Status"
-          description="If you have legacy accounts of the 10 systems, you can migrate your privileges"></samAlert>
+<samAlert type="info" class="usa-alert-static" title="Migrate Your Roles">
+  If you have a user account at any of the <a routerLink="/profile/migrations" fragment="legacy-sites">websites</a> that are moving to the new SAM.gov,
+  you may migrate your roles and keep your same permissions. <a routerLink="/profile/migrations" fragment="top">Begin Now</a>.
+</samAlert>
 
 <h2>Personal Details</h2>
 <div>
@@ -67,7 +67,7 @@
                     *ngIf="states.isGov">
       </agencyPicker>
 
-      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" label="Business Phone"></samPhoneEntry>
+      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" [numbersOnly]="true" (emitter)="updatePhoneNumber($event)" label="Business Phone"></samPhoneEntry>
 
       <samButton [buttonType]="(states.submitted ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('business')"></samButton>
     </section>
@@ -119,6 +119,6 @@
           title="Warning"
           description="If you deactivate your account it cannot be reactivated for future use and you will be immediately logged out of the system. Are you sure you want to deactivate your account?"
           showClose="true"
-          submitButtonLabel="Yes, continue with edit"
-          cancelButtonLabel="No, cancel my edit"
+          submitButtonLabel="Yes, continue with deactivation"
+          cancelButtonLabel="No, cancel deactivation"
           (onSubmit)="deactivate()"></samModal>
