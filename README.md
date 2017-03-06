@@ -67,6 +67,29 @@ Note: Ensure you are running the latest versions of both. If not, please [update
 
 > If you have `nvm` installed, which is highly recommended (`brew install nvm`) you can do a `nvm install --lts && nvm use` in `$` to run with the latest Node LTS. You can also have this `zsh` done for you [automatically](https://github.com/creationix/nvm#calling-nvm-use-automatically-in-a-directory-with-a-nvmrc-file) 
 
+<h3 id="submodules">Using Git Submodules</h3>
+
+Git submodules allows nesting of git repositories. We're currently pulling in sam-ui-elements as the ui-kit.
+
+<h4>First time setup</h4>
+
+Add the following to your local ~/.gitconfig file (this is not tied to the repo). This is a redirect needed to access the submodules locally and keep the builds working
+
+```
+[url "https://csp-github.sam.gov/"]
+    insteadOf = git@csp-github.sam.gov:
+```
+
+Initialize the submodule(s)
+
+`git submodule update --init`
+
+<h4>Updating submodule</h4>
+
+When your feature needs to update the git submodule to a later commit, use the following command
+
+`git submodule update --remote`
+
 <h3 id="installing-globals">Installing required globals</h3>
 
 All should be prepended with `$ npm install --global`:
