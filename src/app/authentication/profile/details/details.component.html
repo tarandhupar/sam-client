@@ -67,7 +67,7 @@
                     *ngIf="states.isGov">
       </agencyPicker>
 
-      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" label="Business Phone"></samPhoneEntry>
+      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" [numbersOnly]="true" (emitter)="updatePhoneNumber($event)" label="Business Phone"></samPhoneEntry>
 
       <samButton [buttonType]="(states.submitted ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('business')"></samButton>
     </section>
