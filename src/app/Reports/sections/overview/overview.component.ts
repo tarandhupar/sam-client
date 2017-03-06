@@ -105,12 +105,12 @@ checkSession(cb: () => void) {
                                 },
                                 {
                                         id: 'DED49FC94E5F54DDDEADBDA5E4CFE8BF',
-                                        name: 'Total Actions by PSC',
+                                        name: 'Total Actions by PSC Report',
                                         desc: 'The report displays actions and dollars for Product or Service Code (PSC) Categories and how many of them are acquired by Commercial Item procedures at the Federal Government level.'
                                 },
                                 {
                                         id: '6B11AF1648055A614207B69E659F9AE8',
-                                        name: 'Total Actions by NAICS',
+                                        name: 'Total Actions by NAICS Report',
                                         desc: 'The report displays actions and dollars for North American Industry Classification System (NAICS) Categories and how many of them are acquired by Commercial Item procedures at the Federal Government level.'
                                 },
                                 {
@@ -130,7 +130,7 @@ checkSession(cb: () => void) {
                                 },
                                 {
                                         id: '37A44ED54B619E53FEDA4E8A3AE0DE78',
-                                        name: 'Other Transaction Actions and Dollars',
+                                        name: 'Other Transaction Actions and Dollars Report',
                                         desc: 'This report displays the Other Transaction actions and dollars for the specified date signed range.'
                                 },
                                 {
@@ -140,7 +140,7 @@ checkSession(cb: () => void) {
                                 },
                                 {
                                         id: 'AA10685B4D7D5CE94B3EE5827690C161',
-                                        name: 'Bundled and Consolidated Contracts',
+                                        name: 'Bundled and Consolidated Contracts Report',
                                         desc: 'This Report Displays the actions and dollars for Bundled and Consolidated Contracts that exceed the threshold that was in place on the date signed of the action.'
                                 },
                                 {
@@ -176,12 +176,14 @@ checkSession(cb: () => void) {
                                 {
                                         id: '765653484A5BD0ECC8C0CBA42AA625E3',
                                         name: 'Unique Vendors Report',
-                                        desc: 'This report reflects the number of Unique Vendors in a given Fiscal Year.'
+                                        app: 'ANOMALY',
+                                        desc: 'This report reflects the number of Unique Vendors in a given Fiscal Year.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
                                 {
                                         id: '03DDC6C04986ECFD3B8273B18E40E2E9',
-                                        name: 'Procurement History for Market Research',
-                                        desc: 'This report provides total dollars awarded to all vendors for a Product and Service Code (PSC) given in the search criteria. The dollars are aggregated by the unique entry reported in the Description of Requirements field.'
+                                        name: 'Procurement History for Market Research Report',
+                                        desc: 'This report provides total dollars awarded to all vendors for a Product and Service Code (PSC) given in the search criteria. The dollars are aggregated by the unique entry reported in the Description of Requirents field.'
                                 },
                                 {
                                         id: '9555AB4F41EAD3556383CB936AADF2AC',
@@ -196,7 +198,9 @@ checkSession(cb: () => void) {
                                 {
                                         id: '8174C9DC4246D0A716FC44B97C7200B9',
                                         name: 'Contract Termination for Default-Cause Report',
-                                        desc: 'This report reflects the "Termination for Default (complete or partial)" and "Termination for Cause" data for the Date range specified.'
+                                        app: 'ANOMALY',
+                                        desc: 'This report reflects the "Termination for Default (complete or partial)" and "Termination for Cause" data for the Date range specified.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
                                 {
                                         id: '4B1FD6CB489C41AE75D8E59498603240',
@@ -205,8 +209,10 @@ checkSession(cb: () => void) {
                                 },
                                 {
                                         id: 'D70B108040683D73AB7D6B8622052D67',
-                                        name: 'Subcontracting Plan report',
-                                        desc: 'This report displays "Plan Required - Incentive Not Included", "Plan Required - Incentive Included", "Plan Required (Pre 2004)", "Individual Subcontract Plan", "Commercial Subcontract Plan" or "DOD Comprehensive Subcontract Plan" for base documents.'
+                                        name: 'Subcontracting Plan Report',
+                                        app: 'ANOMALY',
+                                        desc: 'This report displays "Plan Required - Incentive Not Included", "Plan Required - Incentive Included", "Plan Required (Pre 2004)", "Individual Subcontract Plan", "Commercial Subcontract Plan" or "DOD Comprehensive Subcontract Plan" for base documents.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
                                 {
                                         id: 'EDBDC44E4D0D9F382B7059A7214E0500',
@@ -215,18 +221,20 @@ checkSession(cb: () => void) {
                                 },
                                 {
                                         id: '6B8BE08D4B3C807D09FEF6A6054F1A55',
-                                        name: 'Orders Referencing Incorrect IDV Report',
+                                        name: 'Orders Referencing Incorrect IDV',
                                         desc: 'This report displays Delivery Orders/Task Orders (DO/TO) and BPA Calls that were placed against an IDV by an agency that does not have the authority to use the Referenced IDV.'
                                 },
                                 {
                                         id: 'FED44C46426A02DC9A52A1B5B62EFB1F',
-                                        name: 'Purchase Card as a Payment Method',
+                                        name: 'Purchase Card as Payment Method Report',
                                         desc: 'This report displays the procurement actions within a specified date range where the Purchase Card was used/not used as a method of payment.'
                                 },
                                 {
                                         id: 'C14899804687687D40568A98753E4F80',
-                                        name: 'IDVs whose Orders are over the Ceiling Amount Report',
-                                        desc: 'This report displays EPA Designated Product and Recovered Materials/Sustainability data for the specified date range and PSC range.'
+                                        name: 'IDVs whose Orders are over the Ceiling Amount',
+                                        app: 'ANOMALY',
+                                        desc: 'This report displays EPA Designated Product and Recovered Materials/Sustainability data for the specified date range and PSC range.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
                                 {
                                         id: '63AAC2FE47DB4E0515AAD48BAE7C8872',
@@ -235,7 +243,7 @@ checkSession(cb: () => void) {
                                 },
 								{
                                         id: 'F93C7D5846D6FFF1002156A8927700C0',
-                                        name: 'Competition Report - OLD',
+                                        name: 'Competition Report – OLD',
                                         desc: 'NOT THE OFFICIAL REPORT FOR COMPETITION. This is the old competition report and does not provide as accurate a representation as the Competition Report.'
                                 },
 								{
@@ -246,7 +254,9 @@ checkSession(cb: () => void) {
 								{
                                         id: '1E843D294B046BC4DFBF9C993853B76F',
                                         name: 'Competitive Procedures, but one Offer Report',
-                                        desc: 'This report displays Competed (Competed Under SAP, Full and Open Competition, Full and Open Competition after Exclusion of Sources and Fair Opportunity) data that has only one offer.'
+                                        app: 'ANOMALY',
+                                        desc: 'This report displays Competed (Competed Under SAP, Full and Open Competition, Full and Open Competition after Exclusion of Sources and Fair Opportunity) data that has only one offer.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
 								{
                                         id: '338E9AB44BC3E6A2BA6BC5B923CF9965',
@@ -335,7 +345,9 @@ checkSession(cb: () => void) {
                                 {
                                         id: '765653484A5BD0ECC8C0CBA42AA625E3',
                                         name: 'Unique Vendors Report',
-                                        desc: 'This report reflects the number of Unique Vendors in a given Fiscal Year.'
+                                        app: 'ANOMALY',
+                                        desc: 'This report reflects the number of Unique Vendors in a given Fiscal Year.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
                                 {
                                         id: '03DDC6C04986ECFD3B8273B18E40E2E9',
@@ -355,7 +367,9 @@ checkSession(cb: () => void) {
                                 {
                                         id: '8174C9DC4246D0A716FC44B97C7200B9',
                                         name: 'Contract Termination for Default-Cause Report',
-                                        desc: 'This report reflects the "Termination for Default (complete or partial)" and "Termination for Cause" data for the Date range specified.'
+                                        app: 'ANOMALY',
+                                        desc: 'This report reflects the "Termination for Default (complete or partial)" and "Termination for Cause" data for the Date range specified.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
                                 {
                                         id: '4B1FD6CB489C41AE75D8E59498603240',
@@ -365,7 +379,9 @@ checkSession(cb: () => void) {
                                 {
                                         id: 'D70B108040683D73AB7D6B8622052D67',
                                         name: 'Subcontracting Plan report',
-                                        desc: 'This report displays "Plan Required - Incentive Not Included", "Plan Required - Incentive Included", "Plan Required (Pre 2004)", "Individual Subcontract Plan", "Commercial Subcontract Plan" or "DOD Comprehensive Subcontract Plan" for base documents.'
+                                        app: 'ANOMALY',
+                                        desc: 'This report displays "Plan Required - Incentive Not Included", "Plan Required - Incentive Included", "Plan Required (Pre 2004)", "Individual Subcontract Plan", "Commercial Subcontract Plan" or "DOD Comprehensive Subcontract Plan" for base documents.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
                                 {
                                         id: '6B8BE08D4B3C807D09FEF6A6054F1A55',
@@ -380,7 +396,9 @@ checkSession(cb: () => void) {
                                 {
                                         id: 'C14899804687687D40568A98753E4F80',
                                         name: 'IDVs whose Orders are over the Ceiling Amount Report',
-                                        desc: 'This report displays EPA Designated Product and Recovered Materials/Sustainability data for the specified date range and PSC range.'
+                                        app: 'ANOMALY',
+                                        desc: 'This report displays EPA Designated Product and Recovered Materials/Sustainability data for the specified date range and PSC range.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
 								{
                                         id: 'F93C7D5846D6FFF1002156A8927700C0',
@@ -395,7 +413,9 @@ checkSession(cb: () => void) {
 								{
                                         id: '1E843D294B046BC4DFBF9C993853B76F',
                                         name: 'Competitive Procedures, but one Offer Report',
-                                        desc: 'This report displays Competed (Competed Under SAP, Full and Open Competition, Full and Open Competition after Exclusion of Sources and Fair Opportunity) data that has only one offer.'
+                                        app: 'ANOMALY',
+                                        desc: 'This report displays Competed (Competed Under SAP, Full and Open Competition, Full and Open Competition after Exclusion of Sources and Fair Opportunity) data that has only one offer.',
+                                        verb: 'This report has been identified as having anomalies in the entered award data.  Agencies should review the report to confirm the integrity of their data.'
                                 },
 								{
                                         id: '338E9AB44BC3E6A2BA6BC5B923CF9965',
