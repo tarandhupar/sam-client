@@ -66,9 +66,9 @@
       </div>
 
       <!-- Document -->
-      <textarea *ngIf="wageDetermination?.document" rows="50" cols="100">
+      <pre *ngIf="wageDetermination?.document">
         {{ wageDetermination.document }}
-      </textarea>
+      </pre>
 
       <!-- Print Link -->
       <div *ngIf="wageDetermination?.document" class="centered m_B-5x m_T-5x">
