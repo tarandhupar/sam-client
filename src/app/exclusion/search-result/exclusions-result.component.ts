@@ -50,7 +50,7 @@ export class ExclusionsResult implements OnInit {
 
   ngOnInit(){
 
-    if(this.data.organizationHierarchy.organizationId!=null){
+    if(this.data.organizationHierarchy!=null && this.data.organizationHierarchy.organizationId!=null){
       this.uniqueIdentifier=this.data.samNumber + '+' + this.data.organizationHierarchy.organizationId + '+' + this.data.type + '+' + this.data.cageCode;
     }
     else {
