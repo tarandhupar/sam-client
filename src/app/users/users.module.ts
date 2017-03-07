@@ -2,12 +2,12 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
-import { FormsModule } from "@angular/forms";
+import { FormsModule } from '@angular/forms';
 
 import {Ng2PageScrollModule} from 'ng2-page-scroll';
 
 import { routing } from './users.route';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { UserDirectoryPage } from "./directory/user-directory.page";
 import { ParentOrgsComponent } from "./directory/parent-orgs/parent-orgs.component";
@@ -20,6 +20,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
 import { GrantAccessPage } from "./public/grant-access/grant-access.page";
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
+
 
 @NgModule({
   imports: [

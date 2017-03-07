@@ -1,11 +1,11 @@
 import { TestBed, async } from '@angular/core/testing';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { By } from '@angular/platform-browser';
 
 import { SearchLayoutComponent } from './search-layout.component';
 
-var fixture;
-var comp;
+let fixture;
+let comp;
 
 describe('Search Layout Tests', () => {
   beforeEach(async(() => {
