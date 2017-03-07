@@ -57,7 +57,15 @@
               {{constructionTypes}}
             </li>
             <li *ngIf = "wageDetermination.publishDate">
-              <strong>Published Date: </strong>
+              <ng-container *ngIf="isSCA">
+                <strong>Published Date: </strong>
+                <strong *ngIf="revisionNumber && revisionNumber === 1">Published Date: </strong>
+                <strong *ngIf="revisionNumber && revisionNumber > 1">Last Revised Date: </strong>
+              </ng-container>
+              <ng-container *ngIf="!isSCA">
+                <strong *ngIf="revisionNumber && revisionNumber === 0">Published Date: </strong>
+                <strong *ngIf="revisionNumber && revisionNumber > 0">Last Revised Date: </strong>
+              </ng-container>
               {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
             </li>
           </ul>
