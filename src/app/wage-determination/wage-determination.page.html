@@ -65,15 +65,15 @@
 
       </div>
 
+      <!-- Print Link -->
+      <div *ngIf="wageDetermination?.document" class="text-right m_B-5x m_T-5x">
+        <a class="print-link" tabindex="0" (click)="openDocumentPrintPage()" (keyup.enter)="openDocumentPrintPage()">Printer Friendly Version</a>
+      </div>
+
       <!-- Document -->
       <pre *ngIf="wageDetermination?.document">
         {{ wageDetermination.document }}
       </pre>
-
-      <!-- Print Link -->
-      <div *ngIf="wageDetermination?.document" class="centered m_B-5x m_T-5x">
-        <a class="print-link" tabindex="0" (click)="openDocumentPrintPage()" (keyup.enter)="openDocumentPrintPage()">Printer Friendly Version</a>
-      </div>
     </section>
 
   </div>
