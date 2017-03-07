@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MockBackend } from '@angular/http/testing';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { Observable } from 'rxjs';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 
 import { InputAutocompleteComponent } from './input-autocomplete.component';
 import { AutoCompleteWrapper } from 'api-kit/autoCompleteWrapper/autoCompleteWrapper.service'

@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 
 import {WorkspacePage} from './workspace.page';
 import {ProgramService, SamAPIKitModule} from 'api-kit';
-import {SamUIKitModule} from 'samUIKit';
+import {SamUIKitModule} from 'sam-ui-kit';
 import {AppComponentsModule} from '../app-components/app-components.module';
 import {AssistanceProgramResult} from '../federal-assistance-program/program-result/assistance-program-result.component';
 

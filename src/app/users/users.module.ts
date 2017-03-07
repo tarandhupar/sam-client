@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import {Ng2PageScrollModule} from 'ng2-page-scroll';
 
 import { routing } from './users.route';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { UserDirectoryPage } from "./directory/user-directory.page";
 import { ParentOrgsComponent } from "./directory/parent-orgs/parent-orgs.component";

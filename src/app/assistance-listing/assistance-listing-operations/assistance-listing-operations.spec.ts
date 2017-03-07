@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { SamUIKitModule } from "samUIKit";
+import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { ReactiveFormsModule, FormGroup } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";

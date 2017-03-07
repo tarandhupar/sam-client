@@ -16,7 +16,7 @@ import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { TimezoneLabelPipe } from './pipes/timezone-label.pipe';
 import { FixHTMLPipe } from './pipes/fix-html.pipe';
 import { FilesizePipe } from './pipes/filesize.pipe';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { HistoryComponent } from '../app-components/history/history.component';
 
 let comp: OpportunityPage;

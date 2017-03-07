@@ -3,7 +3,7 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 // Load the implementations that should be tested
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { SamHeaderLinksComponent } from './header-links.component';
 import { IAMService } from 'api-kit';
 

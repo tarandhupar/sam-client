@@ -11,7 +11,7 @@ import { App } from './app.component';
 import { ROUTES } from './app.route';
 import { HomePage } from './application-content/home/home.page';
 import { SearchPage } from './search/search.page';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { SearchService } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
 import { OpportunitiesResult } from './opportunity/search-result/opportunities-result.component';

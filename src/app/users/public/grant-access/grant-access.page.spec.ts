@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { Observable } from "rxjs";
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { ActivatedRoute, Router } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 

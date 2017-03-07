@@ -4,7 +4,7 @@ import {  By  } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
 import { AlertFooterComponent } from './alert-footer.component';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { AlertFooterService } from './alert-footer.service';
 
 

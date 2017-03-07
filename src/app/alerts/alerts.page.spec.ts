@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing';
 import { SystemAlertsService } from 'api-kit/system-alerts/system-alerts.service';
 import { Observable } from 'rxjs';
 import { AlertItemComponent } from './alert-item/alert-item.component';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AlertsPage } from './alerts.page';

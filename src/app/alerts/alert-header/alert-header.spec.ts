@@ -5,7 +5,7 @@ import {  By  } from '@angular/platform-browser';
 // Load the implementations that should be tested
 import { AlertHeaderComponent } from './alert-header.component';
 import { SystemAlertsService } from 'api-kit';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { RouterTestingModule } from '@angular/router/testing';
 
 // Load test data

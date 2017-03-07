@@ -7,7 +7,7 @@ import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { ActivatedRoute } from '@angular/router';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { WageDeterminationService } from 'api-kit';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 
 import { WageDeterminationPage } from './wage-determination.page';
 import { Observable } from 'rxjs';

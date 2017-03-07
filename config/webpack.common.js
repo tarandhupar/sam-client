@@ -81,7 +81,7 @@ module.exports = {
 
     // aliases
     alias: {
-      samUIKit: helpers.root('src/sam-ui-elements/src/ui-kit')
+      "sam-ui-kit": helpers.root('src/sam-ui-elements/src/ui-kit')
     },
 
     // remove other default values

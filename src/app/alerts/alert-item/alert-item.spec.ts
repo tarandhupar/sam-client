@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { Observable } from 'rxjs';
 
 // Load the implementations that should be tested
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { SystemAlertsService } from 'api-kit';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AlertItemComponent } from './alert-item.component';

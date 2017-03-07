@@ -3,7 +3,7 @@ import { RouterTestingModule} from '@angular/router/testing';
 
 // Load the implementations that should be tested
 import { SamSearchHeaderComponent } from './search-header.component';
-import {SamUIKitModule} from "samUIKit";
+import {SamUIKitModule} from "sam-ui-kit";
 import {AutoCompleteWrapper} from "api-kit/autoCompleteWrapper/autoCompleteWrapper.service";
 import {SuggestionsService} from "api-kit/search/suggestions.service";
 import {WrapperService} from "api-kit/wrapper/wrapper.service";

@@ -3,7 +3,7 @@ todo: fix these tests
 import { TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
 
 // Load the implementations that should be tested
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AlertEditComponent } from './alert-edit.component';
 import { Alert } from '../alert.model';

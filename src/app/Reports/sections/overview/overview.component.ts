@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, NgZone, NgModule } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAMService } from 'api-kit';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { globals } from '../../app/globals.ts';
 
 export const REPORTS_PER_PAGE: number = 10;

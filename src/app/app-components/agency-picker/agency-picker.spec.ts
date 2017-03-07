@@ -5,7 +5,7 @@ import { MockBackend } from '@angular/http/testing';
 import { WrapperService, FHService } from 'api-kit';
 import { BaseRequestOptions, ConnectionBackend, Http } from '@angular/http';
 import { Observable } from 'rxjs';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 
 import { AgencyPickerComponent } from './agency-picker.component';
 

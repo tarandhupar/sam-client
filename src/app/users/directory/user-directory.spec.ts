@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { SamUIKitModule } from "samUIKit";
+import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { UserDirectoryPage } from "./user-directory.page";
 import { ParentOrgsComponent } from "./parent-orgs/parent-orgs.component";

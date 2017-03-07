@@ -1,5 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
-import { SamUIKitModule } from 'samUIKit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { By } from '@angular/platform-browser';
 
 import { WorkspaceLayoutComponent } from './workspace-layout.component';

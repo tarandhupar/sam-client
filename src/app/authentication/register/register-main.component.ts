@@ -4,8 +4,8 @@ import { Component, DoCheck, ElementRef, Input, KeyValueDiffers, NgZone, OnInit,
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { SamNameEntryComponent } from 'samUIKit/form-templates/name-entry';
-import { SamPhoneEntryComponent } from 'samUIKit/form-templates/phone-entry';
+import { SamNameEntryComponent } from 'sam-ui-kit/form-templates/name-entry';
+import { SamPhoneEntryComponent } from 'sam-ui-kit/form-templates/phone-entry';
 import { SamKBAComponent, SamPasswordComponent } from '../shared';
 
 import { IAMService } from 'api-kit';
