@@ -30,7 +30,9 @@
           </div>
 
           <p class="usa-form-note">
-            <a title="Show password" href="javascript:void(0);" class="usa-show_password" aria-controls="password" (click)="togglePassword()">Show password</a>
+            <a title="Show password" href="javascript:void(0);" class="usa-show_password" aria-controls="password" (click)="togglePassword()">
+              {{ (states.password.type == 'password') ? 'Show' : 'Hide'  }} Password
+            </a>
           </p>
 
           <div class="usa-button-controls">
