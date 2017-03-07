@@ -50,7 +50,14 @@ export class ExclusionsResult implements OnInit {
 
   ngOnInit(){
 
-    this.uniqueIdentifier=this.data.samNumber + '+' + this.data.organizationHierarchy.organizationId + '+' + this.data.type + '+' + this.data.cageCode;
+    if(this.data.organizationHierarchy.organizationId!=null){
+      this.uniqueIdentifier=this.data.samNumber + '+' + this.data.organizationHierarchy.organizationId + '+' + this.data.type + '+' + this.data.cageCode;
+    }
+    else {
+      this.uniqueIdentifier = this.data.samNumber + '+NA+' + this.data.type + '+' + this.data.cageCode;
+    }
+
+
 
     if(this.data.activationDate!==null) {
       this.data.activationDate = moment(this.data.activationDate).format("MMM D, Y");
