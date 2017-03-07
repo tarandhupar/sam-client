@@ -1,5 +1,6 @@
 <div class="usa-grid search-page">
 
+  <!--filters aside-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
     <div sam-sticky limit=1200 container="occupy-page">
@@ -62,10 +63,10 @@
                   [errorMessage]="wdTypeConfig.errorMessage"
                   (modelChange)="wdFilterChange($event)">
                 </samRadioButton>
-
               </sam-collapsible>
-              <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra'">
 
+              <!--*** DBA Specif Filters ***-->
+              <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra'">
 
                 <!--construction type drop down-->
                 <samSelect
@@ -80,6 +81,63 @@
                 </samSelect>
                 <button (click)='wdConstructionClear()'>Clear</button>
               </sam-collapsible>
+
+              <!--*** SCA Specific Filters ***-->
+              <sam-collapsible [label]="'SCA: Previously Performed'" [startOpened]="true" *ngIf="index === 'wd'">
+
+                <!--previously performed-->
+                <samRadioButton
+                  [(model)]="wdPreviouslyPerformedModel"
+                  [options]="wdPreviouslyPerformedConfig.options"
+                  [label]="wdPreviouslyPerformedConfig.label"
+                  [hint]="wdPreviouslyPerformedConfig.hint"
+                  [name]="wdPreviouslyPerformedConfig.name"
+                  [errorMessage]="wdPreviouslyPerformedConfig.errorMessage"
+                  (modelChange)="wdPreviouslyPerformedChanged($event)">
+                </samRadioButton>
+              </sam-collapsible>
+
+              <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true" *ngIf="index === 'wd'">
+
+                <!--Subject to CBA-->
+                <samRadioButton
+                  [(model)]="wdSubjectToCBAModel"
+                  [options]="wdSubjectToCBAConfig.options"
+                  [label]="wdSubjectToCBAConfig.label"
+                  [hint]="wdSubjectToCBAConfig.hint"
+                  [name]="wdSubjectToCBAConfig.name"
+                  [errorMessage]="wdSubjectToCBAConfig.errorMessage"
+                  (modelChange)="wdSubjectToCBAChanged($event)">
+                </samRadioButton>
+              </sam-collapsible>
+
+              <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true" *ngIf="index === 'wd'">
+
+                <!--Non-Standard Services radio buttons-->
+                <samRadioButton
+                  [(model)]="wdSubjectToCBAModel"
+                  [options]="wdSubjectToCBAConfig.options"
+                  [label]="wdSubjectToCBAConfig.label"
+                  [hint]="wdSubjectToCBAConfig.hint"
+                  [name]="wdSubjectToCBAConfig.name"
+                  [errorMessage]="wdSubjectToCBAConfig.errorMessage"
+                  (modelChange)="wdSubjectToCBAChanged($event)">
+                </samRadioButton>
+
+                <!--Non-Standard Services drop down select-->
+                <samSelect
+                  [(model)]="wdConstructModel"
+                  [name]="selectConstructConfig.name"
+                  [options]="wdServiceConfig.options"
+                  [label]="wdServiceConfig.label"
+                  [hint]="wdServiceConfig.hint"
+                  [errorMessage]="wdServiceConfig.errorMessage"
+                  [disabled]="wdServiceConfig.disabled"
+                  (modelChange)="constructionTypeChange($event)">>
+                </samSelect>
+
+              </sam-collapsible>
+
             </sam-filters-container>
           </li>
         </ul>

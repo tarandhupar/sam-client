@@ -72,9 +72,63 @@ export class SearchPage implements OnInit{
     name: 'county',
   };
 
-  // Select Construct Type Component
+  // Select Construct Type Component drop-down
   wdConstructModel = '';
   selectConstructConfig = {
+    options: [
+      {value:'', label: 'Default option', name: 'empty', disabled: true},
+    ],
+    disabled: false,
+    label: 'Select Construction Type',
+    name: 'constructionType',
+  };
+
+  // Select SCA Previously Performed Radio Buttons
+  wdPreviouslyPerformedModel = '';
+  wdPreviouslyPerformedConfig = {
+    options:  [
+      {value: 'prevPerfYesLocality', label: 'Yes, in the same locality', name: 'empty'},
+      {value: 'prevPerfYesDifferentLocality', label: 'Yes, but in a different locality', name: 'empty'},
+      {value: 'prevPerfNo', label: 'No, not performed before', name: 'empty'}
+    ],
+    name: 'radio-component',
+    label: 'Were these services previously performed under an SCA-Covered contract?',
+    errorMessage: '',
+    hint: ''
+  };
+
+  // Select SCA Subject to CBA - Radio Buttons
+  wdSubjectToCBAModel = '';
+  wdSubjectToCBAConfig = {
+    options:  [
+      {value: 'yesBasedCBA', label: 'Yes, and the current contract is based on a CBA', name: 'empty'},
+      {value: 'yesUnbasedCBA', label: 'Yes, but the current contract is not based on a CBA', name: 'empty'},
+      {value: 'noCBA', label: 'No, not performed before', name: 'empty'}
+    ],
+    name: 'radio-component',
+    label: 'Were the employees working subject to a CBA?',
+    errorMessage: '',
+    hint: ''
+  };
+
+
+  // Select NonStandard Services - Radio Buttons
+  wdNonStandardServicesModel = '';
+  wdNonStandardServicesConfig = {
+    options:  [
+      {value: 'yesNSS', label: 'Yes', name: 'empty'},
+      {value: 'noNSSEven', label: 'No, and the SCA WD ends in an even number', name: 'empty'},
+      {value: 'noNSSOdd', label: 'No, and the SCA WD ends in an odd number', name: 'empty'}
+    ],
+    name: 'radio-component',
+    label: 'Are the contract services to be performed listed below as Non-Standard Services?',
+    errorMessage: '',
+    hint: ''
+  };
+
+  // Select NonStandard Service, Service - drop down
+  wdServiceModel = '';
+  wdServiceConfig = {
     options: [
       {value:'', label: 'Default option', name: 'empty', disabled: true},
     ],
