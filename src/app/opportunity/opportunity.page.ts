@@ -631,8 +631,8 @@ export class OpportunityPage implements OnInit {
     return pcobj;
   }
 
-  public getDownloadFileURL(fileID: string){
-    return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey();
+  public getDownloadFileURL(fileID: string, isArchived: boolean = false){
+    return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived);
   }
 
   selectedItem(item){
@@ -653,12 +653,12 @@ export class OpportunityPage implements OnInit {
 		}
 	}
 
-  public getDownloadPackageURL(packageID: string) {
-    return this.getBaseURL() + '/opportunities/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey();
+  public getDownloadPackageURL(packageID: string, isArchived: boolean = false) {
+    return this.getBaseURL() + '/opportunities/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived);
   }
 
-  public getDownloadAllPackagesURL(opportunityID: string) {
-    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey();
+  public getDownloadAllPackagesURL(opportunityID: string, isArchived: boolean = false) {
+    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived);
   }
 
   public getBaseURL() {
@@ -667,6 +667,10 @@ export class OpportunityPage implements OnInit {
 
   public getAPIUmbrellaKey() {
     return '?api_key=' + API_UMBRELLA_KEY;
+  }
+
+  public getOppStatusQueryString(isArchived: boolean = false): string {
+    return (isArchived === true) ? '&status=archived' : '';
   }
 
   public toggleAccordion(card){
