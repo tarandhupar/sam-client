@@ -29,9 +29,9 @@
 
       <div class="usa-grid-full">
 
-        <div class="usa-width-one-half">
+        <div class="usa-width-two-thirds">
           <ul class="usa-unstyled-list">
-            <div class="m_T-3x m_B-3x" *ngFor="let location of locations">
+            <div class="m_B-3x" *ngFor="let location of locations">
               <li>
                 <strong>State: </strong> {{location.stateString}}
               </li>
@@ -42,7 +42,7 @@
           </ul>
         </div>
 
-        <div class="usa-width-one-half">
+        <div class="usa-width-one-third">
           <ul class="usa-unstyled-list">
             <li *ngIf = "revisionNumber">
               <strong>Revision #: </strong>
