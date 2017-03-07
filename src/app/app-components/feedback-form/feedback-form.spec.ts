@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import {SamUIKitModule} from 'ui-kit';
 import {SamFeedbackComponent} from "./feedback-form.component";
 
-describe('The Sam Footer component', () => {
+describe('The Sam Feedback component', () => {
   let component:SamFeedbackComponent;
   let fixture:any;
 
@@ -22,6 +22,7 @@ describe('The Sam Footer component', () => {
   });
 
   it('should compile sam feedback component', function () {
+
     fixture.detectChanges();
     expect(true).toBe(true);
   });
