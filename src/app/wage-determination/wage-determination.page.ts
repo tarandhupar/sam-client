@@ -150,6 +150,11 @@ export class WageDeterminationPage implements OnInit {
 
   private getLocations(combinedAPI: Observable<any>){
     combinedAPI.subscribe(([wageDetermination, dictionaries]) => {
+      /** Check that locations exist **/
+      if(!wageDetermination.location) {
+        return;
+      }
+
       /** Process each location data into a usable state **/
       for (let eachLocation of wageDetermination.location) {
         /** Process States **/
