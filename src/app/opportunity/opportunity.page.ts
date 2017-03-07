@@ -632,7 +632,6 @@ export class OpportunityPage implements OnInit {
   }
 
   public getDownloadFileURL(fileID: string, isArchived: boolean = false){
-    console.log('isArchived', isArchived)
     return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived);
   }
 
