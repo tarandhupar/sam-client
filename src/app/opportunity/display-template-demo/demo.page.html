@@ -247,7 +247,7 @@
         <h2>Packages</h2>
         <ng-container *ngIf="attachment">
           <span class="download-button">
-            <a class="usa-button-small usa-button-gray" *ngIf="hasResources()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">
+            <a class="usa-button-small usa-button-gray" *ngIf="hasResources()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)}}">
               <i class="fa fa-cloud-download" aria-hidden="true"></i>
               <span>Download All Packages</span>
             </a>
@@ -266,7 +266,7 @@
           </div>
 
           <span *ngIf="package.access === 'Public'" class="download-button">
-            <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId)}}">
+            <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId, opportunity.data?.statuses?.isArchived)}}">
               <i class="fa fa-cloud-download" aria-hidden="true"></i>
               <span>Download</span>
             </a>
@@ -292,7 +292,7 @@
                           {{resource.size | filesize}}
                         </sup>
                       </a>
-                      <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
+                      <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId, opportunity.data?.statuses?.isArchived)}}">
                         {{resource.description}}
                         <sup *ngIf="resource.size && resource.size != 0">
                           {{resource.size | filesize}}
