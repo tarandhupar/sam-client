@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import {SamUIKitModule} from 'ui-kit';
 import {SamFeedbackComponent} from "./feedback-form.component";
 
-fdescribe('The Sam Footer component', () => {
+describe('The Sam Footer component', () => {
   let component:SamFeedbackComponent;
   let fixture:any;
 
