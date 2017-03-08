@@ -145,4 +145,8 @@ export class UserAccessPage implements OnInit {
     this.allAccordions.forEach(acc => acc.setExpandIndex(0));
     this.showCollapse = true;
   }
+
+  hasSelectAll(options) {
+    return options.length > 4;
+  }
 }

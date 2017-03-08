@@ -1,11 +1,11 @@
 <div class="access-page">
   <h1 class="m_T-0">Access</h1>
   <div>
-    <samMultiSelectDropdown (modelChange)="orgsChanged($event)" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [model]="filters.organizations.value"></samMultiSelectDropdown>
-    <samMultiSelectDropdown (modelChange)="rolesChanged($event)" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [model]="filters.roles.value"></samMultiSelectDropdown>
-    <samMultiSelectDropdown (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
-    <samMultiSelectDropdown (modelChange)="objectsChanged($event)" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [model]="filters.objects.value"></samMultiSelectDropdown>
-    <samMultiSelectDropdown (modelChange)="permissionsChanged($event)" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [model]="filters.permissions.value"></samMultiSelectDropdown>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.organizations.options)" (modelChange)="orgsChanged($event)" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [model]="filters.organizations.value"></samMultiSelectDropdown>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.roles.options)" (modelChange)="rolesChanged($event)" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [model]="filters.roles.value"></samMultiSelectDropdown>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.domains.options)" (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.objects.options)" (modelChange)="objectsChanged($event)" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [model]="filters.objects.value"></samMultiSelectDropdown>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.permissions.options)" (modelChange)="permissionsChanged($event)" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [model]="filters.permissions.value"></samMultiSelectDropdown>
     <a [routerLink]="['../grant-access']" class="usa-button usa-button-success pull-right">Grant Access</a>
   </div>
 
