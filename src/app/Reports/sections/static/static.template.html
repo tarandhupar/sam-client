@@ -17,19 +17,19 @@
 
             <div *ngIf="data">
 
-                <ul style="list-style-type: none;">
+                <ul type="none">
                     <li *ngFor="let item of data.reports;let i=index">
                         <div class="grid">
-                            <div style="float: left; width: 60%;"><b><a href="{{item.loc}}" target="_blank">{{item.name}}</a></b></div>
-                            <div style="float: left; width: 40%;"><span style="position: absolute; right: 0"><i>last run on {{item.date}}</i></span></div>
+                            <div class="grid-name"><b><a href="{{item.loc}}" target="_blank">{{item.name}}</a></b></div>
+                            <div class="grid-date"><span style="position: absolute; right: 0"><i>last run on {{item.date}}</i></span></div>
                         </div>
                         <br>
-                        <div style="float: left;width: 100%;">{{item.desc}}</div>
+                        <div class="grid-desc">{{item.desc}}</div>
                         <br>
                         <div *ngIf="item.previousDates">
                             <samAccordion>
                                 <samAccordionSection [name]="'Previous Years'" [headerText]="'Previous Years'">
-                                    <ul style="list-style-type: none;">
+                                    <ul type="none">
                                         <li *ngFor="let previousReport of item.previousDates;let j=index"> <a href="{{previousReport.loc}}" target="_blank">{{previousReport.name}}</a>&nbsp;&nbsp;&nbsp;&nbsp;<i>{{previousReport.year}}</i></li>
                                     </ul>
                                 </samAccordionSection>
