@@ -1,15 +1,19 @@
 <div *ngIf="showFeedback" class="feedback-backdrop"></div>
 <div #feedbackRoot class="sam-feedback">
-  <div *ngIf="!showFeedback" class="feedback-icon-div" (click)="toggleFeedback()">
-    <span>Feedback</span> <br>
-    <span class="feedback-icon-font"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></span>
+  <div>
+    <span class="usa-width-one-whole p_L-2x p_T-2x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
+    <div class="usa-width-one-whole marginCenter p_T-2x"><button class="usa-button-outline usa-button-active" (click)="toggleFeedback()">Provide Feedback</button></div>
   </div>
 
   <div *ngIf="showFeedback" class="feedback-form-div relative">
-    <h4 class="m_B-2x">What you think matters!</h4>
-    <span class="feedback-icon-font"><i class="fa fa-angle-double-right hide-form-icon" aria-hidden="true" (click)="toggleFeedback()"></i></span>
-    <div class="feedback-question-div usa-grid-full m_B-3x m_R-4x">
-      <span>{{curQueIndex+1}}. {{curQuestion.description}}</span>
+    <div class="usa-grid-full m_0 p_L-2x p_T-2x p_B-2x feedback-background feedback-header-span">
+      <i class="fa fa-comments" aria-hidden="true"></i>
+      &nbsp;What you think matters!
+      <i class="pull-right fa fa-times-circle-o m_R-2x" (click)="toggleFeedback()"></i>
+    </div>
+    <!--<span class="feedback-icon-font"><i class="fa fa-angle-double-right hide-form-icon" aria-hidden="true" (click)="toggleFeedback()"></i></span>-->
+    <div class="feedback-question-div usa-grid-full m_T-2x m_B-1x m_R-4x">
+      <span class="m_T-2x">{{curQueIndex+1}}. {{curQuestion.description}}</span>
 
        <!--Rating Question-->
       <div class="feedback-question-rating m_T-2x" *ngIf="isCurrentQType('rating')">
@@ -53,22 +57,32 @@
           <button class="usa-button-primary m_0">Submit</button>
         </div>
         <div class="usa-width-one-whole m_T-2x" *ngIf="emailRadioBtnValue === 'No'" style="text-align: center">
-          <h4>Thanks!</h4>
+          <h4>Thanks!<button class="pull-right usa-button-primary m_0">Submit</button></h4>
         </div>
       </div>
 
-      <div class="usa-width-one-whole">
-        <button class="usa-button-transparent pull-left m_0" style="padding-left: 0" (click)="onPreviousClick()" *ngIf="isPrevButtonOn()"><span><i class="fa fa-angle-left"></i>Previous</span></button>
-        <button class="usa-button-transparent pull-right m_0" style="padding-right: 0" (click)="onNextClick()" *ngIf="isNextButtonOn()"><span>Next<i class="fa fa-angle-right"></i></span></button>
+      <div class="usa-width-one-whole m_T-3x relative" style="z-index: 1070;">
+        <button class="usa-button-transparent pull-left m_0" style="padding-left: 0;" (click)="onPreviousClick()" *ngIf="isPrevButtonOn()"><span><i class="fa fa-angle-left"></i>Previous</span></button>
+        <button class="usa-button-transparent pull-right m_0" style="padding-right: 0;" (click)="onNextClick()" *ngIf="isNextButtonOn()"><span>Next<i class="fa fa-angle-right"></i></span></button>
       </div>
-      <div class="feedback-pagination">
-        <span>
-          <span class="feedback-page" *ngFor="let page of getPaginationArray()" [ngClass]="getPageClass(page)">
-            <span *ngIf="!isPageEdited(page) || isCurrentPage(page)">{{page+1}}</span>
-            <i class="fa fa-check" *ngIf="isPageEdited(page) && !isCurrentPage(page)"></i>
+
+      <div class="usa-width-one-whole m_T-3x" style="text-align: center">
+        <a class="usa-nav-link" style="color: #003264;text-decoration: underline;" href="http://beta.sam.gov/">Form Approved OMB#3090-0297 Exp Date 07/31/2019</a>
+      </div>
+
+      <div class="usa-width-one-whole feedback-pagination">
+          <span style="display: inline-block;">
+            <span *ngFor="let page of getPaginationArray()">
+              <span class="feedback-page" [ngClass]="getPageClass(page)">
+                <span *ngIf="!isPageEdited(page) || isCurrentPage(page)">{{page+1}}</span>
+                <i class="fa fa-check" *ngIf="isPageEdited(page) && !isCurrentPage(page)"></i>
+              </span>
+              <span *ngIf="!isLastPage(page)"><hr class="feedback-dash"></span>
+            </span>
+
           </span>
-        </span>
       </div>
+
     </div>
   </div>
 

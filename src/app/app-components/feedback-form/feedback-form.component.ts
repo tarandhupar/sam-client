@@ -134,4 +134,8 @@ export class SamFeedbackComponent {
   isCurrentPage(page){
     return page === this.curQueIndex;
   }
+
+  isLastPage(page){
+    return page === this.questionData.length - 1;
+  }
 }

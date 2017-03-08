@@ -12,6 +12,7 @@ import { ReferenceLibraryComponent}  from "./sections/reference-library/referenc
 import { PartnersComponent } from "./sections/partners/partners.component";
 import { AwardDataComponent } from "./sections/award-data/award-data.component";
 import { SamUIKitModule } from "ui-kit/ui-kit.module";
+import { AppComponentsModule } from "../app-components/app-components.module"
 import { TransitionToSamComponent } from "./sections/transition-to-sam/transition-to-sam.component";
 import { ImageLibraryComponent } from "./image-library/image-library.component";
 
@@ -19,6 +20,7 @@ import { ImageLibraryComponent } from "./image-library/image-library.component";
   imports: [
     SamUIKitModule,
     BrowserModule,
+    AppComponentsModule,
     routing,
   ],
   exports: [ ImageLibraryComponent ],

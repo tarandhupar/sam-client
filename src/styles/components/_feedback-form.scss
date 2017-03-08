@@ -14,27 +14,17 @@ body.feedback-open {
 }
 
 .sam-feedback{
-  position: fixed;
-  right: 0;
-  top: 40%;
-  z-index: 1050;
 
   h4{
     margin: 0;
   }
 
-  .feedback-icon-div{
-    padding: 10px;
-    width: auto;
-    border: 2px solid black;
-    border-radius: 50%;
-    text-align: center;
-  }
-
 
   .feedback-form-div{
-    margin-top: 10px;
-    padding: 10px;
+    position: fixed;
+    left: 30vw;
+    top: 30vh;
+    z-index: 1050;
     width: 500px;
     border: 2px solid black;
     background: $color-white;
@@ -51,7 +41,11 @@ body.feedback-open {
     margin-left: 20px;
     padding: 10px;
     width: auto;
-    border: 2px solid black;
+
+  }
+
+  .feedback-header-span{
+    border-bottom: 2px solid black;
   }
 
   .feedback-question-rating{
@@ -68,8 +62,8 @@ body.feedback-open {
 
   .feedback-pagination{
     position: absolute;
-    bottom: 13px;
-    left: 17%;
+    bottom: 70px;
+    left: 0;
     text-align: center;
   }
 
@@ -79,7 +73,6 @@ body.feedback-open {
     height: 25px;
     border-radius: 50%;
     border: 2px solid $color-primary;
-    margin: 0 15px;
     text-align: center;
   }
 
@@ -102,11 +95,21 @@ body.feedback-open {
     margin-right: 0;
   }
 
-  .feedback-icon-div:hover, .hide-form-icon:hover, .thumb:hover{
+  .feedback-icon-div:hover, .hide-form-icon:hover, .thumb:hover, .fa-times-circle-o:hover{
     cursor: pointer;
   }
 
   .feedback-icon-font{
     font-size: 175%;
+  }
+
+  .feedback-background{
+    background: $color-primary-alt;
+  }
+
+  .feedback-dash{
+    width: 30px;
+    display: inline-block;
+    border: 1px solid $color-primary;
   }
 }
