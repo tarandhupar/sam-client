@@ -24,7 +24,8 @@
           </div>
 
           <div *ngIf="states.reset">
-            <sam-password [password]="password"></sam-password>
+            <sam-password [password]="password"
+                          [phrases]="[user.firstName, user.initials, user.lastName, user.email]"></sam-password>
           </div>
 
           <div class="usa-button-controls">

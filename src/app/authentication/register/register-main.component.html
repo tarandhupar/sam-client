@@ -22,7 +22,10 @@
         </agencyPicker>
       </fieldset>
       <fieldset class="password">
-        <sam-password [password]="userForm.controls.userPassword" #passwordComponent></sam-password>
+        {{user.firstName}}|{{user.middleName}}|{{user.lastName}}|{{user.email}}
+        <sam-password [password]="userForm.controls.userPassword"
+                      [phrases]="[user.firstName, user.middleName, user.lastName, user.email]"
+                      #passwordComponent></sam-password>
       </fieldset>
       <fieldset class="kba">
         <legend>Security Questions</legend>

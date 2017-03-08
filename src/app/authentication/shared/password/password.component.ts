@@ -11,6 +11,8 @@ export class SamPasswordComponent {
   @Input() currentPassword: FormControl;
   @Input() password:FormControl;
 
+  @Input() phrases:string[] = [];
+
   private confirmPassword = new FormControl(['']);
 
   protected config = {
@@ -57,11 +59,12 @@ export class SamPasswordComponent {
   }
 
   ngOnInit() {
-    this.password.setValidators([
+    this.password.setValidators([,
       $Validators.minlength(this.config.rules.minlength),
       $Validators.uppercase,
       $Validators.numeric,
       $Validators.special,
+      $Validators.consecutive(this.phrases),
       $Validators.match('confirmPassword'),
       Validators.required
     ]);
