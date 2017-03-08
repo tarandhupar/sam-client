@@ -58,7 +58,6 @@
             </li>
             <li *ngIf = "wageDetermination.publishDate">
               <ng-container *ngIf="isSCA">
-                <strong>Published Date: </strong>
                 <strong *ngIf="revisionNumber && revisionNumber === '1'">Published Date: </strong>
                 <strong *ngIf="revisionNumber && revisionNumber !== '1'">Last Revised Date: </strong>
               </ng-container>
