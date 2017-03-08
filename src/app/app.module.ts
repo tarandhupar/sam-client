@@ -29,12 +29,12 @@ import { AwardsModule } from './awards';
 import { OrganizationModule } from './organization';
 import { SearchModule } from './search';
 import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
-import { WorkspaceModule } from './workspace'
+import { WorkspaceModule } from './workspace';
 
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
-import { UserDirectoryModule } from "./users";
+import { UserDirectoryModule } from './users';
 
 // Application wide providers
 const APP_PROVIDERS = [

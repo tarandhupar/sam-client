@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
 // Load the implementations that should be tested
-import {SamUIKitModule} from 'ui-kit';
+import {SamUIKitModule} from 'sam-ui-kit';
 import {SamFeedbackComponent} from "./feedback-form.component";
 
 describe('The Sam Feedback component', () => {

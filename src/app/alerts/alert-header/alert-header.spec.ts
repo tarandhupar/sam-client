@@ -1,15 +1,15 @@
-import {TestBed} from '@angular/core/testing';
-import {Observable} from 'rxjs';
-import { By } from '@angular/platform-browser';
+import { TestBed } from '@angular/core/testing';
+import { Observable } from 'rxjs';
+import {  By  } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
-import {AlertHeaderComponent} from './alert-header.component';
-import {SystemAlertsService} from "api-kit";
-import {SamUIKitModule} from 'ui-kit';
-import {RouterTestingModule} from "@angular/router/testing";
+import { AlertHeaderComponent } from './alert-header.component';
+import { SystemAlertsService } from 'api-kit';
+import { SamUIKitModule } from 'sam-ui-kit';
+import { RouterTestingModule } from '@angular/router/testing';
 
 // Load test data
-import {error, info, warning} from '../alerts-test-data.spec';
+import { error, info, warning } from '../alerts-test-data.spec';
 
 let noAlerts = Observable.of([]);
 let fiveAlerts = Observable.of([error, error, warning, info, info]);
