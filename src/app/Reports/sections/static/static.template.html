@@ -22,10 +22,11 @@
                         <div class="grid">
                             <div class="grid-name"><b><a href="{{item.loc}}" target="_blank">{{item.name}}</a></b></div>
                             <div class="grid-date"><span style="position: absolute; right: 0"><i>last run on {{item.date}}</i></span></div>
-                        </div>
+
                         <br>
                         <div class="grid-desc">{{item.desc}}</div>
                         <br>
+                        </div>
                         <div *ngIf="item.previousDates">
                             <samAccordion>
                                 <samAccordionSection [name]="'Previous Years'" [headerText]="'Previous Years'">
