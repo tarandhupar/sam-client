@@ -1,6 +1,20 @@
 .access-page {
+  .no-wrap {
+    white-space: nowrap;
+  }
+
+  .show-permissions-button {
+    margin-top: -8px !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .fieldset-wrapper {
    min-width: 250px;
+  }
+
+  .usa-width-eleven-twelfths {
+    @include span-columns(11);
   }
 
   .dropdown-list {
@@ -9,6 +23,16 @@
 
     input {
       height: initial;
+    }
+  }
+
+  .modify-role-buttons {
+    margin-right: -5px;
+    margin-top: -10px;
+
+    button {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
 

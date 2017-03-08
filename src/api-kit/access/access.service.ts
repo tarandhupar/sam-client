@@ -98,10 +98,130 @@ export class UserAccessService {
                 "100000013"
               ]
             },
+            {
+              id: 4,
+              value: 'ROLE 2',
+              functions: [
+                {
+                  id: 15,
+                  value: 'ALERTS',
+                  permissions: [
+                    {
+                      id: 17,
+                      value: 'EDIT'
+                    },
+                    {
+                      id: 18,
+                      value: 'DELETE'
+                    },
+                  ]
+                },
+                {
+                  id: 10,
+                  value: 'FUNCTION 10',
+                  permissions: [
+                    {
+                      id: 17,
+                      value: 'EDIT'
+                    },
+                    {
+                      id: 18,
+                      value: 'DELETE'
+                    },
+                  ]
+                }
+              ],
+              organizationIds: [
+                "100000012",
+                "100000013"
+              ]
+            },
+          ]
+        },
+        {
+          id: 2,
+          value: 'DOMAIN 2',
+          roles: [
+            {
+              id: 3,
+              value: 'REPORTS',
+              functions: [
+                {
+                  id: 15,
+                  value: 'ALERTS',
+                  permissions: [
+                    {
+                      id: 17,
+                      value: 'EDIT'
+                    },
+                    {
+                      id: 18,
+                      value: 'DELETE'
+                    },
+                  ]
+                },
+                {
+                  id: 10,
+                  value: 'FUNCTION 10',
+                  permissions: [
+                    {
+                      id: 17,
+                      value: 'EDIT'
+                    },
+                    {
+                      id: 18,
+                      value: 'DELETE'
+                    },
+                  ]
+                }
+              ],
+              organizationIds: [
+                "100000012",
+                "100000013"
+              ]
+            },
+            {
+              id: 4,
+              value: 'ROLE 2',
+              functions: [
+                {
+                  id: 15,
+                  value: 'ALERTS',
+                  permissions: [
+                    {
+                      id: 17,
+                      value: 'EDIT'
+                    },
+                    {
+                      id: 18,
+                      value: 'DELETE'
+                    },
+                  ]
+                },
+                {
+                  id: 10,
+                  value: 'FUNCTION 10',
+                  permissions: [
+                    {
+                      id: 17,
+                      value: 'EDIT'
+                    },
+                    {
+                      id: 18,
+                      value: 'DELETE'
+                    },
+                  ]
+                }
+              ],
+              organizationIds: [
+                "100000012",
+                "100000013"
+              ]
+            },
           ]
         }
       ]
-    })
+    });
   }
 
   getRoles(): Observable< Array<RoleInterface> > {

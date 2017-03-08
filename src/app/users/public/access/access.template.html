@@ -9,49 +9,78 @@
     <a [routerLink]="['../grant-access']" class="usa-button usa-button-success pull-right">Grant Access</a>
   </div>
 
-  <ng-container *ngIf="userAccessModel">
-    <div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">
-      <h2>{{role.role.val}}
+  <!--<ng-container *ngIf="userAccessModel">-->
+  <ng-container>
+    <!--<div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">-->
+    <div *ngFor="let domain of [{ id: 1}, { id: 2}, { id: 3}]">
+      <h2>
+        <!--{{role.role.val}}-->
+        Domain {{domain.id}}
         <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapse All</a>
         <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
       </h2>
-      <samAccordion *ngFor="let domain of role.roleData | groupByDomain" [bordered]="true" [expandIndex]="showCollapse ? 0 : -1">
-        <samAccordionSection [headerText]="domain.val" [name]="'domain-'+domain.val">
-          <div class="usa-grid-full permissions-table-header">
-            <div class="usa-width-one-sixth"><strong>Organization:</strong></div>
-            <div class="usa-width-one-sixth"><strong>Level:</strong></div>
-            <div class="usa-width-one-sixth"><strong>Object:</strong></div>
-            <div class="usa-width-one-third"><strong>Permissions:</strong></div>
-            <div class="usa-width-one-sixth">&nbsp;</div>
+      <div class="background-grey p_All-3x">
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth">
+            Role
           </div>
-          <ng-container *ngFor="let org of domain.organizations">
-            <div class="usa-grid-full permissions-table-row">
-              <div class="usa-width-one-sixth org-col access-cell">
-                <a [routerLink]="['/organization', org.orgKey.trim()]">{{orgName(org.orgKey)}}</a>
-              </div>
-              <div class="usa-width-one-sixth org-level-col access-cell">{{orgLevel(org.orgKey)}}&nbsp;</div>
-              <div class="usa-width-one-half functions-col background-grey access-cell">
-                <div class="pip-left">&nbsp;</div>
-                <ng-container *ngFor="let func of org.functionMapContent">
-                  <div class="usa-grid-full functions-row">
-                    <div class="usa-width-one-third object-col">{{func.function.val | capitalize}}</div>
-                    <div class="usa-width-two-thirds permissions-col">
-                      <span class="pull-left" *ngFor="let perm of func.permission; let lastPermission = last">{{perm.val | capitalize}}<span *ngIf="!lastPermission">,&nbsp;</span></span>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
-              <div class="usa-width-one-sixth">
-                <span class="pull-right">
-                  <button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-pencil"></i></button>
-                  &nbsp;
-                  <button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-trash"></i></button>
-                </span>
-              </div>
+          <div class="usa-width-two-thirds">
+            Agency User
+          </div>
+          <div class="usa-width-one-sixth no-wrap modify-role-buttons">
+            <button class="usa-button-transparent m_T-0"><i class="fa fa-edit"></i>&nbsp;Edit</button>
+            <button class="usa-button-transparent m_T-0"><i class="fa fa-trash"></i>&nbsp;Delete</button>
+          </div>
+        </div>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-sixth">
+            Organizations
+          </div>
+          <div class="usa-width-five-sixths">
+            <div *ngFor="let org of [1, 2, 3]; let lastOrg=last;">
+              Org {{org}}
+              <button *ngIf="lastOrg" class="usa-button-transparent pull-right show-permissions-button m_0"><i class="fa" [ngClass]="domain.isOpen ? 'fa-minus' : 'fa-plus'"></i>&nbsp;Show Permissions</button>
             </div>
-          </ng-container>
-        </samAccordionSection>
-      </samAccordion>
+           </div>
+        </div>
+      </div>
+      <!--<samAccordion *ngFor="let domain of role.roleData | groupByDomain" [bordered]="true" [expandIndex]="showCollapse ? 0 : -1">-->
+        <!--<samAccordionSection [headerText]="domain.val" [name]="'domain-'+domain.val">-->
+          <!--<div class="usa-grid-full permissions-table-header">-->
+            <!--<div class="usa-width-one-sixth"><strong>Organization:</strong></div>-->
+            <!--<div class="usa-width-one-sixth"><strong>Level:</strong></div>-->
+            <!--<div class="usa-width-one-sixth"><strong>Object:</strong></div>-->
+            <!--<div class="usa-width-one-third"><strong>Permissions:</strong></div>-->
+            <!--<div class="usa-width-one-sixth">&nbsp;</div>-->
+          <!--</div>-->
+          <!--<ng-container *ngFor="let org of domain.organizations">-->
+            <!--<div class="usa-grid-full permissions-table-row">-->
+              <!--<div class="usa-width-one-sixth org-col access-cell">-->
+                <!--<a [routerLink]="['/organization', org.orgKey.trim()]">{{orgName(org.orgKey)}}</a>-->
+              <!--</div>-->
+              <!--<div class="usa-width-one-sixth org-level-col access-cell">{{orgLevel(org.orgKey)}}&nbsp;</div>-->
+              <!--<div class="usa-width-one-half functions-col background-grey access-cell">-->
+                <!--<div class="pip-left">&nbsp;</div>-->
+                <!--<ng-container *ngFor="let func of org.functionMapContent">-->
+                  <!--<div class="usa-grid-full functions-row">-->
+                    <!--<div class="usa-width-one-third object-col">{{func.function.val | capitalize}}</div>-->
+                    <!--<div class="usa-width-two-thirds permissions-col">-->
+                      <!--<span class="pull-left" *ngFor="let perm of func.permission; let lastPermission = last">{{perm.val | capitalize}}<span *ngIf="!lastPermission">,&nbsp;</span></span>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                <!--</ng-container>-->
+              <!--</div>-->
+              <!--<div class="usa-width-one-sixth">-->
+                <!--<span class="pull-right">-->
+                  <!--<button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-pencil"></i></button>-->
+                  <!--&nbsp;-->
+                  <!--<button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-trash"></i></button>-->
+                <!--</span>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</ng-container>-->
+        <!--</samAccordionSection>-->
+      <!--</samAccordion>-->
     </div>
   </ng-container>
 </div>
