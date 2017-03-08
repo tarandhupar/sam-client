@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 
 import {WorkspacePage} from './workspace.page';
 import {ProgramService, SamAPIKitModule} from 'api-kit';
-import {SamUIKitModule} from 'ui-kit';
+import {SamUIKitModule} from 'sam-ui-kit';
 import {AppComponentsModule} from '../app-components/app-components.module';
 import {AssistanceProgramResult} from '../federal-assistance-program/program-result/assistance-program-result.component';
 
@@ -65,5 +65,6 @@ describe('WorkspacePage', () => {
     fixture.componentInstance.runProgram();
       expect(fixture.componentInstance.data[0].data.title).toBe("Yukon River Salmon Research and Management Assistance");
   });
+
 });
 
