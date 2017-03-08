@@ -78,12 +78,16 @@
 				<h2 id="">General Information</h2>
 				<h3 id="transactionInforation">Transaction Information</h3>
 				<div class="usa-width-one-half">
-					IDV Type: {{awardData.transactionInformation.type}}<br />
+					<div class="display-inline" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA'">Award Type:</div>
+					<div class="display-inline" *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'">IDV Type:</div>
+					{{awardData.transactionInformation.type}}<br />
 					Prepared Date: {{awardData.transactionInformation.preparedDate}}<br />
 					Prepared User: {{awardData.transactionInformation.preparedUser}}
 				</div>
 				<div class="usa-width-one-half">
-					IDV Status: {{awardData.transactionInformation.status}}<br />
+					<div class="display-inline" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA'">Award Status:</div>
+					<div class="display-inline" *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'">IDV Status:</div>
+					{{awardData.transactionInformation.status}}<br />
 					Last Modified Date: {{awardData.transactionInformation.lastModifiedDate}}<br />
 					Last Modified User: {{awardData.transactionInformation.lastModifiedUser}}
 				</div>
