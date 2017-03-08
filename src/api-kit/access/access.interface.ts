@@ -21,6 +21,11 @@ export interface UserAccessInterface {
           "permission"?: Array<IdVal>
         }>
       }
+      organizationIds?: Array<string>,
+      "functionMapContent"?: Array<{
+        "function"?: IdVal,
+        "permission"?: Array<IdVal>
+      }>
       "domain"?: IdVal,
       "email"?: string,
     }>,
@@ -30,4 +35,8 @@ export interface UserAccessInterface {
       "href"?: string
     }
   }
+}
+
+export interface UserAccessInterface2 {
+
 }

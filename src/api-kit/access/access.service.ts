@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from "rxjs";
 import { UserAccessInterface } from './access.interface';
-import {RoleInterface} from "./roles.interface";
+import { RoleInterface } from "./roles.interface";
+import * as _ from 'lodash';
 
 export interface UserAccessFilterOptions {
   domainIds?: (string|number)[],
@@ -27,7 +28,7 @@ export class UserAccessService {
       name: 'access',
       suffix: '/' + userId + '/',
       method: 'GET',
-      oParam: { fetchNames: 'true' }
+      oParam: {fetchNames: 'true'}
     };
 
     if (filterOptions) {
@@ -52,7 +53,55 @@ export class UserAccessService {
       }
     }
 
-    return this.apiService.call(apiOptions);
+    // return this.apiService.call(apiOptions);
+    return Observable.of({
+      domains: [
+        {
+          id: 1,
+          value: 'AWARD',
+          roles: [
+            {
+              id: 3,
+              value: 'REPORTS',
+              functions: [
+                {
+                  id: 15,
+                  value: 'ALERTS',
+                  permissions: [
+                    {
+                      id: 17,
+                      value: 'EDIT'
+                    },
+                    {
+                      id: 18,
+                      value: 'DELETE'
+                    },
+                  ]
+                },
+                {
+                  id: 10,
+                  value: 'FUNCTION 10',
+                  permissions: [
+                    {
+                      id: 17,
+                      value: 'EDIT'
+                    },
+                    {
+                      id: 18,
+                      value: 'DELETE'
+                    },
+                  ]
+                }
+              ],
+              organizationIds: [
+                "100000012",
+                "100000013"
+              ]
+            },
+          ]
+        }
+      ]
+    })
   }
 
   getRoles(): Observable< Array<RoleInterface> > {
