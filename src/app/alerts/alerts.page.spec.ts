@@ -1,12 +1,12 @@
 import { TestBed, async } from '@angular/core/testing';
-import { SystemAlertsService } from "api-kit/system-alerts/system-alerts.service";
-import { Observable } from "rxjs";
-import { AlertItemComponent } from "./alert-item/alert-item.component";
-import { SamUIKitModule } from 'ui-kit';
-import { Router } from "@angular/router";
-import { RouterTestingModule } from "@angular/router/testing";
-import { AlertsPage } from "./alerts.page";
-import { DateFormatPipe } from "../app-pipes/date-format.pipe";
+import { SystemAlertsService } from 'api-kit/system-alerts/system-alerts.service';
+import { Observable } from 'rxjs';
+import { AlertItemComponent } from './alert-item/alert-item.component';
+import { SamUIKitModule } from 'sam-ui-kit';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AlertsPage } from './alerts.page';
+import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 
 import { By } from "@angular/platform-browser";
 import { HttpModule } from '@angular/http';
@@ -20,7 +20,7 @@ import { WrapperService } from "../../api-kit/wrapper/wrapper.service";
 import { error, info, warning } from './alerts-test-data.spec';
 
 class RouterStub {
-  navigate(url:string) {
+  navigate(url: string) {
     return url;
   }
 }

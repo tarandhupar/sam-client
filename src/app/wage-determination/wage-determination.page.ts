@@ -5,7 +5,7 @@ import { WageDeterminationService } from "api-kit";
 import { ReplaySubject, Observable } from "rxjs";
 import * as _ from 'lodash';
 import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-object.pipe";
-import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
+import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
 
 
 @Component({
@@ -20,7 +20,7 @@ export class WageDeterminationPage implements OnInit {
   wageDetermination: any;
   isSCA: boolean;
   referenceNumber: any;
-  revisionNumber:any;
+  revisionNumber: any;
   currentUrl: string;
   dictionaries: any;
   services: string;

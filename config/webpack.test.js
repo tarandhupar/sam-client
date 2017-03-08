@@ -48,7 +48,10 @@ var conf = {
      * Make sure root is src
      */
     root: helpers.root('src'),
-
+    // aliases
+    alias: {
+      "sam-ui-kit": helpers.root('src') + '/sam-ui-elements/src/ui-kit'
+    },
   },
 
   /**
@@ -73,7 +76,7 @@ var conf = {
       {
         test: /\.ts$/,
         loader: 'tslint-loader',
-        exclude: [helpers.root('node_modules')]
+        exclude: [helpers.root('node_modules'),helpers.root('src/sam-ui-elements')]
       },
 
       /**
