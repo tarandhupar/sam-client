@@ -32,13 +32,19 @@ export class SearchService {
       oApiParam.oParam['construction_type'] = obj.conType;
     }
 
-    // selectStateModel
+    // state filter
     if(typeof obj.state !== 'undefined' && obj.state !== null && obj.state !== '') {
       oApiParam.oParam['state'] = obj.state;
     }
 
+    // county filter
     if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
       oApiParam.oParam['county'] = obj.county;
+    }
+
+    // service filter
+    if(typeof obj.service !== 'undefined' && obj.service !== null && obj.service !== '') {
+      oApiParam.oParam['service'] = obj.service;
     }
 
     // is active filter

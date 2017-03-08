@@ -44,7 +44,7 @@ export class SearchPage implements OnInit{
       {value: 'sca', label: 'Service Contract Act (SCA)', name: 'radio-sca'},
       {value: 'dbra', label: 'Davis-Bacon Act (DBA)', name: 'radio-dba'}
     ],
-    name: 'radio-component',
+    name: 'wageDeterminationRad',
     label: '',
     errorMessage: '',
     hint: ''
@@ -87,11 +87,11 @@ export class SearchPage implements OnInit{
   wdPreviouslyPerformedModel = '';
   wdPreviouslyPerformedConfig = {
     options:  [
-      {value: 'prevPerfYesLocality', label: 'Yes, in the same locality', name: 'empty'},
-      {value: 'prevPerfYesDifferentLocality', label: 'Yes, but in a different locality', name: 'empty'},
-      {value: 'prevPerfNo', label: 'No, not performed before', name: 'empty'}
+      {value: 'prevPerfYesLocality', label: 'Yes, in the same locality', name: 'prevYesLocality'},
+      {value: 'prevPerfYesDifferentLocality', label: 'Yes, but in a different locality', name: 'prevYesDifferentLocality'},
+      {value: 'prevPerfNo', label: 'No, not performed before', name: 'prevNo'}
     ],
-    name: 'radio-component',
+    name: 'previousPerformedRad',
     label: 'Were these services previously performed under an SCA-Covered contract?',
     errorMessage: '',
     hint: ''
@@ -101,11 +101,11 @@ export class SearchPage implements OnInit{
   wdSubjectToCBAModel = '';
   wdSubjectToCBAConfig = {
     options:  [
-      {value: 'yesBasedCBA', label: 'Yes, and the current contract is based on a CBA', name: 'empty'},
-      {value: 'yesUnbasedCBA', label: 'Yes, but the current contract is not based on a CBA', name: 'empty'},
-      {value: 'noCBA', label: 'No, not performed before', name: 'empty'}
+      {value: 'yesBasedCBA', label: 'Yes, and the current contract is based on a CBA', name: 'cbaYesBased'},
+      {value: 'yesUnbasedCBA', label: 'Yes, but the current contract is not based on a CBA', name: 'cbaYesUnbased'},
+      {value: 'noCBA', label: 'No', name: 'cbaNo'}
     ],
-    name: 'radio-component',
+    name: 'cbaRad',
     label: 'Were the employees working subject to a CBA?',
     errorMessage: '',
     hint: ''
@@ -113,27 +113,27 @@ export class SearchPage implements OnInit{
 
 
   // Select NonStandard Services - Radio Buttons
-  wdNonStandardServicesModel = '';
-  wdNonStandardServicesConfig = {
+  wdNonStandardRadModel = '';
+  wdNonStandardRadConfig = {
     options:  [
-      {value: 'yesNSS', label: 'Yes', name: 'empty'},
-      {value: 'noNSSEven', label: 'No, and the SCA WD ends in an even number', name: 'empty'},
-      {value: 'noNSSOdd', label: 'No, and the SCA WD ends in an odd number', name: 'empty'}
+      {value: 'yesNSS', label: 'Yes', name: '6'},
+      {value: 'noNSSEven', label: 'No, and the SCA WD ends in an even number', name: '8'},
+      {value: 'noNSSOdd', label: 'No, and the SCA WD ends in an odd number', name: '8'}
     ],
-    name: 'radio-component',
+    name: 'radio-component4',
     label: 'Are the contract services to be performed listed below as Non-Standard Services?',
     errorMessage: '',
     hint: ''
   };
 
   // Select NonStandard Service, Service - drop down
-  wdServiceModel = '';
-  wdServiceConfig = {
+  wdNonStandardSelectModel = '';
+  wdNonStandardSelectConfig = {
     options: [
       {value:'', label: 'Default option', name: 'empty', disabled: true},
     ],
     disabled: false,
-    label: 'Select Construction Type',
+    label: 'If yes, select the services to be performed',
     name: 'constructionType',
   };
 
@@ -204,6 +204,10 @@ export class SearchPage implements OnInit{
       qsobj['county'] = this.wdCountyModel;
     }
 
+    if(this.wdNonStandardSelectModel.length>0){
+      qsobj['service'] = this.wdNonStandardSelectModel;
+    }
+
     return qsobj;
   }
 
@@ -213,6 +217,7 @@ export class SearchPage implements OnInit{
       this.getCountyByState(this.wdStateModel);
       this.determineEnableCountySelect();
       this.getDictionaryData('dbraConstructionTypes');
+      this.getDictionaryData('scaServices')
     }
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
@@ -253,7 +258,8 @@ export class SearchPage implements OnInit{
       wdType : this.wdTypeModel,
       conType : this.wdConstructModel,
       state: this.wdStateModel,
-      county: this.wdCountyModel
+      county: this.wdCountyModel,
+      service: this.wdNonStandardSelectModel
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -294,7 +300,7 @@ export class SearchPage implements OnInit{
     this.qParams = this.setupQS(false);
   }
 
-  // get dictionary data from dictionary API for samselects
+  // get dictionary data from dictionary API for samselects and map the response array to properly set config options
   getDictionaryData(id){
     this.wageDeterminationService.getWageDeterminationFilterData({
      ids: id
@@ -331,6 +337,21 @@ export class SearchPage implements OnInit{
             reformattedArray.unshift(defaultSelection);
             this.selectConstructConfig.options = reformattedArray;
           }
+
+          // scaServices type data
+          else if(id === 'scaServices'){
+            var reformattedArray = data._embedded.dictionaries[0].elements.map(function(serviceItem){
+              let newObj = {label:'', value:''};
+
+              newObj.label = serviceItem.value;
+              newObj.value = serviceItem.elementId;
+              return newObj;
+            });
+            // adding the default selection row to the array
+            reformattedArray.unshift(defaultSelection);
+            this.wdNonStandardSelectConfig.options = reformattedArray;
+          }
+
         },
       error => {
         console.error("Error!!", error);
@@ -391,6 +412,8 @@ export class SearchPage implements OnInit{
     document.getElementById('search-results').getElementsByTagName('div')[0].focus();
     this.router.navigate(['/search'],navigationExtras);
   }
+
+  // FILTER SELECTION CHANGE FUNCTIONS
 
   activeFilter(event) {
     this.isActive = !this.isActive;
@@ -498,4 +521,36 @@ export class SearchPage implements OnInit{
     this.router.navigate(['/search'], navigationExtras);
   }
 
+  // previously performed selection
+  wdPreviouslyPerformedChanged(event){
+    console.log('previously performed selection: ', this.wdPreviouslyPerformedModel);
+  }
+
+  // subject to change selection
+  wdSubjectToCBAChanged(event){
+    console.log('subject to CBA selection: ', this.wdSubjectToCBAModel);
+  }
+
+  // non standard services radio button selection
+  wdNonStandardRadChanged(event){
+    console.log('non-standard rad selection: ', this.wdNonStandardRadModel);
+  }
+
+  // non standard services drop down selection
+  wdNonStandardSelectChanged(event){
+    console.log('non-standard drop-down selection: ', this.wdNonStandardSelectModel);
+
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
+
+  // this calls function to set up ES query params again and re-call the search endpoint with updated params
+  searchResultsRefresh(){
+    var qsobj = this.setupQS(false);
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/search'], navigationExtras);
+  }
 }

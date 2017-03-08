@@ -83,7 +83,7 @@
               </sam-collapsible>
 
               <!--*** SCA Specific Filters ***-->
-              <sam-collapsible [label]="'SCA: Previously Performed'" [startOpened]="true" *ngIf="index === 'wd'">
+              <sam-collapsible [label]="'SCA: Previously Performed'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'sca'">
 
                 <!--previously performed-->
                 <samRadioButton
@@ -97,7 +97,8 @@
                 </samRadioButton>
               </sam-collapsible>
 
-              <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true" *ngIf="index === 'wd'">
+              <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true"
+                               *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality'">
 
                 <!--Subject to CBA-->
                 <samRadioButton
@@ -111,29 +112,30 @@
                 </samRadioButton>
               </sam-collapsible>
 
-              <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true" *ngIf="index === 'wd'">
+              <sam-collapsible [label]="'SCA: Non-Standard Services'" [startOpened]="true"
+                               *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA' ">
 
                 <!--Non-Standard Services radio buttons-->
                 <samRadioButton
-                  [(model)]="wdSubjectToCBAModel"
-                  [options]="wdSubjectToCBAConfig.options"
-                  [label]="wdSubjectToCBAConfig.label"
-                  [hint]="wdSubjectToCBAConfig.hint"
-                  [name]="wdSubjectToCBAConfig.name"
-                  [errorMessage]="wdSubjectToCBAConfig.errorMessage"
-                  (modelChange)="wdSubjectToCBAChanged($event)">
+                  [(model)]="wdNonStandardRadModel"
+                  [options]="wdNonStandardRadConfig.options"
+                  [label]="wdNonStandardRadConfig.label"
+                  [hint]="wdNonStandardRadConfig.hint"
+                  [name]="wdNonStandardRadConfig.name"
+                  [errorMessage]="wdNonStandardRadConfig.errorMessage"
+                  (modelChange)="wdNonStandardRadChanged($event)">
                 </samRadioButton>
 
                 <!--Non-Standard Services drop down select-->
-                <samSelect
-                  [(model)]="wdConstructModel"
-                  [name]="selectConstructConfig.name"
-                  [options]="wdServiceConfig.options"
-                  [label]="wdServiceConfig.label"
-                  [hint]="wdServiceConfig.hint"
-                  [errorMessage]="wdServiceConfig.errorMessage"
-                  [disabled]="wdServiceConfig.disabled"
-                  (modelChange)="constructionTypeChange($event)">>
+                <samSelect *ngIf="wdNonStandardRadModel === 'yesNSS'"
+                  [(model)]="wdNonStandardSelectModel"
+                  [name]="wdNonStandardSelectConfig.name"
+                  [options]="wdNonStandardSelectConfig.options"
+                  [label]="wdNonStandardSelectConfig.label"
+                  [hint]="wdNonStandardSelectConfig.hint"
+                  [errorMessage]="wdNonStandardSelectConfig.errorMessage"
+                  [disabled]="wdNonStandardSelectConfig.disabled"
+                  (modelChange)="wdNonStandardSelectChanged($event)">
                 </samSelect>
 
               </sam-collapsible>
