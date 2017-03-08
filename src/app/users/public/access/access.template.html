@@ -16,32 +16,39 @@
       <h2>
         <!--{{role.role.val}}-->
         Domain {{domain.id}}
-        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapse All</a>
-        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
+        <a class="usa-button usa-button-transparent pull-right" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapse All</a>
+        <a class="usa-button usa-button-transparent pull-right" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
       </h2>
-      <div class="background-grey p_All-3x">
-        <div class="usa-grid-full">
-          <div class="usa-width-one-sixth">
-            Role
+      <div class="background-grey" *ngFor="let role of [{id: 1}, {id: 2}]">
+        <div class="p_All-3x">
+          <div class="usa-grid-full">
+            <div class="usa-width-one-sixth">
+              <strong>Role {{role.id}}</strong>
+            </div>
+            <div class="usa-width-two-thirds">
+              Agency User
+            </div>
+            <div class="usa-width-one-sixth no-wrap modify-role-buttons">
+              <div class="pull-right">
+                <button class="usa-button-transparent m_T-0 underline"><i class="fa fa-edit"></i>&nbsp;Edit</button>
+                <button class="usa-button-transparent m_T-0 m_R-0 underline"><i class="fa fa-trash"></i>&nbsp;Delete</button>
+              </div>
+            </div>
           </div>
-          <div class="usa-width-two-thirds">
-            Agency User
-          </div>
-          <div class="usa-width-one-sixth no-wrap modify-role-buttons">
-            <button class="usa-button-transparent m_T-0"><i class="fa fa-edit"></i>&nbsp;Edit</button>
-            <button class="usa-button-transparent m_T-0"><i class="fa fa-trash"></i>&nbsp;Delete</button>
+          <div class="usa-grid-full">
+            <div class="usa-width-one-sixth">
+              <strong>Organizations</strong>
+            </div>
+            <div class="usa-width-five-sixths">
+              <div *ngFor="let org of [1, 2, 3]; let lastOrg=last;">
+                Org {{org}}
+                <button (click)="onShowPermissionsClick(role)" *ngIf="lastOrg" class="usa-button-transparent pull-right show-permissions-button m_0 underline"><i class="fa" [ngClass]="role.isOpen ? 'fa-minus' : 'fa-plus'"></i>&nbsp;Show Permissions</button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="usa-grid-full">
-          <div class="usa-width-one-sixth">
-            Organizations
-          </div>
-          <div class="usa-width-five-sixths">
-            <div *ngFor="let org of [1, 2, 3]; let lastOrg=last;">
-              Org {{org}}
-              <button *ngIf="lastOrg" class="usa-button-transparent pull-right show-permissions-button m_0"><i class="fa" [ngClass]="domain.isOpen ? 'fa-minus' : 'fa-plus'"></i>&nbsp;Show Permissions</button>
-            </div>
-           </div>
+        <div class="background-white permissions-block p_All-3x" *ngIf="role.isOpen">
+          Test
         </div>
       </div>
       <!--<samAccordion *ngFor="let domain of role.roleData | groupByDomain" [bordered]="true" [expandIndex]="showCollapse ? 0 : -1">-->

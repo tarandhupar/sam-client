@@ -146,6 +146,10 @@ export class UserAccessPage implements OnInit {
     this.showCollapse = true;
   }
 
+  onShowPermissionsClick(role) {
+    role.isOpen = !role.isOpen;
+  }
+
   hasSelectAll(options) {
     return options.length > 4;
   }
