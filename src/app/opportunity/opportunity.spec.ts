@@ -8,16 +8,16 @@ import { Location, LocationStrategy, HashLocationStrategy } from '@angular/commo
 
 import { OpportunityPage } from './opportunity.page';
 import { OpportunityService, FHService } from 'api-kit';
-import { OpportunityFields } from "./opportunity.fields";
+import { OpportunityFields } from './opportunity.fields';
 
 import { Observable } from 'rxjs';
-import { PipesModule } from "../app-pipes/app-pipes.module";
-import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
-import { TimezoneLabelPipe } from "./pipes/timezone-label.pipe";
-import { FixHTMLPipe } from "./pipes/fix-html.pipe";
-import {FilesizePipe} from "./pipes/filesize.pipe";
-import { SamUIKitModule } from 'ui-kit';
-import { HistoryComponent } from "../app-components/history/history.component";
+import { PipesModule } from '../app-pipes/app-pipes.module';
+import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
+import { TimezoneLabelPipe } from './pipes/timezone-label.pipe';
+import { FixHTMLPipe } from './pipes/fix-html.pipe';
+import { FilesizePipe } from './pipes/filesize.pipe';
+import { SamUIKitModule } from 'sam-ui-kit';
+import { HistoryComponent } from '../app-components/history/history.component';
 
 let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;

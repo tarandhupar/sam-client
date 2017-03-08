@@ -1,5 +1,5 @@
 import { Routes, RouterModule } from '@angular/router';
-import {UIKitDemoPage} from "./ui-kit-demo.page";
+import { UIKitDemoPage } from './ui-kit-demo.page';
 
 export let routes: Routes = [];
 
