@@ -46,17 +46,43 @@ export class ExclusionsResult implements OnInit {
   @Input() data: any={};
   @Input() qParams:any = {};
   uniqueIdentifier: string;
+  samNumberConcat:string;
+  orgIdConcat:string;
+  typeConcat:string;
+  cageCodeConcat:string;
   constructor() { }
 
   ngOnInit(){
 
-    if(this.data.organizationHierarchy!=null && this.data.organizationHierarchy.organizationId!=null){
-      this.uniqueIdentifier=this.data.samNumber + '+' + this.data.organizationHierarchy.organizationId + '+' + this.data.type + '+' + this.data.cageCode;
+    if(this.data.organizationHierarchy!=null && this.data.organizationHierarchy.organizationId!=null && this.data.organizationHierarchy.organizationId.length > 0){
+      this.orgIdConcat=this.data.organizationHierarchy.organizationId;
     }
     else {
-      this.uniqueIdentifier = this.data.samNumber + '+NA+' + this.data.type + '+' + this.data.cageCode;
+      this.orgIdConcat='NA';
     }
 
+    if(this.data.samNumber!=null && this.data.samNumber.length > 0){
+      this.samNumberConcat=this.data.samNumber;
+    }
+    else {
+      this.samNumberConcat='NA';
+    }
+
+    if(this.data.type!=null && this.data.type.length > 0){
+      this.typeConcat=this.data.type;
+    }
+    else {
+      this.typeConcat='NA';
+    }
+
+    if(this.data.cageCode!=null && this.data.cageCode.length > 0){
+      this.cageCodeConcat=this.data.cageCode;
+    }
+    else {
+      this.cageCodeConcat='NA';
+    }
+
+    this.uniqueIdentifier=this.samNumberConcat + '+' + this.orgIdConcat + '+' + this.typeConcat + '+' + this.cageCodeConcat;
 
 
     if(this.data.activationDate!==null) {
