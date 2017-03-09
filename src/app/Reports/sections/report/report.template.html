@@ -12,7 +12,7 @@ Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
           <div *ngIf="id">
           <ul type="none">
-            <li *ngFor="let report of data.reports | repfil: id">
+            <li *ngFor="let report of data.reports">
               <b><a href="{{report.name}}"></a></b>
               <br>
 
