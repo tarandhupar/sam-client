@@ -68,6 +68,7 @@ export class App{
       qsobj['state'] = null;
       qsobj['county'] = null;
       qsobj['conType'] = null;
+      qsobj['service'] = null;
     }
 
     let navigationExtras: NavigationExtras = {

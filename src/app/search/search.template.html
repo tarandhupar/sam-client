@@ -150,10 +150,13 @@
   <div class="usa-width-three-fourths">
     <div class="usa-width-one">
       <samAlert *ngIf="wdTypeModel" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
-      <samAlert *ngIf="wdConstructModel" [type]="'success'" [dismissTimer]="'5000'" [title]="'Search Criteria Complete'"></samAlert>
       <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
+      <h2 *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'">
+        Please navigate to the <a href="https://www.wdol.gov/">Service Contract Act</a> section of the legacy WDOL site to retrieve
+        a Collective Bargaining Agreement (CBA) WD or to create a new CBA WD
+      </h2>
     </div>
-    <div class="usa-width-one">
+    <div class="usa-width-one" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
       <div *ngIf="showOptional" class="usa-width-one">
         <h3>Common Filters:</h3>
         <div class="usa-grid-full">
@@ -183,7 +186,7 @@
       </div>
     </div>
     <div *ngIf="data.results">
-      <div class="usa-width-one-whole">
+      <div class="usa-width-one-whole" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
         <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
       </div>
     </div>

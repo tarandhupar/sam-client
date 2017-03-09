@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import {WageDeterminationService} from "../../api-kit/wage-determination/wage-determination.service";
+import { AlertFooterService } from '../alerts/alert-footer';
 
 @Component({
   moduleId: __filename,
@@ -139,7 +140,11 @@ export class SearchPage implements OnInit{
 
   wdSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result."
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private searchService: SearchService, private wageDeterminationService: WageDeterminationService) { }
+  constructor(private activatedRoute: ActivatedRoute,
+              private router: Router,
+              private searchService: SearchService,
+              private wageDeterminationService: WageDeterminationService,
+              private alertFooterService: AlertFooterService) { }
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       data => {
@@ -154,7 +159,7 @@ export class SearchPage implements OnInit{
         this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : '';
         this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : '';
         this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : '';
-        //this.wdNonStandardSelectModel = data['state'] && data['state'] !== null ? data['state'] : '';
+        this.wdNonStandardSelectModel = data['service'] && data['service'] !== null ? data['service'] : '';
         //this.wdNonStandardRadModel = data['state'] && data['state'] !== null ? data['state'] : '';
         //this.wdSubjectToCBAModel = data['state'] && data['state'] !== null ? data['state'] : '';
         //this.wdPreviouslyPerformedModel = data['state'] && data['state'] !== null ? data['state'] : '';
@@ -162,6 +167,7 @@ export class SearchPage implements OnInit{
         this.loadParams();
       });
   }
+
 
   loadParams(){
     var qsobj = this.setupQS(false);
@@ -441,6 +447,16 @@ export class SearchPage implements OnInit{
   constructionTypeChange(event){
     this.pageNum = 0;
 
+    if(this.wdConstructModel){
+      this.alertFooterService.registerFooterAlert({
+        title: "Search Criteria Complete",
+        description: "",
+        type: "success",
+        timer: 5000
+      });
+    }
+
+
     this.searchResultsRefresh()
   }
 
@@ -505,11 +521,23 @@ export class SearchPage implements OnInit{
   // subject to change selection
   wdSubjectToCBAChanged(event){
     console.log('subject to CBA selection: ', this.wdSubjectToCBAModel);
+
+    // if the subject to change selection is based or unbased yes show
+    if(this.wdSubjectToCBAModel === 'yesBasedCBA' || this.wdSubjectToCBAModel === 'yesUnbasedCBA'){
+      this.alertFooterService.registerFooterAlert({
+        title: "Search Criteria Complete",
+        description: "",
+        type: "success",
+        timer: 3000
+      });
+    }
   }
 
   // non standard services radio button selection
   wdNonStandardRadChanged(event){
     console.log('non-standard rad selection: ', this.wdNonStandardRadModel);
+
+
   }
 
   // non standard services drop down selection
