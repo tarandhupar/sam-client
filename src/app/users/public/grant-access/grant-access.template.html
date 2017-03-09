@@ -13,14 +13,13 @@
     [label]="'Organizations'"
     [multimode]="true"
     (organization)="onOrganizationsChange($event)"
-    required="true"
+    [required]="true"
     [searchMessage]="orgError"
   ></agencyPicker>
   <ng-container *ngIf="objects && objects.length">
     <div class="m_B-1x"><label>Permissions</label></div>
     <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
       <li  *ngFor="let object of objects" class="object-item">
-        <div class="object-title"><strong>{{object.function.val}}</strong>&nbsp;<i class="fa fa-info-circle" aria-hidden="true"></i></div>
         <div class="p_L-4x permission-list">
           <span *ngFor="let permission of object.permission" class="permission-control-group">
             <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
