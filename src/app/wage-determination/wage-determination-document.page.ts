@@ -7,7 +7,7 @@ import { WageDeterminationService } from "api-kit";
   moduleId: __filename,
   template: `
     <div class="usa-grid">
-      <div class="usa-width-whole">
+      <div class="usa-width-one-whole">
         <pre *ngIf="wageDetermination">
           {{wageDetermination.document}}
         </pre>
@@ -15,6 +15,9 @@ import { WageDeterminationService } from "api-kit";
     </div>
   `,
   styles:[`
+    pre{
+      width: 100%;
+    }
      @media print{
        body *{
          visibility: hidden;
