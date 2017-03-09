@@ -69,7 +69,6 @@ module.exports = {
    * See: http://webpack.github.io/docs/configuration.html#resolve
    */
   resolve: {
-
     /*
      * An array of extensions that should be used to resolve modules.
      *
@@ -80,8 +79,13 @@ module.exports = {
     // Make sure root is src
     root: helpers.root('src'),
 
+    // aliases
+    alias: {
+      "sam-ui-kit": helpers.root('src/sam-ui-elements/src/ui-kit')
+    },
+
     // remove other default values
-    modulesDirectories: ['node_modules'],
+    modulesDirectories: ['node_modules']
 
   },
 

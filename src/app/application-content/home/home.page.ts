@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router,NavigationExtras } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { globals } from '../../globals.ts';
 
 @Component({
