@@ -1,12 +1,13 @@
 import { Component, Output, EventEmitter, NgZone, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { routing } from './reports.route';
-import { ReportsPage} from './reports.page';
+import { ReportsPage } from './reports.page';
 import { OverviewComponent } from './sections/overview/overview.component';
+import { ScheduledComponent } from './sections/overview/scheduled/scheduled.component';
 import { ReportComponent } from './sections/report/report.component';
 import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { StaticComponent } from './sections/static/static.component';
-import { SamUIKitModule } from "ui-kit/ui-kit.module";
+import { SamUIKitModule } from 'sam-ui-kit';
 import { IAMService } from 'api-kit';
 import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
@@ -20,6 +21,7 @@ import { globals } from '../../app/globals.ts';
   declarations: [
     ReportsPage,
     OverviewComponent,
+	ScheduledComponent,
     ReportComponent,
     AdhocComponent,
     StaticComponent

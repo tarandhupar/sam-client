@@ -1,22 +1,22 @@
-import {TestBed,inject} from '@angular/core/testing';
-import {Observable} from 'rxjs';
-import { By } from '@angular/platform-browser';
+import { TestBed,inject } from '@angular/core/testing';
+import { Observable } from 'rxjs';
+import {  By  } from '@angular/platform-browser';
 
 // Load the implementations that should be tested
-import {AlertFooterComponent} from './alert-footer.component';
-import {SamUIKitModule} from 'ui-kit';
-import {AlertFooterService} from "./alert-footer.service";
+import { AlertFooterComponent } from './alert-footer.component';
+import { SamUIKitModule } from 'sam-ui-kit';
+import { AlertFooterService } from './alert-footer.service';
 
 
 describe('The AlertFooter component', () => {
-  let component:AlertFooterComponent;
-  let fixture:any;
+  let component: AlertFooterComponent;
+  let fixture: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [AlertFooterComponent],
-      imports: [SamUIKitModule],
-      providers: [AlertFooterService]
+      declarations: [ AlertFooterComponent ],
+      imports: [ SamUIKitModule ],
+      providers: [ AlertFooterService ]
     });
 
     fixture = TestBed.createComponent(AlertFooterComponent);

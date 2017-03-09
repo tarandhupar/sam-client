@@ -4,10 +4,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 
 // Load the implementations that should be tested
-import {SamUIKitModule} from 'ui-kit';
+import {SamUIKitModule} from 'sam-ui-kit';
 import {SamFeedbackComponent} from "./feedback-form.component";
 
-fdescribe('The Sam Footer component', () => {
+describe('The Sam Feedback component', () => {
   let component:SamFeedbackComponent;
   let fixture:any;
 
@@ -22,6 +22,7 @@ fdescribe('The Sam Footer component', () => {
   });
 
   it('should compile sam feedback component', function () {
+
     fixture.detectChanges();
     expect(true).toBe(true);
   });
