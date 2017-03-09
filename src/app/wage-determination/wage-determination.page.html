@@ -19,45 +19,51 @@
     <section id="wage-determination" *ngIf="wageDetermination">
 
       <ng-container *ngIf = "isSCA">
-        <h1>SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
-        <p class="usa-font-lead">Service Contract Act</p>
+        <h1 id="wd-reference-number">SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p id="wd-type" class="usa-font-lead">Service Contract Act</p>
       </ng-container>
       <ng-container *ngIf = "!isSCA">
-        <h1>DBA WD # {{wageDetermination.fullReferenceNumber}} </h1>
-        <p class="usa-font-lead">Davis-Bacon Act</p>
+        <h1 id="wd-reference-number">DBA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p id="wd-type" class="usa-font-lead">Davis-Bacon Act</p>
       </ng-container>
 
       <div class="usa-grid-full">
 
-        <div class="usa-width-one-half">
+        <div class="usa-width-two-thirds">
           <ul class="usa-unstyled-list">
-            <div class="m_T-3x m_B-3x" *ngFor="let location of locations">
-              <li>
+            <div class="m_B-3x" *ngFor="let location of locations; let i = index">
+              <li [attr.id]="'wd-state-' + i">
                 <strong>State: </strong> {{location.stateString}}
               </li>
-              <li>
+              <li [attr.id]="'wd-counties-' + i">
                 <strong>Counties: </strong> {{location.countiesString}}
               </li>
             </div>
           </ul>
         </div>
 
-        <div class="usa-width-one-half">
+        <div class="usa-width-one-third">
           <ul class="usa-unstyled-list">
-            <li *ngIf = "revisionNumber">
+            <li id="wd-revision-number" *ngIf = "revisionNumber">
               <strong>Revision #: </strong>
               {{revisionNumber}}
             </li>
-            <li *ngIf = "services">
+            <li id="wd-services" *ngIf = "services">
               <strong>Service/Services: </strong>
               {{services}}
             </li>
-            <li *ngIf = "constructionTypes">
+            <li id="wd-construction-types" *ngIf = "constructionTypes">
               <strong>Construction: </strong>
               {{constructionTypes}}
             </li>
-            <li *ngIf = "wageDetermination.publishDate">
-              <strong>Published Date: </strong>
+            <li id="wd-date" *ngIf = "wageDetermination.publishDate">
+              <ng-container *ngIf="isSCA">
+                <strong>Published Date: </strong>
+              </ng-container>
+              <ng-container *ngIf="!isSCA">
+                <strong *ngIf="revisionNumber && revisionNumber === '0'">Published Date: </strong>
+                <strong *ngIf="revisionNumber && revisionNumber !== '0'">Last Revised Date: </strong>
+              </ng-container>
               {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
             </li>
           </ul>
@@ -65,15 +71,15 @@
 
       </div>
 
-      <!-- Document -->
-      <textarea *ngIf="wageDetermination?.document" rows="50" cols="100">
-        {{ wageDetermination.document }}
-      </textarea>
-
       <!-- Print Link -->
-      <div *ngIf="wageDetermination?.document" class="centered m_B-5x m_T-5x">
+      <div id="wd-print-link" *ngIf="wageDetermination?.document" class="text-right m_B-5x m_T-5x">
         <a class="print-link" tabindex="0" (click)="openDocumentPrintPage()" (keyup.enter)="openDocumentPrintPage()">Printer Friendly Version</a>
       </div>
+
+      <!-- Document -->
+      <pre id="wd-document" *ngIf="wageDetermination?.document">
+        {{ wageDetermination.document }}
+      </pre>
     </section>
 
   </div>
