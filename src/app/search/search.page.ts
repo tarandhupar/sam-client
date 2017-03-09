@@ -143,6 +143,7 @@ export class SearchPage implements OnInit{
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       data => {
+        console.log('this is the data logged on init ', data);
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
@@ -153,6 +154,10 @@ export class SearchPage implements OnInit{
         this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : '';
         this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : '';
         this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : '';
+        //this.wdNonStandardSelectModel = data['state'] && data['state'] !== null ? data['state'] : '';
+        //this.wdNonStandardRadModel = data['state'] && data['state'] !== null ? data['state'] : '';
+        //this.wdSubjectToCBAModel = data['state'] && data['state'] !== null ? data['state'] : '';
+        //this.wdPreviouslyPerformedModel = data['state'] && data['state'] !== null ? data['state'] : '';
         this.runSearch();
         this.loadParams();
       });
@@ -418,11 +423,7 @@ export class SearchPage implements OnInit{
   activeFilter(event) {
     this.isActive = !this.isActive;
     this.pageNum = 0;
-    var qsobj = this.setupQS(false);
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/search'], navigationExtras);
+    this.searchResultsRefresh()
   }
 
   // event for wdFilter Change
@@ -432,21 +433,15 @@ export class SearchPage implements OnInit{
     }
     this.pageNum = 0;
     this.getDictionaryData('dbraConstructionTypes');
-    var qsobj = this.setupQS(false);
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/search'], navigationExtras);
+
+    this.searchResultsRefresh()
   }
 
   // event for construction type change
   constructionTypeChange(event){
     this.pageNum = 0;
-    var qsobj = this.setupQS(false);
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/search'], navigationExtras);
+
+    this.searchResultsRefresh()
   }
 
   // event for state change
@@ -462,20 +457,13 @@ export class SearchPage implements OnInit{
     // call method to get county data per state
     this.getCountyByState(this.wdStateModel);
 
-    var qsobj = this.setupQS(false);
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/search'], navigationExtras);
+    this.searchResultsRefresh()
   }
 
   countyChange(event){
     this.pageNum = 0;
-    var qsobj = this.setupQS(false);
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/search'], navigationExtras);
+
+    this.searchResultsRefresh()
   }
 
   // determines if state is populated and if not disables county select
@@ -492,33 +480,21 @@ export class SearchPage implements OnInit{
     this.wdStateModel = '';
     this.pageNum = 0;
 
-    var qsobj = this.setupQS(false);
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/search'], navigationExtras);
+    this.searchResultsRefresh()
   }
 
   wdCountyClear(){
     this.wdCountyModel = '';
     this.pageNum = 0;
 
-    var qsobj = this.setupQS(false);
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/search'], navigationExtras);
+    this.searchResultsRefresh()
   }
 
   wdConstructionClear(){
     this.wdConstructModel = '';
     this.pageNum = 0;
 
-    var qsobj = this.setupQS(false);
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/search'], navigationExtras);
+    this.searchResultsRefresh()
   }
 
   // previously performed selection
