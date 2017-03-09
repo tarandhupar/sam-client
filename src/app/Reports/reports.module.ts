@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { routing } from './reports.route';
 import { ReportsPage } from './reports.page';
 import { OverviewComponent } from './sections/overview/overview.component';
+import { ScheduledComponent } from './sections/overview/scheduled/scheduled.component';
 import { ReportComponent } from './sections/report/report.component';
 import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { StaticComponent } from './sections/static/static.component';
@@ -20,6 +21,7 @@ import { globals } from '../../app/globals.ts';
   declarations: [
     ReportsPage,
     OverviewComponent,
+	ScheduledComponent,
     ReportComponent,
     AdhocComponent,
     StaticComponent
