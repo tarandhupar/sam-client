@@ -7,6 +7,8 @@ import {ProgramService, SamAPIKitModule} from 'api-kit';
 import {SamUIKitModule} from 'sam-ui-kit';
 import {AppComponentsModule} from '../app-components/app-components.module';
 import {AssistanceProgramResult} from '../federal-assistance-program/program-result/assistance-program-result.component';
+import * as Cookies from 'js-cookie';
+import {Cookie} from "ng2-cookies";
 
 var fixture;
 
@@ -64,6 +66,17 @@ describe('WorkspacePage', () => {
   it('should "run" a search', () => {
     fixture.componentInstance.runProgram();
       expect(fixture.componentInstance.data[0].data.title).toBe("Yukon River Salmon Research and Management Assistance");
+  });
+  it('should "cookie" is undefined', () => {
+    fixture.componentInstance.ngOnInit();
+    expect(fixture.componentInstance.Cookies).toBe(undefined);
+  });
+  it('should get t"cookie" a search', () => {
+
+    fixture.componentInstance.Cookies.set("iPlanetDirectoryPro", "TEST-COOKIE");
+    fixture.componentInstance.ngOnInit();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.Cookies.get("iPlanetDirectoryPro")).toBe("TEST-COOKIE");
   });
 
 });
