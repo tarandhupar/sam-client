@@ -74,7 +74,7 @@
 
       <!-- Print Link -->
       <div id="wd-print-link" *ngIf="wageDetermination?.document" class="text-right m_B-5x m_T-5x">
-        <a class="print-link" tabindex="0" (click)="openDocumentPrintPage()" (keyup.enter)="openDocumentPrintPage()">Printer Friendly Version</a>
+        <a class="print-link" tabindex="0" [routerLink]="['/wage-determination', referenceNumber, revisionNumber, 'document']">Printer Friendly Version</a>
       </div>
 
       <!-- Document -->
