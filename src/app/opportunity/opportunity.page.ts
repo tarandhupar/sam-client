@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import {forEach} from "@angular/router/src/utils/collection";
 
 @Component({
   moduleId: __filename,
@@ -144,9 +145,10 @@ export class OpportunityPage implements OnInit {
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
-    let packagesOpportunities = this.loadAttachments(opportunityAPI);
     let relatedOpportunities = this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
-    this.loadHistory(opportunityAPI);
+    let historyAPI = this.loadHistory(opportunityAPI);
+
+    //let packagesOpportunities = this.loadAttachments(historyAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
 
     // Construct a new observable that emits both opportunity and its parent as a tuple
@@ -366,11 +368,17 @@ export class OpportunityPage implements OnInit {
     });
   }
 
-  private loadAttachments(opportunityAPI: Observable<any>){
+  private loadAttachments(historyAPI: Observable<any>){
+      historyAPI.subscribe(api =>{
+          api.content.history.forEach((res: any) => {
+            this.loadHistoryAttachments(res.notice_id);
+          });
+      });
+  }
+
+  private loadHistoryAttachments(historyId:any){
     let attachmentSubject = new ReplaySubject(1); // broadcasts the attachments to multiple subscribers
-    opportunityAPI.subscribe(api => {
-      this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
-    });
+    this.opportunityService.getAttachmentById(historyId).subscribe(attachmentSubject);
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
       this.attachment = attachment;
@@ -398,13 +406,15 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadHistory(opportunity: Observable<any>) {
+    let historySubject = new ReplaySubject(1);
+
     opportunity.subscribe(opportunityAPI => {
       if(opportunityAPI.opportunityId == '' || typeof opportunityAPI.opportunityId === 'undefined') {
         console.log('Error loading history');
         return;
       }
 
-      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historyAPI => {
+      historySubject.subscribe(historyAPI => {
         this.history = historyAPI; // save original history information in case it is needed
 
         // setup necessary items for processing history
@@ -433,7 +443,7 @@ export class OpportunityPage implements OnInit {
             let currentType = typeLabel.transform(type); // label for type of current history item
 
             switch(type) {
-                // For these types, show title as prefix and opportunity type
+              // For these types, show title as prefix and opportunity type
               case 'p': // Presolicitation
               case 'r': // Sources Sought
               case 's': // Special Notice
@@ -442,14 +452,14 @@ export class OpportunityPage implements OnInit {
               case 'k': // Combined Synopsis/Solicitation
                 return prefix + ' ' + currentType;
 
-                // For these types, show the opportunity type as the title with no prefix
+              // For these types, show the opportunity type as the title with no prefix
               case 'a': // Award Notice
               case 'j': // Justification and Approval (J&A)
               case 'i': // Intent to Bundle Requirements (DoD-Funded)
               case 'l': // Fair Opportunity / Limited Sources Justification
                 return currentType;
 
-                // For modifications or cancellations, show the appropriate prefix plus original opportunity type
+              // For modifications or cancellations, show the appropriate prefix plus original opportunity type
               case 'm': // Modification/Amendment/Cancel
                 return prefix + ' ' + originalType;
 
@@ -485,8 +495,14 @@ export class OpportunityPage implements OnInit {
             }
           });
         }
+      }, err => {
+        console.log('Error loading history: ', err);
       });
+
+      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
     });
+    return historySubject;
+
   }
 
   // Sets the correct displayField flags for this opportunity type
