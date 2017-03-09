@@ -75,7 +75,6 @@ export class UserAccessPage implements OnInit {
       queryParams: {
         role: role.id,
         domain: domain.id,
-        readOnly: true,
       }
     };
     this.router.navigate(['../edit-access'], extras);

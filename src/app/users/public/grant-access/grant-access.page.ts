@@ -30,6 +30,7 @@ export class GrantAccessPage implements OnInit {
   private objects = [];
 
   private messages: string = "";
+  private isEdit: boolean = false;
 
   constructor(
     private userService: UserAccessService,
@@ -43,6 +44,16 @@ export class GrantAccessPage implements OnInit {
 
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
+
+    console.log(this.route);
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.role = queryParams["role"];
+      this.domain = queryParams["domain"];
+    });
+
+    let match = this.router.url.match('edit-access');
+    this.isEdit = !!(match && match.length);
 
     this.userService.getRoles().subscribe(
       roles => {
