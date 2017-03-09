@@ -89,14 +89,17 @@ export const Validators = {
 
   consecutive(matches: string[]) {
     return (c: FormControl) => {
-      let match,
+      let value = (c.value || '').toLowerCase(),
+          match,
           intMatch,
           valid = true;
 
-      for(intMatch = 0; intMatch < matches.length; intMatch++) {
-        match = matches[intMatch] || '';
-        if(match.length && match.indexOf(c.value) > -1) {
-          valid = false;
+      if(value.length > 1) {
+        for(intMatch = 0; intMatch < matches.length; intMatch++) {
+          match = (matches[intMatch] || '').toLowerCase();
+          if(match.length && match.indexOf(value) > -1) {
+            valid = false;
+          }
         }
       }
 

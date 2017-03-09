@@ -210,7 +210,7 @@ export class RegisterMainComponent {
 
       title:         [''],
       firstName:     ['John', Validators.required],
-      middleName:    [''],
+      middleName:    ['J'],
       lastName:      ['Doe', Validators.required],
       suffix:        [''],
 
@@ -231,6 +231,7 @@ export class RegisterMainComponent {
     });
 
     this.user = this.userForm.value;
+    this.user.fullName = 'John J Doe';
 
     this.lookups.questions = [
       { 'id': 1,  'question': 'What was the make and model of your first car?' },

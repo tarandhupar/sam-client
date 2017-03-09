@@ -22,9 +22,8 @@
         </agencyPicker>
       </fieldset>
       <fieldset class="password">
-        {{user.firstName}}|{{user.middleName}}|{{user.lastName}}|{{user.email}}
         <sam-password [password]="userForm.controls.userPassword"
-                      [phrases]="[user.firstName, user.middleName, user.lastName, user.email]"
+                      [phrases]="[user.firstName, user.middleName, user.lastName, user.email, user.fullName]"
                       #passwordComponent></sam-password>
       </fieldset>
       <fieldset class="kba">
