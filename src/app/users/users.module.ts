@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 
-import {Ng2PageScrollModule} from 'ng2-page-scroll';
+import { Ng2PageScrollModule } from 'ng2-page-scroll';
 
 import { routing } from './users.route';
 import { SamUIKitModule } from 'sam-ui-kit';
@@ -20,6 +20,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
 import { GrantAccessPage } from "./public/grant-access/grant-access.page";
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
+import { EditDomainPage } from "./public/edit-domain/edit-domain.page";
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service"
     UserViewComponent,
     UserMigrationsPage,
     UserAccessPage,
+    EditDomainPage,
     GrantAccessPage,
     UserProfilePage,
     UserDirectoryPage,

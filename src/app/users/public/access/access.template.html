@@ -9,6 +9,28 @@
     <a [routerLink]="['../grant-access']" class="usa-button usa-button-success pull-right">Grant Access</a>
   </div>
 
+  <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()">
+    <p>Are you sure you wish to remove the following access?</p>
+    <div>
+      <div class="modal-subtitle">
+        <strong class="modal-subtitle">Domain:</strong>
+      </div>
+      <div>Domain {{modalData.domain.id}}</div>
+    </div>
+    <div>
+      <div class="modal-subtitle"><strong>Role:</strong></div>
+      <div>Role {{modalData.role.id}}</div>
+    </div>
+    <div>
+      <div class="modal-subtitle">
+        <strong>Organizations:</strong>
+      </div>
+      <div *ngFor="let org of modalData.orgs">
+        Organization {{org.id}}
+      </div>
+    </div>
+  </samModal>
+
   <!--<ng-container *ngIf="userAccessModel">-->
   <ng-container>
     <!--<div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">-->
@@ -19,7 +41,7 @@
         <a class="usa-button usa-button-transparent pull-right" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapse All</a>
         <a class="usa-button usa-button-transparent pull-right" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
       </h2>
-      <div class="background-grey" *ngFor="let role of [{id: 1}, {id: 2}]">
+      <div class="background-grey role-block" *ngFor="let role of [{id: 1}, {id: 2}]">
         <div class="p_All-3x">
           <div class="usa-grid-full">
             <div class="usa-width-one-sixth">
@@ -30,8 +52,8 @@
             </div>
             <div class="usa-width-one-sixth no-wrap modify-role-buttons">
               <div class="pull-right">
-                <button class="usa-button-transparent m_T-0 underline"><i class="fa fa-edit"></i>&nbsp;Edit</button>
-                <button class="usa-button-transparent m_T-0 m_R-0 underline"><i class="fa fa-trash"></i>&nbsp;Delete</button>
+                <button class="usa-button-transparent m_T-0 underline" (click)="onEditClick(role, domain)"><i class="fa fa-edit"></i>&nbsp;Edit</button>
+                <button (click)="onDeleteRoleClick(role)" class="usa-button-transparent m_T-0 m_R-0 underline"><i class="fa fa-trash"></i>&nbsp;Delete</button>
               </div>
             </div>
           </div>
@@ -47,8 +69,25 @@
             </div>
           </div>
         </div>
-        <div class="background-white permissions-block p_All-3x" *ngIf="role.isOpen">
-          Test
+        <div class="background-white permissions-block" *ngIf="role.isOpen">
+          <div class="border-bottom-black permissions-table-header">
+            <div class="usa-grid-full">
+              <div class="usa-width-one-fourth">
+                Object
+              </div>
+              <div class="usa-width-one-fourth">
+                Permissions
+              </div>
+            </div>
+          </div>
+          <div class="usa-grid-full permissions-table" *ngFor="let obj of [{id: 1}, {id: 2}]">
+            <div class="usa-width-one-fourth">
+              Object {{obj.id}}
+            </div>
+            <div class="usa-width-three-fourths">
+              <span *ngFor="let perm of [{id: 1}, {id: 2}]; let lastPermission=last">Permissions {{perm.id}}<span *ngIf="!lastPermission">, </span></span>
+            </div>
+          </div>
         </div>
       </div>
       <!--<samAccordion *ngFor="let domain of role.roleData | groupByDomain" [bordered]="true" [expandIndex]="showCollapse ? 0 : -1">-->

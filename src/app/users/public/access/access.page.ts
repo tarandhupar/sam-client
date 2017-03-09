@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { UserAccessService, UserAccessFilterOptions } from "api-kit/access/access.service";
 import { UserAccessModel } from "../../access.model";
-import { ActivatedRoute} from "@angular/router";
+import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 import { Organization } from "../../../organization/organization.model";
 import { Observable } from "rxjs";
 import { SamAccordionComponent } from "sam-ui-kit/components/accordion/accordion.component";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
+import { SamModalComponent } from "sam-ui-kit/components/modal";
 
 
 @Component({
@@ -28,14 +29,21 @@ export class UserAccessPage implements OnInit {
   private organizations: Organization[];
 
   @ViewChildren(SamAccordionComponent) allAccordions: QueryList<SamAccordionComponent>;
+  @ViewChild('deleteModal') deleteModal: SamModalComponent;
 
   private showCollapse = false;
   private capitalize = new CapitalizePipe();
+  private modalData = {
+    domain: {},
+    role: {},
+    orgs: []
+  };
 
   constructor(
     private userService: UserAccessService,
     private route: ActivatedRoute,
     private fhService: FHService,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -50,6 +58,31 @@ export class UserAccessPage implements OnInit {
 
       this.getOrganizationData(this.userAccessModel.allOrganizations());
     });
+  }
+
+  onDeleteRoleClick(role) {
+    this.modalData = {
+      domain: {id: 1},
+      role: {id: 1},
+      orgs: [{id: 1},{id: 2}]
+    };
+    this.deleteModal.openModal();
+  }
+
+  onEditClick(role, domain) {
+    let extras: NavigationExtras = {
+      relativeTo: this.route,
+      queryParams: {
+        role: role.id,
+        domain: domain.id,
+        readOnly: true,
+      }
+    };
+    this.router.navigate(['../edit-access'], extras);
+  }
+
+  onDeleteConfirm(role) {
+    this.deleteModal.closeModal();
   }
 
   mapLabelAndName(val) {

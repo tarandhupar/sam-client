@@ -7,6 +7,26 @@
     background-color: white;
   }
 
+  .modal-subtitle {
+    margin-top: .8em;
+  }
+
+  .permissions-block {
+    border: 1px solid black;
+  }
+
+  .border-bottom-black {
+    border-bottom: 1px solid black;
+  }
+
+  .permissions-table, .permissions-table-header {
+    padding: .5em;
+  }
+
+  .role-block:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
   .show-permissions-button {
     margin-top: -8px !important;
     padding-left: 0;
@@ -14,7 +34,7 @@
   }
 
   .fieldset-wrapper {
-   min-width: 250px;
+    min-width: 250px;
   }
 
   .usa-width-eleven-twelfths {

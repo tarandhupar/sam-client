@@ -5,6 +5,7 @@ import { UserViewComponent } from "./public/public.component";
 import { UserMigrationsPage } from './public/migrations/migrations.page';
 import { UserProfilePage } from './public/profile/profile.page';
 import { GrantAccessPage } from "./public/grant-access/grant-access.page";
+import { EditDomainPage } from "./public/edit-domain/edit-domain.page";
 
 export const routes: Routes = [];
 
@@ -19,8 +20,10 @@ routes.unshift({
     { path: '', redirectTo: 'profile', pathMatch: 'full' },
     { path: 'profile',  component: UserProfilePage },
     { path: 'migrations',  component: UserMigrationsPage },
-    { path: 'access',  component: UserAccessPage },
-    { path: 'grant-access',  component: GrantAccessPage }
+    { path: 'access',  component: UserAccessPage, },
+    { path: 'edit-access',  component: GrantAccessPage },
+    { path: 'grant-access',  component: GrantAccessPage },
+
   ]
 });
 

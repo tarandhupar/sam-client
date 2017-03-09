@@ -92,7 +92,6 @@ export class AlertsPage {
   @ViewChild('expireModal') expireModal;
   @ViewChildren('alertItem') alertComponents: QueryList<AlertItemComponent>;
 
-
   constructor(private router: Router,
               private alertsService: SystemAlertsService,
               private alertFooterService: AlertFooterService,
