@@ -28,7 +28,8 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.programForm = this.createFormGrp();
-   /* if (Cookies.get('iPlanetDirectoryPro') !== undefined) {*/
+    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+      this.cookieValue = Cookies.get('iPlanetDirectoryPro');
       this.currentUrl = document.location.href;
       this.programId = this.route.snapshot.params['id'];
 
@@ -51,9 +52,9 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
             this.programForm.patchValue({title: title, popularName: popularName, falNo: falNo});
           });
       }
-  /*  } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
+    } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
       this.router.navigate(['signin']);
-    }*/
+    }
   }
 
   createFormGrp() {

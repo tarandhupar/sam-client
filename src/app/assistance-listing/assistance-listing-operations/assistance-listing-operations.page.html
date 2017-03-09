@@ -48,7 +48,7 @@
         <div>
           <div class="pull-left">
             <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-            <samButton [buttonType]="(!programForm.valid ? 'disabled' : 'default')" buttonText="Save" (click)="saveProgram($event)"></samButton>
+            <samButton [buttonType]="(!programForm.valid ? 'disabled' : 'default')" buttonText="Save" (onClick)="saveProgram($event)"></samButton>
           </div>
         </div>
 

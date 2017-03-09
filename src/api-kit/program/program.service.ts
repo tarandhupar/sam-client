@@ -60,7 +60,7 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam, false);
 
   }
-  getAuthProgramById(id: string, cookie) {
+  getAuthProgramById(id: string, cookie: string) {
     let oApiParam = {
       name: 'program',
       suffix: '/' + id,

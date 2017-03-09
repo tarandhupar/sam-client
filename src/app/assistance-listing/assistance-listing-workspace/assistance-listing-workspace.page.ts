@@ -31,16 +31,17 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-   /* if ( Cookies.get('iPlanetDirectoryPro') !== undefined) {*/
+    if ( Cookies.get('iPlanetDirectoryPro') !== undefined) {
     this.setupQS();
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
+        this.cookieValue = Cookies.get('iPlanetDirectoryPro');
         this.runProgram();
       });
-    /*} else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
+    } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
       this.router.navigate(['signin']);
-    }*/
+    }
   }
   ngOnDestroy(){
 
