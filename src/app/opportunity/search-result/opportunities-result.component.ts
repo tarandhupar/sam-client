@@ -42,7 +42,7 @@ import * as moment from 'moment/moment';
           <ng-container *ngIf="data.type?.code === 'm'">
             <ng-container *ngIf="data.isCanceled">Canceled </ng-container>
             <ng-container *ngIf="!data.isCanceled">Updated </ng-container>
-            {{data.type?.value}}
+            {{data.originalType?.value}}
           </ng-container>
         </li>
       </ul>
