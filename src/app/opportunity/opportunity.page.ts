@@ -153,7 +153,6 @@ export class OpportunityPage implements OnInit {
     let relatedOpportunities = this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     let historyAPI = this.loadHistory(opportunityAPI);
     let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
-    this.differences = this.checkChanges(previousOpportunityAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
 
     // Construct a new observable that emits both opportunity and its parent as a tuple
@@ -283,9 +282,10 @@ export class OpportunityPage implements OnInit {
      });// attach subject to stream  
     opportunitySubject.subscribe(api => { // do something with the opportunity api 
       this.previousOpportunityVersion = api;
-      if (api.data.organizationLocationId != '' && typeof api.data.organizationLocationId !== 'undefined'){
-        this.opportunityService.getOpportunityLocationById(api.data.organizationLocationId).subscribe(data => {
+      if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined'){
+        this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
           this.previousOpportunityLocation = data;
+          this.differences = this.checkChanges();
         });
     }
     }, err => { 
@@ -794,14 +794,12 @@ export class OpportunityPage implements OnInit {
         return OpportunityPage.TYPE_UNKNOWN;
     }
   }
-  private checkChanges(previousOpportunityAPI: Observable<any>){
+  private checkChanges(){
     let viewChangesPipe = new ViewChangesPipe();
-    previousOpportunityAPI.subscribe(() => {
       return  viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
-    })
   }
-  
-  private showChanges(){
+
+  private showHide(){
     this.showChanges == false ? this.showChanges = true : this.showChanges = false;
   }
 }

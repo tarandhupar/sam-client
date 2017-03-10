@@ -128,8 +128,8 @@ export class ViewChangesPipe implements PipeTransform {
           archivingPolicy = "Automatic, on specified date".strike();
           break;
         }
-          changesExist = true;
       }
+      changesExist = true;
     }
 
     //checks for Update Archive Date
@@ -214,13 +214,13 @@ export class ViewChangesPipe implements PipeTransform {
 
 
     //Checks for Classification Code
-    if (currentOpportunity.data  && currentOpportunity.data.naicsCode){
-      currentNaicsCode = currentOpportunity.data.naicsCode;
+    if (currentOpportunity.data  && currentOpportunity.data.naicsCode && currentOpportunity.data.naicsCode[0]){
+      currentNaicsCode = currentOpportunity.data.naicsCode[0];
     } else {
       currentNaicsCode = null;
     }
-    if (previousOpportunity.data  && previousOpportunity.data.naicsCode){
-      previousNaicsCode = previousOpportunity.data.naicsCode;
+    if (previousOpportunity.data  && previousOpportunity.data.naicsCode && previousOpportunity.data.naicsCode[0]){
+      previousNaicsCode = previousOpportunity.data.naicsCode[0];
     } else {
       previousNaicsCode = null;
     }
