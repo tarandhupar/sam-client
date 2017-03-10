@@ -61,7 +61,7 @@ checkSession(cb: () => void) {
     else{
       vm.pwd = "abc123";
     }
-    vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl("https://csp-microstrategy.sam.gov/MicroStrategy/servlet/mstrWeb?evt=3031&src=mstrWeb.3031&server=10.11.34.63&project=SAM+Prototype&uid="+vm.user._id+"&pwd="+vm.pwd);
+    vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl("https://csp-microstrategy.sam.gov/MicroStrategy/servlet/mstrWeb?evt=3031&src=mstrWeb.3031&server=10.11.34.63&project=SAM+Prototype&uid="+vm.user._id+"&pwd="+vm.pwd+"&hiddensections=path,dockLeft,footer");
       cb();
     });
   }
