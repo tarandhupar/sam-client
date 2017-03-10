@@ -114,12 +114,12 @@ export class SearchPage implements OnInit{
 
 
   // Select NonStandard Services - Radio Buttons
-  wdNonStandardRadModel = '';
+  wdNonStandardRadModel: any = [''];
   wdNonStandardRadConfig = {
     options:  [
       {value: 'yesNSS', label: 'Yes', name: '6'},
-      {value: 'noNSSEven', label: 'No, and the SCA WD ends in an even number', name: '8'},
-      {value: 'noNSSOdd', label: 'No, and the SCA WD ends in an odd number', name: '8'}
+      {value: 'true', label: 'No, and the SCA WD ends in an even number', name: 'noEven'},
+      {value: 'false', label: 'No, and the SCA WD ends in an odd number', name: 'noOdd'}
     ],
     name: 'radio-component4',
     label: 'Are the contract services to be performed listed below as Non-Standard Services?',
@@ -160,9 +160,10 @@ export class SearchPage implements OnInit{
         this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : '';
         this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : '';
         this.wdNonStandardSelectModel = data['service'] && data['service'] !== null ? data['service'] : '';
-        //this.wdNonStandardRadModel = data['state'] && data['state'] !== null ? data['state'] : '';
-        //this.wdSubjectToCBAModel = data['state'] && data['state'] !== null ? data['state'] : '';
-        //this.wdPreviouslyPerformedModel = data['state'] && data['state'] !== null ? data['state'] : '';
+        this.wdNonStandardRadModel = data['isEven'] && data['isEven'] !== null ? data['isEven'] : '';
+        this.wdSubjectToCBAModel = data['cba'] && data['cba'] !== null ? data['cba'] : '';
+        this.wdPreviouslyPerformedModel = data['prevP'] && data['prevP'] !== null ? data['prevP'] : '';
+
         this.runSearch();
         this.loadParams();
       });
@@ -200,23 +201,44 @@ export class SearchPage implements OnInit{
     }
     qsobj['isActive'] = this.isActive;
 
+    //wd or sca type param
     if(this.wdTypeModel!=null) {
       qsobj['wdType'] = this.wdTypeModel;
     }
+
+    //wd dba construction type param
     if(this.wdConstructModel.length>0){
       qsobj['conType'] = this.wdConstructModel;
     }
 
+    //wd state param
     if(this.wdStateModel.length>0){
       qsobj['state'] = this.wdStateModel;
     }
 
+    //wd county param
     if(this.wdCountyModel.length>0){
       qsobj['county'] = this.wdCountyModel;
     }
 
+    //wd Non Standard drop down param
     if(this.wdNonStandardSelectModel.length>0){
       qsobj['service'] = this.wdNonStandardSelectModel;
+    }
+
+    //wd Non Standard radio button param
+    if(this.wdNonStandardRadModel.length>0){
+      qsobj['isEven'] = this.wdNonStandardRadModel;
+    }
+
+    //wd subject to cba param
+    if(this.wdSubjectToCBAModel.length>0){
+      qsobj['cba'] = this.wdSubjectToCBAModel;
+    }
+
+    //wd previously performed param
+    if(this.wdPreviouslyPerformedModel.length>0){
+      qsobj['prevP'] = this.wdPreviouslyPerformedModel;
     }
 
     return qsobj;
@@ -228,7 +250,7 @@ export class SearchPage implements OnInit{
       this.getCountyByState(this.wdStateModel);
       this.determineEnableCountySelect();
       this.getDictionaryData('dbraConstructionTypes');
-      this.getDictionaryData('scaServices')
+      this.getDictionaryData('scaServices');
     }
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
@@ -270,7 +292,8 @@ export class SearchPage implements OnInit{
       conType : this.wdConstructModel,
       state: this.wdStateModel,
       county: this.wdCountyModel,
-      service: this.wdNonStandardSelectModel
+      service: this.wdNonStandardSelectModel,
+      isEven: this.wdNonStandardRadModel
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -434,8 +457,16 @@ export class SearchPage implements OnInit{
 
   // event for wdFilter Change
   wdFilterChange(event){
+
+    // set the models equal to empty if the opposite wd type is selected
     if(this.wdTypeModel === 'sca'){
       this.wdConstructModel = '';
+    }
+    else{
+      this.wdNonStandardRadModel = '';
+      this.wdNonStandardSelectModel = '';
+      this.wdPreviouslyPerformedModel = '';
+      this.wdSubjectToCBAModel = '';
     }
     this.pageNum = 0;
     this.getDictionaryData('dbraConstructionTypes');
@@ -492,20 +523,6 @@ export class SearchPage implements OnInit{
     }
   }
 
-  wdStateClear(){
-    this.wdStateModel = '';
-    this.pageNum = 0;
-
-    this.searchResultsRefresh()
-  }
-
-  wdCountyClear(){
-    this.wdCountyModel = '';
-    this.pageNum = 0;
-
-    this.searchResultsRefresh()
-  }
-
   wdConstructionClear(){
     this.wdConstructModel = '';
     this.pageNum = 0;
@@ -516,13 +533,21 @@ export class SearchPage implements OnInit{
   // previously performed selection
   wdPreviouslyPerformedChanged(event){
     console.log('previously performed selection: ', this.wdPreviouslyPerformedModel);
+
+    // if previously performed is no, we must set subject to cba model to empty
+    if(this.wdPreviouslyPerformedModel === 'prevPerfNo'){
+      this.wdSubjectToCBAModel = '';
+    }
+
+    // only for updating the url here
+    this.searchResultsRefresh();
   }
 
   // subject to change selection
   wdSubjectToCBAChanged(event){
     console.log('subject to CBA selection: ', this.wdSubjectToCBAModel);
 
-    // if the subject to change selection is based or unbased yes show
+    // if the subject to change selection is based or unbased yes show modal success message
     if(this.wdSubjectToCBAModel === 'yesBasedCBA' || this.wdSubjectToCBAModel === 'yesUnbasedCBA'){
       this.alertFooterService.registerFooterAlert({
         title: "Search Criteria Complete",
@@ -531,12 +556,22 @@ export class SearchPage implements OnInit{
         timer: 3000
       });
     }
+
+    // only for updating the url here
+    this.searchResultsRefresh();
   }
 
   // non standard services radio button selection
   wdNonStandardRadChanged(event){
     console.log('non-standard rad selection: ', this.wdNonStandardRadModel);
 
+    // if the non standard rad selection does not equal yes, services filter must be removed
+    if(this.wdNonStandardRadModel !== 'yesNSS'){
+      this.wdNonStandardSelectModel = '';
+    }
+
+    this.pageNum = 0;
+    this.searchResultsRefresh();
 
   }
 

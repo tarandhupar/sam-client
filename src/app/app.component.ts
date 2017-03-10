@@ -69,6 +69,9 @@ export class App{
       qsobj['county'] = null;
       qsobj['conType'] = null;
       qsobj['service'] = null;
+      qsobj['isEven'] = null;
+      qsobj['cba'] = null;
+      qsobj['prevP'] = null;
     }
 
     let navigationExtras: NavigationExtras = {
