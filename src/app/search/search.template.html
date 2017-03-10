@@ -95,6 +95,7 @@
                   [errorMessage]="wdPreviouslyPerformedConfig.errorMessage"
                   (modelChange)="wdPreviouslyPerformedChanged($event)">
                 </samRadioButton>
+                <button (click)='wdPreviouslyPerformedClear()'>Clear</button>
               </sam-collapsible>
 
               <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true"
@@ -110,6 +111,7 @@
                   [errorMessage]="wdSubjectToCBAConfig.errorMessage"
                   (modelChange)="wdSubjectToCBAChanged($event)">
                 </samRadioButton>
+                <button (click)='wdSubjectToCBAClear()'>Clear</button>
               </sam-collapsible>
 
               <sam-collapsible [label]="'SCA: Non-Standard Services'" [startOpened]="true"
@@ -137,7 +139,7 @@
                   [disabled]="wdNonStandardSelectConfig.disabled"
                   (modelChange)="wdNonStandardSelectChanged($event)">
                 </samSelect>
-
+                <button (click)='wdNonStandardServicesSelectClear()'>Clear</button>
               </sam-collapsible>
 
             </sam-filters-container>

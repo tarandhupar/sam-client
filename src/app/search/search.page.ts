@@ -523,13 +523,6 @@ export class SearchPage implements OnInit{
     }
   }
 
-  wdConstructionClear(){
-    this.wdConstructModel = '';
-    this.pageNum = 0;
-
-    this.searchResultsRefresh()
-  }
-
   // previously performed selection
   wdPreviouslyPerformedChanged(event){
     console.log('previously performed selection: ', this.wdPreviouslyPerformedModel);
@@ -591,5 +584,34 @@ export class SearchPage implements OnInit{
       queryParams: qsobj
     };
     this.router.navigate(['/search'], navigationExtras);
+  }
+
+
+  wdConstructionClear(){
+    this.wdConstructModel = '';
+    this.pageNum = 0;
+
+    this.searchResultsRefresh()
+  }
+
+  wdPreviouslyPerformedClear(){
+    this.wdPreviouslyPerformedModel = '';
+    this.pageNum = 0;
+
+    this.searchResultsRefresh()
+  }
+
+  wdSubjectToCBAClear(){
+    this.wdSubjectToCBAModel = '';
+    this.pageNum = 0;
+
+    this.searchResultsRefresh()
+  }
+
+  wdNonStandardServicesSelectClear(){
+    this.wdNonStandardSelectModel = '';
+    this.pageNum = 0;
+
+    this.searchResultsRefresh()
   }
 }
