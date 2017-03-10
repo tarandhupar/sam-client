@@ -1,24 +1,22 @@
 <form [formGroup] = "mainForm">
 
-    <!--<div *ngFor="let item of objectFormData; let i=index;" [id]="item.section" formGroupName={{item.section}}>
+
+    <ng-container *ngFor="let item of objectFormData; let i=index;">
 
       <form-field *ngFor="let field of item.fields; let j=index;"
         [field]="field"
         [control]="mainForm.controls[item.section].controls[field.name]"
         [value]="mainForm.get( item.section + '.' + field.name).value"
-        [formControlName] = "field.name"
+        [fieldFormGroup] = "mainForm.get(item.section)"
         ></form-field>
 
-    </div>-->
+      <div class="pull-left">
+        <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+        <samButton *ngIf="i >0" buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+        <samButton [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+        <samButton [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+      </div>
 
-  <div formGroupName="header_information">
-  <form-field
-              [field]="objectFormData[0].fields[0]"
-              [control]="mainForm.controls['header_information'].controls['title']"
-              [value]=""
-              formControlName = "title"
-  ></form-field>
+    </ng-container>
 
-  </div>
-  <div>Test1: {{mainForm.controls.header_information.controls.title.valid}}</div>
 </form>

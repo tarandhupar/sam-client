@@ -1,4 +1,4 @@
-{{field | json}}
+<div [formGroup]="fieldFormGroup">
 <samText *ngIf="field.type == 'samText'"
          [label] = "field.label"
          [name] = "field.name + '-input'"
@@ -7,7 +7,7 @@
          [required] = "field.required"
          [control] = "control"
          [value] = "value"
-
+         [formControlName] = "field.name"
 ></samText>
 
 <samNumber *ngIf="field.type == 'samNumber'"
@@ -18,6 +18,7 @@
            [required] = "field.required"
            [control] = "control"
            [value] = "value"
+           [formControlName] = "field.name"
 ></samNumber>
 
 <samTextArea *ngIf="field.type == 'samTextArea'"
@@ -28,5 +29,7 @@
          [required] = "field.required"
          [control] = "control"
          [value] = "value"
+         [formControlName] = "field.name"
 ></samTextArea>
 
+</div>
