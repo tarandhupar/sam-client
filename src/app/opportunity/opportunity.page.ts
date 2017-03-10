@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
 import { DateFormatPipe } from "../app-pipes/date-format.pipe";
 import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
+import {ViewChangesPipe} from "./pipes/view-changes.pipe";
 
 @Component({
   moduleId: __filename,
@@ -83,6 +84,10 @@ export class OpportunityPage implements OnInit {
   public logoUrl: string;
   public logoInfo: any;
   opportunityAPI: any;
+  previousOpportunityVersion: any;
+  previousOpportunityLocation: any;
+  differences: any;
+  showChanges = false;
 
   errorOrganization: any;
   errorLogo: any;
@@ -146,7 +151,9 @@ export class OpportunityPage implements OnInit {
     this.loadOpportunityLocation(opportunityAPI);
     let packagesOpportunities = this.loadAttachments(opportunityAPI);
     let relatedOpportunities = this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
-    this.loadHistory(opportunityAPI);
+    let historyAPI = this.loadHistory(opportunityAPI);
+    let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
+    this.differences = this.checkChanges(previousOpportunityAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
 
     // Construct a new observable that emits both opportunity and its parent as a tuple
@@ -260,6 +267,31 @@ export class OpportunityPage implements OnInit {
       self.sidenavModel.children = children;
     }
 
+  }
+
+  private loadPreviousOpportunityVersion(historyAPI: Observable<any>) { 
+    let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers 
+     historyAPI.subscribe(opportunity => {
+       if (!(this.opportunity.data.type === "m") || opportunity.content.history.length < 2){ 
+         return null; 
+       } else {
+         let index = _.result(_.find(opportunity.content.history, { 'notice_id': this.opportunity.opportunityId }), 'index');
+         index--;
+         let id = _.result(_.find(opportunity.content.history, { 'index': index }), 'notice_id');
+         this.opportunityService.getOpportunityById(id).subscribe(opportunitySubject);
+       } 
+     });// attach subject to stream  
+    opportunitySubject.subscribe(api => { // do something with the opportunity api 
+      this.previousOpportunityVersion = api;
+      if (api.data.organizationLocationId != '' && typeof api.data.organizationLocationId !== 'undefined'){
+        this.opportunityService.getOpportunityLocationById(api.data.organizationLocationId).subscribe(data => {
+          this.previousOpportunityLocation = data;
+        });
+    }
+    }, err => { 
+      console.log('Error loading opportunity: ', err); 
+    });  
+    return opportunitySubject; 
   }
 
   private loadParentOpportunity(opportunityAPI: Observable<any>){
@@ -397,85 +429,103 @@ export class OpportunityPage implements OnInit {
     });
   }
 
+
+
   private loadHistory(opportunity: Observable<any>) {
+    let historySubject = new ReplaySubject(1);
     opportunity.subscribe(opportunityAPI => {
+      /** Check that opportunity id exists **/
       if(opportunityAPI.opportunityId == '' || typeof opportunityAPI.opportunityId === 'undefined') {
         console.log('Error loading history');
         return;
       }
 
-      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historyAPI => {
+      /** Load history API **/
+      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
+      historySubject.subscribe(historyAPI => {
         this.history = historyAPI; // save original history information in case it is needed
 
-        // setup necessary items for processing history
+        /** Setup necessary variables and functions for processing history **/
         let typeLabel = new OpportunityTypeLabelPipe();
         let dateFormat = new DateFormatPipe();
-        let originalType = typeLabel.transform(_.filter(historyAPI.content.history, historyItem => {
-          return historyItem.parent_notice == null;
-        })[0].procurement_type); // filter through history to find original opportunity, and save its type label
 
-        // process history into a form usable by history component
-        this.processedHistory = historyAPI.content.history.map(historyItem => {
+        // filter through history items to find original opportunity, and save its type label
+        // assumption: the original history item is the only one without a parent notice
+        let isOriginal = function(historyItem) {
+          return historyItem.parent_notice == null;
+        };
+        let originalOpportunity = _.filter(this.history.content.history, isOriginal)[0];
+        let originalTypeLabel = typeLabel.transform(originalOpportunity.procurement_type);
+
+        // function that takes a history item and returns a title for it
+        let makeTitle = function(historyItem) {
+          let prefix = ''; // construct the correct prefix
+
+          if(historyItem.parent_notice != null) {
+            prefix = 'Updated';
+          }
+
+          // Canceled prefix takes precedence over updated
+          if(historyItem.cancel_notice === '1') {
+            prefix = 'Canceled';
+          }
+
+          // Original prefix takes precedence over all others
+          if(historyItem.parent_notice == null) {
+            prefix = 'Original';
+          }
+
+          let type = historyItem.procurement_type;
+          let currentTypeLabel = typeLabel.transform(type); // label for type of current history item
+
+          switch(type) {
+            // For these types, show title as prefix and opportunity type
+            case 'p': // Presolicitation
+            case 'r': // Sources Sought
+            case 's': // Special Notice
+            case 'g': // Sale of Surplus Property
+            case 'f': // Foreign Government Standard
+            case 'k': // Combined Synopsis/Solicitation
+              return prefix + ' ' + currentTypeLabel;
+
+            // For these types, show the opportunity type as the title with no prefix
+            case 'a': // Award Notice
+            case 'j': // Justification and Approval (J&A)
+            case 'i': // Intent to Bundle Requirements (DoD-Funded)
+            case 'l': // Fair Opportunity / Limited Sources Justification
+              return currentTypeLabel;
+
+            // For modifications or cancellations, show the appropriate prefix plus original opportunity type
+            case 'm': // Modification/Amendment/Cancel
+              return prefix + ' ' + originalTypeLabel;
+
+            // Unrecognized type, show generic message
+            default:
+              return prefix + ' Opportunity';
+          }
+        };
+
+        /** Process history into a form usable by history component **/
+        let processHistoryItem = function(historyItem) {
           let processedHistoryItem = {};
           processedHistoryItem['id'] = historyItem.notice_id;
-          processedHistoryItem['title'] = (function makeTitle(){
-            let prefix = '';
-
-            if(historyItem.parent_notice != null) { prefix = 'Updated'; }
-
-            // Canceled prefix takes precedence over updated
-            if(historyItem.cancel_notice === '1') { prefix = 'Canceled'; }
-
-            // Original prefix takes precedence over all others
-            if(historyItem.parent_notice == null) { prefix = 'Original';}
-
-            let type = historyItem.procurement_type;
-            let currentType = typeLabel.transform(type); // label for type of current history item
-
-            switch(type) {
-                // For these types, show title as prefix and opportunity type
-              case 'p': // Presolicitation
-              case 'r': // Sources Sought
-              case 's': // Special Notice
-              case 'g': // Sale of Surplus Property
-              case 'f': // Foreign Government Standard
-              case 'k': // Combined Synopsis/Solicitation
-                return prefix + ' ' + currentType;
-
-                // For these types, show the opportunity type as the title with no prefix
-              case 'a': // Award Notice
-              case 'j': // Justification and Approval (J&A)
-              case 'i': // Intent to Bundle Requirements (DoD-Funded)
-              case 'l': // Fair Opportunity / Limited Sources Justification
-                return currentType;
-
-                // For modifications or cancellations, show the appropriate prefix plus original opportunity type
-              case 'm': // Modification/Amendment/Cancel
-                return prefix + ' ' + originalType;
-
-              // Unrecognized type, show generic message
-              default:
-                return prefix + ' Opportunity';
-            }
-          })();
+          processedHistoryItem['title'] = makeTitle(historyItem);
           processedHistoryItem['description'] = ''; // not implemented yet
           processedHistoryItem['date'] = dateFormat.transform(historyItem.posted_date, 'MMM DD, YYYY h:mma');
           processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
           processedHistoryItem['index'] = historyItem.index;
           processedHistoryItem['isTagged'] = false; // todo: decide on logic for which opportunities are tagged
           processedHistoryItem['authoritative'] = historyItem.authoritative;
-
           return processedHistoryItem;
-        });
+        };
+        this.processedHistory = this.history.content.history.map(processHistoryItem);
 
-        // Alert if not latest version
-        let current = _.filter(this.processedHistory, historyItem => {
-          return historyItem.id === opportunityAPI.opportunityId;
-        })[0];
+        /** Show alert if current version is not the authoritative version **/
+        let isCurrent = function(historyItem) { return historyItem.id === opportunityAPI.opportunityId; };
+        let isAuthoritative = function(historyItem) { return historyItem.authoritative === '1'; };
 
-        let authoritative = _.filter(this.processedHistory, historyItem => {
-          return historyItem.authoritative === '1';
-        })[0];
+        let current = _.filter(this.processedHistory, isCurrent)[0];
+        let authoritative = _.filter(this.processedHistory, isAuthoritative)[0];
 
         if(authoritative && current.id !== authoritative.id) {
           this.alert.push({
@@ -487,7 +537,9 @@ export class OpportunityPage implements OnInit {
         }
       });
     });
+    return historySubject;
   }
+
 
   // Sets the correct displayField flags for this opportunity type
   private setDisplayFields(combinedOpportunityAPI: Observable<any>) {
@@ -741,5 +793,15 @@ export class OpportunityPage implements OnInit {
       default:
         return OpportunityPage.TYPE_UNKNOWN;
     }
+  }
+  private checkChanges(previousOpportunityAPI: Observable<any>){
+    let viewChangesPipe = new ViewChangesPipe();
+    previousOpportunityAPI.subscribe(() => {
+      return  viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
+    })
+  }
+  
+  private showChanges(){
+    this.showChanges == false ? this.showChanges = true : this.showChanges = false;
   }
 }
