@@ -21,19 +21,15 @@ body.feedback-open {
 
 
   .feedback-form-div{
+    overflow-x: hidden;
+    overflow-y: auto;
     position: fixed;
-    left: 30vw;
     top: 30vh;
+    left: 30vw;
     z-index: 1050;
-    width: 500px;
+    width: 550px;
     border: 2px solid black;
     background: $color-white;
-  }
-
-  .hide-form-icon{
-    position: absolute;
-    right: 0;
-    top: 50%;
   }
 
   .feedback-question-div{
@@ -50,14 +46,6 @@ body.feedback-open {
 
   .feedback-question-rating{
     text-align: center;
-  }
-
-  .feedback-question-checkbox{
-
-  }
-
-  .feedback-question-radio{
-
   }
 
   .feedback-pagination{
@@ -103,13 +91,14 @@ body.feedback-open {
     font-size: 175%;
   }
 
-  .feedback-background{
-    background: $color-primary-alt;
-  }
 
   .feedback-dash{
     width: 30px;
     display: inline-block;
     border: 1px solid $color-primary;
+  }
+
+  .text-align-center{
+    text-align: center;
   }
 }

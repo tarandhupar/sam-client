@@ -1,9 +1,7 @@
-<div *ngIf="showFeedback" class="feedback-backdrop"></div>
 <div #feedbackRoot class="sam-feedback">
-  <div>
-    <span class="usa-width-one-whole p_L-2x p_T-2x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
-    <div class="usa-width-one-whole marginCenter p_T-2x"><button class="usa-button-outline usa-button-active" (click)="toggleFeedback()">Provide Feedback</button></div>
-  </div>
+
+  <samModal [showClose]="false" #proceedModal [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [submitButtonLabel]="'Confirm'" [cancelButtonLabel]="'Cancel'" (onSubmit)="onProceedModalConfirm()" (onClose)="onProceedModalClose()"  [closeOnOutsideClick]="false">
+  </samModal>
 
   <div *ngIf="showFeedback" class="feedback-form-div relative">
     <div class="usa-grid-full m_0 p_L-2x p_T-2x p_B-2x feedback-background feedback-header-span">
@@ -24,7 +22,7 @@
       <!--Checkbox Question-->
       <div class="feedback-question-checkbox m_T-2x usa-grid" *ngIf="isCurrentQType('multiSelection')">
         <div class="usa-width-one-half m_R-0 m_B-1x" *ngFor="let option of curQuestion.selections">
-          <input class="usa-width-one-half" type="checkbox" (change)="onCbxChange($event.target.checked, option)"><label class="m_T-0">{{option}}</label>
+          <input class="usa-width-one-half" type="checkbox" (change)="onCbxChange(option, $event.target.checked)" [(ngModel)]="multiSelectionModel[option]"><label class="m_T-0">{{option}}</label>
         </div>
       </div>
 
@@ -52,21 +50,23 @@
         <div class="usa-width-one-half m_B-1x p_L-4x">
           <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('No')" [checked]="emailRadioBtnValue === 'No'"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('No')">No</label>
         </div>
-        <div class="usa-width-one-whole m_T-2x" *ngIf="emailRadioBtnValue === 'Yes'">
-          <input class="usa-width-two-thirds m_L-3x " style="height: 36px;" name="text" placeholder="Please provide your email">
-          <button class="usa-button-primary m_0">Submit</button>
-        </div>
-        <div class="usa-width-one-whole m_T-2x" *ngIf="emailRadioBtnValue === 'No'" style="text-align: center">
-          <h4>Thanks!<button class="pull-right usa-button-primary m_0">Submit</button></h4>
+        <div class="usa-width-one-whole m_T-2x">
+          <div class="usa-width-two-thirds m_R-0 text-align-center">
+            <input class="usa-width-one-whole m_L-3x" *ngIf="emailRadioBtnValue === 'Yes'" style="height: 36px;" name="text" placeholder="Please provide your email" [(ngModel)]="userEmailModel">
+            <h3 *ngIf="emailRadioBtnValue !== 'Yes'" >Thanks!</h3>
+          </div>
+          <div class="usa-width-one-third">
+            <button class="usa-button-primary m_0 pull-right" (click)="onSubmitFeedbackClick()">Submit</button>
+          </div>
         </div>
       </div>
 
       <div class="usa-width-one-whole m_T-3x relative" style="z-index: 1070;">
         <button class="usa-button-transparent pull-left m_0" style="padding-left: 0;" (click)="onPreviousClick()" *ngIf="isPrevButtonOn()"><span><i class="fa fa-angle-left"></i>Previous</span></button>
-        <button class="usa-button-transparent pull-right m_0" style="padding-right: 0;" (click)="onNextClick()" *ngIf="isNextButtonOn()"><span>Next<i class="fa fa-angle-right"></i></span></button>
+        <button class="usa-button-transparent pull-right m_0" style="padding-right: 15px;" (click)="onNextClick()" *ngIf="isNextButtonOn()"><span>Next<i class="fa fa-angle-right"></i></span></button>
       </div>
 
-      <div class="usa-width-one-whole m_T-3x" style="text-align: center">
+      <div class="usa-width-one-whole m_T-3x text-align-center">
         <a class="usa-nav-link" style="color: #003264;text-decoration: underline;" href="http://beta.sam.gov/">Form Approved OMB#3090-0297 Exp Date 07/31/2019</a>
       </div>
 
