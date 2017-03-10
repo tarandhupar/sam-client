@@ -20,6 +20,7 @@
     <div class="m_B-1x"><label>Permissions</label></div>
     <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
       <li  *ngFor="let object of objects" class="object-item">
+        <strong>{{object.function.val}}</strong>
         <div class="p_L-4x permission-list">
           <span *ngFor="let permission of object.permission" class="permission-control-group">
             <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
