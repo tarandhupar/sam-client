@@ -1,0 +1,32 @@
+{{field | json}}
+<samText *ngIf="field.type == 'samText'"
+         [label] = "field.label"
+         [name] = "field.name + '-input'"
+         [maxlength] = "field.maxlength"
+         [hint] = "field.hint"
+         [required] = "field.required"
+         [control] = "control"
+         [value] = "value"
+
+></samText>
+
+<samNumber *ngIf="field.type == 'samNumber'"
+           [label] = "field.label"
+           [name] = "field.name + '-input'"
+           [maxlength] = "field.maxlength"
+           [hint] = "field.hint"
+           [required] = "field.required"
+           [control] = "control"
+           [value] = "value"
+></samNumber>
+
+<samTextArea *ngIf="field.type == 'samTextArea'"
+         [label] = "field.label"
+         [name] = "field.name + '-input'"
+         [maxlength] = "field.maxlength"
+         [hint] = "field.hint"
+         [required] = "field.required"
+         [control] = "control"
+         [value] = "value"
+></samTextArea>
+

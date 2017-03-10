@@ -1,0 +1,24 @@
+<form [formGroup] = "mainForm">
+
+    <!--<div *ngFor="let item of objectFormData; let i=index;" [id]="item.section" formGroupName={{item.section}}>
+
+      <form-field *ngFor="let field of item.fields; let j=index;"
+        [field]="field"
+        [control]="mainForm.controls[item.section].controls[field.name]"
+        [value]="mainForm.get( item.section + '.' + field.name).value"
+        [formControlName] = "field.name"
+        ></form-field>
+
+    </div>-->
+
+  <div formGroupName="header_information">
+  <form-field
+              [field]="objectFormData[0].fields[0]"
+              [control]="mainForm.controls['header_information'].controls['title']"
+              [value]=""
+              formControlName = "title"
+  ></form-field>
+
+  </div>
+  <div>Test1: {{mainForm.controls.header_information.controls.title.valid}}</div>
+</form>

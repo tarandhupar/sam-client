@@ -1,6 +1,6 @@
 // Angular Dependencies
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { SamUIKitModule } from 'ui-kit';
@@ -19,9 +19,8 @@ import { SamFooterComponent } from './footer/footer.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
 import { InputAutocompleteComponent } from './input-autocomplete/input-autocomplete.component';
 import { SamFeedbackComponent } from "./feedback-form/feedback-form.component";
-
-
-
+import { FormFieldComponent } from "./object-form/form-field/form-field.component";
+import { ObjectFormModel } from "./object-form/object-form.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -42,13 +41,16 @@ import { SamFeedbackComponent } from "./feedback-form/feedback-form.component";
     InputAutocompleteComponent,
     SamFeedbackComponent,
     ListResultsMessageComponent,
+    FormFieldComponent,
+    ObjectFormModel,
   ],
   imports: [
     BrowserModule,
     SamUIKitModule,
     FormsModule,
     RouterModule,
-    SamAPIKitModule
+    SamAPIKitModule,
+    ReactiveFormsModule
   ],
   exports: [
     AgencyPickerComponent,
@@ -65,6 +67,8 @@ import { SamFeedbackComponent } from "./feedback-form/feedback-form.component";
     InputAutocompleteComponent,
     SamFeedbackComponent,
     ListResultsMessageComponent,
+    FormFieldComponent,
+    ObjectFormModel,
   ],
   providers: [ ]
 })
