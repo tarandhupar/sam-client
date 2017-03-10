@@ -38,7 +38,12 @@ import * as moment from 'moment/moment';
         </li>
         <li>
           <strong>Type</strong><br>
-          {{data.type?.value}}
+          <ng-container *ngIf="data.type?.code !== 'm'">Original {{data.type?.value}}</ng-container>
+          <ng-container *ngIf="data.type?.code === 'm'">
+            <ng-container *ngIf="data.isCanceled">Canceled </ng-container>
+            <ng-container *ngIf="!data.isCanceled">Updated </ng-container>
+            {{data.type?.value}}
+          </ng-container>
         </li>
       </ul>
     </div>
