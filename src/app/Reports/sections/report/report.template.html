@@ -5,7 +5,33 @@ Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
   <h2 class="m_T-2x">{{name}}</h2>
 <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="1024"></iframe>
 <br>
+
     <samAccordion>
-      <samAccordionSection [name]="'Appendix'" [headerText]="'Appendix'">{{desc}}</samAccordionSection>
+
+      <samAccordionSection [name]="'Appendix'" [headerText]="'Appendix'" >
+        <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
+          <div *ngIf="id">
+          <ul type="none">
+            <li *ngFor="let report of data.reports">
+              <b><a href="{{report.name}}"></a></b>
+              <br>
+
+              <br>
+              <ul type="none">
+                <li *ngFor="let item of report.appendix">
+                  {{item}}
+                </li>
+              </ul>
+
+              <br>
+            </li>
+          </ul>
+          </div>
+        </div>
+      </samAccordionSection>
+
     </samAccordion>
+
+
+
 </section>

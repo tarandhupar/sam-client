@@ -6,11 +6,13 @@ import { FinancialObligationChart } from './assistance-listing.chart';
 import { routing } from './assistance-listing.route';
 import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { ProgramDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { ProgramPageOperations } from './assistance-listing-operations/assistance-listing-operations.page';
+import { AssistanceProgramResult } from './assistance-listing-workspace/program-result/assistance-program-result.component';
+import { FalWorkspacePage } from './assistance-listing-workspace/assistance-listing-workspace.page';
 
 
 @NgModule({
@@ -27,6 +29,7 @@ import { ProgramPageOperations } from './assistance-listing-operations/assistanc
     ProgramPage,
     FinancialObligationChart,
     HistoricalIndexLabelPipe,
+    AssistanceProgramResult,
   ],
   declarations: [
     AuthorizationPipe,
@@ -34,6 +37,8 @@ import { ProgramPageOperations } from './assistance-listing-operations/assistanc
     ProgramDisplayPageDemoPage,
     FinancialObligationChart,
     HistoricalIndexLabelPipe,
+    AssistanceProgramResult,
+    FalWorkspacePage,
     ProgramPageOperations,
   ],
   providers: [],

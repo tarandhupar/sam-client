@@ -8,9 +8,10 @@ export class ExclusionService{
   constructor(private oAPIService: WrapperService){}
   
   getExclusion(id: string) {
+  	let encodedId = encodeURIComponent(id);
     let oApiParam = {
       name: 'exclusions',
-      suffix: '/' + id,
+      suffix: '/' + encodedId,
       oParam: {
         'sort': 'name'
       },
