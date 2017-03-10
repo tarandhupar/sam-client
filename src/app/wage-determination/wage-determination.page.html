@@ -58,7 +58,8 @@
             </li>
             <li id="wd-date" *ngIf = "wageDetermination.publishDate">
               <ng-container *ngIf="isSCA">
-                <strong>Published Date: </strong>
+                <strong *ngIf="revisionNumber && revisionNumber === '1'">Published Date: </strong>
+                <strong *ngIf="revisionNumber && revisionNumber !== '1'">Last Revised Date: </strong>
               </ng-container>
               <ng-container *ngIf="!isSCA">
                 <strong *ngIf="revisionNumber && revisionNumber === '0'">Published Date: </strong>
@@ -73,7 +74,7 @@
 
       <!-- Print Link -->
       <div id="wd-print-link" *ngIf="wageDetermination?.document" class="text-right m_B-5x m_T-5x">
-        <a class="print-link" tabindex="0" (click)="openDocumentPrintPage()" (keyup.enter)="openDocumentPrintPage()">Printer Friendly Version</a>
+        <a class="print-link" tabindex="0" [routerLink]="['/wage-determination', referenceNumber, revisionNumber, 'document']">Printer Friendly Version</a>
       </div>
 
       <!-- Document -->

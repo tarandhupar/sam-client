@@ -11,6 +11,8 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
 import { ProgramDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { ProgramPageOperations } from './assistance-listing-operations/assistance-listing-operations.page';
+import { AssistanceProgramResult } from './assistance-listing-workspace/program-result/assistance-program-result.component';
+import { FalWorkspacePage } from './assistance-listing-workspace/assistance-listing-workspace.page';
 
 
 @NgModule({
@@ -27,6 +29,7 @@ import { ProgramPageOperations } from './assistance-listing-operations/assistanc
     ProgramPage,
     FinancialObligationChart,
     HistoricalIndexLabelPipe,
+    AssistanceProgramResult,
   ],
   declarations: [
     AuthorizationPipe,
@@ -34,6 +37,8 @@ import { ProgramPageOperations } from './assistance-listing-operations/assistanc
     ProgramDisplayPageDemoPage,
     FinancialObligationChart,
     HistoricalIndexLabelPipe,
+    AssistanceProgramResult,
+    FalWorkspacePage,
     ProgramPageOperations,
   ],
   providers: [],
