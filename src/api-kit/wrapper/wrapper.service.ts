@@ -5,7 +5,7 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class WrapperService {
     private APIs: any = {
-        "opportunity": "/opps/v1/opportunities",
+        "opportunity": "/opps/v1",
         "search": "/sgs/v1/search",
         "featuredSearch": "/sgs/v1/search/featured",
         "program": "/fac/v1/programs",
