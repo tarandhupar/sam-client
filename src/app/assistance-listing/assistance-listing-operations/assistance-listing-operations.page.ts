@@ -29,28 +29,32 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   ngOnInit() {
     this.programForm = this.createFormGrp();
     if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
-      this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-      this.currentUrl = document.location.href;
-      this.programId = this.route.snapshot.params['id'];
+      if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
+        this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+        this.currentUrl = document.location.href;
+        this.programId = this.route.snapshot.params['id'];
 
-      if (this.programId == null)
-        this.mode = 'add';
-      else
-        this.mode = 'edit';
+        if (this.programId == null)
+          this.mode = 'add';
+        else
+          this.mode = 'edit';
 
 
-      if (this.mode == 'edit') {
-        this.getProgSub = this.programService.getAuthProgramById(this.programId, this.cookieValue)
-          .subscribe(api => {
+        if (this.mode == 'edit') {
+          this.getProgSub = this.programService.getAuthProgramById(this.programId, this.cookieValue)
+            .subscribe(api => {
 
-            let title = api.data.title;
-            let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
-            let falNo = (api.data.programNumber ? api.data.programNumber : '');
+              let title = api.data.title;
+              let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
+              let falNo = (api.data.programNumber ? api.data.programNumber : '');
 
-            if (falNo.trim().length == 6)
-              falNo = falNo.slice(3, 6);
-            this.programForm.patchValue({title: title, popularName: popularName, falNo: falNo});
-          });
+              if (falNo.trim().length == 6)
+                falNo = falNo.slice(3, 6);
+              this.programForm.patchValue({title: title, popularName: popularName, falNo: falNo});
+            });
+        }
+      } else {
+        this.router.navigate(['accessrestricted']);
       }
     } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
       this.router.navigate(['signin']);
@@ -89,16 +93,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
 
     this.saveProgSub = this.programService.saveProgram(this.programId, data, this.cookieValue)
       .subscribe(id => {
-        console.log('AJAX Completed', id);
         this.programId = id;
-        /*if(this.programId == null) {
-         this.programForm.reset();
-         this.successMsg = "New Assistance Listing is successfully added.";
-         }
-         else
-         this.successMsg = "Assistance Listing is successfully updated.";
-
-         this.submitted = true;*/
         this.router.navigate(['/falworkspace']);
       });
   }
