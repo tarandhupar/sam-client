@@ -83,9 +83,21 @@
             <li><a #additionalReference [ngClass]="getSubSectionClass('additionalReference')" (click)="changeSubSection('additionalReference',additionalReference)" href="{{currentUrl}}#additionalReference">Additional References</a></li>
           </ul>
         </li>
+        <li>
+            <span class="usa-width-one-whole p_L-2x p_T-2x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
+            <div class="usa-width-one-whole marginCenter p_T-2x"><button class="usa-button-outline usa-button-active relative" (click)="feedback.toggleFeedback()">Provide Feedback</button></div>
+            <div class="usa-width-one-whole text-align-center" *ngIf="feedback.showUnsubmittedWarning()">
+              <span class="feedback-warning">You have feedback that has not been submitted!</span>
+            </div>
+        </li>
       </ul>
+
     </div>
+
   </aside>
+  <sam-feedback #feedback></sam-feedback>
+
+
   <div class="usa-width-three-fourths">
     <div class="usa-width-one-whole m_L-4x">
       <!--Content for Sections-->

@@ -10,7 +10,7 @@ export class OpportunityService{
   getOpportunityById(id: string) {
     let apiParam = {
         name: 'opportunity',
-        suffix: '/' + id,
+        suffix: '/opportunities/' + id,
         oParam: {},
         method: 'GET'
     };
@@ -21,7 +21,7 @@ export class OpportunityService{
   getOpportunityHistoryById(id: string) {
     let apiParam = {
       name: 'opportunity',
-      suffix: '/' + id + '/history',
+      suffix: '/opportunities/' + id + '/history',
       oParam: {},
       method: 'GET'
     };
@@ -32,7 +32,7 @@ export class OpportunityService{
   getOpportunityLocationById(id: string) {
     let apiParam = {
         name: 'opportunity',
-        suffix: '/' + id + '/location',
+        suffix: '/opportunities/' + id + '/location',
         oParam: {},
         method: 'GET'
     };
@@ -56,7 +56,7 @@ export class OpportunityService{
   getAttachmentById(id: string){
     let apiParam = {
       name: 'opportunity',
-      suffix: '/' + id + '/attachments',
+      suffix: '/opportunities/' + id + '/attachments',
       oParam: {},
       method: 'GET'
     };
@@ -67,7 +67,7 @@ export class OpportunityService{
   getRelatedOpportunitiesByIdAndType(id:string, type:string, page:number, sort:string){
     let apiParam = {
       name: 'opportunity',
-      suffix: '/' + id + '/relatedopportunities',
+      suffix: '/opportunities/' + id + '/relatedopportunities',
       oParam: {
         'type': type,
         'page': page,
