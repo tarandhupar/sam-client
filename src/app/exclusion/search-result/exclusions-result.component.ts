@@ -11,7 +11,7 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive==false" class="usa-label">INACTIVE</span>
     	</p>
     	<h3 class="exclusion-title">
-    	<a *ngIf="data.isActive==true" [routerLink]="['/exclusions', data.samNumber]" [queryParams]="qParams">{{ data.name }}</a>
+    	<a *ngIf="data.isActive==true" [routerLink]="['/exclusions', data.samNumber + '+' + data.agency + '+' + data.exclusionType + '+' + data.ctCode]" [queryParams]="qParams">{{ data.name }}</a>
       	<span *ngIf="data.isActive==false">{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
