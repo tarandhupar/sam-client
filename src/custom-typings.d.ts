@@ -59,7 +59,7 @@ declare var SHOW_HIDE_RESTRICTED_PAGES: string;
 interface SystemJS {
   import: (path?: string) => Promise<any>;
 }
-/** SHOW_HIDE_RESTRICTED_PAGES : created to hide components in MINC Environment even*/
+/** SHOW_HIDE_RESTRICTED_PAGES : defined to hide components in Prodlike/Prod*/
 interface GlobalEnvironment {
   ENV;
   HMR;
