@@ -101,4 +101,30 @@ body.feedback-open {
   .text-align-center{
     text-align: center;
   }
+
+  .feedback-form-link{
+    color: #003264;
+    text-decoration: underline;
+  }
+
+  .feedback-btns-div{
+    z-index: 1070;
+
+    .prev-btn{
+      padding-left: 0px;
+    }
+
+    .next-btn{
+      padding-right: 15px;
+    }
+  }
+
+  .feedback-email-input{
+    height: 36px;
+  }
+
+  .feedback-pagination-span{
+    display: inline-block;
+  }
+
 }

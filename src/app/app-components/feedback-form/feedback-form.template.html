@@ -52,7 +52,7 @@
         </div>
         <div class="usa-width-one-whole m_T-2x">
           <div class="usa-width-two-thirds m_R-0 text-align-center">
-            <input class="usa-width-one-whole m_L-3x" *ngIf="emailRadioBtnValue === 'Yes'" style="height: 36px;" name="text" placeholder="Please provide your email" [(ngModel)]="userEmailModel">
+            <input class="usa-width-one-whole m_L-3x feedback-email-input" *ngIf="emailRadioBtnValue === 'Yes'" name="text" placeholder="Please provide your email" [(ngModel)]="userEmailModel">
             <h3 *ngIf="emailRadioBtnValue !== 'Yes'" >Thanks!</h3>
           </div>
           <div class="usa-width-one-third">
@@ -61,17 +61,19 @@
         </div>
       </div>
 
-      <div class="usa-width-one-whole m_T-3x relative" style="z-index: 1070;">
-        <button class="usa-button-transparent pull-left m_0" style="padding-left: 0;" (click)="onPreviousClick()" *ngIf="isPrevButtonOn()"><span><i class="fa fa-angle-left"></i>Previous</span></button>
-        <button class="usa-button-transparent pull-right m_0" style="padding-right: 15px;" (click)="onNextClick()" *ngIf="isNextButtonOn()"><span>Next<i class="fa fa-angle-right"></i></span></button>
+      <!--Previous and Next button-->
+      <div class="usa-width-one-whole m_T-3x relative feedback-btns-div">
+        <button class="usa-button-transparent pull-left m_0 prev-btn" (click)="onPreviousClick()" *ngIf="isPrevButtonOn()"><span><i class="fa fa-angle-left"></i>Previous</span></button>
+        <button class="usa-button-transparent pull-right m_0 next-btn" (click)="onNextClick()" *ngIf="isNextButtonOn()"><span>Next<i class="fa fa-angle-right"></i></span></button>
       </div>
 
       <div class="usa-width-one-whole m_T-3x text-align-center">
-        <a class="usa-nav-link" style="color: #003264;text-decoration: underline;" href="http://beta.sam.gov/">Form Approved OMB#3090-0297 Exp Date 07/31/2019</a>
+        <a class="usa-nav-link feedback-form-link" [routerLink]="['/help/policies']" target="policies">Form Approved OMB#3090-0297 Exp Date 07/31/2019</a>
       </div>
 
+      <!--Pagination Div-->
       <div class="usa-width-one-whole feedback-pagination">
-          <span style="display: inline-block;">
+          <span class="feedback-pagination-span">
             <span *ngFor="let page of getPaginationArray()">
               <span class="feedback-page" [ngClass]="getPageClass(page)">
                 <span *ngIf="!isPageEdited(page) || isCurrentPage(page)">{{page+1}}</span>

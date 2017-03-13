@@ -23,14 +23,10 @@ export class SamFeedbackComponent {
 
   ratingThumbUpClass: string = "fa-thumbs-o-up";
   ratingThumbDownClass: string = "fa-thumbs-o-down";
-
   multiSelectionModel = {};
-
   radioBtnValue: string = "";
-
   emailRadioBtnValue: string = "";
   userEmailModel: string = "";
-
   textAreaModel: string = "";
 
   formStarted: boolean = false;
@@ -46,7 +42,8 @@ export class SamFeedbackComponent {
     type:'warning',
     title:'Confirm Proceed',
     description:'You have feedback that is not submitted. Do you want to proceed ahead?'
-  }
+  };
+
   @ViewChild("feedbackRoot") feedbackRoot;
 
   private backdropElement: HTMLElement;
@@ -136,12 +133,11 @@ export class SamFeedbackComponent {
 
   onSubmitFeedbackClick(){
     //Get the email of user if Yes is selected on last question
-    console.log("last: "+this.answerData[this.answerData.length-1].value);
     if(this.answerData[this.answerData.length-1].value === "Yes"){
       //Get the email address of user
       this.answerData[this.answerData.length-1].value = this.userEmailModel;
     }
-    console.log(this.answerData);
+
     this.formSubmitted = true;
     this.toggleFeedback();
     this.resetAll();
@@ -221,7 +217,6 @@ export class SamFeedbackComponent {
   }
 
   setMultiSelectionResult(selectedOptions){
-
     this.multiSelectionModel = selectedOptions;
     this.setCurQAnswer(selectedOptions);
   }
