@@ -1,34 +1,33 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
-    <div class="usa-forgot-init">
+    <div class="usa-forgot-main">
       <form (ngSubmit)="verify()" class="usa-form-large" autocomplete="off">
-        <fieldset #form>
+        <fieldset class="relative" #form>
           <legend>Answer your security questions</legend>
           <span>
             Provide the answer to the following question: You have 7 attempts to answer two security
             questions correctly before your account is temporarily locked.
           </span>
 
-          <div *ngIf="!states.reset" [ngClass]="{ 'usa-input-error': states.submitted && (answer.invalid || states.error) }">
+          <div *ngIf="!states.reset" [ngClass]="{ 'usa-input-error': states.submittedCount && answer.invalid }">
             <label for="answer" [innerText]="question"></label>
-            <span class="usa-input-error-message" *ngIf="states.submitted && (answer.invalid || states.error.length)" role="alert">
-              <span *ngIf="states.error.length">{{ states.error }}</span>
-              <span *ngIf="answer.errors && answer.errors.answer">Enter a valid answer address</span>
+            <span class="usa-input-error-message" *ngIf="states.submittedCount && answer.invalid" role="alert">
+              <span>Enter a valid answer</span>
             </span>
             <input type="text"
                    id="answer"
                    autocomplete="off"
                    readonly="readonly"
                    onfocus="this.removeAttribute('readonly');"
-                   [formControl]="answer"/>
+                   [formControl]="answer" />
           </div>
 
           <div *ngIf="states.reset">
-            <sam-password [password]="password"></sam-password>
+            <sam-password [password]="password" #samPassword></sam-password>
           </div>
 
           <div class="usa-button-controls">
-            <button type="submit">Submit</button>
+            <button type="submit" [disabled]="states.submitted">Submit</button>
           </div>
 
           <ul class="links">
@@ -36,14 +35,14 @@
               <a routerLink="/">Return to SAM.gov Home</a>
             </li>
           </ul>
+
+          <samAlert class="usa-alert-static"
+                    [type]="states.alert.type"
+                    [title]="states.alert.title"
+                    [description]="states.alert.message"
+                    [hidden]="!states.alert.show"
+                    showClose="true"></samAlert>
         </fieldset>
-        <samAlert [type]="states.alert.type"
-                  [title]="states.alert.title"
-                  [description]="states.alert.message"
-                  [target]="form"
-                  [placement]="states.alert.placement"
-                  [(hidden)]="!states.alert.show"
-                  showClose="true"></samAlert>
       </form>
     </div>
   </div>
