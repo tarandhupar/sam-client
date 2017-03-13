@@ -250,6 +250,7 @@ export class SearchPage implements OnInit{
       this.getDictionaryData('wdStates');
       this.getCountyByState(this.wdStateModel);
       this.determineEnableCountySelect();
+      this.determineEnableServicesSelect();
       this.getDictionaryData('dbraConstructionTypes');
       this.getDictionaryData('scaServices');
     }
@@ -524,6 +525,16 @@ export class SearchPage implements OnInit{
     }
   }
 
+  // determines if state is populated and if not disables county select
+  determineEnableServicesSelect(){
+    if(this.wdNonStandardRadModel === 'yesNSS'){
+      this.wdNonStandardSelectConfig.disabled = false;
+    }
+    else{
+      this.wdNonStandardSelectConfig.disabled = true;
+    }
+  }
+
   // previously performed selection
   wdPreviouslyPerformedChanged(event){
     console.log('previously performed selection: ', this.wdPreviouslyPerformedModel);
@@ -558,6 +569,9 @@ export class SearchPage implements OnInit{
   // non standard services radio button selection
   wdNonStandardRadChanged(event){
     console.log('non-standard rad selection: ', this.wdNonStandardRadModel);
+
+    // check if services should be disabled/enabled
+    this.determineEnableServicesSelect();
 
     // if the non standard rad selection does not equal yes, services filter must be removed
     if(this.wdNonStandardRadModel !== 'yesNSS'){
@@ -611,6 +625,7 @@ export class SearchPage implements OnInit{
 
   wdNonStandardServicesSelectClear(){
     this.wdNonStandardSelectModel = '';
+    this.wdNonStandardRadModel = '';
     this.pageNum = 0;
 
     this.searchResultsRefresh()
