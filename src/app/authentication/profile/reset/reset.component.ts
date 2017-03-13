@@ -50,6 +50,17 @@ export class ResetComponent {
           if(!this.api.iam.isDebug()) {
             this.router.navigate(['/signin']);
           } else {
+            this.user = <User>{
+              _id: 'john.doe@gsa.gov',
+              fullName: 'John J Doe',
+              firstName: 'John',
+              initials: 'J',
+              lastName: 'Doe',
+              email: 'doe.john@gsa.gov',
+              kbaAnswerList: [],
+              accountClaimed: true
+            };
+
             this.initForm();
           }
         });

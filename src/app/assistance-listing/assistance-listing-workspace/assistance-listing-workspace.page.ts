@@ -1,16 +1,17 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
+import * as Cookies from 'js-cookie';
 
 @Component({
   moduleId: __filename,
-  templateUrl: 'workspace.template.html',
+  templateUrl: 'assistance-listing-workspace.template.html',
   providers: [
     ProgramService
   ]
 })
 
-export class WorkspacePage implements OnInit {
+export class FalWorkspacePage implements OnInit, OnDestroy {
   keyword: string = '';
   index: string = '';
   organizationId: string = '';
@@ -22,17 +23,37 @@ export class WorkspacePage implements OnInit {
   qParams: any = {};
   size: any = {};
   addFALButtonText: string = 'Add Federal Assistance Listing';
+  cookieValue: string;
+  runProgSub: any;
+
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {
   }
 
   ngOnInit() {
-    this.setupQS();
-    this.activatedRoute.queryParams.subscribe(
-      data => {
-        this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
-        this.runProgram();
-      });
+    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+      if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
+        this.setupQS();
+        this.activatedRoute.queryParams.subscribe(
+          data => {
+            this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
+            this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+            this.runProgram();
+          });
+      } else {
+        this.router.navigate(['accessrestricted']);
+      }
+    } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
+      this.router.navigate(['signin']);
+    }
+  }
+
+  ngOnDestroy() {
+
+    if (this.runProgSub)
+      this.runProgSub.unsubscribe();
+
+
   }
 
   setupQS() {
@@ -47,8 +68,10 @@ export class WorkspacePage implements OnInit {
 
   runProgram() {
     // make api call
-    this.programService.runProgram({
-      pageNum: this.pageNum
+    this.runProgSub = this.programService.runProgram({
+      pageNum: this.pageNum,
+      Cookie: this.cookieValue
+
     }).subscribe(
       data => {
         if (data._embedded && data._embedded.program) {
@@ -77,7 +100,7 @@ export class WorkspacePage implements OnInit {
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
-    this.router.navigate(['workspace/'], navigationExtras);
+    this.router.navigate(['falworkspace/'], navigationExtras);
   }
 
   addBtnClick() {

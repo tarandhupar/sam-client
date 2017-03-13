@@ -20,7 +20,7 @@ export class FHService {
     //organizationId length >= 30 -> call opportunity org End Point
     if (id.length >= 30) {
       oApiParam.name = 'opportunity';
-      oApiParam.suffix = '/' + id + '/organization';
+      oApiParam.suffix = '/opportunities/' + id + '/organization';
     } else { //organizationId less than 30 character then call Octo's FH End point
       oApiParam.name = 'federalHierarchy';
       oApiParam.suffix = ((includeChildrenLevels) ? '/hierarchy/' : '/') + id;

@@ -18,12 +18,14 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 /*
  * Webpack Constants
+ * SHOW_HIDE_RESTRICTED_PAGES : created to hide components in MINC Environment
  */
 const METADATA = {
   title: 'SAM Client Starter',
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer(),
-  SHOW_OPTIONAL: process.env.SHOW_OPTIONAL === 'true'
+  SHOW_OPTIONAL: process.env.SHOW_OPTIONAL === 'true',
+  SHOW_HIDE_RESTRICTED_PAGES: process.env.SHOW_HIDE_RESTRICTED_PAGES === 'true'
 };
 
 /*

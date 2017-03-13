@@ -14,23 +14,25 @@
 
         <p class="text-center">The confirmation link will remain valid for 48 hours.</p>
 
-        <ul class="links">
-          <li *ngIf="email" class="email">
-            <a href="javascript:void(0);" (click)="resendEmail()">Resend Email</a>
-          </li>
-          <li class="home">
-            <a routerLink="/">Return to SAM.gov Home</a>
-          </li>
-        </ul>
+        <div class="relative">
+          <ul class="links">
+            <li *ngIf="email" class="email">
+              <a href="javascript:void(0);" (click)="resendEmail()">Resend Email</a>
+            </li>
+            <li class="home">
+              <a routerLink="/">Return to SAM.gov Home</a>
+            </li>
+          </ul>
+          <samAlert class="usa-alert-static"
+                    [type]="states.alert.type"
+                    [title]="states.alert.title"
+                    [showClose]="true"
+                    [hidden]="!states.alert.show"
+                    (dismiss)="dismissAlert()">
+            {{ states.alert.description }}
+          </samAlert>
+        </div>
       </section>
     </span>
   </div>
 </div>
-
-<samAlert [type]="states.alert.type"
-          [title]="states.alert.title"
-          [description]="states.alert.description"
-          [showClose]="true"
-          [hidden]="!states.alert.show"
-          [target]
-          (dismiss)="dismissAlert()"></samAlert>
