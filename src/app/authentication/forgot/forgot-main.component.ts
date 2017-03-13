@@ -18,8 +18,11 @@ import { KBA } from '../kba.interface';
 })
 export class ForgotMainComponent {
   @ViewChild('form') form;
+  @ViewChild('samPassword') $password;
 
   private states = {
+    submittedCount: 0,
+    submitted: false,
     reset: false,
     lockout: false,
     alert: {
@@ -34,8 +37,8 @@ export class ForgotMainComponent {
   private token = '';
 
   private question = '';
-  private answer: FormControl;
-  private password: FormControl;
+  private answer = new FormControl('', Validators.required);
+  private password = new FormControl('');
 
   private lookups = {
     questions: [],
@@ -49,13 +52,7 @@ export class ForgotMainComponent {
     private api: IAMService) {}
 
   ngOnInit() {
-    this.initForm();
     this.verifyToken();
-  }
-
-  initForm() {
-    this.answer = new FormControl('', Validators.required);
-    this.password = new FormControl('');
   }
 
   verifyToken() {
@@ -99,7 +96,6 @@ export class ForgotMainComponent {
       }
     };
 
-
     if(!this.api.iam.isDebug()) {
       this.router.navigate(['/forgot'], params);
     } else {
@@ -133,6 +129,7 @@ export class ForgotMainComponent {
       //--> Reset
       case 'success':
         this.states.reset = true;
+        this.states.alert.show = false;
         break;
 
       //--> Lockout
@@ -153,13 +150,14 @@ export class ForgotMainComponent {
     switch(stage) {
       case 1:
         if(this.answer.valid) {
+          this.states.submitted = true;
 
-          // this.states.reset = true
           this.zone.runOutsideAngular(() => {
             this.api.iam.user.password.kba(this.token, this.answer.value, (status, token, question, message) => {
               vm.zone.run(() => {
                 this.answer.reset('');
                 this.next(status, token, question, message);
+                this.states.submitted = false;
               });
             }, (error) => {
               vm.zone.run(() => {
@@ -181,7 +179,12 @@ export class ForgotMainComponent {
     let vm = this,
         control = this.password;
 
+    this.states.submittedCount++;
+    this.$password.setSubmitted();
+
     if(control.valid) {
+      this.states.submitted = true;
+
       this.zone.runOutsideAngular(() => {
         this.api.iam.user.password.reset(control.value, this.token, () => {
           vm.zone.run(() => {
@@ -194,7 +197,18 @@ export class ForgotMainComponent {
           });
         }, (error) => {
           vm.zone.run(() => {
-            this.expire(error.message);
+            switch(error.httpCode) {
+              case 412:
+                this.$password.setConsecutiveValidationError();
+                break;
+              case 406:
+                this.$password.setCustomError('password', error.message);
+                break;
+              default:
+                this.expire(error.message);
+            }
+
+            this.states.submitted = false;
           });
         });
       })

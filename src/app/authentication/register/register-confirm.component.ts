@@ -26,7 +26,11 @@ export class RegisterConfirmComponent {
 
   ngOnInit() {
     this.email = (Cookie.get('iam-signup-email') || '')
-    Cookie.delete('iam-signup-email')
+    Cookie.delete('iam-signup-email');
+
+    if(this.api.iam.isDebug()) {
+      this.email = 'john.doe@gsa.gov';
+    }
   }
 
   alert(type, message?) {
@@ -58,7 +62,12 @@ export class RegisterConfirmComponent {
       vm.alert('success')
       cb();
     }, (error) => {
-      vm.alert('error', error);
+      if(vm.api.iam.isDebug()) {
+        vm.alert('success');
+      } else {
+        vm.alert('error', error);
+      }
+
       cb();
     });
   }
