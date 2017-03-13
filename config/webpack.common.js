@@ -18,12 +18,14 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 /*
  * Webpack Constants
+ * SHOW_HIDE_RESTRICTED_PAGES : created to hide components in MINC Environment
  */
 const METADATA = {
   title: 'SAM Client Starter',
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer(),
-  SHOW_OPTIONAL: process.env.SHOW_OPTIONAL === 'true'
+  SHOW_OPTIONAL: process.env.SHOW_OPTIONAL === 'true',
+  SHOW_HIDE_RESTRICTED_PAGES: process.env.SHOW_HIDE_RESTRICTED_PAGES === 'true'
 };
 
 /*
@@ -69,7 +71,6 @@ module.exports = {
    * See: http://webpack.github.io/docs/configuration.html#resolve
    */
   resolve: {
-
     /*
      * An array of extensions that should be used to resolve modules.
      *
@@ -80,8 +81,13 @@ module.exports = {
     // Make sure root is src
     root: helpers.root('src'),
 
+    // aliases
+    alias: {
+      "sam-ui-kit": helpers.root('src/sam-ui-elements/src/ui-kit')
+    },
+
     // remove other default values
-    modulesDirectories: ['node_modules'],
+    modulesDirectories: ['node_modules']
 
   },
 

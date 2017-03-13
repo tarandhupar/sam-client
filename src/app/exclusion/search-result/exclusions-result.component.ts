@@ -11,7 +11,7 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive==false" class="usa-label">INACTIVE</span>
     	</p>
     	<h3 class="exclusion-title">
-    	<a *ngIf="data.isActive==true" [routerLink]="['/exclusions', data.samNumber]" [queryParams]="qParams">{{ data.name }}</a>
+    	<a *ngIf="data.isActive==true" [routerLink]="['/exclusions', uniqueIdentifier]" [queryParams]="qParams">{{ data.name }}</a>
       	<span *ngIf="data.isActive==false">{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
@@ -45,9 +45,46 @@ import * as moment from 'moment/moment';
 export class ExclusionsResult implements OnInit {
   @Input() data: any={};
   @Input() qParams:any = {};
+  uniqueIdentifier: string;
+  samNumberConcat:string;
+  orgIdConcat:string;
+  typeConcat:string;
+  cageCodeConcat:string;
   constructor() { }
 
   ngOnInit(){
+
+    if(this.data.organizationHierarchy!=null && this.data.organizationHierarchy.organizationId!=null && this.data.organizationHierarchy.organizationId.length > 0){
+      this.orgIdConcat=this.data.organizationHierarchy.organizationId;
+    }
+    else {
+      this.orgIdConcat='NA';
+    }
+
+    if(this.data.samNumber!=null && this.data.samNumber.length > 0){
+      this.samNumberConcat=this.data.samNumber;
+    }
+    else {
+      this.samNumberConcat='NA';
+    }
+
+    if(this.data.type!=null && this.data.type.length > 0){
+      this.typeConcat=this.data.type;
+    }
+    else {
+      this.typeConcat='NA';
+    }
+
+    if(this.data.cageCode!=null && this.data.cageCode.length > 0){
+      this.cageCodeConcat=this.data.cageCode;
+    }
+    else {
+      this.cageCodeConcat='NA';
+    }
+
+    this.uniqueIdentifier=this.samNumberConcat + '+' + this.orgIdConcat + '+' + this.typeConcat + '+' + this.cageCodeConcat;
+
+
     if(this.data.activationDate!==null) {
       this.data.activationDate = moment(this.data.activationDate).format("MMM D, Y");
     }

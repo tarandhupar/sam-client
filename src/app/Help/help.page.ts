@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 
@@ -13,6 +13,9 @@ export class HelpPage {
   private baseUrl: string = "/help/";
   private currentSubSection: string = "";
   private widthLimit: number = 1200;
+
+  @ViewChild("feedback") feedback;
+
 
   constructor(private router: Router) {
     //router.navigateByUrl('help/overview');

@@ -4,7 +4,8 @@ import { Component, DoCheck, ElementRef, Input, KeyValueDiffers, NgZone, OnInit,
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { SamNameEntryComponent, SamPhoneEntryComponent } from 'ui-kit';
+import { SamNameEntryComponent } from 'sam-ui-kit/form-templates/name-entry';
+import { SamPhoneEntryComponent } from 'sam-ui-kit/form-templates/phone-entry';
 import { SamKBAComponent, SamPasswordComponent } from '../shared';
 
 import { IAMService } from 'api-kit';
@@ -210,7 +211,7 @@ export class RegisterMainComponent {
 
       title:         [''],
       firstName:     ['John', Validators.required],
-      middleName:    [''],
+      middleName:    ['J'],
       lastName:      ['Doe', Validators.required],
       suffix:        [''],
 
@@ -231,6 +232,7 @@ export class RegisterMainComponent {
     });
 
     this.user = this.userForm.value;
+    this.user.fullName = 'John J Doe';
 
     this.lookups.questions = [
       { 'id': 1,  'question': 'What was the make and model of your first car?' },

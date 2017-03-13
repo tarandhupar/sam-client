@@ -1,26 +1,27 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from 'rxjs';
-import { AlphabetSelectorService } from "../../ui-kit/alphabet-selector/alphabet-selector.component";
+import { AlphabetSelectorService } from 'sam-ui-kit/components/alphabet-selector/alphabet-selector.component';
+
 
 @Injectable()
-export class UserDirService implements AlphabetSelectorService{
+export class UserDirService implements AlphabetSelectorService {
 
   drillDownLimitLength: number = 3; // the limit level of drill down
-  pageCount:number = 4;
+  pageCount: number = 4;
   firstLayerChars: any;
 
   constructor(private apiService: WrapperService) {
     this.firstLayerChars = this.randomAvailableChars('');
   }
 
-  getData(checkPrefix:boolean, prefix:string, offset:number){
+  getData(checkPrefix: boolean, prefix: string, offset: number) {
 
     let oParam = {
       prefix: prefix,
       offset: offset,
       checkPrefix: checkPrefix
-    }
+    };
 
     // TODO: Uncomment when alphabet-selector api service is up
     // let apiOptions: any = {
