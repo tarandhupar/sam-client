@@ -5,7 +5,6 @@ import { bootstrap } from '@angular/platform/browser';
 
 
 @Component({
-	//moduleId: module.id,
 	providers: [ ],
 	templateUrl: './static.template.html'
 
@@ -20,8 +19,5 @@ export class StaticComponent {
             .subscribe(data => this.data = data,
 				err => console.log(err),
 				() => console.log('Completed'));
-
-
-	}
-
+  }
 }
