@@ -30,14 +30,16 @@ Dont have a user account?<br>
     Showing {{currentReportStartIndex}}-{{currentReportEndIndex}} out of {{totalReportCount}} reports
   </span>
 
-	<ul>
+	<ul type="none">
   <li *ngFor="let item of currentReports;let i=index">
-    <i class="fa fa-star-o"></i><a [routerLink]="['../report',item.id,item.name, item.desc]">{{item.name}}</a>
+    <a [routerLink]="['../report',item.id,item.name, item.desc]"><b>{{item.name}}</b></a> <b class="grid-overview1">&nbsp;&nbsp;&nbsp;&nbsp;<span>{{item.app}}</span></b><span class="grid-overview2"><i class="fa fa-star-o"></i></span>
     <br>
     {{item.desc}}
+    <br><br>
+    {{item.verb}}
     <br>
     <samAccordion>
-      <samAccordionSection [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">No Saved Criteria</samAccordionSection>
+      <samAccordionSection [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">{{item.appendix}}</samAccordionSection>
     </samAccordion>
     <br>
     </li>

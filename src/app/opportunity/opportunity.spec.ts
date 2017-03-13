@@ -53,7 +53,7 @@ let MockOpportunityService = {
             "content": "Link Additional Info content goes here"
           }
         },
-        "classificationCode": "Classification Code goes here",
+        "classificationCode": "1",
         "naicsCode": [
           "naics Code 1 goes here",
           "naics Code 2 goes here"
@@ -137,17 +137,25 @@ let MockOpportunityService = {
   },
   getOpportunityDictionary(ids: String) {
     return Observable.of({
-      classification_code: [
-        {
-          dictionary_name: "classification_code",
-          code: "10",
-          parent_element_id: null,
-          description: null,
-          element_id: "1",
-          sort_index: "1",
-          value: "10 -- Weapons"
+      _embedded: {
+        dictionaries: [
+          {
+            elements:[
+              {
+                elementId: "1",
+                value: "10 -- Weapons",
+                description: null,
+                elements: null
+              }],
+            id: "classification_code"
+          }
+        ]
+      },
+      "_links": {
+        "self": {
+          "href": "/opps/v1/dictionaries?ids=classification_code"
         }
-      ]
+      }
     });
   },
   getOpportunityLocationById(id: String) {

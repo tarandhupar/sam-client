@@ -30,6 +30,7 @@ export class WageDeterminationPage implements OnInit {
   // On load select first item on sidenav component
   selectedPage: number = 0;
   pageRoute: string;
+  pageFragment: string;
   sidenavModel = {
     "label": "Wage Determination",
     "children": []
@@ -47,7 +48,8 @@ export class WageDeterminationPage implements OnInit {
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
-        if (tree.fragment) {
+        this.pageFragment = tree.fragment;
+        if (this.pageFragment) {
           const element = document.getElementById(tree.fragment);
           if (element) { element.scrollIntoView(); }
         }
@@ -78,16 +80,16 @@ export class WageDeterminationPage implements OnInit {
       wgSubject.subscribe(api => { // do something with the wg api
         this.wageDetermination = api;
 
-        let wageDeterminationSideNavContent = {
-          "label": "Wage Determination",
-          "route": "wage-determination/"+this.wageDetermination.fullReferenceNumber+"/"+this.wageDetermination.revisionNumber,
-          "children": [
-            {
-              "label": (this.isSCA ? "SCA WD # " : "DBA WD # ") + this.wageDetermination.fullReferenceNumber,
-              "field": "wage-determination"
-            }
-          ]
-        };
+        let wageDeterminationSideNavContent = [
+          {
+            "label": "Overview",
+            "route": "#sam-search-header",
+          },
+          {
+            "label": "Wage Determination",
+            "route": "#wage-determination",
+          }
+        ];
         this.updateSideNav(wageDeterminationSideNavContent);
       }, err => {
         console.log('Error logging', err);
@@ -103,11 +105,13 @@ export class WageDeterminationPage implements OnInit {
 
     if(content){
       // Items in first level (pages) have to have a unique name
-      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
-      // If page has a unique name added to the sidenav
-      if(repeatedItem === -1){
-        this.sidenavModel.children.push(content);
-      }
+      _.map(content, function(contentItem){
+        let repeatedItem = _.findIndex(self.sidenavModel.children, item => item.label == contentItem.label );
+        // If page has a unique name added to the sidenav
+        if(repeatedItem === -1){
+          self.sidenavModel.children.push(contentItem);
+        }
+      });
     }
 
     updateContent();
@@ -141,7 +145,11 @@ export class WageDeterminationPage implements OnInit {
 
   sidenavPathEvtHandler(data){
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
-		if(data.charAt(0)=="#"){
+    
+    if (this.pageFragment == data.substring(1)) {
+      document.getElementById(this.pageFragment).scrollIntoView();
+    }
+		else if(data.charAt(0)=="#"){
 			this.router.navigate([], { fragment: data.substring(1) });
 		} else {
 			this.router.navigate([data]);
@@ -150,6 +158,11 @@ export class WageDeterminationPage implements OnInit {
 
   private getLocations(combinedAPI: Observable<any>){
     combinedAPI.subscribe(([wageDetermination, dictionaries]) => {
+      /** Check that locations exist **/
+      if(!wageDetermination.location) {
+        return;
+      }
+
       /** Process each location data into a usable state **/
       for (let eachLocation of wageDetermination.location) {
         /** Process States **/
@@ -226,10 +239,5 @@ export class WageDeterminationPage implements OnInit {
         this.constructionTypes = constructionTypeString;
       }
     })
-  }
-
-  public openDocumentPrintPage() {
-    var win = window.open('', 'Document');
-    win.document.body.innerHTML = '<pre>' + this.wageDetermination.document + '</pre>';
   }
 }
