@@ -11,6 +11,7 @@ import {ViewChangesPipe} from "./pipes/view-changes.pipe";
 import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import { Diff } from 'diff';
 
 @Component({
   moduleId: __filename,
