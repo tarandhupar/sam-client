@@ -245,7 +245,7 @@
       <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages)">
         <div class="download-container-header">
           <h2>Packages</h2>
-          <ng-container *ngIf="attachment">
+          <ng-container *ngIf="attachments">
             <span class="download-button">
               <a class="usa-button-small usa-button-gray" *ngIf="hasPublicPackages()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)}}">
                 <i class="fa fa-cloud-download" aria-hidden="true"></i>
@@ -255,7 +255,8 @@
           </ng-container>
         </div>
 
-        <ng-container *ngIf="attachment">
+        <ng-container *ngIf="attachments && attachments.length > 0">
+          <div *ngFor="let attachment of attachments">
           <!-- Header -->
           <div class="card download-container" *ngFor="let package of attachment.packages" [@intro]="fade">
 
@@ -333,9 +334,10 @@
               </div>
             </div>
           </div>
+          </div>
         </ng-container>
 
-        <div class="card" *ngIf="!attachment && !attachmentError" [@intro]="fade">
+        <div class="card" *ngIf="!attachments && !attachmentError" [@intro]="fade">
           <div class="card-secure-content usa-text-center">
             <i class="fa fa-spinner fa-spin"></i>
             <strong>Loading &hellip;</strong>
@@ -484,18 +486,18 @@
             <samSelect class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></samSelect>
           </div>
         </div>
-        
+
         <p class="m_T-2x" style="text-align: right;" *ngIf="relatedOpportunitiesMetadata">
-          <span class="usa-sr-only">Showing results</span> 
+          <span class="usa-sr-only">Showing results</span>
           <strong>
-            {{min +1}} 
+            {{min +1}}
             <span class="usa-sr-only">through</span> -
             {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
           </strong>
-          of 
+          of
           <strong>{{relatedOpportunitiesMetadata.count}}</strong>
         </p>
-        
+
 
         <div id="awards-list" tabindex="-1">
           <div class="card-simple" *ngFor="let element of relatedOpportunities" tabindex="0">

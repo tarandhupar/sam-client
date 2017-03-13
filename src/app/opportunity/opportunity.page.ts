@@ -78,7 +78,7 @@ export class OpportunityPage implements OnInit {
   organization: any;
   currentUrl: string;
   dictionary: any;
-  attachment: any;
+  attachments: any = [];
   relatedOpportunities:any;
   relatedOpportunitiesMetadata:any;
   public logoUrl: string;
@@ -148,7 +148,7 @@ export class OpportunityPage implements OnInit {
     let relatedOpportunities = this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     let historyAPI = this.loadHistory(opportunityAPI);
 
-    //let packagesOpportunities = this.loadAttachments(historyAPI);
+    let packagesOpportunities = this.loadAttachments(historyAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
 
     // Construct a new observable that emits both opportunity and its parent as a tuple
@@ -168,7 +168,7 @@ export class OpportunityPage implements OnInit {
       success => {
         if (this.pageFragment && document.getElementById(this.pageFragment)) {
           document.getElementById(this.pageFragment).scrollIntoView();
-        }
+      }
       },
       error => {
         // Sometimes api calls return an error
@@ -369,11 +369,24 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadAttachments(historyAPI: Observable<any>){
+    let packagesOpportunities = [];
       historyAPI.subscribe(api =>{
-          api.content.history.forEach((res: any) => {
-            this.loadHistoryAttachments(res.notice_id);
-          });
+        let current = _.filter(api.content.history, historyItem => {
+          return historyItem.notice_id == this.opportunity.opportunityId;
+        })[0];
+        api.content.history.forEach((res: any) => {
+          if(res.index <= current.index) {
+            packagesOpportunities.push(this.loadHistoryAttachments(res.notice_id));
+          }
+        });
+      },err => {
+        console.log('Error loading attachments: ', err);
+        this.attachmentError = true;
       });
+
+    //let attachmentsReady = Observable.zip(packagesOpportunities);
+    return packagesOpportunities;
+
   }
 
   private loadHistoryAttachments(historyId:any){
@@ -381,18 +394,17 @@ export class OpportunityPage implements OnInit {
     this.opportunityService.getAttachmentById(historyId).subscribe(attachmentSubject);
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
-      this.attachment = attachment;
-      this.attachment.packages.forEach((key: any) => {
-        key.accordionState = 'collapsed';
+      this.attachments.push(attachment);
+      this.attachments.forEach((attach: any) => {
+        attach.packages.forEach((key: any) => {
+          key.accordionState = 'collapsed';
+        });
+        attach.resources.forEach((res: any) => {
+          res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+        });
       });
-      this.attachment.resources.forEach((res: any) => {
-        res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
-      });
-    }, err => {
-      console.log('Error loading attachments: ', err);
-      this.attachmentError = true;
     });
-
+    //console.log(this.attachments);
     return attachmentSubject;
   }
 
@@ -694,8 +706,10 @@ export class OpportunityPage implements OnInit {
   }
 
   public hasPublicPackages(){
-    for(let pkg of this.attachment['packages']) {
-      if(pkg['access'] === 'Public') { return true; }
+    for(let attachment of this.attachments){
+      for(let pkg of attachment['packages']) {
+        if(pkg['access'] === 'Public') { return true; }
+      }
     }
     return false;
   }
