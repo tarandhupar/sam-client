@@ -6,7 +6,7 @@
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.domains.options)" (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.objects.options)" (modelChange)="objectsChanged($event)" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [model]="filters.objects.value"></samMultiSelectDropdown>
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.permissions.options)" (modelChange)="permissionsChanged($event)" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [model]="filters.permissions.value"></samMultiSelectDropdown>
-    <a [routerLink]="['../grant-access']" class="usa-button usa-button-success pull-right">Grant Access</a>
+    <a [routerLink]="[isAdmin ? '../grant-access' : '../request-access']" class="usa-button usa-button-success pull-right">{{isAdmin ? 'Grant' : 'Request'}} Access</a>
   </div>
 
   <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()">
@@ -50,7 +50,7 @@
             <div class="usa-width-two-thirds">
               Agency User
             </div>
-            <div class="usa-width-one-sixth no-wrap modify-role-buttons">
+            <div class="usa-width-one-sixth no-wrap modify-role-buttons" *ngIf="isAdmin">
               <div class="pull-right">
                 <button class="usa-button-transparent m_T-0 underline" (click)="onEditClick(role, domain)"><i class="fa fa-edit"></i>&nbsp;Edit</button>
                 <button (click)="onDeleteRoleClick(role)" class="usa-button-transparent m_T-0 m_R-0 underline"><i class="fa fa-trash"></i>&nbsp;Delete</button>
@@ -64,7 +64,7 @@
             <div class="usa-width-five-sixths">
               <div *ngFor="let org of [1, 2, 3]; let lastOrg=last;">
                 Org {{org}}
-                <button (click)="onShowPermissionsClick(role)" *ngIf="lastOrg" class="usa-button-transparent pull-right show-permissions-button m_0 underline"><i class="fa" [ngClass]="role.isOpen ? 'fa-minus' : 'fa-plus'"></i>&nbsp;Show Permissions</button>
+                <button (click)="onShowPermissionsClick(role)" *ngIf="lastOrg" class="usa-button-transparent pull-right show-permissions-button m_0 underline"><i class="fa" [ngClass]="role.isOpen ? 'fa-minus' : 'fa-plus'"></i>&nbsp;{{role.isOpen ? "Hide" : "Show"}} Permissions</button>
               </div>
             </div>
           </div>

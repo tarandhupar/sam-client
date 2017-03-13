@@ -22,7 +22,7 @@ routes.unshift({
     { path: 'access',  component: UserAccessPage, },
     { path: 'edit-access',  component: GrantAccessPage },
     { path: 'grant-access',  component: GrantAccessPage },
-
+    { path: 'request-access',  component: GrantAccessPage },
   ]
 });
 

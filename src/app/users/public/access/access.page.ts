@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 import { SamAccordionComponent } from "sam-ui-kit/components/accordion/accordion.component";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { SamModalComponent } from "sam-ui-kit/components/modal";
-
+import { Cookie } from 'ng2-cookies'
 
 @Component({
   templateUrl: 'access.template.html'
@@ -26,6 +26,7 @@ export class UserAccessPage implements OnInit {
   };
 
   private userName: string;
+  private isAdmin: boolean = false;
   private organizations: Organization[];
 
   @ViewChildren(SamAccordionComponent) allAccordions: QueryList<SamAccordionComponent>;
@@ -57,6 +58,17 @@ export class UserAccessPage implements OnInit {
       this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
 
       this.getOrganizationData(this.userAccessModel.allOrganizations());
+    });
+
+    // for debugging, fake out admin role by setting it as a query parameter
+    this.route.queryParams.subscribe(queryParams => {
+      if (queryParams["admin"] === 'true') {
+        Cookie.set('isAdmin', 'true');
+      } else if (queryParams["admin"] === 'false') {
+        Cookie.set('isAdmin', 'false');
+      }
+
+      this.isAdmin = Cookie.get('isAdmin') === 'true';
     });
   }
 
