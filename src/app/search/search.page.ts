@@ -130,7 +130,7 @@ export class SearchPage implements OnInit{
 
     this.organizationId = organizationStringList;
 
-    this.loadParams();
+    //this.loadParams();
 
     this.pageNum = 0;
     var qsobj = this.setupQS(false);
@@ -178,7 +178,7 @@ export class SearchPage implements OnInit{
     }
 
     if(this.organizationId.length>0){
-      qsobj['orgId'] = this.organizationId;
+      qsobj['organizationId'] = this.organizationId;
     }
 
     return qsobj;

@@ -27,6 +27,11 @@ export class SearchService {
       oApiParam.oParam['index'] = obj.wdType;
     }
 
+    // organization id filter
+    if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null && obj.organizationId !== '') {
+      oApiParam.oParam['organization_id'] = obj.organizationId;
+    }
+
     // construction type filter
     if(typeof obj.conType !== 'undefined' && obj.conType !== null && obj.conType !== '') {
       oApiParam.oParam['construction_type'] = obj.conType;
