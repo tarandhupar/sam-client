@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { UserAccessInterface } from './access.interface';
 import { RoleInterface } from "./roles.interface";
 import * as _ from 'lodash';
+import { IDomain } from "./domain.interface";
 
 export interface UserAccessFilterOptions {
   domainIds?: (string|number)[],
@@ -234,17 +235,27 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  getPermissions(roleId) {
+  getDomains(): Observable< IDomain > {
+    let apiOptions: any = {
+      name: 'domains',
+      method: 'GET',
+      suffix: '',
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  getPermissions(queryParams) {
     let apiOptions: any = {
       name: 'permissions',
       method: 'GET',
-      suffix: '/'+roleId,
+      suffix: '',
       oParam: {
         fetchNames: 'true',
-        roleKey: roleId
       }
     };
 
+    apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
     return this.apiService.call(apiOptions);
   }
 

@@ -53,10 +53,10 @@ export class GrantAccessPage implements OnInit {
     let match = this.router.url.match('edit-access');
     this.isEdit = !!(match && match.length);
 
-    this.userService.getRoles().subscribe(
-      roles => {
-        this.roleOptions = roles.map(role => {
-          return { value: role.id, label: role.roleName };
+    this.userService.getDomains().subscribe(
+      domains => {
+        this.domainOptions = domains._embedded.domainList.map(domain => {
+          return { value: domain.pk_domain, label: domain.domainName };
         });
       },
       error => {
@@ -84,23 +84,87 @@ export class GrantAccessPage implements OnInit {
   }
 
   onRoleChange(role) {
+    // if (role) {
+    //   this.errors.role = '';
+    // }
+    //
+    // this.role = role;
+    // this.domain = null;
+    // this.domainOptions = [];
+    // this.objects = [];
+    //
+    // this.userService.getPermissions(this.role).subscribe(
+    //   perms => {
+    //     this.permissions = perms;
+    //     let c = new PropertyCollector(perms);
+    //     let domains = c.collect(['DomainContent', [], 'domain']);
+    //     this.domainOptions = domains.map(d => {
+    //       return { label: d.val, value: d.id };
+    //     });
+    //   },
+    //   err => {
+    //     this.domainOptions = [];
+    //     this.footerAlert.registerFooterAlert({
+    //       title:"Unable to fetch permission information.",
+    //       description:"",
+    //       type:'error',
+    //       timer:0
+    //     });
+    //   }
+    // );
+
     if (role) {
       this.errors.role = '';
     }
-
     this.role = role;
-    this.domain = null;
-    this.domainOptions = [];
+
+    let d = this.permissions.DomainContent.find(dom => {
+      return +dom.domain.id === +this.domain;
+    });
+    if (d) {
+      this.objects = d.FunctionContent;
+    } else {
+      this.objects = [];
+    }
+  }
+
+  onDomainChange(domain) {
+    // if (domain) {
+    //   this.errors.domain = '';
+    // }
+    // this.domain = domain;
+    //
+    // let d = this.permissions.DomainContent.find(dom => {
+    //   return +dom.domain.id === +this.domain;
+    // });
+    // if (d) {
+    //   this.objects = d.FunctionContent;
+    // } else {
+    //   this.objects = [];
+    // }
+
+    if (domain) {
+      this.errors.role = '';
+    }
+
+    this.domain = domain;
+    this.role = null;
+    this.roleOptions = [];
     this.objects = [];
 
-    this.userService.getPermissions(this.role).subscribe(
+    this.userService.getPermissions({domainID: domain}).subscribe(
       perms => {
         this.permissions = perms;
-        let c = new PropertyCollector(perms);
-        let domains = c.collect(['DomainContent', [], 'domain']);
-        this.domainOptions = domains.map(d => {
-          return { label: d.val, value: d.id };
-        });
+        // let c = new PropertyCollector(perms);
+        // let domains = c.collect(['DomainContent', [], 'domain']);
+        // this.domainOptions = domains.map(d => {
+        //   return { label: d.val, value: d.id };
+        // });
+        // let c = new PropertyCollector(perms);
+        // let roles = c.collect(['DomainContent', [], 'domain']);
+        // this.domainOptions = roles.map(d => {
+        //   return { label: d.val, value: d.id };
+        // });
       },
       err => {
         this.domainOptions = [];
@@ -112,22 +176,6 @@ export class GrantAccessPage implements OnInit {
         });
       }
     );
-  }
-
-  onDomainChange(domain) {
-    if (domain) {
-      this.errors.domain = '';
-    }
-    this.domain = domain;
-
-    let d = this.permissions.DomainContent.find(dom => {
-      return +dom.domain.id === +this.domain;
-    });
-    if (d) {
-      this.objects = d.FunctionContent;
-    } else {
-      this.objects = [];
-    }
   }
 
   goToAccessPage() {

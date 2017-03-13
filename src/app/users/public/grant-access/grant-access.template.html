@@ -1,5 +1,7 @@
 <div class="grant-access-page">
   <h1 class="m_T-0">{{isEdit ? "Edit" : "Grant"}} Access</h1>
+
+  <!-- Domain -->
   <div *ngIf="!isEdit">
     <samSelect name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
   </div>
@@ -7,7 +9,11 @@
     <label>Domain:</label>
     <span>{{domain}}</span>
   </div>
+
+  <!-- Role -->
   <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
+
+  <!-- Orgs -->
   <agencyPicker
     id="form-top"
     [label]="'Organizations'"
@@ -16,6 +22,8 @@
     [required]="true"
     [searchMessage]="orgError"
   ></agencyPicker>
+
+  <!-- Permissions -->
   <ng-container *ngIf="objects && objects.length">
     <div class="m_B-1x"><label>Permissions</label></div>
     <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
@@ -30,7 +38,11 @@
       </li>
     </ul>
   </ng-container>
+
+  <!-- Optional Message -->
   <samTextArea name="options-response" label="Messages:" placeholder="(Optional) Include a message with your response" [(value)]="messages"></samTextArea>
+
+  <!-- Cancel / Confirm -->
   <div>
     <p class="pull-right">
       <a [routerLink]="['../access']"><button class="usa-button usa-button-outline">Cancel</button></a>
