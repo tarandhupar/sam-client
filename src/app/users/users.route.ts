@@ -5,7 +5,6 @@ import { UserViewComponent } from "./public/public.component";
 import { UserMigrationsPage } from './public/migrations/migrations.page';
 import { UserProfilePage } from './public/profile/profile.page';
 import { GrantAccessPage } from "./public/grant-access/grant-access.page";
-import { EditDomainPage } from "./public/edit-domain/edit-domain.page";
 
 export const routes: Routes = [];
 

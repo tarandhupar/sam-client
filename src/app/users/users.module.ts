@@ -20,7 +20,6 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
 import { GrantAccessPage } from "./public/grant-access/grant-access.page";
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
-import { EditDomainPage } from "./public/edit-domain/edit-domain.page";
 
 
 @NgModule({
@@ -43,7 +42,6 @@ import { EditDomainPage } from "./public/edit-domain/edit-domain.page";
     UserViewComponent,
     UserMigrationsPage,
     UserAccessPage,
-    EditDomainPage,
     GrantAccessPage,
     UserProfilePage,
     UserDirectoryPage,
