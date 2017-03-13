@@ -246,6 +246,7 @@ export class SearchPage implements OnInit{
 
 	runSearch(){
     if(this.index === 'wd') {
+      // fetching data for drop downs
       this.getDictionaryData('wdStates');
       this.getCountyByState(this.wdStateModel);
       this.determineEnableCountySelect();
