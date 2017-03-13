@@ -397,6 +397,16 @@ export class OpportunityPage implements OnInit {
     });
   }
 
+  private findDictionary(key: String): any[] {
+    let dictionary = _.find(this.dictionary._embedded['dictionaries'], { id: key });
+
+    if (dictionary && typeof dictionary.elements !== undefined) {
+      return dictionary.elements;
+    } else {
+      return [];
+    }
+  }
+
   private loadHistory(opportunity: Observable<any>) {
     opportunity.subscribe(opportunityAPI => {
       if(opportunityAPI.opportunityId == '' || typeof opportunityAPI.opportunityId === 'undefined') {
