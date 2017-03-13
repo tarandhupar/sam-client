@@ -109,10 +109,37 @@ export class SearchPage implements OnInit{
     this.searchService.loadParams(qsobj);
   }
 
+  // handles 'organization' emmitted event from agency picker
   onOrganizationChange(orgId:any){
+    console.log('onOrganizationChange ', orgId);
 
-    this.organizationId = ""+orgId.value;
+    let organizationStringList = '';
+
+    let stringBuilderArray = orgId.map(function (organizationItem) {
+      if(organizationStringList === ''){
+        organizationStringList += organizationItem.value;
+      }
+      else{
+        organizationStringList += ', ' + organizationItem.value;
+      }
+
+      return organizationStringList;
+    });
+
+    console.log('here is my tempString I compiled ', organizationStringList);
+
+    this.organizationId = organizationStringList;
+
     this.loadParams();
+
+    this.pageNum = 0;
+    var qsobj = this.setupQS(false);
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/search'], navigationExtras);
+
+
   }
 
   setupQS(newsearch){
@@ -148,6 +175,10 @@ export class SearchPage implements OnInit{
 
     if(this.wdCountyModel.length>0){
       qsobj['county'] = this.wdCountyModel;
+    }
+
+    if(this.organizationId.length>0){
+      qsobj['orgId'] = this.organizationId;
     }
 
     return qsobj;
