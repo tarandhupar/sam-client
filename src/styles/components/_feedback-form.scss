@@ -14,36 +14,22 @@ body.feedback-open {
 }
 
 .sam-feedback{
-  position: fixed;
-  right: 0;
-  top: 40%;
-  z-index: 1050;
 
   h4{
     margin: 0;
   }
 
-  .feedback-icon-div{
-    padding: 10px;
-    width: auto;
-    border: 2px solid black;
-    border-radius: 50%;
-    text-align: center;
-  }
-
 
   .feedback-form-div{
-    margin-top: 10px;
-    padding: 10px;
-    width: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: fixed;
+    top: 30vh;
+    left: 30vw;
+    z-index: 1050;
+    width: 550px;
     border: 2px solid black;
     background: $color-white;
-  }
-
-  .hide-form-icon{
-    position: absolute;
-    right: 0;
-    top: 50%;
   }
 
   .feedback-question-div{
@@ -51,25 +37,21 @@ body.feedback-open {
     margin-left: 20px;
     padding: 10px;
     width: auto;
-    border: 2px solid black;
+
+  }
+
+  .feedback-header-span{
+    border-bottom: 2px solid black;
   }
 
   .feedback-question-rating{
     text-align: center;
   }
 
-  .feedback-question-checkbox{
-
-  }
-
-  .feedback-question-radio{
-
-  }
-
   .feedback-pagination{
     position: absolute;
-    bottom: 13px;
-    left: 17%;
+    bottom: 70px;
+    left: 0;
     text-align: center;
   }
 
@@ -79,7 +61,6 @@ body.feedback-open {
     height: 25px;
     border-radius: 50%;
     border: 2px solid $color-primary;
-    margin: 0 15px;
     text-align: center;
   }
 
@@ -102,11 +83,48 @@ body.feedback-open {
     margin-right: 0;
   }
 
-  .feedback-icon-div:hover, .hide-form-icon:hover, .thumb:hover{
+  .feedback-icon-div:hover, .hide-form-icon:hover, .thumb:hover, .fa-times-circle-o:hover{
     cursor: pointer;
   }
 
   .feedback-icon-font{
     font-size: 175%;
   }
+
+
+  .feedback-dash{
+    width: 30px;
+    display: inline-block;
+    border: 1px solid $color-primary;
+  }
+
+  .text-align-center{
+    text-align: center;
+  }
+
+  .feedback-form-link{
+    color: #003264;
+    text-decoration: underline;
+  }
+
+  .feedback-btns-div{
+    z-index: 1070;
+
+    .prev-btn{
+      padding-left: 0px;
+    }
+
+    .next-btn{
+      padding-right: 15px;
+    }
+  }
+
+  .feedback-email-input{
+    height: 36px;
+  }
+
+  .feedback-pagination-span{
+    display: inline-block;
+  }
+
 }
