@@ -83,11 +83,11 @@ export class WageDeterminationPage implements OnInit {
         let wageDeterminationSideNavContent = [
           {
             "label": "Overview",
-            "route": "#sam-search-header",
+            "route": "#wage-determination",
           },
           {
             "label": "Wage Determination",
-            "route": "#wage-determination",
+            "route": "#wd-document",
           }
         ];
         this.updateSideNav(wageDeterminationSideNavContent);
@@ -239,10 +239,5 @@ export class WageDeterminationPage implements OnInit {
         this.constructionTypes = constructionTypeString;
       }
     })
-  }
-
-  public openDocumentPrintPage() {
-    var win = window.open('', 'Document');
-    win.document.body.innerHTML = '<pre>' + this.wageDetermination.document + '</pre>';
   }
 }

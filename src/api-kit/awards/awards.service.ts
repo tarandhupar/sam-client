@@ -39,37 +39,4 @@ export class AwardsService{
     };
     return this.oAPIService.call(oApiParam);
   };
-  
-   getOTAData(agencyCode: string, piid: string, modificationNumber: string, transactionNumber: string, aiType: string) {
-    let oApiParam = {
-      name: 'awards',
-      suffix: '/',
-	  method: 'POST',
-	  body:
-	  {
-		"agencyCode" : agencyCode,
-		"piid" : piid,
-		"modificationNumber" : modificationNumber,
-		"transactionNumber" : transactionNumber,
-		"aiType" : aiType
-	  }
-    };
-    return this.oAPIService.call(oApiParam);
-  };
-  
-  getOTIData(agencyCode: string, piid: string, modificationNumber: string, aiType: string) {
-    let oApiParam = {
-      name: 'awards',
-      suffix: '/',
-	  method: 'POST',
-	  body:
-	  {
-		"agencyCode" : agencyCode,
-		"piid" : piid,
-		"modificationNumber" : modificationNumber,
-		"aiType" : aiType
-	  }
-    };
-    return this.oAPIService.call(oApiParam);
-  };
 }

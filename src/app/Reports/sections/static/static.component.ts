@@ -5,7 +5,7 @@ import { bootstrap } from '@angular/platform/browser';
 
 
 @Component({
-	moduleId: module.id,
+	//moduleId: module.id,
 	providers: [ ],
 	templateUrl: './static.template.html'
 
