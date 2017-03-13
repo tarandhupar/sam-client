@@ -17,7 +17,8 @@ export class SearchService {
       oParam: {
         index: obj.index,
         q: obj.keyword,
-        page: obj.pageNum
+        page: obj.pageNum,
+        is_active: obj.isActive
       },
       method: 'GET'
     };
@@ -39,11 +40,6 @@ export class SearchService {
 
     if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
       oApiParam.oParam['county'] = obj.county;
-    }
-
-    // is active filter
-    if(obj.isActive === true) {
-      oApiParam.oParam['is_active'] = obj.isActive;
     }
 
     if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {

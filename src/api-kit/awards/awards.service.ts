@@ -7,35 +7,11 @@ export class AwardsService{
 
   constructor(private oAPIService: WrapperService){}
   
-  getAwardsData(agencyCode: string, piid: string, modificationNumber: string, transactionNumber: string, aiType: string) {
+   getAwardsData(id: string) {
     let oApiParam = {
       name: 'awards',
-      suffix: '/',
-	  method: 'POST',
-	  body:
-	  {
-		"agencyCode" : agencyCode,
-		"piid" : piid,
-		"modificationNumber" : modificationNumber,
-		"transactionNumber" : transactionNumber,
-		"aiType" : aiType
-	  }
-    };
-    return this.oAPIService.call(oApiParam);
-  };
-  
-   getIDVData(agencyCode: string, piid: string, modificationNumber: string, aiType: string) {
-    let oApiParam = {
-      name: 'awards',
-      suffix: '/',
-	  method: 'POST',
-	  body:
-	  {
-		"agencyCode" : agencyCode,
-		"piid" : piid,
-		"modificationNumber" : modificationNumber,
-		"aiType" : aiType
-	  }
+      suffix: '/' + id,
+	  method: 'GET',
     };
     return this.oAPIService.call(oApiParam);
   };

@@ -148,7 +148,7 @@
           <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.JustificationAuthority)">
             <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
             <ng-container *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && dictionary">
-              {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:dictionary.fo_justification_authority:'element_id':false:'')[0]?.value }}
+              {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:findDictionary('fo_justification_authority'):'elementId':false:'')[0]?.value }}
             </ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ModificationNumber)">
@@ -170,12 +170,12 @@
           <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalSetAside)">
             <strong> Original Set Aside: </strong>
             <ng-container *ngIf="opportunity.parent != null && originalOpportunity?.data?.solicitation?.setAside && dictionary">
-              <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+              <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                 <ng-container>{{ element.value }}</ng-container>
               </ng-container>
             </ng-container>
             <ng-container *ngIf="opportunity.parent == null && opportunity?.data?.solicitation?.setAside && dictionary">
-              <ng-container *ngFor = "let element of [opportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+              <ng-container *ngFor = "let element of [opportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                 <ng-container>{{ element.value }}</ng-container>
               </ng-container>
             </ng-container>
@@ -183,7 +183,7 @@
           <li [attr.id]="generateID(opportunityFields.SetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.SetAside)">
             <ng-container *ngIf="(opportunity.data?.solicitation?.setAside != originalOpportunity?.data?.solicitation?.setAside) && dictionary">
               <strong>Update/Amendment Set Aside: </strong>
-              <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+              <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                 <ng-container> {{ element.value }}</ng-container>
               </ng-container>
             </ng-container>
@@ -191,7 +191,7 @@
           <li [attr.id]="generateID(opportunityFields.ClassificationCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.ClassificationCode)">
             <strong>Classification Code: </strong>
             <ng-container *ngIf="opportunity.data?.classificationCode && dictionary">
-              <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:dictionary.classification_code:'element_id':false:''">
+              <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:findDictionary('classification_code'):'elementId':false:''">
                 {{ element.value }}
               </ng-container>
             </ng-container>
@@ -200,7 +200,7 @@
             <strong>NAICS Code(s): </strong>
             <ng-container *ngIf="opportunity.data?.naicsCode && opportunity.data?.naicsCode[0] != null && dictionary">
               <ul>
-                <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:dictionary.naics_code:'element_id':false:''">
+                <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:findDictionary('naics_code'):'elementId':false:''">
                   <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
                 </li>
               </ul>

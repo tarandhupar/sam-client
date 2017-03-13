@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { WageDeterminationPage }   from './wage-determination.page';
+import { WageDeterminationDocumentPage } from "./wage-determination-document.page";
 import { routing } from './wage-determination.route';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 
@@ -17,10 +18,12 @@ import { AppComponentsModule } from '../app-components/app-components.module';
     AppComponentsModule
   ],
   exports: [
-    WageDeterminationPage
+    WageDeterminationPage,
+    WageDeterminationDocumentPage
   ],
   declarations: [
-    WageDeterminationPage
+    WageDeterminationPage,
+    WageDeterminationDocumentPage
   ],
 })
 export class WageDeterminationModule { }
