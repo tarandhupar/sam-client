@@ -45,8 +45,6 @@ export class GrantAccessPage implements OnInit {
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
 
-    console.log(this.route);
-
     this.route.queryParams.subscribe(queryParams => {
       this.role = queryParams["role"];
       this.domain = queryParams["domain"];
