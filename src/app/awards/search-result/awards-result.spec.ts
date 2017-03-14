@@ -8,7 +8,7 @@ var fixture;
 var comp;
 var titleEl;
 var labelEl;
-describe('EAwardsComponent', () => {
+describe('AwardsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AwardsResult ],
