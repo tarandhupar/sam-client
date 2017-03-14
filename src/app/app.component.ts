@@ -36,7 +36,7 @@ export class App{
       data => {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
-        this.isActive = this.qs['isActive'] === true ? true : this.isActive;
+        this.isActive = typeof data['isActive'] === "string" ? data['isActive'] : this.isActive;
       });
     this._router.events.subscribe(
       val => {
@@ -62,12 +62,16 @@ export class App{
     }
 
     qsobj['page'] = 1;
-    qsobj['isActive'] = this.qs['isActive'];
+    qsobj['isActive'] = this.isActive;
     if(searchObject.searchField !== 'wd') {
       qsobj['wdType'] = null;
       qsobj['state'] = null;
       qsobj['county'] = null;
       qsobj['conType'] = null;
+      qsobj['service'] = null;
+      qsobj['isEven'] = null;
+      qsobj['cba'] = null;
+      qsobj['prevP'] = null;
     }
 
     let navigationExtras: NavigationExtras = {

@@ -32,7 +32,18 @@ Dont have a user account?<br>
 
 	<ul type="none">
   <li *ngFor="let item of currentReports;let i=index">
-    <a [routerLink]="['../report',item.id,item.name, item.desc]"><b>{{item.name}}</b></a> <b class="grid-overview1">&nbsp;&nbsp;&nbsp;&nbsp;<span>{{item.app}}</span></b><span class="grid-overview2"><i class="fa fa-star-o"></i></span>
+    <a [routerLink]="['../report',item.id,item.name, item.desc]">
+      <b>{{item.name}}</b>
+    </a>
+    <b class="grid-overview1">&nbsp;&nbsp;&nbsp;&nbsp;
+      <span>{{item.app}}</span>
+    </b>
+    <span class="grid-overview2">
+      <a>
+        <i aria-hidden="true" class="fa fa-star-o"></i>
+        <span class="usa-sr-only">click to add {{item.name}} to your favorites</span>
+      </a>
+    </span>
     <br>
     {{item.desc}}
     <br><br>
