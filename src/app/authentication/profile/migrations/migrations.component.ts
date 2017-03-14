@@ -78,6 +78,7 @@ export class MigrationsComponent {
         this.zone.run(() => {
           if(this.api.iam.isDebug()) {
             this.initForm();
+            this.alert('Account Successfully Migrated', 'success');
           } else {
             this.router.navigate(['/signin']);
           }
@@ -107,12 +108,10 @@ export class MigrationsComponent {
 
   get session() {
     let data = {
-          system: '',
-          username: '',
-          password: ''
-        },
-
-        mock;
+      system: '',
+      username: '',
+      password: ''
+    };
 
     if(this.api.iam.isDebug()) {
       data.system = 'FBO';
@@ -121,11 +120,6 @@ export class MigrationsComponent {
     }
 
     this.store.systems = this.api.iam.import.systems();
-
-    mock = [
-      'AgencyUser_USFishAndWildlifeService',
-      'AgencyCoordinator_NationalParksService'
-    ];
 
     this.zone.runOutsideAngular(() => {
       this.api.iam.import.history(this.email, (migrations) => {
@@ -151,6 +145,10 @@ export class MigrationsComponent {
               roles: roles
             }
           });
+
+          if(this.store.migrations.length) {
+            this.alert('Account Successfully Migrated', 'success');
+          }
         });
       }, () => {
         this.zone.run(() => {
@@ -197,6 +195,19 @@ export class MigrationsComponent {
     window.location.hash = id;
   }
 
+  alert(message:string, type:string) {
+    type = type || 'success';
+    message = message || '';
+
+    if(message.length) {
+      this.states.confirm.type = type;
+      this.states.confirm.message = message;
+      this.states.confirm.show = true;
+    } else {
+      this.states.confirm.show = false;
+    }
+  }
+
   migrate() {
     this.migrationForm.markAsTouched();
     this.migrationForm.markAsDirty();
@@ -211,15 +222,11 @@ export class MigrationsComponent {
         this.api.iam.import.create(this.email, data.system, data.username, data.password, (account) => {
           this.zone.run(() => {
             this.store.migrations.push(account);
-            this.states.confirm.type = 'success';
-            this.states.confirm.message = 'Account Successfully Migrated';
-            this.states.confirm.show = true;
+            this.alert('Account Successfully Migrated', 'success');
           })
         }, (error) => {
           this.zone.run(() => {
-            this.states.confirm.type = 'error';
-            this.states.confirm.message = error.message;
-            this.states.confirm.show = true;
+            this.alert(error.message, 'error');
           });
         });
       });
