@@ -18,6 +18,7 @@ import * as moment from 'moment/moment';
 
     	</h3>
     	<div class="usa-width-two-thirds">
+    	  <span *ngIf="data.locations==null">&nbsp;</span>
       	<ul *ngFor="let location of data.locations; let i=index" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li><strong>State: </strong>
         	  <span>{{ location.state?.name }}</span>

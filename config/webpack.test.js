@@ -48,7 +48,10 @@ var conf = {
      * Make sure root is src
      */
     root: helpers.root('src'),
-
+    // aliases
+    alias: {
+      "sam-ui-kit": helpers.root('src') + '/sam-ui-elements/src/ui-kit'
+    },
   },
 
   /**
@@ -73,7 +76,7 @@ var conf = {
       {
         test: /\.ts$/,
         loader: 'tslint-loader',
-        exclude: [helpers.root('node_modules')]
+        exclude: [helpers.root('node_modules'),helpers.root('src/sam-ui-elements')]
       },
 
       /**
@@ -199,7 +202,8 @@ var conf = {
       'HMR': false,
       'API_UMBRELLA_URL': JSON.stringify("dummy"), // we do not test with a real backend, but the url and key must be defined
       'API_UMBRELLA_KEY': JSON.stringify("dummy"),
-      'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL === 'true')
+      'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL === 'true'),
+      'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(process.env.SHOW_HIDE_RESTRICTED_PAGES === 'true')
     }),
 
 

@@ -11,6 +11,8 @@ export class SamPasswordComponent {
   @Input() currentPassword: FormControl;
   @Input() password:FormControl;
 
+  @Input() phrases:string[] = [];
+
   private confirmPassword = new FormControl(['']);
 
   protected config = {
@@ -52,16 +54,18 @@ export class SamPasswordComponent {
       uppercase: `Have at least <strong>${this.config.rules.uppercase}</strong> uppercase character`,
       numeric: `Have at least <strong>${this.config.rules.numeric}</strong> numeric digit`,
       special: `Have at least <strong>${this.config.rules.special}</strong> special character`,
+      consecutive: 'Your new password cannot contain more than two consecutive characters of your full name or your account name.',
       match: "The two passwords don't match"
     };
   }
 
   ngOnInit() {
-    this.password.setValidators([
+    this.password.setValidators([,
       $Validators.minlength(this.config.rules.minlength),
       $Validators.uppercase,
       $Validators.numeric,
       $Validators.special,
+      $Validators.consecutive(this.phrases),
       $Validators.match('confirmPassword'),
       Validators.required
     ]);
@@ -139,7 +143,14 @@ export class SamPasswordComponent {
   setCustomError(controlName, error) {
     if(this[controlName] !== undefined) {
       this[controlName].setErrors(error);
+      if(controlName.search(/^(password|confirmPassword)$/) > -1) {
+        this.states.error[controlName] = error;
+      }
     }
+  }
+
+  setConsecutiveValidationError() {
+    this.states.error.password = this.config.messages['consecutive'];
   }
 
   getFormControlStates(controlName) {
@@ -165,7 +176,7 @@ export class SamPasswordComponent {
 
   updateState() {
     let valid = true,
-        errors = this.password.errors,
+        errors = this.password.errors || {},
         validator,
         verifyMatch = (
           (this.states.submitted && this.confirmPassword.dirty) &&
@@ -198,6 +209,10 @@ export class SamPasswordComponent {
         this.states.error.confirmPassword = "Don't forget to confirm your password";
       if(errors['match'])
         this.states.error.confirmPassword = this.config.messages['match'];
+    }
+
+    if(errors['consecutive']) {
+      this.setConsecutiveValidationError();
     }
   }
 };

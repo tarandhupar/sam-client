@@ -21,9 +21,10 @@
 @import 'components/accordion';
 @import 'components/alert';
 @import 'components/authentication';
+@import 'components/collapsible';
+@import 'components/list-input';
 @import 'components/footer';
 @import 'components/button';
-@import 'components/collapsible';
 @import 'components/pagination';
 @import 'components/header';
 @import 'components/header-links';
@@ -43,6 +44,7 @@
 @import 'components/toggle-switch';
 @import 'components/feedback-form';
 @import 'components/well';
+@import 'components/autocomplete';
 
 @import 'pages/awards';
 @import 'pages/entity-object-view';
@@ -54,16 +56,17 @@
 @import 'pages/organization';
 @import 'pages/search';
 @import 'pages/reference-library';
+@import 'pages/reports';
 @import 'pages/alerts';
 @import 'pages/new-to-sam';
 @import 'pages/help-accounts';
 @import 'pages/help-roadmap';
 @import 'pages/users-directory';
 @import 'pages/ui-kit-demo';
-@import 'pages/access';
-@import 'pages/grant-access';
-@import 'pages/public-profile';
-@import 'pages/wage-determination';
+@import 'pages/access';		
+@import 'pages/grant-access';		
+@import 'pages/public-profile';		
+@import 'pages/wage-determination';		
 @import 'pages/assistance-listing-operations';
 
 html, body{
@@ -123,6 +126,8 @@ h2{
   text-align: right;
 }
 
+
+
 .sidenav-logo {
   width:160px;
   height: 160px;
@@ -142,13 +147,13 @@ h2{
   }
 }
 
-.search-layout{
-  .showing-results-meta{
-    margin-top:3rem!important;
-  }
-  samselect{
-    label{
-      margin-top:0;
-    }
-  }
+.search-layout{		
+  .showing-results-meta{		
+    margin-top:3rem!important;		
+  }		
+  samselect{		
+    label{		
+      margin-top:0;		
+    }		
+  }		
 }

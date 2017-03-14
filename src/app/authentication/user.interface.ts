@@ -7,7 +7,7 @@ export interface User {
   title?: string,
   suffix?: string,
 
-  fullName: string,
+  fullName?: string,
   middleName?: string,
 
   firstName: string,
@@ -41,6 +41,6 @@ export interface User {
   kbaAnswerList: KBA[],
   gsaRAC?: any[],
 
-  userPassword: string,
+  userPassword?: string,
   accountClaimed: boolean,
 }

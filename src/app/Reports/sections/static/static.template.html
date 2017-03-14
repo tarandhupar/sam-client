@@ -1,43 +1,46 @@
 <section class="usa-grid-full">
-<br><br><br>
-  <h2 class="m_T-2x">Reports</h2>
-  <p class="p_L-8x">
-    Sam.gov reports can be used to support analysis of federal spending including geographical analysis, market analysis, and analysis on the imapct of the congressional and presedential initiatives in socio-economic areas such as small business spending. The data is also a reliable basis for measuring and assessing the impact of Federal acquisition policy and management improvement.
-  </p>
-  <div class="usa-grid-full">
-    <h3 class="p_L-3x">Static Reports</h3>
+    <br><br><br>
+    <h2 class="m_T-2x">Reports</h2>
+    <p class="p_L-8x">
+        Sam.gov reports can be used to support analysis of federal spending including geographical analysis, market analysis, and analysis on the impact of the congressional and presidential initiatives in socio-economic areas such as small business spending. The data is also a reliable basis for measuring and assessing the impact of Federal acquisition policy and management improvement.
+    </p>
     <div class="usa-grid-full">
-      <p class="p_L-8x">
-	Static Reports are published reports that have been prepared on a fiscal year basis for the public and aggregate data across the Federal Government.  These reports are available for download.
-	<br>
-	<br>
-</div>
+        <h3 class="p_L-3x">Static Reports</h3>
+        <div class="usa-grid-full">
+            <p class="p_L-8x">
+                Static Reports are published reports that have been prepared on a fiscal year basis for the public and aggregate data across the Federal Government.  These reports are available for download.
+                <br>
+                <br>
+        </div>
 
-<section class="usa-grid-full">
+        <section class="usa-grid-full">
 
- <div *ngIf="data">
-  
-<ul style="list-style-type: none;">
-  <li *ngFor="let item of data.reports;let i=index">
-    <b><a href="{{item.loc}}" target="_blank">{{item.name}}</a></b>&nbsp;&nbsp;&nbsp;&nbsp;<i>last run on {{item.date}}</i>
-    <br>
-    {{item.desc}}
-    <br>
-    <div *ngIf="item.previousDates">
-    <samAccordion>
-      <samAccordionSection [name]="'Other Years'" [headerText]="'Other Years'">
-	  <ul style="list-style-type: none;">
-	  	<li *ngFor="let previousReport of item.previousDates;let j=index"> <a href="{{previousReport.loc}}" target="_blank">{{previousReport.name}}</a>&nbsp;&nbsp;&nbsp;&nbsp;<i>{{previousReport.year}}</i></li>
-	  </ul>
-	</samAccordionSection>
-    </samAccordion>
+            <div *ngIf="data">
+
+                <ul type="none">
+                    <li *ngFor="let item of data.reports;let i=index">
+                        <div class="grid">
+                            <div class="grid-name"><b><a href="{{item.loc}}" target="_blank">{{item.name}}</a></b></div>
+                            <div class="grid-date"><span class="grid-date1"><i>last run on {{item.date}}</i></span></div>
+
+                        <br>
+                        <div class="grid-desc">{{item.desc}}</div>
+                        <br>
+                        </div>
+                        <div *ngIf="item.previousDates">
+                            <samAccordion>
+                                <samAccordionSection [name]="'Previous Years'" [headerText]="'Previous Years'">
+                                    <ul type="none">
+                                        <li *ngFor="let previousReport of item.previousDates;let j=index"> <a href="{{previousReport.loc}}" target="_blank">{{previousReport.name}}</a>&nbsp;&nbsp;&nbsp;&nbsp;<i>{{previousReport.year}}</i></li>
+                                    </ul>
+                                </samAccordionSection>
+                            </samAccordion>
+                        </div>
+                        <br>
+                    </li>
+                </ul>
+            </div>
+
+        </section>
     </div>
-    <br>
-    </li>
-  </ul>
-</div>
-   
 </section>
-
-
-

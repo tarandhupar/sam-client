@@ -1,11 +1,11 @@
 import { TestBed, async } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { RouterTestingModule} from '@angular/router/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 // Load the implementations that should be tested
-import { SamUIKitModule } from "ui-kit";
-import { SamHeaderLinksComponent } from "./header-links.component";
-import { IAMService } from "api-kit";
+import { SamUIKitModule } from 'sam-ui-kit';
+import { SamHeaderLinksComponent } from './header-links.component';
+import { IAMService } from 'api-kit';
 
 describe('The Sam Header Links component', () => {
   let component: SamHeaderLinksComponent;
@@ -15,7 +15,7 @@ describe('The Sam Header Links component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [SamHeaderLinksComponent],
-      imports: [SamUIKitModule,RouterTestingModule],
+      imports: [SamUIKitModule, RouterTestingModule],
       providers: [IAMService],
     });
     fixture = TestBed.createComponent(SamHeaderLinksComponent);

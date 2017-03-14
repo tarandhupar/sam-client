@@ -156,7 +156,7 @@
           <li [attr.id]="generateID(opportunityFields.JustificationAuthority, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.JustificationAuthority)">
             <strong>Fair Opportunity / Limited Sources Justification Authority: </strong>
             <ng-container *ngIf="opportunity?.data?.award?.fairOpportunity?.authority && dictionary">
-              {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:dictionary.fo_justification_authority:'element_id':false:'')[0]?.value }}
+              {{ (opportunity?.data?.award?.fairOpportunity?.authority | filterMultiArrayObject:findDictionary('fo_justification_authority'):'elementId':false:'')[0]?.value }}
             </ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ModificationNumber, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ModificationNumber)">
@@ -180,12 +180,12 @@
           <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalSetAside)">
             <strong> Original Set Aside: </strong>
             <ng-container *ngIf="opportunity.parent != null && originalOpportunity?.data?.solicitation?.setAside && dictionary">
-              <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+              <ng-container *ngFor = "let element of [originalOpportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                 <ng-container>{{ element.value }}</ng-container>
               </ng-container>
             </ng-container>
             <ng-container *ngIf="opportunity.parent == null && opportunity?.data?.solicitation?.setAside && dictionary">
-              <ng-container *ngFor = "let element of [opportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+              <ng-container *ngFor = "let element of [opportunity?.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                 <ng-container>{{ element.value }}</ng-container>
               </ng-container>
             </ng-container>
@@ -194,7 +194,7 @@
             <ng-container *ngIf="(opportunity.data?.solicitation?.setAside != originalOpportunity?.data?.solicitation?.setAside) && dictionary">
               <samLabel *ngIf="differences?.specialLegislation" [labelType]="'small'" [labelText]="' '"></samLabel>
               <strong>Update/Amendment Set Aside: </strong>
-              <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:dictionary.set_aside_type:'element_id':false:''">
+              <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                 <ng-container> {{ element.value }}</ng-container>
               </ng-container>
               <span *ngIf="showChanges && differences?.updateSetAside"> {{differences?.updateSetAside}}</span>
@@ -204,7 +204,7 @@
             <samLabel *ngIf="differences?.classificationCode" [labelType]="'small'" [labelText]="' '"></samLabel>
             <strong>Classification Code: </strong>
             <ng-container *ngIf="opportunity.data?.classificationCode && dictionary">
-              <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:dictionary.classification_code:'element_id':false:''">
+              <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:findDictionary('classification_code'):'elementId':false:''">
                 {{ element.value }}
               </ng-container>
             </ng-container>
@@ -215,7 +215,7 @@
             <strong>NAICS Code(s): </strong>
             <ng-container *ngIf="opportunity.data?.naicsCode && opportunity.data?.naicsCode[0] != null && dictionary">
               <ul>
-                <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:dictionary.naics_code:'element_id':false:''">
+                <li *ngFor = "let element of opportunity.data?.naicsCode | filterMultiArrayObject:findDictionary('naics_code'):'elementId':false:''">
                   <ng-container *ngIf="element != null">{{ element.value }}</ng-container>
                 </li>
               </ul>
@@ -267,7 +267,7 @@
           <h2>Packages</h2>
           <ng-container *ngIf="attachment">
             <span class="download-button">
-              <a class="usa-button-small usa-button-gray" *ngIf="hasPublicPackages()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId)}}">
+              <a class="usa-button-small usa-button-gray" *ngIf="hasPublicPackages()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)}}">
                 <i class="fa fa-cloud-download" aria-hidden="true"></i>
                 <span>Download All Packages</span>
               </a>
@@ -286,7 +286,7 @@
             </div>
 
             <span *ngIf="package.access === 'Public'" class="download-button">
-              <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId)}}">
+              <a class="usa-button-small usa-button-gray" href="{{getDownloadPackageURL(package.packageId, opportunity.data?.statuses?.isArchived)}}">
                 <i class="fa fa-cloud-download" aria-hidden="true"></i>
                 <span>Download</span>
               </a>
@@ -311,7 +311,7 @@
                             {{resource.size | filesize}}
                           </sup>
                         </a>
-                        <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId)}}">
+                        <a *ngIf="resource.type === 'file'" href="{{getDownloadFileURL(resource.resourceId, opportunity.data?.statuses?.isArchived)}}">
                           {{resource.description}}
                           <sup *ngIf="resource.size && resource.size != 0">
                             {{resource.size | filesize}}

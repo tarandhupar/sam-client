@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { SearchPage } from './search.page';
 import { SearchService, SamAPIKitModule } from 'api-kit';
-import { SamUIKitModule } from 'ui-kit';
+import { SamUIKitModule } from 'sam-ui-kit';
 import { AppComponentsModule } from '../app-components/app-components.module';
 import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
@@ -15,11 +15,12 @@ import { WageDeterminationResult } from '../wage-determination/search-result/wag
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
 import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
+import { AlertFooterService } from '../alerts/alert-footer';
 
-var fixture;
+let fixture;
 
-var searchServiceStub = {
-  runSearch: ()=>{
+let searchServiceStub = {
+  runSearch: () => {
     return Observable.of({
       _embedded: {
         results: [{
@@ -69,13 +70,13 @@ var searchServiceStub = {
   }
 };
 
-var fhServiceStub = {};
+let fhServiceStub = {};
 
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,FHFeaturedResult ],
-      providers: [ ],
+      providers: [AlertFooterService ],
       imports: [
         SamUIKitModule,
         SamAPIKitModule,

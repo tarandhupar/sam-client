@@ -4,13 +4,14 @@ import { Location } from '@angular/common';
 import { OpportunityService, FHService } from 'api-kit';
 import { ReplaySubject, Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
-import { OpportunityFields } from "./opportunity.fields";
+import { OpportunityFields } from './opportunity.fields';
 import { trigger, state, style, transition, animate } from '@angular/core';
 import * as _ from 'lodash';
-import { OpportunityTypeLabelPipe } from "./pipes/opportunity-type-label.pipe";
-import { DateFormatPipe } from "../app-pipes/date-format.pipe";
-import { SidenavService } from "../../ui-kit/sidenav/services/sidenav.service";
-import {ViewChangesPipe} from "./pipes/view-changes.pipe";
+import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
+import { DateFormatPipe } from '../app-pipes/date-format.pipe';
+import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import { ViewChangesPipe } from "./pipes/view-changes.pipe";
+
 
 @Component({
   moduleId: __filename,
@@ -430,6 +431,16 @@ export class OpportunityPage implements OnInit {
   }
 
 
+  private findDictionary(key: String): any[] {
+    let dictionary = _.find(this.dictionary._embedded['dictionaries'], { id: key });
+
+    if (dictionary && typeof dictionary.elements !== undefined) {
+      return dictionary.elements;
+    } else {
+      return [];
+    }
+  }
+
 
   private loadHistory(opportunity: Observable<any>) {
     let historySubject = new ReplaySubject(1);
@@ -683,8 +694,8 @@ export class OpportunityPage implements OnInit {
     return pcobj;
   }
 
-  public getDownloadFileURL(fileID: string){
-    return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey();
+  public getDownloadFileURL(fileID: string, isArchived: boolean = false){
+    return this.getBaseURL() + '/opportunities/resources/files/' + fileID + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived);
   }
 
   selectedItem(item){
@@ -705,12 +716,12 @@ export class OpportunityPage implements OnInit {
 		}
 	}
 
-  public getDownloadPackageURL(packageID: string) {
-    return this.getBaseURL() + '/opportunities/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey();
+  public getDownloadPackageURL(packageID: string, isArchived: boolean = false) {
+    return this.getBaseURL() + '/opportunities/resources/packages/' + packageID + '/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived);
   }
 
-  public getDownloadAllPackagesURL(opportunityID: string) {
-    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey();
+  public getDownloadAllPackagesURL(opportunityID: string, isArchived: boolean = false) {
+    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived);
   }
 
   public getBaseURL() {
@@ -719,6 +730,10 @@ export class OpportunityPage implements OnInit {
 
   public getAPIUmbrellaKey() {
     return '?api_key=' + API_UMBRELLA_KEY;
+  }
+
+  public getOppStatusQueryString(isArchived: boolean = false): string {
+    return (isArchived === true) ? '&status=archived' : '';
   }
 
   public toggleAccordion(card){

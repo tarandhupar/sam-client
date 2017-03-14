@@ -17,8 +17,13 @@
                    [formControl]="email" />
           </labelWrapper>
 
-          <div class="usa-button-controls">
+          <div class="usa-button-controls relative">
             <button type="submit" [disabled]="states.disabled">Submit</button>
+            <samAlert class="usa-alert-static"
+                      [type]="states.notification.type"
+                      [title]="states.notification.title"
+                      [hidden]="!states.notification.show"
+                      showClose="true"></samAlert>
           </div>
 
           <hr />
@@ -30,12 +35,6 @@
           </ul>
         </fieldset>
       </form>
-      <samAlert [type]="states.notification.type"
-                [title]="states.notification.title"
-                [hidden]="!states.notification.show"
-                [target]="form"
-                placement="right"
-                showClose="true"></samAlert>
     </div>
   </div>
 </div>
