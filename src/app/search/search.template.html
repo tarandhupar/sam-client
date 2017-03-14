@@ -172,6 +172,7 @@
           <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
           <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
           <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
+          <awards-result *ngIf="row._type=='awards'" class="usa-grid-full" [data]="row"></awards-result>
           <hr class="m_T-5x"/>
         </div>
       </div>
