@@ -18,6 +18,10 @@ import { User } from '../../user.interface';
 export class ResetComponent {
   @ViewChild('formControl') formControl;
 
+  private store = {
+    title: 'Reset Password'
+  };
+
   private states = {
     alert: {
       type: 'success',

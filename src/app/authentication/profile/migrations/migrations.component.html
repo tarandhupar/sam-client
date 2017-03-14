@@ -1,5 +1,8 @@
-<h2 id="top">Migrations</h2>
-<div>Select one of our legacy web sites. Then enter your user name and password from that site to move your roles to the new SAM.gov</div>
+<h2 id="top" [innerText]="store.title"></h2>
+<div>
+  Select one of our legacy web sites. Then enter the username and password of your legacy account to
+  migrate your roles to your new SAM.gov account.
+</div>
 
 <div class="usa-content">
   <form *ngIf="migrationForm" [formGroup]="migrationForm" (ngSubmit)="migrate()">
@@ -36,10 +39,13 @@
     </div>
   </form>
   <div>
-    <h3>Migration History</h3>
-    <div *ngIf="!store.migrations.length">You have not migrated any legacy website accounts yet.</div>
+    <h3>Role Migration History</h3>
+    <div>
+      <ng-container *ngIf="!store.migrations.length">You have not yet migrated any legacy roles.</ng-container>
+      <ng-container *ngIf="store.migrations.length">Your new role may named differently than it was in the Legacy System. You privileges are comparable.</ng-container>
+    </div>
 
-    <table class="usa-table-borderless usa-migration-history">
+    <table *ngIf="store.migrations.length" class="usa-table-borderless usa-migration-history">
       <thead>
         <tr>
           <th scope="col" class="text-right">Role</th>
@@ -80,7 +86,10 @@
     </table>
 
     <h3 id="legacy-sites">Legacy Websites</h3>
-    <div>The following web sites are being moved to the new SAM.gov. If you currently have a user account in one of these systems you will be able to move it here.</div>
+    <div>
+      The following web sites are being moved to the new SAM.gov. If you currently have legacy accounts in any of these systems
+      you will be able to migrate all of your associated roles to the new SAM.gov.
+    </div>
 
     <table class="usa-table-borderless usa-legacy-systems">
       <thead>

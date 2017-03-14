@@ -5,6 +5,16 @@ import { Router } from '@angular/router';
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent {
+  private store = {
+    title: 'My Profile',
+    nav: [
+      { text: 'Personal Details', routerLink: 'details',    routerLinkActive: 'usa-current' },
+      { text: 'Reset Password',   routerLink: 'password',   routerLinkActive: 'usa-current' },
+      { text: 'My Access',        routerLink: false,        routerLinkActive: 'usa-current' },
+      { text: 'Role Migrations',  routerLink: 'migrations', routerLinkActive: 'usa-current' }
+    ]
+  };
+
   private states = {
     route: ''
   };

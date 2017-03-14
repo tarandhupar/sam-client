@@ -27,6 +27,10 @@ export class DetailsComponent {
     iam: null
   };
 
+  private store = {
+    title: 'Personal Details'
+  };
+
   private lookups = {
     questions: [
       { 'id': 1,  'question': 'What was the make and model of your first car?' },
