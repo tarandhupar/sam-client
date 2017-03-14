@@ -3,149 +3,143 @@
   <!--filters aside-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
-    <div sam-sticky limit=1200 container="occupy-page">
-      <nav>
-        <ul class="usa-sidenav-list">
-          <li>
-            <sam-filters-container>
-              <sam-collapsible [label]="'Status'" [startOpened]="true">
-                <!--active checkbox-->
-                <samCheckbox
-                  [(model)]="checkboxModel"
-                  [name]="checkboxConfig.name"
-                  [options]="checkboxConfig.options"
-                  [label]="checkboxConfig.label"
-                  [hint]="checkboxConfig.hint"
-                  [errorMessage]="checkboxConfig.errorMessage"
-                  [hasSelectAll]="checkboxConfig.hasSelectAll"
-                  (modelChange)="activeFilter($event)">
-                </samCheckbox>
-              </sam-collapsible>
-              <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">
+    <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
+    <div>
+      <sam-filters-container>
+        <sam-collapsible [label]="'Status'" [startOpened]="true">
+          <!--active checkbox-->
+          <samCheckbox
+            [(model)]="checkboxModel"
+            [name]="checkboxConfig.name"
+            [options]="checkboxConfig.options"
+            [label]="checkboxConfig.label"
+            [hint]="checkboxConfig.hint"
+            [errorMessage]="checkboxConfig.errorMessage"
+            [hasSelectAll]="checkboxConfig.hasSelectAll"
+            (modelChange)="activeFilter($event)">
+          </samCheckbox>
+        </sam-collapsible>
+        <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">
 
-                <!--state drop down-->
-                <samSelect
-                  [(model)]="wdStateModel"
-                  [name]="selectStateConfig.name"
-                  [options]="selectStateConfig.options"
-                  [label]="selectStateConfig.label"
-                  [hint]="selectStateConfig.hint"
-                  [errorMessage]="selectStateConfig.errorMessage"
-                  [disabled]="selectStateConfig.disabled"
-                  (modelChange)="stateChange($event)">
-                </samSelect>
-                <!--<button (click)='wdStateClear()'>Clear</button>-->
+          <!--state drop down-->
+          <samSelect
+            [(model)]="wdStateModel"
+            [name]="selectStateConfig.name"
+            [options]="selectStateConfig.options"
+            [label]="selectStateConfig.label"
+            [hint]="selectStateConfig.hint"
+            [errorMessage]="selectStateConfig.errorMessage"
+            [disabled]="selectStateConfig.disabled"
+            (modelChange)="stateChange($event)">
+          </samSelect>
+          <!--<button (click)='wdStateClear()'>Clear</button>-->
 
-                <!--county drop down-->
-                <samSelect
-                  [(model)]="wdCountyModel"
-                  [name]="selectCountyConfig.name"
-                  [options]="selectCountyConfig.options"
-                  [label]="selectCountyConfig.label"
-                  [hint]="selectCountyConfig.hint"
-                  [errorMessage]="selectCountyConfig.errorMessage"
-                  [disabled]="selectCountyConfig.disabled"
-                  (modelChange)="countyChange($event)">
-                </samSelect>
-                <!--<button (click)='wdCountyClear()'>Clear</button>-->
-              </sam-collapsible>
+          <!--county drop down-->
+          <samSelect
+            [(model)]="wdCountyModel"
+            [name]="selectCountyConfig.name"
+            [options]="selectCountyConfig.options"
+            [label]="selectCountyConfig.label"
+            [hint]="selectCountyConfig.hint"
+            [errorMessage]="selectCountyConfig.errorMessage"
+            [disabled]="selectCountyConfig.disabled"
+            (modelChange)="countyChange($event)">
+          </samSelect>
+          <!--<button (click)='wdCountyClear()'>Clear</button>-->
+        </sam-collapsible>
 
 
-              <sam-collapsible [label]="'Wage Determination Type'" [startOpened]="true" *ngIf="index === 'wd'">
+        <sam-collapsible [label]="'Wage Determination Type'" [startOpened]="true" *ngIf="index === 'wd'">
 
-                <!--wage determination radio buttons-->
-                <samRadioButton
-                  [(model)]="wdTypeModel"
-                  [options]="wdTypeConfig.options"
-                  [label]="wdTypeConfig.label"
-                  [hint]="wdTypeConfig.hint"
-                  [name]="wdTypeConfig.name"
-                  [errorMessage]="wdTypeConfig.errorMessage"
-                  (modelChange)="wdFilterChange($event)">
-                </samRadioButton>
-              </sam-collapsible>
+          <!--wage determination radio buttons-->
+          <samRadioButton
+            [(model)]="wdTypeModel"
+            [options]="wdTypeConfig.options"
+            [label]="wdTypeConfig.label"
+            [hint]="wdTypeConfig.hint"
+            [name]="wdTypeConfig.name"
+            [errorMessage]="wdTypeConfig.errorMessage"
+            (modelChange)="wdFilterChange($event)">
+          </samRadioButton>
+        </sam-collapsible>
 
-              <!--*** DBA Specif Filters ***-->
-              <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra'">
+        <!--*** DBA Specif Filters ***-->
+        <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra'">
 
-                <!--construction type drop down-->
-                <samSelect
-                  [(model)]="wdConstructModel"
-                  [name]="selectConstructConfig.name"
-                  [options]="selectConstructConfig.options"
-                  [label]="selectConstructConfig.label"
-                  [hint]="selectConstructConfig.hint"
-                  [errorMessage]="selectConstructConfig.errorMessage"
-                  [disabled]="selectConstructConfig.disabled"
-                  (modelChange)="constructionTypeChange($event)">>
-                </samSelect>
-                <button (click)='wdConstructionClear()'>Clear</button>
-              </sam-collapsible>
+          <!--construction type drop down-->
+          <samSelect
+            [(model)]="wdConstructModel"
+            [name]="selectConstructConfig.name"
+            [options]="selectConstructConfig.options"
+            [label]="selectConstructConfig.label"
+            [hint]="selectConstructConfig.hint"
+            [errorMessage]="selectConstructConfig.errorMessage"
+            [disabled]="selectConstructConfig.disabled"
+            (modelChange)="constructionTypeChange($event)">>
+          </samSelect>
+          <button (click)='wdConstructionClear()'>Clear</button>
+        </sam-collapsible>
 
-              <!--*** SCA Specific Filters ***-->
-              <sam-collapsible [label]="'SCA: Previously Performed'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'sca'">
+        <!--*** SCA Specific Filters ***-->
+        <sam-collapsible [label]="'SCA: Previously Performed'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'sca'">
 
-                <!--previously performed-->
-                <samRadioButton
-                  [(model)]="wdPreviouslyPerformedModel"
-                  [options]="wdPreviouslyPerformedConfig.options"
-                  [label]="wdPreviouslyPerformedConfig.label"
-                  [hint]="wdPreviouslyPerformedConfig.hint"
-                  [name]="wdPreviouslyPerformedConfig.name"
-                  [errorMessage]="wdPreviouslyPerformedConfig.errorMessage"
-                  (modelChange)="wdPreviouslyPerformedChanged($event)">
-                </samRadioButton>
-                <button (click)='wdPreviouslyPerformedClear()'>Clear</button>
-              </sam-collapsible>
+          <!--previously performed-->
+          <samRadioButton
+            [(model)]="wdPreviouslyPerformedModel"
+            [options]="wdPreviouslyPerformedConfig.options"
+            [label]="wdPreviouslyPerformedConfig.label"
+            [hint]="wdPreviouslyPerformedConfig.hint"
+            [name]="wdPreviouslyPerformedConfig.name"
+            [errorMessage]="wdPreviouslyPerformedConfig.errorMessage"
+            (modelChange)="wdPreviouslyPerformedChanged($event)">
+          </samRadioButton>
+          <button (click)='wdPreviouslyPerformedClear()'>Clear</button>
+        </sam-collapsible>
 
-              <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true"
-                               *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality'">
+        <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true"
+                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality'">
 
-                <!--Subject to CBA-->
-                <samRadioButton
-                  [(model)]="wdSubjectToCBAModel"
-                  [options]="wdSubjectToCBAConfig.options"
-                  [label]="wdSubjectToCBAConfig.label"
-                  [hint]="wdSubjectToCBAConfig.hint"
-                  [name]="wdSubjectToCBAConfig.name"
-                  [errorMessage]="wdSubjectToCBAConfig.errorMessage"
-                  (modelChange)="wdSubjectToCBAChanged($event)">
-                </samRadioButton>
-                <button (click)='wdSubjectToCBAClear()'>Clear</button>
-              </sam-collapsible>
+          <!--Subject to CBA-->
+          <samRadioButton
+            [(model)]="wdSubjectToCBAModel"
+            [options]="wdSubjectToCBAConfig.options"
+            [label]="wdSubjectToCBAConfig.label"
+            [hint]="wdSubjectToCBAConfig.hint"
+            [name]="wdSubjectToCBAConfig.name"
+            [errorMessage]="wdSubjectToCBAConfig.errorMessage"
+            (modelChange)="wdSubjectToCBAChanged($event)">
+          </samRadioButton>
+          <button (click)='wdSubjectToCBAClear()'>Clear</button>
+        </sam-collapsible>
 
-              <sam-collapsible [label]="'SCA: Non-Standard Services'" [startOpened]="true"
-                               *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA' ">
+        <sam-collapsible [label]="'SCA: Non-Standard Services'" [startOpened]="true"
+                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA' ">
 
-                <!--Non-Standard Services radio buttons-->
-                <samRadioButton
-                  [(model)]="wdNonStandardRadModel"
-                  [options]="wdNonStandardRadConfig.options"
-                  [label]="wdNonStandardRadConfig.label"
-                  [hint]="wdNonStandardRadConfig.hint"
-                  [name]="wdNonStandardRadConfig.name"
-                  [errorMessage]="wdNonStandardRadConfig.errorMessage"
-                  (modelChange)="wdNonStandardRadChanged($event)">
-                </samRadioButton>
+          <!--Non-Standard Services radio buttons-->
+          <samRadioButton
+            [(model)]="wdNonStandardRadModel"
+            [options]="wdNonStandardRadConfig.options"
+            [label]="wdNonStandardRadConfig.label"
+            [hint]="wdNonStandardRadConfig.hint"
+            [name]="wdNonStandardRadConfig.name"
+            [errorMessage]="wdNonStandardRadConfig.errorMessage"
+            (modelChange)="wdNonStandardRadChanged($event)">
+          </samRadioButton>
 
-                <!--Non-Standard Services drop down select-->
-                <samSelect
-                  [(model)]="wdNonStandardSelectModel"
-                  [name]="wdNonStandardSelectConfig.name"
-                  [options]="wdNonStandardSelectConfig.options"
-                  [label]="wdNonStandardSelectConfig.label"
-                  [hint]="wdNonStandardSelectConfig.hint"
-                  [errorMessage]="wdNonStandardSelectConfig.errorMessage"
-                  [disabled]="wdNonStandardSelectConfig.disabled"
-                  (modelChange)="wdNonStandardSelectChanged($event)">
-                </samSelect>
-                <button (click)='wdNonStandardServicesSelectClear()'>Clear</button>
-              </sam-collapsible>
-
-            </sam-filters-container>
-          </li>
-        </ul>
-      </nav>
+          <!--Non-Standard Services drop down select-->
+          <samSelect
+            [(model)]="wdNonStandardSelectModel"
+            [name]="wdNonStandardSelectConfig.name"
+            [options]="wdNonStandardSelectConfig.options"
+            [label]="wdNonStandardSelectConfig.label"
+            [hint]="wdNonStandardSelectConfig.hint"
+            [errorMessage]="wdNonStandardSelectConfig.errorMessage"
+            [disabled]="wdNonStandardSelectConfig.disabled"
+            (modelChange)="wdNonStandardSelectChanged($event)">
+          </samSelect>
+          <button (click)='wdNonStandardServicesSelectClear()'>Clear</button>
+        </sam-collapsible>
+      </sam-filters-container>
     </div>
   </aside>
 
