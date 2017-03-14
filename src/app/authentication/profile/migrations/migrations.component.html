@@ -42,7 +42,7 @@
     <h3>Role Migration History</h3>
     <div>
       <ng-container *ngIf="!store.migrations.length">You have not yet migrated any legacy roles.</ng-container>
-      <ng-container *ngIf="store.migrations.length">Your new role may named differently than it was in the Legacy System. You privileges are comparable.</ng-container>
+      <ng-container *ngIf="store.migrations.length">Your new role(s) may named differently than it was in the Legacy System. You privileges are comparable.</ng-container>
     </div>
 
     <table *ngIf="store.migrations.length" class="usa-table-borderless usa-migration-history">
