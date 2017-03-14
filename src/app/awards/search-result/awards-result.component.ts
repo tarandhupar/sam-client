@@ -51,12 +51,12 @@ import Moment = moment.Moment;
           </li>
           <li><strong>NAICS Code </strong>
             <ul class="usa-unstyled-list">
-              <li><span>{{ data.productOrService?.naics?.code }}</span></li>
+              <li><span>{{ data.productOrService?.naics?.value }} ({{ data.productOrService?.naics?.code }})</span></li>
             </ul>
           </li>
           <li><strong>PSC Code </strong>
             <ul class="usa-unstyled-list">
-              <li><span>{{ data.productOrService?.psc?.code }}</span></li>
+              <li><span>{{ data.productOrService?.psc?.value }} ({{ data.productOrService?.psc?.code }})</span></li>
             </ul>
           </li>   
         </ul>
