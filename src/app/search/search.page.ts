@@ -202,7 +202,6 @@ export class SearchPage implements OnInit{
       county: this.wdCountyModel
     }).subscribe(
       data => {
-        console.log(data);
         if(data._embedded && data._embedded.results){
           for(var i=0; i<data._embedded.results.length; i++) {
             //Modifying FAL data
