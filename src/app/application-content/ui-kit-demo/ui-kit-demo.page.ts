@@ -1,11 +1,38 @@
 import { Component, ViewChild } from '@angular/core';
 import { AlertFooterService } from '../../alerts/alert-footer';
+import {FormControl} from '@angular/forms';
 
 @Component({
   templateUrl: 'ui-kit-demo.template.html'
 })
 export class UIKitDemoPage {
-
+  listOptions = [
+    { 
+      label:'apple',
+      value: 1,
+      name: 'apple'
+    },
+    { 
+      label:'orange',
+      value: 2,
+      name: 'orange'
+    },
+    { 
+      label:'banana',
+      value: 3,
+      name: 'banana'
+    },
+    { 
+      label:'grape',
+      value: 4,
+      name: 'grape'
+    },
+    { 
+      label:'tomato',
+      value: 5,
+      name: 'tomato'
+    }];
+  listControl = new FormControl('listtest');
   time: string = '13:01';
   date: string = '2016-12-12';
   dateTime: string = '2016-12-12T13:01';
