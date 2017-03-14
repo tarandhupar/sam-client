@@ -1,0 +1,26 @@
+<div class="usa-grid-full p_B-6x organization-detail relative">
+  <aside class="usa-width-one-fourth p_T-2x m_R-0">
+
+    <div sam-sticky limit=1200 container="organization-detail">
+      <div class="usa-width-one-whole m_B-2x">
+        <div class="org-logo-container relative">
+          <img class="org-logo-image" src="src/assets/img/blank_icon.png" alt="organization detail logo">
+          <span class="org-logo-insert-icon"><i class="fa fa-plus"></i></span>
+        </div>
+      </div>
+      <ul class="usa-sidenav-list">
+        <li><h3>Farm Supplies Management</h3></li>
+        <li><a [routerLink]="['/organization-detail/profile']">Profile</a></li>
+        <li><a [routerLink]="['/organization-detail/profile']">Hierarchy</a></li>
+        <li><a [routerLink]="['/organization-detail/profile']">Access</a></li>
+        <li><a [routerLink]="['/organization-detail/profile']">Administration</a></li>
+
+      </ul>
+    </div>
+  </aside>
+  <div class="usa-width-three-fourths">
+    <div class="usa-width-one-whole m_L-3x">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
