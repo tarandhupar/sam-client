@@ -52,7 +52,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
 
     this.createFormGrp();
 
-   /* if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
       this.cookieValue = Cookies.get('iPlanetDirectoryPro');
       this.currentUrl = document.location.href;
       this.programId = this.route.snapshot.params['id'];
@@ -91,7 +91,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       }
     } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
       this.router.navigate(['signin']);
-    }*/
+    }
   }
 
   createFormGrp() {
