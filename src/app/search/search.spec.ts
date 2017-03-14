@@ -16,6 +16,7 @@ import { AwardsResult } from '../awards/search-result/awards-result.component';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
 import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
+import { AlertFooterService } from '../alerts/alert-footer';
 
 let fixture;
 
@@ -79,7 +80,7 @@ describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult ],
-      providers: [ ],
+      providers: [AlertFooterService ],
       imports: [
         SamUIKitModule,
         SamAPIKitModule,

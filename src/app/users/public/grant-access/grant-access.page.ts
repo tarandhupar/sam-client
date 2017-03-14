@@ -30,6 +30,7 @@ export class GrantAccessPage implements OnInit {
   private objects = [];
 
   private messages: string = "";
+  private isEdit: boolean = false;
 
   constructor(
     private userService: UserAccessService,
@@ -44,10 +45,18 @@ export class GrantAccessPage implements OnInit {
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
 
-    this.userService.getRoles().subscribe(
-      roles => {
-        this.roleOptions = roles.map(role => {
-          return { value: role.id, label: role.roleName };
+    this.route.queryParams.subscribe(queryParams => {
+      this.role = queryParams["role"];
+      this.domain = queryParams["domain"];
+    });
+
+    let match = this.router.url.match('edit-access');
+    this.isEdit = !!(match && match.length);
+
+    this.userService.getDomains().subscribe(
+      domains => {
+        this.domainOptions = domains._embedded.domainList.map(domain => {
+          return { value: domain.pk_domain, label: domain.domainName };
         });
       },
       error => {
@@ -78,23 +87,40 @@ export class GrantAccessPage implements OnInit {
     if (role) {
       this.errors.role = '';
     }
-
     this.role = role;
-    this.domain = null;
-    this.domainOptions = [];
+
+    let r = this.permissions.find(role => {
+      return +role.role.id === +this.role;
+    });
+
+    if (r) {
+      this.objects = r.DomainContent[0].FunctionContent;
+    } else {
+      this.objects = [];
+    }
+  }
+
+  onDomainChange(domain) {
+    if (domain) {
+      this.errors.role = '';
+    }
+
+    this.domain = domain;
+    this.role = null;
+    this.roleOptions = [];
     this.objects = [];
 
-    this.userService.getPermissions(this.role).subscribe(
+    this.userService.getPermissions({domainID: domain}).subscribe(
       perms => {
         this.permissions = perms;
         let c = new PropertyCollector(perms);
-        let domains = c.collect(['DomainContent', [], 'domain']);
-        this.domainOptions = domains.map(d => {
-          return { label: d.val, value: d.id };
+        let roles = c.collect([[], 'role']);
+        this.roleOptions = roles.map(role => {
+          return { label: role.val, value: role.id };
         });
       },
       err => {
-        this.domainOptions = [];
+        this.roleOptions = [];
         this.footerAlert.registerFooterAlert({
           title:"Unable to fetch permission information.",
           description:"",
@@ -103,22 +129,6 @@ export class GrantAccessPage implements OnInit {
         });
       }
     );
-  }
-
-  onDomainChange(domain) {
-    if (domain) {
-      this.errors.domain = '';
-    }
-    this.domain = domain;
-
-    let d = this.permissions.DomainContent.find(dom => {
-      return +dom.domain.id === +this.domain;
-    });
-    if (d) {
-      this.objects = d.FunctionContent;
-    } else {
-      this.objects = [];
-    }
   }
 
   goToAccessPage() {
