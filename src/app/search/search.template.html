@@ -147,10 +147,10 @@
     <div class="usa-width-one">
       <samAlert *ngIf="wdTypeModel" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
       <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
-      <h2 *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'">
+      <p *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'" class="usa-font-lead">
         Please navigate to the <a href="https://www.wdol.gov/">Service Contract Act</a> section of the legacy WDOL site to retrieve
         a Collective Bargaining Agreement (CBA) WD or to create a new CBA WD
-      </h2>
+      </p>
     </div>
     <div class="usa-width-one" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
       <div *ngIf="showOptional" class="usa-width-one">
