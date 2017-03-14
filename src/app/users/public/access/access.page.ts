@@ -50,7 +50,7 @@ export class UserAccessPage implements OnInit {
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
 
-    this.userService.getAccess(this.userName).subscribe(res => {
+    this.userService.getAccess2(this.userName).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
       this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
       this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
@@ -134,7 +134,7 @@ export class UserAccessPage implements OnInit {
       functionIds: this.filters.objects.value,
     };
 
-    this.userService.getAccess(this.userName, filterOptions).subscribe(res => {
+    this.userService.getAccess2(this.userName, filterOptions).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
       this.expandAll();
     });

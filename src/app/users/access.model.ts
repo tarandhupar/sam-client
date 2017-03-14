@@ -67,6 +67,10 @@ export class UserAccessModel {
     return _.uniq(orgKeys);
   }
 
+  public allOrganizations2() {
+
+  }
+
   public allRoles() {
     if (!this._raw.roleMapContent || !this._raw.roleMapContent.length) {
       return [];
