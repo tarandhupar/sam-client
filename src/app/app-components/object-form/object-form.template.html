@@ -13,8 +13,8 @@
       <div class="pull-left">
         <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
         <samButton *ngIf="i >0" buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
-        <samButton [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
-        <samButton [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+        <samButton [buttonId]="item.section + '_se'" [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+        <samButton [buttonId]="item.section + '_sc'" [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
       </div>
 
     </ng-container>

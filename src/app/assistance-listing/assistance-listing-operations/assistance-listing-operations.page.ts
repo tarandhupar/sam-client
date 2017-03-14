@@ -1,33 +1,42 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import * as Cookies from 'js-cookie';
 
 import {ProgramService} from 'api-kit';
+import { ProgramFormModel } from './assistance-listing.model';
 
 @Component({
   moduleId: __filename,
   templateUrl: 'assistance-listing-operations.page.html',
-  providers: [ProgramService]
+  providers: [ProgramService, ProgramFormModel]
 })
 
 export class ProgramPageOperations implements OnInit, OnDestroy {
 
   programForm;
-  successMsg: string;
   submitted: boolean;
   saveProgSub: any;
   getProgSub: any;
   programId: string = null;
   currentUrl: string;
   mode: string;
-  cookieValue: string
+  cookieValue: string;
+  objectFormData: any;
+  @ViewChild('objectForm') objectForm;
 
-  constructor(private route: ActivatedRoute, private router: Router, private programService: ProgramService) {
+  constructor(private route: ActivatedRoute,
+              private router: Router,
+              private programService: ProgramService,
+              private programFormModel: ProgramFormModel) {
   }
 
   ngOnInit() {
-    this.programForm = this.createFormGrp();
+
+    this.objectFormData = this.programFormModel.getFormFields();
+
+
+    this.createFormGrp();
+
     if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
       this.cookieValue = Cookies.get('iPlanetDirectoryPro');
       this.currentUrl = document.location.href;
@@ -42,14 +51,27 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       if (this.mode == 'edit') {
         this.getProgSub = this.programService.getAuthProgramById(this.programId, this.cookieValue)
           .subscribe(api => {
-
+            console.log('api', api);
             let title = api.data.title;
             let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
             let falNo = (api.data.programNumber ? api.data.programNumber : '');
 
             if (falNo.trim().length == 6)
               falNo = falNo.slice(3, 6);
-            this.programForm.patchValue({title: title, popularName: popularName, falNo: falNo});
+
+            let objective = (api.data.objective ? api.data.objective : '');
+
+            this.programForm.patchValue({
+              header_information:{
+                title: title,
+                alternativeNames: popularName,
+                programNumber: falNo
+              },
+              overview:{
+                objective:objective
+              }
+            });
+
           });
       }
     } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
@@ -58,11 +80,9 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   }
 
   createFormGrp() {
-    return ( new FormGroup({
-      title: new FormControl(''),
-      popularName: new FormControl(''),
-      falNo: new FormControl(''),
-    }));
+
+    this.programForm = this.objectForm.createForm(this.objectFormData);
+
   }
 
 
@@ -80,26 +100,39 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
     this.router.navigate(['/falworkspace']);
   }
 
-  saveProgram(event) {
-    let data = {
-      "title": this.programForm.value.title,
-      "alternativeNames": [this.programForm.value.popularName],
-      "programNumber": this.programForm.value.falNo
-    };
+  saveProgram(data, redirectPage) {
 
     this.saveProgSub = this.programService.saveProgram(this.programId, data, this.cookieValue)
-      .subscribe(id => {
-        console.log('AJAX Completed', id);
-        this.programId = id;
-        /*if(this.programId == null) {
-         this.programForm.reset();
-         this.successMsg = "New Assistance Listing is successfully added.";
-         }
-         else
-         this.successMsg = "Assistance Listing is successfully updated.";
+      .subscribe(api => {
+        this.programId = api._body;
 
-         this.submitted = true;*/
-        this.router.navigate(['/falworkspace']);
-      });
+        switch(redirectPage) {
+          case 'edit': {
+            this.router.navigate(['/programs/' + this.programId + '/edit']);
+            break;
+          }
+          case 'workspace':{
+            this.router.navigate(['falworkspace']);
+            break;
+          }
+        }//end of switch
+      }); //end of subscribe
+  }
+
+  buttonHandler(event){
+    let redirectPage: any;
+    switch(event.type){
+      case "saveContinue" : {
+        redirectPage = 'edit';
+        this.saveProgram(event.data, redirectPage);
+        break;
+      }
+      case "saveExit" : {
+        redirectPage = 'workspace';
+        this.saveProgram(event.data, redirectPage);
+        break;
+      }
+    }
+
   }
 }
