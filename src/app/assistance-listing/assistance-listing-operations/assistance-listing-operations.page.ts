@@ -2,8 +2,9 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import * as Cookies from 'js-cookie';
 
-import {ProgramService} from 'api-kit';
+import { ProgramService } from 'api-kit';
 import { ProgramFormModel } from './assistance-listing.model';
+
 
 @Component({
   moduleId: __filename,
@@ -24,20 +25,34 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   objectFormData: any;
   @ViewChild('objectForm') objectForm;
 
+  sidenavModel = {
+    "label": "Assistance Listings",
+    "children": [
+      {
+        "label": "Header Information",
+        "route": "#header_information",
+      },
+      {
+        "label": "Overview",
+        "route": "#overview",
+      }
+    ]
+  };
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               private programService: ProgramService,
-              private programFormModel: ProgramFormModel) {
+              private programFormModel: ProgramFormModel
+              ) {
   }
 
   ngOnInit() {
 
     this.objectFormData = this.programFormModel.getFormFields();
 
-
     this.createFormGrp();
 
-    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+   /* if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
       this.cookieValue = Cookies.get('iPlanetDirectoryPro');
       this.currentUrl = document.location.href;
       this.programId = this.route.snapshot.params['id'];
@@ -76,7 +91,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       }
     } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
       this.router.navigate(['signin']);
-    }
+    }*/
   }
 
   createFormGrp() {
@@ -135,4 +150,6 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
     }
 
   }
+
+
 }

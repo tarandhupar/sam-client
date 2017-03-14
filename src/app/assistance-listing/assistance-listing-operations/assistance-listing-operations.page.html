@@ -12,12 +12,14 @@
       <div>&nbsp;</div>
       <div sam-sticky limit=1200 container="occupy-page">
         <!--Side Navigation-->
-        <nav>
+        <!--<nav>
           <ul class="usa-sidenav-list">
             <li><a href="{{currentUrl}}#headerInfo">Header Information</a></li>
             <li><a href="{{currentUrl}}#oveview">Overview</a></li>
           </ul>
-        </nav>
+        </nav>-->
+
+        <object-sidebar [sidenavModel]="sidenavModel"></object-sidebar>
       </div>
     </aside>
 
@@ -25,37 +27,6 @@
 
       <object-form [objectFormData]="objectFormData" #objectForm (buttonClick)="buttonHandler($event)"></object-form>
 
-      <!--<form [formGroup] = "programForm">
-        <samText [maxlength]="144"
-                 [hint]="'Spell out any acronyms and limit to 144 characters.'"
-                 [control]="programForm.get('title')"
-                 formControlName="title"
-                 [name]="'title-input'"
-                 [label]="'Title'"
-                 [required]="true"></samText>
-
-        <samText [hint]="'The Popular Name should be different than the Program Title.'"
-                 [control]="programForm.get('popularName')"
-                 formControlName="popularName"
-                 [name]="'popularName-input'"
-                 [label]="'Popular Name'"></samText>
-
-        <samNumber [maxlength]="3"
-                 [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
-                 [control]="programForm.get('falNo')"
-                 formControlName="falNo"
-                 [name]="'falNo-input'"
-                 [label]="'FAL Number'"
-                 [errorMessage]= "programForm.controls['falNo'].valid ? '': 'This number falls outside the range defined for this organization.'"></samNumber>
-
-        <div>
-          <div class="pull-left">
-            <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-            <samButton [buttonType]="(!programForm.valid ? 'disabled' : 'default')" buttonText="Save" (onClick)="saveProgram($event)"></samButton>
-          </div>
-        </div>
-
-      </form>-->
     </div>
   </div>
 

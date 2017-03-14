@@ -23,6 +23,7 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
 import { SamFeedbackComponent } from "./feedback-form/feedback-form.component";
 import { FormFieldComponent } from "./object-form/form-field/form-field.component";
 import { ObjectFormModel } from "./object-form/object-form.component";
+import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-sidebar.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -46,6 +47,7 @@ import { ObjectFormModel } from "./object-form/object-form.component";
     ListResultsMessageComponent,
     FormFieldComponent,
     ObjectFormModel,
+    ObjectSidebarComponent,
     SamSearchbarComponent
   ],
   imports: [
@@ -74,6 +76,7 @@ import { ObjectFormModel } from "./object-form/object-form.component";
     ListResultsMessageComponent,
     FormFieldComponent,
     ObjectFormModel,
+    ObjectSidebarComponent,
     SamSearchbarComponent
   ],
   providers: [ ]
