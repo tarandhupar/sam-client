@@ -67,7 +67,11 @@ export class ForgotConfirmComponent {
         });
       }, (error) => {
         vm.zone.run(() => {
-          this.alert('error', error);
+          if(this.api.iam.isDebug()) {
+            this.alert('success');
+          } else {
+            this.alert('error', error);
+          }
         });
       });
     });

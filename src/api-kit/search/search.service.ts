@@ -17,7 +17,8 @@ export class SearchService {
       oParam: {
         index: obj.index,
         q: obj.keyword,
-        page: obj.pageNum
+        page: obj.pageNum,
+        is_active: obj.isActive
       },
       method: 'GET'
     };
@@ -55,11 +56,6 @@ export class SearchService {
           else if(obj.isEven === 'false'){
         oApiParam.oParam['is_even'] = false;
       }
-    }
-
-    // is active filter
-    if(obj.isActive === true) {
-      oApiParam.oParam['is_active'] = obj.isActive;
     }
 
     if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
