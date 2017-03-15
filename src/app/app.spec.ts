@@ -30,6 +30,7 @@ import { TimezoneLabelPipe } from './opportunity/pipes/timezone-label.pipe';
 import { FixHTMLPipe } from './opportunity/pipes/fix-html.pipe';
 import { FilesizePipe } from './opportunity/pipes/filesize.pipe';
 import { FHService } from '../api-kit/fh/fh.service';
+import {AwardsResult} from "./awards/search-result/awards-result.component";
 
 class RouterStub {
   navigate(url:string) {
@@ -51,7 +52,7 @@ let fhServiceStub = {};
 describe('App', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, ExclusionsResult, WageDeterminationResult, FHFeaturedResult, OpportunityPage, PageNotFoundErrorPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe],
+    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, ExclusionsResult, WageDeterminationResult, AwardsResult, FHFeaturedResult, OpportunityPage, PageNotFoundErrorPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe],
     imports: [PipesModule, SamUIKitModule, AppComponentsModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
     providers: [
       App,

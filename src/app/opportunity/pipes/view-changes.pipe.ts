@@ -83,9 +83,9 @@ export class ViewChangesPipe implements PipeTransform {
     // let currentSecondaryFax;
     // let previousSecondaryFax;
     let postedDate = null;
-    let changesExist = false;
+    let changesExistGeneral = false;
+    let changesExistSynopsis = false;
 
-    console.log("Enter pipe");
     //checks for Update Response Date
     if (currentOpportunity.data && currentOpportunity.data.solicitation && currentOpportunity.data.solicitation.deadlines && currentOpportunity.data.solicitation.deadlines.response){
       currentUpdateResponseDate = currentOpportunity.data.solicitation.deadlines.response;
@@ -117,7 +117,7 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentArchivingPolicy != previousArchivingPolicy && previousArchivingPolicy == null){
       archivingPolicy = "New Data".italics();
-      changesExist = true;
+      changesExistGeneral = true;
     } else if (currentUpdateResponseDate != previousUpdateResponseDate && previousUpdateResponseDate != null){
       switch (previousArchivingPolicy){
         case "manual": {
@@ -133,7 +133,7 @@ export class ViewChangesPipe implements PipeTransform {
           break;
         }
       }
-      changesExist = true;
+      changesExistGeneral = true;
     }
 
     //checks for Update Archive Date
@@ -149,10 +149,10 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentUpdateArchiveDate != previousUpdateArchiveDate && previousUpdateArchiveDate == null){
       updateArchiveDate = "New Data".italics();
-      changesExist = true;
+      changesExistGeneral = true;
     } else if (currentUpdateArchiveDate != previousUpdateArchiveDate && previousUpdateArchiveDate != null){
       updateArchiveDate = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY').strike();
-      changesExist = true;
+      changesExistGeneral = true;
     }
 
 
@@ -169,41 +169,31 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentSpecialLegislation != previousSpecialLegislation && (previousSpecialLegislation == null || previousSpecialLegislation == false)){
       specialLegislation = "New Data".italics();
-      changesExist = true;
+      changesExistGeneral = true;
     } else if (currentSpecialLegislation != previousSpecialLegislation && previousSpecialLegislation == true){
       specialLegislation = "Recovery and Reinvestment Act".strike();
-      changesExist = true;
+      changesExistGeneral = true;
     }
 
-    console.log("Enter Pipe 2");
     //Checks for Set Aside
     if(currentOpportunity.data  && currentOpportunity.data.solicitation && currentOpportunity.data.solicitation.setAside){
       currentUpdateSetAside = currentOpportunity.data.solicitation.setAside;
-      console.log("1");
     } else {
       currentUpdateSetAside = null;
-      console.log("2");
     }
     if(previousOpportunity.data  && previousOpportunity.data.solicitation && previousOpportunity.data.solicitation.setAside){
       previousUpdateSetAside = previousOpportunity.data.solicitation.setAside;
-      console.log("3");
     } else {
       previousUpdateSetAside = null;
-      console.log("4");
     }
     if (currentUpdateSetAside != previousUpdateSetAside && previousUpdateSetAside == null){
       updateSetAside = "New Data".italics();
-      console.log("5");
-      changesExist = true;
+      changesExistGeneral = true;
     } else if (currentUpdateSetAside != previousUpdateSetAside && previousUpdateSetAside != null){
-      console.log("previousUpdateSetAside: ", previousUpdateSetAside);
-      console.log("dictionaries.set_aside_type: ", dictionaries.set_aside_type);
       let result = filterMultiArrayObjectPipe.transform([previousUpdateSetAside], dictionaries.set_aside_type, 'element_id', false, "");
-      console.log("Result: ", result);
       updateSetAside = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
-      console.log("Update updateSetAside: ", updateSetAside);
 
-      changesExist = true;
+      changesExistGeneral = true;
     }
 
 
@@ -220,12 +210,12 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentClassificationCode != previousClassificationCode && previousClassificationCode == null){
       classificationCode = "New Data".italics();
-      changesExist = true;
+      changesExistGeneral = true;
     } else if (currentClassificationCode != previousClassificationCode && previousClassificationCode != null){
       let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], dictionaries.classification_code, 'element_id', false, '');
       classificationCode = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
 
-      changesExist = true;
+      changesExistGeneral = true;
     }
 
 
@@ -242,13 +232,11 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentNaicsCode != previousNaicsCode && previousNaicsCode == null){
       naicsCode = "New Data".italics();
-      changesExist = true;
+      changesExistGeneral = true;
     } else if (currentNaicsCode != previousNaicsCode && previousNaicsCode != null){
-      console.log("previousNaicsCode: ", previousNaicsCode);
-      console.log("dictionaries.naics_code: ", dictionaries.naics_code);
       let result = filterMultiArrayObjectPipe.transform([previousNaicsCode], dictionaries.naics_code, 'element_id', false, '')
       naicsCode =(result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
-      changesExist = true;
+      changesExistGeneral = true;
     }
 
 
@@ -305,10 +293,10 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if ((currentPlaceOfPerformanceStreet != previousPlaceOfPerformanceStreet || currentPlaceOfPerformanceCity != previousPlaceOfPerformanceCity || currentPlaceOfPerformanceState != previousPlaceOfPerformanceState || currentPlaceOfPerformanceCountry != previousPlaceOfPerformanceCountry || currentPlaceOfPerformanceZip != previousPlaceOfPerformanceZip) && (previousPlaceOfPerformanceStreet == null && previousPlaceOfPerformanceCity == null && previousPlaceOfPerformanceState == null && previousPlaceOfPerformanceZip == null && previousPlaceOfPerformanceCountry == null)){
       placeOfPerformance = "New Data".italics();
-      changesExist = true;
+      changesExistGeneral = true;
     } else if (((currentPlaceOfPerformanceStreet != previousPlaceOfPerformanceStreet && previousPlaceOfPerformanceStreet != null) || (currentPlaceOfPerformanceCity != previousPlaceOfPerformanceCity && previousPlaceOfPerformanceCity != null) || (currentPlaceOfPerformanceState != previousPlaceOfPerformanceState && previousPlaceOfPerformanceState != null) || (currentPlaceOfPerformanceCountry != previousPlaceOfPerformanceCountry && previousPlaceOfPerformanceCountry != null) || currentPlaceOfPerformanceZip != previousPlaceOfPerformanceZip && previousPlaceOfPerformanceZip != null)){
       placeOfPerformance = ((previousPlaceOfPerformanceStreet ? previousPlaceOfPerformanceStreet : "") + " " + (previousPlaceOfPerformanceCity ? previousPlaceOfPerformanceCity : "") + " " + (previousPlaceOfPerformanceState ? previousPlaceOfPerformanceState : "") + " " + (previousPlaceOfPerformanceCountry ? previousPlaceOfPerformanceCountry : "") + " " + (previousPlaceOfPerformanceZip ? previousPlaceOfPerformanceZip : "")).strike();
-      changesExist = true;
+      changesExistGeneral = true;
     }
 
     //checks for Description
@@ -324,7 +312,7 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentDescription != previousDescription && previousDescription == null){
       description = "New Data".italics();
-      changesExist = true;
+      changesExistSynopsis = true;
     } else if (currentDescription != previousDescription && previousDescription != null){
       //description = fixHtmlPipe.transform(previousDescription).strike();
       let diffString = JsDiff.diffChars(previousDescription, currentDescription);
@@ -342,7 +330,8 @@ export class ViewChangesPipe implements PipeTransform {
       });
       //console.log("description", color);
       description = finalString;
-      changesExist = true;
+      //description = fixHtmlPipe.transform(previousDescription).strike();
+      changesExistSynopsis = true;
     }
 
     //checks for Contracting Office Address
@@ -526,7 +515,8 @@ export class ViewChangesPipe implements PipeTransform {
     postedDate = dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a');
 
     differences = {
-      changesExist: changesExist,
+      changesExistGeneral: changesExistGeneral,
+      changesExistSynopsis: changesExistSynopsis,
       updateResponseDate: updateResponseDate,
       archivingPolicy: archivingPolicy,
       updateArchiveDate: updateArchiveDate,

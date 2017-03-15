@@ -16,7 +16,6 @@ import { CommonModule } from '@angular/common';
     AwardsPage,
     BrowserModule,
     CommonModule,
-    
   ],
   declarations: [
     AwardsPage,

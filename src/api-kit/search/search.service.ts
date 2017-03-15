@@ -25,21 +25,37 @@ export class SearchService {
 
     // wage determination type filter
     if(typeof obj.wdType !== 'undefined' && obj.wdType !== null) {
-      oApiParam.oParam['index'] = obj.wdType;
-    }
+        oApiParam.oParam['index'] = obj.wdType;
+      }
 
-    // construction type filter
-    if(typeof obj.conType !== 'undefined' && obj.conType !== null && obj.conType !== '') {
-      oApiParam.oParam['construction_type'] = obj.conType;
-    }
+        // construction type filter
+        if(typeof obj.conType !== 'undefined' && obj.conType !== null && obj.conType !== '') {
+          oApiParam.oParam['construction_type'] = obj.conType;
+        }
 
-    // selectStateModel
-    if(typeof obj.state !== 'undefined' && obj.state !== null && obj.state !== '') {
-      oApiParam.oParam['state'] = obj.state;
-    }
+        // state filter
+        if(typeof obj.state !== 'undefined' && obj.state !== null && obj.state !== '') {
+          oApiParam.oParam['state'] = obj.state;
+        }
 
-    if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
-      oApiParam.oParam['county'] = obj.county;
+        // county filter
+        if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
+          oApiParam.oParam['county'] = obj.county;
+        }
+
+        // service filter
+        if(typeof obj.service !== 'undefined' && obj.service !== null && obj.service !== '') {
+          oApiParam.oParam['service'] = obj.service;
+        }
+
+        // iseven filter
+        if(typeof obj.isEven !== 'undefined' && obj.isEven !== null && obj.isEven !== '') {
+          if(obj.isEven === 'true'){
+            oApiParam.oParam['is_even'] = true;
+          }
+          else if(obj.isEven === 'false'){
+        oApiParam.oParam['is_even'] = false;
+      }
     }
 
     if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
