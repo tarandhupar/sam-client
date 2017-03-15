@@ -18,18 +18,19 @@
             (modelChange)="activeFilter($event)">
           </samCheckbox>
         </sam-collapsible>
-        <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">
 
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
           <div class="usa-grid-full">
             <agencyPicker
               [label]="'Filter by Organization:'"
-              (organization)="onOrganizationChange($event)">
+              (organization)="onOrganizationChange($event)"
+              [levelLimit] = '2'>
             </agencyPicker>
 
           </div>
         </sam-collapsible>
 
+        <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">
           <!--state drop down-->
           <samSelect
             [(model)]="wdStateModel"
@@ -162,15 +163,6 @@
       </p>
     </div>
     <div class="usa-width-one" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
-      <div *ngIf="showOptional" class="usa-width-one">
-        <h3>Common Filters:</h3>
-        <div class="usa-grid-full">
-          <div class="usa-width-one-third">
-            <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
-          </div>
-        </div>
-        <hr *ngIf="data.results" class="usa-width-one m_T-5x"/>
-      </div>
       <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
       <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
       <div id="search-results">
