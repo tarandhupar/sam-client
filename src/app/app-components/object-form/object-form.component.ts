@@ -35,8 +35,7 @@ export class ObjectFormModel{
       let formGroup = {};
       let index = objectFormData.indexOf(section);
 
-      console.log(section);
-      this.sidenavModel.children[index] = {
+        this.sidenavModel.children[index] = {
         label : section.label,
         route: '#' + section.section
       };
@@ -96,7 +95,7 @@ export class ObjectFormModel{
   }
 
   onPreviousClick(event){
-    console.log("previous clicked");
+
     this.buttonClick.emit({
       type:'previous',
       selectedPage: this.selectedPage - 1

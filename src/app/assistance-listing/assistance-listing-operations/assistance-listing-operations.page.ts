@@ -49,7 +49,6 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
         else
           this.mode = 'edit';
 
-
       if (this.mode == 'edit') {
         this.getProgSub = this.programService.getAuthProgramById(this.programId, this.cookieValue)
           .subscribe(api => {
@@ -58,13 +57,6 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
             let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
             let falNo = (api.data.programNumber ? api.data.programNumber : '');
 
-              if (falNo.trim().length == 6)
-                falNo = falNo.slice(3, 6);
-              this.programForm.patchValue({title: title, popularName: popularName, falNo: falNo});
-            });
-        }
-      } else {
-        this.router.navigate(['accessrestricted']);
             if (falNo.trim().length == 6)
               falNo = falNo.slice(3, 6);
 
@@ -80,13 +72,17 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
                 objective:objective
               }
             });
-
           });
+        }
+      } else {
+        this.router.navigate(['accessrestricted']);
+
       }
     } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
       this.router.navigate(['signin']);
     }
   }
+
 
   createFormGrp() {
 
