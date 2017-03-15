@@ -3,7 +3,7 @@
 
 <div class="usa-content">
   <form *ngIf="migrationForm" [formGroup]="migrationForm" (ngSubmit)="migrate()">
-    <div class="usa-grid" #form>
+    <div class="usa-grid relative" #form>
       <div class="usa-width-one-half">
         <samSelect label="Web Site"
                    name="system"
@@ -23,15 +23,10 @@
           <button type="submit" class="usa-primary-button">Migrate</button>
         </div>
 
-        <div class="usa-alerts">
-          <samAlert [type]="states.confirm.type"
-                    [title]="states.confirm.message"
-                    [target]="form"
-                    [(hidden)]="!states.confirm.show"
-                    [offset]="{ top: -10 }"
-                    showClose="true"
-                    placement='bottom right'></samAlert>
-        </div>
+        <samAlert [type]="states.confirm.type"
+                  [title]="states.confirm.message"
+                  [(hidden)]="!states.confirm.show"
+                  showClose="true"></samAlert>
       </div>
     </div>
   </form>
