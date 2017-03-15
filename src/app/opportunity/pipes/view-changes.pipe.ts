@@ -315,7 +315,7 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistSynopsis = true;
     } else if (currentDescription != previousDescription && previousDescription != null){
       //description = fixHtmlPipe.transform(previousDescription).strike();
-      let diffString = JsDiff.diffChars(previousDescription, currentDescription);
+      let diffString = JsDiff.diffSentences(previousDescription, currentDescription);
       console.log("Diff String", diffString);
       let finalString = '';
       diffString.forEach(function(part){
