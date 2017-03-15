@@ -259,16 +259,16 @@ describe('ViewChangesPipe', () => {
   let differences2 = {
     changesExistGeneral: true,
     changesExistSynopsis: true,
-    updateResponseDate: "<strike>Sep 30, 2014</strike>",
-    archivingPolicy: "<strike>Automatic, on specified date</strike>",
-    updateArchiveDate: "<strike>Feb 14, 2015</strike>",
-    specialLegislation: "<strike>Recovery and Reinvestment Act</strike>",
-    updateSetAside: "<strike>Total Small Business</strike>",
-    classificationCode: "<strike>24 -- Tractors</strike>",
-    naicsCode: "<strike>336212 -- Truck Trailer Manufacturing</strike>",
-    placeOfPerformance: "<strike>8110 Industrial Drive, STE 2002 Scranton PA CA 23123</strike>",
-    description: "<strike>See Attachment</strike>",
-    postedDate: "04/30/2014 3:03 pm"
+    updateResponseDate: '<font color="blue"><strike>Sep 30, 2014</strike></font>',
+    archivingPolicy: '<font color="blue"><strike>Automatic, on specified date</strike></font>',
+    updateArchiveDate: '<font color="blue"><strike>Feb 14, 2015</strike></font>',
+    specialLegislation: '<font color="blue"><strike>Recovery and Reinvestment Act</strike></font>',
+    updateSetAside: '<font color="blue"><strike>Total Small Business</strike></font>',
+    classificationCode: '<font color="blue"><strike>24 -- Tractors</strike></font>',
+    naicsCode: '<font color="blue"><strike>336212 -- Truck Trailer Manufacturing</strike></font>',
+    placeOfPerformance: '<font color="blue"><strike>8110 Industrial Drive, STE 2002 Scranton PA CA 23123</strike></font>',
+    description: '<font color="blue"><strike>See Attachment</strike></font>',
+    postedDate: '<font color="blue">Changes from 04/30/2014 3:03 pm</font>'
   };
 
   let previousAddress2 = null;
