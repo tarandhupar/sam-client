@@ -418,8 +418,6 @@ export class OpportunityPage implements OnInit {
         console.log('Error loading attachments: ', err);
         this.attachmentError = true;
       });
-
-    //let attachmentsReady = Observable.zip(packagesOpportunities);
     return packagesOpportunities;
 
   }
@@ -429,7 +427,6 @@ export class OpportunityPage implements OnInit {
     this.opportunityService.getAttachmentById(historyId).subscribe(attachmentSubject);
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
-      console.log(this.attachments);
       this.attachments.push(attachment);
       this.packages = [];
       this.attachments.forEach((attach: any) => {
