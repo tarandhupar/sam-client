@@ -10,6 +10,7 @@ import { FederalHierarchyResult } from '../organization/search-result/federal-hi
 import { EntitiesResult } from '../entity/search-result/entities-result.component';
 import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.component';
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
+import { AwardsResult } from '../awards/search-result/awards-result.component';
 import { FormsModule } from '@angular/forms';
 
 import { routing } from './search.route';
@@ -39,6 +40,7 @@ import { PipesModule } from '../app-pipes/app-pipes.module';
     EntitiesResult,
     ExclusionsResult,
     WageDeterminationResult,
+    AwardsResult,
     FHFeaturedResult
   ],
   declarations: [
@@ -50,6 +52,7 @@ import { PipesModule } from '../app-pipes/app-pipes.module';
     EntitiesResult,
     ExclusionsResult,
     WageDeterminationResult,
+    AwardsResult,
     FHFeaturedResult
   ],
   providers: [],

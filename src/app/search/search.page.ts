@@ -148,7 +148,6 @@ export class SearchPage implements OnInit{
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       data => {
-        console.log('this is the data logged on init ', data);
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
