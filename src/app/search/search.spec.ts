@@ -12,9 +12,11 @@ import { FederalHierarchyResult } from '../organization/search-result/federal-hi
 import { EntitiesResult } from '../entity/search-result/entities-result.component';
 import { ExclusionsResult } from '../exclusion/search-result/exclusions-result.component';
 import { WageDeterminationResult } from '../wage-determination/search-result/wage-determination-result.component';
+import { AwardsResult } from '../awards/search-result/awards-result.component';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
 import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
+import { AlertFooterService } from '../alerts/alert-footer';
 
 let fixture;
 
@@ -39,6 +41,9 @@ let searchServiceStub = {
           title:"Dummy Result 5"
         },{
           _type:"wdSCA",
+          title:"Dummy Result 6"
+        },{
+          _type:"awards",
           title:"Dummy Result 6"
         }],
       },
@@ -74,8 +79,8 @@ let fhServiceStub = {};
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,FHFeaturedResult ],
-      providers: [ ],
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult ],
+      providers: [AlertFooterService ],
       imports: [
         SamUIKitModule,
         SamAPIKitModule,

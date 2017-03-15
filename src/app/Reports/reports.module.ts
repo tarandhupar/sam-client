@@ -11,6 +11,7 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { IAMService } from 'api-kit';
 import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
+import { ReportsPipe } from './reports.pipe';
 @NgModule({
   imports: [
     SamUIKitModule,
@@ -21,10 +22,11 @@ import { globals } from '../../app/globals.ts';
   declarations: [
     ReportsPage,
     OverviewComponent,
-	ScheduledComponent,
+    ScheduledComponent,
     ReportComponent,
     AdhocComponent,
-    StaticComponent
+    StaticComponent,
+    ReportsPipe
   ],
   providers: [IAMService],
 })
