@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from "rxjs";
-import { UserAccessInterface, UserAccessInterface2 } from './access.interface';
+import { UserAccessInterface2 } from './access.interface';
 import { RoleInterface } from "./roles.interface";
 import * as _ from 'lodash';
 import { IDomain } from "./domain.interface";
