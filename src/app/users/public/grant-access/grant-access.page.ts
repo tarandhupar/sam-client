@@ -49,11 +49,11 @@ export class GrantAccessPage implements OnInit {
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
     this.determinePageMode();
-
+    this.getDomains();
     if (this.mode === 'edit') {
       this.initializePageFromQueryParameters();
     }
-    this.getDomains();
+
   }
 
   getDomains() {
