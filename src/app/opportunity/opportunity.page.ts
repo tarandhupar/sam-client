@@ -79,6 +79,7 @@ export class OpportunityPage implements OnInit {
   currentUrl: string;
   dictionary: any;
   attachments: any = [];
+  packages: any = [];
   relatedOpportunities:any;
   relatedOpportunitiesMetadata:any;
   public logoUrl: string;
@@ -394,17 +395,31 @@ export class OpportunityPage implements OnInit {
     this.opportunityService.getAttachmentById(historyId).subscribe(attachmentSubject);
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
+      console.log(this.attachments);
       this.attachments.push(attachment);
+      this.packages = [];
       this.attachments.forEach((attach: any) => {
         attach.packages.forEach((key: any) => {
+          key.resources = [];
           key.accordionState = 'collapsed';
-        });
-        attach.resources.forEach((res: any) => {
-          res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+          if(key.access == "Public"){
+              key.attachments.forEach((resource: any) => {
+                attach.resources.forEach((res: any) => {
+                  if(resource.resourceId == res.resourceId){
+                    res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+                    key.resources.push(res);
+                  }
+                });
+              });
+          }
+          this.packages.push(key);
+          this.packages = _.sortBy(this.packages, 'postedDate');
         });
       });
+    },err => {
+      console.log('Error loading attachments: ', err);
+      this.attachmentError = true;
     });
-    //console.log(this.attachments);
     return attachmentSubject;
   }
 
