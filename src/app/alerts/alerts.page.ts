@@ -92,6 +92,7 @@ export class AlertsPage {
   @ViewChild('expireModal') expireModal;
   @ViewChildren('alertItem') alertComponents: QueryList<AlertItemComponent>;
 
+
   constructor(private router: Router,
               private alertsService: SystemAlertsService,
               private alertFooterService: AlertFooterService,
@@ -108,7 +109,7 @@ export class AlertsPage {
           this.states.isSignedIn = true;
           this.user = user;
           if(this.user !== null){
-            this.role.getAccess2(this.user._id).subscribe(
+            this.role.getAccess(this.user._id).subscribe(
               res => {
                 this.userAccessModel = UserAccessModel.FromResponse(res);
                 this.states.isCreate = this.userAccessModel.canCreateAlerts();

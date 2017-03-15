@@ -3,10 +3,10 @@ export interface IdVal {
   val: string|number
 }
 
-export interface UserAccessInterface2 {
+export interface UserAccessInterface {
   user?: number|string,
   messages?: string,
-  "domainMapContent":[
+  "domainMapContent"?:[
     {
       "domain": IdVal,
       "roleMapContent":[
@@ -35,5 +35,5 @@ export interface UserAccessInterface2 {
       ]
     }
   ],
-  "id":"sumitdang"
+  "id"?:"sumitdang"
 }

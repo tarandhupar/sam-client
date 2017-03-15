@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from "rxjs";
-import { UserAccessInterface2 } from './access.interface';
+import { UserAccessInterface } from './access.interface';
 import { RoleInterface } from "./roles.interface";
 import * as _ from 'lodash';
 import { IDomain } from "./domain.interface";
@@ -21,7 +21,7 @@ export class UserAccessService {
 
   }
 
-  getAccess2(userId: string, filterOptions?: UserAccessFilterOptions): Observable<UserAccessInterface2> {
+  getAccess2(userId: string, filterOptions?: UserAccessFilterOptions): Observable<UserAccessInterface> {
     if (typeof userId === 'undefined') {
       throw new Error('userId is required');
     }

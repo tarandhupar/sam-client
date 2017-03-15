@@ -1,4 +1,4 @@
-import { UserAccessInterface2 } from "api-kit/access/access.interface";
+import { UserAccessInterface } from "api-kit/access/access.interface";
 import { PropertyCollector } from "../app-utils/property-collector";
 import * as _ from 'lodash';
 
@@ -8,19 +8,19 @@ export interface FunctionInterface {
 }
 
 export class UserAccessModel {
-  private _raw: UserAccessInterface2;
+  private _raw: UserAccessInterface;
   private collector: PropertyCollector;
 
   private constructor() {  }
 
-  static FromResponse(res: UserAccessInterface2): UserAccessModel {
+  static FromResponse(res: UserAccessInterface): UserAccessModel {
     let a = new UserAccessModel();
     a._raw = res;
     a.collector = new PropertyCollector(res);
     return a;
   }
 
-  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>, messages: string): UserAccessInterface2 {
+  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>, messages: string): UserAccessInterface {
     let functionMapContent = functions.map(fun => {
       return {
         function: fun.id,
@@ -40,31 +40,27 @@ export class UserAccessModel {
     return {
       messages: messages,
       user: user,
-      roleMapContent: [
-        {
-          role: roleId,
-          roleData: [
-            {
-              domain: domainId,
-              organizationMapContent: organizationMapContent
-            }
-          ]
-        }
-      ]
+      // roleMapContent: [
+      //   {
+      //     role: roleId,
+      //     roleData: [
+      //       {
+      //         domain: domainId,
+      //         organizationMapContent: organizationMapContent
+      //       }
+      //     ]
+      //   }
+      // ]
     };
   }
 
-  public raw(): UserAccessInterface2 {
+  public raw(): UserAccessInterface {
     return this._raw;
   }
 
   public allOrganizations() {
     let orgKeys = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'organizationMapContent', [], 'organizations', []]);
     return _.uniq(orgKeys);
-  }
-
-  public allOrganizations2() {
-
   }
 
   public allRoles() {
@@ -88,57 +84,57 @@ export class UserAccessModel {
     return _.uniqBy(objs, o => o.id);
   }
 
-  private isAdminForAlerts() {
+  //   let roleData = [];
+  //   roleData = this.userAccessModel.checkRoles(raw,"SUPERUSER");
+  //   let functionMap = [];
+  //   if(roleData.length !== 0){
+  //     functionMap = this.userAccessModel.checkDomain(roleData,"ADMIN");
+  //     if(functionMap.length !== 0){
+  //       let permission = [];
+  //       permission = this.userAccessModel.checkFunction(functionMap,"ALERTS");
+  //       if(permission.length !== 0){
+  //         permission.forEach(
+  //           perm => {
+  //             if(perm.val === "CREATE"){
+  //               this.states.isCreate = true;
+  //             }
+  //             else if(perm.val === "EDIT "){
+  //               this.states.isEdit = true;
+  //             }
+  //           }
+  //         )
+  //       }
+  //     }
+  //   }
 
+  private alertAdminPermissions(): any[] {
+    let ret = [];
+
+    this._raw.domainMapContent.forEach(domain => {
+      if (!domain.domain || !domain.domain.val || domain.domain.val !== 'ADMIN') {
+        return;
+      }
+      domain.roleMapContent.forEach(role => {
+        if (!role.role || !role.role.val || role.role.val !== 'SUPERUSER') {
+          return;
+        }
+        role.organizationMapContent[0].functionMapContent.forEach(fun => {
+          if (!fun.function || !fun.function.val || fun.function.val !== 'ALERTS') {
+            return;
+          }
+          ret.concat(fun.permission);
+        });
+      });
+    });
+
+    return ret;
   }
 
   public canCreateAlerts() {
-    if (this.isAdminForAlerts()) {
-      return false;
-    }
-
+    return this.alertAdminPermissions().find(role => role.val === 'CREATE');
   }
 
   public canEditAlerts() {
-    if (this.isAdminForAlerts()) {
-      return false;
-    }
+    return this.alertAdminPermissions().find(role => role.val === 'EDIT');
   }
-
-  // public checkRoles(useraccess,validate: string) {
-  //   let res = [];
-  //   useraccess.roleMapContent.forEach(
-  //     value =>{
-  //       if(value.role.val === validate){
-  //         res = value.roleData;
-  //       }
-  //     }
-  //   )
-  //   return res;
-  // }
-  //
-  // public checkDomain(useraccess,validate:string){
-  //   let res = [];
-  //   useraccess.forEach(
-  //     role => {
-  //       if(role.domain.val === validate){
-  //         res = role.organizationMapContent.functionMapContent;
-  //       }
-  //     }
-  //   )
-  //   return res;
-  // }
-  //
-  // public checkFunction(useraccess,validate:string){
-  //   let res = [];
-  //   useraccess.forEach(
-  //     funct => {
-  //       if(funct.function.val === "ALERTS"){
-  //         res = funct.permission;
-  //       }
-  //     }
-  //   )
-  //   return res;
-  // }
-
 }
