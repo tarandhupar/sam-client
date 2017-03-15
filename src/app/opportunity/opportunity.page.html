@@ -269,9 +269,7 @@
         <h2>Synopsis
           <samButton *ngIf="differences?.changesExistSynopsis" [buttonId]="'defaultBtnSynopsis'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
         </h2>
-        <p *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x">
-          {{differences?.postedDate}}
-        </p>
+        <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x" [innerHTML]="differences?.postedDate"></span>
         <!-- <samLabel *ngIf="differences?.description" [labelType]="'small'" [labelText]="' '"></samLabel> -->
         <h3>
           <i *ngIf="differences?.description" class="fa fa-square" aria-hidden="true"></i>
