@@ -1,18 +1,10 @@
 <div class="usa-grid-full usa-authentication">
   <aside class="usa-width-one-fourth">
-    <h1>My Profile</h1>
+    <h1 [innerText]="store.title"></h1>
     <ul class="usa-sidenav-list">
-      <li>
-        <a [routerLink]="['details']" [routerLinkActive]="['usa-current']">Personal Details</a>
-      </li>
-      <li>
-        <a [routerLink]="['password']" [routerLinkActive]="['usa-current']">Reset Password</a>
-      </li>
-      <li>
-        <a href="#" [routerLinkActive]="['usa-current']">My Access</a>
-      </li>
-      <li>
-        <a [routerLink]="['migrations']" [routerLinkActive]="['usa-current']">Migrations</a>
+      <li *ngFor="let nav of store.nav; let $index = index;">
+        <a *ngIf="nav.routerLink" [routerLink]="[nav.routerLink]" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
+        <a *ngIf="!nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
       </li>
     </ul>
   </aside>

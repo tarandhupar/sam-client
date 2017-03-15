@@ -3,7 +3,7 @@
   you may migrate your roles and keep your same permissions. <a routerLink="/profile/migrations" fragment="top">Begin Now</a>.
 </samAlert>
 
-<h2>Personal Details</h2>
+<h2 [innerText]="store.title"></h2>
 <div>
   <form *ngIf="detailsForm" [formGroup]="detailsForm">
     <!--============================-->

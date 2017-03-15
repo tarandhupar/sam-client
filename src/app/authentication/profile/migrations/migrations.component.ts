@@ -22,6 +22,7 @@ export class MigrationsComponent {
 
   private differ;
   private store = {
+    title: 'Role Migrations',
     legacy: [],
     migrations: [],
     systems: [],
