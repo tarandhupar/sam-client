@@ -101,9 +101,7 @@
           <samButton *ngIf="differences?.changesExistGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
         </h2>
 
-        <p *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x">
-          Changes from {{differences?.postedDate}}
-        </p>
+        <span *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x" [innerHTML]="differences?.postedDate"></span>
 
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
@@ -272,7 +270,7 @@
           <samButton *ngIf="differences?.changesExistSynopsis" [buttonId]="'defaultBtnSynopsis'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
         </h2>
         <p *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x">
-          Changes from {{differences?.postedDate}}
+          {{differences?.postedDate}}
         </p>
         <!-- <samLabel *ngIf="differences?.description" [labelType]="'small'" [labelText]="' '"></samLabel> -->
         <h3>
