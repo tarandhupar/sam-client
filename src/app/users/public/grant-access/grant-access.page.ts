@@ -125,7 +125,7 @@ export class GrantAccessPage implements OnInit {
     );
   }
 
-  public goToHead(): void {
+  public scrollToHead(): void {
     let pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, '#form-top');
     this.pageScrollService.start(pageScrollInstance);
   };
@@ -237,7 +237,7 @@ export class GrantAccessPage implements OnInit {
     if (!this.domain && this.domainOptions.length) {
       this.errors.domain = 'Domain is required';
     }
-    this.goToHead();
+    this.scrollToHead();
   }
 
   onGrantClick() {

@@ -75,7 +75,7 @@ export class UserAccessPage implements OnInit {
   }
 
   fakeOutAdmin() {
-    // for debugging, fake out admin role by setting it as a query parameter
+    // for debugging, fake out admin role by setting 'admin=true' or 'admin=false' as a query parameter
     this.route.queryParams.subscribe(queryParams => {
       if (queryParams["admin"] === 'true') {
         Cookie.set('isAdmin', 'true');
