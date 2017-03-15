@@ -257,7 +257,8 @@ describe('ViewChangesPipe', () => {
   // };
 
   let differences2 = {
-    changesExist: true,
+    changesExistGeneral: true,
+    changesExistSynopsis: true,
     updateResponseDate: "<strike>Sep 30, 2014</strike>",
     archivingPolicy: "<strike>Automatic, on specified date</strike>",
     updateArchiveDate: "<strike>Feb 14, 2015</strike>",
@@ -274,7 +275,8 @@ describe('ViewChangesPipe', () => {
 
   it('transforms "multiple objects from API calls to one with that contains changes to be displayed (Update)', () => {
     let results = pipe.transform(previousOpportunity, currentOpportunity, dictionaries, currentAddress, previousAddress1);
-    expect(results.changesExist).toBe(differences2.changesExist);
+    expect(results.changesExistGeneral).toBe(differences2.changesExistGeneral);
+    expect(results.changesExistSynopsis).toBe(differences2.changesExistSynopsis);
     expect(results.updateResponseDate).toBe(differences2.updateResponseDate);
     expect(results.archivingPolicy).toBe(differences2.archivingPolicy);
     expect(results.updateArchiveDate).toBe(differences2.updateArchiveDate);

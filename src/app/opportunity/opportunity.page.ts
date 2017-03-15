@@ -88,7 +88,9 @@ export class OpportunityPage implements OnInit {
   previousOpportunityVersion: any;
   previousOpportunityLocation: any;
   differences: any;
-  showChanges = false;
+  showChangesGeneral = false;
+  showChangesSynopsis = false;
+
 
   errorOrganization: any;
   errorLogo: any;
@@ -814,7 +816,11 @@ export class OpportunityPage implements OnInit {
       return  viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
   }
 
-  private showHide(){
-    this.showChanges == false ? this.showChanges = true : this.showChanges = false;
+  private showHideGeneral(){
+    this.showChangesGeneral == false ? this.showChangesGeneral = true : this.showChangesGeneral = false;
+  }
+
+  private showHideSynopsis(){
+    this.showChangesSynopsis == false ? this.showChangesSynopsis = true : this.showChangesSynopsis = false;
   }
 }
