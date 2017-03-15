@@ -16,6 +16,7 @@ import { FHService } from 'api-kit';
 * @Input() orgId: string - Prepopulate picker with an organization id
 * @Input() hint: string - Hint text that will appear below the label
 * @Input() orgRoot: string - Sets a root organization on the picker, users can only search/browse organizations under this root
+* @Input() initial: array - sets the array of selected organization array
 * @Output department - emits a single department object with value property (note: in case later we need organization label emitted)
 * @Output organization - emits array/single (Depending on `multimode` setting) of selected organizations when user closes the selection area
 */
@@ -29,6 +30,7 @@ export class AgencyPickerComponent implements OnInit {
   @Input() orgRoot = "";
   @Input() required = false;
   @Input() searchMessage = "";
+  @Input() initial: any;
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
   @Output() organization = new EventEmitter<any[]>();
@@ -226,6 +228,12 @@ export class AgencyPickerComponent implements OnInit {
     //enter
     else if (!this.autoCompleteToggle && evt['keyCode'] == 13){
       this.setOrganizationFromSearch();
+    }
+  }
+
+  ngOnChanges(changes) {
+    if (changes.initial && this.initial) {
+      this.selectedOrganizations = this.initial;
     }
   }
 
