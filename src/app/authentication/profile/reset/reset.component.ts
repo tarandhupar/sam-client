@@ -18,6 +18,10 @@ import { User } from '../../user.interface';
 export class ResetComponent {
   @ViewChild('formControl') formControl;
 
+  private store = {
+    title: 'Reset Password'
+  };
+
   private states = {
     alert: {
       type: 'success',
@@ -50,6 +54,17 @@ export class ResetComponent {
           if(!this.api.iam.isDebug()) {
             this.router.navigate(['/signin']);
           } else {
+            this.user = <User>{
+              _id: 'john.doe@gsa.gov',
+              fullName: 'John J Doe',
+              firstName: 'John',
+              initials: 'J',
+              lastName: 'Doe',
+              email: 'doe.john@gsa.gov',
+              kbaAnswerList: [],
+              accountClaimed: true
+            };
+
             this.initForm();
           }
         });

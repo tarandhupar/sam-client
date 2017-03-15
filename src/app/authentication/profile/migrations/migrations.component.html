@@ -1,9 +1,12 @@
-<h2 id="top">Migrations</h2>
-<div>Select one of our legacy web sites. Then enter your user name and password from that site to move your roles to the new SAM.gov</div>
+<h2 id="top" [innerText]="store.title"></h2>
+<div>
+  Select one of our legacy web sites. Then enter the username and password of your legacy account to
+  migrate your roles to your new SAM.gov account.
+</div>
 
 <div class="usa-content">
   <form *ngIf="migrationForm" [formGroup]="migrationForm" (ngSubmit)="migrate()">
-    <div class="usa-grid" #form>
+    <div class="usa-grid relative" #form>
       <div class="usa-width-one-half">
         <samSelect label="Web Site"
                    name="system"
@@ -23,23 +26,21 @@
           <button type="submit" class="usa-primary-button">Migrate</button>
         </div>
 
-        <div class="usa-alerts">
-          <samAlert [type]="states.confirm.type"
-                    [title]="states.confirm.message"
-                    [target]="form"
-                    [(hidden)]="!states.confirm.show"
-                    [offset]="{ top: -10 }"
-                    showClose="true"
-                    placement='bottom right'></samAlert>
-        </div>
+        <samAlert [type]="states.confirm.type"
+                  [title]="states.confirm.message"
+                  [(hidden)]="!states.confirm.show"
+                  showClose="true"></samAlert>
       </div>
     </div>
   </form>
   <div>
-    <h3>Migration History</h3>
-    <div *ngIf="!store.migrations.length">You have not migrated any legacy website accounts yet.</div>
+    <h3>Role Migration History</h3>
+    <div>
+      <ng-container *ngIf="!store.migrations.length">You have not yet migrated any legacy roles.</ng-container>
+      <ng-container *ngIf="store.migrations.length">Your new role(s) may named differently than it was in the Legacy System. You privileges are comparable.</ng-container>
+    </div>
 
-    <table class="usa-table-borderless usa-migration-history">
+    <table *ngIf="store.migrations.length" class="usa-table-borderless usa-migration-history">
       <thead>
         <tr>
           <th scope="col" class="text-right">Role</th>
@@ -80,7 +81,10 @@
     </table>
 
     <h3 id="legacy-sites">Legacy Websites</h3>
-    <div>The following web sites are being moved to the new SAM.gov. If you currently have a user account in one of these systems you will be able to move it here.</div>
+    <div>
+      The following web sites are being moved to the new SAM.gov. If you currently have legacy accounts in any of these systems
+      you will be able to migrate all of your associated roles to the new SAM.gov.
+    </div>
 
     <table class="usa-table-borderless usa-legacy-systems">
       <thead>

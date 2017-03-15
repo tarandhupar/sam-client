@@ -10,3 +10,14 @@
   margin:0;
   max-width: 2000px;
 }
+
+.help-content{
+
+  .feedback-warning{
+    color: $color-secondary-dark;
+  }
+
+  .feedback-background{
+    background: $color-primary-alt;
+  }
+}
