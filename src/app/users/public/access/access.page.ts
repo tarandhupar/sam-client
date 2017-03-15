@@ -71,6 +71,10 @@ export class UserAccessPage implements OnInit {
       }
     );
 
+    this.fakeOutAdmin();
+  }
+
+  fakeOutAdmin() {
     // for debugging, fake out admin role by setting it as a query parameter
     this.route.queryParams.subscribe(queryParams => {
       if (queryParams["admin"] === 'true') {
@@ -192,7 +196,7 @@ export class UserAccessPage implements OnInit {
           title:"Unable to get organization data",
           description:"",
           type:'error',
-          timer:0
+          timer:3000
         });
       }
     );

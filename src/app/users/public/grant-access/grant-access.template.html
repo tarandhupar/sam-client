@@ -2,16 +2,37 @@
   <h1 class="m_T-0">{{modeName()}} Access</h1>
 
   <!-- Domain -->
-  <div *ngIf="!isEdit">
+  <div *ngIf="mode !== 'edit'">
     <samSelect name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
   </div>
-  <div *ngIf="isEdit">
-    <label>Domain:</label>
-    <span>{{domain}}</span>
+  <div *ngIf="mode === 'edit'" class="">
+    <div class="usa-grid-full">
+      <div class="usa-width-one-sixth">
+        <label><strong>Domain:</strong></label>
+      </div>
+      <div class="usa-width-five-sixths">
+        <span *ngIf="domain">{{labelForDomain(domain)}}</span>
+        <span *ngIf="!domain"><i>Loading Domain...</i></span>
+      </div>
+    </div>
   </div>
 
   <!-- Role -->
-  <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
+  <div *ngIf="mode === 'grant'">
+    <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
+  </div>
+  <div *ngIf="mode === 'edit'">
+    <div class="usa-grid-full m_T-4x">
+      <div class="usa-width-one-sixth">
+        <label for="role-input"><strong>Role:</strong></label>
+      </div>
+      <div class="usa-width-one-half">
+        <select id="role-input" [ngModel]="role" (ngModelChange)="onRoleChange($event)">
+          <option *ngFor="let r of roleOptions" [value]="r.value">{{r.label}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
 
   <!-- Orgs -->
   <agencyPicker

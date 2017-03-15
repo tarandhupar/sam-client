@@ -48,33 +48,15 @@ export class GrantAccessPage implements OnInit {
 
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
+    this.determinePageMode();
 
-    this.route.queryParams.subscribe(queryParams => {
-      this.role = queryParams["role"];
-      this.domain = queryParams["domain"];
-      if (queryParams['orgs']) {
-        let orgIds = queryParams["orgs"].split(',');
-        if (orgIds.length) {
-          this.prePopulateOrgs(orgIds);
-        }
-      }
-    });
-
-    let match = this.router.url.match('edit-access');
-    if(match && match.length) {
-      this.mode = 'edit';
+    if (this.mode === 'edit') {
+      this.initializePageFromQueryParameters();
     }
-    match = this.router.url.match('grant-access');
-    if (match && match.length) {
-      this.mode = 'grant';
-    }
-    match = this.router.url.match('request-access');
-    if (match && match.length) {
-      this.mode = 'request';
-    }
+    this.getDomains();
+  }
 
-    let url = this.router.url;
-
+  getDomains() {
     this.userService.getDomains().subscribe(
       domains => {
         this.domainOptions = domains._embedded.domainList.map(domain => {
@@ -90,6 +72,35 @@ export class GrantAccessPage implements OnInit {
         });
       }
     );
+  }
+
+  initializePageFromQueryParameters() {
+    this.route.queryParams.subscribe(queryParams => {
+      this.role = parseInt(queryParams["role"]);
+      this.domain = parseInt(queryParams["domain"]);
+      this.getPermissions();
+      if (queryParams['orgs']) {
+        let orgIds = queryParams["orgs"].split(',');
+        if (orgIds.length) {
+          this.prePopulateOrgs(orgIds);
+        }
+      }
+    });
+  }
+
+  determinePageMode() {
+    let match = this.router.url.match('edit-access');
+    if(match && match.length) {
+      this.mode = 'edit';
+    }
+    match = this.router.url.match('grant-access');
+    if (match && match.length) {
+      this.mode = 'grant';
+    }
+    match = this.router.url.match('request-access');
+    if (match && match.length) {
+      this.mode = 'request';
+    }
   }
 
   prePopulateOrgs(orgIds) {
@@ -123,6 +134,18 @@ export class GrantAccessPage implements OnInit {
     return permission.val + '_' + object.function.val;
   }
 
+  labelForDomain(domainId: number) {
+    if (!this.domainOptions.length) {
+      return;
+    }
+    let domain = this.domainOptions.find(dom => dom.value === domainId);
+    if (domain) {
+      return domain.label;
+    } else {
+      console.error('domain:', domainId, ' not found');
+    }
+  }
+
   onOrganizationsChange(orgs) {
     this.orgs = orgs;
     console.log(this.orgs);
@@ -145,17 +168,8 @@ export class GrantAccessPage implements OnInit {
     }
   }
 
-  onDomainChange(domain) {
-    if (domain) {
-      this.errors.role = '';
-    }
-
-    this.domain = domain;
-    this.role = null;
-    this.roleOptions = [];
-    this.objects = [];
-
-    this.userService.getPermissions({domainID: domain}).subscribe(
+  getPermissions() {
+    this.userService.getPermissions({domainID: this.domain}).subscribe(
       perms => {
         this.permissions = perms;
         let c = new PropertyCollector(perms);
@@ -176,6 +190,18 @@ export class GrantAccessPage implements OnInit {
     );
   }
 
+  onDomainChange(domain) {
+    if (domain) {
+      this.errors.role = '';
+    }
+
+    this.domain = domain;
+    this.role = null;
+    this.roleOptions = [];
+    this.objects = [];
+    this.getPermissions();
+  }
+
   modeName() {
     switch (this.mode) {
       case 'edit': return 'Edit';
@@ -189,7 +215,14 @@ export class GrantAccessPage implements OnInit {
   }
 
   isFormValid() {
-    return this.orgs && this.orgs.length && this.domain && this.role;
+    switch (this.mode) {
+      case 'edit':
+      case 'grant':
+        return this.orgs && this.orgs.length && this.domain && this.role;
+      case 'request':
+        return this.orgs && this.orgs.length && this.domain;
+    }
+
   }
 
   showErrors() {
@@ -210,6 +243,16 @@ export class GrantAccessPage implements OnInit {
   onGrantClick() {
     if (!this.isFormValid()) {
       this.showErrors();
+      return;
+    }
+
+    if (this.mode === 'request') {
+      this.footerAlert.registerFooterAlert({
+        title:"Request Sent.",
+        type:'success',
+        timer:3000
+      });
+      this.goToAccessPage();
       return;
     }
 
