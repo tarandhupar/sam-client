@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'reifil'
+    name: 'repfil'
 })
 
 export class ReportsPipe implements PipeTransform {

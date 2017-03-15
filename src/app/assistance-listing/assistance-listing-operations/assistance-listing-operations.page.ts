@@ -39,14 +39,15 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
     this.createFormGrp();
 
     if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
-      this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-      this.currentUrl = document.location.href;
-      this.programId = this.route.snapshot.params['id'];
+      if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
+        this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+        this.currentUrl = document.location.href;
+        this.programId = this.route.snapshot.params['id'];
 
-      if (this.programId == null)
-        this.mode = 'add';
-      else
-        this.mode = 'edit';
+        if (this.programId == null)
+          this.mode = 'add';
+        else
+          this.mode = 'edit';
 
 
       if (this.mode == 'edit') {
@@ -57,6 +58,13 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
             let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
             let falNo = (api.data.programNumber ? api.data.programNumber : '');
 
+              if (falNo.trim().length == 6)
+                falNo = falNo.slice(3, 6);
+              this.programForm.patchValue({title: title, popularName: popularName, falNo: falNo});
+            });
+        }
+      } else {
+        this.router.navigate(['accessrestricted']);
             if (falNo.trim().length == 6)
               falNo = falNo.slice(3, 6);
 
@@ -98,7 +106,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
 
 
   onCancelClick(event) {
-    this.router.navigate(['falworkspace']);
+    this.router.navigate(['/falworkspace']);
   }
 
   saveProgram(data) {

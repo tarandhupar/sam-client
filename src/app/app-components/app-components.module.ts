@@ -17,10 +17,10 @@ import { SearchLayoutComponent } from './search-layout/search-layout.component';
 import { ListResultsMessageComponent } from './list-results-message/list-results-message.component';
 import { WorkspaceLayoutComponent } from './workspace-layout/workspace-layout.component';
 import { SamFooterComponent } from './footer/footer.component';
+import { SamFeedbackComponent } from './feedback-form/feedback-form.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
 import { InputAutocompleteComponent } from './input-autocomplete/input-autocomplete.component';
 import { SamSearchbarComponent } from './searchbar/searchbar.component';
-import { SamFeedbackComponent } from "./feedback-form/feedback-form.component";
 import { FormFieldComponent } from "./object-form/form-field/form-field.component";
 import { ObjectFormModel } from "./object-form/object-form.component";
 import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-sidebar.component";
@@ -43,12 +43,12 @@ import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-side
     SamFooterComponent,
     SamHeaderLinksComponent,
     InputAutocompleteComponent,
-    SamFeedbackComponent,
     ListResultsMessageComponent,
     FormFieldComponent,
     ObjectFormModel,
     ObjectSidebarComponent,
-    SamSearchbarComponent
+    SamSearchbarComponent,
+    SamFeedbackComponent
   ],
   imports: [
     BrowserModule,
@@ -72,12 +72,12 @@ import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-side
     SamFooterComponent,
     SamHeaderLinksComponent,
     InputAutocompleteComponent,
-    SamFeedbackComponent,
     ListResultsMessageComponent,
+    SamSearchbarComponent,
+    SamFeedbackComponent,
     FormFieldComponent,
     ObjectFormModel,
-    ObjectSidebarComponent,
-    SamSearchbarComponent
+    ObjectSidebarComponent
   ],
   providers: [ ]
 })

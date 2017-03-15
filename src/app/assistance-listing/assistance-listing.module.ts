@@ -12,6 +12,7 @@ import { ProgramDisplayPageDemoPage } from './display-template-demo/display-temp
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { ProgramPageOperations } from './assistance-listing-operations/assistance-listing-operations.page';
 import { AssistanceProgramResult } from './assistance-listing-workspace/program-result/assistance-program-result.component';
+import { AccessRestrictedPage } from './assistance-listing-workspace/program-result/testauthenvironment.page';
 import { FalWorkspacePage } from './assistance-listing-workspace/assistance-listing-workspace.page';
 
 
@@ -30,6 +31,7 @@ import { FalWorkspacePage } from './assistance-listing-workspace/assistance-list
     FinancialObligationChart,
     HistoricalIndexLabelPipe,
     AssistanceProgramResult,
+    AccessRestrictedPage,
   ],
   declarations: [
     AuthorizationPipe,
@@ -40,6 +42,7 @@ import { FalWorkspacePage } from './assistance-listing-workspace/assistance-list
     AssistanceProgramResult,
     FalWorkspacePage,
     ProgramPageOperations,
+    AccessRestrictedPage,
   ],
   providers: [],
 })

@@ -46,7 +46,8 @@ export class SamSearchbarComponent {
       {value: 'fh', label: 'Federal Hierarchy', width: '175'},
       {value: 'ent', label: 'Entities', width: '100'},
       {value: 'ex', label: 'Exclusions', width: '120'},
-      {value: 'wd', label: 'Wage Determinations', width: '200'}
+      {value: 'wd', label: 'Wage Determinations', width: '200'},
+      {value: 'fpds', label: 'Awards', width: '100'}
     ],
     disabled: false,
     label: '',

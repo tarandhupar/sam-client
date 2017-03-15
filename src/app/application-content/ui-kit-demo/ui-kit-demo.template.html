@@ -1,6 +1,4 @@
 <div class="sam-ui-kit">
-  <sam-feedback></sam-feedback>
-
 
   <div class="usa-grid">
     <h2>Accordions Component &lt;samAccordions&gt;</h2>
@@ -165,7 +163,7 @@
       <pre><code>{{textModel}}</code></pre>
     </div>
   </div>
-  
+
   <div class="usa-grid">
     <h2>Select Text &lt;samTextarea&gt;</h2>
     <div class="usa-width-one-third">
@@ -247,7 +245,7 @@
       <pre><code>{{textModel}}</code></pre>
     </div-->
   </div>
-  
+
   <div class="usa-grid">
     <h2>Checkboxes Component &lt;samCheckbox&gt;</h2>
     <div class="usa-width-one-third">
@@ -507,5 +505,17 @@
         <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate ex aliquam, molestiae tempora. Nihil alias blanditiis excepturi architecto rerum repellendus adipisci ducimus minus, modi porro nostrum repudiandae perferendis placeat et.</p>
       </sam-collapsible>
     </sam-filters-container>
+  </div>
+</div>
+<div class="usa-grid">
+  <h2 class="usa-width-one">Sam List Input</h2>
+  <div class="usa-width-one-fourth">
+    <pre>{{listOptions | json}}</pre>
+  </div>
+  <div class="usa-width-one-fourth">
+      <sam-list-input [control]="listControl" [options]="listOptions"></sam-list-input>
+  </div>
+  <div class="usa-width-one-fourth">
+      <sam-list-input [control]="listControl" [selections]="[1,4]" [options]="listOptions"></sam-list-input>
   </div>
 </div>

@@ -202,7 +202,8 @@ var conf = {
       'HMR': false,
       'API_UMBRELLA_URL': JSON.stringify("dummy"), // we do not test with a real backend, but the url and key must be defined
       'API_UMBRELLA_KEY': JSON.stringify("dummy"),
-      'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL === 'true')
+      'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL === 'true'),
+      'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(process.env.SHOW_HIDE_RESTRICTED_PAGES === 'true')
     }),
 
 
