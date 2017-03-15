@@ -14,24 +14,23 @@
 
         <p>The password reset link will remain valid for 20 minutes.</p>
 
-        <ul class="links">
-          <li *ngIf="email" class="email">
-            <a href="javascript:void(0);" (click)="resendEmail()" #target>Resend Email</a>
-          </li>
-          <li class="home">
-            <a routerLink="/">Return to SAM.gov Home</a>
-          </li>
-        </ul>
+        <div class="relative">
+          <ul class="links">
+            <li *ngIf="email" class="email">
+              <a href="javascript:void(0);" (click)="resendEmail()" #target>Resend Email</a>
+            </li>
+            <li class="home">
+              <a routerLink="/">Return to SAM.gov Home</a>
+            </li>
+          </ul>
+          <samAlert class="usa-alert-static"
+                    [type]="states.alert.type"
+                    [title]="states.alert.title"
+                    [showClose]="true"
+                    [hidden]="!states.alert.show"
+                    (dismiss)="dismissAlert()"></samAlert>
+        </div>
       </section>
     </span>
   </div>
 </div>
-
-<samAlert [type]="states.alert.type"
-          [title]="states.alert.title"
-          [showClose]="true"
-          [hidden]="!states.alert.show"
-          [target]="target"
-          [offset]="{ left: 100 }"
-          placement="right"
-          (dismiss)="dismissAlert()"></samAlert>
