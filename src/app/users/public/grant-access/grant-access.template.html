@@ -1,5 +1,5 @@
 <div class="grant-access-page">
-  <h1 class="m_T-0">{{isEdit ? "Edit" : "Grant"}} Access</h1>
+  <h1 class="m_T-0">{{modeName()}} Access</h1>
 
   <!-- Domain -->
   <div *ngIf="!isEdit">
@@ -27,8 +27,8 @@
   <ng-container *ngIf="objects && objects.length">
     <div class="m_B-1x"><label>Permissions</label></div>
     <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
-      <li  *ngFor="let object of objects" class="object-item">
-        <strong>{{object.function.val}}</strong>
+      <li  *ngFor="let object of objects; let evenObject=even" class="object-item">
+        <strong>{{object.function.val}}<span *ngIf="evenObject">&nbsp;<i class="fa fa-info-circle"></i></span></strong>
         <div class="p_L-4x permission-list">
           <span *ngFor="let permission of object.permission" class="permission-control-group">
             <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">

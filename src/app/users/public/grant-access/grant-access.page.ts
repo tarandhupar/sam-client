@@ -30,7 +30,7 @@ export class GrantAccessPage implements OnInit {
   private objects = [];
 
   private messages: string = "";
-  private isEdit: boolean = false;
+  private mode: 'edit'|'grant'|'request' = 'grant';
 
   constructor(
     private userService: UserAccessService,
@@ -51,7 +51,19 @@ export class GrantAccessPage implements OnInit {
     });
 
     let match = this.router.url.match('edit-access');
-    this.isEdit = !!(match && match.length);
+    if(match && match.length) {
+      this.mode = 'edit';
+    }
+    match = this.router.url.match('grant-access');
+    if (match && match.length) {
+      this.mode = 'grant';
+    }
+    match = this.router.url.match('request-access');
+    if (match && match.length) {
+      this.mode = 'request';
+    }
+
+    let url = this.router.url;
 
     this.userService.getDomains().subscribe(
       domains => {
@@ -129,6 +141,14 @@ export class GrantAccessPage implements OnInit {
         });
       }
     );
+  }
+
+  modeName() {
+    switch (this.mode) {
+      case 'edit': return 'Edit';
+      case 'grant': return 'Grant';
+      case 'request': return 'Request';
+    }
   }
 
   goToAccessPage() {

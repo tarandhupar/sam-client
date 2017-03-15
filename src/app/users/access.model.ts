@@ -63,6 +63,10 @@ export class UserAccessModel {
     return _.uniq(orgKeys);
   }
 
+  public allOrganizations2() {
+
+  }
+
   public allRoles() {
     let roles = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'role']);
     return _.uniqBy(roles, r => r.id);
