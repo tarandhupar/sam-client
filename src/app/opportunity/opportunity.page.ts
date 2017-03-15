@@ -441,10 +441,6 @@ export class OpportunityPage implements OnInit {
       return [];
     }
   }
-<<<<<<< HEAD
-=======
-
->>>>>>> comp
 
   private loadHistory(opportunity: Observable<any>) {
     let historySubject = new ReplaySubject(1);
