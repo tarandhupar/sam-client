@@ -2,11 +2,14 @@ import { Pipe, PipeTransform } from '@angular/core';
 import {FilterMultiArrayObjectPipe} from "../../app-pipes/filter-multi-array-object.pipe";
 import {DateFormatPipe} from "../../app-pipes/date-format.pipe";
 import {FixHTMLPipe} from "./fix-html.pipe";
+import  JsDiff = require('diff') ;
+
 
 
 @Pipe({name: 'viewChanges'})
 export class ViewChangesPipe implements PipeTransform {
   transform(previousOpportunity: any, currentOpportunity:any, dictionaries: any, currentOpportunityLocation:any, previousOpportunityLocation:any): any {
+    //let jsDiff = new JsDiff();
     let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
     let dateFormatPipe = new DateFormatPipe();
     let fixHtmlPipe = new FixHTMLPipe();
@@ -219,7 +222,7 @@ export class ViewChangesPipe implements PipeTransform {
       classificationCode = "New Data".italics();
       changesExist = true;
     } else if (currentClassificationCode != previousClassificationCode && previousClassificationCode != null){
-      let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], dictionaries.classification_code, 'element_id', false, '')
+      let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], dictionaries.classification_code, 'element_id', false, '');
       classificationCode = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
 
       changesExist = true;
@@ -323,7 +326,22 @@ export class ViewChangesPipe implements PipeTransform {
       description = "New Data".italics();
       changesExist = true;
     } else if (currentDescription != previousDescription && previousDescription != null){
-      description = fixHtmlPipe.transform(previousDescription).strike();
+      //description = fixHtmlPipe.transform(previousDescription).strike();
+      let diffString = JsDiff.diffChars(previousDescription, currentDescription);
+      console.log("Diff String", diffString);
+      let finalString = '';
+      diffString.forEach(function(part){
+        // green for additions, red for deletions
+        // grey for common parts
+        console.log("part: ", part);
+        var color = part.added ? 'green' :
+          part.removed ? 'red' : 'grey';
+        console.log("color: ", color);
+        console.log("part value color,", part.value.fontcolor(color));
+        finalString = finalString + part.value.fontcolor(color);
+      });
+      //console.log("description", color);
+      description = finalString;
       changesExist = true;
     }
 

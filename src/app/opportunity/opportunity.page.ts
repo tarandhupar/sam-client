@@ -11,7 +11,7 @@ import {ViewChangesPipe} from "./pipes/view-changes.pipe";
 import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
-import { Diff } from 'diff';
+import { JsDiff } from 'diff';
 
 @Component({
   moduleId: __filename,
@@ -430,9 +430,7 @@ export class OpportunityPage implements OnInit {
     });
   }
 
-<<<<<<< HEAD
 
-=======
   private findDictionary(key: String): any[] {
     let dictionary = _.find(this.dictionary._embedded['dictionaries'], { id: key });
 
@@ -442,7 +440,6 @@ export class OpportunityPage implements OnInit {
       return [];
     }
   }
->>>>>>> comp
 
   private loadHistory(opportunity: Observable<any>) {
     let historySubject = new ReplaySubject(1);
