@@ -1,13 +1,15 @@
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { UserAccessService, UserAccessFilterOptions } from "api-kit/access/access.service";
 import { UserAccessModel } from "../../access.model";
-import { ActivatedRoute} from "@angular/router";
+import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 import { Organization } from "../../../organization/organization.model";
 import { Observable } from "rxjs";
 import { SamAccordionComponent } from "sam-ui-kit/components/accordion/accordion.component";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
-
+import { SamModalComponent } from "sam-ui-kit/components/modal";
+import { Cookie } from 'ng2-cookies'
+import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.service";
 
 @Component({
   templateUrl: 'access.template.html'
@@ -25,31 +27,84 @@ export class UserAccessPage implements OnInit {
   };
 
   private userName: string;
+  private isAdmin: boolean = false;
   private organizations: Organization[];
 
   @ViewChildren(SamAccordionComponent) allAccordions: QueryList<SamAccordionComponent>;
+  @ViewChild('deleteModal') deleteModal: SamModalComponent;
 
   private showCollapse = false;
   private capitalize = new CapitalizePipe();
+  private modalData = {
+    domain: {},
+    role: {},
+    orgs: []
+  };
 
   constructor(
     private userService: UserAccessService,
     private route: ActivatedRoute,
     private fhService: FHService,
+    private router: Router,
+    private footerAlert: AlertFooterService,
   ) { }
 
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
 
-    this.userService.getAccess(this.userName).subscribe(res => {
-      this.userAccessModel = UserAccessModel.FromResponse(res);
-      this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
-      this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
-      this.filters.permissions.options = this.userAccessModel.allPermissions().map(this.mapLabelAndName);
-      this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
+    this.userService.getAccess2(this.userName).subscribe(
+      res => {
+        this.userAccessModel = UserAccessModel.FromResponse(res);
+        this.filters.domains.options = this.userAccessModel.allDomains().map(this.mapLabelAndName);
+        this.filters.roles.options = this.userAccessModel.allRoles().map(this.mapLabelAndName);
+        this.filters.permissions.options = this.userAccessModel.allPermissions().map(this.mapLabelAndName);
+        this.filters.objects.options = this.userAccessModel.allObjects().map(this.mapLabelAndName);
+        this.getOrganizationData(this.userAccessModel.allOrganizations());
+      },
+      err => {
+        this.footerAlert.registerFooterAlert({
+          title:"Unable to access information for: "+this.userName,
+          description:"",
+          type:'error',
+          timer:0
+        });
+      }
+    );
 
-      this.getOrganizationData(this.userAccessModel.allOrganizations());
+    // for debugging, fake out admin role by setting it as a query parameter
+    this.route.queryParams.subscribe(queryParams => {
+      if (queryParams["admin"] === 'true') {
+        Cookie.set('isAdmin', 'true');
+      } else if (queryParams["admin"] === 'false') {
+        Cookie.set('isAdmin', 'false');
+      }
+
+      this.isAdmin = Cookie.get('isAdmin') === 'true';
     });
+  }
+
+  onDeleteRoleClick(role) {
+    this.modalData = {
+      domain: {id: 1},
+      role: {id: 1},
+      orgs: [{id: 1},{id: 2}]
+    };
+    this.deleteModal.openModal();
+  }
+
+  onEditClick(role, domain) {
+    let extras: NavigationExtras = {
+      relativeTo: this.route,
+      queryParams: {
+        role: role.id,
+        domain: domain.id,
+      }
+    };
+    this.router.navigate(['../edit-access'], extras);
+  }
+
+  onDeleteConfirm(role) {
+    this.deleteModal.closeModal();
   }
 
   mapLabelAndName(val) {
@@ -90,7 +145,7 @@ export class UserAccessPage implements OnInit {
       functionIds: this.filters.objects.value,
     };
 
-    this.userService.getAccess(this.userName, filterOptions).subscribe(res => {
+    this.userService.getAccess2(this.userName, filterOptions).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
       this.expandAll();
     });
@@ -131,7 +186,12 @@ export class UserAccessPage implements OnInit {
         });
       },
       err => {
-        console.error('Unabled to fetch org data. Error', err);
+        this.footerAlert.registerFooterAlert({
+          title:"Unable to get organization data",
+          description:"",
+          type:'error',
+          timer:0
+        });
       }
     );
   }
@@ -144,5 +204,13 @@ export class UserAccessPage implements OnInit {
   expandAll() {
     this.allAccordions.forEach(acc => acc.setExpandIndex(0));
     this.showCollapse = true;
+  }
+
+  onShowPermissionsClick(role) {
+    role.isOpen = !role.isOpen;
+  }
+
+  hasSelectAll(options) {
+    return options.length > 4;
   }
 }

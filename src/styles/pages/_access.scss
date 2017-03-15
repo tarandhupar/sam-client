@@ -1,6 +1,74 @@
 .access-page {
+  .no-wrap {
+    white-space: nowrap;
+  }
+
+  .background-white {
+    background-color: white;
+  }
+
+  .modal-subtitle {
+    margin-top: .8em;
+  }
+
+  .permissions-block {
+    border: 1px solid black;
+  }
+
+  .border-bottom-black {
+    border-bottom: 1px solid black;
+  }
+
+  .permissions-table, .permissions-table-header {
+    padding: .5em;
+  }
+
+  .role-block:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  .show-permissions-button {
+    margin-top: -8px !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .fieldset-wrapper {
-   min-width: 250px;
+    min-width: 250px;
+  }
+
+  .usa-width-eleven-twelfths {
+    @include span-columns(11);
+  }
+
+  .dropdown-list {
+    overflow-y: auto;
+    max-height:200px;
+
+    input {
+      height: initial;
+    }
+  }
+
+  /* For the scroll bar to visible on mac */
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+  }
+
+  .modify-role-buttons {
+    margin-right: -5px;
+    margin-top: -10px;
+
+    button {
+      padding-left: 0;
+      padding-right: 0;
+    }
   }
 
   .access-cell {

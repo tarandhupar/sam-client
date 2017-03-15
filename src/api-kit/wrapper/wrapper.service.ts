@@ -67,6 +67,10 @@ export class WrapperService {
             "url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
         };
 
+        if (oApiParam.name === 'access2') {
+          jsonOption.url = 'http://localhost:8080/rms/v1/access/sumitdang/';
+        }
+
         switch (method.toUpperCase()){
             case "POST":
                 jsonOption.method = RequestMethod.Post;

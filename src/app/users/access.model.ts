@@ -1,4 +1,4 @@
-import { UserAccessInterface } from "api-kit/access/access.interface";
+import { UserAccessInterface2 } from "api-kit/access/access.interface";
 import { PropertyCollector } from "../app-utils/property-collector";
 import * as _ from 'lodash';
 
@@ -8,19 +8,19 @@ export interface FunctionInterface {
 }
 
 export class UserAccessModel {
-  private _raw: UserAccessInterface;
+  private _raw: UserAccessInterface2;
   private collector: PropertyCollector;
 
   private constructor() {  }
 
-  static FromResponse(res: UserAccessInterface): UserAccessModel {
+  static FromResponse(res: UserAccessInterface2): UserAccessModel {
     let a = new UserAccessModel();
     a._raw = res;
     a.collector = new PropertyCollector(res);
     return a;
   }
 
-  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>, messages: string): UserAccessInterface {
+  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>, messages: string): UserAccessInterface2 {
     let functionMapContent = functions.map(fun => {
       return {
         function: fun.id,
@@ -54,76 +54,87 @@ export class UserAccessModel {
     };
   }
 
-  public raw(): UserAccessInterface {
+  public raw(): UserAccessInterface2 {
     return this._raw;
   }
 
-  public userName(): string {
-    return this._raw.user;
-  }
-
   public allOrganizations() {
-    let orgKeys = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'orgKey']);
+    let orgKeys = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'organizationMapContent', [], 'organizations', []]);
     return _.uniq(orgKeys);
   }
 
   public allRoles() {
-    if (!this._raw.roleMapContent || !this._raw.roleMapContent.length) {
-      return [];
-    }
-    return this._raw.roleMapContent.map(role => role.role);
+    let roles = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'role']);
+    return _.uniqBy(roles, r => r.id);
   }
 
   public allDomains() {
-    let domains = this.collector.collect(['roleMapContent', [], 'roleData', [], 'domain']);
-    return _.uniqBy(domains, dom => dom.id);
+    let domains = this.collector.collect(['domainMapContent', [], 'domain']);
+    return _.uniqBy(domains, d => d.id);
   }
 
   // a.k.a functions
   public allObjects() {
-    let objects = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'functionMapContent', [], 'function']);
-    return _.uniqBy(objects, obj => obj.id);
+    let objs = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'organizationMapContent', [], 'functionMapContent', [], 'function']);
+    return _.uniqBy(objs, o => o.id);
   }
 
   public allPermissions() {
-    let perms = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'functionMapContent', [], 'permission', []]);
-    return _.uniqBy(perms, perm => perm.id);
+    let objs = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'organizationMapContent', [], 'functionMapContent', [], 'permission', []]);
+    return _.uniqBy(objs, o => o.id);
   }
 
-  public checkRoles(useraccess,validate: string) {
-    let res = [];
-    useraccess.roleMapContent.forEach(
-      value =>{
-        if(value.role.val === validate){
-          res = value.roleData;
-        }
-      }
-    )
-    return res;
+  private isAdminForAlerts() {
+
   }
 
-  public checkDomain(useraccess,validate:string){
-    let res = [];
-    useraccess.forEach(
-      role => {
-        if(role.domain.val === validate){
-          res = role.organizationMapContent.functionMapContent;
-        }
-      }
-    )
-    return res;
+  public canCreateAlerts() {
+    if (this.isAdminForAlerts()) {
+      return false;
+    }
+
   }
 
-  public checkFunction(useraccess,validate:string){
-    let res = [];
-    useraccess.forEach(
-      funct => {
-        if(funct.function.val === "ALERTS"){
-          res = funct.permission;
-        }
-      }
-    )
-    return res;
+  public canEditAlerts() {
+    if (this.isAdminForAlerts()) {
+      return false;
+    }
   }
+
+  // public checkRoles(useraccess,validate: string) {
+  //   let res = [];
+  //   useraccess.roleMapContent.forEach(
+  //     value =>{
+  //       if(value.role.val === validate){
+  //         res = value.roleData;
+  //       }
+  //     }
+  //   )
+  //   return res;
+  // }
+  //
+  // public checkDomain(useraccess,validate:string){
+  //   let res = [];
+  //   useraccess.forEach(
+  //     role => {
+  //       if(role.domain.val === validate){
+  //         res = role.organizationMapContent.functionMapContent;
+  //       }
+  //     }
+  //   )
+  //   return res;
+  // }
+  //
+  // public checkFunction(useraccess,validate:string){
+  //   let res = [];
+  //   useraccess.forEach(
+  //     funct => {
+  //       if(funct.function.val === "ALERTS"){
+  //         res = funct.permission;
+  //       }
+  //     }
+  //   )
+  //   return res;
+  // }
 
 }
