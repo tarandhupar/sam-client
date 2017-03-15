@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs/Rx';
+import { BehaviorSubject } from 'rxjs/Rx';
+import { Subject, Observable } from 'rxjs';
+// import { Logged } from './declarations/logged.d';
 
 import { ApiService } from './api';
 
@@ -49,19 +51,23 @@ export interface User {
 
 @Injectable()
 export class IAMService {
-  // private _user: BehaviorSubject<User>;
-  // private store = {
-  //
-  // };
+  private _emitter: Subject<User> = new Subject<User>();
+  private store = {
+    user: null as User
+  };
 
   public iam;
 
   constructor() {
-    // this._user = <BehaviorSubject<User>>new BehaviorSubject({});
     this.iam = new ApiService().iam;
   }
 
-  // get user() {
-  //   return this._user.asObservable();
-  // }
+  setUser(user: User): void {
+    this.store.user = user;
+    this._emitter.next(user);
+  }
+
+  getUser(): Observable<User> {
+    return this._emitter.asObservable();
+  }
 }
