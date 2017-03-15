@@ -613,12 +613,18 @@ export class SearchPage implements OnInit{
     this.wdPreviouslyPerformedModel = '';
     this.pageNum = 0;
 
+    // cba should also be cleared if prev performed is cleared
+    this.wdSubjectToCBAClear();
+
     this.searchResultsRefresh()
   }
 
   wdSubjectToCBAClear(){
     this.wdSubjectToCBAModel = '';
     this.pageNum = 0;
+
+    // non standard services should also be cleared if cba is
+    this.wdNonStandardServicesSelectClear();
 
     this.searchResultsRefresh()
   }
