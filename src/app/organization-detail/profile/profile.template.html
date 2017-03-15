@@ -1,33 +1,35 @@
 <div class="usa-width-one-whole organization-profile">
-  <div class="org-notification p_T-4x m_B-6x">&nbsp;<button *ngIf="isNextLayerCreatable()" class="usa-button-big pull-right">Create {{getCreateButtonText()}}</button></div>
-  <div class="usa-width-one-whole">
-    <span *ngFor="let hierarchyName of detailObj.hierarchy; let i = index">
-      <a (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="!isLastHierarchy(i)"> > </span>
-    </span>
-  </div>
+  <div class="usa-width-one-whole" *ngIf="isDataAvailable">
+    <div class="org-notification p_T-4x m_B-6x">&nbsp;<button *ngIf="isNextLayerCreatable()" class="usa-button-big pull-right">Create {{getNextLayer()}}</button></div>
+    <div class="usa-width-one-whole">
+      <span *ngFor="let hierarchyName of hierarchyPath; let i = index">
+        <a [ngClass]="getLastHierarchyClass(i)" (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="!isLastHierarchy(i)"> > </span>
+      </span>
+    </div>
 
-  <!-- Detail Section-->
-  <div class="usa-width-three-fourths m_T-4x">
-    <h3>{{detailObj.type}} Detail<button class="usa-button-transparent pull-right m_0 p_T-0"><i class="fa fa-pencil"></i></button></h3>
-    <div class="usa-width-one-whole m_B-4x">
-      <p class="m_L-3x m_B-1x" *ngFor="let pair of detailObj.detail">
-        <span class="usa-width-one-third m_R-0"><h4>{{pair.description}}:</h4></span>
-        <span class="usa-width-two-thirds">{{pair.value}}</span>
-      </p>
-    </div>
-    <h3>{{detailObj.type}} Codes</h3>
-    <div class="usa-width-one-whole m_B-4x">
-      <p class="m_L-3x m_B-1x" *ngFor="let pair of detailObj.codes">
-        <span class="usa-width-one-third m_R-0"><h4>{{pair.code}}:</h4></span>
-        <span class="usa-width-two-thirds">{{pair.value}}</span>
-      </p>
-    </div>
-    <h3 *ngIf="detailObj.type === 'Office'">{{detailObj.type}} Address</h3>
-    <div class="usa-width-one-whole" *ngIf="detailObj.type === 'Office'">
-      <p class="m_L-3x m_B-1x" *ngFor="let address of detailObj.address">
-        <span class="usa-width-one-third m_R-0"><h4>{{address.addressType}}:</h4></span>
-        <span class="usa-width-two-thirds">{{address.value.street}}<br>{{address.value.city}}, {{address.value.state}}<br>{{address.value.zip}}</span>
-      </p>
+    <!-- Detail Section-->
+    <div class="usa-width-three-fourths m_T-4x">
+      <h3>{{currentHierarchyType}} Detail<button class="usa-button-transparent pull-right m_0 p_T-0"><i class="fa fa-pencil"></i></button></h3>
+      <div class="usa-width-one-whole m_B-4x">
+        <p class="m_L-3x m_B-1x" *ngFor="let pair of orgDetails">
+          <span class="usa-width-one-third m_R-0"><h4>{{pair.description}}:</h4></span>
+          <span class="usa-width-two-thirds">&nbsp;{{pair.value}}</span>
+        </p>
+      </div>
+      <h3>{{currentHierarchyType}} Codes</h3>
+      <div class="usa-width-one-whole m_B-4x">
+        <p class="m_L-3x m_B-1x" *ngFor="let pair of orgCodes">
+          <span class="usa-width-one-third m_R-0"><h4>{{pair.code}}:</h4></span>
+          <span class="usa-width-two-thirds">&nbsp;{{pair.value}}</span>
+        </p>
+      </div>
+      <h3 *ngIf="orgAddresses.length > 0">{{currentHierarchyType}} Address</h3>
+      <div class="usa-width-one-whole" *ngIf="orgAddresses.length > 0">
+        <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
+          <span class="usa-width-one-third m_R-0"><h4>{{address.addressType}}:</h4></span>
+          <span class="usa-width-two-thirds">{{address.value.street}}<br>{{address.value.city}}, {{address.value.state}}<br>{{address.value.zip}}</span>
+        </p>
+      </div>
     </div>
   </div>
 </div>

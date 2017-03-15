@@ -1,94 +1,177 @@
 import { Component } from "@angular/core";
+import { FHService } from "api-kit/fh/fh.service";
 
 @Component ({
   templateUrl: 'profile.template.html'
 })
 export class OrgDetailProfilePage {
-  hierarchyList = ["Department", "Sub-tier Agency", "Office"];
+  orgId:string = "100000121";
+
+  orgDetails = [];
+  orgCodes = [];
+  orgAddresses = [];
+
+  hierarchyPathMap = [];
+  hierarchyPath = [];
 
   currentHierarchyType: string = "";
+  currentHierarchyLevel: number;
 
-  departmentObj = {
-    hierarchy: ["Department of Agriculture"],
-    type: "Department",
-    name: "Department of Agriculture",
-    detail: [
-      {description:"Department Name",value:"Department of Agriculture"},
-      {description:"Description",value:"Lipsum Description..."},
-      {description:"Shortname",value:"USDA"},
-      {description:"Start Date",value:"02/14/2017"},
-    ],
-    codes: [{code:"TAS-2 code",value:"123-456"},{code:"TAS-3 code",value:"123-456"},{code:"CFDA code",value:"123-456"}]
-  };
+  isDataAvailable:boolean = false;
 
-  agencyObj = {
-    hierarchy: ["Department of Agriculture","Farm Service Agency"],
-    type: "Sub-tier Agency",
-    name: "Farm Service Agency",
-    detail: [
-      {description:"Sub-tier Agency Name",value:"Farm Service Agency"},
-      {description:"Description",value:"Lipsum Description..."},
-      {description:"Shortname",value:"FSA"},
-      {description:"Start Date",value:"02/14/2017"},
-    ],
-    codes: [{code:"FPDS code",value:"123-456"},{code:"OMB code",value:"123-456"}]
-  };
-
-  officeObj = {
-    hierarchy: ["Department of Agriculture","Farm Service Agency","Farm Supplies Management"],
-    type: "Office",
-    name: "Farm Supplies Management",
-    detail: [
-      {description:"Office Name",value:"Farm Supplies Management"},
-      {description:"Description",value:"Lipsum Description..."},
-      {description:"Shortname",value:"FSA"},
-      {description:"Start Date",value:"02/14/2017"},
-      {description:"Indicate Funding",value:"Funding/Award"}
-    ],
-    codes: [{code:"AAC code",value:"123-456"},{code:"FPDS code",value:"123-456"}],
-    address: [
-      {addressType:"Mailing Address",value:{street:"813 Rosewood Lane", city:"Washington", state:"DC", zip:20007}},
-      {addressType:"Shipping Address",value:{street:"813 Rosewood Lane", city:"Washington", state:"DC", zip:20007}},
-      {addressType:"Billing Address",value:{street:"813 Rosewood Lane", city:"Washington", state:"DC", zip:20007}},
-    ]
-  };
-
-  detailObj = this.officeObj;
-
-  constructor(){
-    this.currentHierarchyType = this.detailObj.type;
+  constructor(private fhService: FHService){
   }
 
-  isLastHierarchy(index):boolean{return index === this.detailObj.hierarchy.length-1}
-
-  isNextLayerCreatable():boolean{
-    let index = this.hierarchyList.indexOf(this.currentHierarchyType);
-    return index < this.hierarchyList.length -1 && index !== -1;
+  ngOnInit(){
+    this.getOrgDetail(this.orgId);
   }
 
-  getCreateButtonText():string{
-    let index = this.hierarchyList.indexOf(this.currentHierarchyType);
-    if( index < this.hierarchyList.length -1 && index !== -1){
-      return this.hierarchyList[index+1];
-    }
-    return "";
-  }
+  isLastHierarchy(index):boolean{return index === this.hierarchyPath.length-1;}
+  isNextLayerCreatable():boolean{return this.getNextLayer() !== "";}
 
-  getOrgDetail(hierarchyName){
-    if(hierarchyName === "Department of Agriculture"){
-      this.detailObj = this.departmentObj;
-    }else if(hierarchyName === "Farm Service Agency"){
-      this.detailObj = this.agencyObj;
-    }else{
-      this.detailObj = this.officeObj;
-    }
-    this.currentHierarchyType = this.detailObj.type;
+  getOrgDetail(orgId){
+    this.isDataAvailable = false;
+    this.fhService.getOrganizationById(orgId,false,true).subscribe(
+      val => {
+        let orgDetail = val._embedded[0].org;
+        console.log(orgDetail);
+        this.setCurrentHierarchyType(orgDetail.type);
+        this.setCUrrentHierarchyLevel(orgDetail.level);
+        this.setupHierarchyPathMap(orgDetail.fullParentPath, orgDetail.fullParentPathName);
+        this.setupOrganizationDetail(orgDetail);
+        this.setupOrganizationCodes(orgDetail);
+        this.setupOrganizationAddress(orgDetail);
+        this.isDataAvailable = true;
+      });
+
   }
 
   onChangeOrgDetail(hierarchyName){
-    if(hierarchyName !== this.detailObj.name){
+    if(hierarchyName !== this.hierarchyPath[this.hierarchyPath.length - 1]){
       // make API call to get selected organization detail
-      this.getOrgDetail(hierarchyName);
+      this.getOrgDetail(this.hierarchyPathMap[hierarchyName]);
     }
+  }
+
+  setupHierarchyPathMap(fullParentPath:string, fullParentPathName:string){
+    this.setupHierarchyPath(fullParentPathName);
+
+    let parentOrgIds = fullParentPath.split('.');
+    this.hierarchyPathMap = [];
+    parentOrgIds.forEach((elem,index) => {
+      this.hierarchyPathMap[this.hierarchyPath[index]] = elem;
+    });
+
+  }
+
+  setupHierarchyPath(fullParentPathName:string){
+    this.hierarchyPath = fullParentPathName.split('.').map( e => {
+      return e.split('_').join(' ');
+    });
+  }
+
+  setupOrganizationDetail(org){
+    this.orgDetails = [];
+    let description = this.getOrgFieldData(org,"summary");
+    let shortName = this.getOrgFieldData(org,"shortName");
+    let startDateStr = "";
+    let funding = "";
+
+    if(!!org.startDate){
+      let startDate = new Date(this.getOrgFieldData(org,"startDate"));
+      startDateStr = startDate.toLocaleDateString();
+    }
+
+    this.orgDetails.push({description:this.capitalizeFirstLetter(org.type)+" Name", value:this.capitalizeFirstLetter(org.name)});
+    this.orgDetails.push({description:"Description", value:description});
+    this.orgDetails.push({description:"Shortname", value:shortName});
+    this.orgDetails.push({description:"Start Date", value:startDateStr});
+
+    if(org.type === "OFFICE"){
+      let fundingStrs = [];
+      if(org.newIsFunding) fundingStrs.push("Funding");
+      if(org.newIsAward) fundingStrs.push("Award");
+      if(fundingStrs.length > 1) funding = fundingStrs.join('/');
+      this.orgDetails.push({description:"Indicate Funding", value:funding});
+    }
+
+  }
+
+  setupOrganizationCodes(org){
+    this.orgCodes = [];
+    switch (org.type) {
+      case "OFFICE":
+        this.orgCodes.push({code:"AAC Code", value:this.getOrgFieldData(org,"aacCode")});
+        this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsOrgId")});
+        break;
+      case "AGENCY": case "MAJOR COMMAND": case "SUB COMMAND":
+        this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsOrgId")});
+        this.orgCodes.push({code:"OMB Bureau Code", value:this.getOrgFieldData(org,"ombAgencyCode")});
+        break;
+      case "DEPARTMENT":
+        this.orgCodes.push({code:"TAS-2 Code", value:this.getOrgFieldData(org,"tas2Code")});
+        this.orgCodes.push({code:"TAS-3 Code", value:this.getOrgFieldData(org,"tas3Code")});
+        this.orgCodes.push({code:"A-11 Code", value:this.getOrgFieldData(org,"a11TacCode")});
+        this.orgCodes.push({code:"CFDA Code", value:this.getOrgFieldData(org,"cfdaCode")});
+        this.orgCodes.push({code:"OMB Bureau Code", value:this.getOrgFieldData(org,"ombAgencyCode")});
+        break;
+      default:
+        break;
+    }
+  }
+
+  setupOrganizationAddress(org){
+    this.orgAddresses = [];
+    let addresses = org.orgAddresses.length > 0? org.orgAddresses:[];
+    if(addresses.length > 0)this.orgAddresses.push({addressType:"Mailing Address", value:{street:addresses[0].streetAddress, city:addresses[0].city, state:addresses[0].state, zip:addresses[0].zipcode}});
+    if(addresses.length > 1)this.orgAddresses.push({addressType:"Shipping Address", value:{street:addresses[1].streetAddress, city:addresses[1].city, state:addresses[1].state, zip:addresses[1].zipcode}});
+    if(addresses.length > 2)this.orgAddresses.push({addressType:"Billing Address", value:{street:addresses[2].streetAddress, city:addresses[2].city, state:addresses[2].state, zip:addresses[2].zipcode}});
+  }
+
+  setCurrentHierarchyType(type){
+    this.currentHierarchyType = this.capitalizeFirstLetter(type);
+  }
+
+  setCUrrentHierarchyLevel(level){
+    this.currentHierarchyLevel = level;
+  }
+
+  getOrgFieldData(data, fieldName:string){
+    let res = "";
+    if(!!data[fieldName]){
+      res = data[fieldName];
+    }
+    return res;
+  }
+
+  getLastHierarchyClass(index){
+    return index === this.hierarchyPath.length-1? "current-hierarchy-link":"";
+  }
+
+  /**
+   * Returns next layer text for button of creating next layer organization
+   * @returns {string}
+     */
+  getNextLayer():string{
+    let res = "";
+    switch (this.currentHierarchyType) {
+      case "Department":
+        res = "Sub-tier Agency";
+        break;
+      case "Agency": case "Sub Command": case "Major Command":
+        res = "Office";
+        break;
+      case "Office":
+        res= this.currentHierarchyLevel <= 5? "Office":"";
+        break;
+      default:
+        break;
+    }
+
+    return res;
+  }
+
+  capitalizeFirstLetter(str:string):string {
+    return str.split(' ').map(str => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()).join(' ');
   }
 }
