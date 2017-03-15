@@ -16,6 +16,12 @@ export class ObjectFormModel{
   @Input() public objectFormData;
   @Output() public buttonClick = new EventEmitter();
   selectedPage: number = 0;
+  loadFlag: boolean = false;
+
+  sidenavModel = {
+    "label": "Assistance Listings",
+    "children": []
+  };
 
   constructor(private fb: FormBuilder) {}
 
@@ -27,6 +33,14 @@ export class ObjectFormModel{
     for (let section of objectFormData) {
       // dynamically generate the control groups
       let formGroup = {};
+      let index = objectFormData.indexOf(section);
+
+      console.log(section);
+      this.sidenavModel.children[index] = {
+        label : section.label,
+        route: '#' + section.section
+      };
+
       this.arrayFields[section.section]={};
       for (let field of section.fields) {
         formGroup[field.name] = '';
@@ -37,6 +51,7 @@ export class ObjectFormModel{
 
       sections[section.section] = this.fb.group(formGroup);
     }
+    this.loadFlag = true;
     this.mainForm = this.fb.group(sections);
 
     return this.mainForm;
@@ -61,7 +76,7 @@ export class ObjectFormModel{
     this.buttonClick.emit({
       type:'saveContinue',
       data: data,
-      nextSection: this.selectedPage + 1
+      selectedPage: this.selectedPage + 1
     });
 
 
@@ -84,7 +99,7 @@ export class ObjectFormModel{
     console.log("previous clicked");
     this.buttonClick.emit({
       type:'previous',
-      nextSection: this.selectedPage - 1
+      selectedPage: this.selectedPage - 1
     });
   }
 
@@ -102,8 +117,8 @@ export class ObjectFormModel{
     return data;
   }
 
-  setSelectedPage(selectedPage){
-    this.selectedPage = selectedPage;
+  setSelectedPage(event){
+    this.selectedPage = event.selectedPage;
   }
 
 }

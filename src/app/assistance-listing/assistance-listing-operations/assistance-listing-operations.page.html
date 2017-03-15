@@ -6,20 +6,6 @@
     </div>
   </div>-->
 
-  <div class="usa-grid">
-    <!--Sidebar-->
-    <aside class="usa-width-one-fourth">
-      <div>&nbsp;</div>
-      <div sam-sticky limit=1200 container="occupy-page">
-        <object-sidebar [sidenavModel]="sidenavModel" (sideNavClick)="sideNavClickHandler($event)"></object-sidebar>
-      </div>
-    </aside>
-
-    <div class="usa-width-three-fourths">
-
       <object-form [objectFormData]="objectFormData" #objectForm (buttonClick)="buttonHandler($event)"></object-form>
-
-    </div>
-  </div>
 
 </div>

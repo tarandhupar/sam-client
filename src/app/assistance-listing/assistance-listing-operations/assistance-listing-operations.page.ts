@@ -26,26 +26,11 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   redirectToEdit: boolean = false;
   @ViewChild('objectForm') objectForm;
 
-  sidenavModel = {
-    "label": "Assistance Listings",
-    "children": [
-      {
-        "label": "Header Information",
-        "route": "#header_information",
-      },
-      {
-        "label": "Overview",
-        "route": "#overview",
-      }
-    ]
-  };
-
   constructor(private route: ActivatedRoute,
               private router: Router,
               private programService: ProgramService,
               private programFormModel: ProgramFormModel
-              ) {
-  }
+              ) {}
 
   ngOnInit() {
 
@@ -137,8 +122,8 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
         this.saveProgram(event.data);
 
         if(this.mode == 'edit'){
-          this.objectForm.setSelectedPage(event.nextSection);
-          let path = this.sidenavModel.children[event.nextSection].route.substring(1);
+          this.objectForm.setSelectedPage(event);
+          let path = this.objectFormData[event.selectedPage].section;
           this.router.navigate([], { fragment: path });
         }
 
@@ -150,8 +135,8 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
         break;
       }
       case "previous" :{
-        this.objectForm.setSelectedPage(event.nextSection);
-        let path = this.sidenavModel.children[event.nextSection].route.substring(1);
+        this.objectForm.setSelectedPage(event);
+        let path = this.objectFormData[event.selectedPage].section;
         this.router.navigate([], { fragment: path });
         break;
       }
@@ -160,11 +145,6 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
         break;
       }
     }
+  }//end of buttonhandler
 
-  }
-
-  sideNavClickHandler(event){
-
-    this.objectForm.setSelectedPage(event.selectedPage);
-  }
 }

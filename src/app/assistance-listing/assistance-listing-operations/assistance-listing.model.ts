@@ -3,6 +3,7 @@ export class ProgramFormModel{
   getFormFields(){
     var data = [{
       section: 'header_information',
+      label: 'Header Information',
       fields:[
         {
           name: 'title',
@@ -34,6 +35,7 @@ export class ProgramFormModel{
     },
     {
       section: 'overview',
+      label: 'Overview',
       fields:[
         {
           name: 'objective',
