@@ -2,56 +2,7 @@ import { UserAccessInterface } from 'api-kit';
 import { UserAccessModel } from "./access.model";
 
 const emptyResponse: UserAccessInterface = {"userAccessId":1,"user":"00.T.BRENDAN.MCDONOUGH@GSA.GOV","createdBy":"FTS-ADMIN","createdDate":"01/23/2008","updatedBy":"00.T.BRENDAN.MCDONOUGH@GSA.GOV","updatedDate":"08/25/2015","roleMapContent":[],"_links":{"self":{"href":"https://csp-api.sam.gov:443/rms/v1/access/00.T.BRENDAN.MCDONOUGH@GSA.GOV/?roleKey=5&domainKey=1&orgKey=1111&functionKey=11,14"}}};
-const response = {
-  "userAccessId": 1,
-  "user": "00.T.BRENDAN.MCDONOUGH@GSA.GOV",
-  "createdBy": "FTS-ADMIN",
-  "createdDate": "01/23/2008",
-  "updatedBy": "00.T.BRENDAN.MCDONOUGH@GSA.GOV",
-  "updatedDate": "08/25/2015",
-  "roleMapContent": [
-    {
-      "role": {
-        "id": 15,
-        "val": "CFDALIMITEDSUPERUSER"
-      },
-      "roleData": [
-        {
-          "domain": {
-            "id": 2,
-            "val": "OPPORTUNITY"
-          },
-          "email": "Desiray.lunsford@senture.com",
-          "organizationMapContent": {
-            "orgKey": " 100186605.0",
-            "functionMapContent": [
-              {
-                "function": {
-                  "id": 1,
-                  "val": "AWARD"
-                },
-                "permission": [
-                  {
-                    "id": 1,
-                    "val": "APPROVE"
-                  },
-                  {
-                    "id": 12,
-                    "val": "UPDATE"
-                  },
-                  {
-                    "id": 2,
-                    "val": "CREATE"
-                  },
-                ]
-              }
-            ]
-          }
-        }
-      ]
-    }
-  ]
-};
+const response = {"domainMapContent":[{"domain":{"id":1,"val":"AWARD"},"roleMapContent":[{"role":{"id":1,"val":null},"organizationMapContent":[{"organizations":["111","222"],"functionMapContent":[{"function":{"id":1,"val":null},"permission":[{"id":3,"val":null},{"id":4,"val":null}]},{"function":{"id":2,"val":null},"permission":[{"id":1,"val":null},{"id":2,"val":null}]}]},{"organizations":["333","444"],"functionMapContent":[{"function":{"id":1,"val":null},"permission":[{"id":11,"val":null},{"id":12,"val":null}]},{"function":{"id":2,"val":null},"permission":[{"id":21,"val":null},{"id":22,"val":null},{"id":23,"val":null}]}]}]}]}],"id":"sumitdang"};
 
 describe('AccessModel', () => {
   let accessModel: UserAccessModel;

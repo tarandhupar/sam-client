@@ -6,34 +6,26 @@ export interface IdVal {
 export interface UserAccessInterface {
   user?: number|string,
   messages?: string,
-  "domainMapContent"?:[
+  "domainMapContent"?: Array<
     {
       "domain": IdVal,
-      "roleMapContent":[
+      "roleMapContent": Array<
         {
           "role":IdVal,
-          "organizationMapContent":[
+          "organizationMapContent": Array<
             {
-              "organizations":[
-                "111",
-                "222"
-                ],
-              "functionMapContent":[
+              "organizations": Array<number|string>,
+              "functionMapContent":Array<
                 {
                   "function":IdVal,
-                  "permission":[
-                    {
-                      "id":3,
-                      "val":null
-                    }
-                  ]
+                  "permission":Array<IdVal>
                 }
-              ]
+              >
             }
-          ]
+          >
         }
-      ]
+      >
     }
-  ],
-  "id"?:"sumitdang"
+  >,
+  "id"?: string
 }

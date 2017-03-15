@@ -21,7 +21,7 @@ export class UserAccessService {
 
   }
 
-  getAccess2(userId: string, filterOptions?: UserAccessFilterOptions): Observable<UserAccessInterface> {
+  getAccess(userId: string, filterOptions?: UserAccessFilterOptions): Observable<UserAccessInterface> {
     if (typeof userId === 'undefined') {
       throw new Error('userId is required');
     }
