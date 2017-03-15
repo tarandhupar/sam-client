@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
     	  <span *ngIf=false class="usa-label">ARCHIVED</span>
     	</p>
     	<h3 class="federal-hierarchy-title">
-      	<a [routerLink]="['/organization', data._id]">{{ data.name }}</a>
+      	<a [routerLink]="['/organization', data._id]" [queryParams]="qParams">{{ data.name }}</a>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<p class="m_T-2x" *ngIf="data.description !== null && data.description.length>150" >
@@ -29,15 +29,15 @@ import 'rxjs/add/operator/map';
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
         	<li>
-        	  <span><strong>{{ data.type=="Agency" ? 'Sub-Tier' : data.type }}</strong></span>
+        	  <strong>{{ data.type=="Agency" ? 'Sub-Tier' : data.type }}</strong>
           </li>
-          <li *ngIf="data.alternativeNames && data.alternativeNames !== null"><strong>Also Known As</strong>
-            <ul class="usa-unstyled-list">
-              <li><span>{{ data.alternativeNames }}</span></li>
-            </ul>  
+          <li *ngIf="data.alternativeNames && data.alternativeNames !== null">
+            <strong>Also Known As</strong>
+            {{ data.alternativeNames }}
           </li>
           <li>
-            <strong>{{(data | organizationTypeCode).label}}</strong> {{(data | organizationTypeCode).value}}
+            <strong>{{(data | organizationTypeCode).label}}</strong>
+            {{(data | organizationTypeCode).value}}
           </li>    
         </ul>
       </div>
@@ -45,8 +45,9 @@ import 'rxjs/add/operator/map';
 })
 export class FederalHierarchyResult implements OnInit {
   @Input() data: any={};
+  @Input() qParams:any = {};
   constructor() { }
 
-  ngOnInit(){ }
+  ngOnInit(){}
 
 }

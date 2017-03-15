@@ -12,7 +12,7 @@ import { ReplaySubject, Observable } from 'rxjs';
       <div class="card">
         <div class="card-header-secure">
           <h3>
-            <a [routerLink]="['/organization', data._id]">{{ data.name }}</a>
+            <a [routerLink]="['/organization', data._id]" [queryParams]="qParams">{{ data.name }}</a>
           </h3>
           <ng-container *ngIf="data.alternativeNames && data.alternativeNames !== null">
               Also known as <strong><em>{{ data.alternativeNames }}</em></strong>
@@ -23,7 +23,7 @@ import { ReplaySubject, Observable } from 'rxjs';
             <img src="src/assets/img/logo-not-available.png" alt="Logo Not Available">
           </div>
           <div *ngIf="logoUrl && !errorOrganization" class="logo-small"  style="float: left; margin-right: 10px;">
-            <img [src]="logoUrl" alt="HTML5 Icon">
+            <img [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
           </div>
 
           <div>
@@ -52,7 +52,9 @@ import { ReplaySubject, Observable } from 'rxjs';
 })
 export class FHFeaturedResult implements OnInit {
   @Input() data: any={};
-  logoUrl: string;
+  @Input() qParams:any = {};
+  public logoUrl: string;
+  public logoInfo: any;
   errorOrganization: any;
   constructor(private fhService: FHService) { }
 
@@ -68,8 +70,13 @@ export class FHFeaturedResult implements OnInit {
     let organizationSubject = new ReplaySubject(1);
     this.fhService.getOrganizationById(orgId, true).subscribe(organizationSubject);
     this.fhService.getOrganizationLogo(organizationSubject,
-    (logoUrl) => {
-      this.logoUrl = logoUrl;
+    (logoData) => {
+      if (logoData != null) {
+        this.logoUrl = logoData.logo;
+        this.logoInfo = logoData.info;
+      } else {
+        this.errorOrganization = true;
+      }
     }, (err) => {
       this.errorOrganization = true;
     });

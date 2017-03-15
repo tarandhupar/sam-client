@@ -19,7 +19,13 @@ describe('WageDeterminationResultComponent', () => {
       titleEl  = fixture.debugElement.query(By.css('.wage-determination-number')); // find title element
       comp.data = {
         fullReferenceNumber: "12345678",
-        services: "SAMPLE SERVICE",
+        _type:"wdSCA",
+        services: [
+          {
+            "code": 8,
+            "value": "SAMPLE SERVICE"
+          }
+        ],
         constructionTypes: "CONSTRUCTION TYPES",
         isActive:true,
         locations:[

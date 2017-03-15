@@ -20,6 +20,7 @@ describe('EntitiesResultComponent', () => {
       comp.data = {
         name: "SAMPLE NAME",
         isActive:true,
+        registrationExpirationDate: +new Date(2016, 2, 2),
         address: {
           "zip": "12345",
           "streetAddress": "street",
@@ -29,11 +30,12 @@ describe('EntitiesResultComponent', () => {
         }
 
       };
-      fixture.detectChanges();// trigger data binding
     });
   }));
 
   it('should display an entity name', () => {
+    fixture.detectChanges();// trigger data binding
     expect(titleEl.nativeElement.textContent).toContain("SAMPLE NAME");
   });
+
 });

@@ -3,6 +3,7 @@ import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-obje
 
 import * as d3 from 'd3';
 import * as _ from 'lodash';
+import {start} from "repl";
 
 @Component({
   moduleId: __filename,
@@ -36,6 +37,7 @@ export class FinancialObligationChart {
     d3.select("#visualization")
       .insert("svg")
       .attr("id", "chart")
+      .attr("aria-hidden", "true")
       .attr("style", "width: 100%; height:300px;");
 
     d3.select("#visualization")
@@ -202,7 +204,6 @@ export class FinancialObligationChart {
         .tickSizeInner(-width)
         .tickSizeOuter(0)
         .tickPadding(5);
-      ;
 
       let gX = axis.append("g")
         .attr("class", "axis--x")
@@ -315,9 +316,12 @@ export class FinancialObligationChart {
         .data(assistanceTotalsGroupedByYear)
         .enter()
         .append("th")
+        .attr("scope", "col")
+        .attr("aria-label", "Fiscal Year")
         .text(d => d.values[0].value.year);
 
       thead.insert("th", ":first-child")
+        .attr("scope", "col")
         .text("Obligation(s)");
 
       // Table: Assistance Details
@@ -450,20 +454,26 @@ export class FinancialObligationChart {
         .selectAll("tr")
         .data(d => d)
         .enter()
-        .append("td")
-        .html(function (d) {
-          if (String(d).indexOf("Total") !== -1) {
+        .append(function(d, i) {
+          if (i === 0) {
+            return document.createElement("th");
+          }
+          return document.createElement("td");
+        })
+        .html(function (d, i) {
+          if (i === 0) {
+            d3.select(this).attr("scope", "row");
             d3.select(this.parentNode).style("font-weight", "700");
           }
           return d;
         });
 
-      // Table Totals
       tbody.append("tr")
         .attr("class", "totals")
         .style("font-weight", "700")
-        .append("td")
-        .text("Totals");
+        .append("th")
+        .text("Totals")
+        .attr("scope", "row");
 
       tbody.select("tr:last-child")
         .selectAll("tr")
@@ -486,9 +496,9 @@ export class FinancialObligationChart {
             d3.select(".serie").append("text")
               .attr("x", function(){
                 if(x(formatYear(d.key, false))){
-                  return x(formatYear(d.key, false)) + (x.bandwidth() / 4) + (x.bandwidth() / 2); 
+                  return x(formatYear(d.key, false)) + (x.bandwidth() / 4) + (x.bandwidth() / 2);
                 }else{
-                  return x(formatYear(d.key, true)) + (x.bandwidth() / 4) + (x.bandwidth() / 2); 
+                  return x(formatYear(d.key, true)) + (x.bandwidth() / 4) + (x.bandwidth() / 2);
                 }
               })
               .attr("y", function(){
@@ -505,7 +515,7 @@ export class FinancialObligationChart {
                 .style("text-align", "right")
                 .html("<strong>*</strong> The totals shown do not include any amounts that are unidentifiable or unavailable");
             }
-            
+
             return d3.format("($,")(d.value.total) + "*";
           }
 
@@ -531,32 +541,39 @@ export class FinancialObligationChart {
 
     // Find all available years
     this.financialData.map(function(item){
-      for(let year in item.values){
-        allYears.add(year);
+      for(let value of item.values){
+        allYears.add(value.year);
       }
     });
 
     // If a year its missing
     this.financialData.map(function(item){
       existingYears = [];
-      for(let year in item.values){
-        existingYears.push(year);
+      for(let value of item.values){
+        existingYears.push(value.year);
       }
       if(existingYears.length < numberOfYears){
-        missingYears = _.difference(allYears.values(), existingYears);
+        let allYearsFound = allYears.values().map(item => +item);
+        missingYears = _.difference(allYearsFound, existingYears);
         missingYears.forEach(missingYear => {
-          item.values[missingYear] = { flag: "empty" };
+          item.values.push({ flag: 'empty', 'year': missingYear });
         });
       }
     });
 
     this.financialData.map(function (item) {
-      for (let year in item.values) {
+      for (let value of item.values) {
+        let year = value.year;
         let obligation = "No Obligation";
         if (item.assistanceType && item.assistanceType.length > 0) {
           obligation = getAssistanceType(item.assistanceType);
-        } else if (item.questions.salary_or_expense.flag === "yes") {
-          obligation = "Salary or Expense";
+        } else if(item.questions) {
+          for (let question of item.questions) {
+            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
+              obligation = "Salary or Expense";
+              break;
+            }
+          }
         }
 
         obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
@@ -565,12 +582,12 @@ export class FinancialObligationChart {
           "obligation": obligation,
           "info": item.additionalInfo ? item.additionalInfo.content || "" : "",
           "year": +year,
-          "amount": item.values[year]["actual"] || item.values[year]["estimate"] || 0,
-          "estimate": !!!item.values[year]["actual"],
-          "ena": item.values[year].flag == "ena" || item.values[year].flag == "na" ? true : false,
-          "nsi": item.values[year].flag == "nsi" || item.values[year].flag == "no" ? true : false,
-          "empty": item.values[year].flag == "empty" ? true : false,
-          "explanation": item.values[year].explanation || ""
+          "amount": value["actual"] || value["estimate"] || 0,
+          "estimate": !value["actual"],
+          "ena": value.flag == "ena" || value.flag == "na" ? true : false,
+          "nsi": value.flag == "nsi" || value.flag == "no" ? true : false,
+          "empty": value.flag == "empty" ? true : false,
+          "explanation": value.explanation || ""
         };
         formattedFinancialData.push(financialItem);
       }
@@ -579,7 +596,7 @@ export class FinancialObligationChart {
     formattedFinancialData.forEach(function (item) {
       item.quantity = obligations.get(item.obligation) / numberOfYears;
     });
- 
+
     return formattedFinancialData;
   }
 }

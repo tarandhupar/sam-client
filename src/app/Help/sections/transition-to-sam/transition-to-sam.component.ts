@@ -30,7 +30,6 @@ export class TransitionToSamComponent {
   };
 
   featureData:any = [
-    [
       {
         title:"Search/Display",
         releaseDetail: this.featureReleaseDetail,
@@ -52,8 +51,6 @@ export class TransitionToSamComponent {
         url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
-    ],
-    [
       {
         title:"Administration",
         releaseDetail: this.featureReleaseDetail,
@@ -74,12 +71,10 @@ export class TransitionToSamComponent {
         link:"View APIs",
         url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
-      },
-    ]
+      }
   ];
 
   legacyData:any = [
-    [
       {
         title:"Federal Assistance(CFDA)",
         releaseDetail: this.featureReleaseDetail,
@@ -101,8 +96,6 @@ export class TransitionToSamComponent {
         url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
-    ],
-    [
       {
         title:"Sub-Awards(eSRS, FSRS)",
         releaseDetail: this.featureReleaseDetail,
@@ -124,8 +117,6 @@ export class TransitionToSamComponent {
         url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       },
-    ],
-    [
       {
         title:"Entities(SAM.gov)",
         releaseDetail: this.featureReleaseDetail,
@@ -140,7 +131,6 @@ export class TransitionToSamComponent {
         url:"fakeUrl",
         img:"src/assets/img/placeholder.jpg"
       }
-    ]
   ];
 
   filter:string = "feature";
@@ -169,5 +159,5 @@ export class TransitionToSamComponent {
   isCurrentFilter(type){
     return this.filter === type;
   }
-  
+   
 }

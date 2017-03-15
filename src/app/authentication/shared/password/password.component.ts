@@ -7,7 +7,7 @@ import { Validators as $Validators } from '../validators';
 	selector: 'sam-password',
   templateUrl: 'password.component.html'
 })
-export class PasswordComponent {
+export class SamPasswordComponent {
   @Input() currentPassword: FormControl;
   @Input() password:FormControl;
 
@@ -30,8 +30,14 @@ export class PasswordComponent {
   };
 
   protected states = {
+    uid: Math.floor(Math.random() * 89999 + 10000),
     toggle: false,
-    error: '',
+    error: {
+      password: '',
+      confirmPassword: ''
+    },
+
+    submitted: false,
     validations: {
       minlength: false,
       uppercase: false,
@@ -52,11 +58,12 @@ export class PasswordComponent {
 
   ngOnInit() {
     this.password.setValidators([
-      Validators.minLength(this.config.rules.minlength),
+      $Validators.minlength(this.config.rules.minlength),
       $Validators.uppercase,
       $Validators.numeric,
       $Validators.special,
-      $Validators.match('confirmPassword')
+      $Validators.match('confirmPassword'),
+      Validators.required
     ]);
 
     if(this.currentPassword !== undefined) {
@@ -69,6 +76,8 @@ export class PasswordComponent {
       Validators.required
     ]);
 
+    this.confirmPassword.setValue('');
+
     this.password.updateValueAndValidity();
 
     this.password.valueChanges.subscribe(data => this.updateState());
@@ -76,6 +85,23 @@ export class PasswordComponent {
       this.updateState()
       this.password.updateValueAndValidity();
     });
+  }
+
+  ngAfterViewInit() {
+    let $body = document.body,
+        $inputs = $body.querySelectorAll('input[readonly]'),
+        $input,
+        intInput;
+
+    for(intInput = 0; intInput < $inputs.length; intInput++) {
+      $input = $inputs[intInput];
+      $input.removeAttribute('readonly');
+    }
+  }
+
+  setSubmitted() {
+    this.states.submitted = true;
+    this.updateState();
   }
 
   $formState(validation) {
@@ -93,7 +119,7 @@ export class PasswordComponent {
     let errors = [],
         type;
 
-    if(this.confirmPassword.touched) {
+    if(this.states.submitted || this.confirmPassword.touched) {
       for(type in this.currentPassword.errors) {
         switch(type) {
           case 'required':
@@ -132,6 +158,8 @@ export class PasswordComponent {
       }
     }
 
+    classes['ng-submitted'] = this.states.submitted;
+
     return classes;
   }
 
@@ -140,25 +168,36 @@ export class PasswordComponent {
         errors = this.password.errors,
         validator,
         verifyMatch = (
-          this.confirmPassword.dirty &&
+          (this.states.submitted && this.confirmPassword.dirty) &&
+          (
+            !(this.password.errors && (this.password.errors['required'] || false)) &&
+            !(this.confirmPassword.errors && (this.confirmPassword.errors['required'] || false))
+          ) &&
           errors !== null &&
           errors['match'] !== undefined
         );
 
+    this.states.error.password = '';
+    this.states.error.confirmPassword = '';
+
     for(validator in this.states.validations) {
+      validator = validator.toLowerCase();
       this.states.validations[validator] = (
         errors === null ||
         errors[validator] === undefined
       );
     }
 
+    if(this.password.errors && (this.password.errors['required'] || false))
+      this.states.error.password = ' ';
+    if(this.confirmPassword.errors && (this.confirmPassword.errors['required'] || false))
+      this.states.error.confirmPassword = ' ';
+
     if(verifyMatch) {
       if(errors['required'])
-        this.states.error = "Don't forget to confirm your password";
+        this.states.error.confirmPassword = "Don't forget to confirm your password";
       if(errors['match'])
-        this.states.error = this.config.messages['match'];
-    } else {
-      this.states.error = '';
+        this.states.error.confirmPassword = this.config.messages['match'];
     }
   }
 };

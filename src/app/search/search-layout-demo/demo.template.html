@@ -1,0 +1,32 @@
+<search-layout [attr.class]="'search-page'" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages" [totalElements]="totalCount">
+	<div search-sidebar>
+		<sam-collapsible [label]="'Filter By Agency'">
+			<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
+		</sam-collapsible>
+		<sam-collapsible [label]="'Filter By Date'">
+			<samDate [name]="'dateFilter'"></samDate>
+		</sam-collapsible>
+	</div>
+	<div search-title>
+		<h1>SAM.gov Search Results</h1>
+	</div>
+	<div search-featured-result>
+		<fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
+	</div>
+	<div search-content>
+		<div *ngFor="let row of data.results">
+			<opportunities-result *ngIf="row._type=='opportunity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
+      <assistance-listing-result  *ngIf="row._type=='assistanceListing'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
+      <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
+      <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
+      <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
+      <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
+      <hr class="m_T-5x"/>
+  	</div>
+		<div *ngIf="!initLoad && !data.results">
+      <br/>
+      <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
+      <div style="height:300px;"></div>
+    </div>
+	</div>
+</search-layout>

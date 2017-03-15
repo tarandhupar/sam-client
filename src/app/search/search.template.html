@@ -1,35 +1,133 @@
 <div class="usa-grid search-page">
-	<div class="usa-width-one">
-		<h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
-	</div>
-  <div class="usa-width-one">
-    <samSearchbar (onSearch)="onSearchClick($event)" [keyword]="keyword" [placeholder]="'#keyword'" *ngIf="false"></samSearchbar>
-    <div *ngIf="showOptional" class="usa-width-one">
-      <h3>Common Filters:</h3>
-      <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
-      <hr *ngIf="data.results" class="m_T-5x"/>
+
+  <aside class="usa-width-one-fourth">
+    <div>&nbsp;</div>
+    <div sam-sticky limit=1200 container="occupy-page">
+      <nav>
+        <ul class="usa-sidenav-list">
+          <li>
+            <sam-filters-container>
+              <sam-collapsible [label]="'Status'" [startOpened]="true">
+                <!--active checkbox-->
+                <samCheckbox
+                  [(model)]="checkboxModel"
+                  [name]="checkboxConfig.name"
+                  [options]="checkboxConfig.options"
+                  [label]="checkboxConfig.label"
+                  [hint]="checkboxConfig.hint"
+                  [errorMessage]="checkboxConfig.errorMessage"
+                  [hasSelectAll]="checkboxConfig.hasSelectAll"
+                  (modelChange)="activeFilter($event)">
+                </samCheckbox>
+              </sam-collapsible>
+              <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">
+
+                <!--state drop down-->
+                <samSelect
+                  [(model)]="wdStateModel"
+                  [name]="selectStateConfig.name"
+                  [options]="selectStateConfig.options"
+                  [label]="selectStateConfig.label"
+                  [hint]="selectStateConfig.hint"
+                  [errorMessage]="selectStateConfig.errorMessage"
+                  [disabled]="selectStateConfig.disabled"
+                  (modelChange)="stateChange($event)">
+                </samSelect>
+                <!--<button (click)='wdStateClear()'>Clear</button>-->
+
+                <!--county drop down-->
+                <samSelect
+                  [(model)]="wdCountyModel"
+                  [name]="selectCountyConfig.name"
+                  [options]="selectCountyConfig.options"
+                  [label]="selectCountyConfig.label"
+                  [hint]="selectCountyConfig.hint"
+                  [errorMessage]="selectCountyConfig.errorMessage"
+                  [disabled]="selectCountyConfig.disabled"
+                  (modelChange)="countyChange($event)">
+                </samSelect>
+                <!--<button (click)='wdCountyClear()'>Clear</button>-->
+              </sam-collapsible>
+
+
+              <sam-collapsible [label]="'Wage Determination Type'" [startOpened]="true" *ngIf="index === 'wd'">
+
+                <!--wage determination radio buttons-->
+                <samRadioButton
+                  [(model)]="wdTypeModel"
+                  [options]="wdTypeConfig.options"
+                  [label]="wdTypeConfig.label"
+                  [hint]="wdTypeConfig.hint"
+                  [name]="wdTypeConfig.name"
+                  [errorMessage]="wdTypeConfig.errorMessage"
+                  (modelChange)="wdFilterChange($event)">
+                </samRadioButton>
+
+              </sam-collapsible>
+              <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra'">
+
+
+                <!--construction type drop down-->
+                <samSelect
+                  [(model)]="wdConstructModel"
+                  [name]="selectConstructConfig.name"
+                  [options]="selectConstructConfig.options"
+                  [label]="selectConstructConfig.label"
+                  [hint]="selectConstructConfig.hint"
+                  [errorMessage]="selectConstructConfig.errorMessage"
+                  [disabled]="selectConstructConfig.disabled"
+                  (modelChange)="constructionTypeChange($event)">>
+                </samSelect>
+                <button (click)='wdConstructionClear()'>Clear</button>
+              </sam-collapsible>
+            </sam-filters-container>
+          </li>
+        </ul>
+      </nav>
     </div>
-    <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row"></fh-featured-result>
-    <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
-		<div *ngFor="let row of data.results">
-			<opportunities-result *ngIf="row._type=='OPP'" class="usa-grid-full" [data]="row"></opportunities-result>
-      <assistance-listing-result  *ngIf="row._type=='CFDA'" class="usa-grid-full" [data]="row"></assistance-listing-result>
-      <federal-hierarchy-result  *ngIf="row._type=='FH'" class="usa-grid-full" [data]="row"></federal-hierarchy-result>
-      <entities-result *ngIf="row._type=='ENT'" class="usa-grid-full" [data]="row"></entities-result>
-      <exclusions-result *ngIf="row._type=='EX'" class="usa-grid-full" [data]="row"></exclusions-result>
-      <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row"></wage-determination-result>
-      <hr class="m_T-5x"/>
-  	</div>
-    <div *ngIf="!initLoad && !data.results">
-      <br/>
-      <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
-      <div style="height:300px;"></div>
+  </aside>
+
+  <div class="usa-width-three-fourths">
+    <div class="usa-width-one">
+      <samAlert *ngIf="wdTypeModel" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
+      <samAlert *ngIf="wdConstructModel" [type]="'success'" [dismissTimer]="'5000'" [title]="'Search Criteria Complete'"></samAlert>
+      <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
     </div>
-	</div>
-  <div *ngIf="data.results">
-    <div class="usa-width-one-whole">
-      <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
+    <div class="usa-width-one">
+      <div *ngIf="showOptional" class="usa-width-one">
+        <h3>Common Filters:</h3>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-third">
+            <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
+          </div>
+        </div>
+        <hr *ngIf="data.results" class="usa-width-one m_T-5x"/>
+      </div>
+      <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
+      <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
+      <div id="search-results">
+        <div tabindex="-1" *ngFor="let row of data.results">
+          <opportunities-result *ngIf="row._type=='opportunity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
+          <assistance-listing-result  *ngIf="row._type=='assistanceListing'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
+          <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
+          <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
+          <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
+          <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
+          <hr class="m_T-5x"/>
+        </div>
+      </div>
+      <div *ngIf="!initLoad && !data.results">
+        <br/>
+        <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
+        <div style="height:300px;"></div>
+      </div>
     </div>
+    <div *ngIf="data.results">
+      <div class="usa-width-one-whole">
+        <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
+      </div>
+    </div>
+    <br/><br/>
   </div>
-  <br/><br/>
+
 </div>

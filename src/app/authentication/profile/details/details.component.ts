@@ -50,6 +50,7 @@ export class DetailsComponent {
   private states = {
     isGov: false,
     selected: ['','',''],
+    submitted: false,
     editable: {
       identity: false,
       business: false,
@@ -75,11 +76,7 @@ export class DetailsComponent {
 
     workPhone: '',
 
-    kbaAnswerList: [
-      <any>{ questionId: 1, answer: '&bull;' },
-      <any>{ questionId: 5, answer: '&bull;' },
-      <any>{ questionId: 7, answer: '&bull;' }
-    ],
+    kbaAnswerList: [],
 
     accountClaimed: true
   };
@@ -131,11 +128,13 @@ export class DetailsComponent {
             department:      [this.user.department],
             orgID:           [this.user.orgID],
 
-            kbaAnswerList:   this.builder.array([
-              this.initKBAGroup(0),
-              this.initKBAGroup(1),
-              this.initKBAGroup(2)
-            ]),
+            kbaAnswerList:   this.builder.array(
+              this.user.kbaAnswerList.length ? [
+                this.initKBAGroup(0),
+                this.initKBAGroup(1),
+                this.initKBAGroup(2)
+              ] : []
+            ),
           });
 
           if(this.states.isGov) {
@@ -194,6 +193,11 @@ export class DetailsComponent {
           intQuestion,
           intAnswer;
 
+      // Prepopulate kbaAnswerList
+      for(intAnswer = 0; intAnswer < data.selected.length; intAnswer++) {
+        vm.user.kbaAnswerList.push({ questionId: 0, answer: ' ' });
+      }
+
       // Set Selected Answers
       vm.user.kbaAnswerList = vm.user.kbaAnswerList.map(function(answer, intAnswer) {
         selected = (data.selected[intAnswer] || -1);
@@ -230,7 +234,11 @@ export class DetailsComponent {
       cb();
     }
 
-    this.api.iam.kba.questions(processKBAQuestions, processKBAQuestions);
+    function cancelKBAQuestions(error) {
+      cb();
+    }
+
+    this.api.iam.kba.questions(processKBAQuestions, cancelKBAQuestions);
   }
 
   initUser(cb) {
@@ -247,8 +255,6 @@ export class DetailsComponent {
               });
             });
           });
-
-
         }).bind(this),
 
         getMockUser = (function(promise) {
@@ -320,7 +326,7 @@ export class DetailsComponent {
   get phone():string {
     let phone = this.user.workPhone
       .replace(/[^0-9]/g, '')
-      .replace(/([0-9]{3})([0-9]{3})([0-9]{4})/g, '($1) $2-$3');
+      .replace(/([0-9]{1})([0-9]{3})([0-9]{3})([0-9]{4})/g, '$1+($2) $3-$4');
 
     switch(phone.length) {
       case 14:
@@ -329,6 +335,10 @@ export class DetailsComponent {
     }
 
     return phone;
+  }
+
+  updatePhoneNumber(phoneNumber) {
+    this.user.workPhone = phoneNumber;
   }
 
   setDepartment(department) {
@@ -354,6 +364,10 @@ export class DetailsComponent {
   /**
    * KBA
    */
+  getHashedAnswer(answer) {
+    return (answer.length ? answer : this.repeater(' ', 8)).replace(/./g, '&bull;');
+  }
+
   question(questionID) {
     const questions = this.lookups.questions,
           mappings = this.lookups.indexes;
@@ -476,11 +490,15 @@ export class DetailsComponent {
         userData[key] = controlValue;
       }
 
+      if(key == 'workPhone') {
+        userData[key] = this.user.workPhone;
+      }
+
       if(key == 'kbaAnswerList') {
         userData[key] = controlValue.map((item, intItem) => {
           item.answer = item.answer.trim();
           this.user.kbaAnswerList[intItem] = item;
-          this.user.kbaAnswerList[intItem].answer = item.answer.replace(/./g, '&bull;');
+
           return item;
         });
 
@@ -514,10 +532,13 @@ export class DetailsComponent {
         valid = this.isValid(keys);
 
     if(valid) {
+      this.states.submitted = true;
+
       this.zone.runOutsideAngular(() => {
         this.saveGroup(keys, () => {
           this.zone.run(() => {
             this.states.editable[groupKey] = false;
+            this.states.submitted = false;
           });
         });
       });

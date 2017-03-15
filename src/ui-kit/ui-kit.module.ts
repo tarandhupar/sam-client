@@ -15,9 +15,9 @@ import { SamSearchHeaderComponent } from './search-header/search-header.componen
 import { SamSearchbarComponent } from "./form-controls/searchbar/searchbar.component";
 import { SamBannerComponent } from "./banner/banner.component";
 import { SamStickyComponent } from "./sticky/sticky.component";
-import { SamFooterComponent } from "./footer/footer.component";
 import { SamLabelComponent } from "./label/label.component";
 import { SamHeaderComponent } from "./header/header.component";
+import { SamHeaderMenuComponent } from './header-menu/header-menu.component';
 import { SamAlertComponent } from "./alert/alert.component";
 import { SamSpinnerComponent } from './spinner/spinner.component';
 import { SamAccordionComponent, SamAccordionSection } from "./accordion/accordion.component";
@@ -25,7 +25,6 @@ import { SamButtonComponent } from "./form-controls/button/button.component.ts";
 import { SamPointOfContactComponent } from "./point-of-contact/point-of-contact.component";
 import { SamPaginationComponent } from "./pagination/pagination.component";
 import { SamClickOutsideDirective } from "./click-outside/click-outside.directive";
-import { SamHeaderLinksComponent } from "./header-links/header-links.component";
 import { SamMultiSelectDropdownComponent } from "./multiselect-dropdown/multiselect-dropdown.component";
 import { SamNameEntryComponent } from "./form-controls/name-entry/name-entry.component";
 import { SamPhoneEntryComponent } from "./form-controls/phone-entry/phone-entry.component";
@@ -33,13 +32,19 @@ import { SamDateComponent } from "./form-controls/date/date.component";
 import { SamTimeComponent } from "./form-controls/time";
 import { SamDateTimeComponent } from "./form-controls/date-time";
 import { SamTextComponent } from "./form-controls/text/text.component";
+import { SamNumberComponent } from "./form-controls/number/number.component";
 import { SamTextareaComponent } from "./form-controls/textarea/textarea.component";
 import { SamTabComponent } from "./tabs/tabs.component";
 import { SamTabsComponent } from "./tabs/tabs.component";
-import { InputAutocompleteComponent } from "./form-controls/input-autocomplete/input-autocomplete.component";
 import { SamModalComponent } from "./modal/modal.component";
 import { SamAlphabetSelectorComponent } from "./alphabet-selector/alphabet-selector.component";
 import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.component";
+import { SamSidenavModule } from './sidenav';
+import { ResetLabelMarginDirective } from './reset-label-margin/reset-label-margin.directive';
+import { SamToggleSwitchComponent } from './form-controls/toggle-switch/toggle-switch.component';
+
+import { SamCollapsibleComponent } from './collapsible';
+import { SamFiltersContainerComponent } from './filters-container';
 
 /**
  * A module for reusable SAM Web Design components
@@ -48,7 +53,6 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
 @NgModule({
   declarations: [
     SamClickOutsideDirective,
-    SamHeaderLinksComponent,
     SamPaginationComponent,
     SamAccordionComponent,
     SamAccordionSection,
@@ -62,8 +66,8 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
     SamBannerComponent,
     SamSearchHeaderComponent,
     SamStickyComponent,
-    SamFooterComponent,
     SamHeaderComponent,
+    SamHeaderMenuComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
     SamMultiSelectDropdownComponent,
@@ -73,25 +77,31 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
     SamDateComponent,
     SamTimeComponent,
     SamDateTimeComponent,
+    SamNumberComponent,
     SamTextComponent,
     SamTextareaComponent,
-    InputAutocompleteComponent,
     SamModalComponent,
     LabelWrapper,
     FieldsetWrapper,
     SamTabsComponent,
     SamTabComponent,
-    SamAlphabetSelectorComponent
+    SamAlphabetSelectorComponent,
+    SamCollapsibleComponent,
+    SamFiltersContainerComponent,
+    ResetLabelMarginDirective,
+    SamToggleSwitchComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    SamSidenavModule
   ],
   exports: [
     LabelWrapper,
     SamClickOutsideDirective,
-    SamHeaderLinksComponent,
+    SamHeaderComponent,
+    SamHeaderMenuComponent,
     SamPaginationComponent,
     SamAccordionComponent,
     SamAccordionSection,
@@ -105,8 +115,6 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
     SamBannerComponent,
     SamSearchHeaderComponent,
     SamStickyComponent,
-    SamFooterComponent,
-    SamHeaderComponent,
     SamSpinnerComponent,
     SamAlertComponent,
     SamPointOfContactComponent,
@@ -116,13 +124,18 @@ import { AlphabetSelectorService } from "./alphabet-selector/alphabet-selector.c
     SamDateComponent,
     SamTimeComponent,
     SamDateTimeComponent,
+    SamNumberComponent,
     SamTextComponent,
     SamTextareaComponent,
-    InputAutocompleteComponent,
     SamTabsComponent,
     SamTabComponent,
     SamModalComponent,
     SamAlphabetSelectorComponent,
+    SamSidenavModule,
+    SamCollapsibleComponent,
+    SamFiltersContainerComponent,
+    ResetLabelMarginDirective,
+    SamToggleSwitchComponent
   ],
   providers: [
     AlphabetSelectorService

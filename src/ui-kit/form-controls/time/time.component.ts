@@ -4,7 +4,7 @@ import * as moment from 'moment/moment';
 @Component({
   selector: 'samTime',
   template: `
-    <div class="sam-time usa-date-of-birth">
+    <div class="sam-time usa-date-of-birth" style="overflow:auto;">
       <div class="usa-form-group usa-form-group-month">
         <label [attr.for]="hourName()">Hour</label>
         <input [attr.id]="hourName()" type="number" [(ngModel)]='hours' (ngModelChange)="onInputChange()" class="usa-form-control" [disabled]="disabled">

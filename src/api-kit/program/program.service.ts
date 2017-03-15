@@ -28,4 +28,30 @@ export class ProgramService{
 
     return this.oAPIService.call(oApiParam);
   }
+
+  runProgram(obj) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/',
+      oParam: {
+        page: obj.pageNum
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  saveProgram(id: String = null, data: any) {
+    let oApiParam = {
+      name: 'program',
+      suffix: (id == null) ? '' : '/' + id,
+      oParam: {},
+      body: data,
+      method: (id == null) ? 'POST' : 'PATCH'
+    };
+
+    return this.oAPIService.call(oApiParam, false);
+
+  }
 }

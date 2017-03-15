@@ -1,6 +1,6 @@
-import {Component, Input, ViewChild, forwardRef} from '@angular/core';
+import { Component, Input, ViewChild, forwardRef, Output, EventEmitter } from '@angular/core';
 import { LabelWrapper } from '../wrapper/label-wrapper.component';
-import {NG_VALUE_ACCESSOR, ControlValueAccessor, Validators, FormControl} from "@angular/forms";
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, Validators, FormControl } from "@angular/forms";
 
 export const TEXT_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
@@ -15,7 +15,7 @@ export const TEXT_VALUE_ACCESSOR: any = {
   selector: 'samTextArea',
   template: `
     <labelWrapper [label]="label" [name]="name" [hint]="hint" [errorMessage]="errorMessage" [required]="required">
-      <textarea [value]="value" [attr.id]="name" 
+      <textarea [value]="value" [attr.id]="name" [attr.placeholder]="placeholder"
         [disabled]="disabled" (change)="onInputChange($event.target.value)">
       </textarea>
     </labelWrapper>
@@ -23,7 +23,8 @@ export const TEXT_VALUE_ACCESSOR: any = {
   providers: [ TEXT_VALUE_ACCESSOR ]
 })
 export class SamTextareaComponent implements ControlValueAccessor {
-  @Input() value: string;
+  @Input() value: string = "";
+  @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
   @Input() label: string;
   @Input() name: string;
   @Input() hint: string;
@@ -31,6 +32,7 @@ export class SamTextareaComponent implements ControlValueAccessor {
   @Input() disabled: boolean;
   @Input() required: boolean;
   @Input() maxlength: number;
+  @Input() placeholder: string;
   @Input() control: FormControl;
 
   onChange: any = () => {
@@ -74,6 +76,7 @@ export class SamTextareaComponent implements ControlValueAccessor {
   onInputChange(value) {
     this.value = value;
     this.onChange(value);
+    this.valueChange.emit(value);
   }
 
   registerOnChange(fn) {

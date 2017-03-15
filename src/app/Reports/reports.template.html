@@ -1,21 +1,23 @@
 <div class="usa-grid-full p_B-6x reports-content relative" >
-  <aside class="usa-width-one-fourth p_T-2x">
+  <aside class="usa-width-one-fourth p_T-2x" *ngIf="isCurrentSection('overview') || isCurrentSection('static') || isCurrentSection('adhoc') || isCurrentSection('favorites')">
     <div sam-sticky limit=1200 container="reports-content">
 <h3>Navigation</h3>
       <ul class="usa-sidenav-list">
         <li><a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/reports/overview']">Dynamic Reports</a></li>
 	<li><a [ngClass]="getSectionClass('static')" (click)="changeSection('static')" [routerLink]="['/reports/static']">Static Reports</a></li>
 	<li><a [ngClass]="getSectionClass('adhoc')" (click)="changeSection('adhoc')" [routerLink]="['/reports/adhoc']">Ad-hoc Reports</a></li>
+	<span *ngIf="states.isSignedIn">
         <li>
-          <a [ngClass]="getSectionClass('favourites')" (click)="changeSection('favourites')" >Favourites</a>
-          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('favourites')">
-            <li><a #placeholder1 [ngClass]="getSubSectionClass('placeholder1')" (click)="changeSubSection('placeholder1',placeholder1)">Favourite Report 1</a></li>
-            <li><a #placeholder2 [ngClass]="getSubSectionClass('placeholder2')" (click)="changeSubSection('placeholder2',placeholder2)">Favourite Report  2</a></li>
-            <li><a #placeholder3 [ngClass]="getSubSectionClass('placeholder3')" (click)="changeSubSection('placeholder3',placeholder3)">Favourite Report  3</a></li>
-            <li><a #placeholder4 [ngClass]="getSubSectionClass('placeholder4')" (click)="changeSubSection('placeholder4',placeholder4)">Favourite Report  4</a></li>
-            <li><a #placeholder5 [ngClass]="getSubSectionClass('placeholder5')" (click)="changeSubSection('placeholder5',placeholder5)">......</a></li>
+          <a [ngClass]="getSectionClass('favorites')" (click)="changeSection('favorites')" >Favorites</a>
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('favorites')">
+            <li><a #placeholder1 [ngClass]="getSubSectionClass('placeholder1')" (click)="changeSubSection('placeholder1',placeholder1)">Favorite Report 1</a></li>
+            <li><a #placeholder2 [ngClass]="getSubSectionClass('placeholder2')" (click)="changeSubSection('placeholder2',placeholder2)">Favorite Report 2</a></li>
+            <li><a #placeholder3 [ngClass]="getSubSectionClass('placeholder3')" (click)="changeSubSection('placeholder3',placeholder3)">Favorite Report 3</a></li>
+            <li><a #placeholder4 [ngClass]="getSubSectionClass('placeholder4')" (click)="changeSubSection('placeholder4',placeholder4)">Favorite Report 4</a></li>
+            <li><a #placeholder5 [ngClass]="getSubSectionClass('placeholder5')" (click)="changeSubSection('placeholder5',placeholder5)"><button type="button" class="usa-button-outline">More Favorites</button></a></li>
           </ul>
         </li>
+	</span>
       </ul>
 
     </div>

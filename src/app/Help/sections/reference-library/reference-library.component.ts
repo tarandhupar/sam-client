@@ -56,6 +56,16 @@ export class ReferenceLibraryComponent {
     ]
   };
 
+  private imageLibraryNotification:string = "";
+
   constructor() { }
+
+  onImageLibrarySelect(val){
+    this.imageLibraryNotification = val;
+  }
+
+  private linkToggle():boolean{
+    return globals.showOptional;
+  }
 
 }

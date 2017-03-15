@@ -1,7 +1,7 @@
+
 /*
  * Angular 2 decorators and services
  */
-import { Cookie } from 'ng2-cookies';
 import { Component } from '@angular/core';
 import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
@@ -20,6 +20,7 @@ export class App{
 
   keyword: string = "";
   index: string = "";
+  isActive: boolean = false;
   qs: any = {};
 
   showOverlay = false;
@@ -30,16 +31,12 @@ export class App{
     this.searchService.paramsUpdated$.subscribe(
       obj => {
         this.setQS(obj);
-    });
+      });
     this.activatedRoute.queryParams.subscribe(
       data => {
-        if(typeof data['keyword'] == "string" && typeof data['index'] == "string") {
-          this.setCookie(data);
-        } else {
-          this.checkCookie();
-        }
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
+        this.isActive = this.qs['isActive'] === true ? true : this.isActive;
       });
     this._router.events.subscribe(
       val => {
@@ -65,12 +62,18 @@ export class App{
     }
 
     qsobj['page'] = 1;
+    qsobj['isActive'] = this.qs['isActive'];
+    if(searchObject.searchField !== 'wd') {
+      qsobj['wdType'] = null;
+      qsobj['state'] = null;
+      qsobj['county'] = null;
+      qsobj['conType'] = null;
+    }
+
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
 
-    Cookie.delete("term");
-    Cookie.delete("ival");
     this._router.navigate(['/search'], navigationExtras );
 
     return false;
@@ -83,23 +86,6 @@ export class App{
   toggleOverlay(value){
     this.showOverlay = value;
 
-  }
-
-  setCookie(data) {
-    Cookie.delete("term");
-    Cookie.delete("ival");
-    Cookie.set("term", data['keyword']);
-    Cookie.set("ival", data['index']);
-  }
-
-  checkCookie() {
-    let cookielist = Cookie.getAll();
-    if(cookielist['term'] && cookielist['term'].length>0) {
-      this.keyword = cookielist['term'];
-    }
-    if(cookielist['ival'] && cookielist['ival'].length>0) {
-      this.index = cookielist['ival'];
-    }
   }
 
 }

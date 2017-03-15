@@ -27,7 +27,7 @@ describe('Opportunity Service', () => {
     let mockData = {
       "opportunityId": "213ji321hu3jk123",
       "data": {
-        "type": "Type Goes here",
+        "type": "i",
         "solicitationNumber": "Solicitation Number goes here",
         "title": "Title Goes here",
         "organizationId": "100010393",

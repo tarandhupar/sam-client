@@ -1,12 +1,12 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
-    <span class="usa-forgot usa-forgot-initial text-center">
-      <legend class="usa-legend">Email Sent</legend>
+    <span class="usa-forgot usa-forgot-confirm text-center">
+      <h2>Email Sent</h2>
       <div *ngIf="email">We just sent an email to {{ email }}.</div>
 
       <section>
-        <legend>Your Next Steps</legend>
         <ul class="steps">
+          <li class="header">Your Next Steps</li>
           <li>Check your inbox for an email</li>
           <li>Click the password reset link in the email</li>
           <li>Reset your password</li>
@@ -16,7 +16,7 @@
 
         <ul class="links">
           <li *ngIf="email" class="email">
-            <a href="javascript:void(0);" (click)="resendEmail()">Resend Email</a>
+            <a href="javascript:void(0);" (click)="resendEmail()" #target>Resend Email</a>
           </li>
           <li class="home">
             <a routerLink="/">Return to SAM.gov Home</a>
@@ -29,7 +29,9 @@
 
 <samAlert [type]="states.alert.type"
           [title]="states.alert.title"
-          [description]="states.alert.description"
           [showClose]="true"
           [hidden]="!states.alert.show"
+          [target]="target"
+          [offset]="{ left: 100 }"
+          placement="right"
           (dismiss)="dismissAlert()"></samAlert>

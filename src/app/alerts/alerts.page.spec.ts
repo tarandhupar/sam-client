@@ -1,19 +1,23 @@
-import {TestBed, async, fakeAsync, tick} from '@angular/core/testing';
-import {SystemAlertsService} from "api-kit/system-alerts/system-alerts.service";
-import {Observable} from "rxjs";
-import {AlertItemComponent} from "./alert-item/alert-item.component";
-import {SamUIKitModule} from 'ui-kit';
-import {Router} from "@angular/router";
-import {RouterTestingModule} from "@angular/router/testing";
-import {AlertsPage} from "./alerts.page";
-import {DateFormatPipe} from "../app-pipes/date-format.pipe";
+import { TestBed, async } from '@angular/core/testing';
+import { SystemAlertsService } from "api-kit/system-alerts/system-alerts.service";
+import { Observable } from "rxjs";
+import { AlertItemComponent } from "./alert-item/alert-item.component";
+import { SamUIKitModule } from 'ui-kit';
+import { Router } from "@angular/router";
+import { RouterTestingModule } from "@angular/router/testing";
+import { AlertsPage } from "./alerts.page";
+import { DateFormatPipe } from "../app-pipes/date-format.pipe";
 
-// Load test data
-import {error, info, warning} from './alerts-test-data.spec';
-import {By} from "@angular/platform-browser";
-import {AlertEditComponent} from "./alert-edit/alert-edit.component";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { By } from "@angular/platform-browser";
+import { HttpModule } from '@angular/http';
+import { AlertEditComponent } from "./alert-edit/alert-edit.component";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { AlertFooterService } from "./alert-footer/alert-footer.service";
+import { UserAccessService } from "../../api-kit/access/access.service";
+import { WrapperService } from "../../api-kit/wrapper/wrapper.service";
 
+// load test data
+import { error, info, warning } from './alerts-test-data.spec';
 
 class RouterStub {
   navigate(url:string) {
@@ -32,10 +36,12 @@ describe('The AlertsPage component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [AlertsPage,AlertItemComponent,AlertEditComponent,DateFormatPipe],
-      imports: [SamUIKitModule,RouterTestingModule,FormsModule,ReactiveFormsModule],
+      imports: [SamUIKitModule,RouterTestingModule,FormsModule,ReactiveFormsModule,HttpModule],
       providers: [
-        {provide: Router, useClass: RouterStub},
-        {provide: SystemAlertsService, useValue: systemAlertsStub },
+        AlertFooterService,
+        WrapperService,
+        { provide: Router, useClass: RouterStub },
+        { provide: SystemAlertsService, useValue: systemAlertsStub },
       ]
     });
 

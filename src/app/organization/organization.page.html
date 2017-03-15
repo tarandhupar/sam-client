@@ -1,14 +1,14 @@
 <div class="usa-grid" id="organization-page">
   <div class="usa-width-one-whole">
-    <ng-container *ngIf="errorOrganization">Organization ID: {{organization.orgKey}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
+    <ng-container *ngIf="errorOrganization">Organization ID: {{errorOrgId}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
     <div class="clearfix">
       <div class="logo-section">
         <!-- Logo -->
-        <img *ngIf="organization && logoUrl && !errorLogo" class="sidenav-logo" [src]="logoUrl" alt="HTML5 Icon">
-        <img *ngIf="organization && (errorOrganization || errorLogo || logoUrl===null)" src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available">
+        <img *ngIf="organization && logoUrl && !errorLogo" class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
+        <img *ngIf="organization && (errorOrganization || errorLogo || logoUrl===null)" src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
       </div>
       <div class="intro-section" *ngIf="organization" >
-        <h1>{{organization.agencyName || organization.name || organization.orgKey}}</h1>
+        <h1>{{organization.agencyName || organization.name || organization.orgKey}} {{(organization.shortName == '' || organization.shortName == null) ?  '': '('+organization.shortName+')'}}</h1>
 
         <section>
           <strong>{{(organization | organizationTypeCode).label}}</strong> {{(organization | organizationTypeCode).value}}
@@ -23,6 +23,12 @@
             <i class="fa fa-circle" aria-hidden="true"></i>
             <em>Status Active</em>
           </span>
+        </section>
+
+        <section>
+          <div *ngFor="let org of hierarchy">
+            <strong>{{org.type}}: </strong> <a [routerLink]="['/organization', org.orgKey]" [queryParams]="qParams"> {{org.name}} </a>
+          </div>
         </section>
 
         <!-- Description -->
@@ -42,14 +48,21 @@
           </div>
           <div class="usa-width-one-third">
             <p class="m_T-2x" style="text-align: right;">
-              <strong>{{min +1}} - {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}}</strong>
-              of <strong>{{organization.hierarchy.length}}</strong>
+              <span class="usa-sr-only">Showing results</span> 
+              <strong>
+                {{min +1}} 
+                <span class="usa-sr-only">through</span> - 
+                {{(organization.hierarchy.length < max) ? organization.hierarchy.length : max}}
+              </strong>
+              of 
+              <strong>{{organization.hierarchy.length}}</strong>
             </p>
           </div>
         </div>
-        <ul class="usa-zebra-list">
-          <li *ngFor = "let element of organizationPerPage">
-            <a [routerLink]="['/organization', element.orgId]">{{ element.name }} </a>
+        <ul id="org-pagination" class="usa-zebra-list">
+          <li tabindex="-1" *ngFor = "let element of organizationPerPage">
+            <div *ngIf="organization.categoryDesc == 'DEPARTMENT'"><a [routerLink]="['/organization', element.orgId]" [queryParams]="qParams">{{ element.name }} </a></div>
+            <div *ngIf="organization.categoryDesc == 'AGENCY'">{{ element.name }}</div>
           </li>
         </ul>
       </section>

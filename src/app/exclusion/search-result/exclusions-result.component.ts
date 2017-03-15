@@ -8,22 +8,22 @@ import * as moment from 'moment/moment';
   template: `
       <p>
     	  <span class="usa-label">Exclusion</span>
-    	  <span *ngIf="data.isActive<0" class="usa-label">INACTIVE</span>
+    	  <span *ngIf="data.isActive==false" class="usa-label">INACTIVE</span>
     	</p>
     	<h3 class="exclusion-title">
-    	<a *ngIf="data.isActive>=0" [routerLink]="['/exclusion', data.samNumber]">{{ data.name }}</a>
-      	<span *ngIf="data.isActive<0">{{ data.name }}</span>
+    	<a *ngIf="data.isActive==true" [routerLink]="['/exclusions', data.samNumber]" [queryParams]="qParams">{{ data.name }}</a>
+      	<span *ngIf="data.isActive==false">{{ data.name }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li *ngIf="data.dunsNumber!==''"><strong>DUNS: </strong><span>{{ data.dunsNumber }}</span></li>
-          <li *ngIf="data.cageCode!==''"><strong>CAGE Code: </strong><span>{{ data.cageCode }}</span></li>
-          <li><strong>Address: </strong><span>{{ data.address.streetAddress }}{{data.address.city=="" || data.address.streetAddress=="" ? '' : ','}} {{ data.address.city }}{{data.address.state=="" || data.address.city=="" ? '' : ','}} {{ data.address.state}} {{data.address.zip}}</span></li>
+        	<li *ngIf="data.dunsNumber!==null && data.dunsNumber!==''"><strong>DUNS: </strong><span>{{ data.dunsNumber }}</span></li>
+          <li *ngIf="data.cageCode!==null && data.cageCode!==''"><strong>CAGE Code: </strong><span>{{ data.cageCode }}</span></li>
+          <li><strong>Address: </strong><span>{{ data.address.streetAddress }}<ng-container *ngIf="data.address?.city && data.address?.streetAddress">,</ng-container> {{ data.address.city }}<ng-container *ngIf="data.address?.state && data.address?.city">,</ng-container> {{ data.address.state}} {{data.address.zip}}</span></li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">   
-          <li *ngIf="data.classification.code!==null || data.classification.code!==''"><strong>Classification</strong>
+          <li *ngIf="data.classification.code!==null && data.classification.code!==''"><strong>Classification</strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.classification.code }}</span></li>
             </ul>
@@ -33,9 +33,9 @@ import * as moment from 'moment/moment';
               <li><span>{{ data.activationDate }}</span></li>
             </ul>
           </li>    
-          <li *ngIf="data.terminationDate!==null"><strong>Termination Date</strong>
+          <li><strong>Termination Date</strong>
             <ul class="usa-unstyled-list">
-              <li><span>{{ data.terminationDate }}</span></li>
+              <li><span>{{ data.terminationDate !== null ? data.terminationDate : 'Indefinite' }}</span></li>
             </ul>
           </li>      
         </ul>
@@ -44,6 +44,7 @@ import * as moment from 'moment/moment';
 })
 export class ExclusionsResult implements OnInit {
   @Input() data: any={};
+  @Input() qParams:any = {};
   constructor() { }
 
   ngOnInit(){
@@ -52,9 +53,6 @@ export class ExclusionsResult implements OnInit {
     }
     if(this.data.terminationDate!==null) {
       this.data.terminationDate = moment(this.data.terminationDate).format("MMM D, Y");
-      this.data["isActive"] = moment(this.data.terminationDate).diff(moment(new Date()));
-    } else {
-      this.data["isActive"] = 0;
     }
   }
 }

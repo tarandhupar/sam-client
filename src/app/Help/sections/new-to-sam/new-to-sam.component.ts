@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { globals } from '../../../globals';
 
 @Component({
   providers: [ ],
@@ -40,11 +41,11 @@ export class NewToSamComponent {
   // Each Image Library component needs an array 3 objects of image content data as input
   // Each object of image content data will be pointed using the index in imageGroupData
   private imageGroupIndexData:any = {
-    area1:[[0,2,1],[0,1,2],[1,2,0]],
-    area2:[[0,1,2],[0,2,1],[1,0,2]],
-    area3:[[1,2,0],[2,1,0],[0,2,1]],
-    area4:[[0,2,1],[0,2,1],[1,0,2]],
-    area5:[[2,1,0],[0,1,2],[2,0,1]],
+    area1:[0,2,1,0,1,2,1,2,0],
+    area2:[0,1,2,0,2,1,1,0,2],
+    area3:[1,2,0,2,1,0,0,2,1],
+    area4:[0,2,1,0,2,1,1,0,2],
+    area5:[2,1,0,0,1,2,2,0,1],
   };
 
   private curImageGroup:any;
@@ -54,14 +55,12 @@ export class NewToSamComponent {
   constructor() { }
 
   openImageLibrary(type){
-    this.showImageLibrary = true;
-    this.curImageGroup = [];
-    for(let indexList of this.imageGroupIndexData[type]){
-      let tempDataList: any = [];
-      for(let indexItem of indexList){
-        tempDataList.push(this.imageGroupData[indexItem]);
+    if(this.linkToggle()){
+      this.showImageLibrary = true;
+      this.curImageGroup = [];
+      for(let index of this.imageGroupIndexData[type]){
+        this.curImageGroup.push(this.imageGroupData[index]);
       }
-      this.curImageGroup.push(tempDataList);
     }
   }
 
@@ -70,6 +69,7 @@ export class NewToSamComponent {
     this.curImageGroup = {};
   }
 
-
-
+  linkToggle():boolean{
+    return globals.showOptional;
+  }
 }

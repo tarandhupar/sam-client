@@ -19,7 +19,7 @@ export class SamTabComponent {
   selector: 'samTabs',
   template:`
     <ul class="usa-tabs">
-      <li *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab.active">
+      <li *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab.active" tabindex="0" (keyup.enter)="selectTab(tab)">
         {{tab.title}}
       </li>
     </ul>
@@ -29,7 +29,7 @@ export class SamTabComponent {
 export class SamTabsComponent implements AfterContentInit {
   @ContentChildren(SamTabComponent) tabs: QueryList<SamTabComponent>;
 
-  @Output() currentSelectedTab = new EventEmitter(); 
+  @Output() currentSelectedTab = new EventEmitter();
 
   ngAfterContentInit(){
     let activeTabs = this.tabs.filter((tab)=>tab.active);

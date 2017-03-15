@@ -2,7 +2,7 @@ import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, 
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
-import { KBAComponent } from '../shared/kba';
+import { SamKBAComponent } from '../shared/kba';
 
 import { IAMService } from 'api-kit';
 
@@ -26,7 +26,7 @@ export class ForgotMainComponent {
       type: 'warning',
       title: 'You have one attempt left',
       message: '',
-      placement: 'right',
+      placement: 'bottom right',
       show: false
     }
   };
@@ -85,7 +85,9 @@ export class ForgotMainComponent {
         });
       });
     } else {
-      this.expire(null);
+      if(!this.api.iam.isDebug()) {
+        this.expire(null);
+      }
     }
   }
 

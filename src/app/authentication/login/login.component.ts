@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { IAMService } from 'api-kit';
@@ -11,6 +11,13 @@ import { Validators as $Validators } from '../shared/validators';
 })
 export class LoginComponent {
   public form: FormGroup;
+
+  private store = {
+    redirect: {
+      route: '/',
+      params: {}
+    }
+  };
 
   states = {
     stage: 1,
@@ -47,6 +54,7 @@ export class LoginComponent {
   };
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private builder: FormBuilder,
     private zone: NgZone,
@@ -61,6 +69,19 @@ export class LoginComponent {
   }
 
   ngOnInit() {
+    let params = this.route.snapshot.queryParams,
+        key;
+
+    if(params['redirect'] !== undefined && params['redirect'].length) {
+      this.store.redirect.route = params['redirect'];
+
+      for(key in params) {
+        if(key !== 'redirect') {
+          this.store.redirect.params[key] = params[key];
+        }
+      }
+    }
+
     this.form = this.builder.group({
       'stage1': this.builder.group({
         username: ['', [Validators.required, $Validators.email]],
@@ -76,11 +97,11 @@ export class LoginComponent {
   }
 
   authenticate(cb) {
-    let vm = this;
-
-    this.api.iam.checkSession(function() {
-      vm.router.navigate(['/profile']);
-    }, function() {
+    this.api.iam.checkSession(() => {
+      this.router.navigate([this.store.redirect.route], {
+        queryParams: this.store.redirect.params
+      });
+    }, (error) => {
       cb();
     })
   }
@@ -141,8 +162,7 @@ export class LoginComponent {
   }
 
   login(cb: () => void) {
-    let vm = this,
-        form = this.form.controls[this.isStage(1) ? 'stage1' : 'stage2'],
+    let form = this.form.controls[this.isStage(1) ? 'stage1' : 'stage2'],
         credentials;
 
     if(form.valid) {
@@ -150,22 +170,25 @@ export class LoginComponent {
         this.api.iam.resetLogin();
       }
 
-      this.api.iam.loginOTP(form.value, function(user) {
-        vm.states.submitted = false;
+      this.api.iam.loginOTP(form.value, (user) => {
+        this.states.submitted = false;
 
-        switch(vm.states.stage) {
+        switch(this.states.stage) {
           case 1:
-            vm.states.stage = 2;
+            this.states.stage = 2;
             break;
 
           case 2:
-            vm.router.navigate(['/profile/details']);
+            this.router.navigate([this.store.redirect.route], {
+              queryParams: this.store.redirect.params
+            });
+
             break;
         }
 
         cb();
-      }, function(error) {
-        vm.errors.global.push(error);
+      }, (error) => {
+        this.errors.global.push(error.message);
         cb();
       });
     } else {

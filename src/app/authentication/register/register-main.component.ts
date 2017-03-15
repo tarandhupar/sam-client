@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChildren } from '@angular/core';
+import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { KBAComponent } from '../shared/kba';
+import { SamNameEntryComponent, SamPhoneEntryComponent } from 'ui-kit';
+import { SamKBAComponent, SamPasswordComponent } from '../shared';
 
 import { IAMService } from 'api-kit';
 
@@ -20,7 +21,12 @@ import { KBA } from '../kba.interface';
 })
 export class RegisterMainComponent {
   @Input() user: User;
-  @ViewChildren(KBAComponent) kbaComponents:QueryList<any>;
+
+  @ViewChild('nameEntry') nameEntry: SamNameEntryComponent;
+  @ViewChild('phoneEntry') phoneEntry: SamPhoneEntryComponent;
+  @ViewChild('passwordComponent') passwordComponent: SamPasswordComponent;
+
+  @ViewChildren(SamKBAComponent) kbaComponents:QueryList<any>;
 
   public userForm: FormGroup;
   public states = {
@@ -202,7 +208,7 @@ export class RegisterMainComponent {
       lastName:      ['Doe', Validators.required],
       suffix:        [''],
 
-      workPhone:       ['12401234567'],
+      workPhone:       [''],
 
       department:      [''],
       orgID:           [''],
@@ -297,6 +303,10 @@ export class RegisterMainComponent {
     });
   }
 
+  updatePhoneNumber(phoneNumber) {
+    this.user.workPhone = phoneNumber;
+  }
+
   prepareData() {
     let userData = this.userForm.value,
         propKey,
@@ -308,12 +318,6 @@ export class RegisterMainComponent {
       .replace(/\s+/, ' ');
 
     userData.workPhone = this.user.workPhone;
-
-    userData.kbaAnswerList = [
-      { questionId: 1, answer: '12345678' },
-      { questionId: 2, answer: '34567890' },
-      { questionId: 3, answer: '23456789' }
-    ];
 
     // Clean up empty properties
     for(propKey in userData) {
@@ -357,9 +361,17 @@ export class RegisterMainComponent {
     });
   }
 
+  cancel() {
+    this.router.navigate(['/signup']);
+  }
+
   register() {
     let userData,
         kbaAnswerList = this.userForm.value['kbaAnswerList'];
+
+    this.nameEntry.setSubmitted();
+    this.phoneEntry.check();
+    this.passwordComponent.setSubmitted();
 
     this.kbaComponents.forEach(function(kbaComponent, index) {
       kbaComponent.updateState(true);

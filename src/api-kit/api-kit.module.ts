@@ -9,10 +9,12 @@ import { ExclusionService } from './exclusion/exclusion.service';
 import { SearchService } from './search/search.service';
 import { SystemAlertsService } from './system-alerts/system-alerts.service';
 import { OpportunityService } from './opportunity/opportunity.service';
+import { WageDeterminationService } from './wage-determination/wage-determination.service';
 import { WrapperService } from './wrapper/wrapper.service';
 import { SuggestionsService } from './search/suggestions.service';
 import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
 import { UserDirService } from './user-directory/user-directory.service';
+import {UserAccessService} from "./access/access.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -30,12 +32,14 @@ import { UserDirService } from './user-directory/user-directory.service';
     IAMService,
     SystemAlertsService,
     EntityService,
-    ExclusionService, 
+    ExclusionService,
     OpportunityService,
     WrapperService,
     SuggestionsService,
     AutoCompleteWrapper,
-    UserDirService
+    UserDirService,
+    UserAccessService,
+    WageDeterminationService
   ]
 })
 export class SamAPIKitModule { }

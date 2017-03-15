@@ -12,41 +12,47 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive==false" class="usa-label">Inactive</span>
     	</p>
     	<h3 class="wage-determination-number">
-      	<span>{{ data._type=='wdSCA' ? 'SCA Wage Determination #: ' : 'DBA Wage Determination #: ' }}</span><a>{{ data.fullReferenceNumber }}</a>
+
+      	<span>{{ data._type=='wdSCA' ? 'SCA Wage Determination #: ' : 'DBA Wage Determination #: ' }}</span><a [routerLink]="['/wage-determination', data.fullReferenceNumber, data.revisionNumber]" [queryParams]="qParams" >{{ data.fullReferenceNumber }}</a>
+
+
     	</h3>
     	<div class="usa-width-two-thirds">
-      	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li *ngIf="data.locations!==null"><strong>State: </strong>
-        	  <span *ngFor="let location of data.locations; let i=index">{{ location.state?.name }}{{ location.state!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
+      	<ul *ngFor="let location of data.locations; let i=index" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
+        	<li><strong>State: </strong>
+        	  <span>{{ location.state?.name }}</span>
         	</li>
-        	<li *ngIf="data.locations!==null" class="break-word"><strong>County/ies: </strong>
-        	  <span *ngFor="let location of data.locations; let i=index">{{ location.counties }}{{ location.counties!==null && i!==data.locations.length-1 ? ',' : '' }}</span>
+        	<li class="break-word"><strong>County/ies: </strong>
+            <ng-container *ngFor="let county of location.counties; let isLast=last">
+              {{county?.value}}{{ isLast ? '' : ', '}}
+            </ng-container>
         	</li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-      	  <li><strong>Revision #</strong>
-      	    <ul class="usa-unstyled-list">
-      	     <span>{{ data.revisionNumber }}</span>
-            </ul>
+      	  <li>
+            <strong>Revision #</strong><br>
+      	    {{ data.revisionNumber }}
           </li>
-          <li *ngIf="data._type=='wdSCA'"><strong>Service</strong>
-            <ul class="usa-unstyled-list">
-              <span>{{ data.services }}</span>
-            </ul>
+          <li *ngIf="data._type=='wdSCA'">
+            <strong>Service</strong><br>
+            <span *ngFor="let service of data.services; let isLast=last">
+              {{ service.value }}{{ isLast ? '' : ', ' }}
+            </span>
           </li>
-          <li *ngIf="data._type=='wdDBRA'"><strong>Construction Type</strong>
-            <ul class="usa-unstyled-list">
-              <span>{{ data.constructionTypes }}</span>
-            </ul>
+          <li *ngIf="data._type=='wdDBRA'">
+            <strong>Construction Type</strong><br>
+            {{ data.constructionTypes }}
           </li>
           <li>
-              <span *ngIf="data._type=='wdDBRA'"><strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
-              <span *ngIf="data._type=='wdSCA'"><strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong></span>
-            <ul class="usa-unstyled-list">
-              <span>{{ data.publishDate }}</span>
-            </ul>
+            <ng-container *ngIf="data._type=='wdDBRA'">
+              <strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong>
+            </ng-container>
+            <ng-container *ngIf="data._type=='wdSCA'">
+              <strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong>
+            </ng-container>
+            <br>{{ data.publishDate }}
           </li>
         </ul>
       </div>
@@ -54,11 +60,31 @@ import * as moment from 'moment/moment';
 })
 export class WageDeterminationResult implements OnInit {
   @Input() data: any={};
+  @Input() qParams: any={};
   constructor() { }
 
   ngOnInit(){
     if(this.data.publishDate!==null) {
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+    }
+    if(this.data.locations!==null) {
+      for(var i=0; i<this.data.locations.length; i++) {
+        if(this.data.locations[i].counties != null) {
+          this.data.locations[i].counties = this.data.locations[i].counties.sort(function (a, b) {
+            var nameA = a.value.toUpperCase(); // ignore upper and lowercase
+            var nameB = b.value.toUpperCase(); // ignore upper and lowercase
+            if (nameA < nameB) {
+              return -1;
+            }
+            if (nameA > nameB) {
+              return 1;
+            }
+
+            // names must be equal
+            return 0;
+          });
+        }
+      }
     }
   }
 

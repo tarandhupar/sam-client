@@ -11,22 +11,27 @@
       <samTextArea #description [maxlength]="350" [control]="form.get('description')" formControlName="description" [required]='true' [name]="'description'" [label]="'Description'"></samTextArea>
     </div>
     <div class="usa-width-one-half">
-      <samDateTime #publishedDate [control]="form.get('publishedDate')" formControlName="publishedDate" [label]="'Publish Date'" name='publish-date'></samDateTime>
-      <div class="input-group">
-        <input id="publish-immediately" type="checkbox" formControlName="publishImmediately" (click)="onPublishImmediatelyClick($event.target.checked)">
-        <label for="publish-immediately">Publish Immediately</label>
+      <div class="usa-width-one-whole relative">
+        <samDateTime #publishedDate [control]="form.get('publishedDate')" formControlName="publishedDate" [label]="'Publish Date'" name='publish-date'></samDateTime>
+        <div class="input-group abs-top-right">
+          <input id="publish-immediately" type="checkbox" formControlName="publishImmediately" (click)="onPublishImmediatelyClick($event.target.checked)">
+          <label for="publish-immediately">Publish Now</label>
+        </div>
       </div>
-      <samDateTime #endDate [control]="form.get('endDate')" formControlName="endDate" [label]="'End Date'" name='end-date'></samDateTime>
-      <div class="input-group">
-        <input id="end-indefinitely" type="checkbox" formControlName="isExpiresIndefinite" (click)="onEndIndefinitelyClick($event.target.checked)">
-        <label for="end-indefinitely">End Indefinitely</label>
+      <div class="usa-width-one-whole relative">
+        <samDateTime #endDate [control]="form.get('endDate')" formControlName="endDate" [label]="'End Date'" name='end-date'></samDateTime>
+        <div class="input-group abs-top-right">
+          <input id="end-indefinitely" type="checkbox" formControlName="isExpiresIndefinite" (click)="onEndIndefinitelyClick($event.target.checked)">
+          <label for="end-indefinitely">No End Date</label>
+        </div>
       </div>
+
     </div>
   </div>
   <div class="alert-edit-actions clearfix">
     <div class="pull-right">
-      <button class="usa-button-primary" type="button" (click)="onAcceptClick($event)">Confirm</button>
       <button type="button" class="usa-button-outline" (click)="onCancelClick($event)">Cancel</button>
+      <button class="usa-button-primary" type="button" (click)="onAcceptClick($event)">Confirm</button>
     </div>
   </div>
   <!--<div><pre><code>valid: {{form.valid | json}}</code></pre></div>-->

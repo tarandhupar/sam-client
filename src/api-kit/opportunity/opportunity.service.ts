@@ -18,6 +18,17 @@ export class OpportunityService{
     return this.oAPIService.call(apiParam);
   }
 
+  getOpportunityHistoryById(id: string) {
+    let apiParam = {
+      name: 'opportunity',
+      suffix: '/' + id + '/history',
+      oParam: {},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
+
   getOpportunityLocationById(id: string) {
     let apiParam = {
         name: 'opportunity',
@@ -32,7 +43,7 @@ export class OpportunityService{
   getOpportunityDictionary(ids: string) {
     let apiParam = {
         name: 'opportunity',
-        suffix: '/dictionary',
+        suffix: '/dictionaries',
         oParam: {
           ids: ids
         },

@@ -1,0 +1,27 @@
+.wage-determination-page{
+  h1{
+    margin-top: 50px !important;
+  }
+  
+  textarea{
+    width: 100%;
+    max-width: 100%;
+    height: 700px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-family: 'Courier New', Courier, monospace;
+  }
+  
+  .usa-unstyled-list li{
+    margin-bottom: 5px;
+  }
+  
+  .print-link{
+    cursor: pointer;
+  }
+  /* MISC */
+  /*============================*/
+  samsidenav{
+    display: block;
+  }
+}

@@ -1,0 +1,22 @@
+
+div.sam-collapsible div.collapsible-header {
+  clear: both;
+  margin: 0;
+  padding: 1.5rem;
+  width: 100%;
+  background-color: $color-gray-lightest;
+}
+div.sam-collapsible div.collapsible-header .label {
+  color: $color-base;
+  font-weight: 700;
+}
+div.sam-collapsible div.collapsible-header .expand-hide {
+  float: right;
+}
+
+div.sam-collapsible div.collapsible-content.closed {
+  display: none;
+}
+div.sam-collapsible div.collapsible-content.open {
+  display: block;
+}

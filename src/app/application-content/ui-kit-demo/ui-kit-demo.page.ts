@@ -1,4 +1,4 @@
-import { Component,ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AlertFooterService } from '../../alerts/alert-footer';
 
 @Component({
@@ -107,7 +107,10 @@ export class UIKitDemoPage {
     suffix: "Sr."
   };
   phoneModel = "";
-  phoneModel2 = "1+(123)456-3366";
+  phoneModel2 = "123-456-3366";
+  phoneTemplate2 = "___-___-____";
+  phoneModel3 = "5553339999";
+  phoneTemplate3 = "1+(___)___-____";
 
   footerAlertTypes = ['success','warning','error','info'];
   footerAlertModel = {
@@ -125,19 +128,22 @@ export class UIKitDemoPage {
       title:"Benefits.gov Learning Center",
       detail:"Benefits.gov Learning Center: Lipsum content",
       link:"View Benefits.gov",
-      url:"http://www.Benefits.gov"
+      url:"http://www.Benefits.gov",
+      img:"src/assets/img/placeholder.jpg"
     },
     {
       title:"Grants.gov Learning Center",
       detail:"Details for Grants.gov Learning Center: Lipsum content",
       link:"View Grants.gov",
-      url:"http://www.grants.gov/web/grants/learn-grants.html"
+      url:"http://www.grants.gov/web/grants/learn-grants.html",
+      img:"src/assets/img/placeholder.jpg"
     },
     {
       title:"Data Element Repository",
       detail:"Details for Data Element Repository: Lipsum content",
       link:"View DER",
-      url:"fakeUrl"
+      url:"fakeUrl",
+      img:"src/assets/img/placeholder.jpg"
     }
   ];
 
@@ -153,6 +159,22 @@ export class UIKitDemoPage {
     type:'success',
     title:'Sample Title'
   }
+
+  store = {
+    menu: {
+      open: false,
+      items: [
+        { text: 'Menu Item 1', routerLink: '/ui-kit' },
+        { text: 'Menu Item 2', routerLink: '/ui-kit' }
+      ]
+    }
+  };
+
+  collapsibleLabel = 'Test Label';
+
+  // Toggle switch component
+  switch_status = "off";
+  switchDisable = false;
 
   constructor(private alertFooterService: AlertFooterService) {  }
 
@@ -198,5 +220,12 @@ export class UIKitDemoPage {
   }
   onModalInitClick2(){
     this.vcModal2.openModal();
+  }
+
+  OnSwitchChange(val){
+    val? this.switch_status = "on": this.switch_status = "off";
+  }
+  disableSwitchClick(){
+    this.switchDisable = !this.switchDisable;
   }
 }

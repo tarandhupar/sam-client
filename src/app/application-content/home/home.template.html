@@ -27,7 +27,15 @@
   <!--search bar-->
 
   <div class="usa-grid-full marginCenter m_T-6x">
-    <samSearchbar [size]="'large'" (onSearch)="runSearch($event)"></samSearchbar>
+    <samSearchbar #searchbar [size]="'large'" (onSearch)="runSearch($event)">
+      <div custom-input>
+        <samInputAutocomplete 
+          [serviceName]="'suggestions'"
+          (searchTermEmit)="searchbar.callSearch($event)"
+          (keyEnterEmit)="searchbar.onSearchClick()">
+        </samInputAutocomplete>
+      </div>
+    </samSearchbar>
   </div>
 
   <!--Browser topics and the register button-->
@@ -48,7 +56,7 @@
           <div class="usa-width-one-fourth" *ngFor="let item of topicsData">
             <div class="usa-width-one-whole">
               <div class="usa-width-one-half topic-div-marginCenter topic-image-link">
-                <a (click)="selectTopic(item)"><img src="src/assets/img/blank_icon.png" [attr.alt]="item.title"></a>
+                <a (click)="selectTopic(item)"><img src="src/assets/img/blank_icon.png" [attr.alt]="item.title" [attr.tabindex]="0" (keyup.enter)="selectTopic(item)"></a>
               </div>
             </div>
             <div class="usa-width-one-whole">
@@ -96,7 +104,7 @@
 
               <div class="usa-width-one-whole">
                 <div class="usa-width-five-sixths">
-                  <span >{{curTopic.detail}} <a [routerLink]="[curTopic.url]">here</a>.</span>
+                  <span>{{curTopic.detail}} <a [routerLink]="[curTopic.url]">here</a>.</span>
                 </div>
                 <div class="usa-width-one-sixth">
                   <span class="pull-right">
@@ -164,14 +172,16 @@
     <div class="usa-width-one-whole m_T-4x topic-detail">
       <div class="usa-width-one-whole ">
         <span class="pull-right">
-          <a class="dismiss-detail" (click)="closeTopicDetail()">
+          <a class="dismiss-detail" (click)="closeTopicDetail()" (keyup.enter)="closeTopicDetail()" tabindex="0">
             <i class="fa fa-times-circle"></i>
             <span class="sr-only">dismiss detail</span>
           </a>
         </span>
       </div>
       <div class="usa-width-one-whole">
-        <span>{{curTopic.detail}}<a [routerLink]="[curTopic.url]">here</a>.</span>
+        <span *ngIf="linkToggle() || !curTopic.pageInProgress">{{curTopic.detail}}<a [routerLink]="[curTopic.url]">here</a>.</span>
+        <span *ngIf="!linkToggle() && curTopic.pageInProgress">{{curTopic.inProgressDetail}}</span>
+
       </div>
     </div>
   </div>

@@ -23,7 +23,7 @@ import { OptionsType } from '../types';
             <input [attr.id]="checkAllLabelName()" type="checkbox" (change)="onSelectAllChange($event.target.checked)">
             <label [attr.for]="checkAllLabelName()">Select all</label>
           </li>
-          <li *ngFor="let option of options; let i = index">
+          <li *ngFor="let option of options; let i = index" class="checkbox-item">
             <input [attr.id]="option.name" [disabled]='option.disabled' type="checkbox"
               (change)="onCheckChanged(option.value, $event.target.checked)" [checked]="isChecked(option.value)">
             <label [attr.for]="option.name">{{option.label}}</label>

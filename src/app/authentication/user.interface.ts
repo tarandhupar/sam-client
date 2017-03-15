@@ -14,7 +14,7 @@ export interface User {
   initials: string,
   lastName: string,
 
-  homePhone?:string,
+  homePhone?: string,
   workPhone?: string,
   mobile?: string,
   phoneExtension?: string,

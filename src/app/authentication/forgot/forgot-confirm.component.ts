@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit, ViewChild } from '@angular/core';
 
 import { IAMService } from 'api-kit';
 import { Cookie } from 'ng2-cookies';
@@ -10,8 +10,9 @@ import { Cookie } from 'ng2-cookies';
   ]
 })
 export class ForgotConfirmComponent {
-  private email = '';
+  @ViewChild('target') target;
 
+  private email = '';
   private states = {
     alert: {
       show: false,
@@ -28,6 +29,10 @@ export class ForgotConfirmComponent {
   ngOnInit() {
     this.email = (Cookie.get('iam-forgot-email') || '');
     Cookie.delete('iam-forgot-email');
+
+    if(this.api.iam.isDebug()) {
+      this.email = 'john.doe@gsa.gov';
+    }
   }
 
   alert(type, message?) {

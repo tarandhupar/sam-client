@@ -1,23 +1,29 @@
 import { Component, Input, Output, EventEmitter, NgZone, NgModule } from '@angular/core';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { IAMService } from 'api-kit';
 import { SamUIKitModule } from "ui-kit/ui-kit.module";
 import { globals } from '../../app/globals.ts';
+
+export const REPORTS_PER_PAGE: number = 10;
+
 @Component({
   providers: [ IAMService ],
   templateUrl: './overview.template.html',
 })
 export class OverviewComponent {
-     public states = {
-    isSignedIn: false,
-    showSignIn: true,
-    isAdmin: false
+  public states = {
+  isSignedIn: false,
+  showSignIn: true,
+  isAdmin: false
   };
-
   public user = null;
   public userRoles = null;
   public DB_Reports =  null;
-
+  public currentReports =  null;
+  currentPage: number = 1;
+  totalReportCount: number = 0;
+  currentReportStartIndex: number = 0;
+  currentReportEndIndex: number = 0;
 
   constructor(private router: Router, private zone: NgZone, private api: IAMService) {
     this.zone.runOutsideAngular(() => {
@@ -29,6 +35,34 @@ export class OverviewComponent {
     });
   }
 
+totalPages(): number {
+    return Math.floor((this.totalReportCount) / REPORTS_PER_PAGE) + 1;
+  }
+onParamChanged(page) {
+    // if this is a page change, the page parameter is > 1
+    if (page) {
+      this.currentPage = page;
+    } else {
+      this.currentPage = 1;
+    }
+  this.getReports();
+  }
+
+getReports() {
+  var startIndex: number  = (this.currentPage-1)*REPORTS_PER_PAGE;
+  var endIndex: number = startIndex + REPORTS_PER_PAGE;
+
+  this.currentReportStartIndex = startIndex+1;
+
+  if(endIndex > this.totalReportCount){
+this.currentReportEndIndex = this.totalReportCount;
+  }
+  else{
+this.currentReportEndIndex = endIndex;
+  }
+
+   this.currentReports = this.DB_Reports.slice(startIndex,endIndex);
+  }
 
 checkSession(cb: () => void) {
     let vm = this;
@@ -37,25 +71,28 @@ checkSession(cb: () => void) {
       vm.states.isSignedIn = true;
       vm.states.showSignIn = false;
       vm.userRoles = user.gsaRAC;
-
       
-  
+    var isReportsUser = false;
+	var isReportsAdmin = false;
+	
+	for (var _i = 0; _i < vm.userRoles.length; _i++) { 
 
-      for (let role of vm.userRoles) {
-      var isReportsUser = role.includes("GSA_REPORT_R");
-      var isReportsAdmin = role.includes("ADMIN");
-	if(isReportsUser  && isReportsAdmin  ){
-		//User is an Admin user
-		vm.states.isAdmin = true;	
+    if (vm.userRoles[_i].role.indexOf("GSA_REPORT_R") >= 0){
+	isReportsUser = true;
 	}
+
+	if (vm.userRoles[_i].role.indexOf("ADMIN") >= 0){
+	isReportsAdmin = true;
+	}
+
+        if(isReportsUser  && isReportsAdmin  ){
+          //User is an Admin user
+          vm.states.isAdmin = true;
+        }
       }
-
-
       vm.user = user;
-     
       if(vm.states.isAdmin){
-
-      vm.DB_Reports = [
+        vm.DB_Reports = [
                                 {
                                         id: 'DDDE38ED469F690E030715A1C1F06F01',
                                         name: 'Awards by Contractor Type',
@@ -110,7 +147,7 @@ checkSession(cb: () => void) {
                                         id: '303AA968456B5ECFA9AB3FA51E75AF06',
                                         name: 'Geographical Report by Vendor Location',
                                         desc: 'This report provides data on all Awards, Indefinite Delivery Vehicles, and Modifications based on the vendor location. The report displays the vendor state or country name.'
-								},
+                                },
                                 {
                                         id: '40ABE0CB4C2B71AC512B329C744FC867',
                                         name: 'Geographical Report by Place of Performance',
@@ -127,10 +164,10 @@ checkSession(cb: () => void) {
                                         desc: 'The Small Business Achievements by Awarding Agency displays the dollars, actions, and percentages for small business contracts. The goaling exclusions apply to this report. This report is run by awarding agency.'
                                 },
                                 {
-										id: '06EC27254E91094518B76FA4E6449EE9',
-										name: 'Competition Report',
-										desc: 'This is the official competition report. It provides both a summary level report and detailed drilldowns based on statutory exceptions.'
-								},
+                                        id: '06EC27254E91094518B76FA4E6449EE9',
+                                        name: 'Competition Report',
+                                        desc: 'This is the official competition report. It provides both a summary level report and detailed drilldowns based on statutory exceptions.'
+                                },
                                 {
                                         id: '6FE920084CE8728B91C1A2B336506FA6',
                                         name: 'Individual Data Item Oversight Tracker Report',
@@ -169,7 +206,7 @@ checkSession(cb: () => void) {
                                 {
                                         id: 'D70B108040683D73AB7D6B8622052D67',
                                         name: 'Subcontracting Plan report',
-										desc: 'This report displays "Plan Required - Incentive Not Included", "Plan Required - Incentive Included", "Plan Required (Pre 2004)", "Individual Subcontract Plan", "Commercial Subcontract Plan" or "DOD Comprehensive Subcontract Plan" for base documents.'
+                                        desc: 'This report displays "Plan Required - Incentive Not Included", "Plan Required - Incentive Included", "Plan Required (Pre 2004)", "Individual Subcontract Plan", "Commercial Subcontract Plan" or "DOD Comprehensive Subcontract Plan" for base documents.'
                                 },
                                 {
                                         id: 'EDBDC44E4D0D9F382B7059A7214E0500',
@@ -180,12 +217,47 @@ checkSession(cb: () => void) {
                                         id: '6B8BE08D4B3C807D09FEF6A6054F1A55',
                                         name: 'Orders Referencing Incorrect IDV Report',
                                         desc: 'This report displays Delivery Orders/Task Orders (DO/TO) and BPA Calls that were placed against an IDV by an agency that does not have the authority to use the Referenced IDV.'
+                                },
+                                {
+                                        id: 'FED44C46426A02DC9A52A1B5B62EFB1F',
+                                        name: 'Purchase Card as a Payment Method',
+                                        desc: 'This report displays the procurement actions within a specified date range where the Purchase Card was used/not used as a method of payment.'
+                                },
+                                {
+                                        id: 'C14899804687687D40568A98753E4F80',
+                                        name: 'IDVs whose Orders are over the Ceiling Amount Report',
+                                        desc: 'This report displays EPA Designated Product and Recovered Materials/Sustainability data for the specified date range and PSC range.'
+                                },
+                                {
+                                        id: '63AAC2FE47DB4E0515AAD48BAE7C8872',
+                                        name: 'Workload Report',
+                                        desc: 'This report displays actions and dollars for all the federal government contracts for various dollar ranges, thus displaying the workload. It also drills down to the workload by Type of Contract and displays actions and dollars for each contract type.'
+                                },
+								{
+                                        id: 'F93C7D5846D6FFF1002156A8927700C0',
+                                        name: 'Competition Report - OLD',
+                                        desc: 'NOT THE OFFICIAL REPORT FOR COMPETITION. This is the old competition report and does not provide as accurate a representation as the Competition Report.'
+                                },
+								{
+                                        id: '7AB734B64A8650C22912479CD9DA8A3B',
+                                        name: 'Buying Through Government Acquisition Vehicles Report',
+                                        desc: 'The Buying Through Government Acquisition Vehicles report displays actions and dollars for all contract actions (Awards, IDVs, and Modifications) based on Who Can Use on the IDV and based on Department ID for Awards referencing an IDV.'
+                                },
+								{
+                                        id: '1E843D294B046BC4DFBF9C993853B76F',
+                                        name: 'Competitive Procedures, but one Offer Report',
+                                        desc: 'This report displays Competed (Competed Under SAP, Full and Open Competition, Full and Open Competition after Exclusion of Sources and Fair Opportunity) data that has only one offer.'
+                                },
+								{
+                                        id: '338E9AB44BC3E6A2BA6BC5B923CF9965',
+                                        name: 'Performance Based Acquisition Report',
+                                        desc: 'This report displays the actions, dollars and percentages for the performance based acquisition contracts for the specified date range. It also provides drill down capability to view specific report details, including field values for the contract.'
                                 }
                                 ];
-	}
-	else {
-        vm.DB_Reports = [
-                                                                {
+        }
+        else {
+          vm.DB_Reports = [
+                                {
                                         id: 'DDDE38ED469F690E030715A1C1F06F01',
                                         name: 'Awards by Contractor Type',
                                         desc: 'This report displays the dollars and actions for Awards by Contractor Type. The report also allows drilling down to the PIID level.'
@@ -226,7 +298,7 @@ checkSession(cb: () => void) {
                                         desc: 'This report displays the Other Transaction actions and dollars for the specified date signed range.'
                                 },
                                 {
-										id: '5FFCCA5A4AAD0B21AC6CBCBA797BBFE1',
+                                        id: '5FFCCA5A4AAD0B21AC6CBCBA797BBFE1',
                                         name: 'Federal Contract Actions and Dollars',
                                         desc: 'This report displays the federal contract actions and dollars for the specified date signed range.'
                                 },
@@ -256,10 +328,10 @@ checkSession(cb: () => void) {
                                         desc: 'The Small Business Achievements by Awarding Agency displays the dollars, actions, and percentages for small business contracts. The goaling exclusions apply to this report. This report is run by awarding agency.'
                                 },
                                 {
-										id: '06EC27254E91094518B76FA4E6449EE9',
-										name: 'Competition Report',
-										desc: 'This is the official competition report. It provides both a summary level report and detailed drilldowns based on statutory exceptions.'
-								},
+                                        id: '06EC27254E91094518B76FA4E6449EE9',
+                                        name: 'Competition Report',
+                                        desc: 'This is the official competition report. It provides both a summary level report and detailed drilldowns based on statutory exceptions.'
+                                },
                                 {
                                         id: '765653484A5BD0ECC8C0CBA42AA625E3',
                                         name: 'Unique Vendors Report',
@@ -282,7 +354,7 @@ checkSession(cb: () => void) {
                                 },
                                 {
                                         id: '8174C9DC4246D0A716FC44B97C7200B9',
-										name: 'Contract Termination for Default-Cause Report',
+                                        name: 'Contract Termination for Default-Cause Report',
                                         desc: 'This report reflects the "Termination for Default (complete or partial)" and "Termination for Cause" data for the Date range specified.'
                                 },
                                 {
@@ -299,14 +371,49 @@ checkSession(cb: () => void) {
                                         id: '6B8BE08D4B3C807D09FEF6A6054F1A55',
                                         name: 'Orders Referencing Incorrect IDV Report',
                                         desc: 'This report displays Delivery Orders/Task Orders (DO/TO) and BPA Calls that were placed against an IDV by an agency that does not have the authority to use the Referenced IDV.'
+                                },
+                                {
+                                        id: 'FED44C46426A02DC9A52A1B5B62EFB1F',
+                                        name: 'Purchase Card as a Payment Method',
+                                        desc: 'This report displays the procurement actions within a specified date range where the Purchase Card was used/not used as a method of payment.'
+                                },
+                                {
+                                        id: 'C14899804687687D40568A98753E4F80',
+                                        name: 'IDVs whose Orders are over the Ceiling Amount Report',
+                                        desc: 'This report displays EPA Designated Product and Recovered Materials/Sustainability data for the specified date range and PSC range.'
+                                },
+								{
+                                        id: 'F93C7D5846D6FFF1002156A8927700C0',
+                                        name: 'Competition Report - OLD',
+                                        desc: 'NOT THE OFFICIAL REPORT FOR COMPETITION. This is the old competition report and does not provide as accurate a representation as the Competition Report.'
+                                },
+								{
+                                        id: '7AB734B64A8650C22912479CD9DA8A3B',
+                                        name: 'Buying Through Government Acquisition Vehicles Report',
+                                        desc: 'The Buying Through Government Acquisition Vehicles report displays actions and dollars for all contract actions (Awards, IDVs, and Modifications) based on Who Can Use on the IDV and based on Department ID for Awards referencing an IDV.'
+                                },
+								{
+                                        id: '1E843D294B046BC4DFBF9C993853B76F',
+                                        name: 'Competitive Procedures, but one Offer Report',
+                                        desc: 'This report displays Competed (Competed Under SAP, Full and Open Competition, Full and Open Competition after Exclusion of Sources and Fair Opportunity) data that has only one offer.'
+                                },
+								{
+                                        id: '338E9AB44BC3E6A2BA6BC5B923CF9965',
+                                        name: 'Performance Based Acquisition Report',
+                                        desc: 'This report displays the actions, dollars and percentages for the performance based acquisition contracts for the specified date range. It also provides drill down capability to view specific report details, including field values for the contract.'
                                 }
                                 ];
-         }
-      
-      
-
+          }
+          vm.totalReportCount = vm.DB_Reports.length;
+          var sortedArray = vm.DB_Reports.slice(0);
+          sortedArray.sort((first, second): number =>{
+            if(first.name < second.name) return -1;
+            if(first.name > second.name) return 1;
+            return 0;
+          });
+          vm.DB_Reports = sortedArray;
+          vm.getReports();
       cb();
     });
   }
-
 }

@@ -3,19 +3,6 @@
     margin-bottom: 94px;
   }
 
-  .usa-alert-heading {
-    line-height: 2.5rem;
-  }
-
-  .usa-alert-static {
-    width: 46rem;
-    max-width: 46rem;
-    top: -6rem;
-    left: 50%;
-    margin-top: -1rem;
-    transform: translateX(-50%);
-  }
-
   .usa-forgot-init {
     position: relative;
     width: 460px;
@@ -26,25 +13,11 @@
     }
   }
 
-  h2 {
+  legend {
     margin-top: 0rem;
     margin-bottom: 0.5rem;
-  }
-
-  h3 {
-    margin-top: 0rem;
-    margin-bottom: 0rem;
-  }
-
-  legend {
-    margin-top: 4.5rem;
-    font-size: 2.25rem;
-  }
-
-  .usa-legend {
-    margin-top: 0rem;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: 3rem;
+    font-weight: 700;
   }
 
   fieldset {
@@ -93,8 +66,18 @@
   }
 
   section {
-    //width: 380px;
     margin: 0 auto;
+  }
+
+  .usa-forgot-confirm {
+    h2 {
+      margin-bottom: 0rem;
+    }
+
+    section {
+      width: 400px;
+      max-width: 100%;
+    }
   }
 
   .steps,
@@ -118,21 +101,30 @@
   }
 
   .steps {
-    margin-top: 1rem;
-    margin-bottom: 4rem;
+    margin-top: 50px;
+    margin-bottom: 50px;
 
     li {
-      font-size: 1.1em;
-      font-weight: 500;
+      &:not(.header) {
+        font-size: 1.1em;
+        font-weight: 500;
 
-      &:before {
-        content: "\f00c";
+        &:before {
+          content: "\f00c";
+        }
+      }
+
+      &.header {
+        margin-left: 0rem;
+        margin-bottom: 0.25rem;
+        font-size: 2.5rem;
+        font-weight: 700;
       }
     }
   }
 
   .links {
-    margin-top: 4rem;
+    margin-top: 50px;
 
     li {
       font-size: 1.5rem;

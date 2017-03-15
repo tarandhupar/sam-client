@@ -27,6 +27,8 @@ export class AgencyPickerComponent implements OnInit {
   @Input() orgId: string = "";
   @Input() hint: string = "";
   @Input() orgRoot = "";
+  @Input() required = false;
+  @Input() searchMessage = "";
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
   @Output() organization = new EventEmitter<any[]>();
@@ -113,7 +115,6 @@ export class AgencyPickerComponent implements OnInit {
 
   showAutocompleteMsg = false;
   autocompleteMsg = "";
-  searchMessage = "";
   selectorToggle = false;
   browseToggle=false;
   autocompleting = false;
@@ -137,7 +138,7 @@ export class AgencyPickerComponent implements OnInit {
       this.resetAutocomplete();
     }
     this.cancelBlur = false;
-    this.searchMessage = "";
+    //this.searchMessage = "";
   }
 
   cancelBlurMethod(){
@@ -408,6 +409,7 @@ export class AgencyPickerComponent implements OnInit {
     if(this.autocompletePreselect.length>0){
       this.serviceCall(this.autocompletePreselect,false).subscribe(res=>{
         this.setOrganization(res["_embedded"][0]["org"]);
+        this.updateBrowse(res["_embedded"][0]["org"]);
       });
       return;
     }
@@ -631,6 +633,7 @@ export class AgencyPickerComponent implements OnInit {
    var obj = {};
    obj['name'] = data['name'] + this.levelFormatter(level);
    obj['value'] = data['elementId'] ? data['elementId'] : data['orgKey'];
+   this.searchMessage = "";
    this.addToSelectedOrganizations(obj);
    this.autoComplete.length = 0;
    this.organization.emit(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);
@@ -640,6 +643,11 @@ export class AgencyPickerComponent implements OnInit {
     this.selectedOrganizations = this.selectedOrganizations.filter(function(obj){
       return obj.value != value;
     });
+    if (this.multimode) {
+      this.organization.emit(this.selectedOrganizations);
+    }
+    // Should we do this to allow the single select mode hosts to know when an org is removed?
+    // this.organization.emit(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);
   }
 
   addToSelectedOrganizations(data){

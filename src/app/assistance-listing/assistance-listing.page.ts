@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 
@@ -29,7 +29,8 @@ export class ProgramPage implements OnInit, OnDestroy {
   historicalIndex: any;
   alert: any = [];
   errorOrganization: any;
-  logoUrl: any;
+  public logoUrl: any;
+  public logoInfo: any;
   errorLogo: any;
 
   private apiSubjectSub: Subscription;
@@ -41,6 +42,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private location: Location,
     private historicalIndexService: HistoricalIndexService,
     private programService: ProgramService,
@@ -86,7 +88,10 @@ export class ProgramPage implements OnInit, OnDestroy {
       this.checkCurrentFY();
       this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations, 'authorizationId'));
     }, err => {
-      console.log('Error logging', err);
+      console.log('Error loading program', err);
+      if (err.status === 403) {
+        this.router.navigate(['/404']);
+      }
     });
 
     return apiSubject;
@@ -136,9 +141,14 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     this.federalHierarchySub = apiSubject.subscribe(res => {
       this.federalHierarchy = res['_embedded'][0]['org'];
-      this.fhService.getOrganizationLogo(apiSubject, 
-        (logoUrl) => {
-          this.logoUrl = logoUrl;
+      this.fhService.getOrganizationLogo(apiSubject,
+        (logoData) => {
+          if (logoData != null) {
+            this.logoUrl = logoData.logo;
+            this.logoInfo = logoData.info;
+          } else {
+            this.errorLogo = true;
+          }
         }, (err) => {
           this.errorLogo = true;
       });
@@ -153,7 +163,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   private loadHistoricalIndex(apiSource: Observable<any>) {
     // construct a stream of historical index data
     let historicalIndexStream = apiSource.switchMap(api => {
-      return this.historicalIndexService.getHistoricalIndexByProgramNumber(api.data._id, api.data.programNumber);
+      return this.historicalIndexService.getHistoricalIndexByProgramNumber(api.id, api.data.programNumber);
     });
 
     this.historicalIndexSub = historicalIndexStream.subscribe(res => {
@@ -170,7 +180,7 @@ export class ProgramPage implements OnInit, OnDestroy {
       if (api.data.relatedPrograms.flag !== 'na') {
         return Observable.from(api.data.relatedPrograms.relatedTo);
       }
-      return Observable.empty(); // if there are no related programs, don't trigger an update
+      return Observable.empty<string>(); // if there are no related programs, don't trigger an update
     });
 
     // construct a stream that contains all related programs from related program ids
@@ -180,10 +190,10 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     this.relatedProgramsSub = relatedProgramsStream.subscribe(relatedProgram => {
       // run whenever related programs are updated
-      if(typeof relatedProgram !== 'undefined') {
+      if (typeof relatedProgram !== 'undefined') {
         this.relatedProgram.push({ // store the related program
           'programNumber': relatedProgram.data.programNumber,
-          'id': relatedProgram.data._id
+          'id': relatedProgram.id
         });
       }
     });

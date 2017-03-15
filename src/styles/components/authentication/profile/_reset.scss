@@ -1,7 +1,14 @@
 .usa-profile-password {
   .usa-alert-static {
     top: 16px;
-    transform: translateY(-100%);
+  }
+
+  .usa-form-container {
+    > labelwrapper:nth-child(1) {
+      label {
+        margin-top: 0px;
+      }
+    }
   }
 
   button[type="submit"] {
