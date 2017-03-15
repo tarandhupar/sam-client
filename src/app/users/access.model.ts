@@ -20,7 +20,7 @@ export class UserAccessModel {
     return a;
   }
 
-  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>, messages: string): UserAccessInterface {
+  static CreateAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>, messages: string): UserAccessInterface {
     let functionMapContent = functions.map(fun => {
       return {
         function: fun.id,

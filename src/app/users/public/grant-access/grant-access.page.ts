@@ -7,6 +7,9 @@ import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.se
 import { UserAccessInterface } from "api-kit/access/access.interface";
 import { PropertyCollector } from "../../../app-utils/property-collector";
 import { PageScrollService, PageScrollInstance, PageScrollConfig } from "ng2-page-scroll";
+import { FHService } from "../../../../api-kit/fh/fh.service";
+import { Observable } from "rxjs";
+import { Organization } from "../../../organization/organization.model";
 
 @Component({
   templateUrl: 'grant-access.template.html'
@@ -38,6 +41,7 @@ export class GrantAccessPage implements OnInit {
     private footerAlert: AlertFooterService,
     public router: Router,
     private pageScrollService: PageScrollService,
+    private fhService: FHService,
   ) {
     PageScrollConfig.defaultDuration = 500;
   }
@@ -48,6 +52,12 @@ export class GrantAccessPage implements OnInit {
     this.route.queryParams.subscribe(queryParams => {
       this.role = queryParams["role"];
       this.domain = queryParams["domain"];
+      if (queryParams['orgs']) {
+        let orgIds = queryParams["orgs"].split(',');
+        if (orgIds.length) {
+          this.prePopulateOrgs(orgIds);
+        }
+      }
     });
 
     let match = this.router.url.match('edit-access');
@@ -82,6 +92,28 @@ export class GrantAccessPage implements OnInit {
     );
   }
 
+  prePopulateOrgs(orgIds) {
+    let sources = orgIds.map(orgId => this.fhService.getOrganizationById(orgId, false, true));
+    Observable.forkJoin(sources).subscribe(
+      orgs => {
+        this.orgs = orgs.map(org => Organization.FromResponse(org)).map(org => {
+          return {
+            name: org.orgName,
+            value: org.id
+          };
+        });
+      },
+      err => {
+        this.footerAlert.registerFooterAlert({
+          title:"Unable to get organization data",
+          description:"",
+          type:'error',
+          timer:0
+        });
+      }
+    );
+  }
+
   public goToHead(): void {
     let pageScrollInstance: PageScrollInstance = PageScrollInstance.simpleInstance(document, '#form-top');
     this.pageScrollService.start(pageScrollInstance);
@@ -93,6 +125,7 @@ export class GrantAccessPage implements OnInit {
 
   onOrganizationsChange(orgs) {
     this.orgs = orgs;
+    console.log(this.orgs);
   }
 
   onRoleChange(role) {
@@ -188,7 +221,7 @@ export class GrantAccessPage implements OnInit {
         permissions: perms
       }
     });
-    let access: UserAccessInterface = UserAccessModel.FormInputToAccessObject(
+    let access: UserAccessInterface = UserAccessModel.CreateAccessObject(
       this.userName,
       parseInt(this.role),
       parseInt(this.domain),

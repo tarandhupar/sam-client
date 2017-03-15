@@ -92,12 +92,14 @@ export class UserAccessPage implements OnInit {
     this.deleteModal.openModal();
   }
 
-  onEditClick(role, domain) {
+  onEditClick(role, domain, orgs) {
+    orgs = [1, 2, 3];
     let extras: NavigationExtras = {
       relativeTo: this.route,
       queryParams: {
-        role: role.id,
-        domain: domain.id,
+        role: 1,
+        domain: 1,
+        orgs: orgs.join(',')
       }
     };
     this.router.navigate(['../edit-access'], extras);
