@@ -1,7 +1,7 @@
 <div class="usa-grid search-page">
 
   <!--filters aside-->
-  <aside class="usa-width-one-fourth">
+  <aside class="{{index === 'wd' ? 'usa-width-one-third' : 'usa-width-one-fourth'}}">
     <div>&nbsp;</div>
     <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
     <div>
@@ -143,7 +143,7 @@
     </div>
   </aside>
 
-  <div class="usa-width-three-fourths">
+  <div class="{{index === 'wd' ? 'usa-width-two-thirds' : 'usa-width-three-fourths'}}">
     <div class="usa-width-one">
       <samAlert *ngIf="wdTypeModel" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
       <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
