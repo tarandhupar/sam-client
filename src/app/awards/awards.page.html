@@ -112,10 +112,15 @@
 				</table>
 				Initiative: {{awardData.documentInformation.initiative}}<br />
 				<h3 id="dates">Dates</h3>
-				Date Signed: {{awardData.dateInformation.dateSigned}}<br />
-				Effective Date: {{awardData.dateInformation.dateEffective}}<br />
-				Completion Date: {{awardData.dateInformation.dateCompletion}}<br />
-				Estimated Ultimate Completion Date: {{awardData.dateInformation.dateUltimateCompletion}}
+				Date Signed: {{awardData.dateInformation.dateSigned | date:'MMM/dd/y'}}<br />
+				Effective Date: {{awardData.dateInformation.dateEffective | date:'MMM/dd/y'}}<br />
+				<div *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI' || awardData.templateType == 'AWARD'">
+					Completion Date: {{awardData.dateInformation.dateCompletion | date:'MMM/dd/y'}}<br />
+					Estimated Ultimate Completion Date: {{awardData.dateInformation.dateUltimateCompletion | date:'MMM/dd/y'}}
+				</div>
+				<div *ngIf="awardData.templateType == 'IDV'">
+					Last Date to Order: {{awardData.dateInformation.dateLastToOrder | date:'MMM/dd/y'}}
+				</div>
 				<div *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
 					Fiscal Year: {{awardData.dateInformation.fiscalYear}}
 				</div>
@@ -154,19 +159,19 @@
 					</tr>
 				</table>
 				<h3 id="purchaserInformation">Purchaser Information</h3>
-				Contracting Office Agency Name: {{contractingOfficeAgencyName}}<br />
-				Contracting Office Agency ID: {{contractingOfficeAgencyID}}<br />
-				Contracting Office Name: {{contractingOfficeName}}<br />
-				Contracting Office ID: {{contractingOfficeID}}<br />
+				Contracting Office Agency Name: {{awardData.purchaserInformation.contractingOfficeAgencyName}}<br />
+				Contracting Office Agency ID: {{awardData.purchaserInformation.contractingOfficeAgencyID}}<br />
+				Contracting Office Name: {{awardData.purchaserInformation.contractingOfficeName}}<br />
+				Contracting Office ID: {{awardData.purchaserInformation.contractingOfficeID}}<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
-					Foreign Funding: {{foreignFunding}}<br />
+					Foreign Funding: {{awardData.purchaserInformation.foreignFunding}}<br />
 				</div>
-				Funding Agency Name: {{fundingAgencyName}}<br />
-				Funding Agency ID: {{fundingAgencyID}}<br />
-				Funding Office Name: {{fundingOfficeName}}<br />
-				Funding Office ID: {{fundingOfficeID}}
+				Funding Agency Name: {{awardData.purchaserInformation.fundingAgencyName}}<br />
+				Funding Agency ID: {{awardData.purchaserInformation.fundingAgencyID}}<br />
+				Funding Office Name: {{awardData.purchaserInformation.fundingOfficeName}}<br />
+				Funding Office ID: {{awardData.purchaserInformation.fundingOfficeID}}
 				<div *ngIf="awardData.templateType == 'AWARD'">
-					Reason for Inter-Agency Contracting: {{reason}}
+					Reason for Inter-Agency Contracting: {{awardData.purchaserInformation.reasonForPurchase}}
 				</div>
 				<h3 id="contractorInformation">Contractor Information</h3>
 				SAM Exception: {{samException}}
