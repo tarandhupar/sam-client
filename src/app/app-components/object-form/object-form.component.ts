@@ -12,9 +12,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class ObjectFormModel{
   public mainForm: FormGroup;
   arrayFields = {};
+  sectionURL = {};
   @Input() public objectFormData;
   @Output() public buttonClick = new EventEmitter();
-
+  selectedPage: number = 0;
 
   constructor(private fb: FormBuilder) {}
 
@@ -43,14 +44,14 @@ export class ObjectFormModel{
 
 
   onCancelClick(event) {
-    console.log("cancel clicked");
+
     this.buttonClick.emit({
       type:'cancel'
     });
   }
 
   onSaveContinueClick(event){
-    console.log("save and continue clicked");
+
 
     let sectionIndex = event.target.id.lastIndexOf('_');
     let section = event.target.id.substring(0,sectionIndex);
@@ -59,14 +60,15 @@ export class ObjectFormModel{
 
     this.buttonClick.emit({
       type:'saveContinue',
-      data: data
+      data: data,
+      nextSection: this.selectedPage + 1
     });
 
 
   }
 
   onSaveExitClick(event){
-    console.log("save and exit clicked");
+
     let sectionIndex = event.target.id.lastIndexOf('_');
     let section = event.target.id.substring(0,sectionIndex);
 
@@ -80,6 +82,10 @@ export class ObjectFormModel{
 
   onPreviousClick(event){
     console.log("previous clicked");
+    this.buttonClick.emit({
+      type:'previous',
+      nextSection: this.selectedPage - 1
+    });
   }
 
   getData(section){
@@ -94,6 +100,10 @@ export class ObjectFormModel{
         data[field] = this.mainForm.controls[section].value[field];
     }
     return data;
+  }
+
+  setSelectedPage(selectedPage){
+    this.selectedPage = selectedPage;
   }
 
 }

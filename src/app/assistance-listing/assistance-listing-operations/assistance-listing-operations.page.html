@@ -11,15 +11,7 @@
     <aside class="usa-width-one-fourth">
       <div>&nbsp;</div>
       <div sam-sticky limit=1200 container="occupy-page">
-        <!--Side Navigation-->
-        <!--<nav>
-          <ul class="usa-sidenav-list">
-            <li><a href="{{currentUrl}}#headerInfo">Header Information</a></li>
-            <li><a href="{{currentUrl}}#oveview">Overview</a></li>
-          </ul>
-        </nav>-->
-
-        <object-sidebar [sidenavModel]="sidenavModel"></object-sidebar>
+        <object-sidebar [sidenavModel]="sidenavModel" (sideNavClick)="sideNavClickHandler($event)"></object-sidebar>
       </div>
     </aside>
 

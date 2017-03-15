@@ -13,7 +13,7 @@ export class ObjectSidebarComponent implements OnInit{
   selectedPage: number = 0;
   pageFragment: string;
   @Input() sidenavModel;
-  //@Output() public sideNavClick = new EventEmitter();
+  @Output() public sideNavClick = new EventEmitter();
 
   constructor(private sidenavService: SidenavService, private router: Router){
 
@@ -35,19 +35,19 @@ export class ObjectSidebarComponent implements OnInit{
 
   selectedItem(item){
     this.selectedPage = this.sidenavService.getData()[0];
-    /*this.sideNavClick.emit({
+    this.sideNavClick.emit({
       selectedPage: this.selectedPage
-    });*/
+    });
   }
 
   sidenavPathEvtHandler(data){
+
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
-    console.log(data);
     if (this.pageFragment == data.substring(1)) {
       document.getElementById(this.pageFragment).scrollIntoView();
     }
     else if(data.charAt(0)=="#"){
-      this.router.navigate([], { fragment: data.substring(1) });
+            this.router.navigate([], { fragment: data.substring(1) });
     } else {
       this.router.navigate([data]);
     }

@@ -23,6 +23,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   mode: string;
   cookieValue: string;
   objectFormData: any;
+  redirectToEdit: boolean = false;
   @ViewChild('objectForm') objectForm;
 
   sidenavModel = {
@@ -112,44 +113,58 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
 
 
   onCancelClick(event) {
-    this.router.navigate(['/falworkspace']);
+    this.router.navigate(['falworkspace']);
   }
 
-  saveProgram(data, redirectPage) {
+  saveProgram(data) {
 
     this.saveProgSub = this.programService.saveProgram(this.programId, data, this.cookieValue)
       .subscribe(api => {
         this.programId = api._body;
-
-        switch(redirectPage) {
-          case 'edit': {
-            this.router.navigate(['/programs/' + this.programId + '/edit']);
-            break;
-          }
-          case 'workspace':{
-            this.router.navigate(['falworkspace']);
-            break;
-          }
-        }//end of switch
+        if(this.redirectToEdit) {
+          this.router.navigate(['/programs/' + this.programId + '/edit'], {fragment: 'overview'});
+        }
       }); //end of subscribe
   }
 
   buttonHandler(event){
-    let redirectPage: any;
+
     switch(event.type){
       case "saveContinue" : {
-        redirectPage = 'edit';
-        this.saveProgram(event.data, redirectPage);
+        if(this.mode == 'add')
+          this.redirectToEdit = true;
+
+        this.saveProgram(event.data);
+
+        if(this.mode == 'edit'){
+          this.objectForm.setSelectedPage(event.nextSection);
+          let path = this.sidenavModel.children[event.nextSection].route.substring(1);
+          this.router.navigate([], { fragment: path });
+        }
+
         break;
       }
       case "saveExit" : {
-        redirectPage = 'workspace';
-        this.saveProgram(event.data, redirectPage);
+        this.saveProgram(event.data);
+        this.router.navigate(['falworkspace']);
+        break;
+      }
+      case "previous" :{
+        this.objectForm.setSelectedPage(event.nextSection);
+        let path = this.sidenavModel.children[event.nextSection].route.substring(1);
+        this.router.navigate([], { fragment: path });
+        break;
+      }
+      case "cancel" : {
+        this.router.navigate(['falworkspace']);
         break;
       }
     }
 
   }
 
+  sideNavClickHandler(event){
 
+    this.objectForm.setSelectedPage(event.selectedPage);
+  }
 }

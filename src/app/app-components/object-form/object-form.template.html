@@ -1,6 +1,6 @@
 <form [formGroup] = "mainForm">
-Test: {{ selectedPage }}
-    <div *ngFor="let item of objectFormData; let i=index;" [id]="item.section">
+    <div *ngFor="let item of objectFormData; let i=index;" [id]="item.section" [class.hide]="selectedPage !== i">
+      <a [routerLink]="['#' + item.section , {id: i}]" fragment="item.section"></a>
 
       <form-field *ngFor="let field of item.fields; let j=index;"
         [field]="field"
