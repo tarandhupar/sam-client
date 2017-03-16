@@ -85,5 +85,29 @@ export const Validators = {
         }
       }
     };
+  },
+
+  consecutive(matches: string[]) {
+    return (c: FormControl) => {
+      let value = (c.value || '').toLowerCase(),
+          match,
+          intMatch,
+          valid = true;
+
+      if(value.length > 1) {
+        for(intMatch = 0; intMatch < matches.length; intMatch++) {
+          match = (matches[intMatch] || '').toLowerCase();
+          if(match.length && match.indexOf(value) > -1) {
+            valid = false;
+          }
+        }
+      }
+
+      return valid ? null : {
+        consecutive: {
+          valid: false
+        }
+      }
+    };
   }
 }

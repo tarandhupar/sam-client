@@ -18,6 +18,7 @@ import * as moment from 'moment/moment';
 
     	</h3>
     	<div class="usa-width-two-thirds">
+    	  <span *ngIf="data.locations==null">&nbsp;</span>
       	<ul *ngFor="let location of data.locations; let i=index" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li><strong>State: </strong>
         	  <span>{{ location.state?.name }}</span>
@@ -47,10 +48,10 @@ import * as moment from 'moment/moment';
           </li>
           <li>
             <ng-container *ngIf="data._type=='wdDBRA'">
-              <strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Publish Date' }}</strong>
+              <strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Published Date' }}</strong>
             </ng-container>
             <ng-container *ngIf="data._type=='wdSCA'">
-              <strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Publish Date' }}</strong>
+              <strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Published Date' }}</strong>
             </ng-container>
             <br>{{ data.publishDate }}
           </li>
