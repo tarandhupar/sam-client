@@ -63,6 +63,7 @@
     "@angularclass/conventions-loader": "1.0.12",
     "@angularclass/hmr": "1.2.2",
     "@angularclass/hmr-loader": "1.0.1",
+    "aws-sdk": "2.20.0",
     "classlist-polyfill": "1.0.3",
     "core-js": "2.4.1",
     "d3": "^4.2.6",
@@ -79,8 +80,7 @@
     "rxjs": "5.0.1",
     "superagent": "^3.1.0",
     "uswds": "~0.13.1",
-    "zone.js": "0.7.2",
-	"aws-sdk": "2.20.0"
+    "zone.js": "0.7.2"
   },
   "devDependencies": {
     "@angularclass/hmr": "1.2.2",
