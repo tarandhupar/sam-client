@@ -24,6 +24,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   cookieValue: string;
   objectFormData: any;
   redirectToEdit: boolean = false;
+  redirectToWksp: boolean = false;
   relatedPrograms = [];
   getRelatedProgSub: any;
   getProgramsSub: any;
@@ -161,10 +162,15 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
 
     this.saveProgSub = this.programService.saveProgram(this.programId, data, this.cookieValue)
       .subscribe(api => {
-        this.programId = api._body;
-        if(this.redirectToEdit) {
-          this.router.navigate(['/programs/' + this.programId + '/edit'], {fragment: 'overview'});
-        }
+          //console.log("api", api);
+          this.programId = api._body;
+
+          if(this.redirectToEdit) {
+            this.router.navigate(['/programs/' + this.programId + '/edit'], {fragment: 'overview'});
+          }
+
+        if(this.redirectToWksp)
+          this.router.navigate(['falworkspace']);
       }); //end of subscribe
   }
 
@@ -182,12 +188,11 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
           let path = this.objectFormData[event.selectedPage].section;
           this.router.navigate([], { fragment: path });
         }
-
         break;
       }
       case "saveExit" : {
+        this.redirectToWksp = true;
         this.saveProgram(event.data);
-        this.router.navigate(['falworkspace']);
         break;
       }
       case "previous" :{
