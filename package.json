@@ -79,7 +79,8 @@
     "rxjs": "5.0.1",
     "superagent": "^3.1.0",
     "uswds": "~0.13.1",
-    "zone.js": "0.7.2"
+    "zone.js": "0.7.2",
+	"aws-sdk": "2.20.0"
   },
   "devDependencies": {
     "@angularclass/hmr": "1.2.2",
