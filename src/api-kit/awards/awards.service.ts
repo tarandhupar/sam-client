@@ -7,7 +7,7 @@ export class AwardsService{
 
   constructor(private oAPIService: WrapperService){}
   
-   getAwardsData(id: string) {
+  getAwardsData(id: string) {
     let oApiParam = {
       name: 'awards',
       suffix: '/' + id,
