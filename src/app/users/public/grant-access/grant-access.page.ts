@@ -18,9 +18,12 @@ export class GrantAccessPage implements OnInit {
 
   private errors = {
     role: '',
-    domain: ''
+    domain: '',
+    org: '',
+    supervisorName: '',
+    supervisorEmail: '',
+    messages: ''
   };
-  private orgError = '';
 
   private userName: string = "";
   public orgs = [];
@@ -34,6 +37,10 @@ export class GrantAccessPage implements OnInit {
 
   private messages: string = "";
   private mode: 'edit'|'grant'|'request' = 'grant';
+
+  // Request page only
+  private supervisorName: string = "";
+  private supervisorEmail: string = "";
 
   constructor(
     private userService: UserAccessService,
@@ -192,7 +199,7 @@ export class GrantAccessPage implements OnInit {
 
   onDomainChange(domain) {
     if (domain) {
-      this.errors.role = '';
+      this.errors.domain = '';
     }
 
     this.domain = domain;
@@ -220,14 +227,13 @@ export class GrantAccessPage implements OnInit {
       case 'grant':
         return this.orgs && this.orgs.length && this.domain && this.role;
       case 'request':
-        return this.orgs && this.orgs.length && this.domain;
+        return this.domain && this.messages && this.supervisorName && this.supervisorName;
     }
-
   }
 
   showErrors() {
     if (!this.orgs || !this.orgs.length) {
-      this.orgError = 'Organization is required';
+      this.errors.org = 'Organization is required';
     }
 
     if (!this.role) {
@@ -237,7 +243,40 @@ export class GrantAccessPage implements OnInit {
     if (!this.domain && this.domainOptions.length) {
       this.errors.domain = 'Domain is required';
     }
+
+    if (this.mode === 'request') {
+      if (!this.supervisorName) {
+        this.errors.supervisorName = 'Supervisor name is required';
+      }
+      if (!this.supervisorEmail) {
+        this.errors.supervisorEmail = 'Supervisor email is required';
+      }
+      if (!this.messages) {
+        this.errors.messages = "A message is required";
+      }
+    }
+
     this.scrollToHead();
+  }
+
+  onSupervisorNameChange(name) {
+    this.errors.supervisorName = '';
+  }
+
+  onSupervisorEmailChange(email) {
+    this.errors.supervisorEmail = '';
+  }
+
+  onMessageChange(message) {
+    this.errors.messages = '';
+  }
+
+  messagePlaceholder() {
+    if (this.mode === 'request') {
+      return "Please provide a message to your Role Administrator that includes the names of the organizations you need access to and why."
+    } else {
+      return "(Optional) Include a message with your response";
+    }
   }
 
   onGrantClick() {
@@ -248,7 +287,8 @@ export class GrantAccessPage implements OnInit {
 
     if (this.mode === 'request') {
       this.footerAlert.registerFooterAlert({
-        title:"Request Sent.",
+        title:"Success",
+        description: 'Your request has been submitted',
         type:'success',
         timer:3000
       });

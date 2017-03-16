@@ -1,5 +1,5 @@
 <div class="grant-access-page">
-  <h1 class="m_T-0">{{modeName()}} Access</h1>
+  <h1 id="form-top" class="m_T-0">{{modeName()}} Access</h1>
 
   <!-- Domain -->
   <div *ngIf="mode !== 'edit'">
@@ -16,6 +16,12 @@
       </div>
     </div>
   </div>
+
+  <!-- Supervisor Name and email -->
+  <ng-container *ngIf="mode === 'request'">
+    <samText label="Supervisor Name" name="supervisor-name" [(ngModel)]="supervisorName" [errorMessage]="errors.supervisorName" [required]="true" (change)="onSupervisorNameChange($event)"></samText>
+    <samText label="Supervisor Email" name="supervisor-email" [(ngModel)]="supervisorEmail" [errorMessage]="errors.supervisorEmail" [required]="true" (change)="onSupervisorEmailChange($event)"></samText>
+  </ng-container>
 
   <!-- Role -->
   <div *ngIf="mode === 'grant'">
@@ -36,12 +42,12 @@
 
   <!-- Orgs -->
   <agencyPicker
-    id="form-top"
+    *ngIf="mode !== 'request'"
     [label]="'Organizations'"
     [multimode]="true"
     (organization)="onOrganizationsChange($event)"
     [required]="true"
-    [searchMessage]="orgError"
+    [searchMessage]="errors.org"
     [initial]="orgs"
   ></agencyPicker>
 
@@ -62,7 +68,7 @@
   </ng-container>
 
   <!-- Optional Message -->
-  <samTextArea name="options-response" label="Messages:" placeholder="(Optional) Include a message with your response" [(value)]="messages"></samTextArea>
+  <samTextArea name="options-response" label="Messages:" [placeholder]="messagePlaceholder()" [(ngModel)]="messages" [required]="mode === 'request'" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></samTextArea>
 
   <!-- Cancel / Confirm -->
   <div>
