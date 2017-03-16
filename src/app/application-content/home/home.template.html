@@ -29,8 +29,9 @@
   <div class="usa-grid-full marginCenter m_T-6x">
     <samSearchbar #searchbar [size]="'large'" (onSearch)="runSearch($event)">
       <div custom-input>
-        <samInputAutocomplete 
+        <samInputAutocomplete
           [serviceName]="'suggestions'"
+          [index]="searchbar.filterValue"
           (searchTermEmit)="searchbar.callSearch($event)"
           (keyEnterEmit)="searchbar.onSearchClick()">
         </samInputAutocomplete>
