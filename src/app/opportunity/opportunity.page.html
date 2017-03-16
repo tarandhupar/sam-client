@@ -98,10 +98,12 @@
       <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
         <h2>
           General Information
-          <samButton *ngIf="differences?.changesExistGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
+          <samButton *ngIf="differences?.changesExistGeneral && !showChangesGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
+          <samButton *ngIf="differences?.changesExistGeneral && showChangesGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="'Hide Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
+          <span *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x" [innerHTML]="differences?.postedDate"></span>
         </h2>
 
-        <span *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x" [innerHTML]="differences?.postedDate"></span>
+
 
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
@@ -203,7 +205,7 @@
           <li [attr.id]="generateID(opportunityFields.SetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.SetAside)">
             <ng-container *ngIf="(opportunity.data?.solicitation?.setAside != originalOpportunity?.data?.solicitation?.setAside) && dictionary">
               <!-- <samLabel *ngIf="differences?.specialLegislation" [labelType]="'small'" [labelText]="' '"></samLabel> -->
-              <i *ngIf="differences?.specialLegislation" class="fa fa-square" aria-hidden="true"></i>
+              <i *ngIf="differences?.updateSetAside" class="fa fa-square" aria-hidden="true"></i>
               <strong>Update/Amendment Set Aside: </strong>
               <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                 <ng-container> {{ element.value }}</ng-container>
@@ -267,9 +269,10 @@
       <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0]?.content">
 
         <h2>Synopsis
-          <samButton *ngIf="differences?.changesExistSynopsis" [buttonId]="'defaultBtnSynopsis'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
+          <samButton *ngIf="differences?.changesExistSynopsis && !showChangesSynopsis" [buttonId]="'defaultBtnSynopsis'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
+          <samButton *ngIf="differences?.changesExistSynopsis && showChangesSynopsis" [buttonId]="'defaultBtnSynopsis'" [buttonText]="'Hide Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
+          <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x" [innerHTML]="differences?.postedDate"></span>
         </h2>
-        <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x" [innerHTML]="differences?.postedDate"></span>
         <!-- <samLabel *ngIf="differences?.description" [labelType]="'small'" [labelText]="' '"></samLabel> -->
         <h3>
           <i *ngIf="differences?.description" class="fa fa-square" aria-hidden="true"></i>
