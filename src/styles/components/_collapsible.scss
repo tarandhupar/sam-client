@@ -12,6 +12,7 @@ div.sam-collapsible div.collapsible-header .label {
   width: 90%;
   line-height: 1;
   margin-bottom: 0;
+  display: inline-block;
 }
 div.sam-collapsible div.collapsible-header .expand-hide {
   float: right;
@@ -33,6 +34,7 @@ div.sam-collapsible div.collapsible-content.open {
 div.sam-collapsible legend{
   font-size: 1.9rem;
   line-height: 2rem;
+  width: 100%
 }
 
 div.sam-collapsible .label-wrapper label{

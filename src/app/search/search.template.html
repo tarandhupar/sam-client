@@ -1,6 +1,8 @@
 <div class="usa-grid search-page">
 
-  <aside class="usa-width-one-fourth">
+  <!--filters aside-->
+  <aside class="{{index === 'wd' ? 'usa-width-one-third' : 'usa-width-one-fourth'}}">
+
     <div>&nbsp;</div>
     <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
     <div>
@@ -68,6 +70,7 @@
             [errorMessage]="wdTypeConfig.errorMessage"
             (modelChange)="wdFilterChange($event)">
           </samRadioButton>
+          <button (click)='wdTypeRadClear()'>Clear</button>
         </sam-collapsible>
 
         <!--*** DBA Specif Filters ***-->
@@ -150,12 +153,13 @@
     </div>
   </aside>
 
-  <div class="usa-width-three-fourths">
+  <div class="{{index === 'wd' ? 'usa-width-two-thirds' : 'usa-width-three-fourths'}}">
     <div class="usa-width-one">
-      <samAlert *ngIf="wdTypeModel" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
+      <samAlert *ngIf="wdTypeModel && wdTypeModel === 'dbra'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
+      <samAlert *ngIf="wdTypeModel && wdTypeModel === 'sca'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="scaSearchDescription"></div></samAlert>
       <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
       <p *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'" class="usa-font-lead">
-        Please navigate to the <a href="https://www.wdol.gov/">Service Contract Act</a> section of the legacy WDOL site to retrieve
+        Please navigate to the <a href="https://www.wdol.gov/sca.aspx">Service Contract Act</a> section of the legacy WDOL site to retrieve
         a Collective Bargaining Agreement (CBA) WD or to create a new CBA WD
       </p>
     </div>
@@ -174,9 +178,15 @@
           <hr class="m_T-5x"/>
         </div>
       </div>
-      <div *ngIf="!initLoad && !data.results">
+      <div *ngIf="!initLoad && !data.results && index !== 'wd'">
         <br/>
         <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
+        <div style="height:300px;"></div>
+      </div>
+      <div *ngIf="!initLoad && !data.results && index === 'wd'">
+        <br/>
+        <h3>No Wage Determinations were found using the criteria you have selected.</h3>
+        <h3>If you would like to request a SCA WDOL using an e98 form, please click <a href="https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp">here.</a></h3>
         <div style="height:300px;"></div>
       </div>
     </div>
