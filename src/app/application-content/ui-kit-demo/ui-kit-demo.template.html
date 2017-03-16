@@ -520,12 +520,22 @@
 
   <div class="usa-grid">
     <h2 class="usa-width-one">Sam Autocomplete Dropdown</h2>
+    <div class="usa-width-one-half">
+      <sam-autocomplete-dropdown [(ngModel)]="searchValue" [name]="searchName" [options]="dropdownSearch"></sam-autocomplete-dropdown>
+    </div>
+    <div class="usa-width-one-half">
+      {{searchValue}}
+    </div>
   </div>
-  <div class="usa-width-one-half">
-    <sam-autocomplete-dropdown [(ngModel)]="searchValue" [name]="searchName" [options]="dropdownSearch"></sam-autocomplete-dropdown>
-  </div>
-  <div class="usa-width-one-half">
-    {{searchValue}}
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Sam Autocomplete Dropdown</h2>
+    <div class="usa-width-one-half">
+      <sam-autocomplete-dropdown [(ngModel)]="searchValue1" [name]="searchName1" [options]="dropdownSearch1" [button]="button" (onButtonPressed)="getButton($event)"></sam-autocomplete-dropdown>
+    </div>
+    <div class="usa-width-one-half">
+      {{searchValue}}
+    </div>
   </div>
 
 

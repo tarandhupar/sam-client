@@ -4,6 +4,8 @@ import { FormControl } from '@angular/forms';
 
 import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
 import { AutocompleteDropdownService } from 'sam-ui-kit/form-controls/autocomplete-dropdown/autocomplete-dropdown.service';
+import { AutocompleteDropdownButton } from 'sam-ui-kit/types';
+
 
 @Component({
   templateUrl: 'ui-kit-demo.template.html',
@@ -12,9 +14,27 @@ import { AutocompleteDropdownService } from 'sam-ui-kit/form-controls/autocomple
   ]
 })
 export class UIKitDemoPage {
+  // Autocomplete Dropdown No Button
   searchValue: any;
   searchName: string = "MyComponent65491455"
   dropdownSearch: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];
+
+  // Autocomplete Dropdown With Button
+  searchValue1: any;
+  searchName1: string = "MyComponent65491455"
+  dropdownSearch1: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];  
+  getButton(event) {
+    window.alert('You clicked me!');
+  }
+  button: AutocompleteDropdownButton = {
+    label: 'Search',
+    class: '',
+    icon: {
+      class: 'fa fa-search',
+      altText: 'Search'
+    }
+  }
+
   listOptions = [
     { 
       label:'apple',
