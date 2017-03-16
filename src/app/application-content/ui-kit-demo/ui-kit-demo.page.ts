@@ -1,11 +1,20 @@
 import { Component, ViewChild } from '@angular/core';
 import { AlertFooterService } from '../../alerts/alert-footer';
-import {FormControl} from '@angular/forms';
+import { FormControl } from '@angular/forms';
+
+import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteDropdownService } from 'sam-ui-kit/form-controls/autocomplete-dropdown/autocomplete-dropdown.service';
 
 @Component({
-  templateUrl: 'ui-kit-demo.template.html'
+  templateUrl: 'ui-kit-demo.template.html',
+  providers: [
+    {provide: AutocompleteService, useClass: AutocompleteDropdownService}
+  ]
 })
 export class UIKitDemoPage {
+  searchValue: any;
+  searchName: string = "MyComponent65491455"
+  dropdownSearch: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];
   listOptions = [
     { 
       label:'apple',
