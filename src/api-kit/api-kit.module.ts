@@ -14,7 +14,8 @@ import { WrapperService } from './wrapper/wrapper.service';
 import { SuggestionsService } from './search/suggestions.service';
 import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
 import { UserDirService } from './user-directory/user-directory.service';
-import {UserAccessService} from "./access/access.service";
+import { UserAccessService } from "./access/access.service";
+import { LocationService } from "./location/location.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -39,7 +40,8 @@ import {UserAccessService} from "./access/access.service";
     AutoCompleteWrapper,
     UserDirService,
     UserAccessService,
-    WageDeterminationService
+    WageDeterminationService,
+    LocationService
   ]
 })
 export class SamAPIKitModule { }
