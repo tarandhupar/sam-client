@@ -4,41 +4,7 @@ import * as moment from 'moment/moment';
 @Component({
   moduleId: __filename,
   selector: 'assistance-program-result',
-  template: `<p>
-  <span class="usa-label">Federal Assistance Listing</span>
-      <span class="usa-label toggleStatusCode" [ngStyle]="{display:showHideStatusText}"  [style.background-color]="randomColor">{{data.status.value}}</span>
-  </p>
-  
-  <h3 class="assistance-program-title">
-    <a [routerLink]="['/programs', data.id, 'edit']">{{data.data.title}}</a>
-  </h3> 
-  <div class="usa-grid-full">
-    <div class="usa-width-two-thirds">
-      <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x"> 
-     <li>
-        <strong>Date Modified: </strong><span>{{data.modifiedDate}}</span>
-      </li>
-        <li>
-        <strong>Office: </strong><span>{{data.data.organizationId}}</span>
-      </li>
-      </ul>
-    </div>
-    <div class="usa-width-one-third">
-       <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x"> 
-     
-      <li>
-        <strong>CFDA #: </strong>
-        <span class="fal-program-number">{{data.data.programNumber}}</span>
-      </li>
-      <li>
-        <strong>Date Published: </strong>
-        <span>{{data.publishedDate}}</span>
-      </li>
-  </ul>
-    </div>
-  </div>
-
-`
+  templateUrl: 'assistance-program-result.template.html'
 })
 export class AssistanceProgramResult implements OnInit {
   @Input() data: any = {};
