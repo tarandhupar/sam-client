@@ -166,10 +166,12 @@
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 					Foreign Funding: {{awardData.purchaserInformation.foreignFunding}}<br />
 				</div>
-				Funding Agency Name: {{awardData.purchaserInformation.fundingAgencyName}}<br />
-				Funding Agency ID: {{awardData.purchaserInformation.fundingAgencyID}}<br />
-				Funding Office Name: {{awardData.purchaserInformation.fundingOfficeName}}<br />
-				Funding Office ID: {{awardData.purchaserInformation.fundingOfficeID}}
+				<div *ngIf="awardData.templateType != 'OTI'">
+					Funding Agency Name: {{awardData.purchaserInformation.fundingAgencyName}}<br />
+					Funding Agency ID: {{awardData.purchaserInformation.fundingAgencyID}}<br />
+					Funding Office Name: {{awardData.purchaserInformation.fundingOfficeName}}<br />
+					Funding Office ID: {{awardData.purchaserInformation.fundingOfficeID}}
+				</div>
 				<div *ngIf="awardData.templateType == 'AWARD'">
 					Reason for Inter-Agency Contracting: {{awardData.purchaserInformation.reasonForPurchase}}
 				</div>
