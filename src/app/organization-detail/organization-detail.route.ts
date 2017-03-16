@@ -5,7 +5,7 @@ import { OrgDetailProfilePage } from './profile/profile.component';
 
 export const routes: Routes = [
   {
-    path: 'organization-detail',
+    path: 'organization-detail/:orgId',
     component: OrgDetailPage,
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },

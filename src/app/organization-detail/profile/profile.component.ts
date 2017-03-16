@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { ActivatedRoute, Router} from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 
 @Component ({
@@ -19,10 +20,12 @@ export class OrgDetailProfilePage {
 
   isDataAvailable:boolean = false;
 
-  constructor(private fhService: FHService){
+  constructor(private fhService: FHService, private route: ActivatedRoute, private _router: Router){
   }
 
   ngOnInit(){
+    this.orgId = this.route.parent.snapshot.params['orgId'];
+
     this.getOrgDetail(this.orgId);
   }
 
@@ -34,7 +37,6 @@ export class OrgDetailProfilePage {
     this.fhService.getOrganizationById(orgId,false,true).subscribe(
       val => {
         let orgDetail = val._embedded[0].org;
-        console.log(orgDetail);
         this.setCurrentHierarchyType(orgDetail.type);
         this.setCUrrentHierarchyLevel(orgDetail.level);
         this.setupHierarchyPathMap(orgDetail.fullParentPath, orgDetail.fullParentPathName);
@@ -50,6 +52,7 @@ export class OrgDetailProfilePage {
     if(hierarchyName !== this.hierarchyPath[this.hierarchyPath.length - 1]){
       // make API call to get selected organization detail
       this.getOrgDetail(this.hierarchyPathMap[hierarchyName]);
+      this._router.navigate(["/organization-detail",this.hierarchyPathMap[hierarchyName],"profile"]);
     }
   }
 
