@@ -757,7 +757,7 @@ export class OpportunityPage implements OnInit {
   }
 
   public getDownloadAllPackagesURL(opportunityID: string, isArchived: boolean = false) {
-    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived) +'includeRevisions=true';
+    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived) +'&includeRevisions=true';
   }
 
   public getBaseURL() {
