@@ -40,19 +40,11 @@ export class AwardsPage implements OnInit, OnDestroy {
 
     this.subscription = apiSubject.subscribe(api => { // run whenever api data is updated
       let jsonData:any = api;
-      this.awardData = jsonData;
+      this.awardData = jsonData.awardsDetails;
     }, err => {
       console.log('Error logging', err);
     });
    }
-  
-  changeSubNav(value){
-    this.currentSubNav = value;
-  }
-  
-  isCurrentSubNav(value){
-    return this.currentSubNav === value;
-  }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
