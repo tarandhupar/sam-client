@@ -20,14 +20,11 @@
         </sam-collapsible>
 
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
-          <div class="usa-grid-full">
-            <agencyPicker
-              [label]="'Filter by Organization:'"
-              (organization)="onOrganizationChange($event)"
-              [levelLimit] = '2'>
-            </agencyPicker>
-
-          </div>
+          <agencyPicker
+            [label]="'Filter by Organization:'"
+            (organization)="onOrganizationChange($event)"
+            [levelLimit] = '2'>
+          </agencyPicker>
         </sam-collapsible>
 
         <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">

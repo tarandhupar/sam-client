@@ -37,3 +37,25 @@ div.sam-collapsible legend{
 div.sam-collapsible .label-wrapper label{
   margin-top: 0;
 }
+// Agency picker
+// Need to create another version of agency picker
+agencypicker .organization-container > label{
+  margin-top: 1rem;
+}
+div.sam-collapsible .usa-agency-picker-dropdown-area{
+  padding: 10px;
+  .usa-agency-picker-search-input-wrapper,
+  .usa-agency-picker-autocomplete{
+    width: calc(100% - 40px);
+  }
+  .usa-agency-picker-browse-toggle-area{
+    margin-top: -10px;
+    line-height: normal;
+  }
+  select{
+    padding-right: 3rem;
+  }
+  .usa-agency-picker-readonly-area ul:empty{
+    content: "No organizations added"
+  }
+}
