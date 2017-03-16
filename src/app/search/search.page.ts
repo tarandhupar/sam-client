@@ -122,7 +122,7 @@ export class SearchPage implements OnInit{
       {value: 'false', label: 'No, and the SCA WD ends in an odd number', name: 'noOdd'}
     ],
     name: 'radio-component4',
-    label: 'Are the contract services to be performed listed below as Non-Standard Services?',
+    label: 'Are the contract services to be performed listed in the drop-down below as a Non-Standard Service?',
     errorMessage: '',
     hint: ''
   };
@@ -134,10 +134,11 @@ export class SearchPage implements OnInit{
       {value:'', label: 'Default option', name: 'empty', disabled: true},
     ],
     disabled: false,
-    label: 'If yes, select the services to be performed',
+    label: 'If a service is chosen, "Yes" will automatically be selected',
     name: 'constructionType',
   };
 
+  scaSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result. <br><br><b>If you would like to request a SCA contract action, click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form.</b>"
   wdSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result."
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -168,6 +169,7 @@ export class SearchPage implements OnInit{
       });
   }
 
+
   loadParams(){
     var qsobj = this.setupQS(false);
     this.searchService.loadParams(qsobj);
@@ -175,7 +177,6 @@ export class SearchPage implements OnInit{
 
   // handles 'organization' emmitted event from agency picker
   onOrganizationChange(orgId:any){
-    console.log('onOrganizationChange ', orgId);
 
     let organizationStringList = '';
 
@@ -554,9 +555,9 @@ export class SearchPage implements OnInit{
     }
   }
 
-  // determines if state is populated and if not disables county select
+  // determines if non standard rad selected, if not disables nonstandard select
   determineEnableServicesSelect(){
-    if(this.wdNonStandardRadModel === 'yesNSS'){
+    if(this.wdNonStandardRadModel === 'yesNSS' || this.wdNonStandardRadModel === ''){
       this.wdNonStandardSelectConfig.disabled = false;
     }
     else{
@@ -607,6 +608,17 @@ export class SearchPage implements OnInit{
       this.wdNonStandardSelectModel = '';
     }
 
+    // show end of filters notification
+    if(this.wdNonStandardRadModel){
+      // show end of filters notification
+      this.alertFooterService.registerFooterAlert({
+        title: "Search Criteria Complete",
+        description: "",
+        type: "success",
+        timer: 3000
+      });
+    }
+
     this.pageNum = 0;
     this.searchResultsRefresh();
 
@@ -615,6 +627,22 @@ export class SearchPage implements OnInit{
   // non standard services drop down selection
   wdNonStandardSelectChanged(event){
     console.log('non-standard drop-down selection: ', this.wdNonStandardSelectModel);
+
+    // if drop down selection made, auto-select yes rad button
+    if(this.wdNonStandardSelectModel !== ''){
+      this.wdNonStandardRadModel = 'yesNSS'
+    }
+
+    // show end of filters notification
+    if(this.wdNonStandardSelectModel){
+      // show end of filters notification
+      this.alertFooterService.registerFooterAlert({
+        title: "Search Criteria Complete",
+        description: "",
+        type: "success",
+        timer: 3000
+      });
+    }
 
     this.pageNum = 0;
     this.searchResultsRefresh();
@@ -630,6 +658,16 @@ export class SearchPage implements OnInit{
     this.router.navigate(['/search'], navigationExtras);
   }
 
+  wdTypeRadClear(){
+    this.wdTypeModel = '';
+
+    this.wdPreviouslyPerformedClear();
+    this.wdConstructionClear();
+    this.pageNum = 0;
+
+    this.searchResultsRefresh()
+  }
+
   wdConstructionClear(){
     this.wdConstructModel = '';
     this.pageNum = 0;
@@ -641,12 +679,18 @@ export class SearchPage implements OnInit{
     this.wdPreviouslyPerformedModel = '';
     this.pageNum = 0;
 
+    // cba should also be cleared if prev performed is cleared
+    this.wdSubjectToCBAClear();
+
     this.searchResultsRefresh()
   }
 
   wdSubjectToCBAClear(){
     this.wdSubjectToCBAModel = '';
     this.pageNum = 0;
+
+    // non standard services should also be cleared if cba is
+    this.wdNonStandardServicesSelectClear();
 
     this.searchResultsRefresh()
   }
