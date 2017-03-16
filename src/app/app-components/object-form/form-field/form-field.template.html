@@ -1,37 +1,47 @@
 <div [formGroup]="fieldFormGroup">
-<samText *ngIf="field.type == 'samText'"
-         [label] = "field.label"
-         [name] = "field.name + '-input'"
-         [maxlength] = "field.maxlength"
-         [hint] = "field.hint"
-         [required] = "field.required"
-         [control] = "control"
-         [value] = "value"
-         [formControlName] = "field.name"
-></samText>
-
-<samNumber *ngIf="field.type == 'samNumber'"
+  <samText *ngIf="field.type == 'samText'"
            [label] = "field.label"
            [name] = "field.name + '-input'"
            [maxlength] = "field.maxlength"
-           [minlength] = "field.minlength"
            [hint] = "field.hint"
            [required] = "field.required"
            [control] = "control"
            [value] = "value"
            [formControlName] = "field.name"
-           [errorMessage] = "((control.valid == false) && (control.dirty || control.touched)) ? field.errorMessage : ''"
-></samNumber>
+  ></samText>
 
-<samTextArea *ngIf="field.type == 'samTextArea'"
-         [label] = "field.label"
-         [name] = "field.name + '-input'"
-         [maxlength] = "field.maxlength"
-         [hint] = "field.hint"
-         [required] = "field.required"
-         [control] = "control"
-         [value] = "value"
-         [formControlName] = "field.name"
-></samTextArea>
+  <samNumber *ngIf="field.type == 'samNumber'"
+             [label] = "field.label"
+             [name] = "field.name + '-input'"
+             [maxlength] = "field.maxlength"
+             [minlength] = "field.minlength"
+             [hint] = "field.hint"
+             [required] = "field.required"
+             [control] = "control"
+             [value] = "value"
+             [formControlName] = "field.name"
+             [errorMessage] = "((control.valid == false) && (control.dirty || control.touched)) ? field.errorMessage : ''"
+  ></samNumber>
+
+  <samTextArea *ngIf="field.type == 'samTextArea'"
+               [label] = "field.label"
+               [name] = "field.name + '-input'"
+               [maxlength] = "field.maxlength"
+               [hint] = "field.hint"
+               [required] = "field.required"
+               [control] = "control"
+               [value] = "value"
+               [formControlName] = "field.name"
+  ></samTextArea>
+
+  <sam-list-input *ngIf="field.type == 'sam-list-input'"
+                  [label] = "field.label"
+                  [name] = "field.name + '-control'"
+                  [hint] = "field.hint"
+                  [required] = "field.required"
+                  [control] = "control"
+                  [options] = "field.options"
+                  [formControlName] = "field.name"
+  ></sam-list-input>
 
 </div>

@@ -30,30 +30,39 @@ export class ProgramFormModel{
           hint: 'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)',
           required: true,
           errorMessage: 'This number falls outside the range defined for this organization.'
+        },
+        {
+          name: 'relatedTo',
+          type: 'sam-list-input',
+          label: 'Related Federal Assistance Listing',
+          hint: 'Are there any related federal assistance listings?',
+          required: true,
+          options: [],
+          parent: 'relatedPrograms'
         }
       ]
     },
-    {
-      section: 'overview',
-      label: 'Overview',
-      fields:[
-        {
-          name: 'objective',
-          type: 'samTextArea',
-          label: 'Objectives',
-          hint: 'Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.',
-          required: true
-        },
-        {
-          name: 'falDesc',
-          type: 'samTextArea',
-          label: 'Federal Assistance Listing Description',
-          hint: 'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.',
-          required: false
-        }
-      ]
-    }
-   ];
+      {
+        section: 'overview',
+        label: 'Overview',
+        fields:[
+          {
+            name: 'objective',
+            type: 'samTextArea',
+            label: 'Objectives',
+            hint: 'Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.',
+            required: true
+          },
+          {
+            name: 'falDesc',
+            type: 'samTextArea',
+            label: 'Federal Assistance Listing Description',
+            hint: 'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.',
+            required: false
+          }
+        ]
+      }
+    ];
 
     return data;
   }

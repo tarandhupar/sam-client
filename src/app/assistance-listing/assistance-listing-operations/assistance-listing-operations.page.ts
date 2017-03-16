@@ -24,13 +24,18 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   cookieValue: string;
   objectFormData: any;
   redirectToEdit: boolean = false;
+  relatedPrograms = [];
+  getRelatedProgSub: any;
+  getProgramsSub: any;
+  listOfPrograms: string;
+  uuid = [];
   @ViewChild('objectForm') objectForm;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private programService: ProgramService,
               private programFormModel: ProgramFormModel
-              ) {}
+  ) {}
 
   ngOnInit() {
 
@@ -54,36 +59,51 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
           }
         }//end of if
         this.programId = this.route.snapshot.params['id'];
+        this.getPrograms();
 
         if (this.programId == null)
           this.mode = 'add';
         else
           this.mode = 'edit';
 
-      if (this.mode == 'edit') {
-        this.getProgSub = this.programService.getAuthProgramById(this.programId, this.cookieValue)
-          .subscribe(api => {
-            console.log('api', api);
-            let title = api.data.title;
-            let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
-            let falNo = (api.data.programNumber ? api.data.programNumber : '');
+        if (this.mode == 'edit') {
+          this.getProgSub = this.programService.getProgramById(this.programId, this.cookieValue)
+            .subscribe(api => {
+              console.log('api', api);
+              let title = api.data.title;
+              let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
+              let falNo = (api.data.programNumber ? api.data.programNumber : '');
 
-            if (falNo.trim().length == 6)
-              falNo = falNo.slice(3, 6);
+              if (falNo.trim().length == 6)
+                falNo = falNo.slice(3, 6);
 
-            let objective = (api.data.objective ? api.data.objective : '');
-
-            this.programForm.patchValue({
-              header_information:{
-                title: title,
-                alternativeNames: popularName,
-                programNumber: falNo
-              },
-              overview:{
-                objective:objective
+              let objective = (api.data.objective ? api.data.objective : '');
+              let selections = [];
+              this.relatedPrograms = api.data.relatedPrograms.relatedTo;
+              for (let relatedProgram of this.relatedPrograms) {
+                this.getRelatedProgSub = this.programService.getProgramById(relatedProgram, this.cookieValue).subscribe(api => {
+                  this.uuid.push(relatedProgram);
+                  let programNumber = api.data.programNumber;
+                  let title = api.data.title;
+                  let relatedAssistance = programNumber + " "+ title;
+                  selections.push( // store the related program
+                    relatedProgram
+                  );
+                });
               }
-            });
-          });
+
+              this.programForm.patchValue({
+                header_information:{
+                  title: title,
+                  alternativeNames: popularName,
+                  programNumber: falNo,
+                  relatedTo: selections
+                },
+                overview:{
+                  objective:objective
+                }
+              });
+            });//end of subscribe
         }
       } else {
         this.router.navigate(['accessrestricted']);
@@ -94,14 +114,6 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
     }
   }
 
-
-  createFormGrp() {
-
-    this.programForm = this.objectForm.createForm(this.objectFormData);
-
-  }
-
-
   ngOnDestroy() {
 
     if (this.saveProgSub)
@@ -111,9 +123,38 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       this.getProgSub.unsubscribe();
   }
 
+  createFormGrp() {
+    this.programForm = this.objectForm.createForm(this.objectFormData);
+  }
 
-  onCancelClick(event) {
-    this.router.navigate(['/falworkspace']);
+  getPrograms() {
+    /*status=published&includeCount=false&sortBy=title*/
+    this.getProgramsSub = this.programService.runProgram({
+      status: 'published',
+      includeCount : 'false',
+      Cookie: this.cookieValue,
+      size:'100',
+      sortBy: 'programNumber'
+    }).subscribe(
+      data => {
+        if (data._embedded && data._embedded.program) {
+          let optionData = [];
+          for (var item of data._embedded.program) {
+            this.listOfPrograms = item.data.programNumber +" "+item.data.title;
+            optionData.push( { // store the related program
+              'label': this.listOfPrograms,
+              'value': item.id,
+              'name': 'assistanceList'
+            })
+          }
+
+          this.objectFormData[0].fields[3].options = optionData;
+        }
+      },
+      error => {
+        console.error('Error!!', error);
+      }
+    );
   }
 
   saveProgram(data) {

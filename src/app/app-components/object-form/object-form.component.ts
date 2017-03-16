@@ -11,12 +11,11 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 export class ObjectFormModel{
   public mainForm: FormGroup;
-  arrayFields = {};
-  sectionURL = {};
   @Input() public objectFormData;
   @Output() public buttonClick = new EventEmitter();
   selectedPage: number = 0;
   loadFlag: boolean = false;
+  sectionIndex = [];
 
   sidenavModel = {
     "label": "Assistance Listings",
@@ -34,18 +33,15 @@ export class ObjectFormModel{
       // dynamically generate the control groups
       let formGroup = {};
       let index = objectFormData.indexOf(section);
+      this.sectionIndex[section.section] = index;
 
         this.sidenavModel.children[index] = {
         label : section.label,
         route: '#' + section.section
       };
 
-      this.arrayFields[section.section]={};
       for (let field of section.fields) {
         formGroup[field.name] = '';
-        if(field.saveType == 'array'){
-          this.arrayFields[section.section][field.name] = true;
-        }
       }
 
       sections[section.section] = this.fb.group(formGroup);
@@ -105,13 +101,23 @@ export class ObjectFormModel{
   getData(section){
     let data = {};
 
-    let fields = Object.keys(this.mainForm.value[section]);
+    let sectionIndex = this.sectionIndex[section];
 
-    for (let field of fields) {
-      if(this.arrayFields[section][field])
-        data[field] = [this.mainForm.controls[section].value[field]];
-      else
-        data[field] = this.mainForm.controls[section].value[field];
+    for(let field of this.objectFormData[sectionIndex].fields){
+      let name = field.name;
+      if(field.parent){
+        data[field.parent] = {};
+        if(field.saveType == 'array')
+          data[field.parent][name] = [this.mainForm.controls[section].value[name]];
+        else
+          data[field.parent][name] = this.mainForm.controls[section].value[name];
+      }
+      else {
+        if(field.saveType == 'array')
+          data[name] = [this.mainForm.controls[section].value[name]];
+        else
+          data[name] = this.mainForm.controls[section].value[name];
+      }
     }
     return data;
   }
