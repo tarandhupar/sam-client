@@ -79,7 +79,13 @@ export const Validators = {
 
   minlength(min) {
     return (c: FormControl) => {
-      return (c.value || '').trim().length >= min ? null : {
+      let valid = true;
+
+      if(c.dirty) {
+        valid = (c.value || '').trim().length >= min;
+      }
+
+      return valid ? null : {
         minlength: {
           valid: false
         }
