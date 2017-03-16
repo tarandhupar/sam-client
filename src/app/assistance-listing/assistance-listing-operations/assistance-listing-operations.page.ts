@@ -42,6 +42,17 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
         this.cookieValue = Cookies.get('iPlanetDirectoryPro');
         this.currentUrl = document.location.href;
+        if(this.currentUrl.indexOf('#') > 0) {
+
+          let anchor = this.currentUrl.substring(this.currentUrl.indexOf('#')+1);
+
+          for(let i=0, len = this.objectFormData.length; i < len; i++) {
+            if (this.objectFormData[i].section == anchor){
+              this.objectForm.setSelectedPage({selectedPage:i});
+              break;
+            }
+          }
+        }//end of if
         this.programId = this.route.snapshot.params['id'];
 
         if (this.programId == null)
