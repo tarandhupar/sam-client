@@ -3,6 +3,7 @@ import {FilterMultiArrayObjectPipe} from "../../app-pipes/filter-multi-array-obj
 import {DateFormatPipe} from "../../app-pipes/date-format.pipe";
 import {FixHTMLPipe} from "./fix-html.pipe";
 import  JsDiff = require('diff') ;
+import DiffMatchPatch = require('diff-match-patch');
 
 
 
@@ -315,10 +316,10 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistSynopsis = true;
     } else if (currentDescription != previousDescription && previousDescription != null){
       //description = fixHtmlPipe.transform(previousDescription).strike();
-      let diffString = JsDiff.diffSentences(previousDescription, currentDescription);
-      console.log("Diff String", diffString);
+      let diffString1 = JsDiff.diffWordsWithSpace(previousDescription, currentDescription);
+      console.log("Diff String", diffString1);
       let finalString = '';
-      diffString.forEach(function(part){
+      diffString1.forEach(function(part){
         // green for additions, red for deletions
         // grey for common parts
         console.log("part: ", part);
@@ -328,8 +329,14 @@ export class ViewChangesPipe implements PipeTransform {
         console.log("part value color,", part.value.fontcolor(color));
         finalString = finalString + part.value.fontcolor(color);
       });
+      let diff = new DiffMatchPatch();
+      let diffString = diff.diff_main(previousDescription, currentDescription);
+      let m = diff.diff_cleanupSemantic(diffString);
+      console.log("M", diffString);
+      description = diff.diff_prettyHtml(diffString);
+      //console.log("Diff String", diffString);
       //console.log("description", color);
-      description = finalString;
+      //description = finalString;
       //description = fixHtmlPipe.transform(previousDescription).strike();
       changesExistSynopsis = true;
     }

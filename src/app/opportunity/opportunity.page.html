@@ -281,7 +281,7 @@
           <ng-container *ngIf="opportunity.data?.type !== 'i'">Description</ng-container>
         </h3>
 
-        <div [innerHTML]="opportunity.data?.descriptions[0]?.content | fixhtml"></div>
+        <div *ngIf="!(showChangesSynopsis && differences?.description)" [innerHTML]="opportunity.data?.descriptions[0]?.content | fixhtml"></div>
       </section>
       <span *ngIf="showChangesSynopsis && differences?.description" [innerHTML]="differences?.description"></span>
 

@@ -67,6 +67,7 @@
     "core-js": "2.4.1",
     "d3": "^4.2.6",
     "diff": "^3.2.0",
+    "diff-match-patch": "^1.0.0",
     "filesize": "^3.3.0",
     "font-awesome": "4.6.3",
     "ie-shim": "0.1.0",
