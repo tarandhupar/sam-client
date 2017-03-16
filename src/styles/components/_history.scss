@@ -24,6 +24,8 @@ history{
       
       &.current:before{
         color: #ccc;
+        content: "\f0a9" !important;
+        background-color: white;
       }
       
       span{
