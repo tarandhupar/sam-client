@@ -66,7 +66,6 @@ export class UserAccessModel {
     delete existingAcc.id;
 
     // convert ID/Val pairs to just ids
-    console.log('before', existingAcc);
     existingAcc.domainMapContent.forEach(dom => {
       let did = dom.domain.id;
       dom.domain = did;
