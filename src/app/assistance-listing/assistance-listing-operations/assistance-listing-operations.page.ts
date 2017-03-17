@@ -29,6 +29,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   getRelatedProgSub: any;
   getProgramsSub: any;
   listOfPrograms: string;
+  stickyLabel: string;
   uuid = [];
   @ViewChild('objectForm') objectForm;
 
@@ -62,8 +63,9 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
         this.programId = this.route.snapshot.params['id'];
         this.getPrograms();
 
-        if (this.programId == null)
+        if (this.programId == null){
           this.mode = 'add';
+        }
         else
           this.mode = 'edit';
 
@@ -86,13 +88,14 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
                   this.uuid.push(relatedProgram);
                   let programNumber = api.data.programNumber;
                   let title = api.data.title;
-                  let relatedAssistance = programNumber + " "+ title;
+                  let relatedAssistance = programNumber + " " + title;
                   selections.push( // store the related program
                     relatedProgram
                   );
                 });
               }
 
+              this.stickyLabel = title + " (" + falNo + ")";
               this.programForm.patchValue({
                 header_information:{
                   title: title,
@@ -122,6 +125,12 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
 
     if (this.getProgSub)
       this.getProgSub.unsubscribe();
+
+    if(this.getProgramsSub)
+      this.getProgramsSub.unsubscribe();
+
+    if(this.getRelatedProgSub)
+      this.getRelatedProgSub.unsubscribe();
   }
 
   createFormGrp() {

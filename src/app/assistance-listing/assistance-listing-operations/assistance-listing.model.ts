@@ -36,7 +36,7 @@ export class ProgramFormModel{
           type: 'sam-list-input',
           label: 'Related Federal Assistance Listing',
           hint: 'Are there any related federal assistance listings?',
-          required: true,
+          required: false,
           options: [],
           parent: 'relatedPrograms'
         }

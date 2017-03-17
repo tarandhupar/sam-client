@@ -12,6 +12,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class ObjectFormModel{
   public mainForm: FormGroup;
   @Input() public objectFormData;
+  @Input() public stickyLabel;
+  @Input() public mode;
   @Output() public buttonClick = new EventEmitter();
   selectedPage: number = 0;
   loadFlag: boolean = false;

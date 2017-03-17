@@ -1,11 +1,3 @@
 <div class="assistance-listing-operations">
-
-  <!--<div class="usa-grid" *ngIf="submitted">
-    <div class="usa-width-one-whole">
-      <samAlert [type]="'success'" [title]="'Success!!'" [description]="successMsg"></samAlert>
-    </div>
-  </div>-->
-
-      <object-form [objectFormData]="objectFormData" #objectForm (buttonClick)="buttonHandler($event)"></object-form>
-
+  <object-form [objectFormData]="objectFormData" #objectForm [stickyLabel]="stickyLabel" [mode]="mode" (buttonClick)="buttonHandler($event)"></object-form>
 </div>
