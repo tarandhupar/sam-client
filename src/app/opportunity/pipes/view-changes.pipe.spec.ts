@@ -2,41 +2,33 @@ import { ViewChangesPipe } from "./view-changes.pipe";
 
 describe('ViewChangesPipe', () => {
   let pipe = new ViewChangesPipe();
-  let dictionaries = {
-    "set_aside_type":[
+  let dictionaries = {"_embedded": {
+    "dictionaries":[{
+    "elements":[
       {
-        "element_id": "7",
+        "elementId": "7",
         "description": null,
-        "parent_element_id": null,
         "value": "Total Small Business",
-        "dictionary_name": "set_aside_type",
-        "code": "7",
-        "sort_index": "70"
+        "elements": null
       }
-    ],
-    "classification_code": [
+    ], "id": "set_aside_type"},{
+    "elements": [
       {
-        "element_id": "14",
+        "elementId": "14",
         "description": null,
-        "parent_element_id": null,
-        "value": "24 -- Tractors",
-        "dictionary_name": "classification_code",
-        "code": "24",
-        "sort_index": "14"
+        "elements": null,
+        "value": "24 -- Tractors"
       }
-    ],
-    "naics_code": [
+    ], "id": "classification_code"},
+      {"elements": [
       {
-        "element_id": "0091009",
+        "elementId": "0091009",
         "description": null,
-        "parent_element_id": "0091",
+        "elements": null,
         "value": "336212 -- Truck Trailer Manufacturing",
-        "dictionary_name": "naics_code",
-        "code": "336212",
-        "sort_index": "25"
       }
-    ]
-  };
+    ], "id": "naics_code"}
+  ]}};
   let currentOpportunity = {
     "opportunityId": "18741f085fce49fe2c523499e513bbde",
     "data": {
@@ -259,16 +251,16 @@ describe('ViewChangesPipe', () => {
   let differences2 = {
     changesExistGeneral: true,
     changesExistSynopsis: true,
-    updateResponseDate: "<strike>Sep 30, 2014</strike>",
-    archivingPolicy: "<strike>Automatic, on specified date</strike>",
-    updateArchiveDate: "<strike>Feb 14, 2015</strike>",
-    specialLegislation: "<strike>Recovery and Reinvestment Act</strike>",
-    updateSetAside: "<strike>Total Small Business</strike>",
-    classificationCode: "<strike>24 -- Tractors</strike>",
-    naicsCode: "<strike>336212 -- Truck Trailer Manufacturing</strike>",
-    placeOfPerformance: "<strike>8110 Industrial Drive, STE 2002 Scranton PA CA 23123</strike>",
-    description: "<strike>See Attachment</strike>",
-    postedDate: "04/30/2014 3:03 pm"
+    updateResponseDate: '<strike>Sep 30, 2014</strike>',
+    archivingPolicy: '<strike>Automatic, on specified date</strike>',
+    updateArchiveDate: '<strike>Feb 14, 2015</strike>',
+    specialLegislation: '<strike>Recovery and Reinvestment Act</strike>',
+    updateSetAside: '<strike>Total Small Business</strike>',
+    classificationCode: '<strike>24 -- Tractors</strike>',
+    naicsCode: '<strike>336212 -- Truck Trailer Manufacturing</strike>',
+    placeOfPerformance: '<strike>8110 Industrial Drive, STE 2002 Scranton PA CA 23123</strike>',
+    description: '<strike>See Attachment</strike>',
+    postedDate: 'Changes from 04/30/2014 3:03 pm'
   };
 
   let previousAddress2 = null;

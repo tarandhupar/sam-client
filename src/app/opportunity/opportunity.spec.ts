@@ -397,7 +397,7 @@ describe('OpportunityPage', () => {
     expect(comp.opportunity).toBeDefined();
     expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
-    expect(comp.attachment).toBeDefined();
+    expect(comp.attachments).toBeDefined();
     expect(comp.relatedOpportunities).toBeDefined();
     expect(comp.awardSort).toBeDefined();
     expect(comp.awardSortOptions).toBeDefined();

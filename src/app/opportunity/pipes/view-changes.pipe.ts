@@ -4,6 +4,7 @@ import {DateFormatPipe} from "../../app-pipes/date-format.pipe";
 import {FixHTMLPipe} from "./fix-html.pipe";
 import  JsDiff = require('diff') ;
 import DiffMatchPatch = require('diff-match-patch');
+import * as _ from 'lodash';
 
 
 
@@ -100,8 +101,10 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentUpdateResponseDate != previousUpdateResponseDate && previousUpdateResponseDate == null){
       updateResponseDate = "New Data".italics();
+      changesExistGeneral = true;
     } else if (currentUpdateResponseDate != previousUpdateResponseDate && previousUpdateResponseDate != null){
       updateResponseDate = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY').strike();
+      changesExistGeneral = true;
     }
 
 
@@ -119,7 +122,7 @@ export class ViewChangesPipe implements PipeTransform {
     if (currentArchivingPolicy != previousArchivingPolicy && previousArchivingPolicy == null){
       archivingPolicy = "New Data".italics();
       changesExistGeneral = true;
-    } else if (currentUpdateResponseDate != previousUpdateResponseDate && previousUpdateResponseDate != null){
+    } else if (currentArchivingPolicy != previousArchivingPolicy && previousArchivingPolicy != null){
       switch (previousArchivingPolicy){
         case "manual": {
           archivingPolicy = "Manual Archive".strike();
@@ -148,6 +151,7 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousUpdateArchiveDate = null;
     }
+
     if (currentUpdateArchiveDate != previousUpdateArchiveDate && previousUpdateArchiveDate == null){
       updateArchiveDate = "New Data".italics();
       changesExistGeneral = true;
@@ -191,7 +195,7 @@ export class ViewChangesPipe implements PipeTransform {
       updateSetAside = "New Data".italics();
       changesExistGeneral = true;
     } else if (currentUpdateSetAside != previousUpdateSetAside && previousUpdateSetAside != null){
-      let result = filterMultiArrayObjectPipe.transform([previousUpdateSetAside], dictionaries.set_aside_type, 'element_id', false, "");
+      let result = filterMultiArrayObjectPipe.transform([previousUpdateSetAside], this.findDictionary('set_aside_type', dictionaries), 'elementId', false, "");
       updateSetAside = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
 
       changesExistGeneral = true;
@@ -213,7 +217,7 @@ export class ViewChangesPipe implements PipeTransform {
       classificationCode = "New Data".italics();
       changesExistGeneral = true;
     } else if (currentClassificationCode != previousClassificationCode && previousClassificationCode != null){
-      let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], dictionaries.classification_code, 'element_id', false, '');
+      let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], this.findDictionary('classification_code', dictionaries), 'elementId', false, '');
       classificationCode = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
 
       changesExistGeneral = true;
@@ -235,7 +239,7 @@ export class ViewChangesPipe implements PipeTransform {
       naicsCode = "New Data".italics();
       changesExistGeneral = true;
     } else if (currentNaicsCode != previousNaicsCode && previousNaicsCode != null){
-      let result = filterMultiArrayObjectPipe.transform([previousNaicsCode], dictionaries.naics_code, 'element_id', false, '')
+      let result = filterMultiArrayObjectPipe.transform([previousNaicsCode], this.findDictionary('naics_code', dictionaries), 'elementId', false, '');
       naicsCode =(result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
       changesExistGeneral = true;
     }
@@ -519,7 +523,7 @@ export class ViewChangesPipe implements PipeTransform {
     // }
 
     //checks posted date
-    postedDate = dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a');
+    postedDate = ("Changes from " + dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a'));
 
     differences = {
       changesExistGeneral: changesExistGeneral,
@@ -538,8 +542,17 @@ export class ViewChangesPipe implements PipeTransform {
       // secondaryPointOfContact: secondaryPointOfContact,
       postedDate: postedDate
     };
-
     return differences;
+  }
+
+  private findDictionary(key: String, dictionaries: any): any[] {
+    let dictionary = _.find(dictionaries._embedded['dictionaries'], { id: key });
+
+    if (dictionary && typeof dictionary.elements !== undefined) {
+      return dictionary.elements;
+    } else {
+      return [];
+    }
   }
 }
 
