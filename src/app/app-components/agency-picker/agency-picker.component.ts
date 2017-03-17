@@ -56,7 +56,7 @@ export class AgencyPickerComponent implements OnInit {
 	organizationId = '';
   defaultDpmtOption = {
     value:'',
-    label: 'Please select an Department',
+    label: 'Please select a Department/Ind. Agency',
     name: ''
   };
 
@@ -65,7 +65,7 @@ export class AgencyPickerComponent implements OnInit {
       this.defaultDpmtOption
     ],
     show: true,
-    label: 'Department',
+    label: 'Department/Ind. Agency',
     name: 'Department',
     type: 'department',
     selectedOrg: ""
@@ -73,7 +73,7 @@ export class AgencyPickerComponent implements OnInit {
 
   defaultAgencyOption = {
     value:'',
-    label: 'Please select an Agency',
+    label: 'Please select an Sub-tier',
     name: ''
   };
 
@@ -82,7 +82,7 @@ export class AgencyPickerComponent implements OnInit {
       this.defaultAgencyOption
     ],
     show: false,
-    label: 'Agency',
+    label: 'Sub-tier',
     name: 'Agency',
     type: 'agency',
     selectedOrg: ""
