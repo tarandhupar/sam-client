@@ -177,29 +177,6 @@ export class UserAccessModel {
     return _.uniqBy(objs, o => o.id);
   }
 
-  //   let roleData = [];
-  //   roleData = this.userAccessModel.checkRoles(raw,"SUPERUSER");
-  //   let functionMap = [];
-  //   if(roleData.length !== 0){
-  //     functionMap = this.userAccessModel.checkDomain(roleData,"ADMIN");
-  //     if(functionMap.length !== 0){
-  //       let permission = [];
-  //       permission = this.userAccessModel.checkFunction(functionMap,"ALERTS");
-  //       if(permission.length !== 0){
-  //         permission.forEach(
-  //           perm => {
-  //             if(perm.val === "CREATE"){
-  //               this.states.isCreate = true;
-  //             }
-  //             else if(perm.val === "EDIT "){
-  //               this.states.isEdit = true;
-  //             }
-  //           }
-  //         )
-  //       }
-  //     }
-  //   }
-
   private alertAdminPermissions(): any[] {
     let ret = [];
 
