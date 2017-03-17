@@ -34,6 +34,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   public logoInfo: any;
   errorLogo: any;
   cookieValue: string;
+  isCookie: boolean = false;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -55,8 +56,11 @@ export class ProgramPage implements OnInit, OnDestroy {
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
-
-    this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+      if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
+        this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+      }
+    }
 
     let programAPISource = this.loadProgram();
 
