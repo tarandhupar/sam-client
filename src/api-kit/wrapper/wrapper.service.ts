@@ -20,7 +20,8 @@ export class WrapperService {
         "roles": "/rms/v1/uiroles",
         "domains": "/rms/v1/domains",
         "permissions": "/rms/v1/uiroles",
-        "wageDetermination": "/wdol/v1"
+        "wageDetermination": "/wdol/v1",
+        "location": "/locationservices/v1/api"
     };
 
     constructor(private _http: Http){}

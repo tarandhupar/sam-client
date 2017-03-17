@@ -2,7 +2,7 @@
   <div class="usa-width-one-whole">
     <h1>Complete Sign-Up</h1>
     <span>Thank you for joining the new SAM.gov. To complete the sign-up process and gain account access, please complete the following information.</span>
-    <form *ngIf="userForm" [formGroup]="userForm" (ngSubmit)="register()" class="usa-form usa-form-register" autocomplete="off" novalidate>
+    <form *ngIf="userForm" [formGroup]="userForm" class="usa-form usa-form-register" autocomplete="off" novalidate>
       <fieldset class="name">
         <samNameEntry [model]="user" legend="Your Name" #nameEntry></samNameEntry>
       </fieldset>
@@ -45,7 +45,7 @@
                   showClose="true"></samAlert>
         <div class="usa-button-controls">
           <button type="button" class="usa-button-outline" (click)="cancel()">Cancel</button>
-          <button type="submit" [disabled]="states.submitted" #controls>Submit</button>
+          <button type="button" [disabled]="states.submitted" (click)="register()" #controls>Submit</button>
         </div>
       </div>
     </form>

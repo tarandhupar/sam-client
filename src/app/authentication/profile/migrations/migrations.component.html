@@ -16,11 +16,11 @@
                    [errorMessage]="errors('system')"></samSelect>
       </div>
       <div class="usa-width-one-half">
-        <labelWrapper label="Email / User ID" required="true" [errorMessage]="errors('username')">
-          <input type="text" autocomplete="off" formControlName="username" readonly="readonly" onfocus="this.removeAttribute('readonly');" />
+        <labelWrapper name="legacy-username" label="Email / User ID" required="true" [errorMessage]="errors('username')">
+          <input type="text" id="legacy-username" formControlName="username" readonly="readonly" autocomplete="off" onfocus="this.removeAttribute('readonly');" />
         </labelWrapper>
-        <labelWrapper label="Password" required="true" [errorMessage]="errors('password')">
-          <input type="password" autocomplete="off" formControlName="password" readonly="readonly" onfocus="this.removeAttribute('readonly');" />
+        <labelWrapper name="legacy-password" label="Password" required="true" [errorMessage]="errors('password')">
+          <input type="password" id="legacy-password" formControlName="password" readonly="readonly" autocomplete="off" onfocus="this.removeAttribute('readonly');" />
         </labelWrapper>
         <div class="button-controls">
           <button type="submit" class="usa-primary-button">Migrate</button>
