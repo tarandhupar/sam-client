@@ -42,7 +42,7 @@
             <span class="field" id="program-title">{{program?.data?.title}}</span>
           </div>
           <div class="usa-width-one-third">
-            <i class="fa fa-pencil" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']"></i>
+            <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']"></i>
           </div>
         </div>
       </h1>
