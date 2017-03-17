@@ -242,7 +242,6 @@ export class GrantAccessPage implements OnInit {
   }
 
   getRoles() {
-    console.log('getting roles');
     let obs;
     if (this.mode === 'edit') {
       obs = this.userService.getRoles({domainID: this.domain, keepRoles: this.role}, this.userName).share();

@@ -17,9 +17,8 @@ export class WrapperService {
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions",
         "access": "/rms/v1/access",
-        "roles": "/rms/v1/uiroles",
+        "uiroles": "/rms/v1/uiroles",
         "domains": "/rms/v1/domains",
-        "permissions": "/rms/v1/uiroles",
         "wageDetermination": "/wdol/v1",
         "location": "/locationservices/v1/api"
     };
@@ -67,10 +66,6 @@ export class WrapperService {
             "body": oApiParam.body,
             "url": baseUrl + this.APIs[oApiParam.name] + ((oApiParam.suffix !== '') ? oApiParam.suffix : '' )
         };
-
-        // if (oApiParam.name === 'access2') {
-        //   jsonOption.url = 'http://localhost:8080/rms/v1/access/sumitdang/';
-        // }
 
         switch (method.toUpperCase()){
             case "POST":
