@@ -19,8 +19,10 @@ routes.unshift({
     { path: '', redirectTo: 'profile', pathMatch: 'full' },
     { path: 'profile',  component: UserProfilePage },
     { path: 'migrations',  component: UserMigrationsPage },
-    { path: 'access',  component: UserAccessPage },
-    { path: 'grant-access',  component: GrantAccessPage }
+    { path: 'access',  component: UserAccessPage, },
+    { path: 'edit-access',  component: GrantAccessPage },
+    { path: 'grant-access',  component: GrantAccessPage },
+    { path: 'request-access',  component: GrantAccessPage },
   ]
 });
 
