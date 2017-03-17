@@ -3,13 +3,13 @@
     <samSelect [name]="store.question.name"
                [(model)]="$question"
                [options]="$questions"
-               [errorMessage]="states.errors.question"
+               [errorMessage]="states.submitted ? states.errors.question : ''"
                (modelChange)="changeQuestion($event)"
                [label]="label">
     </samSelect>
   </div>
   <div class="answer">
-  <labelWrapper [errorMessage]="(answer.invalid ? states.errors.answer : '')" required="true">
+  <labelWrapper [errorMessage]="(states.submitted && answer.invalid ? states.errors.answer : '')" required="true">
       <input [type]="states.type"
              [name]="store.answer.name"
              [formControl]="answer"

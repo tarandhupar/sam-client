@@ -1,0 +1,20 @@
+.organization-detail{
+
+  .org-logo-container{
+    display: inline-block;
+    width: auto;
+  }
+
+  .org-logo-image{
+    padding: 5px;
+    border: 2px black solid;
+    opacity: 0.6;
+  }
+
+  .org-logo-insert-icon{
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 180%;
+  }
+}
