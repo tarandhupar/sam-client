@@ -322,15 +322,18 @@ export class ViewChangesPipe implements PipeTransform {
       let diffString = diff.diff_main(previousDescription, currentDescription);
       let m = diff.diff_cleanupSemantic(diffString);
       diffString.forEach(function(part){
+        console.log("part 1:  ", part);
         if (part[0] == 1){
-          part[1] = "<u>" + part[1].toString() +"<u/>";
+          part[1] = "<u>" + part[1].toString() +"</u>";
         } else if (part[0] == -1){
           part[1] = part[1].toString().strike();
         }
+        console.log("Part 2", part);
         finalString = finalString + part[1];
       });
 
       description = finalString;
+      console.log("final String: ", finalString);
       changesExistSynopsis = true;
     }
 
@@ -513,7 +516,6 @@ export class ViewChangesPipe implements PipeTransform {
 
     //checks posted date
     postedDate = ("Changes from " + dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a'));
-    console.log("previousOpportunity.postedDate", previousOpportunity.postedDate);
     differences = {
       changesExistGeneral: changesExistGeneral,
       changesExistSynopsis: changesExistSynopsis,
@@ -531,6 +533,7 @@ export class ViewChangesPipe implements PipeTransform {
       // secondaryPointOfContact: secondaryPointOfContact,
       postedDate: postedDate
     };
+    console.log("Differences: ", differences);
     return differences;
   }
 
