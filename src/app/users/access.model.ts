@@ -45,7 +45,75 @@ export class UserAccessModel {
     };
   }
 
-  static CreateAccessObject(user, roleId, domainId, orgIds: any[], functions: Array<FunctionInterface>, messages: string): UserAccessWrapper {
+  static CreateEditObject(user, roleId, domainId, orgIds: any[], functions: Array<FunctionInterface>, messages: string, existingAccess): UserAccessWrapper {
+    let functionMapContent = functions.map(fun => {
+      return {
+        function: fun.id,
+        permission: fun.permissions,
+      };
+    }).filter(fun => {
+      return !!fun.permission.length;
+    });
+
+    let organizationMapContent = [{
+      organizations: orgIds,
+      functionContent: functionMapContent
+    }];
+
+    let existingAcc = _.clone(existingAccess.raw());
+
+    existingAcc.user = _.clone(existingAcc.id);
+    delete existingAcc.id;
+
+    // convert ID/Val pairs to just ids
+    console.log('before', existingAcc);
+    existingAcc.domainMapContent.forEach(dom => {
+      let did = dom.domain.id;
+      dom.domain = did;
+      dom.roleMapContent.forEach( role => {
+        let rid = role.role.id;
+        role.role = rid;
+        role.organizationMapContent.forEach(org => {
+          org.functionMapContent.forEach(fun => {
+            let fid = fun.function.id;
+            fun.function = fid;
+            fun.permission = fun.permission.map(perm => perm.id);
+          });
+          org.functionContent = _.clone(org.functionMapContent);
+          delete org.functionMapContent;
+        });
+        role.organizationContent = _.clone(role.organizationMapContent);
+        delete role.organizationMapContent;
+      });
+      dom.roleContent = _.clone(dom.roleMapContent);
+      delete dom.roleMapContent;
+    });
+    existingAcc.domainContent = _.clone(existingAcc.domainMapContent);
+    delete existingAcc.domainMapContent;
+    console.log('after', existingAcc);
+
+    return {
+      message: messages,
+      mode: "edit",
+      existingAccessContent: existingAcc,
+      updatedAccessContent: {
+        user: user,
+        domainContent: [
+          {
+            domain: domainId,
+            roleContent: [
+              {
+                role: roleId,
+                organizationContent: organizationMapContent
+              }
+            ]
+          }
+        ]
+      }
+    };
+  }
+
+  static CreateGrantObject(user, roleId, domainId, orgIds: any[], functions: Array<FunctionInterface>, messages: string): UserAccessWrapper {
     let functionMapContent = functions.map(fun => {
       return {
         function: fun.id,

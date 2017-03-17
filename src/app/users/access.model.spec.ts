@@ -59,7 +59,7 @@ describe('AccessModel', () => {
     //   { id: 5, permissions: [6, 7] },
     //   { id: 8, permissions: [9]}
     // ];
-    // let access = UserAccessModel.CreateAccessObject("sumit@aol.com", 1, 2, [3, 4], funcs, 'hi');
+    // let access = UserAccessModel.CreateGrantObject("sumit@aol.com", 1, 2, [3, 4], funcs, 'hi');
     //
     // let expected = {
     //   messages: 'hi',
@@ -112,7 +112,7 @@ describe('AccessModel', () => {
     //   { id: 4, permissions: [6] },
     //   { id: 5, permissions: []}
     // ];
-    // let access = UserAccessModel.CreateAccessObject("sumit@aol.com", 1, 2, [3], funcs, 'hi');
+    // let access = UserAccessModel.CreateGrantObject("sumit@aol.com", 1, 2, [3], funcs, 'hi');
     //
     // let expected = {
     //   messages: 'hi',

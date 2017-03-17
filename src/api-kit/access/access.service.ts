@@ -21,7 +21,7 @@ export class UserAccessService {
 
   }
 
-  getAccess(userId: string, filterOptions?: UserAccessFilterOptions): Observable<UserAccessInterface> {
+  getAccess(userId: string, filterOptions?: any): Observable<UserAccessInterface> {
     if (typeof userId === 'undefined') {
       throw new Error('userId is required');
     }
@@ -57,7 +57,7 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  getRoles(queryParams): Observable< Array<IRole> > {
+  getRoles(queryParams, userName?): Observable< Array<IRole> > {
     let apiOptions: any = {
       name: 'roles',
       method: 'GET',
@@ -66,6 +66,10 @@ export class UserAccessService {
         fetchNames: 'true',
       }
     };
+
+    if (userName) {
+      apiOptions.suffix = '/'+userName;
+    }
 
     apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
     return this.apiService.call(apiOptions);

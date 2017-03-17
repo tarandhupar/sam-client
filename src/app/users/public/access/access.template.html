@@ -9,7 +9,7 @@
     <a [routerLink]="[isAdmin ? '../grant-access' : '../request-access']" class="usa-button usa-button-success pull-right">{{isAdmin ? 'Grant' : 'Request'}} Access</a>
   </div>
 
-  <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()">
+  <samModal *ngIf="modalRole && modalDomain" #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()">
     <p>Are you sure you wish to remove the following access?</p>
     <div>
       <div class="modal-subtitle">
@@ -49,7 +49,7 @@
             </div>
             <div class="usa-width-one-sixth no-wrap modify-role-buttons" *ngIf="isAdmin">
               <div class="pull-right">
-                <button class="usa-button-transparent m_T-0 underline" (click)="onEditClick(role, domain)"><i class="fa fa-edit"></i>&nbsp;Edit</button>
+                <button class="usa-button-transparent m_T-0 underline" (click)="onEditClick(role, domain, role.organizationMapContent[0].organizations)"><i class="fa fa-edit"></i>&nbsp;Edit</button>
                 <button (click)="onDeleteRoleClick(role, domain.domain)" class="usa-button-transparent m_T-0 m_R-0 underline"><i class="fa fa-trash"></i>&nbsp;Delete</button>
               </div>
             </div>

@@ -35,11 +35,8 @@ export class UserAccessPage implements OnInit {
 
   private showCollapse = false;
   private capitalize = new CapitalizePipe();
-  private modalRole = {"role":{"id":2,"val":"CONTRACTING SPECIALIST"},"organizationMapContent":[{"organizations":["100167253","100167252","100167254"],"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"SEND"},{"id":3,"val":"CREATE"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"SEND"},{"id":3,"val":"CREATE"}]}]}]};
-  private modalDomain = {
-    id: 0,
-    val: "My Domain",
-  };
+  private modalRole;
+  private modalDomain;
 
   constructor(
     private userService: UserAccessService,
@@ -94,12 +91,11 @@ export class UserAccessPage implements OnInit {
   }
 
   onEditClick(role, domain, orgs) {
-    orgs = [1, 2, 3];
     let extras: NavigationExtras = {
       relativeTo: this.route,
       queryParams: {
-        role: 1,
-        domain: 1,
+        role: role.role.id,
+        domain: domain.domain.id,
         orgs: orgs.join(',')
       }
     };

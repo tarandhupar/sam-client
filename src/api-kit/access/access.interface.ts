@@ -17,7 +17,7 @@ export interface UserAccessInterface {
               "functionMapContent":Array<
                 {
                   "function": any,
-                  "permission":Array<IdVal|number|string>
+                  "permission":Array<any>
                 }
               >
             }

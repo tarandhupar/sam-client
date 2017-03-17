@@ -43,6 +43,9 @@ export class GrantAccessPage implements OnInit {
   private supervisorName: string = "";
   private supervisorEmail: string = "";
 
+  // Edit page only
+  private userAccess: UserAccessModel;
+
   constructor(
     private userService: UserAccessService,
     private route: ActivatedRoute,
@@ -56,12 +59,19 @@ export class GrantAccessPage implements OnInit {
 
   ngOnInit() {
     this.userName = this.route.parent.snapshot.params['id'];
-    this.determinePageMode();
+    this.determinePageModeFromURL();
     this.getDomains();
     if (this.mode === 'edit') {
       this.initializePageFromQueryParameters();
     }
+  }
 
+  getAccess() {
+    return this.userService.getAccess(this.userName, {
+      domainKey: this.domain,
+      roleKey: this.role,
+      orgKey: this.orgs.join(',')
+    });
   }
 
   getDomains() {
@@ -86,7 +96,23 @@ export class GrantAccessPage implements OnInit {
     this.route.queryParams.subscribe(queryParams => {
       this.role = parseInt(queryParams["role"]);
       this.domain = parseInt(queryParams["domain"]);
-      this.getRoles();
+      let accessParams = { domainKey: this.domain, roleKey: this.role, orgKey: this.orgs.join(',') };
+      let obsAccess = this.getAccess();
+      this.getRoles().switchMap(() => obsAccess).subscribe(
+        res => {
+          this.userAccess = UserAccessModel.FromResponse(res);
+          this.onRoleChange(this.role);
+        },
+        error => {
+          this.footerAlert.registerFooterAlert({
+            title:"Unable to fetch access information.",
+            description:"",
+            type:'error',
+            timer:0
+          });
+        }
+      );
+
       if (queryParams['orgs']) {
         let orgIds = queryParams["orgs"].split(',');
         if (orgIds.length) {
@@ -96,7 +122,7 @@ export class GrantAccessPage implements OnInit {
     });
   }
 
-  determinePageMode() {
+  determinePageModeFromURL() {
     let match = this.router.url.match('edit-access');
     if(match && match.length) {
       this.mode = 'edit';
@@ -159,10 +185,20 @@ export class GrantAccessPage implements OnInit {
   }
 
   onRoleChange(role) {
+    let roleIsCurrentRole = false;
+    this.role = role;
+
+    let userRole;
+    if (this.userAccess) {
+      userRole = this.userAccess.raw().domainMapContent[0].roleMapContent[0];
+      if (+userRole.role.id === +this.role) {
+        roleIsCurrentRole = true;
+      }
+    }
+
     if (role) {
       this.errors.role = '';
     }
-    this.role = role;
 
     let r = this.roles.find(role => {
       return +role.role.id === +this.role;
@@ -170,13 +206,51 @@ export class GrantAccessPage implements OnInit {
 
     if (r) {
       this.objects = r.functionContent;
+
+      let userFunctions = userRole.organizationMapContent[0].functionMapContent;
+
+      if (roleIsCurrentRole) {
+        this.objects.forEach(fun => {
+          let fid = fun.function.id;
+          fun.permission.forEach(perm => {
+            let pid = perm.id;
+
+            if (!this.userHasPermission(fid, pid)) {
+              perm.notChecked = true;
+            }
+          });
+        });
+      }
     } else {
       this.objects = [];
     }
   }
 
+  userHasPermission(fid, pid) {
+    let userFunctions =  this.userAccess.raw().domainMapContent[0].roleMapContent[0].organizationMapContent[0].functionMapContent;
+    let found = false;
+    userFunctions.forEach(fun => {
+      if (fun.function.id === fid) {
+        fun.permission.forEach(perm => {
+          if (perm.id === pid) {
+            found = true;
+          }
+        });
+      }
+    });
+    return found;
+  }
+
   getRoles() {
-    this.userService.getRoles({domainID: this.domain}).subscribe(
+    console.log('getting roles');
+    let obs;
+    if (this.mode === 'edit') {
+      obs = this.userService.getRoles({domainID: this.domain, keepRoles: this.role}, this.userName).share();
+    } else {
+      obs = this.userService.getRoles({domainID: this.domain}).share();
+    }
+
+    obs.subscribe(
       perms => {
         this.roles = perms;
         let c = new PropertyCollector(perms);
@@ -195,6 +269,8 @@ export class GrantAccessPage implements OnInit {
         });
       }
     );
+
+    return obs;
   }
 
   onDomainChange(domain) {
@@ -305,20 +381,35 @@ export class GrantAccessPage implements OnInit {
         permissions: perms
       }
     });
-    let access = UserAccessModel.CreateAccessObject(
-      this.userName,
-      parseInt(this.role),
-      parseInt(this.domain),
-      orgIds,
-      funcs,
-      this.messages,
-    );
+
+    let access;
+    if (this.mode === 'grant') {
+      access = UserAccessModel.CreateGrantObject(
+        this.userName,
+        parseInt(this.role),
+        parseInt(this.domain),
+        orgIds,
+        funcs,
+        this.messages,
+      );
+    } else if (this.mode === 'edit') {
+      access = UserAccessModel.CreateEditObject(
+        this.userName,
+        parseInt(this.role),
+        parseInt(this.domain),
+        orgIds,
+        funcs,
+        this.messages,
+        this.userAccess
+      );
+    }
 
     this.userService.postAccess(access, this.userName).delay(2000).subscribe(
       res => {
+        let verb = this.mode === 'edit' ? 'Updated' : this.mode === 'grant' ? 'Granted' : 'Updated';
         this.footerAlert.registerFooterAlert({
-          title:"Access Granted.",
-          description:'You have successfully granted this user access',
+          title:`Access ${verb}.`,
+          description:`You have successfully ${verb.toLowerCase()} this user access`,
           type:'success',
           timer:3000
         });
@@ -326,12 +417,18 @@ export class GrantAccessPage implements OnInit {
         this.goToAccessPage();
       },
       error => {
-        this.footerAlert.registerFooterAlert({
-          title:"Unable to save access information.",
-          description:"",
-          type:'error',
-          timer:0
-        });
+        if (error.status === 409) {
+          this.errors.org = 'One of the organizations is already assigned to this domain and role';
+          this.scrollToHead();
+        } else {
+          this.footerAlert.registerFooterAlert({
+            title:"Unable to save access information.",
+            description:"",
+            type:'error',
+            timer:0
+          });
+        }
+
       }
     );
   }
