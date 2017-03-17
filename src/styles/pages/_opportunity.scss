@@ -263,8 +263,15 @@
     color: #003264;
     font-size: 1.7rem;
   }
-
-  strike{
+  .usa-color-blue{
+    color: #003264; 
+  }
+  .usa-changes{
+    del, .changed{
+      color: #003264;  
+    }
+  }
+  strike, u{
     color: #003264;
   }
 

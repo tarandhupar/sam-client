@@ -259,7 +259,10 @@ describe('ViewChangesPipe', () => {
     classificationCode: '<strike>24 -- Tractors</strike>',
     naicsCode: '<strike>336212 -- Truck Trailer Manufacturing</strike>',
     placeOfPerformance: '<strike>8110 Industrial Drive, STE 2002 Scranton PA CA 23123</strike>',
-    description: '<strike>See Attachment</strike>',
+    description: '<strike>See Attachment</strike><u><p>29 May 2014: Please ensure white papers and/or proposals are submitted in accordance with Amendment 0005 of the USAFA BAA-2009-1, which is also available on the Grants.gov website. The updated BAA found on Grants.gov is the conformed version of the announcement.</p>
+    <p>&nbsp;</p>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p></u>',
     postedDate: 'Changes from 04/30/2014 3:03 pm'
   };
 
