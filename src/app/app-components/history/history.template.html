@@ -1,5 +1,6 @@
+<i class="fa fa-minus" aria-hidden="true"></i>
 <ul>
-  <li *ngFor="let item of data" [class.current]="item.id == currentId">
+  <li *ngFor="let item of data" [class.current]="item.id == currentId" [attr.aria-label]=" item.id == currentId ? 'Current Opportunity' : '' ">
     <span>  
       <strong>{{item.date}}</strong>
       <a *ngIf="item.url" href="{{ item.url }}">{{ item.title }}</a>
@@ -9,3 +10,4 @@
     </span>
   </li>
 </ul>
+<i class="fa fa-minus" aria-hidden="true"></i>

@@ -1,23 +1,13 @@
 history{
+  .fa.fa-minus{
+    color: #ccc;
+    padding-left: 4px;
+  }
   
   ul{
     list-style-type: none;
     padding-left: 10px;
-    
-    &:before, &:after{
-      content:"\f068";
-      font: normal normal normal 20px/1 FontAwesome;
-      margin-left: -7px;
-      display: block;
-      color: #ccc;
-    }
-    &:before{
-      margin-bottom: -9px;
-    }
-    &:after{
-      margin-top: -9px;
-    }
-
+    margin: -10px 0;
     
     li{
       margin: 0px;
@@ -34,6 +24,8 @@ history{
       
       &.current:before{
         color: #ccc;
+        content: "\f0a9" !important;
+        background-color: white;
       }
       
       span{

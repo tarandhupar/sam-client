@@ -17,6 +17,7 @@ export class SearchPage implements OnInit{
   keyword: string = "";
   index: string = "";
   organizationId:string = '';
+  previousStringList:string = '';
   pageNum = 0;
   totalCount: any= 0;
   totalPages: any= 0;
@@ -176,6 +177,7 @@ export class SearchPage implements OnInit{
 
   // handles 'organization' emmitted event from agency picker
   onOrganizationChange(orgId:any){
+
     let organizationStringList = '';
 
     let stringBuilderArray = orgId.map(function (organizationItem) {
@@ -189,17 +191,17 @@ export class SearchPage implements OnInit{
       return organizationStringList;
     });
 
+    this.previousStringList = this.organizationId;
+
+    // storing current organization string list
     this.organizationId = organizationStringList;
 
-    //this.loadParams();
+    // we only want to change page number when the organization list has changed
+    if(this.previousStringList !== this.organizationId){
+      this.pageNum = 0;
+    }
 
-    this.pageNum = 0;
-    var qsobj = this.setupQS(false);
-    let navigationExtras: NavigationExtras = {
-      queryParams: qsobj
-    };
-    this.router.navigate(['/search'], navigationExtras);
-
+    this.searchResultsRefresh();
 
   }
 
