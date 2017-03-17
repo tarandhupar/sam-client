@@ -169,7 +169,6 @@ export class SearchPage implements OnInit{
       });
   }
 
-
   loadParams(){
     var qsobj = this.setupQS(false);
     this.searchService.loadParams(qsobj);
@@ -190,8 +189,6 @@ export class SearchPage implements OnInit{
 
       return organizationStringList;
     });
-
-    console.log('here is my tempString I compiled ', organizationStringList);
 
     this.organizationId = organizationStringList;
 
@@ -567,8 +564,6 @@ export class SearchPage implements OnInit{
 
   // previously performed selection
   wdPreviouslyPerformedChanged(event){
-    console.log('previously performed selection: ', this.wdPreviouslyPerformedModel);
-
     // if previously performed is no, we must set subject to cba model to empty
     if(this.wdPreviouslyPerformedModel === 'prevPerfNo'){
       this.wdSubjectToCBAModel = '';
@@ -580,8 +575,6 @@ export class SearchPage implements OnInit{
 
   // subject to change selection
   wdSubjectToCBAChanged(event){
-    console.log('subject to CBA selection: ', this.wdSubjectToCBAModel);
-
     // if the subject to change selection is based or unbased yes show modal success message
     if(this.wdSubjectToCBAModel === 'yesBasedCBA' || this.wdSubjectToCBAModel === 'yesUnbasedCBA'){
       this.alertFooterService.registerFooterAlert({
@@ -598,8 +591,6 @@ export class SearchPage implements OnInit{
 
   // non standard services radio button selection
   wdNonStandardRadChanged(event){
-    console.log('non-standard rad selection: ', this.wdNonStandardRadModel);
-
     // check if services should be disabled/enabled
     this.determineEnableServicesSelect();
 
@@ -626,8 +617,6 @@ export class SearchPage implements OnInit{
 
   // non standard services drop down selection
   wdNonStandardSelectChanged(event){
-    console.log('non-standard drop-down selection: ', this.wdNonStandardSelectModel);
-
     // if drop down selection made, auto-select yes rad button
     if(this.wdNonStandardSelectModel !== ''){
       this.wdNonStandardRadModel = 'yesNSS'

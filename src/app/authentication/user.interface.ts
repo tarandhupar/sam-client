@@ -35,8 +35,8 @@ export interface User {
   address2Type?: string,
   address2Zip?: string,
 
-  department?: string,
-  orgID?: string,
+  department?: number | string,
+  orgID?: number | string,
 
   kbaAnswerList: KBA[],
   gsaRAC?: any[],

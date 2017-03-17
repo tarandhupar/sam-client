@@ -26,7 +26,7 @@
 
       <samNameEntry class="usa-form-editable" [model]="user" legend=""></samNameEntry>
 
-      <samButton [buttonType]="(states.submitted ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('identity')"></samButton>
+      <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('identity')"></samButton>
     </section>
     <!--============================-->
     <!--=== Business Information ===-->
@@ -69,7 +69,7 @@
 
       <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" [numbersOnly]="true" (emitter)="updatePhoneNumber($event)" label="Business Phone"></samPhoneEntry>
 
-      <samButton [buttonType]="(states.submitted ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('business')"></samButton>
+      <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('business')"></samButton>
     </section>
     <!--==========================-->
     <!--=== Security Questions ===-->
@@ -92,7 +92,7 @@
                        label="Question {{ $index + 1 }}"></sam-kba-entry>
       </div>
 
-      <samButton [buttonType]="(states.submitted ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('kba')"></samButton>
+      <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('kba')"></samButton>
     </section>
     <section>
       <h3>Deactivate Account</h3>
@@ -100,7 +100,7 @@
         Once you deactivate your account, you will not be able to recover any of your account information or permissions. Your account will
         be permanently inaccessible and you will need to re-register to access SAM.gov.
       </div>
-      <samButton [buttonType]="(states.submitted ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></samButton>
+      <samButton [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></samButton>
     </section>
   </form>
 </div>

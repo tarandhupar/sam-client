@@ -539,7 +539,7 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   //switch from search call
-  setOrganizationFromBrowse(){
+  setOrganizationFromBrowse(){ console.log('hi');
     var selectedOrg;
     for(var idx in this.orgLevels){
       if(this.orgLevels[idx]['selectedOrg']){
