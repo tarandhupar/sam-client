@@ -417,7 +417,7 @@ export class GrantAccessPage implements OnInit {
       },
       error => {
         if (error.status === 409) {
-          this.errors.org = 'One of the organizations is already assigned to this domain and role';
+          this.errors.org = 'The user already has access for this domain at one or more of the selected organization(s)';
           this.scrollToHead();
         } else {
           this.footerAlert.registerFooterAlert({
