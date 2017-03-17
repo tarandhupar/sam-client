@@ -73,7 +73,7 @@ export class AgencyPickerComponent implements OnInit {
 
   defaultAgencyOption = {
     value:'',
-    label: 'Please select an Sub-tier',
+    label: 'Please select a Sub-tier',
     name: ''
   };
 
