@@ -18,15 +18,15 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.location==null">&nbsp;</span>
     	  <div *ngIf="data.location?.states!=null">
       	<ul *ngFor="let state of data.location?.states; let i=index" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li><strong>State: </strong>
+        	<li [attr.id]="'wd-state-' + i"><strong>State: </strong>
         	  <span>{{ state?.name }}</span>
         	</li>
-        	<li *ngIf="state.isStateWide==false" class="break-word"><strong>County/ies: </strong>
+        	<li [attr.id]="'wd-counties-' + i" *ngIf="state.isStateWide==false" class="break-word"><strong>County/ies: </strong>
             <ng-container *ngFor="let county of state.counties?.include; let isLast=last">
               {{county?.value}}{{ isLast ? '' : ', '}}
             </ng-container>
         	</li>
-        	<li *ngIf="state.isStateWide==true" class="break-word"><strong>County/ies: </strong>
+        	<li [attr.id]="'wd-counties-' + i" *ngIf="state.isStateWide==true" class="break-word"><strong>County/ies: </strong>
         	  Statewide {{state.counties?.exclude?.length>0 ? 'Except' : ''}}
             <ng-container *ngFor="let county of state.counties?.exclude; let isLast=last">
               {{county?.value}}{{ isLast ? '' : ', '}}
@@ -36,10 +36,10 @@ import * as moment from 'moment/moment';
         </div>
         <div *ngIf="data.location?.state!=null">
         <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li><strong>State: </strong>
+        	<li [attr.id]="'wd-state-0'"><strong>State: </strong>
         	  <span>{{ data.location?.state?.name }}</span>
         	</li>
-        	<li class="break-word"><strong>County/ies: </strong>
+        	<li [attr.id]="'wd-counties-0'" class="break-word"><strong>County/ies: </strong>
             <ng-container *ngFor="let county of data.location?.state?.counties; let isLast=last">
               {{county?.value}}{{ isLast ? '' : ', '}}
             </ng-container>
