@@ -474,7 +474,6 @@ export class OpportunityPage implements OnInit {
     }
   }
 
-
   private loadHistory(opportunity: Observable<any>) {
     let historySubject = new ReplaySubject(1);
     opportunity.subscribe(opportunityAPI => {
@@ -498,7 +497,12 @@ export class OpportunityPage implements OnInit {
           return historyItem.parent_notice == null;
         };
         let originalOpportunity = _.filter(this.history.content.history, isOriginal)[0];
-        let originalTypeLabel = typeLabel.transform(originalOpportunity.procurement_type);
+        let originalTypeLabel;
+        if(originalOpportunity == null) {
+          originalTypeLabel = "No Type Label";
+        } else {
+          originalTypeLabel = typeLabel.transform(originalOpportunity.procurement_type);
+        }
 
         // function that takes a history item and returns a title for it
         let makeTitle = function(historyItem) {
