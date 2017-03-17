@@ -314,7 +314,7 @@ export class ViewChangesPipe implements PipeTransform {
       previousDescription = null;
     }
     if (currentDescription != previousDescription && previousDescription == null){
-      description = "New Data".italics().fontcolor("003264");
+      description = currentDescription + "<span>" + "New Data".italics().fontcolor("003264") + "</span>";
       changesExistSynopsis = true;
     } else if (currentDescription != previousDescription && previousDescription != null){
       let finalString = '';
