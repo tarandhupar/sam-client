@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 import {FilterMultiArrayObjectPipe} from "../../app-pipes/filter-multi-array-object.pipe";
 import {DateFormatPipe} from "../../app-pipes/date-format.pipe";
 import {FixHTMLPipe} from "./fix-html.pipe";
-import  JsDiff = require('diff') ;
 import DiffMatchPatch = require('diff-match-patch');
 import * as _ from 'lodash';
 
@@ -11,7 +10,6 @@ import * as _ from 'lodash';
 @Pipe({name: 'viewChanges'})
 export class ViewChangesPipe implements PipeTransform {
   transform(previousOpportunity: any, currentOpportunity:any, dictionaries: any, currentOpportunityLocation:any, previousOpportunityLocation:any): any {
-    //let jsDiff = new JsDiff();
     let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
     let dateFormatPipe = new DateFormatPipe();
     let fixHtmlPipe = new FixHTMLPipe();
@@ -319,29 +317,20 @@ export class ViewChangesPipe implements PipeTransform {
       description = "New Data".italics();
       changesExistSynopsis = true;
     } else if (currentDescription != previousDescription && previousDescription != null){
-      //description = fixHtmlPipe.transform(previousDescription).strike();
-      let diffString1 = JsDiff.diffWordsWithSpace(previousDescription, currentDescription);
-      console.log("Diff String", diffString1);
       let finalString = '';
-      diffString1.forEach(function(part){
-        // green for additions, red for deletions
-        // grey for common parts
-        console.log("part: ", part);
-        var color = part.added ? 'green' :
-          part.removed ? 'red' : 'grey';
-        console.log("color: ", color);
-        console.log("part value color,", part.value.fontcolor(color));
-        finalString = finalString + part.value.fontcolor(color);
-      });
       let diff = new DiffMatchPatch();
       let diffString = diff.diff_main(previousDescription, currentDescription);
       let m = diff.diff_cleanupSemantic(diffString);
-      console.log("M", diffString);
-      description = diff.diff_prettyHtml(diffString);
-      //console.log("Diff String", diffString);
-      //console.log("description", color);
-      //description = finalString;
-      //description = fixHtmlPipe.transform(previousDescription).strike();
+      diffString.forEach(function(part){
+        if (part[0] == 1){
+          part[1] = "<u>" + part[1].toString() +"<u/>";
+        } else if (part[0] == -1){
+          part[1] = part[1].toString().strike();
+        }
+        finalString = finalString + part[1];
+      });
+
+      description = finalString;
       changesExistSynopsis = true;
     }
 
@@ -524,7 +513,7 @@ export class ViewChangesPipe implements PipeTransform {
 
     //checks posted date
     postedDate = ("Changes from " + dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a'));
-
+    console.log("previousOpportunity.postedDate", previousOpportunity.postedDate);
     differences = {
       changesExistGeneral: changesExistGeneral,
       changesExistSynopsis: changesExistSynopsis,
