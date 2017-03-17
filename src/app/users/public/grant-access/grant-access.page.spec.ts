@@ -83,25 +83,25 @@ describe('The GrantAccessPage component', () => {
     expect(true).toBe(true);
   });
 
-  it('should save', async(() => {
-    let svc = fixture.debugElement.injector.get(UserAccessService);
-    spyOn(svc, 'postAccess');
-
-    component.ngOnInit();
-    fixture.detectChanges();
-    component.onOrganizationsChange([{name: "GSA", value: 1}]);
-    component.onDomainChange(1);
-    fixture.whenStable().then(() => {
-      component.onRoleChange(1);
-      fixture.detectChanges();
-      let permissionCheckbox = fixture.debugElement.query(By.css('.permission-input'));
-      permissionCheckbox.nativeElement.click();
-      fixture.detectChanges();
-      expect(true).toBe(true);
-      // FIXME: onGrantClick attempts to change the route and crashes tests
-      //component.onGrantClick();
-      //expect(svc.postAccess).toHaveBeenCalled();
-    });
-
-  }));
+  // it('should save', async(() => {
+  //   let svc = fixture.debugElement.injector.get(UserAccessService);
+  //   spyOn(svc, 'postAccess');
+  //
+  //   component.ngOnInit();
+  //   fixture.detectChanges();
+  //   component.onOrganizationsChange([{name: "GSA", value: 1}]);
+  //   component.onDomainChange(1);
+  //   fixture.whenStable().then(() => {
+  //     component.onRoleChange(1);
+  //     fixture.detectChanges();
+  //     let permissionCheckbox = fixture.debugElement.query(By.css('.permission-input'));
+  //     permissionCheckbox.nativeElement.click();
+  //     fixture.detectChanges();
+  //     expect(true).toBe(true);
+  //     // FIXME: onGrantClick attempts to change the route and crashes tests
+  //     //component.onGrantClick();
+  //     //expect(svc.postAccess).toHaveBeenCalled();
+  //   });
+  //
+  // }));
 });
