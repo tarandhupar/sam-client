@@ -187,7 +187,11 @@
       </section>
 
       <section [attr.id]="generateID(opportunityFields.Classification)" *ngIf="shouldBeDisplayed(opportunityFields.Classification)">
-        <h2>Classification</h2>
+        <h2>Classification
+          <samButton *ngIf="differences?.changesExistClassification && !showChangesClassification" [buttonId]="'defaultBtnClassification'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideClassification()"></samButton>
+          <samButton *ngIf="differences?.changesExistClassification && showChangesClassification" [buttonId]="'defaultBtnClassification'" [buttonText]="'Hide Changes'" [buttonType]="btnType" (click)="showHideClassification()"></samButton>
+          <span *ngIf="showChangesClassification" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+        </h2>
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalSetAside)">
             <strong> Original Set Aside: </strong>
@@ -210,7 +214,7 @@
               <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                 <ng-container> {{ element.value }}</ng-container>
               </ng-container>
-              <span *ngIf="showChangesGeneral && differences?.updateSetAside" [innerHTML]="differences?.updateSetAside"></span>
+              <span *ngIf="showChangesClassification && differences?.updateSetAside" [innerHTML]="differences?.updateSetAside"></span>
             </ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ClassificationCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.ClassificationCode)">
@@ -222,7 +226,7 @@
                 {{ element.value }}
               </ng-container>
             </ng-container>
-            <span *ngIf="showChangesGeneral && differences?.classificationCode" [innerHTML]="differences?.classificationCode"></span>
+            <span *ngIf="showChangesClassification && differences?.classificationCode" [innerHTML]="differences?.classificationCode"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.NAICSCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.NAICSCode)">
             <!-- <samLabel *ngIf="differences?.naicsCode" [labelType]="'small'" [labelText]="' '"></samLabel> -->
@@ -235,7 +239,7 @@
                 </li>
               </ul>
             </ng-container>
-            <pre *ngIf="showChangesGeneral && differences?.naicsCode" [innerHTML]="differences?.naicsCode"></pre>
+            <pre *ngIf="showChangesClassification && differences?.naicsCode" [innerHTML]="differences?.naicsCode"></pre>
           </li>
           <li [attr.id]="generateID(opportunityFields.POP, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POP)">
             <!-- <samLabel *ngIf="differences?.placeOfPerformance" [labelType]="'small'" [labelText]="' '"></samLabel> -->
@@ -262,7 +266,7 @@
               {{opportunity.data?.placeOfPerformance?.country}}
             </div>
           </li>
-          <span *ngIf="showChangesGeneral && differences?.placeOfPerformance" [innerHTML]="differences?.placeOfPerformance"></span>
+          <span *ngIf="showChangesClassification && differences?.placeOfPerformance" [innerHTML]="differences?.placeOfPerformance"></span>
         </ul>
       </section>
 
