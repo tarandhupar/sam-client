@@ -566,6 +566,8 @@ export class OpportunityPage implements OnInit {
           return processedHistoryItem;
         };
         this.processedHistory = this.history.content.history.map(processHistoryItem);
+        //sort by index to show history by version (oldest to newest)
+        this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.index; });
 
         /** Show alert if current version is not the authoritative version **/
         let isCurrent = function(historyItem) { return historyItem.id === opportunityAPI.opportunityId; };

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { Observable } from "rxjs";
-import { UserAccessInterface } from './access.interface';
-import { RoleInterface } from "./roles.interface";
+import { UserAccessInterface, UserAccessWrapper } from './access.interface';
 import * as _ from 'lodash';
 import { IDomain } from "./domain.interface";
+import { IRole } from "./role.interface";
 
 export interface UserAccessFilterOptions {
   domainIds?: (string|number)[],
@@ -21,10 +21,7 @@ export class UserAccessService {
 
   }
 
-  getAccess(userId: string, filterOptions?: UserAccessFilterOptions): Observable<UserAccessInterface> {
-    if (typeof userId === 'undefined') {
-      throw new Error('userId is required');
-    }
+  getAccess(userId: string, filterOptions?: any): Observable<UserAccessInterface> {
     let apiOptions: any = {
       name: 'access',
       suffix: '/' + userId + '/',
@@ -57,13 +54,21 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  getRoles(): Observable< Array<RoleInterface> > {
+  getRoles(queryParams, userName?): Observable< Array<IRole> > {
     let apiOptions: any = {
-      name: 'roles',
+      name: 'uiroles',
       method: 'GET',
       suffix: '',
+      oParam: {
+        fetchNames: 'true',
+      }
     };
 
+    if (userName) {
+      apiOptions.suffix = '/'+userName;
+    }
+
+    apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
     return this.apiService.call(apiOptions);
   }
 
@@ -77,29 +82,11 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  getPermissions(queryParams) {
-    let apiOptions: any = {
-      name: 'permissions',
-      method: 'GET',
-      suffix: '',
-      oParam: {
-        fetchNames: 'true',
-      }
-    };
-
-    apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
-    return this.apiService.call(apiOptions);
-  }
-
-  putAccess(access: UserAccessInterface) {
-    if (!access.user) {
-      throw new Error('access.user is required');
-    }
-
+  postAccess(access: UserAccessWrapper, userName) {
     let apiOptions: any = {
       name: 'access',
-      suffix: '/' + access.user + '/',
-      method: 'PUT',
+      suffix: '/' + userName + '/',
+      method: 'POST',
       body: access
     };
 

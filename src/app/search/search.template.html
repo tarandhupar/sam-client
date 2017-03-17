@@ -23,7 +23,7 @@
 
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
           <agencyPicker
-            [label]="'Filter by Organization:'"
+            [label]="'Search Federal Organizations'"
             (organization)="onOrganizationChange($event)"
             [levelLimit] = '2'>
           </agencyPicker>
