@@ -1,7 +1,8 @@
 <div class="usa-grid search-page">
 
   <!--filters aside-->
-  <aside class="usa-width-one-fourth">
+  <aside class="{{index === 'wd' ? 'usa-width-one-third' : 'usa-width-one-fourth'}}">
+
     <div>&nbsp;</div>
     <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
     <div>
@@ -19,8 +20,16 @@
             (modelChange)="activeFilter($event)">
           </samCheckbox>
         </sam-collapsible>
-        <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">
 
+        <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
+          <agencyPicker
+            [label]="'Filter by Organization:'"
+            (organization)="onOrganizationChange($event)"
+            [levelLimit] = '2'>
+          </agencyPicker>
+        </sam-collapsible>
+
+        <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">
           <!--state drop down-->
           <samSelect
             [(model)]="wdStateModel"
@@ -61,6 +70,7 @@
             [errorMessage]="wdTypeConfig.errorMessage"
             (modelChange)="wdFilterChange($event)">
           </samRadioButton>
+          <button (click)='wdTypeRadClear()'>Clear</button>
         </sam-collapsible>
 
         <!--*** DBA Specif Filters ***-->
@@ -143,25 +153,17 @@
     </div>
   </aside>
 
-  <div class="usa-width-three-fourths">
+  <div class="{{index === 'wd' ? 'usa-width-two-thirds' : 'usa-width-three-fourths'}}">
     <div class="usa-width-one">
-      <samAlert *ngIf="wdTypeModel" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
+      <samAlert *ngIf="wdTypeModel && wdTypeModel === 'dbra'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
+      <samAlert *ngIf="wdTypeModel && wdTypeModel === 'sca'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="scaSearchDescription"></div></samAlert>
       <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
       <p *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'" class="usa-font-lead">
-        Please navigate to the <a href="https://www.wdol.gov/">Service Contract Act</a> section of the legacy WDOL site to retrieve
+        Please navigate to the <a href="https://www.wdol.gov/sca.aspx">Service Contract Act</a> section of the legacy WDOL site to retrieve
         a Collective Bargaining Agreement (CBA) WD or to create a new CBA WD
       </p>
     </div>
     <div class="usa-width-one" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
-      <div *ngIf="showOptional" class="usa-width-one">
-        <h3>Common Filters:</h3>
-        <div class="usa-grid-full">
-          <div class="usa-width-one-third">
-            <agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
-          </div>
-        </div>
-        <hr *ngIf="data.results" class="usa-width-one m_T-5x"/>
-      </div>
       <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
       <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
       <div id="search-results">
@@ -176,9 +178,15 @@
           <hr class="m_T-5x"/>
         </div>
       </div>
-      <div *ngIf="!initLoad && !data.results">
+      <div *ngIf="!initLoad && !data.results && index !== 'wd'">
         <br/>
         <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
+        <div style="height:300px;"></div>
+      </div>
+      <div *ngIf="!initLoad && !data.results && index === 'wd'">
+        <br/>
+        <h3>No Wage Determinations were found using the criteria you have selected.</h3>
+        <h3>If you would like to request a SCA WDOL using an e98 form, please click <a href="https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp">here.</a></h3>
         <div style="height:300px;"></div>
       </div>
     </div>

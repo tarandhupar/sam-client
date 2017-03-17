@@ -16,6 +16,7 @@ import { FHService } from 'api-kit';
 * @Input() orgId: string - Prepopulate picker with an organization id
 * @Input() hint: string - Hint text that will appear below the label
 * @Input() orgRoot: string - Sets a root organization on the picker, users can only search/browse organizations under this root
+* @Input() levelLimit:number - Sets a hard limit of organizations to drill down to e.g. 2 will only show down to agency
 * @Output department - emits a single department object with value property (note: in case later we need organization label emitted)
 * @Output organization - emits array/single (Depending on `multimode` setting) of selected organizations when user closes the selection area
 */
@@ -29,6 +30,7 @@ export class AgencyPickerComponent implements OnInit {
   @Input() orgRoot = "";
   @Input() required = false;
   @Input() searchMessage = "";
+  @Input() levelLimit:number = null;
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
   @Output() organization = new EventEmitter<any[]>();
@@ -376,6 +378,9 @@ export class AgencyPickerComponent implements OnInit {
     if(data.type!="DEPARTMENT"){
       this.serviceCall(data.orgKey,false).subscribe( fullOrgPath => {
         var orgPathArr = fullOrgPath['_embedded'][0]['org']['fullParentPath'].split(".");
+        if(this.levelLimit){
+          orgPathArr.length = this.levelLimit;
+        }
         for(var orgidx in orgPathArr){
           this.orgLevels[orgidx].selectedOrg = orgPathArr[orgidx];
           this.serviceCall(orgPathArr[orgidx],true).subscribe( orglvldata => {
@@ -388,9 +393,14 @@ export class AgencyPickerComponent implements OnInit {
             }
 
             if(orglvldata['hierarchy'].length>0){
-              var formattedData = this.formatHierarchy(orgType,orglvldata['hierarchy']);
-              this.orgLevels[orglvl].options = formattedData;
-              this.orgLevels[orglvl].show = true;
+              if(!this.levelLimit || this.levelLimit > parseInt(orglvl)){
+                var formattedData = this.formatHierarchy(orgType,orglvldata['hierarchy']);
+                this.orgLevels[orglvl].options = formattedData;
+                this.orgLevels[orglvl].show = true;
+              }
+              else{
+                this.orgLevels[orglvl].show = false;
+              }
             } else{
               this.orgLevels[orglvl].options.length = 1;
               this.orgLevels[orglvl].show = false;
@@ -529,7 +539,7 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   //switch from search call
-  setOrganizationFromBrowse(){
+  setOrganizationFromBrowse(){ console.log('hi');
     var selectedOrg;
     for(var idx in this.orgLevels){
       if(this.orgLevels[idx]['selectedOrg']){
@@ -548,6 +558,9 @@ export class AgencyPickerComponent implements OnInit {
 
   //todo: potential refactor
   loadChildOrganizations(lvl){
+    if(this.levelLimit && lvl >= this.levelLimit - 1){
+      return;
+    }
     var orgLevel = this.orgLevels[lvl];
     var selectionLvl = lvl;
     var dontResetDirectChildLevel = false;
@@ -706,23 +719,31 @@ export class AgencyPickerComponent implements OnInit {
     } else {
       this.serviceCall(root,true).subscribe( res => {
         var orgPath = res._embedded[0]['org']['fullParentPath'].split(".");
+        if(this.levelLimit){
+          orgPath.length = this.levelLimit;
+        }
         this.lockHierachy = orgPath;
         for(var idx in orgPath){
           var level = parseInt(idx)+1;
           var label = res._embedded[0]['org']['l'+level+'Name'] + this.levelFormatter(level);
-          this.orgLevels[idx].options = [{
-            'value':orgPath[idx],
-            'label': label,
-            'name':orgPath[idx]
-          }];
-          this.orgLevels[idx].selectedOrg = orgPath[idx]
-          this.orgLevels[idx].show = true;
+
+          if(!this.levelLimit || level < this.levelLimit) {
+            this.orgLevels[idx].options = [{
+              'value': orgPath[idx],
+              'label': label,
+              'name': orgPath[idx]
+            }];
+            this.orgLevels[idx].selectedOrg = orgPath[idx]
+            this.orgLevels[idx].show = true;
+          }
         }
         if(res._embedded[0]['org']['hierarchy'].length>0){
-          var type = res._embedded[0]['org']['type'] == "DEPARTMENT" ? "agency" : "office";
-          var formattedData = this.formatHierarchy(type,res._embedded[0]['org']['hierarchy']);
-          this.orgLevels[orgPath.length].options = formattedData;
-          this.orgLevels[orgPath.length].show = true;
+          if(!this.levelLimit || orgPath.length < this.levelLimit){
+            var type = res._embedded[0]['org']['type'] == "DEPARTMENT" ? "agency" : "office";
+            var formattedData = this.formatHierarchy(type,res._embedded[0]['org']['hierarchy']);
+            this.orgLevels[orgPath.length].options = formattedData;
+            this.orgLevels[orgPath.length].show = true;
+          }
         }
       });
     }
@@ -738,7 +759,9 @@ export class AgencyPickerComponent implements OnInit {
         if(res.type=="AGENCY"){
           this.orgLevels[1].show=true;
           if(res['hierarchy']){
-            this.orgLevels[2].show=true;
+            if(!this.levelLimit || res.level < this.levelLimit){
+              this.orgLevels[2].show=true;
+            }
           }
         }
         if(res.type=="OFFICE"){
