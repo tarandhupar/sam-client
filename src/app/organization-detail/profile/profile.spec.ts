@@ -158,7 +158,7 @@ describe('Organization Detail Profile Page', () => {
       {description:"Office Name", value:"Us Army Robert Morris Acquisitio"},
       {description:"Description", value:""},
       {description:"Shortname", value:""},
-      {description:"Start Date", value:"9/30/2000"},
+      {description:"Start Date", value:"09/30/2000"},
       {description:"Indicate Funding", value:"Funding/Award"},
     ]);
   });

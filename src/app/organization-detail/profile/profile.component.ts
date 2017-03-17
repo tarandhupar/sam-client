@@ -1,6 +1,8 @@
 import { Component, Input } from "@angular/core";
 import { ActivatedRoute, Router} from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
+import * as moment from 'moment/moment';
+
 
 @Component ({
   templateUrl: 'profile.template.html'
@@ -81,8 +83,8 @@ export class OrgDetailProfilePage {
     let funding = "";
 
     if(!!org.startDate){
-      let startDate = new Date(this.getOrgFieldData(org,"startDate"));
-      startDateStr = startDate.toLocaleDateString();
+      console.log(org.startDate);
+      startDateStr = moment(org.startDate).format('MM/DD/YYYY');
     }
 
     this.orgDetails.push({description:this.capitalizeFirstLetter(org.type)+" Name", value:this.capitalizeFirstLetter(org.name)});
