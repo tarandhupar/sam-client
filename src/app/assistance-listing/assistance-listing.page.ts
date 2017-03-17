@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
+import * as Cookies from 'js-cookie';
 
 import * as _ from 'lodash';
 
@@ -32,6 +33,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   public logoUrl: any;
   public logoInfo: any;
   errorLogo: any;
+  cookieValue: string;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -53,6 +55,8 @@ export class ProgramPage implements OnInit, OnDestroy {
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
+
+    this.cookieValue = Cookies.get('iPlanetDirectoryPro');
 
     let programAPISource = this.loadProgram();
 
@@ -78,7 +82,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = params['id'];
-      return this.programService.getProgramById(params['id']);
+      return this.programService.getProgramById(params['id'], this.cookieValue);
     });
     this.apiStreamSub = apiStream.subscribe(apiSubject);
 
@@ -185,7 +189,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     // construct a stream that contains all related programs from related program ids
     let relatedProgramsStream = relatedProgramsIdStream.flatMap(relatedId => {
-      return this.programService.getLatestProgramById(relatedId);
+      return this.programService.getLatestProgramById(relatedId, this.cookieValue);
     });
 
     this.relatedProgramsSub = relatedProgramsStream.subscribe(relatedProgram => {

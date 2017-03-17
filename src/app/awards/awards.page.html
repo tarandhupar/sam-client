@@ -134,28 +134,28 @@
 					</tr>
 					<tr>
 						<td><b>Action Obligation:</b></td>
-						<td>{{awardData.amountInformation.actionObligation}}</td>
-						<td>{{awardData.amountInformation.totalActionObligation}}</td>
+						<td>{{awardData.amountInformation.actionObligation | currency:'USD':true:'.2-2'}}</td>
+						<td>{{awardData.amountInformation.totalActionObligation | currency:'USD':true:'.2-2'}}</td>
 					</tr>
 					<tr *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
 						<td><b>Base and Exercised Options Value:</b></td>
-						<td>{{awardData.amountInformation.baseExercisedOptionsValue}}</td>
-						<td>{{awardData.amountInformation.totalBaseExercisedOptionsValue}}</td>
+						<td>{{awardData.amountInformation.baseExercisedOptionsValue | currency:'USD':true:'.2-2'}}</td>
+						<td>{{awardData.amountInformation.totalBaseExercisedOptionsValue | currency:'USD':true:'.2-2'}}</td>
 					</tr>
 					<tr>
 						<td><b>Base and All Options Value:</b></td>
-						<td>{{awardData.amountInformation.baseAllOptionsValue}}</td>
-						<td>{{awardData.amountInformation.totalBaseAllOptionsValue}}</td>
+						<td>{{awardData.amountInformation.baseAllOptionsValue | currency:'USD':true:'.2-2'}}</td>
+						<td>{{awardData.amountInformation.totalBaseAllOptionsValue | currency:'USD':true:'.2-2'}}</td>
 					</tr>
 					<tr *ngIf="awardData.templateType == 'AWARD'">
 						<td><b>Fee Paid for Use of IDV:</b></td>
-						<td>{{awardData.amountInformation.feePaidForUseIDV}}</td>
+						<td>{{awardData.amountInformation.feePaidForUseIDV | currency:'USD':true:'.2-2'}}</td>
 						<td></td>
 					</tr>
 					<tr *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
 						<td><b>Non-Governmental Dollars:</b></td>
-						<td>{{awardData.amountInformation.nonGovernmentDollar}}</td>
-						<td>{{awardData.amountInformation.totalNonGovernmentDollar}}</td>
+						<td>{{awardData.amountInformation.nonGovernmentDollar | currency:'USD':true:'.2-2'}}</td>
+						<td>{{awardData.amountInformation.totalNonGovernmentDollar | currency:'USD':true:'.2-2'}}</td>
 					</tr>
 				</table>
 				<h3 id="purchaserInformation">Purchaser Information</h3>
@@ -166,10 +166,12 @@
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 					Foreign Funding: {{awardData.purchaserInformation.foreignFunding}}<br />
 				</div>
-				Funding Agency Name: {{awardData.purchaserInformation.fundingAgencyName}}<br />
-				Funding Agency ID: {{awardData.purchaserInformation.fundingAgencyID}}<br />
-				Funding Office Name: {{awardData.purchaserInformation.fundingOfficeName}}<br />
-				Funding Office ID: {{awardData.purchaserInformation.fundingOfficeID}}
+				<div *ngIf="awardData.templateType != 'OTI'">
+					Funding Agency Name: {{awardData.purchaserInformation.fundingAgencyName}}<br />
+					Funding Agency ID: {{awardData.purchaserInformation.fundingAgencyID}}<br />
+					Funding Office Name: {{awardData.purchaserInformation.fundingOfficeName}}<br />
+					Funding Office ID: {{awardData.purchaserInformation.fundingOfficeID}}
+				</div>
 				<div *ngIf="awardData.templateType == 'AWARD'">
 					Reason for Inter-Agency Contracting: {{awardData.purchaserInformation.reasonForPurchase}}
 				</div>

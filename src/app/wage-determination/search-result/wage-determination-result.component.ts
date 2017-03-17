@@ -12,23 +12,40 @@ import * as moment from 'moment/moment';
     	  <span *ngIf="data.isActive==false" class="usa-label">Inactive</span>
     	</p>
     	<h3 class="wage-determination-number">
-
       	<span>{{ data._type=='wdSCA' ? 'SCA Wage Determination #: ' : 'DBA Wage Determination #: ' }}</span><a [routerLink]="['/wage-determination', data.fullReferenceNumber, data.revisionNumber]" [queryParams]="qParams" >{{ data.fullReferenceNumber }}</a>
-
-
     	</h3>
     	<div class="usa-width-two-thirds">
-    	  <span *ngIf="data.locations==null">&nbsp;</span>
-      	<ul *ngFor="let location of data.locations; let i=index" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
+    	  <span *ngIf="data.location==null">&nbsp;</span>
+    	  <div *ngIf="data.location?.states!=null">
+      	<ul *ngFor="let state of data.location?.states; let i=index" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li><strong>State: </strong>
-        	  <span>{{ location.state?.name }}</span>
+        	  <span>{{ state?.name }}</span>
         	</li>
-        	<li class="break-word"><strong>County/ies: </strong>
-            <ng-container *ngFor="let county of location.counties; let isLast=last">
+        	<li *ngIf="state.isStateWide==false" class="break-word"><strong>County/ies: </strong>
+            <ng-container *ngFor="let county of state.counties?.include; let isLast=last">
+              {{county?.value}}{{ isLast ? '' : ', '}}
+            </ng-container>
+        	</li>
+        	<li *ngIf="state.isStateWide==true" class="break-word"><strong>County/ies: </strong>
+        	  Statewide {{state.counties?.exclude?.length>0 ? 'Except' : ''}}
+            <ng-container *ngFor="let county of state.counties?.exclude; let isLast=last">
               {{county?.value}}{{ isLast ? '' : ', '}}
             </ng-container>
         	</li>
         </ul>
+        </div>
+        <div *ngIf="data.location?.state!=null">
+        <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
+        	<li><strong>State: </strong>
+        	  <span>{{ data.location?.state?.name }}</span>
+        	</li>
+        	<li class="break-word"><strong>County/ies: </strong>
+            <ng-container *ngFor="let county of data.location?.state?.counties; let isLast=last">
+              {{county?.value}}{{ isLast ? '' : ', '}}
+            </ng-container>
+        	</li>
+        </ul>
+        </div>
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
@@ -68,25 +85,35 @@ export class WageDeterminationResult implements OnInit {
     if(this.data.publishDate!==null) {
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
     }
-    if(this.data.locations!==null) {
-      for(var i=0; i<this.data.locations.length; i++) {
-        if(this.data.locations[i].counties != null) {
-          this.data.locations[i].counties = this.data.locations[i].counties.sort(function (a, b) {
-            var nameA = a.value.toUpperCase(); // ignore upper and lowercase
-            var nameB = b.value.toUpperCase(); // ignore upper and lowercase
-            if (nameA < nameB) {
-              return -1;
-            }
-            if (nameA > nameB) {
-              return 1;
-            }
-
-            // names must be equal
-            return 0;
-          });
+    if(this.data.location!==null) {
+      if (this.data.location.states && this.data.location.states !== null) {
+        for (var i = 0; i < this.data.location.states.length; i++) {
+          if (this.data.location.states[i].counties && this.data.location.states[i].counties.include !== null) {
+            this.data.location.states[i].counties.include = this.sortCounties(this.data.location.states[i].counties.include);
+          }
+          if (this.data.location.states[i].counties && this.data.location.states[i].counties.exclude !== null) {
+            this.data.location.states[i].counties.exclude = this.sortCounties(this.data.location.states[i].counties.exclude);
+          }
         }
       }
+      if (this.data.location.state && this.data.location.state.counties && this.data.location.state.counties !== null) {
+        this.data.location.state.counties = this.sortCounties(this.data.location.state.counties);
+      }
     }
-  }
+    }
 
+  sortCounties(countiesArray) {
+    return countiesArray.sort(function (a, b) {
+      var nameA = a.value.toUpperCase(); // ignore upper and lowercase
+      var nameB = b.value.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      // names must be equal
+      return 0;
+    });
+  }
 }
