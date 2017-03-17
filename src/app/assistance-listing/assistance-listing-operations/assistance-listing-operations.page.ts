@@ -72,7 +72,6 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
         if (this.mode == 'edit') {
           this.getProgSub = this.programService.getProgramById(this.programId, this.cookieValue)
             .subscribe(api => {
-              console.log('api', api);
               let title = api.data.title;
               let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
               let falNo = (api.data.programNumber ? api.data.programNumber : '');
@@ -138,7 +137,6 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   }
 
   getPrograms() {
-    /*status=published&includeCount=false&sortBy=title*/
     this.getProgramsSub = this.programService.runProgram({
       status: 'published',
       includeCount : 'false',
@@ -168,16 +166,13 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
   }
 
   saveProgram(data) {
-
     this.saveProgSub = this.programService.saveProgram(this.programId, data, this.cookieValue)
       .subscribe(api => {
-          //console.log("api", api);
           this.programId = api._body;
 
           if(this.redirectToEdit) {
             this.router.navigate(['/programs/' + this.programId + '/edit'], {fragment: 'overview'});
           }
-
         if(this.redirectToWksp)
           this.router.navigate(['falworkspace']);
       }); //end of subscribe
@@ -211,7 +206,11 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
         break;
       }
       case "cancel" : {
-        this.router.navigate(['falworkspace']);
+        if (this.mode == 'add') {
+          this.router.navigate(['/falworkspace']);
+        } else {
+          this.router.navigate(['/programs',this.programId,'view']);
+        }
         break;
       }
     }
