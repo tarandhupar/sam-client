@@ -9,16 +9,16 @@ import { FHService } from 'api-kit';
 /**
  * AgencyPickerComponent - Connects to backend FH services to select a single/multiple organizations
  *
- * @Input multimode: boolean - configure to select a single or multiple organizations
- * @Input advancedMode: boolean - configure advanced mode
- * @Input getQSValue: boolean - Looks up a query string value to prepopulate selection
+ * @Input() multimode: boolean - configure to select a single or multiple organizations
+ * @Input() advancedMode: boolean - configure advanced mode
+ * @Input() getQSValue: boolean - Looks up a query string value to prepopulate selection
  * @Input() orgId: string - Prepopulate picker with an organization id
  * @Input() hint: string - Hint text that will appear below the label
  * @Input() orgRoot: string - Sets a root organization on the picker, users can only search/browse organizations under this root
  * @Input() levelLimit:number - Sets a hard limit of organizations to drill down to e.g. 2 will only show down to agency
  * @Input() initial: array - sets the array of selected organization array
- * @Output department - emits a single department object with value property (note: in case later we need organization label emitted)
- * @Output organization - emits array/single (Depending on `multimode` setting) of selected organizations when user closes the selection area
+ * @Output() department - emits a single department object with value property (note: in case later we need organization label emitted)
+ * @Output() organization - emits array/single (Depending on `multimode` setting) of selected organizations when user closes the selection area
  */
 export class AgencyPickerComponent implements OnInit {
   @Input() label: string = "Multiple Organization(s):";
