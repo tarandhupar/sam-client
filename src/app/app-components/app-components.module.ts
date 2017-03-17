@@ -1,6 +1,6 @@
 // Angular Dependencies
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { SamUIKitModule } from 'sam-ui-kit';
@@ -21,9 +21,9 @@ import { SamFeedbackComponent } from './feedback-form/feedback-form.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
 import { InputAutocompleteComponent } from './input-autocomplete/input-autocomplete.component';
 import { SamSearchbarComponent } from './searchbar/searchbar.component';
-
-
-
+import { FormFieldComponent } from "./object-form/form-field/form-field.component";
+import { ObjectFormModel } from "./object-form/object-form.component";
+import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-sidebar.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -44,6 +44,9 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
     SamHeaderLinksComponent,
     InputAutocompleteComponent,
     ListResultsMessageComponent,
+    FormFieldComponent,
+    ObjectFormModel,
+    ObjectSidebarComponent,
     SamSearchbarComponent,
     SamFeedbackComponent
   ],
@@ -52,7 +55,8 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
     SamUIKitModule,
     FormsModule,
     RouterModule,
-    SamAPIKitModule
+    SamAPIKitModule,
+    ReactiveFormsModule
   ],
   exports: [
     AgencyPickerComponent,
@@ -70,7 +74,10 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
     InputAutocompleteComponent,
     ListResultsMessageComponent,
     SamSearchbarComponent,
-    SamFeedbackComponent
+    SamFeedbackComponent,
+    FormFieldComponent,
+    ObjectFormModel,
+    ObjectSidebarComponent
   ],
   providers: [ ]
 })
