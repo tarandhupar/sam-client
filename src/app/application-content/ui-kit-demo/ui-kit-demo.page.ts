@@ -317,4 +317,8 @@ export class UIKitDemoPage {
     }
 
   }
+
+  clearSearchCountryJSON(){
+    this.locationSearchCountryJSON = {};
+  }
 }

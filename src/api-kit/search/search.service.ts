@@ -28,32 +28,37 @@ export class SearchService {
         oApiParam.oParam['index'] = obj.wdType;
       }
 
-        // construction type filter
-        if(typeof obj.conType !== 'undefined' && obj.conType !== null && obj.conType !== '') {
-          oApiParam.oParam['construction_type'] = obj.conType;
-        }
+    // organization id filter
+    if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null && obj.organizationId !== '') {
+      oApiParam.oParam['organization_id'] = obj.organizationId;
+    }
 
-        // state filter
-        if(typeof obj.state !== 'undefined' && obj.state !== null && obj.state !== '') {
-          oApiParam.oParam['state'] = obj.state;
-        }
+    // construction type filter
+    if(typeof obj.conType !== 'undefined' && obj.conType !== null && obj.conType !== '') {
+      oApiParam.oParam['construction_type'] = obj.conType;
+    }
 
-        // county filter
-        if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
-          oApiParam.oParam['county'] = obj.county;
-        }
+    // selectStateModel
+    if(typeof obj.state !== 'undefined' && obj.state !== null && obj.state !== '') {
+      oApiParam.oParam['state'] = obj.state;
+    }
 
-        // service filter
-        if(typeof obj.service !== 'undefined' && obj.service !== null && obj.service !== '') {
-          oApiParam.oParam['service'] = obj.service;
-        }
+    // county filter
+    if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
+      oApiParam.oParam['county'] = obj.county;
+    }
 
-        // iseven filter
-        if(typeof obj.isEven !== 'undefined' && obj.isEven !== null && obj.isEven !== '') {
-          if(obj.isEven === 'true'){
-            oApiParam.oParam['is_even'] = true;
-          }
-          else if(obj.isEven === 'false'){
+    // service filter
+    if(typeof obj.service !== 'undefined' && obj.service !== null && obj.service !== '') {
+      oApiParam.oParam['service'] = obj.service;
+    }
+
+    // iseven filter
+    if(typeof obj.isEven !== 'undefined' && obj.isEven !== null && obj.isEven !== '') {
+      if(obj.isEven === 'true'){
+        oApiParam.oParam['is_even'] = true;
+      }
+      else if(obj.isEven === 'false'){
         oApiParam.oParam['is_even'] = false;
       }
     }

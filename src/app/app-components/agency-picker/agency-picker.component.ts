@@ -9,14 +9,15 @@ import { FHService } from 'api-kit';
 /**
  * AgencyPickerComponent - Connects to backend FH services to select a single/multiple organizations
  *
- * @Input multimode: boolean - configure to select a single or multiple organizations
- * @Input advancedMode: boolean - configure advanced mode
- * @Input getQSValue: boolean - Looks up a query string value to prepopulate selection
- * @Input orgId: string - Prepopulate picker with an organization id
- * @Input hint: string - Hint text that will appear below the label
- * @Input orgRoot: string - Sets a root organization on the picker, users can only search/browse organizations under this root
- * @Output department - emits a single department object with value property (note: in case later we need organization label emitted)
- * @Output organization - emits array/single (Depending on `multimode` setting) of selected organizations when user closes the selection area
+ * @Input() multimode: boolean - configure to select a single or multiple organizations
+ * @Input() advancedMode: boolean - configure advanced mode
+ * @Input() getQSValue: boolean - Looks up a query string value to prepopulate selection
+ * @Input() orgId: string - Prepopulate picker with an organization id
+ * @Input() hint: string - Hint text that will appear below the label
+ * @Input() orgRoot: string - Sets a root organization on the picker, users can only search/browse organizations under this root
+ * @Input() levelLimit:number - Sets a hard limit of organizations to drill down to e.g. 2 will only show down to agency
+ * @Output() department - emits a single department object with value property (note: in case later we need organization label emitted)
+ * @Output() organization - emits array/single (Depending on `multimode` setting) of selected organizations when user closes the selection area
  */
 export class AgencyPickerComponent implements OnInit {
   @Input() label: string = "Multiple Organization(s):";
@@ -28,6 +29,7 @@ export class AgencyPickerComponent implements OnInit {
   @Input() orgRoot = "";
   @Input() required = false;
   @Input() searchMessage = "";
+  @Input() levelLimit: number = null;
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
   @Output() organization = new EventEmitter<any[]>();
@@ -53,7 +55,7 @@ export class AgencyPickerComponent implements OnInit {
   organizationId = '';
   defaultDpmtOption = {
     value:'',
-    label: 'Please select an Department',
+    label: 'Please select a Department/Ind. Agency',
     name: ''
   };
 
@@ -62,7 +64,7 @@ export class AgencyPickerComponent implements OnInit {
       this.defaultDpmtOption
     ],
     show: true,
-    label: 'Department',
+    label: 'Department/Ind. Agency',
     name: 'Department',
     type: 'department',
     selectedOrg: ""
@@ -70,7 +72,7 @@ export class AgencyPickerComponent implements OnInit {
 
   defaultAgencyOption = {
     value:'',
-    label: 'Please select an Agency',
+    label: 'Please select a Sub-tier',
     name: ''
   };
 
@@ -79,7 +81,7 @@ export class AgencyPickerComponent implements OnInit {
       this.defaultAgencyOption
     ],
     show: false,
-    label: 'Agency',
+    label: 'Sub-tier',
     name: 'Agency',
     type: 'agency',
     selectedOrg: ""
@@ -106,16 +108,16 @@ export class AgencyPickerComponent implements OnInit {
     this.dpmtSelectConfig,
     this.agencySelectConfig,
     this.officeSelectConfig,
-    Object.assign({},this.officeSelectConfig),
-    Object.assign({},this.officeSelectConfig),
-    Object.assign({},this.officeSelectConfig),
-    Object.assign({},this.officeSelectConfig)
+    Object.assign({}, this.officeSelectConfig),
+    Object.assign({}, this.officeSelectConfig),
+    Object.assign({}, this.officeSelectConfig),
+    Object.assign({}, this.officeSelectConfig)
   ];
 
   showAutocompleteMsg = false;
   autocompleteMsg = "";
   selectorToggle = false;
-  browseToggle=false;
+  browseToggle = false;
   autocompleting = false;
   readonlyDisplay = "";
   readonlyDisplayList = [];
@@ -143,7 +145,7 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   cancelBlurMethod() {
-    this.cancelBlur=true;
+    this.cancelBlur = true;
   }
 
   resetAutocomplete() {
@@ -160,7 +162,7 @@ export class AgencyPickerComponent implements OnInit {
       this.autoComplete.length = 0;
       this.autocompleteEnd = false;
       this.autocompletePage = 0;
-      var data = {
+      let data = {
         'keyword':this.searchTerm,
         'pageNum':this.autocompletePage,
         'pageSize':this.autocompletePageSize
@@ -170,7 +172,7 @@ export class AgencyPickerComponent implements OnInit {
         data['parentOrganizationId'] = this.orgRoot;
       }
 
-      this.autocompleteIndex=0;
+      this.autocompleteIndex = 0;
       this.autocompleteLazyLoadMarker = 3;
       this.searchCall(data, false);
     } else {
@@ -180,10 +182,10 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   lazyLoadAutocomplete() {
-    if(this.autocompleteIndex>=this.autocompleteLazyLoadMarker && !this.autocompleteEnd) {
+    if(this.autocompleteIndex>= this.autocompleteLazyLoadMarker && !this.autocompleteEnd) {
       this.autocompleteLazyLoadMarker += this.autocompletePageSize;
 
-      var data = {
+      let data = {
         'keyword':this.searchTerm,
         'pageNum':this.autocompletePage,
         'pageSize':this.autocompletePageSize
@@ -208,12 +210,12 @@ export class AgencyPickerComponent implements OnInit {
     //up
     else if(this.autoCompleteToggle && evt['keyCode'] == 38 && this.autocompleteIndex>0) {
       evt.preventDefault();
-      this.autocompleteIndex-=1;
+      this.autocompleteIndex-= 1;
       this.autocompletelist.nativeElement.scrollTop = this.autocompletelist.nativeElement.getElementsByTagName("li")[this.autocompleteIndex].offsetTop;
     }
     //down
-    else if(this.autoCompleteToggle && evt['keyCode']==40 && this.autocompleteIndex < this.autoComplete.length-1) {
-      this.autocompleteIndex+=1;
+    else if(this.autoCompleteToggle && evt['keyCode']== 40 && this.autocompleteIndex < this.autoComplete.length-1) {
+      this.autocompleteIndex+= 1;
       this.autocompletelist.nativeElement.scrollTop = this.autocompletelist.nativeElement.getElementsByTagName("li")[this.autocompleteIndex].offsetTop;
       this.lazyLoadAutocomplete();
     }
@@ -253,10 +255,10 @@ export class AgencyPickerComponent implements OnInit {
     this.orgLevels[5].label += " (L6)";
     this.orgLevels[6].label += " (L7)";
 
-    if(this.orgId.length>0) {
+    if(this.orgId.length > 0) {
       this.organizationId = this.orgId;
     } else {
-      this.activatedRoute.queryParams.subscribe( data => {
+      this.activatedRoute.queryParams.subscribe(data => {
         this.organizationId = typeof data[this.getQSValue] === "string" ? decodeURI(data[this.getQSValue]) : "";
         this.initDropdowns();
       });
@@ -282,7 +284,7 @@ export class AgencyPickerComponent implements OnInit {
     return  str.match(/[^0-9]/);
   }
 
-  _nameOrgSort(a,b) {
+  _nameOrgSort(a, b) {
     if(a["org"]["name"].toLowerCase() < b["org"]["name"].toLowerCase()) return -1;
     if(a["org"]["name"].toLowerCase() > b["org"]["name"].toLowerCase()) return 1;
     return 0;
@@ -331,10 +333,10 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-  searchCall(data,lazyloadFlag) {
+  searchCall(data, lazyloadFlag) {
     this.oFHService.search(data).subscribe(res => {
       if(res["_embedded"] && res["_embedded"]["results"]) {
-        var comp = this;
+        let comp = this;
 
         this.autocompleteData = res["_embedded"]["results"].map(function(org) {
           switch(org['type']) {
@@ -352,7 +354,7 @@ export class AgencyPickerComponent implements OnInit {
         });
 
         if(this.autocompletePage < res['page']['totalPages'] - 1) {
-          this.autocompletePage+=1;
+          this.autocompletePage+= 1;
         } else {
           this.autocompleteEnd = true;
         }
@@ -393,11 +395,15 @@ export class AgencyPickerComponent implements OnInit {
         let orgPathArr = fullOrgPath['_embedded'][0]['org']['fullParentPath'].split("."),
             orgidx;
 
+        if(this.levelLimit) {
+          orgPathArr.length = this.levelLimit;
+        }
+
         for(orgidx in orgPathArr) {
           this.orgLevels[orgidx].selectedOrg = orgPathArr[orgidx];
 
           this.serviceCall(orgPathArr[orgidx], true).subscribe(orglvldata => {
-            var orglvl,
+            let orglvl,
                 orgType,
                 formattedData;
 
@@ -413,9 +419,13 @@ export class AgencyPickerComponent implements OnInit {
             }
 
             if(orglvldata['hierarchy'].length > 0) {
-              formattedData = this.formatHierarchy(orgType,orglvldata['hierarchy']);
-              this.orgLevels[orglvl].options = formattedData;
-              this.orgLevels[orglvl].show = true;
+              if(!this.levelLimit || this.levelLimit > parseInt(orglvl)) {
+                formattedData = this.formatHierarchy(orgType, orglvldata['hierarchy']);
+                this.orgLevels[orglvl].options = formattedData;
+                this.orgLevels[orglvl].show = true;
+              } else {
+                this.orgLevels[orglvl].show = false;
+              }
             } else {
               this.orgLevels[orglvl].options.length = 1;
               this.orgLevels[orglvl].show = false;
@@ -455,7 +465,7 @@ export class AgencyPickerComponent implements OnInit {
     }
 
     if(this._isLetter(this.searchTerm)) {
-      data["keyword"] = this.searchTerm.replace(/\s\(\S+\)$/,"");
+      data["keyword"] = this.searchTerm.replace(/\s\(\S+\)$/, "");
 
       if(this.orgRoot) {
         data['parentOrganizationId'] = this.orgRoot;
@@ -506,7 +516,7 @@ export class AgencyPickerComponent implements OnInit {
 
   //TODO: search needs a way to return the level
   checkSearchDataMatch() {
-    var i,
+    let i,
         lvl,
         skip = false,
         isSkip;
@@ -528,7 +538,7 @@ export class AgencyPickerComponent implements OnInit {
       //skip match if orgroot is set and result doesn't belong to orgroot
       isSkip = (
         this.orgRoot && (
-          this.orgRoot!=this.searchData[i]._id || (
+          this.orgRoot!= this.searchData[i]._id || (
             this.searchData[i].parentOrganizationHierarchy &&
             this.searchData[i].parentOrganizationHierarchy['organizationId'] != this.orgRoot
           )
@@ -551,8 +561,11 @@ export class AgencyPickerComponent implements OnInit {
     this.resetBrowse();
     /* needs discussion on the right implementation
     console.log(this.searchData);
-    var counts = [0,0,0];
-    for(var idx in this.searchData) {
+
+    let counts = [0, 0, 0],
+        idx;
+
+    for(idx in this.searchData) {
       switch(this.searchData[idx].type) {
         case "DEPARTMENT":
           counts[0]++;
@@ -597,14 +610,22 @@ export class AgencyPickerComponent implements OnInit {
 
   //todo: potential refactor
   loadChildOrganizations(lvl) {
-    let orgLevel = this.orgLevels[lvl],
-        selectionLvl = lvl,
-        dontResetDirectChildLevel = false,
+    let orgLevel,
+        selectionLvl,
+        dontResetDirectChildLevel,
         idx,
         hide,
         isRun;
 
-    switch(selectionLvl) {
+    if(this.levelLimit && lvl >= this.levelLimit - 1) {
+      return;
+    }
+
+    orgLevel = this.orgLevels[lvl];
+    selectionLvl = lvl;
+    dontResetDirectChildLevel = false;
+
+    switch(selectionLvl)  {
       // Department
       case 0:
         this.onDepartmentChange.emit({
@@ -668,7 +689,7 @@ export class AgencyPickerComponent implements OnInit {
     let formattedData;
 
     if(lvl == 0) {
-      formattedData = this.formatHierarchy("agency",data.hierarchy);
+      formattedData = this.formatHierarchy("agency", data.hierarchy);
 
       //no child agencies
       if(formattedData.length <= 1) {
@@ -749,11 +770,7 @@ export class AgencyPickerComponent implements OnInit {
   serviceCall(orgId, hierarchy: boolean) {
     //get Department level of user's organizationId
     if(orgId != "") {
-      if(hierarchy) {
-        return this.oFHService.getOrganizationById(orgId, true);
-      } else {
-        return this.oFHService.getOrganizationById(orgId, false);
-      }
+      return this.oFHService.getOrganizationById(orgId, hierarchy ? true : false);
     } else {
       return this.oFHService.getDepartments();
     }
@@ -762,12 +779,7 @@ export class AgencyPickerComponent implements OnInit {
   //refactor preset organziationId handling
   initDropdowns() {
     let root = this.orgRoot ? this.orgRoot : "",
-        formattedData,
-        orgPath,
-        level,
-        label,
-        idx,
-        type;
+        formattedData;
 
     if(!this.orgRoot) {
   		this.serviceCall(root, true).subscribe(res => {
@@ -778,28 +790,41 @@ export class AgencyPickerComponent implements OnInit {
   		});
     } else {
       this.serviceCall(root, true).subscribe(res => {
-        orgPath = res._embedded[0]['org']['fullParentPath'].split(".");
+        let orgPath = res._embedded[0]['org']['fullParentPath'].split("."),
+            level,
+            label,
+            idx,
+            type;
+
+        if(this.levelLimit) {
+          orgPath.length = this.levelLimit;
+        }
+
         this.lockHierachy = orgPath;
 
         for(idx in orgPath) {
-          level = parseInt(idx)+1;
-          label = res._embedded[0]['org']['l' + level + 'Name'] + this.levelFormatter(level);
+          level = parseInt(idx) + 1;
+          label = res._embedded[0]['org'][`l${level}Name`] + this.levelFormatter(level);
 
-          this.orgLevels[idx].options = [{
-            'value': orgPath[idx],
-            'label': label,
-            'name': orgPath[idx]
-          }];
+          if(!this.levelLimit || level < this.levelLimit) {
+            this.orgLevels[idx].options = [{
+              'value': orgPath[idx],
+              'label': label,
+              'name': orgPath[idx]
+            }];
 
-          this.orgLevels[idx].selectedOrg = orgPath[idx];
-          this.orgLevels[idx].show = true;
+            this.orgLevels[idx].selectedOrg = orgPath[idx]
+            this.orgLevels[idx].show = true;
+          }
         }
-        if(res._embedded[0]['org']['hierarchy'].length > 0) {
-          type = res._embedded[0]['org']['type'] == "DEPARTMENT" ? "agency" : "office";
-          formattedData = this.formatHierarchy(type, res._embedded[0]['org']['hierarchy']);
 
-          this.orgLevels[orgPath.length].options = formattedData;
-          this.orgLevels[orgPath.length].show = true;
+        if(res._embedded[0]['org']['hierarchy'].length > 0) {
+          if(!this.levelLimit || orgPath.length < this.levelLimit) {
+            type = res._embedded[0]['org']['type'] == "DEPARTMENT" ? "agency" : "office";
+            formattedData = this.formatHierarchy(type, res._embedded[0]['org']['hierarchy']);
+            this.orgLevels[orgPath.length].options = formattedData;
+            this.orgLevels[orgPath.length].show = true;
+          }
         }
       });
     }
@@ -813,27 +838,20 @@ export class AgencyPickerComponent implements OnInit {
         this.updateBrowse(res);
         this.searchTerm = res.name;
 
-        switch(res.type) {
-          case 'AGENCY':
-            this.orgLevels[1].show = true;
-
-            if(res['hierarchy']) {
+        if(res.type == "AGENCY") {
+          this.orgLevels[1].show = true;
+          if(res['hierarchy']) {
+            if(!this.levelLimit || res.level < this.levelLimit) {
               this.orgLevels[2].show = true;
             }
-
-            break;
-
-          case 'OFFICE':
-            this.orgLevels[1].show = true;
-            this.orgLevels[2].show = true;
-            break;
+          }
         }
       });
     }
   }
 
-  formatHierarchy(type,data) {
-    var formattedData = [],
+  formatHierarchy(type, data) {
+    let formattedData = [],
         level = 1,
         idx,
         obj;
