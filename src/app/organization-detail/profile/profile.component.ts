@@ -83,7 +83,6 @@ export class OrgDetailProfilePage {
     let funding = "";
 
     if(!!org.startDate){
-      console.log(org.startDate);
       startDateStr = moment(org.startDate).format('MM/DD/YYYY');
     }
 
