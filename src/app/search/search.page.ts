@@ -17,6 +17,7 @@ export class SearchPage implements OnInit{
   keyword: string = "";
   index: string = "";
   organizationId:string = '';
+  previousStringList:string = '';
   pageNum = 0;
   totalCount: any= 0;
   totalPages: any= 0;
@@ -169,16 +170,39 @@ export class SearchPage implements OnInit{
       });
   }
 
-
   loadParams(){
     var qsobj = this.setupQS(false);
     this.searchService.loadParams(qsobj);
   }
 
+  // handles 'organization' emmitted event from agency picker
   onOrganizationChange(orgId:any){
 
-    this.organizationId = ""+orgId.value;
-    this.loadParams();
+    let organizationStringList = '';
+
+    let stringBuilderArray = orgId.map(function (organizationItem) {
+      if(organizationStringList === ''){
+        organizationStringList += organizationItem.value;
+      }
+      else{
+        organizationStringList += ', ' + organizationItem.value;
+      }
+
+      return organizationStringList;
+    });
+
+    this.previousStringList = this.organizationId;
+
+    // storing current organization string list
+    this.organizationId = organizationStringList;
+
+    // we only want to change page number when the organization list has changed
+    if(this.previousStringList !== this.organizationId){
+      this.pageNum = 0;
+    }
+
+    this.searchResultsRefresh();
+
   }
 
   setupQS(newsearch){
@@ -219,6 +243,10 @@ export class SearchPage implements OnInit{
     //wd county param
     if(this.wdCountyModel.length>0){
       qsobj['county'] = this.wdCountyModel;
+    }
+
+    if(this.organizationId.length>0){
+      qsobj['organizationId'] = this.organizationId;
     }
 
     //wd Non Standard drop down param
@@ -537,8 +565,6 @@ export class SearchPage implements OnInit{
 
   // previously performed selection
   wdPreviouslyPerformedChanged(event){
-    console.log('previously performed selection: ', this.wdPreviouslyPerformedModel);
-
     // if previously performed is no, we must set subject to cba model to empty
     if(this.wdPreviouslyPerformedModel === 'prevPerfNo'){
       this.wdSubjectToCBAModel = '';
@@ -550,8 +576,6 @@ export class SearchPage implements OnInit{
 
   // subject to change selection
   wdSubjectToCBAChanged(event){
-    console.log('subject to CBA selection: ', this.wdSubjectToCBAModel);
-
     // if the subject to change selection is based or unbased yes show modal success message
     if(this.wdSubjectToCBAModel === 'yesBasedCBA' || this.wdSubjectToCBAModel === 'yesUnbasedCBA'){
       this.alertFooterService.registerFooterAlert({
@@ -568,8 +592,6 @@ export class SearchPage implements OnInit{
 
   // non standard services radio button selection
   wdNonStandardRadChanged(event){
-    console.log('non-standard rad selection: ', this.wdNonStandardRadModel);
-
     // check if services should be disabled/enabled
     this.determineEnableServicesSelect();
 
@@ -596,8 +618,6 @@ export class SearchPage implements OnInit{
 
   // non standard services drop down selection
   wdNonStandardSelectChanged(event){
-    console.log('non-standard drop-down selection: ', this.wdNonStandardSelectModel);
-
     // if drop down selection made, auto-select yes rad button
     if(this.wdNonStandardSelectModel !== ''){
       this.wdNonStandardRadModel = 'yesNSS'

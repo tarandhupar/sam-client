@@ -69,7 +69,11 @@ export class ExclusionsResult implements OnInit {
     }
 
     if(this.data.type!=null && this.data.type.length > 0){
-      this.typeConcat=this.data.type;
+      if(this.data.type.indexOf("/")>-1) {
+        this.typeConcat = this.data.type.replace(/[/]/g, "SLASH");
+      } else {
+        this.typeConcat = this.data.type;
+      }
     }
     else {
       this.typeConcat='NA';
