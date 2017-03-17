@@ -100,7 +100,7 @@
           General Information
           <samButton *ngIf="differences?.changesExistGeneral && !showChangesGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
           <samButton *ngIf="differences?.changesExistGeneral && showChangesGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="'Hide Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
-          <span *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x" [innerHTML]="differences?.postedDate"></span>
+          <span *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
         </h2>
 
 
@@ -271,7 +271,7 @@
         <h2>Synopsis
           <samButton *ngIf="differences?.changesExistSynopsis && !showChangesSynopsis" [buttonId]="'defaultBtnSynopsis'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
           <samButton *ngIf="differences?.changesExistSynopsis && showChangesSynopsis" [buttonId]="'defaultBtnSynopsis'" [buttonText]="'Hide Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
-          <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x" [innerHTML]="differences?.postedDate"></span>
+          <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
         </h2>
         <!-- <samLabel *ngIf="differences?.description" [labelType]="'small'" [labelText]="' '"></samLabel> -->
         <h3>
@@ -280,9 +280,10 @@
           <ng-container *ngIf="opportunity.data?.type !== 'i'">Description</ng-container>
         </h3>
 
-        <div [innerHTML]="opportunity.data?.descriptions[0]?.content | fixhtml"></div>
+        <div *ngIf="!(showChangesSynopsis && differences?.description)" [innerHTML]="opportunity.data?.descriptions[0]?.content | fixhtml"></div>
+        <div class="usa-changes" *ngIf="showChangesSynopsis && differences?.description" [innerHTML]="differences?.description"></div>
       </section>
-      <span *ngIf="showChangesSynopsis && differences?.description" [innerHTML]="differences?.description"></span>
+
 
       <!-- Packages -->
       <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages)">
