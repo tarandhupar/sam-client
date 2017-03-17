@@ -35,10 +35,10 @@ export class UserAccessPage implements OnInit {
 
   private showCollapse = false;
   private capitalize = new CapitalizePipe();
-  private modalData = {
-    domain: {},
-    role: {},
-    orgs: []
+  private modalRole = {"role":{"id":2,"val":"CONTRACTING SPECIALIST"},"organizationMapContent":[{"organizations":["100167253","100167252","100167254"],"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"SEND"},{"id":3,"val":"CREATE"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"SEND"},{"id":3,"val":"CREATE"}]}]}]};
+  private modalDomain = {
+    id: 0,
+    val: "My Domain",
   };
 
   constructor(
@@ -63,10 +63,10 @@ export class UserAccessPage implements OnInit {
       },
       err => {
         this.footerAlert.registerFooterAlert({
-          title:"Unable to access information for: "+this.userName,
-          description:"",
+          title: "Error",
+          description: "Unable to access information for: "+this.userName,
           type:'error',
-          timer:0
+          timer:3000
         });
       }
     );
@@ -87,12 +87,9 @@ export class UserAccessPage implements OnInit {
     });
   }
 
-  onDeleteRoleClick(role) {
-    this.modalData = {
-      domain: {id: 1},
-      role: {id: 1},
-      orgs: [{id: 1},{id: 2}]
-    };
+  onDeleteRoleClick(role, domain) {
+    this.modalRole = role;
+    this.modalDomain = domain;
     this.deleteModal.openModal();
   }
 
@@ -109,8 +106,21 @@ export class UserAccessPage implements OnInit {
     this.router.navigate(['../edit-access'], extras);
   }
 
-  onDeleteConfirm(role) {
-    this.deleteModal.closeModal();
+  onDeleteConfirm() {
+    let deleteBody = UserAccessModel.CreateDeletePartial(this.userName, this.modalRole.role.id, this.modalDomain.id, this.modalRole.organizationMapContent[0].organizations);
+    this.userService.postAccess(deleteBody, this.userName).subscribe(
+      res => {
+        window.location.reload();
+      },
+      err => {
+        this.footerAlert.registerFooterAlert({
+          title: "Error",
+          description: "Delete failed",
+          type:'error',
+          timer:3000
+        });
+      }
+    );
   }
 
   mapLabelAndName(val) {

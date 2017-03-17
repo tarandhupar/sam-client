@@ -5,20 +5,19 @@ export interface IdVal {
 
 export interface UserAccessInterface {
   user?: number|string,
-  messages?: string,
   "domainMapContent"?: Array<
     {
-      "domain": IdVal,
+      "domain": any,
       "roleMapContent": Array<
         {
-          "role":IdVal,
+          "role": any,
           "organizationMapContent": Array<
             {
               "organizations": Array<number|string>,
               "functionMapContent":Array<
                 {
-                  "function":IdVal,
-                  "permission":Array<IdVal>
+                  "function": any,
+                  "permission":Array<IdVal|number|string>
                 }
               >
             }
@@ -28,4 +27,37 @@ export interface UserAccessInterface {
     }
   >,
   "id"?: string
+}
+
+export interface UserAccessPostInterface {
+  user?: number|string,
+  "domainContent"?: Array<
+    {
+      "domain": IdVal|number|string,
+      "roleContent": Array<
+        {
+          "role":IdVal|number|string,
+          "organizationContent": Array<
+            {
+              "organizations": Array<number|string>,
+              "functionContent"?:Array<
+                {
+                  "function":IdVal|number|string,
+                  "permission":Array<IdVal|number|string>
+                }
+                >
+            }
+            >
+        }
+        >
+    }
+    >,
+  "id"?: string
+}
+
+export interface UserAccessWrapper {
+  "updatedAccessContent"?: UserAccessPostInterface
+  "existingAccessContent"?: UserAccessPostInterface
+  "message"?:string,
+  "mode":"grant"|"request"|"edit"|"remove"
 }

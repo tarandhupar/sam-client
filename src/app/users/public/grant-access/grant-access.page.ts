@@ -10,6 +10,7 @@ import { PageScrollService, PageScrollInstance, PageScrollConfig } from "ng2-pag
 import { FHService } from "../../../../api-kit/fh/fh.service";
 import { Observable } from "rxjs";
 import { Organization } from "../../../organization/organization.model";
+import { IRole } from "../../../../api-kit/access/role.interface";
 
 @Component({
   templateUrl: 'grant-access.template.html'
@@ -32,7 +33,7 @@ export class GrantAccessPage implements OnInit {
   private role;
   public roleOptions = [];
 
-  private permissions: any;
+  private roles: Array<IRole> = [];
   private objects = [];
 
   private messages: string = "";
@@ -67,7 +68,7 @@ export class GrantAccessPage implements OnInit {
     this.userService.getDomains().subscribe(
       domains => {
         this.domainOptions = domains._embedded.domainList.map(domain => {
-          return { value: domain.pk_domain, label: domain.domainName };
+          return { value: domain.id, label: domain.domainName };
         });
       },
       error => {
@@ -85,7 +86,7 @@ export class GrantAccessPage implements OnInit {
     this.route.queryParams.subscribe(queryParams => {
       this.role = parseInt(queryParams["role"]);
       this.domain = parseInt(queryParams["domain"]);
-      this.getPermissions();
+      this.getRoles();
       if (queryParams['orgs']) {
         let orgIds = queryParams["orgs"].split(',');
         if (orgIds.length) {
@@ -126,7 +127,7 @@ export class GrantAccessPage implements OnInit {
           title:"Unable to get organization data",
           description:"",
           type:'error',
-          timer:0
+          timer:2000
         });
       }
     );
@@ -145,7 +146,7 @@ export class GrantAccessPage implements OnInit {
     if (!this.domainOptions.length) {
       return;
     }
-    let domain = this.domainOptions.find(dom => dom.value === domainId);
+    let domain = this.domainOptions.find(dom => +dom.value === +domainId);
     if (domain) {
       return domain.label;
     } else {
@@ -155,7 +156,6 @@ export class GrantAccessPage implements OnInit {
 
   onOrganizationsChange(orgs) {
     this.orgs = orgs;
-    console.log(this.orgs);
   }
 
   onRoleChange(role) {
@@ -164,21 +164,21 @@ export class GrantAccessPage implements OnInit {
     }
     this.role = role;
 
-    let r = this.permissions.find(role => {
+    let r = this.roles.find(role => {
       return +role.role.id === +this.role;
     });
 
     if (r) {
-      this.objects = r.DomainContent[0].FunctionContent;
+      this.objects = r.functionContent;
     } else {
       this.objects = [];
     }
   }
 
-  getPermissions() {
-    this.userService.getPermissions({domainID: this.domain}).subscribe(
+  getRoles() {
+    this.userService.getRoles({domainID: this.domain}).subscribe(
       perms => {
-        this.permissions = perms;
+        this.roles = perms;
         let c = new PropertyCollector(perms);
         let roles = c.collect([[], 'role']);
         this.roleOptions = roles.map(role => {
@@ -188,10 +188,10 @@ export class GrantAccessPage implements OnInit {
       err => {
         this.roleOptions = [];
         this.footerAlert.registerFooterAlert({
-          title:"Unable to fetch permission information.",
-          description:"",
+          title:"Error",
+          description:"Unable to retreive permissions for :"+this.labelForDomain(this.domain),
           type:'error',
-          timer:0
+          timer:2000
         });
       }
     );
@@ -201,12 +201,13 @@ export class GrantAccessPage implements OnInit {
     if (domain) {
       this.errors.domain = '';
     }
-
     this.domain = domain;
     this.role = null;
     this.roleOptions = [];
     this.objects = [];
-    this.getPermissions();
+    if (this.mode !== 'request') {
+      this.getRoles();
+    }
   }
 
   modeName() {
@@ -304,7 +305,7 @@ export class GrantAccessPage implements OnInit {
         permissions: perms
       }
     });
-    let access: UserAccessInterface = UserAccessModel.CreateAccessObject(
+    let access = UserAccessModel.CreateAccessObject(
       this.userName,
       parseInt(this.role),
       parseInt(this.domain),
@@ -313,7 +314,7 @@ export class GrantAccessPage implements OnInit {
       this.messages,
     );
 
-    this.userService.putAccess(access).subscribe(
+    this.userService.postAccess(access, this.userName).delay(2000).subscribe(
       res => {
         this.footerAlert.registerFooterAlert({
           title:"Access Granted.",

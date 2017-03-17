@@ -1,4 +1,4 @@
-import { UserAccessInterface } from "api-kit/access/access.interface";
+import { UserAccessInterface, UserAccessWrapper } from "api-kit/access/access.interface";
 import { PropertyCollector } from "../app-utils/property-collector";
 import * as _ from 'lodash';
 
@@ -20,7 +20,32 @@ export class UserAccessModel {
     return a;
   }
 
-  static CreateAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>, messages: string): UserAccessInterface {
+  static CreateDeletePartial(user, roleId, domainId, orgIds): UserAccessWrapper {
+    console.log(arguments);
+    let organizationMapContent = [{
+      organizations: orgIds,
+    }];
+
+    return {
+      mode: "remove",
+      existingAccessContent: {
+        user: user,
+        domainContent: [
+          {
+            domain: domainId,
+            roleContent: [
+              {
+                role: roleId,
+                organizationContent: organizationMapContent
+              }
+            ]
+          }
+        ]
+      }
+    };
+  }
+
+  static CreateAccessObject(user, roleId, domainId, orgIds: any[], functions: Array<FunctionInterface>, messages: string): UserAccessWrapper {
     let functionMapContent = functions.map(fun => {
       return {
         function: fun.id,
@@ -30,27 +55,28 @@ export class UserAccessModel {
       return !!fun.permission.length;
     });
 
-    let organizationMapContent = orgIds.map(orgId => {
-      return {
-        orgKey: ""+orgId,
-        functionMapContent: functionMapContent
-      };
-    });
+    let organizationMapContent = [{
+      organizations: orgIds,
+      functionContent: functionMapContent
+    }];
 
     return {
-      messages: messages,
-      user: user,
-      // roleMapContent: [
-      //   {
-      //     role: roleId,
-      //     roleData: [
-      //       {
-      //         domain: domainId,
-      //         organizationMapContent: organizationMapContent
-      //       }
-      //     ]
-      //   }
-      // ]
+      message: messages,
+      mode: "grant",
+      updatedAccessContent: {
+        user: user,
+        domainContent: [
+          {
+            domain: domainId,
+            roleContent: [
+              {
+                role: roleId,
+                organizationContent: organizationMapContent
+              }
+            ]
+          }
+        ]
+      }
     };
   }
 

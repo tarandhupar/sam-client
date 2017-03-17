@@ -37,21 +37,13 @@ describe('UserAccessService', () => {
       expect(connection.request.method).toBe(RequestMethod.Put);
       expect(connection.request.url).toMatch(/access/);
     });
-    service.putAccess({ user: "Timmy!"});
-  })));
-
-  it('should put available permissions for a domain and role combination', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
-    backend.connections.subscribe((connection: MockConnection) => {
-      expect(connection.request.method).toBe(RequestMethod.Get);
-      expect(connection.request.url).toMatch(/uiroles/);
-    });
-    service.getPermissions(1);
+    service.postAccess({ user: "Timmy!"});
   })));
 
   it('should get roles', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
     backend.connections.subscribe((connection: MockConnection) => {
       expect(connection.request.method).toBe(RequestMethod.Get);
-      expect(connection.request.url).toMatch(/roles\?/);
+      expect(connection.request.url).toMatch(/uiroles\?/);
     });
     service.getRoles();
   })));
