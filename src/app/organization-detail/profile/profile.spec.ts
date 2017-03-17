@@ -5,6 +5,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
+import * as moment from 'moment/moment';
 
 // Load the implementations that should be tested
 import { OrgDetailProfilePage } from "./profile.component";
@@ -116,16 +117,14 @@ let activatedRouteStub = {
     _lastPathIndex: 0,
   },
   parent: {
-    snapshot: {
-      params: { orgId: "100000121"}
-    }
+      params: Observable.of({ orgId: "100000121"})
   },
   queryParams: {
     subscribe: function() { }
   }
 };
 
-describe('Organization Detail Profile Page', () => {
+fdescribe('Organization Detail Profile Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgDetailProfilePage;
   let fixture:any;
@@ -158,7 +157,7 @@ describe('Organization Detail Profile Page', () => {
       {description:"Office Name", value:"Us Army Robert Morris Acquisitio"},
       {description:"Description", value:""},
       {description:"Shortname", value:""},
-      {description:"Start Date", value:"09/30/2000"},
+      {description:"Start Date", value:moment(970358400000).format('MM/DD/YYYY')},
       {description:"Indicate Funding", value:"Funding/Award"},
     ]);
   });

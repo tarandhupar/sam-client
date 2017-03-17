@@ -26,9 +26,11 @@ export class OrgDetailProfilePage {
   }
 
   ngOnInit(){
-    this.orgId = this.route.parent.snapshot.params['orgId'];
-
-    this.getOrgDetail(this.orgId);
+    this.route.parent.params.subscribe(
+      params => {
+        this.orgId = params['orgId'];
+        this.getOrgDetail(this.orgId);
+      });
   }
 
   isLastHierarchy(index):boolean{return index === this.hierarchyPath.length-1;}
