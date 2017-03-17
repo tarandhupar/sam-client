@@ -91,6 +91,7 @@ export class OpportunityPage implements OnInit {
   differences: any;
   showChangesGeneral = false;
   showChangesSynopsis = false;
+  showChangesClassification = false;
 
 
   errorOrganization: any;
@@ -862,5 +863,8 @@ export class OpportunityPage implements OnInit {
 
   private showHideSynopsis(){
     this.showChangesSynopsis == false ? this.showChangesSynopsis = true : this.showChangesSynopsis = false;
+  }
+  private showHideClassification(){
+    this.showChangesClassification == false ? this.showChangesClassification = true : this.showChangesClassification = false;
   }
 }

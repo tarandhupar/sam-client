@@ -85,6 +85,7 @@ export class ViewChangesPipe implements PipeTransform {
     let postedDate = null;
     let changesExistGeneral = false;
     let changesExistSynopsis = false;
+    let changesExistClassification = false;
 
     //checks for Update Response Date
     if (currentOpportunity.data && currentOpportunity.data.solicitation && currentOpportunity.data.solicitation.deadlines && currentOpportunity.data.solicitation.deadlines.response){
@@ -191,12 +192,12 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentUpdateSetAside != previousUpdateSetAside && previousUpdateSetAside == null){
       updateSetAside = "New Data".italics().fontcolor("003264");
-      changesExistGeneral = true;
+      changesExistClassification = true;
     } else if (currentUpdateSetAside != previousUpdateSetAside && previousUpdateSetAside != null){
       let result = filterMultiArrayObjectPipe.transform([previousUpdateSetAside], this.findDictionary('set_aside_type', dictionaries), 'elementId', false, "");
       updateSetAside = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
 
-      changesExistGeneral = true;
+      changesExistClassification = true;
     }
 
 
@@ -213,16 +214,16 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentClassificationCode != previousClassificationCode && previousClassificationCode == null){
       classificationCode = "New Data".italics().fontcolor("003264");
-      changesExistGeneral = true;
+      changesExistClassification = true;
     } else if (currentClassificationCode != previousClassificationCode && previousClassificationCode != null){
       let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], this.findDictionary('classification_code', dictionaries), 'elementId', false, '');
       classificationCode = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
 
-      changesExistGeneral = true;
+      changesExistClassification = true;
     }
 
 
-    //Checks for Classification Code
+    //Checks for Naics Code
     if (currentOpportunity.data  && currentOpportunity.data.naicsCode && currentOpportunity.data.naicsCode[0]){
       currentNaicsCode = currentOpportunity.data.naicsCode[0];
     } else {
@@ -235,11 +236,11 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if (currentNaicsCode != previousNaicsCode && previousNaicsCode == null){
       naicsCode = "New Data".italics().fontcolor("003264");
-      changesExistGeneral = true;
+      changesExistClassification = true;
     } else if (currentNaicsCode != previousNaicsCode && previousNaicsCode != null){
       let result = filterMultiArrayObjectPipe.transform([previousNaicsCode], this.findDictionary('naics_code', dictionaries), 'elementId', false, '');
       naicsCode =(result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
-      changesExistGeneral = true;
+      changesExistClassification = true;
     }
 
 
@@ -296,10 +297,10 @@ export class ViewChangesPipe implements PipeTransform {
     }
     if ((currentPlaceOfPerformanceStreet != previousPlaceOfPerformanceStreet || currentPlaceOfPerformanceCity != previousPlaceOfPerformanceCity || currentPlaceOfPerformanceState != previousPlaceOfPerformanceState || currentPlaceOfPerformanceCountry != previousPlaceOfPerformanceCountry || currentPlaceOfPerformanceZip != previousPlaceOfPerformanceZip) && (previousPlaceOfPerformanceStreet == null && previousPlaceOfPerformanceCity == null && previousPlaceOfPerformanceState == null && previousPlaceOfPerformanceZip == null && previousPlaceOfPerformanceCountry == null)){
       placeOfPerformance = "New Data".italics().fontcolor("003264");
-      changesExistGeneral = true;
+      changesExistClassification = true;
     } else if (((currentPlaceOfPerformanceStreet != previousPlaceOfPerformanceStreet && previousPlaceOfPerformanceStreet != null) || (currentPlaceOfPerformanceCity != previousPlaceOfPerformanceCity && previousPlaceOfPerformanceCity != null) || (currentPlaceOfPerformanceState != previousPlaceOfPerformanceState && previousPlaceOfPerformanceState != null) || (currentPlaceOfPerformanceCountry != previousPlaceOfPerformanceCountry && previousPlaceOfPerformanceCountry != null) || currentPlaceOfPerformanceZip != previousPlaceOfPerformanceZip && previousPlaceOfPerformanceZip != null)){
       placeOfPerformance = ((previousPlaceOfPerformanceStreet ? previousPlaceOfPerformanceStreet : "") + " " + (previousPlaceOfPerformanceCity ? previousPlaceOfPerformanceCity : "") + " " + (previousPlaceOfPerformanceState ? previousPlaceOfPerformanceState : "") + " " + (previousPlaceOfPerformanceCountry ? previousPlaceOfPerformanceCountry : "") + " " + (previousPlaceOfPerformanceZip ? previousPlaceOfPerformanceZip : "")).strike();
-      changesExistGeneral = true;
+      changesExistClassification = true;
     }
 
     //checks for Description
@@ -515,6 +516,7 @@ export class ViewChangesPipe implements PipeTransform {
     differences = {
       changesExistGeneral: changesExistGeneral,
       changesExistSynopsis: changesExistSynopsis,
+      changesExistClassification: changesExistClassification,
       updateResponseDate: updateResponseDate,
       archivingPolicy: archivingPolicy,
       updateArchiveDate: updateArchiveDate,
