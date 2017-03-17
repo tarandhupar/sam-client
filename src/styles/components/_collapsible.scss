@@ -46,7 +46,9 @@ agencypicker .organization-container > label{
   margin-top: 1rem;
 }
 div.sam-collapsible .usa-agency-picker-dropdown-area{
-  padding: 10px;
+  padding: 0px;
+  border: none;
+  background-color: transparent;
   .usa-agency-picker-search-input-wrapper,
   .usa-agency-picker-autocomplete{
     width: calc(100% - 40px);
