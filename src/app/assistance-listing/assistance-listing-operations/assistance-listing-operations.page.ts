@@ -140,7 +140,7 @@ export class ProgramPageOperations implements OnInit, OnDestroy {
       data => {
         if (data._embedded && data._embedded.program) {
           let optionData = [];
-          for (var item of data._embedded.program) {
+          for (let item of data._embedded.program) {
             this.listOfPrograms = item.data.programNumber +" "+item.data.title;
             optionData.push( { // store the related program
               'label': this.listOfPrograms,
