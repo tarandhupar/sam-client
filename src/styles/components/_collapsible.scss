@@ -46,19 +46,38 @@ agencypicker .organization-container > label{
   margin-top: 1rem;
 }
 div.sam-collapsible .usa-agency-picker-dropdown-area{
-  padding: 10px;
+  padding: 0px;
+  border: none;
+  background-color: transparent;
   .usa-agency-picker-search-input-wrapper,
   .usa-agency-picker-autocomplete{
-    width: calc(100% - 40px);
+    width: calc(100% - 30px);
+  }
+  .usa-agency-picker-icon-area{
+    margin: 0px 0px 0 3px;
   }
   .usa-agency-picker-browse-toggle-area{
-    margin-top: -10px;
     line-height: normal;
   }
   select{
     padding-right: 3rem;
   }
-  .usa-agency-picker-readonly-area ul:empty{
-    content: "No organizations added"
+  .usa-agency-picker-button-area{
+    float: none;
+    & > button:first-child {
+      margin-left: 0;
+    }
   }
+}
+div.sam-collapsible .usa-agency-picker-readonly-area{
+  margin-top: 30px;
+  ul{
+    margin-top: 15px;
+  }
+}
+div.sam-collapsible .usa-agency-picker-readonly-area:before{
+  content: "Selected";
+  display: block;
+  margin-top: -40px;
+  margin-left: -10px;
 }
