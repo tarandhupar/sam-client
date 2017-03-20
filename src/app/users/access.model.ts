@@ -192,7 +192,7 @@ export class UserAccessModel {
           if (!fun.function || !fun.function.val || fun.function.val !== 'ALERTS') {
             return;
           }
-          ret.concat(fun.permission);
+          ret = ret.concat(fun.permission);
         });
       });
     });
