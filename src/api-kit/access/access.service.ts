@@ -65,7 +65,7 @@ export class UserAccessService {
     };
 
     if (userName) {
-      apiOptions.suffix = '/'+userName;
+      apiOptions.suffix = '/'+userName+'/';
     }
 
     apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
