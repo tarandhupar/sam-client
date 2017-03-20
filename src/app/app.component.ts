@@ -72,6 +72,8 @@ export class App{
       qsobj['isEven'] = null;
       qsobj['cba'] = null;
       qsobj['prevP'] = null;
+      qsobj['isStandard'] = null;
+
     }
     if(searchObject.searchField === 'wd' || searchObject.searchField === 'ent'){
       qsobj['organizationId'] = null;
