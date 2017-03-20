@@ -12,7 +12,7 @@ import Moment = moment.Moment;
     	  <span class="usa-label">Award</span>
     	</p>
     	<h3 class="award-title">
-      	<a href="#">{{ data.identifiers[0]?.piid }}</a>
+      	<span>{{ data.identifiers[0]?.piid }}</span>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
@@ -23,7 +23,7 @@ import Moment = moment.Moment;
           <li><strong>Global Vendor: </strong><span>{{ data.vendor?.globalName }}</span></li>
           <li><strong>Global DUNS: </strong><span>{{ data.vendor?.globalDunsNumber }}</span></li>
           <li>&nbsp;</li>
-          <li><strong>Department/Ind. Agency: </strong><a href="#">{{ data.purchaser?.contractingOrganizationHierarchy[0]?.name }}</a></li>
+          <li><strong>Department/Ind. Agency: </strong><span>{{ data.purchaser?.contractingOrganizationHierarchy[0]?.name }}</span></li>
           <li><strong>Office: </strong><span>{{ data.purchaser?.contractingOrganizationHierarchy[1]?.name }}</span></li>
         </ul>
     	</div>
