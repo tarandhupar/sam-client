@@ -354,7 +354,7 @@ export class GrantAccessPage implements OnInit {
 
   messagePlaceholder() {
     if (this.mode === 'request') {
-      return "Please provide a message to your Role Administrator that includes the names of the organizations you need access to and why."
+      return "Send your Role Administrator the names of the organizations and roles you are requesting and why."
     } else {
       return "(Optional) Include a message with your response";
     }
