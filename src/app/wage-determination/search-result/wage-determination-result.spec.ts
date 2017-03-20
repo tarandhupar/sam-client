@@ -28,18 +28,27 @@ describe('WageDeterminationResultComponent', () => {
         ],
         constructionTypes: "CONSTRUCTION TYPES",
         isActive:true,
-        locations:[
-          {
-            "state": {
+        location:{
+         "additionalInfo": {
+           "content": null
+         },
+          "states":[
+            {
+              "isStateWide": false,
               "code": "DC",
-              "name": "District of Columbia"
-            },
-            "counties": [
-              "DC"
-            ]
-          }
-        ]
-
+              "name": "District of Columbia",
+              "counties": {
+                "include": [
+                  {
+                    "code": 12345,
+                    "value": "DC"
+                  }
+                ],
+                "exclude": null
+              }
+            }
+          ]
+        }
       };
       fixture.detectChanges();// trigger data binding
     });

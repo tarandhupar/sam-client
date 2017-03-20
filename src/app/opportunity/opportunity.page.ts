@@ -10,8 +10,8 @@ import * as _ from 'lodash';
 import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import {forEach} from "@angular/router/src/utils/collection";
 import { ViewChangesPipe } from "./pipes/view-changes.pipe";
-
 
 @Component({
   moduleId: __filename,
@@ -79,7 +79,8 @@ export class OpportunityPage implements OnInit {
   organization: any;
   currentUrl: string;
   dictionary: any;
-  attachment: any;
+  attachments: any = [];
+  packages: any = [];
   relatedOpportunities:any;
   relatedOpportunitiesMetadata:any;
   public logoUrl: string;
@@ -90,6 +91,7 @@ export class OpportunityPage implements OnInit {
   differences: any;
   showChangesGeneral = false;
   showChangesSynopsis = false;
+  showChangesClassification = false;
 
 
   errorOrganization: any;
@@ -152,10 +154,11 @@ export class OpportunityPage implements OnInit {
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
-    let packagesOpportunities = this.loadAttachments(opportunityAPI);
     let relatedOpportunities = this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     let historyAPI = this.loadHistory(opportunityAPI);
+    let packagesOpportunities = this.loadAttachments(historyAPI);
     let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
+
     this.sidenavService.updateData(this.selectedPage, 0);
 
     // Construct a new observable that emits both opportunity and its parent as a tuple
@@ -175,7 +178,7 @@ export class OpportunityPage implements OnInit {
       success => {
         if (this.pageFragment && document.getElementById(this.pageFragment)) {
           document.getElementById(this.pageFragment).scrollIntoView();
-        }
+      }
       },
       error => {
         // Sometimes api calls return an error
@@ -401,25 +404,54 @@ export class OpportunityPage implements OnInit {
     });
   }
 
-  private loadAttachments(opportunityAPI: Observable<any>){
+  private loadAttachments(historyAPI: Observable<any>){
+    let packagesOpportunities = [];
+      historyAPI.subscribe(api =>{
+        let current = _.filter(api.content.history, historyItem => {
+          return historyItem.notice_id == this.opportunity.opportunityId;
+        })[0];
+        api.content.history.forEach((res: any) => {
+          if(res.index <= current.index) {
+            packagesOpportunities.push(this.loadHistoryAttachments(res.notice_id));
+          }
+        });
+      },err => {
+        console.log('Error loading attachments: ', err);
+        this.attachmentError = true;
+      });
+    return packagesOpportunities;
+
+  }
+
+  private loadHistoryAttachments(historyId:any){
     let attachmentSubject = new ReplaySubject(1); // broadcasts the attachments to multiple subscribers
-    opportunityAPI.subscribe(api => {
-      this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
-    });
+    this.opportunityService.getAttachmentById(historyId).subscribe(attachmentSubject);
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
-      this.attachment = attachment;
-      this.attachment.packages.forEach((key: any) => {
-        key.accordionState = 'collapsed';
+      this.attachments.push(attachment);
+      this.packages = [];
+      this.attachments.forEach((attach: any) => {
+        attach.packages.forEach((key: any) => {
+          key.resources = [];
+          key.accordionState = 'collapsed';
+          if(key.access == "Public"){
+              key.attachments.forEach((resource: any) => {
+                attach.resources.forEach((res: any) => {
+                  if(resource.resourceId == res.resourceId){
+                    res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+                    key.resources.push(res);
+                  }
+                });
+              });
+          }
+          this.packages.push(key);
+          this.packages = _.sortBy(this.packages, 'postedDate');
+        });
       });
-      this.attachment.resources.forEach((res: any) => {
-        res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
-      });
-    }, err => {
+    },err => {
       console.log('Error loading attachments: ', err);
       this.attachmentError = true;
     });
-
     return attachmentSubject;
   }
 
@@ -443,7 +475,6 @@ export class OpportunityPage implements OnInit {
     }
   }
 
-
   private loadHistory(opportunity: Observable<any>) {
     let historySubject = new ReplaySubject(1);
     opportunity.subscribe(opportunityAPI => {
@@ -452,7 +483,6 @@ export class OpportunityPage implements OnInit {
         console.log('Error loading history');
         return;
       }
-
       /** Load history API **/
       this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
@@ -468,7 +498,12 @@ export class OpportunityPage implements OnInit {
           return historyItem.parent_notice == null;
         };
         let originalOpportunity = _.filter(this.history.content.history, isOriginal)[0];
-        let originalTypeLabel = typeLabel.transform(originalOpportunity.procurement_type);
+        let originalTypeLabel;
+        if(originalOpportunity == null) {
+          originalTypeLabel = "No Type Label";
+        } else {
+          originalTypeLabel = typeLabel.transform(originalOpportunity.procurement_type);
+        }
 
         // function that takes a history item and returns a title for it
         let makeTitle = function(historyItem) {
@@ -532,6 +567,8 @@ export class OpportunityPage implements OnInit {
           return processedHistoryItem;
         };
         this.processedHistory = this.history.content.history.map(processHistoryItem);
+        //sort by index to show history by version (oldest to newest)
+        this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.index; });
 
         /** Show alert if current version is not the authoritative version **/
         let isCurrent = function(historyItem) { return historyItem.id === opportunityAPI.opportunityId; };
@@ -548,7 +585,11 @@ export class OpportunityPage implements OnInit {
             }
           });
         }
+      }, err => {
+        console.log('Error loading history: ', err);
       });
+
+      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
     });
     return historySubject;
   }
@@ -723,7 +764,7 @@ export class OpportunityPage implements OnInit {
   }
 
   public getDownloadAllPackagesURL(opportunityID: string, isArchived: boolean = false) {
-    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived);
+    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived) +'&includeRevisions=true';
   }
 
   public getBaseURL() {
@@ -743,8 +784,10 @@ export class OpportunityPage implements OnInit {
   }
 
   public hasPublicPackages(){
-    for(let pkg of this.attachment['packages']) {
-      if(pkg['access'] === 'Public') { return true; }
+    for(let attachment of this.attachments){
+      for(let pkg of attachment['packages']) {
+        if(pkg['access'] === 'Public') { return true; }
+      }
     }
     return false;
   }
@@ -822,5 +865,8 @@ export class OpportunityPage implements OnInit {
 
   private showHideSynopsis(){
     this.showChangesSynopsis == false ? this.showChangesSynopsis = true : this.showChangesSynopsis = false;
+  }
+  private showHideClassification(){
+    this.showChangesClassification == false ? this.showChangesClassification = true : this.showChangesClassification = false;
   }
 }

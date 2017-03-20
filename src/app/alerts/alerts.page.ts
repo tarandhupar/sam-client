@@ -112,29 +112,8 @@ export class AlertsPage {
             this.role.getAccess(this.user._id).subscribe(
               res => {
                 this.userAccessModel = UserAccessModel.FromResponse(res);
-                let raw = this.userAccessModel.raw();
-                let roleData = [];
-                roleData = this.userAccessModel.checkRoles(raw,"SUPERUSER");
-                let functionMap = [];
-                if(roleData.length !== 0){
-                  functionMap = this.userAccessModel.checkDomain(roleData,"ADMIN");
-                  if(functionMap.length !== 0){
-                    let permission = [];
-                    permission = this.userAccessModel.checkFunction(functionMap,"ALERTS");
-                    if(permission.length !== 0){
-                      permission.forEach(
-                        perm => {
-                          if(perm.val === "CREATE"){
-                            this.states.isCreate = true;
-                          }
-                          else if(perm.val === "EDIT "){
-                            this.states.isEdit = true;
-                          }
-                        }
-                      )
-                    }
-                  }
-                }
+                this.states.isCreate = this.userAccessModel.canCreateAlerts();
+                this.states.isEdit = this.userAccessModel.canEditAlerts();
               }
             )
           }

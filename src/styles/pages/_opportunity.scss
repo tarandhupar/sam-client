@@ -244,7 +244,7 @@
     font-weight: 700;
     color: #5b616b;
   }
-  
+
   /* View Changes */
   /*============================*/
   h2 button{
@@ -253,21 +253,28 @@
     font-size: 1.4rem;
     vertical-align: middle;
   }
-  
+
   h2 + p.usa-font-lead{
     margin-top: -1.7rem;
   }
-  
+
   .fa.fa-square{
     margin-left: -1.8rem;
     color: #003264;
     font-size: 1.7rem;
   }
-  
-  strike{
-    color: #7b7b7b;
+  .usa-color-blue{
+    color: #003264; 
   }
-  
+  .usa-changes{
+    del, .changed{
+      color: #003264;  
+    }
+  }
+  strike, u{
+    color: #003264;
+  }
+
   /* MISC */
   /*============================*/
   samsidenav{

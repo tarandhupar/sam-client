@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
+import * as Cookies from 'js-cookie';
 
 import * as _ from 'lodash';
 
@@ -70,6 +71,7 @@ export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
   errorOrganization: any;
   public logoData: any;
   errorLogo: any;
+  cookieValue: string;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -91,6 +93,7 @@ export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
 
+    this.cookieValue = Cookies.get('iPlanetDirectoryPro');
     let programAPISource = this.loadProgram();
 
     this.loadDictionaries();
@@ -115,7 +118,7 @@ export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = "8ae108c410f5e1f093e32a140e4a6801";//params['id'];
-      return this.programService.getProgramById("8ae108c410f5e1f093e32a140e4a6801");
+      return this.programService.getProgramById("8ae108c410f5e1f093e32a140e4a6801", this.cookieValue);
     });
     this.apiStreamSub = apiStream.subscribe(apiSubject);
 
@@ -214,7 +217,7 @@ export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
 
     // construct a stream that contains all related programs from related program ids
     let relatedProgramsStream = relatedProgramsIdStream.flatMap(relatedId => {
-      return this.programService.getLatestProgramById(relatedId);
+      return this.programService.getLatestProgramById(relatedId, this.cookieValue);
     });
 
     this.relatedProgramsSub = relatedProgramsStream.subscribe(relatedProgram => {
