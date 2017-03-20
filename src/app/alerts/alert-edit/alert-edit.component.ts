@@ -2,7 +2,7 @@ import { Input, Output, Component, OnInit, EventEmitter, ViewChild } from '@angu
 import { Alert } from '../alert.model';
 import { OptionsType } from 'sam-ui-kit/types';
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
-import moment from 'moment';
+import * as moment from 'moment';
 import { SamDateTimeComponent } from 'sam-ui-kit/form-controls/date-time';
 import { SamSelectComponent } from 'sam-ui-kit/form-controls/select/select.component';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
@@ -198,5 +198,5 @@ export class AlertEditComponent implements OnInit {
       ctrl.enable();
     }
   }
-  
+
 }
