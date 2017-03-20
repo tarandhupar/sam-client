@@ -627,13 +627,6 @@ export class SearchPage implements OnInit{
           timer: 3000
         });
       }
-
-
-
-      var alertResponse = this.alertFooterService.getAlerts();
-
-      console.log(alertResponse);
-
     }
 
     this.pageNum = 0;
