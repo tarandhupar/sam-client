@@ -1,0 +1,25 @@
+<h2 [innerText]="store.title"></h2>
+
+<div>
+  <form *ngIf="detailsForm" class="usa-form-large" [formGroup]="detailsForm">
+    <section class="system-information">
+      <h3>System Information</h3>
+      <div class="usa-button-controls">
+        <button type="button" class="usa-button-outline">Cancel</button>
+        <button type="button" (click)="save()">Save</button>
+      </div>
+    </section>
+
+    <section class="organization-information">
+      <h3>Organization Information</h3>
+      <div class="usa-button-controls">
+        <button type="button" class="usa-button-outline">Cancel</button>
+        <button type="button" (click)="save()">Save</button>
+      </div>
+    </section>
+
+    <section class="point-of-contact">
+      <h3>Point of Contact</h3>
+    </section>
+  </form>
+</div>

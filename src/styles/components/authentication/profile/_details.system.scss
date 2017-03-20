@@ -1,0 +1,16 @@
+.usa-profile-details-system {
+  h3 {
+    margin-top: 0.5em !important;
+  }
+
+  .usa-button-controls {
+    max-width: 32rem;
+
+    button {
+      width: 36%;
+      &:nth-child(2) {
+        float: right;
+      }
+    }
+  }
+}
