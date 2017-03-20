@@ -105,13 +105,27 @@ export class SamPasswordComponent {
 
   setSubmitted() {
     this.states.submitted = true;
+
+    this.setControlSubmitted('currentPassword');
+    this.setControlSubmitted('password');
+    this.setControlSubmitted('confirmPassword');
+
     this.updateState();
   }
 
-  $formState(validation) {
-    let classes = this.getFormControlStates('password');
+  setControlSubmitted(name) {
+    if(this[name] !== undefined) {
+      this[name].markAsTouched();
+      this[name].markAsDirty();
+      this[name].updateValueAndValidity()
+    }
+  }
 
-    if(validation !== undefined) {
+  $formState(key) {
+    let classes = this.getFormControlStates('password'),
+        validation = (key !== undefined) ? this.states.validations[key] : false;
+
+    if(key !== undefined) {
       classes[this.config.icons.valid] = validation;
       classes[this.config.icons.invalid] = !validation;
     }
@@ -123,7 +137,7 @@ export class SamPasswordComponent {
     let errors = [],
         type;
 
-    if(this.states.submitted || this.confirmPassword.touched) {
+    if(this.states.submitted) {
       for(type in this.currentPassword.errors) {
         switch(type) {
           case 'required':

@@ -91,6 +91,7 @@ export class OpportunityPage implements OnInit {
   differences: any;
   showChangesGeneral = false;
   showChangesSynopsis = false;
+  showChangesClassification = false;
 
 
   errorOrganization: any;
@@ -566,6 +567,8 @@ export class OpportunityPage implements OnInit {
           return processedHistoryItem;
         };
         this.processedHistory = this.history.content.history.map(processHistoryItem);
+        //sort by index to show history by version (oldest to newest)
+        this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.index; });
 
         /** Show alert if current version is not the authoritative version **/
         let isCurrent = function(historyItem) { return historyItem.id === opportunityAPI.opportunityId; };
@@ -862,5 +865,8 @@ export class OpportunityPage implements OnInit {
 
   private showHideSynopsis(){
     this.showChangesSynopsis == false ? this.showChangesSynopsis = true : this.showChangesSynopsis = false;
+  }
+  private showHideClassification(){
+    this.showChangesClassification == false ? this.showChangesClassification = true : this.showChangesClassification = false;
   }
 }
