@@ -68,7 +68,7 @@
   </ng-container>
 
   <!-- Optional Message -->
-  <samTextArea name="options-response" label="Messages:" [placeholder]="messagePlaceholder()" [(ngModel)]="messages" [required]="mode === 'request'" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></samTextArea>
+  <samTextArea name="options-response" label="Messages:" [hint]="messagePlaceholder()" [(ngModel)]="messages" [required]="mode === 'request'" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></samTextArea>
 
   <!-- Cancel / Confirm -->
   <div>
