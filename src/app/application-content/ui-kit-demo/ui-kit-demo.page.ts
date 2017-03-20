@@ -37,6 +37,15 @@ export class UIKitDemoPage {
     }
   }
 
+  // Dropdown Multisleect
+  mySpecialValue;
+
+  testModel1 = [];
+
+  getDropdownListItems(event) {
+    this.mySpecialValue = event;
+  }
+
   listOptions = [
     {
       label:'apple',
