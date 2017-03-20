@@ -20,9 +20,9 @@ import 'rxjs/add/operator/map';
           <span [innerHTML]="data.description"></span>
         </p>
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
+        	<li *ngIf="data.organizationHierarchy && data.organizationHierarchy[0]?.level==1">
         	  <strong>Department: </strong>
-        	  <span>{{ data.parentOrganizationHierarchy.name }}</span>
+        	  <span>{{ data.organizationHierarchy[0].name }}</span>
         	</li>
         </ul>
     	</div>
