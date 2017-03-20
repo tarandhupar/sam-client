@@ -29,6 +29,7 @@ export class SearchPage implements OnInit{
   showOptional:any = (SHOW_OPTIONAL=="true");
   qParams:any = {};
   isActive: boolean = false;
+  isStandard: string = '';
 
   // Active Checkbox config
   checkboxModel: any = ['true'];
@@ -164,6 +165,7 @@ export class SearchPage implements OnInit{
         this.wdNonStandardRadModel = data['isEven'] && data['isEven'] !== null ? data['isEven'] : '';
         this.wdSubjectToCBAModel = data['cba'] && data['cba'] !== null ? data['cba'] : '';
         this.wdPreviouslyPerformedModel = data['prevP'] && data['prevP'] !== null ? data['prevP'] : '';
+        this.isStandard = data['isStandard'] && data['isStandard'] !== null ? data['isStandard'] : '';
 
         this.runSearch();
         this.loadParams();
@@ -257,6 +259,8 @@ export class SearchPage implements OnInit{
     //wd Non Standard radio button param
     if(this.wdNonStandardRadModel.length>0){
       qsobj['isEven'] = this.wdNonStandardRadModel;
+      // this rad button determins isStandard as well
+      qsobj["isStandard"] = this.isStandard;
     }
 
     //wd subject to cba param
@@ -323,7 +327,8 @@ export class SearchPage implements OnInit{
       state: this.wdStateModel,
       county: this.wdCountyModel,
       service: this.wdNonStandardSelectModel,
-      isEven: this.wdNonStandardRadModel
+      isEven: this.wdNonStandardRadModel,
+      isStandard: this.isStandard
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -600,15 +605,35 @@ export class SearchPage implements OnInit{
       this.wdNonStandardSelectModel = '';
     }
 
+    // determine isStandard filter
+    if(this.wdNonStandardRadModel === 'yesNSS'){
+      this.isStandard = 'false';
+    }
+    else if(this.wdNonStandardRadModel === 'true' || this.wdNonStandardRadModel === 'false'){
+      this.isStandard = 'true';
+    }
+    else{
+      this.isStandard = '';
+    }
+
     // show end of filters notification
     if(this.wdNonStandardRadModel){
-      // show end of filters notification
-      this.alertFooterService.registerFooterAlert({
-        title: "Search Criteria Complete",
-        description: "",
-        type: "success",
-        timer: 3000
-      });
+      if(this.alertFooterService.getAlerts().length < 1){
+        // show end of filters notification
+        this.alertFooterService.registerFooterAlert({
+          title: "Search Criteria Complete",
+          description: "",
+          type: "success",
+          timer: 3000
+        });
+      }
+
+
+
+      var alertResponse = this.alertFooterService.getAlerts();
+
+      console.log(alertResponse);
+
     }
 
     this.pageNum = 0;

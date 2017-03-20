@@ -63,6 +63,16 @@ export class SearchService {
       }
     }
 
+    // isstandard filter
+    if(typeof obj.isStandard !== 'undefined' && obj.isStandard !== null && obj.isStandard !== ''){
+      if(obj.isStandard === 'true'){
+        oApiParam.oParam['is_standard'] = true;
+      }
+      else if(obj.isStandard === 'false'){
+        oApiParam.oParam['is_standard'] = false;
+      }
+    }
+
     if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
       oApiParam.oParam['noticeId'] = obj.noticeId;
     }
