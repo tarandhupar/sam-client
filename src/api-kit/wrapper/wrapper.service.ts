@@ -17,10 +17,10 @@ export class WrapperService {
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions",
         "access": "/rms/v1/access",
-        "roles": "/rms/v1/roles",
+        "uiroles": "/rms/v1/uiroles",
         "domains": "/rms/v1/domains",
-        "permissions": "/rms/v1/uiroles",
-        "wageDetermination": "/wdol/v1"
+        "wageDetermination": "/wdol/v1",
+        "location": "/locationservices/v1/api"
     };
 
     constructor(private _http: Http){}

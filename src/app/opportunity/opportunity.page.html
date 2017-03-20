@@ -96,7 +96,15 @@
       </section>
 
       <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
-        <h2>General Information</h2>
+        <h2>
+          General Information
+          <samButton *ngIf="differences?.changesExistGeneral && !showChangesGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
+          <samButton *ngIf="differences?.changesExistGeneral && showChangesGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="'Hide Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
+          <span *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+        </h2>
+
+
+
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
             <strong>Opportunity Type: </strong>
@@ -117,8 +125,12 @@
             <ng-container *ngIf="opportunity.parent == null">{{ opportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}</ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ResponseDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ResponseDate)">
+            <!-- <samLabel *ngIf="differences?.updateResponseDate" [labelType]="'small'" [labelText]="' '">
+            </samLabel> -->
+            <i *ngIf="differences?.updateResponseDate" class="fa fa-square" aria-hidden="true"></i>
             <strong>Update/Amendment Response Date: </strong>
             {{ opportunity.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
+            <span *ngIf="showChangesGeneral && differences?.updateResponseDate" [innerHTML]="differences?.updateResponseDate"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.OriginalResponseDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalResponseDate)">
             <strong>Original Response Date: </strong>
@@ -127,14 +139,21 @@
           </li>
           <li [attr.id]="generateID(opportunityFields.ArchivePolicy, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchivePolicy)"
               [ngSwitch]="opportunity.data?.archive?.type">
+            <!-- <samLabel *ngIf="differences?.archivingPolicy" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <i *ngIf="differences?.archivingPolicy" class="fa fa-square" aria-hidden="true"></i>
             <strong>Archiving Policy: </strong>
             <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
             <ng-container *ngSwitchCase="'auto15'">Automatic, 15 days after response date</ng-container>
             <ng-container *ngSwitchCase="'autocustom'">Automatic, on specified date</ng-container>
+            <span *ngIf="showChangesGeneral && differences?.archivingPolicy" [innerHTML]="differences?.archivingPolicy"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.ArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchiveDate)">
+            <!-- <samLabel *ngIf="differences?.updateArchiveDate" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <i *ngIf="differences?.updateArchiveDate" class="fa fa-square" aria-hidden="true"></i>
             <strong>Update/Amendment Archive Date: </strong>
             {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
+            <span *ngIf="showChangesGeneral && differences?.updateArchiveDate" [innerHTML]="differences?.updateArchiveDate"></span>
+
           </li>
           <li [attr.id]="generateID(opportunityFields.OriginalArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalArchiveDate)">
             <strong>Original Archive Date: </strong>
@@ -156,16 +175,23 @@
             {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
           </li>
           <li [attr.id]="generateID(opportunityFields.SpecialLegislation, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.SpecialLegislation)">
+            <!-- <samLabel *ngIf="differences?.specialLegislation" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <i *ngIf="differences?.specialLegislation" class="fa fa-square" aria-hidden="true"></i>
             <strong>Special Legislation: </strong>
             <ng-container *ngIf="opportunity?.data?.isRecoveryRelated == true">
               Recovery and Reinvestment Act
             </ng-container>
+            <span *ngIf="showChangesGeneral && differences?.specialLegislation" [innerHTML]="differences?.specialLegislation"></span>
           </li>
         </ul>
       </section>
 
       <section [attr.id]="generateID(opportunityFields.Classification)" *ngIf="shouldBeDisplayed(opportunityFields.Classification)">
-        <h2>Classification</h2>
+        <h2>Classification
+          <samButton *ngIf="differences?.changesExistClassification && !showChangesClassification" [buttonId]="'defaultBtnClassification'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideClassification()"></samButton>
+          <samButton *ngIf="differences?.changesExistClassification && showChangesClassification" [buttonId]="'defaultBtnClassification'" [buttonText]="'Hide Changes'" [buttonType]="btnType" (click)="showHideClassification()"></samButton>
+          <span *ngIf="showChangesClassification" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+        </h2>
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalSetAside)">
             <strong> Original Set Aside: </strong>
@@ -182,21 +208,29 @@
           </li>
           <li [attr.id]="generateID(opportunityFields.SetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.SetAside)">
             <ng-container *ngIf="(opportunity.data?.solicitation?.setAside != originalOpportunity?.data?.solicitation?.setAside) && dictionary">
+              <!-- <samLabel *ngIf="differences?.specialLegislation" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+              <i *ngIf="differences?.updateSetAside" class="fa fa-square" aria-hidden="true"></i>
               <strong>Update/Amendment Set Aside: </strong>
               <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
                 <ng-container> {{ element.value }}</ng-container>
               </ng-container>
+              <span *ngIf="showChangesClassification && differences?.updateSetAside" [innerHTML]="differences?.updateSetAside"></span>
             </ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ClassificationCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.ClassificationCode)">
+            <!-- <samLabel *ngIf="differences?.classificationCode" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <i *ngIf="differences?.classificationCode" class="fa fa-square" aria-hidden="true"></i>
             <strong>Classification Code: </strong>
             <ng-container *ngIf="opportunity.data?.classificationCode && dictionary">
               <ng-container *ngFor = "let element of [opportunity.data?.classificationCode] | filterMultiArrayObject:findDictionary('classification_code'):'elementId':false:''">
                 {{ element.value }}
               </ng-container>
             </ng-container>
+            <span *ngIf="showChangesClassification && differences?.classificationCode" [innerHTML]="differences?.classificationCode"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.NAICSCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.NAICSCode)">
+            <!-- <samLabel *ngIf="differences?.naicsCode" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <i *ngIf="differences?.naicsCode" class="fa fa-square" aria-hidden="true"></i>
             <strong>NAICS Code(s): </strong>
             <ng-container *ngIf="opportunity.data?.naicsCode && opportunity.data?.naicsCode[0] != null && dictionary">
               <ul>
@@ -205,8 +239,11 @@
                 </li>
               </ul>
             </ng-container>
+            <pre *ngIf="showChangesClassification && differences?.naicsCode" [innerHTML]="differences?.naicsCode"></pre>
           </li>
           <li [attr.id]="generateID(opportunityFields.POP, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POP)">
+            <!-- <samLabel *ngIf="differences?.placeOfPerformance" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <i *ngIf="differences?.placeOfPerformance" class="fa fa-square" aria-hidden="true"></i>
             <strong >Place of Performance: </strong>
             <div [attr.id]="generateID(opportunityFields.POPLocation, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPLocation)">
               {{opportunity.data?.placeOfPerformance?.streetAddress}}
@@ -229,23 +266,34 @@
               {{opportunity.data?.placeOfPerformance?.country}}
             </div>
           </li>
+          <span *ngIf="showChangesClassification && differences?.placeOfPerformance" [innerHTML]="differences?.placeOfPerformance"></span>
         </ul>
       </section>
 
-      <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0].content">
-        <h2>Synopsis</h2>
+      <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0]?.content">
+
+        <h2>Synopsis
+          <samButton *ngIf="differences?.changesExistSynopsis && !showChangesSynopsis" [buttonId]="'defaultBtnSynopsis'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
+          <samButton *ngIf="differences?.changesExistSynopsis && showChangesSynopsis" [buttonId]="'defaultBtnSynopsis'" [buttonText]="'Hide Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
+          <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+        </h2>
+        <!-- <samLabel *ngIf="differences?.description" [labelType]="'small'" [labelText]="' '"></samLabel> -->
         <h3>
+          <i *ngIf="differences?.description" class="fa fa-square" aria-hidden="true"></i>
           <ng-container *ngIf="opportunity.data?.type === 'i'">Description of Benefits</ng-container>
           <ng-container *ngIf="opportunity.data?.type !== 'i'">Description</ng-container>
         </h3>
-        <div [innerHTML]="opportunity.data?.descriptions[0].content | fixhtml"></div>
+
+        <div *ngIf="!(showChangesSynopsis && differences?.description)" [innerHTML]="opportunity.data?.descriptions[0]?.content | fixhtml"></div>
+        <div class="usa-changes" *ngIf="showChangesSynopsis && differences?.description" [innerHTML]="differences?.description"></div>
       </section>
+
 
       <!-- Packages -->
       <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages)">
         <div class="download-container-header">
           <h2>Packages</h2>
-          <ng-container *ngIf="attachment">
+          <ng-container *ngIf="attachments">
             <span class="download-button">
               <a class="usa-button-small usa-button-gray" *ngIf="hasPublicPackages()" href="{{getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)}}">
                 <i class="fa fa-cloud-download" aria-hidden="true"></i>
@@ -255,9 +303,10 @@
           </ng-container>
         </div>
 
-        <ng-container *ngIf="attachment">
+        <ng-container *ngIf="attachments && attachments.length > 0">
+          <!--<div *ngFor="let attachment of attachments">-->
           <!-- Header -->
-          <div class="card download-container" *ngFor="let package of attachment.packages" [@intro]="fade">
+          <div class="card download-container" *ngFor="let package of packages" [@intro]="fade">
 
             <!-- It's public -->
             <div *ngIf="package.access === 'Public'" class="card-header {{ package.accordionState }}" (click)="toggleAccordion(package)" tabindex="0" (keyup.enter)="toggleAccordion(package)">
@@ -273,11 +322,12 @@
             </span>
 
             <ul *ngIf="package.access === 'Public'" [@accordion]="package.accordionState" class="usa-zebra-list">
-              <li *ngFor="let element of package.attachments">
+              <!--<li *ngFor="let element of package.attachments">-->
+              <li *ngFor="let resource of package.resources">
                 <!-- Element -->
-                <ng-container *ngFor="let resource of attachment.resources">
+                <!--<ng-container *ngFor="let resource of attachment.resources">-->
                   <!-- Resource -->
-                  <ng-container *ngIf="element.resourceId === resource.resourceId">
+                  <!--<ng-container *ngIf="element.resourceId === resource.resourceId">-->
                     <div class="download-info">
 
                       <span class="download-info-icon">
@@ -303,8 +353,8 @@
                         {{resource.typeInfo.name}}
                       </span>
                     </div>
-                  </ng-container>
-                </ng-container>
+                  <!--</ng-container> -->
+                <!--</ng-container> -->
               </li>
             </ul>
 
@@ -333,16 +383,17 @@
               </div>
             </div>
           </div>
+          <!--</div>-->
         </ng-container>
 
-        <div class="card" *ngIf="!attachment && !attachmentError" [@intro]="fade">
+        <div class="card" *ngIf="packages.length < 1 && !attachmentError" [@intro]="fade">
           <div class="card-secure-content usa-text-center">
             <i class="fa fa-spinner fa-spin"></i>
             <strong>Loading &hellip;</strong>
           </div>
         </div>
 
-        <div class="card" *ngIf="attachmentError" [@intro]="fade">
+        <div class="card" *ngIf="packages.length < 1 && attachmentError" [@intro]="fade">
           <div class="card-secure-content usa-text-center">
             <strong>No packages uploaded.</strong>
           </div>
@@ -353,7 +404,11 @@
         <h2>Contact Information</h2>
         <div class="usa-grid-full">
           <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
-            <h3>Contracting Office Address:</h3>
+            <!-- <samLabel *ngIf="differences?.contractingOfficeAddress" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <h3>
+              <i *ngIf="differences?.contractingOfficeAddress" class="fa fa-square" aria-hidden="true"></i>
+              Contracting Office Address:
+            </h3>
             <span [attr.id]="generateID(opportunityFields.OfficeStreet, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.OfficeStreet)">
               {{opportunityLocation?.street}}
             </span>
@@ -370,10 +425,15 @@
               {{opportunityLocation?.zip}}
             </span>
           </div>
+          <!--<span *ngIf="showChanges && differences?.contractingOfficeAddress" [innerHTML]="differences?.contractingOfficeAddress"></span>-->
         </div>
         <div class="usa-grid-full">
           <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-primary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
-            <h3>Primary Point of Contact</h3>
+            <!-- <samLabel *ngIf="differences?.primaryPointOfContact" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <h3>
+              <i *ngIf="differences?.primaryPointOfContact" class="fa fa-square" aria-hidden="true"></i>
+              Primary Point of Contact
+            </h3>
             <ul class="usa-unstyled-list">
               <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-primary')"
                   *ngIf="opportunity.data?.pointOfContact[0]?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
@@ -403,8 +463,13 @@
               </li>
             </ul>
           </div>
+          <!--<span *ngIf="showChanges && differences?.primaryPointOfContact" [innerHTML]="differences?.primaryPointOfContact"></span>-->
           <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-secondary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
-            <h3>Secondary Point of Contact</h3>
+            <!-- <samLabel *ngIf="differences?.secondaryPointOfContact" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <h3>
+              <i *ngIf="differences?.secondaryPointOfContact" class="fa fa-square" aria-hidden="true"></i>
+              Secondary Point of Contact
+            </h3>
             <ul class="usa-unstyled-list">
               <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-secondary')"
                   *ngIf="opportunity.data?.pointOfContact[1]?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
@@ -434,6 +499,7 @@
               </li>
             </ul>
           </div>
+          <!--<span *ngIf="showChanges && differences?.secondaryPointOfContact" [innerHTML]="differences?.secondaryPointOfContact"></span>-->
         </div>
       </section>
 
@@ -484,18 +550,18 @@
             <samSelect class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></samSelect>
           </div>
         </div>
-        
+
         <p class="m_T-2x" style="text-align: right;" *ngIf="relatedOpportunitiesMetadata">
-          <span class="usa-sr-only">Showing results</span> 
+          <span class="usa-sr-only">Showing results</span>
           <strong>
-            {{min +1}} 
+            {{min +1}}
             <span class="usa-sr-only">through</span> -
             {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
           </strong>
-          of 
+          of
           <strong>{{relatedOpportunitiesMetadata.count}}</strong>
         </p>
-        
+
 
         <div id="awards-list" tabindex="-1">
           <div class="card-simple" *ngFor="let element of relatedOpportunities" tabindex="0">

@@ -46,6 +46,7 @@
 @import 'components/well';
 @import 'components/autocomplete';
 @import 'components/autocomplete-dropdown';
+@import 'components/organization-profile';
 
 @import 'pages/awards';
 @import 'pages/entity-object-view';
@@ -64,11 +65,12 @@
 @import 'pages/help-roadmap';
 @import 'pages/users-directory';
 @import 'pages/ui-kit-demo';
-@import 'pages/access';		
-@import 'pages/grant-access';		
-@import 'pages/public-profile';		
-@import 'pages/wage-determination';		
+@import 'pages/access';
+@import 'pages/grant-access';
+@import 'pages/public-profile';
+@import 'pages/wage-determination';
 @import 'pages/assistance-listing-operations';
+@import 'pages/organization-detail';
 
 html, body{
   height: 100%;

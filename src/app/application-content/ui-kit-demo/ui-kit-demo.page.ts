@@ -6,6 +6,8 @@ import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autoc
 import { AutocompleteDropdownService } from 'sam-ui-kit/form-controls/autocomplete-dropdown/autocomplete-dropdown.service';
 import { AutocompleteDropdownButton } from 'sam-ui-kit/types';
 
+import { LocationService } from 'api-kit/location/location.service';
+
 
 @Component({
   templateUrl: 'ui-kit-demo.template.html',
@@ -36,27 +38,27 @@ export class UIKitDemoPage {
   }
 
   listOptions = [
-    { 
+    {
       label:'apple',
       value: 1,
       name: 'apple'
     },
-    { 
+    {
       label:'orange',
       value: 2,
       name: 'orange'
     },
-    { 
+    {
       label:'banana',
       value: 3,
       name: 'banana'
     },
-    { 
+    {
       label:'grape',
       value: 4,
       name: 'grape'
     },
-    { 
+    {
       label:'tomato',
       value: 5,
       name: 'tomato'
@@ -232,7 +234,31 @@ export class UIKitDemoPage {
   switch_status = "off";
   switchDisable = false;
 
-  constructor(private alertFooterService: AlertFooterService) {  }
+  // Location Service Demo
+  locationSelectModel = 'iso2';
+  locationSelectConfig = {
+    options: [
+      {value: 'iso2', label: '2 digit code', name: '2 digit code'},
+      {value: 'iso3', label: '3 digit code', name: '2 digit code'},
+      {value: 'countryname', label: 'country name', name: 'country name'},
+    ],
+    disabled: false,
+    label: '',
+    name: 'location',
+  };
+  locationQueryStr = '';
+  locationAllCountryJSON;
+  locationSearchCountryJSON;
+
+  locationResultModel = "";
+  locationResultConfig = {
+    options: [],
+    disabled: false,
+    label: 'All Countries Drop Down',
+    name: 'countries',
+  };
+
+  constructor(private alertFooterService: AlertFooterService, private locationService: LocationService) {  }
 
   onEmptyOptionChanged($event) {
     if ($event.target.checked) {
@@ -283,5 +309,46 @@ export class UIKitDemoPage {
   }
   disableSwitchClick(){
     this.switchDisable = !this.switchDisable;
+  }
+
+  getAllCountriesJSON(){
+    this.locationService.getAllContries().subscribe(
+      res => {
+        this.locationAllCountryJSON = res;
+        this.locationResultConfig.options = [];
+        if(res.length > 0) this.locationResultModel = res[0].country;
+        res.forEach(e => {
+          this.locationResultConfig.options.push({value: e.country, label: e.country, name: e.country});
+        });
+      },
+      error => {
+        this.locationAllCountryJSON = error;
+      }
+    );
+  }
+
+  clearAllCountriesJSON(){
+    this.locationAllCountryJSON = {};
+    this.locationResultConfig.options = [];
+    this.locationResultModel = ""
+  }
+
+
+  searchCountry(locationSelectModel,locationQueryStr){
+    if(locationQueryStr.length !== 0){
+      this.locationService.searchCountry(locationSelectModel, locationQueryStr).subscribe(
+        res => {
+          this.locationSearchCountryJSON = res;
+        },
+        error => {
+          this.locationSearchCountryJSON = error;
+        }
+      );
+    }
+
+  }
+
+  clearSearchCountryJSON(){
+    this.locationSearchCountryJSON = {};
   }
 }

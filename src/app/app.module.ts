@@ -35,6 +35,7 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
 import { UserDirectoryModule } from './users';
+import { OrganizationDetailModule } from "./organization-detail/organization-detail.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -76,6 +77,7 @@ const APP_PROVIDERS = [
     ErrorModule,
     UIKitDemoModule,
     WageDeterminationModule,
+    OrganizationDetailModule,
 
     // Other Modules
     SamUIKitModule,

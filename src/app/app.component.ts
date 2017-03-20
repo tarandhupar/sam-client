@@ -73,6 +73,9 @@ export class App{
       qsobj['cba'] = null;
       qsobj['prevP'] = null;
     }
+    if(searchObject.searchField === 'wd' || searchObject.searchField === 'ent'){
+      qsobj['organizationId'] = null;
+    }
 
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj

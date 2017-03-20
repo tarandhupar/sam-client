@@ -7,33 +7,9 @@
 				<img src="">
 				<nav>
 					<ul class="usa-sidenav-list">
-					<li><a (click)="changeSubNav('generalInformation')" href="{{currentUrl}}#general-information">General Information</a>
-						<ul class="usa-sidenav-sub_list" *ngIf="isCurrentSubNav('generalInformation')">
-							<li><a href="{{currentUrl}}#transactionInforation">Transaction Information</a></li>
-							<li><a href="{{currentUrl}}#documentInformation">Document Information</a></li>
-							<li><a href="{{currentUrl}}#dates">Dates</a></li>
-							<li><a href="{{currentUrl}}#amounts">Amounts</a></li>
-							<li><a href="{{currentUrl}}#purchaserInformation">Purchaser Information</a></li>
-							<li><a href="{{currentUrl}}#contractorInformation">Contractor Information</a></li>
-							<li><a href="{{currentUrl}}#businessCategory">Business Category</a></li>
-							<li><a href="{{currentUrl}}#contractData">Contract Data</a></li>
-							<li><a href="{{currentUrl}}#legislativeMandates">Legislative Mandates</a></li>
-						</ul>
-					</li>
-					<li><a (click)="changeSubNav('businessInformation')" href="{{currentUrl}}#business-information">Business Information</a>
-						<ul class="usa-sidenav-sub_list" *ngIf="isCurrentSubNav('businessInformation')">
-							<div *ngIf="awardData.templateType == 'IDV'">
-								<li><a href="{{currentUrl}}#contractMarketingData">Contract Marketing Data</a></li>
-							</div>
-							<div *ngIf="awardData.templateType == 'AWARD'">
-								<li><a href="{{currentUrl}}#principalPlaceOfPerformance">Principal Place of Performance</a></li>
-							</div>
-							<li><a href="{{currentUrl}}#ProductOrServiceInformation">Product or Service Information</a></li>
-							<li><a href="{{currentUrl}}#competitionInformation">Competition Information</a></li>
-							<li><a href="{{currentUrl}}#preferenceProgramsOtherData">Preference Programs/Other Data</a></li>
-						</ul>
-					</li>
-					<li><a href="{{currentUrl}}#financial-information">Financial Information</a>
+						<li><a href="{{currentUrl}}#general-information">General Information</a></li>
+						<li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
+						<li><a href="{{currentUrl}}#business-information">Business Information</a></li>
 					</ul>
 				</nav>
 			</div>
@@ -41,41 +17,38 @@
 	</div>
 	<div class="usa-width-three-fourths" >
 		<div>
+			<div class="usa-grid-full">
+				<h3 class="display-inline">{{awardData.documentInformation.id.procurementIdentifier}}</h3><br />
+				<h2 class="display-inline">Agency Name</h2><br />
+				Agency Address<br />
+				<br />
+			</div>
 			<div class="usa-grid-full bottom-border">
 				<div class="usa-width-one-half padding-bottom-10px">
-					<div [ngSwitch]="awardData.templateType">
-						<ng-container *ngSwitchCase="'AWARD'"><h3>Award (Mod #): {{award}}</h3></ng-container>
-						<ng-container *ngSwitchCase="'OTA'"><h3>Award (Mod #): {{award}}</h3></ng-container>
-						<ng-container *ngSwitchCase="'IDV'"><h3>IDV (Mod #): {{award}}</h3></ng-container>
-						<ng-container *ngSwitchCase="'OTI'"><h3>IDV (Mod #): {{award}}</h3></ng-container>
-					</div>
-					Vendor Name: {{vendorName}}<br />
-					Vendor DUNS: {{vendorDUNS}}<br />
+					DUNS: {{vendorDUNS}}<br />
 					Global Vendor Name: {{globalVendorName}}<br />
 					Global Vendor DUNS: {{globalVendorDUNS}}
+					<br />
 					<br />
 					<br />
 					Contracting Agency: {{contractingAgency}}<br />
 					Contracting Office: {{contractingOffice}}
 				</div>
 				<div class="usa-width-one-half">
-					<div [ngSwitch]="awardData.templateType">
-						<ng-container *ngSwitchCase="'AWARD'"><h3>Award Type: {{awardType}}</h3></ng-container>
-						<ng-container *ngSwitchCase="'OTA'"><h3>Award Type: {{awardType}}</h3></ng-container>
-						<ng-container *ngSwitchCase="'IDV'"><h3>IDV Type: {{awardType}}</h3></ng-container>
-						<ng-container *ngSwitchCase="'OTI'"><h3>IDV Type: {{awardType}}</h3></ng-container>
-					</div>
-					Referenced IDV: {{referencedIDV}}<br />
+					Action Obligation: {{actionObligation}}<br />
+					<div class="display-inline" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA'">Award Type:</div>
+					<div class="display-inline" *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'">IDV Type:</div>
+					{{awardData.transactionInformation.type}}<br />
+					Referenced IDV: {{awardData.documentInformation.referenceId.referenceProcurementIdentifier}}<br />
+					Date Signed: {{awardData.dateInformation.dateSigned}}
+					<br />
+					<br />
 					NAICS Code: {{naicsCode}}<br />
-					PSC (Code): {{pscCode}}<br />
-					Action Obligation: {{actionObligation}}
-					<br />
-					<br />
-					Date Signed: {{dateSigned}}
+					Product Service Code: {{pscCode}}
 				</div>
 			</div>
 			<div class="usa-grid-full">
-				<h2 id="">General Information</h2>
+				<h2 id="general-information">General Information</h2>
 				<h3 id="transactionInforation">Transaction Information</h3>
 				<div class="usa-width-one-half">
 					<div class="display-inline" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA'">Award Type:</div>
@@ -139,10 +112,19 @@
 				</table>
 				Initiative: {{awardData.documentInformation.initiative}}<br />
 				<h3 id="dates">Dates</h3>
-				Date Signed: {{awardData.dateInformation.dateSigned}}<br />
-				Effective Date: {{awardData.dateInformation.dateEffective}}<br />
-				Completion Date: {{awardData.dateInformation.dateCompletion}}<br />
-				Estimated Ultimate Completion Date: {{awardData.dateInformation.dateUltimateCompletion}}
+				Date Signed: {{awardData.dateInformation.dateSigned | date:'MMM/dd/y'}}<br />
+				Effective Date: {{awardData.dateInformation.dateEffective | date:'MMM/dd/y'}}<br />
+				<div *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI' || awardData.templateType == 'AWARD'">
+					Completion Date: {{awardData.dateInformation.dateCompletion | date:'MMM/dd/y'}}<br />
+					Estimated Ultimate Completion Date: {{awardData.dateInformation.dateUltimateCompletion | date:'MMM/dd/y'}}
+				</div>
+				<div *ngIf="awardData.templateType == 'IDV'">
+					Last Date to Order: {{awardData.dateInformation.dateLastToOrder | date:'MMM/dd/y'}}
+				</div>
+				<div *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
+					Fiscal Year: {{awardData.dateInformation.fiscalYear}}
+				</div>
+				<h2 id="financial-information">Financial Information</h2>
 				<h3 id="amounts">Amounts</h3>
 				<table>
 					<tr>
@@ -152,44 +134,47 @@
 					</tr>
 					<tr>
 						<td><b>Action Obligation:</b></td>
-						<td>{{current}}</td>
-						<td>{{total}}</td>
+						<td>{{awardData.amountInformation.actionObligation | currency:'USD':true:'.2-2'}}</td>
+						<td>{{awardData.amountInformation.totalActionObligation | currency:'USD':true:'.2-2'}}</td>
 					</tr>
 					<tr *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
 						<td><b>Base and Exercised Options Value:</b></td>
-						<td>{{current}}</td>
-						<td>{{total}}</td>
+						<td>{{awardData.amountInformation.baseExercisedOptionsValue | currency:'USD':true:'.2-2'}}</td>
+						<td>{{awardData.amountInformation.totalBaseExercisedOptionsValue | currency:'USD':true:'.2-2'}}</td>
 					</tr>
 					<tr>
 						<td><b>Base and All Options Value:</b></td>
-						<td>{{current}}</td>
-						<td>{{total}}</td>
+						<td>{{awardData.amountInformation.baseAllOptionsValue | currency:'USD':true:'.2-2'}}</td>
+						<td>{{awardData.amountInformation.totalBaseAllOptionsValue | currency:'USD':true:'.2-2'}}</td>
 					</tr>
 					<tr *ngIf="awardData.templateType == 'AWARD'">
 						<td><b>Fee Paid for Use of IDV:</b></td>
-						<td>{{current}}</td>
-						<td>{{total}}</td>
+						<td>{{awardData.amountInformation.feePaidForUseIDV | currency:'USD':true:'.2-2'}}</td>
+						<td></td>
 					</tr>
-					<div id="award-type" *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
-						<tr>
-							<td><b>Non-Governmental Dollars:</b></td>
-							<td>{{current}}</td>
-							<td>{{total}}</td>
-						</tr>
-					</div>
+					<tr *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
+						<td><b>Non-Governmental Dollars:</b></td>
+						<td>{{awardData.amountInformation.nonGovernmentDollar | currency:'USD':true:'.2-2'}}</td>
+						<td>{{awardData.amountInformation.totalNonGovernmentDollar | currency:'USD':true:'.2-2'}}</td>
+					</tr>
 				</table>
 				<h3 id="purchaserInformation">Purchaser Information</h3>
-				Contracting Office Agency Name: {{contractingOfficeAgencyName}}<br />
-				Contracting Office Agency ID: {{contractingOfficeAgencyID}}<br />
-				Contracting Office Name: {{contractingOfficeName}}<br />
-				Contracting Office ID: {{contractingOfficeID}}<br />
+				Contracting Office Agency Name: {{awardData.purchaserInformation.contractingOfficeAgencyName}}<br />
+				Contracting Office Agency ID: {{awardData.purchaserInformation.contractingOfficeAgencyID}}<br />
+				Contracting Office Name: {{awardData.purchaserInformation.contractingOfficeName}}<br />
+				Contracting Office ID: {{awardData.purchaserInformation.contractingOfficeID}}<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
-					Foreign Funding: {{foreignFunding}}<br />
+					Foreign Funding: {{awardData.purchaserInformation.foreignFunding}}<br />
 				</div>
-				Funding Agency Name: {{fundingAgencyName}}<br />
-				Funding Agency ID: {{fundingAgencyID}}<br />
-				Funding Office Name: {{fundingOfficeName}}<br />
-				Funding Office ID: {{fundingOfficeID}}<br />
+				<div *ngIf="awardData.templateType != 'OTI'">
+					Funding Agency Name: {{awardData.purchaserInformation.fundingAgencyName}}<br />
+					Funding Agency ID: {{awardData.purchaserInformation.fundingAgencyID}}<br />
+					Funding Office Name: {{awardData.purchaserInformation.fundingOfficeName}}<br />
+					Funding Office ID: {{awardData.purchaserInformation.fundingOfficeID}}
+				</div>
+				<div *ngIf="awardData.templateType == 'AWARD'">
+					Reason for Inter-Agency Contracting: {{awardData.purchaserInformation.reasonForPurchase}}
+				</div>
 				<h3 id="contractorInformation">Contractor Information</h3>
 				SAM Exception: {{samException}}
 				<br />
@@ -276,7 +261,7 @@
 					Interagency Contracting Authority: {{ica}}<br />
 					Other Interagency Contracting Statutory Authority (1000 Characters) {{oicsa}}
 				</div>
-				<h2 id="">Business Information</h2>
+				<h2 id="business-information">Business Information</h2>
 				<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
 					<h3 id="contractMarketingData">Contract Marketing Data</h3>
 					Website URL: {{websiteURL}}<br />

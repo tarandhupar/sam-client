@@ -1,4 +1,4 @@
-<div class="usa-grid assistance-listing-page">
+<div class="usa-grid assistance-listing-page" *ngIf="program">
 
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
@@ -14,6 +14,7 @@
       <!--Side Navigation-->
       <nav>
         <ul class="usa-sidenav-list">
+          <li *ngIf="program.status?.code!='published'"><a href="{{currentUrl}}#program-information">Header Information</a></li>
           <li><a href="{{currentUrl}}#overview">Overview</a></li>
           <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
           <li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
@@ -34,9 +35,17 @@
     </ng-container>
 
     <section id="program-information">
-      <h1>
-        <span class="field" id="program-title">{{program?.data?.title}}</span>
-      </h1>
+      <div class="view-section-margin"></div>
+        <div class="usa-grid-full">
+          <div class="usa-width-two-thirds">
+            <h1><span class="field" id="program-title">{{program?.data?.title}}</span></h1>
+          </div>
+          <div class="usa-width-one-third">
+            <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']">Edit</a>
+            <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']"></i>
+          </div>
+        </div>
+
 
       <p class="field" id="program-alternative-names" *ngIf="program.data?.alternativeNames && program.data?.alternativeNames[0] != null">
         <strong>Popular Name:</strong> {{program.data.alternativeNames[0]}}
@@ -64,8 +73,16 @@
 
     <section id="program-overview">
       <a name="#/programs/{{programID}}/view#overview"></a>
-      <h2 id="overview">Overview</h2>
-
+      <div class="view-section-margin"></div>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="overview">Overview</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']" [fragment]="'overview'">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']" [fragment]="'overview'"></i>
+        </div>
+      </div>
       <h3>Objectives:</h3>
 
       <p class="field" id="program-objective">
@@ -475,11 +492,11 @@
 
       <h3>Records:</h3>
 
-      <p class="field" id="program-postaward-records" *ngIf="(program.data?.postAward.records?.content) && (program.data.postAward.records.content != '')">
-        {{program.data.postAward.records.content}}
+      <p class="field" id="program-postaward-records" *ngIf="(program.data?.postAward?.records?.content) && (program.data?.postAward?.records.content != '')">
+        {{program.data?.postAward?.records?.content}}
       </p>
 
-      <p class="field" id="program-postaward-records" *ngIf="!(program.data?.postAward.records?.content) || (program.data.postAward.records.content == '')">
+      <p class="field" id="program-postaward-records" *ngIf="!(program.data?.postAward?.records?.content) || (program.data?.postAward?.records?.content == '')">
         No Data Available.
       </p>
 
