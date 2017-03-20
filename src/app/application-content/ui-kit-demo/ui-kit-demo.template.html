@@ -130,7 +130,6 @@
         [(model)]="selectModel"
         [name]="selectConfig.name"
         [options]="selectConfig.options"
-        [label]="selectConfig.label"
         [hint]="selectConfig.hint"
         [errorMessage]="selectConfig.errorMessage"
         [disabled]="selectConfig.disabled">
@@ -559,9 +558,33 @@
     <pre>{{listOptions | json}}</pre>
   </div>
   <div class="usa-width-one-fourth">
-      <sam-list-input [control]="listControl" [options]="listOptions"></sam-list-input>
+      <sam-list-input [name]="wawaweewa" [control]="listControl" [options]="listOptions"></sam-list-input>
   </div>
   <div class="usa-width-one-fourth">
-      <sam-list-input [control]="listControl" [selections]="[1,4]" [options]="listOptions"></sam-list-input>
+      <sam-list-input [name]="gogogogogogo" [control]="listControl" [selections]="[1,4]" [options]="listOptions"></sam-list-input>
   </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Sam Autocomplete Dropdown</h2>
+    <div class="usa-width-one-half">
+      <sam-autocomplete-dropdown [(ngModel)]="searchValue" [name]="searchName" [options]="dropdownSearch"></sam-autocomplete-dropdown>
+    </div>
+    <div class="usa-width-one-half">
+      {{searchValue}}
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">MultiSelect Dropdown</h2>
+    <div class="usa-width-one-half">
+      <sam-list-display [newValue]="searchValue1" (emitSelectedItems)="getDropdownListItems($event)" [(ngModel)]="testModel1">
+        <sam-autocomplete-dropdown [(ngModel)]="searchValue1" [name]="searchName1" [options]="dropdownSearch1" [button]="button" (onButtonPressed)="getButton($event)"></sam-autocomplete-dropdown>
+      </sam-list-display>
+    </div>
+    <div class="usa-width-one-half">
+      Model value: {{testModel1}}
+    </div>
+  </div>
+
+
 </div>

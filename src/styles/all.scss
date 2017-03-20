@@ -45,6 +45,7 @@
 @import 'components/feedback-form';
 @import 'components/well';
 @import 'components/autocomplete';
+@import 'components/autocomplete-dropdown';
 @import 'components/organization-profile';
 
 @import 'pages/awards';
@@ -149,13 +150,18 @@ h2{
   }
 }
 
-.search-layout{
-  .showing-results-meta{
-    margin-top:3rem!important;
-  }
-  samselect{
-    label{
-      margin-top:0;
-    }
-  }
+.search-layout{		
+  .showing-results-meta{		
+    margin-top:3rem!important;		
+  }		
+  samselect{		
+    label{		
+      margin-top:0;		
+    }		
+  }		
+}
+
+select {
+  background-position: right .65rem center;
+  padding: 1rem 2.6rem 1rem 0.7em;
 }
