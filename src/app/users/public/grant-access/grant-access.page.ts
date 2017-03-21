@@ -96,7 +96,7 @@ export class GrantAccessPage implements OnInit {
     this.route.queryParams.subscribe(queryParams => {
       this.role = parseInt(queryParams["role"]);
       this.domain = parseInt(queryParams["domain"]);
-      let accessParams = { domainKey: this.domain, roleKey: this.role, orgKey: this.orgs.join(',') };
+      this.orgs = queryParams["orgs"].split(',');
       let obsAccess = this.getAccess();
       this.getRoles().switchMap(() => obsAccess).subscribe(
         res => {
@@ -207,8 +207,6 @@ export class GrantAccessPage implements OnInit {
     if (r) {
       this.objects = r.functionContent;
 
-      let userFunctions = userRole.organizationMapContent[0].functionMapContent;
-
       if (roleIsCurrentRole) {
         this.objects.forEach(fun => {
           let fid = fun.function.id;
@@ -220,6 +218,8 @@ export class GrantAccessPage implements OnInit {
             }
           });
         });
+      } else {
+
       }
     } else {
       this.objects = [];
