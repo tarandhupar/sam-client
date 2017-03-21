@@ -586,20 +586,7 @@
     <section id="program-history" *ngIf="historicalIndex">
       <a name="#/programs/{{programID}}/view#history"></a>
       <h2 id="history">History</h2><br>
-      <ng-container *ngFor="let item of historicalIndex; let i = index">
-        <div id="historyItem" *ngIf="(!(item.actionType == 'publish' && item.index != 1))">
-          <!--<p *ngIf="item.statusCode" style="text-align:left; margin-top:.7em">
-            {{item.fiscalYear}} ({{item.statusCode}})
-            <span class="historyDetails">{{item.actionType | historicalIndexLabel}}</span>
-          </p>
-          <p id="fiscalYear" *ngIf="!item.statusCode">-->
-          <p class="field" [attr.id]="'program-historical-' + i">
-            {{item.fiscalYear}}
-            <span class="historyDetails" [attr.id]="'program-historical-details-' + i">{{item.actionType | historicalIndexLabel}}</span>
-          </p>
-          <p id="changeDescription">{{item.changeDescription}}</p>
-        </div>
-      </ng-container>
+      <history [data]="history"></history>
     </section>
 
     <!--Internal Fields-->

@@ -5,6 +5,7 @@
       <strong>{{item.date}}</strong>
       <a *ngIf="item.url" href="{{ item.url }}">{{ item.title }}</a>
       <ng-container *ngIf="!item.url">{{ item.title }}</ng-container>
+      <br *ngIf="item.title && item.description"/>
       <em *ngIf="item.description">{{ item.description }}</em>
       <i *ngIf="item.isTagged" class="fa fa-certificate" aria-hidden="true"></i>
     </span>
