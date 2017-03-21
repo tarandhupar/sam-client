@@ -43,7 +43,7 @@ export class SearchPage implements OnInit{
   };
 
   // Wage Determination Radio Component
-  wdTypeModel: any = null;
+  wdTypeModel = '';
   wdTypeConfig = {
     options:  [
       {value: 'sca', label: 'Service Contract Act (SCA)', name: 'radio-sca'},
@@ -159,7 +159,7 @@ export class SearchPage implements OnInit{
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
         this.isActive = data['isActive'] && data['isActive'] === "true" ? true : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
-        this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : null;
+        this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : '';
         this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : '';
         this.wdCountyModel = data['county'] && data['county'] !== null ? data['county'] : '';
         this.wdConstructModel = data['conType'] && data['conType'] !== null ? data['conType'] : '';
@@ -230,7 +230,7 @@ export class SearchPage implements OnInit{
     qsobj['isActive'] = this.isActive;
 
     //wd or sca type param
-    if(this.wdTypeModel!=null) {
+    if(this.wdTypeModel.length>0) {
       qsobj['wdType'] = this.wdTypeModel;
     }
 
@@ -674,8 +674,6 @@ export class SearchPage implements OnInit{
     this.wdPreviouslyPerformedClear();
     this.wdConstructionClear();
     this.pageNum = 0;
-
-    this.searchResultsRefresh()
   }
 
   wdConstructionClear(){
@@ -691,8 +689,6 @@ export class SearchPage implements OnInit{
 
     // cba should also be cleared if prev performed is cleared
     this.wdSubjectToCBAClear();
-
-    this.searchResultsRefresh()
   }
 
   wdSubjectToCBAClear(){
@@ -701,8 +697,6 @@ export class SearchPage implements OnInit{
 
     // non standard services should also be cleared if cba is
     this.wdNonStandardServicesSelectClear();
-
-    this.searchResultsRefresh()
   }
 
   wdNonStandardServicesSelectClear(){
@@ -728,6 +722,12 @@ export class SearchPage implements OnInit{
     // call clear for agency picker
     if(this.agencyPicker){
       this.agencyPicker.resetBrowse();
+
+      // clear the selected organizations
+      this.agencyPicker.onResetClick();
+
+      // clear the keyword search
+      this.agencyPicker.clearSelectedOrgs();
     }
 
 
