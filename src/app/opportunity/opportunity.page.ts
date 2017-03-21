@@ -92,6 +92,7 @@ export class OpportunityPage implements OnInit {
   showChangesGeneral = false;
   showChangesSynopsis = false;
   showChangesClassification = false;
+  showChangesContactInformation = false;
 
 
   errorOrganization: any;
@@ -158,6 +159,7 @@ export class OpportunityPage implements OnInit {
     let historyAPI = this.loadHistory(opportunityAPI);
     let packagesOpportunities = this.loadAttachments(historyAPI);
     let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
+    this.differences = this.checkChanges(previousOpportunityAPI);
 
     this.sidenavService.updateData(this.selectedPage, 0);
 
@@ -291,7 +293,6 @@ export class OpportunityPage implements OnInit {
       if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined'){
         this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
           this.previousOpportunityLocation = data;
-          this.differences = this.checkChanges();
         });
     }
     }, err => { 
@@ -854,9 +855,11 @@ export class OpportunityPage implements OnInit {
         return OpportunityPage.TYPE_UNKNOWN;
     }
   }
-  private checkChanges(){
-    let viewChangesPipe = new ViewChangesPipe();
+  private checkChanges(previousOpportunityAPI){
+    previousOpportunityAPI.subscribe(() => {
+      let viewChangesPipe = new ViewChangesPipe();
       return  viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
+    });
   }
 
   private showHideGeneral(){
@@ -868,5 +871,8 @@ export class OpportunityPage implements OnInit {
   }
   private showHideClassification(){
     this.showChangesClassification == false ? this.showChangesClassification = true : this.showChangesClassification = false;
+  }
+  private showHideContactInformation(){
+    this.showChangesContactInformation == false ? this.showChangesContactInformation = true : this.showChangesContactInformation = false;
   }
 }

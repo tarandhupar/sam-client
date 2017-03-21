@@ -401,7 +401,11 @@
       </section>
 
       <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
-        <h2>Contact Information</h2>
+        <h2>Contact Information
+          <samButton *ngIf="differences?.changesExistContactInformation && !showChangesContactInformation" [buttonId]="'defaultBtnContactInformation'" [buttonText]="'View Changes'" [buttonType]="btnType" (click)="showHideContactInformation()"></samButton>
+          <samButton *ngIf="differences?.changesExistContactInformation && showChangesContactInformation" [buttonId]="'defaultBtnContactInformation'" [buttonText]="'Hide Changes'" [buttonType]="btnType" (click)="showHideContactInformation()"></samButton>
+          <span *ngIf="showChangesContactInformation" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+        </h2>
         <div class="usa-grid-full">
           <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
             <!-- <samLabel *ngIf="differences?.contractingOfficeAddress" [labelType]="'small'" [labelText]="' '"></samLabel> -->
