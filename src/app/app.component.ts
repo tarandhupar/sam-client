@@ -22,6 +22,12 @@ export class App{
   index: string = "";
   isActive: boolean = false;
   qs: any = {};
+  searchSelectConfig = {
+    options: globals.searchFilterConfig,
+    disabled: false,
+    label: '',
+    name: 'filter',
+  };
 
   showOverlay = false;
 

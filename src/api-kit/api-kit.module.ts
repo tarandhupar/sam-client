@@ -12,7 +12,7 @@ import { OpportunityService } from './opportunity/opportunity.service';
 import { WageDeterminationService } from './wage-determination/wage-determination.service';
 import { WrapperService } from './wrapper/wrapper.service';
 import { SuggestionsService } from './search/suggestions.service';
-import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.service';
+import { AutoCompleteWrapper,SuggestionsServiceDirective } from './autoCompleteWrapper/autoCompleteWrapper.service';
 import { UserDirService } from './user-directory/user-directory.service';
 import { UserAccessService } from "./access/access.service";
 import { LocationService } from "./location/location.service";
@@ -23,6 +23,10 @@ import { LocationService } from "./location/location.service";
  */
 @NgModule({
   declarations: [
+    SuggestionsServiceDirective
+  ],
+  exports: [
+    SuggestionsServiceDirective
   ],
   imports: [
     HttpModule,
