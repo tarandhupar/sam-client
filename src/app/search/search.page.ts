@@ -715,8 +715,6 @@ export class SearchPage implements OnInit{
 
   clearAllFilters(){
 
-    console.log('agency picker ', this.agencyPicker);
-
     // clear/reset all top level filters
     this.isActive = true;
 
