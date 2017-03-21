@@ -3,7 +3,7 @@ import { By }              from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AssistanceListingResult } from './assistance-listing-result.component';
-import { HistoryComponent } from "../../app-components/history/history.component";
+import { SamUIKitModule } from 'sam-ui-kit';
 
 var fixture;
 var comp;
@@ -12,8 +12,8 @@ var programNumberEl;
 describe('AssistanceListingResultComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [ AssistanceListingResult, HistoryComponent ],
+      imports: [RouterTestingModule,SamUIKitModule],
+      declarations: [ AssistanceListingResult ],
     });
     TestBed.compileComponents().then( ()=>{
       fixture = TestBed.createComponent(AssistanceListingResult);

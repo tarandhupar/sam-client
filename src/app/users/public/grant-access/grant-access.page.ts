@@ -96,7 +96,7 @@ export class GrantAccessPage implements OnInit {
     this.route.queryParams.subscribe(queryParams => {
       this.role = parseInt(queryParams["role"]);
       this.domain = parseInt(queryParams["domain"]);
-      let accessParams = { domainKey: this.domain, roleKey: this.role, orgKey: this.orgs.join(',') };
+      this.orgs = queryParams["orgs"].split(',');
       let obsAccess = this.getAccess();
       this.getRoles().switchMap(() => obsAccess).subscribe(
         res => {
@@ -207,9 +207,8 @@ export class GrantAccessPage implements OnInit {
     if (r) {
       this.objects = r.functionContent;
 
-      let userFunctions = userRole.organizationMapContent[0].functionMapContent;
-
       if (roleIsCurrentRole) {
+        // merge roles the user has with all available roles
         this.objects.forEach(fun => {
           let fid = fun.function.id;
           fun.permission.forEach(perm => {
@@ -222,6 +221,7 @@ export class GrantAccessPage implements OnInit {
         });
       }
     } else {
+      // the user selected a role that is not in the roles table (it may not have been fetched yet)
       this.objects = [];
     }
   }
@@ -303,7 +303,12 @@ export class GrantAccessPage implements OnInit {
       case 'grant':
         return this.orgs && this.orgs.length && this.domain && this.role;
       case 'request':
-        return this.domain && this.messages && this.supervisorName && this.supervisorName;
+        return this.domain
+          && this.messages
+          && this.supervisorName
+          && this.supervisorName.length
+          && this.supervisorEmail
+          && this.supervisorEmail.length;
     }
   }
 
@@ -321,13 +326,13 @@ export class GrantAccessPage implements OnInit {
     }
 
     if (this.mode === 'request') {
-      if (!this.supervisorName) {
+      if (!this.supervisorName || !this.supervisorName.length) {
         this.errors.supervisorName = 'Supervisor name is required';
       }
-      if (!this.supervisorEmail) {
+      if (!this.supervisorEmail || !this.supervisorEmail.length) {
         this.errors.supervisorEmail = 'Supervisor email is required';
       }
-      if (!this.messages) {
+      if (!this.messages || !this.messages.length) {
         this.errors.messages = "A message is required";
       }
     }
@@ -349,7 +354,7 @@ export class GrantAccessPage implements OnInit {
 
   messagePlaceholder() {
     if (this.mode === 'request') {
-      return "Please provide a message to your Role Administrator that includes the names of the organizations you need access to and why."
+      return "Send your Role Administrator the names of the organizations and roles you are requesting and why."
     } else {
       return "(Optional) Include a message with your response";
     }

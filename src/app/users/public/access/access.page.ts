@@ -35,8 +35,19 @@ export class UserAccessPage implements OnInit {
 
   private showCollapse = false;
   private capitalize = new CapitalizePipe();
-  private modalRole;
-  private modalDomain;
+  private modalRole = {
+    role: {
+      id: null,
+      val: null
+    },
+    organizationMapContent: [
+      { organizations: []}
+    ]
+  };
+  private modalDomain = {
+    id: null,
+    val: null,
+  };
 
   constructor(
     private userService: UserAccessService,
@@ -149,15 +160,29 @@ export class UserAccessPage implements OnInit {
   }
 
   filterChanged() {
-    const filterOptions: UserAccessFilterOptions = {
-      organizationIds: this.filters.organizations.value,
-      domainIds: this.filters.domains.value,
-      roleIds: this.filters.roles.value,
-      permissionIds: this.filters.permissions.value,
-      functionIds: this.filters.objects.value,
-    };
+    const queryParams: any = { };
 
-    this.userService.getAccess(this.userName, filterOptions).subscribe(res => {
+    if (this.filters.domains.value && this.filters.domains.value.length) {
+      queryParams.domainKey = this.filters.domains.value.join(',');
+    }
+
+    if (this.filters.objects.value && this.filters.objects.value.length) {
+      queryParams.functionKey = this.filters.objects.value.join(',');
+    }
+
+    if (this.filters.roles.value && this.filters.roles.value.length) {
+      queryParams.roleKey = this.filters.roles.value.join(',');
+    }
+
+    if (this.filters.organizations.value && this.filters.organizations.value.length) {
+      queryParams.orgKey = this.filters.organizations.value.join(',');
+    }
+
+    if (this.filters.permissions.value && this.filters.permissions.value.length) {
+      queryParams.permissionKey = this.filters.permissions.value.join(',');
+    }
+
+    this.userService.getAccess(this.userName, queryParams).subscribe(res => {
       this.userAccessModel = UserAccessModel.FromResponse(res);
       this.expandAll();
     });
