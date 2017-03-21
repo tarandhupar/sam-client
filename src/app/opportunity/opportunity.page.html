@@ -408,7 +408,6 @@
         </h2>
         <div class="usa-grid-full">
           <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
-            <!-- <samLabel *ngIf="differences?.contractingOfficeAddress" [labelType]="'small'" [labelText]="' '"></samLabel> -->
             <h3>
               <i *ngIf="differences?.contractingOfficeAddress" class="fa fa-square" aria-hidden="true"></i>
               Contracting Office Address:
@@ -429,11 +428,10 @@
               {{opportunityLocation?.zip}}
             </span>
           </div>
-          <!--<span *ngIf="showChanges && differences?.contractingOfficeAddress" [innerHTML]="differences?.contractingOfficeAddress"></span>-->
+          <span *ngIf="showChangesContactInformation && differences?.contractingOfficeAddress" [innerHTML]="differences?.contractingOfficeAddress"></span>
         </div>
         <div class="usa-grid-full">
           <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-primary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
-            <!-- <samLabel *ngIf="differences?.primaryPointOfContact" [labelType]="'small'" [labelText]="' '"></samLabel> -->
             <h3>
               <i *ngIf="differences?.primaryPointOfContact" class="fa fa-square" aria-hidden="true"></i>
               Primary Point of Contact
@@ -467,9 +465,8 @@
               </li>
             </ul>
           </div>
-          <!--<span *ngIf="showChanges && differences?.primaryPointOfContact" [innerHTML]="differences?.primaryPointOfContact"></span>-->
+          <span *ngIf="showChangesContactInformation && differences?.primaryPointOfContact" [innerHTML]="differences?.primaryPointOfContact"></span>
           <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-secondary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
-            <!-- <samLabel *ngIf="differences?.secondaryPointOfContact" [labelType]="'small'" [labelText]="' '"></samLabel> -->
             <h3>
               <i *ngIf="differences?.secondaryPointOfContact" class="fa fa-square" aria-hidden="true"></i>
               Secondary Point of Contact
@@ -503,7 +500,7 @@
               </li>
             </ul>
           </div>
-          <!--<span *ngIf="showChanges && differences?.secondaryPointOfContact" [innerHTML]="differences?.secondaryPointOfContact"></span>-->
+          <span *ngIf="showChangesContactInformation && differences?.secondaryPointOfContact" [innerHTML]="differences?.secondaryPointOfContact"></span>
         </div>
       </section>
 

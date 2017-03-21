@@ -159,7 +159,7 @@ export class OpportunityPage implements OnInit {
     let historyAPI = this.loadHistory(opportunityAPI);
     let packagesOpportunities = this.loadAttachments(historyAPI);
     let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
-    this.differences = this.checkChanges(previousOpportunityAPI);
+    this.checkChanges(previousOpportunityAPI);
 
     this.sidenavService.updateData(this.selectedPage, 0);
 
@@ -277,7 +277,8 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadPreviousOpportunityVersion(historyAPI: Observable<any>) { 
-    let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers 
+    let opportunitySubject = new ReplaySubject(1);
+    let opportunitySubject2 = new ReplaySubject(1);// broadcasts the opportunity to multiple subscribers 
      historyAPI.subscribe(opportunity => {
        if (!(this.opportunity.data.type === "m") || opportunity.content.history.length < 2){ 
          return null; 
@@ -288,17 +289,22 @@ export class OpportunityPage implements OnInit {
          this.opportunityService.getOpportunityById(id).subscribe(opportunitySubject);
        } 
      });// attach subject to stream  
+
     opportunitySubject.subscribe(api => { // do something with the opportunity api 
       this.previousOpportunityVersion = api;
+      console.log("Prev Opp API", this.previousOpportunityVersion);
       if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined'){
-        this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
-          this.previousOpportunityLocation = data;
-        });
+        console.log("inside if");
+        this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(opportunitySubject2);
+        // opportunitySubject2.subscribe(data => {
+        //   this.previousOpportunityLocation = data;
+        //   console.log("this.previousOpportunityLocation",this.previousOpportunityLocation);
+        // });
     }
     }, err => { 
       console.log('Error loading opportunity: ', err); 
     });  
-    return opportunitySubject; 
+    return opportunitySubject2; 
   }
 
   private loadParentOpportunity(opportunityAPI: Observable<any>){
@@ -855,10 +861,11 @@ export class OpportunityPage implements OnInit {
         return OpportunityPage.TYPE_UNKNOWN;
     }
   }
-  private checkChanges(previousOpportunityAPI){
-    previousOpportunityAPI.subscribe(() => {
+  private checkChanges(previousOpportunityAPI: Observable<any>){
+    previousOpportunityAPI.subscribe((data) => {
+      this.previousOpportunityLocation = data;
       let viewChangesPipe = new ViewChangesPipe();
-      return  viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
+      this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
     });
   }
 

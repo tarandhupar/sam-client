@@ -10,6 +10,10 @@ import * as _ from 'lodash';
 @Pipe({name: 'viewChanges'})
 export class ViewChangesPipe implements PipeTransform {
   transform(previousOpportunity: any, currentOpportunity:any, dictionaries: any, currentOpportunityLocation:any, previousOpportunityLocation:any): any {
+    console.log("currentOpportunity", currentOpportunity);
+    console.log("previousOpportunity", previousOpportunity);
+    console.log("currentOpportunityLocation", currentOpportunityLocation);
+    console.log("previousOpportunityLocation", previousOpportunityLocation);
     let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
     let dateFormatPipe = new DateFormatPipe();
     let fixHtmlPipe = new FixHTMLPipe();
@@ -315,8 +319,6 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousDescription = null;
     }
-    console.log("currentDescription", currentDescription);
-    console.log("previousDescription", previousDescription);
 
     if (currentDescription != previousDescription && previousDescription == null){
       description = currentDescription + "<span>" + "New Data".italics().fontcolor("003264") + "</span>";
@@ -392,8 +394,19 @@ export class ViewChangesPipe implements PipeTransform {
     } else{
       previousContractingOfficeAddressZip = null;
     }
+    console.log("currentContractingOfficeAddressStreet",currentContractingOfficeAddressStreet);
+    console.log("currentContractingOfficeAddressCity",currentContractingOfficeAddressCity);
+    console.log("currentContractingOfficeAddressState",currentContractingOfficeAddressState);
+    console.log("currentContractingOfficeAddressCountry",currentContractingOfficeAddressCountry);
+    console.log("currentContractingOfficeAddressZip",currentContractingOfficeAddressZip);
+
+    console.log("previousContractingOfficeAddressStreet",previousContractingOfficeAddressStreet);
+    console.log("previousContractingOfficeAddressCity",previousContractingOfficeAddressCity);
+    console.log("previousContractingOfficeAddressState",previousContractingOfficeAddressState);
+    console.log("previousContractingOfficeAddressCountry",previousContractingOfficeAddressCountry);
+    console.log("previousContractingOfficeAddressZip",previousContractingOfficeAddressZip);
     if ((currentContractingOfficeAddressStreet != previousContractingOfficeAddressStreet || currentContractingOfficeAddressCity != previousContractingOfficeAddressCity || currentContractingOfficeAddressState != previousContractingOfficeAddressState || currentContractingOfficeAddressCountry != previousContractingOfficeAddressCountry || currentContractingOfficeAddressZip != previousContractingOfficeAddressZip) && (previousContractingOfficeAddressStreet == null && previousContractingOfficeAddressCity == null && previousContractingOfficeAddressState == null && previousContractingOfficeAddressZip == null && previousContractingOfficeAddressCountry == null)){
-      contractingOfficeAddress = "New Data".italics();
+      contractingOfficeAddress = "New Data".italics().fontcolor("003264");
       changesExistContactInformation = true;
     } else if (((currentContractingOfficeAddressStreet != previousContractingOfficeAddressStreet && previousContractingOfficeAddressStreet != null) || (currentContractingOfficeAddressCity != previousContractingOfficeAddressCity && previousContractingOfficeAddressCity != null) || (currentContractingOfficeAddressState != previousContractingOfficeAddressState && previousContractingOfficeAddressState != null) || (currentContractingOfficeAddressCountry != previousContractingOfficeAddressCountry && previousContractingOfficeAddressCountry != null) || currentContractingOfficeAddressZip != previousContractingOfficeAddressZip && previousContractingOfficeAddressZip != null)){
       contractingOfficeAddress = ((previousContractingOfficeAddressStreet ? previousContractingOfficeAddressStreet : "") + " " + (previousContractingOfficeAddressCity ? previousContractingOfficeAddressCity : "") + " " + (previousContractingOfficeAddressState ? previousContractingOfficeAddressState : "") + " " + (previousContractingOfficeAddressCountry ? previousContractingOfficeAddressCountry : "") + " " + (previousContractingOfficeAddressZip ? previousContractingOfficeAddressZip : "")).strike();
@@ -401,8 +414,8 @@ export class ViewChangesPipe implements PipeTransform {
     }
 
     //checks primary Contact
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].fullName){
-      currentPrimaryFullName = previousOpportunity.data.pointOfContact[0].fullName;
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].fullName){
+      currentPrimaryFullName = currentOpportunity.data.pointOfContact[0].fullName;
     } else {
       currentPrimaryFullName = null;
     }
@@ -411,8 +424,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousPrimaryFullName = null;
     }
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].title){
-      currentPrimaryTitle = previousOpportunity.data.pointOfContact[0].title;
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].title){
+      currentPrimaryTitle = currentOpportunity.data.pointOfContact[0].title;
     } else {
       currentPrimaryTitle = null;
     }
@@ -421,8 +434,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousPrimaryTitle = null;
     }
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].email){
-      currentPrimaryEmail = previousOpportunity.data.pointOfContact[0].email;
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].email){
+      currentPrimaryEmail = currentOpportunity.data.pointOfContact[0].email;
     } else {
       currentPrimaryEmail = null;
     }
@@ -431,8 +444,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousPrimaryEmail = null;
     }
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].phone){
-      currentPrimaryPhone = previousOpportunity.data.pointOfContact[0].phone;
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].phone){
+      currentPrimaryPhone = currentOpportunity.data.pointOfContact[0].phone;
     } else {
       currentPrimaryPhone = null;
     }
@@ -441,8 +454,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousPrimaryPhone = null;
     }
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].fax){
-      currentPrimaryFax = previousOpportunity.data.pointOfContact[0].fax;
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].fax){
+      currentPrimaryFax = currentOpportunity.data.pointOfContact[0].fax;
     } else {
       currentPrimaryFax = null;
     }
@@ -452,7 +465,7 @@ export class ViewChangesPipe implements PipeTransform {
       previousPrimaryFax = null;
     }
     if ((currentPrimaryFullName != previousPrimaryFullName || currentPrimaryTitle != previousPrimaryTitle || currentPrimaryEmail != previousPrimaryEmail || currentPrimaryPhone != previousPrimaryPhone || currentPrimaryFax != previousPrimaryFax) && (previousPrimaryFullName == null && previousPrimaryTitle == null && previousPrimaryEmail == null && previousPrimaryPhone == null && previousPrimaryFax == null)){
-      contractingOfficeAddress = "New Data".italics();
+      contractingOfficeAddress = "New Data".italics().fontcolor("003264");
       changesExistContactInformation = true;
     } else if (((currentPrimaryFullName != previousPrimaryFullName && previousPrimaryFullName != null) || (currentPrimaryTitle != previousPrimaryTitle && previousPrimaryTitle != null) || (currentPrimaryEmail != previousPrimaryEmail && previousPrimaryEmail != null) || (currentPrimaryPhone != previousPrimaryPhone && previousPrimaryPhone != null) || currentPrimaryFax != currentPrimaryFax && previousPrimaryFax != null)){
       contractingOfficeAddress = ((previousPrimaryFullName ? previousPrimaryFullName : "") + " " + (previousPrimaryTitle ? previousPrimaryTitle : "") + " " + (previousPrimaryEmail ? previousPrimaryEmail : "") + " " + (previousPrimaryPhone ? previousPrimaryPhone : "") + " " + (currentPrimaryFax ? currentPrimaryFax : "")).strike();
@@ -460,7 +473,7 @@ export class ViewChangesPipe implements PipeTransform {
     }
 
     //checks Secondary Contact
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].fullName){
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[1] && currentOpportunity.data.pointOfContact[1].fullName){
       currentSecondaryFullName = previousOpportunity.data.pointOfContact[1].fullName;
     } else {
       currentSecondaryFullName = null;
@@ -470,8 +483,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousSecondaryFullName = null;
     }
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].title){
-      currentSecondaryTitle = previousOpportunity.data.pointOfContact[1].title;
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[1] && currentOpportunity.data.pointOfContact[1].title){
+      currentSecondaryTitle = currentOpportunity.data.pointOfContact[1].title;
     } else {
       currentSecondaryTitle = null;
     }
@@ -480,8 +493,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousSecondaryTitle = null;
     }
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].email){
-      currentSecondaryEmail = previousOpportunity.data.pointOfContact[1].email;
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[1] && currentOpportunity.data.pointOfContact[1].email){
+      currentSecondaryEmail = currentOpportunity.data.pointOfContact[1].email;
     } else {
       currentSecondaryEmail = null;
     }
@@ -490,8 +503,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousSecondaryEmail = null;
     }
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].phone){
-      currentSecondaryPhone = previousOpportunity.data.pointOfContact[1].phone;
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[1] && currentOpportunity.data.pointOfContact[1].phone){
+      currentSecondaryPhone = currentOpportunity.data.pointOfContact[1].phone;
     } else {
       currentSecondaryPhone = null;
     }
@@ -500,8 +513,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousSecondaryPhone = null;
     }
-    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].fax){
-      currentSecondaryFax = previousOpportunity.data.pointOfContact[1].fax;
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[1] && currentOpportunity.data.pointOfContact[1].fax){
+      currentSecondaryFax = currentOpportunity.data.pointOfContact[1].fax;
     } else {
       currentSecondaryFax = null;
     }
@@ -511,7 +524,7 @@ export class ViewChangesPipe implements PipeTransform {
       previousSecondaryFax = null;
     }
     if ((currentSecondaryFullName != previousSecondaryFullName || currentSecondaryTitle != previousSecondaryTitle || currentSecondaryEmail != previousSecondaryEmail || currentSecondaryPhone != previousSecondaryPhone || currentSecondaryFax != previousSecondaryFax) && (previousSecondaryFullName == null && previousSecondaryTitle == null && previousSecondaryEmail == null && previousSecondaryPhone == null && previousSecondaryFax == null)){
-      contractingOfficeAddress = "New Data".italics();
+      contractingOfficeAddress = "New Data".italics().fontcolor("003264");
       changesExistContactInformation = true;
     } else if (((currentSecondaryFullName != previousSecondaryFullName && previousSecondaryFullName != null) || (currentSecondaryTitle != previousSecondaryTitle && previousSecondaryTitle != null) || (currentSecondaryEmail != previousSecondaryEmail && previousSecondaryEmail != null) || (currentSecondaryPhone != previousSecondaryPhone && previousSecondaryPhone != null) || currentSecondaryFax != currentSecondaryFax && previousSecondaryFax != null)){
       contractingOfficeAddress = ((previousSecondaryFullName ? previousSecondaryFullName : "") + " " + (previousSecondaryTitle ? previousSecondaryTitle : "") + " " + (previousSecondaryEmail ? previousSecondaryEmail : "") + " " + (previousSecondaryPhone ? previousSecondaryPhone : "") + " " + (currentSecondaryFax ? currentSecondaryFax : "")).strike();
