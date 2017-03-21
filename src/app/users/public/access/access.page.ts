@@ -35,8 +35,19 @@ export class UserAccessPage implements OnInit {
 
   private showCollapse = false;
   private capitalize = new CapitalizePipe();
-  private modalRole;
-  private modalDomain;
+  private modalRole = {
+    role: {
+      id: null,
+      val: null
+    },
+    organizationMapContent: [
+      { organizations: []}
+    ]
+  };
+  private modalDomain = {
+    id: null,
+    val: null,
+  };
 
   constructor(
     private userService: UserAccessService,

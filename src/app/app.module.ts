@@ -80,8 +80,8 @@ const APP_PROVIDERS = [
     OrganizationDetailModule,
 
     // Other Modules
-    SamUIKitModule,
     SamAPIKitModule,
+    SamUIKitModule,
     AppComponentsModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
