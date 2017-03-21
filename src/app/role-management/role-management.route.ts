@@ -1,5 +1,8 @@
 import { Routes, RouterModule } from '@angular/router';
-import { ObjectsWorkspacePage } from "./objects-workspace.page";
+import { ObjectWorkspacePage } from "./object-workspace.page";
+import { ObjectDetailsPage } from "./object-details.page";
+import { RoleDetailsPage } from "./role-details.page";
+import { RoleWorkspacePage } from "./role-workspace.page";
 
 export const routes: Routes = [];
 
@@ -7,7 +10,12 @@ if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
   routes.unshift({
     path: 'access',
     children: [
-      { path: 'objects',  component: ObjectsWorkspacePage },
+      { path: 'objects',  component: ObjectWorkspacePage },
+      { path: 'roles', component: RoleWorkspacePage },
+      { path: 'objects/new', component: ObjectDetailsPage},
+      { path: 'roles/new', component: RoleDetailsPage},
+      { path: 'objects/:objectId/edit', component: ObjectDetailsPage },
+      { path: 'roles/:roleId/edit', component: RoleDetailsPage },
     ]
   });
 }

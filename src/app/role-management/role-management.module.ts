@@ -7,7 +7,10 @@ import { routing } from './role-management.route';
 import { SamUIKitModule } from "sam-ui-kit/index";
 import { SamAPIKitModule } from "../../api-kit/api-kit.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
-import { ObjectsWorkspacePage } from "./objects-workspace.page";
+import { ObjectWorkspacePage } from "./object-workspace.page";
+import { RoleDetailsPage } from "./role-details.page";
+import { ObjectDetailsPage } from "./object-details.page";
+import { RoleWorkspacePage } from "./role-workspace.page";
 
 @NgModule({
   imports: [
@@ -23,7 +26,10 @@ import { ObjectsWorkspacePage } from "./objects-workspace.page";
 
   ],
   declarations: [
-    ObjectsWorkspacePage
+    ObjectWorkspacePage,
+    RoleWorkspacePage,
+    RoleDetailsPage,
+    ObjectDetailsPage,
   ],
   providers: [
     AlertFooterService
