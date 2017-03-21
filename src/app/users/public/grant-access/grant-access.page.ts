@@ -208,6 +208,7 @@ export class GrantAccessPage implements OnInit {
       this.objects = r.functionContent;
 
       if (roleIsCurrentRole) {
+        // merge roles the user has with all available roles
         this.objects.forEach(fun => {
           let fid = fun.function.id;
           fun.permission.forEach(perm => {
@@ -218,10 +219,9 @@ export class GrantAccessPage implements OnInit {
             }
           });
         });
-      } else {
-
       }
     } else {
+      // the user selected a role that is not in the roles table (it may not have been fetched yet)
       this.objects = [];
     }
   }
