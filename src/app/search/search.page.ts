@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component,OnInit, ViewChild } from '@angular/core';
 import { Router,NavigationExtras,ActivatedRoute } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { SearchService } from 'api-kit';
@@ -30,6 +30,8 @@ export class SearchPage implements OnInit{
   qParams:any = {};
   isActive: boolean = false;
   isStandard: string = '';
+
+  @ViewChild('agencyPicker') agencyPicker;
 
   // Active Checkbox config
   checkboxModel: any = ['true'];
@@ -710,4 +712,27 @@ export class SearchPage implements OnInit{
 
     this.searchResultsRefresh()
   }
+
+  clearAllFilters(){
+
+    console.log('agency picker ', this.agencyPicker);
+
+    // clear/reset all top level filters
+    this.isActive = true;
+
+    // call wd clear filters
+    this.wdStateModel = '';
+    this.wdCountyModel = '';
+
+    // each clear calls the clear method beneath it, so all depencies are cleared
+    this.wdTypeRadClear();
+
+    // call clear for agency picker
+    if(this.agencyPicker){
+      this.agencyPicker.resetBrowse();
+    }
+
+
+  }
+
 }

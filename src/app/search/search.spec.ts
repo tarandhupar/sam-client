@@ -17,6 +17,7 @@ import { FHFeaturedResult } from '../organization/featured-result/featured-resul
 import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AlertFooterService } from '../alerts/alert-footer';
+import {printLine} from "tslint/lib/test/lines";
 
 let fixture;
 
@@ -115,6 +116,18 @@ describe('SearchPage', () => {
     fixture.componentInstance.runSearch();
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.featuredData.featuredResult[0].name).toBe("SAMPLE NAME");
+    });
+  });
+
+  it('should "check" if clear filters is clearing models', () => {
+    fixture.componentInstance.isActive = false;
+    fixture.componentInstance.wdStateModel = "AK";
+    fixture.componentInstance.wdCountyModel = "17606";
+    fixture.componentInstance.clearAllFilters();
+    fixture.whenStable().then(() => {
+      expect(fixture.componentInstance.isActive).toBe(true);
+      expect(fixture.componentInstance.wdStateModel).toBe("");
+      expect(fixture.componentInstance.wdCountyModel).toBe("");
     });
   });
 
