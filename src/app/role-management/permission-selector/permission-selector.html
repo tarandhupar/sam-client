@@ -1,0 +1,53 @@
+<div class="permission-selector">
+  <div class="permission-selector-title">
+    <strong>{{title}}</strong>
+  </div>
+  <div class="permissions-body">
+    <div class="usa-grid-full check-all-row permission-row">
+      <div class="usa-width-one-twelfth">
+        <div class="empty-space">&nbsp;</div>
+      </div>
+      <div class="usa-width-one-third">
+        <strong>{{selectAllText}}</strong>
+      </div>
+      <div class="usa-width-one-twelfth">
+        All
+        <div class="pull-right">
+          <input type="checkbox" (click)="onCheckAllClick($event.target.checked)">
+        </div>
+      </div>
+      <div class="usa-width-one-fourth">
+        <strong class="p_L-4x">Make Default</strong>
+      </div>
+      <div class="usa-width-one-twelfth">
+        All
+        <div class="pull-right">
+          <input type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)">
+        </div>
+      </div>
+    </div>
+    <div class="usa-grid-full permission-row" *ngFor="let option of options; let i = index">
+      <div class="usa-width-one-twelfth">
+        <em *ngIf="option.isNew">New</em>&nbsp;
+      </div>
+      <div class="usa-width-one-third">
+        <label [attr.for]="option.label">{{option.label}}</label>
+      </div>
+      <div class="usa-width-one-twelfth">
+        &nbsp;
+        <div class="pull-right">
+          <input [attr.id]='option.label' type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [checked]="option.isSelected">
+        </div>
+      </div>
+      <div class="usa-width-one-fourth">
+        &nbsp;
+      </div>
+      <div class="usa-width-one-twelfth">
+        &nbsp;
+        <div class="pull-right">
+          <input type="checkbox" (click)="onDefaultClick($event.target.checked, option)" [disabled]="!option.isSelected" [checked]="option.isDefault">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

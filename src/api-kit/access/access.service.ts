@@ -26,29 +26,11 @@ export class UserAccessService {
       name: 'access',
       suffix: '/' + userId + '/',
       method: 'GET',
-      oParam: {fetchNames: 'true'}
+      oParam: { fetchNames: 'true'}
     };
 
     if (filterOptions) {
-      if (filterOptions.domainIds && filterOptions.domainIds.length) {
-        apiOptions.oParam.domainKey = filterOptions.domainIds.join(',');
-      }
-
-      if (filterOptions.functionIds && filterOptions.functionIds.length) {
-        apiOptions.oParam.functionKey = filterOptions.functionIds.join(',');
-      }
-
-      if (filterOptions.roleIds && filterOptions.roleIds.length) {
-        apiOptions.oParam.roleKey = filterOptions.roleIds.join(',');
-      }
-
-      if (filterOptions.organizationIds && filterOptions.organizationIds.length) {
-        apiOptions.oParam.orgKey = filterOptions.organizationIds.join(',');
-      }
-
-      if (filterOptions.permissionIds && filterOptions.permissionIds.length) {
-        apiOptions.oParam.permissionKey = filterOptions.permissionIds.join(',');
-      }
+      apiOptions.oParam = _.merge(apiOptions.oParam, filterOptions);
     }
 
     return this.apiService.call(apiOptions);
@@ -80,6 +62,16 @@ export class UserAccessService {
     };
 
     return this.apiService.call(apiOptions);
+  }
+
+  getDomainDefinition(domainId: number) {
+    let apiOptions: any = {
+      name: 'domaindefinition',
+      method: 'GET',
+      suffix: '',
+    };
+
+    return Observable.of({"domain":{"id":1,"val":"AWARD"},"roleDefinitionMapContent":[{"role":{"id":2,"val":"GENERAL PUBLIC"},"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":3,"val":"IDV"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":4,"val":"AWARD"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":5,"val":"GOVERNMENT REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":6,"val":"WEBPORTAL"},"permission":[{"id":16,"val":"REFERENCE DATA MAINTENANCE"},{"id":17,"val":"REPORTS"},{"id":18,"val":"SEARCH/VIEW CONTRACTS"},{"id":12,"val":"USER MAINTENANCE"},{"id":15,"val":"DATA COLLECTION"}]},{"function":{"id":7,"val":"ADHOC REPORTS"},"permission":[{"id":13,"val":"VIEW"}]}]},{"role":{"id":3,"val":"CONTRACTING SPECIALIST"},"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":3,"val":"IDV"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":4,"val":"AWARD"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":5,"val":"GOVERNMENT REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":6,"val":"WEBPORTAL"},"permission":[{"id":16,"val":"REFERENCE DATA MAINTENANCE"},{"id":17,"val":"REPORTS"},{"id":18,"val":"SEARCH/VIEW CONTRACTS"},{"id":12,"val":"USER MAINTENANCE"},{"id":15,"val":"DATA COLLECTION"}]},{"function":{"id":7,"val":"ADHOC REPORTS"},"permission":[{"id":13,"val":"VIEW"}]}]},{"role":{"id":4,"val":"CONTRACTING OFFICER/SPECIALIST"},"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":3,"val":"IDV"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":4,"val":"AWARD"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":5,"val":"GOVERNMENT REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":6,"val":"WEBPORTAL"},"permission":[{"id":16,"val":"REFERENCE DATA MAINTENANCE"},{"id":17,"val":"REPORTS"},{"id":18,"val":"SEARCH/VIEW CONTRACTS"},{"id":12,"val":"USER MAINTENANCE"},{"id":15,"val":"DATA COLLECTION"}]},{"function":{"id":7,"val":"ADHOC REPORTS"},"permission":[{"id":13,"val":"VIEW"}]}]}],"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":3,"val":"IDV"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":4,"val":"AWARD"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":5,"val":"GOVERNMENT REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":6,"val":"WEBPORTAL"},"permission":[{"id":16,"val":"REFERENCE DATA MAINTENANCE"},{"id":17,"val":"REPORTS"},{"id":18,"val":"SEARCH/VIEW CONTRACTS"},{"id":12,"val":"USER MAINTENANCE"},{"id":15,"val":"DATA COLLECTION"}]},{"function":{"id":7,"val":"ADHOC REPORTS"},"permission":[{"id":13,"val":"VIEW"}]}]});
   }
 
   postAccess(access: UserAccessWrapper, userName) {
