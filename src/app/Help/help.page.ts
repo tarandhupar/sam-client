@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, NavigationCancel } from '@angular/router';
 import { globals } from '../../app/globals.ts';
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { Location } from '@angular/common';
 
 @Component({
   providers: [ ],
@@ -15,7 +15,6 @@ export class HelpPage {
   private currentSubSection: string = "";
   private widthLimit: number = 1200;
 
-  private preSection: string = "";
 
   @ViewChild("feedback") feedback;
 
@@ -34,7 +33,6 @@ export class HelpPage {
           }
           let section = this.currentUrl.substr(this.baseUrl.length);
           section = section.length === 0? 'overview':section;
-          this.preSection = this.currentSection;
           this.currentSection = section;
         }else{
           this.currentSection = this.location.path(false).substr(this.baseUrl.length);
