@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
-import { Router } from "@angular/router";
-import { UserAccessService } from "../../api-kit/access/access.service";
-import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
+import { Router, ActivatedRoute } from "@angular/router";
+import { UserAccessService } from "../../../api-kit/access/access.service";
+import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
 
 @Component({
   templateUrl: 'role-details.page.html'
@@ -13,6 +13,7 @@ export class RoleDetailsPage {
   roles = [{ vals: [], name: 'Assistance Listing'}, {vals: [], name: 'IDV'}, {vals: [], name: 'Regional Offices'}];
   role;
   domains: any[] = [];
+  domain;
   domainOptions: {label: string}[] = [];
   selectedDomain;
   domainRoleOptions = [{label: 'Agency User', value: 0}, {label: 'Agency Admin', value: 1}, {label: 'Agency Admin Lite', value: 2}];
@@ -21,15 +22,29 @@ export class RoleDetailsPage {
     private router: Router
     , private accessService: UserAccessService
     , private footerAlert: AlertFooterService
+    , private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.determineMode();
     this.getAllDomains();
+    if (this.mode === 'edit') {
+      this.getDomainAndDefaultRole();
+    }
+  }
+
+  getDomainAndDefaultRole() {
+    this.route.params.switchMap(params => {
+      this.role = +params['roleId'];
+      return this.route.queryParams;
+    }).subscribe(qp => {
+      this.domain = +qp['domain'];
+      console.log('domain', this.domain);
+    });
   }
 
   determineMode() {
-    if(/edit\/?^/.test(this.router.url)) {
+    if(/\/edit/.test(this.router.url)) {
       this.mode = 'edit';
     }
   }
@@ -68,5 +83,14 @@ export class RoleDetailsPage {
       label: this.role,
       value: null,
     });
+  }
+
+  onSubmitClick() {
+    this.footerAlert.registerFooterAlert({
+      title: 'Role exists',
+      type: 'success'
+    });
+    this.router.navigateByUrl('/access/roles');
+    return;
   }
 }
