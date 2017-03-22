@@ -537,7 +537,6 @@ export class ViewChangesPipe implements PipeTransform {
       secondaryPointOfContact: secondaryPointOfContact,
       postedDate: postedDate
     };
-  console.log("differences", differences);
     return differences;
   }
 
