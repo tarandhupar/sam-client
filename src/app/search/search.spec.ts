@@ -142,4 +142,13 @@ describe('SearchPage', () => {
       expect(fixture.componentInstance.agencyPicker).toBeDefined();
     });
   });
+  it('should check for displayed results', () => {
+    fixture.componentInstance.runSearch();
+
+    fixture.whenStable().then(() => {
+      expect(fixture.componentInstance.data.page.size).toBe(10);
+      expect(fixture.componentInstance.data.page.totalElements).toBe(123);
+    });
+  })
+
 });
