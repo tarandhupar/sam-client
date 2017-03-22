@@ -4,5 +4,5 @@ import { Component } from "@angular/core";
   templateUrl: 'role-workspace.page.html'
 })
 export class RoleWorkspacePage {
-
+    
 }
