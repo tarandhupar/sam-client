@@ -47,6 +47,7 @@
 @import 'components/autocomplete';
 @import 'components/autocomplete-dropdown';
 @import 'components/organization-profile';
+@import 'components/role-management/role-managment';
 
 @import 'pages/awards';
 @import 'pages/entity-object-view';
@@ -150,15 +151,15 @@ h2{
   }
 }
 
-.search-layout{		
-  .showing-results-meta{		
-    margin-top:3rem!important;		
-  }		
-  samselect{		
-    label{		
-      margin-top:0;		
-    }		
-  }		
+.search-layout{
+  .showing-results-meta{
+    margin-top:3rem!important;
+  }
+  samselect{
+    label{
+      margin-top:0;
+    }
+  }
 }
 
 select {

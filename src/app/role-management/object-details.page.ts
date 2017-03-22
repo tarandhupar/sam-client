@@ -5,7 +5,7 @@ import { Router } from "@angular/router";
   templateUrl: 'object-details.page.html'
 })
 export class ObjectDetailsPage implements OnInit {
-  mode: 'edit'|'create' = 'create';
+  mode: 'edit'|'new' = 'new';
 
   constructor(private router: Router) { }
 
@@ -14,8 +14,7 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   determineMode() {
-    let match = this.router.url.match('edit');
-    if(match && match.length) {
+    if(/edit\/?^/.test(this.router.url)) {
       this.mode = 'edit';
     }
   }

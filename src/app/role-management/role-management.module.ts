@@ -11,6 +11,7 @@ import { ObjectWorkspacePage } from "./object-workspace.page";
 import { RoleDetailsPage } from "./role-details.page";
 import { ObjectDetailsPage } from "./object-details.page";
 import { RoleWorkspacePage } from "./role-workspace.page";
+import { PermissionSelectorComponent } from "./permission-selector";
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { RoleWorkspacePage } from "./role-workspace.page";
     RoleWorkspacePage,
     RoleDetailsPage,
     ObjectDetailsPage,
+    PermissionSelectorComponent,
   ],
   providers: [
     AlertFooterService
