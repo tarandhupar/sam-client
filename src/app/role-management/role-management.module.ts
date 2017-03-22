@@ -11,7 +11,11 @@ import { ObjectWorkspacePage } from "./object-workspace.page";
 import { RoleDetailsPage } from "./role-details.page";
 import { ObjectDetailsPage } from "./object-details.page";
 import { RoleWorkspacePage } from "./role-workspace.page";
+<<<<<<< HEAD
 import { RoleSideNav } from "./role-sidenav/role-sidenav.component.ts";
+=======
+import { PermissionSelectorComponent } from "./permission-selector";
+>>>>>>> 8cbd3e2a9e57af2a5633eb8edd709c4d71168c5b
 
 @NgModule({
   imports: [
@@ -31,7 +35,11 @@ import { RoleSideNav } from "./role-sidenav/role-sidenav.component.ts";
     RoleWorkspacePage,
     RoleDetailsPage,
     ObjectDetailsPage,
+<<<<<<< HEAD
     RoleSideNav
+=======
+    PermissionSelectorComponent,
+>>>>>>> 8cbd3e2a9e57af2a5633eb8edd709c4d71168c5b
   ],
   providers: [
     AlertFooterService
