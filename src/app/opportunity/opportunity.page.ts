@@ -292,14 +292,8 @@ export class OpportunityPage implements OnInit {
 
     opportunitySubject.subscribe(api => { // do something with the opportunity api 
       this.previousOpportunityVersion = api;
-      console.log("Prev Opp API", this.previousOpportunityVersion);
       if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined'){
-        console.log("inside if");
         this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(opportunitySubject2);
-        // opportunitySubject2.subscribe(data => {
-        //   this.previousOpportunityLocation = data;
-        //   console.log("this.previousOpportunityLocation",this.previousOpportunityLocation);
-        // });
     }
     }, err => { 
       console.log('Error loading opportunity: ', err); 

@@ -10,10 +10,6 @@ import * as _ from 'lodash';
 @Pipe({name: 'viewChanges'})
 export class ViewChangesPipe implements PipeTransform {
   transform(previousOpportunity: any, currentOpportunity:any, dictionaries: any, currentOpportunityLocation:any, previousOpportunityLocation:any): any {
-    console.log("currentOpportunity", currentOpportunity);
-    console.log("previousOpportunity", previousOpportunity);
-    console.log("currentOpportunityLocation", currentOpportunityLocation);
-    console.log("previousOpportunityLocation", previousOpportunityLocation);
     let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
     let dateFormatPipe = new DateFormatPipe();
     let fixHtmlPipe = new FixHTMLPipe();
@@ -394,17 +390,6 @@ export class ViewChangesPipe implements PipeTransform {
     } else{
       previousContractingOfficeAddressZip = null;
     }
-    console.log("currentContractingOfficeAddressStreet",currentContractingOfficeAddressStreet);
-    console.log("currentContractingOfficeAddressCity",currentContractingOfficeAddressCity);
-    console.log("currentContractingOfficeAddressState",currentContractingOfficeAddressState);
-    console.log("currentContractingOfficeAddressCountry",currentContractingOfficeAddressCountry);
-    console.log("currentContractingOfficeAddressZip",currentContractingOfficeAddressZip);
-
-    console.log("previousContractingOfficeAddressStreet",previousContractingOfficeAddressStreet);
-    console.log("previousContractingOfficeAddressCity",previousContractingOfficeAddressCity);
-    console.log("previousContractingOfficeAddressState",previousContractingOfficeAddressState);
-    console.log("previousContractingOfficeAddressCountry",previousContractingOfficeAddressCountry);
-    console.log("previousContractingOfficeAddressZip",previousContractingOfficeAddressZip);
     if ((currentContractingOfficeAddressStreet != previousContractingOfficeAddressStreet || currentContractingOfficeAddressCity != previousContractingOfficeAddressCity || currentContractingOfficeAddressState != previousContractingOfficeAddressState || currentContractingOfficeAddressCountry != previousContractingOfficeAddressCountry || currentContractingOfficeAddressZip != previousContractingOfficeAddressZip) && (previousContractingOfficeAddressStreet == null && previousContractingOfficeAddressCity == null && previousContractingOfficeAddressState == null && previousContractingOfficeAddressZip == null && previousContractingOfficeAddressCountry == null)){
       contractingOfficeAddress = "New Data".italics().fontcolor("003264");
       changesExistContactInformation = true;
@@ -465,10 +450,10 @@ export class ViewChangesPipe implements PipeTransform {
       previousPrimaryFax = null;
     }
     if ((currentPrimaryFullName != previousPrimaryFullName || currentPrimaryTitle != previousPrimaryTitle || currentPrimaryEmail != previousPrimaryEmail || currentPrimaryPhone != previousPrimaryPhone || currentPrimaryFax != previousPrimaryFax) && (previousPrimaryFullName == null && previousPrimaryTitle == null && previousPrimaryEmail == null && previousPrimaryPhone == null && previousPrimaryFax == null)){
-      contractingOfficeAddress = "New Data".italics().fontcolor("003264");
+      primaryPointOfContact = "New Data".italics().fontcolor("003264");
       changesExistContactInformation = true;
     } else if (((currentPrimaryFullName != previousPrimaryFullName && previousPrimaryFullName != null) || (currentPrimaryTitle != previousPrimaryTitle && previousPrimaryTitle != null) || (currentPrimaryEmail != previousPrimaryEmail && previousPrimaryEmail != null) || (currentPrimaryPhone != previousPrimaryPhone && previousPrimaryPhone != null) || currentPrimaryFax != currentPrimaryFax && previousPrimaryFax != null)){
-      contractingOfficeAddress = ((previousPrimaryFullName ? previousPrimaryFullName : "") + " " + (previousPrimaryTitle ? previousPrimaryTitle : "") + " " + (previousPrimaryEmail ? previousPrimaryEmail : "") + " " + (previousPrimaryPhone ? previousPrimaryPhone : "") + " " + (currentPrimaryFax ? currentPrimaryFax : "")).strike();
+      primaryPointOfContact = ((previousPrimaryFullName ? previousPrimaryFullName : "") + " " + (previousPrimaryTitle ? previousPrimaryTitle : "") + " " + (previousPrimaryEmail ? previousPrimaryEmail : "") + " " + (previousPrimaryPhone ? previousPrimaryPhone : "") + " " + (currentPrimaryFax ? currentPrimaryFax : "")).strike();
       changesExistContactInformation = true;
     }
 
@@ -524,10 +509,10 @@ export class ViewChangesPipe implements PipeTransform {
       previousSecondaryFax = null;
     }
     if ((currentSecondaryFullName != previousSecondaryFullName || currentSecondaryTitle != previousSecondaryTitle || currentSecondaryEmail != previousSecondaryEmail || currentSecondaryPhone != previousSecondaryPhone || currentSecondaryFax != previousSecondaryFax) && (previousSecondaryFullName == null && previousSecondaryTitle == null && previousSecondaryEmail == null && previousSecondaryPhone == null && previousSecondaryFax == null)){
-      contractingOfficeAddress = "New Data".italics().fontcolor("003264");
+      secondaryPointOfContact = "New Data".italics().fontcolor("003264");
       changesExistContactInformation = true;
     } else if (((currentSecondaryFullName != previousSecondaryFullName && previousSecondaryFullName != null) || (currentSecondaryTitle != previousSecondaryTitle && previousSecondaryTitle != null) || (currentSecondaryEmail != previousSecondaryEmail && previousSecondaryEmail != null) || (currentSecondaryPhone != previousSecondaryPhone && previousSecondaryPhone != null) || currentSecondaryFax != currentSecondaryFax && previousSecondaryFax != null)){
-      contractingOfficeAddress = ((previousSecondaryFullName ? previousSecondaryFullName : "") + " " + (previousSecondaryTitle ? previousSecondaryTitle : "") + " " + (previousSecondaryEmail ? previousSecondaryEmail : "") + " " + (previousSecondaryPhone ? previousSecondaryPhone : "") + " " + (currentSecondaryFax ? currentSecondaryFax : "")).strike();
+      secondaryPointOfContact = ((previousSecondaryFullName ? previousSecondaryFullName : "") + " " + (previousSecondaryTitle ? previousSecondaryTitle : "") + " " + (previousSecondaryEmail ? previousSecondaryEmail : "") + " " + (previousSecondaryPhone ? previousSecondaryPhone : "") + " " + (currentSecondaryFax ? currentSecondaryFax : "")).strike();
       changesExistContactInformation = true;
     }
 
@@ -552,8 +537,7 @@ export class ViewChangesPipe implements PipeTransform {
       secondaryPointOfContact: secondaryPointOfContact,
       postedDate: postedDate
     };
-    console.log("differences: ", differences);
-
+  console.log("differences", differences);
     return differences;
   }
 

@@ -464,8 +464,8 @@
                 {{opportunity.data?.pointOfContact[0].fax}}
               </li>
             </ul>
+            <span *ngIf="showChangesContactInformation && differences?.primaryPointOfContact" [innerHTML]="differences?.primaryPointOfContact"></span>
           </div>
-          <span *ngIf="showChangesContactInformation && differences?.primaryPointOfContact" [innerHTML]="differences?.primaryPointOfContact"></span>
           <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-secondary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
             <h3>
               <i *ngIf="differences?.secondaryPointOfContact" class="fa fa-square" aria-hidden="true"></i>
@@ -499,8 +499,8 @@
                 {{opportunity.data?.pointOfContact[1].fax}}
               </li>
             </ul>
+            <span *ngIf="showChangesContactInformation && differences?.secondaryPointOfContact" [innerHTML]="differences?.secondaryPointOfContact"></span>
           </div>
-          <span *ngIf="showChangesContactInformation && differences?.secondaryPointOfContact" [innerHTML]="differences?.secondaryPointOfContact"></span>
         </div>
       </section>
 
