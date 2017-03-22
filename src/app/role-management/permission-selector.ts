@@ -14,10 +14,9 @@ import { Component, Input, Output, OnChanges, EventEmitter } from "@angular/core
         </div>
         <div class="usa-width-one-third">
           <strong>{{selectAllText}}</strong>
-          <span class="pull-right m_R-3x">All</span>
         </div>
         <div class="usa-width-seven-twelfths">
-          <input type="checkbox" (click)="onCheckAllClick($event.target.checked)">
+          <span class="pull-right m_R-3x">All</span><input type="checkbox" (click)="onCheckAllClick($event.target.checked)">
         </div>
       </div>
       <div class="usa-grid-full permission-row" *ngFor="let option of options; let i = index">
