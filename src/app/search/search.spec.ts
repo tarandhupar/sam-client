@@ -142,6 +142,7 @@ describe('SearchPage', () => {
       expect(fixture.componentInstance.agencyPicker).toBeDefined();
     });
   });
+
   it('should check for displayed results', () => {
     fixture.componentInstance.runSearch();
 
