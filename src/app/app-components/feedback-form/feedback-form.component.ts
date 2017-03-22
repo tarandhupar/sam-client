@@ -151,6 +151,13 @@ export class SamFeedbackComponent {
     this.resetAll();
   }
 
+  OnOMBlinkClick(){
+    this.toggleFeedback();
+    if(!this.currentUrl.startsWith("/help/policies")){
+      this.router.navigateByUrl("/help/policies#OMB");
+    }
+  }
+
   showProceedModal(){
     this.proceedModal.openModal();
   }
