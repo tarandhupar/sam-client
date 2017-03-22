@@ -23,6 +23,8 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
 import { FormFieldComponent } from "./object-form/form-field/form-field.component";
 import { ObjectFormModel } from "./object-form/object-form.component";
 import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-sidebar.component";
+import { SamTypeAheadMultiselectComponent } from './type-ahead-multiselect/type-ahead-multiselect.component';
+import {SamTypeAheadComponent} from "./type-ahead-multiselect/type-ahead/type-ahead.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -46,7 +48,9 @@ import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-side
     ObjectFormModel,
     ObjectSidebarComponent,
     SamSearchbarComponent,
-    SamFeedbackComponent
+    SamFeedbackComponent,
+    SamTypeAheadMultiselectComponent,
+    SamTypeAheadComponent
   ],
   imports: [
     BrowserModule,
@@ -74,7 +78,9 @@ import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-side
     SamFeedbackComponent,
     FormFieldComponent,
     ObjectFormModel,
-    ObjectSidebarComponent
+    ObjectSidebarComponent,
+    SamTypeAheadMultiselectComponent,
+    SamTypeAheadComponent
   ],
   providers: [ ]
 })

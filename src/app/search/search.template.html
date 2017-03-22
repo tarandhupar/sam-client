@@ -149,6 +149,14 @@
           </samSelect>
           <button (click)='wdNonStandardServicesSelectClear()'>Clear</button>
         </sam-collapsible>
+
+        <!--Awards specific Filters-->
+        <sam-collapsible [label]="'Award - IDV Type'" [startOpened]="true" *ngIf="index==='fpds'">
+          <sam-type-ahead-multiselect [label] = "awardType.label"
+                                      [name] = "awardType.name"
+                                      [options] = "awardType.options"
+          ><div [innerHTML]="'Award-IDV Types Selected'"></div></sam-type-ahead-multiselect>
+        </sam-collapsible>
       </sam-filters-container>
     </div>
   </aside>

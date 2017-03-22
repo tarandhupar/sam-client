@@ -143,6 +143,37 @@ export class SearchPage implements OnInit{
   scaSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result. <br><br><b>If you would like to request a SCA contract action, click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form.</b>"
   wdSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result."
 
+  awardType = {
+    "name": "Award-IDV Type",
+    "label": "Search Award-IDV Type",
+    "options": [
+    {
+      label:'apple',
+      value: 1,
+      name: 'apple'
+    },
+    {
+      label:'orange',
+      value: 2,
+      name: 'orange'
+    },
+    {
+      label:'banana',
+      value: 3,
+      name: 'banana'
+    },
+    {
+      label:'grape',
+      value: 4,
+      name: 'grape'
+    },
+    {
+      label:'tomato',
+      value: 5,
+      name: 'tomato'
+    }]
+};
+
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,

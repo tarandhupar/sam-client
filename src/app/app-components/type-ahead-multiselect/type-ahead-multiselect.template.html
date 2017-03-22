@@ -1,0 +1,16 @@
+<labelWrapper class="sam-list-input" [label]="label" [name]="name" [hint]="hint">
+  <div class="input-area">
+    <div class="input-wrapper">
+      <sam-type-ahead #textinput [name]="name" [options]="autocompleteOptions" (selection)="autocompleteSelect($event)" (addToList)="onInputChange($event)"></sam-type-ahead>
+    </div>
+    <a tabindex="0" class="usa-list-input-submit">
+      <i class="fa fa-chevron-down" (click)="textinput.hasfocus=true" aria-hidden="true"></i>
+    </a>
+  </div>
+  <ng-content></ng-content>
+  <ul class="usa-unstyled-list">
+    <li *ngFor="let item of selections; let i = index;">
+      <span (click)="removeItem(i)" tabindex="0" (keyup.enter)="removeItem(i)"><i class="fa fa-times" aria-hidden="true"></i></span> {{ searchByVal(item)?.label }}
+    </li>
+  </ul>
+</labelWrapper>
