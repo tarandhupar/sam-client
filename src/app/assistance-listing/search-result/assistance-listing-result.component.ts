@@ -40,7 +40,7 @@ import * as moment from 'moment/moment';
         <div *ngIf="data.isActive==false">
           <h4 tabindex="0" (keyup.enter)="toggleHistory()" (click)="toggleHistory()" class="collapsible" [class.expanded]="toggleField"><span class="history">History</span></h4>
           <div *ngIf="toggleField">
-            <history [data]="history"></history>
+            <sam-history [data]="history"></sam-history>
           </div>
         </div>
     	</div>

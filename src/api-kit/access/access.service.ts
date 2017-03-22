@@ -26,29 +26,11 @@ export class UserAccessService {
       name: 'access',
       suffix: '/' + userId + '/',
       method: 'GET',
-      oParam: {fetchNames: 'true'}
+      oParam: { fetchNames: 'true'}
     };
 
     if (filterOptions) {
-      if (filterOptions.domainIds && filterOptions.domainIds.length) {
-        apiOptions.oParam.domainKey = filterOptions.domainIds.join(',');
-      }
-
-      if (filterOptions.functionIds && filterOptions.functionIds.length) {
-        apiOptions.oParam.functionKey = filterOptions.functionIds.join(',');
-      }
-
-      if (filterOptions.roleIds && filterOptions.roleIds.length) {
-        apiOptions.oParam.roleKey = filterOptions.roleIds.join(',');
-      }
-
-      if (filterOptions.organizationIds && filterOptions.organizationIds.length) {
-        apiOptions.oParam.orgKey = filterOptions.organizationIds.join(',');
-      }
-
-      if (filterOptions.permissionIds && filterOptions.permissionIds.length) {
-        apiOptions.oParam.permissionKey = filterOptions.permissionIds.join(',');
-      }
+      apiOptions.oParam = _.merge(apiOptions.oParam, filterOptions);
     }
 
     return this.apiService.call(apiOptions);

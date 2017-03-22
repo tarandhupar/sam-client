@@ -36,7 +36,6 @@ describe('Program Service', () => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: '213kj21l3j23jlk21j3kl1j2' }))));
 
     testService.saveProgram(null, {},'').subscribe((res: Response) => {
-      console.log('response Save ', res)
       expect(res).toBeDefined();
       expect(res.text()).toBe('213kj21l3j23jlk21j3kl1j2');
     });

@@ -506,7 +506,7 @@
 
       <section [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History) && history">
         <h2>History</h2>
-        <history [data]="processedHistory" [currentId]="opportunity.opportunityId"></history>
+        <sam-history [data]="processedHistory" [currentId]="opportunity.opportunityId"></sam-history>
       </section>
      </div>
 

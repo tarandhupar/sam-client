@@ -12,7 +12,6 @@ import { SamSectionComponent } from './section/section.component';
 import { SamSubSectionComponent } from './subsection/subsection.component';
 import { SamTitleSectionComponent } from './title-section/title-section.component';
 import { DisplayPageComponent } from './display-page/display-page.component';
-import { HistoryComponent } from './history/history.component';
 import { SearchLayoutComponent } from './search-layout/search-layout.component';
 import { ListResultsMessageComponent } from './list-results-message/list-results-message.component';
 import { WorkspaceLayoutComponent } from './workspace-layout/workspace-layout.component';
@@ -37,7 +36,6 @@ import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-side
     SamSubSectionComponent,
     SamTitleSectionComponent,
     DisplayPageComponent,
-    HistoryComponent,
     SearchLayoutComponent,
     WorkspaceLayoutComponent,
     SamFooterComponent,
@@ -66,7 +64,6 @@ import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-side
     SamSubSectionComponent,
     SamTitleSectionComponent,
     DisplayPageComponent,
-    HistoryComponent,
     SearchLayoutComponent,
     WorkspaceLayoutComponent,
     SamFooterComponent,
@@ -79,6 +76,8 @@ import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-side
     ObjectFormModel,
     ObjectSidebarComponent
   ],
-  providers: [ ]
+  providers: [
+    SamFeedbackComponent
+  ]
 })
 export class AppComponentsModule { }
