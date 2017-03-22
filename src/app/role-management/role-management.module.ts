@@ -13,6 +13,7 @@ import { ObjectDetailsPage } from "./object-details.page";
 import { RoleWorkspacePage } from "./role-workspace.page";
 import { RoleSideNav } from "./role-sidenav/role-sidenav.component.ts";
 import { PermissionSelectorComponent } from "./permission-selector/permission-selector";
+import { DomainsResolve } from "./domains.resolve";
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import { PermissionSelectorComponent } from "./permission-selector/permission-se
     PermissionSelectorComponent,
   ],
   providers: [
+    DomainsResolve,
     AlertFooterService
   ],
 })

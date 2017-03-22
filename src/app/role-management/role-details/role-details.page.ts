@@ -38,8 +38,7 @@ export class RoleDetailsPage {
       this.role = +params['roleId'];
       return this.route.queryParams;
     }).subscribe(qp => {
-      this.domain = +qp['domain'];
-      console.log('domain', this.domain);
+      let domainId = +qp['domain'];
     });
   }
 
@@ -50,17 +49,12 @@ export class RoleDetailsPage {
   }
 
   getAllDomains() {
-    this.accessService.getDomains().subscribe(res => {
-      this.domains = res._embedded.domainList;
-      this.domainOptions = this.domains.map(d => {
-        return {
-          label: d.domainName,
-          value: d.id,
-        };
-      })
-    },
-    err => {
-      this.showGenericServicesError();
+    this.domains = this.route.parent.snapshot.data['domains']._embedded.domainList;
+    this.domainOptions = this.domains.map(d => {
+      return {
+        label: d.domainName,
+        value: d.id,
+      };
     });
   }
 
