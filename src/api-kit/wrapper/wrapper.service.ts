@@ -18,7 +18,7 @@ export class WrapperService {
         "suggestions": "/sgs/v1/suggestions",
         "access": "/rms/v1/access",
         "uiroles": "/rms/v1/uiroles",
-        "domains": "/rms/v1/domains2",
+        "domains": "/rms/v1/domains",
         "wageDetermination": "/wdol/v1",
         "location": "/locationservices/v1/api"
     };

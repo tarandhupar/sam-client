@@ -6,32 +6,37 @@
     <p>{{domain}}</p>
   </ng-container>
   <ng-container *ngIf="mode === 'new'">
-    <samSelect name='domain' label="Domain" [options]="domainOptions" [(ngModel)]="selectedDomain"></samSelect>
+    <samSelect name='domain' label="Domain" [options]="domainOptions" [(ngModel)]="selectedDomain" (modelChange)="onDomainChange()"></samSelect>
   </ng-container>
 
-  <!-- Role text -->
-  <labelWrapper name="role" label="Role">
-    <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()">
-  </labelWrapper>
+  <ng-container *ngIf="domainDefinitions">
+    <!-- Role text -->
+    <labelWrapper name="role" label="Role">
+      <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()">
+    </labelWrapper>
 
-  <div class="domain-roles m_T-3em">
-    <permission-selector
-      [options]="domainRoleOptions"
-      selectAllText='Associate Roles'
-      title='Domain Roles'>
-    </permission-selector>
-  </div>
-  <div class="m_T-4x">
-    <strong>Objects and Permissions</strong>
-  </div>
-  <div class="m_T-4x object-block" *ngFor="let role of roles">
-    <permission-selector
-      [options]="[{label: 'Create', value: 0}, {label: 'Edit', value: 1}, {label: 'Submit', value: 2}]"
-      [values]="[0, 1]"
-      selectAllText="Associate Permissions"
-      [title]="role.name"
-    ></permission-selector>
-  </div>
+    <!-- Domain Roles -->
+    <div class="domain-roles m_T-3em">
+      <permission-selector
+        [options]="domainRoleOptions"
+        selectAllText='Associate Roles'
+        title='Domain Roles'>
+      </permission-selector>
+    </div>
+    <div class="m_T-4x">
+      <strong>Objects and Permissions</strong>
+    </div>
+
+    <!-- Objects and permission -->
+    <div class="m_T-4x object-block" *ngFor="let function of permissionOptions">
+      <permission-selector
+        [options]="function.permissions"
+        selectAllText="Associate Permissions"
+        [title]="function.name"
+      ></permission-selector>
+    </div>
+  </ng-container>
+
   <div class="clearfix">
     <div class="pull-right">
       <button class="usa-button-outline" routerLink="/access/roles">Cancel</button>

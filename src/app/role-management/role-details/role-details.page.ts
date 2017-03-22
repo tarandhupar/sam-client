@@ -3,13 +3,13 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
 import * as _ from 'lodash';
+import { Title } from "@angular/platform-browser";
 
 @Component({
   templateUrl: 'role-details.page.html'
 })
 export class RoleDetailsPage {
   mode: 'edit'|'new' = 'new';
-  perms = [0, 2];
 
   roles = [{ vals: [], name: 'Assistance Listing'}, {vals: [], name: 'IDV'}, {vals: [], name: 'Regional Offices'}];
   role;
@@ -18,20 +18,28 @@ export class RoleDetailsPage {
   domainOptions: {label: string}[] = [];
   selectedDomain;
   domainRoleOptions: any = [{label: 'Agency User', value: 0}, {label: 'Agency Admin', value: 1}, {label: 'Agency Admin Lite', value: 2}];
+  domainDefinitions: any = null;
+  permissionOptions: any = [];
 
   constructor(
     private router: Router
     , private accessService: UserAccessService
     , private footerAlert: AlertFooterService
     , private route: ActivatedRoute
+    , private titleService: Title
   ) { }
 
   ngOnInit() {
     this.determineMode();
+    this.setTitle();
     this.getAllDomains();
     if (this.mode === 'edit') {
       this.getDomainAndDefaultRole();
     }
+  }
+
+  setTitle() {
+    this.titleService.setTitle(this.mode === 'edit' ? 'Edit Role' : 'New Role');
   }
 
   getDomainAndDefaultRole() {
@@ -57,6 +65,37 @@ export class RoleDetailsPage {
         value: d.id,
       };
     });
+  }
+
+  onDomainChange() {
+    console.log('change');
+    this.domainRoleOptions = null;
+    this.accessService.getDomainDefinition(this.domain).subscribe(
+      defs => {
+        console.log(defs);
+        this.domainDefinitions = defs;
+        this.domainRoleOptions = defs.roleDefinitionMapContent.map(r => {
+          return {
+            label: r.role.val,
+            value: r.role.id,
+          };
+        });
+        this.permissionOptions = defs.functionMapContent.map(f => {
+          return {
+            name: f.function.val,
+            permissions: f.permission.map(perm => {
+              return {
+                label: perm.val,
+                value: perm.id
+              };
+            })
+          }
+        });
+      },
+      err => {
+        this.showGenericServicesError();
+      }
+    )
   }
 
   showGenericServicesError() {

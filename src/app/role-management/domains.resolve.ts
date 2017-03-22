@@ -11,6 +11,7 @@ export class DomainsResolve implements Resolve<IDomain> {
 
   resolve(route: ActivatedRouteSnapshot) {
     return this.accessService.getDomains().catch(() => {
+      this.router.navigateByUrl('/');
       this.footerAlerts.registerFooterAlert({
         description: "There was an error with an a required service",
         type: 'error',
