@@ -19,8 +19,8 @@
 		<div>
 			<div class="usa-grid-full">
 				<h3 class="display-inline">{{awardData.documentInformation.id.procurementIdentifier}}</h3><br />
-				<h2 class="display-inline">Agency Name</h2><br />
-				Agency Address<br />
+				<h2 class="display-inline">Vendor Name</h2><br />
+				Vendor Address<br />
 				<br />
 			</div>
 			<div class="usa-grid-full bottom-border">
@@ -40,7 +40,7 @@
 					<div class="display-inline" *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'">IDV Type:</div>
 					{{awardData.transactionInformation.type}}<br />
 					Referenced IDV: {{awardData.documentInformation.referenceId.referenceProcurementIdentifier}}<br />
-					Date Signed: {{awardData.dateInformation.dateSigned}}
+					Date Signed: {{awardData.dateInformation.dateSigned | datex:'MMM DD, YYYY'}}
 					<br />
 					<br />
 					NAICS Code: {{naicsCode}}<br />
@@ -54,14 +54,14 @@
 					<div class="display-inline" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA'">Award Type:</div>
 					<div class="display-inline" *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'">IDV Type:</div>
 					{{awardData.transactionInformation.type}}<br />
-					Prepared Date: {{awardData.transactionInformation.preparedDate}}<br />
+					Prepared Date: {{awardData.transactionInformation.preparedDate | datex:'MMM DD, YYYY'}}<br />
 					Prepared User: {{awardData.transactionInformation.preparedUser}}
 				</div>
 				<div class="usa-width-one-half">
 					<div class="display-inline" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA'">Award Status:</div>
 					<div class="display-inline" *ngIf="awardData.templateType == 'IDV' || awardData.templateType == 'OTI'">IDV Status:</div>
 					{{awardData.transactionInformation.status}}<br />
-					Last Modified Date: {{awardData.transactionInformation.lastModifiedDate}}<br />
+					Last Modified Date: {{awardData.transactionInformation.lastModifiedDate | datex:'MMM DD, YYYY'}}<br />
 					Last Modified User: {{awardData.transactionInformation.lastModifiedUser}}
 				</div>
 				
@@ -112,14 +112,14 @@
 				</table>
 				Initiative: {{awardData.documentInformation.initiative}}<br />
 				<h3 id="dates">Dates</h3>
-				Date Signed: {{awardData.dateInformation.dateSigned | date:'MMM/dd/y'}}<br />
-				Effective Date: {{awardData.dateInformation.dateEffective | date:'MMM/dd/y'}}<br />
+				Date Signed: {{awardData.dateInformation.dateSigned | datex:'MMM DD, YYYY'}}<br />
+				Effective Date: {{awardData.dateInformation.dateEffective | datex:'MMM DD, YYYY'}}<br />
 				<div *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI' || awardData.templateType == 'AWARD'">
-					Completion Date: {{awardData.dateInformation.dateCompletion | date:'MMM/dd/y'}}<br />
-					Estimated Ultimate Completion Date: {{awardData.dateInformation.dateUltimateCompletion | date:'MMM/dd/y'}}
+					Completion Date: {{awardData.dateInformation.dateCompletion | datex:'MMM DD, YYYY'}}<br />
+					Estimated Ultimate Completion Date: {{awardData.dateInformation.dateUltimateCompletion | datex:'MMM DD, YYYY'}}
 				</div>
 				<div *ngIf="awardData.templateType == 'IDV'">
-					Last Date to Order: {{awardData.dateInformation.dateLastToOrder | date:'MMM/dd/y'}}
+					Last Date to Order: {{awardData.dateInformation.dateLastToOrder | datex:'MMM DD, YYYY'}}
 				</div>
 				<div *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
 					Fiscal Year: {{awardData.dateInformation.fiscalYear}}
@@ -150,7 +150,7 @@
 					<tr *ngIf="awardData.templateType == 'AWARD'">
 						<td><b>Fee Paid for Use of IDV:</b></td>
 						<td>{{awardData.amountInformation.feePaidForUseIDV | currency:'USD':true:'.2-2'}}</td>
-						<td></td>
+						<td>N/A</td>
 					</tr>
 					<tr *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
 						<td><b>Non-Governmental Dollars:</b></td>
