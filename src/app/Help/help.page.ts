@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd, NavigationCancel } from '@angular/router';
 import { globals } from '../../app/globals.ts';
+import { Location } from '@angular/common';
 
 @Component({
   providers: [ ],
@@ -14,25 +15,29 @@ export class HelpPage {
   private currentSubSection: string = "";
   private widthLimit: number = 1200;
 
+
   @ViewChild("feedback") feedback;
 
 
-  constructor(private router: Router) {
-    //router.navigateByUrl('help/overview');
-
-  }
+  constructor(private router: Router, private location:Location) {}
 
   ngOnInit(){
+
     this.router.events.subscribe(
       val => {
-        if(val.url.indexOf("#") > 0){
-          this.currentUrl = val.url.substr(0,val.url.indexOf("#"));
+        if(!(val instanceof  NavigationCancel)){
+          if(val.url.indexOf("#") > 0){
+            this.currentUrl = val.url.substr(0,val.url.indexOf("#"));
+          }else{
+            this.currentUrl = val.url;
+          }
+          let section = this.currentUrl.substr(this.baseUrl.length);
+          section = section.length === 0? 'overview':section;
+          this.currentSection = section;
         }else{
-          this.currentUrl = val.url;
+          this.currentSection = this.location.path(false).substr(this.baseUrl.length);
         }
-        let section = this.currentUrl.substr(this.baseUrl.length);
-        section = section.length === 0? 'overview':section;
-        this.currentSection = section;
+
       });
   }
 
