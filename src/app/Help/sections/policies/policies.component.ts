@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { globals } from '../../../../app/globals.ts';
 
 @Component({
   providers: [ ],
@@ -8,4 +9,7 @@ export class PoliciesComponent {
 
   constructor() { }
 
+  private linkToggle():boolean{
+    return globals.showOptional;
+  }
 }

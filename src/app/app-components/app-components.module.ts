@@ -76,6 +76,8 @@ import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-side
     ObjectFormModel,
     ObjectSidebarComponent
   ],
-  providers: [ ]
+  providers: [
+    SamFeedbackComponent
+  ]
 })
 export class AppComponentsModule { }
