@@ -10,12 +10,13 @@
   </ng-container>
 
   <!-- Role text -->
-  <samText name='role' label="Role Name"></samText>
+  <labelWrapper name="role" label="Role">
+    <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()">
+  </labelWrapper>
 
   <div class="domain-roles m_T-3em">
     <permission-selector
-      [(values)]="perms"
-      [options]="[{label: 'Agency User', value: 0}, {label: 'Agency Admin', value: 1}, {label: 'Agency Admin Lite', value: 2}]"
+      [options]="domainRoleOptions"
       selectAllText='Associate Roles'
       title='Domain Roles'>
     </permission-selector>

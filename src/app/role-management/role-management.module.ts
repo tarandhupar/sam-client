@@ -12,7 +12,7 @@ import { RoleDetailsPage } from "./role-details.page";
 import { ObjectDetailsPage } from "./object-details.page";
 import { RoleWorkspacePage } from "./role-workspace.page";
 import { RoleSideNav } from "./role-sidenav/role-sidenav.component.ts";
-import { PermissionSelectorComponent } from "./permission-selector";
+import { PermissionSelectorComponent } from "./permission-selector/permission-selector";
 
 
 @NgModule({

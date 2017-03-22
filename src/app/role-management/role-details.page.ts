@@ -11,9 +11,11 @@ export class RoleDetailsPage {
   perms = [0, 2];
 
   roles = [{ vals: [], name: 'Assistance Listing'}, {vals: [], name: 'IDV'}, {vals: [], name: 'Regional Offices'}];
+  role;
   domains: any[] = [];
-  domainOptions: {label: string, value: any}[] = [];
+  domainOptions: {label: string}[] = [];
   selectedDomain;
+  domainRoleOptions = [{label: 'Agency User', value: 0}, {label: 'Agency Admin', value: 1}, {label: 'Agency Admin Lite', value: 2}];
 
   constructor(
     private router: Router
@@ -52,5 +54,19 @@ export class RoleDetailsPage {
       title: 'Something went wrong with a required service',
       type: 'error'
     })
+  }
+
+  onRoleBlur() {
+    if (this.domainRoleOptions.find(d => d.label === this.role)) {
+      this.footerAlert.registerFooterAlert({
+        title: 'Role exists',
+        type: 'error'
+      });
+      return;
+    }
+    this.domainRoleOptions.push({
+      label: this.role,
+      value: null,
+    });
   }
 }
