@@ -47,6 +47,11 @@ export class ProgramFormModel{
         label: 'Overview',
         fields:[
           {
+            custom: true,
+            testId: 'widget1',
+            component: 'Widget1'
+          },
+          {
             name: 'objective',
             type: 'samTextArea',
             label: 'Objectives',
@@ -59,6 +64,22 @@ export class ProgramFormModel{
             label: 'Federal Assistance Listing Description',
             hint: 'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.',
             required: false
+          }
+        ]
+      },
+      {
+        section: 'contact_information',
+        label: 'Contact Information',
+        fields:[
+          {
+            name: 'content',
+            type: 'samTextArea',
+            label: 'Additional Information',
+            required: false
+          },{
+            custom:true,
+            testId: 'widget2',
+            component: 'Widget2'
           }
         ]
       }

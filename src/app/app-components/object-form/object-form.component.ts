@@ -1,5 +1,7 @@
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewContainerRef,
+         ViewChild
+       } from '@angular/core';
 
 
 @Component({
@@ -9,7 +11,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 
 
-export class ObjectFormModel{
+export class ObjectFormModel {
   public mainForm: FormGroup;
   @Input() public objectFormData;
   @Input() public stickyLabel;
@@ -24,10 +26,15 @@ export class ObjectFormModel{
     "children": []
   };
 
-  constructor(private fb: FormBuilder) {}
+  @ViewChild('dynamicComponent', {read: ViewContainerRef})
+  dynamicComponent: ViewContainerRef;
+
+  constructor(private fb: FormBuilder) {
+  }
 
 
   createForm(objectFormData){
+
     this.objectFormData = objectFormData;
     let sections = {};
 

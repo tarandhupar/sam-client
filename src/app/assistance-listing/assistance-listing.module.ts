@@ -14,7 +14,8 @@ import { ProgramPageOperations } from './assistance-listing-operations/assistanc
 import { AssistanceProgramResult } from './assistance-listing-workspace/program-result/assistance-program-result.component';
 import { AccessRestrictedPage } from './assistance-listing-workspace/program-result/testauthenvironment.page';
 import { FalWorkspacePage } from './assistance-listing-workspace/assistance-listing-workspace.page';
-
+import { Widget1 } from './assistance-listing-operations/widget1';
+import { Widget2 } from './assistance-listing-operations/widget2';
 
 @NgModule({
   imports: [
@@ -43,6 +44,8 @@ import { FalWorkspacePage } from './assistance-listing-workspace/assistance-list
     FalWorkspacePage,
     ProgramPageOperations,
     AccessRestrictedPage,
+    Widget1,
+    Widget2
   ],
   providers: [],
 })
