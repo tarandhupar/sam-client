@@ -4,6 +4,8 @@ import {DateFormatPipe} from "../../app-pipes/date-format.pipe";
 import {FixHTMLPipe} from "./fix-html.pipe";
 import DiffMatchPatch = require('diff-match-patch');
 import * as _ from 'lodash';
+import * as moment from 'moment/moment';
+
 
 
 
@@ -99,12 +101,17 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousUpdateResponseDate = null;
     }
-    if (currentUpdateResponseDate != previousUpdateResponseDate && previousUpdateResponseDate == null){
+    if (currentUpdateResponseDate != null && previousUpdateResponseDate == null){
       updateResponseDate = "New Data".italics().fontcolor("003264");
       changesExistGeneral = true;
-    } else if (currentUpdateResponseDate != previousUpdateResponseDate && previousUpdateResponseDate != null){
+    } else if (previousUpdateResponseDate != null && currentUpdateResponseDate == null){
       updateResponseDate = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY').strike();
       changesExistGeneral = true;
+    } else if (previousUpdateResponseDate != null && currentUpdateResponseDate != null) {
+      if (moment(currentUpdateResponseDate).format('YYYY-MM-DD') != moment(previousUpdateResponseDate).format('YYYY-MM-DD')){
+        updateResponseDate = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY').strike();
+        changesExistGeneral = true;
+      }
     }
 
 
@@ -152,12 +159,17 @@ export class ViewChangesPipe implements PipeTransform {
       previousUpdateArchiveDate = null;
     }
 
-    if (currentUpdateArchiveDate != previousUpdateArchiveDate && previousUpdateArchiveDate == null){
+    if (currentUpdateArchiveDate != null && previousUpdateArchiveDate == null){
       updateArchiveDate = "New Data".italics().fontcolor("003264");
       changesExistGeneral = true;
-    } else if (currentUpdateArchiveDate != previousUpdateArchiveDate && previousUpdateArchiveDate != null){
+    } else if (previousUpdateArchiveDate != null && currentUpdateArchiveDate == null){
       updateArchiveDate = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY').strike();
       changesExistGeneral = true;
+    } else if (previousUpdateArchiveDate != null && currentUpdateArchiveDate != null) {
+      if (moment(currentUpdateArchiveDate).format('YYYY-MM-DD') != moment(previousUpdateArchiveDate).format('YYYY-MM-DD')){
+        updateArchiveDate = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY').strike();
+        changesExistGeneral = true;
+      }
     }
 
 
@@ -537,6 +549,7 @@ export class ViewChangesPipe implements PipeTransform {
       secondaryPointOfContact: secondaryPointOfContact,
       postedDate: postedDate
     };
+    console.log("differences: ",differences);
     return differences;
   }
 

@@ -864,16 +864,16 @@ export class OpportunityPage implements OnInit {
   }
 
   private showHideGeneral(){
-    this.showChangesGeneral == false ? this.showChangesGeneral = true : this.showChangesGeneral = false;
+    this.showChangesGeneral = !this.showChangesGeneral;
   }
 
   private showHideSynopsis(){
-    this.showChangesSynopsis == false ? this.showChangesSynopsis = true : this.showChangesSynopsis = false;
+    this.showChangesSynopsis = !this.showChangesSynopsis;
   }
   private showHideClassification(){
-    this.showChangesClassification == false ? this.showChangesClassification = true : this.showChangesClassification = false;
+    this.showChangesClassification = !this.showChangesClassification
   }
   private showHideContactInformation(){
-    this.showChangesContactInformation == false ? this.showChangesContactInformation = true : this.showChangesContactInformation = false;
+    this.showChangesContactInformation = !this.showChangesContactInformation
   }
 }
