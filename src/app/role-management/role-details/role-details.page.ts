@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import * as _ from 'lodash';
 
 @Component({
   templateUrl: 'role-details.page.html'
@@ -16,7 +17,7 @@ export class RoleDetailsPage {
   domain;
   domainOptions: {label: string}[] = [];
   selectedDomain;
-  domainRoleOptions = [{label: 'Agency User', value: 0}, {label: 'Agency Admin', value: 1}, {label: 'Agency Admin Lite', value: 2}];
+  domainRoleOptions: any = [{label: 'Agency User', value: 0}, {label: 'Agency Admin', value: 1}, {label: 'Agency Admin Lite', value: 2}];
 
   constructor(
     private router: Router
@@ -38,7 +39,7 @@ export class RoleDetailsPage {
       this.role = +params['roleId'];
       return this.route.queryParams;
     }).subscribe(qp => {
-      let domainId = +qp['domain'];
+      this.domain = +qp['domain'];
     });
   }
 
@@ -73,9 +74,14 @@ export class RoleDetailsPage {
       });
       return;
     }
+    let lastRole = _.last(this.domainRoleOptions);
+    if (lastRole.isNew) {
+      this.domainRoleOptions.pop();
+    }
     this.domainRoleOptions.push({
       label: this.role,
       value: null,
+      isNew: true,
     });
   }
 
