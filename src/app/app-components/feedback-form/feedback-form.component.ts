@@ -1,5 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+
+export let navigateAwayObj = {
+  discardFeedbackRes: false,
+  formStarted: false,
+  formSubmitted: false,
+};
 
 @Component({
   selector: 'sam-feedback',
@@ -29,13 +35,8 @@ export class SamFeedbackComponent {
   userEmailModel: string = "";
   textAreaModel: string = "";
 
-  formStarted: boolean = false;
-  formSubmitted: boolean = false;
-
   currentUrl: string = "";
   nextUrl: string = "";
-
-  proceedResult: boolean = false;
 
   @ViewChild('proceedModal') proceedModal;
   modalConfig = {
@@ -52,6 +53,14 @@ export class SamFeedbackComponent {
     this.createBackdrop();
   }
 
+  canDeactivate(component: SamFeedbackComponent, route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
+    if(!navigateAwayObj.formSubmitted && navigateAwayObj.formStarted){
+      return navigateAwayObj.discardFeedbackRes;
+    }
+
+    return true;
+  }
+
   ngOnInit(){
     this.router.events.subscribe(
       val => {
@@ -66,14 +75,13 @@ export class SamFeedbackComponent {
         }
 
       });
-
     this.setUpAnswerArray();
   }
 
   toggleFeedback(){
     this.showFeedback = !this.showFeedback;
     if(this.showFeedback){
-      this.formStarted = true;
+      navigateAwayObj.formStarted = true;
       this.resultInit();
       if(document && document.body){
         document.body.appendChild(this.backdropElement);
@@ -138,7 +146,7 @@ export class SamFeedbackComponent {
       this.answerData[this.answerData.length-1].value = this.userEmailModel;
     }
 
-    this.formSubmitted = true;
+    navigateAwayObj.formSubmitted = true;
     this.toggleFeedback();
     this.resetAll();
   }
@@ -148,16 +156,16 @@ export class SamFeedbackComponent {
   }
 
   onProceedModalConfirm() {
-    this.proceedResult = true;
+    navigateAwayObj.discardFeedbackRes = true;
     this.proceedModal.closeModal();
   }
 
   onProceedModalClose(){
-    if(!this.proceedResult){
+    if(!navigateAwayObj.discardFeedbackRes){
       this.nextUrl = "";
-      this.router.navigateByUrl(this.currentUrl);
     }else{
       this.currentUrl = this.nextUrl;
+      this.router.navigateByUrl(this.currentUrl);
       this.resetAll();
     }
   }
@@ -173,7 +181,8 @@ export class SamFeedbackComponent {
   isLastPage(page){return page === this.questionData.length - 1;}
 
   showUnsubmittedWarning(){
-    return this.formStarted && !this.formSubmitted && !this.showFeedback;
+
+    return navigateAwayObj.formStarted && !navigateAwayObj.formSubmitted && !this.showFeedback;
   }
 
   resultInit(){
@@ -260,12 +269,17 @@ export class SamFeedbackComponent {
   resetAll(){
     this.setUpAnswerArray();
     this.resetQueOptions();
+    this.resetNavigateObj();
     this.showFeedback = false;
     this.curQueIndex = 0;
     this.curQuestion = this.questionData[this.curQueIndex];
-    this.formStarted = false;
-    this.formSubmitted = false;
-    this.proceedResult = false;
+
+  }
+
+  resetNavigateObj(){
+    navigateAwayObj.formStarted = false;
+    navigateAwayObj.formSubmitted = false;
+    navigateAwayObj.discardFeedbackRes = false;
   }
 
   resetQueOptions(){

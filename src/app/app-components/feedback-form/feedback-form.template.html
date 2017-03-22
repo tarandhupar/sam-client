@@ -9,7 +9,7 @@
       &nbsp;What you think matters!
       <i class="pull-right fa fa-times-circle-o m_R-2x" (click)="toggleFeedback()"></i>
     </div>
-    <!--<span class="feedback-icon-font"><i class="fa fa-angle-double-right hide-form-icon" aria-hidden="true" (click)="toggleFeedback()"></i></span>-->
+
     <div class="feedback-question-div usa-grid-full m_T-2x m_B-1x m_R-4x">
       <span class="m_T-2x">{{curQueIndex+1}}. {{curQuestion.description}}</span>
 
@@ -68,7 +68,7 @@
       </div>
 
       <div class="usa-width-one-whole m_T-3x text-align-center">
-        <a class="usa-nav-link feedback-form-link" [routerLink]="['/help/policies']" target="policies">Form Approved OMB#3090-0297 Exp Date 07/31/2019</a>
+        <a class="usa-nav-link feedback-form-link" [routerLink]="['/help/policies']"  fragment="OMB" (click)="toggleFeedback()">Form Approved OMB#3090-0297 Exp. Date 07/31/2019</a>
       </div>
 
       <!--Pagination Div-->
