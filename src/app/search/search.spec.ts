@@ -131,4 +131,15 @@ describe('SearchPage', () => {
     });
   });
 
+  it('should "check" if the agency picker variable is receiving a value', () => {
+
+    fixture.componentInstance.keyword = "test";
+    fixture.componentInstance.pageNum = 0;
+    fixture.componentInstance.runSearch();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(fixture.componentInstance.agencyPicker).toBeDefined();
+    });
+  });
 });
