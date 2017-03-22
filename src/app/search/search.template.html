@@ -22,7 +22,7 @@
         </sam-collapsible>
 
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
-          <agencyPicker
+          <agencyPicker #agencyPicker
             [label]="'Search Federal Organizations'"
             (organization)="onOrganizationChange($event)"
             [levelLimit] = '2'>
@@ -149,6 +149,9 @@
           </samSelect>
           <button (click)='wdNonStandardServicesSelectClear()'>Clear</button>
         </sam-collapsible>
+        <hr>
+        <button (click)='clearAllFilters()'>Clear All</button>
+
       </sam-filters-container>
     </div>
   </aside>

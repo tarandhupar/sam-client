@@ -17,6 +17,7 @@ import { FHFeaturedResult } from '../organization/featured-result/featured-resul
 import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AlertFooterService } from '../alerts/alert-footer';
+import {printLine} from "tslint/lib/test/lines";
 
 let fixture;
 
@@ -52,7 +53,6 @@ let searchServiceStub = {
         totalElements: 123,
         totalPages: 123,
         number: 0
-
       }
     });
   },
@@ -116,6 +116,30 @@ describe('SearchPage', () => {
     fixture.componentInstance.runSearch();
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.featuredData.featuredResult[0].name).toBe("SAMPLE NAME");
+    });
+  });
+
+  it('should "check" if clear filters is clearing models', () => {
+    fixture.componentInstance.isActive = false;
+    fixture.componentInstance.wdStateModel = "AK";
+    fixture.componentInstance.wdCountyModel = "17606";
+    fixture.componentInstance.clearAllFilters();
+    fixture.whenStable().then(() => {
+      expect(fixture.componentInstance.isActive).toBe(true);
+      expect(fixture.componentInstance.wdStateModel).toBe("");
+      expect(fixture.componentInstance.wdCountyModel).toBe("");
+    });
+  });
+
+  it('should "check" if the agency picker variable is receiving a value', () => {
+
+    fixture.componentInstance.keyword = "test";
+    fixture.componentInstance.pageNum = 0;
+    fixture.componentInstance.runSearch();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(fixture.componentInstance.agencyPicker).toBeDefined();
     });
   });
 
