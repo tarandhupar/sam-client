@@ -1,20 +1,17 @@
-import {Component, OnInit, OnDestroy, ViewChild, ComponentFactoryResolver, AfterViewInit} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import * as Cookies from 'js-cookie';
 
 import { ProgramService } from 'api-kit';
 import { ProgramFormModel } from './assistance-listing.model';
-import { Widget1 } from '../../assistance-listing/assistance-listing-operations/widget1';
-import { Widget2 } from '../../assistance-listing/assistance-listing-operations/widget2';
 
 @Component({
   moduleId: __filename,
   templateUrl: 'assistance-listing-operations.page.html',
-  providers: [ProgramService, ProgramFormModel],
-  entryComponents: [Widget1,Widget2]
+  providers: [ProgramService, ProgramFormModel]
 })
 
-export class ProgramPageOperations implements OnInit, OnDestroy, AfterViewInit {
+export class ProgramPageOperations implements OnInit, OnDestroy {
 
   programForm;
   submitted: boolean;
@@ -38,34 +35,9 @@ export class ProgramPageOperations implements OnInit, OnDestroy, AfterViewInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private programService: ProgramService,
-              private programFormModel: ProgramFormModel,
-              private componentFactoryResolver: ComponentFactoryResolver
+              private programFormModel: ProgramFormModel
   ) {}
 
-  ngAfterViewInit(){
-
-     /*const widget1 = this.componentFactoryResolver.resolveComponentFactory(Widget1);
-     this.objectForm.dynamicComponent.createComponent(widget1, 0);
-     const widget2 = this.componentFactoryResolver.resolveComponentFactory(Widget2);
-     this.objectForm.dynamicComponent.createComponent(widget2, 3);*/
-
-    for (let section of this.objectFormData) {
-
-      for (let field of section.fields) {
-        if(field.custom && field.component == 'Widget2'){
-          const widget = this.componentFactoryResolver.resolveComponentFactory(Widget2);
-          this.objectForm.dynamicComponent.createComponent(widget);
-        }
-
-        if(field.custom && field.component == 'Widget1'){
-          const widget = this.componentFactoryResolver.resolveComponentFactory(Widget1);
-          this.objectForm.dynamicComponent.createComponent(widget);
-        }
-      }//end of field
-
-    }//end of section
-
-  }
 
   ngOnInit() {
 
