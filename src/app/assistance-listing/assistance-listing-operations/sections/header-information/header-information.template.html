@@ -1,0 +1,16 @@
+<form [formGroup]="falHeaderInfoForm">
+  <samText [maxlength]="144"
+           [hint]="'Spell out any acronyms and limit to 144 characters.'"
+           [control]="falHeaderInfoForm.controls['title']"
+           formControlName="title"
+           [name]="'title-input'"
+           [label]="'Title'"
+           [required]="true"></samText>
+  <div>
+    <div class="pull-left">
+      <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+      <samButton [buttonType]="(!falHeaderInfoForm.valid ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+      <samButton [buttonType]="(!falHeaderInfoForm.valid ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+    </div>
+  </div>
+</form>

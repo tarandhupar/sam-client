@@ -5,19 +5,36 @@ import {ProgramPageOperations} from './assistance-listing-operations/assistance-
 import {FalWorkspacePage} from './assistance-listing-workspace/assistance-listing-workspace.page';
 import {AccessRestrictedPage} from './assistance-listing-workspace/program-result/testauthenvironment.page';
 
+import { FALHeaderInfoComponent } from './assistance-listing-operations/sections/header-information/header-information.component';
+import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
+
 export const routes: Routes = [
   {path: 'programs/:id/view', component: ProgramPage},
   {path: 'programs', component: ProgramPage},
   {path: 'accessrestricted', component: AccessRestrictedPage},
 ];
+
 if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
   routes.unshift({path: 'programs/demo', component: ProgramDisplayPageDemoPage});
 }
+
 if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
   routes.unshift(
     {path: 'falworkspace', component: FalWorkspacePage},
-    {path: 'programs/add', component: ProgramPageOperations},
-    {path: 'programs/:id/edit', component: ProgramPageOperations}
+    {path: 'programs/add', component: ProgramPageOperations,
+      children: [
+        { path: '', pathMatch: 'full', redirectTo: 'header-information' },
+        { path: 'header-information', component: FALHeaderInfoComponent },
+        { path: 'overview', component: FALOverviewComponent },
+      ]
+    },
+    {path: 'programs/:id/edit', component: ProgramPageOperations,
+      children:[
+        { path: '', pathMatch: 'full', redirectTo: 'header-information' },
+        { path: 'header-information', component: FALHeaderInfoComponent },
+        { path: 'overview', component: FALOverviewComponent },
+      ]
+    }
   );
 }
 export const routing = RouterModule.forChild(routes);

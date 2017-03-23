@@ -1,6 +1,5 @@
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Component, Input, Output, EventEmitter, ViewContainerRef,
-         ViewChild
+import { Component, Input, Output, EventEmitter
        } from '@angular/core';
 
 
@@ -25,9 +24,6 @@ export class ObjectFormModel {
     "label": "Assistance Listings",
     "children": []
   };
-
-  @ViewChild('dynamicComponent', {read: ViewContainerRef})
-  dynamicComponent: ViewContainerRef;
 
   constructor(private fb: FormBuilder) {
   }

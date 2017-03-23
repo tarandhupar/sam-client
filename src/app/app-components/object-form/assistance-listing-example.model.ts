@@ -76,10 +76,6 @@ export class ProgramFormModel{
             type: 'samTextArea',
             label: 'Additional Information',
             required: false
-          },{
-            custom:true,
-            testId: 'widget2',
-            component: 'Widget2'
           }
         ]
       }
