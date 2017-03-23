@@ -3,8 +3,8 @@ import * as _ from 'lodash';
 
 export type PermissionOptionType = {
   label: string,
-  isNew: boolean,
   value: any,
+  isNew?: boolean,
   isSelected?: boolean,
   isDefault?: boolean,
 };
@@ -13,7 +13,7 @@ export type PermissionOptionType = {
   selector: 'permission-selector',
   templateUrl: './permission-selector.html'
 })
-export class PermissionSelectorComponent implements OnChanges {
+export class PermissionSelectorComponent {
   @Input() options: PermissionOptionType[];
   @Input() optionsChange: EventEmitter<PermissionOptionType[]> = new EventEmitter();
   @Input() selectAllText: string = '';

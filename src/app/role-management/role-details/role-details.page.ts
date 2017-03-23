@@ -167,6 +167,6 @@ export class RoleDetailsPage {
       'domain': this.domain,
       'domainRoles': this.domainRoleOptions,
       'functions': this.permissionOptions
-    }
+    };
   }
 }
