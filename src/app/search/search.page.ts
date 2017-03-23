@@ -746,14 +746,14 @@ export class SearchPage implements OnInit{
 
   awardTypeSelected(evt) {
     console.log("Award type",evt);
-    this.awardTypeModel = evt;
+    this.awardTypeModel = evt.toString();
     this.pageNum = 0;
     this.searchResultsRefresh();
   }
 
   contractTypeSelected(evt) {
     console.log("Contract Type",evt);
-    this.contractTypeModel = evt;
+    this.contractTypeModel = evt.toString();
     this.pageNum = 0;
     this.searchResultsRefresh();
   }
