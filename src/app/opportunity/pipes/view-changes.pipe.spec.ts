@@ -45,7 +45,7 @@ describe('ViewChangesPipe', () => {
       "descriptions": [
         {
           "descriptionId": "f804f07655a594a98ee87bcedf11107d",
-          "content": "<p>29 May 2014: Please ensure white papers and/or proposals are submitted in accordance with Amendment 0005 of the USAFA BAA-2009-1, which is also available on the Grants.gov website. The updated BAA found on Grants.gov is the conformed version of the announcement.</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>"
+          "content": "<p>29 May 2014: Please ensure white papers and/or proposals are submitted in accordance with Amendment 0005 of the USAFA BAA-2009-1, which is also available on the Grants.gov website. The updated BAA found on Grants.gov is the conformed version of the announcement.</p>"
         }
       ],
       "link": {
@@ -153,18 +153,15 @@ describe('ViewChangesPipe', () => {
       "pointOfContact": [
         {
           "type": "primary",
-          "title": "Contracting Officer",
-          "fullName": "Mara A. Strobel",
-          "email": "mara.strobel@us.af.mil",
-          "phone": "719-333-4899",
+          "fullName": "Warren ACC IDQ",
+          "email": "usarmy.detroit.acc.mbx.wrn-idq@mail.mil",
           "additionalInfo": {}
         },
         {
           "type": "secondary",
-          "title": "Contracting Officer",
-          "fullName": "Shawna L. Bowshot",
-          "email": "shawna.bowshot@us.af.mil",
-          "phone": "7193334595",
+          "title": "Contract Specialist",
+          "fullName": "Marta Furman",
+          "email": "marta.furman.civ@mail.mil",
           "additionalInfo": {}
         }
       ],
@@ -230,23 +227,7 @@ describe('ViewChangesPipe', () => {
     "country": "Canada",
     "city": "Vancouver"
   };
-
-  // let differences1 = {
-  //   changesExist: changesExist,
-  //   updateResponseDate: updateResponseDate,
-  //   archivingPolicy: archivingPolicy,
-  //   updateArchiveDate: updateArchiveDate,
-  //   specialLegislation: specialLegislation,
-  //   updateSetAside: updateSetAside,
-  //   classificationCode: classificationCode,
-  //   naicsCode: naicsCode,
-  //   placeOfPerformance: placeOfPerformance,
-  //   description: description,
-  //   contractingOfficeAddress: contractingOfficeAddress,
-  //   primaryPointOfContact: primaryPointOfContact,
-  //   secondaryPointOfContact: secondaryPointOfContact,
-  //   postedDate: postedDate
-  // };
+  
 
   let differences2 = {
     changesExistGeneral: true,
@@ -259,14 +240,13 @@ describe('ViewChangesPipe', () => {
     classificationCode: '<strike>24 -- Tractors</strike>',
     naicsCode: '<strike>336212 -- Truck Trailer Manufacturing</strike>',
     placeOfPerformance: '<strike>8110 Industrial Drive, STE 2002 Scranton PA CA 23123</strike>',
-    description: '<strike>See Attachment</strike><u><p>29 May 2014: Please ensure white papers and/or proposals are submitted in accordance with Amendment 0005 of the USAFA BAA-2009-1, which is also available on the Grants.gov website. The updated BAA found on Grants.gov is the conformed version of the announcement.</p>
-    <p>&nbsp;</p>
-  <p>&nbsp;</p>
-  <p>&nbsp;</p></u>',
+    contractingOfficeAddress: '<strike>Not Office of the Chief Procurement Officer Vancouver BC Canada 20852</strike>',
+    primaryPointOfContact: '<strike>Warren ACC IDQ usarmy.detroit.acc.mbx.wrn-idq@mail.mil</strike>',
+    secondaryPointOfContact: '<strike>Contract Specialist Marta Furman marta.furman.civ@mail.mil</strike>',
+    description: '<strike>See Attachment</strike><u><p>29 May 2014: Please ensure white papers and/or proposals are submitted in accordance with Amendment 0005 of the USAFA BAA-2009-1, which is also available on the Grants.gov website. The updated BAA found on Grants.gov is the conformed version of the announcement.</p></u>',
     postedDate: 'Changes from 04/30/2014 3:03 pm'
   };
 
-  let previousAddress2 = null;
 
   it('transforms "multiple objects from API calls to one with that contains changes to be displayed (Update)', () => {
     let results = pipe.transform(previousOpportunity, currentOpportunity, dictionaries, currentAddress, previousAddress1);
@@ -283,9 +263,5 @@ describe('ViewChangesPipe', () => {
     expect(results.description).toBe(differences2.description);
     expect(results.postedDate).toBe(differences2.postedDate);
   });
-
-  // it('transforms "multiple objects from API calls to one with that contains changes to be displayed (New Data)', () => {
-  //   expect(pipe.transform('UTC-10:00')).toBe('Hawaii');
-  // });
 
 });
