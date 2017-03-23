@@ -19,7 +19,7 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
   name: string;
 
   @Input()
-  label: string;
+  placeholder: string;
 
   @Input()
   selectedLabel: string;
@@ -43,18 +43,21 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
     if(this.listDisplay.selectedItems.indexOf(value) === -1) {
       this.listDisplay.selectedItems.push(value);
     }
+    let emitArray = [];
     for(var i=0; i<this.Aoptions.length; i++) {
-      if(this.Aoptions[i].label == value) {
-        this.modelChange.emit(this.Aoptions[i].value);
+      for(var j=0; j<this.listDisplay.selectedItems.length; j++) {
+      if(this.Aoptions[i].label == this.listDisplay.selectedItems[j]) {
+        emitArray.push(this.Aoptions[i].value);
+      }
       }
     }
+    this.modelChange.emit(emitArray);
   }
 
   showDropdown() {
     this.input.nativeElement.focus();
     this.results = this.filterResults(this.input.nativeElement.value, this.options);
     this.hasFocus = true;
-    console.log(this.results);
   }
 
   checkSelectedList(value) {

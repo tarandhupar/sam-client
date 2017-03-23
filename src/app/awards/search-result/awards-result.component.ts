@@ -36,7 +36,7 @@ import Moment = moment.Moment;
           </li>    
           <li><strong>Award Type </strong>
             <ul class="usa-unstyled-list">
-              <li><span>{{ data.type }}</span></li>
+              <li><span>{{ data.awardType?.value }}</span></li>
             </ul>
           </li>      
           <li><strong>Referenced IDV </strong>

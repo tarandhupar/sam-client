@@ -152,23 +152,30 @@
 
         <!--Awards specific Filters-->
         <sam-collapsible [label]="'Award - IDV Type'" [startOpened]="true" *ngIf="index==='fpds'">
-          <!--<sam-type-ahead-multiselect [label] = "awardType.label"-->
-                                      <!--[name] = "awardType.name"-->
-                                      <!--[options] = "awardType.options"-->
-          <!--&gt;<div [innerHTML]="'Award-IDV Types Selected'"></div></sam-type-ahead-multiselect>-->
-          <sam-type-ahead [label]="awardType.label"
+          <samRadioButton
+            class="usa-award-radio"
+            [(model)]="awardIDVModel"
+            [options]="awardIDVRadConfig.options"
+            [label]="awardIDVRadConfig.label"
+            [hint]="awardIDVRadConfig.hint"
+            [name]="awardIDVRadConfig.name"
+            [errorMessage]="awardIDVRadConfig.errorMessage"
+            (modelChange)="awardIDVRadChanged($event)">
+          </samRadioButton>
+          <br/>
+          <sam-type-ahead [placeholder]="awardType.label"
                           [selectedLabel]="'Award-IDV Types Selected'"
                           [name]="awardType.name"
                           [Aoptions]="awardType.options"
                           (modelChange)="awardTypeSelected($event)">
 
           </sam-type-ahead>
-          <sam-type-ahead [label]="contractType.label"
+          <br/>
+          <sam-type-ahead [placeholder]="contractType.label"
                           [selectedLabel]="'Contract Types Selected'"
                           [name]="contractType.name"
                           [Aoptions]="contractType.options"
                           (modelChange)="contractTypeSelected($event)">
-
           </sam-type-ahead>
         </sam-collapsible>
       </sam-filters-container>
