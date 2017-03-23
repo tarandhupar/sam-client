@@ -1,6 +1,6 @@
 import { Routes, RouterModule } from '@angular/router';
 import { ObjectWorkspacePage } from "./object-workspace.page";
-import { ObjectDetailsPage } from "./object-details.page";
+import { ObjectDetailsPage } from "./object-details/object-details.page";
 import { RoleDetailsPage } from "./role-details/role-details.page";
 import { RoleWorkspacePage } from "./role-workspace.page";
 import { DomainsResolve } from "./domains.resolve";

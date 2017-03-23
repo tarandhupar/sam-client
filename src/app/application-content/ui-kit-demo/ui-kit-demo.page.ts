@@ -24,7 +24,7 @@ export class UIKitDemoPage {
   // Autocomplete Dropdown With Button
   searchValue1: any;
   searchName1: string = "MyComponent65491455"
-  dropdownSearch1: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];  
+  dropdownSearch1: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];
   getButton(event) {
     window.alert('You clicked me!');
   }
@@ -48,22 +48,22 @@ export class UIKitDemoPage {
 
   listOptions = [
     {
-      label:'apple',
+      label:'Unarchive',
       value: 1,
       name: 'apple'
     },
     {
-      label:'orange',
+      label:'Create',
       value: 2,
       name: 'orange'
     },
     {
-      label:'banana',
+      label:'Edit',
       value: 3,
       name: 'banana'
     },
     {
-      label:'grape',
+      label:'Submit',
       value: 4,
       name: 'grape'
     },

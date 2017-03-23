@@ -1,0 +1,33 @@
+<div class="usa-grid object-details-page">
+  <h1>{{mode === 'edit' ? 'Edit' : 'New' }} Object</h1>
+
+  <!-- Domain select -->
+  <labelWrapper name="domain" label="Domain">
+    <samMultiSelectDropdown name='domain' label="Domain" [options]="domainOptions" [(model)]="selectedDomains" (modelChange)="onDomainsChange()"></samMultiSelectDropdown>
+  </labelWrapper>
+
+  <!-- Object name -->
+  <labelWrapper name="object" label="Object Name">
+    <input id="object" type="text" [(ngModel)]="objectName">
+  </labelWrapper>
+
+  <div class="usa-grid-full">
+    <div class="usa-width-one-half">
+      <sam-list-input [(ngModel)]='selectedPermissions' label='Permissions' name="permissions" [options]="permissionOptions"></sam-list-input>
+    </div>
+  </div>
+
+  <div class="clearfix">
+    <div class="pull-right">
+      <button class="usa-button-outline" routerLink="/access/objects">Cancel</button>
+      <button class="usa-button-primary" (click)="onSubmitClick()">Submit</button>
+    </div>
+  </div>
+
+  <pre><code>{{requestObject | json}}</code></pre>
+</div>
+
+
+
+
+

@@ -9,7 +9,7 @@ import { SamAPIKitModule } from "../../api-kit/api-kit.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { ObjectWorkspacePage } from "./object-workspace.page";
 import { RoleDetailsPage } from "./role-details/role-details.page";
-import { ObjectDetailsPage } from "./object-details.page";
+import { ObjectDetailsPage } from "./object-details/object-details.page";
 import { RoleWorkspacePage } from "./role-workspace.page";
 import { RoleSideNav } from "./role-sidenav/role-sidenav.component.ts";
 import { PermissionSelectorComponent } from "./permission-selector/permission-selector";
