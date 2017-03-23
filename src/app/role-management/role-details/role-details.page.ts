@@ -21,6 +21,7 @@ export class RoleDetailsPage {
   domainRoleOptions: any = [{label: 'Agency User', value: 0}, {label: 'Agency Admin', value: 1}, {label: 'Agency Admin Lite', value: 2}];
   domainDefinitions: any = null;
   permissionOptions: any = [];
+  requestObject;
 
   constructor(
     private router: Router
@@ -105,7 +106,7 @@ export class RoleDetailsPage {
 
         if (this.mode === 'edit') {
           // find the text label for role and set the text label
-          console.log('find', this.roleId, 'in', this.domainRoleOptions)
+          console.log('find', this.roleId, 'in', this.domainRoleOptions);
           let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.value);
           if (r) {
             this.role = r.label;
@@ -153,12 +154,19 @@ export class RoleDetailsPage {
   }
 
   onSubmitClick() {
-
+    this.requestObject = this.getRequestObject();
     this.footerAlert.registerFooterAlert({
       title: 'Successfully create new role.',
       type: 'success'
     });
-    this.router.navigateByUrl('/access/roles');
-    return;
+    //this.router.navigateByUrl('/access/roles');
+  }
+
+  getRequestObject() {
+    return {
+      'domain': this.domain,
+      'domainRoles': this.domainRoleOptions,
+      'functions': this.permissionOptions
+    }
   }
 }

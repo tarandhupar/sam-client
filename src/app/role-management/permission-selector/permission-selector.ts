@@ -15,8 +15,7 @@ export type PermissionOptionType = {
 })
 export class PermissionSelectorComponent implements OnChanges {
   @Input() options: PermissionOptionType[];
-  @Input() values: PermissionOptionType[];
-  @Output() valuesChange: EventEmitter<PermissionOptionType[]> = new EventEmitter();
+  @Input() optionsChange: EventEmitter<PermissionOptionType[]> = new EventEmitter();
   @Input() selectAllText: string = '';
   @Input() title: string = '';
 
@@ -24,29 +23,27 @@ export class PermissionSelectorComponent implements OnChanges {
 
   }
 
-  ngOnChanges(val) {
-    if (val.options) {
-      this.values = _.clone(this.options);
-    }
-  }
-
   onPermissionClick(isChecked, option) {
     option.isSelected = isChecked;
+    this.optionsChange.emit(this.options);
   }
 
   onDefaultClick(isChecked, option) {
     option.isDefault = isChecked;
+    this.optionsChange.emit(this.options);
   }
 
-  onCheckAllClick(isChecked, val) {
-    this.values.forEach(v => {
+  onCheckAllClick(isChecked) {
+    this.options.forEach(v => {
       v.isSelected = isChecked;
-    })
+    });
+    this.optionsChange.emit(this.options);
   }
 
-  onCheckAllDefaultClick(isChecked, val) {
-    this.values.forEach(v => {
+  onCheckAllDefaultClick(isChecked) {
+    this.options.forEach(v => {
       v.isDefault = isChecked;
-    })
+    });
+    this.optionsChange.emit(this.options);
   }
 }
