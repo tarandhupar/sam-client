@@ -79,6 +79,8 @@ import { SamTypeAheadComponent } from "./type-ahead-multiselect/type-ahead.compo
     ObjectSidebarComponent,
     SamTypeAheadComponent
   ],
-  providers: [ ]
+  providers: [
+    SamFeedbackComponent
+  ]
 })
 export class AppComponentsModule { }

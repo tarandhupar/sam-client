@@ -152,65 +152,60 @@ export class DetailsComponent {
   }
 
   ngDoCheck() {
-    let vm = this,
-        changes = this.differ.diff(this.user),
+    let changes = this.differ.diff(this.user),
         key;
 
     if(changes) {
       changes.forEachChangedItem((diff) => {
-        if(vm.detailsForm && vm.detailsForm.controls[diff.key]) {
+        if(this.detailsForm && this.detailsForm.controls[diff.key]) {
           key = diff.key.toString().search(/(middleName|initials)/) > -1 ? 'initials' : diff.key;
-          vm.detailsForm.controls[key].setValue(diff.currentValue);
-          vm.user[key] = diff.currentValue;
+          this.detailsForm.controls[key].setValue(diff.currentValue);
+          this.user[key] = diff.currentValue;
         }
       });
     }
   }
 
   loadUser(cb) {
-    let vm = this;
-
     this.api.iam.checkSession((user) => {
-      vm.user = _.merge({}, vm.user, user);
-      vm.user['middleName'] = user.initials;
+      this.user = _.merge({}, this.user, user);
+      this.user['middleName'] = user.initials;
       cb();
     }, () => {
-      vm.router.navigate(['/signin']);
+      this.router.navigate(['/signin']);
     });
   }
 
   loadKBA(cb) {
-    let vm = this;
-
     function processKBAQuestions(data) {
       let selected,
           intAnswer;
 
       // Prepopulate kbaAnswerList
       for(intAnswer = 0; intAnswer < data.selected.length; intAnswer++) {
-        vm.user.kbaAnswerList.push({ questionId: 0, answer: '' });
+        this.user.kbaAnswerList.push({ questionId: 0, answer: this.repeater(' ', 8) });
       }
 
       // Set Selected Answers
-      vm.user.kbaAnswerList = vm.user.kbaAnswerList.map((answer, intAnswer) => {
+      this.user.kbaAnswerList = this.user.kbaAnswerList.map((answer, intAnswer) => {
         selected = (data.selected[intAnswer] || -1);
 
         answer.questionId = selected;
-        vm.states.selected[intAnswer] = selected;
+        this.states.selected[intAnswer] = selected;
 
         return answer;
       });
 
       // Set question mapping of questionID => index
-      vm.store.questions = data.questions;
-      vm.store.questions = vm.store.questions.map((question, intQuestion) => {
+      this.store.questions = data.questions;
+      this.store.questions = this.store.questions.map((question, intQuestion) => {
         // Create reverse lookup while remapping
-        vm.store.indexes[question.id] = intQuestion;
+        this.store.indexes[question.id] = intQuestion;
         question['disabled'] = false;
         return question;
       });
 
-      vm.initQuestions(data);
+      this.initQuestions(data);
 
       cb();
     }
@@ -219,12 +214,14 @@ export class DetailsComponent {
       cb();
     }
 
-    this.api.iam.kba.questions(processKBAQuestions, cancelKBAQuestions);
+    this.api.iam.kba.questions(
+      processKBAQuestions.bind(this),
+      cancelKBAQuestions.bind(this)
+    );
   }
 
   initUser(cb) {
-    let vm = this,
-        fn,
+    let fn,
         getSessionUser = ((promise) => {
           this.zone.runOutsideAngular(() => {
             this.loadUser(() => {
@@ -386,15 +383,14 @@ export class DetailsComponent {
   }
 
   changeQuestion(questionID, $index) {
-    let vm = this,
-        items = _.cloneDeep(this.store.questions),
+    let  items = _.cloneDeep(this.store.questions),
         intQuestion;
 
     this.states.selected[$index] = questionID;
 
     this.states.selected.forEach((questionID, intItem) => {
       if(questionID.toString().length) {
-        intQuestion = vm.store.indexes[questionID];
+        intQuestion = this.store.indexes[questionID];
         // Loop through new questions array lookup to apply disabled options
         items[intQuestion].disabled = true;
       }
@@ -402,11 +398,11 @@ export class DetailsComponent {
 
     this.states.selected.forEach((questionID, intItem) => {
       // Loop through each question list to set the list to the new questions list
-      vm.questions[intItem] = _.cloneDeep(items);
+      this.questions[intItem] = _.cloneDeep(items);
       // Re-enable the selected option
       if(questionID) {
-        intQuestion = vm.store.indexes[questionID];
-        vm.questions[intItem][intQuestion].disabled = false;
+        intQuestion = this.store.indexes[questionID];
+        this.questions[intItem][intQuestion].disabled = false;
       }
     });
   }

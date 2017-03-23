@@ -22,7 +22,7 @@
         </sam-collapsible>
 
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
-          <agencyPicker
+          <agencyPicker #agencyPicker
             [label]="'Search Federal Organizations'"
             (organization)="onOrganizationChange($event)"
             [levelLimit] = '2'>
@@ -153,7 +153,6 @@
         <!--Awards specific Filters-->
         <sam-collapsible [label]="'Award - IDV Type'" [startOpened]="true" *ngIf="index==='fpds'">
           <samRadioButton
-            class="usa-award-radio"
             [(model)]="awardIDVModel"
             [options]="awardIDVRadConfig.options"
             [label]="awardIDVRadConfig.label"
@@ -163,7 +162,8 @@
             (modelChange)="awardIDVRadChanged($event)">
           </samRadioButton>
           <br/>
-          <sam-type-ahead [placeholder]="awardType.label"
+          <sam-type-ahead class="usa-award-radio"
+                          [placeholder]="awardType.label"
                           [selectedLabel]="'Award-IDV Types Selected'"
                           [name]="awardType.name"
                           [Aoptions]="awardType.options"
@@ -171,13 +171,17 @@
 
           </sam-type-ahead>
           <br/>
-          <sam-type-ahead [placeholder]="contractType.label"
+          <sam-type-ahead class="usa-award-radio"
+                          [placeholder]="contractType.label"
                           [selectedLabel]="'Contract Types Selected'"
                           [name]="contractType.name"
                           [Aoptions]="contractType.options"
                           (modelChange)="contractTypeSelected($event)">
           </sam-type-ahead>
         </sam-collapsible>
+        <hr>
+        <button (click)='clearAllFilters()'>Clear All</button>
+
       </sam-filters-container>
     </div>
   </aside>
@@ -187,6 +191,7 @@
       <samAlert *ngIf="wdTypeModel && wdTypeModel === 'dbra'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
       <samAlert *ngIf="wdTypeModel && wdTypeModel === 'sca'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="scaSearchDescription"></div></samAlert>
       <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
+      <list-results-message *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'"[showing]="10" [currentPage]="pageNum+1" [total]="totalCount" [suffix]="listMessageSuffix"></list-results-message>
       <p *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'" class="usa-font-lead">
         Please navigate to the <a href="https://www.wdol.gov/sca.aspx">Service Contract Act</a> section of the legacy WDOL site to retrieve
         a Collective Bargaining Agreement (CBA) WD or to create a new CBA WD

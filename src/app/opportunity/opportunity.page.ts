@@ -92,6 +92,7 @@ export class OpportunityPage implements OnInit {
   showChangesGeneral = false;
   showChangesSynopsis = false;
   showChangesClassification = false;
+  showChangesContactInformation = false;
 
 
   errorOrganization: any;
@@ -158,6 +159,7 @@ export class OpportunityPage implements OnInit {
     let historyAPI = this.loadHistory(opportunityAPI);
     let packagesOpportunities = this.loadAttachments(historyAPI);
     let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
+    this.checkChanges(previousOpportunityAPI);
 
     this.sidenavService.updateData(this.selectedPage, 0);
 
@@ -275,7 +277,8 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadPreviousOpportunityVersion(historyAPI: Observable<any>) { 
-    let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers 
+    let opportunitySubject = new ReplaySubject(1);
+    let opportunitySubject2 = new ReplaySubject(1);// broadcasts the opportunity to multiple subscribers 
      historyAPI.subscribe(opportunity => {
        if (!(this.opportunity.data.type === "m") || opportunity.content.history.length < 2){ 
          return null; 
@@ -286,18 +289,16 @@ export class OpportunityPage implements OnInit {
          this.opportunityService.getOpportunityById(id).subscribe(opportunitySubject);
        } 
      });// attach subject to stream  
+
     opportunitySubject.subscribe(api => { // do something with the opportunity api 
       this.previousOpportunityVersion = api;
       if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined'){
-        this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
-          this.previousOpportunityLocation = data;
-          this.differences = this.checkChanges();
-        });
+        this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(opportunitySubject2);
     }
     }, err => { 
       console.log('Error loading opportunity: ', err); 
     });  
-    return opportunitySubject; 
+    return opportunitySubject2; 
   }
 
   private loadParentOpportunity(opportunityAPI: Observable<any>){
@@ -854,19 +855,25 @@ export class OpportunityPage implements OnInit {
         return OpportunityPage.TYPE_UNKNOWN;
     }
   }
-  private checkChanges(){
-    let viewChangesPipe = new ViewChangesPipe();
-      return  viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
+  private checkChanges(previousOpportunityAPI: Observable<any>){
+    previousOpportunityAPI.subscribe((data) => {
+      this.previousOpportunityLocation = data;
+      let viewChangesPipe = new ViewChangesPipe();
+      this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
+    });
   }
 
   private showHideGeneral(){
-    this.showChangesGeneral == false ? this.showChangesGeneral = true : this.showChangesGeneral = false;
+    this.showChangesGeneral = !this.showChangesGeneral;
   }
 
   private showHideSynopsis(){
-    this.showChangesSynopsis == false ? this.showChangesSynopsis = true : this.showChangesSynopsis = false;
+    this.showChangesSynopsis = !this.showChangesSynopsis;
   }
   private showHideClassification(){
-    this.showChangesClassification == false ? this.showChangesClassification = true : this.showChangesClassification = false;
+    this.showChangesClassification = !this.showChangesClassification
+  }
+  private showHideContactInformation(){
+    this.showChangesContactInformation = !this.showChangesContactInformation
   }
 }

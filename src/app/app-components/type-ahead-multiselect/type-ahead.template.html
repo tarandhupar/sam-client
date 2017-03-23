@@ -4,19 +4,22 @@
     <div class="sam-autocomplete">
       <div>
         <label *ngIf="labelText" [attr.for]="id">{{labelText}}<span class="usa-sr-only">&nbsp;autocomplete</span></label>
-        <input [attr.id]="id" #input autocomplete="off" [attr.placeholder]="placeholder" [attr.name]="name" type="text" (focus)="hasFocus = true" (change)="onChange($event.target.value)" (keydown)="onKeydown($event)" (keyup)="onKeyup($event)" [(ngModel)]="innerValue">
-        <span class="usa-type-ahead-search"><i class="fa fa-search"></i></span>
+        <input [attr.id]="id" #input autocomplete="off" [attr.placeholder]="placeholder" [attr.name]="name" type="text" (focus)="showDropdown()" (change)="onChange($event.target.value)" (keydown)="onKeydown($event)" (keyup)="onKeyup($event)" [(ngModel)]="innerValue">
+        <span class="usa-type-ahead-search"><i *ngIf="!hasFocus" class="fa fa-search"></i><i class="fa fa-chevron-down"></i></span>
       </div>
       <ul id="sam-autocomplete-results" #resultsList *ngIf="results && hasFocus">
-        <li *ngFor="let result of results" class="usa-type-ahead-list" (click)="emitResult(result)" (keydown)="$event.which==13 ? emitResult(result) : ''">{{result}}<i *ngIf="checkSelectedList(result)" tabindex="0" class="fa fa-plus-square fa-pull-right"></i></li>
+        <li *ngFor="let result of results" class="usa-type-ahead-list" (click)="emitResult(result)"
+            (keydown)="$event.which==13 ? emitResult(result) : ''">{{result}}
+          <i *ngIf="checkSelectedList(result)" tabindex="0" class="fa fa-plus-square fa-pull-right"></i>
+        </li>
       </ul>
       <ul #srOnly class="usa-sr-only" role="status" aria-live="assertive" aria-relevant="additions">
       </ul>
     </div>
   </div>
-  <a tabindex="0" class="usa-list-input-submit" (click)="showDropdown()">
-    <i class="fa fa-chevron-down" aria-hidden="true"></i>
-  </a>
+  <!--<button tabindex="0" class="usa-button-primary" (click)="showDropdown()" (keydown)="$event.which==13 ? showDropdown() : ''">-->
+    <!--<i class="fa fa-chevron-down" aria-hidden="true"></i>-->
+  <!--</button>-->
 </div>
   <sam-list-display #listDisplay [newValue]="newValue"><div [innerHTML]="selectedLabel"></div></sam-list-display>
 </labelWrapper>
