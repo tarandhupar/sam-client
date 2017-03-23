@@ -48,6 +48,7 @@ export class RoleDetailsPage {
       return this.route.queryParams;
     }).subscribe(qp => {
       this.domain = +qp['domain'];
+      this.onDomainChange();
     });
   }
 
