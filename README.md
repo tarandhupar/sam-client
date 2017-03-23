@@ -235,7 +235,7 @@ npm run e2e
 ```bash
 npm run webdriver:update
 npm run webdriver:start
-```
+``` 
 
 **run Protractor's elementExplorer**
 
@@ -244,4 +244,3 @@ npm run webdriver:start
 # in another terminal
 npm run e2e:live 
 ```
-
