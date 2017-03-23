@@ -24,7 +24,7 @@ export class SearchService {
     };
 
     // wage determination type filter
-    if(typeof obj.wdType !== 'undefined' && obj.wdType !== null) {
+    if(typeof obj.wdType !== 'undefined' && obj.organizationId !== null && obj.wdType !== '') {
         oApiParam.oParam['index'] = obj.wdType;
       }
 
