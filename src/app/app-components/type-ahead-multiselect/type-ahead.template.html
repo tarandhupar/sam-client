@@ -1,0 +1,22 @@
+<labelWrapper class="sam-list-input" [name]="name" [hint]="hint">
+<div class="input-area" samClickOutside (clickOutside)="checkForFocus($event)" samTabOutside (tabOutside)="checkForFocus($event)">
+  <div class="input-wrapper">
+    <div class="sam-autocomplete">
+      <div>
+        <label *ngIf="labelText" [attr.for]="id">{{labelText}}<span class="usa-sr-only">&nbsp;autocomplete</span></label>
+        <input [attr.id]="id" #input autocomplete="off" [attr.placeholder]="label" [attr.name]="name" type="text" (focus)="hasFocus = true" (change)="onChange($event.target.value)" (keydown)="onKeydown($event)" (keyup)="onKeyup($event)" [(ngModel)]="innerValue">
+        <span class="usa-type-ahead-search"><i class="fa fa-search"></i></span>
+      </div>
+      <ul id="sam-autocomplete-results" #resultsList *ngIf="results && hasFocus">
+        <li *ngFor="let result of results" class="usa-type-ahead-list">{{result}}<i *ngIf="checkSelectedList(result)" tabindex="0" class="fa fa-plus-square fa-pull-right" (click)="emitResult(result)" (keydown)="$event.which==13 ? emitResult(result) : ''"></i></li>
+      </ul>
+      <ul #srOnly class="usa-sr-only" role="status" aria-live="assertive" aria-relevant="additions">
+      </ul>
+    </div>
+  </div>
+  <a tabindex="0" class="usa-list-input-submit" (click)="showDropdown()">
+    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+  </a>
+</div>
+  <sam-list-display #listDisplay [newValue]="newValue"><div [innerHTML]="selectedLabel"></div></sam-list-display>
+</labelWrapper>

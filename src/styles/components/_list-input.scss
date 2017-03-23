@@ -10,7 +10,7 @@
     position:relative;
     overflow:visible;
     height: 52px;
-    
+
     .input-wrapper{
       position:relative;
       float:left;
@@ -24,11 +24,23 @@
       }
       .sam-autocomplete{
         display:block;
-        
+
         input{
           margin-bottom:0;
         }
       }
+
+      .usa-type-ahead-search{
+        position:absolute;
+        top:20%;
+        right:10px;
+        z-index:10;
+
+        i{
+          color: #777;
+        }
+      }
+
       /*input{
         position:absolute;
       }*/
@@ -65,5 +77,5 @@
       margin-left: 5px;
     }
   }
-  
+
 }
