@@ -1,15 +1,17 @@
 <div class="usa-grid role-details-page">
   <h1>{{mode === 'edit' ? 'Edit' : 'New' }} Role</h1>
+
   <!-- Domain label or dropdown -->
   <ng-container *ngIf="mode === 'edit'">
     <label>Domain</label>
-    <p>{{domain}}</p>
+    <p>{{getLabelForDomain(domain)}}</p>
   </ng-container>
   <ng-container *ngIf="mode === 'new'">
     <samSelect name='domain' label="Domain" [options]="domainOptions" [(ngModel)]="selectedDomain" (modelChange)="onDomainChange()"></samSelect>
   </ng-container>
 
   <ng-container *ngIf="domainDefinitions">
+
     <!-- Role text -->
     <labelWrapper name="role" label="Role">
       <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()">
