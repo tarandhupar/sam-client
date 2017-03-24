@@ -1,5 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, NgZone } from '@angular/core';
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { FeedbackService, feedbackResItemType } from 'api-kit/feedback/feedback.service';
+import { IAMService } from "api-kit/iam/iam.service";
+import { Observable, Subscription } from 'rxjs/Rx';
+
 
 export let navigateAwayObj = {
   discardFeedbackRes: false,
@@ -13,13 +17,7 @@ export let navigateAwayObj = {
 })
 export class SamFeedbackComponent {
 
-  questionData = [
-    {type:'rating',description:'Was the information helpful?',selections:[]},
-    {type:'multiSelection',description:'Which type of search did you use?',selections:['Opportunities','Assistance Listings','FH','Entities']},
-    {type:'singleSelection',description:'Did you get what you need',selections:['Yes','No']},
-    {type:'text',description:'What do you think about our website?',selections:[]},
-    {type:'last', description:'Can we follow up with you in the future?',selections:[]}
-  ];
+  questionData = [];
 
   answerData = [];
 
@@ -38,6 +36,14 @@ export class SamFeedbackComponent {
   currentUrl: string = "";
   nextUrl: string = "";
 
+  user = null;
+  isSignedIn = false;
+
+  timer:Subscription;
+  curSec = 5;
+  showThanksNote = false;
+  showEmptyFeedbackWarning = false;
+
   @ViewChild('proceedModal') proceedModal;
   modalConfig = {
     type:'warning',
@@ -49,7 +55,10 @@ export class SamFeedbackComponent {
 
   private backdropElement: HTMLElement;
 
-  constructor(private router: Router){
+  constructor(private router: Router,
+              private feedbackService: FeedbackService,
+              private iamService: IAMService,
+              private zone: NgZone){
     this.createBackdrop();
   }
 
@@ -62,9 +71,9 @@ export class SamFeedbackComponent {
   }
 
   ngOnInit(){
+    this.setUpFeedbackQuestions();
     this.router.events.subscribe(
       val => {
-
         if(this.currentUrl === ""){
           this.currentUrl = val.url;
         }else{
@@ -73,9 +82,7 @@ export class SamFeedbackComponent {
             this.showProceedModal();
           }
         }
-
       });
-    this.setUpAnswerArray();
   }
 
   toggleFeedback(){
@@ -98,7 +105,6 @@ export class SamFeedbackComponent {
     }
   }
 
-
   onRatingClick(val){
     this.setRatingResult(val);
   }
@@ -108,7 +114,7 @@ export class SamFeedbackComponent {
   }
 
   onEmailRadioBtnChange(val){
-    this.setLastQueResult(val);
+    this.setRadioEmailResult(val);
   }
 
   onTextAreaChange(){
@@ -140,15 +146,39 @@ export class SamFeedbackComponent {
   }
 
   onSubmitFeedbackClick(){
-    //Get the email of user if Yes is selected on last question
-    if(this.answerData[this.answerData.length-1].value === "Yes"){
-      //Get the email address of user
-      this.answerData[this.answerData.length-1].value = this.userEmailModel;
+    // Check whether the feedback result is empty
+    if(this.isFeedbackAnswerEmpty()){
+      this.showEmptyFeedbackWarning = true;
+      console.log("Result is empty");
+    }else{
+      // Submit the feedback results
+      let res = this.generateFeedbackRes();
+      this.feedbackService.createFeedback(res);
+      navigateAwayObj.formSubmitted = true;
+      this.showThanksNote = true;
+      this.startCountDown();
     }
+  }
 
-    navigateAwayObj.formSubmitted = true;
-    this.toggleFeedback();
-    this.resetAll();
+  generateFeedbackRes():any{
+    let res = {
+      userId : this.userEmailModel,
+      feedbackList: []
+    };
+    this.answerData.forEach((answerItem,index) => {
+      if(answerItem.edited){
+        let feedbackRaw:feedbackResItemType = {
+          questionId: this.questionData[index].id,
+          userId: this.userEmailModel,
+          feedback_response: {
+            type: this.questionData[index].type,
+            selected: answerItem.edited? answerItem.value: [],
+          },
+        };
+        res.feedbackList.push(feedbackRaw);
+      }
+    });
+    return res;
   }
 
   OnOMBlinkClick(){
@@ -175,6 +205,14 @@ export class SamFeedbackComponent {
       this.router.navigateByUrl(this.currentUrl);
       this.resetAll();
     }
+  }
+
+  checkSignInUser() {
+    //Get the sign in info
+      this.iamService.iam.checkSession( user => {
+          this.isSignedIn = true;
+          this.user = user;
+      });
   }
 
   getPaginationArray(){return Array.from(Array(this.questionData.length).keys());}
@@ -204,11 +242,11 @@ export class SamFeedbackComponent {
         case 'singleSelection':
           this.setSingleSelectionResult(this.answerData[this.curQueIndex].value);
           break;
-        case 'text':
+        case 'textarea':
           this.setTextAreaResult(this.answerData[this.curQueIndex].value);
           break;
-        case 'last':
-          this.setLastQueResult(this.answerData[this.curQueIndex].value);
+        case 'radio-text':
+          this.setRadioEmailResult(this.answerData[this.curQueIndex].value);
           break;
         default:
           break;
@@ -217,6 +255,8 @@ export class SamFeedbackComponent {
       this.resetQueOptions();
       if(this.questionData[this.curQueIndex].type === 'multiSelection'){
         this.setUpMultiSelectionModel(this.questionData[this.curQueIndex].selections);
+      }if(this.questionData[this.curQueIndex].type === 'radio-text'){
+        this.checkSignInUser();
       }
     }
   }
@@ -246,19 +286,22 @@ export class SamFeedbackComponent {
     this.textAreaModel = val;
   }
 
-  setLastQueResult(val){
+  setRadioEmailResult(val) {
     this.emailRadioBtnValue = val;
-    this.setCurQAnswer(val);
+    if (this.emailRadioBtnValue === "Yes" && this.isSignedIn) {
+      this.userEmailModel = this.user.email;
+    }
+    this.setCurQAnswer(this.userEmailModel);
   }
 
   setCurQAnswer(val){
     this.answerData[this.curQueIndex].edited = true;
-    this.answerData[this.curQueIndex].value = val;
+    this.answerData[this.curQueIndex].value = Array.isArray(val)? val:[val];
   }
 
   resetCurQAnswer(){
     this.answerData[this.curQueIndex].edited = false;
-    this.answerData[this.curQueIndex].value = {};
+    this.answerData[this.curQueIndex].value = [];
   }
 
   setUpAnswerArray(){
@@ -273,10 +316,31 @@ export class SamFeedbackComponent {
 
   }
 
+  setUpFeedbackQuestions(){
+    this.feedbackService.getAllQuestions().subscribe(
+      res => {
+        this.questionData = [];
+        res._embedded.questionList.forEach( q => {
+          let questionItem = {
+            type : q.question_options.type,
+            description : q.questionDesc,
+            selections : q.question_options.options,
+            id : q.questionId
+          };
+          this.questionData.push(questionItem);
+        });
+        this.resetAll();
+      }
+    );
+  }
+
   resetAll(){
     this.setUpAnswerArray();
     this.resetQueOptions();
     this.resetNavigateObj();
+    this.showThanksNote = false;
+    this.showEmptyFeedbackWarning = false;
+    this.curSec = 5;
     this.showFeedback = false;
     this.curQueIndex = 0;
     this.curQuestion = this.questionData[this.curQueIndex];
@@ -315,5 +379,26 @@ export class SamFeedbackComponent {
     let curPathLastIndex = urlPath.indexOf('#');
     let urlPathPage = curPathLastIndex === -1? urlPath: urlPath.substr(0,curPathLastIndex);
     return urlPathPage;
+  }
+
+  isFeedbackAnswerEmpty(): boolean{
+    let isEmpty = true;
+    this.answerData.forEach( answerItem => {
+      if(answerItem.edited) isEmpty = false;
+    });
+    return isEmpty;
+  }
+
+  startCountDown(){
+    this.timer = Observable.interval(1000).subscribe( () => {
+      this.curSec -- ;
+      if(this.curSec === 0) this.stopCountDown();
+    });
+  }
+
+  stopCountDown(){
+    this.timer.unsubscribe();
+    this.toggleFeedback();
+    this.resetAll();
   }
 }
