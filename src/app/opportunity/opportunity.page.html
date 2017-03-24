@@ -398,6 +398,11 @@
             <strong>No packages uploaded.</strong>
           </div>
         </div>
+
+       <ng-container *ngIf="packagesWarning">
+          <samAlert [type]="packagesWarning.config?.type"><div [innerHTML]="packagesWarning.config?.description"></div></samAlert>
+        </ng-container>
+
       </section>
 
       <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
