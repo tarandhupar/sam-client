@@ -1,0 +1,26 @@
+.awards-data{
+  .awards-black-border{
+    border: 2px solid black;
+  }
+
+  .awards-data-label{
+    border: 2px solid $color-primary;
+    padding: 0 10px;
+    color: $color-primary;
+  }
+
+  samAccordionSection li:first-child{
+    margin: 0 ;
+    border-top: 2px solid black;
+  }
+
+  .edit-image-icon{
+    position: absolute;
+    top: 3px;
+    right: 3px;
+  }
+
+  .edit-image-icon:hover{
+    cursor: pointer;
+  }
+}
