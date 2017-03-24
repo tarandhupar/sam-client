@@ -13,7 +13,9 @@
 
   <div class="usa-grid-full">
     <div class="usa-width-one-half">
-      <sam-list-input [(ngModel)]='selectedPermissions' label='Permissions' name="permissions" [options]="permissionOptions"></sam-list-input>
+      <sam-list-display [newValue]="testValue1" [(ngModel)]="testModel1">
+        <sam-autocomplete [labelText]="'Permissions'" name="permissions" [options]="permissionOptions" (change)="onAutocompleteSelect($event)"></sam-autocomplete>
+      </sam-list-display>
     </div>
   </div>
 

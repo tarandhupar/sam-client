@@ -15,32 +15,20 @@ export class ObjectDetailsPage implements OnInit {
   selectedPermissions = [1, 2];
 
   permissionOptions = [
-    {
-      label:'Unarchive',
-      value: 1,
-      name: 'apple'
-    },
-    {
-      label:'Create',
-      value: 2,
-      name: 'orange'
-    },
-    {
-      label:'Edit',
-      value: 3,
-      name: 'banana'
-    },
-    {
-      label:'Submit',
-      value: 4,
-      name: 'grape'
-    },
-    {
-      label:'tomato',
-      value: 5,
-      name: 'tomato'
-    }
+    'Unarchive',
+    'Create',
+    'Edit',
+    'Submit'
   ];
+
+  testValue1: any = [];
+  testModel1: any = [];
+  
+  onAutocompleteSelect(evt) {
+    let val = evt.target.value;
+    console.log(val);
+    this.testValue1 = val;
+  }
 
   constructor(private router: Router, private route: ActivatedRoute) {
 
