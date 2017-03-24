@@ -26,6 +26,9 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         { path: '', pathMatch: 'full', redirectTo: 'header-information' },
         { path: 'header-information', component: FALHeaderInfoComponent },
         { path: 'overview', component: FALOverviewComponent },
+        { path: 'financial-information', pathMatch: 'full', redirectTo: 'financial-information/obligations'},
+        { path: 'financial-information/obligations', component: FALHeaderInfoComponent },
+        { path: 'financial-information/other-financial-info', component: FALOverviewComponent},
       ]
     },
     {path: 'programs/:id/edit', component: ProgramPageOperations,
@@ -34,7 +37,8 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         { path: 'header-information', component: FALHeaderInfoComponent },
         { path: 'overview', component: FALOverviewComponent },
       ]
-    }
+    },
+
   );
 }
 export const routing = RouterModule.forChild(routes);

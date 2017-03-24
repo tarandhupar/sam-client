@@ -59,13 +59,13 @@ export class ProgramPageOperations implements OnInit {
           children:[
             {
               label : "Obligations",
-              route: this.baseURL + '/financial-information/obligations',
-              path: 'obligations'
+              route: '/obligations',
+              path: 'financial-information/obligations'
             },
             {
               label : "Other Financial Info",
-              route: this.baseURL + '/financial-information/other-financial-info',
-              path: 'other-financial-info'
+              route: '/other-financial-info',
+              path: 'financial-information/obligationsother-financial-info'
             }
           ]
         }
