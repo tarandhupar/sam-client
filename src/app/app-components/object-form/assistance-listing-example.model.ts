@@ -47,11 +47,6 @@ export class ProgramFormModel{
         label: 'Overview',
         fields:[
           {
-            custom: true,
-            testId: 'widget1',
-            component: 'Widget1'
-          },
-          {
             name: 'objective',
             type: 'samTextArea',
             label: 'Objectives',

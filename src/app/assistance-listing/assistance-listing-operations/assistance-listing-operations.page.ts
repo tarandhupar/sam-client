@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
@@ -40,16 +40,34 @@ export class ProgramPageOperations implements OnInit {
     }
 
     this.sidenavModel = {
-      "label": "Assistance Listings",
-      "children": [
+      label: "Assistance Listings",
+      children: [
         {
           label : "Header Information",
-          route: this.baseURL + '/header-information'
-
+          route: this.baseURL + '/header-information',
+          path: 'header-information'
         },
         {
           label : "Overview",
-          route: this.baseURL + '/overview'
+          route: this.baseURL + '/overview',
+          path: 'overview'
+        },
+        {
+          label: "Financial Information",
+          route: this.baseURL + '/financial-information',
+          path: 'financial-information',
+          children:[
+            {
+              label : "Obligations",
+              route: this.baseURL + '/financial-information/obligations',
+              path: 'obligations'
+            },
+            {
+              label : "Other Financial Info",
+              route: this.baseURL + '/financial-information/other-financial-info',
+              path: 'other-financial-info'
+            }
+          ]
         }
       ]
     };
@@ -59,7 +77,14 @@ export class ProgramPageOperations implements OnInit {
   ngOnInit(){
     if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
       if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
-        this.sidenavService.updateData(this.selectedPage, 0);
+        let path = this.route.snapshot.firstChild.url[0].path;
+
+        for(let child of this.sidenavModel['children']) {
+          if(child.path == path) {
+            this.sidenavService.updateData(this.selectedPage, this.sidenavModel['children'].indexOf(child));
+          }
+        }
+
       }else {
         this.router.navigate(['accessrestricted']);
       }
@@ -68,7 +93,6 @@ export class ProgramPageOperations implements OnInit {
       this.router.navigate(['signin']);
     }
 
-    //this.sidenavService.updateData(this.selectedPage, 0);
   }
 
   selectedItem(item){

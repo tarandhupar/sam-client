@@ -1,0 +1,24 @@
+<form [formGroup]="falOverviewForm">
+
+  <samTextArea [hint]="'Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.'"
+               [control]="falOverviewForm.controls['objective']"
+               [name]="'objectives-input'"
+               [label]="'Objectives'"
+               [required]="true"
+               formControlName="objective"></samTextArea>
+
+  <samTextArea [hint]="'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.'"
+               [control]="falOverviewForm.controls['falDesc']"
+               [name]="'falDesc-input'"
+               [label]="'Federal Assistance Listing Description'"
+               formControlName="falDesc"></samTextArea>
+
+  <div>
+    <div class="pull-left">
+      <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+      <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+      <samButton [buttonType]="(!falOverviewForm.valid ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+      <samButton [buttonType]="(!falOverviewForm.valid ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+    </div>
+  </div>
+</form>
