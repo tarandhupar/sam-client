@@ -13,8 +13,11 @@
 
   <div class="usa-grid-full">
     <div class="usa-width-one-half">
-      <sam-list-display [newValue]="testValue1" [(ngModel)]="testModel1">
-        <sam-autocomplete [labelText]="'Permissions'" name="permissions" [options]="permissionOptions" (change)="onAutocompleteSelect($event)"></sam-autocomplete>
+      <sam-list-display [newValue]="permissionSetter" [(ngModel)]="selectedPermissions">
+        <sam-autocomplete #permission [labelText]="'Permissions'" name="permissions" [options]="permissionOptions"></sam-autocomplete>
+        <button class="usa-button usa-button-icon add-permission-button" (click)="onAddPermissionClick()" (click)="onAutocompleteSelect()">
+          <i class="fa fa-plus-circle"></i>
+        </button>
       </sam-list-display>
     </div>
   </div>

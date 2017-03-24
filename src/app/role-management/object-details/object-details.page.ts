@@ -1,10 +1,13 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
+import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
 
 @Component({
   templateUrl: 'object-details.page.html'
 })
 export class ObjectDetailsPage implements OnInit {
+  @ViewChild('permission') permissionComponent: SamAutocompleteComponent;
+
   mode: 'edit'|'new' = 'new';
   selectedDomains = [];
   domains;
@@ -12,7 +15,7 @@ export class ObjectDetailsPage implements OnInit {
   objectName;
   requestObject;
 
-  selectedPermissions = [1, 2];
+  selectedPermissions = [];
 
   permissionOptions = [
     'Unarchive',
@@ -21,13 +24,13 @@ export class ObjectDetailsPage implements OnInit {
     'Submit'
   ];
 
-  testValue1: any = [];
-  testModel1: any = [];
-  
+  permissionSetter;
+
   onAutocompleteSelect(evt) {
-    let val = evt.target.value;
-    console.log(val);
-    this.testValue1 = val;
+    // let val = evt.target.value;
+    // console.log(val);
+    let val = this.permissionComponent.inputValue;
+    this.permissionSetter = val;
   }
 
   constructor(private router: Router, private route: ActivatedRoute) {
@@ -57,6 +60,10 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   onDomainsChange() {
+
+  }
+
+  onAddPermissionClick() {
 
   }
 
