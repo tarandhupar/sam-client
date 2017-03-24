@@ -67,7 +67,7 @@ export class OpportunityService{
   getAttachmentsCount(id: string){
     let apiParam = {
       name: 'opportunity',
-      suffix: '/opportunities/' + id + '/attachments/count',
+      suffix: '/opportunities/' + id + '/packages/count',
       oParam: {},
       method: 'GET'
     };
