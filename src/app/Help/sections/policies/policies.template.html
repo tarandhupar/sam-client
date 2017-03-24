@@ -1,7 +1,7 @@
 <section>
   <h2 class="m_T-2x">Policies</h2>
-  <h3 id="accessibility" class="p_L-3x">Accessibility</h3>
-  <div class="usa-grid-full">
+  <h3 id="accessibility" class="p_L-3x" *ngIf="linkToggle()">Accessibility</h3>
+  <div class="usa-grid-full" *ngIf="linkToggle()">
     <p class="p_L-8x">
       Lorem ipsum dolor sit amet, an quo elitr singulis, cu assum simul persius eos,
       per omittam concludaturque no. Albucius lobortis ius et, sea debet inimicus ne,
@@ -11,8 +11,8 @@
       fuisset convenire an.
     </p>
   </div>
-  <h3 id="legal" class="p_L-3x">Legal</h3>
-  <div class="usa-grid-full">
+  <h3 id="legal" class="p_L-3x" *ngIf="linkToggle()">Legal</h3>
+  <div class="usa-grid-full" *ngIf="linkToggle()">
     <p class="p_L-8x">
       Albucius lobortis ius et, sea debet inimicus ne,
       nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis
@@ -21,8 +21,8 @@
       fuisset convenire an.
     </p>
   </div>
-  <h3 id="privacy" class="p_L-3x">Privacy Policy</h3>
-  <div class="usa-grid-full">
+  <h3 id="privacy" class="p_L-3x" *ngIf="linkToggle()">Privacy Policy</h3>
+  <div class="usa-grid-full" *ngIf="linkToggle()">
     <p class="p_L-8x">
       Lorem ipsum dolor sit amet, an quo elitr singulis, cu assum simul persius eos,
       per omittam concludaturque no. Albucius lobortis ius et, sea debet inimicus ne,
@@ -32,8 +32,8 @@
       fuisset convenire an.
     </p>
   </div>
-  <h3 id="terms" class="p_L-3x">Terms of Use</h3>
-  <div class="usa-grid-full">
+  <h3 id="terms" class="p_L-3x" *ngIf="linkToggle()">Terms of Use</h3>
+  <div class="usa-grid-full" *ngIf="linkToggle()">
     <p class="p_L-8x">
       Albucius lobortis ius et, sea debet inimicus ne,
       nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis
@@ -41,5 +41,20 @@
       deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam
       fuisset convenire an.
     </p>
+  </div>
+  <h3 id="OMB" class="p_L-3x">Paperwork Reduction Act Statement</h3>
+  <div class="usa-grid-full">
+    <p class="p_L-8x">
+      The feedback surveys on beta.SAM.gov (information collections) meet the requirements
+      of 44 U.S.C. § 3507, as amended by section 2 of the Paperwork Reduction Act of 1995.
+      You do not need to answer these questions unless we display a valid Office of Management
+      and Budget (OMB) control number. The OMB control number for our collections is 3090-0297.
+      We estimate that it will take 3 minutes to read the instructions, gather the facts, and
+      answer the questions. Send only comments relating to our time estimate, including
+      suggestions for reducing this burden, or any other aspects of this collection of information
+      to: General Services Administration, Regulatory Secretariat Division (MVCB), ATTN: Ms.
+      Flowers/IC 3090-0297, 1800 F Street, NW, Washington, DC 20405.<br>
+    </p>
+
   </div>
 </section>
