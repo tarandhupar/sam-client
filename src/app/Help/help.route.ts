@@ -10,23 +10,25 @@ import { ReferenceLibraryComponent}  from "./sections/reference-library/referenc
 import { PartnersComponent } from "./sections/partners/partners.component";
 import { AwardDataComponent } from "./sections/award-data/award-data.component";
 import { TransitionToSamComponent } from "./sections/transition-to-sam/transition-to-sam.component";
+import { SamFeedbackComponent } from '../app-components/feedback-form/feedback-form.component';
 
 export const routes: Routes = [
   {
     path: 'help',
     component: HelpPage,
+    canDeactivate:[SamFeedbackComponent],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'overview' },
-      { path: 'overview', component: OverviewComponent },
-      { path: 'transition', component: TransitionToSamComponent },
-      { path: 'about', component: AboutSamComponent },
-      { path: 'new', component: NewToSamComponent },
-      { path: 'accounts', component: AccountsComponent },
-      { path: 'features', component: FeaturesComponent },
-      { path: 'policies', component: PoliciesComponent },
-      { path: 'partners', component: PartnersComponent },
-      { path: 'reference', component: ReferenceLibraryComponent },
-      { path: 'award', component: AwardDataComponent },
+      { path: 'overview', component: OverviewComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'transition', component: TransitionToSamComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'about', component: AboutSamComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'new', component: NewToSamComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'accounts', component: AccountsComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'features', component: FeaturesComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'policies', component: PoliciesComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'partners', component: PartnersComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'reference', component: ReferenceLibraryComponent, canDeactivate:[SamFeedbackComponent] },
+      { path: 'award', component: AwardDataComponent, canDeactivate:[SamFeedbackComponent] },
     ]
   },
 ];

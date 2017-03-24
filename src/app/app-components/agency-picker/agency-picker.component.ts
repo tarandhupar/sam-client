@@ -38,6 +38,7 @@ export class AgencyPickerComponent implements OnInit {
 
   @ViewChild("autocompletelist") autocompletelist;
 
+
   private searchTimer: NodeJS.Timer = null;
 
   autocompletePreselect = "";
