@@ -59,12 +59,11 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
         this.falOverviewForm.patchValue({
             objective:objective
-          },
-          error => {
-            console.error('Error Retrieving Program!!', error);
           });
-
-      });//end of subscribe
+      },
+        error => {
+          console.error('Error Retrieving Program!!', error);
+        });//end of subscribe
 
   }
 

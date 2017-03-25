@@ -87,8 +87,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
       },
       error => {
         console.error('Error!!', error);
-      }
-    );
+      });
   }
 
   getData() {
@@ -108,7 +107,10 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
           this.getRelatedProgSub = this.programService.getProgramById(relatedProgram, this.sharedService.cookieValue)
             .subscribe(api => {
               selections.push(relatedProgram);
-            });
+            },
+              error => {
+                console.error('Error!!', error);
+              });
         }
 
         this.falHeaderInfoForm.patchValue({
@@ -116,12 +118,11 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
           alternativeNames: popularName,
           programNumber: falNo,
           relatedTo: selections
-        },
-          error => {
-            console.error('Error Retrieving Program!!', error);
-          });
-
-      });//end of subscribe
+        });
+      },
+        error => {
+          console.error('Error Retrieving Program!!', error);
+        });//end of subscribe
 
   }
 
