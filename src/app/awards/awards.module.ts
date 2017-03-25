@@ -5,6 +5,7 @@ import { routing } from './awards.route.ts';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { CommonModule } from '@angular/common';
 import {DatexPipe} from './string-to-date.pipe';
+import { AwardsAddress } from './awards-address.component.ts';
 
 @NgModule({
   imports: [
@@ -18,10 +19,12 @@ import {DatexPipe} from './string-to-date.pipe';
     BrowserModule,
     CommonModule,
     DatexPipe,
+    AwardsAddress
   ],
   declarations: [
     AwardsPage,
     DatexPipe,
+    AwardsAddress
   ],
 })
 export class AwardsModule { }
