@@ -1,16 +1,15 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import { ActivatedRoute, Router} from '@angular/router';
+import { Router} from '@angular/router';
 import { ProgramService } from 'api-kit';
-import * as Cookies from 'js-cookie';
+import { FALOpSharedService } from '../../assistance-listing-operations.service';
 
 @Component({
   providers: [ ProgramService ],
   templateUrl: 'header-information.template.html',
 })
 export class FALHeaderInfoComponent implements OnInit, OnDestroy {
-  cookieValue: string;
-  programId: string;
+
   getProgSub: any;
   saveProgSub: any;
   redirectToWksp: boolean = false;
@@ -23,18 +22,16 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
-              private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private sharedService: FALOpSharedService) {
+    this.sharedService.setSideNavFocus();
   }
 
   ngOnInit() {
 
-    this.programId = this.route.snapshot.parent.params['id'];
-    this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-
     this.createForm();
 
-    if (this.programId) {
+    if (this.sharedService.programId) {
       this.getData();
     }
   }
@@ -69,7 +66,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     this.getProgramsSub = this.programService.runProgram({
       status: 'published',
       includeCount : 'false',
-      Cookie: this.cookieValue,
+      Cookie: this.sharedService.cookieValue,
       size:'100',
       sortBy: 'programNumber'
     }).subscribe(
@@ -96,7 +93,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
   getData() {
 
-    this.getProgSub = this.programService.getProgramById(this.programId, this.cookieValue)
+    this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
         let title = api.data.title;
         let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
@@ -108,7 +105,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
         let selections = [];
         this.relatedPrograms = api.data.relatedPrograms.relatedTo;
         for (let relatedProgram of this.relatedPrograms) {
-          this.getRelatedProgSub = this.programService.getProgramById(relatedProgram, this.cookieValue)
+          this.getRelatedProgSub = this.programService.getProgramById(relatedProgram, this.sharedService.cookieValue)
             .subscribe(api => {
               selections.push(relatedProgram);
             });
@@ -139,15 +136,15 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
       }
     };
 
-    this.saveProgSub = this.programService.saveProgram(this.programId, data, this.cookieValue)
+    this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
-        this.programId = api._body;
+        this.sharedService.programId = api._body;
         console.log('AJAX Completed Header Info', api);
 
         if(this.redirectToWksp)
           this.router.navigate(['falworkspace']);
         else
-          this.router.navigate(['/programs/' + this.programId + '/edit/overview']);
+          this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/overview']);
 
       },
         error => {
@@ -156,10 +153,10 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
   }
 
   onCancelClick(event) {
-    if (this.programId)
+    if (this.sharedService.programId)
       this.router.navigate(['/falworkspace']);
     else
-      this.router.navigate(['/programs', this.programId, 'view']);
+      this.router.navigate(['/programs', this.sharedService.programId, 'view']);
   }
 
   onSaveExitClick(event) {

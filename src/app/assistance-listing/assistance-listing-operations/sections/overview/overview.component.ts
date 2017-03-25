@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import { ActivatedRoute, Router} from '@angular/router';
+import { Router} from '@angular/router';
 import { ProgramService } from 'api-kit';
-import * as Cookies from 'js-cookie';
+import { FALOpSharedService } from '../../assistance-listing-operations.service';
 
 @Component({
   providers: [ ProgramService ],
@@ -10,8 +10,6 @@ import * as Cookies from 'js-cookie';
 })
 export class FALOverviewComponent implements OnInit, OnDestroy{
 
-  cookieValue: string;
-  programId: string;
   getProgSub: any;
   saveProgSub: any;
   redirectToWksp: boolean = false;
@@ -19,17 +17,17 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
-              private route: ActivatedRoute,
-              private router: Router) { }
+              private router: Router,
+              private sharedService: FALOpSharedService) {
+
+    this.sharedService.setSideNavFocus();
+  }
 
   ngOnInit() {
 
-    this.programId = this.route.snapshot.parent.params['id'];
-    this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-
     this.createForm();
 
-    if (this.programId) {
+    if (this.sharedService.programId) {
       this.getData();
     }
 
@@ -55,7 +53,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
   getData() {
 
-    this.getProgSub = this.programService.getProgramById(this.programId, this.cookieValue)
+    this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
         let objective = (api.data.objective ? api.data.objective : '');
 
@@ -76,15 +74,15 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
       "objective": this.falOverviewForm.value.objective
     };
 
-    this.saveProgSub = this.programService.saveProgram(this.programId, data, this.cookieValue)
+    this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
-          this.programId = api._body;
+          this.sharedService.programId = api._body;
           console.log('AJAX Completed Overview', api);
 
           if(this.redirectToWksp)
             this.router.navigate(['falworkspace']);
 
-          //this.router.navigate(['/programs/' + this.programId + '/edit/overview']);
+          this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/financial-information']);
 
         },
         error => {
@@ -93,14 +91,18 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
   }
 
   onCancelClick(event) {
-    if (this.programId)
+    if (this.sharedService.programId)
       this.router.navigate(['/falworkspace']);
     else
-      this.router.navigate(['/programs', this.programId, 'view']);
+      this.router.navigate(['/programs', this.sharedService.programId, 'view']);
   }
 
   onPreviousClick(event){
-    this.router.navigate(['/programs/' + this.programId + '/edit/header-information']);
+    if(this.sharedService.programId)
+      this.router.navigate(['programs/' + this.sharedService.programId + '/edit/header-information']);
+    else
+      this.router.navigate(['programs/add/header-information']);
+
   }
 
   onSaveExitClick(event) {
@@ -109,7 +111,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
   }
 
   onSaveContinueClick(event) {
-    this.redirectToWksp = true;
+    //this.redirectToWksp = true;
     this.saveData();
   }
 }

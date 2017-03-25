@@ -1,14 +1,13 @@
 import {Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
-import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
-import { ProgramService } from 'api-kit';
+import { FALOpSharedService } from './assistance-listing-operations.service';
 import * as Cookies from 'js-cookie';
 
 @Component({
   moduleId: __filename,
   templateUrl: 'assistance-listing-operations.page.html',
-  providers: [ProgramService]
+  providers: [ FALOpSharedService ]
 })
 
 export class ProgramPageOperations implements OnInit {
@@ -17,74 +16,19 @@ export class ProgramPageOperations implements OnInit {
   selectedPage: number = 0;
   pageFragment: string;
   sidenavModel = {};
-  baseURL: string;
 
-  constructor(private sidenavService: SidenavService, private router: Router, private route: ActivatedRoute) {
+  constructor(private sharedService: FALOpSharedService,
+              private router: Router) {
 
-    router.events.subscribe(s => {
-      if (s instanceof NavigationEnd) {
-        const tree = router.parseUrl(router.url);
-        this.pageFragment = tree.fragment;
-        if (this.pageFragment) {
-          const element = document.getElementById(tree.fragment);
-          if (element) { element.scrollIntoView(); }
-        }
-      }
-    });
-
-    if(this.route.snapshot.params['id']){
-        this.baseURL = "programs/" + this.route.snapshot.params['id'] + "/edit";
-    }
-    else {
-      this.baseURL = "programs/add";
-    }
-
-    this.sidenavModel = {
-      label: "Assistance Listings",
-      children: [
-        {
-          label : "Header Information",
-          route: this.baseURL + '/header-information',
-          path: 'header-information'
-        },
-        {
-          label : "Overview",
-          route: this.baseURL + '/overview',
-          path: 'overview'
-        },
-        {
-          label: "Financial Information",
-          route: this.baseURL + '/financial-information',
-          path: 'financial-information',
-          children:[
-            {
-              label : "Obligations",
-              route: '/obligations',
-              path: 'financial-information/obligations'
-            },
-            {
-              label : "Other Financial Info",
-              route: '/other-financial-info',
-              path: 'financial-information/obligationsother-financial-info'
-            }
-          ]
-        }
-      ]
-    };
+    this.sidenavModel = sharedService.getSideNavModel();
 
   }
 
   ngOnInit(){
+
     if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
       if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
-        let path = this.route.snapshot.firstChild.url[0].path;
-
-        for(let child of this.sidenavModel['children']) {
-          if(child.path == path) {
-            this.sidenavService.updateData(this.selectedPage, this.sidenavModel['children'].indexOf(child));
-          }
-        }
-
+        this.sharedService.setSideNavFocus();
       }else {
         this.router.navigate(['accessrestricted']);
       }
@@ -96,7 +40,7 @@ export class ProgramPageOperations implements OnInit {
   }
 
   selectedItem(item){
-    this.selectedPage = this.sidenavService.getData()[0];
+    this.selectedPage = this.sharedService.selectedItem(item);
   }
 
   sidenavPathEvtHandler(data){
