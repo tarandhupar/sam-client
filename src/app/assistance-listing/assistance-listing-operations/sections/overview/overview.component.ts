@@ -14,6 +14,8 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
   saveProgSub: any;
   redirectToWksp: boolean = false;
   falOverviewForm: FormGroup;
+  programId : any;
+  title: string;
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -21,6 +23,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
               private sharedService: FALOpSharedService) {
 
     this.sharedService.setSideNavFocus();
+    this.programId = sharedService.programId;
   }
 
   ngOnInit() {
@@ -55,6 +58,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
+        this.title = api.data.title;
         let objective = (api.data.objective ? api.data.objective : '');
 
         this.falOverviewForm.patchValue({
