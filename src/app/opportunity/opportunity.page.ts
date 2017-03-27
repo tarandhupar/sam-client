@@ -72,6 +72,7 @@ export class OpportunityPage implements OnInit {
   public displayField = {}; // object containing boolean flags for whether fields should be displayed
 
   alert: any = [];
+  packagesWarning : any;
   originalOpportunity: any;
   opportunityLocation: any;
   opportunity: any;
@@ -162,6 +163,7 @@ export class OpportunityPage implements OnInit {
     let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
     this.checkChanges(previousOpportunityAPI);
     let packagesOpportunities = this.loadAttachments(historyAPI);
+    let totalAttachmentsCount = this.getTotalAttachmentsCount(opportunityAPI, historyAPI, packagesOpportunities);
 
     this.sidenavService.updateData(this.selectedPage, 0);
 
@@ -173,7 +175,7 @@ export class OpportunityPage implements OnInit {
     // Assumes DOM its ready when opportunites, packages and related opportutnies API calls are done
     // Observable triggers when each API has emitted at least one value or error
     // and waits for 2 seconds for package's animation to finish
-    let DOMReady$ = Observable.zip(opportunityAPI, relatedOpportunities, packagesOpportunities).delay(2000);
+    let DOMReady$ = Observable.zip(opportunityAPI, relatedOpportunities, packagesOpportunities, totalAttachmentsCount).delay(2000);
     this.DOMComplete(DOMReady$);
   }
 
@@ -407,8 +409,38 @@ export class OpportunityPage implements OnInit {
     });
   }
 
+  private getTotalAttachmentsCount(opportunity: Observable<any>, historyAPI: Observable<any>, packagesOpportunities: Observable<any>[]){
+    let attachmentCountSubject = new ReplaySubject(1);
+    opportunity.subscribe(opportunityAPI => {
+      this.opportunityService.getPackagesCount(opportunityAPI.opportunityId).subscribe(attachmentCountSubject);
+    });
+    attachmentCountSubject.subscribe(data => {
+      console.log(data);
+        historyAPI.subscribe(historyAPI => {
+          let packagesObservable:Observable<any> = Observable.forkJoin(Observable.onErrorResumeNext.apply(Observable, packagesOpportunities));
+          packagesObservable.subscribe(res =>{
+
+            }, err => {
+
+            }, () => {
+              if(data > this.packages.length) {
+                let latestNotice = historyAPI.content.history[historyAPI.content.history.length - 1]['notice_id'];
+                this.packagesWarning = {
+                  config: {
+                    type: 'warning',
+                    description: 'An update has been made to this opportunity with new packages added. Please click <a href="opportunities/' + latestNotice + '">here</a> to view the latest update and packages.'
+                  }
+                };
+              }
+            })
+        });
+    });
+    return attachmentCountSubject;
+  }
+
+
   private loadAttachments(historyAPI: Observable<any>){
-    let packagesOpportunities = [];
+    let packagesOpportunities: Observable<any>[] = [];
       historyAPI.subscribe(api =>{
         let current = _.filter(api.content.history, historyItem => {
           return historyItem.notice_id == this.opportunity.opportunityId;
