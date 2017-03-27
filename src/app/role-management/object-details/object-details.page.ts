@@ -127,7 +127,7 @@ export class ObjectDetailsPage implements OnInit {
 
   onDomainChange() {
     let domainId = +this.selectedDomain;
-    this.accessService.getDomainDefinition(domainId).subscribe(
+    this.accessService.getRoleObjDefinitions('object', ''+domainId).subscribe(
       domains => {
         let permissions = domains.functionMapContent.map(f => f.function.val);
         this.selectedPermissions = permissions;

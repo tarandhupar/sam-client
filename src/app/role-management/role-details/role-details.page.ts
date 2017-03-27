@@ -81,7 +81,7 @@ export class RoleDetailsPage {
 
   onDomainChange() {
     this.domainRoleOptions = null;
-    this.accessService.getDomainDefinition(this.domain).subscribe(
+    this.accessService.getRoleObjDefinitions('role', ''+this.selectedDomain).subscribe(
       defs => {
         this.domainDefinitions = defs;
         this.domainRoleOptions = defs.roleDefinitionMapContent.map(r => {
