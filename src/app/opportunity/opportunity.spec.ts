@@ -418,6 +418,7 @@ describe('OpportunityPage', () => {
     expect(comp.showChangesSynopsis).toBeDefined();
     expect(comp.showChangesClassification).toBeDefined();
     expect(comp.showChangesContactInformation).toBeDefined();
+    expect(comp.showChangesAwardDetails).toBeDefined();
   });
 
   it('Should generate ids', () => {
