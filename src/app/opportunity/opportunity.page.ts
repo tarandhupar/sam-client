@@ -416,7 +416,7 @@ export class OpportunityPage implements OnInit {
     attachmentCountSubject.subscribe(data => {
       console.log(data);
         historyAPI.subscribe(historyAPI => {
-          let packagesObservable:Observable = Observable.forkJoin(Observable.onErrorResumeNext.apply(Observable, packagesOpportunities));
+          let packagesObservable:Observable<any> = Observable.forkJoin(Observable.onErrorResumeNext.apply(Observable, packagesOpportunities));
           packagesObservable.subscribe(res =>{
 
             }, err => {
