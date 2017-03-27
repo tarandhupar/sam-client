@@ -80,11 +80,9 @@ export class RoleDetailsPage {
   }
 
   onDomainChange() {
-    console.log('change');
     this.domainRoleOptions = null;
     this.accessService.getDomainDefinition(this.domain).subscribe(
       defs => {
-        console.log(defs);
         this.domainDefinitions = defs;
         this.domainRoleOptions = defs.roleDefinitionMapContent.map(r => {
           return {
@@ -106,7 +104,6 @@ export class RoleDetailsPage {
 
         if (this.mode === 'edit') {
           // find the text label for role and set the text label
-          console.log('find', this.roleId, 'in', this.domainRoleOptions);
           let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.value);
           if (r) {
             this.role = r.label;

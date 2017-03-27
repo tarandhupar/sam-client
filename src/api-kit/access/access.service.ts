@@ -5,6 +5,7 @@ import { UserAccessInterface, UserAccessWrapper } from './access.interface';
 import * as _ from 'lodash';
 import { IDomain } from "./domain.interface";
 import { IRole } from "./role.interface";
+import { IPermissions } from "./permissions.interface";
 
 export interface UserAccessFilterOptions {
   domainIds?: (string|number)[],
@@ -57,6 +58,16 @@ export class UserAccessService {
   getDomains(): Observable< IDomain > {
     let apiOptions: any = {
       name: 'domains',
+      method: 'GET',
+      suffix: '',
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  getPermissions() : Observable<IPermissions> {
+    let apiOptions: any = {
+      name: 'permissions',
       method: 'GET',
       suffix: '',
     };

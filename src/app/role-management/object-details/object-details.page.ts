@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
+import { UserAccessService } from "../../../api-kit/access/access.service";
+import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
 
 @Component({
   templateUrl: 'object-details.page.html'
@@ -16,30 +18,48 @@ export class ObjectDetailsPage implements OnInit {
   requestObject;
 
   selectedPermissions = [];
-
-  permissionOptions = [
-    'Unarchive',
-    'Create',
-    'Edit',
-    'Submit'
-  ];
+  permissionOptions = [];
 
   permissionSetter;
 
-  onAutocompleteSelect(evt) {
-    // let val = evt.target.value;
-    // console.log(val);
-    let val = this.permissionComponent.inputValue;
-    this.permissionSetter = val;
-  }
-
-  constructor(private router: Router, private route: ActivatedRoute) {
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private accessService: UserAccessService,
+    private footerAlerts: AlertFooterService,
+  ) {
 
   }
 
   ngOnInit() {
     this.determineMode();
     this.getAllDomains();
+    this.getAllPermissions();
+    if (this.mode === 'edit') {
+      this.parseUrlForDomains();
+    }
+  }
+
+  parseUrlForDomains() {
+    this.route.queryParams.subscribe(
+      params => {
+        if (!params['domains'] || !params['domains'].length) {
+          this.footerAlerts.registerFooterAlert({
+            title: 'Domains parameter missing',
+            type: 'error',
+          });
+          return;
+        }
+        this.selectedDomains = params['domains'].split(',').map(dom => {
+          return +dom;
+        });
+        this.domainOptions.forEach(opt => {
+          if (this.selectedDomains.indexOf(+opt.value) !== -1) {
+            opt.disabled = true;
+          }
+        })
+      }
+    );
   }
 
   determineMode() {
@@ -59,12 +79,26 @@ export class ObjectDetailsPage implements OnInit {
     });
   }
 
+  getAllPermissions() {
+    this.accessService.getPermissions().subscribe(
+      res => {
+        this.permissionOptions = res._embedded.permissionList.map(perm => {
+          return perm.permissionName;
+        })
+      },
+      error => {
+        // do nothing, but the user cannot select existing permissions
+      }
+    );
+  }
+
   onDomainsChange() {
 
   }
 
   onAddPermissionClick() {
-
+    let val = this.permissionComponent.inputValue;
+    this.permissionSetter = val;
   }
 
   onSubmitClick() {

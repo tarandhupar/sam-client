@@ -19,6 +19,7 @@ export class WrapperService {
         "access": "/rms/v1/access",
         "uiroles": "/rms/v1/uiroles",
         "domains": "/rms/v1/domains",
+        "permissions": "/rms/v1/permissions",
         "wageDetermination": "/wdol/v1",
         "location": "/locationservices/v1/api"
     };

@@ -11,17 +11,21 @@
     <input id="object" type="text" [(ngModel)]="objectName">
   </labelWrapper>
 
+  <!-- Permissions -->
   <div class="usa-grid-full">
     <div class="usa-width-one-half">
       <sam-list-display [newValue]="permissionSetter" [(ngModel)]="selectedPermissions">
-        <sam-autocomplete #permission [labelText]="'Permissions'" name="permissions" [options]="permissionOptions"></sam-autocomplete>
-        <button class="usa-button usa-button-icon add-permission-button" (click)="onAddPermissionClick()" (click)="onAutocompleteSelect()">
-          <i class="fa fa-plus-circle"></i>
-        </button>
+        <div class="input-and-add">
+          <sam-autocomplete #permission [labelText]="'Permissions'" name="permissions" [options]="permissionOptions" [showMagnifyingGlass]="true"></sam-autocomplete>
+          <button class="usa-button usa-button-transparent add-permission-button" (click)="onAddPermissionClick()">
+            <i class="fa fa-plus-circle"></i>
+          </button>
+        </div>
       </sam-list-display>
     </div>
   </div>
 
+  <!-- Cancel / Submit -->
   <div class="clearfix">
     <div class="pull-right">
       <button class="usa-button-outline" routerLink="/access/objects">Cancel</button>
