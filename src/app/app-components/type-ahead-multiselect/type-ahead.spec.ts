@@ -9,7 +9,7 @@ import {SamUIKitModule} from "../../../sam-ui-elements/src/ui-kit/index";
 import {SamTypeAheadComponent} from "./type-ahead.component";
 import {AutocompleteConfig} from "../../../sam-ui-elements/src/ui-kit/types";
 
-fdescribe('The Sam Type-ahead Component', () => {
+describe('The Sam Type-ahead Component', () => {
   let component: SamTypeAheadComponent;
   let fixture: ComponentFixture<SamTypeAheadComponent>;
 
