@@ -411,7 +411,7 @@ export class OpportunityPage implements OnInit {
   private getTotalAttachmentsCount(opportunity: Observable<any>, historyAPI: Observable<any>, packagesOpportunities: Observable<any>[]){
     let attachmentCountSubject = new ReplaySubject(1);
     opportunity.subscribe(opportunityAPI => {
-      this.opportunityService.getAttachmentsCount(opportunityAPI.opportunityId).subscribe(attachmentCountSubject);
+      this.opportunityService.getPackagesCount(opportunityAPI.opportunityId).subscribe(attachmentCountSubject);
     });
     attachmentCountSubject.subscribe(data => {
       console.log(data);
