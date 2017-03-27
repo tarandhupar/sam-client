@@ -908,8 +908,7 @@ export class AgencyPickerComponent implements OnInit {
       'L6',
       'L7',
     ];
-
-    return ` (${lvls[lvl + 1]})`;
+    return ` (${lvls[lvl-1]})`;
   }
 
   clearSelectedOrgs() {
