@@ -11,7 +11,11 @@
     </div>
 
     <div class="feedback-question-div usa-grid-full m_T-2x m_B-1x m_R-4x">
-      <span class="m_T-2x" *ngIf="!showThanksNote">{{curQueIndex+1}}. {{curQuestion.description}}</span>
+      <h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning"><i class="fa fa-exclamation-triangle"></i><span>&nbsp;Please provide at least one feedback!</span></h4>
+
+      <!--<samAlert class="m_T-0 usa-width-one-whole" *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" [type]="'warning'" [title]="''" [description]="'Please provide at least one feedback!'"></samAlert>-->
+
+      <span class="m_T-2x" style="display: block" *ngIf="!showThanksNote">{{curQueIndex+1}}. {{curQuestion.description}}</span>
 
        <!--Rating Question-->
       <div class="feedback-question-rating m_T-2x" *ngIf="isCurrentQType('rating')">
@@ -28,13 +32,9 @@
 
       <!--Radio Button Question-->
       <div class="feedback-question-radio m_T-2x usa-grid" *ngIf="isCurrentQType('singleSelection')">
-        <div class="usa-width-one-half m_B-1x p_L-4x m_R-0">
-          <input class="usa-width-one-fourth" type="radio" (change)="onRadioBtnChange('Yes')" [checked]="radioBtnValue === 'Yes'"><label class="m_T-0 marginCenter" (click)="onRadioBtnChange('Yes')">Yes</label>
+        <div class="usa-width-one-half m_B-1x p_L-4x m_R-0" *ngFor="let option of curQuestion.selections">
+          <input class="usa-width-one-fourth" type="radio" (change)="onRadioBtnChange(option)" [checked]="radioBtnValue === option"><label class="m_T-0 marginCenter" (click)="onRadioBtnChange(option)">{{option}}</label>
         </div>
-        <div class="usa-width-one-half m_B-1x p_L-4x">
-          <input class="usa-width-one-fourth" type="radio" (change)="onRadioBtnChange('No')" [checked]="radioBtnValue === 'No'"><label class="m_T-0 marginCenter" (click)="onRadioBtnChange('No')">No</label>
-        </div>
-
       </div>
 
       <!--TextBox Question-->
@@ -53,9 +53,10 @@
         <div class="usa-width-one-whole m_T-2x">
           <div class="usa-width-two-thirds m_R-0 text-align-center">
             <input class="usa-width-one-whole m_L-3x feedback-email-input" *ngIf="emailRadioBtnValue === 'Yes'" name="text" placeholder="Please provide your email" [(ngModel)]="userEmailModel" (change)="setCurQAnswer(userEmailModel)">
-            <h3 *ngIf="!showEmptyFeedbackWarning || !isFeedbackAnswerEmpty()">&nbsp;</h3>
+            <!--<h3 *ngIf="!showEmptyFeedbackWarning || !isFeedbackAnswerEmpty()">&nbsp;</h3>-->
+            <h3 *ngIf="emailRadioBtnValue !== 'Yes'">&nbsp;</h3>
             <!--<h4 *ngIf="showEmptyFeedbackWarning" class="feedback-warning">Please provide at least one feedback!</h4>-->
-            <h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning"><i class="fa fa-exclamation-triangle"></i><span>&nbsp;Please provide at least one feedback!</span></h4>
+            <!--<h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning"><i class="fa fa-exclamation-triangle"></i><span>&nbsp;Please provide at least one feedback!</span></h4>-->
           </div>
           <div class="usa-width-one-third">
             <button class="usa-button-primary m_0 pull-right" (click)="onSubmitFeedbackClick()">Submit</button>

@@ -149,7 +149,6 @@ export class SamFeedbackComponent {
     // Check whether the feedback result is empty
     if(this.isFeedbackAnswerEmpty()){
       this.showEmptyFeedbackWarning = true;
-      console.log("Result is empty");
     }else{
       // Submit the feedback results
       let res = this.generateFeedbackRes();
@@ -167,7 +166,7 @@ export class SamFeedbackComponent {
     };
     this.answerData.forEach((answerItem,index) => {
       if(answerItem.edited){
-        let feedbackRaw:feedbackResItemType = {
+        let feedbackResItem:feedbackResItemType = {
           questionId: this.questionData[index].id,
           userId: this.userEmailModel,
           feedback_response: {
@@ -175,7 +174,7 @@ export class SamFeedbackComponent {
             selected: answerItem.edited? answerItem.value: [],
           },
         };
-        res.feedbackList.push(feedbackRaw);
+        res.feedbackList.push(feedbackResItem);
       }
     });
     return res;
@@ -209,10 +208,15 @@ export class SamFeedbackComponent {
 
   checkSignInUser() {
     //Get the sign in info
-      this.iamService.iam.checkSession( user => {
+    this.isSignedIn = false;
+    this.zone.runOutsideAngular(() => {
+      this.iamService.iam.checkSession((user) => {
+        this.zone.run(() => {
           this.isSignedIn = true;
           this.user = user;
+        });
       });
+    });
   }
 
   getPaginationArray(){return Array.from(Array(this.questionData.length).keys());}
