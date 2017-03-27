@@ -53,28 +53,42 @@
     <div [class.hide]="selectedPage !== 0">
       <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
         <h2>Award Details</h2>
+        <samButton *ngIf="differences?.changesExistAwardDetails" [buttonId]="'defaultBtnGeneral'" [buttonText]="!showChangesAwardDetails ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideAwardDetails()"></samButton>
+
+        <span *ngIf="showChangesAwardDetails" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.AwardDate)" *ngIf="shouldBeDisplayed(opportunityFields.AwardDate)">
+            <i *ngIf="differences?.awardDate" class="fa fa-square" aria-hidden="true"></i>
             <strong>Contract Award Date: </strong>
             {{ opportunity.data?.award?.date | dateFormat: 'MMM DD, YYYY' }}
+            <span *ngIf="showChangesAwardDetails && differences?.awardDate" [innerHTML]="differences?.awardDate"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.AwardNumber)" *ngIf="shouldBeDisplayed(opportunityFields.AwardNumber)">
+            <i *ngIf="differences?.awardNumber" class="fa fa-square" aria-hidden="true"></i>
             <strong>Contract Award Number: </strong>
             {{ opportunity.data?.award?.number }}
+            <span *ngIf="showChangesAwardDetails && differences?.awardNumber" [innerHTML]="differences?.awardNumber"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.OrderNumber)" *ngIf="shouldBeDisplayed(opportunityFields.OrderNumber)">
+            <i *ngIf="differences?.orderNumber" class="fa fa-square" aria-hidden="true"></i>
             <strong>Task/Delivery Order Number: </strong>
             {{ opportunity?.data?.award?.deliveryOrderNumber }}
+            <span *ngIf="showChangesAwardDetails && differences?.orderNumber" [innerHTML]="differences?.orderNumber"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.AwardedDUNS)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedDUNS)">
+            <i *ngIf="differences?.awardedDuns" class="fa fa-square" aria-hidden="true"></i>
             <strong>Contractor Awarded DUNS: </strong>
             <span>{{ opportunity.data?.award?.awardee?.duns }}</span>
+            <span *ngIf="showChangesAwardDetails && differences?.awardedDuns" [innerHTML]="differences?.awardedDuns"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.AwardedName)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedName)">
+            <i *ngIf="differences?.awardedName" class="fa fa-square" aria-hidden="true"></i>
             <strong>Contractor Awarded Name: </strong>
             <span>{{opportunity.data?.award?.awardee?.name}}</span>
+            <span *ngIf="showChangesAwardDetails && differences?.awardedName" [innerHTML]="differences?.awardedName"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.AwardedAddress)" *ngIf="shouldBeDisplayed(opportunityFields.AwardedAddress)">
+            <i *ngIf="differences?.awardedAddress" class="fa fa-square" aria-hidden="true"></i>
             <strong>Contractor Awarded Address: </strong>
             <span>
               {{opportunity.data?.award?.awardee?.location?.streetAddress}}<br>
@@ -83,14 +97,19 @@
               {{opportunity.data?.award?.awardee?.location?.zip}}<br>
               {{opportunity.data?.award?.awardee?.location?.country}}<br>
             </span>
+            <span *ngIf="showChangesAwardDetails && differences?.awardedAddress" [innerHTML]="differences?.awardedAddress"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.AwardAmount)" *ngIf="shouldBeDisplayed(opportunityFields.AwardAmount)">
+            <i *ngIf="differences?.awardAmount" class="fa fa-square" aria-hidden="true"></i>
             <strong>Contract Award Dollar Amount: </strong>
             <span>{{opportunity.data?.award?.amount}}</span>
+            <span *ngIf="showChangesAwardDetails && differences?.awardAmount" [innerHTML]="differences?.awardAmount"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.LineItemNumber, 'award')" *ngIf="shouldBeDisplayed(opportunityFields.LineItemNumber)">
+            <i *ngIf="differences?.lineItemNumber" class="fa fa-square" aria-hidden="true"></i>
             <strong>Contract Line Item Number: </strong>
             <span>{{opportunity.data?.award?.lineItemNumber}}</span>
+            <span *ngIf="showChangesAwardDetails && differences?.lineItemNumber" [innerHTML]="differences?.lineItemNumber"></span>
           </li>
         </ul>
       </section>
@@ -332,11 +351,13 @@
               <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-primary')"
                   *ngIf="opportunity.data?.pointOfContact[0]?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
                 <strong>{{opportunity.data?.pointOfContact[0].fullName}}</strong>
+                <span *ngIf="showChangesContactInformation && differences?.primaryFullName" [innerHTML]="differences?.primaryFullName"></span>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCTitle, 'contact-primary')"
                   *ngIf="opportunity.data?.pointOfContact[0]?.title && shouldBeDisplayed(opportunityFields.POCTitle)">
                 <!--TODO: fix capitalize pipe-->
                 <em [innerHTML]="opportunity.data?.pointOfContact[0].title"></em>
+                <span *ngIf="showChangesContactInformation && differences?.primaryTitle" [innerHTML]="differences?.primaryTitle"></span>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-primary')"
                   *ngIf="opportunity.data?.pointOfContact[0]?.email && shouldBeDisplayed(opportunityFields.POCEmail)">
@@ -344,19 +365,21 @@
                 <a href="mailto:{{opportunity.data?.pointOfContact[0].email}}">
                   {{opportunity.data?.pointOfContact[0].email}}
                 </a>
+                <span *ngIf="showChangesContactInformation && differences?.primaryEmail" [innerHTML]="differences?.primaryEmail"></span>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-primary')"
                   *ngIf="opportunity.data?.pointOfContact[0]?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
                 <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
                 {{opportunity.data?.pointOfContact[0].phone}}
+                <span *ngIf="showChangesContactInformation && differences?.primaryPhone" [innerHTML]="differences?.primaryPhone"></span>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-primary')"
                   *ngIf="opportunity.data?.pointOfContact[0]?.fax && shouldBeDisplayed(opportunityFields.POCFax)">
                 <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
                 {{opportunity.data?.pointOfContact[0].fax}}
+                <span *ngIf="showChangesContactInformation && differences?.primaryFax" [innerHTML]="differences?.primaryFax"></span>
               </li>
             </ul>
-            <span *ngIf="showChangesContactInformation && differences?.primaryPointOfContact" [innerHTML]="differences?.primaryPointOfContact"></span>
           </div>
           <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-secondary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
             <h3>
@@ -367,31 +390,35 @@
               <li [attr.id]="generateID(opportunityFields.POCFullName, 'contact-secondary')"
                   *ngIf="opportunity.data?.pointOfContact[1]?.fullName && shouldBeDisplayed(opportunityFields.POCFullName)">
                 <strong>{{opportunity.data?.pointOfContact[1].fullName}}</strong>
+                <span *ngIf="showChangesContactInformation && differences?.secondaryFullName" [innerHTML]="differences?.secondaryFullName"></span>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCTitle, 'contact-secondary')"
                   *ngIf="opportunity.data?.pointOfContact[1]?.title && shouldBeDisplayed(opportunityFields.POCTitle)">
                 <!--TODO: fix capitalize pipe-->
                 <em [innerHTML]="opportunity.data?.pointOfContact[1].title"></em>
+                <span *ngIf="showChangesContactInformation && differences?.secondaryTitle" [innerHTML]="differences?.secondaryTitle"></span>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCEmail, 'contact-secondary')"
                   *ngIf="opportunity.data?.pointOfContact[1]?.email && shouldBeDisplayed(opportunityFields.POCEmail)">
                 <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
                 <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
                   {{opportunity.data?.pointOfContact[1].email}}
+                  <span *ngIf="showChangesContactInformation && differences?.secondaryEmail" [innerHTML]="differences?.secondaryEmail"></span>
                 </a>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-secondary')"
                   *ngIf="opportunity.data?.pointOfContact[1]?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
                 <i class="fa fa-phone" aria-hidden="true"></i> &nbsp;
                 {{opportunity.data?.pointOfContact[1].phone}}
+                <span *ngIf="showChangesContactInformation && differences?.secondaryPhone" [innerHTML]="differences?.secondaryPhone"></span>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCFax, 'contact-secondary')"
                   *ngIf="opportunity.data?.pointOfContact[1]?.fax && shouldBeDisplayed(opportunityFields.POCFax)">
                 <i class="fa fa-fax" aria-hidden="true"></i> &nbsp;
                 {{opportunity.data?.pointOfContact[1].fax}}
+                <span *ngIf="showChangesContactInformation && differences?.secondaryFax" [innerHTML]="differences?.secondaryFax"></span>
               </li>
             </ul>
-            <span *ngIf="showChangesContactInformation && differences?.secondaryPointOfContact" [innerHTML]="differences?.secondaryPointOfContact"></span>
           </div>
         </div>
       </section>

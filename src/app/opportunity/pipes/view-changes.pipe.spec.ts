@@ -64,14 +64,16 @@ describe('ViewChangesPipe', () => {
           "fullName": "Mara A. Strobel",
           "email": "mara.strobel@us.af.mil",
           "phone": "719-333-4899",
+          "fax": "4444444444",
           "additionalInfo": {}
         },
         {
           "type": "secondary",
-          "title": "Contracting Officer",
+          "title": "Officer",
           "fullName": "Shawna L. Bowshot",
           "email": "shawna.bowshot@us.af.mil",
           "phone": "7193334595",
+          "fax": "5555555",
           "additionalInfo": {}
         }
       ],
@@ -97,9 +99,21 @@ describe('ViewChangesPipe', () => {
         }
       },
       "award": {
+        "date": "2013-10-02",
+        "number": "DJBTDAT312",
+        "amount": "$ 2,156,181.00",
+        "lineItemNumber": "Not All",
+        "deliveryOrderNumber": "1",
         "awardee": {
+          "name": "Apple Street Health Services",
+          "duns": "501136417",
           "location": {
-            "streetAddress2": ""
+            "streetAddress": "200 Cherry Street, S.E.",
+            "streetAddress2": "",
+            "city": "Chicago",
+            "state": "IL",
+            "zip": "49505",
+            "country": "US"
           }
         },
         "justificationAuthority": {},
@@ -153,8 +167,11 @@ describe('ViewChangesPipe', () => {
       "pointOfContact": [
         {
           "type": "primary",
+          "title": "Specialist",
           "fullName": "Warren ACC IDQ",
           "email": "usarmy.detroit.acc.mbx.wrn-idq@mail.mil",
+          "phone": "0000000000",
+          "fax": "1111111111",
           "additionalInfo": {}
         },
         {
@@ -162,6 +179,8 @@ describe('ViewChangesPipe', () => {
           "title": "Contract Specialist",
           "fullName": "Marta Furman",
           "email": "marta.furman.civ@mail.mil",
+          "phone": "2222222222",
+          "fax": "3333333333",
           "additionalInfo": {}
         }
       ],
@@ -187,9 +206,21 @@ describe('ViewChangesPipe', () => {
         }
       },
       "award": {
+        "date": "2013-10-01",
+        "number": "DJBTDAT311",
+        "amount": "$ 1,156,181.00",
+        "deliveryOrderNumber": "2",
+        "lineItemNumber": "All",
         "awardee": {
+          "name": "Cherry Street Health Services",
+          "duns": "603136417",
           "location": {
-            "streetAddress2": ""
+            "streetAddress": "100 Cherry Street, S.E.",
+            "streetAddress2": "",
+            "city": "Grand Rapids",
+            "state": "MI",
+            "zip": "49503",
+            "country": "US"
           }
         },
         "justificationAuthority": {},
@@ -227,11 +258,31 @@ describe('ViewChangesPipe', () => {
     "country": "Canada",
     "city": "Vancouver"
   };
-  
 
   let differences2 = {
+    primaryFullName: '<strike>Warren ACC IDQ</strike>',
+    primaryTitle: '<strike>Specialist</strike>',
+    primaryEmail: '<strike>usarmy.detroit.acc.mbx.wrn-idq@mail.mil</strike>',
+    primaryPhone: '<strike>0000000000</strike>',
+    primaryFax: '<strike>1111111111</strike>',
+    secondaryFullName: '<strike>Marta Furman</strike>',
+    secondaryTitle: '<strike>Contract Specialist</strike>',
+    secondaryEmail: '<strike>marta.furman.civ@mail.mil</strike>',
+    secondaryPhone: '<strike>2222222222</strike>',
+    secondaryFax: '<strike>3333333333</strike>',
     changesExistGeneral: true,
     changesExistSynopsis: true,
+    changesExistClassification:true,
+    changesExistContactInformation: true,
+    changesExistAwardDetails: true,
+    awardDate: '<strike>Oct 01, 2013</strike>',
+    awardNumber:'<strike>DJBTDAT311</strike>',
+    orderNumber: '<strike>2</strike>',
+    awardedDuns: '<strike>603136417</strike>',
+    awardedName: '<strike>Cherry Street Health Services</strike>',
+    awardedAddress: '<strike>100 Cherry Street, S.E. Grand Rapids, MI US 49503</strike>',
+    awardAmount: '<strike>$ 1,156,181.00</strike>',
+    lineItemNumber: '<strike>All</strike>',
     updateResponseDate: '<strike>Sep 30, 2014</strike>',
     archivingPolicy: '<strike>Automatic, on specified date</strike>',
     updateArchiveDate: '<strike>Feb 14, 2015</strike>',
@@ -239,10 +290,10 @@ describe('ViewChangesPipe', () => {
     updateSetAside: '<strike>Total Small Business</strike>',
     classificationCode: '<strike>24 -- Tractors</strike>',
     naicsCode: '<strike>336212 -- Truck Trailer Manufacturing</strike>',
-    placeOfPerformance: '<strike>8110 Industrial Drive, STE 2002 Scranton PA CA 23123</strike>',
+    placeOfPerformance: '<strike>8110 Industrial Drive, STE 2002 Scranton, PA CA 23123</strike>',
     contractingOfficeAddress: '<strike>Not Office of the Chief Procurement Officer Vancouver BC Canada 20852</strike>',
-    primaryPointOfContact: '<strike>Warren ACC IDQ usarmy.detroit.acc.mbx.wrn-idq@mail.mil</strike>',
-    secondaryPointOfContact: '<strike>Contract Specialist Marta Furman marta.furman.civ@mail.mil</strike>',
+    primaryPointOfContact: true,
+    secondaryPointOfContact: true,
     description: '<strike>See Attachment</strike><u><p>29 May 2014: Please ensure white papers and/or proposals are submitted in accordance with Amendment 0005 of the USAFA BAA-2009-1, which is also available on the Grants.gov website. The updated BAA found on Grants.gov is the conformed version of the announcement.</p></u>',
     postedDate: 'Changes from 04/30/2014 3:03 pm'
   };
@@ -251,6 +302,9 @@ describe('ViewChangesPipe', () => {
   it('transforms "multiple objects from API calls to one with that contains changes to be displayed (Update)', () => {
     let results = pipe.transform(previousOpportunity, currentOpportunity, dictionaries, currentAddress, previousAddress1);
     expect(results.changesExistGeneral).toBe(differences2.changesExistGeneral);
+    expect(results.changesExistClassification).toBe(differences2.changesExistClassification);
+    expect(results.changesExistContactInformation).toBe(differences2.changesExistContactInformation);
+    expect(results.changesExistAwardDetails).toBe(differences2.changesExistAwardDetails);
     expect(results.changesExistSynopsis).toBe(differences2.changesExistSynopsis);
     expect(results.updateResponseDate).toBe(differences2.updateResponseDate);
     expect(results.archivingPolicy).toBe(differences2.archivingPolicy);
@@ -262,6 +316,23 @@ describe('ViewChangesPipe', () => {
     expect(results.placeOfPerformance).toBe(differences2.placeOfPerformance);
     expect(results.description).toBe(differences2.description);
     expect(results.postedDate).toBe(differences2.postedDate);
+    expect(results.awardDate).toBe(differences2.awardDate);
+    expect(results.awardNumber).toBe(differences2.awardNumber);
+    expect(results.orderNumber).toBe(differences2.orderNumber);
+    expect(results.awardedDuns).toBe(differences2.awardedDuns);
+    expect(results.awardedName).toBe(differences2.awardedName);
+    expect(results.awardAmount).toBe(differences2.awardAmount);
+    expect(results.awardedAddress).toBe(differences2.awardedAddress);
+    expect(results.primaryFullName).toBe(differences2.primaryFullName);
+    expect(results.primaryTitle).toBe(differences2.primaryTitle);
+    expect(results.primaryEmail).toBe(differences2.primaryEmail);
+    expect(results.primaryPhone).toBe(differences2.primaryPhone);
+    expect(results.primaryFax).toBe(differences2.primaryFax);
+    expect(results.secondaryFullName).toBe(differences2.secondaryFullName);
+    expect(results.secondaryTitle).toBe(differences2.secondaryTitle);
+    expect(results.secondaryEmail).toBe(differences2.secondaryEmail);
+    expect(results.secondaryPhone).toBe(differences2.secondaryPhone);
+    expect(results.secondaryFax).toBe(differences2.secondaryFax);
   });
 
 });
