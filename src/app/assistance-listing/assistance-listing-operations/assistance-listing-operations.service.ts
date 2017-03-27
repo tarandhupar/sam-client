@@ -32,12 +32,12 @@ export class FALOpSharedService{
       label: "Assistance Listings",
         children: [
       {
-        label : "Header Information",
+        label: "Header Information",
         route: this.baseURL + '/header-information',
         path: 'header-information'
       },
       {
-        label : "Overview",
+        label: "Overview",
         route: this.baseURL + '/overview',
         path: 'overview'
       },
@@ -47,16 +47,21 @@ export class FALOpSharedService{
         path: 'financial-information',
         children:[
           {
-            label : "Obligations",
+            label: "Obligations",
             route: '/obligations',
             path: 'obligations'
           },
           {
-            label : "Other Financial Info",
+            label: "Other Financial Info",
             route: '/other-financial-info',
             path: 'other-financial-info'
           }
         ]
+      },
+      {
+        label : "Contact Information",
+        route: this.baseURL + "/contact-information",
+        path: "contact-information"
       }
     ]
     };

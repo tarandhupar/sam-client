@@ -16,6 +16,7 @@ import { AccessRestrictedPage } from './assistance-listing-workspace/program-res
 import { FalWorkspacePage } from './assistance-listing-workspace/assistance-listing-workspace.page';
 import { FALHeaderInfoComponent } from './assistance-listing-operations/sections/header-information/header-information.component';
 import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
+import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
 
 
 @NgModule({
@@ -46,7 +47,8 @@ import { FALOverviewComponent } from './assistance-listing-operations/sections/o
     ProgramPageOperations,
     AccessRestrictedPage,
     FALHeaderInfoComponent,
-    FALOverviewComponent
+    FALOverviewComponent,
+    FALContactInfoComponent
   ],
   providers: [],
 })
