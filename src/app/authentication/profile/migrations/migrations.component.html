@@ -23,7 +23,7 @@
           <input type="password" id="legacy-password" formControlName="password" readonly="readonly" autocomplete="off" onfocus="this.removeAttribute('readonly');" />
         </labelWrapper>
         <div class="button-controls">
-          <button type="submit" class="usa-primary-button">Migrate</button>
+          <button type="submit" class="usa-primary-button" [disabled]="states.loading">Migrate</button>
         </div>
 
         <samAlert [type]="states.confirm.type"
@@ -64,19 +64,6 @@
             <div class="key">Migrated <span [innerText]="account.migratedAt">12/10/2016</span></div>
           </td>
         </tr>
-        <tr>
-          <td class="text-center" colspan="2">
-            <dl>
-              <dd *ngFor="let role of account.roles;" [innerText]="role.role"></dd>
-            </dl>
-          </td>
-          <td class="text-center">
-            <dl>
-              <dd *ngFor="let role of account.roles;" [innerText]="role.department"></dd>
-            </dl>
-          </td>
-          <td></td>
-        </tr>
       </tbody>
     </table>
 
@@ -101,6 +88,9 @@
           </td>
           <td [innerText]="system.statuses.migration"></td>
           <td [innerText]="system.statuses.system"></td>
+        </tr>
+        <tr>
+          <td colspan="3">&nbsp;</td>
         </tr>
       </tbody>
     </table>
