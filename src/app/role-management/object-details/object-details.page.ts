@@ -12,6 +12,7 @@ export class ObjectDetailsPage implements OnInit {
 
   mode: 'edit'|'new' = 'new';
   selectedDomains = [];
+  selectedDomain;
   domains;
   domainOptions;
   objectName;
@@ -60,21 +61,32 @@ export class ObjectDetailsPage implements OnInit {
   parseUrlForDomains() {
     this.route.queryParams.subscribe(
       params => {
-        if (!params['domains'] || !params['domains'].length) {
+        let domainId = params['domain'];
+        if (!domainId || !domainId.length) {
           this.footerAlerts.registerFooterAlert({
-            title: 'Domains parameter missing',
+            title: 'Domain parameter missing',
             type: 'error',
           });
-          return;
         }
-        this.selectedDomains = params['domains'].split(',').map(dom => {
-          return +dom;
-        });
-        this.domainOptions.forEach(opt => {
-          if (this.selectedDomains.indexOf(+opt.value) !== -1) {
-            opt.disabled = true;
-          }
-        })
+        domainId = +domainId;
+        this.selectedDomain = domainId;
+        this.onDomainChange();
+
+        // if (!params['domains'] || !params['domains'].length) {
+        //   this.footerAlerts.registerFooterAlert({
+        //     title: 'Domains parameter missing',
+        //     type: 'error',
+        //   });
+        //   return;
+        // }
+        // this.selectedDomains = params['domains'].split(',').map(dom => {
+        //   return +dom;
+        // });
+        // this.domainOptions.forEach(opt => {
+        //   if (this.selectedDomains.indexOf(+opt.value) !== -1) {
+        //     opt.disabled = true;
+        //   }
+        // })
       }
     );
   }
@@ -109,8 +121,18 @@ export class ObjectDetailsPage implements OnInit {
     );
   }
 
-  onDomainsChange() {
+  // onDomainsChange() {
+  //
+  // }
 
+  onDomainChange() {
+    let domainId = +this.selectedDomain;
+    this.accessService.getDomainDefinition(domainId).subscribe(
+      domains => {
+        let permissions = domains.functionMapContent.map(f => f.function.val);
+        this.selectedPermissions = permissions;
+      }
+    )
   }
 
   onAddPermissionClick() {
@@ -124,7 +146,7 @@ export class ObjectDetailsPage implements OnInit {
 
   getRequestObject() {
     return {
-      domains: this.selectedDomains,
+      domain: +this.selectedDomain,
       objectName: this.objectName,
       permissions: this.selectedPermissions
     };
