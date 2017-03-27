@@ -23,6 +23,7 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
 import { FormFieldComponent } from "./object-form/form-field/form-field.component";
 import { ObjectFormModel } from "./object-form/object-form.component";
 import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-sidebar.component";
+import { SamTypeAheadComponent } from "./type-ahead-multiselect/type-ahead.component";
 import {FalTableComponent} from "./fal-table/fal-table.component";
 
 /**
@@ -48,6 +49,7 @@ import {FalTableComponent} from "./fal-table/fal-table.component";
     ObjectSidebarComponent,
     SamSearchbarComponent,
     SamFeedbackComponent,
+    SamTypeAheadComponent,
     FalTableComponent
   ],
   imports: [
@@ -77,6 +79,7 @@ import {FalTableComponent} from "./fal-table/fal-table.component";
     FormFieldComponent,
     ObjectFormModel,
     ObjectSidebarComponent,
+    SamTypeAheadComponent,
     FalTableComponent
   ],
   providers: [
