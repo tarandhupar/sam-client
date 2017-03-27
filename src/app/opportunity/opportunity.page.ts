@@ -12,6 +12,7 @@ import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
 import {forEach} from "@angular/router/src/utils/collection";
 import { ViewChangesPipe } from "./pipes/view-changes.pipe";
+import { FilesizePipe } from "./pipes/filesize.pipe";
 
 @Component({
   moduleId: __filename,
@@ -432,19 +433,33 @@ export class OpportunityPage implements OnInit {
     attachmentSubject.subscribe(attachment => { // do something with the organization api
       this.attachments.push(attachment);
       this.packages = [];
+      let filesizePipe = new FilesizePipe();
+      let dateformatPipe = new DateFormatPipe();
+      let archiveVal = this.opportunity.data.statuses.isArchived;
       this.attachments.forEach((attach: any) => {
         attach.packages.forEach((key: any) => {
           key.resources = [];
           key.accordionState = 'collapsed';
+          key.downloadUrl = this.getDownloadPackageURL(key.packageId, archiveVal);
+          key.postedDate = dateformatPipe.transform(key.postedDate,'MMM DD, YYYY');
           if(key.access == "Public"){
-              key.attachments.forEach((resource: any) => {
-                attach.resources.forEach((res: any) => {
-                  if(resource.resourceId == res.resourceId){
-                    res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
-                    key.resources.push(res);
+            key.attachments.forEach((resource: any) => {
+              attach.resources.forEach((res: any) => {
+                if(resource.resourceId == res.resourceId){
+                  if(res.type=="link"){
+                    res.downloadUrl = res.uri;
+                  } else {
+                    //file
+                    res.downloadUrl = this.getDownloadFileURL(resource.resourceId, archiveVal);
                   }
-                });
+                  if(!isNaN(res.size)){
+                    res.size = filesizePipe.transform(res.size);
+                  }
+                  res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+                  key.resources.push(res);
+                }
               });
+            });
           }
           this.packages.push(key);
           this.packages = _.sortBy(this.packages, 'postedDate');
@@ -786,10 +801,8 @@ export class OpportunityPage implements OnInit {
   }
 
   public hasPublicPackages(){
-    for(let attachment of this.attachments){
-      for(let pkg of attachment['packages']) {
-        if(pkg['access'] === 'Public') { return true; }
-      }
+    for(let pkg of this.packages) {
+      if(pkg['access'] === 'Public') { return true; }
     }
     return false;
   }
