@@ -358,6 +358,7 @@ export class SearchPage implements OnInit{
           this.totalPages = data.page['totalPages']>maxAllowedPages?maxAllowedPages:data.page['totalPages'];
         } else{
           this.data['results'] = null;
+          this.totalCount = 0;
         }
 
         this.oldKeyword = this.keyword;
