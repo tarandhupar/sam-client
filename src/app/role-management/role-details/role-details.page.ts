@@ -84,23 +84,34 @@ export class RoleDetailsPage {
     this.accessService.getRoleObjDefinitions('role', ''+this.selectedDomain).subscribe(
       defs => {
         this.domainDefinitions = defs;
-        this.domainRoleOptions = defs.roleDefinitionMapContent.map(r => {
-          return {
-            label: r.role.val,
-            value: r.role.id,
-          };
-        });
-        this.permissionOptions = defs.functionMapContent.map(f => {
-          return {
-            name: f.function.val,
-            permissions: f.permission.map(perm => {
-              return {
-                label: perm.val,
-                value: perm.id
-              };
-            })
-          }
-        });
+        this.domainRoleOptions = [];
+        this.permissionOptions = [];
+        if (!defs || !defs.length) {
+          return;
+        }
+
+        if (defs.roleDefinitionMapContent && defs.roleDefinitionMapContent.length) {
+          this.domainRoleOptions = defs.roleDefinitionMapContent.map(r => {
+            return {
+              label: r.role.val,
+              value: r.role.id,
+            };
+          });
+        }
+
+        if (defs.functionMapContent && defs.functionMapContent.length){
+          this.permissionOptions = defs.functionMapContent.map(f => {
+            return {
+              name: f.function.val,
+              permissions: f.permission.map(perm => {
+                return {
+                  label: perm.val,
+                  value: perm.id
+                };
+              })
+            };
+          });
+        }
 
         if (this.mode === 'edit') {
           // find the text label for role and set the text label
