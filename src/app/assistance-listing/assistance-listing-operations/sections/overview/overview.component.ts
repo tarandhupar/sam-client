@@ -84,8 +84,8 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
           if(this.redirectToWksp)
             this.router.navigate(['falworkspace']);
-
-          this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/financial-information']);
+          else
+            this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/financial-information']);
 
         },
         error => {

@@ -56,7 +56,14 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
     return this.fb.group({
       title: [''],
       fullName: [''],
-      email:['']
+      email:[''],
+      phone:[''],
+      fax:[''],
+      street:[''],
+      city:[''],
+      state:[''],
+      zip:[''],
+      country:['']
     });
   }
 

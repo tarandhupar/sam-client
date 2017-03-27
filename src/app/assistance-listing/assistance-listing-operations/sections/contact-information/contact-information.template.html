@@ -41,6 +41,7 @@
                  [control]="falContactInfoForm.controls.contacts.controls[i].controls.fullName"
                  [name]="'fullName-input'"
                  [label]="'Full Name'"
+                 [required]="true"
                  formControlName="fullName"></samText>
 
         <samText [maxlength]="144"
@@ -49,7 +50,7 @@
                  [label]="'Email'"
                  formControlName="email"></samText>
 
-        <samButton buttonText="Confirm" (onClick)="onConfirmClick()"></samButton>
+        <samButton buttonText="Confirm" [buttonType]="(!falContactInfoForm.controls.contacts.controls[i].valid ? 'disabled' : 'default')" (onClick)="onConfirmClick()"></samButton>
 
       </div>
     </div>
