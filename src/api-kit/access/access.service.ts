@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { IDomain } from "./domain.interface";
 import { IRole } from "./role.interface";
 import { IPermissions } from "./permissions.interface";
+import { IFunction } from "./function.interface";
 
 export interface UserAccessFilterOptions {
   domainIds?: (string|number)[],
@@ -72,6 +73,15 @@ export class UserAccessService {
       suffix: '',
     };
 
+    return this.apiService.call(apiOptions);
+  }
+
+  getFunctionById(id: number) : Observable<IFunction> {
+    let apiOptions: any = {
+      name: 'functions',
+      method: 'GET',
+      suffix: '/'+id+'/',
+    };
     return this.apiService.call(apiOptions);
   }
 

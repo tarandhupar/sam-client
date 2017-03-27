@@ -16,7 +16,7 @@
     <div class="usa-width-one-half">
       <sam-list-display [newValue]="permissionSetter" [(ngModel)]="selectedPermissions">
         <div class="input-and-add">
-          <sam-autocomplete #permission [labelText]="'Permissions'" name="permissions" [options]="permissionOptions" [showMagnifyingGlass]="true"></sam-autocomplete>
+          <sam-autocomplete #permission [labelText]="'Permissions'" name="permissions" [options]="permissionOptions" [config]="{addOnIconClass:'fa fa-search'}"></sam-autocomplete>
           <button class="usa-button usa-button-transparent add-permission-button" (click)="onAddPermissionClick()">
             <i class="fa fa-plus-circle"></i>
           </button>

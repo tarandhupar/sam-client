@@ -37,7 +37,24 @@ export class ObjectDetailsPage implements OnInit {
     this.getAllPermissions();
     if (this.mode === 'edit') {
       this.parseUrlForDomains();
+      this.getObjectName();
     }
+  }
+
+  getObjectName() {
+    this.route.params.subscribe(params => {
+      if (!params['objectId'] || !params['objectId'].length) {
+        this.footerAlerts.registerFooterAlert({
+          title: 'Object ID parameter missing',
+          type: 'error',
+        });
+        return;
+      }
+      let objectId = params['objectId'];
+      this.accessService.getFunctionById(+objectId).subscribe(obj => {
+        this.objectName = obj.functionName;
+      });
+    });
   }
 
   parseUrlForDomains() {
