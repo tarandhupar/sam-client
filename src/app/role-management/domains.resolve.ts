@@ -13,7 +13,7 @@ export class DomainsResolve implements Resolve<IDomain> {
     return this.accessService.getDomains().catch(() => {
       this.router.navigateByUrl('/');
       this.footerAlerts.registerFooterAlert({
-        description: "There was an error with an a required service",
+        description: "There was an error with a required service",
         type: 'error',
       });
       return Observable.throw('Domain endpoint down.');

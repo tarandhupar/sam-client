@@ -16,6 +16,38 @@ import { LocationService } from 'api-kit/location/location.service';
   ]
 })
 export class UIKitDemoPage {
+  packages = [{
+    "packageId": "5510527885db16f1d7ae72ecfa8e6567",
+    "name": "Industry Day IV Change of Location",
+    "type": "Other (Draft RFPs/RFIs, Responses to Questions, etc..)",
+    "postedDate": "Apr 07, 2015",
+    "access": "Public",
+    "attachments": [
+      {
+        "attachmentId": "38112bb086ee9b88163c734c16b88307",
+        "resourceId": "862178b04be2db1778a697464f186836"
+      }
+    ],
+    "resources": [
+      {
+        "resourceId": "862178b04be2db1778a697464f186836",
+        "name": "J.pdf",
+        "type": "file",
+        "uri": "J.pdf",
+        "description": "Industry Day IV change of conference room.",
+        "mimeType": "application/pdf",
+        "size": "83 kB",
+        "downloadUrl": "https://csp-api.sam.gov/comp/opps/v1/opportunities/resources/files/862178b04be2db1778a697464f186836?api_key=Z5vc0lK9ubZdK6fLKDCdeYODaSVFtGElOUVSzIl0",
+        "typeInfo": {
+          "name": "PDF document",
+          "iconClass": "fa fa-file-pdf-o"
+        }
+      }
+    ],
+    "accordionState": "collapsed",
+    "downloadUrl": "https://csp-api.sam.gov/comp/opps/v1/opportunities/resources/packages/5510527885db16f1d7ae72ecfa8e6567/download/zip?api_key=Z5vc0lK9ubZdK6fLKDCdeYODaSVFtGElOUVSzIl0"
+  }];
+  
   // Autocomplete Dropdown No Button
   searchValue: any;
   searchName: string = "MyComponent65491455"
@@ -24,7 +56,7 @@ export class UIKitDemoPage {
   // Autocomplete Dropdown With Button
   searchValue1: any;
   searchName1: string = "MyComponent65491455"
-  dropdownSearch1: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];  
+  dropdownSearch1: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];
   getButton(event) {
     window.alert('You clicked me!');
   }
@@ -48,22 +80,22 @@ export class UIKitDemoPage {
 
   listOptions = [
     {
-      label:'apple',
+      label:'Unarchive',
       value: 1,
       name: 'apple'
     },
     {
-      label:'orange',
+      label:'Create',
       value: 2,
       name: 'orange'
     },
     {
-      label:'banana',
+      label:'Edit',
       value: 3,
       name: 'banana'
     },
     {
-      label:'grape',
+      label:'Submit',
       value: 4,
       name: 'grape'
     },

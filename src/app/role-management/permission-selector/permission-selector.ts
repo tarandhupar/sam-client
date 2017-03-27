@@ -3,8 +3,8 @@ import * as _ from 'lodash';
 
 export type PermissionOptionType = {
   label: string,
-  isNew: boolean,
   value: any,
+  isNew?: boolean,
   isSelected?: boolean,
   isDefault?: boolean,
 };
@@ -13,40 +13,38 @@ export type PermissionOptionType = {
   selector: 'permission-selector',
   templateUrl: './permission-selector.html'
 })
-export class PermissionSelectorComponent implements OnChanges {
+export class PermissionSelectorComponent {
   @Input() options: PermissionOptionType[];
-  @Input() values: PermissionOptionType[];
-  @Output() valuesChange: EventEmitter<PermissionOptionType[]> = new EventEmitter();
+  @Input() optionsChange: EventEmitter<PermissionOptionType[]> = new EventEmitter();
   @Input() selectAllText: string = '';
   @Input() title: string = '';
+  @Input() hideDefaultColumn: false;
 
   constructor() {
 
   }
 
-  ngOnChanges(val) {
-    if (val.options) {
-      this.values = _.clone(this.options);
-    }
-  }
-
   onPermissionClick(isChecked, option) {
     option.isSelected = isChecked;
+    this.optionsChange.emit(this.options);
   }
 
   onDefaultClick(isChecked, option) {
     option.isDefault = isChecked;
+    this.optionsChange.emit(this.options);
   }
 
-  onCheckAllClick(isChecked, val) {
-    this.values.forEach(v => {
+  onCheckAllClick(isChecked) {
+    this.options.forEach(v => {
       v.isSelected = isChecked;
-    })
+    });
+    this.optionsChange.emit(this.options);
   }
 
-  onCheckAllDefaultClick(isChecked, val) {
-    this.values.forEach(v => {
+  onCheckAllDefaultClick(isChecked) {
+    this.options.forEach(v => {
       v.isDefault = isChecked;
-    })
+    });
+    this.optionsChange.emit(this.options);
   }
 }

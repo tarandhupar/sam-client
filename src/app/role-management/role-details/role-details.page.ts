@@ -13,13 +13,15 @@ export class RoleDetailsPage {
 
   roles = [{ vals: [], name: 'Assistance Listing'}, {vals: [], name: 'IDV'}, {vals: [], name: 'Regional Offices'}];
   role;
+  roleId;
   domains: any[] = [];
   domain;
-  domainOptions: {label: string}[] = [];
+  domainOptions: {label: string, value: any}[] = [];
   selectedDomain;
   domainRoleOptions: any = [{label: 'Agency User', value: 0}, {label: 'Agency Admin', value: 1}, {label: 'Agency Admin Lite', value: 2}];
   domainDefinitions: any = null;
   permissionOptions: any = [];
+  requestObject;
 
   constructor(
     private router: Router
@@ -44,11 +46,21 @@ export class RoleDetailsPage {
 
   getDomainAndDefaultRole() {
     this.route.params.switchMap(params => {
-      this.role = +params['roleId'];
+      this.roleId = +params['roleId'];
       return this.route.queryParams;
     }).subscribe(qp => {
       this.domain = +qp['domain'];
+      this.onDomainChange();
     });
+  }
+
+  getLabelForDomain(domainId) {
+    let d = this.domainOptions.find(dom => +dom.value === +domainId);
+    if (d) {
+      return d.label;
+    } else {
+      return 'Domain not found.';
+    }
   }
 
   determineMode() {
@@ -68,11 +80,9 @@ export class RoleDetailsPage {
   }
 
   onDomainChange() {
-    console.log('change');
     this.domainRoleOptions = null;
     this.accessService.getDomainDefinition(this.domain).subscribe(
       defs => {
-        console.log(defs);
         this.domainDefinitions = defs;
         this.domainRoleOptions = defs.roleDefinitionMapContent.map(r => {
           return {
@@ -91,6 +101,22 @@ export class RoleDetailsPage {
             })
           }
         });
+
+        if (this.mode === 'edit') {
+          // find the text label for role and set the text label
+          let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.value);
+          if (r) {
+            this.role = r.label;
+          } else {
+            this.footerAlert.registerFooterAlert({
+              title: 'Role '+this.roleId+' not found',
+              type: 'error'
+            });
+            this.domainRoleOptions = null;
+            this.domainDefinitions = null;
+            return;
+          }
+        }
       },
       err => {
         this.showGenericServicesError();
@@ -125,11 +151,19 @@ export class RoleDetailsPage {
   }
 
   onSubmitClick() {
+    this.requestObject = this.getRequestObject();
     this.footerAlert.registerFooterAlert({
-      title: 'Role exists',
+      title: 'Successfully create new role.',
       type: 'success'
     });
-    this.router.navigateByUrl('/access/roles');
-    return;
+    //this.router.navigateByUrl('/access/roles');
+  }
+
+  getRequestObject() {
+    return {
+      'domain': this.domain,
+      'domainRoles': this.domainRoleOptions,
+      'functions': this.permissionOptions
+    };
   }
 }

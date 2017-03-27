@@ -16,7 +16,9 @@
 @import '~uswds/src/stylesheets/uswds';
 
 @import 'components/parent-orgs.scss';
+@import 'components/card';
 @import 'components/date-entry';
+@import 'components/download';
 @import 'components/label-wrapper';
 @import 'components/accordion';
 @import 'components/alert';
@@ -48,6 +50,7 @@
 @import 'components/autocomplete-dropdown';
 @import 'components/organization-profile';
 @import 'components/role-management/role-managment';
+@import 'components/fal-table';
 
 @import 'pages/awards';
 @import 'pages/entity-object-view';

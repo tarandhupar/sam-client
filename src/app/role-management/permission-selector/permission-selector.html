@@ -13,18 +13,20 @@
       <div class="usa-width-one-twelfth">
         All
         <div class="pull-right">
-          <input type="checkbox" (click)="onCheckAllClick($event.target.checked)">
+          <input class='check-all' type="checkbox" (click)="onCheckAllClick($event.target.checked)">
         </div>
       </div>
-      <div class="usa-width-one-fourth">
-        <strong class="p_L-4x">Make Default</strong>
-      </div>
-      <div class="usa-width-one-twelfth">
-        All
-        <div class="pull-right">
-          <input type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)">
+      <ng-container *ngIf="!hideDefaultColumn">
+        <div class="usa-width-one-fourth">
+          <strong class="p_L-4x">Make Default</strong>
         </div>
-      </div>
+        <div class="usa-width-one-twelfth">
+          All
+          <div class="pull-right">
+            <input class='check-all-defaults' type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)">
+          </div>
+        </div>
+      </ng-container>
     </div>
     <div class="usa-grid-full permission-row" *ngFor="let option of options; let i = index">
       <div class="usa-width-one-twelfth">
@@ -33,21 +35,22 @@
       <div class="usa-width-one-third">
         <label [attr.for]="option.label">{{option.label}}</label>
       </div>
-      <div class="usa-width-one-twelfth">
-        &nbsp;
+      <div class="usa-width-one-twelfth">        &nbsp;
         <div class="pull-right">
           <input [attr.id]='option.label' type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [checked]="option.isSelected">
         </div>
       </div>
-      <div class="usa-width-one-fourth">
-        &nbsp;
-      </div>
-      <div class="usa-width-one-twelfth">
-        &nbsp;
-        <div class="pull-right">
-          <input type="checkbox" (click)="onDefaultClick($event.target.checked, option)" [disabled]="!option.isSelected" [checked]="option.isDefault">
+      <ng-container *ngIf="!hideDefaultColumn">
+        <div class="usa-width-one-fourth">
+          &nbsp;
         </div>
-      </div>
+        <div class="usa-width-one-twelfth">
+          &nbsp;
+          <div class="pull-right">
+            <input type="checkbox" (click)="onDefaultClick($event.target.checked, option)" [disabled]="!option.isSelected" [checked]="option.isDefault">
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
