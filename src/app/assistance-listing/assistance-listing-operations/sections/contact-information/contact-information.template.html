@@ -3,6 +3,11 @@
 
   <h4>Information Contacts</h4>
 
+  <samCheckbox
+    [name]="'regional_local_office'"
+    [options]="checkboxConfig.options"
+    [label]="'Regional or Local Office'"></samCheckbox>
+
   <samTextArea [control]="falContactInfoForm.controls['addInfo']"
                [name]="'addInfo-input'"
                [label]="'Additional Information'"

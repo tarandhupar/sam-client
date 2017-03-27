@@ -20,6 +20,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   hideContactsForm: boolean = false;
   contactIndex: number = 0;
   contactsInfo : any;
+  checkboxConfig: any;
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -37,6 +38,13 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   ngOnDestroy(){}
 
   createForm() {
+
+    // Checkboxes Component
+    this.checkboxConfig = {
+      options: [
+        {value: '', label: 'See Regional Agency Offices', name: 'checkbox-rao'},
+      ],
+    };
 
     this.falContactInfoForm = this.fb.group({
       'addInfo': '',
