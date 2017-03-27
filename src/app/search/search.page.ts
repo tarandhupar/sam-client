@@ -754,21 +754,18 @@ export class SearchPage implements OnInit{
 
   //Award model change events
   awardIDVRadChanged(evt){
-    console.log("Award Radio",evt);
     this.awardIDVModel = evt;
     this.pageNum = 0;
     this.searchResultsRefresh();
   }
 
   awardTypeSelected(evt) {
-    console.log("Award type",evt);
     this.awardTypeModel = evt.toString();
     this.pageNum = 0;
     this.searchResultsRefresh();
   }
 
   contractTypeSelected(evt) {
-    console.log("Contract Type",evt);
     this.contractTypeModel = evt.toString();
     this.pageNum = 0;
     this.searchResultsRefresh();
