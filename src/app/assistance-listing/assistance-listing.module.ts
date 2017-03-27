@@ -14,6 +14,9 @@ import { ProgramPageOperations } from './assistance-listing-operations/assistanc
 import { AssistanceProgramResult } from './assistance-listing-workspace/program-result/assistance-program-result.component';
 import { AccessRestrictedPage } from './assistance-listing-workspace/program-result/testauthenvironment.page';
 import { FalWorkspacePage } from './assistance-listing-workspace/assistance-listing-workspace.page';
+import { FALHeaderInfoComponent } from './assistance-listing-operations/sections/header-information/header-information.component';
+import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
+import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
 
 
 @NgModule({
@@ -43,6 +46,9 @@ import { FalWorkspacePage } from './assistance-listing-workspace/assistance-list
     FalWorkspacePage,
     ProgramPageOperations,
     AccessRestrictedPage,
+    FALHeaderInfoComponent,
+    FALOverviewComponent,
+    FALContactInfoComponent
   ],
   providers: [],
 })

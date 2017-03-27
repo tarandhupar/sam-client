@@ -1,0 +1,60 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Contact Information - {{title}}</div>
+<form [formGroup]="falContactInfoForm">
+
+  <h4>Information Contacts</h4>
+
+  <samCheckbox
+    [name]="'regional_local_office'"
+    [options]="checkboxConfig.options"
+    [label]="'Regional or Local Office'"></samCheckbox>
+
+  <samTextArea [control]="falContactInfoForm.controls['addInfo']"
+               [name]="'addInfo-input'"
+               [label]="'Additional Information'"
+               [required]="true"
+               formControlName="addInfo"></samTextArea>
+
+  <h4>Headquaters Office</h4>
+
+  <div *ngFor="let contact of contactsInfo; let i=index">
+    {{contact | json}}
+    <a (click)="removeContact(i)">Delete</a>
+
+    <a (click)="editContact(i)">Edit</a>
+  </div>
+
+  <samButton buttonText="Add Contact" (onClick)="addContact()" *ngIf="falContactInfoForm.controls.contacts.length < 2" [class.hide]="hideAddButton"></samButton>
+
+  <div formArrayName="contacts" [class.hide]="hideContactsForm">
+
+    <div *ngFor="let contact of falContactInfoForm.controls.contacts.controls; let i=index">
+
+      <div [formGroupName]="i" [class.hide]="contactIndex !== i">
+
+        <samText [maxlength]="144"
+                 [control]="falContactInfoForm.controls.contacts.controls[i].controls.title"
+                 [name]="'title-input'"
+                 [label]="'Title'"
+                 formControlName="title"></samText>
+
+        <samText [maxlength]="144"
+                 [control]="falContactInfoForm.controls.contacts.controls[i].controls.fullName"
+                 [name]="'fullName-input'"
+                 [label]="'Full Name'"
+                 [required]="true"
+                 formControlName="fullName"></samText>
+
+        <samText [maxlength]="144"
+                 [control]="falContactInfoForm.controls.contacts.controls[i].controls.email"
+                 [name]="'email-input'"
+                 [label]="'Email'"
+                 formControlName="email"></samText>
+
+        <samButton buttonText="Confirm" [buttonType]="(!falContactInfoForm.controls.contacts.controls[i].valid ? 'disabled' : 'default')" (onClick)="onConfirmClick()"></samButton>
+
+      </div>
+    </div>
+  </div>
+
+  <samButton buttonText="Save" (onClick)="saveData()" [buttonType]="(!falContactInfoForm.valid || hideAddButton ? 'disabled' : 'default')"></samButton>
+</form>
