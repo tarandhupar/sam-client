@@ -15,17 +15,17 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 })
 export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor {
   public model;
-  @Input() options;
+  @Input() options;   // optional - can pass all parameters in a single options object for convenience
 
   // general
-  @Input() name: string;
+  @Input() name: string; // required
   @Input() label: string;
   @Input() hint: string;
   @Input() required: boolean;
 
   // checkbox
   public checkboxName: string;
-  @Input() checkboxOptions: {};
+  @Input() checkboxOptions: {}; // required
   @Input() checkboxHasSelectAll: boolean;
 
   // textarea
@@ -47,7 +47,6 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   }
 
   private parseInputsAndSetDefaults() {
-    // todo: verify how everything works when inputs are null, and figure out appropriate default values
     this.model = { // set default empty model
       checkbox: [],
       textarea: ''
@@ -56,13 +55,15 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
     // inputs can either be passed directly, or through an options object
     // if an input is passed both ways, the value passed directly will take precedence
     if(this.options) {
+      // no default name - name is mandatory
       this.name = this.name || this.options.name;
       // subcomponent names are generated based on this component's name
       this.checkboxName = this.name + '-checkbox';
       this.textareaName = this.name + '-textarea';
+
       this.label = this.label || this.options.label;
       this.hint = this.hint || this.options.hint;
-      if(this.required == null) { this.required = this.options.required; }
+      if(this.required == null) { this.required = this.options.required }
 
       if(this.options.checkbox) {
         this.checkboxOptions = this.checkboxOptions || this.options.checkbox.options;
@@ -135,19 +136,19 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   public writeValue(obj: any) : void {
     if(obj) {
       this.model = obj;
-    }
 
-    if(this.model) {
-      if(this.model.textarea) {
-        this.textareaControl.setValue(this.model.textarea);
+      if(!this.model.textarea) {
+        this.model.textarea = '';
       }
 
-      if(this.model.checkbox) {
-        this.toggleTextarea();
+      if(!this.model.checkbox) {
+        this.model.checkbox = [];
       }
-    }
 
-    this.onChange();
+      this.textareaControl.setValue(this.model.textarea);
+      this.toggleTextarea();
+      this.onChange();
+    }
   }
 
   // todo: finish implementation of disabled for checkbox
