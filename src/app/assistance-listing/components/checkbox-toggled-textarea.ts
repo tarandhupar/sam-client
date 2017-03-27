@@ -33,7 +33,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   @Input() textareaPlaceholder: string;
   @Input() textareaDisabled: boolean;
   @Input() textareaMaxlength: number; // todo: implement this
-  @Input() textareaHidden: boolean;
+  @Input() textareaHidden: boolean; // todo: implement this
 
   public textareaControl: FormControl;
   @ViewChild('checkboxToggledTextareaLabel') wrapper: LabelWrapper;
@@ -105,7 +105,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   }
 
   private toggleTextarea() {
-    if(this.model.checkbox.includes('na')) {
+    if(this.model.checkbox.includes('na')) { // todo: generalize this
       this.textareaHidden = true;
       this.textareaControl.setValidators(null);
       this.textareaControl.updateValueAndValidity();
