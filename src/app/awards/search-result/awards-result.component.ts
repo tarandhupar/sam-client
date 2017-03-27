@@ -34,7 +34,7 @@ import Moment = moment.Moment;
               <li><span>{{ data.contract?.obligatedAmount | currency:'USD':true }}</span></li>
             </ul>
           </li>    
-          <li><strong>Award Type </strong>
+          <li><strong>{{ data.type=='AWARD' ? 'Award Type' : 'IDV Type' }} </strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.awardType?.value }}</span></li>
             </ul>
