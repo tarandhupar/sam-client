@@ -12,8 +12,6 @@ export class RoleMainContent implements OnInit{
   @Input() currPath;
 
   ngOnInit(){
-    console.log(this.roleDef);
-    console.log(this.currPath);
 
   }
 
@@ -26,9 +24,5 @@ export class RoleMainContent implements OnInit{
     if(this.currPath === 'objects')
       return true;
   }
-
-  domChange(value){
-    console.log("Here " + value.flag);
-    value.flag = !value.flag;
-  }
+    
 }
