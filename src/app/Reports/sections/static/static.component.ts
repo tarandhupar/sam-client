@@ -9,6 +9,7 @@ import { bootstrap } from '@angular/platform/browser';
 	templateUrl: './static.template.html'
 
 })
+
 export class StaticComponent {
 
 	data: Object;
