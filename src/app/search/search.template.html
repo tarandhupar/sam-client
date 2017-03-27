@@ -163,19 +163,23 @@
           </samRadioButton>
           <br/>
           <sam-type-ahead class="usa-award-radio"
+                          [selectModel]="awardTypeModel"
                           [placeholder]="awardType.label"
-                          [selectedLabel]="'Award-IDV Types Selected'"
                           [name]="awardType.name"
-                          [Aoptions]="awardType.options"
+                          [selectedLabel]="'Award - IDV Types Selected'"
+                          [options]="awardType.options"
+                          [config]="awardType.config"
                           (modelChange)="awardTypeSelected($event)">
 
           </sam-type-ahead>
           <br/>
           <sam-type-ahead class="usa-award-radio"
+                          [selectModel]="contractTypeModel"
                           [placeholder]="contractType.label"
-                          [selectedLabel]="'Contract Types Selected'"
                           [name]="contractType.name"
-                          [Aoptions]="contractType.options"
+                          [selectedLabel]="'Contract Types Selected'"
+                          [options]="contractType.options"
+                          [config]="awardType.config"
                           (modelChange)="contractTypeSelected($event)">
           </sam-type-ahead>
         </sam-collapsible>

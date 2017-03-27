@@ -10,13 +10,8 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
 
   @ViewChild('listDisplay') listDisplay;
 
-  newValue: string = '';
-
   @Input()
-  Aoptions: any;
-
-  @Input()
-  name: string;
+  selectModel: string;
 
   @Input()
   placeholder: string;
@@ -27,45 +22,60 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
   @Output()
   modelChange: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(@Optional() protected autocompleteService: AutocompleteService, protected renderer: Renderer){
+  constructor(@Optional() public autocompleteService: AutocompleteService, public renderer: Renderer){
     super(autocompleteService, renderer);
   }
 
   ngOnChanges() {
-    if(this.Aoptions) {
-      this.options = <string[]>this.Aoptions.map((item)=>{
-        return <string>item.label;
-      });
-    }
-  }
-
-  emitResult(value) {
-    if(this.listDisplay.selectedItems.indexOf(value) === -1) {
-      this.listDisplay.selectedItems.push(value);
-    }
-    let emitArray = [];
-    for(var i=0; i<this.Aoptions.length; i++) {
-      for(var j=0; j<this.listDisplay.selectedItems.length; j++) {
-      if(this.Aoptions[i].label == this.listDisplay.selectedItems[j]) {
-        emitArray.push(this.Aoptions[i].value);
+    if(this.selectModel !== '') {
+      let selectArray = this.selectModel.split(",");
+      for(var i=0; i<this.options.length; i++) {
+        for(var j=0; j<selectArray.length; j++) {
+          if(this.options[i].value == selectArray[j]) {
+            if(this.listDisplay.selectedItems.indexOf(this.options[i].label) === -1) {
+              this.listDisplay.selectedItems.push(this.options[i].label);
+            }
+          }
+        }
       }
-      }
+    } else {
+      this.listDisplay.selectedItems = [];
     }
-    this.modelChange.emit(emitArray);
   }
 
   showDropdown() {
     this.input.nativeElement.focus();
-    this.results = this.filterResults(this.input.nativeElement.value, this.options);
+    this.filteredKeyValuePairs = this.filterKeyValuePairs(this.input.nativeElement.value, this.options);
     this.hasFocus = true;
   }
 
-  checkSelectedList(value) {
-    if(this.listDisplay.selectedItems.indexOf(value) === -1) {
+  setSelectedList(obj) {
+    if(this.listDisplay.selectedItems.indexOf(obj.label) === -1) {
+      this.listDisplay.selectedItems.push(obj.label);
+    }
+    this.emitSelected();
+    this.clearInput();
+  }
+
+  checkSelectedList(obj) {
+    if(this.listDisplay.selectedItems.indexOf(obj.label) === -1) {
       return true;
     } else {
       return false;
     }
   }
+
+  emitSelected() {
+    let emitArray = [];
+    for(var i=0; i<this.options.length; i++) {
+      for(var j=0; j<this.listDisplay.selectedItems.length; j++) {
+        if(this.options[i].label == this.listDisplay.selectedItems[j]) {
+          emitArray.push(this.options[i].value);
+        }
+      }
+    }
+    this.modelChange.emit(emitArray);
+  }
+
 }
 

@@ -163,24 +163,30 @@ export class SearchPage implements OnInit{
     "name": "Award-IDV Type",
     "label": "Award-IDV Types",
     "options": [
-      { label: 'IDC (IDV)', value: 'B', name: 'IDC' },
-      { label: 'DELIVERY ORDER', value: 'C', name: 'DELIVERY ORDER' },
-      { label: 'BPA (IDV)', value: 'E', name: 'BPA' },
-      { label: 'GWAC (IDV)', value: 'A', name: 'GWAC' },
-      { label: 'OTHER TRANSACTION ORDER', value: 'O', name: 'OTHER TRANSACTION ORDER' },
-      { label: 'DEFINITIVE CONTRACT', value: 'D', name: 'DEFINITIVE CONTRACT' },
-      { label: 'GRANT FOR RESEARCH', value: 'G', name: 'GRANT FOR RESEARCH' },
-      { label: 'PURCHASE ORDER', value: 'B', name: 'PURCHASE ORDER' },
-      { label: 'FSS (IDV)', value: 'C', name: 'FSS' },
-      { label: 'OTHER TRANSACTION AGREEMENT', value: 'R', name: 'OTHER TRANSACTION AGREEMENT' },
-      { label: 'OTHER TRANSACTION (IDV)', value: 'O', name: 'OTHER TRANSACTION IDV' },
-      { label: 'COOPERATIVE AGREEMENT', value: 'F', name: 'COOPERATIVE AGREEMENT' },
-      { label: 'TRAINING GRANT', value: 'T', name: 'TRAINING GRANT' },
-      { label: 'FUNDED SPACE ACT AGREEMENT', value: 'S', name: 'FUNDED SPACE ACT AGREEMENT' },
-      { label: 'BOA (IDV)', value: 'D', name: 'BOA' },
-      { label: 'BPA CALL', value: 'A', name: 'BPA CALL' }
-    ]
-};
+      { label: 'IDC (IDV)', value: 'B:IDV', name: 'IDC' },
+      { label: 'DELIVERY ORDER', value: 'C:AWARD', name: 'DELIVERY ORDER' },
+      { label: 'BPA (IDV)', value: 'E:IDV', name: 'BPA' },
+      { label: 'GWAC (IDV)', value: 'A:IDV', name: 'GWAC' },
+      { label: 'OTHER TRANSACTION ORDER', value: 'O:AWARD', name: 'OTHER TRANSACTION ORDER' },
+      { label: 'DEFINITIVE CONTRACT', value: 'D:AWARD', name: 'DEFINITIVE CONTRACT' },
+      { label: 'GRANT FOR RESEARCH', value: 'G:AWARD', name: 'GRANT FOR RESEARCH' },
+      { label: 'PURCHASE ORDER', value: 'B:AWARD', name: 'PURCHASE ORDER' },
+      { label: 'FSS (IDV)', value: 'C:IDV', name: 'FSS' },
+      { label: 'OTHER TRANSACTION AGREEMENT', value: 'R:AWARD', name: 'OTHER TRANSACTION AGREEMENT' },
+      { label: 'OTHER TRANSACTION (IDV)', value: 'O:IDV', name: 'OTHER TRANSACTION IDV' },
+      { label: 'COOPERATIVE AGREEMENT', value: 'F:AWARD', name: 'COOPERATIVE AGREEMENT' },
+      { label: 'TRAINING GRANT', value: 'T:AWARD', name: 'TRAINING GRANT' },
+      { label: 'FUNDED SPACE ACT AGREEMENT', value: 'S:AWARD', name: 'FUNDED SPACE ACT AGREEMENT' },
+      { label: 'BOA (IDV)', value: 'D:IDV', name: 'BOA' },
+      { label: 'BPA CALL', value: 'A:AWARD', name: 'BPA CALL' }
+    ],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
 
   //Select Contract Types
   contractTypeModel: string = '';
@@ -205,7 +211,13 @@ export class SearchPage implements OnInit{
       { label: 'ORDER DEPENDENT (IDV ALLOWS PRICING ARRANGEMENT TO BE DETERMINED SEPARATELY FOR EACH ORDER)', value: '1', name: 'ORDER DEPENDENT (IDV ALLOWS PRICING ARRANGEMENT TO BE DETERMINED SEPARATELY FOR EACH ORDER)'},
       { label: 'OTHER (APPLIES TO AWARDS WHERE NONE OF THE ABOVE APPLY)', value: '3', name: 'OTHER (APPLIES TO AWARDS WHERE NONE OF THE ABOVE APPLY)' },
       { label: 'TIME AND MATERIALS', value: 'Y', name: 'TIME AND MATERIALS'}
-    ]
+    ],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
   };
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -832,6 +844,13 @@ export class SearchPage implements OnInit{
       // clear the keyword search
       this.agencyPicker.clearSelectedOrgs();
     }
+
+    // call awards clear filters
+    this.awardIDVModel = '';
+    this.awardTypeModel = '';
+    this.contractTypeModel = '';
+
+    this.searchResultsRefresh();
 
 
   }
