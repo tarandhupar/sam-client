@@ -18,6 +18,8 @@ import { FALHeaderInfoComponent } from './assistance-listing-operations/sections
 import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
 import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
 import { FALContactInfoTableComponent } from './assistance-listing-operations/sections/contact-information/contact-information-table.component';
+import { FinancialInfoFormPage2 } from "./assistance-listing-operations/sections/financial-info/other/financial-info-other";
+import { SamCheckboxToggledTextareaComponent } from "./components/checkbox-toggled-textarea";
 
 @NgModule({
   imports: [
@@ -49,7 +51,9 @@ import { FALContactInfoTableComponent } from './assistance-listing-operations/se
     FALHeaderInfoComponent,
     FALOverviewComponent,
     FALContactInfoComponent,
-    FALContactInfoTableComponent
+    FALContactInfoTableComponent,
+    FinancialInfoFormPage2,
+    SamCheckboxToggledTextareaComponent
   ],
   providers: [],
 })
