@@ -1,0 +1,23 @@
+<div *ngIf="otherFinancialInfoGroup" [formGroup]="otherFinancialInfoGroup">
+  <samText [label] = "'Range and Average of Financial Assistance'"
+           [name] = "'assitance-range-input'"
+           [required] = "false"
+           [control] = "otherFinancialInfoGroup.get('assistanceRange')"
+           [formControlName] = "'assistanceRange'"
+  ></samText>
+
+  <samCheckboxToggledTextarea [options] = "accomplishmentsConfig"
+                              [formControlName] = "'accomplishments'"
+  ></samCheckboxToggledTextarea>
+
+  {{accomplishmentsModel | json}}
+
+  <div *ngIf="tafsGroup" [formGroup]="tafsGroup">
+    <samText [label] = "'Treasury Dept. Code'"
+             [name] = "'treasury-dept-code-input'"
+             [required] = "true"
+             [control] = "tafsGroup.get('treasuryDeptCode')"
+             [formControlName] = "'treasuryDeptCode'"
+    ></samText>
+  </div>
+</div>
