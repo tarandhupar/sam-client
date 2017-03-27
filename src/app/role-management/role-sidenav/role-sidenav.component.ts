@@ -25,7 +25,6 @@ export class RoleSideNav implements OnInit{
       this.domainList = this.route.parent.snapshot.data['domains']._embedded.domainList;
       this.filters.domains.options = this.domainList.map(this.mapLabelAndName);
       this.domains = this.domainList.map(this.mapLabel);
-      console.log(this.domainList);
     }
 
     accordionHeading1 = "Role Management Definitions";
