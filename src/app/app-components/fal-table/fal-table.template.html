@@ -1,0 +1,25 @@
+<labelWrapper [name]="name" [hint]="hint" [errorMessage]="errorMessage">
+  <div class="fal-table">
+    <table>
+      <thead>
+      <tr>
+        <th scope="col" *ngFor="let headerLabel of tableData.headerLabels">{{headerLabel.label}}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let row of tableData.rows">
+        <ng-container *ngFor="let cellData of row">
+          <td scope="row" *ngIf="!cellData.id">{{cellData.cell}}</td>
+          <td *ngIf="cellData.id"><a class="fal-table-edit" (click)="onEditClick(cellData.id)">{{editLabel}}</a><i
+            class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="onEditClick(cellData.id)"></i> <a
+            class="fal-table-delete"
+            (click)="onDeleteClick(cellData.id)">{{deleteLabel}}</a><i
+            class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="onDeleteClick(cellData.id)"></i>
+          </td>
+        </ng-container>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</labelWrapper>
+

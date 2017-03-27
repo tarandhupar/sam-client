@@ -20,6 +20,7 @@ describe('AwardsComponent', () => {
       titleEl  = fixture.debugElement.query(By.css('.award-title')); // find title element
       labelEl = fixture.debugElement.query(By.css('.usa-label'));
       comp.data = {
+        isActive: true,
         identifiers: [{
           "piid": "SAMPLE PIID",
           "isCurrent": true,

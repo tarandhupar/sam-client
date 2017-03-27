@@ -6,6 +6,7 @@ The following explains how to get set up locally. For instructions regarding bra
     <a href="#getting-started">Getting started</a>
     <ul>    
       <li><a href="#check-node">Check NodeJS and NPM</a></li>
+      <li><a href="#submodules">Using Git Submodules</a></li>
       <li><a href="#installing-globals">Installing required globals</a></li>
       <li><a href="#serving-locally">Serving app locally</a></li>
       <li><a href="#submitting-prs">Submitting pull requests</a></li>      
@@ -73,7 +74,7 @@ Git submodules allows nesting of git repositories. We're currently pulling in sa
 
 <h4>First time setup</h4>
 
-Add the following to your local ~/.gitconfig file (this is not tied to the repo). This is a redirect needed to access the submodules locally and keep the builds working
+Please make sure you're on the CSP develop branch when starting this. Add the following to your local ~/.gitconfig file (this is not tied to the repo). This is a redirect needed to access the submodules locally and keep the builds working
 
 ```
 [url "https://csp-github.sam.gov/"]
@@ -84,11 +85,27 @@ Initialize the submodule(s)
 
 `git submodule update --init`
 
-<h4>Updating submodule</h4>
+If you get an SSL certificate issue, please run this workaround:
 
-When your feature needs to update the git submodule to a later commit, use the following command
+`git config http.sslVerify false`
+
+<h4>Updating submodule during development</h4>
+
+When you're jumping between feature branches and need to update your submodule files to the currently tracked commit
+
+`git submodule update`
+
+When your feature needs to update the git submodule to a latest tracked commit, use the following command
 
 `git submodule update --remote`
+
+<h4>Resolving Merge Conflicts</h4>
+
+If you're merging a feature branch and get a conflict on the submodule, run
+
+`git mergetool`
+
+In order to bring up a prompt to make selection between the local or remote submodule commit. Its recommended to pick the later commit when doing this selection.
 
 <h3 id="installing-globals">Installing required globals</h3>
 
@@ -218,7 +235,7 @@ npm run e2e
 ```bash
 npm run webdriver:update
 npm run webdriver:start
-```
+``` 
 
 **run Protractor's elementExplorer**
 

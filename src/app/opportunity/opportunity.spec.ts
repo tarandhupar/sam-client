@@ -402,6 +402,17 @@ describe('OpportunityPage', () => {
     expect(comp.awardSortOptions).toBeDefined();
     expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
+    expect(comp.originalOpportunity).toBeDefined();
+    expect(comp.history).toBeDefined();
+    expect(comp.processedHistory).toBeDefined();
+    expect(comp.dictionary).toBeDefined();
+    expect(comp.packages).toBeDefined();
+    expect(comp.attachments).toBeDefined();
+    expect(comp.showChangesGeneral).toBeDefined();
+    expect(comp.showChangesSynopsis).toBeDefined();
+    expect(comp.showChangesClassification).toBeDefined();
+    expect(comp.showChangesContactInformation).toBeDefined();
+    expect(comp.showChangesAwardDetails).toBeDefined();
   });
 
   it('Should generate ids', () => {
