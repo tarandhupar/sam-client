@@ -2,6 +2,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 import {FilterMultiArrayObjectPipe} from "../../app-pipes/filter-multi-array-object.pipe";
 import {DateFormatPipe} from "../../app-pipes/date-format.pipe";
 import {FixHTMLPipe} from "./fix-html.pipe";
+import DiffMatchPatch = require('diff-match-patch');
+import * as _ from 'lodash';
+import * as moment from 'moment/moment';
+
+
 
 
 @Pipe({name: 'viewChanges'})
@@ -46,42 +51,87 @@ export class ViewChangesPipe implements PipeTransform {
     let description = null;
     let currentDescription;
     let previousDescription;
-    // let contractingOfficeAddress = null;
-    // let currentContractingOfficeAddressStreet;
-    // let previousContractingOfficeAddressStreet;
-    // let currentContractingOfficeAddressCity;
-    // let previousContractingOfficeAddressCity;
-    // let currentContractingOfficeAddressState;
-    // let previousContractingOfficeAddressState;
-    // let currentContractingOfficeAddressZip;
-    // let previousContractingOfficeAddressZip;
-    // let currentContractingOfficeAddressCountry;
-    // let previousContractingOfficeAddressCountry;
-    // let primaryPointOfContact = null;
-    // let currentPrimaryFullName;
-    // let previousPrimaryFullName;
-    // let currentPrimaryTitle;
-    // let previousPrimaryTitle;
-    // let currentPrimaryEmail;
-    // let previousPrimaryEmail;
-    // let currentPrimaryPhone;
-    // let previousPrimaryPhone;
-    // let currentPrimaryFax;
-    // let previousPrimaryFax;
-    // let secondaryPointOfContact = null;
-    // let currentSecondaryFullName;
-    // let previousSecondaryFullName;
-    // let currentSecondaryTitle;
-    // let previousSecondaryTitle;
-    // let currentSecondaryEmail;
-    // let previousSecondaryEmail;
-    // let currentSecondaryPhone;
-    // let previousSecondaryPhone;
-    // let currentSecondaryFax;
-    // let previousSecondaryFax;
+    let contractingOfficeAddress = null;
+    let currentContractingOfficeAddressStreet;
+    let previousContractingOfficeAddressStreet;
+    let currentContractingOfficeAddressCity;
+    let previousContractingOfficeAddressCity;
+    let currentContractingOfficeAddressState;
+    let previousContractingOfficeAddressState;
+    let currentContractingOfficeAddressZip;
+    let previousContractingOfficeAddressZip;
+    let currentContractingOfficeAddressCountry;
+    let previousContractingOfficeAddressCountry;
+    let primaryPointOfContact = false;
+    let secondaryPointOfContact = false;
+    let primaryFullName = null;
+    let currentPrimaryFullName;
+    let previousPrimaryFullName;
+    let primaryTitle = null;
+    let currentPrimaryTitle;
+    let previousPrimaryTitle;
+    let primaryEmail = null;
+    let currentPrimaryEmail;
+    let previousPrimaryEmail;
+    let primaryPhone = null;
+    let currentPrimaryPhone;
+    let previousPrimaryPhone;
+    let primaryFax = null;
+    let currentPrimaryFax;
+    let previousPrimaryFax;
+    let secondaryFullName = null;
+    let currentSecondaryFullName;
+    let previousSecondaryFullName;
+    let secondaryTitle = null;
+    let currentSecondaryTitle;
+    let previousSecondaryTitle;
+    let secondaryEmail = null;
+    let currentSecondaryEmail;
+    let previousSecondaryEmail;
+    let secondaryPhone = null;
+    let currentSecondaryPhone;
+    let previousSecondaryPhone;
+    let secondaryFax = null;
+    let currentSecondaryFax;
+    let previousSecondaryFax;
     let postedDate = null;
+    let awardDate = null;
+    let currentAwardDate;
+    let previousAwardDate;
+    let awardNumber = null;
+    let currentAwardNumber;
+    let previousAwardNumber;
+    let orderNumber = null;
+    let currentOrderNumber;
+    let previousOrderNumber;
+    let awardedDuns = null;
+    let currentAwardedDuns;
+    let previousAwardedDuns;
+    let awardedName;
+    let currentAwardedName;
+    let previousAwardedName = null;
+    let awardedAddress = null;
+    let currentAwardedAddressStreet;
+    let previousAwardedAddressStreet;
+    let currentAwardedAddressCity;
+    let previousAwardedAddressCity;
+    let currentAwardedAddressState;
+    let previousAwardedAddressState;
+    let currentAwardedAddressZip;
+    let previousAwardedAddressZip;
+    let currentAwardedAddressCountry;
+    let previousAwardedAddressCountry;
+    let awardAmount = null;
+    let currentAwardAmount;
+    let previousAwardAmount;
+    let lineItemNumber = null;
+    let currentLineItemNumber;
+    let previousLineItemNumber;
     let changesExistGeneral = false;
     let changesExistSynopsis = false;
+    let changesExistClassification = false;
+    let changesExistContactInformation = false;
+    let changesExistAwardDetails = false;
 
     //checks for Update Response Date
     if (currentOpportunity.data && currentOpportunity.data.solicitation && currentOpportunity.data.solicitation.deadlines && currentOpportunity.data.solicitation.deadlines.response){
@@ -94,12 +144,17 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousUpdateResponseDate = null;
     }
-    if (currentUpdateResponseDate != previousUpdateResponseDate && previousUpdateResponseDate == null){
-      updateResponseDate = "New Data".italics().fontcolor("blue");
+    if (currentUpdateResponseDate != null && previousUpdateResponseDate == null){
+      updateResponseDate = "New Data".italics().fontcolor("003264");
       changesExistGeneral = true;
-    } else if (currentUpdateResponseDate != previousUpdateResponseDate && previousUpdateResponseDate != null){
-      updateResponseDate = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY').strike().fontcolor("blue");
+    } else if (previousUpdateResponseDate != null && currentUpdateResponseDate == null){
+      updateResponseDate = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY').strike();
       changesExistGeneral = true;
+    } else if (previousUpdateResponseDate != null && currentUpdateResponseDate != null) {
+      if (moment(currentUpdateResponseDate).format('YYYY-MM-DD') != moment(previousUpdateResponseDate).format('YYYY-MM-DD')){
+        updateResponseDate = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY').strike();
+        changesExistGeneral = true;
+      }
     }
 
 
@@ -115,20 +170,20 @@ export class ViewChangesPipe implements PipeTransform {
       previousArchivingPolicy = null;
     }
     if (currentArchivingPolicy != previousArchivingPolicy && previousArchivingPolicy == null){
-      archivingPolicy = "New Data".italics().fontcolor("blue");
+      archivingPolicy = "New Data".italics().fontcolor("003264");
       changesExistGeneral = true;
-    } else if (currentUpdateResponseDate != previousUpdateResponseDate && previousUpdateResponseDate != null){
+    } else if (currentArchivingPolicy != previousArchivingPolicy && previousArchivingPolicy != null){
       switch (previousArchivingPolicy){
         case "manual": {
-          archivingPolicy = "Manual Archive".strike().fontcolor("blue");
+          archivingPolicy = "Manual Archive".strike();
           break;
         }
         case "auto15": {
-          archivingPolicy = "Automatic, 15 days after response date".strike().fontcolor("blue");
+          archivingPolicy = "Automatic, 15 days after response date".strike();
           break;
         }
         case "autocustom": {
-          archivingPolicy = "Automatic, on specified date".strike().fontcolor("blue");
+          archivingPolicy = "Automatic, on specified date".strike();
           break;
         }
       }
@@ -146,12 +201,18 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousUpdateArchiveDate = null;
     }
-    if (currentUpdateArchiveDate != previousUpdateArchiveDate && previousUpdateArchiveDate == null){
-      updateArchiveDate = "New Data".italics().fontcolor("blue");
+
+    if (currentUpdateArchiveDate != null && previousUpdateArchiveDate == null){
+      updateArchiveDate = "New Data".italics().fontcolor("003264");
       changesExistGeneral = true;
-    } else if (currentUpdateArchiveDate != previousUpdateArchiveDate && previousUpdateArchiveDate != null){
-      updateArchiveDate = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY').strike().fontcolor("blue");
+    } else if (previousUpdateArchiveDate != null && currentUpdateArchiveDate == null){
+      updateArchiveDate = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY').strike();
       changesExistGeneral = true;
+    } else if (previousUpdateArchiveDate != null && currentUpdateArchiveDate != null) {
+      if (moment(currentUpdateArchiveDate).format('YYYY-MM-DD') != moment(previousUpdateArchiveDate).format('YYYY-MM-DD')){
+        updateArchiveDate = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY').strike();
+        changesExistGeneral = true;
+      }
     }
 
 
@@ -167,10 +228,10 @@ export class ViewChangesPipe implements PipeTransform {
       previousSpecialLegislation = null;
     }
     if (currentSpecialLegislation != previousSpecialLegislation && (previousSpecialLegislation == null || previousSpecialLegislation == false)){
-      specialLegislation = "New Data".italics().fontcolor("blue");
+      specialLegislation = "New Data".italics().fontcolor("003264");
       changesExistGeneral = true;
     } else if (currentSpecialLegislation != previousSpecialLegislation && previousSpecialLegislation == true){
-      specialLegislation = "Recovery and Reinvestment Act".strike().fontcolor("blue");
+      specialLegislation = "Recovery and Reinvestment Act".strike();
       changesExistGeneral = true;
     }
 
@@ -186,13 +247,13 @@ export class ViewChangesPipe implements PipeTransform {
       previousUpdateSetAside = null;
     }
     if (currentUpdateSetAside != previousUpdateSetAside && previousUpdateSetAside == null){
-      updateSetAside = "New Data".italics().fontcolor("blue");
-      changesExistGeneral = true;
+      updateSetAside = "New Data".italics().fontcolor("003264");
+      changesExistClassification = true;
     } else if (currentUpdateSetAside != previousUpdateSetAside && previousUpdateSetAside != null){
-      let result = filterMultiArrayObjectPipe.transform([previousUpdateSetAside], dictionaries.set_aside_type, 'element_id', false, "");
-      updateSetAside = (result instanceof Array && result.length > 0) ? result[0].value.strike().fontcolor("blue") : [];
+      let result = filterMultiArrayObjectPipe.transform([previousUpdateSetAside], this.findDictionary('set_aside_type', dictionaries), 'elementId', false, "");
+      updateSetAside = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
 
-      changesExistGeneral = true;
+      changesExistClassification = true;
     }
 
 
@@ -208,17 +269,17 @@ export class ViewChangesPipe implements PipeTransform {
       previousClassificationCode = null;
     }
     if (currentClassificationCode != previousClassificationCode && previousClassificationCode == null){
-      classificationCode = "New Data".italics().fontcolor("blue");
-      changesExistGeneral = true;
+      classificationCode = "New Data".italics().fontcolor("003264");
+      changesExistClassification = true;
     } else if (currentClassificationCode != previousClassificationCode && previousClassificationCode != null){
-      let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], dictionaries.classification_code, 'element_id', false, '')
-      classificationCode = (result instanceof Array && result.length > 0) ? result[0].value.strike().fontcolor("blue") : [];
+      let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], this.findDictionary('classification_code', dictionaries), 'elementId', false, '');
+      classificationCode = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
 
-      changesExistGeneral = true;
+      changesExistClassification = true;
     }
 
 
-    //Checks for Classification Code
+    //Checks for Naics Code
     if (currentOpportunity.data  && currentOpportunity.data.naicsCode && currentOpportunity.data.naicsCode[0]){
       currentNaicsCode = currentOpportunity.data.naicsCode[0];
     } else {
@@ -230,12 +291,12 @@ export class ViewChangesPipe implements PipeTransform {
       previousNaicsCode = null;
     }
     if (currentNaicsCode != previousNaicsCode && previousNaicsCode == null){
-      naicsCode = "New Data".italics().fontcolor("blue");
-      changesExistGeneral = true;
+      naicsCode = "New Data".italics().fontcolor("003264");
+      changesExistClassification = true;
     } else if (currentNaicsCode != previousNaicsCode && previousNaicsCode != null){
-      let result = filterMultiArrayObjectPipe.transform([previousNaicsCode], dictionaries.naics_code, 'element_id', false, '')
-      naicsCode =(result instanceof Array && result.length > 0) ? result[0].value.strike().fontcolor("blue") : [];
-      changesExistGeneral = true;
+      let result = filterMultiArrayObjectPipe.transform([previousNaicsCode], this.findDictionary('naics_code', dictionaries), 'elementId', false, '');
+      naicsCode =(result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
+      changesExistClassification = true;
     }
 
 
@@ -291,11 +352,11 @@ export class ViewChangesPipe implements PipeTransform {
       previousPlaceOfPerformanceCountry = null;
     }
     if ((currentPlaceOfPerformanceStreet != previousPlaceOfPerformanceStreet || currentPlaceOfPerformanceCity != previousPlaceOfPerformanceCity || currentPlaceOfPerformanceState != previousPlaceOfPerformanceState || currentPlaceOfPerformanceCountry != previousPlaceOfPerformanceCountry || currentPlaceOfPerformanceZip != previousPlaceOfPerformanceZip) && (previousPlaceOfPerformanceStreet == null && previousPlaceOfPerformanceCity == null && previousPlaceOfPerformanceState == null && previousPlaceOfPerformanceZip == null && previousPlaceOfPerformanceCountry == null)){
-      placeOfPerformance = "New Data".italics().fontcolor("blue");
-      changesExistGeneral = true;
+      placeOfPerformance = "New Data".italics().fontcolor("003264");
+      changesExistClassification = true;
     } else if (((currentPlaceOfPerformanceStreet != previousPlaceOfPerformanceStreet && previousPlaceOfPerformanceStreet != null) || (currentPlaceOfPerformanceCity != previousPlaceOfPerformanceCity && previousPlaceOfPerformanceCity != null) || (currentPlaceOfPerformanceState != previousPlaceOfPerformanceState && previousPlaceOfPerformanceState != null) || (currentPlaceOfPerformanceCountry != previousPlaceOfPerformanceCountry && previousPlaceOfPerformanceCountry != null) || currentPlaceOfPerformanceZip != previousPlaceOfPerformanceZip && previousPlaceOfPerformanceZip != null)){
-      placeOfPerformance = ((previousPlaceOfPerformanceStreet ? previousPlaceOfPerformanceStreet : "") + " " + (previousPlaceOfPerformanceCity ? previousPlaceOfPerformanceCity : "") + " " + (previousPlaceOfPerformanceState ? previousPlaceOfPerformanceState : "") + " " + (previousPlaceOfPerformanceCountry ? previousPlaceOfPerformanceCountry : "") + " " + (previousPlaceOfPerformanceZip ? previousPlaceOfPerformanceZip : "")).strike().fontcolor("blue");
-      changesExistGeneral = true;
+      placeOfPerformance = ((previousPlaceOfPerformanceStreet ? previousPlaceOfPerformanceStreet : "") + " " + (previousPlaceOfPerformanceCity ? previousPlaceOfPerformanceCity + "," : "") + " " + (previousPlaceOfPerformanceState ? previousPlaceOfPerformanceState : "") + " " + (previousPlaceOfPerformanceCountry ? previousPlaceOfPerformanceCountry : "") + " " + (previousPlaceOfPerformanceZip ? previousPlaceOfPerformanceZip : "")).strike();
+      changesExistClassification = true;
     }
 
     //checks for Description
@@ -309,197 +370,520 @@ export class ViewChangesPipe implements PipeTransform {
     } else {
       previousDescription = null;
     }
+
     if (currentDescription != previousDescription && previousDescription == null){
-      description = "New Data".italics().fontcolor("blue");
+      description = currentDescription + "<span>" + "New Data".italics().fontcolor("003264") + "</span>";
       changesExistSynopsis = true;
     } else if (currentDescription != previousDescription && previousDescription != null){
-      description = fixHtmlPipe.transform(previousDescription).strike().fontcolor("blue");
+      if (currentDescription == null) {
+        currentDescription = "";
+      }
+      let finalString = '';
+      let diff = new DiffMatchPatch();
+      let diffString = diff.diff_main(previousDescription, currentDescription);
+      let m = diff.diff_cleanupSemantic(diffString);
+      diffString.forEach(function(part){
+        if (part[0] == 1){
+          part[1] = "<u>" + part[1].toString() +"</u>";
+        } else if (part[0] == -1){
+          part[1] = part[1].toString().strike();
+        }
+        finalString = finalString + part[1];
+      });
+      description = finalString;
       changesExistSynopsis = true;
     }
 
     //checks for Contracting Office Address
-    // if(currentOpportunityLocation.street) {
-    //   currentContractingOfficeAddressStreet = currentOpportunityLocation.street;
-    // } else{
-    //   currentContractingOfficeAddressStreet = null;
-    // }
-    // if(previousOpportunityLocation.street) {
-    //   previousContractingOfficeAddressStreet = previousOpportunityLocation.street;
-    // } else{
-    //   previousContractingOfficeAddressStreet = null;
-    // }
-    // if(currentOpportunityLocation.city) {
-    //   currentContractingOfficeAddressCity = currentOpportunityLocation.city;
-    // } else{
-    //   currentContractingOfficeAddressCity = null;
-    // }
-    // if(previousOpportunityLocation.city) {
-    //   previousContractingOfficeAddressCity = previousOpportunityLocation.city;
-    // } else{
-    //   previousContractingOfficeAddressCity = null;
-    // }
-    // if(currentOpportunityLocation.state) {
-    //   currentContractingOfficeAddressState = currentOpportunityLocation.state;
-    // } else{
-    //   currentContractingOfficeAddressState = null;
-    // }
-    // if(previousOpportunityLocation.state) {
-    //   previousContractingOfficeAddressState = previousOpportunityLocation.state;
-    // } else{
-    //   previousContractingOfficeAddressState = null;
-    // }
-    // if(currentOpportunityLocation.country) {
-    //   currentContractingOfficeAddressCountry = currentOpportunityLocation.country;
-    // } else{
-    //   currentContractingOfficeAddressCountry = null;
-    // }
-    // if(previousOpportunityLocation.country) {
-    //   previousContractingOfficeAddressCountry = previousOpportunityLocation.country;
-    // } else{
-    //   previousContractingOfficeAddressCountry = null;
-    // }
-    // if(currentOpportunityLocation.zip) {
-    //   currentContractingOfficeAddressZip = currentOpportunityLocation.zip;
-    // } else{
-    //   currentContractingOfficeAddressZip = null;
-    // }
-    // if(previousOpportunityLocation.zip) {
-    //   previousContractingOfficeAddressZip = previousOpportunityLocation.zip;
-    // } else{
-    //   previousContractingOfficeAddressZip = null;
-    // }
-    // if ((currentContractingOfficeAddressStreet != previousContractingOfficeAddressStreet || currentContractingOfficeAddressCity != previousContractingOfficeAddressCity || currentContractingOfficeAddressState != previousContractingOfficeAddressState || currentContractingOfficeAddressCountry != previousContractingOfficeAddressCountry || currentContractingOfficeAddressZip != previousContractingOfficeAddressZip) && (previousContractingOfficeAddressStreet == null && previousContractingOfficeAddressCity == null && previousContractingOfficeAddressState == null && previousContractingOfficeAddressZip == null && previousContractingOfficeAddressCountry == null)){
-    //   contractingOfficeAddress = "New Data".italics();
-    //   changesExist = true;
-    // } else if (((currentContractingOfficeAddressStreet != previousContractingOfficeAddressStreet && previousContractingOfficeAddressStreet != null) || (currentContractingOfficeAddressCity != previousContractingOfficeAddressCity && previousContractingOfficeAddressCity != null) || (currentContractingOfficeAddressState != previousContractingOfficeAddressState && previousContractingOfficeAddressState != null) || (currentContractingOfficeAddressCountry != previousContractingOfficeAddressCountry && previousContractingOfficeAddressCountry != null) || currentContractingOfficeAddressZip != previousContractingOfficeAddressZip && previousContractingOfficeAddressZip != null)){
-    //   contractingOfficeAddress = ((previousContractingOfficeAddressStreet ? previousContractingOfficeAddressStreet : "") + " " + (previousContractingOfficeAddressCity ? previousContractingOfficeAddressCity : "") + " " + (previousContractingOfficeAddressState ? previousContractingOfficeAddressState : "") + " " + (previousContractingOfficeAddressCountry ? previousContractingOfficeAddressCountry : "") + " " + (previousContractingOfficeAddressZip ? previousContractingOfficeAddressZip : "")).strike();
-    //   changesExist = true;
-    // }
-    //
-    // //checks primary Contact
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].fullName){
-    //   currentPrimaryFullName = previousOpportunity.data.pointOfContact[0].fullName;
-    // } else {
-    //   currentPrimaryFullName = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].fullName){
-    //   previousPrimaryFullName = previousOpportunity.data.pointOfContact[0].fullName;
-    // } else {
-    //   previousPrimaryFullName = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].title){
-    //   currentPrimaryTitle = previousOpportunity.data.pointOfContact[0].title;
-    // } else {
-    //   currentPrimaryTitle = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].title){
-    //   previousPrimaryTitle = previousOpportunity.data.pointOfContact[0].title;
-    // } else {
-    //   previousPrimaryTitle = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].email){
-    //   currentPrimaryEmail = previousOpportunity.data.pointOfContact[0].email;
-    // } else {
-    //   currentPrimaryEmail = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].email){
-    //   previousPrimaryEmail = previousOpportunity.data.pointOfContact[0].email;
-    // } else {
-    //   previousPrimaryEmail = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].phone){
-    //   currentPrimaryPhone = previousOpportunity.data.pointOfContact[0].phone;
-    // } else {
-    //   currentPrimaryPhone = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].phone){
-    //   previousPrimaryPhone = previousOpportunity.data.pointOfContact[0].phone;
-    // } else {
-    //   previousPrimaryPhone = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].fax){
-    //   currentPrimaryFax = previousOpportunity.data.pointOfContact[0].fax;
-    // } else {
-    //   currentPrimaryFax = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].fax){
-    //   previousPrimaryFax = previousOpportunity.data.pointOfContact[0].fax;
-    // } else {
-    //   previousPrimaryFax = null;
-    // }
-    // if ((currentPrimaryFullName != previousPrimaryFullName || currentPrimaryTitle != previousPrimaryTitle || currentPrimaryEmail != previousPrimaryEmail || currentPrimaryPhone != previousPrimaryPhone || currentPrimaryFax != previousPrimaryFax) && (previousPrimaryFullName == null && previousPrimaryTitle == null && previousPrimaryEmail == null && previousPrimaryPhone == null && previousPrimaryFax == null)){
-    //   contractingOfficeAddress = "New Data".italics();
-    //   changesExist = true;
-    // } else if (((currentPrimaryFullName != previousPrimaryFullName && previousPrimaryFullName != null) || (currentPrimaryTitle != previousPrimaryTitle && previousPrimaryTitle != null) || (currentPrimaryEmail != previousPrimaryEmail && previousPrimaryEmail != null) || (currentPrimaryPhone != previousPrimaryPhone && previousPrimaryPhone != null) || currentPrimaryFax != currentPrimaryFax && previousPrimaryFax != null)){
-    //   contractingOfficeAddress = ((previousPrimaryFullName ? previousPrimaryFullName : "") + " " + (previousPrimaryTitle ? previousPrimaryTitle : "") + " " + (previousPrimaryEmail ? previousPrimaryEmail : "") + " " + (previousPrimaryPhone ? previousPrimaryPhone : "") + " " + (currentPrimaryFax ? currentPrimaryFax : "")).strike();
-    //   changesExist = true;
-    // }
-    //
-    // //checks Secondary Contact
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].fullName){
-    //   currentSecondaryFullName = previousOpportunity.data.pointOfContact[1].fullName;
-    // } else {
-    //   currentSecondaryFullName = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].fullName){
-    //   previousSecondaryFullName = previousOpportunity.data.pointOfContact[1].fullName;
-    // } else {
-    //   previousSecondaryFullName = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].title){
-    //   currentSecondaryTitle = previousOpportunity.data.pointOfContact[1].title;
-    // } else {
-    //   currentSecondaryTitle = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].title){
-    //   previousSecondaryTitle = previousOpportunity.data.pointOfContact[1].title;
-    // } else {
-    //   previousSecondaryTitle = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].email){
-    //   currentSecondaryEmail = previousOpportunity.data.pointOfContact[1].email;
-    // } else {
-    //   currentSecondaryEmail = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].email){
-    //   previousSecondaryEmail = previousOpportunity.data.pointOfContact[1].email;
-    // } else {
-    //   previousSecondaryEmail = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].phone){
-    //   currentSecondaryPhone = previousOpportunity.data.pointOfContact[1].phone;
-    // } else {
-    //   currentSecondaryPhone = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].phone){
-    //   previousSecondaryPhone = previousOpportunity.data.pointOfContact[1].phone;
-    // } else {
-    //   previousSecondaryPhone = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].fax){
-    //   currentSecondaryFax = previousOpportunity.data.pointOfContact[1].fax;
-    // } else {
-    //   currentSecondaryFax = null;
-    // }
-    // if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].fax){
-    //   previousSecondaryFax = previousOpportunity.data.pointOfContact[1].fax;
-    // } else {
-    //   previousSecondaryFax = null;
-    // }
-    // if ((currentSecondaryFullName != previousSecondaryFullName || currentSecondaryTitle != previousSecondaryTitle || currentSecondaryEmail != previousSecondaryEmail || currentSecondaryPhone != previousSecondaryPhone || currentSecondaryFax != previousSecondaryFax) && (previousSecondaryFullName == null && previousSecondaryTitle == null && previousSecondaryEmail == null && previousSecondaryPhone == null && previousSecondaryFax == null)){
-    //   contractingOfficeAddress = "New Data".italics();
-    //   changesExist = true;
-    // } else if (((currentSecondaryFullName != previousSecondaryFullName && previousSecondaryFullName != null) || (currentSecondaryTitle != previousSecondaryTitle && previousSecondaryTitle != null) || (currentSecondaryEmail != previousSecondaryEmail && previousSecondaryEmail != null) || (currentSecondaryPhone != previousSecondaryPhone && previousSecondaryPhone != null) || currentSecondaryFax != currentSecondaryFax && previousSecondaryFax != null)){
-    //   contractingOfficeAddress = ((previousSecondaryFullName ? previousSecondaryFullName : "") + " " + (previousSecondaryTitle ? previousSecondaryTitle : "") + " " + (previousSecondaryEmail ? previousSecondaryEmail : "") + " " + (previousSecondaryPhone ? previousSecondaryPhone : "") + " " + (currentSecondaryFax ? currentSecondaryFax : "")).strike();
-    //   changesExist = true;
-    // }
+    if(currentOpportunityLocation && currentOpportunityLocation.street) {
+      currentContractingOfficeAddressStreet = currentOpportunityLocation.street;
+    } else{
+      currentContractingOfficeAddressStreet = null;
+    }
+    if(previousOpportunityLocation && previousOpportunityLocation.street) {
+      previousContractingOfficeAddressStreet = previousOpportunityLocation.street;
+    } else{
+      previousContractingOfficeAddressStreet = null;
+    }
+    if(currentOpportunityLocation && currentOpportunityLocation.city) {
+      currentContractingOfficeAddressCity = currentOpportunityLocation.city;
+    } else{
+      currentContractingOfficeAddressCity = null;
+    }
+    if(previousOpportunityLocation && previousOpportunityLocation.city) {
+      previousContractingOfficeAddressCity = previousOpportunityLocation.city;
+    } else{
+      previousContractingOfficeAddressCity = null;
+    }
+    if(currentOpportunityLocation && currentOpportunityLocation.state) {
+      currentContractingOfficeAddressState = currentOpportunityLocation.state;
+    } else{
+      currentContractingOfficeAddressState = null;
+    }
+    if(previousOpportunityLocation && previousOpportunityLocation.state) {
+      previousContractingOfficeAddressState = previousOpportunityLocation.state;
+    } else{
+      previousContractingOfficeAddressState = null;
+    }
+    if(currentOpportunityLocation && currentOpportunityLocation.country) {
+      currentContractingOfficeAddressCountry = currentOpportunityLocation.country;
+    } else{
+      currentContractingOfficeAddressCountry = null;
+    }
+    if(previousOpportunityLocation && previousOpportunityLocation.country) {
+      previousContractingOfficeAddressCountry = previousOpportunityLocation.country;
+    } else{
+      previousContractingOfficeAddressCountry = null;
+    }
+    if(currentOpportunityLocation && currentOpportunityLocation.zip) {
+      currentContractingOfficeAddressZip = currentOpportunityLocation.zip;
+    } else{
+      currentContractingOfficeAddressZip = null;
+    }
+    if(previousOpportunityLocation && previousOpportunityLocation.zip) {
+      previousContractingOfficeAddressZip = previousOpportunityLocation.zip;
+    } else{
+      previousContractingOfficeAddressZip = null;
+    }
+    if ((currentContractingOfficeAddressStreet != previousContractingOfficeAddressStreet || currentContractingOfficeAddressCity != previousContractingOfficeAddressCity || currentContractingOfficeAddressState != previousContractingOfficeAddressState || currentContractingOfficeAddressCountry != previousContractingOfficeAddressCountry || currentContractingOfficeAddressZip != previousContractingOfficeAddressZip) && (previousContractingOfficeAddressStreet == null && previousContractingOfficeAddressCity == null && previousContractingOfficeAddressState == null && previousContractingOfficeAddressZip == null && previousContractingOfficeAddressCountry == null)){
+      contractingOfficeAddress = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+    } else if (((currentContractingOfficeAddressStreet != previousContractingOfficeAddressStreet && previousContractingOfficeAddressStreet != null) || (currentContractingOfficeAddressCity != previousContractingOfficeAddressCity && previousContractingOfficeAddressCity != null) || (currentContractingOfficeAddressState != previousContractingOfficeAddressState && previousContractingOfficeAddressState != null) || (currentContractingOfficeAddressCountry != previousContractingOfficeAddressCountry && previousContractingOfficeAddressCountry != null) || currentContractingOfficeAddressZip != previousContractingOfficeAddressZip && previousContractingOfficeAddressZip != null)){
+      contractingOfficeAddress = ((previousContractingOfficeAddressStreet ? previousContractingOfficeAddressStreet : "") + " " + (previousContractingOfficeAddressCity ? previousContractingOfficeAddressCity + "," : "") + " " + (previousContractingOfficeAddressState ? previousContractingOfficeAddressState : "") + " " + (previousContractingOfficeAddressCountry ? previousContractingOfficeAddressCountry : "") + " " + (previousContractingOfficeAddressZip ? previousContractingOfficeAddressZip : "")).strike();
+      changesExistContactInformation = true;
+    }
+
+    //checks primary Contact
+
+    //primary full name
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].fullName){
+      currentPrimaryFullName = currentOpportunity.data.pointOfContact[0].fullName;
+    } else {
+      currentPrimaryFullName = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].fullName){
+      previousPrimaryFullName = previousOpportunity.data.pointOfContact[0].fullName;
+    } else {
+      previousPrimaryFullName = null;
+    }
+    if (currentPrimaryFullName != previousPrimaryFullName && previousPrimaryFullName == null){
+      primaryFullName = "New Data".italics().fontcolor("003264");
+      primaryPointOfContact = true;
+      changesExistContactInformation = true;
+    } else if (currentPrimaryFullName != previousPrimaryFullName && previousPrimaryFullName != null) {
+      primaryFullName = previousPrimaryFullName.strike();
+      primaryPointOfContact = true;
+      changesExistContactInformation = true;
+    }
+
+    //Primary Title
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].title){
+      currentPrimaryTitle = currentOpportunity.data.pointOfContact[0].title;
+    } else {
+      currentPrimaryTitle = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].title){
+      previousPrimaryTitle = previousOpportunity.data.pointOfContact[0].title;
+    } else {
+      previousPrimaryTitle = null;
+    }
+    if (currentPrimaryTitle != previousPrimaryTitle && previousPrimaryTitle == null){
+      primaryTitle = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+      primaryPointOfContact = true;
+    } else if (currentPrimaryTitle != previousPrimaryTitle && previousPrimaryTitle != null) {
+      primaryTitle = previousPrimaryTitle.strike();
+      changesExistContactInformation = true;
+      primaryPointOfContact = true;
+    }
+
+    //primary email
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].email){
+      currentPrimaryEmail = currentOpportunity.data.pointOfContact[0].email;
+    } else {
+      currentPrimaryEmail = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].email){
+      previousPrimaryEmail = previousOpportunity.data.pointOfContact[0].email;
+    } else {
+      previousPrimaryEmail = null;
+    }
+    if (currentPrimaryEmail != previousPrimaryEmail && previousPrimaryEmail == null){
+      primaryEmail = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+      primaryPointOfContact = true;
+    } else if (currentPrimaryEmail != previousPrimaryEmail && previousPrimaryEmail != null) {
+      primaryEmail = previousPrimaryEmail.strike();
+      changesExistContactInformation = true;
+      primaryPointOfContact = true;
+    }
+
+    //primary phone
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].phone){
+      currentPrimaryPhone = currentOpportunity.data.pointOfContact[0].phone;
+    } else {
+      currentPrimaryPhone = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].phone){
+      previousPrimaryPhone = previousOpportunity.data.pointOfContact[0].phone;
+    } else {
+      previousPrimaryPhone = null;
+    }
+    if (currentPrimaryPhone != previousPrimaryPhone && previousPrimaryPhone == null){
+      primaryPhone = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+      primaryPointOfContact = true;
+    } else if (currentPrimaryPhone != previousPrimaryPhone && previousPrimaryPhone != null) {
+      primaryPhone = previousPrimaryPhone.strike();
+      changesExistContactInformation = true;
+      primaryPointOfContact = true;
+    }
+
+    //primary fax
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[0].fax){
+      currentPrimaryFax = currentOpportunity.data.pointOfContact[0].fax;
+    } else {
+      currentPrimaryFax = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[0] && previousOpportunity.data.pointOfContact[0].fax){
+      previousPrimaryFax = previousOpportunity.data.pointOfContact[0].fax;
+    } else {
+      previousPrimaryFax = null;
+    }
+    if (currentPrimaryFax != previousPrimaryFax && previousPrimaryFax == null){
+      primaryFax = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+      primaryPointOfContact = true;
+    } else if (currentPrimaryFax != previousPrimaryFax && previousPrimaryFax != null) {
+      primaryFax = previousPrimaryFax.strike();
+      changesExistContactInformation = true;
+      primaryPointOfContact = true;
+    }
+
+
+
+
+
+    //checks Secondary Contact
+    //full name
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[1] && currentOpportunity.data.pointOfContact[1].fullName){
+      currentSecondaryFullName = currentOpportunity.data.pointOfContact[1].fullName;
+    } else {
+      currentSecondaryFullName = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].fullName){
+      previousSecondaryFullName = previousOpportunity.data.pointOfContact[1].fullName;
+    } else {
+      previousSecondaryFullName = null;
+    }
+    if (currentSecondaryFullName != previousSecondaryFullName && previousSecondaryFullName == null){
+      secondaryFullName = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    } else if (currentSecondaryFullName != previousSecondaryFullName && previousSecondaryFullName != null) {
+      secondaryFullName = previousSecondaryFullName.strike();
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    }
+
+    //Secondary Title
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[1].title){
+      currentSecondaryTitle = currentOpportunity.data.pointOfContact[1].title;
+    } else {
+      currentSecondaryTitle = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].title){
+      previousSecondaryTitle = previousOpportunity.data.pointOfContact[1].title;
+    } else {
+      previousSecondaryTitle = null;
+    }
+    if (currentSecondaryTitle != previousSecondaryTitle && previousSecondaryTitle == null){
+      secondaryTitle = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    } else if (currentSecondaryTitle != previousSecondaryTitle && previousSecondaryTitle != null) {
+      secondaryTitle = previousSecondaryTitle.strike();
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    }
+
+    //secondary email
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[0] && currentOpportunity.data.pointOfContact[1].email){
+      currentSecondaryEmail = currentOpportunity.data.pointOfContact[1].email;
+    } else {
+      currentSecondaryEmail = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].email){
+      previousSecondaryEmail = previousOpportunity.data.pointOfContact[1].email;
+    } else {
+      previousSecondaryEmail = null;
+    }
+    if (currentSecondaryEmail != previousSecondaryEmail && previousSecondaryEmail == null){
+      secondaryEmail = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    } else if (currentSecondaryEmail != previousSecondaryEmail && previousSecondaryEmail != null) {
+      secondaryEmail = previousSecondaryEmail.strike();
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    }
+
+    //secondary phone
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[1] && currentOpportunity.data.pointOfContact[1].phone){
+      currentSecondaryPhone = currentOpportunity.data.pointOfContact[1].phone;
+    } else {
+      currentSecondaryPhone = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].phone){
+      previousSecondaryPhone = previousOpportunity.data.pointOfContact[1].phone;
+    } else {
+      previousSecondaryPhone = null;
+    }
+    if (currentSecondaryPhone != previousSecondaryPhone && previousSecondaryPhone == null){
+      secondaryPhone = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    } else if (currentSecondaryPhone != previousSecondaryPhone && previousSecondaryPhone != null) {
+      secondaryPhone = previousSecondaryPhone.strike();
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    }
+
+    //secondary fax
+    if(currentOpportunity.data && currentOpportunity.data.pointOfContact && currentOpportunity.data.pointOfContact[1] && currentOpportunity.data.pointOfContact[1].fax){
+      currentSecondaryFax = currentOpportunity.data.pointOfContact[1].fax;
+    } else {
+      currentSecondaryFax = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.pointOfContact && previousOpportunity.data.pointOfContact[1] && previousOpportunity.data.pointOfContact[1].fax){
+      previousSecondaryFax = previousOpportunity.data.pointOfContact[1].fax;
+    } else {
+      previousSecondaryFax = null;
+    }
+    if (currentSecondaryFax != previousSecondaryFax && previousSecondaryFax == null){
+      secondaryFax = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    } else if (currentSecondaryFax != previousSecondaryFax && previousSecondaryFax != null) {
+      secondaryFax = previousSecondaryFax.strike();
+      changesExistContactInformation = true;
+      secondaryPointOfContact = true;
+    }
+
+
+    //Award Details
+    if (currentOpportunity.data && currentOpportunity.data.award && currentOpportunity.data.award.date) {
+      currentAwardDate = currentOpportunity.data.award.date;
+    } else {
+      currentAwardDate = null;
+    }
+    if (previousOpportunity.data && previousOpportunity.data.award && previousOpportunity.data.award.date) {
+      previousAwardDate = previousOpportunity.data.award.date;
+    } else {
+      previousAwardDate = null;
+    }
+
+    if (currentAwardDate != null && previousAwardDate == null) {
+      awardDate = "New Data".italics().fontcolor("003264");
+      changesExistAwardDetails = true;
+    } else if (previousAwardDate != null && currentAwardDate == null) {
+      awardDate = dateFormatPipe.transform(previousAwardDate, 'MMM DD, YYYY').strike();
+      changesExistAwardDetails = true;
+    } else if (previousAwardDate != null && currentAwardDate != null) {
+      if (moment(currentAwardDate).format('YYYY-MM-DD') != moment(previousAwardDate).format('YYYY-MM-DD')) {
+        awardDate = dateFormatPipe.transform(previousAwardDate, 'MMM DD, YYYY').strike();
+        changesExistAwardDetails = true;
+      }
+    }
+
+    //Award Number
+    if(currentOpportunity.data  && currentOpportunity.data.award && currentOpportunity.data.award.number){
+      currentAwardNumber = currentOpportunity.data.award.number;
+    } else {
+      currentAwardNumber = null;
+    }
+    if(previousOpportunity.data  && previousOpportunity.data.award && previousOpportunity.data.award.number){
+      previousAwardNumber = previousOpportunity.data.award.number;
+    } else {
+      previousAwardNumber = null;
+    }
+    if (currentAwardNumber != previousAwardNumber && previousAwardNumber == null){
+      awardNumber = "New Data".italics().fontcolor("003264");
+      changesExistAwardDetails = true;
+    } else if (currentAwardNumber != previousAwardNumber && previousAwardNumber != null){
+      awardNumber = previousAwardNumber.strike();
+
+      changesExistAwardDetails = true;
+    }
+
+    //Task/Delivery Order Number
+    if(currentOpportunity.data  && currentOpportunity.data.award && currentOpportunity.data.award.deliveryOrderNumber){
+      currentOrderNumber = currentOpportunity.data.award.deliveryOrderNumber;
+    } else {
+      currentOrderNumber = null;
+    }
+    if(previousOpportunity.data  && previousOpportunity.data.award && previousOpportunity.data.award.deliveryOrderNumber){
+      previousOrderNumber = previousOpportunity.data.award.deliveryOrderNumber;
+    } else {
+      previousOrderNumber = null;
+    }
+    if (currentOrderNumber != previousOrderNumber && previousOrderNumber == null){
+      orderNumber = "New Data".italics().fontcolor("003264");
+      changesExistAwardDetails = true;
+    } else if (currentOrderNumber != previousOrderNumber && previousOrderNumber != null){
+      orderNumber = previousOrderNumber.strike();
+
+      changesExistAwardDetails = true;
+    }
+
+    //Contractor Awarded DUNS
+    if(currentOpportunity.data  && currentOpportunity.data.award && currentOpportunity.data.award.awardee && currentOpportunity.data.award.awardee.duns){
+      currentAwardedDuns = currentOpportunity.data.award.awardee.duns;
+    } else {
+      currentAwardedDuns = null;
+    }
+    if(previousOpportunity.data  && previousOpportunity.data.award && previousOpportunity.data.award.awardee && previousOpportunity.data.award.awardee.duns){
+      previousAwardedDuns = previousOpportunity.data.award.awardee.duns;
+    } else {
+      previousAwardedDuns = null;
+    }
+    if (currentAwardedDuns != previousAwardedDuns && previousAwardedDuns == null){
+      awardedDuns = "New Data".italics().fontcolor("003264");
+      changesExistAwardDetails = true;
+    } else if (currentAwardedDuns != previousAwardedDuns && previousAwardedDuns != null){
+      awardedDuns = previousAwardedDuns.strike();
+
+      changesExistAwardDetails = true;
+    }
+
+    //Contractor Awarded Name
+    if(currentOpportunity.data  && currentOpportunity.data.award && currentOpportunity.data.award.awardee && currentOpportunity.data.award.awardee.name){
+      currentAwardedName = currentOpportunity.data.award.awardee.name;
+    } else {
+      currentAwardedName = null;
+    }
+    if(previousOpportunity.data  && previousOpportunity.data.award && previousOpportunity.data.award.awardee && previousOpportunity.data.award.awardee.name){
+      previousAwardedName = previousOpportunity.data.award.awardee.name;
+    } else {
+      previousAwardedName = null;
+    }
+    if (currentAwardedName != previousAwardedName && previousAwardedName == null){
+      awardedName = "New Data".italics().fontcolor("003264");
+      changesExistAwardDetails = true;
+    } else if (currentAwardedName != previousAwardedName && previousAwardedName != null){
+      awardedName = previousAwardedName.strike();
+
+      changesExistAwardDetails = true;
+    }
+
+    //Contractor Awarded Address
+    if(currentOpportunity.data && currentOpportunity.data.award && currentOpportunity.data.award.awardee && currentOpportunity.data.award.awardee.location && currentOpportunity.data.award.awardee.location.streetAddress) {
+      currentAwardedAddressStreet = currentOpportunity.data.award.awardee.location.streetAddress;
+    } else{
+      currentAwardedAddressStreet = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.award && previousOpportunity.data.award.awardee && previousOpportunity.data.award.awardee.location && previousOpportunity.data.award.awardee.location.streetAddress) {
+      previousAwardedAddressStreet = previousOpportunity.data.award.awardee.location.streetAddress;
+    } else{
+      previousAwardedAddressStreet = null;
+    }
+    if(currentOpportunity.data && currentOpportunity.data.award && currentOpportunity.data.award.awardee && currentOpportunity.data.award.awardee.location && currentOpportunity.data.award.awardee.location.city) {
+      currentAwardedAddressCity = currentOpportunity.data.award.awardee.location.city;
+    } else{
+      currentAwardedAddressCity = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.award && previousOpportunity.data.award.awardee && previousOpportunity.data.award.awardee.location && previousOpportunity.data.award.awardee.location.city) {
+      previousAwardedAddressCity = previousOpportunity.data.award.awardee.location.city;
+    } else{
+      previousAwardedAddressCity = null;
+    }
+    if(currentOpportunity.data && currentOpportunity.data.award && currentOpportunity.data.award.awardee && currentOpportunity.data.award.awardee.location && currentOpportunity.data.award.awardee.location.state) {
+      currentAwardedAddressState = currentOpportunity.data.award.awardee.location.state;
+    } else{
+      currentAwardedAddressState = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.award && previousOpportunity.data.award.awardee && previousOpportunity.data.award.awardee.location && previousOpportunity.data.award.awardee.location.state) {
+      previousAwardedAddressState = previousOpportunity.data.award.awardee.location.state;
+    } else{
+      previousAwardedAddressState = null;
+    }
+    if(currentOpportunity.data && currentOpportunity.data.award && currentOpportunity.data.award.awardee && currentOpportunity.data.award.awardee.location && currentOpportunity.data.award.awardee.location.country) {
+      currentAwardedAddressCountry = currentOpportunity.data.award.awardee.location.country;
+    } else{
+      currentAwardedAddressCountry = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.award && previousOpportunity.data.award.awardee && previousOpportunity.data.award.awardee.location && previousOpportunity.data.award.awardee.location.country) {
+      previousAwardedAddressCountry = previousOpportunity.data.award.awardee.location.country;
+    } else{
+      previousAwardedAddressCountry = null;
+    }
+    if(currentOpportunity.data && currentOpportunity.data.award && currentOpportunity.data.award.awardee && currentOpportunity.data.award.awardee.location && currentOpportunity.data.award.awardee.location.zip) {
+      currentAwardedAddressZip = currentOpportunity.data.award.awardee.location.zip;
+    } else{
+      currentAwardedAddressZip = null;
+    }
+    if(previousOpportunity.data && previousOpportunity.data.award && previousOpportunity.data.award.awardee && previousOpportunity.data.award.awardee.location && previousOpportunity.data.award.awardee.location.zip) {
+      previousAwardedAddressZip = previousOpportunity.data.award.awardee.location.zip;
+    } else{
+      previousAwardedAddressZip = null;
+    }
+    if ((currentAwardedAddressStreet != previousAwardedAddressStreet || currentAwardedAddressCity != previousAwardedAddressCity || currentAwardedAddressState != previousAwardedAddressState || currentAwardedAddressCountry != previousAwardedAddressCountry || currentAwardedAddressZip != previousAwardedAddressZip) && (previousAwardedAddressStreet == null && previousAwardedAddressCity == null && previousAwardedAddressState == null && previousAwardedAddressZip == null && previousAwardedAddressCountry == null)){
+      awardedAddress = "New Data".italics().fontcolor("003264");
+      changesExistContactInformation = true;
+    } else if (((currentAwardedAddressStreet != previousAwardedAddressStreet && previousAwardedAddressStreet != null) || (currentAwardedAddressCity != previousAwardedAddressCity && previousAwardedAddressCity != null) || (currentAwardedAddressState != previousAwardedAddressState && previousAwardedAddressState != null) || (currentAwardedAddressCountry != previousAwardedAddressCountry && previousAwardedAddressCountry != null) || currentAwardedAddressZip != previousAwardedAddressZip && previousAwardedAddressZip != null)){
+      awardedAddress = ((previousAwardedAddressStreet ? previousAwardedAddressStreet : "") + " " + (previousAwardedAddressCity ? previousAwardedAddressCity + "," : "") + " " + (previousAwardedAddressState ? previousAwardedAddressState : "") + " " + (previousAwardedAddressCountry ? previousAwardedAddressCountry : "") + " " + (previousAwardedAddressZip ? previousAwardedAddressZip : "")).strike();
+      changesExistAwardDetails = true;
+    }
+
+    //Contract Award Dollar Amount
+    if(currentOpportunity.data  && currentOpportunity.data.award && currentOpportunity.data.award.amount){
+      currentAwardAmount = currentOpportunity.data.award.amount;
+    } else {
+      currentAwardAmount = null;
+    }
+    if(previousOpportunity.data  && previousOpportunity.data.award && previousOpportunity.data.award.amount){
+      previousAwardAmount = previousOpportunity.data.award.amount;
+    } else {
+      previousAwardAmount = null;
+    }
+    if (currentAwardAmount != previousAwardAmount && previousAwardAmount == null){
+      awardAmount = "New Data".italics().fontcolor("003264");
+      changesExistAwardDetails = true;
+    } else if (currentAwardedName != previousAwardedName && previousAwardedName != null) {
+      awardAmount = previousAwardAmount.strike();
+
+      changesExistAwardDetails = true;
+    }
+
+
+    //Contract Line Item Number
+    if(currentOpportunity.data  && currentOpportunity.data.award && currentOpportunity.data.award.lineItemNumber){
+      currentLineItemNumber = currentOpportunity.data.award.lineItemNumber;
+    } else {
+      currentLineItemNumber = null;
+    }
+    if(previousOpportunity.data  && previousOpportunity.data.award && previousOpportunity.data.award.lineItemNumber){
+      previousLineItemNumber = previousOpportunity.data.award.lineItemNumber;
+    } else {
+      previousLineItemNumber = null;
+    }
+    if (currentLineItemNumber != previousLineItemNumber && previousLineItemNumber == null){
+      lineItemNumber = "New Data".italics().fontcolor("003264");
+      changesExistAwardDetails = true;
+    } else if (currentLineItemNumber != previousLineItemNumber && previousLineItemNumber != null) {
+      lineItemNumber = previousLineItemNumber.strike();
+
+      changesExistAwardDetails = true;
+    }
 
     //checks posted date
-    postedDate = ("Changes from " + dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a')).fontcolor("blue");
-
+    postedDate = ("Changes from " + dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a'));
     differences = {
       changesExistGeneral: changesExistGeneral,
       changesExistSynopsis: changesExistSynopsis,
+      changesExistClassification: changesExistClassification,
+      changesExistContactInformation: changesExistContactInformation,
+      changesExistAwardDetails:changesExistAwardDetails,
       updateResponseDate: updateResponseDate,
       archivingPolicy: archivingPolicy,
       updateArchiveDate: updateArchiveDate,
@@ -509,13 +893,40 @@ export class ViewChangesPipe implements PipeTransform {
       naicsCode: naicsCode,
       placeOfPerformance: placeOfPerformance,
       description: description,
-      // contractingOfficeAddress: contractingOfficeAddress,
-      // primaryPointOfContact: primaryPointOfContact,
-      // secondaryPointOfContact: secondaryPointOfContact,
+      contractingOfficeAddress: contractingOfficeAddress,
+      primaryPointOfContact: primaryPointOfContact,
+      primaryFullName: primaryFullName,
+      primaryTitle: primaryTitle,
+      primaryPhone: primaryPhone,
+      primaryEmail: primaryEmail,
+      primaryFax: primaryFax,
+      secondaryPointOfContact: secondaryPointOfContact,
+      secondaryFullName: secondaryFullName,
+      secondaryTitle: secondaryTitle,
+      secondaryPhone: secondaryPhone,
+      secondaryEmail: secondaryEmail,
+      secondaryFax: secondaryFax,
+      awardDate: awardDate,
+      awardNumber: awardNumber,
+      orderNumber: orderNumber,
+      awardedDuns: awardedDuns,
+      awardedName: awardedName,
+      awardedAddress: awardedAddress,
+      awardAmount: awardAmount,
+      lineItemNumber: lineItemNumber,
       postedDate: postedDate
     };
-    console.log("Differences", differences);
     return differences;
+  }
+
+  private findDictionary(key: String, dictionaries: any): any[] {
+    let dictionary = _.find(dictionaries._embedded['dictionaries'], { id: key });
+
+    if (dictionary && typeof dictionary.elements !== undefined) {
+      return dictionary.elements;
+    } else {
+      return [];
+    }
   }
 }
 

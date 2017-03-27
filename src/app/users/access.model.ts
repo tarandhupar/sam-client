@@ -1,4 +1,4 @@
-import { UserAccessInterface } from "api-kit/access/access.interface";
+import { UserAccessInterface, UserAccessWrapper } from "api-kit/access/access.interface";
 import { PropertyCollector } from "../app-utils/property-collector";
 import * as _ from 'lodash';
 
@@ -20,7 +20,32 @@ export class UserAccessModel {
     return a;
   }
 
-  static FormInputToAccessObject(user, roleId, domainId, orgIds, functions: Array<FunctionInterface>, messages: string): UserAccessInterface {
+  static CreateDeletePartial(user, roleId, domainId, orgIds): UserAccessWrapper {
+    console.log(arguments);
+    let organizationMapContent = [{
+      organizations: orgIds,
+    }];
+
+    return {
+      mode: "remove",
+      existingAccessContent: {
+        user: user,
+        domainContent: [
+          {
+            domain: domainId,
+            roleContent: [
+              {
+                role: roleId,
+                organizationContent: organizationMapContent
+              }
+            ]
+          }
+        ]
+      }
+    };
+  }
+
+  static CreateEditObject(user, roleId, domainId, orgIds: any[], functions: Array<FunctionInterface>, messages: string, existingAccess): UserAccessWrapper {
     let functionMapContent = functions.map(fun => {
       return {
         function: fun.id,
@@ -30,27 +55,95 @@ export class UserAccessModel {
       return !!fun.permission.length;
     });
 
-    let organizationMapContent = orgIds.map(orgId => {
-      return {
-        orgKey: ""+orgId,
-        functionMapContent: functionMapContent
-      };
+    let organizationMapContent = [{
+      organizations: orgIds,
+      functionContent: functionMapContent
+    }];
+
+    let existingAcc = _.clone(existingAccess.raw());
+
+    existingAcc.user = _.clone(existingAcc.id);
+    delete existingAcc.id;
+
+    // convert ID/Val pairs to just ids
+    existingAcc.domainMapContent.forEach(dom => {
+      let did = dom.domain.id;
+      dom.domain = did;
+      dom.roleMapContent.forEach( role => {
+        let rid = role.role.id;
+        role.role = rid;
+        role.organizationMapContent.forEach(org => {
+          org.functionMapContent.forEach(fun => {
+            let fid = fun.function.id;
+            fun.function = fid;
+            fun.permission = fun.permission.map(perm => perm.id);
+          });
+          org.functionContent = _.clone(org.functionMapContent);
+          delete org.functionMapContent;
+        });
+        role.organizationContent = _.clone(role.organizationMapContent);
+        delete role.organizationMapContent;
+      });
+      dom.roleContent = _.clone(dom.roleMapContent);
+      delete dom.roleMapContent;
     });
+    existingAcc.domainContent = _.clone(existingAcc.domainMapContent);
+    delete existingAcc.domainMapContent;
+    console.log('after', existingAcc);
 
     return {
-      messages: messages,
-      user: user,
-      roleMapContent: [
-        {
-          role: roleId,
-          roleData: [
-            {
-              domain: domainId,
-              organizationMapContent: organizationMapContent
-            }
-          ]
-        }
-      ]
+      message: messages,
+      mode: "edit",
+      existingAccessContent: existingAcc,
+      updatedAccessContent: {
+        user: user,
+        domainContent: [
+          {
+            domain: domainId,
+            roleContent: [
+              {
+                role: roleId,
+                organizationContent: organizationMapContent
+              }
+            ]
+          }
+        ]
+      }
+    };
+  }
+
+  static CreateGrantObject(user, roleId, domainId, orgIds: any[], functions: Array<FunctionInterface>, messages: string): UserAccessWrapper {
+    let functionMapContent = functions.map(fun => {
+      return {
+        function: fun.id,
+        permission: fun.permissions,
+      };
+    }).filter(fun => {
+      return !!fun.permission.length;
+    });
+
+    let organizationMapContent = [{
+      organizations: orgIds,
+      functionContent: functionMapContent
+    }];
+
+    return {
+      message: messages,
+      mode: "grant",
+      updatedAccessContent: {
+        user: user,
+        domainContent: [
+          {
+            domain: domainId,
+            roleContent: [
+              {
+                role: roleId,
+                organizationContent: organizationMapContent
+              }
+            ]
+          }
+        ]
+      }
     };
   }
 
@@ -58,72 +151,60 @@ export class UserAccessModel {
     return this._raw;
   }
 
-  public userName(): string {
-    return this._raw.user;
-  }
-
   public allOrganizations() {
-    let orgKeys = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'orgKey']);
+    let orgKeys = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'organizationMapContent', [], 'organizations', []]);
     return _.uniq(orgKeys);
   }
 
   public allRoles() {
-    if (!this._raw.roleMapContent || !this._raw.roleMapContent.length) {
-      return [];
-    }
-    return this._raw.roleMapContent.map(role => role.role);
+    let roles = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'role']);
+    return _.uniqBy(roles, r => r.id);
   }
 
   public allDomains() {
-    let domains = this.collector.collect(['roleMapContent', [], 'roleData', [], 'domain']);
-    return _.uniqBy(domains, dom => dom.id);
+    let domains = this.collector.collect(['domainMapContent', [], 'domain']);
+    return _.uniqBy(domains, d => d.id);
   }
 
   // a.k.a functions
   public allObjects() {
-    let objects = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'functionMapContent', [], 'function']);
-    return _.uniqBy(objects, obj => obj.id);
+    let objs = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'organizationMapContent', [], 'functionMapContent', [], 'function']);
+    return _.uniqBy(objs, o => o.id);
   }
 
   public allPermissions() {
-    let perms = this.collector.collect(['roleMapContent', [], 'roleData', [], 'organizationMapContent', 'functionMapContent', [], 'permission', []]);
-    return _.uniqBy(perms, perm => perm.id);
+    let objs = this.collector.collect(['domainMapContent', [], 'roleMapContent', [], 'organizationMapContent', [], 'functionMapContent', [], 'permission', []]);
+    return _.uniqBy(objs, o => o.id);
   }
 
-  public checkRoles(useraccess,validate: string) {
-    let res = [];
-    useraccess.roleMapContent.forEach(
-      value =>{
-        if(value.role.val === validate){
-          res = value.roleData;
-        }
+  private alertAdminPermissions(): any[] {
+    let ret = [];
+
+    this._raw.domainMapContent.forEach(domain => {
+      if (!domain.domain || !domain.domain.val || domain.domain.val !== 'ADMIN') {
+        return;
       }
-    )
-    return res;
-  }
-
-  public checkDomain(useraccess,validate:string){
-    let res = [];
-    useraccess.forEach(
-      role => {
-        if(role.domain.val === validate){
-          res = role.organizationMapContent.functionMapContent;
+      domain.roleMapContent.forEach(role => {
+        if (!role.role || !role.role.val || role.role.val !== 'SUPERUSER') {
+          return;
         }
-      }
-    )
-    return res;
+        role.organizationMapContent[0].functionMapContent.forEach(fun => {
+          if (!fun.function || !fun.function.val || fun.function.val !== 'ALERTS') {
+            return;
+          }
+          ret = ret.concat(fun.permission);
+        });
+      });
+    });
+
+    return ret;
   }
 
-  public checkFunction(useraccess,validate:string){
-    let res = [];
-    useraccess.forEach(
-      funct => {
-        if(funct.function.val === "ALERTS"){
-          res = funct.permission;
-        }
-      }
-    )
-    return res;
+  public canCreateAlerts() {
+    return this.alertAdminPermissions().find(role => role.val === 'CREATE');
   }
 
+  public canEditAlerts() {
+    return this.alertAdminPermissions().find(role => role.val === 'EDIT');
+  }
 }

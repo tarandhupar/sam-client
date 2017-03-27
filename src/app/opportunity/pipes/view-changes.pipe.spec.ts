@@ -2,41 +2,33 @@ import { ViewChangesPipe } from "./view-changes.pipe";
 
 describe('ViewChangesPipe', () => {
   let pipe = new ViewChangesPipe();
-  let dictionaries = {
-    "set_aside_type":[
+  let dictionaries = {"_embedded": {
+    "dictionaries":[{
+    "elements":[
       {
-        "element_id": "7",
+        "elementId": "7",
         "description": null,
-        "parent_element_id": null,
         "value": "Total Small Business",
-        "dictionary_name": "set_aside_type",
-        "code": "7",
-        "sort_index": "70"
+        "elements": null
       }
-    ],
-    "classification_code": [
+    ], "id": "set_aside_type"},{
+    "elements": [
       {
-        "element_id": "14",
+        "elementId": "14",
         "description": null,
-        "parent_element_id": null,
-        "value": "24 -- Tractors",
-        "dictionary_name": "classification_code",
-        "code": "24",
-        "sort_index": "14"
+        "elements": null,
+        "value": "24 -- Tractors"
       }
-    ],
-    "naics_code": [
+    ], "id": "classification_code"},
+      {"elements": [
       {
-        "element_id": "0091009",
+        "elementId": "0091009",
         "description": null,
-        "parent_element_id": "0091",
+        "elements": null,
         "value": "336212 -- Truck Trailer Manufacturing",
-        "dictionary_name": "naics_code",
-        "code": "336212",
-        "sort_index": "25"
       }
-    ]
-  };
+    ], "id": "naics_code"}
+  ]}};
   let currentOpportunity = {
     "opportunityId": "18741f085fce49fe2c523499e513bbde",
     "data": {
@@ -53,7 +45,7 @@ describe('ViewChangesPipe', () => {
       "descriptions": [
         {
           "descriptionId": "f804f07655a594a98ee87bcedf11107d",
-          "content": "<p>29 May 2014: Please ensure white papers and/or proposals are submitted in accordance with Amendment 0005 of the USAFA BAA-2009-1, which is also available on the Grants.gov website. The updated BAA found on Grants.gov is the conformed version of the announcement.</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>\r\n<p>&nbsp;</p>"
+          "content": "<p>29 May 2014: Please ensure white papers and/or proposals are submitted in accordance with Amendment 0005 of the USAFA BAA-2009-1, which is also available on the Grants.gov website. The updated BAA found on Grants.gov is the conformed version of the announcement.</p>"
         }
       ],
       "link": {
@@ -72,14 +64,16 @@ describe('ViewChangesPipe', () => {
           "fullName": "Mara A. Strobel",
           "email": "mara.strobel@us.af.mil",
           "phone": "719-333-4899",
+          "fax": "4444444444",
           "additionalInfo": {}
         },
         {
           "type": "secondary",
-          "title": "Contracting Officer",
+          "title": "Officer",
           "fullName": "Shawna L. Bowshot",
           "email": "shawna.bowshot@us.af.mil",
           "phone": "7193334595",
+          "fax": "5555555",
           "additionalInfo": {}
         }
       ],
@@ -105,9 +99,21 @@ describe('ViewChangesPipe', () => {
         }
       },
       "award": {
+        "date": "2013-10-02",
+        "number": "DJBTDAT312",
+        "amount": "$ 2,156,181.00",
+        "lineItemNumber": "Not All",
+        "deliveryOrderNumber": "1",
         "awardee": {
+          "name": "Apple Street Health Services",
+          "duns": "501136417",
           "location": {
-            "streetAddress2": ""
+            "streetAddress": "200 Cherry Street, S.E.",
+            "streetAddress2": "",
+            "city": "Chicago",
+            "state": "IL",
+            "zip": "49505",
+            "country": "US"
           }
         },
         "justificationAuthority": {},
@@ -161,18 +167,20 @@ describe('ViewChangesPipe', () => {
       "pointOfContact": [
         {
           "type": "primary",
-          "title": "Contracting Officer",
-          "fullName": "Mara A. Strobel",
-          "email": "mara.strobel@us.af.mil",
-          "phone": "719-333-4899",
+          "title": "Specialist",
+          "fullName": "Warren ACC IDQ",
+          "email": "usarmy.detroit.acc.mbx.wrn-idq@mail.mil",
+          "phone": "0000000000",
+          "fax": "1111111111",
           "additionalInfo": {}
         },
         {
           "type": "secondary",
-          "title": "Contracting Officer",
-          "fullName": "Shawna L. Bowshot",
-          "email": "shawna.bowshot@us.af.mil",
-          "phone": "7193334595",
+          "title": "Contract Specialist",
+          "fullName": "Marta Furman",
+          "email": "marta.furman.civ@mail.mil",
+          "phone": "2222222222",
+          "fax": "3333333333",
           "additionalInfo": {}
         }
       ],
@@ -198,9 +206,21 @@ describe('ViewChangesPipe', () => {
         }
       },
       "award": {
+        "date": "2013-10-01",
+        "number": "DJBTDAT311",
+        "amount": "$ 1,156,181.00",
+        "deliveryOrderNumber": "2",
+        "lineItemNumber": "All",
         "awardee": {
+          "name": "Cherry Street Health Services",
+          "duns": "603136417",
           "location": {
-            "streetAddress2": ""
+            "streetAddress": "100 Cherry Street, S.E.",
+            "streetAddress2": "",
+            "city": "Grand Rapids",
+            "state": "MI",
+            "zip": "49503",
+            "country": "US"
           }
         },
         "justificationAuthority": {},
@@ -239,43 +259,52 @@ describe('ViewChangesPipe', () => {
     "city": "Vancouver"
   };
 
-  // let differences1 = {
-  //   changesExist: changesExist,
-  //   updateResponseDate: updateResponseDate,
-  //   archivingPolicy: archivingPolicy,
-  //   updateArchiveDate: updateArchiveDate,
-  //   specialLegislation: specialLegislation,
-  //   updateSetAside: updateSetAside,
-  //   classificationCode: classificationCode,
-  //   naicsCode: naicsCode,
-  //   placeOfPerformance: placeOfPerformance,
-  //   description: description,
-  //   contractingOfficeAddress: contractingOfficeAddress,
-  //   primaryPointOfContact: primaryPointOfContact,
-  //   secondaryPointOfContact: secondaryPointOfContact,
-  //   postedDate: postedDate
-  // };
-
   let differences2 = {
+    primaryFullName: '<strike>Warren ACC IDQ</strike>',
+    primaryTitle: '<strike>Specialist</strike>',
+    primaryEmail: '<strike>usarmy.detroit.acc.mbx.wrn-idq@mail.mil</strike>',
+    primaryPhone: '<strike>0000000000</strike>',
+    primaryFax: '<strike>1111111111</strike>',
+    secondaryFullName: '<strike>Marta Furman</strike>',
+    secondaryTitle: '<strike>Contract Specialist</strike>',
+    secondaryEmail: '<strike>marta.furman.civ@mail.mil</strike>',
+    secondaryPhone: '<strike>2222222222</strike>',
+    secondaryFax: '<strike>3333333333</strike>',
     changesExistGeneral: true,
     changesExistSynopsis: true,
-    updateResponseDate: '<font color="blue"><strike>Sep 30, 2014</strike></font>',
-    archivingPolicy: '<font color="blue"><strike>Automatic, on specified date</strike></font>',
-    updateArchiveDate: '<font color="blue"><strike>Feb 14, 2015</strike></font>',
-    specialLegislation: '<font color="blue"><strike>Recovery and Reinvestment Act</strike></font>',
-    updateSetAside: '<font color="blue"><strike>Total Small Business</strike></font>',
-    classificationCode: '<font color="blue"><strike>24 -- Tractors</strike></font>',
-    naicsCode: '<font color="blue"><strike>336212 -- Truck Trailer Manufacturing</strike></font>',
-    placeOfPerformance: '<font color="blue"><strike>8110 Industrial Drive, STE 2002 Scranton PA CA 23123</strike></font>',
-    description: '<font color="blue"><strike>See Attachment</strike></font>',
-    postedDate: '<font color="blue">Changes from 04/30/2014 3:03 pm</font>'
+    changesExistClassification:true,
+    changesExistContactInformation: true,
+    changesExistAwardDetails: true,
+    awardDate: '<strike>Oct 01, 2013</strike>',
+    awardNumber:'<strike>DJBTDAT311</strike>',
+    orderNumber: '<strike>2</strike>',
+    awardedDuns: '<strike>603136417</strike>',
+    awardedName: '<strike>Cherry Street Health Services</strike>',
+    awardedAddress: '<strike>100 Cherry Street, S.E. Grand Rapids, MI US 49503</strike>',
+    awardAmount: '<strike>$ 1,156,181.00</strike>',
+    lineItemNumber: '<strike>All</strike>',
+    updateResponseDate: '<strike>Sep 30, 2014</strike>',
+    archivingPolicy: '<strike>Automatic, on specified date</strike>',
+    updateArchiveDate: '<strike>Feb 14, 2015</strike>',
+    specialLegislation: '<strike>Recovery and Reinvestment Act</strike>',
+    updateSetAside: '<strike>Total Small Business</strike>',
+    classificationCode: '<strike>24 -- Tractors</strike>',
+    naicsCode: '<strike>336212 -- Truck Trailer Manufacturing</strike>',
+    placeOfPerformance: '<strike>8110 Industrial Drive, STE 2002 Scranton, PA CA 23123</strike>',
+    contractingOfficeAddress: '<strike>Not Office of the Chief Procurement Officer Vancouver BC Canada 20852</strike>',
+    primaryPointOfContact: true,
+    secondaryPointOfContact: true,
+    description: '<strike>See Attachment</strike><u><p>29 May 2014: Please ensure white papers and/or proposals are submitted in accordance with Amendment 0005 of the USAFA BAA-2009-1, which is also available on the Grants.gov website. The updated BAA found on Grants.gov is the conformed version of the announcement.</p></u>',
+    postedDate: 'Changes from 04/30/2014 3:03 pm'
   };
 
-  let previousAddress2 = null;
 
   it('transforms "multiple objects from API calls to one with that contains changes to be displayed (Update)', () => {
     let results = pipe.transform(previousOpportunity, currentOpportunity, dictionaries, currentAddress, previousAddress1);
     expect(results.changesExistGeneral).toBe(differences2.changesExistGeneral);
+    expect(results.changesExistClassification).toBe(differences2.changesExistClassification);
+    expect(results.changesExistContactInformation).toBe(differences2.changesExistContactInformation);
+    expect(results.changesExistAwardDetails).toBe(differences2.changesExistAwardDetails);
     expect(results.changesExistSynopsis).toBe(differences2.changesExistSynopsis);
     expect(results.updateResponseDate).toBe(differences2.updateResponseDate);
     expect(results.archivingPolicy).toBe(differences2.archivingPolicy);
@@ -287,10 +316,23 @@ describe('ViewChangesPipe', () => {
     expect(results.placeOfPerformance).toBe(differences2.placeOfPerformance);
     expect(results.description).toBe(differences2.description);
     expect(results.postedDate).toBe(differences2.postedDate);
+    expect(results.awardDate).toBe(differences2.awardDate);
+    expect(results.awardNumber).toBe(differences2.awardNumber);
+    expect(results.orderNumber).toBe(differences2.orderNumber);
+    expect(results.awardedDuns).toBe(differences2.awardedDuns);
+    expect(results.awardedName).toBe(differences2.awardedName);
+    expect(results.awardAmount).toBe(differences2.awardAmount);
+    expect(results.awardedAddress).toBe(differences2.awardedAddress);
+    expect(results.primaryFullName).toBe(differences2.primaryFullName);
+    expect(results.primaryTitle).toBe(differences2.primaryTitle);
+    expect(results.primaryEmail).toBe(differences2.primaryEmail);
+    expect(results.primaryPhone).toBe(differences2.primaryPhone);
+    expect(results.primaryFax).toBe(differences2.primaryFax);
+    expect(results.secondaryFullName).toBe(differences2.secondaryFullName);
+    expect(results.secondaryTitle).toBe(differences2.secondaryTitle);
+    expect(results.secondaryEmail).toBe(differences2.secondaryEmail);
+    expect(results.secondaryPhone).toBe(differences2.secondaryPhone);
+    expect(results.secondaryFax).toBe(differences2.secondaryFax);
   });
-
-  // it('transforms "multiple objects from API calls to one with that contains changes to be displayed (New Data)', () => {
-  //   expect(pipe.transform('UTC-10:00')).toBe('Hawaii');
-  // });
 
 });

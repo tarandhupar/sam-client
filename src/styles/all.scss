@@ -16,7 +16,9 @@
 @import '~uswds/src/stylesheets/uswds';
 
 @import 'components/parent-orgs.scss';
+@import 'components/card';
 @import 'components/date-entry';
+@import 'components/download';
 @import 'components/label-wrapper';
 @import 'components/accordion';
 @import 'components/alert';
@@ -45,6 +47,9 @@
 @import 'components/feedback-form';
 @import 'components/well';
 @import 'components/autocomplete';
+@import 'components/autocomplete-dropdown';
+@import 'components/organization-profile';
+@import 'components/fal-table';
 
 @import 'pages/awards';
 @import 'pages/entity-object-view';
@@ -63,11 +68,12 @@
 @import 'pages/help-roadmap';
 @import 'pages/users-directory';
 @import 'pages/ui-kit-demo';
-@import 'pages/access';		
-@import 'pages/grant-access';		
-@import 'pages/public-profile';		
-@import 'pages/wage-determination';		
+@import 'pages/access';
+@import 'pages/grant-access';
+@import 'pages/public-profile';
+@import 'pages/wage-determination';
 @import 'pages/assistance-listing-operations';
+@import 'pages/organization-detail';
 
 html, body{
   height: 100%;
@@ -147,13 +153,18 @@ h2{
   }
 }
 
-.search-layout{		
-  .showing-results-meta{		
-    margin-top:3rem!important;		
-  }		
-  samselect{		
-    label{		
-      margin-top:0;		
-    }		
-  }		
+.search-layout{
+  .showing-results-meta{
+    margin-top:3rem!important;
+  }
+  samselect{
+    label{
+      margin-top:0;
+    }
+  }
+}
+
+select {
+  background-position: right .65rem center;
+  padding: 1rem 2.6rem 1rem 0.7em;
 }

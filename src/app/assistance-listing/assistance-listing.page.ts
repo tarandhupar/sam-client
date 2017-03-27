@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
+import * as Cookies from 'js-cookie';
 
 import * as _ from 'lodash';
 
@@ -26,12 +28,15 @@ export class ProgramPage implements OnInit, OnDestroy {
   currentUrl: string;
   dictionaries: any;
   authorizationIdsGrouped: any[];
+  history: any[];
   historicalIndex: any;
   alert: any = [];
   errorOrganization: any;
   public logoUrl: any;
   public logoInfo: any;
   errorLogo: any;
+  cookieValue: string;
+  isCookie: boolean = false;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -53,6 +58,11 @@ export class ProgramPage implements OnInit, OnDestroy {
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
+    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+      if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
+        this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+      }
+    }
 
     let programAPISource = this.loadProgram();
 
@@ -78,7 +88,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = params['id'];
-      return this.programService.getProgramById(params['id']);
+      return this.programService.getProgramById(params['id'], this.cookieValue);
     });
     this.apiStreamSub = apiStream.subscribe(apiSubject);
 
@@ -169,6 +179,17 @@ export class ProgramPage implements OnInit, OnDestroy {
     this.historicalIndexSub = historicalIndexStream.subscribe(res => {
       // run whenever historical index data is updated
       this.historicalIndex = res._embedded ? res._embedded.historicalIndex : []; // store the historical index
+      let pipe = new HistoricalIndexLabelPipe();
+      this.history = _.map(this.historicalIndex, function(value){
+        return {
+          "id": value.id,
+          "index": value.index,
+          "date": value.fiscalYear,
+          "title": pipe.transform(value.actionType),
+          "description": value.changeDescription
+        }
+      });
+      this.history = _.sortBy(this.history, ['index']);
     });
 
     return historicalIndexStream;
@@ -184,11 +205,11 @@ export class ProgramPage implements OnInit, OnDestroy {
     });
 
     // construct a stream that contains all related programs from related program ids
-    let relatedProgramsStream = relatedProgramsIdStream.flatMap(relatedId => {
-      return this.programService.getLatestProgramById(relatedId);
+    let relatedProgramsStream = relatedProgramsIdStream.flatMap((relatedId: any) => {
+      return this.programService.getLatestProgramById(relatedId, this.cookieValue);
     });
 
-    this.relatedProgramsSub = relatedProgramsStream.subscribe(relatedProgram => {
+    this.relatedProgramsSub = relatedProgramsStream.subscribe((relatedProgram: any) => {
       // run whenever related programs are updated
       if (typeof relatedProgram !== 'undefined') {
         this.relatedProgram.push({ // store the related program

@@ -26,7 +26,7 @@ describe('Program Service', () => {
   it('should return response when subscribed to getProgramById', inject([ProgramService, MockBackend], (testService: ProgramService, backend: MockBackend) => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: '{"response":"sot response!!"}' }))));
 
-    testService.getProgramById("fee2e0e30ce63b7bc136aeff32096c1d").subscribe((res: Response) => {
+    testService.getProgramById("fee2e0e30ce63b7bc136aeff32096c1d", '').subscribe((res: Response) => {
       expect(res['response']).toBeDefined();
       expect(res['response']).toBe('sot response!!');
     });
@@ -36,7 +36,6 @@ describe('Program Service', () => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: '213kj21l3j23jlk21j3kl1j2' }))));
 
     testService.saveProgram(null, {},'').subscribe((res: Response) => {
-      console.log('response Save ', res)
       expect(res).toBeDefined();
       expect(res.text()).toBe('213kj21l3j23jlk21j3kl1j2');
     });

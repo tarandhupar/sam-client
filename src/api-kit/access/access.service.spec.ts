@@ -32,28 +32,20 @@ describe('UserAccessService', () => {
     service.getAccess("bob@gmail.com");
   })));
 
-  it('should put permissions for a user', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
+  it('should update permissions for a user', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
     backend.connections.subscribe((connection: MockConnection) => {
-      expect(connection.request.method).toBe(RequestMethod.Put);
+      expect(connection.request.method).toBe(RequestMethod.Post);
       expect(connection.request.url).toMatch(/access/);
     });
-    service.putAccess({ user: "Timmy!"});
-  })));
-
-  it('should put available permissions for a domain and role combination', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
-    backend.connections.subscribe((connection: MockConnection) => {
-      expect(connection.request.method).toBe(RequestMethod.Get);
-      expect(connection.request.url).toMatch(/uiroles/);
-    });
-    service.getPermissions(1);
+    service.postAccess({mode: 'grant'}, 'Timmy!');
   })));
 
   it('should get roles', inject([UserAccessService, MockBackend], fakeAsync((service: UserAccessService, backend: MockBackend) => {
     backend.connections.subscribe((connection: MockConnection) => {
       expect(connection.request.method).toBe(RequestMethod.Get);
-      expect(connection.request.url).toMatch(/roles\?/);
+      expect(connection.request.url).toMatch(/uiroles\?/);
     });
-    service.getRoles();
+    service.getRoles({});
   })));
 
 });

@@ -17,7 +17,6 @@ import { TimezoneLabelPipe } from './pipes/timezone-label.pipe';
 import { FixHTMLPipe } from './pipes/fix-html.pipe';
 import { FilesizePipe } from './pipes/filesize.pipe';
 import { SamUIKitModule } from 'sam-ui-kit';
-import { HistoryComponent } from '../app-components/history/history.component';
 
 let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
@@ -348,7 +347,7 @@ let MockFHService = {
 describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe, HistoryComponent], // declare the test component
+      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe], // declare the test component
       imports: [
         PipesModule,
         HttpModule,
@@ -397,12 +396,23 @@ describe('OpportunityPage', () => {
     expect(comp.opportunity).toBeDefined();
     expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
-    expect(comp.attachment).toBeDefined();
+    expect(comp.attachments).toBeDefined();
     expect(comp.relatedOpportunities).toBeDefined();
     expect(comp.awardSort).toBeDefined();
     expect(comp.awardSortOptions).toBeDefined();
     expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
+    expect(comp.originalOpportunity).toBeDefined();
+    expect(comp.history).toBeDefined();
+    expect(comp.processedHistory).toBeDefined();
+    expect(comp.dictionary).toBeDefined();
+    expect(comp.packages).toBeDefined();
+    expect(comp.attachments).toBeDefined();
+    expect(comp.showChangesGeneral).toBeDefined();
+    expect(comp.showChangesSynopsis).toBeDefined();
+    expect(comp.showChangesClassification).toBeDefined();
+    expect(comp.showChangesContactInformation).toBeDefined();
+    expect(comp.showChangesAwardDetails).toBeDefined();
   });
 
   it('Should generate ids', () => {

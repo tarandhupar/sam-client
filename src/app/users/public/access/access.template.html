@@ -1,57 +1,92 @@
 <div class="access-page">
   <h1 class="m_T-0">Access</h1>
   <div>
-    <samMultiSelectDropdown (modelChange)="orgsChanged($event)" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [model]="filters.organizations.value"></samMultiSelectDropdown>
-    <samMultiSelectDropdown (modelChange)="rolesChanged($event)" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [model]="filters.roles.value"></samMultiSelectDropdown>
-    <samMultiSelectDropdown (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
-    <samMultiSelectDropdown (modelChange)="objectsChanged($event)" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [model]="filters.objects.value"></samMultiSelectDropdown>
-    <samMultiSelectDropdown (modelChange)="permissionsChanged($event)" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [model]="filters.permissions.value"></samMultiSelectDropdown>
-    <a [routerLink]="['../grant-access']" class="usa-button usa-button-success pull-right">Grant Access</a>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.domains.options)" (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.roles.options)" (modelChange)="rolesChanged($event)" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [model]="filters.roles.value"></samMultiSelectDropdown>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.organizations.options)" (modelChange)="orgsChanged($event)" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [model]="filters.organizations.value"></samMultiSelectDropdown>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.objects.options)" (modelChange)="objectsChanged($event)" [options]="filters.objects.options" [label]="filters.objects.label" [name]="filters.objects.label" [model]="filters.objects.value"></samMultiSelectDropdown>
+    <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.permissions.options)" (modelChange)="permissionsChanged($event)" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [model]="filters.permissions.value"></samMultiSelectDropdown>
+    <a [routerLink]="[isAdmin ? '../grant-access' : '../request-access']" class="usa-button usa-button-success pull-right">{{isAdmin ? 'Grant' : 'Request'}} Access</a>
   </div>
 
+  <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()">
+    <p>Are you sure you wish to remove the following access?</p>
+    <div>
+      <div class="modal-subtitle">
+        <strong class="modal-subtitle">Domain:</strong>
+      </div>
+      <div>{{modalDomain.val}}</div>
+    </div>
+    <div>
+      <div class="modal-subtitle"><strong>Role:</strong></div>
+      <div>{{modalRole.role.val}}</div>
+    </div>
+    <div>
+      <div class="modal-subtitle">
+        <strong>Organizations:</strong>
+      </div>
+      <div *ngFor="let org of modalRole.organizationMapContent[0].organizations">
+        {{orgName(org)}}
+      </div>
+    </div>
+  </samModal>
+
   <ng-container *ngIf="userAccessModel">
-    <div *ngFor="let role of userAccessModel.raw().roleMapContent; let firstRole=first">
-      <h2>{{role.role.val}}
-        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapse All</a>
-        <a class="usa-button usa-button-transparent pull-right underline" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
+    <div *ngFor="let domain of userAccessModel.raw().domainMapContent">
+      <h2>
+        {{domain.domain.val || 'Domain not found'}}
+        <a class="usa-button usa-button-transparent pull-right" *ngIf="firstRole && showCollapse" (click)="collapseAll()">Collapse All</a>
+        <a class="usa-button usa-button-transparent pull-right" *ngIf="firstRole && !showCollapse" (click)="expandAll()">Expand All</a>
       </h2>
-      <samAccordion *ngFor="let domain of role.roleData | groupByDomain" [bordered]="true" [expandIndex]="showCollapse ? 0 : -1">
-        <samAccordionSection [headerText]="domain.val" [name]="'domain-'+domain.val">
-          <div class="usa-grid-full permissions-table-header">
-            <div class="usa-width-one-sixth"><strong>Organization:</strong></div>
-            <div class="usa-width-one-sixth"><strong>Level:</strong></div>
-            <div class="usa-width-one-sixth"><strong>Object:</strong></div>
-            <div class="usa-width-one-third"><strong>Permissions:</strong></div>
-            <div class="usa-width-one-sixth">&nbsp;</div>
-          </div>
-          <ng-container *ngFor="let org of domain.organizations">
-            <div class="usa-grid-full permissions-table-row">
-              <div class="usa-width-one-sixth org-col access-cell">
-                <a [routerLink]="['/organization', org.orgKey.trim()]">{{orgName(org.orgKey)}}</a>
-              </div>
-              <div class="usa-width-one-sixth org-level-col access-cell">{{orgLevel(org.orgKey)}}&nbsp;</div>
-              <div class="usa-width-one-half functions-col background-grey access-cell">
-                <div class="pip-left">&nbsp;</div>
-                <ng-container *ngFor="let func of org.functionMapContent">
-                  <div class="usa-grid-full functions-row">
-                    <div class="usa-width-one-third object-col">{{func.function.val | capitalize}}</div>
-                    <div class="usa-width-two-thirds permissions-col">
-                      <span class="pull-left" *ngFor="let perm of func.permission; let lastPermission = last">{{perm.val | capitalize}}<span *ngIf="!lastPermission">,&nbsp;</span></span>
-                    </div>
-                  </div>
-                </ng-container>
-              </div>
-              <div class="usa-width-one-sixth">
-                <span class="pull-right">
-                  <button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-pencil"></i></button>
-                  &nbsp;
-                  <button class="usa-button-transparent m_0 row-action-button"><i class="fa fa-trash"></i></button>
-                </span>
+      <div class="background-grey role-block" *ngFor="let role of domain.roleMapContent">
+        <div class="p_All-3x">
+          <div class="usa-grid-full">
+            <div class="usa-width-one-sixth">
+              <strong>Role</strong>
+            </div>
+            <div class="usa-width-two-thirds">
+              {{role.role.val || 'Role not found'}}
+            </div>
+            <div class="usa-width-one-sixth no-wrap modify-role-buttons" *ngIf="isAdmin">
+              <div class="pull-right">
+                <button class="usa-button-transparent m_T-0 underline" (click)="onEditClick(role, domain, role.organizationMapContent[0].organizations)"><i class="fa fa-edit"></i>&nbsp;Edit</button>
+                <button (click)="onDeleteRoleClick(role, domain.domain)" class="usa-button-transparent m_T-0 m_R-0 underline"><i class="fa fa-trash"></i>&nbsp;Delete</button>
               </div>
             </div>
-          </ng-container>
-        </samAccordionSection>
-      </samAccordion>
+          </div>
+          <div class="usa-grid-full organizations-row">
+            <div class="usa-width-one-sixth">
+              <strong>Organizations</strong>
+            </div>
+            <div class="usa-width-five-sixths">
+              <div *ngFor="let orgId of role.organizationMapContent[0].organizations; let lastOrg=last;">
+                {{orgName(orgId) || 'Org not Found'}}
+                <button (click)="onShowPermissionsClick(role)" *ngIf="lastOrg" class="usa-button-transparent pull-right show-permissions-button m_0 underline"><i class="fa" [ngClass]="role.isOpen ? 'fa-minus' : 'fa-plus'"></i>&nbsp;{{role.isOpen ? "Hide" : "Show"}} Permissions</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="background-white permissions-block" *ngIf="role.isOpen">
+          <div class="border-bottom-black permissions-table-header">
+            <div class="usa-grid-full">
+              <div class="usa-width-one-fourth">
+                Object
+              </div>
+              <div class="usa-width-one-fourth">
+                Permissions
+              </div>
+            </div>
+          </div>
+          <div class="usa-grid-full permissions-table" *ngFor="let obj of role.organizationMapContent[0].functionMapContent">
+            <div class="usa-width-one-fourth">
+              {{obj.function.val || 'object not found'}}
+            </div>
+            <div class="usa-width-three-fourths">
+              <span *ngFor="let perm of obj.permission; let lastPermission=last">{{perm.val || 'Permission not Found'}}<span *ngIf="!lastPermission">, </span></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </ng-container>
 </div>

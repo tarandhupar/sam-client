@@ -24,45 +24,78 @@ export class SearchService {
     };
 
     // wage determination type filter
-    if(typeof obj.wdType !== 'undefined' && obj.wdType !== null) {
+    if(typeof obj.wdType !== 'undefined' && obj.organizationId !== null && obj.wdType !== '') {
         oApiParam.oParam['index'] = obj.wdType;
       }
 
-        // construction type filter
-        if(typeof obj.conType !== 'undefined' && obj.conType !== null && obj.conType !== '') {
-          oApiParam.oParam['construction_type'] = obj.conType;
-        }
+    // organization id filter
+    if(typeof obj.organizationId !== 'undefined' && obj.organizationId !== null && obj.organizationId !== '') {
+      oApiParam.oParam['organization_id'] = obj.organizationId;
+    }
 
-        // state filter
-        if(typeof obj.state !== 'undefined' && obj.state !== null && obj.state !== '') {
-          oApiParam.oParam['state'] = obj.state;
-        }
+    // construction type filter
+    if(typeof obj.conType !== 'undefined' && obj.conType !== null && obj.conType !== '') {
+      oApiParam.oParam['construction_type'] = obj.conType;
+    }
 
-        // county filter
-        if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
-          oApiParam.oParam['county'] = obj.county;
-        }
+    // selectStateModel
+    if(typeof obj.state !== 'undefined' && obj.state !== null && obj.state !== '') {
+      oApiParam.oParam['state'] = obj.state;
+    }
 
-        // service filter
-        if(typeof obj.service !== 'undefined' && obj.service !== null && obj.service !== '') {
-          oApiParam.oParam['service'] = obj.service;
-        }
+    // county filter
+    if(typeof obj.county !== 'undefined' && obj.county !== null && obj.county !== '') {
+      oApiParam.oParam['county'] = obj.county;
+    }
 
-        // iseven filter
-        if(typeof obj.isEven !== 'undefined' && obj.isEven !== null && obj.isEven !== '') {
-          if(obj.isEven === 'true'){
-            oApiParam.oParam['is_even'] = true;
-          }
-          else if(obj.isEven === 'false'){
+    // service filter
+    if(typeof obj.service !== 'undefined' && obj.service !== null && obj.service !== '') {
+      oApiParam.oParam['service'] = obj.service;
+    }
+
+    // iseven filter
+    if(typeof obj.isEven !== 'undefined' && obj.isEven !== null && obj.isEven !== '') {
+      if(obj.isEven === 'true'){
+        oApiParam.oParam['is_even'] = true;
+      }
+      else if(obj.isEven === 'false'){
         oApiParam.oParam['is_even'] = false;
       }
     }
 
-    if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
-      oApiParam.oParam['noticeId'] = obj.noticeId;
+    // isstandard filter
+    if(typeof obj.isStandard !== 'undefined' && obj.isStandard !== null && obj.isStandard !== ''){
+      if(obj.isStandard === 'true'){
+        oApiParam.oParam['is_standard'] = true;
+      }
+      else if(obj.isStandard === 'false'){
+        oApiParam.oParam['is_standard'] = false;
+      }
+    }
+
+    // award Filters
+    if(typeof obj.awardOrIdv !== 'undefined' && obj.awardOrIdv !== null && obj.awardOrIdv !== ''){
+      oApiParam.oParam['award_or_IDV'] = obj.awardOrIdv;
+    }
+
+    if(typeof obj.awardType !== 'undefined' && obj.awardType !== null && obj.awardType !== ''){
+      oApiParam.oParam['award_type'] = this.setAwardsParams(obj.awardType);
+    }
+
+    if(typeof obj.contractType !== 'undefined' && obj.contractType !== null && obj.contractType !== ''){
+      oApiParam.oParam['contract_type'] = this.setAwardsParams(obj.contractType);
     }
 
     return this.oAPIService.call(oApiParam);
+  }
+  
+  setAwardsParams(str) {
+    let awardArray = str.split(",");
+    let newArray = [];
+    for(var i=0; i<awardArray.length; i++) {
+      newArray.push(awardArray[i].substr(0,1));
+    }
+    return newArray.toString();
   }
 
   featuredSearch(obj) {

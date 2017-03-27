@@ -1,33 +1,105 @@
 import { Component, ViewChild } from '@angular/core';
 import { AlertFooterService } from '../../alerts/alert-footer';
-import {FormControl} from '@angular/forms';
+import { FormControl } from '@angular/forms';
+
+import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import { AutocompleteDropdownService } from 'sam-ui-kit/form-controls/autocomplete-dropdown/autocomplete-dropdown.service';
+import { AutocompleteDropdownButton } from 'sam-ui-kit/types';
+
+import { LocationService } from 'api-kit/location/location.service';
+
 
 @Component({
-  templateUrl: 'ui-kit-demo.template.html'
+  templateUrl: 'ui-kit-demo.template.html',
+  providers: [
+    {provide: AutocompleteService, useClass: AutocompleteDropdownService}
+  ]
 })
 export class UIKitDemoPage {
+  packages = [{
+    "packageId": "5510527885db16f1d7ae72ecfa8e6567",
+    "name": "Industry Day IV Change of Location",
+    "type": "Other (Draft RFPs/RFIs, Responses to Questions, etc..)",
+    "postedDate": "Apr 07, 2015",
+    "access": "Public",
+    "attachments": [
+      {
+        "attachmentId": "38112bb086ee9b88163c734c16b88307",
+        "resourceId": "862178b04be2db1778a697464f186836"
+      }
+    ],
+    "resources": [
+      {
+        "resourceId": "862178b04be2db1778a697464f186836",
+        "name": "J.pdf",
+        "type": "file",
+        "uri": "J.pdf",
+        "description": "Industry Day IV change of conference room.",
+        "mimeType": "application/pdf",
+        "size": "83 kB",
+        "downloadUrl": "https://csp-api.sam.gov/comp/opps/v1/opportunities/resources/files/862178b04be2db1778a697464f186836?api_key=Z5vc0lK9ubZdK6fLKDCdeYODaSVFtGElOUVSzIl0",
+        "typeInfo": {
+          "name": "PDF document",
+          "iconClass": "fa fa-file-pdf-o"
+        }
+      }
+    ],
+    "accordionState": "collapsed",
+    "downloadUrl": "https://csp-api.sam.gov/comp/opps/v1/opportunities/resources/packages/5510527885db16f1d7ae72ecfa8e6567/download/zip?api_key=Z5vc0lK9ubZdK6fLKDCdeYODaSVFtGElOUVSzIl0"
+  }];
+  
+  // Autocomplete Dropdown No Button
+  searchValue: any;
+  searchName: string = "MyComponent65491455"
+  dropdownSearch: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];
+
+  // Autocomplete Dropdown With Button
+  searchValue1: any;
+  searchName1: string = "MyComponent65491455"
+  dropdownSearch1: any = [{value: 'Opportunities', label: 'Opportunities', name: 'Opportunities'}, {value: 'Entities', label: 'Entities', name: 'Entities'}, {value: 'Other', label: 'Other', name: 'Other'}];  
+  getButton(event) {
+    window.alert('You clicked me!');
+  }
+  button: AutocompleteDropdownButton = {
+    label: 'Search',
+    class: '',
+    icon: {
+      class: 'fa fa-search',
+      altText: 'Search'
+    }
+  }
+
+  // Dropdown Multisleect
+  mySpecialValue;
+
+  testModel1 = [];
+
+  getDropdownListItems(event) {
+    this.mySpecialValue = event;
+  }
+
   listOptions = [
-    { 
+    {
       label:'apple',
       value: 1,
       name: 'apple'
     },
-    { 
+    {
       label:'orange',
       value: 2,
       name: 'orange'
     },
-    { 
+    {
       label:'banana',
       value: 3,
       name: 'banana'
     },
-    { 
+    {
       label:'grape',
       value: 4,
       name: 'grape'
     },
-    { 
+    {
       label:'tomato',
       value: 5,
       name: 'tomato'
@@ -203,7 +275,31 @@ export class UIKitDemoPage {
   switch_status = "off";
   switchDisable = false;
 
-  constructor(private alertFooterService: AlertFooterService) {  }
+  // Location Service Demo
+  locationSelectModel = 'iso2';
+  locationSelectConfig = {
+    options: [
+      {value: 'iso2', label: '2 digit code', name: '2 digit code'},
+      {value: 'iso3', label: '3 digit code', name: '2 digit code'},
+      {value: 'countryname', label: 'country name', name: 'country name'},
+    ],
+    disabled: false,
+    label: '',
+    name: 'location',
+  };
+  locationQueryStr = '';
+  locationAllCountryJSON;
+  locationSearchCountryJSON;
+
+  locationResultModel = "";
+  locationResultConfig = {
+    options: [],
+    disabled: false,
+    label: 'All Countries Drop Down',
+    name: 'countries',
+  };
+
+  constructor(private alertFooterService: AlertFooterService, private locationService: LocationService) {  }
 
   onEmptyOptionChanged($event) {
     if ($event.target.checked) {
@@ -254,5 +350,46 @@ export class UIKitDemoPage {
   }
   disableSwitchClick(){
     this.switchDisable = !this.switchDisable;
+  }
+
+  getAllCountriesJSON(){
+    this.locationService.getAllContries().subscribe(
+      res => {
+        this.locationAllCountryJSON = res;
+        this.locationResultConfig.options = [];
+        if(res.length > 0) this.locationResultModel = res[0].country;
+        res.forEach(e => {
+          this.locationResultConfig.options.push({value: e.country, label: e.country, name: e.country});
+        });
+      },
+      error => {
+        this.locationAllCountryJSON = error;
+      }
+    );
+  }
+
+  clearAllCountriesJSON(){
+    this.locationAllCountryJSON = {};
+    this.locationResultConfig.options = [];
+    this.locationResultModel = ""
+  }
+
+
+  searchCountry(locationSelectModel,locationQueryStr){
+    if(locationQueryStr.length !== 0){
+      this.locationService.searchCountry(locationSelectModel, locationQueryStr).subscribe(
+        res => {
+          this.locationSearchCountryJSON = res;
+        },
+        error => {
+          this.locationSearchCountryJSON = error;
+        }
+      );
+    }
+
+  }
+
+  clearSearchCountryJSON(){
+    this.locationSearchCountryJSON = {};
   }
 }

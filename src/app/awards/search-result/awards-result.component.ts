@@ -12,7 +12,7 @@ import Moment = moment.Moment;
     	  <span class="usa-label">Award</span>
     	</p>
     	<h3 class="award-title">
-      	<a href="#">{{ data.identifiers[0]?.piid }}</a>
+    	<a *ngIf="data.isActive==true" [routerLink]="['/awards', uniqueIdentifier]" [queryParams]="qParams">{{ data.identifiers[0]?.piid }}</a>
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
@@ -23,7 +23,7 @@ import Moment = moment.Moment;
           <li><strong>Global Vendor: </strong><span>{{ data.vendor?.globalName }}</span></li>
           <li><strong>Global DUNS: </strong><span>{{ data.vendor?.globalDunsNumber }}</span></li>
           <li>&nbsp;</li>
-          <li><strong>Department/Ind. Agency: </strong><a href="#">{{ data.purchaser?.contractingOrganizationHierarchy[0]?.name }}</a></li>
+          <li><strong>Department/Ind. Agency: </strong><span>{{ data.purchaser?.contractingOrganizationHierarchy[0]?.name }}</span></li>
           <li><strong>Office: </strong><span>{{ data.purchaser?.contractingOrganizationHierarchy[1]?.name }}</span></li>
         </ul>
     	</div>
@@ -34,9 +34,9 @@ import Moment = moment.Moment;
               <li><span>{{ data.contract?.obligatedAmount | currency:'USD':true }}</span></li>
             </ul>
           </li>    
-          <li><strong>Award Type </strong>
+          <li><strong>{{ data.type=='AWARD' ? 'Award Type' : 'IDV Type' }} </strong>
             <ul class="usa-unstyled-list">
-              <li><span>{{ data.type }}</span></li>
+              <li><span>{{ data.awardType?.value }}</span></li>
             </ul>
           </li>      
           <li><strong>Referenced IDV </strong>
@@ -65,13 +65,33 @@ import Moment = moment.Moment;
 })
 export class AwardsResult implements OnInit {
   @Input() data: any={};
-
+  idConcat:string;
+  typeConcat:string;
+  uniqueIdentifier:string;
   constructor() { }
 
   ngOnInit(){
+
     if(this.data.contract!==null && this.data.contract.signedDate!==null) {
       let exp = moment(this.data.contract.signedDate);
       this.data.contract.signedDate = exp.format("MMM D, Y");
     }
+
+    if(this.data._id!=null && this.data._id.length >0){
+      this.idConcat = this.data._id;
+    }
+    else{
+      this.idConcat = 'NA';
+    }
+
+    if(this.data.type != null && this.data.type.length > 0){
+      this.typeConcat = this.data.type;
+    }
+    else{
+      this.typeConcat = 'NA';
+    }
+
+    this.uniqueIdentifier = this.idConcat + '+' + this.typeConcat;
+
   }
 }

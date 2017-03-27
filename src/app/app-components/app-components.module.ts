@@ -1,6 +1,6 @@
 // Angular Dependencies
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { SamUIKitModule } from 'sam-ui-kit';
@@ -12,7 +12,6 @@ import { SamSectionComponent } from './section/section.component';
 import { SamSubSectionComponent } from './subsection/subsection.component';
 import { SamTitleSectionComponent } from './title-section/title-section.component';
 import { DisplayPageComponent } from './display-page/display-page.component';
-import { HistoryComponent } from './history/history.component';
 import { SearchLayoutComponent } from './search-layout/search-layout.component';
 import { ListResultsMessageComponent } from './list-results-message/list-results-message.component';
 import { WorkspaceLayoutComponent } from './workspace-layout/workspace-layout.component';
@@ -21,9 +20,11 @@ import { SamFeedbackComponent } from './feedback-form/feedback-form.component';
 import { SamHeaderLinksComponent } from './header-links/header-links.component';
 import { InputAutocompleteComponent } from './input-autocomplete/input-autocomplete.component';
 import { SamSearchbarComponent } from './searchbar/searchbar.component';
-
-
-
+import { FormFieldComponent } from "./object-form/form-field/form-field.component";
+import { ObjectFormModel } from "./object-form/object-form.component";
+import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-sidebar.component";
+import { SamTypeAheadComponent } from "./type-ahead-multiselect/type-ahead.component";
+import {FalTableComponent} from "./fal-table/fal-table.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -37,22 +38,27 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
     SamSubSectionComponent,
     SamTitleSectionComponent,
     DisplayPageComponent,
-    HistoryComponent,
     SearchLayoutComponent,
     WorkspaceLayoutComponent,
     SamFooterComponent,
     SamHeaderLinksComponent,
     InputAutocompleteComponent,
     ListResultsMessageComponent,
+    FormFieldComponent,
+    ObjectFormModel,
+    ObjectSidebarComponent,
     SamSearchbarComponent,
-    SamFeedbackComponent
+    SamFeedbackComponent,
+    SamTypeAheadComponent,
+    FalTableComponent
   ],
   imports: [
     BrowserModule,
     SamUIKitModule,
     FormsModule,
     RouterModule,
-    SamAPIKitModule
+    SamAPIKitModule,
+    ReactiveFormsModule
   ],
   exports: [
     AgencyPickerComponent,
@@ -62,7 +68,6 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
     SamSubSectionComponent,
     SamTitleSectionComponent,
     DisplayPageComponent,
-    HistoryComponent,
     SearchLayoutComponent,
     WorkspaceLayoutComponent,
     SamFooterComponent,
@@ -70,8 +75,15 @@ import { SamSearchbarComponent } from './searchbar/searchbar.component';
     InputAutocompleteComponent,
     ListResultsMessageComponent,
     SamSearchbarComponent,
-    SamFeedbackComponent
+    SamFeedbackComponent,
+    FormFieldComponent,
+    ObjectFormModel,
+    ObjectSidebarComponent,
+    SamTypeAheadComponent,
+    FalTableComponent
   ],
-  providers: [ ]
+  providers: [
+    SamFeedbackComponent
+  ]
 })
 export class AppComponentsModule { }

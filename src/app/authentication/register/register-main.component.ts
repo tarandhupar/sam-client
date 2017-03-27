@@ -210,9 +210,9 @@ export class RegisterMainComponent {
       email:           ['doe.john@gsa.com', Validators.required],
 
       title:         [''],
-      firstName:     ['John', Validators.required],
-      middleName:    ['J'],
-      lastName:      ['Doe', Validators.required],
+      firstName:     ['', Validators.required],
+      middleName:    [''],
+      lastName:      ['', Validators.required],
       suffix:        [''],
 
       workPhone:       [''],

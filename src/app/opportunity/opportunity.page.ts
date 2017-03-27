@@ -10,8 +10,9 @@ import * as _ from 'lodash';
 import { OpportunityTypeLabelPipe } from './pipes/opportunity-type-label.pipe';
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
+import {forEach} from "@angular/router/src/utils/collection";
 import { ViewChangesPipe } from "./pipes/view-changes.pipe";
-
+import { FilesizePipe } from "./pipes/filesize.pipe";
 
 @Component({
   moduleId: __filename,
@@ -79,7 +80,8 @@ export class OpportunityPage implements OnInit {
   organization: any;
   currentUrl: string;
   dictionary: any;
-  attachment: any;
+  attachments: any = [];
+  packages: any = [];
   relatedOpportunities:any;
   relatedOpportunitiesMetadata:any;
   public logoUrl: string;
@@ -90,6 +92,9 @@ export class OpportunityPage implements OnInit {
   differences: any;
   showChangesGeneral = false;
   showChangesSynopsis = false;
+  showChangesClassification = false;
+  showChangesContactInformation = false;
+  showChangesAwardDetails = false;
 
 
   errorOrganization: any;
@@ -152,10 +157,12 @@ export class OpportunityPage implements OnInit {
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
-    let packagesOpportunities = this.loadAttachments(opportunityAPI);
     let relatedOpportunities = this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     let historyAPI = this.loadHistory(opportunityAPI);
     let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
+    this.checkChanges(previousOpportunityAPI);
+    let packagesOpportunities = this.loadAttachments(historyAPI);
+
     this.sidenavService.updateData(this.selectedPage, 0);
 
     // Construct a new observable that emits both opportunity and its parent as a tuple
@@ -175,7 +182,7 @@ export class OpportunityPage implements OnInit {
       success => {
         if (this.pageFragment && document.getElementById(this.pageFragment)) {
           document.getElementById(this.pageFragment).scrollIntoView();
-        }
+      }
       },
       error => {
         // Sometimes api calls return an error
@@ -272,7 +279,8 @@ export class OpportunityPage implements OnInit {
   }
 
   private loadPreviousOpportunityVersion(historyAPI: Observable<any>) { 
-    let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers 
+    let opportunitySubject = new ReplaySubject(1);
+    let opportunitySubject2 = new ReplaySubject(1);// broadcasts the opportunity to multiple subscribers 
      historyAPI.subscribe(opportunity => {
        if (!(this.opportunity.data.type === "m") || opportunity.content.history.length < 2){ 
          return null; 
@@ -283,18 +291,16 @@ export class OpportunityPage implements OnInit {
          this.opportunityService.getOpportunityById(id).subscribe(opportunitySubject);
        } 
      });// attach subject to stream  
+
     opportunitySubject.subscribe(api => { // do something with the opportunity api 
       this.previousOpportunityVersion = api;
       if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined'){
-        this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
-          this.previousOpportunityLocation = data;
-          this.differences = this.checkChanges();
-        });
+        this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(opportunitySubject2);
     }
     }, err => { 
       console.log('Error loading opportunity: ', err); 
     });  
-    return opportunitySubject; 
+    return opportunitySubject2; 
   }
 
   private loadParentOpportunity(opportunityAPI: Observable<any>){
@@ -401,25 +407,68 @@ export class OpportunityPage implements OnInit {
     });
   }
 
-  private loadAttachments(opportunityAPI: Observable<any>){
+  private loadAttachments(historyAPI: Observable<any>){
+    let packagesOpportunities = [];
+      historyAPI.subscribe(api =>{
+        let current = _.filter(api.content.history, historyItem => {
+          return historyItem.notice_id == this.opportunity.opportunityId;
+        })[0];
+        api.content.history.forEach((res: any) => {
+          if(res.index <= current.index) {
+            packagesOpportunities.push(this.loadHistoryAttachments(res.notice_id));
+          }
+        });
+      },err => {
+        console.log('Error loading attachments: ', err);
+        this.attachmentError = true;
+      });
+    return packagesOpportunities;
+
+  }
+
+  private loadHistoryAttachments(historyId:any){
     let attachmentSubject = new ReplaySubject(1); // broadcasts the attachments to multiple subscribers
-    opportunityAPI.subscribe(api => {
-      this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
-    });
+    this.opportunityService.getAttachmentById(historyId).subscribe(attachmentSubject);
 
     attachmentSubject.subscribe(attachment => { // do something with the organization api
-      this.attachment = attachment;
-      this.attachment.packages.forEach((key: any) => {
-        key.accordionState = 'collapsed';
+      this.attachments.push(attachment);
+      this.packages = [];
+      let filesizePipe = new FilesizePipe();
+      let dateformatPipe = new DateFormatPipe();
+      let archiveVal = this.opportunity.data.statuses.isArchived;
+      this.attachments.forEach((attach: any) => {
+        attach.packages.forEach((key: any) => {
+          key.resources = [];
+          key.accordionState = 'collapsed';
+          key.downloadUrl = this.getDownloadPackageURL(key.packageId, archiveVal);
+          key.postedDate = dateformatPipe.transform(key.postedDate,'MMM DD, YYYY');
+          if(key.access == "Public"){
+            key.attachments.forEach((resource: any) => {
+              attach.resources.forEach((res: any) => {
+                if(resource.resourceId == res.resourceId){
+                  if(res.type=="link"){
+                    res.downloadUrl = res.uri;
+                  } else {
+                    //file
+                    res.downloadUrl = this.getDownloadFileURL(resource.resourceId, archiveVal);
+                  }
+                  if(!isNaN(res.size)){
+                    res.size = filesizePipe.transform(res.size);
+                  }
+                  res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+                  key.resources.push(res);
+                }
+              });
+            });
+          }
+          this.packages.push(key);
+          this.packages = _.sortBy(this.packages, 'postedDate');
+        });
       });
-      this.attachment.resources.forEach((res: any) => {
-        res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
-      });
-    }, err => {
+    },err => {
       console.log('Error loading attachments: ', err);
       this.attachmentError = true;
     });
-
     return attachmentSubject;
   }
 
@@ -443,7 +492,6 @@ export class OpportunityPage implements OnInit {
     }
   }
 
-
   private loadHistory(opportunity: Observable<any>) {
     let historySubject = new ReplaySubject(1);
     opportunity.subscribe(opportunityAPI => {
@@ -452,7 +500,6 @@ export class OpportunityPage implements OnInit {
         console.log('Error loading history');
         return;
       }
-
       /** Load history API **/
       this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
@@ -468,7 +515,12 @@ export class OpportunityPage implements OnInit {
           return historyItem.parent_notice == null;
         };
         let originalOpportunity = _.filter(this.history.content.history, isOriginal)[0];
-        let originalTypeLabel = typeLabel.transform(originalOpportunity.procurement_type);
+        let originalTypeLabel;
+        if(originalOpportunity == null) {
+          originalTypeLabel = "No Type Label";
+        } else {
+          originalTypeLabel = typeLabel.transform(originalOpportunity.procurement_type);
+        }
 
         // function that takes a history item and returns a title for it
         let makeTitle = function(historyItem) {
@@ -532,6 +584,8 @@ export class OpportunityPage implements OnInit {
           return processedHistoryItem;
         };
         this.processedHistory = this.history.content.history.map(processHistoryItem);
+        //sort by index to show history by version (oldest to newest)
+        this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.index; });
 
         /** Show alert if current version is not the authoritative version **/
         let isCurrent = function(historyItem) { return historyItem.id === opportunityAPI.opportunityId; };
@@ -548,7 +602,11 @@ export class OpportunityPage implements OnInit {
             }
           });
         }
+      }, err => {
+        console.log('Error loading history: ', err);
       });
+
+      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
     });
     return historySubject;
   }
@@ -723,7 +781,7 @@ export class OpportunityPage implements OnInit {
   }
 
   public getDownloadAllPackagesURL(opportunityID: string, isArchived: boolean = false) {
-    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived);
+    return this.getBaseURL() + '/opportunities/' + opportunityID + '/resources/packages/download/zip' + this.getAPIUmbrellaKey() + this.getOppStatusQueryString(isArchived) +'&includeRevisions=true';
   }
 
   public getBaseURL() {
@@ -743,7 +801,7 @@ export class OpportunityPage implements OnInit {
   }
 
   public hasPublicPackages(){
-    for(let pkg of this.attachment['packages']) {
+    for(let pkg of this.packages) {
       if(pkg['access'] === 'Public') { return true; }
     }
     return false;
@@ -811,16 +869,28 @@ export class OpportunityPage implements OnInit {
         return OpportunityPage.TYPE_UNKNOWN;
     }
   }
-  private checkChanges(){
-    let viewChangesPipe = new ViewChangesPipe();
-      return  viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
+  private checkChanges(previousOpportunityAPI: Observable<any>){
+    previousOpportunityAPI.subscribe((data) => {
+      this.previousOpportunityLocation = data;
+      let viewChangesPipe = new ViewChangesPipe();
+      this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
+    });
   }
 
   private showHideGeneral(){
-    this.showChangesGeneral == false ? this.showChangesGeneral = true : this.showChangesGeneral = false;
+    this.showChangesGeneral = !this.showChangesGeneral;
   }
 
   private showHideSynopsis(){
-    this.showChangesSynopsis == false ? this.showChangesSynopsis = true : this.showChangesSynopsis = false;
+    this.showChangesSynopsis = !this.showChangesSynopsis;
+  }
+  private showHideClassification(){
+    this.showChangesClassification = !this.showChangesClassification
+  }
+  private showHideContactInformation(){
+    this.showChangesContactInformation = !this.showChangesContactInformation
+  }
+  private showHideAwardDetails(){
+    this.showChangesAwardDetails = !this.showChangesAwardDetails;
   }
 }

@@ -34,6 +34,52 @@
   </div>
 
   <div class="usa-grid">
+    <h2>Location Services Demo</h2>
+    <div class="usa-width-one-whole">
+      <div class="usa-width-one-half m_R-0">
+        <button class="usa-button-primary" (click)="getAllCountriesJSON()">Get All Countries</button>
+        <button class="usa-button-transparent" (click)="clearAllCountriesJSON()">Clear <i class="fa fa-trash" aria-hidden="true"></i></button>
+        <div class="usa-width-one-whole m_T-1x">
+          <textarea readonly style="overflow-y: scroll;height: 250px;resize: none;">{{locationAllCountryJSON | json}}</textarea>
+        </div>
+        <div class="usa-width-one-whole m_T-1x">
+          <samSelect [(model)]="locationResultModel"
+                     [name]="locationResultConfig.name"
+                     [options]="locationResultConfig.options"
+                     [label]="locationResultConfig.label"
+                     [hint]="locationResultConfig.hint"
+                     [errorMessage]="locationResultConfig.errorMessage"
+                     [disabled]="locationResultConfig.disabled">
+
+          </samSelect>
+        </div>
+      </div>
+      <div class="usa-width-one-half">
+        <div class="usa-width-one-third relative m_R-0"> &nbsp;
+          <samSelect class="usa-width-one-whole" style="position:absolute;top:-27px"
+                     [(model)]="locationSelectModel"
+                     [name]="locationSelectConfig.name"
+                     [options]="locationSelectConfig.options"
+                     [label]="''"
+                     [hint]="locationSelectConfig.hint"
+                     [errorMessage]="locationSelectConfig.errorMessage"
+                     [disabled]="locationSelectConfig.disabled">
+          </samSelect>
+        </div>
+        <input class="usa-width-one-third m_R-0" [(ngModel)]="locationQueryStr">
+        <button class="usa-button-big m_0" (click)="searchCountry(locationSelectModel,locationQueryStr)">Search</button>
+        <div class="usa-width-one-whole m_T-1x">
+          <textarea readonly style="overflow-y: scroll;height: 250px;resize: none;">{{locationSearchCountryJSON | json}}</textarea>
+          <button class="usa-button-transparent" (click)="clearSearchCountryJSON()">Clear <i class="fa fa-trash" aria-hidden="true"></i></button>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="usa-grid">
     <h2>Button Component &lt;samButton&gt;</h2>
     <div class="usa-width-one-whole">
       <div class="usa-width-one-fourth">
@@ -84,7 +130,6 @@
         [(model)]="selectModel"
         [name]="selectConfig.name"
         [options]="selectConfig.options"
-        [label]="selectConfig.label"
         [hint]="selectConfig.hint"
         [errorMessage]="selectConfig.errorMessage"
         [disabled]="selectConfig.disabled">
@@ -513,9 +558,38 @@
     <pre>{{listOptions | json}}</pre>
   </div>
   <div class="usa-width-one-fourth">
-      <sam-list-input [control]="listControl" [options]="listOptions"></sam-list-input>
+      <sam-list-input [name]="wawaweewa" [control]="listControl" [options]="listOptions"></sam-list-input>
   </div>
   <div class="usa-width-one-fourth">
-      <sam-list-input [control]="listControl" [selections]="[1,4]" [options]="listOptions"></sam-list-input>
+      <sam-list-input [name]="gogogogogogo" [control]="listControl" [selections]="[1,4]" [options]="listOptions"></sam-list-input>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Sam Autocomplete Dropdown</h2>
+    <div class="usa-width-one-half">
+      <sam-autocomplete-dropdown [(ngModel)]="searchValue" [name]="searchName" [options]="dropdownSearch"></sam-autocomplete-dropdown>
+    </div>
+    <div class="usa-width-one-half">
+      {{searchValue}}
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">MultiSelect Dropdown</h2>
+    <div class="usa-width-one-half">
+      <sam-list-display [newValue]="searchValue1" (emitSelectedItems)="getDropdownListItems($event)" [(ngModel)]="testModel1">
+        <sam-autocomplete-dropdown [(ngModel)]="searchValue1" [name]="searchName1" [options]="dropdownSearch1" [button]="button" (onButtonPressed)="getButton($event)"></sam-autocomplete-dropdown>
+      </sam-list-display>
+    </div>
+    <div class="usa-width-one-half">
+      Model value: {{testModel1}}
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">SAM Download</h2>
+    <div class="usa-width-one-whole">
+      <sam-download [packages]="packages" [downloadAllUrl]="'fakedownloadlink'"></sam-download>
+    </div>
   </div>
 </div>

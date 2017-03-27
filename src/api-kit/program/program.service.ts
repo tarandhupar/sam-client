@@ -7,24 +7,38 @@ export class ProgramService{
 
   constructor(private oAPIService: WrapperService){}
 
-  getProgramById(id: string) {
+  getProgramById(id: string, cookie: string) {
     let oApiParam = {
-        name: 'program',
-        suffix: '/' + id,
-        oParam: {},
-        method: 'GET'
+      name: 'program',
+      suffix: '/' + id,
+      oParam: {},
+      headers: {},
+      method: 'GET'
     };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
 
     return this.oAPIService.call(oApiParam);
   }
 
-  getLatestProgramById(id: string) {
+  getLatestProgramById(id: string, cookie: string) {
     let oApiParam = {
       name: 'program',
       suffix: '/' + id + '/getLatestPublishedProgramByProgramId',
+      headers: {},
       oParam: {},
       method: 'GET'
     };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
 
     return this.oAPIService.call(oApiParam);
   }
@@ -34,7 +48,11 @@ export class ProgramService{
       name: 'program',
       suffix: '/',
       oParam: {
-        page: obj.pageNum
+        page: (obj.pageNum == undefined) ? '' : obj.pageNum,
+        status: (obj.status == undefined) ? '' : obj.status,
+        includeCount : (obj.includeCount == undefined) ? '' : obj.includeCount,
+        size: (obj.size == undefined) ? '' : obj.size,
+        sortBy: (obj.sortBy == undefined) ? '' : obj.sortBy
       },
       headers: {
         "X-Auth-Token": obj.Cookie
@@ -59,18 +77,5 @@ export class ProgramService{
 
     return this.oAPIService.call(oApiParam, false);
 
-  }
-  getAuthProgramById(id: string, cookie: string) {
-    let oApiParam = {
-      name: 'program',
-      suffix: '/' + id,
-      oParam: {},
-      headers: {
-        "X-Auth-Token": cookie
-      },
-      method: 'GET'
-    };
-
-    return this.oAPIService.call(oApiParam);
   }
 }

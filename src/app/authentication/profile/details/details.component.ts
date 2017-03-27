@@ -6,8 +6,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { FHService, IAMService } from 'api-kit';
 
-import { User } from '../user.interface';
-import { KBA } from '../kba.interface';
+import { User } from '../../user.interface';
+import { KBA } from '../../kba.interface';
 
 @Component({
   templateUrl: './details.component.html',
@@ -28,10 +28,7 @@ export class DetailsComponent {
   };
 
   private store = {
-    title: 'Personal Details'
-  };
-
-  private lookups = {
+    title: 'Personal Details',
     questions: [
       { 'id': 1,  'question': 'What was the make and model of your first car?' },
       { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
@@ -53,6 +50,7 @@ export class DetailsComponent {
   private states = {
     isGov: false,
     selected: ['','',''],
+    loading: false,
     submitted: false,
     editable: {
       identity: false,
@@ -61,18 +59,17 @@ export class DetailsComponent {
     }
   };
 
-  private user = {
+  private user:User = {
     _id: '',
     email: '',
 
     title: '',
+    suffix: '',
 
     fullName: '',
     firstName: '',
     initials: '',
     lastName: '',
-
-    suffix: '',
 
     department: '',
     orgID: '',
@@ -111,10 +108,6 @@ export class DetailsComponent {
       this.initUser(() => {
         this.zone.run(() => {
           let intAnswer;
-
-          for(intAnswer = 0; intAnswer < this.user.kbaAnswerList.length; intAnswer++) {
-            this.user.kbaAnswerList[intAnswer].answer = this.repeater(this.user.kbaAnswerList[intAnswer].answer, 8);
-          }
 
           this.detailsForm = this.builder.group({
             title:           [this.user.title],
@@ -159,80 +152,60 @@ export class DetailsComponent {
   }
 
   ngDoCheck() {
-    let vm = this,
-        changes = this.differ.diff(this.user),
+    let changes = this.differ.diff(this.user),
         key;
 
     if(changes) {
       changes.forEachChangedItem((diff) => {
-        if(vm.detailsForm && vm.detailsForm.controls[diff.key]) {
+        if(this.detailsForm && this.detailsForm.controls[diff.key]) {
           key = diff.key.toString().search(/(middleName|initials)/) > -1 ? 'initials' : diff.key;
-
-          vm.detailsForm.controls[key].setValue(diff.currentValue);
-          vm.user[key] = diff.currentValue;
+          this.detailsForm.controls[key].setValue(diff.currentValue);
+          this.user[key] = diff.currentValue;
         }
       });
     }
   }
 
   loadUser(cb) {
-    let vm = this;
-
-    this.api.iam.checkSession(function(user) {
-      vm.user = _.merge({}, vm.user, user);
-      vm.user['middleName'] = user.initials;
+    this.api.iam.checkSession((user) => {
+      this.user = _.merge({}, this.user, user);
+      this.user['middleName'] = user.initials;
       cb();
-    }, function() {
-      vm.router.navigate(['/signin']);
+    }, () => {
+      this.router.navigate(['/signin']);
     });
   }
 
   loadKBA(cb) {
-    let vm = this;
-
     function processKBAQuestions(data) {
-      let questions,
-          selected,
-          intQuestion,
+      let selected,
           intAnswer;
 
       // Prepopulate kbaAnswerList
       for(intAnswer = 0; intAnswer < data.selected.length; intAnswer++) {
-        vm.user.kbaAnswerList.push({ questionId: 0, answer: ' ' });
+        this.user.kbaAnswerList.push({ questionId: 0, answer: this.repeater(' ', 8) });
       }
 
       // Set Selected Answers
-      vm.user.kbaAnswerList = vm.user.kbaAnswerList.map(function(answer, intAnswer) {
+      this.user.kbaAnswerList = this.user.kbaAnswerList.map((answer, intAnswer) => {
         selected = (data.selected[intAnswer] || -1);
 
         answer.questionId = selected;
-        vm.states.selected[intAnswer] = selected;
+        this.states.selected[intAnswer] = selected;
 
         return answer;
       });
 
       // Set question mapping of questionID => index
-      vm.lookups.questions = data.questions;
-      vm.lookups.questions = vm.lookups.questions.map(function(question, intQuestion) {
+      this.store.questions = data.questions;
+      this.store.questions = this.store.questions.map((question, intQuestion) => {
         // Create reverse lookup while remapping
-        vm.lookups.indexes[question.id] = intQuestion;
+        this.store.indexes[question.id] = intQuestion;
         question['disabled'] = false;
         return question;
       });
 
-      for(intQuestion in vm.user.kbaAnswerList) {
-        intQuestion = parseInt(intQuestion);
-
-        questions = _.cloneDeep(vm.lookups.questions).map(function(question, index) {
-          intAnswer = _.indexOf(data.selected, question.id);
-          // Update disabled state
-          question.disabled = (intAnswer > -1) && (intAnswer !== intQuestion);
-
-          return question;
-        });
-
-        vm.questions.push(questions);
-      }
+      this.initQuestions(data);
 
       cb();
     }
@@ -241,17 +214,19 @@ export class DetailsComponent {
       cb();
     }
 
-    this.api.iam.kba.questions(processKBAQuestions, cancelKBAQuestions);
+    this.api.iam.kba.questions(
+      processKBAQuestions.bind(this),
+      cancelKBAQuestions.bind(this)
+    );
   }
 
   initUser(cb) {
-    let vm = this,
-        fn,
-        getSessionUser = (function(promise) {
+    let fn,
+        getSessionUser = ((promise) => {
           this.zone.runOutsideAngular(() => {
             this.loadUser(() => {
               this.zone.run(() => {
-                this.states.isGov = _.isUndefined(this.user.department) && String(this.user.department).length;
+                this.states.isGov = (_.isUndefined(this.user.department) && String(this.user.department).length > 0);
                 this.loadKBA(() => {
                   promise(this.user);
                 });
@@ -260,28 +235,17 @@ export class DetailsComponent {
           });
         }).bind(this),
 
-        getMockUser = (function(promise) {
+        getMockUser = ((promise) => {
           let intQuestion;
 
-          vm.states.isGov = true;
-
-          for(intQuestion in vm.user.kbaAnswerList) {
-            vm.questions.push(vm.lookups.questions);
-          }
-
-          vm.lookups.questions = vm.lookups.questions.map(function(question, intQuestion) {
-            // Create reverse lookup while remapping
-            vm.lookups.indexes[question.id] = intQuestion;
-            question['disabled'] = false;
-            return question;
-          });
-
-          promise({
+          this.states.isGov = true;
+          _.merge(this.user, {
+            _id: 'doe.john@gsa.gov',
             email: 'doe.john@gsa.gov',
             suffix: '',
+            middleName: 'J',
             firstName: 'John',
             initials: 'J',
-            middleName: 'J',
             lastName: 'Doe',
 
             department: 100006688,
@@ -290,21 +254,60 @@ export class DetailsComponent {
             workPhone: '12401234568',
 
             kbaAnswerList: [
-              { questionId: 1, answer: '' },
-              { questionId: 3, answer: '' },
-              { questionId: 5, answer: '' }
+              { questionId: 1, answer: this.repeater(' ', 8) },
+              { questionId: 3, answer: this.repeater(' ', 8) },
+              { questionId: 5, answer: this.repeater(' ', 8) }
             ]
           });
+
+          for(intQuestion in this.user.kbaAnswerList) {
+            this.questions.push(this.store.questions);
+          }
+
+          this.store.questions = this.store.questions.map((question, intQuestion) => {
+            // Create reverse lookup while remapping
+            this.store.indexes[question.id] = intQuestion;
+            question['disabled'] = false;
+            return question;
+          });
+
+          this.initQuestions();
+
+          promise(this.user);
         }).bind(this);
 
     fn = this.api.iam.isDebug() ? getMockUser : getSessionUser;
 
     fn((userData) => {
-      vm.user = _.merge({}, vm.user, userData);
-      vm.user.workPhone = vm.user.workPhone.replace(/[^0-9]/g, '');
-      vm.user.workPhone = (vm.user.workPhone.length < 11 ? '1' : '' ) + vm.user.workPhone;
+      this.user = _.merge({}, this.user, userData);
+      this.user.workPhone = this.user.workPhone.replace(/[^0-9]/g, '');
+      this.user.workPhone = (this.user.workPhone.length < 11 ? '1' : '' ) + this.user.workPhone;
       cb();
     });
+  }
+
+  initQuestions(data?:any) {
+    let questions,
+        intQuestion,
+        intAnswer;
+
+    data = data || {
+      selected: this.api.iam.isDebug() ? [1, 3, 5] : []
+    };
+
+    for(intQuestion in this.user.kbaAnswerList) {
+      intQuestion = parseInt(intQuestion);
+
+      questions = _.cloneDeep(this.store.questions).map((question, index) => {
+        intAnswer = _.indexOf(data.selected, question.id);
+        // Update disabled state
+        question.disabled = (intAnswer > -1) && (intAnswer !== intQuestion);
+
+        return question;
+      });
+
+      this.questions.push(questions);
+    }
   }
 
   initKBAGroup($index) {
@@ -374,33 +377,32 @@ export class DetailsComponent {
   }
 
   question(questionID) {
-    const questions = this.lookups.questions,
-          mappings = this.lookups.indexes;
+    const questions = this.store.questions,
+          mappings = this.store.indexes;
     return questions[mappings[questionID]].question;
   }
 
   changeQuestion(questionID, $index) {
-    let vm = this,
-        items = _.cloneDeep(this.lookups.questions),
+    let  items = _.cloneDeep(this.store.questions),
         intQuestion;
 
     this.states.selected[$index] = questionID;
 
-    this.states.selected.forEach(function(questionID, intItem) {
+    this.states.selected.forEach((questionID, intItem) => {
       if(questionID.toString().length) {
-        intQuestion = vm.lookups.indexes[questionID];
+        intQuestion = this.store.indexes[questionID];
         // Loop through new questions array lookup to apply disabled options
         items[intQuestion].disabled = true;
       }
     });
 
-    this.states.selected.forEach(function(questionID, intItem) {
+    this.states.selected.forEach((questionID, intItem) => {
       // Loop through each question list to set the list to the new questions list
-      vm.questions[intItem] = _.cloneDeep(items);
+      this.questions[intItem] = _.cloneDeep(items);
       // Re-enable the selected option
       if(questionID) {
-        intQuestion = vm.lookups.indexes[questionID];
-        vm.questions[intItem][intQuestion].disabled = false;
+        intQuestion = this.store.indexes[questionID];
+        this.questions[intItem][intQuestion].disabled = false;
       }
     });
   }
@@ -418,9 +420,9 @@ export class DetailsComponent {
   }
 
   deactivateAccount(cb) {
-    this.api.iam.user.deactivate(this.user.email, function() {
+    this.api.iam.user.deactivate(this.user.email, () => {
       cb();
-    }, function() {
+    }, () => {
       //TODO
     });
   }
@@ -436,7 +438,7 @@ export class DetailsComponent {
           // Redirect to login
           this.router
             .navigate(['signin'])
-            .then(function() {
+            .then(() => {
               window.location.reload();
             });
         });
@@ -466,7 +468,9 @@ export class DetailsComponent {
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
 
-      controls[key].markAsDirty();
+      if(key !== 'kbaAnswerList') {
+        controls[key].markAsDirty();
+      }
 
       if(controls[key].invalid) {
         valid = false;
@@ -495,26 +499,31 @@ export class DetailsComponent {
         userData[key] = controlValue;
       }
 
-      if(key == 'workPhone') {
-        userData[key] = this.user.workPhone;
-      }
+      switch(key) {
+        case 'workPhone':
+          userData[key] = this.user.workPhone;
+          break;
 
-      if(key == 'kbaAnswerList') {
-        userData[key] = controlValue.map((item, intItem) => {
-          item.answer = item.answer.trim();
-          this.user.kbaAnswerList[intItem] = item;
+        case 'kbaAnswerList':
+          if(controls[key].dirty) {
+            userData[key] = controlValue.map((item, intItem) => {
+              item.answer = item.answer.trim();
+              this.user.kbaAnswerList[intItem] = item;
 
-          return item;
-        });
+              return item;
+            });
 
-        this.api.iam.kba.update(userData[key], () => {
-          console.log('KBA Q&A successfully saved');
-          cb();
-        }, () => {
-          cb();
-        });
+            this.api.iam.kba.update(userData[key], () => {
+              console.log('KBA Q&A successfully saved');
+              cb();
+            }, () => {
+              cb();
+            });
+          } else {
+            cb();
+          }
 
-        return;
+          return;
       }
     }
 
@@ -536,14 +545,16 @@ export class DetailsComponent {
         keys = mappings[groupKey].split('|'),
         valid = this.isValid(keys);
 
+    this.states.submitted = true;
+
     if(valid) {
-      this.states.submitted = true;
+      this.states.loading = true;
 
       this.zone.runOutsideAngular(() => {
         this.saveGroup(keys, () => {
           this.zone.run(() => {
             this.states.editable[groupKey] = false;
-            this.states.submitted = false;
+            this.states.loading = false;
           });
         });
       });

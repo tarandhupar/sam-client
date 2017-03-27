@@ -1,34 +1,62 @@
 <div class="grant-access-page">
-  <h1 class="m_T-0">{{isEdit ? "Edit" : "Grant"}} Access</h1>
+  <h1 id="form-top" class="m_T-0">{{modeName()}} Access</h1>
 
   <!-- Domain -->
-  <div *ngIf="!isEdit">
+  <div *ngIf="mode !== 'edit'">
     <samSelect name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
   </div>
-  <div *ngIf="isEdit">
-    <label>Domain:</label>
-    <span>{{domain}}</span>
+  <div *ngIf="mode === 'edit'" class="">
+    <div class="usa-grid-full">
+      <div class="usa-width-one-sixth">
+        <label><strong>Domain:</strong></label>
+      </div>
+      <div class="usa-width-five-sixths">
+        <span *ngIf="domain">{{labelForDomain(domain)}}</span>
+        <span *ngIf="!domain"><i>Loading Domain...</i></span>
+      </div>
+    </div>
   </div>
 
+  <!-- Supervisor Name and email -->
+  <ng-container *ngIf="mode === 'request'">
+    <samText label="Supervisor Name" name="supervisor-name" [(ngModel)]="supervisorName" [errorMessage]="errors.supervisorName" [required]="true" (change)="onSupervisorNameChange($event)"></samText>
+    <samText label="Supervisor Email" name="supervisor-email" [(ngModel)]="supervisorEmail" [errorMessage]="errors.supervisorEmail" [required]="true" (change)="onSupervisorEmailChange($event)"></samText>
+  </ng-container>
+
   <!-- Role -->
-  <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
+  <div *ngIf="mode === 'grant'">
+    <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
+  </div>
+  <div *ngIf="mode === 'edit'">
+    <div class="usa-grid-full m_T-4x">
+      <div class="usa-width-one-sixth">
+        <label for="role-input"><strong>Role:</strong></label>
+      </div>
+      <div class="usa-width-one-half">
+        <select id="role-input" [ngModel]="role" (ngModelChange)="onRoleChange($event)">
+          <option *ngFor="let r of roleOptions" [value]="r.value">{{r.label}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
 
   <!-- Orgs -->
   <agencyPicker
-    id="form-top"
+    *ngIf="mode !== 'request'"
     [label]="'Organizations'"
     [multimode]="true"
     (organization)="onOrganizationsChange($event)"
     [required]="true"
-    [searchMessage]="orgError"
+    [searchMessage]="errors.org"
+    [initial]="orgs"
   ></agencyPicker>
 
   <!-- Permissions -->
   <ng-container *ngIf="objects && objects.length">
     <div class="m_B-1x"><label>Permissions</label></div>
     <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
-      <li  *ngFor="let object of objects" class="object-item">
-        <strong>{{object.function.val}}</strong>
+      <li  *ngFor="let object of objects; let evenObject=even" class="object-item">
+        <strong>{{object.function.val}}<span *ngIf="evenObject">&nbsp;<i class="fa fa-info-circle"></i></span></strong>
         <div class="p_L-4x permission-list">
           <span *ngFor="let permission of object.permission" class="permission-control-group">
             <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
@@ -40,7 +68,7 @@
   </ng-container>
 
   <!-- Optional Message -->
-  <samTextArea name="options-response" label="Messages:" placeholder="(Optional) Include a message with your response" [(value)]="messages"></samTextArea>
+  <samTextArea name="options-response" label="Messages:" [hint]="messagePlaceholder()" [(ngModel)]="messages" [required]="mode === 'request'" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></samTextArea>
 
   <!-- Cancel / Confirm -->
   <div>
