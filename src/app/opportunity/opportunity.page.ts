@@ -94,6 +94,7 @@ export class OpportunityPage implements OnInit {
   showChangesSynopsis = false;
   showChangesClassification = false;
   showChangesContactInformation = false;
+  showChangesAwardDetails = false;
 
 
   errorOrganization: any;
@@ -158,9 +159,9 @@ export class OpportunityPage implements OnInit {
     this.loadOpportunityLocation(opportunityAPI);
     let relatedOpportunities = this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     let historyAPI = this.loadHistory(opportunityAPI);
-    let packagesOpportunities = this.loadAttachments(historyAPI);
     let previousOpportunityAPI = this.loadPreviousOpportunityVersion(historyAPI);
     this.checkChanges(previousOpportunityAPI);
+    let packagesOpportunities = this.loadAttachments(historyAPI);
 
     this.sidenavService.updateData(this.selectedPage, 0);
 
@@ -888,5 +889,8 @@ export class OpportunityPage implements OnInit {
   }
   private showHideContactInformation(){
     this.showChangesContactInformation = !this.showChangesContactInformation
+  }
+  private showHideAwardDetails(){
+    this.showChangesAwardDetails = !this.showChangesAwardDetails;
   }
 }

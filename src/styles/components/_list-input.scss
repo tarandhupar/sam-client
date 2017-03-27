@@ -10,7 +10,7 @@
     position:relative;
     overflow:visible;
     height: 52px;
-    
+
     .input-wrapper{
       position:relative;
       float:left;
@@ -24,11 +24,12 @@
       }
       .sam-autocomplete{
         display:block;
-        
+
         input{
           margin-bottom:0;
         }
       }
+
       /*input{
         position:absolute;
       }*/
@@ -65,5 +66,5 @@
       margin-left: 5px;
     }
   }
-  
+
 }

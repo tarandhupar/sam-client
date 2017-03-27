@@ -73,10 +73,14 @@ export class App{
       qsobj['cba'] = null;
       qsobj['prevP'] = null;
       qsobj['isStandard'] = null;
-
     }
     if(searchObject.searchField === 'wd' || searchObject.searchField === 'ent'){
       qsobj['organizationId'] = null;
+    }
+    if(searchObject.searchField !== 'fpds') {
+      qsobj['awardOrIdv'] = null;
+      qsobj['awardType'] = null;
+      qsobj['contractType'] = null;
     }
 
     let navigationExtras: NavigationExtras = {
