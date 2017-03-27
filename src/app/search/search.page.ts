@@ -28,7 +28,7 @@ export class SearchPage implements OnInit{
   initLoad = true;
   showOptional:any = (SHOW_OPTIONAL=="true");
   qParams:any = {};
-  isActive: boolean = false;
+  isActive: boolean = true;
   isStandard: string = '';
 
   @ViewChild('agencyPicker') agencyPicker;
@@ -145,6 +145,81 @@ export class SearchPage implements OnInit{
   scaSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result. <br><br><b>If you would like to request a SCA contract action, click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form.</b>"
   wdSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result."
 
+  //Select Award Types
+  awardIDVModel: string = '';
+  awardIDVRadConfig = {
+    options:  [
+      {value: 'AWARD', label: 'Contract', name: 'Contract'},
+      {value: 'IDV', label: 'ICD (Interagency Contract Delivery)', name: 'ICD'}
+    ],
+    name: 'radio-component5',
+    label: '',
+    errorMessage: '',
+    hint: ''
+  };
+
+  awardTypeModel: string = '';
+  awardType = {
+    "name": "Award-IDV Type",
+    "label": "Award-IDV Types",
+    "options": [
+      { label: 'IDC (IDV)', value: 'B:IDV', name: 'IDC' },
+      { label: 'DELIVERY ORDER', value: 'C:AWARD', name: 'DELIVERY ORDER' },
+      { label: 'BPA (IDV)', value: 'E:IDV', name: 'BPA' },
+      { label: 'GWAC (IDV)', value: 'A:IDV', name: 'GWAC' },
+      { label: 'OTHER TRANSACTION ORDER', value: 'O:AWARD', name: 'OTHER TRANSACTION ORDER' },
+      { label: 'DEFINITIVE CONTRACT', value: 'D:AWARD', name: 'DEFINITIVE CONTRACT' },
+      { label: 'GRANT FOR RESEARCH', value: 'G:AWARD', name: 'GRANT FOR RESEARCH' },
+      { label: 'PURCHASE ORDER', value: 'B:AWARD', name: 'PURCHASE ORDER' },
+      { label: 'FSS (IDV)', value: 'C:IDV', name: 'FSS' },
+      { label: 'OTHER TRANSACTION AGREEMENT', value: 'R:AWARD', name: 'OTHER TRANSACTION AGREEMENT' },
+      { label: 'OTHER TRANSACTION (IDV)', value: 'O:IDV', name: 'OTHER TRANSACTION IDV' },
+      { label: 'COOPERATIVE AGREEMENT', value: 'F:AWARD', name: 'COOPERATIVE AGREEMENT' },
+      { label: 'TRAINING GRANT', value: 'T:AWARD', name: 'TRAINING GRANT' },
+      { label: 'FUNDED SPACE ACT AGREEMENT', value: 'S:AWARD', name: 'FUNDED SPACE ACT AGREEMENT' },
+      { label: 'BOA (IDV)', value: 'D:IDV', name: 'BOA' },
+      { label: 'BPA CALL', value: 'A:AWARD', name: 'BPA CALL' }
+    ],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
+
+  //Select Contract Types
+  contractTypeModel: string = '';
+  contractType = {
+    "name": "Contract Type",
+    "label": "Contract Types",
+    "options": [
+      { label: 'COMBINATION (APPLIES TO AWARDS WHERE TWO OR MORE OF THE ABOVE APPLY)', value: '2', name: 'COMBINATION (APPLIES TO AWARDS WHERE TWO OR MORE OF THE ABOVE APPLY)' },
+      { label: 'COST NO FEE', value: 'S', name: 'COST NO FEE' },
+      { label: 'COST PLUS AWARD FEE', value: 'R', name: 'COST PLUS AWARD FEE' },
+      { label: 'COST PLUS FIXED FEE', value: 'U', name: 'COST PLUS FIXED FEE' },
+      { label: 'COST PLUS INCENTIVE FEE', value: 'V', name: 'COST PLUS INCENTIVE FEE' },
+      { label: 'COST SHARING', value: 'T', name: 'COST SHARING' },
+      { label: 'FIRM FIXED PRICE', value: 'J', name: 'FIRM FIXED PRICE' },
+      { label: 'FIXED PRICE', value: 'J', name: 'FIXED PRICE' },
+      { label: 'FIXED PRICE AWARD FEE', value: 'M', name: 'FIXED PRICE AWARD FEE' },
+      { label: 'FIXED PRICE INCENTIVE', value: 'L', name: 'FIXED PRICE INCENTIVE' },
+      { label: 'FIXED PRICE LEVEL OF EFFORT', value: 'B', name: 'FIXED PRICE LEVEL OF EFFORT' },
+      { label: 'FIXED PRICE REDETERMINATION', value: 'A', name: 'FIXED PRICE REDETERMINATION' },
+      { label: 'FIXED PRICE WITH ECONOMIC PRICE ADJUSTMENT', value: 'K', name: 'FIXED PRICE WITH ECONOMIC PRICE ADJUSTMENT' },
+      { label: 'LABOR HOURS', value: 'Z', name: 'LABOR HOURS' },
+      { label: 'ORDER DEPENDENT (IDV ALLOWS PRICING ARRANGEMENT TO BE DETERMINED SEPARATELY FOR EACH ORDER)', value: '1', name: 'ORDER DEPENDENT (IDV ALLOWS PRICING ARRANGEMENT TO BE DETERMINED SEPARATELY FOR EACH ORDER)'},
+      { label: 'OTHER (APPLIES TO AWARDS WHERE NONE OF THE ABOVE APPLY)', value: '3', name: 'OTHER (APPLIES TO AWARDS WHERE NONE OF THE ABOVE APPLY)' },
+      { label: 'TIME AND MATERIALS', value: 'Y', name: 'TIME AND MATERIALS'}
+    ],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
+
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,
@@ -157,7 +232,7 @@ export class SearchPage implements OnInit{
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.isActive = data['isActive'] && data['isActive'] === "true" ? true : this.isActive;
+        this.isActive = data['isActive'] && data['isActive'] === "false" ? false : this.isActive;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : '';
         this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : '';
@@ -168,6 +243,9 @@ export class SearchPage implements OnInit{
         this.wdSubjectToCBAModel = data['cba'] && data['cba'] !== null ? data['cba'] : '';
         this.wdPreviouslyPerformedModel = data['prevP'] && data['prevP'] !== null ? data['prevP'] : '';
         this.isStandard = data['isStandard'] && data['isStandard'] !== null ? data['isStandard'] : '';
+        this.awardIDVModel = data['awardOrIdv'] && data['awardOrIdv'] !== null ? data['awardOrIdv'] : '';
+        this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
+        this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
 
         this.runSearch();
         this.loadParams();
@@ -275,6 +353,19 @@ export class SearchPage implements OnInit{
       qsobj['prevP'] = this.wdPreviouslyPerformedModel;
     }
 
+    //awardType param
+    if(this.awardIDVModel.length>0){
+      qsobj['awardOrIdv'] = this.awardIDVModel;
+    }
+
+    if(this.awardTypeModel.length>0){
+      qsobj['awardType'] = this.awardTypeModel;
+    }
+
+    if(this.contractTypeModel.length>0){
+      qsobj['contractType'] = this.contractTypeModel;
+    }
+
     return qsobj;
   }
 
@@ -330,7 +421,10 @@ export class SearchPage implements OnInit{
       county: this.wdCountyModel,
       service: this.wdNonStandardSelectModel,
       isEven: this.wdNonStandardRadModel,
-      isStandard: this.isStandard
+      isStandard: this.isStandard,
+      awardOrIdv: this.awardIDVModel,
+      awardType: this.awardTypeModel,
+      contractType: this.contractTypeModel
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -358,6 +452,7 @@ export class SearchPage implements OnInit{
           this.totalPages = data.page['totalPages']>maxAllowedPages?maxAllowedPages:data.page['totalPages'];
         } else{
           this.data['results'] = null;
+          this.totalCount = 0;
         }
 
         this.oldKeyword = this.keyword;
@@ -658,6 +753,24 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  //Award model change events
+  awardIDVRadChanged(evt){
+    this.awardIDVModel = evt;
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
+  awardTypeSelected(evt) {
+    this.awardTypeModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
+  contractTypeSelected(evt) {
+    this.contractTypeModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
 
   // this calls function to set up ES query params again and re-call the search endpoint with updated params
   searchResultsRefresh(){
@@ -729,6 +842,13 @@ export class SearchPage implements OnInit{
       // clear the keyword search
       this.agencyPicker.clearSelectedOrgs();
     }
+
+    // call awards clear filters
+    this.awardIDVModel = '';
+    this.awardTypeModel = '';
+    this.contractTypeModel = '';
+
+    this.searchResultsRefresh();
 
 
   }
