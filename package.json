@@ -63,6 +63,7 @@
     "@angularclass/conventions-loader": "1.0.12",
     "@angularclass/hmr": "1.2.2",
     "@angularclass/hmr-loader": "1.0.1",
+    "aws-sdk": "2.20.0",
     "classlist-polyfill": "1.0.3",
     "core-js": "2.4.1",
     "d3": "4.7.3",
