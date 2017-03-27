@@ -1,7 +1,7 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 
@@ -73,7 +73,7 @@ describe('The Sam Feedback component', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [SamFeedbackComponent],
-      imports: [SamUIKitModule, RouterTestingModule, BrowserModule, FormsModule],
+      imports: [SamUIKitModule, RouterTestingModule, BrowserModule, FormsModule, ReactiveFormsModule],
       providers: [
         { provide: ApiService, useClass: ApiServiceStub},
         { provide: IAMService, useClass: IAMServiceStub},
@@ -121,6 +121,7 @@ describe('The Sam Feedback component', () => {
     expect(component.answerData[0].value).toEqual([true]);
     expect(component.generateFeedbackRes()).toEqual({
       userId:"",
+      feedbackPath: '',
       feedbackList:[
         {
           questionId: 1,

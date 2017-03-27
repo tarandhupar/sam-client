@@ -11,9 +11,7 @@
     </div>
 
     <div class="feedback-question-div usa-grid-full m_T-2x m_B-1x m_R-4x">
-      <h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning"><i class="fa fa-exclamation-triangle"></i><span>&nbsp;Please provide at least one feedback!</span></h4>
-
-      <!--<samAlert class="m_T-0 usa-width-one-whole" *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" [type]="'warning'" [title]="''" [description]="'Please provide at least one feedback!'"></samAlert>-->
+      <!--<h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning"><i class="fa fa-exclamation-triangle"></i><span>&nbsp;Please provide at least one feedback!</span></h4>-->
 
       <span class="m_T-2x" style="display: block" *ngIf="!showThanksNote">{{curQueIndex+1}}. {{curQuestion.description}}</span>
 
@@ -45,20 +43,24 @@
       <!--Radio Email Question-->
       <div class="feedback-question-fin m_T-2x m_B-2x usa-grid" *ngIf="isCurrentQType('radio-text') && !showThanksNote">
         <div class="usa-width-one-half m_B-1x p_L-4x m_R-0">
-          <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('Yes')" [checked]="emailRadioBtnValue === 'Yes'"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('Yes')">Yes</label>
+          <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('Yes')" [checked]="isEmailBtnChecked('Yes')"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('Yes')">Yes</label>
         </div>
         <div class="usa-width-one-half m_B-1x p_L-4x">
-          <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('No')" [checked]="emailRadioBtnValue === 'No'"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('No')">No</label>
+          <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('No')" [checked]="isEmailBtnChecked('No')"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('No')">No</label>
         </div>
-        <div class="usa-width-one-whole m_T-2x">
+        <div class="usa-width-one-whole">
           <div class="usa-width-two-thirds m_R-0 text-align-center">
-            <input class="usa-width-one-whole m_L-3x feedback-email-input" *ngIf="emailRadioBtnValue === 'Yes'" name="text" placeholder="Please provide your email" [(ngModel)]="userEmailModel" (change)="setCurQAnswer(userEmailModel)">
-            <!--<h3 *ngIf="!showEmptyFeedbackWarning || !isFeedbackAnswerEmpty()">&nbsp;</h3>-->
-            <h3 *ngIf="emailRadioBtnValue !== 'Yes'">&nbsp;</h3>
+            <span>
+              <span class="usa-input-error-message" *ngIf="isEmailBtnChecked('No') || !isPageEdited(curQueIndex) || !email.errors || !emailModelEdited">&nbsp;</span>
+              <span class="usa-input-error-message" *ngIf="isEmailBtnChecked('Yes') && isPageEdited(curQueIndex) && email.errors && emailModelEdited">Enter a valid email address</span>
+            </span>
+            <input type="email" id="email" name="email" [formControl]="email" class="usa-width-one-whole m_L-3x feedback-email-input" *ngIf="emailRadioBtnValue == 'Yes'" name="text" placeholder="Please provide your email" [(ngModel)]="userEmailModel" (change)="onEmailTextChange()">
+            <h3 *ngIf="!showEmptyFeedbackWarning || !isFeedbackAnswerEmpty()">&nbsp;</h3>
+            <!--<h3 *ngIf="emailRadioBtnValue !== 'Yes'">&nbsp;</h3>-->
             <!--<h4 *ngIf="showEmptyFeedbackWarning" class="feedback-warning">Please provide at least one feedback!</h4>-->
-            <!--<h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning"><i class="fa fa-exclamation-triangle"></i><span>&nbsp;Please provide at least one feedback!</span></h4>-->
+            <h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning"><i class="fa fa-exclamation-triangle"></i><span>&nbsp;Please provide at least one feedback!</span></h4>
           </div>
-          <div class="usa-width-one-third">
+          <div class="usa-width-one-third p_T-6x">
             <button class="usa-button-primary m_0 pull-right" (click)="onSubmitFeedbackClick()">Submit</button>
           </div>
         </div>

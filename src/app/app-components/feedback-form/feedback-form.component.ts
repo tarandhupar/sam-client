@@ -3,6 +3,8 @@ import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/ro
 import { FeedbackService, feedbackResItemType } from 'api-kit/feedback/feedback.service';
 import { IAMService } from "api-kit/iam/iam.service";
 import { Observable, Subscription } from 'rxjs/Rx';
+import { Validators as $Validators } from '../../authentication/shared/validators';
+import { FormControl, Validators } from '@angular/forms';
 
 
 export let navigateAwayObj = {
@@ -29,9 +31,11 @@ export class SamFeedbackComponent {
   ratingThumbDownClass: string = "fa-thumbs-o-down";
   multiSelectionModel = {};
   radioBtnValue: string = "";
-  emailRadioBtnValue: string = "";
+  emailRadioBtnValue = "";
   userEmailModel: string = "";
+  email: FormControl;
   textAreaModel: string = "";
+  emailModelEdited: boolean = false;
 
   currentUrl: string = "";
   nextUrl: string = "";
@@ -98,6 +102,10 @@ export class SamFeedbackComponent {
         window.setTimeout(() => this.feedbackRoot.nativeElement.focus(), 0);
       }
     }else{
+      if(navigateAwayObj.formSubmitted){
+        this.timer.unsubscribe();
+        this.resetAll();
+      }
       if(document && document.body){
         document.body.removeChild(this.backdropElement);
         document.body.className = document.body.className.replace(/feedback-open\b/, "");
@@ -115,6 +123,11 @@ export class SamFeedbackComponent {
 
   onEmailRadioBtnChange(val){
     this.setRadioEmailResult(val);
+  }
+
+  onEmailTextChange(){
+    if(!this.emailModelEdited) this.emailModelEdited = true;
+    this.setCurQAnswer({selectedValue:'Yes',userEmail:this.userEmailModel});
   }
 
   onTextAreaChange(){
@@ -150,28 +163,34 @@ export class SamFeedbackComponent {
     if(this.isFeedbackAnswerEmpty()){
       this.showEmptyFeedbackWarning = true;
     }else{
-      // Submit the feedback results
-      let res = this.generateFeedbackRes();
-      this.feedbackService.createFeedback(res);
-      navigateAwayObj.formSubmitted = true;
-      this.showThanksNote = true;
-      this.startCountDown();
+      this.emailModelEdited = true;
+      if((this.isEmailBtnChecked('Yes') && !this.email.errors) || this.isEmailBtnChecked('No')){
+        // Submit the feedback results
+        let res = this.generateFeedbackRes();
+
+        this.feedbackService.createFeedback(res);
+        navigateAwayObj.formSubmitted = true;
+        this.showThanksNote = true;
+        this.startCountDown();
+      }
     }
+
   }
 
   generateFeedbackRes():any{
     let res = {
-      userId : this.userEmailModel,
+      userId : this.isEmailBtnChecked('No')? "":this.userEmailModel,
+      feedbackPath: this.currentUrl,
       feedbackList: []
     };
     this.answerData.forEach((answerItem,index) => {
       if(answerItem.edited){
         let feedbackResItem:feedbackResItemType = {
           questionId: this.questionData[index].id,
-          userId: this.userEmailModel,
+          userId: this.isEmailBtnChecked('No')? "":this.userEmailModel,
           feedback_response: {
             type: this.questionData[index].type,
-            selected: answerItem.edited? answerItem.value: [],
+            selected: this.questionData[index].type === "radio-text"? [answerItem.value[0].userEmail]: answerItem.value,
           },
         };
         res.feedbackList.push(feedbackResItem);
@@ -228,6 +247,7 @@ export class SamFeedbackComponent {
   isPageEdited(page){return this.answerData[page].edited;}
   isCurrentPage(page){return page === this.curQueIndex;}
   isLastPage(page){return page === this.questionData.length - 1;}
+  isEmailBtnChecked(val){return this.emailRadioBtnValue === val;}
 
   showUnsubmittedWarning(){
 
@@ -238,19 +258,19 @@ export class SamFeedbackComponent {
     if(this.answerData[this.curQueIndex].edited){
       switch(this.questionData[this.curQueIndex].type){
         case 'rating':
-          this.setRatingResult(this.answerData[this.curQueIndex].value);
+          this.setRatingResult(this.answerData[this.curQueIndex].value[0]);
           break;
         case 'multiSelection':
           this.setMultiSelectionResult(this.answerData[this.curQueIndex].value);
           break;
         case 'singleSelection':
-          this.setSingleSelectionResult(this.answerData[this.curQueIndex].value);
+          this.setSingleSelectionResult(this.answerData[this.curQueIndex].value[0]);
           break;
         case 'textarea':
           this.setTextAreaResult(this.answerData[this.curQueIndex].value);
           break;
         case 'radio-text':
-          this.setRadioEmailResult(this.answerData[this.curQueIndex].value);
+          this.setRadioEmailResult(this.answerData[this.curQueIndex].value[0].selectedValue);
           break;
         default:
           break;
@@ -292,10 +312,17 @@ export class SamFeedbackComponent {
 
   setRadioEmailResult(val) {
     this.emailRadioBtnValue = val;
-    if (this.emailRadioBtnValue === "Yes" && this.isSignedIn) {
-      this.userEmailModel = this.user.email;
+    if (this.emailRadioBtnValue === "Yes") {
+      if(this.isSignedIn){
+        this.userEmailModel = this.user.email;
+      }
+      this.setCurQAnswer({selectedValue:val,userEmail:this.userEmailModel});
+      if(!this.emailModelEdited && this.userEmailModel.length > 0) this.emailModelEdited = true;
     }
-    this.setCurQAnswer(this.userEmailModel);
+    if (this.emailRadioBtnValue === "No") {
+      this.emailModelEdited = false;
+      this.setCurQAnswer({selectedValue:val});
+    }
   }
 
   setCurQAnswer(val){
@@ -363,6 +390,8 @@ export class SamFeedbackComponent {
     this.radioBtnValue = "";
     this.emailRadioBtnValue = "";
     this.userEmailModel = "";
+    this.emailModelEdited = false;
+    this.email = new FormControl('', [Validators.required, $Validators.email]);
     this.textAreaModel = "";
     this.multiSelectionModel = {};
   }
