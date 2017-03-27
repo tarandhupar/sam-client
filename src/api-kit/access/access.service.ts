@@ -105,4 +105,20 @@ export class UserAccessService {
 
     return this.apiService.call(apiOptions, false);
   }
+
+  getRoleObjDefinitions(mode : string, domainKey : string){
+    let apiOptions: any = {
+      name: 'domainDefinition',
+      suffix: '/',
+      method: 'GET',
+      oParam: { }
+    };
+
+    apiOptions.oParam.mode = mode || 'role';
+    if( domainKey.length > 0 ){
+      apiOptions.oParam.domainKey = domainKey;
+    }
+
+    return this.apiService.call(apiOptions);
+  }
 }

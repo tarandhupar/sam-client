@@ -1,11 +1,15 @@
 <div class="role-workspace usa-grid-full">
   <div class = "usa-width-one-fourth m_W-3em">
-    <role-sidenav></role-sidenav>
+    <role-sidenav (pathChange) = "onPathChange($event)"  (checkSelected) = "onSelectedChange($event)"></role-sidenav>
   </div>
-  <div class = "usa-width-three-fourths" style = "padding-top: 2.4em">
-    <h1>WorkSpace</h1>
-    <h3>Role Definition</h3>
-    <button class="usa-button usa-button-primary" routerLink="new">Create New Role</button>
-
+  <div class = "usa-width-three-fourths m_W-3em">
+    <div class = "create-btn">
+      <button class="usa-button-outline usa-button-active pull-right" routerLink="{{path}}/new">Create New {{ path === 'roles' ? 'Role' : 'Object' }}</button>
+    <div>
+    <h1>Workspace</h1>
+    <h3>{{ path === 'roles' ? 'Role' : 'Object' }} Definitions</h3>
+    <div class = "main-content">
+      <role-content [roleDef] = "Data" [currPath] = path></role-content>
+    </div>
   </div>
 </div>

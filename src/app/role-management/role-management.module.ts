@@ -7,13 +7,13 @@ import { routing } from './role-management.route';
 import { SamUIKitModule } from "sam-ui-kit/index";
 import { SamAPIKitModule } from "../../api-kit/api-kit.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
-import { ObjectWorkspacePage } from "./object-workspace.page";
 import { RoleDetailsPage } from "./role-details/role-details.page";
 import { ObjectDetailsPage } from "./object-details/object-details.page";
 import { RoleWorkspacePage } from "./role-workspace.page";
 import { RoleSideNav } from "./role-sidenav/role-sidenav.component.ts";
 import { PermissionSelectorComponent } from "./permission-selector/permission-selector";
 import { DomainsResolve } from "./domains.resolve";
+import {RoleMainContent} from "./role-maincontent/role-maincontent.component.ts"
 
 
 @NgModule({
@@ -30,12 +30,12 @@ import { DomainsResolve } from "./domains.resolve";
 
   ],
   declarations: [
-    ObjectWorkspacePage,
     RoleWorkspacePage,
     RoleDetailsPage,
     ObjectDetailsPage,
     RoleSideNav,
     PermissionSelectorComponent,
+    RoleMainContent,
   ],
   providers: [
     DomainsResolve,
