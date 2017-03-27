@@ -43,7 +43,7 @@ import { ReplaySubject, Observable } from 'rxjs';
 
         </div>
         <div class="card-extra-content">
-          <i class="fa fa-spin fa-star" aria-hidden="true" style="color:#fdb81e;"></i> <strong>Featured Result</strong>
+          <i class="fa fa-star" aria-hidden="true" style="color:#fdb81e;"></i> <strong>Featured Result</strong>
         </div>
       </div>
 
