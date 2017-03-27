@@ -12,12 +12,11 @@ if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
     path: 'access',
     resolve: { domains: DomainsResolve },
     children: [
-      { path: 'objects',  component: ObjectWorkspacePage },
-      { path: 'roles', component: RoleWorkspacePage },
-      { path: 'objects/new', component: ObjectDetailsPage},
-      { path: 'roles/new', component: RoleDetailsPage},
-      { path: 'objects/:objectId/edit', component: ObjectDetailsPage },
-      { path: 'roles/:roleId/edit', component: RoleDetailsPage },
+      { path: 'workspace',  component: RoleWorkspacePage },
+      { path: 'workspace/objects/new', component: ObjectDetailsPage},
+      { path: 'workspace/roles/new', component: RoleDetailsPage},
+      { path: 'workspace/objects/:objectId/edit', component: ObjectDetailsPage },
+      { path: 'workspace/roles/:roleId/edit', component: RoleDetailsPage },
     ]
   });
 }

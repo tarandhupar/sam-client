@@ -1,23 +1,32 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Output, EventEmitter} from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-
 
 @Component({
   selector : 'role-sidenav',
   templateUrl : "./role-sidenav.template.html"
 })
 export class RoleSideNav implements OnInit{
-    path: 'roles'|'objects' = 'roles';
     constructor(private router: Router, private route: ActivatedRoute){ }
-    domains = '';
+
+    @Output() pathChange: EventEmitter<any> = new EventEmitter<any>();
+    @Output() checkSelected: EventEmitter<any> = new EventEmitter<any>();
+
+    domainList : any;
+    domains : any;
+    path: 'roles'|'objects' = 'roles';
+
+
+    private filters = {
+      domains: { options: [ ], value: [] },
+    };
 
     ngOnInit() {
-      //this.domains = this.route.parent.snapshot.data['domains']._embedded.domainList;
       this.determinePath();
-      console.log(this.route.parent);  
+      this.domainList = this.route.parent.snapshot.data['domains']._embedded.domainList;
+      this.filters.domains.options = this.domainList.map(this.mapLabelAndName);
+      this.domains = this.domainList.map(this.mapLabel);
+      console.log(this.domainList);
     }
-
-
 
     accordionHeading1 = "Role Management Definitions";
     accordionName1 = "Role Management Definitions Filter";
@@ -31,48 +40,62 @@ export class RoleSideNav implements OnInit{
         {value: 'objects', label: 'Object Definitions', name: 'object-def'},
       ],
       name: 'role-management-definition picker',
-      label: '',
-      errorMessage: '',
-      hint: ''
     };
 
+    newDomain = 'Add new...';
+    textErrorMessage = '';
+
     ChangeRoute(value){
-      if(value === "roles")
-        this.router.navigate(['/access/roles']);
-      else if(value === "objects")
-        this.router.navigate(['/access/objects']);
+      if(value === "roles"){
+        this.pathChange.emit('roles');
+      }
+      else if(value === "objects"){
+        this.pathChange.emit('objects');
+      }
+    }
+
+    mapLabelAndName(val) {
+      return { label: val.domainName, value: val.id, name: val.domainName };
+    }
+
+    mapLabel(val) {
+      return val.domainName;
     }
 
     checkboxModel: any = [];
-    checkboxConfig = {
-      options: [
-        {value: '1', label: 'Awards', name: 'checkbox-awards'},
-        {value: '2', label: 'Oppurtunity', name: 'checkbox-oppurtunity'},
-        {value: '3', label: 'Performance & Integrity Information', name: 'checkbox-info'},
-        {value: '4', label: 'Identity and Access Management', name: 'checkbox-access'},
-        {value: '5', label: 'Federal Organization', name: 'checkbox-fbo'},
-        {value: '6', label: 'Entity Registration', name:'check-registration'},
-        {value: '7', label: 'Wage Information', name: 'check-wage'},
-        {value: '8', label: 'Sub-Awards', name: 'check-sub-awards'},
-        {value: '9', label: 'Federal Assistance Listing', name: 'check-FA'},
-        {value: '10', label: 'Admin', name: 'check-admin'},
-        {value: '11', label: 'FPDS Reporting', name: 'check-reporting'}
-      ],
-      name: 'domains-checkbox',
-      label: '',
-      hasSelectAll: 'Yes'
-    };
 
     determinePath(){
-      //console.log("DP");
       if(this.router.url.match('roles')) {
-        //console.log("roles " + this.router.url.match('roles'));
         this.path = "roles";
       }
       else if (this.router.url.match('objects')){
-        //console.log("object " + this.router.url.match('objects'));
         this.path = "objects";
       }
     }
 
+    activeFilter(event){
+      this.checkSelected.emit(event.toString());
+    }
+
+    SubmitDomain(){
+      let flag = 0;
+      if(this.newDomain === ''){
+        this.textErrorMessage = 'Domain name cannot be empty';
+      }
+      else{
+        this.textErrorMessage = '';
+      }
+
+      this.domains.forEach( val => {
+          if(val.toLowerCase() === this.newDomain.toLowerCase())
+              flag = 1;
+      });
+
+      if(flag === 1){
+        this.textErrorMessage = 'This domain already exists';
+      }
+      else{
+        this.textErrorMessage = '';
+      }
+    }
 }
