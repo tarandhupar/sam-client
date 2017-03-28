@@ -48,7 +48,15 @@ export class FinancialInfoFormPage2 implements OnInit {
   };
 
   public accountIdentificationModel: Object = {
-    textarea: ''
+    codeBoxes: [],
+    descriptionText: '',
+
+    accounts: [
+      {
+        code: '',
+        description: ''
+      }
+    ]
   };
 
   constructor(private fb: FormBuilder,
