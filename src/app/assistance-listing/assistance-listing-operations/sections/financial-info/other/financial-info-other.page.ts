@@ -7,7 +7,7 @@ import * as Cookies from 'js-cookie';
 
 @Component({
   providers: [ProgramService],
-  templateUrl: 'financial-info-other.html'
+  templateUrl: 'financial-info-other.page.html'
 })
 export class FinancialInfoFormPage2 implements OnInit {
   public otherFinancialInfoGroup: FormGroup;
@@ -34,8 +34,20 @@ export class FinancialInfoFormPage2 implements OnInit {
     }
   };
 
-  private accomplishmentsModel: Object = {
+  public accountIdentificationConfig: Object = {
+    name: 'account-identification',
+    label: 'Account Identification',
+    hint: 'List the 11-digit budget account identification code(s) that funds the program. This code must match the President\'s budget.',
+    codeHint: 'Agency supplied 11-digit budget account code',
+    required: true
+  };
+
+  public accomplishmentsModel: Object = {
     checkbox: [],
+    textarea: ''
+  };
+
+  public accountIdentificationModel: Object = {
     textarea: ''
   };
 
@@ -72,6 +84,7 @@ export class FinancialInfoFormPage2 implements OnInit {
     this.otherFinancialInfoGroup = this.fb.group({
       assistanceRange: '',
       accomplishments: '',
+      accountIdentification: '',
 
       tafs: this.fb.group({
         treasuryDeptCode: ''
@@ -91,7 +104,11 @@ export class FinancialInfoFormPage2 implements OnInit {
     this.otherFinancialInfoGroup.get('accomplishments').setValue(this.accomplishmentsModel);
     this.otherFinancialInfoGroup.get('accomplishments').valueChanges.subscribe(model => {
       this.accomplishmentsModel = model;
-      console.log(model);
+    });
+
+    this.otherFinancialInfoGroup.get('accountIdentification').setValue(this.accountIdentificationModel);
+    this.otherFinancialInfoGroup.get('accountIdentification').valueChanges.subscribe(model => {
+      this.accountIdentificationModel = model;
     });
   }
 }

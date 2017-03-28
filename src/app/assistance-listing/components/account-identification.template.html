@@ -1,0 +1,27 @@
+<labelWrapper #accountIdentificationLabel
+              [name]="name"
+              [label]="label"
+              [hint]="hint">
+
+  <labelWrapper #codeLabel
+                [name]="codeLabelName"
+                [label]="'Code'"
+                [hint]="codeHint"
+                [required]="required">
+
+    <ng-container *ngFor="let textbox of codeTextboxes">
+      <samText [name]="textbox.name"
+               [control]="textbox.control"
+      ></samText>
+    </ng-container>
+
+    <samTextArea [name]="textareaName"
+                 [placeholder]="textareaPlaceholder"
+                 [disabled]="textareaDisabled"
+                 [hidden]="textareaHidden"
+                 [formControl]="textareaControl"
+    ></samTextArea>
+
+  </labelWrapper>
+
+</labelWrapper>

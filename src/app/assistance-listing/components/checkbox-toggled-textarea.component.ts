@@ -4,7 +4,7 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
 @Component({
   selector: 'samCheckboxToggledTextarea',
-  templateUrl: 'checkbox-toggled-textarea.html',
+  templateUrl: 'checkbox-toggled-textarea.template.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -14,10 +14,13 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
   ]
 })
 export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor {
-  public model;
-  @Input() options;   // optional - can pass all parameters in a single options object for convenience
+  public model = {
+    checkbox: [],
+    textarea: ''
+  };
 
   // general
+  @Input() options;   // optional - can pass all parameters in a single options object for convenience
   @Input() name: string; // required
   @Input() label: string;
   @Input() hint: string;
@@ -47,19 +50,10 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   }
 
   private parseInputsAndSetDefaults() {
-    this.model = { // set default empty model
-      checkbox: [],
-      textarea: ''
-    };
-
     // inputs can either be passed directly, or through an options object
     // if an input is passed both ways, the value passed directly will take precedence
     if(this.options) {
-      // no default name - name is mandatory
       this.name = this.name || this.options.name;
-      // subcomponent names are generated based on this component's name
-      this.checkboxName = this.name + '-checkbox';
-      this.textareaName = this.name + '-textarea';
 
       this.label = this.label || this.options.label;
       this.hint = this.hint || this.options.hint;
@@ -77,6 +71,10 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
         if(this.textareaHidden == null) { this.textareaHidden = this.options.textarea.hidden; }
       }
     }
+
+    // subcomponent names are generated based on this component's name
+    this.checkboxName = this.name + '-checkbox';
+    this.textareaName = this.name + '-textarea';
   }
 
   private validateInputs() {
