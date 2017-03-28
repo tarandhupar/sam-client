@@ -14,6 +14,7 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
   ]
 })
 export class SamAccountIdentificationComponent implements ControlValueAccessor {
+  private currentIndex: number = 0;
   public model = {
     codeBoxes: [],
     descriptionText: '',
@@ -37,8 +38,9 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
 
   // textarea
   public textareaName: string;
-
   public textareaControl: FormControl;
+
+  // label wrappers
   @ViewChild('accountIdentificationLabel') wrapper: LabelWrapper;
   @ViewChild('codeLabel') codeWrapper: LabelWrapper;
 
@@ -107,9 +109,33 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
 
     account['code'] = code;
     account['description'] = this.textareaControl.value;
-    this.model.accounts.push(account);
+    this.model.accounts[this.currentIndex] = account;
+    this.currentIndex = this.model.accounts.length;
     this.accountFormGroup.reset();
   };
+
+  public removeAccount(index: number) {
+    this.model.accounts.splice(index, 1);
+    if(index === this.currentIndex) {
+      this.accountFormGroup.reset();
+      this.currentIndex = this.model.accounts.length;
+    } else if(index < this.currentIndex) {
+      this.currentIndex--;
+    }
+  }
+
+  public editAccount(index: number) {
+    let code = this.model.accounts[index].code;
+    this.codeBoxLengths.reduce((acc, length, i) => {
+      this.codeFormGroup.get('codeBox' + i).setValue(code.slice(acc, acc+length));
+      return acc + length;
+    }, 0);
+
+    let description = this.model.accounts[index].description;
+    this.textareaControl.setValue(description);
+
+    this.currentIndex = index;
+  }
 
   private onChange() {
     this.wrapper.formatErrors(this.accountFormGroup);
