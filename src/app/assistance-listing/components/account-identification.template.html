@@ -11,6 +11,7 @@
 
     <ng-container *ngFor="let textbox of codeTextboxes">
       <samText [name]="textbox.name"
+               [maxlength]="textbox.length"
                [formControl]="textbox.control"
       ></samText>
     </ng-container>
