@@ -131,17 +131,28 @@ export class UserAccessService {
       name: 'functions',
       suffix: '',
       method: 'POST',
-      oParam: { }
+      oParam: {}
     };
 
     apiOptions.body = {
-      domain: { id: domainId },
-      functionMapContent: { val: objectName },
+      domain: {id: domainId},
+      functionMapContent: {val: objectName},
       permission: permissions
     };
 
     console.log(apiOptions.body);
 
     return this.apiService.call(apiOptions);
+  }
+
+  requestAccess(req: any, userName) {
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/' + userName + '/',
+      method: 'POST',
+      body: req
+    };
+
+    return this.apiService.call(apiOptions, false);
   }
 }
