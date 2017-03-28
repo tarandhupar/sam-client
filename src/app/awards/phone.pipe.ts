@@ -14,6 +14,10 @@ export class PhonePipe implements PipeTransform {
 		{
 			newStr = val.substr(0, 3) + '-' + val.substr(3, 4);
 		}
+		else if(val.length === 11)
+		{
+			newStr = val.substr(0, 1) + '-(' + val.substr(1, 3) + ')' + val.substr(4, 3) + '-' + val.substr(7, 4);
+		}
         return newStr;
     }
 }
