@@ -4,9 +4,9 @@
   <h4>Information Contacts</h4>
 
   <samCheckbox
+    [label]="'Regional or Local Office'"
     [name]="'regional_local_office'"
-    [options]="checkboxConfig.options"
-    [label]="'Regional or Local Office'"></samCheckbox>
+    [options]="checkboxConfig.options"></samCheckbox>
 
   <samTextArea [control]="falContactInfoForm.controls['addInfo']"
                [name]="'addInfo-input'"
@@ -15,46 +15,134 @@
                formControlName="addInfo"></samTextArea>
 
   <h4>Headquaters Office</h4>
+  <label>Add up to two points of Contacts for your headquarters office.</label>
+  <table [class.hide]="contactsInfo.length == 0">
+    <thead>
+      <th>Contacts</th>
+      <th>Actions</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let contact of contactsInfo; let i=index">
+        <td>
+          {{contact.title}} {{contact.fullName}} <br/>
+          {{contact.street}} <br/>
+          {{contact.city}} {{contact.state}} {{contact.zip}} <br/>
+          Email: {{contact.email}} <br/>
+          Phone: {{contact.phone}} <br/>
+        </td>
+        <td>
+          <a class="fal-table-edit" (click)="editContact(i)">Edit</a>
+          <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editContact(i)"></i>
+          <a class="fal-table-delete" (click)="removeContact(i)">Delete</a>
+          <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeContact(i)"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
-  <div *ngFor="let contact of contactsInfo; let i=index">
-    {{contact | json}}
-    <a (click)="removeContact(i)">Delete</a>
-
-    <a (click)="editContact(i)">Edit</a>
-  </div>
 
   <samButton buttonText="Add Contact" (onClick)="addContact()" *ngIf="falContactInfoForm.controls.contacts.length < 2" [class.hide]="hideAddButton"></samButton>
 
-  <div formArrayName="contacts" [class.hide]="hideContactsForm">
+  <div formArrayName="contacts" *ngIf="!hideContactsForm">
 
-    <div *ngFor="let contact of falContactInfoForm.controls.contacts.controls; let i=index">
+    <h4>{{mode}} Contact Form</h4>
+
+    <ng-container *ngFor="let contact of falContactInfoForm.controls.contacts.controls; let i=index">
 
       <div [formGroupName]="i" [class.hide]="contactIndex !== i">
 
-        <samText [maxlength]="144"
-                 [control]="falContactInfoForm.controls.contacts.controls[i].controls.title"
-                 [name]="'title-input'"
-                 [label]="'Title'"
-                 formControlName="title"></samText>
+        <samSelect
+        [label]="'Contact'"
+        [name]="'contact-control'"
+        [required]="true"
+        [options]="contactDrpDwnOptions"
+        formControlName="contact"></samSelect>
 
-        <samText [maxlength]="144"
-                 [control]="falContactInfoForm.controls.contacts.controls[i].controls.fullName"
-                 [name]="'fullName-input'"
-                 [label]="'Full Name'"
-                 [required]="true"
-                 formControlName="fullName"></samText>
+        <div id="newContact" *ngIf="falContactInfoForm.controls.contacts.controls[i].controls.contact.value == 'new'">
 
-        <samText [maxlength]="144"
-                 [control]="falContactInfoForm.controls.contacts.controls[i].controls.email"
-                 [name]="'email-input'"
-                 [label]="'Email'"
-                 formControlName="email"></samText>
+        <samText
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.title"
+          [name]="'title-input'"
+          [label]="'Title'"
+          formControlName="title"></samText>
 
+        <samText
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.fullName"
+          [name]="'fullName-input'"
+          [label]="'Full Name'"
+          [required]="true"
+          formControlName="fullName"></samText>
+
+        <samText
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.email"
+          [name]="'email-input'"
+          [label]="'Email'"
+          [required]="true"
+          formControlName="email"></samText>
+
+        <samNumber
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.phone"
+          [name]="'phone-input'"
+          [label]="'Phone'"
+          [required]="true"
+          formControlName="phone"></samNumber>
+
+        <samNumber
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.fax"
+          [minlength]="10"
+          [maxlength]="10"
+          [name]="'fax-input'"
+          [label]="'Fax'"
+          formControlName="fax"></samNumber>
+
+        <samTextArea
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.street"
+          [name]="'street-input'"
+          [label]="'Street'"
+          [required]="true"
+          formControlName="street"></samTextArea>
+
+        <samText
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.city"
+          [name]="'city-input'"
+          [label]="'City'"
+          [required]="true"
+          formControlName="city"></samText>
+
+        <samSelect
+            [label]="'State'"
+            [name]="'state-control'"
+            [required]="true"
+            [options]="stateDrpDwnOptions"
+            formControlName="state"></samSelect>
+
+        <samNumber
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.zip"
+          [name]="'zip-input'"
+          [label]="'Zip'"
+          [required]="true"
+          formControlName="zip"></samNumber>
+
+        <samSelect
+          [label]="'Country'"
+          [name]="'country-control'"
+          [options]="countryDrpDwnOptions"
+          formControlName="country"></samSelect>
+
+        </div> <!-- End of newcontact -->
+        <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick()"></samButton>
+        <!--<samButton buttonText="Confirm"  (onClick)="onConfirmClick()"></samButton>-->
         <samButton buttonText="Confirm" [buttonType]="(!falContactInfoForm.controls.contacts.controls[i].valid ? 'disabled' : 'default')" (onClick)="onConfirmClick()"></samButton>
-
-      </div>
-    </div>
+      </div> <!-- End of formgroup div -->
+    </ng-container>
   </div>
+
+  <samText
+    [control]="falContactInfoForm.controls['website']"
+    [hint]="'Provide the primary web page URL for this listing. When possible, the web page should be specific to this listing.'"
+    [name]="'website-input'"
+    [label]="'Website'"
+    formControlName="website"></samText>
 
   <samButton buttonText="Save" (onClick)="saveData()" [buttonType]="(!falContactInfoForm.valid || hideAddButton ? 'disabled' : 'default')"></samButton>
 </form>

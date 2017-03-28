@@ -17,18 +17,31 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   programId : any;
   title: string;
   hideAddButton: boolean = false;
-  hideContactsForm: boolean = false;
+  hideContactsForm: boolean = true;
   contactIndex: number = 0;
-  contactsInfo : any;
+  contactsInfo = [];
   checkboxConfig: any;
+  mode:string;
+  contactDrpDwnOptions = [{label:"None Selected", value:'na'},
+                          {label:"New Contact", value:'new'},
+                          {label:"Existing Contact", value:'existing'}];
+  stateDrpDwnOptions = [{label:"None Selected", value:'na'}];
+  countryDrpDwnOptions;
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
               private router: Router,
               private sharedService: FALOpSharedService){
 
-    this.sharedService.setSideNavFocus();
+    sharedService.setSideNavFocus();
     this.programId = sharedService.programId;
+
+    let states = sharedService.getStates();
+    for(let key in states){
+      this.stateDrpDwnOptions.push({label:states[key], value:key});
+    }
+
+    //this.countryDrpDwnOptions = sharedService.getCountries();
   }
 
   ngOnInit(){
@@ -48,12 +61,14 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
     this.falContactInfoForm = this.fb.group({
       'addInfo': '',
-      'contacts': this.fb.array([ ])
+      'contacts': this.fb.array([ ]),
+      'website': ''
     });
   }
 
   initContacts(){
     return this.fb.group({
+      contact:['na'],
       title: [''],
       fullName: [''],
       email:[''],
@@ -61,7 +76,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
       fax:[''],
       street:[''],
       city:[''],
-      state:[''],
+      state:['na'],
       zip:[''],
       country:['']
     });
@@ -73,11 +88,17 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
     control.push(this.initContacts());
     this.hideAddButton = true;
     this.hideContactsForm = false;
+    this.mode = "Add";
   }
 
   onConfirmClick(){
 
     this.contactsInfo = this.falContactInfoForm.value.contacts;
+    this.hideAddButton = false;
+    this.hideContactsForm = true;
+  }
+
+  onSubFormCancelClick(){
     this.hideAddButton = false;
     this.hideContactsForm = true;
   }
@@ -89,7 +110,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   }
 
   editContact(i: number){
-    console.log("test");
+    this.mode = "Edit";
     this.contactIndex = i;
     this.hideContactsForm = false;
   }
