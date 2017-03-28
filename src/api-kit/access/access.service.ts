@@ -108,10 +108,7 @@ export class UserAccessService {
     return this.apiService.call(apiOptions,false);
   }
 
-  getRoleObjDefinitions(mode : string, domainKey : string){
-=======
   getRoleObjDefinitions(mode : string, domainKey : string) {
->>>>>>> origin/role-management
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
