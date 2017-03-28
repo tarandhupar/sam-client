@@ -7,11 +7,24 @@
     border: 2px solid $color-primary;
     padding: 0 10px;
     color: $color-primary;
+    display: inline-block;
   }
 
   samAccordionSection li:first-child{
     margin: 0 ;
     border-top: 2px solid black;
+  }
+
+  samMultiSelectDropdown{
+    position: absolute;
+    top: -25px;
+    left: 10px;
+    z-index: 100;
+  }
+
+  samMultiSelectDropdown .dropdown-title{
+    opacity: 0;
+    width: 200px;
   }
 
   .edit-image-icon{
@@ -20,7 +33,35 @@
     right: 3px;
   }
 
-  .edit-image-icon:hover{
+  .edit-image-icon:hover, .fa-times:hover{
     cursor: pointer;
+  }
+
+  .awards-terms-input{
+    height: 30px;
+  }
+
+  .awards-content-input{
+    width: 100%;
+    max-width: 800px;
+
+  }
+
+  .awards-splash-input{
+    width: 100%;
+    max-width: 800px;
+  }
+
+  .awards-large-icon{
+    font-size: 140%;
+  }
+
+  .awards-mid-icon{
+    font-size: 110%;
+  }
+
+  .awards-terms-div{
+    min-height: 250px;
+    max-height: 350px;
   }
 }

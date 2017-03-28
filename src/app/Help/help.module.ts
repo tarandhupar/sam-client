@@ -15,12 +15,14 @@ import { AppComponentsModule } from '../app-components/app-components.module';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { TransitionToSamComponent } from './sections/transition-to-sam/transition-to-sam.component';
 import { ImageLibraryComponent } from './image-library/image-library.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     SamUIKitModule,
     BrowserModule,
     AppComponentsModule,
+    FormsModule,
     routing,
   ],
   exports: [ ImageLibraryComponent ],
