@@ -3,6 +3,9 @@
     <div *ngFor = "let domain of roleDef let x = index">
       <div class="usa-width-five-sixths">
         <div class = "content-label"><span class="usa-label-big label-ht">{{domain.domain.val}}</span></div>
+        <div *ngIf = "!domain.roleDefinitionMapContent || domain.roleDefinitionMapContent.length == 0" class = "content-label">
+          <h3><i>No roles found for this domain</i></h3>
+        </div>
         <div *ngFor = "let role of domain.roleDefinitionMapContent let i = index">
           <div class = "section-spc">
             <div class = "usa-grid-full header-bg-color">
@@ -51,6 +54,9 @@
     <div *ngFor = "let domain of roleDef">
       <div class="usa-width-five-sixths">
         <div class = "content-label"><span class="usa-label-big label-ht">{{domain.domain.val}}</span></div>
+        <div *ngIf = "!domain.functionMapContent || domain.functionMapContent.length == 0" class = "content-label">
+          <h3><i>No Object found for this domain</i></h3>
+        </div>
         <div *ngFor = "let func of domain.functionMapContent">
           <div class = "section-spc">
             <div class = "usa-grid-full header-bg-color">

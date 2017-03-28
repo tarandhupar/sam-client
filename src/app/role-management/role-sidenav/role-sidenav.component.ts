@@ -1,12 +1,13 @@
 import { Component, OnInit, Output, EventEmitter} from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
+import { UserAccessService } from "../../../api-kit/access/access.service";
 
 @Component({
   selector : 'role-sidenav',
   templateUrl : "./role-sidenav.template.html"
 })
 export class RoleSideNav implements OnInit{
-    constructor(private router: Router, private route: ActivatedRoute){ }
+    constructor(private router: Router, private route: ActivatedRoute,private role: UserAccessService){ }
 
     @Output() pathChange: EventEmitter<any> = new EventEmitter<any>();
     @Output() checkSelected: EventEmitter<any> = new EventEmitter<any>();
@@ -74,6 +75,7 @@ export class RoleSideNav implements OnInit{
 
     activeFilter(event){
       this.checkSelected.emit(event.toString());
+      window.scrollTo(0,0);
     }
 
     SubmitDomain(){
@@ -93,8 +95,13 @@ export class RoleSideNav implements OnInit{
       if(flag === 1){
         this.textErrorMessage = 'This domain already exists';
       }
-      else{
-        this.textErrorMessage = '';
+
+      if(this.textErrorMessage === '' && this.newDomain !== ''){
+        let domain = {"domainName" : this.newDomain};
+        this.role.postDomain(domain).subscribe(res => {
+          window.location.reload();
+        });
       }
+
     }
 }

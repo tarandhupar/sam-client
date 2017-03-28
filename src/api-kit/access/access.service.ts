@@ -106,6 +106,17 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
+  postDomain(domain){
+    let apiOptions : any = {
+      name : 'domains',
+      suffix: '/',
+      method: 'POST',
+      body: domain
+    };
+
+    return this.apiService.call(apiOptions,false);
+  }
+
   getRoleObjDefinitions(mode : string, domainKey : string){
     let apiOptions: any = {
       name: 'domainDefinition',
