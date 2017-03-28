@@ -8,6 +8,7 @@ import {AccessRestrictedPage} from './assistance-listing-workspace/program-resul
 import { FALHeaderInfoComponent } from './assistance-listing-operations/sections/header-information/header-information.component';
 import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
 import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
+import {FinancialInfoFormPage2} from "./assistance-listing-operations/sections/financial-info/other/financial-info-other.page";
 
 export const routes: Routes = [
   {path: 'programs/:id/view', component: ProgramPage},
@@ -29,7 +30,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         { path: 'overview', component: FALOverviewComponent },
         { path: 'financial-information', pathMatch: 'full', redirectTo: 'financial-information/obligations'},
        // { path: 'financial-information/obligations', component: FALHeaderInfoComponent },
-       // { path: 'financial-information/other-financial-info', component: FALOverviewComponent},
+        { path: 'financial-information/other-financial-info', component: FinancialInfoFormPage2},
         { path: 'contact-information', component: FALContactInfoComponent },
       ]
     },
@@ -40,7 +41,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         { path: 'overview', component: FALOverviewComponent },
         { path: 'financial-information', pathMatch: 'full', redirectTo: 'financial-information/obligations'},
        // { path: 'financial-information/obligations', component: FALHeaderInfoComponent },
-       // { path: 'financial-information/other-financial-info', component: FALOverviewComponent},
+        { path: 'financial-information/other-financial-info', component: FinancialInfoFormPage2},
         { path: 'contact-information', component: FALContactInfoComponent },
       ]
     },

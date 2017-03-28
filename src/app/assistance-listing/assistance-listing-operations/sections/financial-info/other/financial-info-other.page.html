@@ -1,40 +1,30 @@
-<div class="usa-grid">
+<div *ngIf="otherFinancialInfoGroup" [formGroup]="otherFinancialInfoGroup">
+  <samTextArea [label] = "'Range and Average of Financial Assistance'"
+               [name] = "'assitance-range-input'"
+               [hint] = "'Provide a range that best represents the smallest and largest awards available. Provide an approximate average award size.'"
+               [required] = "false"
+               [control] = "otherFinancialInfoGroup.get('assistanceRange')"
+               [formControlName] = "'assistanceRange'"
+  ></samTextArea>
 
-  <div class="usa-width-one-third">
-    Sidenav here
+  <samCheckboxToggledTextarea [options] = "accomplishmentsConfig"
+                              [formControlName] = "'accomplishments'"
+  ></samCheckboxToggledTextarea>
+
+  {{accomplishmentsModel | json}}
+
+  <samAccountIdentification [options] = "accountIdentificationConfig"
+                            [formControlName] = "'accountIdentification'"
+  ></samAccountIdentification>
+
+  {{accountIdentificationModel | json}}
+
+  <div *ngIf="tafsGroup" [formGroup]="tafsGroup">
+    <samText [label] = "'Treasury Dept. Code'"
+             [name] = "'treasury-dept-code-input'"
+             [required] = "true"
+             [control] = "tafsGroup.get('treasuryDeptCode')"
+             [formControlName] = "'treasuryDeptCode'"
+    ></samText>
   </div>
-
-  <div class="usa-width-two-thirds">
-    <div *ngIf="otherFinancialInfoGroup" [formGroup]="otherFinancialInfoGroup">
-      <samTextArea [label] = "'Range and Average of Financial Assistance'"
-                   [name] = "'assitance-range-input'"
-                   [hint] = "'Provide a range that best represents the smallest and largest awards available. Provide an approximate average award size.'"
-                   [required] = "false"
-                   [control] = "otherFinancialInfoGroup.get('assistanceRange')"
-                   [formControlName] = "'assistanceRange'"
-      ></samTextArea>
-
-      <samCheckboxToggledTextarea [options] = "accomplishmentsConfig"
-                                  [formControlName] = "'accomplishments'"
-      ></samCheckboxToggledTextarea>
-
-      {{accomplishmentsModel | json}}
-
-      <samAccountIdentification [options] = "accountIdentificationConfig"
-                                [formControlName] = "'accountIdentification'"
-      ></samAccountIdentification>
-
-      {{accountIdentificationModel | json}}
-
-      <div *ngIf="tafsGroup" [formGroup]="tafsGroup">
-        <samText [label] = "'Treasury Dept. Code'"
-                 [name] = "'treasury-dept-code-input'"
-                 [required] = "true"
-                 [control] = "tafsGroup.get('treasuryDeptCode')"
-                 [formControlName] = "'treasuryDeptCode'"
-        ></samText>
-      </div>
-    </div>
-  </div>
-
 </div>
