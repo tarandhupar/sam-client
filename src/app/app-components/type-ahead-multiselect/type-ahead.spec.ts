@@ -23,7 +23,7 @@ describe('The Sam Type-ahead Component', () => {
     { label: 'Alabama', value: 'AL'},
     { label: 'New York', value: 'NY'},
     { label: 'Virginia', value: 'VA'},
-  ]
+  ];
   let config: AutocompleteConfig = {
     keyValueConfig: {
       keyProperty: 'value',

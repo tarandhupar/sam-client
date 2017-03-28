@@ -77,7 +77,22 @@ let searchServiceStub = {
 
 let fhServiceStub = {};
 
-describe('SearchPage', () => {
+let awardType = {
+  "options": [
+    { label: 'Alaska', value: 'AK'},
+    { label: 'Alabama', value: 'AL'},
+    { label: 'New York', value: 'NY'},
+    { label: 'Virginia', value: 'VA'}
+  ],
+  "config": {
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    }
+  }
+};
+
+fdescribe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult ],
@@ -123,16 +138,19 @@ describe('SearchPage', () => {
     fixture.componentInstance.isActive = false;
     fixture.componentInstance.wdStateModel = "AK";
     fixture.componentInstance.wdCountyModel = "17606";
+    fixture.componentInstance.awardTypeModel = "xyz";
+    fixture.componentInstance.contractTypeModel = "abc";
     fixture.componentInstance.clearAllFilters();
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.isActive).toBe(true);
       expect(fixture.componentInstance.wdStateModel).toBe("");
       expect(fixture.componentInstance.wdCountyModel).toBe("");
+      expect(fixture.componentInstance.awardTypeModel).toBe("");
+      expect(fixture.componentInstance.contractTypeModel).toBe("");
     });
   });
 
   it('should "check" if the agency picker variable is receiving a value', () => {
-
     fixture.componentInstance.keyword = "test";
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.runSearch();
@@ -140,6 +158,19 @@ describe('SearchPage', () => {
     fixture.whenStable().then(() => {
       fixture.detectChanges();
       expect(fixture.componentInstance.agencyPicker).toBeDefined();
+    });
+  });
+
+  it('should "check" if award type filters are defined', () => {
+    fixture.componentInstance.index = "fpds";
+    fixture.componentInstance.keyword = "";
+    fixture.componentInstance.pageNum = 0;
+    fixture.componentInstance.runSearch();
+
+    fixture.whenStable().then(() => {
+      fixture.detectChanges();
+      expect(fixture.componentInstance.awardType).toBeDefined();
+      expect(fixture.componentInstance.contractType).toBeDefined();
     });
   });
 
