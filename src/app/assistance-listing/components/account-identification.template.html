@@ -1,17 +1,18 @@
 <labelWrapper #accountIdentificationLabel
               [name]="name"
               [label]="label"
-              [hint]="hint">
+              [hint]="hint"
+              [required]="required">
 
   <labelWrapper #codeLabel
                 [name]="codeLabelName"
                 [label]="'Code'"
                 [hint]="codeHint"
-                [required]="required">
+                [required]="true">
 
     <div class="usa-grid-full">
       <div class="usa-width-one-whole">
-        <ng-container *ngFor="let textbox of codeTextboxes">
+        <ng-container *ngFor="let textbox of codeTextboxes; let isLast = last">
           <!-- todo: don't hardcode maxwidth -->
           <samText [name]="textbox.name"
                    [maxlength]="textbox.length"
@@ -19,6 +20,7 @@
                    [style.maxWidth]=".9*textbox.length + 2.55 + 'rem'"
                    [formControl]="textbox.control"
           ></samText>
+          {{isLast ? '' : '-'}}
         </ng-container>
       </div>
     </div>
