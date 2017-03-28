@@ -307,11 +307,16 @@
 
 
       <!-- Packages -->
-      <sam-download 
+      <sam-download
         [attachmentError]="attachmentError"
-        [packages]="packages" 
+        [packages]="packages"
         [downloadAllUrl]="getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)"></sam-download>
-      
+
+      <ng-container *ngIf="packagesWarning">
+        <samAlert [type]="packagesWarning.config?.type"><div [innerHTML]="packagesWarning.config?.description"></div></samAlert>
+      </ng-container>
+
+
       <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
         <h2>Contact Information
           <samButton *ngIf="differences?.changesExistContactInformation" [buttonId]="'defaultBtnContactInformation'" [buttonText]="!showChangesContactInformation ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideContactInformation()"></samButton>

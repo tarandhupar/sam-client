@@ -45,7 +45,7 @@ export default {
   },
 
   import: {
-    history: '/import/{email}/roles',
+    history: '/import/roles',
     roles: '/import/roles'
   }
 };
