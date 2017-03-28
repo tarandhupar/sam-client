@@ -202,7 +202,8 @@
     </div>
     <div class="usa-width-one" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
       <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
-      <list-results-message *ngIf="totalCount > 0 && wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'"[showing]="10" [currentPage]="pageNum+1" [total]="totalCount" [suffix]="listMessageSuffix"></list-results-message>
+      <strong><list-results-message *ngIf="totalCount > 0 && wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'"[showing]="10" [currentPage]="pageNum+1" [total]="totalCount" [suffix]="listMessageSuffix"></list-results-message></strong>
+      <br><br>
       <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
       <div id="search-results">
         <div tabindex="-1" *ngFor="let row of data.results">
