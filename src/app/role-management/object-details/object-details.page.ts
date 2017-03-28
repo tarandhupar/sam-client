@@ -4,6 +4,8 @@ import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete"
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
 import * as _ from 'lodash';
+import { Title } from "@angular/platform-browser";
+
 
 @Component({
   templateUrl: 'object-details.page.html'
@@ -30,12 +32,14 @@ export class ObjectDetailsPage implements OnInit {
     private route: ActivatedRoute,
     private accessService: UserAccessService,
     private footerAlerts: AlertFooterService,
+    private titleService: Title,
   ) {
 
   }
 
   ngOnInit() {
     this.determineMode();
+    this.setTitle();
     this.getAllDomains();
     this.getAllPermissions();
     if (this.mode === 'edit') {
@@ -43,6 +47,11 @@ export class ObjectDetailsPage implements OnInit {
       this.getObjectName();
     }
   }
+
+  setTitle() {
+    this.titleService.setTitle(this.mode === 'edit' ? 'Edit Object' : 'Create New Object');
+  }
+
 
   getObjectName() {
     this.route.params.subscribe(params => {

@@ -45,7 +45,7 @@ export class RoleDetailsPage {
   }
 
   setTitle() {
-    this.titleService.setTitle(this.mode === 'edit' ? 'Edit Role' : 'New Role');
+    this.titleService.setTitle(this.mode === 'edit' ? 'Edit Role' : 'Create New Role');
   }
 
   getDomainAndDefaultRole() {
@@ -119,7 +119,7 @@ export class RoleDetailsPage {
         }
 
         if (this.mode === 'edit') {
-          // find the text label for role and set the text label
+          // find the text label for role
           let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.value);
           if (r) {
             this.role = r.label;
@@ -132,6 +132,7 @@ export class RoleDetailsPage {
             this.domainDefinitions = null;
             return;
           }
+          updatePermissions(this.domainRoleOptions)
         }
       },
       err => {
@@ -147,27 +148,36 @@ export class RoleDetailsPage {
     })
   }
 
-  onRoleBlur() {
-    if (this.domainRoleOptions.find(d => d.label === this.role)) {
-      this.footerAlert.registerFooterAlert({
-        title: 'Cannot create role. Role name already exists',
-        type: 'error'
-      });
-      return;
-    }
+  clearLastDomainRole() {
     let lastRole = _.last(this.domainRoleOptions);
     if (lastRole && lastRole.isNew) {
       this.domainRoleOptions.pop();
     }
-    this.domainRoleOptions.push({
-      label: this.role,
-      value: null,
-      isNew: true,
-    });
+  }
+
+  onRoleBlur() {
+    this.clearLastDomainRole();
+
+    if (this.roleExists()) {
+      this.errors.role = 'Cannot create role. Role name already exists';
+      return;
+    }
+
+    if (this.role) {
+      this.domainRoleOptions.push({
+        label: this.role,
+        value: null,
+        isNew: true,
+      });
+    }
+  }
+
+  roleExists() {
+    return this.domainRoleOptions.find(d => d.label.toUpperCase() === this.role.toUpperCase());
   }
 
   validate() {
-    return this.domain && this.role;
+    return this.domain && this.role && !this.roleExists();
   }
 
   onDomainFocus() {
@@ -178,6 +188,17 @@ export class RoleDetailsPage {
     this.errors.role = '';
   }
 
+  showValidationErrors() {
+    if (!this.selectedDomain) {
+      this.errors.domain = "Domain is required";
+    }
+    if (!this.role) {
+      this.errors.role = "Role is required";
+    } else if (this.roleExists()) {
+      this.errors.role = 'Cannot create role. Role name already exists';
+    }
+  }
+
   onSubmitClick() {
     if (this.validate()) {
       this.requestObject = this.getRequestObject();
@@ -186,12 +207,7 @@ export class RoleDetailsPage {
         type: 'success'
       });
     } else {
-      if (!this.selectedDomain) {
-        this.errors.domain = "Domain is required";
-      }
-      if (!this.role) {
-        this.errors.role = "Role is required";
-      }
+      this.showValidationErrors();
     }
 
     //this.router.navigateByUrl('/access/roles');
