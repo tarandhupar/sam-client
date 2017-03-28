@@ -16,6 +16,7 @@ import { AutoCompleteWrapper } from './autoCompleteWrapper/autoCompleteWrapper.s
 import { UserDirService } from './user-directory/user-directory.service';
 import { UserAccessService } from "./access/access.service";
 import { LocationService } from "./location/location.service";
+import { FeedbackService } from "./feedback/feedback.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -41,7 +42,8 @@ import { LocationService } from "./location/location.service";
     UserDirService,
     UserAccessService,
     WageDeterminationService,
-    LocationService
+    LocationService,
+    FeedbackService
   ]
 })
 export class SamAPIKitModule { }
