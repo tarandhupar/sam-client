@@ -74,4 +74,15 @@ export class UserAccessService {
 
     return this.apiService.call(apiOptions, false);
   }
+
+  requestAccess(req: any, userName) {
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/' + userName + '/',
+      method: 'POST',
+      body: req
+    };
+
+    return this.apiService.call(apiOptions, false);
+  }
 }
