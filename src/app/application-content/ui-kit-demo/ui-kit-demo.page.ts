@@ -299,6 +299,13 @@ export class UIKitDemoPage {
     name: 'countries',
   };
 
+  locationDemoConfig = {
+    keyValueConfig: {
+      keyProperty: 'key',
+      valueProperty: 'value'
+    }
+  }
+
   constructor(private alertFooterService: AlertFooterService, private locationService: LocationService) {  }
 
   onEmptyOptionChanged($event) {
@@ -355,10 +362,10 @@ export class UIKitDemoPage {
   getAllCountriesJSON(){
     this.locationService.getAllContries().subscribe(
       res => {
-        this.locationAllCountryJSON = res;
+          this.locationAllCountryJSON = res._embedded.countryList;
         this.locationResultConfig.options = [];
-        if(res.length > 0) this.locationResultModel = res[0].country;
-        res.forEach(e => {
+        if (this.locationAllCountryJSON.length > 0) this.locationResultModel = this.locationAllCountryJSON[0].country;
+        this.locationAllCountryJSON.forEach(e => {
           this.locationResultConfig.options.push({value: e.country, label: e.country, name: e.country});
         });
       },

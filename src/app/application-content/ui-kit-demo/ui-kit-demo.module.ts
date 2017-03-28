@@ -11,6 +11,8 @@ import { AppComponentsModule } from '../../app-components/app-components.module'
 import { AlertsModule } from '../../alerts/alerts.module';
 import { HelpModule } from '../../Help/help.module';
 
+import { LocationServiceDirective } from './location-demo';
+
 @NgModule({
   imports: [
     routing,
@@ -23,9 +25,12 @@ import { HelpModule } from '../../Help/help.module';
     AlertsModule,
     HelpModule,
   ],
-  exports: [],
+  exports: [
+    LocationServiceDirective
+  ],
   declarations: [
-    UIKitDemoPage
+    UIKitDemoPage,
+    LocationServiceDirective
   ],
   providers: [],
 })
