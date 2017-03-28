@@ -18,12 +18,7 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
     codeBoxes: [],
     descriptionText: '',
 
-    accounts: [
-      {
-        code: '',
-        description: ''
-      }
-    ]
+    accounts: [] // { code: '', description: '' }
   };
 
   // general
@@ -102,6 +97,19 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
     });
     this.accountFormGroup.addControl('textarea', this.textareaControl);
   }
+
+  public addAccount() {
+    let account = {};
+    let code = '';
+    for(let i = 0; i < this.codeBoxLengths.length; i++) {
+      code = code + this.codeFormGroup.get('codeBox'+i).value;
+    }
+
+    account['code'] = code;
+    account['description'] = this.textareaControl.value;
+    this.model.accounts.push(account);
+    this.accountFormGroup.reset();
+  };
 
   private onChange() {
     this.wrapper.formatErrors(this.accountFormGroup);

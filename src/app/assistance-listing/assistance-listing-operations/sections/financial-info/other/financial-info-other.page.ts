@@ -41,22 +41,8 @@ export class FinancialInfoFormPage2 implements OnInit {
     required: true
   };
 
-  public accomplishmentsModel: Object = {
-    checkbox: [],
-    textarea: ''
-  };
-
-  public accountIdentificationModel: Object = {
-    codeBoxes: [],
-    descriptionText: '',
-
-    accounts: [
-      {
-        code: '',
-        description: ''
-      }
-    ]
-  };
+  public accomplishmentsModel: Object = {};
+  public accountIdentificationModel: Object = {};
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -101,12 +87,12 @@ export class FinancialInfoFormPage2 implements OnInit {
 
   private createForm() {
     this.otherFinancialInfoGroup = this.fb.group({
-      assistanceRange: '',
-      accomplishments: '',
-      accountIdentification: '',
+      assistanceRange: null,
+      accomplishments: null,
+      accountIdentification: null,
 
       tafs: this.fb.group({
-        treasuryDeptCode: ''
+        treasuryDeptCode: null
       })
     });
 
@@ -120,12 +106,10 @@ export class FinancialInfoFormPage2 implements OnInit {
       }
     }
 
-    this.otherFinancialInfoGroup.get('accomplishments').setValue(this.accomplishmentsModel);
     this.otherFinancialInfoGroup.get('accomplishments').valueChanges.subscribe(model => {
       this.accomplishmentsModel = model;
     });
 
-    this.otherFinancialInfoGroup.get('accountIdentification').setValue(this.accountIdentificationModel);
     this.otherFinancialInfoGroup.get('accountIdentification').valueChanges.subscribe(model => {
       this.accountIdentificationModel = model;
     });

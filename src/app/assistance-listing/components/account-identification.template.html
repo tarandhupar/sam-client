@@ -35,7 +35,7 @@
                  [formControl]="textareaControl"
     ></samTextArea>
 
-    <samButton buttonText="Add New Account" (onClick)="saveData()" [buttonType]="(!codeFormGroup.valid || hideAddButton ? 'disabled' : 'default')"></samButton>
+    <samButton buttonText="Add New Account" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
   </form>
 
 </labelWrapper>
