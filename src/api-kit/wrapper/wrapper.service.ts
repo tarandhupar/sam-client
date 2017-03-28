@@ -16,6 +16,7 @@ export class WrapperService {
         "alerts": "/alert/v2/alerts",
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions",
+        "access": "/rms/v1/access",
         "requestaccess": "/rms/v1/requestaccess",
         "uiroles": "/rms/v1/uiroles",
         "domains": "/rms/v1/domains",
