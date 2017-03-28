@@ -42,7 +42,7 @@ export class RoleSideNav implements OnInit{
       name: 'role-management-definition picker',
     };
 
-    newDomain = 'Add new...';
+    newDomain = '';
     textErrorMessage = '';
 
     ChangeRoute(value){
@@ -79,12 +79,10 @@ export class RoleSideNav implements OnInit{
     }
 
     SubmitDomain(){
+      this.textErrorMessage = '';
       let flag = 0;
       if(this.newDomain === ''){
         this.textErrorMessage = 'Domain name cannot be empty';
-      }
-      else{
-        this.textErrorMessage = '';
       }
 
       this.domains.forEach( val => {
@@ -95,7 +93,6 @@ export class RoleSideNav implements OnInit{
       if(flag === 1){
         this.textErrorMessage = 'This domain already exists';
       }
-
       if(this.textErrorMessage === '' && this.newDomain !== ''){
         let domain = {"domainName" : this.newDomain};
         this.role.postDomain(domain).subscribe(res => {
@@ -103,5 +100,11 @@ export class RoleSideNav implements OnInit{
         });
       }
 
+    }
+
+    onEnterClick(event){
+      if(event.keyCode == 13){
+        this.SubmitDomain();
+      }
     }
 }
