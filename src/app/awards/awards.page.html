@@ -180,9 +180,9 @@
 				</div>
 				DUNS Number: {{awardData.contractorInformation.duns}}<br />
 				Vendor Name: {{awardData.contractorInformation.vendorName}}<br />
-				DBAN: {{awardData.contractorInformation.dBan}}<br />
+				Doing Business as Name: {{awardData.contractorInformation.dBan}}<br />
 				<div *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
-					Contractor Name: {{awardData.contractorInformation.contractorName}}
+					Contractor Name from Contract: {{awardData.contractorInformation.contractorName}}
 				</div>
 				<br />
 				<b>
@@ -193,8 +193,8 @@
 				Congressional District: {{awardData.contractorInformation.address.congDistrict}}
 				<br />
 				<br />
-				Phone: {{awardData.contractorInformation.address.phoneNumber}}<br />
-				FAX: {{awardData.contractorInformation.address.faxNumber}}
+				Phone: {{awardData.contractorInformation.address.phoneNumber | phone}}<br />
+				Fax: {{awardData.contractorInformation.address.faxNumber | phone}}
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 					<h3 id="businessCategory">Business Category</h3>
 					Organization Type: {{orgType}}<br />

@@ -4,7 +4,8 @@ import { AwardsPage }   from './awards.page.ts';
 import { routing } from './awards.route.ts';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { CommonModule } from '@angular/common';
-import {DatexPipe} from './string-to-date.pipe';
+import { DatexPipe } from './string-to-date.pipe';
+import { PhonePipe } from './phone.pipe';
 import { AwardsAddress } from './awards-address.component.ts';
 
 @NgModule({
@@ -19,11 +20,13 @@ import { AwardsAddress } from './awards-address.component.ts';
     BrowserModule,
     CommonModule,
     DatexPipe,
+    PhonePipe,
     AwardsAddress
   ],
   declarations: [
     AwardsPage,
     DatexPipe,
+    PhonePipe,
     AwardsAddress
   ],
 })
