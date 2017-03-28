@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup } from "@angular/forms";
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup, Validators } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
 @Component({
@@ -27,27 +27,17 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
   };
 
   // general
-  @Input() options;   // optional - can pass all parameters in a single options object for convenience
+  @Input() options; // optional - can pass all parameters in a single options object for convenience
   @Input() name: string; // required
   @Input() label: string;
   @Input() hint: string;
   @Input() required: boolean;
+  public accountFormGroup: FormGroup;
 
   //code
   public codeLabelName: string;
   @Input() codeHint: string;
-  public codeGroup: FormGroup;
-  public codeTextboxes: Object[] = [
-    {
-      length: 2,
-      name: null,
-      control: null
-    },
-    { length: 4 },
-    { length: 1 },
-    { length: 1 },
-    { length: 3 }
-  ];
+  public codeBoxLengths: number[] = [2, 4, 1, 1, 3];
 
   // textarea
   public textareaName: string;
@@ -79,9 +69,6 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
     // subcomponent names are generated based on this component's name
     this.codeLabelName = this.name + '-code-label';
     this.textareaName = this.name + '-textarea';
-    for(let i = 0; i < this.codeTextboxes.length; i++) {
-      this.codeTextboxes[i]['name'] = this.name + '-code-box' + i;
-    }
   }
 
   private validateInputs() {
@@ -93,17 +80,16 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   private createFormControls() {
-    this.codeGroup = new FormGroup({});
+    this.accountFormGroup = new FormGroup({});
 
-    for(let i = 0; i < this.codeTextboxes.length; i++) {
-      let codeTextboxControl = new FormControl();
-      codeTextboxControl.valueChanges.subscribe(value => {
+    for(let i = 0; i < this.codeBoxLengths.length; i++) {
+      let codeBoxControl = new FormControl('', Validators.required);
+      codeBoxControl.valueChanges.subscribe(value => {
         this.model.codeBoxes[i] = value;
         this.onChange();
       });
 
-      this.codeGroup.addControl('codeTextbox' + i, codeTextboxControl);
-      this.codeTextboxes[i]['control'] = codeTextboxControl;
+      this.accountFormGroup.addControl('codeBox' + i, codeBoxControl);
     }
 
     this.textareaControl = new FormControl();
@@ -111,11 +97,13 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
       this.model.descriptionText = value;
       this.onChange();
     });
+    this.accountFormGroup.addControl('textarea', this.textareaControl);
   }
 
   private onChange() {
     // todo ...
-    // this.wrapper.formatErrors(this.textareaControl);
+    console.log(this.accountFormGroup.valid);
+    // this.codeWrapper.formatErrors(this.textareaControl);
     this.onChangeCallback(this.model);
   }
 

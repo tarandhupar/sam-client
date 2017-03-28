@@ -20,7 +20,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   };
 
   // general
-  @Input() options;   // optional - can pass all parameters in a single options object for convenience
+  @Input() options; // optional - can pass all parameters in a single options object for convenience
   @Input() name: string; // required
   @Input() label: string;
   @Input() hint: string;

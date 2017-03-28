@@ -4,7 +4,7 @@
               [hint]="hint"
               [required]="required">
 
-  <form [formGroup]="codeGroup">
+  <form [formGroup]="accountFormGroup">
     <labelWrapper #codeLabel
                   [name]="codeLabelName"
                   [label]="'Code'"
@@ -13,13 +13,13 @@
 
       <div class="usa-grid-full">
         <div class="usa-width-one-whole">
-          <ng-container *ngFor="let textbox of codeTextboxes; let isLast = last">
+          <ng-container *ngFor="let length of codeBoxLengths; let i = index; let isLast = last">
             <!-- todo: don't hardcode maxwidth -->
-            <samText [name]="textbox.name"
-                     [maxlength]="textbox.length"
+            <samText [name]="'code-box-' + i"
+                     [maxlength]="length"
                      [style.display]="'inline-block'"
-                     [style.maxWidth]=".9*textbox.length + 2.55 + 'rem'"
-                     [formControl]="textbox.control"
+                     [style.maxWidth]=".9*length + 2.55 + 'rem'"
+                     [formControlName]="'codeBox' + i"
             ></samText>
             {{isLast ? '' : '-'}}
           </ng-container>
@@ -34,5 +34,8 @@
                  [hidden]="textareaHidden"
                  [formControl]="textareaControl"
     ></samTextArea>
+
+    <samButton buttonText="Add New Account" (onClick)="saveData()" [buttonType]="(!accountFormGroup.valid || hideAddButton ? 'disabled' : 'default')"></samButton>
   </form>
+
 </labelWrapper>
