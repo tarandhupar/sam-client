@@ -70,7 +70,7 @@ export class SamPasswordComponent {
       Validators.required
     ]);
 
-    if(this.currentPassword !== undefined) {
+    if(this.currentPassword !== undefined && this.currentPassword !== null) {
       this.currentPassword.setValidators([
         Validators.required
       ]);
