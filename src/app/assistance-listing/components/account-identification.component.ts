@@ -38,6 +38,7 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
   public codeLabelName: string;
   @Input() codeHint: string;
   public codeBoxLengths: number[] = [2, 4, 1, 1, 3];
+  private codeFormGroup: FormGroup;
 
   // textarea
   public textareaName: string;
@@ -81,6 +82,8 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
 
   private createFormControls() {
     this.accountFormGroup = new FormGroup({});
+    this.codeFormGroup = new FormGroup({});
+    this.accountFormGroup.addControl('codeBoxes', this.codeFormGroup);
 
     for(let i = 0; i < this.codeBoxLengths.length; i++) {
       let codeBoxControl = new FormControl('', Validators.required);
@@ -89,7 +92,7 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
         this.onChange();
       });
 
-      this.accountFormGroup.addControl('codeBox' + i, codeBoxControl);
+      this.codeFormGroup.addControl('codeBox' + i, codeBoxControl);
     }
 
     this.textareaControl = new FormControl();
@@ -101,9 +104,8 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   private onChange() {
-    // todo ...
-    console.log(this.accountFormGroup.valid);
-    // this.codeWrapper.formatErrors(this.textareaControl);
+    this.wrapper.formatErrors(this.accountFormGroup);
+    this.codeWrapper.formatErrors(this.codeFormGroup);
     this.onChangeCallback(this.model);
   }
 

@@ -12,7 +12,7 @@
                   [required]="true">
 
       <div class="usa-grid-full">
-        <div class="usa-width-one-whole">
+        <div class="usa-width-one-whole" [formGroup]="codeFormGroup">
           <ng-container *ngFor="let length of codeBoxLengths; let i = index; let isLast = last">
             <!-- todo: don't hardcode maxwidth -->
             <samText [name]="'code-box-' + i"
@@ -35,7 +35,7 @@
                  [formControl]="textareaControl"
     ></samTextArea>
 
-    <samButton buttonText="Add New Account" (onClick)="saveData()" [buttonType]="(!accountFormGroup.valid || hideAddButton ? 'disabled' : 'default')"></samButton>
+    <samButton buttonText="Add New Account" (onClick)="saveData()" [buttonType]="(!codeFormGroup.valid || hideAddButton ? 'disabled' : 'default')"></samButton>
   </form>
 
 </labelWrapper>
