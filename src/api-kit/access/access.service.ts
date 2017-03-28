@@ -96,7 +96,6 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
-<<<<<<< HEAD
   postDomain(domain){
     let apiOptions : any = {
       name : 'domains',
