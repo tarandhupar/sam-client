@@ -26,7 +26,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
                           {label:"New Contact", value:'new'},
                           {label:"Existing Contact", value:'existing'}];
   stateDrpDwnOptions = [{label:"None Selected", value:'na'}];
-  countryDrpDwnOptions;
+  countryDrpDwnOptions = [];
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -41,7 +41,10 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
       this.stateDrpDwnOptions.push({label:states[key], value:key});
     }
 
-    //this.countryDrpDwnOptions = sharedService.getCountries();
+    let countries = sharedService.getCountries();
+    for(let key in countries){
+      this.countryDrpDwnOptions.push({label:countries[key], value:key});
+    }
   }
 
   ngOnInit(){
@@ -78,7 +81,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
       city:[''],
       state:['na'],
       zip:[''],
-      country:['']
+      country:['US']
     });
   }
 
