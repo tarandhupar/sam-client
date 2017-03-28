@@ -12,7 +12,7 @@
               <div class = "usa-width-one-half p_T-1em">
                 <div class = "pull-right">
                   <i class=" fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Remove</span>
-                  <span routerLink="/access/workspace/roles/{{role.role.id}}/edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Edit</span></span>
+                  <span [routerLink]="['../roles/' + role.role.id + '/edit']" [queryParams]="{ domain: domain.domain.id }"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Edit</span></span>
                   <span (click) = "role.testFlag = !role.testFlag"><i class="fa " [ngClass] = "role.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">{{role.testFlag ? 'Hide' : 'Show'}} Permission</span></span>
                 </div>
               </div>
@@ -60,7 +60,7 @@
               <div class = "usa-width-one-half p_T-1em">
                 <div class = "pull-right">
                   <i class=" fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Remove</span>
-                  <span routerLink="/access/workspace/objects/{{func.function.id}}/edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Edit</span></span>
+                  <span [routerLink]="['../objects/' + func.function.id + '/edit']" [queryParams]="{ domains: domain.domain.id }"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Edit</span></span>
                   <span (click) = "func.testFlag = !func.testFlag"><i class="fa " [ngClass] = "func.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">{{func.testFlag ? 'Hide' : 'Show'}} Permission</span></span>
                 </div>
               </div>
