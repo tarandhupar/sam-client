@@ -23,7 +23,7 @@
         <div class="usa-width-one-twelfth">
           All
           <div class="pull-right">
-            <input class='check-all-defaults' type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)">
+            <input class='check-all-defaults' type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked">
           </div>
         </div>
       </ng-container>

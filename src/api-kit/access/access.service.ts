@@ -96,7 +96,7 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
-  getRoleObjDefinitions(mode : string, domainKey : string){
+  getRoleObjDefinitions(mode : string, domainKey : string) {
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -104,10 +104,32 @@ export class UserAccessService {
       oParam: { }
     };
 
-    apiOptions.oParam.mode = mode || 'role';
+    if (mode) {
+      apiOptions.oParam.mode = mode;
+    }
+
     if( domainKey.length > 0 ){
       apiOptions.oParam.domainKey = domainKey;
     }
+
+    return this.apiService.call(apiOptions);
+  }
+
+  createObject(domainId: number, objectName: string, permissions: {id: any, val: string}[]) {
+    let apiOptions: any = {
+      name: 'functions',
+      suffix: '',
+      method: 'POST',
+      oParam: { }
+    };
+
+    apiOptions.body = {
+      domain: { id: domainId },
+      functionMapContent: { val: objectName },
+      permissions: permissions
+    };
+
+    console.log(apiOptions.body);
 
     return this.apiService.call(apiOptions);
   }

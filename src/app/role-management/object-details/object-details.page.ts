@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import * as _ from 'lodash';
 
 @Component({
   templateUrl: 'object-details.page.html'
@@ -20,6 +21,7 @@ export class ObjectDetailsPage implements OnInit {
 
   selectedPermissions = [];
   permissionOptions = [];
+  originalPermissions = [];
 
   permissionSetter;
 
@@ -121,16 +123,25 @@ export class ObjectDetailsPage implements OnInit {
     );
   }
 
-  // onDomainsChange() {
-  //
-  // }
+  showGenericServicesError() {
+    this.footerAlerts.registerFooterAlert({
+      description: 'Something went wrong with a required service',
+      type: 'error'
+    })
+  }
 
   onDomainChange() {
     let domainId = +this.selectedDomain;
     this.accessService.getRoleObjDefinitions('object', ''+domainId).subscribe(
       domains => {
-        let permissions = domains.functionMapContent.map(f => f.function.val);
-        this.selectedPermissions = permissions;
+        console.log('ddd', domains);
+        if (domains[0] && domains[0].functionMapContent && domains[0].functionMapContent.length) {
+          let permissions = domains[0].functionMapContent.map(f => f.function.val);
+          this.originalPermissions = _.clone(domains[0].functionMapContent);
+          this.selectedPermissions = permissions;
+        } else {
+          this.selectedPermissions = [];
+        }
       }
     )
   }
@@ -141,14 +152,31 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   onSubmitClick() {
-    this.requestObject = this.getRequestObject();
+    let perms = this.getPermissionsArray();
+    this.accessService.createObject(+this.selectedDomain, this.objectName, perms).delay(1000).subscribe(
+      res => {
+        this.footerAlerts.registerFooterAlert({
+          title: 'Successfully created object',
+          type: 'success'
+        });
+        this.router.navigate(['/access/workspace']);
+      },
+      err => {
+        this.showGenericServicesError();
+      }
+    );
   }
 
-  getRequestObject() {
-    return {
-      domain: +this.selectedDomain,
-      objectName: this.objectName,
-      permissions: this.selectedPermissions
-    };
+  getPermissionsArray() {
+    return this.selectedPermissions.map((perm: string) => {
+      let p = this.originalPermissions.find(op => op.val === perm);
+      if (p) {
+        return p;
+      } else {
+        return { val: perm };
+      }
+    })
   }
+
+
 }

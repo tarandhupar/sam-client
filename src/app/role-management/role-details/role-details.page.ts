@@ -81,17 +81,17 @@ export class RoleDetailsPage {
 
   onDomainChange() {
     this.domainRoleOptions = null;
-    this.accessService.getRoleObjDefinitions('role', ''+this.selectedDomain).subscribe(
+    this.accessService.getRoleObjDefinitions(null, ''+this.selectedDomain).subscribe(
       defs => {
-        this.domainDefinitions = defs;
+        this.domainDefinitions = defs[0];
         this.domainRoleOptions = [];
         this.permissionOptions = [];
         if (!defs || !defs.length) {
           return;
         }
 
-        if (defs.roleDefinitionMapContent && defs.roleDefinitionMapContent.length) {
-          this.domainRoleOptions = defs.roleDefinitionMapContent.map(r => {
+        if (this.domainDefinitions.roleDefinitionMapContent && this.domainDefinitions.roleDefinitionMapContent.length) {
+          this.domainRoleOptions = this.domainDefinitions.roleDefinitionMapContent.map(r => {
             return {
               label: r.role.val,
               value: r.role.id,
@@ -99,8 +99,8 @@ export class RoleDetailsPage {
           });
         }
 
-        if (defs.functionMapContent && defs.functionMapContent.length){
-          this.permissionOptions = defs.functionMapContent.map(f => {
+        if (this.domainDefinitions.functionMapContent && this.domainDefinitions.functionMapContent.length){
+          this.permissionOptions = this.domainDefinitions.functionMapContent.map(f => {
             return {
               name: f.function.val,
               permissions: f.permission.map(perm => {
@@ -145,13 +145,13 @@ export class RoleDetailsPage {
   onRoleBlur() {
     if (this.domainRoleOptions.find(d => d.label === this.role)) {
       this.footerAlert.registerFooterAlert({
-        title: 'Role exists',
+        title: 'Cannot create role. Role name already exists',
         type: 'error'
       });
       return;
     }
     let lastRole = _.last(this.domainRoleOptions);
-    if (lastRole.isNew) {
+    if (lastRole && lastRole.isNew) {
       this.domainRoleOptions.pop();
     }
     this.domainRoleOptions.push({
