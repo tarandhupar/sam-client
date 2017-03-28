@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validators } from "@angular/forms";
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
 @Component({
@@ -36,6 +36,7 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
   //code
   public codeLabelName: string;
   @Input() codeHint: string;
+  public codeGroup: FormGroup;
   public codeTextboxes: Object[] = [
     {
       length: 2,
@@ -92,12 +93,17 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   private createFormControls() {
+    this.codeGroup = new FormGroup({});
+
     for(let i = 0; i < this.codeTextboxes.length; i++) {
-      this.codeTextboxes[i]['control'] = new FormControl();
-      this.codeTextboxes[i]['control'].valueChanges.subscribe(value => {
+      let codeTextboxControl = new FormControl();
+      codeTextboxControl.valueChanges.subscribe(value => {
         this.model.codeBoxes[i] = value;
         this.onChange();
       });
+
+      this.codeGroup.addControl('codeTextbox' + i, codeTextboxControl);
+      this.codeTextboxes[i]['control'] = codeTextboxControl;
     }
 
     this.textareaControl = new FormControl();
