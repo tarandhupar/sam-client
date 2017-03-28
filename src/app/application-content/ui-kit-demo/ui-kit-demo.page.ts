@@ -190,11 +190,14 @@ export class UIKitDemoPage {
   pointOfContact = {
     fullName:"John Doe",
     address: "1234 Waterway Rd",
+    address2: "Unit D",
     city: "Norfolk",
     state: "VA",
     zip:"12345",
     email: "jdoe@test.gov",
     phone: "222-222-2222",
+    phone2: "333-333-3333",
+    fax: "444-444-4444",
     website: "www.testsite.gov"
   };
 
