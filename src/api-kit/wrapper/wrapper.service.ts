@@ -16,12 +16,13 @@ export class WrapperService {
         "alerts": "/alert/v2/alerts",
         "allAlerts": "/alert/v2/alerts/allAlerts",
         "suggestions": "/sgs/v1/suggestions",
-        "access": "/rms/v1/access",
+        "requestaccess": "/rms/v1/requestaccess",
         "uiroles": "/rms/v1/uiroles",
         "domains": "/rms/v1/domains",
         "wageDetermination": "/wdol/v1",
         "location": "/locationservices/v1/api",
-        "feedback": "/feedback/v1"
+        "feedback": "/feedback/v1",
+        "request": "/rms/v1/request",
     };
 
     constructor(private _http: Http){}
