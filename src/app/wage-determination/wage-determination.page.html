@@ -83,6 +83,11 @@
       </pre>
     </section>
 
+    <section [attr.id]="wdHistory" *ngIf="history">
+      <h2>History</h2>
+      <sam-history [data]="processedHistory" [currentId]="wageDetermination.fullReferenceNumber"></sam-history>
+    </section>
+
   </div>
 
 </div>
