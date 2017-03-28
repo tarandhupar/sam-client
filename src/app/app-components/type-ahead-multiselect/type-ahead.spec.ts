@@ -29,7 +29,7 @@ describe('The Sam Type-ahead Component', () => {
       keyProperty: 'value',
       valueProperty: 'label'
     }
-  }
+  };
   let allowAny = false;
 
   beforeEach(() => {
