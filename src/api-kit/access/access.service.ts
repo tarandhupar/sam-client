@@ -115,7 +115,7 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  createObject(domainId: number, objectName: string, permissions: {id: any, val: string}[]) {
+  createObject(domainId: number, objectName: string, permissions: {id?: any, val?: string}[]) {
     let apiOptions: any = {
       name: 'functions',
       suffix: '',
@@ -126,7 +126,7 @@ export class UserAccessService {
     apiOptions.body = {
       domain: { id: domainId },
       functionMapContent: { val: objectName },
-      permissions: permissions
+      permission: permissions
     };
 
     console.log(apiOptions.body);
