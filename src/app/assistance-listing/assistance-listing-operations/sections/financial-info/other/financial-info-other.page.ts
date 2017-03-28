@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ProgramService } from "api-kit";
-
-import * as Cookies from 'js-cookie';
+import { FALOpSharedService } from "../../../assistance-listing-operations.service";
 
 @Component({
   providers: [ProgramService],
@@ -62,18 +61,19 @@ export class FinancialInfoFormPage2 implements OnInit {
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
               private route: ActivatedRoute,
-              private router: Router) { }
+              private router: Router,
+              private sharedService: FALOpSharedService) {
+    this.sharedService.setSideNavFocus();
+    this.programId = this.sharedService.programId;
+    this.cookieValue = this.sharedService.cookieValue;
+  }
 
   ngOnInit() {
-    let routeParams$ = this.route.params.share();
+    this.createForm();
 
-    routeParams$.subscribe(params => {
-      this.programId = params['id'];
-      this.cookieValue = Cookies.get('iPlanetDirectoryPro');
-
-      // todo: refactor this
-      this.programId != null ? this.loadProgramData() : this.createForm();
-    });
+    if(this.programId) {
+      this.loadProgramData();
+    }
   }
 
   private loadProgramData() {
@@ -81,11 +81,22 @@ export class FinancialInfoFormPage2 implements OnInit {
 
     programAPI$.subscribe(programData => {
       this.program = programData;
-      this.createForm();
-    }, err => {
+      this.populateForm();
+    }, error => {
       // todo: handle error
-      console.log('Error loading program', err);
+      console.log('Error loading program', error);
     });
+  }
+
+  private saveProgramData() {
+    // todo: understand, fix this
+    let data = {};
+    this.programService.saveProgram(this.programId, data, this.cookieValue)
+      .subscribe(api => {
+
+      }, error => {
+        console.error('Error saving program', error);
+      });
   }
 
   private createForm() {
@@ -118,5 +129,35 @@ export class FinancialInfoFormPage2 implements OnInit {
     this.otherFinancialInfoGroup.get('accountIdentification').valueChanges.subscribe(model => {
       this.accountIdentificationModel = model;
     });
+  }
+
+  private populateForm() {
+    // todo ...
+  }
+
+  public onCancelClick(event) {
+    if(this.programId) {
+      this.router.navigate(['/programs', this.programId, 'view']);
+    } else {
+      this.router.navigate(['/falworkspace']);
+    }
+  }
+
+  public onPreviousClick(event){
+    if(this.programId) {
+      this.router.navigate(['programs', this.programId, 'edit', 'financial-information', 'obligations']);
+    } else {
+      this.router.navigate(['programs', 'add', 'financial-information', 'obligations']);
+    }
+  }
+
+  public onSaveExitClick(event) {
+    this.saveProgramData();
+    // todo: redirect ...
+  }
+
+  public onSaveContinueClick(event) {
+    this.saveProgramData();
+    // todo: redirect ...
   }
 }
