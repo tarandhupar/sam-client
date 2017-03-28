@@ -7,14 +7,14 @@
     <p>{{getLabelForDomain(domain)}}</p>
   </ng-container>
   <ng-container *ngIf="mode === 'new'">
-    <samSelect name='domain' label="Domain" [options]="domainOptions" [(ngModel)]="selectedDomain" (modelChange)="onDomainChange()"></samSelect>
+    <samSelect (focus)="onDomainFocus()" name='domain' label="Domain" [options]="domainOptions" [(ngModel)]="selectedDomain" (modelChange)="onDomainChange()" [errorMessage]="errors.domain"></samSelect>
   </ng-container>
 
   <ng-container *ngIf="domainDefinitions">
 
     <!-- Role text -->
-    <labelWrapper name="role" label="Role">
-      <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()">
+    <labelWrapper name="role" label="Role" [errorMessage]="errors.role">
+      <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()" (focus)="onRoleFocus()">
     </labelWrapper>
 
     <!-- Domain Roles -->

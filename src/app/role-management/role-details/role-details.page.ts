@@ -22,6 +22,10 @@ export class RoleDetailsPage {
   domainDefinitions: any = null;
   permissionOptions: any = [];
   requestObject;
+  errors = {
+    role: '',
+    domain: '',
+  };
 
   constructor(
     private router: Router
@@ -81,7 +85,8 @@ export class RoleDetailsPage {
 
   onDomainChange() {
     this.domainRoleOptions = null;
-    this.accessService.getRoleObjDefinitions(null, ''+this.selectedDomain).subscribe(
+    let domain = this.domain || this.selectedDomain;
+    this.accessService.getRoleObjDefinitions(null, ''+domain).subscribe(
       defs => {
         this.domainDefinitions = defs[0];
         this.domainRoleOptions = [];
@@ -161,12 +166,34 @@ export class RoleDetailsPage {
     });
   }
 
+  validate() {
+    return this.domain && this.role;
+  }
+
+  onDomainFocus() {
+    this.errors.domain = '';
+  }
+
+  onRoleFocus() {
+    this.errors.role = '';
+  }
+
   onSubmitClick() {
-    this.requestObject = this.getRequestObject();
-    this.footerAlert.registerFooterAlert({
-      title: 'Successfully create new role.',
-      type: 'success'
-    });
+    if (this.validate()) {
+      this.requestObject = this.getRequestObject();
+      this.footerAlert.registerFooterAlert({
+        title: 'Successfully create new role.',
+        type: 'success'
+      });
+    } else {
+      if (!this.selectedDomain) {
+        this.errors.domain = "Domain is required";
+      }
+      if (!this.role) {
+        this.errors.role = "Role is required";
+      }
+    }
+
     //this.router.navigateByUrl('/access/roles');
   }
 
