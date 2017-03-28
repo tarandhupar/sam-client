@@ -85,16 +85,6 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  getDomainDefinition(domainId: number) {
-    let apiOptions: any = {
-      name: 'domaindefinition',
-      method: 'GET',
-      suffix: '',
-    };
-
-    return Observable.of({"domain":{"id":1,"val":"AWARD"},"roleDefinitionMapContent":[{"role":{"id":2,"val":"GENERAL PUBLIC"},"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":3,"val":"IDV"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":4,"val":"AWARD"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":5,"val":"GOVERNMENT REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":6,"val":"WEBPORTAL"},"permission":[{"id":16,"val":"REFERENCE DATA MAINTENANCE"},{"id":17,"val":"REPORTS"},{"id":18,"val":"SEARCH/VIEW CONTRACTS"},{"id":12,"val":"USER MAINTENANCE"},{"id":15,"val":"DATA COLLECTION"}]},{"function":{"id":7,"val":"ADHOC REPORTS"},"permission":[{"id":13,"val":"VIEW"}]}]},{"role":{"id":3,"val":"CONTRACTING SPECIALIST"},"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":3,"val":"IDV"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":4,"val":"AWARD"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":5,"val":"GOVERNMENT REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":6,"val":"WEBPORTAL"},"permission":[{"id":16,"val":"REFERENCE DATA MAINTENANCE"},{"id":17,"val":"REPORTS"},{"id":18,"val":"SEARCH/VIEW CONTRACTS"},{"id":12,"val":"USER MAINTENANCE"},{"id":15,"val":"DATA COLLECTION"}]},{"function":{"id":7,"val":"ADHOC REPORTS"},"permission":[{"id":13,"val":"VIEW"}]}]},{"role":{"id":4,"val":"CONTRACTING OFFICER/SPECIALIST"},"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":3,"val":"IDV"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":4,"val":"AWARD"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":5,"val":"GOVERNMENT REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":6,"val":"WEBPORTAL"},"permission":[{"id":16,"val":"REFERENCE DATA MAINTENANCE"},{"id":17,"val":"REPORTS"},{"id":18,"val":"SEARCH/VIEW CONTRACTS"},{"id":12,"val":"USER MAINTENANCE"},{"id":15,"val":"DATA COLLECTION"}]},{"function":{"id":7,"val":"ADHOC REPORTS"},"permission":[{"id":13,"val":"VIEW"}]}]}],"functionMapContent":[{"function":{"id":1,"val":"EXECUTIVE REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"}]},{"function":{"id":2,"val":"PUBLIC REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":3,"val":"IDV"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":4,"val":"AWARD"},"permission":[{"id":1,"val":"APPROVE"},{"id":4,"val":"CREATE"},{"id":5,"val":"DELETE DRAFT"},{"id":6,"val":"ISCOMPLETE"},{"id":7,"val":"MODIFY"},{"id":8,"val":"UPDATE"},{"id":9,"val":"VALIDATE"},{"id":11,"val":"CORRECT"},{"id":14,"val":"DELETE"}]},{"function":{"id":5,"val":"GOVERNMENT REPORTS"},"permission":[{"id":2,"val":"GET"},{"id":3,"val":"SEND"},{"id":10,"val":"SCHEDULE"}]},{"function":{"id":6,"val":"WEBPORTAL"},"permission":[{"id":16,"val":"REFERENCE DATA MAINTENANCE"},{"id":17,"val":"REPORTS"},{"id":18,"val":"SEARCH/VIEW CONTRACTS"},{"id":12,"val":"USER MAINTENANCE"},{"id":15,"val":"DATA COLLECTION"}]},{"function":{"id":7,"val":"ADHOC REPORTS"},"permission":[{"id":13,"val":"VIEW"}]}]});
-  }
-
   postAccess(access: UserAccessWrapper, userName) {
     let apiOptions: any = {
       name: 'access',
@@ -106,6 +96,7 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
+<<<<<<< HEAD
   postDomain(domain){
     let apiOptions : any = {
       name : 'domains',
@@ -118,6 +109,9 @@ export class UserAccessService {
   }
 
   getRoleObjDefinitions(mode : string, domainKey : string){
+=======
+  getRoleObjDefinitions(mode : string, domainKey : string) {
+>>>>>>> origin/role-management
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -125,10 +119,32 @@ export class UserAccessService {
       oParam: { }
     };
 
-    apiOptions.oParam.mode = mode || 'role';
+    if (mode) {
+      apiOptions.oParam.mode = mode;
+    }
+
     if( domainKey.length > 0 ){
       apiOptions.oParam.domainKey = domainKey;
     }
+
+    return this.apiService.call(apiOptions);
+  }
+
+  createObject(domainId: number, objectName: string, permissions: {id: any, val: string}[]) {
+    let apiOptions: any = {
+      name: 'functions',
+      suffix: '',
+      method: 'POST',
+      oParam: { }
+    };
+
+    apiOptions.body = {
+      domain: { id: domainId },
+      functionMapContent: { val: objectName },
+      permissions: permissions
+    };
+
+    console.log(apiOptions.body);
 
     return this.apiService.call(apiOptions);
   }

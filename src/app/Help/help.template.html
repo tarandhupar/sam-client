@@ -88,7 +88,9 @@
             <span class="usa-width-one-whole p_L-2x p_T-2x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
             <div class="usa-width-one-whole marginCenter p_T-2x"><button class="usa-button-outline usa-button-active relative" (click)="feedback.toggleFeedback()">Provide Feedback</button></div>
             <div class="usa-width-one-whole text-align-center" *ngIf="feedback.showUnsubmittedWarning()">
-              <span class="feedback-warning">You have feedback that has not been submitted!</span>
+              <!--<span class="feedback-warning">You have feedback that has not been submitted!</span>-->
+              <samAlert class="feedback-warning-font-size" [type]="'warning'" [title]="''" [description]="'You have feedback that has not been submitted!'"></samAlert>
+
             </div>
         </li>
       </ul>

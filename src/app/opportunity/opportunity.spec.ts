@@ -287,6 +287,11 @@ let MockOpportunityService = {
         }
       }});
   },
+  getPackagesCount(id: String) {
+    return Observable.of(
+      "6"
+    );
+  },
   getOpportunityHistoryById(id: String){
     return Observable.of({
       content: {
@@ -407,11 +412,13 @@ describe('OpportunityPage', () => {
     expect(comp.processedHistory).toBeDefined();
     expect(comp.dictionary).toBeDefined();
     expect(comp.packages).toBeDefined();
+    expect(comp.packagesWarning).toBeDefined();
     expect(comp.attachments).toBeDefined();
     expect(comp.showChangesGeneral).toBeDefined();
     expect(comp.showChangesSynopsis).toBeDefined();
     expect(comp.showChangesClassification).toBeDefined();
     expect(comp.showChangesContactInformation).toBeDefined();
+    expect(comp.showChangesAwardDetails).toBeDefined();
   });
 
   it('Should generate ids', () => {

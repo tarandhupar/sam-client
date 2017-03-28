@@ -26,6 +26,7 @@
         [hideDefaultColumn]="true">
       </permission-selector>
     </div>
+
     <div class="m_T-4x">
       <strong>Objects and Permissions</strong>
     </div>
@@ -38,11 +39,14 @@
         [title]="function.name"
       ></permission-selector>
     </div>
+    <div *ngIf="!permissionOptions.length">
+      <em>No permissions found for selected domain</em>
+    </div>
   </ng-container>
 
   <div class="clearfix">
     <div class="pull-right">
-      <button class="usa-button-outline" routerLink="/access/roles">Cancel</button>
+      <button class="usa-button-outline" routerLink="/access/workspace">Cancel</button>
       <button class="usa-button-primary" (click)="onSubmitClick()">Submit</button>
     </div>
   </div>

@@ -2,9 +2,10 @@
   <h1>{{mode === 'edit' ? 'Edit' : 'New' }} Object</h1>
 
   <!-- Domain select -->
-  <labelWrapper name="domain" label="Domain">
-    <samMultiSelectDropdown name='domain' label="Domain" [options]="domainOptions" [(model)]="selectedDomains" (modelChange)="onDomainsChange()"></samMultiSelectDropdown>
-  </labelWrapper>
+  <!--<labelWrapper name="domain" label="Domain">-->
+    <!--<samMultiSelectDropdown name='domain' label="Domain" [options]="domainOptions" [(model)]="selectedDomains" (modelChange)="onDomainsChange()"></samMultiSelectDropdown>-->
+  <!--</labelWrapper>-->
+  <samSelect name="domain" label="Domain" [options]="domainOptions" [(model)]="selectedDomain" (modelChange)="onDomainChange()"></samSelect>
 
   <!-- Object name -->
   <labelWrapper name="object" label="Object Name">
@@ -14,7 +15,7 @@
   <!-- Permissions -->
   <div class="usa-grid-full">
     <div class="usa-width-one-half">
-      <sam-list-display [newValue]="permissionSetter" [(ngModel)]="selectedPermissions">
+      <sam-list-display #permissionList [newValue]="permissionSetter" [(ngModel)]="selectedPermissions" [showNewIndicator]="true">
         <div class="input-and-add">
           <sam-autocomplete #permission [labelText]="'Permissions'" name="permissions" [options]="permissionOptions" [config]="{addOnIconClass:'fa fa-search'}"></sam-autocomplete>
           <button class="usa-button usa-button-transparent add-permission-button" (click)="onAddPermissionClick()">

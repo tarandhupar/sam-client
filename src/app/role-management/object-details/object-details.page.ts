@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import * as _ from 'lodash';
 
 @Component({
   templateUrl: 'object-details.page.html'
@@ -12,6 +13,7 @@ export class ObjectDetailsPage implements OnInit {
 
   mode: 'edit'|'new' = 'new';
   selectedDomains = [];
+  selectedDomain;
   domains;
   domainOptions;
   objectName;
@@ -19,6 +21,7 @@ export class ObjectDetailsPage implements OnInit {
 
   selectedPermissions = [];
   permissionOptions = [];
+  originalPermissions = [];
 
   permissionSetter;
 
@@ -60,21 +63,32 @@ export class ObjectDetailsPage implements OnInit {
   parseUrlForDomains() {
     this.route.queryParams.subscribe(
       params => {
-        if (!params['domains'] || !params['domains'].length) {
+        let domainId = params['domain'];
+        if (!domainId || !domainId.length) {
           this.footerAlerts.registerFooterAlert({
-            title: 'Domains parameter missing',
+            title: 'Domain parameter missing',
             type: 'error',
           });
-          return;
         }
-        this.selectedDomains = params['domains'].split(',').map(dom => {
-          return +dom;
-        });
-        this.domainOptions.forEach(opt => {
-          if (this.selectedDomains.indexOf(+opt.value) !== -1) {
-            opt.disabled = true;
-          }
-        })
+        domainId = +domainId;
+        this.selectedDomain = domainId;
+        this.onDomainChange();
+
+        // if (!params['domains'] || !params['domains'].length) {
+        //   this.footerAlerts.registerFooterAlert({
+        //     title: 'Domains parameter missing',
+        //     type: 'error',
+        //   });
+        //   return;
+        // }
+        // this.selectedDomains = params['domains'].split(',').map(dom => {
+        //   return +dom;
+        // });
+        // this.domainOptions.forEach(opt => {
+        //   if (this.selectedDomains.indexOf(+opt.value) !== -1) {
+        //     opt.disabled = true;
+        //   }
+        // })
       }
     );
   }
@@ -109,8 +123,27 @@ export class ObjectDetailsPage implements OnInit {
     );
   }
 
-  onDomainsChange() {
+  showGenericServicesError() {
+    this.footerAlerts.registerFooterAlert({
+      description: 'Something went wrong with a required service',
+      type: 'error'
+    })
+  }
 
+  onDomainChange() {
+    let domainId = +this.selectedDomain;
+    this.accessService.getRoleObjDefinitions('object', ''+domainId).subscribe(
+      domains => {
+        console.log('ddd', domains);
+        if (domains[0] && domains[0].functionMapContent && domains[0].functionMapContent.length) {
+          let permissions = domains[0].functionMapContent.map(f => f.function.val);
+          this.originalPermissions = _.clone(domains[0].functionMapContent);
+          this.selectedPermissions = permissions;
+        } else {
+          this.selectedPermissions = [];
+        }
+      }
+    )
   }
 
   onAddPermissionClick() {
@@ -119,14 +152,31 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   onSubmitClick() {
-    this.requestObject = this.getRequestObject();
+    let perms = this.getPermissionsArray();
+    this.accessService.createObject(+this.selectedDomain, this.objectName, perms).delay(1000).subscribe(
+      res => {
+        this.footerAlerts.registerFooterAlert({
+          title: 'Successfully created object',
+          type: 'success'
+        });
+        this.router.navigate(['/access/workspace']);
+      },
+      err => {
+        this.showGenericServicesError();
+      }
+    );
   }
 
-  getRequestObject() {
-    return {
-      domains: this.selectedDomains,
-      objectName: this.objectName,
-      permissions: this.selectedPermissions
-    };
+  getPermissionsArray() {
+    return this.selectedPermissions.map((perm: string) => {
+      let p = this.originalPermissions.find(op => op.val === perm);
+      if (p) {
+        return p;
+      } else {
+        return { val: perm };
+      }
+    })
   }
+
+
 }

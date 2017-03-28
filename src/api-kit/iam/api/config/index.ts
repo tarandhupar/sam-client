@@ -6,8 +6,8 @@ export default {
 
   environments: {
     comp: new RegExp('comp\.280\.samfrontendpipelinetwo\.prod', 'gi'),
-    minc: new RegExp('(minc\.280\.samfrontendpipelinetwo\.prod)|(minc\.sam\.micropaas\.io)', 'gi'),
-    prodlike: new RegExp('(prodlike\.280\.samfrontendpipelinetwo\.prod)|(prodlike\.sam\.micropaas\.io)', 'gi')
+    minc: new RegExp('(minc\.280\.samfrontendpipelinetwo\.prod)|((minc\.sam|sam\.minc)\.micropaas\.io)', 'gi'),
+    prodlike: new RegExp('(prodlike\.280\.samfrontendpipelinetwo\.prod)|((prodlike\.sam|sam\.prodlike)\.micropaas\.io)', 'gi')
   },
 
   endpoints: {

@@ -32,6 +32,7 @@ export class MigrationsComponent {
 
   private states = {
     submitted: false,
+    loading: false,
     confirm: {
       type: 'success',
       message: 'Account Successfully Migrated',
@@ -123,38 +124,25 @@ export class MigrationsComponent {
     this.store.systems = this.api.iam.import.systems();
 
     this.zone.runOutsideAngular(() => {
-      this.api.iam.import.history(this.email, (migrations) => {
+      this.api.iam.import.history(this.email, (accounts) => {
         this.zone.run(() => {
-          this.store.migrations = migrations.map((account, index) => {
-            let roles = [];
-
-            if(this.store.roles[account.system] && this.store.roles[account.system][account.username]) {
-              roles = this.store.roles[account.system][account.username].map((role) => {
-                return {
-                  department: role.department,
-                  role: role.role
-                }
-              });
-            }
-
-            return {
-              system: account.sourceLegacySystem.toUpperCase() + '.gov',
-              username: account.username || '',
-              orgKey: account.orgKey,
-              name: account.fullName,
-              migratedAt: moment(account.claimedTimestamp).format('MM/DD/YYYY'),
-              roles: roles
-            }
-          });
+          this.store.migrations = accounts;
 
           if(this.store.migrations.length) {
             this.alert('Account Successfully Migrated', 'success');
           }
         });
-      }, () => {
+      }, (response) => {
         this.zone.run(() => {
-          console.warn('Endpoint Unavailable')
-          //TODO
+          if(this.api.iam.isDebug()) {
+            this.store.migrations = response;
+
+            if(this.store.migrations.length) {
+              this.alert('Account Successfully Migrated', 'success');
+            }
+          } else {
+            console.warn('Endpoint Unavailable')
+          }
         });
       })
     });
@@ -214,20 +202,24 @@ export class MigrationsComponent {
     this.migrationForm.markAsDirty();
 
     this.states.confirm.show = false;
-    this.states.submitted;
+    this.states.submitted = true;
 
     if(this.migrationForm.valid) {
       let data = this.migrationForm.value;
+
+      this.states.loading = true;
 
       this.zone.runOutsideAngular(() => {
         this.api.iam.import.create(this.email, data.system, data.username, data.password, (account) => {
           this.zone.run(() => {
             this.store.migrations.push(account);
             this.alert('Account Successfully Migrated', 'success');
+            this.states.loading = false;
           })
         }, (error) => {
           this.zone.run(() => {
             this.alert(error.message, 'error');
+            this.states.loading = false;
           });
         });
       });

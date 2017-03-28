@@ -81,26 +81,37 @@ export class RoleDetailsPage {
 
   onDomainChange() {
     this.domainRoleOptions = null;
-    this.accessService.getDomainDefinition(this.domain).subscribe(
+    this.accessService.getRoleObjDefinitions(null, ''+this.selectedDomain).subscribe(
       defs => {
-        this.domainDefinitions = defs;
-        this.domainRoleOptions = defs.roleDefinitionMapContent.map(r => {
-          return {
-            label: r.role.val,
-            value: r.role.id,
-          };
-        });
-        this.permissionOptions = defs.functionMapContent.map(f => {
-          return {
-            name: f.function.val,
-            permissions: f.permission.map(perm => {
-              return {
-                label: perm.val,
-                value: perm.id
-              };
-            })
-          }
-        });
+        this.domainDefinitions = defs[0];
+        this.domainRoleOptions = [];
+        this.permissionOptions = [];
+        if (!defs || !defs.length) {
+          return;
+        }
+
+        if (this.domainDefinitions.roleDefinitionMapContent && this.domainDefinitions.roleDefinitionMapContent.length) {
+          this.domainRoleOptions = this.domainDefinitions.roleDefinitionMapContent.map(r => {
+            return {
+              label: r.role.val,
+              value: r.role.id,
+            };
+          });
+        }
+
+        if (this.domainDefinitions.functionMapContent && this.domainDefinitions.functionMapContent.length){
+          this.permissionOptions = this.domainDefinitions.functionMapContent.map(f => {
+            return {
+              name: f.function.val,
+              permissions: f.permission.map(perm => {
+                return {
+                  label: perm.val,
+                  value: perm.id
+                };
+              })
+            };
+          });
+        }
 
         if (this.mode === 'edit') {
           // find the text label for role and set the text label
@@ -134,13 +145,13 @@ export class RoleDetailsPage {
   onRoleBlur() {
     if (this.domainRoleOptions.find(d => d.label === this.role)) {
       this.footerAlert.registerFooterAlert({
-        title: 'Role exists',
+        title: 'Cannot create role. Role name already exists',
         type: 'error'
       });
       return;
     }
     let lastRole = _.last(this.domainRoleOptions);
-    if (lastRole.isNew) {
+    if (lastRole && lastRole.isNew) {
       this.domainRoleOptions.pop();
     }
     this.domainRoleOptions.push({
