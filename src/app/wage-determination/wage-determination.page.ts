@@ -6,6 +6,7 @@ import { ReplaySubject, Observable } from "rxjs";
 import * as _ from 'lodash';
 import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-object.pipe";
 import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
+import {DateFormatPipe} from "../app-pipes/date-format.pipe";
 
 
 @Component({
@@ -26,6 +27,7 @@ export class WageDeterminationPage implements OnInit {
   services: string;
   constructionTypes: string;
   public locations: any;
+  history: any;
   processedHistory: any;
 
   // On load select first item on sidenav component
@@ -67,7 +69,7 @@ export class WageDeterminationPage implements OnInit {
     let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
     this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
     this.getLocations(wgAndDictionariesAPI);
-    this.loadHistory(dictionariesAPI);
+    this.loadHistory(wdAPI);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
 
@@ -246,118 +248,43 @@ export class WageDeterminationPage implements OnInit {
   private loadHistory(wageDetermination: Observable<any>) {
     let historySubject = new ReplaySubject(1);
     wageDetermination.subscribe(wageDeterminationAPI => {
+      console.log('wageDeterminationAPI: ',wageDeterminationAPI);
       /** Check that wageDetermination reference and revision numbers exist **/
-      if(opportunityAPI.opportunityId == '' || typeof opportunityAPI.opportunityId === 'undefined') {
-        console.log('Error loading history');
+      if(wageDeterminationAPI.fullReferenceNumber == '' || typeof wageDeterminationAPI.fullReferenceNumber === 'undefined' || wageDeterminationAPI.revisionNumber == '' || typeof wageDeterminationAPI.revisionNumber === 'undefined') {
+        console.log('Error loading history1');
         return;
       }
       /** Load history API **/
-      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
+      this.wgService.getWageDeterminationHistoryByReferenceNumber(wageDeterminationAPI.fullReferenceNumber).subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
-        this.history = historyAPI; // save original history information in case it is needed
+        console.log('historyAPI: ',historyAPI);
+        this.history = historyAPI._embedded.wageDetermination; // save original history information in case it is needed
 
         /** Setup necessary variables and functions for processing history **/
-        let typeLabel = new OpportunityTypeLabelPipe();
         let dateFormat = new DateFormatPipe();
 
-        // filter through history items to find original opportunity, and save its type label
-        // assumption: the original history item is the only one without a parent notice
-        let isOriginal = function(historyItem) {
-          return historyItem.parent_notice == null;
-        };
-        let originalOpportunity = _.filter(this.history.content.history, isOriginal)[0];
-        let originalTypeLabel;
-        if(originalOpportunity == null) {
-          originalTypeLabel = "No Type Label";
-        } else {
-          originalTypeLabel = typeLabel.transform(originalOpportunity.procurement_type);
-        }
 
-        // function that takes a history item and returns a title for it
-        let makeTitle = function(historyItem) {
-          let prefix = ''; // construct the correct prefix
 
-          if(historyItem.parent_notice != null) {
-            prefix = 'Updated';
-          }
-
-          // Canceled prefix takes precedence over updated
-          if(historyItem.cancel_notice === '1') {
-            prefix = 'Canceled';
-          }
-
-          // Original prefix takes precedence over all others
-          if(historyItem.parent_notice == null) {
-            prefix = 'Original';
-          }
-
-          let type = historyItem.procurement_type;
-          let currentTypeLabel = typeLabel.transform(type); // label for type of current history item
-
-          switch(type) {
-            // For these types, show title as prefix and opportunity type
-            case 'p': // Presolicitation
-            case 'r': // Sources Sought
-            case 's': // Special Notice
-            case 'g': // Sale of Surplus Property
-            case 'f': // Foreign Government Standard
-            case 'k': // Combined Synopsis/Solicitation
-              return prefix + ' ' + currentTypeLabel;
-
-            // For these types, show the opportunity type as the title with no prefix
-            case 'a': // Award Notice
-            case 'j': // Justification and Approval (J&A)
-            case 'i': // Intent to Bundle Requirements (DoD-Funded)
-            case 'l': // Fair Opportunity / Limited Sources Justification
-              return currentTypeLabel;
-
-            // For modifications or cancellations, show the appropriate prefix plus original opportunity type
-            case 'm': // Modification/Amendment/Cancel
-              return prefix + ' ' + originalTypeLabel;
-
-            // Unrecognized type, show generic message
-            default:
-              return prefix + ' Opportunity';
-          }
-        };
 
         /** Process history into a form usable by history component **/
         let processHistoryItem = function(historyItem) {
           let processedHistoryItem = {};
-          processedHistoryItem['id'] = historyItem.notice_id;
-          processedHistoryItem['title'] = makeTitle(historyItem);
-          processedHistoryItem['description'] = ''; // not implemented yet
-          processedHistoryItem['date'] = dateFormat.transform(historyItem.posted_date, 'MMM DD, YYYY h:mma');
-          processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
-          processedHistoryItem['index'] = historyItem.index;
-          processedHistoryItem['isTagged'] = false; // todo: decide on logic for which opportunities are tagged
-          processedHistoryItem['authoritative'] = historyItem.authoritative;
+          processedHistoryItem['id'] = historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
+          processedHistoryItem['title'] = historyItem.fullReferenceNumber + ' - Revision ' + historyItem.revisionNumber;
+          processedHistoryItem['date'] = dateFormat.transform(historyItem.publishDate, 'MMMMM DD, YYYY');
+          processedHistoryItem['url'] = 'wageDetermination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
+          processedHistoryItem['index'] = historyItem.revisionNumber;
+          processedHistoryItem['authoritative'] = historyItem.active;
           return processedHistoryItem;
         };
-        this.processedHistory = this.history.content.history.map(processHistoryItem);
+        this.processedHistory = this.history.map(processHistoryItem);
         //sort by index to show history by version (oldest to newest)
-        this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.index; });
-
-        /** Show alert if current version is not the authoritative version **/
-        let isCurrent = function(historyItem) { return historyItem.id === opportunityAPI.opportunityId; };
-        let isAuthoritative = function(historyItem) { return historyItem.authoritative === '1'; };
-
-        let current = _.filter(this.processedHistory, isCurrent)[0];
-        let authoritative = _.filter(this.processedHistory, isAuthoritative)[0];
-
-        if(authoritative && current.id !== authoritative.id) {
-          this.alert.push({
-            config: {
-              type: 'info',
-              description: 'Note: There have been updates to this opportunity. To view the most recent update/amendment, click <a href="' + authoritative.url + '">here</a>'
-            }
-          });
-        }
+        this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.revisionNumber; });
       }, err => {
-        console.log('Error loading history: ', err);
+        console.log('Error loading history2: ', err);
       });
 
-      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
+      this.wgService.getWageDeterminationHistoryByReferenceNumber(wageDeterminationAPI.fullReferenceNumber).subscribe(historySubject);
     });
     return historySubject;
   }
