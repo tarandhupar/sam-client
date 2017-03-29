@@ -5,6 +5,35 @@
               [required]="required">
 
   <form novalidate [formGroup]="accountFormGroup">
+    <!-- todo: add styling -->
+    <table *ngIf="model.accounts && model.accounts.length > 0">
+      <thead>
+      <tr>
+        <th scope="col">
+          Account Code
+        </th>
+        <th scope="col">
+          Description
+        </th>
+        <th scope="col">
+          Actions
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngFor="let account of model.accounts; let i=index">
+        <tr>
+          <td>{{ account.code }}</td>
+          <td>{{ account.description }}</td>
+          <td>
+            <a (click)="removeAccount(i)">Delete</a>
+            <a (click)="editAccount(i)">Edit</a>
+          </td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+
     <labelWrapper #codeLabel
                   [name]="codeLabelName"
                   [label]="'Code'"
@@ -36,37 +65,7 @@
     ></samTextArea>
 
     <samButton *ngIf="currentIndex === model.accounts.length" buttonText="Add New Account" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
-    <samButton *ngIf="currentIndex < model.accounts.length" buttonText="Save Account Edits" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
-
-    <!-- todo: add styling -->
-    <table *ngIf="model.accounts">
-      <thead>
-        <tr>
-          <th scope="col">
-            Account Code
-          </th>
-          <th scope="col">
-            Description
-          </th>
-          <th scope="col">
-            Actions
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let account of model.accounts; let i=index">
-          <tr>
-            <td>{{ account.code }}</td>
-            <td>{{ account.description }}</td>
-            <td>
-              <a (click)="removeAccount(i)">Delete</a>
-              <a (click)="editAccount(i)">Edit</a>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-
+    <samButton *ngIf="currentIndex < model.accounts.length" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
   </form>
 
 </labelWrapper>
