@@ -61,12 +61,13 @@
           </ul>
         </li>
         <li>
-          <a [ngClass]="getSectionClass('policies')" (click)="changeSection('policies')" [routerLink]="['/help/policies']" *ngIf="linkToggle()">Policies</a>
+          <a [ngClass]="getSectionClass('policies')" (click)="changeSection('policies')" [routerLink]="['/help/policies']">Policies</a>
           <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('policies')">
-            <li><a #accessibility [ngClass]="getSubSectionClass('accessibility')" (click)="changeSubSection('accessibility',accessibility)" href="{{currentUrl}}#accessibility">Accessibility</a></li>
-            <li><a #legal [ngClass]="getSubSectionClass('legal')" (click)="changeSubSection('legal',legal)" href="{{currentUrl}}#legal">Legal</a></li>
-            <li><a #privacy [ngClass]="getSubSectionClass('privacy')" (click)="changeSubSection('privacy',privacy)" href="{{currentUrl}}#privacy">Privacy Policy</a></li>
-            <li><a #terms [ngClass]="getSubSectionClass('terms')" (click)="changeSubSection('terms',terms)" href="{{currentUrl}}#terms">Terms of Use</a></li>
+            <li><a #accessibility [ngClass]="getSubSectionClass('accessibility')" (click)="changeSubSection('accessibility',accessibility)" href="{{currentUrl}}#accessibility" *ngIf="linkToggle()">Accessibility</a></li>
+            <li><a #legal [ngClass]="getSubSectionClass('legal')" (click)="changeSubSection('legal',legal)" href="{{currentUrl}}#legal" *ngIf="linkToggle()">Legal</a></li>
+            <li><a #privacy [ngClass]="getSubSectionClass('privacy')" (click)="changeSubSection('privacy',privacy)" href="{{currentUrl}}#privacy" *ngIf="linkToggle()">Privacy Policy</a></li>
+            <li><a #terms [ngClass]="getSubSectionClass('terms')" (click)="changeSubSection('terms',terms)" href="{{currentUrl}}#terms" *ngIf="linkToggle()">Terms of Use</a></li>
+            <li><a #OMB [ngClass]="getSubSectionClass('OMB')" (click)="changeSubSection('OMB',OMB)" href="{{currentUrl}}#OMB">Paperwork Reduction Act Statement</a></li>
           </ul>
         </li>
         <li>
@@ -87,7 +88,9 @@
             <span class="usa-width-one-whole p_L-2x p_T-2x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
             <div class="usa-width-one-whole marginCenter p_T-2x"><button class="usa-button-outline usa-button-active relative" (click)="feedback.toggleFeedback()">Provide Feedback</button></div>
             <div class="usa-width-one-whole text-align-center" *ngIf="feedback.showUnsubmittedWarning()">
-              <span class="feedback-warning">You have feedback that has not been submitted!</span>
+              <!--<span class="feedback-warning">You have feedback that has not been submitted!</span>-->
+              <samAlert class="feedback-warning-font-size" [type]="'warning'" [title]="''" [description]="'You have feedback that has not been submitted!'"></samAlert>
+
             </div>
         </li>
       </ul>

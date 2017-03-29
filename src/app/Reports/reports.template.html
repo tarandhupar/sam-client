@@ -33,10 +33,12 @@
 
     </div>
   </aside>
-  <div class="usa-width-three-fourths">
+  <div [ngClass]="{'usa-width-one-whole': isCurrentSection('') && isCurrentSection('') && isCurrentSection('') && isCurrentSection(''), 'usa-width-three-fourths': isCurrentSection('overview') || isCurrentSection('static') || isCurrentSection('adhoc') || isCurrentSection('favorites')}">
+
     <div class="usa-width-one-whole m_L-4x">
       <!--Content for Sections-->
       <router-outlet></router-outlet>
+
 
 
     </div>

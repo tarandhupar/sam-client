@@ -9,7 +9,7 @@
     <a [routerLink]="[isAdmin ? '../grant-access' : '../request-access']" class="usa-button usa-button-success pull-right">{{isAdmin ? 'Grant' : 'Request'}} Access</a>
   </div>
 
-  <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()">
+  <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
     <p>Are you sure you wish to remove the following access?</p>
     <div>
       <div class="modal-subtitle">

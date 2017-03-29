@@ -127,4 +127,21 @@ body.feedback-open {
     display: inline-block;
   }
 
+  .feedback-alert-warning{
+    background: #fff1d2;
+    height: 36px;
+    font-weight: 400;
+    padding-top: 8px;
+  }
+
+  .feedback-alert-placeholder{
+    height: 36px;
+    font-weight: 400;
+    padding-top: 8px;
+  }
+
+  .usa-input-error{
+    padding-top: 0;
+    border: none;
+  }
 }

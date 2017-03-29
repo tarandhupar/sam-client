@@ -17,7 +17,6 @@ import { TimezoneLabelPipe } from './pipes/timezone-label.pipe';
 import { FixHTMLPipe } from './pipes/fix-html.pipe';
 import { FilesizePipe } from './pipes/filesize.pipe';
 import { SamUIKitModule } from 'sam-ui-kit';
-import { HistoryComponent } from '../app-components/history/history.component';
 
 let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
@@ -288,6 +287,11 @@ let MockOpportunityService = {
         }
       }});
   },
+  getPackagesCount(id: String) {
+    return Observable.of(
+      "6"
+    );
+  },
   getOpportunityHistoryById(id: String){
     return Observable.of({
       content: {
@@ -348,7 +352,7 @@ let MockFHService = {
 describe('OpportunityPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe, HistoryComponent], // declare the test component
+      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe], // declare the test component
       imports: [
         PipesModule,
         HttpModule,
@@ -403,6 +407,18 @@ describe('OpportunityPage', () => {
     expect(comp.awardSortOptions).toBeDefined();
     expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
+    expect(comp.originalOpportunity).toBeDefined();
+    expect(comp.history).toBeDefined();
+    expect(comp.processedHistory).toBeDefined();
+    expect(comp.dictionary).toBeDefined();
+    expect(comp.packages).toBeDefined();
+    expect(comp.packagesWarning).toBeDefined();
+    expect(comp.attachments).toBeDefined();
+    expect(comp.showChangesGeneral).toBeDefined();
+    expect(comp.showChangesSynopsis).toBeDefined();
+    expect(comp.showChangesClassification).toBeDefined();
+    expect(comp.showChangesContactInformation).toBeDefined();
+    expect(comp.showChangesAwardDetails).toBeDefined();
   });
 
   it('Should generate ids', () => {

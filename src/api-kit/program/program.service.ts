@@ -12,11 +12,15 @@ export class ProgramService{
       name: 'program',
       suffix: '/' + id,
       oParam: {},
-      headers: {
-        "X-Auth-Token": (cookie == undefined) ? '' : cookie
-      },
+      headers: {},
       method: 'GET'
     };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
 
     return this.oAPIService.call(oApiParam);
   }
@@ -25,12 +29,16 @@ export class ProgramService{
     let oApiParam = {
       name: 'program',
       suffix: '/' + id + '/getLatestPublishedProgramByProgramId',
-      headers: {
-        "X-Auth-Token": (cookie == undefined) ? '' : cookie
-      },
+      headers: {},
       oParam: {},
       method: 'GET'
     };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
 
     return this.oAPIService.call(oApiParam);
   }

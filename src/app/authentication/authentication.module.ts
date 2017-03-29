@@ -17,7 +17,11 @@ import { SamKBAComponent, SamPasswordComponent } from './shared';
 import { LoginComponent } from './login';
 import { RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
 import { ForgotComponent, ForgotInitialComponent, ForgotConfirmComponent, ForgotMainComponent } from './forgot';
-import { ProfileComponent, DetailsComponent, ResetComponent, MigrationsComponent } from './profile';
+import {
+  ProfileComponent,
+  DetailsComponent, ResetComponent, MigrationsComponent,
+  SystemDetailsComponent, SystemResetComponent
+} from './profile';
 
 @NgModule({
   imports: [
@@ -62,9 +66,13 @@ import { ProfileComponent, DetailsComponent, ResetComponent, MigrationsComponent
      * Profile
      */
     ProfileComponent,
+    // User
     DetailsComponent,
+    MigrationsComponent,
     ResetComponent,
-    MigrationsComponent
+    // System
+    SystemDetailsComponent,
+    SystemResetComponent
   ],
 
   providers: [

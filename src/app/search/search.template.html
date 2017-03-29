@@ -22,7 +22,7 @@
         </sam-collapsible>
 
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
-          <agencyPicker
+          <agencyPicker #agencyPicker
             [label]="'Search Federal Organizations'"
             (organization)="onOrganizationChange($event)"
             [levelLimit] = '2'>
@@ -149,6 +149,43 @@
           </samSelect>
           <button (click)='wdNonStandardServicesSelectClear()'>Clear</button>
         </sam-collapsible>
+
+        <!--Awards specific Filters-->
+        <sam-collapsible [label]="'Award - IDV Type'" [startOpened]="true" *ngIf="index==='fpds'">
+          <samRadioButton
+            [(model)]="awardIDVModel"
+            [options]="awardIDVRadConfig.options"
+            [label]="awardIDVRadConfig.label"
+            [hint]="awardIDVRadConfig.hint"
+            [name]="awardIDVRadConfig.name"
+            [errorMessage]="awardIDVRadConfig.errorMessage"
+            (modelChange)="awardIDVRadChanged($event)">
+          </samRadioButton>
+          <br/>
+          <sam-type-ahead class="usa-award-radio"
+                          [selectModel]="awardTypeModel"
+                          [placeholder]="awardType.label"
+                          [name]="awardType.name"
+                          [selectedLabel]="'Award - IDV Types Selected'"
+                          [options]="awardType.options"
+                          [config]="awardType.config"
+                          (modelChange)="awardTypeSelected($event)">
+
+          </sam-type-ahead>
+          <br/>
+          <sam-type-ahead class="usa-award-radio"
+                          [selectModel]="contractTypeModel"
+                          [placeholder]="contractType.label"
+                          [name]="contractType.name"
+                          [selectedLabel]="'Contract Types Selected'"
+                          [options]="contractType.options"
+                          [config]="awardType.config"
+                          (modelChange)="contractTypeSelected($event)">
+          </sam-type-ahead>
+        </sam-collapsible>
+        <hr>
+        <button (click)='clearAllFilters()'>Clear All</button>
+
       </sam-filters-container>
     </div>
   </aside>
@@ -165,6 +202,8 @@
     </div>
     <div class="usa-width-one" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
       <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
+      <strong><list-results-message *ngIf="totalCount > 0 && wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'"[showing]="10" [currentPage]="pageNum+1" [total]="totalCount" [suffix]="listMessageSuffix"></list-results-message></strong>
+      <br><br>
       <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
       <div id="search-results">
         <div tabindex="-1" *ngFor="let row of data.results">
