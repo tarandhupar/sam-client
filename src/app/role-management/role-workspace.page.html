@@ -1,6 +1,7 @@
-<div class="role-workspace usa-grid-full">
+<div #workspaceRoot class="role-workspace usa-grid-full">
+  <samModal style= "top:20em" #removeModal [type]="modalConfig.type" [description]="modalConfig.description" [title]="modalConfig.title" [cancelButtonLabel]="'Cancel'" [submitButtonLabel]="'Remove'" (onSubmit)="onRemoveConfirm()" (onClose)="onRemoveCancel()" [closeOnOutsideClick]="false" [closeOnEscape]="false"></samModal>
   <div class = "usa-width-one-fourth m_W-3em">
-    <role-sidenav (pathChange) = "onPathChange($event)"  (checkSelected) = "onSelectedChange($event)"></role-sidenav>
+    <role-sidenav (pathChange) = "onPathChange($event)"  (checkSelected) = "onSelectedChange($event)" ></role-sidenav>
   </div>
   <div class = "usa-width-three-fourths m_W-3em">
     <div class = "create-btn">
@@ -9,7 +10,7 @@
     <h1>Workspace</h1>
     <h2>{{ path === 'roles' ? 'Role' : 'Object' }} Definitions</h2>
     <div class = "main-content">
-      <role-content [roleDef] = "Data" [currPath] = path></role-content>
+      <role-content [roleDef] = "Data" [currPath] = path (onRemoveClick) = "onShowExpireModal($event)"></role-content>
     </div>
   </div>
 </div>

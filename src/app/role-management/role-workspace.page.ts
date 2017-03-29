@@ -1,4 +1,4 @@
-import { Input, Output,Component,OnInit } from "@angular/core";
+import { Input, Output,Component,OnInit, ViewChild } from "@angular/core";
 import { UserAccessService } from "../../api-kit/access/access.service";
 
 
@@ -11,12 +11,39 @@ export class RoleWorkspacePage implements OnInit {
   mode: 'role' | 'object' = 'role';
   domainKey = '';
   Data : any;
+  expireModalConfirm: boolean = false;
 
   constructor(private role: UserAccessService){
 
   }
   ngOnInit(){
       this.getDefinition();
+  }
+
+  @ViewChild('removeModal') removeModal;
+  modalConfig = {
+    type:'warning',
+    title:'Confirm Removal',
+    description:'Are you sure you want to remove this ' + this.mode + '? This will permanently remove the ' + this.mode + ' from the database. The ' + this.mode +  ' is not currently associated to any user.'
+  };
+
+  @ViewChild("workspaceRoot") workspaceRoot;
+
+  onRemoveConfirm(){
+    console.log("remove");
+    this.expireModalConfirm = true;
+    this.removeModal.closeModal();
+  }
+
+  onRemoveCancel(){
+    console.log("cancel");
+    this.expireModalConfirm = false;
+  }
+
+  onShowExpireModal(event){
+    //console.log(event + "," + this.mode);
+    this.modalConfig.description ='Are you sure you want to remove this ' + this.mode + '? This will permanently remove the ' + this.mode + ' from the database. The ' + this.mode +  ' is not currently associated to any user.';
+    this.removeModal.openModal();
   }
 
   getDefinition(){
@@ -37,5 +64,5 @@ export class RoleWorkspacePage implements OnInit {
   onSelectedChange(event){
     this.domainKey = event;
     this.getDefinition();
-  }  
+  }
 }
