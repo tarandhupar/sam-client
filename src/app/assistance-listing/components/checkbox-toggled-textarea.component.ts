@@ -108,6 +108,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   }
 
   private toggleTextarea() {
+    // todo: fix array.prototype.includes does not exist warning
     if(this.model.checkbox.includes('na')) { // todo: generalize this
       this.textareaHidden = true;
       this.textareaControl.setValidators(null);

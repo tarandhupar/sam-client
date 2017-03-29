@@ -3,17 +3,17 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup, Valida
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
 @Component({
-  selector: 'samAccountIdentification',
+  selector: 'falAccountIdentificationInput',
   templateUrl: 'account-identification.template.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => SamAccountIdentificationComponent),
+      useExisting: forwardRef(() => FALAccountIdentificationComponent),
       multi: true
     }
   ]
 })
-export class SamAccountIdentificationComponent implements ControlValueAccessor {
+export class FALAccountIdentificationComponent implements ControlValueAccessor {
   private currentIndex: number = 0;
   public model = {
     codeBoxes: [],
@@ -71,7 +71,7 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   private validateInputs() {
-    let errorPrefix = "<samAccountIdentification> requires ";
+    let errorPrefix = "<falAccountIdentificationInput> requires ";
 
     if(!this.name) {
       throw new Error(errorPrefix + "a [name] parameter for 508 compliance");
@@ -143,7 +143,7 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   private onChange() {
-    // todo: fix validation errors...
+    // todo: fix label wrapper formatErrors to accept formgroup
     this.wrapper.formatErrors(this.accountFormGroup);
     this.codeWrapper.formatErrors(this.codeFormGroup);
     this.onChangeCallback(this.model);

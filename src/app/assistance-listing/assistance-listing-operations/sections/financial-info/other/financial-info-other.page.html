@@ -10,10 +10,14 @@
   <samCheckboxToggledTextarea [options] = "accomplishmentsConfig"
                               [formControlName] = "'accomplishments'"
   ></samCheckboxToggledTextarea>
-  
-  <samAccountIdentification [options] = "accountIdentificationConfig"
-                            [formControlName] = "'accountIdentification'"
-  ></samAccountIdentification>
+
+  <falAccountIdentificationInput [options] = "accountIdentificationConfig"
+                                 [formControlName] = "'accountIdentification'"
+  ></falAccountIdentificationInput>
+
+  <!--todo: tafs component-->
+  <falTAFSInput [name]="'foo'"
+  ></falTAFSInput>
 
   <div *ngIf="tafsGroup" [formGroup]="tafsGroup">
     <samText [label] = "'Treasury Dept. Code'"
