@@ -20,7 +20,7 @@
 			<div class="usa-grid-full">
 				<h3 class="display-inline">{{awardData.documentInformation.id.procurementIdentifier}} ({{awardData.documentInformation.id.modificationNumber}})</h3><br />
 				<h2 class="display-inline">{{awardData.contractorInformation.vendorName}}</h2><br />
-				{{awardData.contractorInformation.address.city}}, {{awardData.contractorInformation.address.state}}, {{awardData.contractorInformation.address.zip}}
+				{{awardData.contractorInformation.address.city}}, {{awardData.contractorInformation.address.state}}, {{awardData.contractorInformation.address.zip | zipCode}}
 			</div>
 			<div class="usa-grid-full bottom-border">
 				<div class="usa-width-one-half padding-bottom-10px">
@@ -197,14 +197,14 @@
 				Fax: {{awardData.contractorInformation.address.faxNumber | phone}}
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 					<h3 id="businessCategory">Business Category</h3>
-					Organization Type: {{orgType}}<br />
-					Number of Employees: <br />
-					State of Incorporation<br />
-					Country of Incorporation<br />
-					Annual Revenue<br />
+					Organization Type: {{awardData.businessCategory.organizationType}}<br />
+					Number of Employees: {{awardData.businessCategory.numberOfEmployees}}<br />
+					State of Incorporation: {{awardData.businessCategory.stateOfIncorporation}}<br />
+					Country of Incorporation: {{awardData.businessCategory.countryOfIncorporation}}<br />
+					Annual Revenue: {{awardData.businessCategory.annualRevenue}}<br />
 					<div class="padding-left-20px">
 					<br />
-						Business Types<br />
+						Business Types:<br />
 						<!--list of business types>--><br />
 						Socioeconomic Data<br />
 						<!--list of socioeconomic data>-->

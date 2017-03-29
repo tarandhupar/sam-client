@@ -6,6 +6,7 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { CommonModule } from '@angular/common';
 import { DatexPipe } from './string-to-date.pipe';
 import { PhonePipe } from './phone.pipe';
+import { ZipCodePipe } from './zipCode.pipe';
 import { AwardsAddress } from './awards-address.component.ts';
 
 @NgModule({
@@ -21,12 +22,14 @@ import { AwardsAddress } from './awards-address.component.ts';
     CommonModule,
     DatexPipe,
     PhonePipe,
+    ZipCodePipe,
     AwardsAddress
   ],
   declarations: [
     AwardsPage,
     DatexPipe,
     PhonePipe,
+    ZipCodePipe,
     AwardsAddress
   ],
 })
