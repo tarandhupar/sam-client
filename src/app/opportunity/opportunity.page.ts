@@ -415,7 +415,6 @@ export class OpportunityPage implements OnInit {
       this.opportunityService.getPackagesCount(opportunityAPI.opportunityId).subscribe(attachmentCountSubject);
     });
     attachmentCountSubject.subscribe(data => {
-      console.log(data);
         historyAPI.subscribe(historyAPI => {
           let packagesObservable:Observable<any> = Observable.forkJoin(Observable.onErrorResumeNext.apply(Observable, packagesOpportunities));
           packagesObservable.subscribe(res =>{
@@ -424,6 +423,7 @@ export class OpportunityPage implements OnInit {
 
             }, () => {
               if(data > this.packages.length) {
+                historyAPI.content.history = _.sortBy(historyAPI.content.history, 'index');
                 let latestNotice = historyAPI.content.history[historyAPI.content.history.length - 1]['notice_id'];
                 this.packagesWarning = {
                   config: {
