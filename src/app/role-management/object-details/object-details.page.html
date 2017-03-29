@@ -15,21 +15,33 @@
   <!-- Permissions -->
   <div class="usa-grid-full">
     <div class="usa-width-one-half">
-      <sam-list-display #permissionList [newValue]="permissionSetter" [(ngModel)]="selectedPermissions" [showNewIndicator]="true">
-        <div class="input-and-add">
-          <sam-autocomplete
-            #permission
-            labelText="Permissions"
-            name="permissions"
-            [options]="permissionOptions"
-            [config]="{addOnIconClass:'fa fa-search'}"
-            (ngModelChange)="onAddPermissionClick()"
-          ></sam-autocomplete>
-          <!--<button class="usa-button usa-button-transparent add-permission-button" (click)="onAddPermissionClick()">-->
-            <!--<i class="fa fa-plus-circle"></i>-->
-          <!--</button>-->
-        </div>
-      </sam-list-display>
+      <!--<sam-list-display #permissionList [newValue]="permissionSetter" [(ngModel)]="selectedPermissions" [showNewIndicator]="true">-->
+      <div class="input-and-add">
+        <sam-autocomplete
+          #permission
+          labelText="Permissions"
+          name="permissions"
+          [options]="permissionOptions"
+          [config]="{addOnIconClass:'fa fa-search'}"
+          (ngModelChange)="onAddPermissionClick()"
+        ></sam-autocomplete>
+        <!--<button class="usa-button usa-button-transparent add-permission-button" (click)="onAddPermissionClick()">-->
+          <!--<i class="fa fa-plus-circle"></i>-->
+        <!--</button>-->
+      </div>
+      <!--</sam-list-display>-->
+      <div class="selected-permissions">
+        <ul class="usa-unstyled-list">
+          <li *ngFor="let permission of selectedPermissions; let i = index">
+            <button class="usa-button-link" (click)="removePermission(i)">
+              <span class="usa-sr-only">Click button to delete</span>
+              <i class="fa fa-times"></i>
+              {{permission.val}}
+              <span *ngIf="permission.isNew"><em>&nbsp;New</em></span>
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 

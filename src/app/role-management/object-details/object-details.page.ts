@@ -19,6 +19,7 @@ export class ObjectDetailsPage implements OnInit {
   domains;
   domainOptions;
   objectName;
+  objectId;
   requestObject;
 
   selectedPermissions = [];
@@ -63,6 +64,7 @@ export class ObjectDetailsPage implements OnInit {
         return;
       }
       let objectId = params['objectId'];
+      this.objectId = +objectId;
       this.accessService.getFunctionById(+objectId).subscribe(obj => {
         this.objectName = obj.functionName;
       });
@@ -139,26 +141,22 @@ export class ObjectDetailsPage implements OnInit {
     })
   }
 
-  onDomainChange() {
-    let domainId = +this.selectedDomain;
-    this.accessService.getPermissions().subscribe(
-      res => {
-        console.log(res);
-        let p = res._embedded.permissionList;
-        if (p && p[0]) {
-          this.originalPermissions = p.map(perm => perm.permissionName);
-        } else {
+  removePermission(i) {
+    this.selectedPermissions.splice(i, 1);
+  }
 
+  onDomainChange() {
+    this.accessService.getRoleObjDefinitions(null, ''+this.selectedDomain).subscribe(
+      res => {
+        if (this.mode === 'edit') {
+          if (!res || !res[0]) {
+            return;
+          }
+          let func = res[0].functionMapContent.find(fun => +fun.function.id === +this.objectId);
+          this.selectedPermissions = func.permission;
         }
-        // if (perms[0] && perms[0].functionMapContent && perms[0].functionMapContent.length) {
-        //   let permissions = perms[0].functionMapContent.map(f => f.function.val);
-        //   this.originalPermissions = _.clone(perms[0].functionMapContent);
-        //   this.selectedPermissions = permissions;
-        // } else {
-        //   this.selectedPermissions = [];
-        // }
       }
-    )
+    );
   }
 
   onAddPermissionClick() {

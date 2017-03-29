@@ -6,7 +6,7 @@
 
     <!-- Column Headers -->
     <ng-container *ngIf="!hideColumnHeader">
-      <div class="usa-grid-full check-all-row permission-row">
+      <div class="usa-grid-fullpermission-row">
         <div class="usa-width-one-twelfth">
           <div class="empty-space">&nbsp;</div>
         </div>
@@ -36,11 +36,11 @@
         <label>All</label>
       </div>
       <div class="usa-width-one-fourth">
-        <input type="checkbox" (click)="onCheckAllClick($event.target.checked)" [(ngModel)]="isAllChecked">&nbsp;
+        <input class='check-all' type="checkbox" (click)="onCheckAllClick($event.target.checked)" [(ngModel)]="isAllChecked">&nbsp;
       </div>
       <ng-container *ngIf="!hideDefaultColumn">
         <div class="usa-width-one-fourth">
-          <input type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked">&nbsp;
+          <input class='check-all-defaults' type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked">&nbsp;
         </div>
         <div class="usa-width-one-twelfth">
           &nbsp;
