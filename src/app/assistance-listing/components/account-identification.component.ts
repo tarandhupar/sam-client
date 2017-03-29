@@ -1,5 +1,8 @@
 import { Component, Input, ViewChild, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup, Validators } from "@angular/forms";
+import {
+  ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup, Validators,
+  AbstractControl
+} from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
 @Component({
@@ -143,9 +146,24 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   private onChange() {
-    // todo: fix label wrapper formatErrors to accept formgroup
-    this.wrapper.formatErrors(this.accountFormGroup);
-    this.codeWrapper.formatErrors(this.codeFormGroup);
+    let errored: AbstractControl = this.codeFormGroup;
+
+    for(let key in this.codeFormGroup.controls) {
+      if(this.codeFormGroup.controls.hasOwnProperty(key)) {
+        let control = this.codeFormGroup.controls[key];
+        if(control.invalid && control.errors) {
+          // hack to let errors be shown once any member of group is interacted with
+          if(control.pristine && !this.codeFormGroup.pristine) {
+            control.markAsDirty();
+          }
+          errored = control;
+          break;
+        }
+      }
+    }
+
+    this.codeWrapper.formatErrors(errored);
+    // this.wrapper.formatErrors(this.accountFormGroup);
     this.onChangeCallback(this.model);
   }
 
