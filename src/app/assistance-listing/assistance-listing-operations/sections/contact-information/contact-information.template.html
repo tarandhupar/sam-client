@@ -25,7 +25,7 @@
       <tr *ngFor="let contact of contactsInfo; let i=index">
         <td>
           {{contact.title}} {{contact.fullName}} <br/>
-          {{contact.street}} <br/>
+          {{contact.streetAddress}} <br/>
           {{contact.city}} {{contact.state}} {{contact.zip}} <br/>
           Email: {{contact.email}} <br/>
           Phone: {{contact.phone}} <br/>
@@ -99,11 +99,11 @@
           formControlName="fax"></samNumber>
 
         <samTextArea
-          [control]="contactGrp.controls.street"
+          [control]="contactGrp.controls.streetAddress"
           [name]="'street-input'"
           [label]="'Street'"
           [required]="true"
-          formControlName="street"></samTextArea>
+          formControlName="streetAddress"></samTextArea>
 
         <samText
           [control]="contactGrp.controls.city"

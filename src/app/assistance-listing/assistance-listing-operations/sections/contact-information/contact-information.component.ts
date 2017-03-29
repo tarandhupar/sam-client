@@ -14,9 +14,10 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   getProgSub: any;
   saveProgSub: any;
   redirectToWksp: boolean = false;
+  redirectToViewPg: boolean = false;
   falContactInfoForm: FormGroup;
   programId : any;
-  title: string;
+  progTitle: string;
   hideAddButton: boolean = false;
   hideContactsForm: boolean = true;
   contactIndex: number = 0;
@@ -26,6 +27,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   contactDrpDwnOptions = [{label:"None Selected", value:'na'},
                           {label:"New Contact", value:'new'},
                           {label:"Existing Contact", value:'existing'}];
+
   stateDrpDwnOptions = [{label:"None Selected", value:'na'}];
   countryDrpDwnOptions = [];
 
@@ -56,9 +58,18 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
   ngOnInit(){
     this.createForm();
+    if (this.sharedService.programId) {
+      this.getData();
+    }
   }
 
-  ngOnDestroy(){}
+  ngOnDestroy(){
+    if (this.saveProgSub)
+      this.saveProgSub.unsubscribe();
+
+    if (this.getProgSub)
+      this.getProgSub.unsubscribe();
+  }
 
   createForm() {
 
@@ -81,10 +92,10 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
       contact:['na'],
       title: [''],
       fullName: [''],
-      email:['', Validators.minLength(2)],
+      email:['', Validators.minLength(5)],
       phone:[''],
       fax:[''],
-      street:[''],
+      streetAddress:[''],
       city:[''],
       state:['na'],
       zip:[''],
@@ -140,22 +151,51 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
     this.hideContactsForm = false;
   }
 
+  getData() {
+
+    this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
+      .subscribe(api => {
+          this.progTitle = api.data.title;
+          console.log("Api", api);
+          let addInfo = '';
+
+          if(api.data.contacts) {
+            if(api.data.contacts.local)
+                addInfo = (api.data.contacts.local.description ? api.data.contacts.local.description : '');
+
+            if(api.data.contacts.headquarters){
+              let index = 0;
+              const control = <FormArray> this.falContactInfoForm.controls['contacts'];
+              for(let contact of api.data.contacts.headquarters){
+                contact['contact'] = 'existing';
+                control.push(this.initContacts());
+                control.at(index).patchValue(contact);
+                index = index + 1;
+              }
+            }
+          }
+
+          let website = (api.data.website ? api.data.website : '');
+
+          this.falContactInfoForm.patchValue({
+            addInfo:addInfo,
+            website: website
+          });
+
+          this.contactsInfo = this.falContactInfoForm.value.contacts;
+        },
+        error => {
+          console.error('Error Retrieving Program!!', error);
+        });//end of subscribe
+
+  }
+
   saveData(){
 
     let contacts = [];
     for(let contact of this.falContactInfoForm.value.contacts){
-      contacts.push({
-        title: contact.title,
-        fullName: contact.fullName,
-        email: contact.email,
-        phone: contact.phone,
-        fax: contact.fax,
-        streetAddress: contact.street,
-        city: contact.city,
-        state: contact.state,
-        zip: contact.zip,
-        country: contact.country
-      });
+      delete contact.contact;
+      contacts.push(contact);
     }
 
     let data = {
@@ -168,21 +208,22 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
       }
     };
 
-    console.log(data);
-
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
           this.sharedService.programId = api._body;
-          console.log('AJAX Completed Overview', api);
+          console.log('AJAX Completed Contact Information', api);
 
           if(this.redirectToWksp)
             this.router.navigate(['falworkspace']);
+          else if(this.redirectToViewPg){
+            this.router.navigate(['/programs', this.sharedService.programId, 'view']);
+          }
           else
             this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/financial-information']);
 
         },
         error => {
-          console.error('Error saving Program!!', error);
+          console.error('Error saving Program - Contact Information Section!!', error);
         }); //end of subscribe
 
   }
@@ -203,12 +244,18 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   }
 
   onSaveExitClick(event) {
-    this.redirectToWksp = true;
+
+    if (this.sharedService.programId)
+      this.redirectToViewPg = true;
+    else
+      this.redirectToWksp = true;
+
+
     this.saveData();
   }
 
   onSaveContinueClick(event) {
-    this.redirectToWksp = true;
+    this.redirectToViewPg = true;
     this.saveData();
   }
 }
