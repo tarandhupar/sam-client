@@ -412,9 +412,20 @@
     <div class="usa-width-one-whole">
       <h2>Agency picker &lt;agencyPicker&gt;</h2>
     </div>
+  </div>
+  <div class="usa-grid">
     <div class="usa-width-one-third"><agencyPicker [hint]="'Please select one or more organization filters'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker></div>
     <div class="usa-width-one-third"><agencyPicker [hint]="'Please select one organization'" [label]="'Filter by Organization:'" [multimode]="false"></agencyPicker></div>
     <div class="usa-width-one-third"><agencyPicker [orgRoot]="100006688" [hint]="'Please select one or more organization filters under GSA'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker></div>
+  </div>
+  <div class="usa-grid">
+    <div class="usa-width-one-third">
+      <agencyPicker 
+        [initial]="[100184736,100182416]" 
+        [orgRoot]="100011753" 
+        [orgId]="100184736" 
+        [hint]="'Please select one or more organization filters (prepopulated, preselected, locked)'" [label]="'Filter by Organization(s):'" [multimode]="true"></agencyPicker>
+      </div>
   </div>
 
   <div class="usa-grid">
