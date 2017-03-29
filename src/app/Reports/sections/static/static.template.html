@@ -21,12 +21,13 @@
                     <li *ngFor="let item of data.reports;let i=index">
                         <div class="grid">
                             <div class="grid-name"><b><a href="{{item.loc}}" target="_blank">{{item.name}}</a></b></div>
-                            <div class="grid-date"><span class="grid-date1"><i>last run on {{item.date}}</i></span></div>
+                            <div class="grid-date"><span class="grid-date1"><i>last run on {{item.date}}</i></span><span class="grid-overview2"><i aria-hidden="true" class="fa fa-star-o"></i></span></div>
 
                         <br>
                         <div class="grid-desc">{{item.desc}}</div>
                         <br>
                         </div>
+                      <br>
                         <div *ngIf="item.previousDates">
                             <samAccordion>
                                 <samAccordionSection [name]="'Previous Years'" [headerText]="'Previous Years'">
@@ -38,6 +39,7 @@
                         </div>
                         <br>
                     </li>
+                  <br><br>
                 </ul>
             </div>
 
