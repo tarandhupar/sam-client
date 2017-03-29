@@ -6,6 +6,8 @@ import * as moment from 'moment';
 import config from '../config';
 import utilities from '../utilities';
 
+import * as modules from './modules';
+
 import User from './user';
 
 const exceptionHandler = function(responseBody) {
@@ -545,7 +547,7 @@ class IAM {
       user: user,
       kba: kba,
       import: $import
-    });
+    }, modules);
 
     this.debug = false;
     this.states = {

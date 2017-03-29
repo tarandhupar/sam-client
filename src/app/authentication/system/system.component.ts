@@ -4,29 +4,26 @@ import { Router } from '@angular/router';
 import { IAMService } from 'api-kit';
 
 @Component({
-  templateUrl: './profile.component.html',
+  templateUrl: './system.component.html',
   providers: [
     IAMService
   ]
 })
-export class ProfileComponent {
+export class SystemComponent {
   private store = {
-    title: 'My Profile',
+    title: 'System Account',
     nav: [
-      { text: 'Personal Details', routerLink: 'details',    routerLinkActive: 'usa-current' },
-      { text: 'Reset Password',   routerLink: 'password',   routerLinkActive: 'usa-current' },
-      { text: 'My Access',        routerLink: false,        routerLinkActive: 'usa-current' },
-      { text: 'Role Migrations',  routerLink: 'migrations', routerLinkActive: 'usa-current' }
-    ],
-
-    systemNav: [
-      { text: 'System Account', routerLink: 'system', routerLinkActive: 'usa-current' }
+      { text: 'Profile',        routerLink: 'profile', routerLinkActive: 'usa-current', children: [
+        { text: 'System Information',       routerLink: '#system-information',       anchor: true },
+        { text: 'Organization Information', routerLink: '#organization-information', anchor: true },
+        { text: 'Point of Contact',         routerLink: '#point-of-contact',         anchor: true },
+      ] },
+      { text: 'Reset Password', routerLink: 'password',   routerLinkActive: 'usa-current' }
     ]
   };
 
   private states = {
-    route: '',
-    system: false
+    route: ''
   };
 
   activeRouteClass = '';
@@ -40,13 +37,15 @@ export class ProfileComponent {
   }
 
   ngOnInit() {
-    this.states.system = true;
     /*
     this.api.iam.checkSession((user) => {
       this.zone.run(() => {
       });
     });
     */
+    this.store.nav.push(
+
+    );
 
     this.checkRoute();
   }

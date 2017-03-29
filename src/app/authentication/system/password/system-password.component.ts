@@ -9,17 +9,17 @@ import { Validators as $Validators } from '../../shared/validators';
 import { User } from '../../user.interface';
 
 @Component({
-  templateUrl: './system-reset.component.html',
+  templateUrl: './system-password.component.html',
   providers: [
     IAMService
   ]
 })
-export class SystemResetComponent {
+export class SystemPasswordComponent {
   @ViewChild('formControl') formControl;
   @ViewChild('password') $password: SamPasswordComponent;
 
   private store = {
-    title: 'System Account Password Management'
+    title: 'Reset Password'
   };
 
   private states = {

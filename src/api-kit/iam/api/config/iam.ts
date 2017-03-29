@@ -47,5 +47,9 @@ export default {
   import: {
     history: '/import/roles',
     roles: '/import/roles'
+  },
+
+  system: {
+    accounts: '/cws/api/system-accounts'
   }
 };
