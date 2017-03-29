@@ -59,7 +59,7 @@
           formControlName="contact"
           (modelChange)="onParamChanged($event)"></samSelect>
 
-        <div id="newContact" *ngIf="contactGrp.controls.contact.value == 'new'">
+        <div id="newContact" *ngIf="contactGrp.controls.contact.value == 'new' || mode == 'Edit'">
 
         <samText
           [control]="falContactInfoForm.controls.contacts.controls[i].controls.title"

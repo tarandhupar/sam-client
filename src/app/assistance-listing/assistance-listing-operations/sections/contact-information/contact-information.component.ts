@@ -149,6 +149,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
     this.mode = "Edit";
     this.contactIndex = i;
     this.hideContactsForm = false;
+    this.hideAddButton = true;
   }
 
   getData() {
