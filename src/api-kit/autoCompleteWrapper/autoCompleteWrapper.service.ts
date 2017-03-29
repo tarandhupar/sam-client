@@ -8,6 +8,7 @@ import { Observable }    from 'rxjs/Observable';
 @Injectable()
 export class AutoCompleteWrapper implements AutocompleteService{
   private target = "search";
+  autocompleteIndex = "";
   constructor(private oFHService:FHService, private oSearchService:SuggestionsService) {}
 
   search(oData, name) {
@@ -25,7 +26,7 @@ export class AutoCompleteWrapper implements AutocompleteService{
     if(this.target=="search"){
       if(val.length>3){
         return this.oSearchService.autosearch({
-          index: "",
+          index: this.autocompleteIndex,
           keyword: val
         });
       }
