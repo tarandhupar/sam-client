@@ -5,6 +5,8 @@ import { UserAccessInterface, UserAccessWrapper } from './access.interface';
 import * as _ from 'lodash';
 import { IDomain } from "./domain.interface";
 import { IRole } from "./role.interface";
+import { IPermissions } from "./permissions.interface";
+import { IFunction } from "./function.interface";
 
 export interface UserAccessFilterOptions {
   domainIds?: (string|number)[],
@@ -64,6 +66,25 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
+  getPermissions() : Observable<IPermissions> {
+    let apiOptions: any = {
+      name: 'permissions',
+      method: 'GET',
+      suffix: '',
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  getFunctionById(id: number) : Observable<IFunction> {
+    let apiOptions: any = {
+      name: 'functions',
+      method: 'GET',
+      suffix: '/'+id+'/',
+    };
+    return this.apiService.call(apiOptions);
+  }
+
   postAccess(access: UserAccessWrapper, userName) {
     let apiOptions: any = {
       name: 'access',
@@ -73,6 +94,55 @@ export class UserAccessService {
     };
 
     return this.apiService.call(apiOptions, false);
+  }
+
+  postDomain(domain){
+    let apiOptions : any = {
+      name : 'domains',
+      suffix: '/',
+      method: 'POST',
+      body: domain
+    };
+
+    return this.apiService.call(apiOptions,false);
+  }
+
+  getRoleObjDefinitions(mode : string, domainKey : string) {
+    let apiOptions: any = {
+      name: 'domainDefinition',
+      suffix: '/',
+      method: 'GET',
+      oParam: { }
+    };
+
+    if (mode) {
+      apiOptions.oParam.mode = mode;
+    }
+
+    if( domainKey.length > 0 ){
+      apiOptions.oParam.domainKey = domainKey;
+    }
+
+    return this.apiService.call(apiOptions);
+  }
+
+  createObject(domainId: number, objectName: string, permissions: {id?: any, val?: string}[]) {
+    let apiOptions: any = {
+      name: 'functions',
+      suffix: '',
+      method: 'POST',
+      oParam: {}
+    };
+
+    apiOptions.body = {
+      domain: {id: domainId},
+      functionMapContent: {val: objectName},
+      permission: permissions
+    };
+
+    console.log(apiOptions.body);
+
+    return this.apiService.call(apiOptions);
   }
 
   requestAccess(req: any, userName) {
