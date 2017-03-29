@@ -38,13 +38,34 @@
     <samButton *ngIf="currentIndex === model.accounts.length" buttonText="Add New Account" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
     <samButton *ngIf="currentIndex < model.accounts.length" buttonText="Save Account Edits" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
 
-    <!-- todo: put into table structure and add styling -->
-    <div *ngFor="let account of model.accounts; let i=index">
-      {{ account | json }}
-      <a (click)="removeAccount(i)">Delete</a>
+    <!-- todo: add styling -->
+    <table *ngIf="model.accounts">
+      <thead>
+        <tr>
+          <th scope="col">
+            Account Code
+          </th>
+          <th scope="col">
+            Description
+          </th>
+          <th>
 
-      <a (click)="editAccount(i)">Edit</a>
-    </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let account of model.accounts; let i=index">
+          <tr>
+            <td>{{ account.code }}</td>
+            <td>{{ account.description }}</td>
+            <td>
+              <a (click)="removeAccount(i)">Delete</a>
+              <a (click)="editAccount(i)">Edit</a>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
 
   </form>
 
