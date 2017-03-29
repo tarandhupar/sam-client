@@ -91,11 +91,11 @@
             <i *ngIf="differences?.awardedAddress" class="fa fa-square" aria-hidden="true"></i>
             <strong>Contractor Awarded Address: </strong>
             <span>
-              {{opportunity.data?.award?.awardee?.location?.streetAddress}}<br>
+              {{opportunity.data?.award?.awardee?.location?.streetAddress}}
               {{opportunity.data?.award?.awardee?.location?.city}}
               {{opportunity.data?.award?.awardee?.location?.state}}
-              {{opportunity.data?.award?.awardee?.location?.zip}}<br>
-              {{opportunity.data?.award?.awardee?.location?.country}}<br>
+              {{opportunity.data?.award?.awardee?.location?.zip}}
+              {{opportunity.data?.award?.awardee?.location?.country}}
             </span>
             <span *ngIf="showChangesAwardDetails && differences?.awardedAddress" [innerHTML]="differences?.awardedAddress"></span>
           </li>
@@ -343,8 +343,8 @@
             <span [attr.id]="generateID(opportunityFields.OfficeZip, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.OfficeZip)">
               {{opportunityLocation?.zip}}
             </span>
+            <span *ngIf="showChangesContactInformation && differences?.contractingOfficeAddress" [innerHTML]="differences?.contractingOfficeAddress"></span>
           </div>
-          <span *ngIf="showChangesContactInformation && differences?.contractingOfficeAddress" [innerHTML]="differences?.contractingOfficeAddress"></span>
         </div>
         <div class="usa-grid-full">
           <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-primary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
@@ -505,11 +505,11 @@
                     <li>
                       <span>Contractor Awarded Address: </span>
                       <span style="display: block;">
-                        {{element.data?.award?.awardee?.location?.streetAddress}}<br>
+                        {{element.data?.award?.awardee?.location?.streetAddress}}
                         {{element.data?.award?.awardee?.location?.city}}
                         {{element.data?.award?.awardee?.location?.state}}
-                        {{element.data?.award?.awardee?.location?.zip}}<br>
-                        {{element.data?.award?.awardee?.location?.country}}<br>
+                        {{element.data?.award?.awardee?.location?.zip}}
+                        {{element.data?.award?.awardee?.location?.country}}
                       </span>
                     </li>
                   </ul>
