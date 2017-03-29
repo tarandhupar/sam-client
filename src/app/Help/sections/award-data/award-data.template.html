@@ -35,6 +35,7 @@
               </samMultiSelectDropdown>
             </div>
             <div class="usa-width-one-whole">
+              <span class="awards-data-feature-tag"><i class="fa fa-tag" aria-hidden="true"></i></span>
               <span class="awards-data-label m_R-3x m_B-2x" *ngFor="let featureItem of curFeatures">
                 {{featureItem}} &nbsp;<i class="fa fa-times" *ngIf="isEdit" (click)="onRemoveFeatureClick(featureItem)"></i>
               </span>
@@ -48,7 +49,7 @@
         <div class="usa-width-one-third awards-black-border p_All-3x awards-terms-div">
           <h3>Common Terms &nbsp;<i class="fa fa-plus-square-o" aria-hidden="true" *ngIf="isEdit" (click)="onAddTermClick()"></i></h3>
           <div class="usa-width-one-whole m_B-2x" *ngFor="let term of curCommonTerms">
-            <span>{{term.termName}} &nbsp;&nbsp; <i class="fa fa-times" *ngIf="isEdit" (click)="onRemoveTermClick(term)"></i></span>
+            <span class="bold">{{term.termName}} &nbsp;&nbsp; <i class="fa fa-times" *ngIf="isEdit" (click)="onRemoveTermClick(term)"></i></span>
             <div class="usa-width-one-whole">
               <p class="p_T-1x p_L-2x" *ngIf="!isEdit">{{term.termContent}}</p>
               <input class="usa-width-one-whole awards-terms-input" type="text" *ngIf="isEdit" [(ngModel)]="term.termContent">
@@ -58,11 +59,10 @@
       </div>
 
       <div class="usa-width-one-whole m_T-2x">
-        <h4 class="p_L-4x">Sub Header</h4>
-        <p class="p_L-4x" *ngIf="!isEdit">{{curConfig.subContent}}</p>
+        <p class="p_L-4x p_T-3x p_R-4x" *ngIf="!isEdit">{{curConfig.subContent}}</p>
         <textarea class="m_L-4x awards-content-input" rows="5" *ngIf="isEdit" [(ngModel)]="curConfig.subContent">{{curConfig.subContent}}</textarea>
 
-        <button class="usa-button-transparent pull-right" (click)="onEditPageClick()" *ngIf="!isEdit">Edit this page <i class="fa fa-edit awards-larger-icon"></i></button>
+        <button class="usa-button-transparent pull-right" (click)="onEditPageClick()" *ngIf="!isEdit && isAdmin">Edit this page <i class="fa fa-edit awards-larger-icon"></i></button>
         <button class="usa-button-transparent pull-right p_L-1x awards-large-icon m_B-0" (click)="onSaveEditPageClick()" *ngIf="isEdit"> <i class="fa fa-save"></i></button>
         <button class="usa-button-transparent pull-right p_R-1x awards-large-icon" (click)="onCancelEditPageClick()" *ngIf="isEdit"> <i class="fa fa-times"></i></button>
 
@@ -81,66 +81,4 @@
     </div>
 
   </div>
-  <!--<div class="usa-grid-full">-->
-    <!--<h3 id="awards" class="p_L-3x">Awards</h3>-->
-    <!--<p class="p_L-8x">-->
-      <!--Albucius lobortis ius et, sea debet inimicus ne,-->
-      <!--nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis-->
-      <!--ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum-->
-      <!--deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam-->
-      <!--fuisset convenire an.-->
-    <!--</p>-->
-  <!--</div>-->
-  <!--<div class="usa-grid-full">-->
-    <!--<h3 id="subAwards" class="p_L-3x">Sub-Awards</h3>-->
-    <!--<p class="p_L-8x">-->
-      <!--Lorem ipsum dolor sit amet, an quo elitr singulis, cu assum simul persius eos,-->
-      <!--per omittam concludaturque no. Albucius lobortis ius et, sea debet inimicus ne,-->
-      <!--nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis-->
-      <!--ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum-->
-      <!--deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam-->
-      <!--fuisset convenire an.-->
-    <!--</p>-->
-  <!--</div>-->
-  <!--<div class="usa-grid-full">-->
-    <!--<h3 id="entities" class="p_L-3x">Entities</h3>-->
-    <!--<p class="p_L-8x">-->
-      <!--Albucius lobortis ius et, sea debet inimicus ne,-->
-      <!--nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis-->
-      <!--ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum-->
-      <!--deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam-->
-      <!--fuisset convenire an.-->
-    <!--</p>-->
-  <!--</div>-->
-  <!--<div class="usa-grid-full">-->
-    <!--<h3 id="assistanceListings" class="p_L-3x">Assistance Listings</h3>-->
-    <!--<p class="p_L-8x">-->
-      <!--Lorem ipsum dolor sit amet, an quo elitr singulis, cu assum simul persius eos,-->
-      <!--per omittam concludaturque no. Albucius lobortis ius et, sea debet inimicus ne,-->
-      <!--nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis-->
-      <!--ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum-->
-      <!--deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam-->
-      <!--fuisset convenire an.-->
-    <!--</p>-->
-  <!--</div>-->
-  <!--<div class="usa-grid-full">-->
-    <!--<h3 id="exclusions" class="p_L-3x">Exclusions</h3>-->
-    <!--<p class="p_L-8x">-->
-      <!--Albucius lobortis ius et, sea debet inimicus ne,-->
-      <!--nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis-->
-      <!--ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum-->
-      <!--deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam-->
-      <!--fuisset convenire an.-->
-    <!--</p>-->
-  <!--</div>-->
-  <!--<div class="usa-grid-full">-->
-    <!--<h3 id="agencies" class="p_L-3x">Agencies</h3>-->
-    <!--<p class="p_L-8x">-->
-      <!--Albucius lobortis ius et, sea debet inimicus ne,-->
-      <!--nec accusam iudicabit cu. Ad verterem scripserit pro, falli apeirian ad est, vis-->
-      <!--ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum-->
-      <!--deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam-->
-      <!--fuisset convenire an.-->
-    <!--</p>-->
-  <!--</div>-->
 </section>

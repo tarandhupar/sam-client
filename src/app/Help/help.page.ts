@@ -39,6 +39,7 @@ export class HelpPage {
         }
 
       });
+    
   }
 
   changeSection(value){
