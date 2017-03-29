@@ -10,14 +10,10 @@
   <samCheckboxToggledTextarea [options] = "accomplishmentsConfig"
                               [formControlName] = "'accomplishments'"
   ></samCheckboxToggledTextarea>
-
-  {{accomplishmentsModel | json}}
-
+  
   <samAccountIdentification [options] = "accountIdentificationConfig"
                             [formControlName] = "'accountIdentification'"
   ></samAccountIdentification>
-
-  {{accountIdentificationModel | json}}
 
   <div *ngIf="tafsGroup" [formGroup]="tafsGroup">
     <samText [label] = "'Treasury Dept. Code'"
