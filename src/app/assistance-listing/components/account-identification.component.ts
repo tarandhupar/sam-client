@@ -146,14 +146,16 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   private onChange() {
-    let errored: AbstractControl = this.codeFormGroup;
+    this.onChangeCallback(this.model);
 
-    for(let key in this.codeFormGroup.controls) {
-      if(this.codeFormGroup.controls.hasOwnProperty(key)) {
+    let errored: AbstractControl = new FormControl();
+
+    for (let key in this.codeFormGroup.controls) {
+      if (this.codeFormGroup.controls.hasOwnProperty(key)) {
         let control = this.codeFormGroup.controls[key];
-        if(control.invalid && control.errors) {
+        if (control.invalid && control.errors) {
           // hack to let errors be shown once any member of group is interacted with
-          if(control.pristine && !this.codeFormGroup.pristine) {
+          if (control.pristine && !this.codeFormGroup.pristine) {
             control.markAsDirty();
           }
           errored = control;
@@ -164,7 +166,6 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
 
     this.codeWrapper.formatErrors(errored);
     // this.wrapper.formatErrors(this.accountFormGroup);
-    this.onChangeCallback(this.model);
   }
 
   private onChangeCallback: any = (_: any) => {};
