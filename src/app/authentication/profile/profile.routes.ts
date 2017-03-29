@@ -1,17 +1,21 @@
 import {
+  // User
   DetailsComponent,
-  SystemDetailsComponent,
   MigrationsComponent,
-  ResetComponent
+  ResetComponent,
+  // System Account
+  SystemDetailsComponent,
+  SystemResetComponent,
 } from './';
 
 export default [
   { path: '',       redirectTo: 'details', pathMatch: 'full' },
-  { path: 'system', redirectTo: 'details/system' },
-  { path: 'details', children: [
-    { path: '',       component: DetailsComponent },
-    { path: 'system', component: SystemDetailsComponent },
+  { path: 'system', children: [
+    { path: '', redirectTo: 'details', pathMatch: 'full' },
+    { path: 'details', component: SystemDetailsComponent },
+    { path: 'reset', component: SystemResetComponent }
   ] },
-  { path: 'password',   component: ResetComponent },
+  { path: 'details', component: DetailsComponent },
+  { path: 'password', component: ResetComponent },
   { path: 'migrations', component: MigrationsComponent },
 ];

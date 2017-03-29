@@ -20,13 +20,13 @@
 			<div class="usa-grid-full">
 				<h3 class="display-inline">{{awardData.documentInformation.id.procurementIdentifier}} ({{awardData.documentInformation.id.modificationNumber}})</h3><br />
 				<h2 class="display-inline">{{awardData.contractorInformation.vendorName}}</h2><br />
-				{{awardData.contractorInformation.address.city}}, {{awardData.contractorInformation.address.state}}, {{awardData.contractorInformation.address.zip}}
+				{{awardData.contractorInformation.address.city}}, {{awardData.contractorInformation.address.state}}, {{awardData.contractorInformation.address.zip | zipCode}}
 			</div>
 			<div class="usa-grid-full bottom-border">
 				<div class="usa-width-one-half padding-bottom-10px">
 					DUNS: {{awardData.contractorInformation.duns}}<br />
-					Global Vendor Name: {{globalVendorName}}<br />
-					Global Vendor DUNS: {{globalVendorDUNS}}
+					Global Vendor: {{awardData.contractorInformation.globalVendorName}}<br />
+					Global DUNS: {{awardData.contractorInformation.globalDuns}}
 					<br />
 					<br />
 					<br />
@@ -180,9 +180,9 @@
 				</div>
 				DUNS Number: {{awardData.contractorInformation.duns}}<br />
 				Vendor Name: {{awardData.contractorInformation.vendorName}}<br />
-				DBAN: {{awardData.contractorInformation.dBan}}<br />
+				Doing Business as Name: {{awardData.contractorInformation.dBan}}<br />
 				<div *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
-					Contractor Name: {{awardData.contractorInformation.contractorName}}
+					Contractor Name from Contract: {{awardData.contractorInformation.contractorName}}
 				</div>
 				<br />
 				<b>
@@ -193,18 +193,18 @@
 				Congressional District: {{awardData.contractorInformation.address.congDistrict}}
 				<br />
 				<br />
-				Phone: {{awardData.contractorInformation.address.phoneNumber}}<br />
-				FAX: {{awardData.contractorInformation.address.faxNumber}}
+				Phone: {{awardData.contractorInformation.address.phoneNumber | phone}}<br />
+				Fax: {{awardData.contractorInformation.address.faxNumber | phone}}
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 					<h3 id="businessCategory">Business Category</h3>
-					Organization Type: {{orgType}}<br />
-					Number of Employees: <br />
-					State of Incorporation<br />
-					Country of Incorporation<br />
-					Annual Revenue<br />
+					Organization Type: {{awardData.businessCategory.organizationType}}<br />
+					Number of Employees: {{awardData.businessCategory.numberOfEmployees}}<br />
+					State of Incorporation: {{awardData.businessCategory.stateOfIncorporation}}<br />
+					Country of Incorporation: {{awardData.businessCategory.countryOfIncorporation}}<br />
+					Annual Revenue: {{awardData.businessCategory.annualRevenue}}<br />
 					<div class="padding-left-20px">
 					<br />
-						Business Types<br />
+						Business Types:<br />
 						<!--list of business types>--><br />
 						Socioeconomic Data<br />
 						<!--list of socioeconomic data>-->

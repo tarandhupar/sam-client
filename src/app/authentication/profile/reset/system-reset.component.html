@@ -1,0 +1,26 @@
+<samAlert class="usa-alert-static" type="info" title="Migrate Your Roles">
+  If you have a user account at any of the <a routerLink="/profile/migrations" fragment="legacy-sites">websites</a> that are moving to the new SAM.gov,
+  you may migrate your roles and keep your same permissions. <a routerLink="/profile/migrations" fragment="top">Begin Now</a>.
+</samAlert>
+
+<h2 [innerText]="store.title"></h2>
+<div>
+  <form *ngIf="passwordForm" class="usa-form-large usa-form-password" [ngClass]="{ 'ng-submitted': states.submitted }" [formGroup]="passwordForm" (ngSubmit)="reset()" autocomplete="off">
+    <div #formControl>
+      <sam-password [currentPassword]="passwordForm.controls.currentPassword"
+                    [password]="passwordForm.controls.newPassword"
+                    [phrases]="[user.firstName, user.initials, user.lastName, user.email, user.fullName]"
+                    #password></sam-password>
+      <div class="usa-button-controls">
+        <button type="submit" [disabled]="states.loading">Submit</button>
+      </div>
+    </div>
+    <samAlert [type]="states.alert.type"
+              [title]="states.alert.title"
+              [hidden]="!states.alert.show"
+              [target]="formControl"
+              [offset]="{ left: 40, top: -30 }"
+              placement="bottom center"
+              showClose="true"></samAlert>
+  </form>
+</div>

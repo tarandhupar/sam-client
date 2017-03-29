@@ -73,8 +73,17 @@ export class SearchService {
       }
     }
 
-    if(typeof obj.noticeId != 'undefined' && obj.noticeId != null) {
-      oApiParam.oParam['noticeId'] = obj.noticeId;
+    // award Filters
+    if(typeof obj.awardOrIdv !== 'undefined' && obj.awardOrIdv !== null && obj.awardOrIdv !== ''){
+      oApiParam.oParam['award_or_IDV'] = obj.awardOrIdv;
+    }
+
+    if(typeof obj.awardType !== 'undefined' && obj.awardType !== null && obj.awardType !== ''){
+      oApiParam.oParam['award_type'] = obj.awardType;
+    }
+
+    if(typeof obj.contractType !== 'undefined' && obj.contractType !== null && obj.contractType !== ''){
+      oApiParam.oParam['contract_type'] = obj.contractType;
     }
 
     return this.oAPIService.call(oApiParam);

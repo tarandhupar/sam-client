@@ -23,7 +23,7 @@ describe('Opportunity Service', () => {
     });
   });
 
-  beforeEach(inject([MockBackend], (backend: MockBackend) => {
+  it('should return response when subscribed to getOpportunityById', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
     let mockData = {
       "opportunityId": "213ji321hu3jk123",
       "data": {
@@ -131,15 +131,20 @@ describe('Opportunity Service', () => {
         }
       }
     };
+    backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: mockData }))));
 
-    const baseResponse = new Response(new ResponseOptions({ body: mockData }));
-    backend.connections.subscribe((c: MockConnection) => c.mockRespond(baseResponse));
-  }));
-
-  it('should return response when subscribed to getOpportunityById', inject([OpportunityService], (testService: OpportunityService) => {
     testService.getOpportunityById("fee2e0e30ce63b7bc136aeff32096c1d").subscribe((res: Response) => {
       expect(res['opportunityId']).toBeDefined();
       expect(res['opportunityId']).toBe('213ji321hu3jk123');
+    });
+  }));
+
+  it('should return response when subscribed to getPackagesCount', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
+    backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: '6' }))));
+
+    testService.getPackagesCount("fee2e0e30ce63b7bc136aeff32096c1d").subscribe((res: Response) => {
+      expect(res).toBeDefined();
+      expect(res).toBe(6);
     });
   }));
 });

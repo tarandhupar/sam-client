@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as Cookies from 'js-cookie';
 import * as request from 'superagent';
+import * as moment from 'moment';
 
 import config from '../config';
 import utilities from '../utilities';
@@ -8,7 +9,7 @@ import utilities from '../utilities';
 import User from './user';
 
 const exceptionHandler = function(responseBody) {
-  return _.extend({
+  return _.merge({
     status: 'error',
     message: 'Sorry, an unknown server error occured. Please contact the Help Desk for support.'
   }, responseBody);
@@ -19,7 +20,24 @@ const isDebug = function() {
   return (utils.isLocal() && isDebug);
 };
 
-let $config = _.extend({}, config.endpoints.iam),
+const transformMigrationAccount = function(account) {
+  account = _.isObject(account) ? account : {};
+  account = _.merge({
+    sourceLegacySystem: '',
+    username: '',
+    firstname: '',
+    lastname: '',
+    roles: []
+  }, account);
+
+  account.system = account.sourceLegacySystem.toUpperCase() + '.gov';
+  account.name = [account.firstname || '', account.lastname || ''].join(' ').trim();
+  account.migratedAt = (account.claimedTimestamp ? moment(account.claimedTimestamp) : moment()).format('MM/DD/YYYY');
+
+  return account;
+}
+
+let $config = _.merge({}, config.endpoints.iam),
     utils = new utilities({
       localResource: $config.localResource,
       remoteResource: $config.remoteResource
@@ -205,7 +223,7 @@ user.password = {
         let data;
 
         if(!err) {
-          data = _.extend({
+          data = _.merge({
             status: '',
             question: '',
             token: ''
@@ -232,7 +250,7 @@ user.password = {
       .post(endpoint)
       .send(params)
       .end(function(err, response) {
-        let data = _.extend({
+        let data = _.merge({
               status: '',
               question: '',
               token: '',
@@ -411,7 +429,7 @@ let $import = {
   },
 
   history(email, $success, $error) {
-    let endpoint = utils.getUrl($config.import.history.replace(/\{email\}/g, email)),
+    let endpoint = utils.getUrl($config.import.history),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
@@ -425,27 +443,29 @@ let $import = {
       {
         "id": 300001,
         "email": "rhonda@nostra.gov",
-        "legacyPassword": "5f4dcc3b5aa765d61d8327deb882cf99",
+        "username": "rhonda@nostra.gov",
+        "firstname": "Kuame",
+        "lastname": "Sanford",
         "phone": "hassanriaz@gmail.com",
         "sourceLegacySystem": "DoD",
         "importTimestamp": 1482438998453,
-        "orgKey": 100000000,
         "loginAttempts": 0,
         "claimedTimestamp": 1484930796371,
-        "fullName": "Kuame Sanford",
+        "claimedBy": "doe.john@gmail.com",
         "claimed": true
       },
       {
-        "id": 300358,
-        "email": "ina@iaculis.us",
-        "legacyPassword": "579356b2d3267d2eaa93b741e17c997a",
-        "phone": "hassanriaz@gmail.com",
-        "sourceLegacySystem": "DoD",
-        "importTimestamp": 1482438998465,
-        "orgKey": 100000357,
+        "id": 3,
+        "email": "Naomi@quam.edu",
+        "username": "PBROOKS",
+        "firstname": "Xanthus",
+        "lastname": "Nash",
+        "phone": "kristinwighttester@gmail.com",
+        "sourceLegacySystem": "FPDS",
+        "importTimestamp": 1482249828796,
         "loginAttempts": 0,
-        "claimedTimestamp": 1484930761579,
-        "fullName": "Violet Barlow",
+        "claimedTimestamp": 1490638542792,
+        "claimedBy": "doe.john@gmail.com",
         "claimed": true
       }
     ];
@@ -458,16 +478,18 @@ let $import = {
 
         if(!err) {
           accounts = response.body || [];
-
           accounts = accounts.map((account) => {
-            account.role = account.role || [];
-            return account;
+            return transformMigrationAccount(account);
           });
 
           $success(accounts);
         } else {
           if(isDebug()) {
-            $error(mock);
+            $error(
+              mock.map((account) => {
+                return transformMigrationAccount(account);
+              })
+            );
           } else {
             $error(exceptionHandler(response));
           }
@@ -497,9 +519,11 @@ let $import = {
       .send(params)
       .end(function(err, response) {
         if(!err) {
-          $success(response.body);
+          $success(
+            transformMigrationAccount(response.body)
+          );
         } else {
-          $success(response.body);
+          $error(response.body);
         }
       });
   }
@@ -516,7 +540,7 @@ class IAM {
   isDebug;
 
   constructor($api) {
-    _.extend(this, utils, {
+    _.merge(this, utils, {
       config: config,
       user: user,
       kba: kba,
@@ -559,7 +583,7 @@ class IAM {
     let $api = this,
         endpoint = utils.getUrl($config.session),
         token,
-        data = _.extend({ service: 'ldapService' }, credentials);
+        data = _.merge({ service: 'ldapService' }, credentials);
 
     $success = $success || function(data) {};
     $error = $error || function(data) {};
@@ -584,7 +608,7 @@ class IAM {
   loginOTP(credentials, $success, $error) {
     let endpoint = utils.getUrl($config.session),
         token,
-        data = _.extend(this.getStageData(), credentials);
+        data = _.merge(this.getStageData(), credentials);
 
     $success = $success || function(data) {};
     $error = $error || function(data) {};
