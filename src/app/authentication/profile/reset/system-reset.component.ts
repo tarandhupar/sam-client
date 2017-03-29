@@ -9,20 +9,21 @@ import { Validators as $Validators } from '../../shared/validators';
 import { User } from '../../user.interface';
 
 @Component({
-  templateUrl: './reset.component.html',
+  templateUrl: './system-reset.component.html',
   providers: [
     IAMService
   ]
 })
-export class ResetComponent {
+export class SystemResetComponent {
   @ViewChild('formControl') formControl;
   @ViewChild('password') $password: SamPasswordComponent;
 
   private store = {
-    title: 'Reset Password'
+    title: 'System Account Password Management'
   };
 
   private states = {
+    initial: true,
     submitted: false,
     loading: false,
     alert: {
@@ -77,11 +78,18 @@ export class ResetComponent {
   initForm() {
     let isDebug = (this.api.iam.isDebug() && this.user == undefined);
 
-    this.passwordForm = this.builder.group({
-      email: [!isDebug ? this.user.email : ''],
-      currentPassword: ['', Validators.required],
-      newPassword: ['', Validators.required],
-    });
+    if(this.states.initial) {
+      this.passwordForm = this.builder.group({
+        email: [!isDebug ? this.user.email : ''],
+        newPassword: ['', Validators.required],
+      });
+    } else {
+      this.passwordForm = this.builder.group({
+        email: [!isDebug ? this.user.email : ''],
+        currentPassword: ['', Validators.required],
+        newPassword: ['', Validators.required],
+      });
+    }
   }
 
   setSubmitted() {

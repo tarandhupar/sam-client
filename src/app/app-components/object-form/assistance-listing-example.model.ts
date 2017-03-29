@@ -61,6 +61,18 @@ export class ProgramFormModel{
             required: false
           }
         ]
+      },
+      {
+        section: 'contact_information',
+        label: 'Contact Information',
+        fields:[
+          {
+            name: 'content',
+            type: 'samTextArea',
+            label: 'Additional Information',
+            required: false
+          }
+        ]
       }
     ];
 

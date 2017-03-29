@@ -367,13 +367,27 @@ export class GrantAccessPage implements OnInit {
     }
 
     if (this.mode === 'request') {
-      this.footerAlert.registerFooterAlert({
-        title:"Success",
-        description: 'Your request has been submitted',
-        type:'success',
-        timer:3000
-      });
-      this.goToAccessPage();
+      let obj = UserAccessModel.CreateRequestObject(this.userName, this.supervisorName, this.supervisorEmail, this.domain, this.messages);
+      this.userService.requestAccess(obj, this.userName).delay(1000).subscribe(
+        res => {
+          this.footerAlert.registerFooterAlert({
+            title:"Success",
+            description: 'Your request has been submitted',
+            type:'success',
+            timer:3000
+          });
+          this.goToAccessPage();
+        },
+        err => {
+          this.footerAlert.registerFooterAlert({
+            title:"There was an error while trying to grant access.",
+            description:"",
+            type:'error',
+            timer:0
+          });
+        }
+      );
+
       return;
     }
 
