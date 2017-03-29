@@ -90,7 +90,11 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   }
 
   private createTextareaControl() {
-    this.textareaControl = new FormControl();
+    this.textareaControl = new FormControl(null);
+    if(this.required) {
+      this.textareaControl.setValidators(Validators.required);
+      this.textareaControl.updateValueAndValidity();
+    }
     this.textareaControl.valueChanges.subscribe(value => {
       this.model.textarea = value;
       this.onChange();
@@ -110,8 +114,10 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
       this.textareaControl.updateValueAndValidity();
     } else {
       this.textareaHidden = false;
-      this.textareaControl.setValidators(Validators.required);
-      this.textareaControl.updateValueAndValidity();
+      if(this.required) {
+        this.textareaControl.setValidators(Validators.required);
+        this.textareaControl.updateValueAndValidity();
+      }
     }
   }
 
