@@ -65,6 +65,7 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
     }
 
     // subcomponent names are generated based on this component's name
+    // names of code text boxes are generated in html template
     this.codeLabelName = this.name + '-code-label';
     this.textareaName = this.name + '-textarea';
   }
@@ -112,6 +113,8 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
     this.model.accounts[this.currentIndex] = account;
     this.currentIndex = this.model.accounts.length;
     this.accountFormGroup.reset();
+
+    this.onChange();
   };
 
   public removeAccount(index: number) {
@@ -122,6 +125,8 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
     } else if(index < this.currentIndex) {
       this.currentIndex--;
     }
+
+    this.onChange();
   }
 
   public editAccount(index: number) {
