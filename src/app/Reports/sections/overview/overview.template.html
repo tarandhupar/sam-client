@@ -1,4 +1,4 @@
-<section>
+<section [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
 <br><br><br>
   <h2 class="m_T-2x">Reports</h2>
   <p class="p_L-8x">
@@ -49,9 +49,11 @@ Dont have a user account?<br>
     <br><br>
     {{item.verb}}
     <br>
-    <samAccordion>
+    <div >
+    <samAccordion >
       <samAccordionSection [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">{{item.appendix}}</samAccordionSection>
     </samAccordion>
+    </div>
     <br>
     </li>
   </ul>

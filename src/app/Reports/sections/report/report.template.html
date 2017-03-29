@@ -1,14 +1,17 @@
+<div [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
 <section class="usa-grid-full">
 <br><br>
 Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
 <br>
   <h2 class="m_T-2x">{{name}}</h2>
-<iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="1024"></iframe>
+<iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
 <br>
 
-    <samAccordion>
 
-      <samAccordionSection [name]="'Appendix'" [headerText]="'Appendix'" >
+
+    <samAccordion >
+
+      <samAccordionSection  [name]="'Appendix'" [headerText]="'Appendix'" >
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
           <div *ngIf="id">
           <ul type="none">
@@ -34,4 +37,7 @@ Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
 
 
 
+
+
 </section>
+</div>

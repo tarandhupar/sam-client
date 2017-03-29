@@ -1,0 +1,25 @@
+.permission-selector {
+  border: solid 1px black;
+  max-width: 50em;
+
+  input[type="checkbox"] {
+    width: initial;
+    height: initial;
+    opacity: 1;
+    margin-left: inherit;
+  }
+
+  .permission-selector-title {
+    padding: .5rem;
+    border-bottom: solid 1px black;
+    background-color: #eee;
+  }
+
+  .permission-row:not(:first-child) {
+    margin-top: .5em;
+  }
+
+  .permissions-body {
+    padding: .5em;
+  }
+}
