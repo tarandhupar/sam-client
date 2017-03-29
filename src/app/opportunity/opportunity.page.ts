@@ -413,6 +413,7 @@ export class OpportunityPage implements OnInit {
 
             }, () => {
               if(data > this.packages.length) {
+                historyAPI.content.history = _.sortBy(historyAPI.content.history, 'index');
                 let latestNotice = historyAPI.content.history[historyAPI.content.history.length - 1]['notice_id'];
                 this.packagesWarning = {
                   config: {
