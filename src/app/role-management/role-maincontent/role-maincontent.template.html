@@ -10,11 +10,11 @@
           <div class = "section-spc">
             <div class = "usa-grid-full header-bg-color">
               <div class = "usa-width-one-half">
-                <h2 class= "collapsible-header">{{role.role.val}}</h2>
+                <h3 class= "collapsible-header">{{role.role.val}}</h3>
               </div>
               <div class = "usa-width-one-half p_T-1em">
                 <div class = "pull-right">
-                  <i class=" fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Remove</span>
+                  <span *ngIf = "role.roleRemovable" (click) = "clickRemove(role.role.id)"><i class=" fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Remove</span></span>
                   <span [routerLink]="['../roles/' + role.role.id + '/edit']" [queryParams]="{ domain: domain.domain.id }"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Edit</span></span>
                   <span (click) = "role.testFlag = !role.testFlag"><i class="fa " [ngClass] = "role.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">{{role.testFlag ? 'Hide' : 'Show'}} Permission</span></span>
                 </div>
@@ -55,17 +55,17 @@
       <div class="usa-width-five-sixths">
         <div class = "content-label"><span class="usa-label-big label-ht">{{domain.domain.val}}</span></div>
         <div *ngIf = "!domain.functionMapContent || domain.functionMapContent.length == 0" class = "content-label">
-          <h3><i>No Object found for this domain</i></h3>
+          <h3><i>No objects found for this domain</i></h3>
         </div>
         <div *ngFor = "let func of domain.functionMapContent">
           <div class = "section-spc">
             <div class = "usa-grid-full header-bg-color">
               <div class = "usa-width-one-half">
-                <h2 class= "collapsible-header">{{func.function.val}}</h2>
+                <h3 class= "collapsible-header">{{func.function.val}}</h3>
               </div>
               <div class = "usa-width-one-half p_T-1em">
                 <div class = "pull-right">
-                  <i class=" fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Remove</span>
+                  <span *ngIf = "func.functionRemovable" (click) = "clickRemove(func.function.id)"><i class=" fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Remove</span></span>
                   <span [routerLink]="['../objects/' + func.function.id + '/edit']" [queryParams]="{ domain: domain.domain.id }"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Edit</span></span>
                   <span (click) = "func.testFlag = !func.testFlag"><i class="fa " [ngClass] = "func.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">{{func.testFlag ? 'Hide' : 'Show'}} Permission</span></span>
                 </div>

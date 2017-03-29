@@ -1,4 +1,4 @@
-import { Input,Component, OnInit } from "@angular/core";
+import { Input,Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
 @Component({
@@ -11,6 +11,7 @@ export class RoleMainContent implements OnInit{
   @Input() roleDef;
   @Input() currPath;
 
+  @Output() onRemoveClick: EventEmitter<any> = new EventEmitter<any>();
   ngOnInit(){
 
   }
@@ -24,5 +25,10 @@ export class RoleMainContent implements OnInit{
     if(this.currPath === 'objects')
       return true;
   }
-    
+
+  clickRemove(event){
+    //console.log('Here ' + event);
+    this.onRemoveClick.emit(event);
+  }
+
 }
