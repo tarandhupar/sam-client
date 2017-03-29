@@ -62,6 +62,10 @@ export class RoleSideNav implements OnInit{
       return val.domainName;
     }
 
+    mapId(val){
+      return val.value;
+    }
+
     checkboxModel: any = [];
 
     determinePath(){
@@ -94,10 +98,15 @@ export class RoleSideNav implements OnInit{
         this.textErrorMessage = 'This domain already exists';
       }
       if(this.textErrorMessage === '' && this.newDomain !== ''){
-        let domain = {"domainName" : this.newDomain};
+        let domain = {"domainName" : this.newDomain.toUpperCase()};
         this.role.postDomain(domain).subscribe(res => {
-          window.location.reload();
+          this.newDomain = '';
+          let value = JSON.parse(res._body);
+          this.filters.domains.options.push({label: value.domainName, value: value.id, name: value.domainName});
+          let values = this.filters.domains.options.map(this.mapId);
+          this.checkSelected.emit(values.toString());
         });
+
       }
 
     }
