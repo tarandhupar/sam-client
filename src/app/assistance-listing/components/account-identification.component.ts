@@ -84,7 +84,7 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
     this.accountFormGroup.addControl('codeBoxes', this.codeFormGroup);
 
     for(let i = 0; i < this.codeBoxLengths.length; i++) {
-      let codeBoxControl = new FormControl('', Validators.required);
+      let codeBoxControl = new FormControl(null, Validators.required);
       codeBoxControl.valueChanges.subscribe(value => {
         this.model.codeBoxes[i] = value;
         this.onChange();
