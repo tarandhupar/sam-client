@@ -111,7 +111,9 @@ export class RoleDetailsPage {
               permissions: f.permission.map(perm => {
                 return {
                   label: perm.val,
-                  value: perm.id
+                  value: perm.id,
+                  isDefault: true,
+                  isSelected: true,
                 };
               })
             };
@@ -132,7 +134,7 @@ export class RoleDetailsPage {
             this.domainDefinitions = null;
             return;
           }
-          updatePermissions(this.domainRoleOptions)
+          //updatePermissions(this.domainRoleOptions)
         }
       },
       err => {

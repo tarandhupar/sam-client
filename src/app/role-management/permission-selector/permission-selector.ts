@@ -20,7 +20,8 @@ export class PermissionSelectorComponent {
   @Input() title: string = '';
   @Input() hideDefaultColumn: false;
 
-  private isAllDefaultsChecked: boolean = false;
+  private isAllDefaultsChecked: boolean = true;
+  private isAllChecked: boolean = true;
 
   constructor() {
 
@@ -33,21 +34,27 @@ export class PermissionSelectorComponent {
 
   onDefaultClick(isChecked, option) {
     option.isDefault = isChecked;
+    if (isChecked) {
+      option.isSelected = true;
+    }
     this.optionsChange.emit(this.options);
   }
 
   onCheckAllClick(isChecked) {
     this.options.forEach(v => {
-      v.isSelected = isChecked;
-      v.isDefault = isChecked;
+      if (!v.isDefault) {
+        v.isSelected = isChecked;
+      }
     });
-    this.isAllDefaultsChecked = isChecked;
     this.optionsChange.emit(this.options);
   }
 
   onCheckAllDefaultClick(isChecked) {
     this.options.forEach(v => {
       v.isDefault = isChecked;
+      if (isChecked) {
+        v.isSelected = true;
+      }
     });
     this.optionsChange.emit(this.options);
   }
