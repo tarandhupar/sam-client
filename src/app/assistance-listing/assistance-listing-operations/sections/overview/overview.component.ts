@@ -60,9 +60,11 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
       .subscribe(api => {
         this.title = api.data.title;
         let objective = (api.data.objective ? api.data.objective : '');
+        let desc = (api.data.description ? api.data.description : '');
 
         this.falOverviewForm.patchValue({
-            objective:objective
+            objective:objective,
+            falDesc:desc
           });
       },
         error => {
@@ -74,7 +76,8 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
   saveData() {
 
     let data = {
-      "objective": this.falOverviewForm.value.objective
+      "objective": this.falOverviewForm.value.objective,
+      "description": this.falOverviewForm.value.description
     };
 
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
