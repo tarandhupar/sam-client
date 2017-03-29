@@ -13,6 +13,9 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
   getProgSub: any;
   saveProgSub: any;
+  dictSubState: any;
+  dictSubCountry: any;
+  getContactSub: any;
   redirectToWksp: boolean = false;
   redirectToViewPg: boolean = false;
   falContactInfoForm: FormGroup;
@@ -40,19 +43,24 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
     sharedService.setSideNavFocus();
     this.programId = sharedService.programId;
 
-    dictService.getDictionaryById('states')
+    this.dictSubState = dictService.getDictionaryById('states')
       .subscribe(data => {
         for(let state of data['states']){
           this.stateDrpDwnOptions.push({label:state.value, value:state.code});
         }
       });
 
-    dictService.getDictionaryById('countries')
+    this.dictSubCountry = dictService.getDictionaryById('countries')
       .subscribe(data => {
         for(let country of data['countries']){
           this.countryDrpDwnOptions.push({label:country.value, value:country.code});
         }
       });
+
+    this.getContactSub = this.programService.getContacts(this.sharedService.cookieValue)
+      .subscribe(api => {
+      console.log("data", api);
+    });
 
   }
 
@@ -69,6 +77,16 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
     if (this.getProgSub)
       this.getProgSub.unsubscribe();
+
+    if (this.dictSubState)
+      this.dictSubState.unsubscribe();
+
+    if (this.dictSubCountry)
+      this.dictSubCountry.unsubscribe();
+
+    if(this.getContactSub)
+      this.getContactSub.unsubscribe();
+
   }
 
   createForm() {
@@ -76,11 +94,12 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
     // Checkboxes Component
     this.checkboxConfig = {
       options: [
-        {value: '', label: 'See Regional Agency Offices', name: 'checkbox-rao'},
+        {value: 'appendix', label: 'See Regional Agency Offices', name: 'checkbox-rao'},
       ],
     };
 
     this.falContactInfoForm = this.fb.group({
+      'regLocalOffice':'',
       'addInfo': '',
       'contacts': this.fb.array([ ]),
       'website': ''
@@ -92,7 +111,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
       contact:['na'],
       title: [''],
       fullName: [''],
-      email:['', Validators.minLength(5)],
+      email:['', Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$')],
       phone:[''],
       fax:[''],
       streetAddress:[''],
@@ -159,10 +178,13 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
           this.progTitle = api.data.title;
           console.log("Api", api);
           let addInfo = '';
+          let regLocalOffice = '';
 
           if(api.data.contacts) {
-            if(api.data.contacts.local)
-                addInfo = (api.data.contacts.local.description ? api.data.contacts.local.description : '');
+            if(api.data.contacts.local) {
+              addInfo = (api.data.contacts.local.description ? api.data.contacts.local.description : '');
+              regLocalOffice = (api.data.contacts.local.flag ? api.data.contacts.local.flag : '');
+            }
 
             if(api.data.contacts.headquarters){
               let index = 0;
@@ -177,10 +199,14 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
           }
 
           let website = (api.data.website ? api.data.website : '');
+          if(regLocalOffice == "none"){
+            regLocalOffice = '';
+          }
 
           this.falContactInfoForm.patchValue({
             addInfo:addInfo,
-            website: website
+            website: website,
+            regLocalOffice: regLocalOffice
           });
 
           this.contactsInfo = this.falContactInfoForm.value.contacts;
@@ -199,10 +225,13 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
       contacts.push(contact);
     }
 
+    let regLocalOffice  = (this.falContactInfoForm.value.regLocalOffice[0] ? this.falContactInfoForm.value.regLocalOffice[0] : 'none');
+
     let data = {
       website: this.falContactInfoForm.value.website,
       contacts:{
         local:{
+          flag: regLocalOffice,
           description: this.falContactInfoForm.value.addInfo
         },
         headquarters:contacts

@@ -1,12 +1,14 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Contact Information - {{title}}</div>
+<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Contact Information - {{progTitle}}</div>
 <form [formGroup]="falContactInfoForm">
 
   <h4>Information Contacts</h4>
 
   <samCheckbox
+    [control]="falContactInfoForm.controls['regLocalOffice']"
     [label]="'Regional or Local Office'"
     [name]="'regional_local_office'"
-    [options]="checkboxConfig.options"></samCheckbox>
+    [options]="checkboxConfig.options"
+    formControlName="regLocalOffice"></samCheckbox>
 
   <samTextArea [control]="falContactInfoForm.controls['addInfo']"
                [name]="'addInfo-input'"

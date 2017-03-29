@@ -78,4 +78,22 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam, false);
 
   }
+
+  getContacts(cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/contacts',
+      oParam: {},
+      headers: {},
+      method: 'GET'
+    };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
+
+    return this.oAPIService.call(oApiParam);
+  }
 }
