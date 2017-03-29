@@ -138,6 +138,7 @@ export class SamAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   private onChange() {
+    // todo: fix validation errors...
     this.wrapper.formatErrors(this.accountFormGroup);
     this.codeWrapper.formatErrors(this.codeFormGroup);
     this.onChangeCallback(this.model);
