@@ -408,8 +408,8 @@
                 <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
                 <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
                   {{opportunity.data?.pointOfContact[1].email}}
-                  <span *ngIf="showChangesContactInformation && differences?.secondaryEmail" [innerHTML]="differences?.secondaryEmail"></span>
                 </a>
+                <span *ngIf="showChangesContactInformation && differences?.secondaryEmail" [innerHTML]="differences?.secondaryEmail"></span>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-secondary')"
                   *ngIf="opportunity.data?.pointOfContact[1]?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
