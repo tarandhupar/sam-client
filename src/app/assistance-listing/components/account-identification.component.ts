@@ -162,6 +162,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
 
     let errored: AbstractControl = new FormControl();
 
+    // todo: add check for whether user is editing
     for (let key in this.codeFormGroup.controls) {
       if (this.codeFormGroup.controls.hasOwnProperty(key)) {
         let control = this.codeFormGroup.controls[key];
@@ -180,6 +181,8 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     } else {
       this.codeWrapper.formatErrors(errored);
     }
+
+    // todo: implement this in separate function
     // this.wrapper.formatErrors(this.accountFormGroup);
   }
 

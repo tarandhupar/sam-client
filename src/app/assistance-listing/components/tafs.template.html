@@ -42,11 +42,11 @@
           <td>{{ tafs.fy2Code }}</td>
           <td>
             <!--todo: handle this with css classes?-->
-            <ng-container *ngIf="currentIndex === model.tafs.length">
+            <ng-container *ngIf="currentIndex === model.tafs.length && !showForm">
               <a (click)="editTafs(i)">Edit</a>
               <a (click)="removeTafs(i)">Delete</a>
             </ng-container>
-            <ng-container *ngIf="currentIndex < model.tafs.length">
+            <ng-container *ngIf="currentIndex < model.tafs.length || showForm">
               <s>Edit</s>
               <s>Delete</s>
             </ng-container>

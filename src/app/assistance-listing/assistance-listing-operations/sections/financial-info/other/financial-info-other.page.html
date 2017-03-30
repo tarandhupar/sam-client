@@ -21,8 +21,8 @@
 
   <div>
     <div class="pull-left">
-      <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-      <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+      <samButton [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+      <samButton [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
       <samButton [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
       <samButton [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
     </div>

@@ -28,11 +28,11 @@
             <td>{{ account.description }}</td>
             <td>
               <!--todo: handle this with css classes?-->
-              <ng-container *ngIf="currentIndex === model.accounts.length">
+              <ng-container *ngIf="currentIndex === model.accounts.length && !showForm">
                 <a (click)="editAccount(i)">Edit</a>
                 <a (click)="removeAccount(i)">Delete</a>
               </ng-container>
-              <ng-container *ngIf="currentIndex < model.accounts.length">
+              <ng-container *ngIf="currentIndex < model.accounts.length || showForm">
                 <s>Edit</s>
                 <s>Delete</s>
               </ng-container>
