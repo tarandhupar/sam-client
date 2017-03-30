@@ -6,6 +6,7 @@ $search-input-height: $search-header-height - 4;
 }
 
 .search-header {
+  overflow: visible;
   background-color: $color-primary-darkest;
   min-height: $search-header-height;
 
@@ -47,7 +48,8 @@ $search-input-height: $search-header-height - 4;
 
   .filter-select select,
   .search-inputbar,
-  .search-btn {
+  .search-btn,
+  .sam-autocomplete input{
     height: $search-input-height;
     line-height: $search-input-height;
   }
@@ -61,8 +63,20 @@ $search-input-height: $search-header-height - 4;
   .search-btn {
     background-color: $color-primary-alt;
   }
-
-  .search-inputbar {
+  .sam-autocomplete{
+    display: block;
+    label,input{
+      margin:0;
+    }
+    input{
+      max-width:100%;
+    }
+    #sam-autocomplete-results,.sam-autocomplete-no-results{
+      position: absolute;
+      z-index: 1000;
+    }
+  }
+  .search-inputbar,.sam-autocomplete input {
     border: none;
   }
 
