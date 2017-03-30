@@ -1,3 +1,7 @@
+const getExpiration = ((minutes: number) => {
+  return new Date(new Date().getTime() + minutes * 60 * 1000)
+});
+
 export default {
   localResource: {
     comp:     'https://csp-api.sam.gov/comp/iam',
@@ -12,7 +16,8 @@ export default {
   },
 
   cookies: {
-    path: '/'
+    path: '/',
+    expires: getExpiration(15)
   },
 
   session:   'https://csp-api.sam.gov/{environment}/IdentityandAccess/v3/auth/session',
@@ -46,6 +51,14 @@ export default {
 
   import: {
     history: '/import/roles',
-    roles: '/import/roles'
+    roles:   '/import/roles'
+  },
+
+  system: {
+    account: {
+      get:    '/cws/api/system-accounts/{id}',
+      create: '/cws/api/system-accounts',
+      update: '/cws/api/system-accounts/{id}'
+    }
   }
 };

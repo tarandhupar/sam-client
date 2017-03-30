@@ -150,7 +150,7 @@ export class SearchPage implements OnInit{
   awardIDVRadConfig = {
     options:  [
       {value: 'AWARD', label: 'Contract', name: 'Contract'},
-      {value: 'IDV', label: 'ICD (Interagency Contract Delivery)', name: 'ICD'}
+      {value: 'IDV', label: 'Interagency Contract Delivery (ICD)', name: 'ICD'}
     ],
     name: 'radio-component5',
     label: '',
@@ -163,22 +163,22 @@ export class SearchPage implements OnInit{
     "name": "Award-IDV Type",
     "label": "Award-IDV Types",
     "options": [
-      { label: 'IDC (IDV)', value: 'B_IDV', name: 'IDC' },
-      { label: 'DELIVERY ORDER', value: 'C_AWARD', name: 'DELIVERY ORDER' },
+      { label: 'BOA (IDV)', value: 'D_IDV', name: 'BOA' },
+      { label: 'BPA CALL', value: 'A_AWARD', name: 'BPA CALL' },
       { label: 'BPA (IDV)', value: 'E_IDV', name: 'BPA' },
-      { label: 'GWAC (IDV)', value: 'A_IDV', name: 'GWAC' },
-      { label: 'OTHER TRANSACTION ORDER', value: 'O_AWARD', name: 'OTHER TRANSACTION ORDER' },
+      { label: 'COOPERATIVE AGREEMENT', value: 'F_AWARD', name: 'COOPERATIVE AGREEMENT' },
+      { label: 'DELIVERY ORDER', value: 'C_AWARD', name: 'DELIVERY ORDER' },
       { label: 'DEFINITIVE CONTRACT', value: 'D_AWARD', name: 'DEFINITIVE CONTRACT' },
-      { label: 'GRANT FOR RESEARCH', value: 'G_AWARD', name: 'GRANT FOR RESEARCH' },
-      { label: 'PURCHASE ORDER', value: 'B_AWARD', name: 'PURCHASE ORDER' },
+      { label: 'FUNDED SPACE ACT AGREEMENT', value: 'S_AWARD', name: 'FUNDED SPACE ACT AGREEMENT' },
       { label: 'FSS (IDV)', value: 'C_IDV', name: 'FSS' },
+      { label: 'GRANT FOR RESEARCH', value: 'G_AWARD', name: 'GRANT FOR RESEARCH' },
+      { label: 'GWAC (IDV)', value: 'A_IDV', name: 'GWAC' },
+      { label: 'IDC (IDV)', value: 'B_IDV', name: 'IDC' },
+      { label: 'OTHER TRANSACTION ORDER', value: 'O_AWARD', name: 'OTHER TRANSACTION ORDER' },
       { label: 'OTHER TRANSACTION AGREEMENT', value: 'R_AWARD', name: 'OTHER TRANSACTION AGREEMENT' },
       { label: 'OTHER TRANSACTION (IDV)', value: 'O_IDV', name: 'OTHER TRANSACTION IDV' },
-      { label: 'COOPERATIVE AGREEMENT', value: 'F_AWARD', name: 'COOPERATIVE AGREEMENT' },
-      { label: 'TRAINING GRANT', value: 'T_AWARD', name: 'TRAINING GRANT' },
-      { label: 'FUNDED SPACE ACT AGREEMENT', value: 'S_AWARD', name: 'FUNDED SPACE ACT AGREEMENT' },
-      { label: 'BOA (IDV)', value: 'D_IDV', name: 'BOA' },
-      { label: 'BPA CALL', value: 'A_AWARD', name: 'BPA CALL' }
+      { label: 'PURCHASE ORDER', value: 'B_AWARD', name: 'PURCHASE ORDER' },
+      { label: 'TRAINING GRANT', value: 'T_AWARD', name: 'TRAINING GRANT' }
     ],
     "config": {
       keyValueConfig: {
