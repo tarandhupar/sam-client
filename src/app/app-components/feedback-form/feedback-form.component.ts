@@ -149,12 +149,14 @@ export class SamFeedbackComponent {
   onPreviousClick(){
     this.curQueIndex--;
     this.curQuestion = this.questionData[this.curQueIndex];
+    this.showEmptyFeedbackWarning = false;
     this.resultInit();
   }
 
   onNextClick(){
     this.curQueIndex++;
     this.curQuestion = this.questionData[this.curQueIndex];
+    this.showEmptyFeedbackWarning = false;
     this.resultInit();
   }
 
@@ -168,7 +170,7 @@ export class SamFeedbackComponent {
         // Submit the feedback results
         let res = this.generateFeedbackRes();
 
-        this.feedbackService.createFeedback(res);
+        this.feedbackService.createFeedback(res).subscribe(res => {});
         navigateAwayObj.formSubmitted = true;
         this.showThanksNote = true;
         this.startCountDown();
@@ -248,6 +250,7 @@ export class SamFeedbackComponent {
   isCurrentPage(page){return page === this.curQueIndex;}
   isLastPage(page){return page === this.questionData.length - 1;}
   isEmailBtnChecked(val){return this.emailRadioBtnValue === val;}
+  isEmailError():boolean{return this.isEmailBtnChecked('Yes') && this.isPageEdited(this.curQueIndex) && this.email.errors && this.emailModelEdited;}
 
   showUnsubmittedWarning(){
 
@@ -315,13 +318,14 @@ export class SamFeedbackComponent {
     if (this.emailRadioBtnValue === "Yes") {
       if(this.isSignedIn){
         this.userEmailModel = this.user.email;
+        this.email.setValue(this.user.email);
       }
       this.setCurQAnswer({selectedValue:val,userEmail:this.userEmailModel});
       if(!this.emailModelEdited && this.userEmailModel.length > 0) this.emailModelEdited = true;
     }
     if (this.emailRadioBtnValue === "No") {
       this.emailModelEdited = false;
-      this.setCurQAnswer({selectedValue:val});
+      this.setCurQAnswer({selectedValue:val,userEmail:""});
     }
   }
 
