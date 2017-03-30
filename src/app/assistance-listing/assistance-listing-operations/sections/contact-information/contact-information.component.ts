@@ -62,8 +62,6 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
       .subscribe(api => {
 
       for(let contact of api._embedded.contacts){
-        let uuid = UUID.UUID().replace(/-/g, "");
-        contact.contactId = uuid;
 
         this.contactDrpDwnOptions.push({
           label:contact.fullName + ", " + contact.email,
@@ -236,6 +234,11 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
     let contacts = [];
     for(let contact of this.falContactInfoForm.value.contacts){
+      if(contact.contactId == 'na' || contact.contactId == 'new'){
+        let uuid = UUID.UUID().replace(/-/g, "");
+        contact.contactId = uuid;
+      }
+
         contacts.push(contact);
     }
 
