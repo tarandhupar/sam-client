@@ -15,8 +15,15 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 })
 export class FALTafsComponent implements ControlValueAccessor {
   private currentIndex: number = 0;
+  
   public model = {
-    tafs: [] // todo: document
+    deptCode: '',
+    mainCode: '',
+    subCode: '',
+    transferCode: '',
+    fy1Code: '',
+    fy2Code: '',
+    tafs: []
   };
 
   // general
@@ -70,8 +77,37 @@ export class FALTafsComponent implements ControlValueAccessor {
       fy1Code: new FormControl(null),
       fy2Code: new FormControl(null)
     });
-  }
 
+    this.tafsFormGroup.get('treasuryDeptCode').valueChanges.subscribe(value => {
+      this.model.deptCode = value;
+      this.onChange();
+    });
+
+    this.tafsFormGroup.get('treasuryMainCode').valueChanges.subscribe(value => {
+      this.model.mainCode = value;
+      this.onChange();
+    });
+
+    this.tafsFormGroup.get('tafsSubCode').valueChanges.subscribe(value => {
+      this.model.subCode = value;
+      this.onChange();
+    });
+
+    this.tafsFormGroup.get('allocationTransferCode').valueChanges.subscribe(value => {
+      this.model.transferCode = value;
+      this.onChange();
+    });
+
+    this.tafsFormGroup.get('fy1Code').valueChanges.subscribe(value => {
+      this.model.fy1Code = value;
+      this.onChange();
+    });
+
+    this.tafsFormGroup.get('fy2Code').valueChanges.subscribe(value => {
+      this.model.fy2Code = value;
+      this.onChange();
+    });
+  }
 
   private onChange() {
     this.onChangeCallback(this.model);
