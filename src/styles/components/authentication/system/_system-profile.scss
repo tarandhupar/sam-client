@@ -1,0 +1,33 @@
+.usa-system-profile {
+  section {
+    margin-top: 1.5em;
+
+    > h3 {
+      margin-top: 0.5em !important;
+    }
+  }
+
+  .organization-container {
+    width: 100%;
+  }
+
+  .usa-button-controls {
+    position: relative;
+    max-width: 32rem;
+    margin-top: 1.5em;
+
+    button {
+      width: 36%;
+      &:nth-child(2) {
+        float: right;
+      }
+    }
+
+    .usa-alert-static {
+      top: 0px;
+      right: 0px;
+      margin-top: 0.5rem;
+      transform: translateX(100%);
+    }
+  }
+}

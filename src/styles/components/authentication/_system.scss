@@ -1,0 +1,15 @@
+@import './system/system-profile';
+
+.usa-system {
+ //TODO
+}
+
+aside.usa-system {
+  h1 {
+    font-size: 3.9rem;
+  }
+
+  a[pageScroll] {
+    cursor: pointer;
+  }
+}
