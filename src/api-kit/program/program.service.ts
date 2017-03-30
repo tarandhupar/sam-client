@@ -96,16 +96,4 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam);
   }
 
-  getUUID(){
-    let oApiParam = {
-      name: 'program',
-      suffix: '/uuid',
-      oParam: {},
-      headers: {},
-      method: 'GET'
-    };
-
-    return this.oAPIService.call(oApiParam);
-  }
-
 }
