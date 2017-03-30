@@ -51,6 +51,57 @@
     <samButton *ngIf="currentIndex === model.tafs.length" buttonText="Add Tafs" (onClick)="addTafs()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
     <samButton *ngIf="currentIndex < model.tafs.length" buttonText="Confirm" (onClick)="addTafs()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
     <samButton *ngIf="currentIndex < model.tafs.length" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
+
+    <table *ngIf="model.tafs && model.tafs.length > 0">
+      <thead>
+        <tr>
+          <th scope="col">
+            Treasury Dept. Code
+          </th>
+          <th scope="col">
+            Treasury Account Main Code
+          </th>
+          <th scope="col">
+            TAFS Sub Account
+          </th>
+          <th scope="col">
+            Allocation Transfer Agency
+          </th>
+          <th scope="col">
+            FY 1
+          </th>
+          <th scope="col">
+            FY 2
+          </th>
+          <th scope="col">
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let tafs of model.tafs; let i=index">
+          <tr>
+            <td>{{ tafs.deptCode }}</td>
+            <td>{{ tafs.mainCode }}</td>
+            <td>{{ tafs.subCode }}</td>
+            <td>{{ tafs.transferCode }}</td>
+            <td>{{ tafs.fy1Code }}</td>
+            <td>{{ tafs.fy2Code }}</td>
+            <td>
+              <!--todo: handle this with css classes?-->
+              <ng-container *ngIf="currentIndex === model.tafs.length">
+                <a (click)="removeAccount(i)">Delete</a>
+                <a (click)="editAccount(i)">Edit</a>
+              </ng-container>
+              <ng-container *ngIf="currentIndex < model.tafs.length">
+                <s>Delete</s>
+                <s>Edit</s>
+              </ng-container>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
   </form>
 
 </labelWrapper>

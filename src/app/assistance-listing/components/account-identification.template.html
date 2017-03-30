@@ -8,37 +8,37 @@
     <!-- todo: add styling -->
     <table *ngIf="model.accounts && model.accounts.length > 0">
       <thead>
-      <tr>
-        <th scope="col">
-          Account Code
-        </th>
-        <th scope="col">
-          Description
-        </th>
-        <th scope="col">
-          Actions
-        </th>
-      </tr>
+        <tr>
+          <th scope="col">
+            Account Code
+          </th>
+          <th scope="col">
+            Description
+          </th>
+          <th scope="col">
+            Actions
+          </th>
+        </tr>
       </thead>
       <tbody>
-      <ng-container *ngFor="let account of model.accounts; let i=index">
-        <tr>
-          <td>{{ account.code }}</td>
-          <!--todo: wrap account description if it is long-->
-          <td>{{ account.description }}</td>
-          <td>
-            <!--todo: handle this with css classes?-->
-            <ng-container *ngIf="currentIndex === model.accounts.length">
-              <a (click)="removeAccount(i)">Delete</a>
-              <a (click)="editAccount(i)">Edit</a>
-            </ng-container>
-            <ng-container *ngIf="currentIndex < model.accounts.length">
-              <s>Delete</s>
-              <s>Edit</s>
-            </ng-container>
-          </td>
-        </tr>
-      </ng-container>
+        <ng-container *ngFor="let account of model.accounts; let i=index">
+          <tr>
+            <td>{{ account.code }}</td>
+            <!--todo: wrap account description if it is long-->
+            <td>{{ account.description }}</td>
+            <td>
+              <!--todo: handle this with css classes?-->
+              <ng-container *ngIf="currentIndex === model.accounts.length">
+                <a (click)="removeAccount(i)">Delete</a>
+                <a (click)="editAccount(i)">Edit</a>
+              </ng-container>
+              <ng-container *ngIf="currentIndex < model.accounts.length">
+                <s>Delete</s>
+                <s>Edit</s>
+              </ng-container>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
 

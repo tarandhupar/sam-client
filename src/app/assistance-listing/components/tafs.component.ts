@@ -109,6 +109,20 @@ export class FALTafsComponent implements ControlValueAccessor {
     });
   }
 
+  public addTafs() {
+    let tafs = {};
+
+    tafs['deptCode'] = this.model.deptCode;
+    tafs['mainCode'] = this.model.mainCode;
+    tafs['subCode'] = this.model.subCode;
+    tafs['transferCode'] = this.model.transferCode;
+    tafs['fy1Code'] = this.model.fy1Code;
+    tafs['fy2Code'] = this.model.fy2Code;
+
+    this.model.tafs[this.currentIndex] = tafs;
+    this.resetForm();
+  }
+
   public resetForm() {
     this.currentIndex = this.model.tafs.length;
     this.tafsFormGroup.reset();
