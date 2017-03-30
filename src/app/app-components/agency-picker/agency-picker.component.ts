@@ -241,19 +241,23 @@ export class AgencyPickerComponent implements OnInit {
 
   ngOnChanges(changes) {
     if (changes.initial && this.initial.length > 0) {
-      let comp = this;
-      this.initial.forEach(function(element) {
-        comp.serviceCall(element, true).subscribe(data => {
-          if(data['_embedded'][0]){
-            let org = data._embedded[0]['org'];
-            comp.addToSelectedOrganizations({
-              name: org.name,
-              value: org.orgKey
-            });
-          }
-        });
-      });
+      this.processInitial();
     }
+  }
+  
+  processInitial(){
+    let comp = this;
+    this.initial.forEach(function(element) {
+      comp.serviceCall(element, true).subscribe(data => {
+        if(data['_embedded'][0]){
+          let org = data._embedded[0]['org'];
+          comp.addToSelectedOrganizations({
+            name: org.name,
+            value: org.orgKey
+          });
+        }
+      });
+    });
   }
 
   /**
@@ -279,10 +283,30 @@ export class AgencyPickerComponent implements OnInit {
       this.organizationId = this.orgId;
       this.initDropdowns();
     } else {
-      this.activatedRoute.queryParams.subscribe(data => {
-        this.organizationId = typeof data[this.getQSValue] === "string" ? decodeURI(data[this.getQSValue]) : "";
+      this.activatedRoute.queryParams.first().subscribe(data => {
+        //read organizations from query string
+        let qsOrgStr = typeof data[this.getQSValue] === "string" ? decodeURI(data[this.getQSValue]) : "";
+        if(qsOrgStr){
+          let orgArray = [];
+          //if string has commas, process as array
+          if(qsOrgStr.indexOf(",")!=-1){
+            orgArray = qsOrgStr.split(",").map(function(el){
+              return el.trim();
+            });
+            this.organizationId = orgArray[0];
+            
+          } else {
+            orgArray.push(qsOrgStr);
+          }
+          //set the initial selected orgs
+          this.initial = this.initial.concat(orgArray);
+          this.processInitial();
+        }
+        
+        //update the dropdowns
         this.initDropdowns();
       });
+      
     }
   }
 
