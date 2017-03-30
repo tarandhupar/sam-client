@@ -10,3 +10,9 @@ export interface SortOption {
   label: string;
   name: string;
 }
+
+export interface SearchOption {
+  value: string;
+  label: string;
+  width: number|string;
+}
