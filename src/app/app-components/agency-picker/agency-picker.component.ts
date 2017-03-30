@@ -30,7 +30,7 @@ export class AgencyPickerComponent implements OnInit {
   @Input() orgRoot = "";
   @Input() required = false;
   @Input() searchMessage = "";
-  @Input() initial: any;
+  @Input() initial: any[] = [];
   @Input() levelLimit: number = null;
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
@@ -54,7 +54,7 @@ export class AgencyPickerComponent implements OnInit {
   autocompleteData = [];
   selectedOrganizations = [];
   selectedSingleOrganizationName = "";
-  lockHierachy = [];
+  lockHierarchy = [];
   organizationId = '';
   defaultDpmtOption = {
     value:'',
@@ -240,8 +240,19 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   ngOnChanges(changes) {
-    if (changes.initial && this.initial) {
-      this.selectedOrganizations = this.initial;
+    if (changes.initial && this.initial.length > 0) {
+      let comp = this;
+      this.initial.forEach(function(element) {
+        comp.serviceCall(element, true).subscribe(data => {
+          if(data['_embedded'][0]){
+            let org = data._embedded[0]['org'];
+            comp.addToSelectedOrganizations({
+              name: org.name,
+              value: org.orgKey
+            });
+          }
+        });
+      });
     }
   }
 
@@ -263,9 +274,10 @@ export class AgencyPickerComponent implements OnInit {
     this.orgLevels[4].label += " (L5)";
     this.orgLevels[5].label += " (L6)";
     this.orgLevels[6].label += " (L7)";
-
-    if(this.orgId.length > 0) {
+    
+    if(this.orgId) {
       this.organizationId = this.orgId;
+      this.initDropdowns();
     } else {
       this.activatedRoute.queryParams.subscribe(data => {
         this.organizationId = typeof data[this.getQSValue] === "string" ? decodeURI(data[this.getQSValue]) : "";
@@ -430,7 +442,17 @@ export class AgencyPickerComponent implements OnInit {
             if(orglvldata['hierarchy'].length > 0) {
               if(!this.levelLimit || this.levelLimit > parseInt(orglvl)) {
                 formattedData = this.formatHierarchy(orgType, orglvldata['hierarchy']);
-                this.orgLevels[orglvl].options = formattedData;
+                if(this.lockHierarchy && orglvl < this.lockHierarchy.length){
+                  let lockHierarchy = this.lockHierarchy;
+                  this.orgLevels[orglvl].options = formattedData.filter((org) => {
+                    if(org["value"] && lockHierarchy.indexOf(""+org["value"])!=-1)
+                      return true;
+                    return false;
+                  });
+                  this.orgLevels[orglvl].selectedOrg = this.lockHierarchy[orglvl];
+                } else {
+                  this.orgLevels[orglvl].options = formattedData;
+                }
                 this.orgLevels[orglvl].show = true;
               } else {
                 this.orgLevels[orglvl].show = false;
@@ -790,30 +812,19 @@ export class AgencyPickerComponent implements OnInit {
     let root = this.orgRoot ? this.orgRoot : "",
         formattedData;
 
-    if(!this.orgRoot) {
-  		this.serviceCall(root, true).subscribe(res => {
-        res._embedded = res._embedded.sort(this._nameOrgSort);
-        formattedData = this.formatHierarchy("department", res._embedded);
-        this.orgLevels[0].options = formattedData;
-        this.processPresetOrg();
-  		});
-    } else {
-      this.serviceCall(root, true).subscribe(res => {
-        let orgPath = res._embedded[0]['org']['fullParentPath'].split("."),
-            level,
-            label,
-            idx,
-            type;
-
+		this.serviceCall(root, true).subscribe(res => {
+      let orgPath = res._embedded[0]['org']['fullParentPath'].split(".");
+      
+      //lock the hierachy to the defined orgroot
+      if(this.orgRoot){
         if(this.levelLimit) {
           orgPath.length = this.levelLimit;
         }
-
-        this.lockHierachy = orgPath;
-
-        for(idx in orgPath) {
-          level = parseInt(idx) + 1;
-          label = res._embedded[0]['org'][`l${level}Name`] + this.levelFormatter(level);
+        this.lockHierarchy = orgPath;
+        //set dropdowns to have only selections belonging to orgroot
+        for(let idx in orgPath) {
+          let level = parseInt(idx) + 1;
+          let label = res._embedded[0]['org'][`l${level}Name`] + this.levelFormatter(level);
 
           if(!this.levelLimit || level < this.levelLimit) {
             this.orgLevels[idx].options = [{
@@ -827,75 +838,57 @@ export class AgencyPickerComponent implements OnInit {
           }
         }
 
+        //if there are children, populate the next level dropdowns
         if(res._embedded[0]['org']['hierarchy'].length > 0) {
           if(!this.levelLimit || orgPath.length < this.levelLimit) {
-            type = res._embedded[0]['org']['type'] == "DEPARTMENT" ? "agency" : "office";
+            let type = res._embedded[0]['org']['type'] == "DEPARTMENT" ? "agency" : "office";//children types can only be one of these
             formattedData = this.formatHierarchy(type, res._embedded[0]['org']['hierarchy']);
             this.orgLevels[orgPath.length].options = formattedData;
             this.orgLevels[orgPath.length].show = true;
           }
         }
-      });
-    }
-  }
-
-  processPresetOrg() {
-    if(this.organizationId.length > 0) {
-      this.serviceCall(this.organizationId, true).subscribe(res => {
-        res = res._embedded[0]['org'];
-        this.setOrganization(res);
-        this.updateBrowse(res);
-        this.searchTerm = res.name;
-
-        if(res.type == "AGENCY") {
-          this.orgLevels[1].show = true;
-          if(res['hierarchy']) {
-            if(!this.levelLimit || res.level < this.levelLimit) {
-              this.orgLevels[2].show = true;
-            }
-          }
-        }
-      });
-    }
+      }
+      //populate deparment dropdowns otherwise 
+      else {
+        res._embedded = res._embedded.sort(this._nameOrgSort);
+        formattedData = this.formatHierarchy("department", res._embedded);
+        this.orgLevels[0].options = formattedData;
+      }
+      //if organizationId is preset (QS or through an input)
+      if(this.organizationId){
+        this.serviceCall(this.organizationId, false).subscribe(res => {
+          this.updateBrowse(res['_embedded'][0]["org"]);
+          this.searchTerm = res['_embedded'][0]["org"]["name"];
+        });
+      }
+		});
   }
 
   formatHierarchy(type, data) {
-    let formattedData = [],
-        level = 1,
-        idx,
-        obj;
-
+    data = data.map((el,idx)=>{
+      let level = el["org"]["level"];
+      let obj = {
+        value: el['org']['orgKey'],
+        label: el["org"]["name"] + this.levelFormatter(level),
+        name: el["org"]["orgKey"],
+        
+      };
+      return obj;
+    });
+    
+    //add defaults
     switch(type) {
       case "department":
-        formattedData.push(this.defaultDpmtOption);
+        data.unshift(this.defaultDpmtOption);
         break;
       case "agency":
-        formattedData.push(this.defaultAgencyOption);
-        level = 2;
+        data.unshift(this.defaultAgencyOption);
         break;
       case "office":
-        formattedData.push(this.defaultOfficeOption);
-        level = 3;
+        data.unshift(this.defaultOfficeOption);
         break;
     }
-
-    for(idx in data) {
-      obj = {};
-
-      if(data[idx]["org"]) {
-        level = data[idx]["org"]["level"];
-
-        obj['value'] = data[idx]["org"]["orgKey"];
-        obj['label'] = data[idx]["org"]["name"] + this.levelFormatter(level);
-        obj['name'] = data[idx]["org"]["orgKey"];
-      }
-
-      if(obj['label']) {
-        formattedData.push(obj);
-      }
-    }
-
-    return formattedData;
+    return data;
   }
 
   levelFormatter(lvl) {
@@ -922,10 +915,10 @@ export class AgencyPickerComponent implements OnInit {
 
     for(idx in this.orgLevels) {
       //if orgroot is set, only reset orgs below orgroot (defined in lockHierarchy)
-      if(this.lockHierachy.length == 0 || this.lockHierachy.length > 0 && parseInt(idx) > this.lockHierachy.length - 1) {
+      if(this.lockHierarchy.length == 0 || this.lockHierarchy.length > 0 && parseInt(idx) > this.lockHierarchy.length - 1) {
         this.orgLevels[idx].selectedOrg = "";
         //sub-tier and office need full reset only
-        if(parseInt(idx) > this.lockHierachy.length) {
+        if(parseInt(idx) > this.lockHierarchy.length) {
           this.orgLevels[idx].show = false;
           this.orgLevels[idx].options.length = 1;
         }

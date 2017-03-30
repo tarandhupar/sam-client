@@ -41,8 +41,6 @@
             [disabled]="selectStateConfig.disabled"
             (modelChange)="stateChange($event)">
           </samSelect>
-          <!--<button (click)='wdStateClear()'>Clear</button>-->
-
           <!--county drop down-->
           <samSelect
             [(model)]="wdCountyModel"
@@ -54,7 +52,7 @@
             [disabled]="selectCountyConfig.disabled"
             (modelChange)="countyChange($event)">
           </samSelect>
-          <!--<button (click)='wdCountyClear()'>Clear</button>-->
+          <button (click)='wdStateCountyClear()'>Clear</button>
         </sam-collapsible>
 
 
@@ -182,6 +180,7 @@
                           [config]="awardType.config"
                           (modelChange)="contractTypeSelected($event)">
           </sam-type-ahead>
+          <button (click)='awardIdvFilterClear()'>Clear</button>
         </sam-collapsible>
         <hr>
         <button (click)='clearAllFilters()'>Clear All</button>
@@ -213,7 +212,7 @@
           <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
           <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
           <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
-          <awards-result *ngIf="row._type=='award'" class="usa-grid-full" [data]="row"></awards-result>
+          <awards-result *ngIf="row._type=='award'" class="usa-grid-full" [data]="row" [qParams]="qParams"></awards-result>
           <hr class="m_T-5x"/>
         </div>
       </div>
