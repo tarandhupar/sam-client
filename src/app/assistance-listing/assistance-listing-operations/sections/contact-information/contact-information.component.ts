@@ -141,15 +141,18 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   }
 
   onConfirmClick(){
+
     this.contactsInfo = this.falContactInfoForm.value.contacts;
     this.hideAddButton = false;
     this.hideContactsForm = true;
   }
 
-  onSubFormCancelClick(){
+  onSubFormCancelClick(i){
+    const control = <FormArray> this.falContactInfoForm.controls['contacts'];
+    control.at(i).setValue(this.contactsInfo[i]);
+
     if(this.mode == 'Add'){
-      const control = <FormArray> this.falContactInfoForm.controls['contacts'];
-      this.removeContact(control.length - 1);
+      this.removeContact(i);
     }
 
     this.hideAddButton = false;

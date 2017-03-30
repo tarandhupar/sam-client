@@ -138,7 +138,7 @@
           formControlName="country"></samSelect>
 
         </div> <!-- End of newcontact -->
-        <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick()"></samButton>
+        <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></samButton>
         <samButton
           buttonText="Confirm"
           [buttonType]="(!contactGrp.valid ? 'disabled' : 'default')"
