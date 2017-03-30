@@ -5,103 +5,104 @@
               [required]="required">
 
   <form novalidate [formGroup]="tafsFormGroup">
-
-    <samText [label]="'Treasury Dept. Code'"
-             [name]="name + '-treasury-dept-code'"
-             [required]="true"
-             [control]="tafsFormGroup.get('treasuryDeptCode')"
-             [formControlName]="'treasuryDeptCode'"
-    ></samText>
-
-    <samText [label]="'Treasury Account Main Code'"
-             [name]="name + '-treasury-account-main-code'"
-             [required]="true"
-             [control]="tafsFormGroup.get('treasuryMainCode')"
-             [formControlName]="'treasuryMainCode'"
-    ></samText>
-
-    <samText [label]="'TAFS Sub Account'"
-             [name]="name + '-sub-account-code'"
-             [required]="false"
-             [control]="tafsFormGroup.get('tafsSubCode')"
-             [formControlName]="'tafsSubCode'"
-    ></samText>
-
-    <samText [label]="'Allocation Transfer Agency'"
-             [name]="name + '-allocation-transfer-agency-code'"
-             [required]="false"
-             [control]="tafsFormGroup.get('allocationTransferCode')"
-             [formControlName]="'allocationTransferCode'"
-    ></samText>
-
-    <samText [label]="'FY 1'"
-             [name]="name + '-fy1-code'"
-             [required]="false"
-             [control]="tafsFormGroup.get('fy1Code')"
-             [formControlName]="'fy1Code'"
-    ></samText>
-
-    <samText [label]="'FY 2'"
-             [name]="name + '-fy2-code'"
-             [required]="false"
-             [control]="tafsFormGroup.get('fy2Code')"
-             [formControlName]="'fy2Code'"
-    ></samText>
-
-    <samButton *ngIf="currentIndex === model.tafs.length" buttonText="Add Tafs" (onClick)="addTafs()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
-    <samButton *ngIf="currentIndex < model.tafs.length" buttonText="Confirm" (onClick)="addTafs()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
-    <samButton *ngIf="currentIndex < model.tafs.length" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
-
     <table *ngIf="model.tafs && model.tafs.length > 0">
       <thead>
-        <tr>
-          <th scope="col">
-            Treasury Dept. Code
-          </th>
-          <th scope="col">
-            Treasury Account Main Code
-          </th>
-          <th scope="col">
-            TAFS Sub Account
-          </th>
-          <th scope="col">
-            Allocation Transfer Agency
-          </th>
-          <th scope="col">
-            FY 1
-          </th>
-          <th scope="col">
-            FY 2
-          </th>
-          <th scope="col">
-            Actions
-          </th>
-        </tr>
+      <tr>
+        <th scope="col">
+          Treasury Dept. Code
+        </th>
+        <th scope="col">
+          Treasury Account Main Code
+        </th>
+        <th scope="col">
+          TAFS Sub Account
+        </th>
+        <th scope="col">
+          Allocation Transfer Agency
+        </th>
+        <th scope="col">
+          FY 1
+        </th>
+        <th scope="col">
+          FY 2
+        </th>
+        <th scope="col">
+          Actions
+        </th>
+      </tr>
       </thead>
       <tbody>
-        <ng-container *ngFor="let tafs of model.tafs; let i=index">
-          <tr>
-            <td>{{ tafs.deptCode }}</td>
-            <td>{{ tafs.mainCode }}</td>
-            <td>{{ tafs.subCode }}</td>
-            <td>{{ tafs.transferCode }}</td>
-            <td>{{ tafs.fy1Code }}</td>
-            <td>{{ tafs.fy2Code }}</td>
-            <td>
-              <!--todo: handle this with css classes?-->
-              <ng-container *ngIf="currentIndex === model.tafs.length">
-                <a (click)="removeTafs(i)">Delete</a>
-                <a (click)="editTafs(i)">Edit</a>
-              </ng-container>
-              <ng-container *ngIf="currentIndex < model.tafs.length">
-                <s>Delete</s>
-                <s>Edit</s>
-              </ng-container>
-            </td>
-          </tr>
-        </ng-container>
+      <ng-container *ngFor="let tafs of model.tafs; let i=index">
+        <tr>
+          <td>{{ tafs.deptCode }}</td>
+          <td>{{ tafs.mainCode }}</td>
+          <td>{{ tafs.subCode }}</td>
+          <td>{{ tafs.transferCode }}</td>
+          <td>{{ tafs.fy1Code }}</td>
+          <td>{{ tafs.fy2Code }}</td>
+          <td>
+            <!--todo: handle this with css classes?-->
+            <ng-container *ngIf="currentIndex === model.tafs.length">
+              <a (click)="removeTafs(i)">Delete</a>
+              <a (click)="editTafs(i)">Edit</a>
+            </ng-container>
+            <ng-container *ngIf="currentIndex < model.tafs.length">
+              <s>Delete</s>
+              <s>Edit</s>
+            </ng-container>
+          </td>
+        </tr>
+      </ng-container>
       </tbody>
     </table>
+
+    <div [hidden]="!showForm">
+      <samText [label]="'Treasury Dept. Code'"
+               [name]="name + '-treasury-dept-code'"
+               [required]="true"
+               [control]="tafsFormGroup.get('treasuryDeptCode')"
+               [formControlName]="'treasuryDeptCode'"
+      ></samText>
+
+      <samText [label]="'Treasury Account Main Code'"
+               [name]="name + '-treasury-account-main-code'"
+               [required]="true"
+               [control]="tafsFormGroup.get('treasuryMainCode')"
+               [formControlName]="'treasuryMainCode'"
+      ></samText>
+
+      <samText [label]="'TAFS Sub Account'"
+               [name]="name + '-sub-account-code'"
+               [required]="false"
+               [control]="tafsFormGroup.get('tafsSubCode')"
+               [formControlName]="'tafsSubCode'"
+      ></samText>
+
+      <samText [label]="'Allocation Transfer Agency'"
+               [name]="name + '-allocation-transfer-agency-code'"
+               [required]="false"
+               [control]="tafsFormGroup.get('allocationTransferCode')"
+               [formControlName]="'allocationTransferCode'"
+      ></samText>
+
+      <samText [label]="'FY 1'"
+               [name]="name + '-fy1-code'"
+               [required]="false"
+               [control]="tafsFormGroup.get('fy1Code')"
+               [formControlName]="'fy1Code'"
+      ></samText>
+
+      <samText [label]="'FY 2'"
+               [name]="name + '-fy2-code'"
+               [required]="false"
+               [control]="tafsFormGroup.get('fy2Code')"
+               [formControlName]="'fy2Code'"
+      ></samText>
+    </div>
+
+    <samButton *ngIf="!showForm" buttonText="Add Tafs" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
+    <samButton *ngIf="showForm" buttonText="Confirm" (onClick)="addTafs()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
+    <samButton *ngIf="showForm" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
   </form>
 
 </labelWrapper>

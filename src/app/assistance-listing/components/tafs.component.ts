@@ -33,6 +33,7 @@ export class FALTafsComponent implements ControlValueAccessor {
   @Input() label: string;
   @Input() hint: string;
   @Input() required: boolean;
+  public showForm: boolean = false;
 
   // tafs
   private tafsFormGroup;
@@ -152,12 +153,18 @@ export class FALTafsComponent implements ControlValueAccessor {
     this.tafsFormGroup.get('fy2Code').setValue(tafs.fy2Code);
 
     this.currentIndex = index;
+
+    this.showForm = true;
   }
 
+  public displayForm() {
+    this.showForm = true;
+  }
 
   public resetForm() {
     this.currentIndex = this.model.tafs.length;
     this.tafsFormGroup.reset();
+    this.showForm = false;
 
     this.onChange();
   }
