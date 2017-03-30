@@ -42,39 +42,41 @@
       </tbody>
     </table>
 
-    <labelWrapper #codeLabel
-                  [name]="codeLabelName"
-                  [label]="'Code'"
-                  [hint]="codeHint"
-                  [required]="true">
+    <div [hidden]="!showForm">
+      <labelWrapper #codeLabel
+                    [name]="codeLabelName"
+                    [label]="'Code'"
+                    [hint]="codeHint"
+                    [required]="true">
 
-      <div class="usa-grid-full">
-        <div class="usa-width-one-whole" [formGroup]="codeFormGroup">
-          <ng-container *ngFor="let length of codeBoxLengths; let i = index; let isLast = last">
-            <!-- todo: don't hardcode maxwidth -->
-            <samText [name]="'code-box-' + i"
-                     [maxlength]="length"
-                     [style.display]="'inline-block'"
-                     [style.maxWidth]="0.9*length + 2.8 + 'rem'"
-                     [formControlName]="'codeBox' + i"
-            ></samText>
-            {{isLast ? '' : '-'}}
-          </ng-container>
+        <div class="usa-grid-full">
+          <div class="usa-width-one-whole" [formGroup]="codeFormGroup">
+            <ng-container *ngFor="let length of codeBoxLengths; let i = index; let isLast = last">
+              <!-- todo: don't hardcode maxwidth -->
+              <samText [name]="'code-box-' + i"
+                       [maxlength]="length"
+                       [style.display]="'inline-block'"
+                       [style.maxWidth]="0.9*length + 2.8 + 'rem'"
+                       [formControlName]="'codeBox' + i"
+              ></samText>
+              {{isLast ? '' : '-'}}
+            </ng-container>
+          </div>
         </div>
-      </div>
 
-    </labelWrapper>
+      </labelWrapper>
 
-    <samTextArea [name]="textareaName"
-                 [placeholder]="textareaPlaceholder"
-                 [disabled]="textareaDisabled"
-                 [hidden]="textareaHidden"
-                 [formControl]="textareaControl"
-    ></samTextArea>
+      <samTextArea [name]="textareaName"
+                   [placeholder]="textareaPlaceholder"
+                   [disabled]="textareaDisabled"
+                   [hidden]="textareaHidden"
+                   [formControl]="textareaControl"
+      ></samTextArea>
+    </div>
 
-    <samButton *ngIf="currentIndex === model.accounts.length" buttonText="Add Account" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
-    <samButton *ngIf="currentIndex < model.accounts.length" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
-    <samButton *ngIf="currentIndex < model.accounts.length" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
+    <samButton *ngIf="!showForm" buttonText="Add Account" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
+    <samButton *ngIf="showForm" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
+    <samButton *ngIf="showForm" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
   </form>
 
 </labelWrapper>

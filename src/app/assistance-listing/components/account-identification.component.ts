@@ -33,6 +33,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
   @Input() hint: string;
   @Input() required: boolean;
   public accountFormGroup: FormGroup;
+  public showForm: boolean = false;
 
   //code
   public codeLabelName: string;
@@ -105,6 +106,10 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     this.accountFormGroup.addControl('textarea', this.textareaControl);
   }
 
+  public displayForm() {
+    this.showForm = true;
+  }
+
   public addAccount() {
     let account = {};
     let code = '';
@@ -141,11 +146,13 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     this.textareaControl.setValue(description);
 
     this.currentIndex = index;
+    this.showForm = true;
   }
 
   public resetForm() {
     this.currentIndex = this.model.accounts.length;
     this.accountFormGroup.reset();
+    this.showForm = false;
 
     this.onChange();
   }
