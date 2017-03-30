@@ -65,6 +65,7 @@ import Moment = moment.Moment;
 })
 export class AwardsResult implements OnInit {
   @Input() data: any={};
+  @Input() qParams:any = {};
   idConcat:string;
   typeConcat:string;
   uniqueIdentifier:string;
