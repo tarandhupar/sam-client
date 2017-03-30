@@ -49,28 +49,28 @@ import * as moment from 'moment/moment';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-      	  <li>
+      	  <li id="wd-revision-number">
             <strong>Revision #</strong><br>
-      	    {{ data.revisionNumber }}
+      	    <span>{{ data.revisionNumber }}</span>
           </li>
-          <li *ngIf="data._type=='wdSCA'">
+          <li  id="wd-services" *ngIf="data._type=='wdSCA'">
             <strong>Service</strong><br>
             <span *ngFor="let service of data.services; let isLast=last">
               {{ service.value }}{{ isLast ? '' : ', ' }}
             </span>
           </li>
-          <li *ngIf="data._type=='wdDBRA'">
+          <li id="wd-construction-types" *ngIf="data._type=='wdDBRA'">
             <strong>Construction Type</strong><br>
-            {{ data.constructionTypes }}
+            <span>{{ data.constructionTypes }}</span>
           </li>
-          <li>
+          <li id="wd-date">
             <ng-container *ngIf="data._type=='wdDBRA'">
               <strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Published Date' }}</strong>
             </ng-container>
             <ng-container *ngIf="data._type=='wdSCA'">
               <strong>{{ data.revisionNumber>1 ? 'Last Revised Date' : 'Published Date' }}</strong>
             </ng-container>
-            <br>{{ data.publishDate }}
+            <br><span>{{ data.publishDate }}</span>
           </li>
         </ul>
       </div>
