@@ -38,9 +38,9 @@ export interface User {
   department?: number | string,
   orgID?: number | string,
 
-  kbaAnswerList: KBA[],
-  gsaRAC?: any[],
+  kbaAnswerList?: KBA[],
 
   userPassword?: string,
-  accountClaimed: boolean,
+  accountClaimed?: boolean,
+  systemAccount?: boolean
 }
