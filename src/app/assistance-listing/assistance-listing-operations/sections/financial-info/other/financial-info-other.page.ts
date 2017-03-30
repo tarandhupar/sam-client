@@ -82,7 +82,7 @@ export class FinancialInfoFormPage2 implements OnInit {
     });
   }
 
-  private saveProgramData(): Observable {
+  private saveProgramData(): Observable<any> {
     let data = this.program;
     return this.programService.saveProgram(this.programId, data, this.cookieValue);
   }
