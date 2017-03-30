@@ -1,4 +1,4 @@
-import { clone, merge } from 'lodash';
+import { clone, indexOf, merge } from 'lodash';
 
 const LDAP_MAPPINGS = {
   'dn':               'dn',
@@ -17,8 +17,13 @@ class User {
   }
 
   set(user) {
+    let roles = (user.gsaRAC || []).map(role => role.system);
+
     user = this.reverseMappings(user || {});
-    merge(this, user);
+
+    merge(this, user, {
+      systemAccount: (indexOf(roles, 'GSA_IAM_CWS_SFA_R_SrvAcct') > -1)
+    });
   }
 
   reverseMappings(params) {

@@ -21,7 +21,6 @@
 
     <section [class]="states.gov ? 'organization-information' : 'business-information'">
       <h3 id="organization-information" [innerText]="states.gov ? 'Organization Information' : 'Business Information'"></h3>
-      {{ detailsForm.controls.department.value }}
       <agencyPicker [advancedMode]="false"
                     [multimode]="false"
                     [label]="'Select the office you work for:'"
@@ -38,17 +37,18 @@
         <input type="text" id="system-ip" formControlName="ipAddress" />
       </labelWrapper>
       -->
-      <labelWrapper name="system-primary-owner" label="Primary Owner Name" required="true" [errorMessage]="$errors('primaryOwnerName')" *ngIf="states.gov">
-        <input type="text" id="system-primary-owner" formControlName="primaryOwnerName" />
-      </labelWrapper>
-      <labelWrapper name="system-primary-email" label="Primary Owner Email" required="true" [errorMessage]="$errors('primaryOwnerEmail')" *ngIf="states.gov">
-        <input type="text" id="system-primary-email" formControlName="primaryOwnerEmail" />
-      </labelWrapper>
       <labelWrapper name="system-business-name" label="Business Name" [errorMessage]="$errors('businessName')" *ngIf="!states.gov">
         <input type="text" id="system-business-name" formControlName="businessName" />
       </labelWrapper>
       <labelWrapper name="system-primary-owner" label="Business Address" [errorMessage]="$errors('businessAddress')" *ngIf="!states.gov">
         <input type="text" id="system-business-name" formControlName="businessAddress" />
+      </labelWrapper>
+
+      <labelWrapper name="system-primary-owner" label="Primary Owner Name" required="true" [errorMessage]="$errors('primaryOwnerName')">
+        <input type="text" id="system-primary-owner" formControlName="primaryOwnerName" />
+      </labelWrapper>
+      <labelWrapper name="system-primary-email" label="Primary Owner Email" required="true" [errorMessage]="$errors('primaryOwnerEmail')">
+        <input type="text" id="system-primary-email" formControlName="primaryOwnerEmail" />
       </labelWrapper>
     </section>
 

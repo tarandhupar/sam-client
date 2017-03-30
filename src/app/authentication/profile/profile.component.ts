@@ -20,7 +20,7 @@ export class ProfileComponent {
     ],
 
     systemNav: [
-      { text: 'System Account', routerLink: 'system', routerLinkActive: 'usa-current' }
+      { text: 'System Account', routerLink: '/system', routerLinkActive: 'usa-current' }
     ]
   };
 
@@ -40,13 +40,11 @@ export class ProfileComponent {
   }
 
   ngOnInit() {
-    this.states.system = true;
-    /*
     this.api.iam.checkSession((user) => {
       this.zone.run(() => {
+        this.states.system = true;
       });
     });
-    */
 
     this.checkRoute();
   }

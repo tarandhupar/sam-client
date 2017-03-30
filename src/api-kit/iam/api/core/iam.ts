@@ -3,26 +3,12 @@ import * as Cookies from 'js-cookie';
 import * as request from 'superagent';
 import * as moment from 'moment';
 
-import config from '../config';
-import utilities from '../utilities';
-
 import * as modules from './modules';
+import { config, utilities, exceptionHandler, isDebug } from './modules/helpers';
 
 import User from './user';
 
-const exceptionHandler = function(responseBody) {
-  return _.merge({
-    status: 'error',
-    message: 'Sorry, an unknown server error occured. Please contact the Help Desk for support.'
-  }, responseBody);
-};
-
-const isDebug = function() {
-  let isDebug = (utils.queryparams.debug !== undefined || false);
-  return (utils.isLocal() && isDebug);
-};
-
-const transformMigrationAccount = function(account) {
+function transformMigrationAccount(account) {
   account = _.isObject(account) ? account : {};
   account = _.merge({
     sourceLegacySystem: '',
@@ -39,43 +25,42 @@ const transformMigrationAccount = function(account) {
   return account;
 }
 
-let $config = _.merge({}, config.endpoints.iam),
-    utils = new utilities({
-      localResource: $config.localResource,
-      remoteResource: $config.remoteResource
-    });
-
 /**
  * [Component][IAM] User Module
  */
 let user: any = {
   get($success, $error) {
     let core = this,
-        endpoint = utils.getUrl($config.session);
+        endpoint = utilities.getUrl(config.session);
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
+    // Verify Session Token
     if(Cookies.get('iPlanetDirectoryPro')) {
-      request
-        .get(endpoint)
-        .set({
-          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
-        })
-        .then(function(response) {
-          let user = new User(response.body.sessionToken);
-          $success(user);
-        }, function(response) {
-          core.$base.removeSession();
-          $error(exceptionHandler(response.body));
-        });
+      // Verify User Session Cache
+      if(Cookies.getJSON('IAMSession')) {
+        $success(new User(Cookies.getJSON('IAMSession')));
+      } else {
+        request
+          .get(endpoint)
+          .set({ 'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro') })
+          .then(function(response) {
+            let user = new User(response.body.sessionToken);
+            Cookies.set('IAMSession', response.body.sessionToken, config.cookie);
+            $success(user);
+          }, function(response) {
+            core.$base.removeSession();
+            $error(exceptionHandler(response.body));
+          });
+      }
     } else {
       $error({ message: 'No user active user session.' });
     }
   },
 
   create(token, userData, $success, $error) {
-    let endpoint = utils.getUrl($config.registration.register),
+    let endpoint = utilities.getUrl(config.registration.register),
         data: any = {
           tokenId: token,
           user: (userData || {})
@@ -102,7 +87,7 @@ let user: any = {
   },
 
   update(userData, $success, $error) {
-    let endpoint = utils.getUrl($config.details.update),
+    let endpoint = utilities.getUrl(config.details.update),
         headers = {
           iPlanetDirectoryPro: Cookies.get('iPlanetDirectoryPro')
         },
@@ -122,7 +107,7 @@ let user: any = {
   },
 
   deactivate(email, $success, $error) {
-    let endpoint = utils.getUrl($config.details.deactivate.replace(/\{email\}/g, email)),
+    let endpoint = utilities.getUrl(config.details.deactivate.replace(/\{email\}/g, email)),
         headers = {
           iPlanetDirectoryPro: Cookies.get('iPlanetDirectoryPro')
         };
@@ -147,7 +132,7 @@ let user: any = {
 user.registration = {
   init(email, $success, $error) {
     let endpoint = [
-      utils.getUrl($config.registration.init.replace(/\{email\}/g, email)),
+      utilities.getUrl(config.registration.init.replace(/\{email\}/g, email)),
       Date.now().toString()
     ].join('&');
 
@@ -167,7 +152,7 @@ user.registration = {
   },
 
   confirm(token, $success, $error) {
-    let endpoint = utils.getUrl($config.registration.confirm),
+    let endpoint = utilities.getUrl(config.registration.confirm),
         data = {
           tokenId: token
         };
@@ -193,7 +178,7 @@ user.registration = {
  */
 user.password = {
   init(email, $success, $error) {
-    let endpoint = utils.getUrl($config.password.unauthenticated.init.replace(/\{email\}/g, email));
+    let endpoint = utilities.getUrl(config.password.unauthenticated.init.replace(/\{email\}/g, email));
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
@@ -210,7 +195,7 @@ user.password = {
   },
 
   verify(token, $success, $error) {
-    let endpoint = utils.getUrl($config.password.unauthenticated.verify),
+    let endpoint = utilities.getUrl(config.password.unauthenticated.verify),
         data = {
           token: token
         };
@@ -239,7 +224,7 @@ user.password = {
   },
 
   kba(token, answer, $success, $error) {
-    let endpoint = utils.getUrl($config.password.unauthenticated.kba),
+    let endpoint = utilities.getUrl(config.password.unauthenticated.kba),
         params = {
           answer: answer,
           token: token
@@ -269,7 +254,7 @@ user.password = {
 
   // Password Reset for Unauthenticated Users
   reset(password, token, $success, $error) {
-    let endpoint = utils.getUrl($config.password.unauthenticated.reset),
+    let endpoint = utilities.getUrl(config.password.unauthenticated.reset),
         data = {
           password: password,
           token: token
@@ -292,7 +277,7 @@ user.password = {
 
   // Password Reset for Authenticated Sessions
   change(email, oldPassword, newPassword, $success, $error) {
-    let endpoint = utils.getUrl($config.password.authenticated.replace(/\{email\}/g, email)),
+    let endpoint = utilities.getUrl(config.password.authenticated.replace(/\{email\}/g, email)),
         headers = {
           iPlanetDirectoryPro: Cookies.get('iPlanetDirectoryPro')
         },
@@ -324,7 +309,7 @@ user.password = {
  */
 let kba = {
   questions($success, $error) {
-    let endpoint = utils.getUrl($config.kba.questions),
+    let endpoint = utilities.getUrl(config.kba.questions),
         headers = {
           iPlanetDirectoryPro: Cookies.get('iPlanetDirectoryPro')
         };
@@ -355,7 +340,7 @@ let kba = {
   },
 
   update(answers, $success, $error) {
-    let endpoint = utils.getUrl($config.kba.update),
+    let endpoint = utilities.getUrl(config.kba.update),
         headers = {
           iPlanetDirectoryPro: Cookies.get('iPlanetDirectoryPro')
         },
@@ -395,7 +380,7 @@ let kba = {
 
 user.cac = {
   merge: function(email, token, $success, $error) {
-    let endpoint = utils.getUrl($config.mergeWith.replace(/\{email\}/g, email)),
+    let endpoint = utilities.getUrl(config.mergeWith.replace(/\{email\}/g, email)),
         headers = {
           iPlanetDirectoryPro: Cookies.get('iPlanetDirectoryPro')
         };
@@ -431,7 +416,7 @@ let $import = {
   },
 
   history(email, $success, $error) {
-    let endpoint = utils.getUrl($config.import.history),
+    let endpoint = utilities.getUrl(config.import.history),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
@@ -500,7 +485,7 @@ let $import = {
   },
 
   create(email, system, username, password, $success, $error) {
-    let endpoint = utils.getUrl($config.import.roles),
+    let endpoint = utilities.getUrl(config.import.roles),
         headers = {
           'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
         },
@@ -542,7 +527,7 @@ class IAM {
   isDebug;
 
   constructor($api) {
-    _.merge(this, utils, {
+    _.merge(this, utilities, {
       config: config,
       user: user,
       kba: kba,
@@ -574,6 +559,7 @@ class IAM {
     this.user.get((user) => {
       this.states.auth = true;
       this.states.user = user;
+
       $success(this.states.user);
     }, (error) => {
       this.states.auth = false;
@@ -583,7 +569,7 @@ class IAM {
 
   login(credentials, $success, $error) {
     let $api = this,
-        endpoint = utils.getUrl($config.session),
+        endpoint = utilities.getUrl(config.session),
         token,
         data = _.merge({ service: 'ldapService' }, credentials);
 
@@ -597,7 +583,7 @@ class IAM {
         let data = response.body;
 
         if(data.authnResponse.tokenId !== undefined) {
-          Cookies.set('iPlanetDirectoryPro', (data.authnResponse.tokenId  || null), $config.cookies);
+          Cookies.set('iPlanetDirectoryPro', (data.authnResponse.tokenId  || null), config.cookies);
           $success();
         } else {
           $error();
@@ -608,7 +594,7 @@ class IAM {
   }
 
   loginOTP(credentials, $success, $error) {
-    let endpoint = utils.getUrl($config.session),
+    let endpoint = utilities.getUrl(config.session),
         token,
         data = _.merge(this.getStageData(), credentials);
 
@@ -630,7 +616,7 @@ class IAM {
             this.auth.authId = false;
             this.auth.stage = false;
 
-            Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), $config.cookies);
+            Cookies.set('iPlanetDirectoryPro', (data.tokenId  || null), config.cookies);
 
             this.checkSession((user) => {
               $success(user);
@@ -667,15 +653,17 @@ class IAM {
   }
 
   removeSession() {
-    Cookies.remove('iPlanetDirectoryPro', $config.cookies);
+    Cookies.remove('iPlanetDirectoryPro', config.cookies);
+    Cookies.remove('IAMSession', config.cookies);
+    Cookies.remove('IAMSystemAccount', config.cookies);
   }
 
   isLocal() {
-    return utils.isLocal();
+    return utilities.isLocal();
   }
 
   getEnvironment() {
-    return utils.getEnvironment();
+    return utilities.getEnvironment();
   }
 
   logout(refresh) {

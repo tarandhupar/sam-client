@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { indexOf, isArray, isObject, isUndefined, merge } from 'lodash';
 import config from './config';
 
 function $params() {
@@ -42,7 +42,7 @@ function $matcher(payload, pattern) {
       output;
 
   while(output = pattern.exec(payload)) {
-    if(_.indexOf(matches, output[1]) == -1) {
+    if(indexOf(matches, output[1]) == -1) {
       matches.push(output[1]);
     }
   }
@@ -57,7 +57,7 @@ function $sprintf(payload, data) {
       match,
       intMatch;
 
-  if(_.isObject(data)) {
+  if(isObject(data)) {
     for(intMatch = 0; intMatch < matches.length; intMatch++) {
       match = matches[intMatch];
       if(data[match] !== undefined) {
@@ -98,12 +98,12 @@ class Utilities {
     this.environment = this.getEnvironment();
     this.baseUri = '';
 
-    if(_.isObject(options)) {
+    if(isObject(options)) {
       options.localResource = options.localResource || {};
       options.remoteResource = options.remoteResource || {};
 
-      this.localResource = _.isObject(options.localResource) ? options.localResource : {};
-      this.remoteResource = _.isObject(options.remoteResource) ? options.remoteResource : false;
+      this.localResource = isObject(options.localResource) ? options.localResource : {};
+      this.remoteResource = isObject(options.remoteResource) ? options.remoteResource : false;
     } else {
       this.localResource = {};
       this.remoteResource = {};
@@ -143,7 +143,7 @@ class Utilities {
     }
 
     for(environment in environments) {
-      if(_.isArray(environments[environment])) {
+      if(isArray(environments[environment])) {
         patterns = environments[environment];
 
         for(intPattern = 0; intPattern < patterns.length; intPattern++) {
@@ -166,8 +166,8 @@ class Utilities {
   }
 
   getEnvironmentPattern(env) {
-    let patterns = !_.isUndefined(this.environments[env]) ? this.environments[env] : [];
-    return _.isArray(patterns) ? patterns : [patterns];
+    let patterns = !isUndefined(this.environments[env]) ? this.environments[env] : [];
+    return isArray(patterns) ? patterns : [patterns];
   }
 
   getLocalEnvironment() {
@@ -183,15 +183,13 @@ class Utilities {
     return env;
   }
 
-  getUrl(endpoint) {
-    let url = endpoint,
-        $environment = (this.environment == 'local') ? 'comp' : this.environment;
+  getUrl(endpoint, params?) {
+    let $environment = (this.environment == 'local') ? 'comp' : this.environment,
+        routeParams = merge({}, (params || {}), { environment: $environment }),
+        url = $sprintf(endpoint, routeParams);
 
-    // String Interpolations
-    url = $sprintf(endpoint, { environment: $environment });
-
-    if(this.isRelative(endpoint)) {
-      url = [this.baseUri, endpoint]
+    if(this.isRelative(url)) {
+      url = [this.baseUri, url]
         .join('/')
         .replace(/([a-z-]+)\/\/+/g, '$1/');
     }

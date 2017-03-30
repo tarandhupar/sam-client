@@ -1,4 +1,4 @@
-import { Component, DoCheck, Input, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, DoCheck, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SamPasswordComponent } from '../../shared';
@@ -6,7 +6,7 @@ import { SamPasswordComponent } from '../../shared';
 import { IAMService } from 'api-kit';
 import { Validators as $Validators } from '../../shared/validators';
 
-import { User } from '../../user.interface';
+import { System } from '../../system.interface';
 
 @Component({
   templateUrl: './system-password.component.html',
@@ -28,68 +28,46 @@ export class SystemPasswordComponent {
     loading: false,
     alert: {
       type: 'success',
-      title: '',
       message: '',
       show: false
     }
   }
 
-  private user: User;
+  private system: System;
   public passwordForm: FormGroup;
 
-  constructor(
-    private router: Router,
-    private builder: FormBuilder,
-    private zone: NgZone,
-    private api: IAMService) {}
+  constructor(private router: Router, private builder: FormBuilder, private api: IAMService) {}
 
   ngOnInit() {
-    this.states.alert.show = false;
-
-    this.zone.runOutsideAngular(() => {
-      this.api.iam.checkSession((user) => {
-        this.zone.run(() => {
-          this.user = user;
-          this.initForm();
-        });
-      }, (response) => {
-        this.zone.run(() => {
-          if(!this.api.iam.isDebug()) {
-            this.router.navigate(['/signin']);
-          } else {
-            this.user = <User>{
-              _id: 'john.doe@gsa.gov',
-              fullName: 'John J Doe',
-              firstName: 'John',
-              initials: 'J',
-              lastName: 'Doe',
-              email: 'doe.john@gsa.gov',
-              kbaAnswerList: [],
-              accountClaimed: true
-            };
-
-            this.initForm();
-          }
-        });
+    // Verify Session
+    this.api.iam.checkSession((user) => {
+      // Verify System Account
+      this.api.iam.system.account.get((account) => {
+        this.states.initial = (account.userPassword == undefined);
+        this.system = account;
+        this.initForm();
+      }, (error) => {
+        if(!this.api.iam.isDebug()) {
+          this.router.navigate(['profile']);
+        }
       });
+    }, (error) => {
+      if(!this.api.iam.isDebug()) {
+        this.router.navigateByUrl('/signin');
+      }
     });
   }
 
   initForm() {
-    let isDebug = (this.api.iam.isDebug() && this.user == undefined);
+    let group = {
+      newPassword: ['', Validators.required],
+    };
 
     if(this.states.initial) {
-      this.passwordForm = this.builder.group({
-        email: [!isDebug ? this.user.email : ''],
-        newPassword: ['', Validators.required],
-      });
-    } else {
-      this.passwordForm = this.builder.group({
-        email: [!isDebug ? this.user.email : ''],
-        currentPassword: ['', Validators.required],
-        newPassword: ['', Validators.required],
-      });
+      group.newPassword = ['', Validators.required];
     }
+
+    this.passwordForm = this.builder.group(group);
   }
 
   setSubmitted() {
@@ -109,6 +87,12 @@ export class SystemPasswordComponent {
     }
   }
 
+  alert(type: string, message: string) {
+    this.states.alert.message = (message || '');
+    this.states.alert.type = (type || 'success');
+    this.states.alert.show = true;
+  }
+
   reset() {
     let params = this.passwordForm.value;
 
@@ -117,22 +101,14 @@ export class SystemPasswordComponent {
     if(this.passwordForm.valid) {
       this.states.loading = true;
 
-      this.zone.runOutsideAngular(() => {
-        this.api.iam.user.password.change(params.email, params.currentPassword, params.newPassword, () => {
-          this.zone.run(() => {
-            this.states.loading = false;
-            this.states.alert.type = 'success';
-            this.states.alert.title = 'Password Successfully Reset';
-            this.states.alert.show = true;
-          });
-        }, (response) => {
-          this.zone.run(() => {
-            this.states.loading = false;
-            this.states.alert.type = 'error';
-            this.states.alert.title = response.message;
-            this.states.alert.show = true;
-          });
-        });
+      this.system['userPassword'] = this.passwordForm.controls['newPassword'].value;
+
+      this.api.iam.system.account.update(this.system, () => {
+        this.states.loading = false;
+        this.alert('success', `Password Successfully ${(this.states.initial ? 'Created' : 'Changed')}`);
+      }, (error) => {
+        this.states.loading = false;
+        this.alert('error', error.message)
       });
     }
   }
