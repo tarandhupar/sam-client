@@ -20,7 +20,7 @@
 			<div class="usa-grid-full">
 				<h3 class="display-inline">{{awardData.documentInformation.id.procurementIdentifier}} ({{awardData.documentInformation.id.modificationNumber}})</h3><br />
 				<h2 class="display-inline">{{awardData.contractorInformation.vendorName}}</h2><br />
-				{{awardData.contractorInformation.address.city}}, {{awardData.contractorInformation.address.state}}, {{awardData.contractorInformation.address.zip | zipCode}}
+				<div class="display-inline" *ngIf="awardData.contractorInformation.address.City">{{awardData.contractorInformation.address.City}}, </div><div class="display-inline" *ngIf="awardData.contractorInformation.address.state">{{awardData.contractorInformation.address.state}}, </div>{{awardData.contractorInformation.address.zip | zipCode}}
 			</div>
 			<div class="usa-grid-full bottom-border">
 				<div class="usa-width-one-half padding-bottom-10px">
@@ -198,34 +198,56 @@
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 					<h3 id="businessCategory">Business Category</h3>
 					Organization Type: {{awardData.businessCategory.organizationType}}<br />
-					Number of Employees: {{awardData.businessCategory.numberOfEmployees}}<br />
+					Number of Employees: {{awardData.businessCategory.numberOfEmployees | number}}<br />
 					State of Incorporation: {{awardData.businessCategory.stateOfIncorporation}}<br />
 					Country of Incorporation: {{awardData.businessCategory.countryOfIncorporation}}<br />
 					Annual Revenue: {{awardData.businessCategory.annualRevenue}}<br />
 					<div class="padding-left-20px">
 					<br />
 						Business Types:<br />
-						<!--list of business types>--><br />
-						Socioeconomic Data<br />
-						<!--list of socioeconomic data>-->
+						<div class="display-inline" *ngIf="awardData.businessCategory.businessTypes | busCategories">
+							{{awardData.businessCategory.businessTypes | busCategories}}
+							<br />
+						</div>
 						<br />
-						Line of Business<br />
+						Socioeconomic Data:<br />
+						<div class="display-inline" *ngIf="awardData.businessCategory.socioEconomicData | busCategories">
+							{{awardData.businessCategory.socioEconomicData | busCategories}}
+							<br />
+						</div>
+						<br />
+						Line of Business:<br />
 						<!--list of line of Business data>-->
 						<br />
-						Relationship with Federal Government<br />
-						<!--list of relationship with federal government data>-->
+						Relationship with Federal Government:<br />
+						<div class="display-inline" *ngIf="awardData.businessCategory.relationShipWithFedGovernment | busCategories">
+							{{awardData.businessCategory.relationShipWithFedGovernment | busCategories}}
+							<br />
+						</div>
 						<br />
-						Other Governmental Entities<br />
-						<!--list of other governmental entities data>-->
+						Other Governmental Entities:<br />
+						<div class="display-inline" *ngIf="awardData.businessCategory.otherGovernmentalEntities | busCategories">
+							{{awardData.businessCategory.otherGovernmentalEntities | busCategories}}
+							<br />
+						</div>
 						<br />
-						Organizational Factors<br />
-						<!--list of organizational Factors data>-->
+						Organizational Factors:<br />
+						<div class="display-inline" *ngIf="awardData.businessCategory.organizationFactors | busCategories">
+							{{awardData.businessCategory.organizationFactors | busCategories}}
+							<br />
+						</div>
 						<br />
-						Educational Entities<br />
-						<!--list of educational entities data>-->
+						Educational Entities:<br />
+						<div class="display-inline" *ngIf="awardData.businessCategory.educationalEntities | busCategories">
+							{{awardData.businessCategory.educationalEntities | busCategories}}
+							<br />
+						</div>
 						<br />
-						Certifications<br />
-						<!--list of certifications data>-->
+						Certifications:<br />
+						<div class="display-inline" *ngIf="awardData.businessCategory.certifications | busCategories">
+							{{awardData.businessCategory.certifications | busCategories}}
+							<br />
+						</div>
 					</div>
 					<h3 id="contractData">Contract Data</h3>
 					Type of Contract: {{typeOfContract}}<br />

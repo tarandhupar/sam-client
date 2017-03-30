@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { DatexPipe } from './string-to-date.pipe';
 import { PhonePipe } from './phone.pipe';
 import { ZipCodePipe } from './zipCode.pipe';
+import { BusCategoriesPipe } from './busCategories.pipe';
 import { AwardsAddress } from './awards-address.component.ts';
 
 @NgModule({
@@ -23,6 +24,7 @@ import { AwardsAddress } from './awards-address.component.ts';
     DatexPipe,
     PhonePipe,
     ZipCodePipe,
+    BusCategoriesPipe,
     AwardsAddress
   ],
   declarations: [
@@ -30,6 +32,7 @@ import { AwardsAddress } from './awards-address.component.ts';
     DatexPipe,
     PhonePipe,
     ZipCodePipe,
+    BusCategoriesPipe,
     AwardsAddress
   ],
 })
