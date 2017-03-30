@@ -71,7 +71,7 @@ $search-input-height: $search-header-height - 4;
     input{
       max-width:100%;
     }
-    #sam-autocomplete-results{
+    #sam-autocomplete-results,.sam-autocomplete-no-results{
       position: absolute;
       z-index: 1000;
     }
