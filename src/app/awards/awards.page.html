@@ -202,52 +202,52 @@
 					State of Incorporation: {{awardData.businessCategory.stateOfIncorporation}}<br />
 					Country of Incorporation: {{awardData.businessCategory.countryOfIncorporation}}<br />
 					Annual Revenue: {{awardData.businessCategory.annualRevenue | currency:'USD':true:'.2-2'}}<br />
-					<div class="padding-left-20px">
+					<div class="padding-left-20px display-inline">
 					<br />
-						Business Types:<br />
 						<div class="display-inline" *ngIf="awardData.businessCategory.businessTypes | busCategories">
+							Business Types:<br />
 							{{awardData.businessCategory.businessTypes | busCategories}}
 							<br />
+							<br />
 						</div>
-						<br />
-						Socioeconomic Data:<br />
 						<div class="display-inline" *ngIf="awardData.businessCategory.socioEconomicData | busCategories">
+							Socioeconomic Data:<br />
 							{{awardData.businessCategory.socioEconomicData | busCategories}}
 							<br />
+							<br />
 						</div>
-						<br />
-						Line of Business:<br />
 						<div class="display-inline" *ngIf="awardData.businessCategory.lineOfBusiness | busCategories">
+							Line of Business:<br />
 							{{awardData.businessCategory.lineOfBusiness | busCategories}}
 							<br />
+							<br />
 						</div>
-						<br />
-						Relationship with Federal Government:<br />
 						<div class="display-inline" *ngIf="awardData.businessCategory.relationShipWithFedGovernment | busCategories">
+							Relationship with Federal Government:<br />
 							{{awardData.businessCategory.relationShipWithFedGovernment | busCategories}}
 							<br />
+							<br />
 						</div>
-						<br />
-						Other Governmental Entities:<br />
 						<div class="display-inline" *ngIf="awardData.businessCategory.otherGovernmentalEntities | busCategories">
+							Other Governmental Entities:<br />
 							{{awardData.businessCategory.otherGovernmentalEntities | busCategories}}
 							<br />
+							<br />
 						</div>
-						<br />
-						Organizational Factors:<br />
 						<div class="display-inline" *ngIf="awardData.businessCategory.organizationFactors | busCategories">
+							Organizational Factors:<br />
 							{{awardData.businessCategory.organizationFactors | busCategories}}
 							<br />
-						</div>
-						<br />
-						Educational Entities:<br />
-						<div class="display-inline" *ngIf="awardData.businessCategory.educationalEntities | busCategories">
-							{{awardData.businessCategory.educationalEntities | busCategories}}
 							<br />
 						</div>
-						<br />
-						Certifications:<br />
+						<div class="display-inline" *ngIf="awardData.businessCategory.educationalEntities | busCategories">
+							Educational Entities:<br />
+							{{awardData.businessCategory.educationalEntities | busCategories}}
+							<br />
+							<br />
+						</div>
 						<div class="display-inline" *ngIf="awardData.businessCategory.certifications | busCategories">
+							Certifications:<br />
 							{{awardData.businessCategory.certifications | busCategories}}
 							<br />
 						</div>
