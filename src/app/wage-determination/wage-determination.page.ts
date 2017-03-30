@@ -29,6 +29,9 @@ export class WageDeterminationPage implements OnInit {
   public locations: any;
   history: any;
   processedHistory: any;
+  longProcessedHistory: any;
+  shortProcessedHistory: any;
+  showingLongHistory = false;
 
   // On load select first item on sidenav component
   selectedPage: number = 0;
@@ -92,6 +95,10 @@ export class WageDeterminationPage implements OnInit {
           {
             "label": "Wage Determination",
             "route": "#wd-document",
+          },
+          {
+            "label": "History",
+            "route": "#wd-history",
           }
         ];
         this.updateSideNav(wageDeterminationSideNavContent);
@@ -246,24 +253,21 @@ export class WageDeterminationPage implements OnInit {
   }
 
   private loadHistory(wageDetermination: Observable<any>) {
+
     let historySubject = new ReplaySubject(1);
     wageDetermination.subscribe(wageDeterminationAPI => {
-      console.log('wageDeterminationAPI: ',wageDeterminationAPI);
       /** Check that wageDetermination reference and revision numbers exist **/
       if(wageDeterminationAPI.fullReferenceNumber == '' || typeof wageDeterminationAPI.fullReferenceNumber === 'undefined' || wageDeterminationAPI.revisionNumber == '' || typeof wageDeterminationAPI.revisionNumber === 'undefined') {
-        console.log('Error loading history1');
+        console.log('Error loading history');
         return;
       }
       /** Load history API **/
       this.wgService.getWageDeterminationHistoryByReferenceNumber(wageDeterminationAPI.fullReferenceNumber).subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
-        console.log('historyAPI: ',historyAPI);
-        this.history = historyAPI._embedded.wageDetermination; // save original history information in case it is needed
+        this.history = historyAPI; // save original history information in case it is needed
 
         /** Setup necessary variables and functions for processing history **/
         let dateFormat = new DateFormatPipe();
-
-
 
 
         /** Process history into a form usable by history component **/
@@ -271,21 +275,36 @@ export class WageDeterminationPage implements OnInit {
           let processedHistoryItem = {};
           processedHistoryItem['id'] = historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['title'] = historyItem.fullReferenceNumber + ' - Revision ' + historyItem.revisionNumber;
-          processedHistoryItem['date'] = dateFormat.transform(historyItem.publishDate, 'MMMMM DD, YYYY');
-          processedHistoryItem['url'] = 'wageDetermination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
+          processedHistoryItem['date'] = dateFormat.transform(historyItem.publishDate, 'MMMM DD, YYYY');
+          processedHistoryItem['url'] = 'wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['index'] = historyItem.revisionNumber;
           processedHistoryItem['authoritative'] = historyItem.active;
           return processedHistoryItem;
         };
-        this.processedHistory = this.history.map(processHistoryItem);
+        this.longProcessedHistory = this.history._embedded.wageDetermination.map(processHistoryItem);
+        if (this.longProcessedHistory.length > 5) {
+          this.shortProcessedHistory = this.longProcessedHistory.slice(0,5);
+          this.processedHistory = this.shortProcessedHistory;
+        } else {
+          this.processedHistory = this.longProcessedHistory;
+        }
         //sort by index to show history by version (oldest to newest)
-        this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.revisionNumber; });
+        //this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.revisionNumber; });
       }, err => {
-        console.log('Error loading history2: ', err);
+        console.log('Error loading history: ', err);
       });
 
-      this.wgService.getWageDeterminationHistoryByReferenceNumber(wageDeterminationAPI.fullReferenceNumber).subscribe(historySubject);
     });
     return historySubject;
+  }
+
+  private showHideLongHistory(){
+    if (this.showingLongHistory == false){
+      this.processedHistory = this.longProcessedHistory;
+      this.showingLongHistory = true;
+    } else {
+      this.processedHistory = this.shortProcessedHistory;
+      this.showingLongHistory = false;
+    }
   }
 }
