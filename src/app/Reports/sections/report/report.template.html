@@ -1,11 +1,11 @@
 <div [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
-<section class="usa-grid-full">
-<br><br>
-Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
-<br>
-  <h2 class="m_T-2x">{{name}}</h2>
-<iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
-<br>
+  <section class="usa-grid-full">
+    <br><br>
+    Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
+    <br>
+    <h2 class="m_T-2x">{{name}}</h2>
+    <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
+    <br>
 
 
 
@@ -14,21 +14,21 @@ Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
       <samAccordionSection  [name]="'Appendix'" [headerText]="'Appendix'" >
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
           <div *ngIf="id">
-          <ul type="none">
-            <li *ngFor="let report of data.reports | repfil: id">
-              <b><a href="{{report.name}}"></a></b>
-              <br>
+            <ul type="none">
+              <li *ngFor="let report of data.reports | repfil: id">
+                <b><a href="{{report.name}}"></a></b>
+                <br>
 
-              <br>
-              <ul type="none">
-                <li *ngFor="let item of report.appendix">
-                  {{item}}
-                </li>
-              </ul>
+                <br>
+                <ul type="none">
+                  <li *ngFor="let item of report.appendix">
+                    {{item}}
+                  </li>
+                </ul>
 
-              <br>
-            </li>
-          </ul>
+                <br>
+              </li>
+            </ul>
           </div>
         </div>
       </samAccordionSection>
@@ -39,5 +39,5 @@ Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
 
 
 
-</section>
+  </section>
 </div>
