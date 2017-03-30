@@ -64,8 +64,9 @@
                  [formControl]="textareaControl"
     ></samTextArea>
 
-    <samButton *ngIf="currentIndex === model.accounts.length" buttonText="Add New Account" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
+    <samButton *ngIf="currentIndex === model.accounts.length" buttonText="Add Account" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
     <samButton *ngIf="currentIndex < model.accounts.length" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="(!codeFormGroup.valid ? 'disabled' : 'default')"></samButton>
+    <samButton *ngIf="currentIndex < model.accounts.length" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
   </form>
 
 </labelWrapper>

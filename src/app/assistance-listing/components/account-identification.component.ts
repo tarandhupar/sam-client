@@ -114,10 +114,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     account['code'] = code;
     account['description'] = this.textareaControl.value;
     this.model.accounts[this.currentIndex] = account;
-    this.currentIndex = this.model.accounts.length;
-    this.accountFormGroup.reset();
-
-    this.onChange();
+    this.resetForm();
   };
 
   public removeAccount(index: number) {
@@ -143,6 +140,13 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     this.textareaControl.setValue(description);
 
     this.currentIndex = index;
+  }
+
+  public resetForm() {
+    this.currentIndex = this.model.accounts.length;
+    this.accountFormGroup.reset();
+
+    this.onChange();
   }
 
   private onChange() {
