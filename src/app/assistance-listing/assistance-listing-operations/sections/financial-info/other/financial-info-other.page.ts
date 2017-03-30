@@ -10,7 +10,6 @@ import { FALOpSharedService } from "../../../assistance-listing-operations.servi
 })
 export class FinancialInfoFormPage2 implements OnInit {
   public otherFinancialInfoGroup: FormGroup;
-  public tafsGroup: FormGroup;
   public program: any;
 
   private programId;
@@ -41,8 +40,16 @@ export class FinancialInfoFormPage2 implements OnInit {
     required: true
   };
 
+  public tafsConfig: Object = {
+    name: 'tafs',
+    label: 'TAFS Codes - Unique Treasury Appropriation Fund Symbols',
+    hint: 'Enter as many components as possible. Treasury Dept Code, Allocation Transfer Agency, and Treasury Account main code are required.',
+    required: false
+  };
+
   public accomplishmentsModel: Object = {};
   public accountIdentificationModel: Object = {};
+  public tafsModel: Object = {};
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -90,13 +97,8 @@ export class FinancialInfoFormPage2 implements OnInit {
       assistanceRange: null,
       accomplishments: null,
       accountIdentification: null,
-
-      tafs: this.fb.group({
-        treasuryDeptCode: null
-      })
+      tafs: null
     });
-
-    this.tafsGroup = <FormGroup>this.otherFinancialInfoGroup.get('tafs');
 
     if(this.program) {
       if(this.program.data && this.program.data.financial) {
@@ -112,6 +114,10 @@ export class FinancialInfoFormPage2 implements OnInit {
 
     this.otherFinancialInfoGroup.get('accountIdentification').valueChanges.subscribe(model => {
       this.accountIdentificationModel = model;
+    });
+
+    this.otherFinancialInfoGroup.get('tafs').valueChanges.subscribe(model => {
+      this.tafsModel = model;
     });
   }
 

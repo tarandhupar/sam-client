@@ -1,0 +1,56 @@
+<labelWrapper #tafsLabel
+              [name]="name"
+              [label]="label"
+              [hint]="hint"
+              [required]="required">
+
+  <form novalidate [formGroup]="tafsFormGroup">
+
+    <samText [label]="'Treasury Dept. Code'"
+             [name]="name + '-treasury-dept-code'"
+             [required]="true"
+             [control]="tafsFormGroup.get('treasuryDeptCode')"
+             [formControlName]="'treasuryDeptCode'"
+    ></samText>
+
+    <samText [label]="'Treasury Account Main Code'"
+             [name]="name + '-treasury-account-main-code'"
+             [required]="true"
+             [control]="tafsFormGroup.get('treasuryMainCode')"
+             [formControlName]="'treasuryMainCode'"
+    ></samText>
+
+    <samText [label]="'TAFS Sub Account'"
+             [name]="name + '-sub-account-code'"
+             [required]="false"
+             [control]="tafsFormGroup.get('tafsSubCode')"
+             [formControlName]="'tafsSubCode'"
+    ></samText>
+
+    <samText [label]="'Allocation Transfer Agency'"
+             [name]="name + '-allocation-transfer-agency-code'"
+             [required]="false"
+             [control]="tafsFormGroup.get('allocationTransferCode')"
+             [formControlName]="'allocationTransferCode'"
+    ></samText>
+
+    <samText [label]="'FY 1'"
+             [name]="name + '-fy1-code'"
+             [required]="false"
+             [control]="tafsFormGroup.get('fy1Code')"
+             [formControlName]="'fy1Code'"
+    ></samText>
+
+    <samText [label]="'FY 2'"
+             [name]="name + '-fy2-code'"
+             [required]="false"
+             [control]="tafsFormGroup.get('fy2Code')"
+             [formControlName]="'fy2Code'"
+    ></samText>
+
+    <samButton *ngIf="currentIndex === model.tafs.length" buttonText="Add Tafs" (onClick)="addAccount()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
+    <samButton *ngIf="currentIndex < model.tafs.length" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
+    <samButton *ngIf="currentIndex < model.tafs.length" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
+  </form>
+
+</labelWrapper>

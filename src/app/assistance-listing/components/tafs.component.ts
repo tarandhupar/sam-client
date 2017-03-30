@@ -1,5 +1,6 @@
-import { Component, Input, forwardRef } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { Component, Input, forwardRef, ViewChild } from "@angular/core";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl } from "@angular/forms";
+import { LabelWrapper } from "sam-ui-kit/wrappers";
 
 @Component({
   selector: 'falTAFSInput',
@@ -13,7 +14,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
   ]
 })
 export class FALTafsComponent implements ControlValueAccessor {
-  public model = {};
+  private currentIndex: number = 0;
+  public model = {
+    tafs: [] // todo: document
+  };
 
   // general
   @Input() options; // optional - can pass all parameters in a single options object for convenience
@@ -21,6 +25,11 @@ export class FALTafsComponent implements ControlValueAccessor {
   @Input() label: string;
   @Input() hint: string;
   @Input() required: boolean;
+
+  // tafs
+  private tafsFormGroup;
+
+  @ViewChild('tafsLabel') tafsWrapper: LabelWrapper;
 
   constructor() { }
 
@@ -30,7 +39,19 @@ export class FALTafsComponent implements ControlValueAccessor {
     this.createFormControls();
   }
 
-  private parseInputsAndSetDefaults() {}
+  private parseInputsAndSetDefaults() {
+    // inputs can either be passed directly, or through an options object
+    // if an input is passed both ways, the value passed directly will take precedence
+    if(this.options) {
+      this.name = this.name || this.options.name;
+
+      this.label = this.label || this.options.label;
+      this.hint = this.hint || this.options.hint;
+      if(this.required == null) { this.required = this.options.required }
+    }
+
+    // subcomponent names are generated based on this component's name within html template
+  }
 
   private validateInputs() {
     let errorPrefix = "<samTAFSInput> requires ";
@@ -40,7 +61,16 @@ export class FALTafsComponent implements ControlValueAccessor {
     }
   }
 
-  private createFormControls() {}
+  private createFormControls() {
+    this.tafsFormGroup = new FormGroup({
+      treasuryDeptCode: new FormControl(null),
+      treasuryMainCode: new FormControl(null),
+      tafsSubCode: new FormControl(null),
+      allocationTransferCode: new FormControl(null),
+      fy1Code: new FormControl(null),
+      fy2Code: new FormControl(null)
+    });
+  }
 
 
   private onChange() {
