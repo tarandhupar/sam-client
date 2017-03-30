@@ -83,6 +83,13 @@
       </pre>
     </section>
 
+    <section id="wd-history" *ngIf="history">
+      <h2>History
+        <samButton *ngIf="shortProcessedHistory" [buttonId]="'defaultBtnHistory'" [buttonText]="!showingLongHistory ? 'Show More' : 'Show Less'" [buttonType]="btnType" (click)="showHideLongHistory()"></samButton>
+      </h2>
+      <sam-history [data]="processedHistory" [currentId]="wageDetermination.fullReferenceNumber + '/' + wageDetermination.revisionNumber"></sam-history>
+    </section>
+
   </div>
 
 </div>
