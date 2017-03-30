@@ -823,12 +823,14 @@ export class SearchPage implements OnInit{
   wdStateCountyClear() {
     this.wdStateModel = '';
     this.wdCountyModel = '';
+    this.searchResultsRefresh();
   }
 
   awardIdvFilterClear() {
     this.awardIDVModel = '';
     this.awardTypeModel = '';
     this.contractTypeModel = '';
+    this.searchResultsRefresh();
   }
 
   clearAllFilters(){
@@ -837,7 +839,8 @@ export class SearchPage implements OnInit{
     this.isActive = true;
 
     // call wd clear filters
-    this.wdStateCountyClear();
+    this.wdStateModel = '';
+    this.wdCountyModel = '';
 
     // each clear calls the clear method beneath it, so all depencies are cleared
     this.wdTypeRadClear();
@@ -854,7 +857,9 @@ export class SearchPage implements OnInit{
     }
 
     // call awards clear filters
-    this.awardIdvFilterClear();
+    this.awardIDVModel = '';
+    this.awardTypeModel = '';
+    this.contractTypeModel = '';
 
     this.searchResultsRefresh();
 
