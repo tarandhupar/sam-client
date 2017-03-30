@@ -34,12 +34,12 @@
       <tbody>
       <ng-container *ngFor="let tafs of model.tafs; let i=index">
         <tr>
-          <td>{{ tafs.deptCode }}</td>
-          <td>{{ tafs.mainCode }}</td>
-          <td>{{ tafs.subCode }}</td>
-          <td>{{ tafs.transferCode }}</td>
-          <td>{{ tafs.fy1Code }}</td>
-          <td>{{ tafs.fy2Code }}</td>
+          <td>{{ tafs.departmentCode }}</td>
+          <td>{{ tafs.accountCode }}</td>
+          <td>{{ tafs.subAccountCode }}</td>
+          <td>{{ tafs.allocationTransferAgency }}</td>
+          <td>{{ tafs.fy1 }}</td>
+          <td>{{ tafs.fy2 }}</td>
           <td>
             <!--todo: handle this with css classes?-->
             <ng-container *ngIf="currentIndex === model.tafs.length && !showForm">
@@ -60,43 +60,43 @@
       <samText [label]="'Treasury Dept. Code'"
                [name]="name + '-treasury-dept-code'"
                [required]="true"
-               [control]="tafsFormGroup.get('treasuryDeptCode')"
-               [formControlName]="'treasuryDeptCode'"
+               [control]="tafsFormGroup.get('departmentCode')"
+               [formControlName]="'departmentCode'"
       ></samText>
 
       <samText [label]="'Treasury Account Main Code'"
                [name]="name + '-treasury-account-main-code'"
                [required]="true"
-               [control]="tafsFormGroup.get('treasuryMainCode')"
-               [formControlName]="'treasuryMainCode'"
+               [control]="tafsFormGroup.get('accountCode')"
+               [formControlName]="'accountCode'"
       ></samText>
 
       <samText [label]="'TAFS Sub Account'"
                [name]="name + '-sub-account-code'"
                [required]="false"
-               [control]="tafsFormGroup.get('tafsSubCode')"
-               [formControlName]="'tafsSubCode'"
+               [control]="tafsFormGroup.get('subAccountCode')"
+               [formControlName]="'subAccountCode'"
       ></samText>
 
       <samText [label]="'Allocation Transfer Agency'"
                [name]="name + '-allocation-transfer-agency-code'"
                [required]="false"
-               [control]="tafsFormGroup.get('allocationTransferCode')"
-               [formControlName]="'allocationTransferCode'"
+               [control]="tafsFormGroup.get('allocationTransferAgency')"
+               [formControlName]="'allocationTransferAgency'"
       ></samText>
 
       <samText [label]="'FY 1'"
                [name]="name + '-fy1-code'"
                [required]="false"
-               [control]="tafsFormGroup.get('fy1Code')"
-               [formControlName]="'fy1Code'"
+               [control]="tafsFormGroup.get('fy1')"
+               [formControlName]="'fy1'"
       ></samText>
 
       <samText [label]="'FY 2'"
                [name]="name + '-fy2-code'"
                [required]="false"
-               [control]="tafsFormGroup.get('fy2Code')"
-               [formControlName]="'fy2Code'"
+               [control]="tafsFormGroup.get('fy2')"
+               [formControlName]="'fy2'"
       ></samText>
     </div>
 

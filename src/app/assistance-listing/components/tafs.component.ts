@@ -18,12 +18,12 @@ export class FALTafsComponent implements ControlValueAccessor {
   private currentIndex: number = 0;
 
   public model = {
-    deptCode: '',
-    mainCode: '',
-    subCode: '',
-    transferCode: '',
-    fy1Code: '',
-    fy2Code: '',
+    departmentCode: '',
+    accountCode: '',
+    subAccountCode: '',
+    allocationTransferAgency: '',
+    fy1: '',
+    fy2: '',
     tafs: []
   };
 
@@ -72,41 +72,41 @@ export class FALTafsComponent implements ControlValueAccessor {
 
   private createFormControls() {
     this.tafsFormGroup = new FormGroup({
-      treasuryDeptCode: new FormControl(null),
-      treasuryMainCode: new FormControl(null),
-      tafsSubCode: new FormControl(null),
-      allocationTransferCode: new FormControl(null),
-      fy1Code: new FormControl(null),
-      fy2Code: new FormControl(null)
+      departmentCode: new FormControl(null),
+      accountCode: new FormControl(null),
+      subAccountCode: new FormControl(null),
+      allocationTransferAgency: new FormControl(null),
+      fy1: new FormControl(null),
+      fy2: new FormControl(null)
     });
 
-    this.tafsFormGroup.get('treasuryDeptCode').valueChanges.subscribe(value => {
-      this.model.deptCode = value;
+    this.tafsFormGroup.get('departmentCode').valueChanges.subscribe(value => {
+      this.model.departmentCode = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('treasuryMainCode').valueChanges.subscribe(value => {
-      this.model.mainCode = value;
+    this.tafsFormGroup.get('accountCode').valueChanges.subscribe(value => {
+      this.model.accountCode = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('tafsSubCode').valueChanges.subscribe(value => {
-      this.model.subCode = value;
+    this.tafsFormGroup.get('subAccountCode').valueChanges.subscribe(value => {
+      this.model.subAccountCode = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('allocationTransferCode').valueChanges.subscribe(value => {
-      this.model.transferCode = value;
+    this.tafsFormGroup.get('allocationTransferAgency').valueChanges.subscribe(value => {
+      this.model.allocationTransferAgency = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('fy1Code').valueChanges.subscribe(value => {
-      this.model.fy1Code = value;
+    this.tafsFormGroup.get('fy1').valueChanges.subscribe(value => {
+      this.model.fy1 = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('fy2Code').valueChanges.subscribe(value => {
-      this.model.fy2Code = value;
+    this.tafsFormGroup.get('fy2').valueChanges.subscribe(value => {
+      this.model.fy2 = value;
       this.onChange();
     });
   }
@@ -114,12 +114,12 @@ export class FALTafsComponent implements ControlValueAccessor {
   public addTafs() {
     let tafs = {};
 
-    tafs['deptCode'] = this.model.deptCode;
-    tafs['mainCode'] = this.model.mainCode;
-    tafs['subCode'] = this.model.subCode;
-    tafs['transferCode'] = this.model.transferCode;
-    tafs['fy1Code'] = this.model.fy1Code;
-    tafs['fy2Code'] = this.model.fy2Code;
+    tafs['departmentCode'] = this.model.departmentCode;
+    tafs['accountCode'] = this.model.accountCode;
+    tafs['subAccountCode'] = this.model.subAccountCode;
+    tafs['allocationTransferAgency'] = this.model.allocationTransferAgency;
+    tafs['fy1'] = this.model.fy1;
+    tafs['fy2'] = this.model.fy2;
 
     this.model.tafs[this.currentIndex] = tafs;
     this.resetForm();
@@ -140,20 +140,14 @@ export class FALTafsComponent implements ControlValueAccessor {
   public editTafs(index: number) {
     let tafs = this.model.tafs[index];
 
-    this.tafsFormGroup.get('treasuryDeptCode').setValue(tafs.deptCode);
-
-    this.tafsFormGroup.get('treasuryMainCode').setValue(tafs.mainCode);
-
-    this.tafsFormGroup.get('tafsSubCode').setValue(tafs.subCode);
-
-    this.tafsFormGroup.get('allocationTransferCode').setValue(tafs.transferCode);
-
-    this.tafsFormGroup.get('fy1Code').setValue(tafs.fy1Code);
-
-    this.tafsFormGroup.get('fy2Code').setValue(tafs.fy2Code);
+    this.tafsFormGroup.get('departmentCode').setValue(tafs.departmentCode);
+    this.tafsFormGroup.get('accountCode').setValue(tafs.accountCode);
+    this.tafsFormGroup.get('subAccountCode').setValue(tafs.subAccountCode);
+    this.tafsFormGroup.get('allocationTransferAgency').setValue(tafs.allocationTransferAgency);
+    this.tafsFormGroup.get('fy1').setValue(tafs.fy1);
+    this.tafsFormGroup.get('fy2').setValue(tafs.fy2);
 
     this.currentIndex = index;
-
     this.showForm = true;
   }
 

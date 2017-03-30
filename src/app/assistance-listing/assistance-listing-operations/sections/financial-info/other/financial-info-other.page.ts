@@ -83,8 +83,46 @@ export class FinancialInfoFormPage2 implements OnInit {
   }
 
   private saveProgramData(): Observable<any> {
-    let data = this.program;
+    let data: any = (this.program && this.program.data) || {};
+    data.financial = data.financial || {};
+    data.financial.description = this.otherFinancialInfoGroup.get('assistanceRange').value;
+    data.financial.accomplishments = this.saveAccomplishments();
+    data.financial.accounts = this.saveAccountIdentifications();
+    data.financial.treasury = data.financial.treasure || {};
+    data.financial.treasury.tafs = this.saveTafs();
+    
     return this.programService.saveProgram(this.programId, data, this.cookieValue);
+  }
+
+  private saveAccomplishments() {
+    let accomplishments: any = {};
+
+    if(this.accomplishmentsModel && this.accomplishmentsModel['checkbox']) {
+      accomplishments.isApplicable = this.accomplishmentsModel['checkbox'].indexOf('na') < 0;
+    }
+
+    // todo: check what to put for fiscalYear
+    if(accomplishments.isApplicable) {
+      accomplishments.list = [
+        {
+          description: this.accomplishmentsModel['textarea']
+        }
+      ]
+    }
+
+    return accomplishments;
+  }
+
+  private saveAccountIdentifications() {
+    let accounts = [];
+    if(this.accountIdentificationModel) { accounts = this.accountIdentificationModel['accounts']; }
+    return accounts;
+  }
+
+  private saveTafs() {
+    let tafs = [];
+    if(this.tafsModel) { tafs = this.tafsModel['tafs']; }
+    return tafs;
   }
 
   private createForm() {
@@ -110,13 +148,6 @@ export class FinancialInfoFormPage2 implements OnInit {
 
   private populateForm() {
     // todo: implement this...
-    if(this.program) {
-      if(this.program.data && this.program.data.financial) {
-        if(this.program.data.financial.additionalInfo) {
-          this.otherFinancialInfoGroup.get('assistanceRange').setValue(this.program.data.financial.additionalInfo.content || '');
-        }
-      }
-    }
   }
 
   public onCancelClick(event) {

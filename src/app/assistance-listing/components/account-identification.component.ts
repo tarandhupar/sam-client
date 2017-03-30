@@ -112,9 +112,9 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
 
   public addAccount() {
     let account = {};
-    let code = '';
-    for(let i = 0; i < this.codeBoxLengths.length; i++) {
-      code = code + this.codeFormGroup.get('codeBox'+i).value;
+    let code = this.codeFormGroup.get('codeBox0').value;
+    for(let i = 1; i < this.codeBoxLengths.length; i++) {
+      code = code + '-' + this.codeFormGroup.get('codeBox'+i).value;
     }
 
     account['code'] = code;
@@ -137,10 +137,15 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
 
   public editAccount(index: number) {
     let code = this.model.accounts[index].code;
-    this.codeBoxLengths.reduce((acc, length, i) => {
-      this.codeFormGroup.get('codeBox' + i).setValue(code.slice(acc, acc+length));
-      return acc + length;
-    }, 0);
+    let splits = code.split('-');
+    for(let i = 0; i < this.codeBoxLengths.length; i++) {
+      this.codeFormGroup.get('codeBox' + i).setValue(splits[i]);
+    }
+
+    // this.codeBoxLengths.reduce((acc, length, i) => {
+    //   this.codeFormGroup.get('codeBox' + i).setValue(code.slice(acc, acc+length));
+    //   return acc + length;
+    // }, 0);
 
     let description = this.model.accounts[index].description;
     this.textareaControl.setValue(description);
