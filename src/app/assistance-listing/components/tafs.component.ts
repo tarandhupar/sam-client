@@ -15,7 +15,7 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 })
 export class FALTafsComponent implements ControlValueAccessor {
   private currentIndex: number = 0;
-  
+
   public model = {
     deptCode: '',
     mainCode: '',
@@ -107,6 +107,13 @@ export class FALTafsComponent implements ControlValueAccessor {
       this.model.fy2Code = value;
       this.onChange();
     });
+  }
+
+  public resetForm() {
+    this.currentIndex = this.model.tafs.length;
+    this.tafsFormGroup.reset();
+
+    this.onChange();
   }
 
   private onChange() {

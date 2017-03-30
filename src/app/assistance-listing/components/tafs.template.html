@@ -48,8 +48,8 @@
              [formControlName]="'fy2Code'"
     ></samText>
 
-    <samButton *ngIf="currentIndex === model.tafs.length" buttonText="Add Tafs" (onClick)="addAccount()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
-    <samButton *ngIf="currentIndex < model.tafs.length" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
+    <samButton *ngIf="currentIndex === model.tafs.length" buttonText="Add Tafs" (onClick)="addTafs()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
+    <samButton *ngIf="currentIndex < model.tafs.length" buttonText="Confirm" (onClick)="addTafs()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
     <samButton *ngIf="currentIndex < model.tafs.length" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
   </form>
 
