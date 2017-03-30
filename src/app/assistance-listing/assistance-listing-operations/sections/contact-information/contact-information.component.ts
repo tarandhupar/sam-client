@@ -60,17 +60,19 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
     this.getContactSub = this.programService.getContacts(this.sharedService.cookieValue)
       .subscribe(api => {
-      console.log("contacts", api._embedded.contacts);
+
       for(let contact of api._embedded.contacts){
+        let uuid = UUID.UUID().replace(/-/g, "");
+        contact.contactId = uuid;
+
         this.contactDrpDwnOptions.push({
           label:contact.fullName + ", " + contact.email,
-          value:contact.email
+          value:contact.contactId
         });
 
-        this.contactDrpDwnInfo[contact.email] = contact;
+        this.contactDrpDwnInfo[contact.contactId] = contact;
       }
 
-      console.log(this.contactDrpDwnInfo);
     });
 
   }
@@ -204,10 +206,8 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
               let index = 0;
               const control = <FormArray> this.falContactInfoForm.controls['contacts'];
               for(let contact of api.data.contacts.headquarters){
-                contact['contactId'] = contact.email;
                 control.push(this.initContacts());
                 control.at(index).patchValue(contact);
-                console.log(control);
                 index = index + 1;
               }
             }
@@ -221,7 +221,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
           this.falContactInfoForm.patchValue({
             addInfo:addInfo,
             website: website,
-            regLocalOffice: regLocalOffice
+            regLocalOffice: [regLocalOffice]
           });
 
           this.contactsInfo = this.falContactInfoForm.value.contacts;
@@ -236,14 +236,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
     let contacts = [];
     for(let contact of this.falContactInfoForm.value.contacts){
-      if(contact.contactId == '' || contact.contactId == 'na' || contact.contactId == 'new'){
-        let uuid = UUID.UUID();
-        contact.contactId = uuid;
         contacts.push(contact);
-      }
-      else {
-        contacts.push(contact);
-      }
     }
 
     let regLocalOffice  = (this.falContactInfoForm.value.regLocalOffice[0] ? this.falContactInfoForm.value.regLocalOffice[0] : 'none');
