@@ -8,7 +8,12 @@ import { globals } from '../../globals.ts';
   templateUrl: 'home.template.html'
 })
 export class HomePage {
-
+  searchSelectConfig = {
+    options: globals.searchFilterConfig,
+    disabled: false,
+    label: '',
+    name: 'filter',
+  };
   topicsData = [
     {
       title:'SAM.gov Transition Roadmap',

@@ -41,8 +41,6 @@
             [disabled]="selectStateConfig.disabled"
             (modelChange)="stateChange($event)">
           </samSelect>
-          <!--<button (click)='wdStateClear()'>Clear</button>-->
-
           <!--county drop down-->
           <samSelect
             [(model)]="wdCountyModel"
@@ -54,7 +52,7 @@
             [disabled]="selectCountyConfig.disabled"
             (modelChange)="countyChange($event)">
           </samSelect>
-          <!--<button (click)='wdCountyClear()'>Clear</button>-->
+          <button (click)='wdStateCountyClear()'>Clear</button>
         </sam-collapsible>
 
 
@@ -182,6 +180,7 @@
                           [config]="awardType.config"
                           (modelChange)="contractTypeSelected($event)">
           </sam-type-ahead>
+          <button (click)='awardIdvFilterClear()'>Clear</button>
         </sam-collapsible>
         <hr>
         <button (click)='clearAllFilters()'>Clear All</button>
@@ -202,7 +201,8 @@
     </div>
     <div class="usa-width-one" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
       <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
-      <list-results-message *ngIf="totalCount > 0 && wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'"[showing]="10" [currentPage]="pageNum+1" [total]="totalCount" [suffix]="listMessageSuffix"></list-results-message>
+      <strong><list-results-message *ngIf="totalCount > 0 && wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'"[showing]="10" [currentPage]="pageNum+1" [total]="totalCount" [suffix]="listMessageSuffix"></list-results-message></strong>
+      <br><br>
       <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
       <div id="search-results">
         <div tabindex="-1" *ngFor="let row of data.results">
@@ -212,7 +212,7 @@
           <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
           <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
           <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
-          <awards-result *ngIf="row._type=='award'" class="usa-grid-full" [data]="row"></awards-result>
+          <awards-result *ngIf="row._type=='award'" class="usa-grid-full" [data]="row" [qParams]="qParams"></awards-result>
           <hr class="m_T-5x"/>
         </div>
       </div>

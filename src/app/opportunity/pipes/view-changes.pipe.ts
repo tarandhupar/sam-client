@@ -849,7 +849,7 @@ export class ViewChangesPipe implements PipeTransform {
     if (currentAwardAmount != previousAwardAmount && previousAwardAmount == null){
       awardAmount = "New Data".italics().fontcolor("003264");
       changesExistAwardDetails = true;
-    } else if (currentAwardedName != previousAwardedName && previousAwardedName != null) {
+    } else if (currentAwardAmount != previousAwardAmount && previousAwardAmount != null) {
       awardAmount = previousAwardAmount.strike();
 
       changesExistAwardDetails = true;

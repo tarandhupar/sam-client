@@ -52,10 +52,10 @@
 
     <div [class.hide]="selectedPage !== 0">
       <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
-        <h2>Award Details</h2>
-        <samButton *ngIf="differences?.changesExistAwardDetails" [buttonId]="'defaultBtnGeneral'" [buttonText]="!showChangesAwardDetails ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideAwardDetails()"></samButton>
-
-        <span *ngIf="showChangesAwardDetails" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+        <h2>Award Details
+        <samButton *ngIf="differences?.changesExistAwardDetails" [buttonId]="'defaultBtnAwardDetails'" [buttonText]="!showChangesAwardDetails ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideAwardDetails()"></samButton>
+          <span *ngIf="showChangesAwardDetails" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+        </h2>
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.AwardDate)" *ngIf="shouldBeDisplayed(opportunityFields.AwardDate)">
             <i *ngIf="differences?.awardDate" class="fa fa-square" aria-hidden="true"></i>
@@ -91,11 +91,11 @@
             <i *ngIf="differences?.awardedAddress" class="fa fa-square" aria-hidden="true"></i>
             <strong>Contractor Awarded Address: </strong>
             <span>
-              {{opportunity.data?.award?.awardee?.location?.streetAddress}}<br>
+              {{opportunity.data?.award?.awardee?.location?.streetAddress}}
               {{opportunity.data?.award?.awardee?.location?.city}}
               {{opportunity.data?.award?.awardee?.location?.state}}
-              {{opportunity.data?.award?.awardee?.location?.zip}}<br>
-              {{opportunity.data?.award?.awardee?.location?.country}}<br>
+              {{opportunity.data?.award?.awardee?.location?.zip}}
+              {{opportunity.data?.award?.awardee?.location?.country}}
             </span>
             <span *ngIf="showChangesAwardDetails && differences?.awardedAddress" [innerHTML]="differences?.awardedAddress"></span>
           </li>
@@ -307,14 +307,16 @@
 
 
       <!-- Packages -->
-      <sam-download
-        [attachmentError]="attachmentError"
-        [packages]="packages"
-        [downloadAllUrl]="getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)"></sam-download>
+      <section [attr.id]="generateID(opportunityFields.Packages)" *ngIf="shouldBeDisplayed(opportunityFields.Packages) && ready">
+        <sam-download
+          [attachmentError]="attachmentError"
+          [packages]="packages"
+          [downloadAllUrl]="getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)"></sam-download>
 
-      <ng-container *ngIf="packagesWarning">
-        <samAlert [type]="packagesWarning.config?.type"><div [innerHTML]="packagesWarning.config?.description"></div></samAlert>
-      </ng-container>
+        <ng-container *ngIf="packagesWarning">
+          <samAlert [type]="packagesWarning.config?.type"><div [innerHTML]="packagesWarning.config?.description"></div></samAlert>
+        </ng-container>
+        </section>
 
 
       <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
@@ -343,8 +345,8 @@
             <span [attr.id]="generateID(opportunityFields.OfficeZip, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.OfficeZip)">
               {{opportunityLocation?.zip}}
             </span>
+            <span *ngIf="showChangesContactInformation && differences?.contractingOfficeAddress" [innerHTML]="differences?.contractingOfficeAddress"></span>
           </div>
-          <span *ngIf="showChangesContactInformation && differences?.contractingOfficeAddress" [innerHTML]="differences?.contractingOfficeAddress"></span>
         </div>
         <div class="usa-grid-full">
           <div class="usa-width-one-half" [attr.id]="generateID(opportunityFields.POC, 'contact-primary')" *ngIf="shouldBeDisplayed(opportunityFields.POC)">
@@ -408,8 +410,8 @@
                 <i class="fa fa-envelope-o" aria-hidden="true"></i> &nbsp;
                 <a href="mailto:{{opportunity.data?.pointOfContact[1].email}}">
                   {{opportunity.data?.pointOfContact[1].email}}
-                  <span *ngIf="showChangesContactInformation && differences?.secondaryEmail" [innerHTML]="differences?.secondaryEmail"></span>
                 </a>
+                <span *ngIf="showChangesContactInformation && differences?.secondaryEmail" [innerHTML]="differences?.secondaryEmail"></span>
               </li>
               <li [attr.id]="generateID(opportunityFields.POCPhone, 'contact-secondary')"
                   *ngIf="opportunity.data?.pointOfContact[1]?.phone && shouldBeDisplayed(opportunityFields.POCPhone)">
@@ -505,11 +507,11 @@
                     <li>
                       <span>Contractor Awarded Address: </span>
                       <span style="display: block;">
-                        {{element.data?.award?.awardee?.location?.streetAddress}}<br>
+                        {{element.data?.award?.awardee?.location?.streetAddress}}
                         {{element.data?.award?.awardee?.location?.city}}
                         {{element.data?.award?.awardee?.location?.state}}
-                        {{element.data?.award?.awardee?.location?.zip}}<br>
-                        {{element.data?.award?.awardee?.location?.country}}<br>
+                        {{element.data?.award?.awardee?.location?.zip}}
+                        {{element.data?.award?.awardee?.location?.country}}
                       </span>
                     </li>
                   </ul>

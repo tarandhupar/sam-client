@@ -36,6 +36,7 @@ import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from './app-components/app-components.module';
 import { UserDirectoryModule } from './users';
 import { OrganizationDetailModule } from "./organization-detail/organization-detail.module";
+import { RoleManagementModule } from "./role-management/role-management.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -78,6 +79,7 @@ const APP_PROVIDERS = [
     UIKitDemoModule,
     WageDeterminationModule,
     OrganizationDetailModule,
+    RoleManagementModule,
 
     // Other Modules
     SamAPIKitModule,

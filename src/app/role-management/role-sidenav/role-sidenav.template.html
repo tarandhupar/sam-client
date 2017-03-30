@@ -1,0 +1,43 @@
+<div class="role-sidenav">
+  <div class = "m_T-5em ">
+    <div class = "pull-left filter-color">
+      <h3>Filters</h3>
+    </div>
+    <div class = "pull-right filter-icon filter-color">
+      <i class="fa fa-sliders fa-2x" aria-hidden="true"></i>
+    </div>
+    <div class = "def-filter">
+      <samAccordion [expandIndex]="0">
+        <samAccordionSection [headerText]="accordionHeading1" [name]="accordionName1">
+          <samRadioButton (modelChange) = "ChangeRoute($event)"
+            [(model)]="path"
+            [options]="radioConfig.options"
+            [label]="radioConfig.label"
+            [name]="radioConfig.name"
+            >
+          </samRadioButton>
+        </samAccordionSection>
+      </samAccordion>
+
+      <samAccordion [expandIndex]="0">
+        <samAccordionSection [headerText]="accordionHeading2" [name]="accordionName2">
+          <samCheckbox (modelChange)="activeFilter($event)"
+            [(model)]="checkboxModel"
+            [name]="'Domains-Checkbox-Filter'"
+            [options]="filters.domains.options"
+            [label]="filters.domains.label"
+            [hasSelectAll]="'Yes'"
+            >
+          </samCheckbox>
+        </samAccordionSection>
+      </samAccordion>
+      <div class = "tx-pad">
+        <labelWrapper [name]="'Domain-Text-Wrapper'" [errorMessage]="textErrorMessage">
+          <input type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">
+        </labelWrapper>
+        <!--<samText [(ngModel)]="newDomain" [name]="'New-Domain-Text-Input'" [errorMessage]="textErrorMessage"></samText>-->
+        <span class="fa fa-plus-circle"  [ngClass] = "textErrorMessage.length > 0 ? 'btn-plus-error' : 'btn-plus' " aria-hidden="true" (click) = SubmitDomain()></span>
+      </div>
+    </div>
+  </div>
+</div>
