@@ -16,6 +16,7 @@ export class ObjectDetailsPage implements OnInit {
   mode: 'edit'|'new' = 'new';
   selectedDomains = [];
   selectedDomain;
+  domainName = '';
   domains;
   domainOptions;
   objectName;
@@ -25,6 +26,7 @@ export class ObjectDetailsPage implements OnInit {
   selectedPermissions = [];
   permissionOptions = [];
   originalPermissions = [];
+  permission;
 
   permissionSetter;
 
@@ -83,23 +85,12 @@ export class ObjectDetailsPage implements OnInit {
         }
         domainId = +domainId;
         this.selectedDomain = domainId;
+        console.log(this.domains);
+        let d = this.domains.find(dom => {
+          return +dom.domain.id === domainId;
+        });
+        this.domainName = d.domain.domainName;
         this.onDomainChange();
-
-        // if (!params['domains'] || !params['domains'].length) {
-        //   this.footerAlerts.registerFooterAlert({
-        //     title: 'Domains parameter missing',
-        //     type: 'error',
-        //   });
-        //   return;
-        // }
-        // this.selectedDomains = params['domains'].split(',').map(dom => {
-        //   return +dom;
-        // });
-        // this.domainOptions.forEach(opt => {
-        //   if (this.selectedDomains.indexOf(+opt.value) !== -1) {
-        //     opt.disabled = true;
-        //   }
-        // })
       }
     );
   }
@@ -119,6 +110,11 @@ export class ObjectDetailsPage implements OnInit {
         value: d.id,
       };
     });
+
+    if (this.mode === 'new' && !this.selectedDomain && this.domainOptions.length) {
+      this.selectedDomain = this.domainOptions[0].value;
+      this.onDomainChange();
+    }
   }
 
   getAllPermissions() {
@@ -159,10 +155,29 @@ export class ObjectDetailsPage implements OnInit {
     );
   }
 
-  onAddPermissionClick() {
-    console.log('clicked');
-    let val = this.permissionComponent.inputValue;
-    this.permissionSetter = val;
+  onAddPermissionClick(newValue: any) {
+    console.log(this, arguments);
+    let v = typeof newValue === 'string' ? newValue : newValue.inputValue;
+
+    if (this.selectedPermissions.findIndex(sp => sp.val === v) !== -1) {
+      // No duplicates
+      console.warn('duplicate permission');
+      return;
+    }
+
+    // User has selected a value from the drop down
+    if (typeof newValue === 'string') {
+      this.selectedPermissions.push({
+        val: v,
+      });
+    // User has input a new value
+    } else {
+      this.selectedPermissions.push({
+        val: v,
+        isNew: true,
+      })
+    }
+
   }
 
   onSubmitClick() {

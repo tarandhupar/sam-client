@@ -18,7 +18,8 @@ export class RoleDetailsPage {
   domain;
   domainOptions: {label: string, value: any}[] = [];
   selectedDomain;
-  domainRoleOptions: any = [{label: 'Agency User', value: 0}, {label: 'Agency Admin', value: 1}, {label: 'Agency Admin Lite', value: 2}];
+  domainRoles: any[] = [];
+  domainRoleOptions: any = [];
   domainDefinitions: any = null;
   permissionOptions: any = [];
   requestObject;
@@ -81,6 +82,12 @@ export class RoleDetailsPage {
         value: d.id,
       };
     });
+
+    if (this.mode === 'new' && !this.selectedDomain && this.domainOptions.length) {
+      this.selectedDomain = this.domainOptions[0].value;
+      this.onDomainChange();
+    }
+
   }
 
   onDomainChange() {
@@ -96,6 +103,7 @@ export class RoleDetailsPage {
         }
 
         if (this.domainDefinitions.roleDefinitionMapContent && this.domainDefinitions.roleDefinitionMapContent.length) {
+          this.domainRoles = this.domainDefinitions.roleDefinitionMapContent;
           this.domainRoleOptions = this.domainDefinitions.roleDefinitionMapContent.map(r => {
             return {
               label: r.role.val,
@@ -160,18 +168,30 @@ export class RoleDetailsPage {
   onRoleBlur() {
     this.clearLastDomainRole();
 
-    if (this.roleExists()) {
-      this.errors.role = 'Cannot create role. Role name already exists';
-      return;
+    if (this.mode === 'new') {
+      if (this.roleExists()) {
+        this.errors.role = 'Cannot create role. Role name already exists';
+        return;
+      }
+
+      if (this.role) {
+        this.domainRoleOptions.push({
+          label: this.role,
+          value: null,
+          isNew: true,
+        });
+      }
+    } else {
+      let opt = this.domainRoleOptions.find(ro => +ro.value === +this.roleId);
+      let dr = this.domainRoles.find(dr => +dr.role.id === +this.roleId);
+      if (!opt) {
+        console.error('unable to update role label');
+        return;
+      }
+      //opt.isModified = dr.role.val !== this.role;
+      opt.label = this.role;
     }
 
-    if (this.role) {
-      this.domainRoleOptions.push({
-        label: this.role,
-        value: null,
-        isNew: true,
-      });
-    }
   }
 
   roleExists() {
