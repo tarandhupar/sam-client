@@ -1,6 +1,6 @@
 import { Component, Input, forwardRef, ViewChild } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl } from "@angular/forms";
-import { LabelWrapper } from "sam-ui-kit/wrappers";
+import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
 @Component({
   selector: 'falTAFSInput',
