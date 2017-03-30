@@ -1,4 +1,5 @@
 import {Component, Input, Output, EventEmitter, ViewChild, Renderer, OnChanges} from '@angular/core';
+import {SearchOption} from '../interfaces';
 
 /**
  * The <samSearchbar> component(filter,input bar and search button) can automatically change it size according to the div the wrap it.
@@ -27,6 +28,12 @@ export class SamSearchbarComponent {
   @Input()
   filterValue: string = "";
 
+  @Input()
+  selectConfig: any;
+  
+  @Output()
+  filterValueChange:EventEmitter<any> = new EventEmitter<any>();
+  
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
 
@@ -34,25 +41,6 @@ export class SamSearchbarComponent {
   public filterSelect: any;
 
   searchBtnText:string = "Search";
-
-  // Added "width" (in pixels) as a temporary solution to find width of selected text
-  // Ideally select element width needs to be calculated automatically based on
-  // character width of selected text;
-  selectConfig = {
-    options: [
-      {value: '', label: 'All', width: '60'},
-      {value: 'opp', label: 'Opportunities', width: '145'},
-      {value: 'cfda', label: 'Assistance Listings', width: '180'},
-      {value: 'fh', label: 'Federal Hierarchy', width: '175'},
-      {value: 'ent', label: 'Entities', width: '100'},
-      {value: 'ex', label: 'Exclusions', width: '120'},
-      {value: 'wd', label: 'Wage Determinations', width: '200'},
-      {value: 'fpds', label: 'Awards', width: '100'}
-    ],
-    disabled: false,
-    label: '',
-    name: 'filter',
-  };
 
   resetIconClass:string = "reset-icon";
   // resetDisabled:boolean = true;
@@ -88,6 +76,7 @@ export class SamSearchbarComponent {
 
   onSelect(value):void {
     this.filterValue = value;
+    this.filterValueChange.emit(this.filterValue);
     this.findSelectedOption(value);
   }
 

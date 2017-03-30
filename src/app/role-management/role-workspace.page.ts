@@ -11,7 +11,6 @@ export class RoleWorkspacePage implements OnInit {
   mode: 'role' | 'object' = 'role';
   domainKey = '';
   Data : any;
-  expireModalConfirm: boolean = false;
 
   constructor(private role: UserAccessService){
 
@@ -27,18 +26,11 @@ export class RoleWorkspacePage implements OnInit {
     description:'Are you sure you want to remove this ' + this.mode + '? This will permanently remove the ' + this.mode + ' from the database. The ' + this.mode +  ' is not currently associated to any user.'
   };
 
-  @ViewChild("workspaceRoot") workspaceRoot;
-
   onRemoveConfirm(){
     console.log("remove");
-    this.expireModalConfirm = true;
     this.removeModal.closeModal();
   }
 
-  onRemoveCancel(){
-    console.log("cancel");
-    this.expireModalConfirm = false;
-  }
 
   onShowExpireModal(event){
     //console.log(event + "," + this.mode);
