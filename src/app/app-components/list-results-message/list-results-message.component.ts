@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges  } from '@angular/core';
+import {NumberFormatter} from "@angular/common/src/pipes/intl";
 /**
 * ListResultsMessageComponent - Lists results message component
 */
@@ -12,7 +13,7 @@ export class ListResultsMessageComponent implements OnChanges{
   @Input() public showing: number;
   @Input() public suffix: string;
   private message: string;
-  
+
   ngOnChanges(){
     let total = this.total;
     let currentPage = this.currentPage;
@@ -27,7 +28,7 @@ export class ListResultsMessageComponent implements OnChanges{
 		if(numberB > total){
 			numberB = total;
 		}
-		this.message = "Showing " + numberA + " - " + numberB + " of " + total;
+		this.message = "Showing " + numberA.toLocaleString() + " - " + numberB.toLocaleString() + " of " + total.toLocaleString();
 		if(this.suffix){
 			this.message += " " + this.suffix;
 		} else {

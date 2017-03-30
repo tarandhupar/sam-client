@@ -52,12 +52,13 @@
           <a [ngClass]="getSectionClass('award')" (click)="changeSection('award')" [routerLink]="['/help/award']" *ngIf="linkToggle()">Award Data</a>
           <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('award')">
             <li><a #opportunities [ngClass]="getSubSectionClass('opportunities')" (click)="changeSubSection('opportunities',opportunities)" href="{{currentUrl}}#opportunities">Opportunities</a></li>
+            <li><a #wageDeterminations [ngClass]="getSubSectionClass('wageDeterminations')" (click)="changeSubSection('wageDeterminations',wageDeterminations)" href="{{currentUrl}}#wageDeterminations">Wage Determinations</a></li>
             <li><a #awards [ngClass]="getSubSectionClass('awards')" (click)="changeSubSection('awards',awards)" href="{{currentUrl}}#awards">Awards</a></li>
             <li><a #subAwards [ngClass]="getSubSectionClass('subAwards')" (click)="changeSubSection('subAwards',subAwards)" href="{{currentUrl}}#subAwards">Sub Awards</a></li>
             <li><a #entities [ngClass]="getSubSectionClass('entities')" (click)="changeSubSection('entities',entities)" href="{{currentUrl}}#entities">Entities</a></li>
+            <li><a #entityComplianceReporting [ngClass]="getSubSectionClass('entityComplianceReporting')" (click)="changeSubSection('entityComplianceReporting',entityComplianceReporting)" href="{{currentUrl}}#entityComplianceReporting">Entity Compliance Reporting</a></li>
             <li><a #assistanceListings [ngClass]="getSubSectionClass('assistanceListings')" (click)="changeSubSection('assistanceListings',assistanceListings)" href="{{currentUrl}}#assistanceListings">Assistance Listings</a></li>
             <li><a #exclusions [ngClass]="getSubSectionClass('exclusions')" (click)="changeSubSection('exclusions',exclusions)" href="{{currentUrl}}#exclusions">Exclusions</a></li>
-            <li><a #agencies [ngClass]="getSubSectionClass('agencies')" (click)="changeSubSection('agencies',agencies)" href="{{currentUrl}}#agencies">Agencies</a></li>
           </ul>
         </li>
         <li>
@@ -88,7 +89,6 @@
             <span class="usa-width-one-whole p_L-2x p_T-2x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
             <div class="usa-width-one-whole marginCenter p_T-2x"><button class="usa-button-outline usa-button-active relative" (click)="feedback.toggleFeedback()">Provide Feedback</button></div>
             <div class="usa-width-one-whole text-align-center" *ngIf="feedback.showUnsubmittedWarning()">
-              <!--<span class="feedback-warning">You have feedback that has not been submitted!</span>-->
               <samAlert class="feedback-warning-font-size" [type]="'warning'" [title]="''" [description]="'You have feedback that has not been submitted!'"></samAlert>
 
             </div>
