@@ -70,11 +70,8 @@
 
       <div class="usa-width-one-whole m_T-0">
         <samAccordion>
-          <samAccordionSection headerText="What is an Opportunity?" name="Opportunity Definition">
-            <p>Opportunity description</p>
-          </samAccordionSection>
-          <samAccordionSection headerText="What qualifies to apply for an opportunity?" name="Opportunity Application">
-            <p>Opportunity description</p>
+          <samAccordionSection *ngFor="let faq of curFAQs" [headerText]="faq.question" [name]="faq.question">
+            <p>{{faq.answer}}</p>
           </samAccordionSection>
         </samAccordion>
       </div>

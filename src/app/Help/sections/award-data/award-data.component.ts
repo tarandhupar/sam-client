@@ -32,6 +32,7 @@ export class AwardDataComponent {
     {termName:"Interested Vendor List", termContent:"Term definition lipsum"},
     {termName:"Document Package", termContent:"Term definition lipsum"}
   ];
+  opportunityFAQs = [];
   opportunityTypes = {
     label: 'Types',
     options:   []
@@ -48,6 +49,7 @@ export class AwardDataComponent {
     {termName:"Service Contract Act", termContent:"Term definition lipsum"},
     {termName:"Davis-Bacon Act", termContent:"Term definition lipsum"}
   ];
+  wageFAQs = [];
   wageTypes = {
     label: 'Types',
     options:   [
@@ -75,6 +77,11 @@ export class AwardDataComponent {
     {termName:"CO Size determination", termContent:"Term definition lipsum"},
     {termName:"Estimated Ultimate Completion Date", termContent:"Term definition lipsum"}
   ];
+  awardsFAQs = [
+    {question:"How is the data reported?", answer:"Contracting Officers enter the procurement data or the data is fed from 90+ agency contract writing systems."},
+    {question:"How often is the data updated?", answer:" Data is entered upon completion of the award and updated if contracts are modified."},
+    {question:"How can I run reports using the data?", answer:" The only step you need to take to access the reporting tool is that you must create an account in SAM.gov."}
+  ];
   awardsTypes = {
     label: 'Types',
     options:   [
@@ -95,6 +102,7 @@ export class AwardDataComponent {
   };
   subAwardsFeatures = [];
   subAwardsCommonTerms = [];
+  subAwardsFAQs = [];
   subAwardsTypes = {
     label: 'Types',
     options:   []
@@ -111,6 +119,11 @@ export class AwardDataComponent {
     {termName:"Entities", termContent:"Contractors, federal assistance recipients, and other potential award recipients"},
     {termName:"DUNS Number", termContent:"Unique number assignment and validation process for entities for which each entity must register independently before they register in SAM.gov"},
     {termName:"Awards", termContent:"Contracts, orders, grants, loans, loan guarantees, scholarships, mortgage loans, insurance, and other types of financial assistance, including cooperative agreements; property, technical assistance, counseling, statistical, and other expert information; and service activities of regulatory agencies."}
+  ];
+  entityFAQs = [
+    {question:"How often is the data updated?", answer:"Entities can update their information at any time but are required to update annually to remain in the active status."},
+    {question:"How much does it cost to register in SAM?", answer:"It is free to register in SAM and to obtain a DUNS number. "},
+    {question:"What are reps and certs?", answer:"For an entity wishing to compete for federal contracts, SAM captures responses required by the Federal Acquisition Regulations  and, if applicable, Defense Federal Acquisition Regulations and SF 330 Part II (A-E work) requirements. Some of the data prepopulates from data provided in other areas of SAM (e.g. Core Data and Assertions), while other data is captured from responses to the Representations and Certifications Questionnaire."},
   ];
   entityTypes = {
     label: 'Types',
@@ -137,6 +150,9 @@ export class AwardDataComponent {
     {termName:"Service Contract Report", termContent:"Term definition lipsum"},
     {termName:"BIOPREFFERED Report", termContent:"Term definition lipsum"},
   ];
+  entityReportFAQs = [
+    {question:"How often must contractors report?", answer:"It depends on the clause itself.  Biopreffered reporting is continuous but has a cut off date for the previous fiscal year.  Service contract reports are open for reporting on an annual basis."}
+  ];
   entityReportTypes = {
     label: 'Types',
     options:   [
@@ -160,6 +176,7 @@ export class AwardDataComponent {
   assistListingCommonTerms = [
     {termName:"Financial assistance", termContent:"Term definition lipsum"}
   ];
+  assistListingFAQs = [];
   assistListingTypes = {
     label: 'Types',
     options:   [
@@ -191,6 +208,7 @@ export class AwardDataComponent {
     {termName:"Nature", termContent:"The reason for (nature of) the exclusion—why is the entity excluded"},
     {termName:"Effect", termContent:"What the exclusion means in terms of any restrictions or outcomes of the exclusion; it gives specific, award-related guidance to contracting officers, grants officials, and others when determining how to treat the excluded party, such as what can and can't be awarded to them."}
   ];
+  exclusionsFAQs = [];
   exclusionsTypes = {
     label: 'Types',
     options:   []
@@ -200,20 +218,21 @@ export class AwardDataComponent {
   curFeatures;
   curCommonTerms;
   curTypes;
+  curFAQs;
   prevConfig;
   prevFeatures;
   prevCommonTerms;
 
   curSubSection = "opportunities";
   subSectionMap = {
-    opportunities: [this.opportunityConfig, this.opportunityFeatures, this.opportunityCommonTerms, this.opportunityTypes],
-    awards: [this.awardsConfig, this.awardsFeatures, this.awardsCommonTerms, this.awardsTypes],
-    subAwards: [this.subAwardsConfig, this.subAwardsFeatures, this.subAwardsCommonTerms, this.subAwardsTypes],
-    entities: [this.entityConfig, this.entityFeatures, this.entityCommonTerms, this.entityTypes],
-    assistanceListings: [this.assistListingConfig, this.assistListingFeatures, this.assistListingCommonTerms, this.assistListingTypes],
-    exclusions: [this.exclusionsConfig, this.exclusionsFeatures, this.exclusionsCommonTerms, this.exclusionsTypes],
-    wageDeterminations: [this.wageConfig, this.wageFeatures, this.wageCommonTerms, this.wageTypes],
-    entityComplianceReporting: [this.entityReportConfig, this.entityReportFeatures, this.entityReportCommonTerms, this.entityReportTypes],
+    opportunities: [this.opportunityConfig, this.opportunityFeatures, this.opportunityCommonTerms, this.opportunityTypes, this.opportunityFAQs],
+    awards: [this.awardsConfig, this.awardsFeatures, this.awardsCommonTerms, this.awardsTypes, this.awardsFAQs],
+    subAwards: [this.subAwardsConfig, this.subAwardsFeatures, this.subAwardsCommonTerms, this.subAwardsTypes, this.subAwardsFAQs],
+    entities: [this.entityConfig, this.entityFeatures, this.entityCommonTerms, this.entityTypes, this.entityFAQs],
+    assistanceListings: [this.assistListingConfig, this.assistListingFeatures, this.assistListingCommonTerms, this.assistListingTypes, this.assistListingFAQs],
+    exclusions: [this.exclusionsConfig, this.exclusionsFeatures, this.exclusionsCommonTerms, this.exclusionsTypes, this.exclusionsFAQs],
+    wageDeterminations: [this.wageConfig, this.wageFeatures, this.wageCommonTerms, this.wageTypes, this.wageFAQs],
+    entityComplianceReporting: [this.entityReportConfig, this.entityReportFeatures, this.entityReportCommonTerms, this.entityReportTypes, this.entityReportFAQs],
   };
 
 
@@ -242,6 +261,7 @@ export class AwardDataComponent {
 
   fakeOutAdmin(){
     this.route.queryParams.subscribe(queryParams => {
+      this.isAdmin = false;
       if (queryParams["admin"] === 'true') {
         this.isAdmin = true;
       }
@@ -314,6 +334,7 @@ export class AwardDataComponent {
     this.curFeatures = this.subSectionMap[subSection][1];
     this.curCommonTerms = this.subSectionMap[subSection][2];
     this.curTypes = this.subSectionMap[subSection][3];
+    this.curFAQs = this.subSectionMap[subSection][4];
     this.updateCopies();
   }
 
