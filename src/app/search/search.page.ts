@@ -817,7 +817,20 @@ export class SearchPage implements OnInit{
     this.wdNonStandardRadModel = '';
     this.pageNum = 0;
 
-    this.searchResultsRefresh()
+    this.searchResultsRefresh();
+  }
+
+  wdStateCountyClear() {
+    this.wdStateModel = '';
+    this.wdCountyModel = '';
+    this.searchResultsRefresh();
+  }
+
+  awardIdvFilterClear() {
+    this.awardIDVModel = '';
+    this.awardTypeModel = '';
+    this.contractTypeModel = '';
+    this.searchResultsRefresh();
   }
 
   clearAllFilters(){
