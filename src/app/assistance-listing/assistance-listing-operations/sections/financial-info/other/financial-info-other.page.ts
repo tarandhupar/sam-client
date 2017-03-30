@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ProgramService } from "api-kit";
 import { FALOpSharedService } from "../../../assistance-listing-operations.service";
+import { Observable } from "rxjs";
 
 @Component({
   providers: [ProgramService],
@@ -81,15 +82,9 @@ export class FinancialInfoFormPage2 implements OnInit {
     });
   }
 
-  private saveProgramData() {
-    // todo: understand, fix this
-    let data = {};
-    this.programService.saveProgram(this.programId, data, this.cookieValue)
-      .subscribe(api => {
-
-      }, error => {
-        console.error('Error saving program', error);
-      });
+  private saveProgramData(): Observable {
+    let data = this.program;
+    return this.programService.saveProgram(this.programId, data, this.cookieValue);
   }
 
   private createForm() {
@@ -99,14 +94,6 @@ export class FinancialInfoFormPage2 implements OnInit {
       accountIdentification: null,
       tafs: null
     });
-
-    if(this.program) {
-      if(this.program.data && this.program.data.financial) {
-        if(this.program.data.financial.additionalInfo) {
-          this.otherFinancialInfoGroup.get('assistanceRange').setValue(this.program.data.financial.additionalInfo.content || '');
-        }
-      }
-    }
 
     this.otherFinancialInfoGroup.get('accomplishments').valueChanges.subscribe(model => {
       this.accomplishmentsModel = model;
@@ -122,14 +109,21 @@ export class FinancialInfoFormPage2 implements OnInit {
   }
 
   private populateForm() {
-    // todo ...
+    // todo: implement this...
+    if(this.program) {
+      if(this.program.data && this.program.data.financial) {
+        if(this.program.data.financial.additionalInfo) {
+          this.otherFinancialInfoGroup.get('assistanceRange').setValue(this.program.data.financial.additionalInfo.content || '');
+        }
+      }
+    }
   }
 
   public onCancelClick(event) {
     if(this.programId) {
-      this.router.navigate(['/programs', this.programId, 'view']);
+      this.router.navigate(['programs', this.programId, 'view']);
     } else {
-      this.router.navigate(['/falworkspace']);
+      this.router.navigate(['falworkspace']);
     }
   }
 
@@ -142,12 +136,22 @@ export class FinancialInfoFormPage2 implements OnInit {
   }
 
   public onSaveExitClick(event) {
-    this.saveProgramData();
-    // todo: redirect ...
+    this.saveProgramData().subscribe(id => {
+      if(this.programId) {
+        this.router.navigate(['programs', this.programId, 'view']);
+      } else {
+        this.router.navigate(['falworkspace']);
+      }
+    }, err => {
+      console.log("Error saving program ", err);
+    });
   }
 
   public onSaveContinueClick(event) {
-    this.saveProgramData();
-    // todo: redirect ...
+    this.saveProgramData().subscribe(id => {
+      this.router.navigate(['programs', 'add', 'contact-information']);
+    }, err => {
+      console.log("Error saving program ", err);
+    });
   }
 }

@@ -17,6 +17,7 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
   ]
 })
 export class FALAccountIdentificationComponent implements ControlValueAccessor {
+  //todo: refactor model duplication
   private currentIndex: number = 0;
   public model = {
     codeBoxes: [],

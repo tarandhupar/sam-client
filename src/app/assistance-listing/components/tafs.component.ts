@@ -14,6 +14,7 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
   ]
 })
 export class FALTafsComponent implements ControlValueAccessor {
+  //todo: refactor model duplication
   private currentIndex: number = 0;
 
   public model = {
