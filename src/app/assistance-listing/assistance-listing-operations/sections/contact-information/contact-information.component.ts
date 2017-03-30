@@ -233,6 +233,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   saveData(){
 
     let contacts = [];
+    let regLocalOffice  = '';
     for(let contact of this.falContactInfoForm.value.contacts){
       if(contact.contactId == 'na' || contact.contactId == 'new'){
         let uuid = UUID.UUID().replace(/-/g, "");
@@ -242,7 +243,14 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
         contacts.push(contact);
     }
 
-    let regLocalOffice  = (this.falContactInfoForm.value.regLocalOffice[0] ? this.falContactInfoForm.value.regLocalOffice[0] : 'none');
+    if(this.falContactInfoForm.value.regLocalOffice.length == 2){
+      regLocalOffice = this.falContactInfoForm.value.regLocalOffice[1];
+    }
+    else {
+      regLocalOffice = this.falContactInfoForm.value.regLocalOffice[0];
+    }
+
+    regLocalOffice  = (regLocalOffice ? regLocalOffice : 'none');
 
     let data = {
       website: this.falContactInfoForm.value.website,
