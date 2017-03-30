@@ -154,17 +154,20 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
       if (this.codeFormGroup.controls.hasOwnProperty(key)) {
         let control = this.codeFormGroup.controls[key];
         if (control.invalid && control.errors) {
-          // hack to let errors be shown once any member of group is interacted with
-          if (control.pristine && !this.codeFormGroup.pristine) {
-            control.markAsDirty();
-          }
           errored = control;
           break;
         }
       }
     }
 
-    this.codeWrapper.formatErrors(errored);
+    // Magic happens here
+    if(errored.pristine && !this.codeFormGroup.pristine) {
+      errored.markAsDirty({onlySelf: true});
+      this.codeWrapper.formatErrors(errored);
+      errored.markAsPristine({onlySelf: true});
+    } else {
+      this.codeWrapper.formatErrors(errored);
+    }
     // this.wrapper.formatErrors(this.accountFormGroup);
   }
 
