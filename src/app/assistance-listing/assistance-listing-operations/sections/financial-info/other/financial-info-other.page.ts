@@ -90,7 +90,7 @@ export class FinancialInfoFormPage2 implements OnInit {
     data.financial.accounts = this.saveAccountIdentifications();
     data.financial.treasury = data.financial.treasure || {};
     data.financial.treasury.tafs = this.saveTafs();
-    
+
     return this.programService.saveProgram(this.programId, data, this.cookieValue);
   }
 
@@ -180,7 +180,7 @@ export class FinancialInfoFormPage2 implements OnInit {
 
   public onSaveContinueClick(event) {
     this.saveProgramData().subscribe(id => {
-      this.router.navigate(['programs', 'add', 'contact-information']);
+      this.router.navigate(['programs', id, 'edit', 'contact-information']);
     }, err => {
       console.log("Error saving program ", err);
     });
