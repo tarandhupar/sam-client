@@ -54,14 +54,15 @@
       <div [formGroupName]="i" [class.hide]="contactIndex !== i">
 
         <samSelect
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.contactId"
           [label]="'Contact'"
           [name]="'contact-control'"
           [required]="true"
           [options]="contactDrpDwnOptions"
-          formControlName="contact"
+          formControlName="contactId"
           (modelChange)="onParamChanged($event)"></samSelect>
 
-        <div id="newContact" *ngIf="contactGrp.controls.contact.value == 'new' || mode == 'Edit'">
+        <div id="newContact" *ngIf="contactGrp.controls.contactId.value == 'new' || mode == 'Edit'">
 
         <samText
           [control]="falContactInfoForm.controls.contacts.controls[i].controls.title"
@@ -143,7 +144,7 @@
           buttonText="Confirm"
           [buttonType]="(!contactGrp.valid ? 'disabled' : 'default')"
           (onClick)="onConfirmClick()"
-          *ngIf="contactGrp.controls.contact.value != 'na'"></samButton>
+          *ngIf="contactGrp.controls.contactId.value != 'na'"></samButton>
 
       </div> <!-- End of formgroup div -->
     </ng-container>

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {FormBuilder, FormArray, FormGroup, Validators} from '@angular/forms';
 import { Router} from '@angular/router';
+import { UUID } from 'angular2-uuid';
 import { ProgramService } from 'api-kit';
 import { FALOpSharedService } from '../../assistance-listing-operations.service';
 import { DictionaryService } from 'api-kit';
@@ -27,9 +28,9 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   contactsInfo = [];
   checkboxConfig: any;
   mode:string;
+  contactDrpDwnInfo = [];
   contactDrpDwnOptions = [{label:"None Selected", value:'na'},
-                          {label:"New Contact", value:'new'},
-                          {label:"Existing Contact", value:'existing'}];
+                          {label:"New Contact", value:'new'}];
 
   stateDrpDwnOptions = [{label:"None Selected", value:'na'}];
   countryDrpDwnOptions = [];
@@ -59,7 +60,17 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
     this.getContactSub = this.programService.getContacts(this.sharedService.cookieValue)
       .subscribe(api => {
-      console.log("data", api);
+      console.log("contacts", api._embedded.contacts);
+      for(let contact of api._embedded.contacts){
+        this.contactDrpDwnOptions.push({
+          label:contact.fullName + ", " + contact.email,
+          value:contact.email
+        });
+
+        this.contactDrpDwnInfo[contact.email] = contact;
+      }
+
+      console.log(this.contactDrpDwnInfo);
     });
 
   }
@@ -108,7 +119,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
   initContacts(){
     return this.fb.group({
-      contact:['na'],
+      contactId:['na'],
       title: [''],
       fullName: [''],
       email:['', Validators.pattern('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,3}$')],
@@ -125,7 +136,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   onParamChanged(event){
     if(event != 'new' && event != 'na'){
       const control = <FormArray> this.falContactInfoForm.controls['contacts'];
-      control.at(control.length - 1).patchValue({title:"test"});
+      control.at(control.length - 1).patchValue(this.contactDrpDwnInfo[event]);
     }
   }
 
@@ -193,9 +204,10 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
               let index = 0;
               const control = <FormArray> this.falContactInfoForm.controls['contacts'];
               for(let contact of api.data.contacts.headquarters){
-                contact['contact'] = 'existing';
+                contact['contactId'] = contact.email;
                 control.push(this.initContacts());
                 control.at(index).patchValue(contact);
+                console.log(control);
                 index = index + 1;
               }
             }
@@ -224,8 +236,14 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
     let contacts = [];
     for(let contact of this.falContactInfoForm.value.contacts){
-      delete contact.contact;
-      contacts.push(contact);
+      if(contact.contactId == '' || contact.contactId == 'na' || contact.contactId == 'new'){
+        let uuid = UUID.UUID();
+        contact.contactId = uuid;
+        contacts.push(contact);
+      }
+      else {
+        contacts.push(contact);
+      }
     }
 
     let regLocalOffice  = (this.falContactInfoForm.value.regLocalOffice[0] ? this.falContactInfoForm.value.regLocalOffice[0] : 'none');
