@@ -145,7 +145,7 @@ export class AwardDataComponent {
     splashContent:`Find information reported by individual contractors in accordance with the terms of an existing contract.`,
     subContent:`Individual contractors are required to report information against contracts awarded by federal agencies. SAM.gov is the central reporting portal for certain information such as Service Contract Report and Biopreferred Report. Government employees have access to the information and use it to determine contractor compliance with reporting requirements contained in their contracts.`
   };
-  entityReportFeatures = [' Search', 'Display', 'Create', 'Edit', 'Delete', 'Entity reporting of data on awarded contracts', 'Download data'];
+  entityReportFeatures = ['Search', 'Display', 'Create', 'Edit', 'Delete', 'Entity reporting of data on awarded contracts', 'Download data'];
   entityReportCommonTerms = [
     {termName:"Service Contract Report", termContent:"Term definition lipsum"},
     {termName:"BIOPREFFERED Report", termContent:"Term definition lipsum"},
@@ -161,7 +161,7 @@ export class AwardDataComponent {
       { label: 'Create', value: 'Create', name: 'Create' },
       { label: 'Edit', value: 'Edit', name: 'Edit' },
       { label: 'Delete', value: 'Delete', name: 'Delete' },
-      { label: 'Entity reporting of  data on awarded contracts', value: 'Entity reporting of  data on awarded contracts', name: 'Entity reporting of  data on awarded contracts' },
+      { label: 'Entity reporting of data on awarded contracts', value: 'Entity reporting of data on awarded contracts', name: 'Entity reporting of data on awarded contracts' },
       { label: 'Download data', value: 'Download data', name: 'Download data' },
     ]
   };

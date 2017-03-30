@@ -26,11 +26,9 @@ export class HelpPage {
     this.router.events.subscribe(
       val => {
         if(!(val instanceof  NavigationCancel)){
-          if(val.url.indexOf("#") > 0){
-            this.currentUrl = val.url.substr(0,val.url.indexOf("#"));
-          }else{
-            this.currentUrl = val.url;
-          }
+          this.currentUrl = val.url.indexOf("#") > 0? val.url.substr(0,val.url.indexOf("#")):val.url;
+          this.currentUrl = this.currentUrl.indexOf("?") > 0? this.currentUrl.substr(0,this.currentUrl.indexOf("?")):this.currentUrl;
+
           let section = this.currentUrl.substr(this.baseUrl.length);
           section = section.length === 0? 'overview':section;
           this.currentSection = section;
@@ -39,7 +37,7 @@ export class HelpPage {
         }
 
       });
-    
+
   }
 
   changeSection(value){
