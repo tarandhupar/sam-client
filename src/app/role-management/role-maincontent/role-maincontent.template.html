@@ -1,0 +1,92 @@
+<div class="role-content usa-grid-full">
+  <div *ngIf = "isRole()">
+    <div *ngFor = "let domain of roleDef let x = index">
+      <div class="usa-width-five-sixths">
+        <div class = "content-label"><span class="usa-label-big label-ht">{{domain.domain.val}}</span></div>
+        <div *ngIf = "!domain.roleDefinitionMapContent || domain.roleDefinitionMapContent.length == 0" class = "content-label">
+          <h3><i>No roles found for this domain</i></h3>
+        </div>
+        <div *ngFor = "let role of domain.roleDefinitionMapContent let i = index">
+          <div class = "section-spc">
+            <div class = "usa-grid-full header-bg-color">
+              <div class = "usa-width-one-half">
+                <h3 class= "collapsible-header">{{role.role.val}}</h3>
+              </div>
+              <div class = "usa-width-one-half p_T-1em">
+                <div class = "pull-right">
+                  <span *ngIf = "role.roleRemovable" (click) = "clickRemove(role.role.id)"><i class=" fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Remove</span></span>
+                  <span [routerLink]="['../roles/' + role.role.id + '/edit']" [queryParams]="{ domain: domain.domain.id }"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Edit</span></span>
+                  <span (click) = "role.testFlag = !role.testFlag"><i class="fa " [ngClass] = "role.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">{{role.testFlag ? 'Hide' : 'Show'}} Permission</span></span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf = "role.testFlag">
+              <div class = "usa-grid-full content-row">
+                <div class = "usa-width-one-third">
+                  <h3>Object</h3>
+                </div>
+                <div class = "usa-width-two-thirds">
+                  <h3>Permissions</h3>
+                </div>
+              </div>
+              <div class = "content-row">
+                <div *ngFor = "let func of role.functionContent">
+                  <div class = "usa-grid-full line-spacing">
+                    <div class = "usa-width-one-third">
+                      <h4>{{func.function.val}}</h4>
+                    </div>
+                    <div class = "usa-width-two-thirds">
+                      <h4><span *ngFor = "let perm of func.permission; let isLast = last">
+                        {{perm.val}} {{isLast ? '' : ', '}}
+                      </span>
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf = "isObject()">
+    <div *ngFor = "let domain of roleDef">
+      <div class="usa-width-five-sixths">
+        <div class = "content-label"><span class="usa-label-big label-ht">{{domain.domain.val}}</span></div>
+        <div *ngIf = "!domain.functionMapContent || domain.functionMapContent.length == 0" class = "content-label">
+          <h3><i>No objects found for this domain</i></h3>
+        </div>
+        <div *ngFor = "let func of domain.functionMapContent">
+          <div class = "section-spc">
+            <div class = "usa-grid-full header-bg-color">
+              <div class = "usa-width-one-half">
+                <h3 class= "collapsible-header">{{func.function.val}}</h3>
+              </div>
+              <div class = "usa-width-one-half p_T-1em">
+                <div class = "pull-right">
+                  <span *ngIf = "func.functionRemovable" (click) = "clickRemove(func.function.id)"><i class=" fa fa-trash" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Remove</span></span>
+                  <span [routerLink]="['../objects/' + func.function.id + '/edit']" [queryParams]="{ domain: domain.domain.id }"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">Edit</span></span>
+                  <span (click) = "func.testFlag = !func.testFlag"><i class="fa " [ngClass] = "func.testFlag ? 'fa-minus' : 'fa-plus'"  aria-hidden="true"></i>&nbsp;&nbsp;<span class = "icons-color">{{func.testFlag ? 'Hide' : 'Show'}} Permission</span></span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf = "func.testFlag">
+              <div class = "usa-grid-full content-row">
+                <div class = "usa-width-one-third">
+                  <h3>Permissions</h3>
+                </div>
+              </div>
+              <div class = "content-row">
+                <h4><span *ngFor = "let perm of func.permission; let isLast = last">
+                  {{perm.val}} {{isLast ? '' : ', '}}
+                </span>
+                </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

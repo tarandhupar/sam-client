@@ -45,6 +45,23 @@ class FeedbackServiceStub {
           },
           {
             "questionId": 2,
+            "questionDesc": "What do you like or dislike about beta.SAM.gov?",
+            "createdDate": "2017-03-22T13:49:34.717-0400",
+            "createdBy": "ADMIN",
+            "lastModifiedBy": "ADMIN",
+            "lastModifiedDate": "2017-03-22T13:49:34.717-0400",
+            "_links": {
+              "self": {
+                "href": "https://csp-api.sam.gov:443/feedback/v1/question?qIds=1"
+              }
+            },
+            "question_options": {
+              "type": "singleSelection",
+              "options": ["like","dislike"]
+            }
+          },
+          {
+            "questionId": 3,
             "questionDesc": "What changes or improvements would you suggest?",
             "createdDate": "2017-03-22T13:49:34.717-0400",
             "createdBy": "ADMIN",
@@ -109,6 +126,7 @@ describe('The Sam Feedback component', () => {
     component.onRatingClick(false);
     expect(component.answerData).toEqual([
       {edited:true, value:[false]},
+      {edited:false},
       {edited:false}
     ]);
   });
@@ -119,6 +137,8 @@ describe('The Sam Feedback component', () => {
     component.toggleFeedback();
     component.onRatingClick(true);
     expect(component.answerData[0].value).toEqual([true]);
+    component.onNextClick();
+    component.onRadioBtnChange("like");
     expect(component.generateFeedbackRes()).toEqual({
       userId:"",
       feedbackPath: '',
@@ -130,6 +150,14 @@ describe('The Sam Feedback component', () => {
             type: "rating",
             selected: [true],
           }
+        },
+        {
+          questionId: 2,
+          userId: "",
+          feedback_response: {
+            type: "singleSelection",
+            selected: ["like"],
+          }
         }
       ]
     });
@@ -139,13 +167,13 @@ describe('The Sam Feedback component', () => {
   it('should populate the pagination and current page correctly', () => {
     fixture.detectChanges();
     component.toggleFeedback();
-    expect(component.getPaginationArray()).toEqual([0,1]);
+    expect(component.getPaginationArray()).toEqual([0,1,2]);
     expect(component.isCurrentPage(0)).toBe(true);
     component.onNextClick();
     expect(component.isCurrentPage(1)).toBe(true);
     component.onPreviousClick();
     expect(component.isCurrentPage(0)).toBe(true);
-    expect(component.isLastPage(1)).toBe(true);
+    expect(component.isLastPage(2)).toBe(true);
 
   });
 
@@ -153,6 +181,9 @@ describe('The Sam Feedback component', () => {
     fixture.detectChanges();
     component.toggleFeedback();
     expect(component.isPrevButtonOn()).toBe(false);
+    expect(component.isNextButtonOn()).toBe(true);
+    component.onNextClick();
+    expect(component.isPrevButtonOn()).toBe(true);
     expect(component.isNextButtonOn()).toBe(true);
     component.onNextClick();
     expect(component.isPrevButtonOn()).toBe(true);

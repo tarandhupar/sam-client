@@ -112,6 +112,16 @@ export class UserAccessModel {
     };
   }
 
+  static CreateRequestObject(requestor: string, supervisorName: string, supervisorEmail: string, domainId: number, message: string) {
+    return {
+      requestorName: requestor,
+      supervisorName: supervisorName,
+      supervisorEmail: supervisorEmail,
+      domain: domainId,
+      requestorMessage: message
+    };
+  }
+
   static CreateGrantObject(user, roleId, domainId, orgIds: any[], functions: Array<FunctionInterface>, messages: string): UserAccessWrapper {
     let functionMapContent = functions.map(fun => {
       return {
