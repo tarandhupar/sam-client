@@ -60,7 +60,6 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
     this.getContactSub = this.programService.getContacts(this.sharedService.cookieValue)
       .subscribe(api => {
-
       for(let contact of api._embedded.contacts){
 
         this.contactDrpDwnOptions.push({
