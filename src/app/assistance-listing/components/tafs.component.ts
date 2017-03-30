@@ -123,6 +123,37 @@ export class FALTafsComponent implements ControlValueAccessor {
     this.resetForm();
   }
 
+  public removeTafs(index: number) {
+    this.model.tafs.splice(index, 1);
+    if(index === this.currentIndex) {
+      this.tafsFormGroup.reset();
+      this.currentIndex = this.model.tafs.length;
+    } else if(index < this.currentIndex) {
+      this.currentIndex--;
+    }
+
+    this.onChange();
+  }
+
+  public editTafs(index: number) {
+    let tafs = this.model.tafs[index];
+
+    this.tafsFormGroup.get('treasuryDeptCode').setValue(tafs.deptCode);
+
+    this.tafsFormGroup.get('treasuryMainCode').setValue(tafs.mainCode);
+
+    this.tafsFormGroup.get('tafsSubCode').setValue(tafs.subCode);
+
+    this.tafsFormGroup.get('allocationTransferCode').setValue(tafs.transferCode);
+
+    this.tafsFormGroup.get('fy1Code').setValue(tafs.fy1Code);
+
+    this.tafsFormGroup.get('fy2Code').setValue(tafs.fy2Code);
+
+    this.currentIndex = index;
+  }
+
+
   public resetForm() {
     this.currentIndex = this.model.tafs.length;
     this.tafsFormGroup.reset();

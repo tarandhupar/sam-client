@@ -90,8 +90,8 @@
             <td>
               <!--todo: handle this with css classes?-->
               <ng-container *ngIf="currentIndex === model.tafs.length">
-                <a (click)="removeAccount(i)">Delete</a>
-                <a (click)="editAccount(i)">Edit</a>
+                <a (click)="removeTafs(i)">Delete</a>
+                <a (click)="editTafs(i)">Edit</a>
               </ng-container>
               <ng-container *ngIf="currentIndex < model.tafs.length">
                 <s>Delete</s>
