@@ -1,0 +1,22 @@
+<fieldset-wrapper [label]="label" [hint]="hint" [errorMessage]="errorMessage">
+  <ul class="usa-unstyled-list">
+    <li *ngFor="let option of options; let i = index">
+      <div class="usa-grid-full">
+
+        <div class="usa-width-two-thirds">
+         <!-- {{ model | json}}
+          {{ option | json }}-->
+          <input [attr.id]="option.name" type="radio" (change)="onRadioOptionChange(option.value)" [attr.name]="name"
+                 [checked]="model.radioOptionId == option.value" [checked]="model.radioOptionId == option.value" [value]="option.value">
+          <label [attr.for]="option.name">{{option.label}}</label>
+        </div>
+        <div class="usa-width-two-thirds" *ngIf="model.radioOptionId === option.value">
+          <span *ngIf="option.flag == 'number'">
+          <samNumber [name]="'numtest'" [formControl]="textBoxControl"></samNumber></span>
+          <span *ngIf="option.flag == 'text'">
+          <samText [name]="'test'" [formControl]="textBoxControl"></samText></span>
+        </div>
+      </div>
+    </li>
+  </ul>
+</fieldset-wrapper>

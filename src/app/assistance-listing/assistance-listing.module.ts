@@ -17,6 +17,8 @@ import { FalWorkspacePage } from './assistance-listing-workspace/assistance-list
 import { FALHeaderInfoComponent } from './assistance-listing-operations/sections/header-information/header-information.component';
 import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
 import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
+import {FinancialObligationsComponent} from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
+import {SamTextRadioButtonComponent} from "./components/text-radio-button.component";
 
 
 @NgModule({
@@ -48,7 +50,9 @@ import { FALContactInfoComponent } from './assistance-listing-operations/section
     AccessRestrictedPage,
     FALHeaderInfoComponent,
     FALOverviewComponent,
-    FALContactInfoComponent
+    FALContactInfoComponent,
+    FinancialObligationsComponent,
+    SamTextRadioButtonComponent
   ],
   providers: [],
 })
