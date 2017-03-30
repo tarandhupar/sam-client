@@ -201,7 +201,7 @@
 					Number of Employees: {{awardData.businessCategory.numberOfEmployees | number}}<br />
 					State of Incorporation: {{awardData.businessCategory.stateOfIncorporation}}<br />
 					Country of Incorporation: {{awardData.businessCategory.countryOfIncorporation}}<br />
-					Annual Revenue: {{awardData.businessCategory.annualRevenue}}<br />
+					Annual Revenue: {{awardData.businessCategory.annualRevenue | currency:'USD':true:'.2-2'}}<br />
 					<div class="padding-left-20px">
 					<br />
 						Business Types:<br />
@@ -217,7 +217,10 @@
 						</div>
 						<br />
 						Line of Business:<br />
-						<!--list of line of Business data>-->
+						<div class="display-inline" *ngIf="awardData.businessCategory.lineOfBusiness | busCategories">
+							{{awardData.businessCategory.lineOfBusiness | busCategories}}
+							<br />
+						</div>
 						<br />
 						Relationship with Federal Government:<br />
 						<div class="display-inline" *ngIf="awardData.businessCategory.relationShipWithFedGovernment | busCategories">
