@@ -15,6 +15,10 @@
     border-top: 2px solid black;
   }
 
+  samAccordion ul{
+    margin-top: 0;
+  }
+
   samMultiSelectDropdown{
     position: absolute;
     top: -25px;
@@ -64,6 +68,10 @@
     min-height: 250px;
     max-height: 300px;
     overflow: auto;
+  }
+
+  .awards-terms-content{
+    font-size: 90%;
   }
 
   .awards-data-feature-tag{

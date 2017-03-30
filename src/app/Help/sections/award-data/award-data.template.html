@@ -6,17 +6,17 @@
 
       <div class="usa-width-one-whole m_T-3x">
         <div class="usa-width-two-thirds m_R-0">
-          <div class="usa-width-one-whole p_L-4x p_T-1x">
+          <div class="usa-width-one-whole p_L-4x p_T-1x m_B-2x">
             <div class="usa-width-one-sixth relative">
               <img class="awards-data-image" src="src/assets/img/blank_icon.png" alt="logo image">
-              <span class="edit-image-icon"><i class="fa fa-pencil"></i></span>
+              <span class="edit-image-icon" *ngIf="isEdit"><i class="fa fa-pencil"></i></span>
             </div>
             <div class="usa-width-five-sixths">
               <h3 class="m_B-0 p_B-1x">Legacy Website:</h3>
               <span>{{curConfig.legacyWebsiteContent}}</span>
             </div>
           </div>
-          <div class="usa-width-one-whole p_L-4x m_B-2x m_T-1x relative">
+          <div class="usa-width-one-whole p_L-4x m_B-2x m_T-2x relative">
             <h3>
               <span>
                 Features
@@ -51,7 +51,7 @@
           <div class="usa-width-one-whole m_B-2x" *ngFor="let term of curCommonTerms">
             <span class="bold">{{term.termName}} &nbsp;&nbsp; <i class="fa fa-times" *ngIf="isEdit" (click)="onRemoveTermClick(term)"></i></span>
             <div class="usa-width-one-whole">
-              <p class="p_T-1x p_L-2x" *ngIf="!isEdit">{{term.termContent}}</p>
+              <p class="p_T-1x p_L-2x awards-terms-content" *ngIf="!isEdit">{{term.termContent}}</p>
               <input class="usa-width-one-whole awards-terms-input" type="text" *ngIf="isEdit" [(ngModel)]="term.termContent">
             </div>
           </div>
@@ -68,9 +68,9 @@
 
       </div>
 
-      <div class="usa-width-one-whole m_T-0">
-        <samAccordion>
-          <samAccordionSection *ngFor="let faq of curFAQs" [headerText]="faq.question" [name]="faq.question">
+      <div class="usa-width-one-whole m_T-4x">
+        <samAccordion *ngFor="let faq of curFAQs">
+          <samAccordionSection [headerText]="faq.question" [name]="faq.question">
             <p>{{faq.answer}}</p>
           </samAccordionSection>
         </samAccordion>

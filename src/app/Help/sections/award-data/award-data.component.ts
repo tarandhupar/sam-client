@@ -65,7 +65,7 @@ export class AwardDataComponent {
     splashContent:`Find data on Federal contract awards`,
     subContent:`The capturing of individual contract actions provides transparency and visibility into government contracting. Award data is used by business development to plan their business pipelines. Self-service reporting tools assist in demystifying government spending by rolling up data based on a multitude of factors. Single authoritative source of contracting data. Provides the information needed to manage federal contracting activities more effectively.`
   };
-  awardsFeatures = ['Search', 'Data entry', 'Reports', 'Interfaces with Contract Writing Systems', 'Atom Feed', 'API of contracting data'];
+  awardsFeatures = ['Search/Display', 'Data Entry', 'Reports', 'Interfaces with Contract Writing Systems', 'Atom Feed', 'API of contracting data'];
   awardsCommonTerms = [
     {termName:"Action Obligation", termContent:"Term definition lipsum"},
     {termName:"Period of Performance", termContent:"Term definition lipsum"},
