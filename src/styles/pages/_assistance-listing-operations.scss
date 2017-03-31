@@ -12,11 +12,16 @@
   .sam-list-input .label-wrapper{
     max-width: 480px;
   }
-  
+
   .sticky-label{
     color: #a6a6a6;
     letter-spacing: -0.3px;
     font-size: 1.6rem;
   }
-  
+
+  legend{
+    font-size: 1.7rem;
+    font-weight: 400;
+    margin-bottom: 1em;
+  }
 }

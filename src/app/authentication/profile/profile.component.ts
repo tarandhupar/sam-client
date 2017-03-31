@@ -42,7 +42,9 @@ export class ProfileComponent {
   ngOnInit() {
     this.api.iam.checkSession((user) => {
       this.zone.run(() => {
-        this.states.system = true;
+        if(user.systemAccount) {
+          this.states.system = true;
+        }
       });
     });
 
