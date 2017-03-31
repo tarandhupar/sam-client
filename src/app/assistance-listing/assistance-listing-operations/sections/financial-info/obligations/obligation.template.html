@@ -127,7 +127,7 @@
     <div class="pull-left">
       <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
       <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
-      <samButton [buttonType]="(!finObligationsForm.valid || hideAddButton ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
-      <samButton [buttonType]="(!finObligationsForm.valid || hideAddButton ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+      <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+      <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
     </div>
 </form>
