@@ -102,14 +102,12 @@
           [options]="stateDrpDwnOptions"
           formControlName="state"></samSelect>
 
-        <samNumber
+        <samText
           [control]="contactGrp.controls.zip"
-          [minlength]="5"
-          [maxlength]="5"
           [name]="'zip-input'"
           [label]="'Zip'"
           [required]="true"
-          formControlName="zip"></samNumber>
+          formControlName="zip"></samText>
 
         <samSelect
           [label]="'Country'"
@@ -121,7 +119,6 @@
         <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></samButton>
         <samButton
           buttonText="Confirm"
-          [buttonType]="(!contactGrp.valid ? 'disabled' : 'default')"
           (onClick)="onConfirmClick()"
           *ngIf="contactGrp.controls.contactId.value != 'na'"></samButton>
 
@@ -139,7 +136,7 @@
   <div class="pull-left">
     <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
     <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
-    <samButton [buttonType]="(!falContactInfoForm.valid || hideAddButton ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
-    <samButton [buttonType]="(!falContactInfoForm.valid || hideAddButton ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
   </div>
 </form>
