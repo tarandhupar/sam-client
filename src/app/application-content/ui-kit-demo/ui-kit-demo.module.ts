@@ -11,7 +11,9 @@ import { AppComponentsModule } from '../../app-components/app-components.module'
 import { AlertsModule } from '../../alerts/alerts.module';
 import { HelpModule } from '../../Help/help.module';
 
-import { LocationServiceDirective } from './location-demo';
+import { CountryServiceDirective } from './country-demo';
+import { StateServiceDirective } from './state-demo';
+import { CountyServiceDirective } from './county-demo';
 
 @NgModule({
   imports: [
@@ -26,11 +28,15 @@ import { LocationServiceDirective } from './location-demo';
     HelpModule,
   ],
   exports: [
-    LocationServiceDirective
+    CountryServiceDirective,
+    StateServiceDirective,
+    CountyServiceDirective
   ],
   declarations: [
     UIKitDemoPage,
-    LocationServiceDirective
+    CountryServiceDirective,
+    StateServiceDirective,
+    CountyServiceDirective
   ],
   providers: [],
 })

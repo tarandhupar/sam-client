@@ -76,13 +76,110 @@
       </div>
     </div>
 
+
+
+    <div class="usa-width-one-whole">
+      <div class="usa-width-one-half m_R-0">
+        <button class="usa-button-primary" (click)="getAllStatesJSON(countryQueryStr)">Get All States</button>
+        <button class="usa-button-transparent" (click)="clearAllStatesJSON()">Clear <i class="fa fa-trash" aria-hidden="true"></i></button>
+        <div class="usa-width-one-whole m_T-1x">
+          <textarea readonly style="overflow-y: scroll;height: 250px;resize: none;">{{locationAllStateJSON | json}}</textarea>
+        </div>
+        <div class="usa-width-one-whole m_T-1x">
+          <samSelect [(model)]="stateResultModel"
+                     [name]="stateResultConfig.name"
+                     [options]="stateResultConfig.options"
+                     [label]="stateResultConfig.label"
+                     [hint]="stateResultConfig.hint"
+                     [errorMessage]="stateResultConfig.errorMessage"
+                     [disabled]="stateResultConfig.disabled">
+
+          </samSelect>
+        </div>
+      </div>
+      <div class="usa-width-one-half">
+        <div class="usa-width-one-third relative m_R-0"> &nbsp;
+          <samSelect class="usa-width-one-whole" style="position:absolute;top:-27px"
+                     [(model)]="stateSelectModel"
+                     [name]="stateSelectConfig.name"
+                     [options]="stateSelectConfig.options"
+                     [label]="''"
+                     [hint]="stateSelectConfig.hint"
+                     [errorMessage]="stateSelectConfig.errorMessage"
+                     [disabled]="stateSelectConfig.disabled">
+          </samSelect>
+        </div>
+        <input class="usa-width-one-fifth m_R-0" [(ngModel)]="stateQueryStr">
+        Country:
+        <input class="usa-width-one-fifth m_R-0" [(ngModel)]="countryQueryStr">
+        <button class="usa-button-big m_0" (click)="searchState(stateSelectModel,stateQueryStr,countryQueryStr)">Search</button>
+        <div class="usa-width-one-whole m_T-1x">
+          <textarea readonly style="overflow-y: scroll;height: 250px;resize: none;">{{locationSearchStateJSON | json}}</textarea>
+          <button class="usa-button-transparent" (click)="clearSearchStateJSON()">Clear <i class="fa fa-trash" aria-hidden="true"></i></button>
+
+        </div>
+      </div>
+    </div>    
+
+
+  </div>
+<div class="usa-grid">
+  <div class="usa-width-one-whole">
+      <div class="usa-width-one-half m_R-0">
+        <button class="usa-button-primary" (click)="getAllCountiesJSON(statQueryStr)">Get All Counties</button>
+        <button class="usa-button-transparent" (click)="clearAllCountiesJSON()">Clear <i class="fa fa-trash" aria-hidden="true"></i></button>
+        <div class="usa-width-one-whole m_T-1x">
+          <textarea readonly style="overflow-y: scroll;height: 250px;resize: none;">{{locationAllCountyJSON | json}}</textarea>
+        </div>
+        <div class="usa-width-one-whole m_T-1x">
+          <samSelect [(model)]="countyResultModel"
+                     [name]="countyResultConfig.name"
+                     [options]="countyResultConfig.options"
+                     [label]="countyResultConfig.label"
+                     [hint]="countyResultConfig.hint"
+                     [errorMessage]="countyResultConfig.errorMessage"
+                     [disabled]="countyResultConfig.disabled">
+
+          </samSelect>
+        </div>
+      </div>
+      <div class="usa-width-one-half">
+        <div class="usa-width-one-third relative m_R-0"> &nbsp;
+          <samSelect class="usa-width-one-whole" style="position:absolute;top:-27px"
+                     [(model)]="countySelectModel"
+                     [name]="countySelectConfig.name"
+                     [options]="countySelectConfig.options"
+                     [label]="''"
+                     [hint]="countySelectConfig.hint"
+                     [errorMessage]="countySelectConfig.errorMessage"
+                     [disabled]="countySelectConfig.disabled">
+          </samSelect>
+        </div>       
+        State:
+        <input class="usa-width-one-fifth m_R-0" [(ngModel)]="statQueryStr">
+        County:
+        <input class="usa-width-one-fifth m_R-0" [(ngModel)]="countyQueryStr">
+        <button class="usa-button-big m_0" (click)="searchCounty(countySelectModel,statQueryStr,countyQueryStr)">Search</button>
+        <div class="usa-width-one-whole m_T-1x">
+          <textarea readonly style="overflow-y: scroll;height: 250px;resize: none;">{{locationSearchCountyJSON | json}}</textarea>
+          <button class="usa-button-transparent" (click)="clearSearchCountyJSON()">Clear <i class="fa fa-trash" aria-hidden="true"></i></button>
+
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="usa-grid">
     <h2>Location Service Demo with Autocomplete</h2>
-    <div class="usa-width-one-whole">
-     <sam-autocomplete location [id]="'h1231029380938489'" [labelText]="'Country Picker'" [config]="locationDemoConfig"></sam-autocomplete>
-    </div>  
+    <div class="usa-width-one-third">
+     <sam-autocomplete country [(ngModel)]="locationOutput" [id]="'h1231029380938489'" [labelText]="'Country Picker'" [config]="locationDemoConfig"></sam-autocomplete>
+    </div>
+    <div class="usa-width-one-third">
+     <sam-autocomplete state [(ngModel)]="locationOutput" [id]="'h1231029380938489'" [labelText]="'State Picker'" [config]="locationDemoConfig"></sam-autocomplete>
+    </div>
+    <div class="usa-width-one-third">
+     <sam-autocomplete county [(ngModel)]="locationOutput" [id]="'h1231029380938489'" [labelText]="'County Picker'" [config]="locationDemoConfig"></sam-autocomplete>
+    </div>
   </div>
 
 

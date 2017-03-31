@@ -306,6 +306,54 @@ export class UIKitDemoPage {
     }
   }
 
+  stateSelectModel = 'statecode';
+  stateSelectConfig = {
+    options: [
+      {value: 'statecode', label: 'State Code', name: 'State Code'},
+      {value: 'statename', label: 'State Name', name: 'State Name'},
+      {value: 'statetype', label: 'State Type', name: 'State Type'},
+    ],
+    disabled: false,
+    label: '',
+    name: 'state',
+  };
+  stateQueryStr = '';
+  countryQueryStr = '';
+  locationAllStateJSON;
+  locationSearchStateJSON;
+
+  stateResultModel = "";
+  stateResultConfig = {
+    options: [],
+    disabled: false,
+    label: 'All States Drop Down',
+    name: 'states',
+  };
+
+  countySelectModel = 'Y';
+  countySelectConfig = {
+    options: [
+      {value: 'Y', label: 'Is WDOL', name: 'Is WDOL'},
+      {value: 'N', label: 'Is Not WDOL', name: 'Is Not WDOL'},
+    ],
+    disabled: false,
+    label: '',
+    name: 'county',
+  };
+  countyQueryStr = '';
+  statQueryStr = '';
+  locationAllCountyJSON;
+  locationSearchCountyJSON;
+
+  countyResultModel = "";
+  countyResultConfig = {
+    options: [],
+    disabled: false,
+    label: 'All Counties Drop Down',
+    name: 'counties',
+  };
+
+
   constructor(private alertFooterService: AlertFooterService, private locationService: LocationService) {  }
 
   onEmptyOptionChanged($event) {
@@ -398,5 +446,97 @@ export class UIKitDemoPage {
 
   clearSearchCountryJSON(){
     this.locationSearchCountryJSON = {};
+  }
+
+
+
+
+
+
+  getAllStatesJSON(countryQueryStr){
+    this.locationService.getAllStates(countryQueryStr).subscribe(
+      res => {
+          this.locationAllStateJSON = res._embedded.stateList;
+        this.stateResultConfig.options = [];
+        if (this.locationAllStateJSON.length > 0) this.stateResultModel = this.locationAllStateJSON[0].state;
+        this.locationAllStateJSON.forEach(e => {
+          this.stateResultConfig.options.push({value: e.state, label: e.state, name: e.state});
+        });
+      },
+      error => {
+        this.locationAllStateJSON = error;
+      }
+    );
+  }
+
+  clearAllStatesJSON(){
+    this.locationAllStateJSON = {};
+    this.stateResultConfig.options = [];
+    this.stateResultModel = ""
+  }
+
+
+  searchState(stateSelectModel,stateQueryStr, countryQueryStr){
+    if(stateQueryStr.length !== 0){
+      this.locationService.searchState(stateSelectModel, stateQueryStr, countryQueryStr).subscribe(
+        res => {
+          this.locationSearchStateJSON = res;
+        },
+        error => {
+          this.locationSearchStateJSON = error;
+        }
+      );
+    }
+
+  }
+
+  clearSearchStateJSON(){
+    this.locationSearchStateJSON = {};
+  }
+
+
+
+
+
+
+  getAllCountiesJSON(statQueryStr){
+    this.locationService.getAllCounties(statQueryStr).subscribe(
+      res => {
+          this.locationAllCountyJSON = res._embedded.countyList;
+        this.countyResultConfig.options = [];
+        if (this.locationAllCountyJSON.length > 0) this.countyResultModel = this.locationAllCountyJSON[0].county;
+        this.locationAllCountyJSON.forEach(e => {
+          this.countyResultConfig.options.push({value: e.county, label: e.county, name: e.county});
+        });
+      },
+      error => {
+        this.locationAllCountyJSON = error;
+      }
+    );
+  }
+
+  clearAllCountiesJSON(){
+    this.locationAllCountyJSON = {};
+    this.countyResultConfig.options = [];
+    this.countyResultModel = ""
+  }
+
+
+  searchCounty(countySelectModel,statQueryStr,countyQueryStr){
+    if(statQueryStr.length !== 0){
+      this.locationService.searchCounty(countySelectModel, statQueryStr, countyQueryStr).subscribe(
+        res => {
+          this.locationSearchCountyJSON = res;
+        },
+        error => {
+          this.locationSearchCountyJSON = error;
+        }
+      );
+    }
+
+  }
+
+  clearSearchCountyJSON(){
+    this.locationSearchCountyJSON = {};
   }
 }

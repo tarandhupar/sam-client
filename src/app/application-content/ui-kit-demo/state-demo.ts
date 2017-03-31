@@ -5,11 +5,11 @@ import { AutocompleteService } from '../../../sam-ui-elements/src/ui-kit/form-co
 import { LocationService } from 'api-kit/location/location.service';
 
 @Injectable()
-export class LocationServiceImpl implements AutocompleteService {
+export class StateServiceImpl implements AutocompleteService {
 
 		// Location Service Demo
 
-	  locationAllCountryJSON;
+	  locationAllStateJSON;
 
 	  locationResultModel = "";
 	  locationResultConfig = {
@@ -18,14 +18,14 @@ export class LocationServiceImpl implements AutocompleteService {
 
 	constructor(private locationService: LocationService) { }
 
-	getAllCountriesJSON(): ReplaySubject<any> {=
+	getAllStatesJSON(q:string): ReplaySubject<any> {
 		const results = new ReplaySubject();
-		this.locationService.getAllContries().subscribe(
+		this.locationService.getAutoCompleteStates(q,'USA').subscribe(
 		  (res) => {
-		    results.next(res._embedded.countryList.reduce( (prev, curr) => {
+		    results.next(res._embedded.stateList.reduce( (prev, curr) => {
 		    	const newObj = {
-		    		key: curr.countryId.toString(),
-		    		value: curr.country.toString()
+		    		key: curr.stateId.toString(),
+		    		value: curr.state.toString()
 		    	}
 		    	prev.push(newObj);
 		    	return prev;
@@ -43,20 +43,14 @@ export class LocationServiceImpl implements AutocompleteService {
   }
 
   fetch(val: string, pageEnd: boolean): Observable<any> {
-  	this.getAllCountriesJSON().subscribe(
-  		(data) => {
-  			return Observable.of(data).map(o => o);
-  		},
-  		(error) => {
-  			return Observable.of(error).map(o => o);
-  		});
+  	return this.getAllStatesJSON(val).map(o => o);
   }
 }
 
 @Directive({
-	selector: 'sam-autocomplete[location]',
+	selector: 'sam-autocomplete[state]',
 	providers: [
-		{provide: AutocompleteService, useClass: LocationServiceImpl}
+		{provide: AutocompleteService, useClass: StateServiceImpl}
 	]
 })
-export class LocationServiceDirective {}
+export class StateServiceDirective {}
