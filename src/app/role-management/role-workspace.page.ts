@@ -12,6 +12,9 @@ export class RoleWorkspacePage implements OnInit {
   domainKey = '';
   Data : any;
 
+  removefunc : string;
+  removedomain : string;
+
   constructor(private role: UserAccessService){
 
   }
@@ -27,14 +30,29 @@ export class RoleWorkspacePage implements OnInit {
   };
 
   onRemoveConfirm(){
-    console.log("remove");
+    this.role.deleteFunction(this.removedomain,this.removefunc).subscribe(res =>{
+        if(this.mode === 'object' && res.status == 200){
+          this.Data.forEach(dom => {
+            if(dom.domain.id == this.removedomain){
+              dom.functionMapContent = dom.functionMapContent.filter(val => { return val.function.id != this.removefunc});
+            }
+          });
+        }
+    });
+
     this.removeModal.closeModal();
   }
 
 
   onShowExpireModal(event){
-    //console.log(event + "," + this.mode);
-    this.modalConfig.description ='Are you sure you want to remove this ' + this.mode + '? This will permanently remove the ' + this.mode + ' from the database. The ' + this.mode +  ' is not currently associated to any user.';
+    if(this.mode === 'role')
+      this.modalConfig.description ='Are you sure you want to remove this ' + this.mode + '? This will permanently remove the ' + this.mode + ' from the database. The ' + this.mode +  ' is not currently associated to any user.';
+    else{
+      this.modalConfig.description ='Are you sure you want to remove this ' + this.mode + '? This will permanently remove the ' + this.mode + ' from the database. This ' + this.mode +  ' is not currently associated to any role under this domain.'
+      this.removefunc = event.function;
+      this.removedomain = event.domain;
+    }
+
     this.removeModal.openModal();
   }
 

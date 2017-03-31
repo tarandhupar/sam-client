@@ -1,14 +1,14 @@
-import {Routes, RouterModule} from '@angular/router';
-import {ProgramPage} from './assistance-listing.page';
-import {ProgramDisplayPageDemoPage} from './display-template-demo/display-template-demo.page';
-import {ProgramPageOperations} from './assistance-listing-operations/assistance-listing-operations.page';
-import {FalWorkspacePage} from './assistance-listing-workspace/assistance-listing-workspace.page';
-import {AccessRestrictedPage} from './assistance-listing-workspace/program-result/testauthenvironment.page';
-
-import {FALHeaderInfoComponent} from './assistance-listing-operations/sections/header-information/header-information.component';
-import {FALOverviewComponent} from './assistance-listing-operations/sections/overview/overview.component';
-import {FALContactInfoComponent} from './assistance-listing-operations/sections/contact-information/contact-information.component';
-import {FinancialObligationsComponent} from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
+import { Routes, RouterModule } from '@angular/router';
+import { ProgramPage } from './assistance-listing.page';
+import { ProgramDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
+import { ProgramPageOperations } from './assistance-listing-operations/assistance-listing-operations.page';
+import { FalWorkspacePage } from './assistance-listing-workspace/assistance-listing-workspace.page';
+import { AccessRestrictedPage } from './assistance-listing-workspace/program-result/testauthenvironment.page';
+import { FALHeaderInfoComponent } from './assistance-listing-operations/sections/header-information/header-information.component';
+import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
+import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
+import { FinancialObligationsComponent } from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
+import { FinancialInfoFormPage2 } from "./assistance-listing-operations/sections/financial-info/other/financial-info-other.page";
 
 export const routes: Routes = [
   {path: 'programs/:id/view', component: ProgramPage},
@@ -31,7 +31,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'overview', component: FALOverviewComponent},
         {path: 'financial-information', pathMatch: 'full', redirectTo: 'financial-information/obligations'},
         {path: 'financial-information/obligations', component: FinancialObligationsComponent},
-        {path: 'financial-information/other-financial-info', component: FALOverviewComponent},
+        {path: 'financial-information/other-financial-info', component: FinancialInfoFormPage2},
         {path: 'contact-information', component: FALContactInfoComponent},
       ]
     },
@@ -43,7 +43,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'overview', component: FALOverviewComponent},
         {path: 'financial-information', pathMatch: 'full', redirectTo: 'financial-information/obligations'},
         {path: 'financial-information/obligations', component: FinancialObligationsComponent},
-        // { path: 'financial-information/other-financial-info', component: FALOverviewComponent},
+        {path: 'financial-information/other-financial-info', component: FinancialInfoFormPage2},
         {path: 'contact-information', component: FALContactInfoComponent},
       ]
     },

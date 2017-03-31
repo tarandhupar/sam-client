@@ -5,7 +5,14 @@
   <!--<labelWrapper name="domain" label="Domain">-->
     <!--<samMultiSelectDropdown name='domain' label="Domain" [options]="domainOptions" [(model)]="selectedDomains" (modelChange)="onDomainsChange()"></samMultiSelectDropdown>-->
   <!--</labelWrapper>-->
-  <samSelect name="domain" label="Domain" [options]="domainOptions" [(model)]="selectedDomain" (modelChange)="onDomainChange()"></samSelect>
+  <ng-container *ngIf="mode === 'edit'">
+    <label for="domain">Domain</label>
+    <span id="domain">{{domainName}}</span>
+  </ng-container>
+  <ng-container *ngIf="mode === 'new'">
+    <samSelect name="domain" label="Domain" [options]="domainOptions" [(model)]="selectedDomain" (modelChange)="onDomainChange()"></samSelect>
+  </ng-container>
+
 
   <!-- Object name -->
   <labelWrapper name="object" label="Object Name">
@@ -23,7 +30,8 @@
           name="permissions"
           [options]="permissionOptions"
           [config]="{addOnIconClass:'fa fa-search'}"
-          (ngModelChange)="onAddPermissionClick()"
+          [ngModel]="permission"
+          (ngModelChange)="onAddPermissionClick($event)"
         ></sam-autocomplete>
         <!--<button class="usa-button usa-button-transparent add-permission-button" (click)="onAddPermissionClick()">-->
           <!--<i class="fa fa-plus-circle"></i>-->

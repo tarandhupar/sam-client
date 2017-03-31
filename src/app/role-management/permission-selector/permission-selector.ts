@@ -21,8 +21,8 @@ export class PermissionSelectorComponent {
   @Input() hideDefaultColumn: false;
   @Input() hideColumnHeader: false;
 
-  private isAllDefaultsChecked: boolean = true;
-  private isAllChecked: boolean = true;
+  private isAllDefaultsChecked: boolean = false;
+  private isAllChecked: boolean = false;
 
   constructor() {
 

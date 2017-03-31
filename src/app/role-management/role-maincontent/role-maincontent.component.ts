@@ -1,6 +1,7 @@
 import { Input,Component, OnInit, Output, EventEmitter } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
+
 @Component({
   selector: "role-content",
   templateUrl: "./role-maincontent.template.html"
@@ -13,7 +14,6 @@ export class RoleMainContent implements OnInit{
 
   @Output() onRemoveClick: EventEmitter<any> = new EventEmitter<any>();
   ngOnInit(){
-
   }
 
   isRole(){
@@ -26,9 +26,9 @@ export class RoleMainContent implements OnInit{
       return true;
   }
 
-  clickRemove(event){
-    //console.log('Here ' + event);
-    this.onRemoveClick.emit(event);
+  clickRemove(func,domain){
+    let clickedValues = {function : func, domain : domain};
+    this.onRemoveClick.emit(clickedValues);
   }
 
 }

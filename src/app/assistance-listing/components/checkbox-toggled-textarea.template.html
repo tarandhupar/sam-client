@@ -1,0 +1,22 @@
+<labelWrapper #checkboxToggledTextareaLabel
+              [name]="name"
+              [label]="label"
+              [hint]="hint"
+              [required]="required">
+
+  <samCheckbox *ngIf="model"
+               [model]="model.checkbox"
+               [name]="checkboxName"
+               [options]="checkboxOptions"
+               [hasSelectAll]="checkboxHasSelectAll"
+               (modelChange)="onCheckboxChange($event)"
+  ></samCheckbox>
+
+  <samTextArea [name]="textareaName"
+               [placeholder]="textareaPlaceholder"
+               [disabled]="textareaDisabled"
+               [hidden]="textareaHidden"
+               [formControl]="textareaControl"
+  ></samTextArea>
+
+</labelWrapper>

@@ -24,6 +24,11 @@
             &nbsp;
           </div>
         </ng-container>
+        <ng-container *ngIf="hideDefaultColumn">
+          <div class="usa-width-one-third">
+            &nbsp;
+          </div>
+        </ng-container>
       </div>
     </ng-container>
 
@@ -46,6 +51,11 @@
           &nbsp;
         </div>
       </ng-container>
+      <ng-container *ngIf="hideDefaultColumn">
+        <div class="usa-width-one-third">
+          &nbsp;
+        </div>
+      </ng-container>
     </div>
 
     <!-- Table Data -->
@@ -64,6 +74,11 @@
           <input type="checkbox" (click)="onDefaultClick($event.target.checked, option)" [(ngModel)]="option.isDefault">&nbsp;
         </div>
         <div class="usa-width-one-twelfth">
+          &nbsp;
+        </div>
+      </ng-container>
+      <ng-container *ngIf="hideDefaultColumn">
+        <div class="usa-width-one-third">
           &nbsp;
         </div>
       </ng-container>

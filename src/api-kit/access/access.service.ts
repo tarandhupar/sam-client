@@ -107,7 +107,7 @@ export class UserAccessService {
     return this.apiService.call(apiOptions,false);
   }
 
-  getRoleObjDefinitions(mode : string, domainKey : string) {
+  getRoleObjDefinitions(mode : string, domainKey : string, roleKey?) {
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -123,26 +123,48 @@ export class UserAccessService {
       apiOptions.oParam.domainKey = domainKey;
     }
 
+    if (roleKey) {
+      apiOptions.oParam.roleKey = ''+roleKey;
+    }
+
     return this.apiService.call(apiOptions);
   }
 
-  createObject(domainId: number, objectName: string, permissions: {id?: any, val?: string}[]) {
+  createObject(domainId: number, objectName: number|string, permissions: {id?: any, val?: string}[], objectId: any) {
+    console.log(arguments);
     let apiOptions: any = {
-      name: 'functions',
-      suffix: '',
+      name: 'domainDefinition',
+      suffix: '/',
       method: 'POST',
       oParam: {}
     };
 
+    let fun = { }
+
+    if (objectId) {
+      fun['id'] = objectId;
+    }
+
+    if (objectName) {
+      fun['val'] = objectName;
+    }
+
     apiOptions.body = {
-      domain: {id: domainId},
-      functionMapContent: {val: objectName},
-      permission: permissions
+      domain: {
+        id: domainId
+      },
+      functionMapContent: [
+        {
+          function: fun,
+          permission: permissions
+        }
+      ],
+
     };
 
     console.log(apiOptions.body);
 
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, false);
   }
 
   requestAccess(req: any, userName) {
@@ -155,4 +177,29 @@ export class UserAccessService {
 
     return this.apiService.call(apiOptions, false);
   }
+
+  putRole(obj) {
+    let apiOptions: any = {
+      name: 'domainDefinition',
+      suffix: '/',
+      method: 'POST',
+      oParam: { },
+      body: obj,
+    };
+
+    return this.apiService.call(apiOptions, false);
+  }
+
+  deleteFunction(domainKey : string , functionId: string){
+    let apiOptions: any = {
+      name: 'functions',
+      suffix: '/' + functionId + '/',
+      method: 'Delete',
+      oParam: {}
+    };
+    apiOptions.oParam.domainKey = domainKey;
+
+    return this.apiService.call(apiOptions, false);
+  }
+
 }
