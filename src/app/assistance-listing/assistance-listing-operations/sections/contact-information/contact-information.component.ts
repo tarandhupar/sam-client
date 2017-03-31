@@ -313,12 +313,7 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
   onSaveExitClick(event) {
 
-    if (this.sharedService.programId)
-      this.redirectToViewPg = true;
-    else
-      this.redirectToWksp = true;
-
-
+    this.redirectToWksp = true;
     this.saveData();
   }
 
