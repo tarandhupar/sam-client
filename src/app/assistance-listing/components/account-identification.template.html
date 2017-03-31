@@ -62,6 +62,7 @@
                        [style.display]="'inline-block'"
                        [style.maxWidth]="0.9*length + 2.8 + 'rem'"
                        [formControlName]="'codeBox' + i"
+                       (keyup)="onKeyup($event)"
               ></samText>
               {{isLast ? '' : '-'}}
             </ng-container>

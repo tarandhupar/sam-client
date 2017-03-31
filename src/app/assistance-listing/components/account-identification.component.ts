@@ -162,6 +162,37 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     this.onChange();
   }
 
+  // Modified version of code originally by Joseph Lennox
+  // http://stackoverflow.com/a/15595732
+  private onKeyup(event) {
+    let target = event.srcElement || event.target;
+    let maxLength = parseInt(target.attributes["maxlength"].value, 10);
+    let currentLength = target.value.length;
+    if (currentLength >= maxLength) {
+      var next = target.parentNode.parentNode.parentNode;
+      while (next = next.nextElementSibling) {
+        if (next == null)
+          break;
+        if (next.tagName.toLowerCase() === "samtext") {
+          next.getElementsByTagName('input')[0].focus();
+          break;
+        }
+      }
+    }
+    // Move to previous field if empty (user pressed backspace)
+    else if (currentLength === 0) {
+      var previous = target.parentNode.parentNode.parentNode;
+      while (previous = previous.previousElementSibling) {
+        if (previous == null)
+          break;
+        if (previous.tagName.toLowerCase() === "samtext") {
+          previous.getElementsByTagName('input')[0].focus();
+          break;
+        }
+      }
+    }
+  }
+
   private onChange() {
     this.onChangeCallback(this.model);
 
