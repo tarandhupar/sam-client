@@ -155,9 +155,10 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
   onCancelClick(event) {
     if (this.sharedService.programId)
-      this.router.navigate(['/falworkspace']);
-    else
       this.router.navigate(['/programs', this.sharedService.programId, 'view']);
+    else
+      this.router.navigate(['/falworkspace']);
+
   }
 
   onSaveExitClick(event) {
