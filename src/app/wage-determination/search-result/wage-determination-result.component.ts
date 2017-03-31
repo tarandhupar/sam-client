@@ -39,9 +39,9 @@ import * as moment from 'moment/moment';
         	<li class="wd-state-0"><strong>State: </strong>
         	  <span>{{ data.location?.state?.name }}</span>
         	</li>
-        	<li class="wd-counties-0" class="break-word"><strong>County/ies: </strong>
+        	<li class="wd-counties-0"><strong>County/ies: </strong>
             <ng-container *ngFor="let county of data.location?.state?.counties; let isLast=last">
-              {{county?.value}}{{ isLast ? '' : ', '}}
+              <span>{{county?.value}}{{ isLast ? '' : ', '}}</span>
             </ng-container>
         	</li>
         </ul>
