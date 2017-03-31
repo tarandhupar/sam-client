@@ -32,17 +32,17 @@ export class FALOpSharedService{
       label: "Assistance Listings",
         children: [
       {
-        label: "Header Information",
+        label: "1. Header Information",
         route: this.baseURL + '/header-information',
         path: 'header-information'
       },
       {
-        label: "Overview",
+        label: "2. Overview",
         route: this.baseURL + '/overview',
         path: 'overview'
       },
       {
-        label: "Financial Information",
+        label: "4. Financial Information",
         route: this.baseURL + '/financial-information',
         path: 'financial-information',
         children:[
@@ -59,7 +59,7 @@ export class FALOpSharedService{
         ]
       },
       {
-        label : "Contact Information",
+        label : "5. Contact Information",
         route: this.baseURL + "/contact-information",
         path: "contact-information"
       }
