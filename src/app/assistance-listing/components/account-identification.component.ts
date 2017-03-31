@@ -89,7 +89,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     this.accountFormGroup.addControl('codeBoxes', this.codeFormGroup);
 
     for(let i = 0; i < this.codeBoxLengths.length; i++) {
-      let codeBoxControl = new FormControl(null, Validators.required);
+      let codeBoxControl = new FormControl(null, [Validators.required, Validators.pattern('[0-9]*')]);
       codeBoxControl.valueChanges.subscribe(value => {
         this.model.codeBoxes[i] = value;
         this.onChange();

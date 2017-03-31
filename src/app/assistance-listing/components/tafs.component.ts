@@ -1,5 +1,5 @@
 import { Component, Input, forwardRef, ViewChild } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl } from "@angular/forms";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, Validators } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
 @Component({
@@ -72,12 +72,12 @@ export class FALTafsComponent implements ControlValueAccessor {
 
   private createFormControls() {
     this.tafsFormGroup = new FormGroup({
-      departmentCode: new FormControl(null),
-      accountCode: new FormControl(null),
-      subAccountCode: new FormControl(null),
-      allocationTransferAgency: new FormControl(null),
-      fy1: new FormControl(null),
-      fy2: new FormControl(null)
+      departmentCode: new FormControl(null, Validators.pattern('[0-9]*')),
+      accountCode: new FormControl(null, Validators.pattern('[0-9]*')),
+      subAccountCode: new FormControl(null, Validators.pattern('[0-9]*')),
+      allocationTransferAgency: new FormControl(null, Validators.pattern('[0-9]*')),
+      fy1: new FormControl(null, Validators.pattern('[0-9]*')),
+      fy2: new FormControl(null, Validators.pattern('[0-9]*'))
     });
 
     this.tafsFormGroup.get('departmentCode').valueChanges.subscribe(value => {
