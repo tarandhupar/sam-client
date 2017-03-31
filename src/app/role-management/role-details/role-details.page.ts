@@ -13,6 +13,7 @@ export class RoleDetailsPage {
 
   roles = [{ vals: [], name: 'Assistance Listing'}, {vals: [], name: 'IDV'}, {vals: [], name: 'Regional Offices'}];
   role;
+  originalRole;
   roleId;
   domains: any[] = [];
   domain;
@@ -91,10 +92,6 @@ export class RoleDetailsPage {
   }
 
   setObjectPermissions() {
-    // this.permissionOptions.forEach(obj => {
-    //   let functionAllId = obj.id;
-    //   let functionChecked = this.domainDefinitions.roleDefinitionMapContent.find();
-    // });
     this.domainDefinitions.roleDefinitionMapContent[0].functionContent.forEach(rd => {
       if (+rd.function.id === 0) {
         // check domain roles
@@ -107,15 +104,13 @@ export class RoleDetailsPage {
       } else {
         let perms = rd.permission;
         let fid = rd.function.id;
-        //console.log('find', rd.function, 'in', this.domainOptions);
-        //console.log(this.permissionOptions);
         let fun = this.permissionOptions.find(popt => +popt.id === +fid);
         if (fun) {
-          //console.log('found', fun, 'rd', rd);
-          console.log('permission options', fun.permissions, 'should be checked: ', perms);
           fun.permissions.forEach(pp => {
-            if (perms.find(p => +p.id === pp.value )) {
+            let ppx = perms.find(p => +p.id === pp.value );
+            if (ppx) {
               pp.isSelected = true;
+              pp.isDefault = !!ppx.isDefault;
             }
           });
         }
@@ -137,7 +132,6 @@ export class RoleDetailsPage {
         }
 
         let func0 = this.domainDefinitions.functionMapContent.find(func => +func.function.id === 0);
-        console.log(func0);
 
         this.domainRoleOptions = func0.permission.map(dr => {
           return {
@@ -185,7 +179,7 @@ export class RoleDetailsPage {
               console.error('mode not found');
             }
           });
-          //this.permissionOptions.filter(p => +p.id !== 0);
+          this.permissionOptions = this.permissionOptions.filter(p => +p.id !== 0);
         }
 
         if (this.mode === 'edit') {
@@ -194,6 +188,7 @@ export class RoleDetailsPage {
           let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.id);
           if (r) {
             this.role = r.label;
+            this.originalRole = _.clone(this.role);
           } else {
             this.footerAlert.registerFooterAlert({
               title: 'Role '+this.roleId+' not found',
@@ -255,13 +250,12 @@ export class RoleDetailsPage {
         });
       }
     } else {
-      let opt = this.domainRoleOptions.find(ro => +ro.value === +this.roleId);
+      let opt = this.domainRoleOptions.find(ro => +ro.id === +this.roleId);
       let dr = this.domainRoles.find(dr => +dr.role.id === +this.roleId);
       if (!opt) {
         console.error('unable to update role label');
         return;
       }
-      //opt.isModified = dr.role.val !== this.role;
       opt.label = this.role;
     }
 
@@ -272,13 +266,18 @@ export class RoleDetailsPage {
   }
 
   roleExists() {
-    return this.domainRoleOptions.find(d => {
+    return !!this.domainRoleOptions.find(d => {
       return d.label.toUpperCase() === this.role.toUpperCase() && !d.isNew;
     });
   }
 
   validate() {
-    return this.selectedDomain && this.role && (this.mode === 'edit' || !this.roleExists());
+    console.log(this.selectedDomain, this.role, this.mode, this.roleExists());
+    if (this.mode === 'edit') {
+      return this.role;
+    } else {
+      return this.selectedDomain && this.role && !this.roleExists();
+    }
   }
 
   onDomainFocus() {
@@ -295,7 +294,7 @@ export class RoleDetailsPage {
     }
     if (!this.role) {
       this.errors.role = "Role is required";
-    } else if (this.roleExists()) {
+    } else if (this.mode === 'new' && this.roleExists()) {
       this.errors.role = 'Cannot create role. Role name already exists';
     }
   }
@@ -305,11 +304,12 @@ export class RoleDetailsPage {
       this.requestObject = this.getRequestObject();
       this.accessService.putRole(this.requestObject).subscribe(
         res => {
+          let verb = this.mode === 'new' ? 'created' : 'editted';
           this.footerAlert.registerFooterAlert({
-            description: 'Successfully create new role.',
+            description: 'Successfully '+verb+' new role.',
             type: 'success'
           });
-          this.router.navigateByUrl('/access/roles');
+          this.router.navigateByUrl('/access/workspace');
         },
         err => {
           this.showGenericServicesError();
@@ -325,16 +325,17 @@ export class RoleDetailsPage {
   }
 
   getRequestObject() {
-
     let allDomainRoles = this.domainRoleOptions.filter(dr => dr.isSelected);
     let domainRoles = allDomainRoles.map(dr => {
       return {
-        id: dr.value,
+        id: dr.id,
       };
     });
 
-
     let allFuncs = this.permissionOptions.map(obj => {
+      if (+obj.id === 0) {
+        return;
+      }
       let permissions = obj.permissions.filter(perm => perm.isSelected);
       permissions = permissions.map(perm => {
         return {
@@ -351,20 +352,22 @@ export class RoleDetailsPage {
       };
     });
 
-    let role = {
-      //"id":24,
-      "val": this.role,
-    };
+    let role = { };
 
     if (this.mode === 'edit') {
       role['id'] = this.roleId;
+      if (this.role.toUpperCase() !== this.originalRole.toUpperCase()) {
+        role['val'] = this.role;
+      }
+    } else {
+      role['val'] = this.role;
     }
 
     let ret = {
-          "domain":{
-          "id": +this.selectedDomain
-        },
-        "roleDefinitionMapContent":[
+      "domain":{
+        "id": +this.selectedDomain || +this.domain
+      },
+      "roleDefinitionMapContent":[
         {
           role: role,
           "functionContent":[

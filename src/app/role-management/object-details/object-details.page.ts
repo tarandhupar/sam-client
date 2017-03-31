@@ -20,6 +20,7 @@ export class ObjectDetailsPage implements OnInit {
   domains;
   domainOptions;
   objectName;
+  originalObjectName;
   objectId;
   requestObject;
 
@@ -69,6 +70,7 @@ export class ObjectDetailsPage implements OnInit {
       this.objectId = +objectId;
       this.accessService.getFunctionById(+objectId).subscribe(obj => {
         this.objectName = obj.functionName;
+        this.originalObjectName = _.clone(this.objectName);
       });
     });
   }
@@ -85,7 +87,6 @@ export class ObjectDetailsPage implements OnInit {
         }
         domainId = +domainId;
         this.selectedDomain = domainId;
-        console.log(this.domains);
         let d = this.domains.find(dom => {
           return +dom.id === domainId;
         });
@@ -195,7 +196,11 @@ export class ObjectDetailsPage implements OnInit {
 
   onSubmitClick() {
     let perms = this.getPermissionsArray();
-    this.accessService.createObject(+this.selectedDomain, this.objectName, perms, this.objectId).delay(1000).subscribe(
+    let name = this.objectName;
+    if (this.mode === 'edit' && name === this.originalObjectName) {
+      name = undefined;
+    }
+    this.accessService.createObject(+this.selectedDomain, name, perms, this.objectId).delay(1000).subscribe(
       res => {
         this.footerAlerts.registerFooterAlert({
           title: 'Successfully created object',

@@ -139,12 +139,14 @@ export class UserAccessService {
       oParam: {}
     };
 
-    let fun = {
-      val: objectName
-    };
+    let fun = { }
 
     if (objectId) {
       fun['id'] = objectId;
+    }
+
+    if (objectName) {
+      fun['val'] = objectName;
     }
 
     apiOptions.body = {
