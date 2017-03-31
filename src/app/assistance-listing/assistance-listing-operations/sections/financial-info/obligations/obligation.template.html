@@ -1,17 +1,15 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Contact Information - {{title}}</div>
+<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Financial Information - {{title}}</div>
 <form [formGroup]="finObligationsForm" novalidate (ngSubmit)="save(finObligationsForm)">
   <div class="usa-grid">
     <div> Select if applicable</div>
     <samCheckbox
-      [(model)]="currentFiscalYearCheckboxModel"
       [name]="currentFiscalYearCheckboxConfig.name"
       [options]="currentFiscalYearCheckboxConfig.options"
       [label]="currentFiscalYearCheckboxConfig.label"
       [hint]="currentFiscalYearCheckboxConfig.hint"
       [errorMessage]="currentFiscalYearCheckboxConfig.errorMessage"
       (modelChange)="chkCurrFiscalYearChange($event)"
-      class="form-control" formControlName="isFundedCurrentFY" ngDefaultControl
-      [(ngModel)]=" currentFiscalYearFlag">
+      class="form-control" formControlName="isFundedCurrentFY">
     </samCheckbox>
     <div [class.hide]="obligationsInfo.length == 0">
       <h2>Obligations</h2>
@@ -30,15 +28,24 @@
 
         <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
           <tr>
-            <td>{{obligation.assistanceType}}</td>
-            <td><span>$</span>{{obligation['pFY']['textboxValue']?obligation['pFY']['textboxValue']:'0'}}</td>
-            <td><span>$</span>{{obligation['cFY']['textboxValue']?obligation['cFY']['textboxValue']:'0'}}</td>
-            <td><span>$</span>{{obligation['bFY']['textboxValue']?obligation['bFY']['textboxValue']:'0'}}</td>
+            <td>{{obligation.assistanceType.name}}</td>
+            <td>{{obligation['pFY']['radioOptionId']==='pFYActual'?'$' + obligation['pFY']['textboxValue']:(obligation['pFY']['radioOptionId']==='pFYNsi' ? 'NSI' : 'N/A')}}</td>
+            <td>{{obligation['cFY']['radioOptionId']==='cFYEstimate'?'$' + obligation['cFY']['textboxValue']:(obligation['cFY']['radioOptionId']==='cFYNsi' ? 'NSI' : 'N/A')}}</td>
+            <td>{{obligation['bFY']['radioOptionId']==='bFYEstimate'?'$' + obligation['bFY']['textboxValue']:(obligation['bFY']['radioOptionId']==='bFYNsi' ? 'NSI' : 'N/A')}}</td>
             <td>
-              <a class="fal-table-edit" (click)="editObligation(i)">Edit</a>
-              <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editObligation(i)"></i>
-              <a class="fal-table-delete" (click)="removeObligation(i)">Delete</a>
-              <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeObligation(i)"></i>
+              <ng-container *ngIf="hideObligationsForm">
+                <a class="fal-table-edit" (click)="editObligation(i)" >Edit</a>
+                <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editObligation(i)"></i>
+                <a class="fal-table-delete" (click)="removeObligation(i)">Remove</a>
+                <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeObligation(i)"></i>
+              </ng-container>
+
+              <ng-container *ngIf="!hideObligationsForm">
+                <s class="fal-table-edit">Edit</s>
+                <s class="fa fa-pencil fal-table-edit" aria-hidden="true"></s>
+                <s class="fal-table-delete">Remove</s>
+                <s class="fa fa-trash fal-table-delete" aria-hidden="true"></s>
+              </ng-container>
             </td>
           </tr>
 
@@ -68,11 +75,9 @@
           <h2>New Obligation</h2>
           <div>Select if applicable</div>
           <samCheckbox
-            [(model)]="recReinveCheckboxModel"
             [name]="recReinveCheckboxConfig.name"
             [options]="recReinveCheckboxConfig.options"
-            class="form-control" formControlName="isRecoveryAct" [(ngModel)]="chkRecReinvActObj"
-            ngDefaultControl>
+            class="form-control" formControlName="isRecoveryAct">
           </samCheckbox>
 
           <div>Assistance Type</div>
