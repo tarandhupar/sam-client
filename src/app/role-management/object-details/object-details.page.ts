@@ -170,7 +170,6 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   onAddPermissionClick(newValue: any) {
-    console.log(this, arguments);
     let v = typeof newValue === 'string' ? newValue : newValue.inputValue;
 
     if (this.selectedPermissions.findIndex(sp => sp.val === v) !== -1) {
@@ -215,28 +214,19 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   getPermissionsArray() {
-    // console.log('selected', this.selectedPermissions);
-    // console.log('original', this.originalPermissions);
     return this.selectedPermissions.map(perm => {
       if (perm.isNew) {
         return {
           val: perm.val
         }
       } else {
-        console.log('find', perm, 'in', this.originalPermissions);
         let o = this.originalPermissions.find(op => op.permissionName.toUpperCase() === perm.val.toUpperCase() );
         if (!o) {
           console.error('could not find', perm, 'in', this.originalPermissions);
         }
         return { id: o.id };
       }
-      // let p = this.originalPermissions.find(op => op.val === perm);
-      // if (p) {
-      //   return p;
-      // } else {
-      //   return { val: perm };
-      // }
-    })
+    });
   }
 
 
