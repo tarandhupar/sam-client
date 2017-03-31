@@ -231,11 +231,7 @@ export class FinancialInfoFormPage2 implements OnInit {
   public onSaveExitClick(event) {
     this.saveProgramData().subscribe(res => {
       let id = res._body;
-      if(this.programId) {
-        this.router.navigate(['programs', id, 'view']);
-      } else {
-        this.router.navigate(['falworkspace']);
-      }
+      this.router.navigate(['falworkspace']);
     }, err => {
       console.log("Error saving program ", err);
     });
