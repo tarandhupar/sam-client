@@ -178,7 +178,7 @@ export class UserAccessService {
       suffix: '/' + functionId + '/',
       method: 'Delete',
       oParam: {}
-    }
+    };
     apiOptions.oParam.domainKey = domainKey;
 
     return this.apiService.call(apiOptions, false);
