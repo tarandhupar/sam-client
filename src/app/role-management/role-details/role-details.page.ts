@@ -90,8 +90,37 @@ export class RoleDetailsPage {
 
   }
 
-  setObjectPermissions(permissions, domainDefs) {
-
+  setObjectPermissions() {
+    // this.permissionOptions.forEach(obj => {
+    //   let functionAllId = obj.id;
+    //   let functionChecked = this.domainDefinitions.roleDefinitionMapContent.find();
+    // });
+    this.domainDefinitions.roleDefinitionMapContent[0].functionContent.forEach(rd => {
+      if (+rd.function.id === 0) {
+        // check domain roles
+        let droles = rd.permission;
+        this.domainRoleOptions.forEach(dopt => {
+          if (droles.find(dr => +dopt.id === +dr.id)) {
+            dopt.isSelected = true;
+          }
+        });
+      } else {
+        let perms = rd.permission;
+        let fid = rd.function.id;
+        //console.log('find', rd.function, 'in', this.domainOptions);
+        //console.log(this.permissionOptions);
+        let fun = this.permissionOptions.find(popt => +popt.id === +fid);
+        if (fun) {
+          //console.log('found', fun, 'rd', rd);
+          console.log('permission options', fun.permissions, 'should be checked: ', perms);
+          fun.permissions.forEach(pp => {
+            if (perms.find(p => +p.id === pp.value )) {
+              pp.isSelected = true;
+            }
+          });
+        }
+      }
+    });
   }
 
   onDomainChange() {
@@ -117,16 +146,6 @@ export class RoleDetailsPage {
           };
         });
 
-        // if (this.domainDefinitions.roleDefinitionMapContent && this.domainDefinitions.roleDefinitionMapContent.length) {
-        //   this.domainRoles = this.domainDefinitions.roleDefinitionMapContent;
-        //   this.domainRoleOptions = this.domainDefinitions.roleDefinitionMapContent.map(r => {
-        //     return {
-        //       label: r.role.val,
-        //       value: r.role.id,
-        //     };
-        //   });
-        // }
-
         if (this.domainDefinitions.functionMapContent && this.domainDefinitions.functionMapContent.length){
           this.permissionOptions = this.domainDefinitions.functionMapContent.map(f => {
             if (this.mode === 'new') {
@@ -137,27 +156,28 @@ export class RoleDetailsPage {
                   return {
                     label: perm.val,
                     value: perm.id,
-                    isDefault: true,
-                    isSelected: true,
+                    isDefault: false,
+                    isSelected: false,
                   };
                 })
               };
             } else if (this.mode === 'edit') {
               // Check to see if the permission is set for this domain/role combo
 
-              let roleDefitionMapContent = this.domainDefinitions.roleDefinitionMapContent;
+              //let roleDefitionMapContent = this.domainDefinitions.roleDefinitionMapContent;
 
               // Find this function
               //let fun = roleDefitionMapContent.find(r => +r.role.id === f.)
 
               return {
+                id: f.function.id,
                 name: f.function.val,
                 permissions: f.permission.map(perm => {
                   return {
                     label: perm.val,
                     value: perm.id,
-                    isDefault: true,
-                    isSelected: true,
+                    isDefault: false,
+                    isSelected: false,
                   };
                 })
               };
@@ -165,11 +185,13 @@ export class RoleDetailsPage {
               console.error('mode not found');
             }
           });
+          //this.permissionOptions.filter(p => +p.id !== 0);
         }
 
         if (this.mode === 'edit') {
           // find the text label for role
-          let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.value);
+          console.log(this.domainRoleOptions, 'find', this.roleId);
+          let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.id);
           if (r) {
             this.role = r.label;
           } else {
@@ -181,7 +203,7 @@ export class RoleDetailsPage {
             this.domainDefinitions = null;
             return;
           }
-          //updatePermissions(this.domainRoleOptions)
+          this.setObjectPermissions();
         }
       },
       err => {
