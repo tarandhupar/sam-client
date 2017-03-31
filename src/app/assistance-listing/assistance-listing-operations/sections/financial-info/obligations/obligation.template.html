@@ -29,9 +29,9 @@
         <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
           <tr>
             <td>{{obligation.assistanceType.name}}</td>
-            <td>{{obligation['pFY']['radioOptionId']==='pFYActual'?'$' + obligation['pFY']['textboxValue']:(obligation['pFY']['radioOptionId']==='pFYNsi' ? 'NSI' : 'N/A')}}</td>
-            <td>{{obligation['cFY']['radioOptionId']==='cFYEstimate'?'$' + obligation['cFY']['textboxValue']:(obligation['cFY']['radioOptionId']==='cFYNsi' ? 'NSI' : 'N/A')}}</td>
-            <td>{{obligation['bFY']['radioOptionId']==='bFYEstimate'?'$' + obligation['bFY']['textboxValue']:(obligation['bFY']['radioOptionId']==='bFYNsi' ? 'NSI' : 'N/A')}}</td>
+            <td>{{obligation['pFY']['radioOptionId']==='pFYActual'?'$' + obligation['pFY']['textboxValue']:(obligation['pFY']['radioOptionId']==='pFYNsi' ? 'Not Separatly Identifiable' : 'Not available')}}</td>
+            <td>{{obligation['cFY']['radioOptionId']==='cFYEstimate'?'$' + obligation['cFY']['textboxValue']:(obligation['cFY']['radioOptionId']==='cFYNsi' ? 'Not Separatly Identifiable' : 'Not available')}}</td>
+            <td>{{obligation['bFY']['radioOptionId']==='bFYEstimate'?'$' + obligation['bFY']['textboxValue']:(obligation['bFY']['radioOptionId']==='bFYNsi' ? 'Not Separatly Identifiable' : 'Not available')}}</td>
             <td>
               <ng-container *ngIf="hideObligationsForm">
                 <a class="fal-table-edit" (click)="editObligation(i)" >Edit</a>
