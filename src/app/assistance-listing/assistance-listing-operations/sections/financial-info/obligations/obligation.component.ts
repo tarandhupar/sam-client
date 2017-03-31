@@ -398,21 +398,16 @@ export class FinancialObligationsComponent implements OnInit {
     if (this.sharedService.programId)
       this.router.navigate(['programs/' + this.sharedService.programId + '/edit/overview']);
     else
-      this.router.navigate(['programs/add/financial-information/other-financial-info']);
+      this.router.navigate(['programs/add/overview']);
 
   }
 
   onSaveExitClick(event) {
-
-    /* if (this.sharedService.programId)
-     this.redirectToViewPg = true;
-     else
-     this.redirectToWksp = true;*/
+    this.redirectToWksp = true;
     this.saveData();
   }
 
   onSaveContinueClick(event) {
-    this.redirectToViewPg = true;
     this.saveData();
   }
 
@@ -490,7 +485,7 @@ export class FinancialObligationsComponent implements OnInit {
             this.router.navigate(['/programs', this.sharedService.programId, 'view']);
           }
           else
-            this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/financial-information']);
+            this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/financial-information/other-financial-info']);
 
         },
         error => {
