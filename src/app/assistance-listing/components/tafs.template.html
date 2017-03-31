@@ -49,10 +49,10 @@
               <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeTafs(i)"></i>
             </ng-container>
             <ng-container *ngIf="currentIndex < model.tafs.length || showForm">
-              <s class="fal-table-edit">Edit</s>
-              <s class="fa fa-pencil fal-table-edit" aria-hidden="true"></s>
-              <s class="fal-table-delete">Delete</s>
-              <s class="fa fa-trash fal-table-delete" aria-hidden="true"></s>
+              <span class="fal-table-edit disabled">Edit</span>
+              <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+              <span class="fal-table-delete disabled">Delete</span>
+              <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
             </ng-container>
           </td>
         </tr>
