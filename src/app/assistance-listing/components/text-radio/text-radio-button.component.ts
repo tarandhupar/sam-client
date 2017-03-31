@@ -1,9 +1,8 @@
 import {Component, Input, ViewChild, Output, EventEmitter, forwardRef} from '@angular/core';
-import {SamRadioButtonComponent} from "sam-ui-elements/src/ui-kit/form-controls/radiobutton";
 import {FormControl, ControlValueAccessor, Validators, NG_VALUE_ACCESSOR} from "@angular/forms";
-import { FieldsetWrapper } from '../../../sam-ui-elements/src/ui-kit/wrappers/fieldset-wrapper';
-import { SamTextInputModule } from '../../../sam-ui-elements/src/ui-kit/form-controls/text';
-import {OptionsType} from "sam-ui-kit/types";
+import {OptionsType} from "../../../../sam-ui-elements/src/ui-kit/types";
+import { FieldsetWrapper } from '../../../../sam-ui-elements/src/ui-kit/wrappers/fieldset-wrapper';
+import { SamTextInputModule } from '../../../../sam-ui-elements/src/ui-kit/form-controls/text';
 
 
 export class modelData{

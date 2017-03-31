@@ -19,9 +19,9 @@
         <thead>
         <tr>
           <th scope="col">obligations</th>
-          <th scope="col">FY {{pastYear}}</th>
-          <th scope="col">FY {{currentYear}} (est.)</th>
-          <th scope="col">FY {{budgetYear}} (est.)</th>
+          <th scope="col">FY {{pFYtableHeaderText}}</th>
+          <th scope="col">FY {{cFYtableHeaderText}} (est.)</th>
+          <th scope="col">FY {{bFYtableHeaderText}} (est.)</th>
           <th>Actions</th>
 
         </tr>
@@ -31,9 +31,9 @@
         <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
           <tr>
             <td>{{obligation.assistanceType}}</td>
-            <td>{{obligation['pFY']['textboxValue']}}</td>
-            <td>{{obligation['cFY']['textboxValue']}}</td>
-            <td>{{obligation['bFY']['textboxValue']}}</td>
+            <td><span>$</span>{{obligation['pFY']['textboxValue']?obligation['pFY']['textboxValue']:'0'}}</td>
+            <td><span>$</span>{{obligation['cFY']['textboxValue']?obligation['cFY']['textboxValue']:'0'}}</td>
+            <td><span>$</span>{{obligation['bFY']['textboxValue']?obligation['bFY']['textboxValue']:'0'}}</td>
             <td>
               <a class="fal-table-edit" (click)="editObligation(i)">Edit</a>
               <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editObligation(i)"></i>
@@ -45,9 +45,9 @@
         </ng-container>
         <tr>
           <td>Total</td>
-          <td><span>$</span>{{totalvalue.totalpFY}}</td>
-          <td><span>$</span>{{totalvalue.totalcFY}}</td>
-          <td><span>$</span>{{totalvalue.totalbFY}}</td>
+          <td>${{totalvalue.totalpFY}}</td>
+          <td>${{totalvalue.totalcFY}}</td>
+          <td>${{totalvalue.totalbFY}}</td>
           <td></td>
         </tr>
         </tbody>
@@ -119,23 +119,10 @@
     </div>
 
   </div>
-  <div class="pull-left">
-    <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"
-               [buttonType]="(!finObligationsForm.valid || hideAddButton ? 'disabled' : 'default')"></samButton>
-    <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"
-               [buttonType]="(!finObligationsForm.valid || hideAddButton ? 'disabled' : 'default')"></samButton>
-    <samButton buttonText="Save and Exit" (onClick)="saveData()" (onClick)="saveData()"
-               [buttonType]="(!finObligationsForm.valid || hideAddButton ? 'disabled' : 'default')"
-    ></samButton>
-    <samButton buttonText="Save and Continue"
-               [buttonType]="(!finObligationsForm.valid || hideAddButton ? 'disabled' : 'default')"
-               (onClick)="onSaveContinueClick($event)"
-    ></samButton>
-  </div>
+    <div class="pull-left">
+      <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+      <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+      <samButton [buttonType]="(!finObligationsForm.valid || hideAddButton ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+      <samButton [buttonType]="(!finObligationsForm.valid || hideAddButton ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+    </div>
 </form>
-
-
-
-
-
-

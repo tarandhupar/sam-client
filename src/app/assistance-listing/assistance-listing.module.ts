@@ -18,7 +18,7 @@ import { FALHeaderInfoComponent } from './assistance-listing-operations/sections
 import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
 import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
 import {FinancialObligationsComponent} from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
-import {SamTextRadioButtonComponent} from "./components/text-radio-button.component";
+import {SamTextRadioButtonComponent} from "./components/text-radio/text-radio-button.component";
 
 
 @NgModule({

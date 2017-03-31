@@ -2,10 +2,7 @@
   <ul class="usa-unstyled-list">
     <li *ngFor="let option of options; let i = index">
       <div class="usa-grid-full">
-
         <div class="usa-width-two-thirds">
-         <!-- {{ model | json}}
-          {{ option | json }}-->
           <input [attr.id]="option.name" type="radio" (change)="onRadioOptionChange(option.value)" [attr.name]="name"
                  [checked]="model.radioOptionId == option.value" [checked]="model.radioOptionId == option.value" [value]="option.value">
           <label [attr.for]="option.name">{{option.label}}</label>
