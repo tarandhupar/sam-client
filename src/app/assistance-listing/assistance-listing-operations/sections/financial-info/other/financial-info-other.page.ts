@@ -45,7 +45,7 @@ export class FinancialInfoFormPage2 implements OnInit {
     name: 'tafs',
     label: 'TAFS Codes - Unique Treasury Appropriation Fund Symbols',
     hint: 'Enter as many components as possible. Treasury Dept Code, Allocation Transfer Agency, and Treasury Account main code are required.',
-    required: false
+    required: true
   };
 
   public accomplishmentsModel: Object = {};

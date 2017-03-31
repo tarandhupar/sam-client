@@ -43,12 +43,16 @@
           <td>
             <!--todo: handle this with css classes?-->
             <ng-container *ngIf="currentIndex === model.tafs.length && !showForm">
-              <a (click)="editTafs(i)">Edit</a>
-              <a (click)="removeTafs(i)">Delete</a>
+              <a class="fal-table-edit" (click)="editTafs(i)">Edit</a>
+              <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editTafs(i)"></i>
+              <a class="fal-table-delete" (click)="removeTafs(i)">Delete</a>
+              <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeTafs(i)"></i>
             </ng-container>
             <ng-container *ngIf="currentIndex < model.tafs.length || showForm">
-              <s>Edit</s>
-              <s>Delete</s>
+              <s class="fal-table-edit">Edit</s>
+              <s class="fa fa-pencil fal-table-edit" aria-hidden="true"></s>
+              <s class="fal-table-delete">Delete</s>
+              <s class="fa fa-trash fal-table-delete" aria-hidden="true"></s>
             </ng-container>
           </td>
         </tr>
