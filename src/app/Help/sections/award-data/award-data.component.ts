@@ -235,6 +235,8 @@ export class AwardDataComponent {
     entityComplianceReporting: [this.entityReportConfig, this.entityReportFeatures, this.entityReportCommonTerms, this.entityReportTypes, this.entityReportFAQs],
   };
 
+  baseURL = "/help/award";
+
 
   constructor(private router:Router, private route:ActivatedRoute) {}
 
@@ -242,16 +244,18 @@ export class AwardDataComponent {
     this.loadSubSectionContent(this.curSubSection);
     this.router.events.subscribe(
       val => {
-        let subSection = "";
-        let start = val.url.indexOf("#");
-        if(start > 0){
-          subSection = val.url.substr(start+1,val.url.length-start-1);
-        }else{
-          subSection = "opportunities";
-        }
-        if(subSection !== this.curSubSection) {
-          this.curSubSection = subSection;
-          this.loadSubSectionContent(this.curSubSection);
+        if(val.url.startsWith(this.baseURL)){
+          let subSection = "";
+          let start = val.url.indexOf("#");
+          if(start > 0){
+            subSection = val.url.substr(start+1,val.url.length-start-1);
+          }else{
+            subSection = "opportunities";
+          }
+          if(subSection !== this.curSubSection) {
+            this.curSubSection = subSection;
+            this.loadSubSectionContent(this.curSubSection);
+          }
         }
       });
 

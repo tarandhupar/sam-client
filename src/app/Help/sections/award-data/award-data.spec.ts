@@ -15,7 +15,7 @@ describe("Award data page in help page", ()=>{
   beforeEach(()=>{
     TestBed.configureTestingModule({
       providers:[AwardDataComponent,
-        {provide: Router, useValue:{events:Observable.of({url:"help/award#wageDeterminations"})}},
+        {provide: Router, useValue:{events:Observable.of({url:"/help/award#wageDeterminations"})}},
         {provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{ 'admin': 'true' }])}}],
       imports:[HelpModule, RouterTestingModule],
     });
