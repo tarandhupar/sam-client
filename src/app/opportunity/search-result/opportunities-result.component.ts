@@ -25,8 +25,8 @@ import * as moment from 'moment/moment';
           <a *ngIf="data.isActive==true && data.organizationHierarchy[0].organizationId.length < 12" [routerLink]="['/organization', data.organizationHierarchy[0].organizationId]" [queryParams]="qParams">{{data.organizationHierarchy[0].name}}</a>
           <span *ngIf="data.organizationHierarchy[0].organizationId.length >= 12">{{data.organizationHierarchy[0].name}}</span>
         </li>
-        <li *ngIf="data.organizationHierarchy!=null"><strong>Office:</strong> {{ data.organizationHierarchy[1].name }}</li>
-        <li *ngIf="data.organizationHierarchy!=null"><strong>Location:</strong> {{ data.organizationHierarchy[2].name }}</li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Sub-tier:</strong> {{ data.organizationHierarchy[1].name }}</li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Office:</strong> {{ data.organizationHierarchy[2].name }}</li>
       </ul>
     </div>
     <div class="usa-width-one-third">
