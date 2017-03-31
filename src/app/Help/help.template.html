@@ -49,7 +49,7 @@
           </ul>
         </li>
         <li>
-          <a [ngClass]="getSectionClass('award')" (click)="changeSection('award')" [routerLink]="['/help/award']" *ngIf="linkToggle()">Award Data</a>
+          <a [ngClass]="getSectionClass('award')" (click)="changeSection('award')" [routerLink]="['/help/award']">Award Data</a>
           <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('award')">
             <li><a #opportunities [ngClass]="getSubSectionClass('opportunities')" (click)="changeSubSection('opportunities',opportunities)" href="{{currentUrl}}#opportunities">Opportunities</a></li>
             <li><a #wageDeterminations [ngClass]="getSubSectionClass('wageDeterminations')" (click)="changeSubSection('wageDeterminations',wageDeterminations)" href="{{currentUrl}}#wageDeterminations">Wage Determinations</a></li>
