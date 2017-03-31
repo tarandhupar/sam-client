@@ -6,22 +6,25 @@ import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { SamAPIKitModule } from '../../api-kit/api-kit.module';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { AppComponentsModule } from '../../app/app-components/app-components.module';
+import { Ng2PageScrollModule } from 'ng2-page-scroll';
 
 import { AuthenticationService } from './authentication.service.ts';
-
 import { AuthenticationRouter } from './authentication.route';
+
+// Route Guards
 import { RegisterGuard } from './register/register.guard';
 import { ProfileGuard } from './profile/profile.guard';
+import { SystemGuard } from './system/system.guard';
 
+// Shared Components
 import { SamKBAComponent, SamPasswordComponent } from './shared';
+
+// Page Components
 import { LoginComponent } from './login';
 import { RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
 import { ForgotComponent, ForgotInitialComponent, ForgotConfirmComponent, ForgotMainComponent } from './forgot';
-import {
-  ProfileComponent,
-  DetailsComponent, ResetComponent, MigrationsComponent,
-  SystemDetailsComponent, SystemResetComponent
-} from './profile';
+import { ProfileComponent,DetailsComponent, ResetComponent, MigrationsComponent } from './profile';
+import { SystemComponent, SystemProfileComponent, SystemPasswordComponent } from './system';
 
 @NgModule({
   imports: [
@@ -31,7 +34,8 @@ import {
     SamAPIKitModule,
     SamUIKitModule,
     AppComponentsModule,
-    AuthenticationRouter
+    AuthenticationRouter,
+    Ng2PageScrollModule.forRoot()
   ],
 
   declarations: [
@@ -66,19 +70,23 @@ import {
      * Profile
      */
     ProfileComponent,
-    // User
     DetailsComponent,
     MigrationsComponent,
     ResetComponent,
-    // System
-    SystemDetailsComponent,
-    SystemResetComponent
+
+    /**
+     * System
+     */
+    SystemComponent,
+    SystemProfileComponent,
+    SystemPasswordComponent
   ],
 
   providers: [
     AuthenticationService,
     RegisterGuard,
-    ProfileGuard
+    ProfileGuard,
+    SystemGuard
   ]
 })
 export class AuthenticationModule {

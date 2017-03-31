@@ -34,8 +34,12 @@ let apiServiceStub = {
 };
 let activatedRouteStub = {
   queryParams: {
-    subscribe: () =>{
-      return {};
+    first: ()=>{
+      return {
+        subscribe: () =>{
+          return {};
+        }
+      };
     }
   }
 };
