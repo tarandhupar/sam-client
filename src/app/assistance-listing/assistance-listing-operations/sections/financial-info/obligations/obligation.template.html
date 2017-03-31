@@ -31,9 +31,9 @@
         <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
           <tr>
             <td>{{obligation.assistanceType}}</td>
-            <td *ngFor="let value of obligation.values let i = index"><span
-              *ngIf="(value.radioOptionId=='pFYActual' || value.radioOptionId=='cFYEstimate' || value.radioOptionId=='bFYEstimate')">${{value.textboxValue}}</span>
-            </td>
+            <td>{{obligation['pFY']['textboxValue']}}</td>
+            <td>{{obligation['cFY']['textboxValue']}}</td>
+            <td>{{obligation['bFY']['textboxValue']}}</td>
             <td>
               <a class="fal-table-edit" (click)="editObligation(i)">Edit</a>
               <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editObligation(i)"></i>
@@ -64,7 +64,7 @@
                [class.hide]="hideAddButton"></samButton>
     <div #subForm formArrayName="obligations" *ngIf="!hideObligationsForm">
       <div *ngFor="let obligation of finObligationsForm.controls.obligations.controls; let i=index">
-        <div [formGroupName]="i" [class.hide]="obligationIndex !== i">
+        <div [formGroupName]="i" *ngIf="obligationIndex == i">
           <h2>New Obligation</h2>
           <div>Select if applicable</div>
           <samCheckbox
