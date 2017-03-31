@@ -63,6 +63,7 @@
     <div [hidden]="!showForm">
       <samText [label]="'Treasury Dept. Code'"
                [name]="name + '-treasury-dept-code'"
+               [maxlength]="2"
                [required]="true"
                [control]="tafsFormGroup.get('departmentCode')"
                [formControlName]="'departmentCode'"
@@ -70,6 +71,7 @@
 
       <samText [label]="'Treasury Account Main Code'"
                [name]="name + '-treasury-account-main-code'"
+               [maxlength]="4"
                [required]="true"
                [control]="tafsFormGroup.get('accountCode')"
                [formControlName]="'accountCode'"
@@ -77,6 +79,7 @@
 
       <samText [label]="'TAFS Sub Account'"
                [name]="name + '-sub-account-code'"
+               [maxlength]="3"
                [required]="false"
                [control]="tafsFormGroup.get('subAccountCode')"
                [formControlName]="'subAccountCode'"
@@ -84,6 +87,7 @@
 
       <samText [label]="'Allocation Transfer Agency'"
                [name]="name + '-allocation-transfer-agency-code'"
+               [maxlength]="2"
                [required]="false"
                [control]="tafsFormGroup.get('allocationTransferAgency')"
                [formControlName]="'allocationTransferAgency'"
@@ -91,6 +95,7 @@
 
       <samText [label]="'FY 1'"
                [name]="name + '-fy1-code'"
+               [maxlength]="4"
                [required]="false"
                [control]="tafsFormGroup.get('fy1')"
                [formControlName]="'fy1'"
@@ -98,6 +103,7 @@
 
       <samText [label]="'FY 2'"
                [name]="name + '-fy2-code'"
+               [maxlength]="4"
                [required]="false"
                [control]="tafsFormGroup.get('fy2')"
                [formControlName]="'fy2'"
