@@ -165,5 +165,7 @@ export class UserAccessService {
     }
     apiOptions.oParam.domainKey = domainKey;
 
+    return this.apiService.call(apiOptions, false);
   }
+
 }
