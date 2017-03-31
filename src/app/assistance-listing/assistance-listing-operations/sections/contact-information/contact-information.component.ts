@@ -133,10 +133,12 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
   }
 
   onParamChanged(event){
+    const control = <FormArray> this.falContactInfoForm.controls['contacts'];
+
     if(event != 'new' && event != 'na'){
-      const control = <FormArray> this.falContactInfoForm.controls['contacts'];
       control.at(control.length - 1).patchValue(this.contactDrpDwnInfo[event]);
     }
+
   }
 
   addContact(){

@@ -37,6 +37,7 @@
           [name]="'contact-control'"
           [required]="true"
           [options]="contactDrpDwnOptions"
+          [disabled]="(mode == 'Edit' ? true : false)"
           formControlName="contactId"
           (modelChange)="onParamChanged($event)"></samSelect>
 
