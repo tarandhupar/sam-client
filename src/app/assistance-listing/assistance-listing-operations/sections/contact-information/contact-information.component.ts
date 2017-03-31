@@ -247,13 +247,25 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
     let contacts = [];
     let regLocalOffice  = '';
+
     for(let contact of this.falContactInfoForm.value.contacts){
+      let generateUUID = false;
+
       if(contact.contactId == 'na' || contact.contactId == 'new'){
+        generateUUID = true;
+      }
+      else{
+        if(JSON.stringify(contact) !== JSON.stringify(this.contactDrpDwnInfo[contact.contactId])){
+          generateUUID = true;
+        }
+      }
+
+      if(generateUUID){
         let uuid = UUID.UUID().replace(/-/g, "");
         contact.contactId = uuid;
       }
 
-        contacts.push(contact);
+      contacts.push(contact);
     }
 
     if(this.falContactInfoForm.value.regLocalOffice.length == 2){
