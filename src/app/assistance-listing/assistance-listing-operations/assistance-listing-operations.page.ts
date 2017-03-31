@@ -1,6 +1,5 @@
 import {Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { globals } from '../../app/globals.ts';
 import { FALOpSharedService } from './assistance-listing-operations.service';
 import * as Cookies from 'js-cookie';
 
