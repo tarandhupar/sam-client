@@ -57,14 +57,14 @@
           <div class="usa-width-one-whole" [formGroup]="codeFormGroup">
             <ng-container *ngFor="let length of codeBoxLengths; let i = index; let isLast = last">
               <!-- todo: don't hardcode maxwidth -->
-              <samText [name]="'code-box-' + i"
+              <samText class="code-box"
+                       [name]="'code-box-' + i"
                        [maxlength]="length"
-                       [style.display]="'inline-block'"
                        [style.maxWidth]="0.9*length + 2.8 + 'rem'"
                        [formControlName]="'codeBox' + i"
                        (keyup)="onKeyup($event)"
               ></samText>
-              {{isLast ? '' : '-'}}
+              <span class="code-separator" *ngIf="!isLast">-</span>
             </ng-container>
           </div>
         </div>
