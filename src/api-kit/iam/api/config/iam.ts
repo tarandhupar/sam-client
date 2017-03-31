@@ -21,6 +21,8 @@ export default {
   },
 
   session:   'https://csp-api.sam.gov/{environment}/IdentityandAccess/v3/auth/session',
+  timeout:   'https://csp-api.sam.gov/{environment}/IdentityandAccess/v4/auth/session/getTimeLeft',
+
   mergeWith: '/users/v3/mergeWith/{email}',
 
   registration: {

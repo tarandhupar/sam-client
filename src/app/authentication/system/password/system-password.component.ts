@@ -42,7 +42,8 @@ export class SystemPasswordComponent {
     // Verify Session
     this.api.iam.checkSession((user) => {
       // Verify System Account
-      this.api.iam.system.account.get((account) => {
+      this.api.iam.system.account.get(account => {
+console.log(account)
         this.states.initial = (account.userPassword == undefined);
         this.system = account;
         this.initForm();
@@ -105,6 +106,7 @@ export class SystemPasswordComponent {
 
       this.api.iam.system.account.update(this.system, () => {
         this.states.loading = false;
+        this.$password.reset();
         this.alert('success', `Password Successfully ${(this.states.initial ? 'Created' : 'Changed')}`);
       }, (error) => {
         this.states.loading = false;
