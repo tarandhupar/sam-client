@@ -36,10 +36,10 @@ import * as moment from 'moment/moment';
         </div>
         <div *ngIf="data.location?.state!=null">
         <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li [attr.id]="'wd-state-0'"><strong>State: </strong>
+        	<li class="wd-state-0"><strong>State: </strong>
         	  <span>{{ data.location?.state?.name }}</span>
         	</li>
-        	<li [attr.id]="'wd-counties-0'" class="break-word"><strong>County/ies: </strong>
+        	<li class="wd-counties-0" class="break-word"><strong>County/ies: </strong>
             <ng-container *ngFor="let county of data.location?.state?.counties; let isLast=last">
               {{county?.value}}{{ isLast ? '' : ', '}}
             </ng-container>
@@ -49,21 +49,21 @@ import * as moment from 'moment/moment';
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-      	  <li id="wd-revision-number">
+      	  <li class="wd-revision-number">
             <strong>Revision #</strong><br>
       	    <span>{{ data.revisionNumber }}</span>
           </li>
-          <li  id="wd-services" *ngIf="data._type=='wdSCA'">
+          <li  class="wd-services" *ngIf="data._type=='wdSCA'">
             <strong>Service</strong><br>
             <span *ngFor="let service of data.services; let isLast=last">
               {{ service.value }}{{ isLast ? '' : ', ' }}
             </span>
           </li>
-          <li id="wd-construction-types" *ngIf="data._type=='wdDBRA'">
+          <li class="wd-construction-types" *ngIf="data._type=='wdDBRA'">
             <strong>Construction Type</strong><br>
             <span>{{ data.constructionTypes }}</span>
           </li>
-          <li id="wd-date">
+          <li class="wd-date">
             <ng-container *ngIf="data._type=='wdDBRA'">
               <strong>{{ data.revisionNumber>0 ? 'Last Revised Date' : 'Published Date' }}</strong>
             </ng-container>
