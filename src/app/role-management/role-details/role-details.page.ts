@@ -184,7 +184,6 @@ export class RoleDetailsPage {
 
         if (this.mode === 'edit') {
           // find the text label for role
-          console.log(this.domainRoleOptions, 'find', this.roleId);
           let r = this.domainRoleOptions.find(dr => +this.roleId === +dr.id);
           if (r) {
             this.role = r.label;
@@ -272,7 +271,6 @@ export class RoleDetailsPage {
   }
 
   validate() {
-    console.log(this.selectedDomain, this.role, this.mode, this.roleExists());
     if (this.mode === 'edit') {
       return this.role;
     } else {
@@ -317,11 +315,8 @@ export class RoleDetailsPage {
       );
 
     } else {
-      console.log('not valid');
       this.showValidationErrors();
     }
-
-    //this.router.navigateByUrl('/access/roles');
   }
 
   getRequestObject() {
@@ -330,6 +325,9 @@ export class RoleDetailsPage {
       return {
         id: dr.id,
       };
+    });
+    domainRoles = domainRoles.filter(dr => {
+      return typeof dr.id !== 'undefined';
     });
 
     let allFuncs = this.permissionOptions.map(obj => {
@@ -384,7 +382,6 @@ export class RoleDetailsPage {
 
     ret.roleDefinitionMapContent[0].functionContent = ret.roleDefinitionMapContent[0].functionContent.concat(allFuncs);
     return ret;
-
 
   }
 }
