@@ -171,4 +171,17 @@ export class UserAccessService {
 
     return this.apiService.call(apiOptions);
   }
+
+  deleteFunction(domainKey : string , functionId: string){
+    let apiOptions: any = {
+      name: 'functions',
+      suffix: '/' + functionId + '/',
+      method: 'Delete',
+      oParam: {}
+    }
+    apiOptions.oParam.domainKey = domainKey;
+
+    return this.apiService.call(apiOptions, false);
+  }
+
 }
