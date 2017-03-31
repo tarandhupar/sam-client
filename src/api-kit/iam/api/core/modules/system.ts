@@ -1,4 +1,4 @@
-import { merge } from 'lodash';
+import { defaults, merge } from 'lodash';
 import * as Cookies from 'js-cookie';
 import * as request from 'superagent';
 
@@ -8,6 +8,13 @@ import {
   isDebug
 } from './helpers';
 
+function transformSAResponse(data) {
+  return defaults({
+    pointOfContact: []
+  }, data || {});
+}
+
+Cookies.set('IAMSystemAccount', 'iceman9559', config.cookies);
 export const system = {
   account: {
     get(success, error) {
@@ -27,7 +34,7 @@ export const system = {
             if(err) {
               error(exceptionHandler(response.body));
             } else {
-              success(response.body || {});
+              success(transformSAResponse(response.body));
             }
           });
       } else {
@@ -87,16 +94,7 @@ export const system = {
             _id: '',
             email: '',
             systemName: '',
-            systemType: 'Non-Gov',
-            comments: null,
-            department: null,
-            duns: null,
-            businessName: null,
-            businessAddress: null,
-            ipAddress: null,
-            primaryOwnerName: null,
-            primaryOwnerEmail: null,
-            pointOfContact: null
+            systemType: 'Non-Gov'
           }, account));
 
       success = success || ((response) => {});
