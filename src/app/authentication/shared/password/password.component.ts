@@ -188,6 +188,23 @@ export class SamPasswordComponent {
     return classes;
   }
 
+  reset() {
+    let key;
+
+    this.states.submitted = false;
+
+    if(this.currentPassword) {
+      this.currentPassword.reset();
+    }
+
+    this.password.reset();
+    this.confirmPassword.reset();
+
+    for(key in this.states.validations) {
+      this.states.validations[key] = false;
+    }
+  }
+
   updateState() {
     let valid = true,
         errors = this.password.errors || {},

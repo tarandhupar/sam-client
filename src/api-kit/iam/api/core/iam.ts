@@ -4,7 +4,11 @@ import * as request from 'superagent';
 import * as moment from 'moment';
 
 import * as modules from './modules';
-import { config, utilities, exceptionHandler, isDebug } from './modules/helpers';
+import {
+  config, utilities,
+  getAuthHeaders, exceptionHandler,
+  isDebug
+} from './modules/helpers';
 
 import User from './user';
 
@@ -650,6 +654,26 @@ class IAM {
       authId: false,
       stage: false
     };
+  }
+
+  verifySession() {
+    const ping = function() {
+      let endpoint = utilities.getUrl(config.timeout),
+          auth = getAuthHeaders();
+
+      if(auth) {
+        request
+          .post(endpoint)
+          .set(auth)
+          .end((err, response) => {
+            if(!err) {
+              console.log(response);
+            }
+          });
+      };
+    };
+
+    ping();
   }
 
   removeSession() {
