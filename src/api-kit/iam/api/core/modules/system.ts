@@ -14,7 +14,6 @@ function transformSAResponse(data) {
   }, data || {});
 }
 
-Cookies.set('IAMSystemAccount', 'iceman9559', config.cookies);
 export const system = {
   account: {
     get(success, error) {

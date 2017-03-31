@@ -17,6 +17,7 @@ import { FalWorkspacePage } from './assistance-listing-workspace/assistance-list
 import { FALHeaderInfoComponent } from './assistance-listing-operations/sections/header-information/header-information.component';
 import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
 import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
+import { FALContactInfoTableComponent } from './assistance-listing-operations/sections/contact-information/contact-information-table.component';
 import {FinancialObligationsComponent} from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
 import {SamTextRadioButtonComponent} from "./components/text-radio/text-radio-button.component";
 
@@ -50,6 +51,8 @@ import {SamTextRadioButtonComponent} from "./components/text-radio/text-radio-bu
     AccessRestrictedPage,
     FALHeaderInfoComponent,
     FALOverviewComponent,
+    FALContactInfoComponent,
+    FALContactInfoTableComponent,
     FALContactInfoComponent,
     FinancialObligationsComponent,
     SamTextRadioButtonComponent

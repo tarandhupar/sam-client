@@ -47,6 +47,7 @@ export class SamFeedbackComponent {
   curSec = 5;
   showThanksNote = false;
   showEmptyFeedbackWarning = false;
+  showEmailError = false;
 
   @ViewChild('proceedModal') proceedModal;
   modalConfig = {
@@ -168,7 +169,10 @@ export class SamFeedbackComponent {
       this.showEmptyFeedbackWarning = true;
     }else{
       this.emailModelEdited = true;
-      if((this.isEmailBtnChecked('Yes') && !this.email.errors) || this.isEmailBtnChecked('No')){
+
+      if((this.isEmailBtnChecked('Yes') && this.email.errors)){
+        this.showEmailError = true;
+      }else if((this.isEmailBtnChecked('Yes') && !this.email.errors) || this.isEmailBtnChecked('No') || this.emailRadioBtnValue === ''){
         // Submit the feedback results
         let res = this.generateFeedbackRes();
 
@@ -208,6 +212,10 @@ export class SamFeedbackComponent {
     if(!this.currentUrl.startsWith("/help/policies")){
       this.router.navigateByUrl("/help/policies#OMB");
     }
+  }
+
+  onEmailEnter(val){
+    this.showEmailError = false;
   }
 
   showProceedModal(){
@@ -275,7 +283,8 @@ export class SamFeedbackComponent {
           this.setTextAreaResult(this.answerData[this.curQueIndex].value);
           break;
         case 'radio-text':
-          this.setRadioEmailResult(this.answerData[this.curQueIndex].value[0].selectedValue);
+          this.emailRadioBtnValue = this.answerData[this.curQueIndex].value[0].selectedValue;
+          this.userEmailModel = this.emailRadioBtnValue === "Yes"? this.answerData[this.curQueIndex].value[0].userEmail:"";
           break;
         default:
           break;
@@ -316,13 +325,14 @@ export class SamFeedbackComponent {
   }
 
   setRadioEmailResult(val) {
+    this.showEmailError = false;
     this.emailRadioBtnValue = val;
     if (this.emailRadioBtnValue === "Yes") {
       if(this.isSignedIn){
         this.userEmailModel = this.user.email;
         this.email.setValue(this.user.email);
       }
-      this.setCurQAnswer({selectedValue:val,userEmail:this.userEmailModel});
+      this.setCurQAnswer({selectedValue:val,userEmail:this.email.value});
       if(!this.emailModelEdited && this.userEmailModel.length > 0) this.emailModelEdited = true;
     }
     if (this.emailRadioBtnValue === "No") {
@@ -377,6 +387,7 @@ export class SamFeedbackComponent {
     this.resetNavigateObj();
     this.showThanksNote = false;
     this.showEmptyFeedbackWarning = false;
+    this.showEmailError = false;
     this.curSec = 5;
     this.showFeedback = false;
     this.curQueIndex = 0;
