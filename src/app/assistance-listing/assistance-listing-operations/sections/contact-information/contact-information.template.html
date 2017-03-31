@@ -13,44 +13,12 @@
   <samTextArea [control]="falContactInfoForm.controls['addInfo']"
                [name]="'addInfo-input'"
                [label]="'Additional Information'"
-               [required]="true"
                formControlName="addInfo"></samTextArea>
 
   <h4>Headquaters Office</h4>
   <label>Add up to two points of Contacts for your headquarters office.</label>
-  <table [class.hide]="contactsInfo.length == 0">
-    <thead>
-      <th>Contacts</th>
-      <th>Actions</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let contact of contactsInfo; let i=index">
-        <td>
-          {{contact.title}} {{contact.fullName}} <br/>
-          {{contact.streetAddress}} <br/>
-          {{contact.city}} {{contact.state}} {{contact.zip}} <br/>
-          Email: {{contact.email}} <br/>
-          Phone: {{contact.phone}} <br/>
-        </td>
-        <td>
-          <ng-container *ngIf="hideContactsForm">
-            <a class="fal-table-edit" (click)="editContact(i)" >Edit</a>
-            <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editContact(i)"></i>
-            <a class="fal-table-delete" (click)="removeContact(i)">Delete</a>
-            <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeContact(i)"></i>
-          </ng-container>
 
-          <ng-container *ngIf="!hideContactsForm">
-          <s class="fal-table-edit">Edit</s>
-          <s class="fa fa-pencil fal-table-edit" aria-hidden="true"></s>
-          <s class="fal-table-delete">Delete</s>
-          <s class="fa fa-trash fal-table-delete" aria-hidden="true"></s>
-          </ng-container>
-
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <contactInfoTable [contactsInfo]="contactsInfo" [hideContactsForm]="hideContactsForm" (actionHandler)="actionHandler($event)"></contactInfoTable>
 
 
   <samButton buttonText="Add Contact" (onClick)="addContact()" *ngIf="falContactInfoForm.controls.contacts.length < 2" [class.hide]="hideAddButton"></samButton>

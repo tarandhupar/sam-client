@@ -172,6 +172,15 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
     this.hideContactsForm = true;
   }
 
+  actionHandler(event){
+    if(event.type == 'edit') {
+      this.editContact(event.index);
+    }
+    else {
+      this.removeContact(event.index);
+    }
+  }
+
   removeContact(i: number) {
     const control = <FormArray>this.falContactInfoForm.controls['contacts'];
     control.removeAt(i);
