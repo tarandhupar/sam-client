@@ -104,7 +104,7 @@
       ></samText>
     </div>
 
-    <samButton *ngIf="!showForm" buttonText="Add Tafs" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
+    <samButton *ngIf="!showForm" buttonText="Add New TAF" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
     <samButton *ngIf="showForm" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
     <samButton *ngIf="showForm" buttonText="Confirm" (onClick)="addTafs()" [buttonType]="(!tafsFormGroup.valid ? 'disabled' : 'default')"></samButton>
   </form>
