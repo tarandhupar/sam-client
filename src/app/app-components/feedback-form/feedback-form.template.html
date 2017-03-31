@@ -54,7 +54,7 @@
             <div [ngClass]="{'usa-input-error':showEmailError}">
                 <span class="usa-input-error-message" *ngIf="!showEmailError">&nbsp;</span>
                 <span class="usa-input-error-message" *ngIf="showEmailError">Enter a valid email address</span>
-                <input aria-describedby="input-error-message" type="email" id="email" name="email" [formControl]="email" class="usa-width-one-whole m_L-3x feedback-email-input" *ngIf="emailRadioBtnValue == 'Yes'" placeholder="Please provide your email" [(ngModel)]="userEmailModel" (change)="onEmailTextChange()" (keypress)="onEmailEnter($event)">
+                <input aria-describedby="input-error-message" type="email" id="email" name="email" [formControl]="email" class="usa-width-one-whole m_L-3x feedback-email-input" *ngIf="emailRadioBtnValue == 'Yes'" placeholder="Please provide your email" [(ngModel)]="userEmailModel" (change)="onEmailTextChange()" (focus)="onEmailEnter($event)">
             </div>
 
             <h3>&nbsp;</h3>
