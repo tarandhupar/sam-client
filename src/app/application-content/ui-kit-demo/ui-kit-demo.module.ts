@@ -11,6 +11,10 @@ import { AppComponentsModule } from '../../app-components/app-components.module'
 import { AlertsModule } from '../../alerts/alerts.module';
 import { HelpModule } from '../../Help/help.module';
 
+import { CountryServiceDirective } from './country-demo';
+import { StateServiceDirective } from './state-demo';
+import { CountyServiceDirective } from './county-demo';
+
 @NgModule({
   imports: [
     routing,
@@ -23,9 +27,16 @@ import { HelpModule } from '../../Help/help.module';
     AlertsModule,
     HelpModule,
   ],
-  exports: [],
+  exports: [
+    CountryServiceDirective,
+    StateServiceDirective,
+    CountyServiceDirective
+  ],
   declarations: [
-    UIKitDemoPage
+    UIKitDemoPage,
+    CountryServiceDirective,
+    StateServiceDirective,
+    CountyServiceDirective
   ],
   providers: [],
 })

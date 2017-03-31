@@ -84,6 +84,8 @@ export class SamFeedbackComponent {
           this.nextUrl = val.url;
           if(!this.isUrlInSamePage(this.currentUrl, this.nextUrl) && this.showUnsubmittedWarning()){
             this.showProceedModal();
+          }else{
+            this.currentUrl = this.nextUrl;
           }
         }
       });

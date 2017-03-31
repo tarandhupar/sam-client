@@ -21,9 +21,12 @@ import * as moment from 'moment/moment';
         <span [innerHTML]="data.description"></span>
       </p>
       <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        <li *ngIf="data.organizationHierarchy!=null"><strong>Department/Ind. Agency:</strong> <a href="#">{{ data.organizationHierarchy[2].name }}</a></li>
-        <li *ngIf="data.organizationHierarchy!=null"><strong>Office:</strong> {{ data.organizationHierarchy[1].name }}</li>
-        <li *ngIf="data.organizationHierarchy!=null"><strong>Location:</strong> {{ data.organizationHierarchy[0].name }}</li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Department/Ind. Agency:</strong> 
+          <a *ngIf="data.isActive==true && data.organizationHierarchy[0].organizationId.length < 12" [routerLink]="['/organization', data.organizationHierarchy[0].organizationId]" [queryParams]="qParams">{{data.organizationHierarchy[0].name}}</a>
+          <span *ngIf="data.organizationHierarchy[0].organizationId.length >= 12">{{data.organizationHierarchy[0].name}}</span>
+        </li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Sub-tier:</strong> {{ data.organizationHierarchy[1].name }}</li>
+        <li *ngIf="data.organizationHierarchy!=null"><strong>Office:</strong> {{ data.organizationHierarchy[2].name }}</li>
       </ul>
     </div>
     <div class="usa-width-one-third">

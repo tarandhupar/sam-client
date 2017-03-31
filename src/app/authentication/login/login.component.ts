@@ -134,6 +134,13 @@ export class LoginComponent {
 
   switchStage(stage) {
     this.states.stage = stage;
+
+    switch(this.states.stage) {
+      case 1:
+        this.form.controls['stage2'].reset();
+        break;
+    }
+
     this.resetErrors();
   }
 
