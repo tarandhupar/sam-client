@@ -257,7 +257,7 @@ export class WageDeterminationPage implements OnInit {
     let historySubject = new ReplaySubject(1);
     wageDetermination.subscribe(wageDeterminationAPI => {
       /** Check that wageDetermination reference and revision numbers exist **/
-      if(wageDeterminationAPI.fullReferenceNumber == '' || typeof wageDeterminationAPI.fullReferenceNumber === 'undefined' || wageDeterminationAPI.revisionNumber == '' || typeof wageDeterminationAPI.revisionNumber === 'undefined') {
+      if(wageDeterminationAPI.fullReferenceNumber === '' || typeof wageDeterminationAPI.fullReferenceNumber === 'undefined' || wageDeterminationAPI.revisionNumber === '' || typeof wageDeterminationAPI.revisionNumber === 'undefined') {
         console.log('Error loading history');
         return;
       }
