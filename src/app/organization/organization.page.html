@@ -11,6 +11,11 @@
         <h1>{{organization.agencyName || organization.name || organization.orgKey}} {{(organization.shortName == '' || organization.shortName == null) ?  '': '('+organization.shortName+')'}}</h1>
 
         <section>
+          <strong>Federal Hierarchy Level:</strong> 
+          <ng-container *ngIf="organization.type == 'DEPARTMENT'">Department/Ind. Agency</ng-container>
+          <ng-container *ngIf="organization.type == 'AGENCY'">Sub-tier</ng-container>
+          <span class="divider">&nbsp;|&nbsp;</span>
+
           <strong>{{(organization | organizationTypeCode).label}}</strong> {{(organization | organizationTypeCode).value}}
           <span class="divider">&nbsp;|&nbsp;</span>
 
