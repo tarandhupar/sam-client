@@ -89,6 +89,68 @@ let MockWageDeterminationService = {
       }
     });
 },
+  getWageDeterminationHistoryByReferenceNumber(id: String){
+    return Observable.of({
+      "_embedded": {
+        "wageDetermination": [
+          {
+            "fullReferenceNumber": "ak20170001",
+            "revisionNumber": 0,
+            "shortName": "ak1",
+            "year": 2017,
+            "publishDate": "2017-01-19 19:00:00",
+            "active": false,
+            "standard": false
+          },
+          {
+            "fullReferenceNumber": "ak20170001",
+            "revisionNumber": 1,
+            "shortName": "ak1",
+            "year": 2017,
+            "publishDate": "2017-01-26 19:00:00",
+            "active": false,
+            "standard": false
+          },
+          {
+            "fullReferenceNumber": "ak20170001",
+            "revisionNumber": 2,
+            "shortName": "ak1",
+            "year": 2017,
+            "publishDate": "2017-02-16 19:00:00",
+            "active": false,
+            "standard": false
+          },
+          {
+            "fullReferenceNumber": "ak20170001",
+            "revisionNumber": 3,
+            "shortName": "ak1",
+            "year": 2017,
+            "publishDate": "2017-03-16 19:00:00",
+            "active": false,
+            "standard": false
+          },
+          {
+            "fullReferenceNumber": "AK20170001",
+            "revisionNumber": 4,
+            "shortName": "AK1",
+            "year": 2017,
+            "publishDate": "2017-03-16 19:00:00",
+            "active": true,
+            "standard": false
+          },
+          {
+            "fullReferenceNumber": "AK20170001",
+            "revisionNumber": 5,
+            "shortName": "AK1",
+            "year": 2017,
+            "publishDate": "2017-03-16 19:00:00",
+            "active": true,
+            "standard": true
+          }
+        ]
+      }
+    });
+  },
   getWageDeterminationByReferenceNumberAndRevisionNumber: (referenceNumber: string, revisionNumber: number) => {
     return Observable.of({
       "fullReferenceNumber": "1998-0642",
@@ -183,5 +245,9 @@ describe('WageDeterminationPage', () => {
     expect(comp.dictionaries).toBeDefined();
     expect(comp.locations).toBeDefined();
     expect(comp.services).toBeDefined();
+    expect(comp.history).toBeDefined();
+    expect(comp.processedHistory).toBeDefined();
+    expect(comp.longProcessedHistory).toBeDefined();
+    expect(comp.shortProcessedHistory).toBeDefined();
   });
 });

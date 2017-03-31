@@ -34,6 +34,7 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
           if(this.options[i].value == selectArray[j]) {
             if(this.listDisplay.selectedItems.indexOf(this.options[i].label) === -1) {
               this.listDisplay.selectedItems.push(this.options[i].label);
+              this.listDisplay.selectedItems.sort();
             }
           }
         }
@@ -53,6 +54,7 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
     if(this.listDisplay.selectedItems.indexOf(obj.label) === -1) {
       this.listDisplay.selectedItems.push(obj.label);
     }
+    this.listDisplay.selectedItems.sort();
     this.emitSelected();
     this.clearInput();
   }

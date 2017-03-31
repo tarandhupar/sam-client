@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { IAMService } from 'api-kit';
+
 @Component({
-  templateUrl: './profile.component.html'
+  templateUrl: './profile.component.html',
+  providers: [
+    IAMService
+  ]
 })
 export class ProfileComponent {
   private store = {
@@ -12,16 +17,21 @@ export class ProfileComponent {
       { text: 'Reset Password',   routerLink: 'password',   routerLinkActive: 'usa-current' },
       { text: 'My Access',        routerLink: false,        routerLinkActive: 'usa-current' },
       { text: 'Role Migrations',  routerLink: 'migrations', routerLinkActive: 'usa-current' }
+    ],
+
+    systemNav: [
+      { text: 'System Account', routerLink: '/system', routerLinkActive: 'usa-current' }
     ]
   };
 
   private states = {
-    route: ''
+    route: '',
+    system: false
   };
 
   activeRouteClass = '';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private zone: NgZone, private api: IAMService) {
     this.router.events.subscribe((event) => {
       if(event.constructor.name === 'NavigationEnd') {
         this.checkRoute();
@@ -30,6 +40,12 @@ export class ProfileComponent {
   }
 
   ngOnInit() {
+    this.api.iam.checkSession((user) => {
+      this.zone.run(() => {
+        this.states.system = true;
+      });
+    });
+
     this.checkRoute();
   }
 

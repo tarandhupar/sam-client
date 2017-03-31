@@ -56,4 +56,15 @@ export class WageDeterminationService{
 
     return this.oAPIService.call(apiParam);
   }
+
+  getWageDeterminationHistoryByReferenceNumber(referenceNumber: string) {
+    let apiParam = {
+      name: 'wageDetermination',
+      suffix: '/wd/' + referenceNumber + '/history',
+      oParam: {},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(apiParam);
+  }
 }
