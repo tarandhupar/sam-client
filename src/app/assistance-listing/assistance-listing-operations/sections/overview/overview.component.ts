@@ -58,7 +58,6 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
-        console.log(api);
         this.title = api.data.title;
         let objective = (api.data.objective ? api.data.objective : '');
         let desc = (api.data.description ? api.data.description : '');
@@ -76,7 +75,6 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
   saveData() {
 
-    console.log("value",this.falOverviewForm.value);
     let data = {
       "objective": this.falOverviewForm.value.objective,
       "description": this.falOverviewForm.value.falDesc
@@ -84,8 +82,6 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
-        console.log("data");
-        console.log(api);
           this.sharedService.programId = api._body;
           console.log('AJAX Completed Overview', api);
 

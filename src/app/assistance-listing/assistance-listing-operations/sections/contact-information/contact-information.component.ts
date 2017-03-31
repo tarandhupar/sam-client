@@ -203,7 +203,6 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
           this.progTitle = api.data.title;
-          console.log("Api", api);
           let addInfo = '';
           let regLocalOffice = '';
 
