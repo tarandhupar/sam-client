@@ -30,7 +30,7 @@ export class SamHeaderLinksComponent {
   showDropdown:boolean = false;
   dropdownData:any = [
     {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/", pageInProgress:false},
-    {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/reports/overview", pageInProgress:false},
+    {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/reports/overview", pageInProgress:true},
     {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/", pageInProgress:true},
     {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview", pageInProgress:false},
     {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/", pageInProgress:true},
