@@ -130,23 +130,39 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  createObject(domainId: number, objectName: string, permissions: {id?: any, val?: string}[]) {
+  createObject(domainId: number, objectName: number|string, permissions: {id?: any, val?: string}[], objectId: any) {
+    console.log(arguments);
     let apiOptions: any = {
-      name: 'functions',
-      suffix: '',
+      name: 'domainDefinition',
+      suffix: '/',
       method: 'POST',
       oParam: {}
     };
 
+    let fun = {
+      val: objectName
+    };
+
+    if (objectId) {
+      fun['id'] = objectId;
+    }
+
     apiOptions.body = {
-      domain: {id: domainId},
-      functionMapContent: {val: objectName},
-      permission: permissions
+      domain: {
+        id: domainId
+      },
+      functionMapContent: [
+        {
+          function: fun,
+          permission: permissions
+        }
+      ],
+
     };
 
     console.log(apiOptions.body);
 
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, false);
   }
 
   requestAccess(req: any, userName) {
@@ -169,7 +185,7 @@ export class UserAccessService {
       body: obj,
     };
 
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, false);
   }
 
   deleteFunction(domainKey : string , functionId: string){

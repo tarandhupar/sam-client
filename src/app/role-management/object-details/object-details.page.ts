@@ -26,7 +26,7 @@ export class ObjectDetailsPage implements OnInit {
   selectedPermissions = [];
   permissionOptions = [];
   originalPermissions = [];
-  permission;
+  permission = '';
 
   permissionSetter;
 
@@ -89,7 +89,14 @@ export class ObjectDetailsPage implements OnInit {
         let d = this.domains.find(dom => {
           return +dom.id === domainId;
         });
-        this.domainName = d.domain.domainName;
+        if (!d) {
+          this.footerAlerts.registerFooterAlert({
+            title: 'Domain '+domainId+' not found.',
+            type: 'error',
+          });
+          return;
+        }
+        this.domainName = d.domainName;
         this.onDomainChange();
       }
     );
@@ -120,9 +127,10 @@ export class ObjectDetailsPage implements OnInit {
   getAllPermissions() {
     this.accessService.getPermissions().subscribe(
       res => {
+        this.originalPermissions = res._embedded.permissionList;
         this.permissionOptions = res._embedded.permissionList.map(perm => {
           return perm.permissionName;
-        })
+        });
       },
       error => {
         // do nothing, but the user cannot select existing permissions
@@ -142,14 +150,16 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   onDomainChange() {
-    this.accessService.getRoleObjDefinitions(null, ''+this.selectedDomain).subscribe(
+    this.accessService.getRoleObjDefinitions('object', ''+this.selectedDomain).subscribe(
       res => {
         if (this.mode === 'edit') {
           if (!res || !res[0]) {
             return;
           }
           let func = res[0].functionMapContent.find(fun => +fun.function.id === +this.objectId);
-          this.selectedPermissions = func.permission;
+          this.selectedPermissions = func.permission.map(p => {
+            return { val: p.val };
+          });
         }
       },
       err => {
@@ -185,7 +195,7 @@ export class ObjectDetailsPage implements OnInit {
 
   onSubmitClick() {
     let perms = this.getPermissionsArray();
-    this.accessService.createObject(+this.selectedDomain, this.objectName, perms).delay(1000).subscribe(
+    this.accessService.createObject(+this.selectedDomain, this.objectName, perms, this.objectId).delay(1000).subscribe(
       res => {
         this.footerAlerts.registerFooterAlert({
           title: 'Successfully created object',
@@ -200,13 +210,27 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   getPermissionsArray() {
-    return this.selectedPermissions.map((perm: string) => {
-      let p = this.originalPermissions.find(op => op.val === perm);
-      if (p) {
-        return p;
+    // console.log('selected', this.selectedPermissions);
+    // console.log('original', this.originalPermissions);
+    return this.selectedPermissions.map(perm => {
+      if (perm.isNew) {
+        return {
+          val: perm.val
+        }
       } else {
-        return { val: perm };
+        console.log('find', perm, 'in', this.originalPermissions);
+        let o = this.originalPermissions.find(op => op.permissionName.toUpperCase() === perm.val.toUpperCase() );
+        if (!o) {
+          console.error('could not find', perm, 'in', this.originalPermissions);
+        }
+        return { id: o.id };
       }
+      // let p = this.originalPermissions.find(op => op.val === perm);
+      // if (p) {
+      //   return p;
+      // } else {
+      //   return { val: perm };
+      // }
     })
   }
 

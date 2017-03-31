@@ -278,7 +278,7 @@ export class RoleDetailsPage {
   }
 
   validate() {
-    return this.selectedDomain && this.role && (this.mode === 'new' || !this.roleExists());
+    return this.selectedDomain && this.role && (this.mode === 'edit' || !this.roleExists());
   }
 
   onDomainFocus() {
