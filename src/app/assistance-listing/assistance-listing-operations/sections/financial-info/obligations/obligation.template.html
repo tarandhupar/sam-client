@@ -1,4 +1,4 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Financial Information - {{title}}</div>
+<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Financial Information - {{programTitle}}</div>
 <form [formGroup]="finObligationsForm" novalidate (ngSubmit)="save(finObligationsForm)">
   <div class="usa-grid">
     <div> Select if applicable</div>
@@ -29,9 +29,9 @@
         <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
           <tr>
             <td>{{obligation.assistanceType.name}}</td>
-            <td>{{obligation['pFY']['radioOptionId']==='pFYActual'?'$' + obligation['pFY']['textboxValue']:(obligation['pFY']['radioOptionId']==='pFYNsi' ? 'Not Separatly Identifiable' : 'Not available')}}</td>
-            <td>{{obligation['cFY']['radioOptionId']==='cFYEstimate'?'$' + obligation['cFY']['textboxValue']:(obligation['cFY']['radioOptionId']==='cFYNsi' ? 'Not Separatly Identifiable' : 'Not available')}}</td>
-            <td>{{obligation['bFY']['radioOptionId']==='bFYEstimate'?'$' + obligation['bFY']['textboxValue']:(obligation['bFY']['radioOptionId']==='bFYNsi' ? 'Not Separatly Identifiable' : 'Not available')}}</td>
+            <td>{{obligation['pFY']['radioOptionId']==='pFYActual'?'$' + obligation['pFY']['textboxValue']:(obligation['pFY']['radioOptionId']==='pFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>
+            <td>{{obligation['cFY']['radioOptionId']==='cFYEstimate'?'$' + obligation['cFY']['textboxValue']:(obligation['cFY']['radioOptionId']==='cFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>
+            <td>{{obligation['bFY']['radioOptionId']==='bFYEstimate'?'$' + obligation['bFY']['textboxValue']:(obligation['bFY']['radioOptionId']==='bFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>
             <td>
               <ng-container *ngIf="hideObligationsForm">
                 <a class="fal-table-edit" (click)="editObligation(i)" >Edit</a>
@@ -41,10 +41,10 @@
               </ng-container>
 
               <ng-container *ngIf="!hideObligationsForm">
-                <s class="fal-table-edit">Edit</s>
-                <s class="fa fa-pencil fal-table-edit" aria-hidden="true"></s>
-                <s class="fal-table-delete">Remove</s>
-                <s class="fa fa-trash fal-table-delete" aria-hidden="true"></s>
+                <span class="fal-table-edit disabled">Edit</span>
+                <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+                <span class="fal-table-delete disabled">Remove</span>
+                <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
               </ng-container>
             </td>
           </tr>
@@ -59,13 +59,6 @@
         </tr>
         </tbody>
       </table>
-    </div>
-
-    <div *ngFor="let obligation of obligationsInfo; let i=index">
-      {{obligation | json}}
-      <a (click)="removeObligation(i)">Delete</a>
-
-      <a (click)="editObligation(i)">Edit</a>
     </div>
     <samButton buttonText="Add New Obligation" (onClick)="onAddNewObliClick()"
                [class.hide]="hideAddButton"></samButton>
@@ -114,7 +107,7 @@
             formControlName="description">
           </samTextArea>
           <div class="pull-center">
-            <samButton buttonText="Cancel" (click)="onObligationCancelClick($event)"></samButton>
+            <samButton buttonText="Cancel" (click)="onObligationCancelClick(i)"></samButton>
             <samButton buttonText="Confirm Obligation"
                        (onClick)="onObligationConfirmClick()"></samButton>
           </div>

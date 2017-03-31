@@ -51,6 +51,7 @@ export class FinancialObligationsComponent implements OnInit {
   bFYtableHeaderText: string;
   redirectToWksp: boolean = false;
   redirectToViewPg: boolean = false;
+  programTitle: string;
 
   testtotalpFY = 0;
   testtotalcFY = 0;
@@ -88,7 +89,7 @@ export class FinancialObligationsComponent implements OnInit {
   pastFiscalYearConfig = {
     options: [
       {value: 'pFYActual', label: 'Actual', name: 'rradio-pFY', flag: 'number'},
-      {value: 'pFYNsi', label: 'Not Separatly Identifiable', name: 'radio-pFY', flag: 'text'},
+      {value: 'pFYNsi', label: 'Not Separately Identifiable', name: 'radio-pFY', flag: 'text'},
       {value: 'pFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-pFY', flag: 'text'}
     ],
     name: 'Past Fiscal year - 2016',
@@ -101,7 +102,7 @@ export class FinancialObligationsComponent implements OnInit {
   currentFiscalYearConfig = {
     options: [
       {value: 'cFYEstimate', label: 'Estimate', name: 'radio-cFY', flag: 'number'},
-      {value: 'cFYNsi', label: 'Not Separatly Identifiable', name: 'radio-cFY', flag: 'text'},
+      {value: 'cFYNsi', label: 'Not Separately Identifiable', name: 'radio-cFY', flag: 'text'},
       {value: 'cFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-cFY', flag: 'text'}
     ],
     name: 'Current Fiscal year - 2016',
@@ -114,7 +115,7 @@ export class FinancialObligationsComponent implements OnInit {
   budgetFiscalYearConfig = {
     options: [
       {value: 'bFYEstimate', label: 'Estimate', name: 'radio-bFY', flag: 'number'},
-      {value: 'bFYNsi', label: 'Not Separatly Identifiable', name: 'rradio-bFY', flag: 'text'},
+      {value: 'bFYNsi', label: 'Not Separately Identifiable', name: 'rradio-bFY', flag: 'text'},
       {value: 'bFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-bFY', flag: 'text'}
     ],
     name: 'Budget Fiscal year - 2016',
@@ -136,6 +137,7 @@ export class FinancialObligationsComponent implements OnInit {
       valueProperty: 'name'
     }
   };
+
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -198,9 +200,6 @@ export class FinancialObligationsComponent implements OnInit {
     const control = <FormArray> this.finObligationsForm.controls['obligations'];
     this.obligationIndex = control.length;
     control.push(this.initobligations({}));
-
-    console.log('control', control.value);
-
     this.hideAddButton = true;
     this.hideObligationsForm = false;
     this.mode = "Add";
@@ -255,7 +254,6 @@ export class FinancialObligationsComponent implements OnInit {
         }
       }
     }
-    console.log('init obligations', obligation);
 
     return this.fb.group({
       isRecoveryAct: obligation['isRecoveryAct'],
@@ -290,7 +288,6 @@ export class FinancialObligationsComponent implements OnInit {
   }
 
   editObligation(i: number) {
-    console.log('edit clicked');
     this.mode = "Edit";
     this.obligationIndex = i;
     this.hideObligationsForm = false;
@@ -300,7 +297,6 @@ export class FinancialObligationsComponent implements OnInit {
 
   onObligationConfirmClick() {
     this.obligationsInfo = [];
-    console.log('asdf', this.finObligationsForm.value);
     this.caluclateTotal(this.finObligationsForm.value.obligations, true);
     this.hideAddButton = false;
     this.hideObligationsForm = true;
@@ -327,8 +323,8 @@ export class FinancialObligationsComponent implements OnInit {
   getData() {
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
+        this.programTitle = api.data.title;
         let isFundedCurrentFY = '';
-        console.log(api,'api');
         if (api.data) {
           if(api.data.financial) {
             if (api.data.financial.isFundedCurrentFY) {
@@ -345,12 +341,12 @@ export class FinancialObligationsComponent implements OnInit {
             }
           }
         }
-        console.log(isFundedCurrentFY,'isFundedCurrentFY............');
-
+        if(isFundedCurrentFY) {
+          isFundedCurrentFY = 'isFundedCurrentFY';
+        }
         this.finObligationsForm.patchValue({
          isFundedCurrentFY: [isFundedCurrentFY]
         });
-        console.log('get data..............', this.finObligationsForm.value.obligations);
         this.obligationsInfo = this.finObligationsForm.value.obligations;
         this.caluclateTotal(this.obligationsInfo, false);
       }, error => {
@@ -413,15 +409,21 @@ export class FinancialObligationsComponent implements OnInit {
 
   saveData() {
     let uuid = UUID.UUID().replace(/-/g, "");
-    /*console.log(uuid,'id ......');*/
     let data = {};
-    let isFundedCurrentFY = this.finObligationsForm.value.isFundedCurrentFY.indexOf('isFundedCurrentFY') !== -1;
+    let isFundedCurrentFY: boolean;
+    if(this.finObligationsForm.value.isFundedCurrentFY) {
+      isFundedCurrentFY = this.finObligationsForm.value.isFundedCurrentFY.indexOf('isFundedCurrentFY') !== -1;
+    }
+
     let obligationsData = [];
-    console.log(this.obligationsInfo);
     for (let i = 0; i < this.obligationsInfo.length; i++) {
+      let isRecoveryAct: boolean;
       let valuesData = [];
       let obligation = this.obligationsInfo[i];
-      let isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !== -1;
+      if(obligation.isRecoveryAct) {
+        isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !== -1;
+      }
+
       let description = obligation.description;
       let assistanceType = obligation.assistanceType.code;
       let value: any;
@@ -472,7 +474,6 @@ export class FinancialObligationsComponent implements OnInit {
       }
 
     };
-    console.log('final save', data);
 
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
@@ -489,7 +490,7 @@ export class FinancialObligationsComponent implements OnInit {
 
         },
         error => {
-          console.error('Error saving Program - Contact Information Section!!', error);
+          console.error('Error saving Program - Obligations Information Section!!', error);
         });
   }
 
