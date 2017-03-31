@@ -167,9 +167,10 @@ export class FinancialInfoFormPage2 implements OnInit {
   }
 
   public onSaveExitClick(event) {
-    this.saveProgramData().subscribe(id => {
+    this.saveProgramData().subscribe(res => {
+      let id = res._body;
       if(this.programId) {
-        this.router.navigate(['programs', this.programId, 'view']);
+        this.router.navigate(['programs', id, 'view']);
       } else {
         this.router.navigate(['falworkspace']);
       }
@@ -179,7 +180,8 @@ export class FinancialInfoFormPage2 implements OnInit {
   }
 
   public onSaveContinueClick(event) {
-    this.saveProgramData().subscribe(id => {
+    this.saveProgramData().subscribe(res => {
+      let id = res._body;
       this.router.navigate(['programs', id, 'edit', 'contact-information']);
     }, err => {
       console.log("Error saving program ", err);
