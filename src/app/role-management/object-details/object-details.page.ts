@@ -87,7 +87,7 @@ export class ObjectDetailsPage implements OnInit {
         this.selectedDomain = domainId;
         console.log(this.domains);
         let d = this.domains.find(dom => {
-          return +dom.domain.id === domainId;
+          return +dom.id === domainId;
         });
         this.domainName = d.domain.domainName;
         this.onDomainChange();
@@ -151,6 +151,9 @@ export class ObjectDetailsPage implements OnInit {
           let func = res[0].functionMapContent.find(fun => +fun.function.id === +this.objectId);
           this.selectedPermissions = func.permission;
         }
+      },
+      err => {
+        this.showGenericServicesError();
       }
     );
   }

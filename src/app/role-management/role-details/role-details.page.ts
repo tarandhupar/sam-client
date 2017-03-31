@@ -90,10 +90,15 @@ export class RoleDetailsPage {
 
   }
 
+  setObjectPermissions(permissions, domainDefs) {
+
+  }
+
   onDomainChange() {
     this.domainRoleOptions = null;
     let domain = this.domain || this.selectedDomain;
-    this.accessService.getRoleObjDefinitions(null, ''+domain).subscribe(
+    let mode = this.mode === 'edit' ? null : 'object';
+    this.accessService.getRoleObjDefinitions(mode, ''+domain, this.roleId).subscribe(
       defs => {
         this.domainDefinitions = defs[0];
         this.domainRoleOptions = [];
@@ -102,29 +107,63 @@ export class RoleDetailsPage {
           return;
         }
 
-        if (this.domainDefinitions.roleDefinitionMapContent && this.domainDefinitions.roleDefinitionMapContent.length) {
-          this.domainRoles = this.domainDefinitions.roleDefinitionMapContent;
-          this.domainRoleOptions = this.domainDefinitions.roleDefinitionMapContent.map(r => {
-            return {
-              label: r.role.val,
-              value: r.role.id,
-            };
-          });
-        }
+        let func0 = this.domainDefinitions.functionMapContent.find(func => +func.function.id === 0);
+        console.log(func0);
+
+        this.domainRoleOptions = func0.permission.map(dr => {
+          return {
+            label: dr.val,
+            id: dr.id,
+          };
+        });
+
+        // if (this.domainDefinitions.roleDefinitionMapContent && this.domainDefinitions.roleDefinitionMapContent.length) {
+        //   this.domainRoles = this.domainDefinitions.roleDefinitionMapContent;
+        //   this.domainRoleOptions = this.domainDefinitions.roleDefinitionMapContent.map(r => {
+        //     return {
+        //       label: r.role.val,
+        //       value: r.role.id,
+        //     };
+        //   });
+        // }
 
         if (this.domainDefinitions.functionMapContent && this.domainDefinitions.functionMapContent.length){
           this.permissionOptions = this.domainDefinitions.functionMapContent.map(f => {
-            return {
-              name: f.function.val,
-              permissions: f.permission.map(perm => {
-                return {
-                  label: perm.val,
-                  value: perm.id,
-                  isDefault: true,
-                  isSelected: true,
-                };
-              })
-            };
+            if (this.mode === 'new') {
+              return {
+                id: f.function.id,
+                name: f.function.val,
+                permissions: f.permission.map(perm => {
+                  return {
+                    label: perm.val,
+                    value: perm.id,
+                    isDefault: true,
+                    isSelected: true,
+                  };
+                })
+              };
+            } else if (this.mode === 'edit') {
+              // Check to see if the permission is set for this domain/role combo
+
+              let roleDefitionMapContent = this.domainDefinitions.roleDefinitionMapContent;
+
+              // Find this function
+              //let fun = roleDefitionMapContent.find(r => +r.role.id === f.)
+
+              return {
+                name: f.function.val,
+                permissions: f.permission.map(perm => {
+                  return {
+                    label: perm.val,
+                    value: perm.id,
+                    isDefault: true,
+                    isSelected: true,
+                  };
+                })
+              };
+            } else {
+              console.error('mode not found');
+            }
           });
         }
 
@@ -153,7 +192,7 @@ export class RoleDetailsPage {
 
   showGenericServicesError() {
     this.footerAlert.registerFooterAlert({
-      title: 'Something went wrong with a required service',
+      description: 'Something went wrong with a required service',
       type: 'error'
     })
   }
@@ -163,6 +202,18 @@ export class RoleDetailsPage {
     if (lastRole && lastRole.isNew) {
       this.domainRoleOptions.pop();
     }
+  }
+
+  showNameModifiedAlert() {
+    // we need to wait on some ajax calls
+    if (this.mode !== 'edit' || !this.roleId || !this.domainRoles.length) {
+      return false;
+    }
+    let dr = this.domainRoles.find(dr => +dr.role.id === +this.roleId);
+    if (!dr) {
+      return false;
+    }
+    return dr.role.val !== this.role;
   }
 
   onRoleBlur() {
@@ -194,12 +245,18 @@ export class RoleDetailsPage {
 
   }
 
+  roleIsNew() {
+
+  }
+
   roleExists() {
-    return this.domainRoleOptions.find(d => d.label.toUpperCase() === this.role.toUpperCase());
+    return this.domainRoleOptions.find(d => {
+      return d.label.toUpperCase() === this.role.toUpperCase() && !d.isNew;
+    });
   }
 
   validate() {
-    return this.domain && this.role && !this.roleExists();
+    return this.selectedDomain && this.role && (this.mode === 'new' || !this.roleExists());
   }
 
   onDomainFocus() {
@@ -224,11 +281,21 @@ export class RoleDetailsPage {
   onSubmitClick() {
     if (this.validate()) {
       this.requestObject = this.getRequestObject();
-      this.footerAlert.registerFooterAlert({
-        title: 'Successfully create new role.',
-        type: 'success'
-      });
+      this.accessService.putRole(this.requestObject).subscribe(
+        res => {
+          this.footerAlert.registerFooterAlert({
+            description: 'Successfully create new role.',
+            type: 'success'
+          });
+          this.router.navigateByUrl('/access/roles');
+        },
+        err => {
+          this.showGenericServicesError();
+        }
+      );
+
     } else {
+      console.log('not valid');
       this.showValidationErrors();
     }
 
@@ -236,10 +303,63 @@ export class RoleDetailsPage {
   }
 
   getRequestObject() {
-    return {
-      'domain': this.domain,
-      'domainRoles': this.domainRoleOptions,
-      'functions': this.permissionOptions
+
+    let allDomainRoles = this.domainRoleOptions.filter(dr => dr.isSelected);
+    let domainRoles = allDomainRoles.map(dr => {
+      return {
+        id: dr.value,
+      };
+    });
+
+
+    let allFuncs = this.permissionOptions.map(obj => {
+      let permissions = obj.permissions.filter(perm => perm.isSelected);
+      permissions = permissions.map(perm => {
+        return {
+          id: perm.value,
+          isDefault: perm.isDefault
+        };
+      });
+
+      return {
+        function: {
+          id: obj.id,
+        },
+        permission: permissions
+      };
+    });
+
+    let role = {
+      //"id":24,
+      "val": this.role,
     };
+
+    if (this.mode === 'edit') {
+      role['id'] = this.roleId;
+    }
+
+    let ret = {
+          "domain":{
+          "id": +this.selectedDomain
+        },
+        "roleDefinitionMapContent":[
+        {
+          role: role,
+          "functionContent":[
+            {
+              function: {
+                id: 0
+              },
+              permission: domainRoles
+            },
+          ]
+        }
+      ]
+    };
+
+    ret.roleDefinitionMapContent[0].functionContent = ret.roleDefinitionMapContent[0].functionContent.concat(allFuncs);
+    return ret;
+
+
   }
 }

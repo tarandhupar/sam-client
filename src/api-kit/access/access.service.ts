@@ -107,7 +107,7 @@ export class UserAccessService {
     return this.apiService.call(apiOptions,false);
   }
 
-  getRoleObjDefinitions(mode : string, domainKey : string) {
+  getRoleObjDefinitions(mode : string, domainKey : string, roleKey?) {
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -121,6 +121,10 @@ export class UserAccessService {
 
     if( domainKey.length > 0 ){
       apiOptions.oParam.domainKey = domainKey;
+    }
+
+    if (roleKey) {
+      apiOptions.oParam.roleKey = ''+roleKey;
     }
 
     return this.apiService.call(apiOptions);
@@ -154,5 +158,17 @@ export class UserAccessService {
     };
 
     return this.apiService.call(apiOptions, false);
+  }
+
+  putRole(obj) {
+    let apiOptions: any = {
+      name: 'domainDefinition',
+      suffix: '/',
+      method: 'POST',
+      oParam: { },
+      body: obj,
+    };
+
+    return this.apiService.call(apiOptions);
   }
 }

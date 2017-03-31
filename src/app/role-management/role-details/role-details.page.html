@@ -45,13 +45,13 @@
     </div>
   </ng-container>
 
+  <samAlert type='warning' *ngIf='showNameModifiedAlert()' description="Are you sure you want to edit this role name. This will impact all users with this role in the system"></samAlert>
   <div class="clearfix">
     <div class="pull-right">
       <button class="usa-button-outline" routerLink="/access/workspace">Cancel</button>
       <button class="usa-button-primary" (click)="onSubmitClick()">Submit</button>
     </div>
   </div>
-  <pre><code>{{ requestObject | json}}</code></pre>
 
 </div>
 
