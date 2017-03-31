@@ -20,6 +20,8 @@ import { FALHeaderInfoComponent } from './assistance-listing-operations/sections
 import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
 import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
 import { FALContactInfoTableComponent } from './assistance-listing-operations/sections/contact-information/contact-information-table.component';
+import { FinancialObligationsComponent } from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
+import { SamTextRadioButtonComponent } from "./components/text-radio/text-radio-button.component";
 import { FALAccountIdentificationComponent } from "./components/account-identification.component";
 import { FALTafsComponent } from "./components/tafs.component";
 
@@ -58,8 +60,8 @@ import { FALTafsComponent } from "./components/tafs.component";
     FALOverviewComponent,
     FALContactInfoComponent,
     FALContactInfoTableComponent,
-    FinancialInfoFormPage2,
-    SamCheckboxToggledTextareaComponent,
+    FinancialObligationsComponent,
+    SamTextRadioButtonComponent
   ],
   providers: [],
 })
