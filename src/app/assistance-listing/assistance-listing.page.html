@@ -79,8 +79,8 @@
           <h2 id="overview">Overview</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']" [fragment]="'overview'">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']" [fragment]="'overview'"></i>
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'overview']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'overview']"></i>
         </div>
       </div>
       <h3>Objectives:</h3>
@@ -119,7 +119,17 @@
     <!--Financials-->
     <section id="program-financials">
       <a name="#/programs/{{programID}}/view#financial-information"></a>
-      <h2 id="financial-information">Financial Information</h2>
+
+      <div class="view-section-margin"></div>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="financial-information">Financial Information</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'other-financial-info']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'other-financial-info']"></i>
+        </div>
+      </div>
 
       <financial-obligation-chart *ngIf='dictionaries && program.data?.financial?.obligations' [financialData]='program.data?.financial?.obligations' [dictionaries]='dictionaries'></financial-obligation-chart>
 
@@ -563,7 +573,17 @@
     <!--Contact information-->
     <section id="program-contact-information">
       <a name="#/programs/{{programID}}/view#contact-information"></a>
-      <h2 id="contact-information">Contact Information</h2>
+
+      <div class="view-section-margin"></div>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="contact-information">Contact Information</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'other-financial-info']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'other-financial-info']"></i>
+        </div>
+      </div>
 
       <address>
         <h3 class="m_B-5x">Regional or Local Office:</h3>
