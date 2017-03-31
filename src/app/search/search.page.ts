@@ -194,7 +194,6 @@ export class SearchPage implements OnInit{
     "name": "Contract Type",
     "label": "Contract Types",
     "options": [
-      { label: 'COMBINATION (APPLIES TO AWARDS WHERE TWO OR MORE OF THE ABOVE APPLY)', value: '2', name: 'COMBINATION (APPLIES TO AWARDS WHERE TWO OR MORE OF THE ABOVE APPLY)' },
       { label: 'COST NO FEE', value: 'S', name: 'COST NO FEE' },
       { label: 'COST PLUS AWARD FEE', value: 'R', name: 'COST PLUS AWARD FEE' },
       { label: 'COST PLUS FIXED FEE', value: 'U', name: 'COST PLUS FIXED FEE' },
@@ -209,8 +208,9 @@ export class SearchPage implements OnInit{
       { label: 'FIXED PRICE WITH ECONOMIC PRICE ADJUSTMENT', value: 'K', name: 'FIXED PRICE WITH ECONOMIC PRICE ADJUSTMENT' },
       { label: 'LABOR HOURS', value: 'Z', name: 'LABOR HOURS' },
       { label: 'ORDER DEPENDENT (IDV ALLOWS PRICING ARRANGEMENT TO BE DETERMINED SEPARATELY FOR EACH ORDER)', value: '1', name: 'ORDER DEPENDENT (IDV ALLOWS PRICING ARRANGEMENT TO BE DETERMINED SEPARATELY FOR EACH ORDER)'},
+      { label: 'TIME AND MATERIALS', value: 'Y', name: 'TIME AND MATERIALS'},
       { label: 'OTHER (APPLIES TO AWARDS WHERE NONE OF THE ABOVE APPLY)', value: '3', name: 'OTHER (APPLIES TO AWARDS WHERE NONE OF THE ABOVE APPLY)' },
-      { label: 'TIME AND MATERIALS', value: 'Y', name: 'TIME AND MATERIALS'}
+      { label: 'COMBINATION (APPLIES TO AWARDS WHERE TWO OR MORE OF THE ABOVE APPLY)', value: '2', name: 'COMBINATION (APPLIES TO AWARDS WHERE TWO OR MORE OF THE ABOVE APPLY)' }
     ],
     "config": {
       keyValueConfig: {
