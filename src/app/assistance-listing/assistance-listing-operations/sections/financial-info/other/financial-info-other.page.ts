@@ -70,61 +70,6 @@ export class FinancialInfoFormPage2 implements OnInit {
     }
   }
 
-  private loadProgramData() {
-    let programAPI$ = this.programService.getProgramById(this.programId, this.cookieValue).share();
-
-    programAPI$.subscribe(programData => {
-      this.program = programData;
-      this.populateForm();
-    }, error => {
-      // todo: handle error
-      console.log('Error loading program', error);
-    });
-  }
-
-  private saveProgramData(): Observable<any> {
-    let data: any = (this.program && this.program.data) || {};
-    data.financial = data.financial || {};
-    data.financial.description = this.otherFinancialInfoGroup.get('assistanceRange').value;
-    data.financial.accomplishments = this.saveAccomplishments();
-    data.financial.accounts = this.saveAccountIdentifications();
-    data.financial.treasury = data.financial.treasure || {};
-    data.financial.treasury.tafs = this.saveTafs();
-
-    return this.programService.saveProgram(this.programId, data, this.cookieValue);
-  }
-
-  private saveAccomplishments() {
-    let accomplishments: any = {};
-
-    if(this.accomplishmentsModel && this.accomplishmentsModel['checkbox']) {
-      accomplishments.isApplicable = this.accomplishmentsModel['checkbox'].indexOf('na') < 0;
-    }
-
-    // todo: check what to put for fiscalYear
-    if(accomplishments.isApplicable) {
-      accomplishments.list = [
-        {
-          description: this.accomplishmentsModel['textarea']
-        }
-      ]
-    }
-
-    return accomplishments;
-  }
-
-  private saveAccountIdentifications() {
-    let accounts = [];
-    if(this.accountIdentificationModel) { accounts = this.accountIdentificationModel['accounts']; }
-    return accounts;
-  }
-
-  private saveTafs() {
-    let tafs = [];
-    if(this.tafsModel) { tafs = this.tafsModel['tafs']; }
-    return tafs;
-  }
-
   private createForm() {
     this.otherFinancialInfoGroup = this.fb.group({
       assistanceRange: null,
@@ -146,8 +91,125 @@ export class FinancialInfoFormPage2 implements OnInit {
     });
   }
 
+  private loadProgramData() {
+    let programAPI$ = this.programService.getProgramById(this.programId, this.cookieValue).share();
+
+    programAPI$.subscribe(programData => {
+      this.program = programData;
+      this.populateForm();
+    }, error => {
+      // todo: handle error
+      console.log('Error loading program', error);
+    });
+  }
+
   private populateForm() {
-    // todo: implement this...
+    if(this.program.data && this.program.data.financial) {
+      if(this.program.data.financial.description) {
+        this.otherFinancialInfoGroup.get('assistanceRange').setValue(this.program.data.financial.description);
+      }
+      this.otherFinancialInfoGroup.get('accomplishments').setValue(this.loadAccomplishments());
+      this.otherFinancialInfoGroup.get('accountIdentification').setValue(this.loadAccounts());
+      if(this.program.data.financial.treasury) {
+        this.otherFinancialInfoGroup.get('tafs').setValue(this.loadTafs());
+      }
+    }
+  }
+
+  private saveProgramData(): Observable<any> {
+    let data: any = (this.program && this.program.data) || {};
+    data.financial = data.financial || {};
+    data.financial.description = this.otherFinancialInfoGroup.get('assistanceRange').value;
+    data.financial.accomplishments = this.saveAccomplishments();
+    data.financial.accounts = this.saveAccounts();
+    data.financial.treasury = data.financial.treasury || {};
+    data.financial.treasury.tafs = this.saveTafs();
+
+    return this.programService.saveProgram(this.programId, data, this.cookieValue);
+  }
+
+  private saveAccomplishments() {
+    let accomplishments: any = {};
+
+    if(this.accomplishmentsModel && this.accomplishmentsModel['checkbox']) {
+      accomplishments.isApplicable = this.accomplishmentsModel['checkbox'].indexOf('na') < 0;
+    }
+
+    // todo: check what to put for fiscalYear
+    // todo: check whether to clear out list if not applicable
+    if(accomplishments.isApplicable) {
+      accomplishments.list = [
+        {
+          description: this.accomplishmentsModel['textarea']
+        }
+      ]
+    } else {
+      accomplishments.list = [];
+    }
+
+    return accomplishments;
+  }
+
+  private loadAccomplishments() {
+    let model: any = {
+      checkbox: [],
+      description: ''
+    };
+
+    if(this.program.data.financial.accomplishments) {
+      if(!this.program.data.financial.accomplishments.isApplicable) {
+        model.checkbox.push('na');
+      }
+
+      if(this.program.data.financial.accomplishments.list
+        && this.program.data.financial.accomplishments.list[0]) {
+        model.textarea = this.program.data.financial.accomplishments.list[0].description;
+      }
+    }
+
+    return model;
+  }
+
+  private saveAccounts() {
+    let accounts = [];
+    if(this.accountIdentificationModel) { accounts = this.accountIdentificationModel['accounts']; }
+    return accounts;
+  }
+
+  private loadAccounts() {
+    let model = {
+      codeBoxes: [],
+      descriptionText: '',
+
+      accounts: []
+    };
+
+    if(this.program.data.financial.accounts) { model.accounts = this.program.data.financial.accounts }
+    return model;
+  }
+
+  private saveTafs() {
+    let tafs = [];
+    if(this.tafsModel) { tafs = this.tafsModel['tafs']; }
+    return tafs;
+  }
+
+  private loadTafs() {
+    let model = {
+      departmentCode: '',
+      accountCode: '',
+      subAccountCode: '',
+      allocationTransferAgency: '',
+      fy1: '',
+      fy2: '',
+      tafs: []
+    };
+
+    if(this.program.data.financial.treasury.tafs) {
+      model.tafs = this.program.data.financial.treasury.tafs;
+    }
+
+    return model;
   }
 
   public onCancelClick(event) {

@@ -181,8 +181,7 @@ export class FALTafsComponent implements ControlValueAccessor {
   public writeValue(obj: any) : void {
     if(obj) {
       this.model = obj;
-
-      // todo ...
+      this.currentIndex = this.model.tafs.length;
 
       this.onChange();
     }

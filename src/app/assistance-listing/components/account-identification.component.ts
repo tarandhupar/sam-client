@@ -205,8 +205,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
   public writeValue(obj: any) : void {
     if(obj) {
       this.model = obj;
-
-      // todo ...
+      this.currentIndex = this.model.accounts.length;
 
       this.onChange();
     }
