@@ -69,13 +69,12 @@
       </div>
 
       <div class="usa-width-one-whole m_T-4x">
-        <samAccordion *ngFor="let faq of curFAQs">
-          <samAccordionSection [headerText]="faq.question" [name]="faq.question">
+        <samAccordion>
+          <samAccordionSection *ngFor="let faq of curFAQs" [headerText]="faq.question" [name]="faq.question" [isExpanded]="false">
             <p>{{faq.answer}}</p>
           </samAccordionSection>
         </samAccordion>
       </div>
     </div>
-
   </div>
 </section>
