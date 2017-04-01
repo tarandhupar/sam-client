@@ -555,6 +555,8 @@ export class DetailsComponent {
           this.zone.run(() => {
             this.states.editable[groupKey] = false;
             this.states.loading = false;
+            // Trick Header to Update State
+            this.router.navigate(['profile']);
           });
         });
       });
