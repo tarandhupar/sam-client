@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { isArray, isObject, isUndefined, merge } from 'lodash';
 import * as Cookies from 'js-cookie';
 import * as request from 'superagent';
 import * as moment from 'moment';
@@ -13,8 +13,8 @@ import {
 import User from './user';
 
 function transformMigrationAccount(account) {
-  account = _.isObject(account) ? account : {};
-  account = _.merge({
+  account = isObject(account) ? account : {};
+  account = merge({
     sourceLegacySystem: '',
     username: '',
     firstname: '',
@@ -70,7 +70,7 @@ let user: any = {
           user: (userData || {})
         };
 
-    if(!_.isUndefined(userData.kbaAnswerList) && _.isArray(userData.kbaAnswerList)) {
+    if(!isUndefined(userData.kbaAnswerList) && isArray(userData.kbaAnswerList)) {
       data.kbaAnswerList = userData.kbaAnswerList;
       delete userData.kbaAnswerList;
     }
@@ -92,9 +92,7 @@ let user: any = {
 
   update(userData, $success, $error) {
     let endpoint = utilities.getUrl(config.details.update),
-        headers = {
-          iPlanetDirectoryPro: Cookies.get('iPlanetDirectoryPro')
-        },
+        headers = getAuthHeaders(),
 
         data = userData || {};
 
@@ -105,7 +103,11 @@ let user: any = {
       .patch(endpoint)
       .set(headers)
       .send(data)
-      .then(function(response) {
+      .then((response) => {
+        let user = merge(Cookies.getJSON('IAMSession') || {}, userData);
+
+        Cookies.set('IAMSession', user);
+
         $success(response.body);
       }, $error);
   },
@@ -214,7 +216,7 @@ user.password = {
         let data;
 
         if(!err) {
-          data = _.merge({
+          data = merge({
             status: '',
             question: '',
             token: ''
@@ -241,7 +243,7 @@ user.password = {
       .post(endpoint)
       .send(params)
       .end(function(err, response) {
-        let data = _.merge({
+        let data = merge({
               status: '',
               question: '',
               token: '',
@@ -358,7 +360,7 @@ let kba = {
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    if(_.isUndefined(answers)) {
+    if(isUndefined(answers)) {
       console.warn('KBA answers must be passed in as an argument, update aborted!');
       return;
     }
@@ -524,6 +526,7 @@ let $import = {
  * IAM API Class
  */
 class IAM {
+  $root;
   debug;
   states;
   user;
@@ -531,7 +534,7 @@ class IAM {
   isDebug;
 
   constructor($api) {
-    _.merge(this, utilities, {
+    merge(this, utilities, {
       config: config,
       user: user,
       kba: kba,
@@ -543,8 +546,8 @@ class IAM {
       auth: false
     };
 
+    this.$root = $api;
     this.isDebug = isDebug;
-
     this.user.$base = this;
 
     this.checkSession();
@@ -575,7 +578,7 @@ class IAM {
     let $api = this,
         endpoint = utilities.getUrl(config.session),
         token,
-        data = _.merge({ service: 'ldapService' }, credentials);
+        data = merge({ service: 'ldapService' }, credentials);
 
     $success = $success || function(data) {};
     $error = $error || function(data) {};
@@ -600,7 +603,7 @@ class IAM {
   loginOTP(credentials, $success, $error) {
     let endpoint = utilities.getUrl(config.session),
         token,
-        data = _.merge(this.getStageData(), credentials);
+        data = merge(this.getStageData(), credentials);
 
     $success = $success || function(data) {};
     $error = $error || function(data) {};
@@ -612,7 +615,7 @@ class IAM {
         if(!err) {
           let data = response.body.authnResponse;
 
-          if(_.isUndefined(data.tokenId)) {
+          if(isUndefined(data.tokenId)) {
             this.auth.authId = data['authId'];
             this.auth.stage = data['stage'];
             $success();

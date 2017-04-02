@@ -39,7 +39,7 @@ export class SamHeaderLinksComponent {
 
   constructor(private _router:Router, private zone: NgZone, private api: IAMService) {
     this._router.events.subscribe((event) => {
-      if(event.constructor.name === 'NavigationStart') {
+      if(event.constructor.name === 'NavigationEnd') {
         this.checkSession();
       }
     });
