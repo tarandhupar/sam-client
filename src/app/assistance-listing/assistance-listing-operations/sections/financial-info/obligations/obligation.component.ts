@@ -225,32 +225,37 @@ export class FinancialObligationsComponent implements OnInit {
           if (value['estimate']) {
             current = 'cFYEstimate';
             currentText = value['estimate'];
-          } else if (value['flag'] === 'ena') {
+          } else if (value['flag'] === 'nsi') {
             current = 'cFYNsi';
             currentText = value['explanation'];
-          } else {
+          } else if (value['flag'] === 'ena'){
+            current = 'cFYNa';
             currentText = value['explanation'];
           }
         } else if (value['year'] === this.budgetYear) {
           if (value['estimate']) {
             budget = 'bFYEstimate';
             budgetText = value['estimate'];
-          } else if (value['flag'] === 'ena') {
+          } else if (value['flag'] === 'nsi') {
             budget = 'bFYNsi';
             budgetText = value['explanation'];
-          } else {
+          } else if (value['flag'] === 'ena') {
+            budget = 'bFYNa';
             budgetText = value['explanation'];
           }
         } else if (value['year'] === this.pastYear) {
           if (value['actual']) {
             past = 'pFYActual';
             pastText = value['actual'];
-          } else if (value['flag'] === 'ena') {
+          } else if (value['flag'] === 'nsi') {
             past = 'pFYNsi';
             pastText = value['explanation'];
-          } else {
+          } else if (value['flag'] === 'ena') {
+            past = 'pFYNa';
             pastText = value['explanation'];
           }
+        } else if(value['year'] !== this.pastYear || value['year'] === this.currentYear || value['year'] === this.pastYear) {
+
         }
       }
     }
@@ -283,6 +288,7 @@ export class FinancialObligationsComponent implements OnInit {
     for (let obligation of  this.finObligationsForm.value.obligations) {
       this.obligationsInfo.push(obligation);
     }
+    this.caluclateTotal(this.obligationsInfo, false);
     this.hideObligationsForm = true;
     this.hideAddButton = false;
   }
@@ -341,10 +347,11 @@ export class FinancialObligationsComponent implements OnInit {
             }
           }
         }
+
         if(isFundedCurrentFY) {
           isFundedCurrentFY = 'isFundedCurrentFY';
         }
-        this.finObligationsForm.patchValue({
+       this.finObligationsForm.patchValue({
          isFundedCurrentFY: [isFundedCurrentFY]
         });
         this.obligationsInfo = this.finObligationsForm.value.obligations;
@@ -410,22 +417,21 @@ export class FinancialObligationsComponent implements OnInit {
   saveData() {
     let uuid = UUID.UUID().replace(/-/g, "");
     let data = {};
-    let isFundedCurrentFY: boolean;
+    let isFundedCurrentFY:boolean;
     if(this.finObligationsForm.value.isFundedCurrentFY) {
       isFundedCurrentFY = this.finObligationsForm.value.isFundedCurrentFY.indexOf('isFundedCurrentFY') !== -1;
     }
-
     let obligationsData = [];
     for (let i = 0; i < this.obligationsInfo.length; i++) {
       let isRecoveryAct: boolean;
       let valuesData = [];
       let obligation = this.obligationsInfo[i];
       if(obligation.isRecoveryAct) {
-        isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !== -1;
+        isRecoveryAct = obligation.isRecoveryAct;
       }
 
       let description = obligation.description;
-      let assistanceType = obligation.assistanceType.code;
+      let assistanceType = obligation.assistanceType;
       let value: any;
       if (obligation.pFY) {
         if (obligation.pFY.radioOptionId === 'pFYActual') {
@@ -460,7 +466,7 @@ export class FinancialObligationsComponent implements OnInit {
       obligationsData.push(
         {
           "isRecoveryAct": isRecoveryAct,
-          "obligationId": '',
+          "obligationId": uuid,
           "assistanceType": assistanceType,
           "values": valuesData,
           "description": description
@@ -473,9 +479,9 @@ export class FinancialObligationsComponent implements OnInit {
         "obligations": obligationsData
       }
 
-    };
 
-    this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
+    };
+   this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
           this.sharedService.programId = api._body;
           console.log('AJAX Completed Obligation Information', api);

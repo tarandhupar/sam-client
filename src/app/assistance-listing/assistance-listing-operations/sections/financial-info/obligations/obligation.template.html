@@ -3,12 +3,9 @@
   <div class="usa-grid">
     <div> Select if applicable</div>
     <samCheckbox
+      [control]="finObligationsForm.controls['isFundedCurrentFY']"
       [name]="currentFiscalYearCheckboxConfig.name"
       [options]="currentFiscalYearCheckboxConfig.options"
-      [label]="currentFiscalYearCheckboxConfig.label"
-      [hint]="currentFiscalYearCheckboxConfig.hint"
-      [errorMessage]="currentFiscalYearCheckboxConfig.errorMessage"
-      (modelChange)="chkCurrFiscalYearChange($event)"
       class="form-control" formControlName="isFundedCurrentFY">
     </samCheckbox>
     <div [class.hide]="obligationsInfo.length == 0">
@@ -29,9 +26,20 @@
         <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
           <tr>
             <td>{{obligation.assistanceType.name}}</td>
-            <td>{{obligation['pFY']['radioOptionId']==='pFYActual'?'$' + obligation['pFY']['textboxValue']:(obligation['pFY']['radioOptionId']==='pFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>
+            <!--<td>{{obligation['pFY']['radioOptionId']==='pFYActual'?'$' + obligation['pFY']['textboxValue']:(obligation['pFY']['radioOptionId']==='pFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>
             <td>{{obligation['cFY']['radioOptionId']==='cFYEstimate'?'$' + obligation['cFY']['textboxValue']:(obligation['cFY']['radioOptionId']==='cFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>
-            <td>{{obligation['bFY']['radioOptionId']==='bFYEstimate'?'$' + obligation['bFY']['textboxValue']:(obligation['bFY']['radioOptionId']==='bFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>
+            <td>{{obligation['bFY']['radioOptionId']==='bFYEstimate'?'$' + obligation['bFY']['textboxValue']:(obligation['bFY']['radioOptionId']==='bFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>-->
+            <td *ngIf="obligation['pFY']['radioOptionId']==='pFYActual'">{{obligation['pFY']['radioOptionId']==='pFYActual' && obligation['pFY']['textboxValue']!==''?'$' + obligation['pFY']['textboxValue']:'$0'}}</td>
+            <td *ngIf="obligation['pFY']['radioOptionId']==='pFYNsi'">Not Separately Identifiable</td>
+            <td *ngIf="obligation['pFY']['radioOptionId']==='pFYNa'">Not available</td>
+
+            <td *ngIf="obligation['cFY']['radioOptionId']==='cFYEstimate'">{{obligation['cFY']['radioOptionId']==='cFYEstimate' && obligation['cFY']['textboxValue']!==''?'$' + obligation['cFY']['textboxValue']:'$0'}}</td>
+            <td *ngIf="obligation['cFY']['radioOptionId']==='cFYNsi'">Not Separately Identifiable</td>
+            <td *ngIf="obligation['cFY']['radioOptionId']==='cFYNa'">Not available</td>
+
+            <td *ngIf="obligation['bFY']['radioOptionId']==='bFYEstimate'">{{obligation['bFY']['radioOptionId']==='bFYEstimate' && obligation['bFY']['textboxValue']!==''?'$' + obligation['bFY']['textboxValue']:'$0'}}</td>
+            <td *ngIf="obligation['bFY']['radioOptionId']==='bFYNsi'">Not Separately Identifiable</td>
+            <td *ngIf="obligation['bFY']['radioOptionId']==='bFYNa'">Not available</td>
             <td>
               <ng-container *ngIf="hideObligationsForm">
                 <a class="fal-table-edit" (click)="editObligation(i)" >Edit</a>
