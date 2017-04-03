@@ -16,16 +16,17 @@ public name = null;
 public desc = null;
 public pwd = null;
 url: SafeResourceUrl;
-private showReport:boolean = false;
+
 public states = {
     isSignedIn: false
   };
 
   public user = null;
+  private showReport: boolean = false;
 
    constructor(
   private route: ActivatedRoute,
-  private router: Router,private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer
+  private router: Router, private zone: NgZone, private api: IAMService, private sanitizer: DomSanitizer
 ) {
       this.zone.runOutsideAngular(() => {
       this.checkSession(() => {
@@ -43,31 +44,14 @@ checkSession(cb: () => void) {
     this.api.iam.user.get(function(user) {
     vm.states.isSignedIn = true;
     vm.user = user;
-    if(user._id == "TEST_Public_User"){
-      vm.pwd = "Publictest!!123";
-    }
-    else if (user._id == "TEST_NASA_User"){
-      vm.pwd = "NASA";
-    }
-    else if (user._id == "TEST_DOD_User"){
-      vm.pwd = "DOD";
-    }
-    else if (user._id == "TEST_Sys_Admin"){
-      vm.pwd = "SYSADMIN";
-    }
-    else if (user._id == "TEST_DOD_Admin"){
-      vm.pwd = "abc123";
-    }
-    else{
-      vm.pwd = "abc123";
-    }
-    vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl("https://csp-microstrategy.sam.gov/MicroStrategy/servlet/mstrWeb?evt=3031&src=mstrWeb.3031&server=10.11.34.63&project=SAM+Prototype&uid="+vm.user._id+"&pwd="+vm.pwd+"&hiddensections=path,dockLeft,footer");
+    vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
+    ('https://csp-microstrategy.sam.gov/MicroStrategy/servlet/mstrWeb?&evt=3031&src=mstrWeb.3031' +
+    '&hiddensections=path,dockLeft,footer' + '&uid=' + vm.user._id + '&role=' + vm.user.gsaRAC[0].role);
       cb();
     });
   }
 
-ngOnInit() { 
-  this.showReport = true; // show iframe
-}
-
+   ngOnInit() {
+     this.showReport = true;
+   }
 }
