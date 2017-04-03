@@ -4,7 +4,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { IAMService } from 'api-kit';
 import { globals } from '../../app/globals';
-import { Cookie } from 'ng2-cookies'
+import { Cookie } from 'ng2-cookies';
 import all = protractor.promise.all;
 
 @Component({
@@ -12,7 +12,7 @@ import all = protractor.promise.all;
   templateUrl: './report.template.html',
 
 })
-export class ReportComponent {
+export class ReportComponent implements OnInit {
   public id = null;
   public name = null;
   public desc = null;
@@ -47,8 +47,6 @@ export class ReportComponent {
         err => console.log(err),
         () => console.log('Completed'));
   }
-
-
   checkSession(cb: () => void) {
     let vm = this;
 
@@ -58,13 +56,13 @@ export class ReportComponent {
 
       vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
       ('https://csp-microstrategy.sam.gov/MicroStrategy/servlet/mstrWeb?&evt=4001&hiddensections=path,dockLeft,footer'
-        + '&uid=' + vm.user._id + '&reportID=' + vm.id + '&role=' + vm.user.gsaRAC[0].role);
+        + '&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0].role);
+
+
 
       cb();
     });
   }
-
-  
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.name = this.route.snapshot.params['name'];
