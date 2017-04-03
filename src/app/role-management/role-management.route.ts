@@ -7,18 +7,16 @@ import { DomainsResolve } from "./domains.resolve";
 
 export const routes: Routes = [];
 
-if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
-  routes.unshift({
-    path: 'access',
-    resolve: { domains: DomainsResolve },
-    children: [
-      { path: 'workspace',  component: RoleWorkspacePage },
-      { path: 'objects/new', component: ObjectDetailsPage},
-      { path: 'roles/new', component: RoleDetailsPage},
-      { path: 'objects/:objectId/edit', component: ObjectDetailsPage },
-      { path: 'roles/:roleId/edit', component: RoleDetailsPage },
-    ]
-  });
-}
+routes.unshift({
+  path: 'access',
+  resolve: { domains: DomainsResolve },
+  children: [
+    { path: 'workspace',  component: RoleWorkspacePage },
+    { path: 'objects/new', component: ObjectDetailsPage},
+    { path: 'roles/new', component: RoleDetailsPage},
+    { path: 'objects/:objectId/edit', component: ObjectDetailsPage },
+    { path: 'roles/:roleId/edit', component: RoleDetailsPage },
+  ]
+});
 
 export const routing = RouterModule.forChild(routes);
