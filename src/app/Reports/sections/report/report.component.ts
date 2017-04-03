@@ -47,8 +47,6 @@ export class ReportComponent implements OnInit {
         err => console.log(err),
         () => console.log('Completed'));
   }
-
-
   checkSession(cb: () => void) {
     let vm = this;
 
@@ -65,8 +63,6 @@ export class ReportComponent implements OnInit {
       cb();
     });
   }
-
-
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.name = this.route.snapshot.params['name'];
