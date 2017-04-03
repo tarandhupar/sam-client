@@ -1,6 +1,6 @@
 import { Component, NgZone, NgModule  } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
+import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { IAMService } from 'api-kit';
 import { globals } from '../../app/globals.ts';
 
