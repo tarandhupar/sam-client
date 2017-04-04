@@ -4,6 +4,7 @@ import {
   AbstractControl
 } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
+import { OptionsType } from "sam-ui-kit/types";
 
 @Component({
   selector: 'samCheckboxToggledTextarea',
@@ -23,21 +24,22 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   };
 
   // general
-  @Input() options; // optional - can pass all parameters in a single options object for convenience
+  @Input() options: any; // optional - can pass all parameters in a single options object for convenience
   @Input() name: string; // required, subcomponent names are generated based on this component's name
   @Input() label: string;
   @Input() hint: string;
   @Input() required: boolean;
 
   // checkbox
-  @Input() checkboxOptions: any[]; // required
+  @Input() checkboxOptions: OptionsType[]; // required
   @Input() checkboxHasSelectAll: boolean;
 
   // textarea
   @Input() textareaPlaceholder: string[]; // todo: implement this
   @Input() textareaDisabled: boolean[]; // todo: implement this
   @Input() textareaMaxlength: number[]; // todo: implement this
-  public textareaHidden: boolean[] = [];
+  @Input() showWhenCheckbox: string; // 'checked' or 'unchecked'
+  public textareaHidden: boolean[];
 
   public validationGroup: FormGroup;
   public textareaControls: FormControl[];
@@ -63,9 +65,6 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
 
       if(this.options.checkbox) {
         this.checkboxOptions = this.checkboxOptions || this.options.checkbox.options;
-        for(let i = 0; i < this.checkboxOptions.length; i++) {
-          this.textareaHidden.push(true);
-        }
         if(this.checkboxHasSelectAll == null) { this.checkboxHasSelectAll = this.options.checkbox.hasSelectAll; }
       }
 
@@ -73,8 +72,18 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
         this.textareaPlaceholder = this.textareaPlaceholder || this.options.textarea.placeholder;
         if(this.textareaDisabled == null) { this.textareaDisabled = this.options.textarea.disabled; }
         if(this.textareaMaxlength == null) { this.textareaMaxlength = this.options.textarea.maxlength; }
+        this.showWhenCheckbox = this.showWhenCheckbox || this.options.textarea.showWhenCheckbox;
       }
     }
+
+    this.textareaHidden = [];
+    if(this.checkboxOptions) {
+      for(let i = 0; i < this.checkboxOptions.length; i++) {
+        this.textareaHidden.push(true);
+      }
+    }
+
+    this.showWhenCheckbox = this.showWhenCheckbox || 'checked';
   }
 
   private validateInputs() {
@@ -119,16 +128,17 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
 
   private toggleTextarea() {
     for (let i = 0; i < this.checkboxOptions.length; i++) {
-      if (this.model.checkbox.indexOf(this.checkboxOptions[i].value) >= 0) {
-        this.textareaHidden[i] = true;
-        this.textareaControls[i].setValidators(null);
-        this.textareaControls[i].updateValueAndValidity();
-      } else {
+      let isChecked = this.model.checkbox.indexOf(this.checkboxOptions[i].value) >= 0;
+      if (isChecked && this.showWhenCheckbox === 'checked' || !isChecked && this.showWhenCheckbox === 'unchecked') {
         this.textareaHidden[i] = false;
         if (this.required) {
           this.textareaControls[i].setValidators(Validators.required);
           this.textareaControls[i].updateValueAndValidity();
         }
+      } else {
+        this.textareaHidden[i] = true;
+        this.textareaControls[i].setValidators(null);
+        this.textareaControls[i].updateValueAndValidity();
       }
     }
   }

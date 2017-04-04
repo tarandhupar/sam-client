@@ -26,6 +26,10 @@ export class FinancialInfoFormPage2 implements OnInit {
       options: [
         { value: 'na', label: 'Not Applicable', name: 'accomplishments-checkbox-na' }
       ]
+    },
+
+    textarea: {
+      showWhenCheckbox: 'unchecked'
     }
   };
 
