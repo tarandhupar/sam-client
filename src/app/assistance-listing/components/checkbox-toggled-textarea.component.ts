@@ -129,6 +129,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
         textareaControl.updateValueAndValidity();
       }
       textareaControl.valueChanges.subscribe(value => {
+        // todo: figure out why this is being called twice on population
         this.model.textarea[i] = value;
         this.onChange();
       });
