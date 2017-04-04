@@ -17,7 +17,7 @@ import {UUID} from 'angular2-uuid';
   ]
 })
 
-export class FinancialObligationsComponent implements OnInit {
+export class FinancialObligationsComponent implements OnInit, OnDestroy {
   obligationsInfo = [];
   obligationsData = [];
   data = [];
@@ -326,7 +326,7 @@ export class FinancialObligationsComponent implements OnInit {
         this.programTitle = api.data.title;
         let isFundedCurrentFY = '';
         if (api.data) {
-          if(api.data.financial) {
+          if (api.data.financial) {
             if (api.data.financial.isFundedCurrentFY) {
               isFundedCurrentFY = (api.data.financial.isFundedCurrentFY ? api.data.financial.isFundedCurrentFY : '');
             }
@@ -341,11 +341,11 @@ export class FinancialObligationsComponent implements OnInit {
             }
           }
         }
-        if(isFundedCurrentFY) {
+        if (isFundedCurrentFY) {
           isFundedCurrentFY = 'isFundedCurrentFY';
         }
         this.finObligationsForm.patchValue({
-         isFundedCurrentFY: [isFundedCurrentFY]
+          isFundedCurrentFY: [isFundedCurrentFY]
         });
         this.obligationsInfo = this.finObligationsForm.value.obligations;
         this.caluclateTotal(this.obligationsInfo, false);
@@ -411,7 +411,7 @@ export class FinancialObligationsComponent implements OnInit {
     let uuid = UUID.UUID().replace(/-/g, "");
     let data = {};
     let isFundedCurrentFY: boolean;
-    if(this.finObligationsForm.value.isFundedCurrentFY) {
+    if (this.finObligationsForm.value.isFundedCurrentFY) {
       isFundedCurrentFY = this.finObligationsForm.value.isFundedCurrentFY.indexOf('isFundedCurrentFY') !== -1;
     }
 
@@ -420,7 +420,7 @@ export class FinancialObligationsComponent implements OnInit {
       let isRecoveryAct: boolean;
       let valuesData = [];
       let obligation = this.obligationsInfo[i];
-      if(obligation.isRecoveryAct) {
+      if (obligation.isRecoveryAct) {
         isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !== -1;
       }
 
@@ -468,7 +468,7 @@ export class FinancialObligationsComponent implements OnInit {
       );
     }
     data = {
-      "financial":{
+      "financial": {
         "isFundedCurrentFY": isFundedCurrentFY,
         "obligations": obligationsData
       }

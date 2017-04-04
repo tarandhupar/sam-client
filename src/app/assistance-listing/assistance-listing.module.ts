@@ -24,6 +24,7 @@ import { FinancialObligationsComponent } from "./assistance-listing-operations/s
 import { SamTextRadioButtonComponent } from "./components/text-radio/text-radio-button.component";
 import { FALAccountIdentificationComponent } from "./components/account-identification.component";
 import { FALTafsComponent } from "./components/tafs.component";
+import {FALCriteriaInfoComponent} from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
 
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import { FALTafsComponent } from "./components/tafs.component";
     FALContactInfoComponent,
     FALContactInfoTableComponent,
     FinancialObligationsComponent,
-    SamTextRadioButtonComponent
+    SamTextRadioButtonComponent,
+    FALCriteriaInfoComponent
   ],
   providers: [],
 })

@@ -1,0 +1,87 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Criteria for Applying - {{programTitle}}</div>
+<form [formGroup]="falCriteriaForm" novalidate (ngSubmit)="save(falCriteriaForm)">
+  <h4>Credentials and Documentation</h4>
+  <samTextArea
+    [control]="falCriteriaForm.controls['documentation']"
+    [name]="'documentation-input'"
+    [label]="'Please describe credentials or documentation required for applying. Do not include anything covered in 2CFR 200.'"
+    formControlName="documentation"></samTextArea>
+  <h4>Eligibility Requirements</h4>
+  <sam-list-input
+    [hint]="'Please select all that apply to help public users search for this listing'"
+    [control]="falCriteriaForm.controls['applicantTypes']"
+    [name]="'applicantTypes-control'"
+    [label]="'Applicant Eligibility'"
+    [options]="applicantTypes"
+    formControlName="applicantTypes"></sam-list-input>
+  <samTextArea
+    [control]="falCriteriaForm.controls['applicantDescription']"
+    [name]="'applicant-description-input'"
+    [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
+    formControlName="applicantDescription"></samTextArea>
+  <h4>Beneficiary Eligibility</h4>
+  <samCheckbox
+    [control]="falCriteriaForm.controls['benSameAsApplicant']"
+    [name]="'beneficiary-SameAsApplicant-input-checkbox'"
+    [options]="benSameAsApplicantConfig.options"
+    formControlName="benSameAsApplicant"></samCheckbox>
+  <sam-list-input
+    [control]="falCriteriaForm.controls['benTypes']"
+    [name]="'beneficiaryTypes-control'"
+    [label]="'Please select all that apply to help public users search for this listing'"
+    [options]="benTypes"
+    formControlName="benTypes"></sam-list-input>
+  <samTextArea
+    [control]="falCriteriaForm.controls['benDescription']"
+    [name]="'beneficiary-description-input'"
+    [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
+    formControlName="benDescription"></samTextArea>
+  <h4>Length and Time Phasing of Assistance</h4>
+  <samTextArea
+    [control]="falCriteriaForm.controls['lengthTimeDesc']"
+    [name]="'lengthandtime-description-input'"
+    [label]="'Describe the period of time when assistance is available. Also, the period of time when funding must be spent.'"
+    formControlName="lengthTimeDesc"></samTextArea>
+  <sam-autocomplete [labelText]="'How is this assistance awarded and/or released?'"
+                    [options]="awardedTypesoptions"
+                    [name]="awardedTypes-control"
+                    formControlName="awardedTypes"
+                    [config]="awardedTypesConfig"></sam-autocomplete>
+  <samTextArea
+    [control]="falCriteriaForm.controls['awardedDescription']"
+    [name]="'awarded-description-input'"
+    [label]="''"
+    formControlName="awardedDescription"></samTextArea>
+  <h4>Use and Use Restrictions</h4>
+  <sam-autocomplete [labelText]="'How is this assistance awarded and/or released?'"
+                    [options]="awardedTypesoptions"
+                    [name]="awardedTypes-control"
+                    formControlName="awardedTypes"
+                    [config]="awardedTypesConfig"></sam-autocomplete>
+  <samTextArea
+    [control]="falCriteriaForm.controls['awardedDescription']"
+    [name]="'awarded-description-input'"
+    [label]="''"
+    formControlName="awardedDescription"></samTextArea>
+  <sam-autocomplete [labelText]="'Use of Assistance'"
+                    [options]="assiUsageTypesoptions"
+                    [name]="assistance-usage-control"
+                    formControlName="assiUsageTypes"
+                    [config]="assiUsageTypesConfig"></sam-autocomplete>
+  <samTextArea
+    [control]="falCriteriaForm.controls['assiUsageDescription']"
+    [name]="'assistanceusage-description-input'"
+    [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
+    formControlName="assiUsageDescription"></samTextArea>
+  <samTextArea
+    [control]="falCriteriaForm.controls['usageResDesc']"
+    [name]="'usage-restriction-description-input'"
+    [label]="''"
+    formControlName="usageResDesc"></samTextArea>
+  <div class="pull-left">
+    <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+    <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+    <samButton buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+    <samButton buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+  </div>
+</form>
