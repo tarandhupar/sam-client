@@ -21,7 +21,7 @@ export class ComplianceRequirementsPage implements OnInit {
   public recordsModel: any = {};
   public additionalDocumentationModel: any = {};
 
-  public policyRequirementsConfig: Object = {
+  public policyRequirementsConfig: any = {
     checkbox: {
       name: 'compliance-policy-requirements',
       label: 'Policy Requirements',
@@ -29,11 +29,11 @@ export class ComplianceRequirementsPage implements OnInit {
       hint: 'Does 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards apply to this federal assistance listing?',
 
       options: [
-        { value: 'subB', label: 'Subpart B, General Provisions', name: 'policy-requirements-checkbox-subB' },
-        { value: 'subC', label: 'Subpart C, Pre-Federal Award Requirements and Contents of Federal Awards', name: 'policy-requirements-checkbox-subC' },
-        { value: 'subD', label: 'Subpart D, Post Federal Award Requirements', name: 'policy-requirements-checkbox-subD' },
-        { value: 'subE', label: 'Subpart E, Cost Principles', name: 'policy-requirements-checkbox-subE' },
-        { value: 'subF', label: 'Subpart F, Audit Requirements', name: 'policy-requirements-checkbox-subF' }
+        { value: 'subpartB', label: 'Subpart B, General Provisions', name: 'policy-requirements-checkbox-subB' },
+        { value: 'subpartC', label: 'Subpart C, Pre-Federal Award Requirements and Contents of Federal Awards', name: 'policy-requirements-checkbox-subC' },
+        { value: 'subpartD', label: 'Subpart D, Post Federal Award Requirements', name: 'policy-requirements-checkbox-subD' },
+        { value: 'subpartE', label: 'Subpart E, Cost Principles', name: 'policy-requirements-checkbox-subE' },
+        { value: 'subpartF', label: 'Subpart F, Audit Requirements', name: 'policy-requirements-checkbox-subF' }
       ]
     },
 
@@ -43,7 +43,7 @@ export class ComplianceRequirementsPage implements OnInit {
     }
   };
 
-  public reportsConfig: Object = {
+  public reportsConfig: any = {
     name: 'compliance-reports',
     label: 'Reports',
     hint: 'What reports does the funding agency require?',
@@ -53,21 +53,21 @@ export class ComplianceRequirementsPage implements OnInit {
     checkbox: {
       options: [
         { value: 'program', label: 'Program Reports', name: 'reports-checkbox-program' },
-        { value: 'crash', label: 'Crash Reports', name: 'reports-checkbox-crash' },
+        { value: 'cash', label: 'Cash Reports', name: 'reports-checkbox-cash' },
         { value: 'progress', label: 'Progress Reports', name: 'reports-checkbox-progress' },
         { value: 'expenditure', label: 'Expenditure Reports', name: 'reports-checkbox-expenditure' },
-        { value: 'performance', label: 'Performance Reports', name: 'reports-checkbox-performance' }
+        { value: 'performanceMonitoring', label: 'Performance Reports', name: 'reports-checkbox-performance' }
       ]
     },
 
     textarea: {
       showWhenCheckbox: 'checked',
-      labels: ['Program Reports', 'Crash Reports', 'Progress Reports', 'Expenditure Reports', 'Performance Reports'],
+      labels: ['Program Reports', 'Cash Reports', 'Progress Reports', 'Expenditure Reports', 'Performance Reports'],
       required: [true, true, true, true, true]
     }
   };
 
-  public auditsConfig: Object = {
+  public auditsConfig: any = {
     name: 'compliance-audits',
     label: 'Audits',
     hint: 'Describe audit procedures for this program. Only include requirements not already covered by 2 CFR 200.',
@@ -84,7 +84,7 @@ export class ComplianceRequirementsPage implements OnInit {
     }
   };
 
-  public additionalDocumentationConfig: Object = {
+  public additionalDocumentationConfig: any = {
     name: 'compliance-additional-documentation',
     label: 'Regulations, Guidelines, and Literature',
     hint: 'Please reference additional documentation specific to your program Do not include government wide guidance.',
@@ -167,11 +167,182 @@ export class ComplianceRequirementsPage implements OnInit {
   }
 
   private populateForm() {
+    if(this.program.data && this.program.data.compliance) {
+      let CFR200 = this.loadCFR200();
+      this.complianceRequirementsGroup.get('policyRequirementsCheckbox').setValue(CFR200.checkbox);
+      this.complianceRequirementsGroup.get('policyRequirementsTextarea').setValue(CFR200.description);
+      this.complianceRequirementsGroup.get('reports').setValue(this.loadReports());
+      this.complianceRequirementsGroup.get('audits').setValue(this.loadAudit());
+      this.complianceRequirementsGroup.get('records').setValue(this.loadRecords());
+      this.complianceRequirementsGroup.get('additionalDocumentation').setValue(this.loadDocuments());
+    }
   }
 
   private saveProgramData(): Observable<any> {
     let data: any = (this.program && this.program.data) || {};
+
+    data.compliance = data.compliance || {};
+    data.compliance.CFR200Requirements = this.saveCFR200();
+    data.compliance.reports = this.saveReports();
+    data.compliance.audit = this.saveAudit();
+    data.compliance.records = this.saveRecords();
+    data.compliance.documents = this.saveDocuments();
+
     return this.programService.saveProgram(this.programId, data, this.cookieValue);
+  }
+
+  private saveCFR200() {
+    let CFR200: any = {};
+
+    if(this.policyRequirementsModel && this.policyRequirementsModel.checkbox) {
+      CFR200.questions = [];
+      for(let checkbox of this.policyRequirementsConfig.checkbox.options) {
+        let selected = this.policyRequirementsModel.checkbox.indexOf(checkbox.value) >= 0;
+        CFR200.questions.push({code: checkbox.value, isSelected: selected});
+      }
+    }
+
+    if(this.policyRequirementsModel && this.policyRequirementsModel.textarea) {
+      CFR200.description = this.policyRequirementsModel.textarea;
+    }
+
+    return CFR200;
+  }
+
+  private loadCFR200() {
+    let model: any = {
+      checkbox: [],
+      description: ''
+    };
+
+    if(this.program.data.compliance.CFR200Requirements) {
+      if(this.program.data.compliance.CFR200Requirements.questions) {
+        for(let question of this.program.data.compliance.CFR200Requirements.questions) {
+          if(question.isSelected) {
+            model.checkbox.push(question.code);
+          }
+        }
+      }
+
+      if(this.program.data.compliance.CFR200Requirements.description) {
+        model.description = this.program.data.compliance.CFR200Requirements.description;
+      }
+    }
+
+    return model;
+  }
+
+  private saveReports() {
+    let reports: any[] = [];
+
+    if(this.reportsModel && this.reportsModel.checkbox && this.reportsModel.textarea) {
+      for(let i = 0; i < this.reportsConfig.checkbox.options.length; i++) {
+        let codeName = this.reportsConfig.checkbox.options[i].value;
+        let selected = this.reportsModel.checkbox.indexOf(codeName) >= 0;
+        let description = this.reportsModel.textarea[i];
+        reports.push({code: codeName, isSelected: selected, description: description});
+      }
+    }
+
+    return reports;
+  }
+
+  private loadReports() {
+    let model: any = {
+      checkbox: [],
+      textarea: []
+    };
+
+    if (this.program.data.compliance.reports) {
+      for (let report of this.program.data.compliance.reports) {
+        if (report.isSelected) {
+          model.checkbox.push(report.code);
+        }
+        model.textarea.push(report.description);
+      }
+    }
+
+    return model;
+  }
+
+  private saveAudit() {
+    let audit: any = {};
+
+    if(this.auditsModel && this.auditsModel.checkbox) {
+        audit.isApplicable = this.auditsModel.checkbox.indexOf('na') < 0;
+    }
+
+    if(this.auditsModel && this.auditsModel.textarea && this.auditsModel.textarea[0]) {
+      audit.description = this.auditsModel.textarea[0];
+    }
+
+    return audit;
+  }
+
+  private loadAudit() {
+    let model: any = {
+      checkbox: [],
+      textarea: []
+    };
+
+    if(this.program.data.compliance.audit) {
+      if(!this.program.data.compliance.audit.isApplicable) {
+        model.checkbox.push('na');
+      }
+      model.textarea.push(this.program.data.compliance.audit.description);
+    }
+
+    return model;
+  }
+
+  private saveRecords() {
+    let records: any = {};
+
+    if(this.recordsModel) {
+      records.description = this.recordsModel;
+    }
+
+    return records;
+  }
+
+  private loadRecords() {
+    let model: string = '';
+
+    if(this.program.data.compliance.records && this.program.data.compliance.records.description) {
+      model = this.program.data.compliance.records.description;
+    }
+
+    return model;
+  }
+
+  private saveDocuments() {
+    let documents: any = {};
+
+    if(this.additionalDocumentationModel && this.additionalDocumentationModel.checkbox) {
+      documents.isApplicable = this.additionalDocumentationModel.checkbox.indexOf('na') < 0;
+    }
+
+    if(this.additionalDocumentationModel&& this.additionalDocumentationModel.textarea && this.additionalDocumentationModel.textarea[0]) {
+      documents.description = this.additionalDocumentationModel.textarea[0];
+    }
+
+    return documents;
+  }
+
+  private loadDocuments() {
+    let model: any = {
+      checkbox: [],
+      textarea: []
+    };
+
+    if(this.program.data.compliance.documents) {
+      if(!this.program.data.compliance.documents.isApplicable) {
+        model.checkbox.push('na');
+      }
+      model.textarea.push(this.program.data.compliance.documents.description);
+    }
+
+    return model;
   }
 
   public onCancelClick(event) {
