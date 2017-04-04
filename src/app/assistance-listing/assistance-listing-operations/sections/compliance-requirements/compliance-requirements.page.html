@@ -1,7 +1,17 @@
 <div *ngIf="complianceRequirementsGroup" [formGroup]="complianceRequirementsGroup">
-  <samCheckboxToggledTextarea [options]="policyRequirementsConfig"
-                              [formControlName]="'policyRequirements'"
-  ></samCheckboxToggledTextarea>
+  <samCheckbox [name]="policyRequirementsConfig.checkbox.name"
+               [label]="policyRequirementsConfig.checkbox.label"
+               [hint]="policyRequirementsConfig.checkbox.hint"
+               [options]="policyRequirementsConfig.checkbox.options"
+               [control]="complianceRequirementsGroup.get('policyRequirementsCheckbox')"
+               [formControlName]="'policyRequirementsCheckbox'"
+  ></samCheckbox>
+
+  <samTextArea [name]="policyRequirementsConfig.textarea.name"
+               [label]="policyRequirementsConfig.textarea.label"
+               [control]="complianceRequirementsGroup.get('policyRequirementsTextarea')"
+               [formControlName]="'policyRequirementsTextarea'"
+  ></samTextArea>
   {{ policyRequirementsModel | json}}
 
   <samCheckboxToggledTextarea [options]="reportsConfig"

@@ -15,20 +15,19 @@ export class ComplianceRequirementsPage implements OnInit {
 
   public program: any;
   public complianceRequirementsGroup: FormGroup;
-  public policyRequirementsModel: Object = {};
-  public reportsModel: Object = {};
-  public auditsModel: Object = {};
-  public recordsModel: Object = {};
-  public additionalDocumentationModel: Object = {};
+  public policyRequirementsModel: any = {};
+  public reportsModel: any = {};
+  public auditsModel: any = {};
+  public recordsModel: any = {};
+  public additionalDocumentationModel: any = {};
 
   public policyRequirementsConfig: Object = {
-    name: 'compliance-policy-requirements',
-    label: 'Policy Requirements',
-    // todo: check what * is for in hint
-    hint: 'Does 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards apply to this federal assistance listing?',
-    required: false,
-
     checkbox: {
+      name: 'compliance-policy-requirements',
+      label: 'Policy Requirements',
+      // todo: check what * is for in hint
+      hint: 'Does 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards apply to this federal assistance listing?',
+
       options: [
         { value: 'subB', label: 'Subpart B, General Provisions', name: 'policy-requirements-checkbox-subB' },
         { value: 'subC', label: 'Subpart C, Pre-Federal Award Requirements and Contents of Federal Awards', name: 'policy-requirements-checkbox-subC' },
@@ -39,7 +38,8 @@ export class ComplianceRequirementsPage implements OnInit {
     },
 
     textarea: {
-      showWhenCheckbox: 'checked'
+      name: 'compliance-policy-additional-info',
+      label: 'Additional Information'
     }
   };
 
@@ -48,6 +48,7 @@ export class ComplianceRequirementsPage implements OnInit {
     label: 'Reports',
     hint: 'What reports does the funding agency require?',
     required: false,
+    validate: false,
 
     checkbox: {
       options: [
@@ -60,7 +61,9 @@ export class ComplianceRequirementsPage implements OnInit {
     },
 
     textarea: {
-      showWhenCheckbox: 'checked'
+      showWhenCheckbox: 'checked',
+      labels: ['Program Reports', 'Crash Reports', 'Progress Reports', 'Expenditure Reports', 'Performance Reports'],
+      required: [true, true, true, true, true]
     }
   };
 
@@ -118,15 +121,20 @@ export class ComplianceRequirementsPage implements OnInit {
 
   private createForm() {
     this.complianceRequirementsGroup = this.fb.group({
-      policyRequirements: null,
+      policyRequirementsCheckbox: null,
+      policyRequirementsTextarea: null,
       reports: null,
       audits: null,
       records: null,
       additionalDocumentation: null
     });
 
-    this.complianceRequirementsGroup.get('policyRequirements').valueChanges.subscribe(model => {
-      this.policyRequirementsModel = model;
+    this.complianceRequirementsGroup.get('policyRequirementsCheckbox').valueChanges.subscribe(model => {
+      this.policyRequirementsModel.checkbox = model;
+    });
+
+    this.complianceRequirementsGroup.get('policyRequirementsTextarea').valueChanges.subscribe(model => {
+      this.policyRequirementsModel.textarea = model;
     });
 
     this.complianceRequirementsGroup.get('reports').valueChanges.subscribe(model => {
