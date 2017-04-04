@@ -131,7 +131,6 @@ export class UserAccessService {
   }
 
   createObject(domainId: number, objectName: number|string, permissions: {id?: any, val?: string}[], objectId: any) {
-    console.log(arguments);
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -161,8 +160,6 @@ export class UserAccessService {
       ],
 
     };
-
-    console.log(apiOptions.body);
 
     return this.apiService.call(apiOptions, false);
   }
