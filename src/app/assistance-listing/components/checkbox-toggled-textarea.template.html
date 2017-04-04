@@ -4,19 +4,20 @@
               [hint]="hint"
               [required]="required">
 
-  <samCheckbox *ngIf="model"
-               [model]="model.checkbox"
-               [name]="checkboxName"
-               [options]="checkboxOptions"
-               [hasSelectAll]="checkboxHasSelectAll"
-               (modelChange)="onCheckboxChange($event)"
-  ></samCheckbox>
+  <form novalidate [formGroup]="validationGroup">
+    <samCheckbox *ngIf="model"
+                 [model]="model.checkbox"
+                 [name]="name + '-checkbox'"
+                 [options]="checkboxOptions"
+                 [hasSelectAll]="checkboxHasSelectAll"
+                 (modelChange)="onCheckboxChange($event)"
+    ></samCheckbox>
 
-  <samTextArea [name]="textareaName"
-               [placeholder]="textareaPlaceholder"
-               [disabled]="textareaDisabled"
-               [hidden]="textareaHidden"
-               [formControl]="textareaControl"
-  ></samTextArea>
-
+    <ng-container *ngFor="let option of checkboxOptions; let i = index;">
+      <samTextArea [name]="name + '-textarea' + i"
+                   [hidden]="textareaHidden[i]"
+                   [formControlName]="'textarea'+i"
+      ></samTextArea>
+    </ng-container>
+  </form>
 </labelWrapper>
