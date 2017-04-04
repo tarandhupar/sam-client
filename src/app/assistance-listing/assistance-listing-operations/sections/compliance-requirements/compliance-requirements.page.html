@@ -1,8 +1,37 @@
-<div>
-  <div class="pull-left">
-    <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-    <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
-    <samButton buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
-    <samButton buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+<div *ngIf="complianceRequirementsGroup" [formGroup]="complianceRequirementsGroup">
+  <samCheckboxToggledTextarea [options]="policyRequirementsConfig"
+                              [formControlName]="'policyRequirements'"
+  ></samCheckboxToggledTextarea>
+  {{ policyRequirementsModel | json}}
+
+  <samCheckboxToggledTextarea [options]="reportsConfig"
+                              [formControlName]="'reports'"
+  ></samCheckboxToggledTextarea>
+  {{ reportsModel | json}}
+
+  <samCheckboxToggledTextarea [options]="auditsConfig"
+                              [formControlName]="'audits'"
+  ></samCheckboxToggledTextarea>
+  {{ auditsModel | json}}
+
+  <samTextArea [hint]="'Describe required records. Include the time period when the records must be'"
+               [name]="'compliance-records'"
+               [control]="records"
+               [formControlName]="'records'"
+  ></samTextArea>
+  {{ recordsModel | json}}
+
+  <samCheckboxToggledTextarea [options]="additionalDocumentationConfig"
+                              [formControlName]="'additionalDocumentation'"
+  ></samCheckboxToggledTextarea>
+  {{ additionalDocumentationModel | json}}
+
+  <div>
+    <div class="pull-left">
+      <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+      <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+      <samButton buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+      <samButton buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+    </div>
   </div>
 </div>
