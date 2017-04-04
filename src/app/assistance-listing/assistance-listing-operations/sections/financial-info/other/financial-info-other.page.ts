@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
   providers: [ProgramService],
   templateUrl: 'financial-info-other.page.html'
 })
-export class FinancialInfoFormPage2 implements OnInit {
+export class FinancialInfoPage2 implements OnInit {
   public otherFinancialInfoGroup: FormGroup;
   public program: any;
 
@@ -240,7 +240,7 @@ export class FinancialInfoFormPage2 implements OnInit {
   public onSaveContinueClick(event) {
     this.saveProgramData().subscribe(res => {
       let id = res._body;
-      this.router.navigate(['programs', id, 'edit', 'contact-information']);
+      this.router.navigate(['programs', id, 'edit', 'compliance-requirements']);
     }, err => {
       console.log("Error saving program ", err);
     });
