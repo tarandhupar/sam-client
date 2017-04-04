@@ -24,12 +24,13 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   };
 
   // general
+  // todo: document options
   @Input() options: any; // optional - can pass all parameters in a single options object for convenience
   @Input() name: string; // required, subcomponent names are generated based on this component's name
   @Input() label: string;
   @Input() hint: string;
   @Input() required: boolean;
-  @Input() validate: boolean;
+  @Input() validateComponentLevel: boolean;
 
   // checkbox
   @Input() checkboxOptions: OptionsType[]; // required
@@ -65,7 +66,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
       this.label = this.label || this.options.label;
       this.hint = this.hint || this.options.hint;
       if(this.required == null) { this.required = this.options.required; }
-      if(this.validate == null) { this.validate = this.options.validate; }
+      if(this.validateComponentLevel == null) { this.validateComponentLevel = this.options.validateComponentLevel; }
 
       if(this.options.checkbox) {
         this.checkboxOptions = this.checkboxOptions || this.options.checkbox.options;
@@ -85,7 +86,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
 
     // Defaults
     if(this.required == null) { this.required = false; }
-    if(this.validate == null) { this.validate = false; }
+    if(this.validateComponentLevel == null) { this.validateComponentLevel = false; }
 
     this.textareaHidden = [];
     this.textareaRequired = this.textareaRequired || [];
@@ -165,7 +166,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   private onChange() {
     let errored: AbstractControl = new FormControl();
 
-    if(this.validate) {
+    if(this.validateComponentLevel) {
       for (let key in this.validationGroup.controls) {
         if (this.validationGroup.controls.hasOwnProperty(key)) {
           let control = this.validationGroup.controls[key];

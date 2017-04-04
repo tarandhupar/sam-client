@@ -48,7 +48,7 @@ export class ComplianceRequirementsPage implements OnInit {
     label: 'Reports',
     hint: 'What reports does the funding agency require?',
     required: false,
-    validate: false,
+    validateComponentLevel: false,
 
     checkbox: {
       options: [
