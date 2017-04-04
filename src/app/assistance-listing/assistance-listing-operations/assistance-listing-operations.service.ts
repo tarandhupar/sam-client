@@ -62,6 +62,11 @@ export class FALOpSharedService{
         label : "5. Contact Information",
         route: this.baseURL + "/contact-information",
         path: "contact-information"
+      },
+      {
+        label : "7. Compliance Requirements",
+        route: this.baseURL + "/compliance-requirements",
+        path: "compliance-requirements"
       }
     ]
     };
