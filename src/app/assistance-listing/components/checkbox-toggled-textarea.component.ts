@@ -29,6 +29,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   @Input() label: string;
   @Input() hint: string;
   @Input() required: boolean;
+  @Input() validate: boolean;
 
   // checkbox
   @Input() checkboxOptions: OptionsType[]; // required
@@ -38,6 +39,8 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   @Input() textareaPlaceholder: string[]; // todo: implement this
   @Input() textareaDisabled: boolean[]; // todo: implement this
   @Input() textareaMaxlength: number[]; // todo: implement this
+  @Input() textareaRequired: boolean[];
+  @Input() textareaLabel: string[];
   @Input() showWhenCheckbox: string; // 'checked' or 'unchecked'
   public textareaHidden: boolean[];
 
@@ -61,7 +64,8 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
 
       this.label = this.label || this.options.label;
       this.hint = this.hint || this.options.hint;
-      if(this.required == null) { this.required = this.options.required }
+      if(this.required == null) { this.required = this.options.required; }
+      if(this.validate == null) { this.validate = this.options.validate; }
 
       if(this.options.checkbox) {
         this.checkboxOptions = this.checkboxOptions || this.options.checkbox.options;
@@ -69,17 +73,32 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
       }
 
       if(this.options.textarea) {
-        this.textareaPlaceholder = this.textareaPlaceholder || this.options.textarea.placeholder;
+        this.textareaPlaceholder = this.textareaPlaceholder || this.options.textarea.placeholders;
         if(this.textareaDisabled == null) { this.textareaDisabled = this.options.textarea.disabled; }
-        if(this.textareaMaxlength == null) { this.textareaMaxlength = this.options.textarea.maxlength; }
+        if(this.textareaMaxlength == null) { this.textareaMaxlength = this.options.textarea.maxlengths; }
+        this.textareaRequired = this.textareaRequired || this.options.textarea.required;
+        this.textareaLabel = this.textareaLabel || this.options.textarea.labels;
         this.showWhenCheckbox = this.showWhenCheckbox || this.options.textarea.showWhenCheckbox;
       }
     }
 
+
+    // Defaults
+    if(this.required == null) { this.required = false; }
+    if(this.validate == null) { this.validate = false; }
+
     this.textareaHidden = [];
+    this.textareaRequired = this.textareaRequired || [];
+    this.textareaLabel = this.textareaLabel || [];
     if(this.checkboxOptions) {
       for(let i = 0; i < this.checkboxOptions.length; i++) {
         this.textareaHidden.push(true);
+        if(this.textareaLabel.length <= i || this.textareaLabel[i] == null) {
+          this.textareaLabel.push('');
+        }
+        if(this.textareaRequired.length <= i || this.textareaRequired[i] == null) {
+          this.textareaRequired.push(false);
+        }
       }
     }
 
@@ -104,7 +123,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
 
     for(let i = 0; i < this.checkboxOptions.length; i++) {
       let textareaControl = new FormControl(null);
-      if(this.required) {
+      if(this.required || this.textareaRequired[i]) {
         textareaControl.setValidators(Validators.required);
         textareaControl.updateValueAndValidity();
       }
@@ -131,7 +150,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
       let isChecked = this.model.checkbox.indexOf(this.checkboxOptions[i].value) >= 0;
       if (isChecked && this.showWhenCheckbox === 'checked' || !isChecked && this.showWhenCheckbox === 'unchecked') {
         this.textareaHidden[i] = false;
-        if (this.required) {
+        if (this.required || this.textareaRequired[i]) {
           this.textareaControls[i].setValidators(Validators.required);
           this.textareaControls[i].updateValueAndValidity();
         }
@@ -146,23 +165,25 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   private onChange() {
     let errored: AbstractControl = new FormControl();
 
-    for (let key in this.validationGroup.controls) {
-      if (this.validationGroup.controls.hasOwnProperty(key)) {
-        let control = this.validationGroup.controls[key];
-        if (control.invalid && control.errors) {
-          errored = control;
-          break;
+    if(this.validate) {
+      for (let key in this.validationGroup.controls) {
+        if (this.validationGroup.controls.hasOwnProperty(key)) {
+          let control = this.validationGroup.controls[key];
+          if (control.invalid && control.errors) {
+            errored = control;
+            break;
+          }
         }
       }
-    }
 
-    // Magic happens here
-    if(errored.pristine && !this.validationGroup.pristine) {
-      errored.markAsDirty({onlySelf: true});
-      this.wrapper.formatErrors(errored);
-      errored.markAsPristine({onlySelf: true});
-    } else {
-      this.wrapper.formatErrors(errored);
+      // Magic happens here
+      if (errored.pristine && !this.validationGroup.pristine) {
+        errored.markAsDirty({onlySelf: true});
+        this.wrapper.formatErrors(errored);
+        errored.markAsPristine({onlySelf: true});
+      } else {
+        this.wrapper.formatErrors(errored);
+      }
     }
 
     this.onChangeCallback(this.model);
