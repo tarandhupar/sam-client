@@ -38,7 +38,7 @@ let routerStub = {
 })
 class DummyComponent { }
 
-fdescribe('The Roles Edit and New pages', () => {
+describe('The Roles Edit and New pages', () => {
   let component: RoleDetailsPage;
   let fixture: any;
 
