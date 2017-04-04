@@ -136,7 +136,9 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   resetIconClass:string = "usa-agency-picker-search-reset";
 
   constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService) {}
-
+  private onChange: (_: any) => void = (_: any) => {};
+  private onTouched: () => void = () => {};
+  
   /**
    * Autocomplete
    */
@@ -978,7 +980,4 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   registerOnTouched(fn: any) {
     this.onTouched = fn;
   }
-
-  private onChange: (_: any) => void;
-  private onTouched: () => void;
 }
