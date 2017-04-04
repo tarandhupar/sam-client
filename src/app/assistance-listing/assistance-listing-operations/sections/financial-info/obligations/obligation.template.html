@@ -1,7 +1,7 @@
 <div id="stickyLabel" class="sticky-label focus" *ngIf="programId">Edit Financial Information - {{programTitle}}</div>
 <form [formGroup]="finObligationsForm" novalidate (ngSubmit)="save(finObligationsForm)">
   <div class="usa-grid">
-    <div> Select if applicable</div>
+    <div class="falobli-selectappli-margin"> Select if applicable</div>
     <samCheckbox
       [control]="finObligationsForm.controls['isFundedCurrentFY']"
       [name]="currentFiscalYearCheckboxConfig.name"
