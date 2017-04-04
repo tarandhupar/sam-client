@@ -179,7 +179,7 @@ export class FinancialInfoFormPage2 implements OnInit {
   private loadAccounts() {
     let model = {
       codeBoxes: [],
-      descriptionText: '',
+      descriptionText: [],
 
       accounts: []
     };
