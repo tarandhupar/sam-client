@@ -24,7 +24,8 @@
   ></samCheckboxToggledTextarea>
   {{ auditsModel | json}}
 
-  <samTextArea [hint]="'Describe required records. Include the time period when the records must be'"
+  <samTextArea [label]="'Records'"
+               [hint]="'Describe required records. Include the time period when the records must be'"
                [name]="'compliance-records'"
                [control]="records"
                [formControlName]="'records'"
