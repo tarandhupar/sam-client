@@ -10,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 
-fdescribe('The <alert-edit> component', () => {
+describe('The <alert-edit> component', () => {
   let component: AlertEditComponent;
   let fixture: any;
 
