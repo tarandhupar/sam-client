@@ -1,7 +1,7 @@
-import {Component, OnInit, OnDestroy, NgZone} from '@angular/core';
+import {Component, OnInit, OnDestroy, NgZone, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {ProgramService} from 'api-kit';
-import {FormGroup, FormArray, FormBuilder} from '@angular/forms';
+import {FormGroup, FormArray, FormBuilder, Validators} from '@angular/forms';
 import {FinacialInformation} from "./financialinfo";
 import {AutocompleteConfig} from "sam-ui-elements/src/ui-kit/types";
 import {DictionaryService} from "../../../../../../api-kit/dictionary/dictionary.service";
@@ -57,6 +57,9 @@ export class FinancialObligationsComponent implements OnInit {
   testtotalcFY = 0;
   testtotalbFY = 0;
   totalvalue = {};
+  assistanceTypeArray = [];
+  assistanceTypeLabel='Assistance Type';
+  @ViewChild('assistanceTypeWrapper') assistanceTypeWrapper;
 
 
   // Current Fiscal year Checkbox config
@@ -88,7 +91,7 @@ export class FinancialObligationsComponent implements OnInit {
   pastFiscalYearModel: {radioOptionId: '', textBoxValue: ''}
   pastFiscalYearConfig = {
     options: [
-      {value: 'pFYActual', label: 'Actual', name: 'rradio-pFY', flag: 'number'},
+      {value: 'pFYActual', label: 'Actual', name: 'radio-pFY', flag: 'number'},
       {value: 'pFYNsi', label: 'Not Separately Identifiable', name: 'radio-pFY', flag: 'text'},
       {value: 'pFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-pFY', flag: 'text'}
     ],
@@ -115,7 +118,7 @@ export class FinancialObligationsComponent implements OnInit {
   budgetFiscalYearConfig = {
     options: [
       {value: 'bFYEstimate', label: 'Estimate', name: 'radio-bFY', flag: 'number'},
-      {value: 'bFYNsi', label: 'Not Separately Identifiable', name: 'rradio-bFY', flag: 'text'},
+      {value: 'bFYNsi', label: 'Not Separately Identifiable', name: 'radio-bFY', flag: 'text'},
       {value: 'bFYNa', label: 'Not available (Must be updated by the end of the year)', name: 'radio-bFY', flag: 'text'}
     ],
     name: 'Budget Fiscal year - 2016',
@@ -153,10 +156,12 @@ export class FinancialObligationsComponent implements OnInit {
             let elementId = element.element_id;
             let value = element.value;
             let code = element.code;
+            let name = code + ' - ' + value;
             this.options.push({
               code: elementId,
-              name: code + ' - ' + value
-            })
+              name: name
+            });
+            this.assistanceTypeArray[elementId] = name;
           }
         }
       });
@@ -169,6 +174,11 @@ export class FinancialObligationsComponent implements OnInit {
     if (this.sharedService.programId) {
       this.getData();
     }
+  }
+  assistanceTypeChange(event, i) {
+    const control = <FormArray> this.finObligationsForm.controls['obligations'];
+    const controlGrp = <FormGroup> control.at(i);
+    this.assistanceTypeWrapper.formatErrors(controlGrp.controls['assistanceType'])
   }
 
   fiscalyear() {
@@ -219,6 +229,14 @@ export class FinancialObligationsComponent implements OnInit {
     let currentText = '';
     let budget = 'bFYEstimate';
     let budgetText = '';
+    let isRecoveryAct = '';
+    if (obligation['isRecoveryAct']) {
+      isRecoveryAct = (obligation['isRecoveryAct'] ? obligation['isRecoveryAct'] : '');
+    }
+    if(isRecoveryAct) {
+      isRecoveryAct = 'isRecoveryAct';
+    }
+
     if (obligation['values']) {
       for (let value of obligation['values']) {
         if (value['year'] === this.currentYear) {
@@ -261,9 +279,10 @@ export class FinancialObligationsComponent implements OnInit {
     }
 
     return this.fb.group({
-      isRecoveryAct: obligation['isRecoveryAct'],
-      assistanceType: {
-        code: obligation['assistanceType']
+      isRecoveryAct: [[isRecoveryAct]],
+      assistanceType:{
+        code:obligation['assistanceType'],
+        name:this.assistanceTypeArray[obligation['assistanceType']]
       },
       pFY: {
         radioOptionId: past,
@@ -279,6 +298,42 @@ export class FinancialObligationsComponent implements OnInit {
       },
       description: obligation['description']
     });
+  }
+
+  getData() {
+    this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
+      .subscribe(api => {
+        this.programTitle = api.data.title;
+        let isFundedCurrentFY = '';
+        if (api.data) {
+          if(api.data.financial) {
+            if (api.data.financial.isFundedCurrentFY) {
+              isFundedCurrentFY = (api.data.financial.isFundedCurrentFY ? api.data.financial.isFundedCurrentFY : '');
+            }
+            if (api.data.financial.obligations) {
+              let index = 0;
+              const control = <FormArray> this.finObligationsForm.controls['obligations'];
+              for (let obligation of api.data.financial.obligations) {
+                control.push(this.initobligations(obligation));
+                let initObligations = this.initobligations(obligation);
+                control.at(index).patchValue(initObligations);
+                index = index + 1;
+              }
+
+            }
+          }
+        }
+        if(isFundedCurrentFY) {
+          isFundedCurrentFY = 'isFundedCurrentFY';
+        }
+        this.finObligationsForm.patchValue({
+          isFundedCurrentFY: [isFundedCurrentFY]
+        });
+        this.obligationsInfo = this.finObligationsForm.value.obligations;
+        this.caluclateTotal(this.obligationsInfo, false);
+      }, error => {
+        console.error('Error Retrieving Program!!', error);
+      });
   }
 
   removeObligation(i: number) {
@@ -321,45 +376,6 @@ export class FinancialObligationsComponent implements OnInit {
 
   }
 
-
-  chkCurrFiscalYearChange(event) {
-    this.currentFiscalYearCheckboxConfig.options[0].value = 'true';
-  }
-
-  getData() {
-    this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
-      .subscribe(api => {
-        this.programTitle = api.data.title;
-        let isFundedCurrentFY = '';
-        if (api.data) {
-          if(api.data.financial) {
-            if (api.data.financial.isFundedCurrentFY) {
-              isFundedCurrentFY = (api.data.financial.isFundedCurrentFY ? api.data.financial.isFundedCurrentFY : '');
-            }
-            if (api.data.financial.obligations) {
-              let index = 0;
-              const control = <FormArray> this.finObligationsForm.controls['obligations'];
-              for (let obligation of api.data.financial.obligations) {
-                control.push(this.initobligations(obligation));
-                control.at(index).patchValue(obligation);
-                index = index + 1;
-              }
-            }
-          }
-        }
-
-        if(isFundedCurrentFY) {
-          isFundedCurrentFY = 'isFundedCurrentFY';
-        }
-       this.finObligationsForm.patchValue({
-         isFundedCurrentFY: [isFundedCurrentFY]
-        });
-        this.obligationsInfo = this.finObligationsForm.value.obligations;
-        this.caluclateTotal(this.obligationsInfo, false);
-      }, error => {
-        console.error('Error Retrieving Program!!', error);
-      });
-  }
 
   caluclateTotal(obligations: any, flag: boolean) {
     let totalpFY = 0;
@@ -426,12 +442,10 @@ export class FinancialObligationsComponent implements OnInit {
       let isRecoveryAct: boolean;
       let valuesData = [];
       let obligation = this.obligationsInfo[i];
-      if(obligation.isRecoveryAct) {
-        isRecoveryAct = obligation.isRecoveryAct;
-      }
+        isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !==-1;
 
       let description = obligation.description;
-      let assistanceType = obligation.assistanceType;
+      let assistanceType = obligation.assistanceType.code;
       let value: any;
       if (obligation.pFY) {
         if (obligation.pFY.radioOptionId === 'pFYActual') {
@@ -481,7 +495,7 @@ export class FinancialObligationsComponent implements OnInit {
 
 
     };
-   this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
+  this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
           this.sharedService.programId = api._body;
           console.log('AJAX Completed Obligation Information', api);

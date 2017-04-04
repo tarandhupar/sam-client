@@ -1,4 +1,4 @@
-<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Financial Information - {{programTitle}}</div>
+<div id="stickyLabel" class="sticky-label focus" *ngIf="programId">Edit Financial Information - {{programTitle}}</div>
 <form [formGroup]="finObligationsForm" novalidate (ngSubmit)="save(finObligationsForm)">
   <div class="usa-grid">
     <div> Select if applicable</div>
@@ -13,7 +13,7 @@
       <table>
         <thead>
         <tr>
-          <th scope="col">obligations</th>
+          <th scope="col">Obligations</th>
           <th scope="col">FY {{pFYtableHeaderText}}</th>
           <th scope="col">FY {{cFYtableHeaderText}} (est.)</th>
           <th scope="col">FY {{bFYtableHeaderText}} (est.)</th>
@@ -26,9 +26,6 @@
         <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
           <tr>
             <td>{{obligation.assistanceType.name}}</td>
-            <!--<td>{{obligation['pFY']['radioOptionId']==='pFYActual'?'$' + obligation['pFY']['textboxValue']:(obligation['pFY']['radioOptionId']==='pFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>
-            <td>{{obligation['cFY']['radioOptionId']==='cFYEstimate'?'$' + obligation['cFY']['textboxValue']:(obligation['cFY']['radioOptionId']==='cFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>
-            <td>{{obligation['bFY']['radioOptionId']==='bFYEstimate'?'$' + obligation['bFY']['textboxValue']:(obligation['bFY']['radioOptionId']==='bFYNsi' ? 'Not Separately Identifiable' : 'Not available')}}</td>-->
             <td *ngIf="obligation['pFY']['radioOptionId']==='pFYActual'">{{obligation['pFY']['radioOptionId']==='pFYActual' && obligation['pFY']['textboxValue']!==''?'$' + obligation['pFY']['textboxValue']:'$0'}}</td>
             <td *ngIf="obligation['pFY']['radioOptionId']==='pFYNsi'">Not Separately Identifiable</td>
             <td *ngIf="obligation['pFY']['radioOptionId']==='pFYNa'">Not available</td>
@@ -76,14 +73,15 @@
           <h2>New Obligation</h2>
           <div>Select if applicable</div>
           <samCheckbox
+            [control]="finObligationsForm.controls['isRecoveryAct']"
             [name]="recReinveCheckboxConfig.name"
             [options]="recReinveCheckboxConfig.options"
             class="form-control" formControlName="isRecoveryAct">
           </samCheckbox>
-
-          <div>Assistance Type</div>
-          <sam-autocomplete [options]="options" [name]="samauto" formControlName="assistanceType"
-                            [config]="autocompleteConfig"></sam-autocomplete>
+          <labelWrapper #assistanceTypeWrapper [label]="assistanceTypeLabel" [required]="true">
+          <sam-autocomplete [options]="options" [name]="autoAssistanceType" formControlName="assistanceType" (change)="assistanceTypeChange($event,i)"
+                            [config]="autocompleteConfig"  [allowAny]="true" required></sam-autocomplete>
+          </labelWrapper>
           <h2>Past Fiscal Year - {{pastYear}}</h2>
           <samTextRadioButton
             [options]="pastFiscalYearConfig.options"
