@@ -202,4 +202,26 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
+  getPendingRequests(userId: string) {
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/' + userId + '/',
+      method: 'GET',
+      oParam: {}
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  updateRequest(requestId: string, updatedRequest: any) {
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/' + requestId + '/',
+      method: 'PUT',
+      oParam: {},
+      body: updatedRequest,
+    };
+
+    return this.apiService.call(apiOptions);
+  }
 }
