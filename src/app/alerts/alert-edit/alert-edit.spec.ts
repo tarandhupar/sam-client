@@ -1,5 +1,3 @@
-/*
-todo: fix these tests
 import { TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
 
 // Load the implementations that should be tested
@@ -12,7 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 
 
-describe('The <alert-edit> component', () => {
+fdescribe('The <alert-edit> component', () => {
   let component: AlertEditComponent;
   let fixture: any;
 
@@ -62,4 +60,3 @@ describe('The <alert-edit> component', () => {
     });
   });
 });
-*/
