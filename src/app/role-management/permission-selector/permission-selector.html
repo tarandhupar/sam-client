@@ -64,10 +64,10 @@
         <em *ngIf="option.isNew">New</em>&nbsp;
       </div>
       <div class="usa-width-one-third">
-        <label [attr.for]="option.label">{{option.label}}&nbsp;</label>
+        <label>{{option.label}}&nbsp;</label>
       </div>
       <div class="usa-width-one-fourth">
-        <input [attr.id]='option.label' type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [(ngModel)]="option.isSelected" [disabled]="option.isDefault">&nbsp;
+        <input type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [(ngModel)]="option.isSelected" [disabled]="option.isDefault">&nbsp;
       </div>
       <ng-container *ngIf="!hideDefaultColumn">
         <div class="usa-width-one-fourth">
