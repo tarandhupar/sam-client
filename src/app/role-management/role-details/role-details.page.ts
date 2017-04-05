@@ -133,12 +133,17 @@ export class RoleDetailsPage {
 
         let func0 = this.domainDefinitions.functionMapContent.find(func => +func.function.id === 0);
 
-        this.domainRoleOptions = func0.permission.map(dr => {
-          return {
-            label: dr.val,
-            id: dr.id,
-          };
-        });
+        if (func0 && func0.permission) {
+          this.domainRoleOptions = func0.permission.map(dr => {
+            return {
+              label: dr.val,
+              id: dr.id,
+            };
+          });
+        } else {
+          this.domainRoleOptions = [];
+        }
+
 
         if (this.domainDefinitions.functionMapContent && this.domainDefinitions.functionMapContent.length){
           this.permissionOptions = this.domainDefinitions.functionMapContent.map(f => {
@@ -334,6 +339,7 @@ export class RoleDetailsPage {
       if (+obj.id === 0) {
         return;
       }
+
       let permissions = obj.permissions.filter(perm => perm.isSelected);
       permissions = permissions.map(perm => {
         return {
