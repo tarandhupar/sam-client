@@ -24,8 +24,9 @@ export class ProgramPageOperations implements OnInit {
   }
 
   ngOnInit(){
+    this.sharedService.setSideNavFocus();
 
-    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+    /*if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
       if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
         this.sharedService.setSideNavFocus();
       }else {
@@ -34,7 +35,7 @@ export class ProgramPageOperations implements OnInit {
     }
     else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
       this.router.navigate(['signin']);
-    }
+    }*/
 
   }
 

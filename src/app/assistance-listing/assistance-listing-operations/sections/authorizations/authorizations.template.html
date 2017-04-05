@@ -1,0 +1,25 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Authorizations - {{progTitle}}</div>
+
+<form [formGroup]="falAuthForm">
+
+  <div [class.hide]="authInfo.length == 0" *ngFor="let auth of authInfo; let i=index">
+    {{auth|json}}
+    <a class="fal-table-edit" (click)="editAuth(i)">Edit</a>
+  </div>
+
+  <authSubform [hideAddButton]="hideAddButton" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
+
+  <samTextArea
+    [control]="falAuthForm.controls['description']"
+    [name]="'description-input'"
+    [label]="'Description'"
+    formControlName="description"></samTextArea>
+
+  <div class="pull-left">
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+  </div>
+
+</form>

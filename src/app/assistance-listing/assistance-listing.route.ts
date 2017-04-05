@@ -9,6 +9,7 @@ import { FALOverviewComponent } from './assistance-listing-operations/sections/o
 import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
 import { FinancialObligationsComponent } from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
 import { FinancialInfoFormPage2 } from "./assistance-listing-operations/sections/financial-info/other/financial-info-other.page";
+import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
 
 export const routes: Routes = [
   {path: 'programs/:id/view', component: ProgramPage},
@@ -33,6 +34,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'financial-information/obligations', component: FinancialObligationsComponent},
         {path: 'financial-information/other-financial-info', component: FinancialInfoFormPage2},
         {path: 'contact-information', component: FALContactInfoComponent},
+        {path: 'authorization', component: FALAuthorizationsComponent }
       ]
     },
     {
@@ -45,6 +47,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'financial-information/obligations', component: FinancialObligationsComponent},
         {path: 'financial-information/other-financial-info', component: FinancialInfoFormPage2},
         {path: 'contact-information', component: FALContactInfoComponent},
+        {path: 'authorization', component: FALAuthorizationsComponent }
       ]
     },
   );

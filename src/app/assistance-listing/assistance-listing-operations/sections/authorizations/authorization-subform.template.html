@@ -1,0 +1,21 @@
+<samButton buttonText="Add Authorization" (onClick)="addAuth()" [class.hide]="hideAddButton"></samButton>
+
+<div [formGroup]="falAuthSubForm" [class.hide]="!hideAddButton">
+  <div formArrayName="authorizations">
+    <h4>{{subFormLabel}}</h4>
+
+    <ng-container *ngFor="let authGrp of falAuthSubForm.controls.authorizations.controls; let i=index">
+      <div [formGroupName]="i" [class.hide]="authIndex !== i">
+        <samCheckbox
+           [control]="falAuthSubForm.controls['authType']"
+           [hint]="'Please select all that apply'"
+           [name]="'authType'"
+           [options]="checkboxConfig.options"
+           formControlName="authType"></samCheckbox>
+
+        <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></samButton>
+        <samButton buttonText="Confirm" (onClick)="onConfirmClick()"></samButton>
+      </div>
+    </ng-container>
+  </div>
+</div>
