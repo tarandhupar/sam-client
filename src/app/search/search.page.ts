@@ -5,6 +5,7 @@ import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import {WageDeterminationService} from "../../api-kit/wage-determination/wage-determination.service";
 import { AlertFooterService } from '../alerts/alert-footer';
+import {OpportunityService} from "../../api-kit/opportunity/opportunity.service";
 
 @Component({
   moduleId: __filename,
@@ -161,7 +162,8 @@ export class SearchPage implements OnInit{
   awardTypeModel: string = '';
   awardType = {
     "name": "Award-IDV Type",
-    "label": "Award-IDV Types",
+    "placeholder": "Award-IDV Types",
+    "selectedLabel": "Award - IDV Types Selected",
     "options": [
       { label: 'BOA (IDV)', value: 'D_IDV', name: 'BOA' },
       { label: 'BPA CALL', value: 'A_AWARD', name: 'BPA CALL' },
@@ -192,7 +194,8 @@ export class SearchPage implements OnInit{
   contractTypeModel: string = '';
   contractType = {
     "name": "Contract Type",
-    "label": "Contract Types",
+    "placeholder": "Contract Types",
+    "selectedLabel": "Contract Types Selected",
     "options": [
       { label: 'COST NO FEE', value: 'S', name: 'COST NO FEE' },
       { label: 'COST PLUS AWARD FEE', value: 'R', name: 'COST PLUS AWARD FEE' },
@@ -220,10 +223,25 @@ export class SearchPage implements OnInit{
     }
   };
 
+  //Select NAICS Types
+  naicsTypeModel: string = '';
+  naicsType = {
+    "name": "NAICS Type",
+    "label": "NAICS Types",
+    "options": [],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
+
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,
               private wageDeterminationService: WageDeterminationService,
+              private opportunityService: OpportunityService,
               private alertFooterService: AlertFooterService) { }
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
@@ -378,6 +396,9 @@ export class SearchPage implements OnInit{
       this.determineEnableServicesSelect();
       this.getDictionaryData('dbraConstructionTypes');
       this.getDictionaryData('scaServices');
+    }
+    if(this.index === 'fpds') {
+      this.getAwardsDictionaryData('naics_code');
     }
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
@@ -565,6 +586,30 @@ export class SearchPage implements OnInit{
         console.error("Error!!", error);
       }
 
+    );
+  }
+
+  getAwardsDictionaryData(id) {
+    this.opportunityService.getOpportunityDictionary(id).subscribe(
+      data => {
+
+        // formatting the array data according to api type to match what UI elements expect
+        if(id === 'naics_code'){
+          var reformattedArray = data._embedded.dictionaries[0].elements.map(function(naicsItem){
+            let newObj = {label:'', value:'', type: 'naics'};
+
+            newObj.label = naicsItem.value;
+            newObj.value = naicsItem.elementId;
+            return newObj;
+          });
+
+          this.naicsType.options = reformattedArray;
+        }
+
+      },
+      error => {
+        console.error("Error!!", error);
+      }
     );
   }
 

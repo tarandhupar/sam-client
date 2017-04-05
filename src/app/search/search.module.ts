@@ -19,6 +19,7 @@ import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from '../app-components/app-components.module';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
 import { PipesModule } from '../app-pipes/app-pipes.module';
+import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import { PipesModule } from '../app-pipes/app-pipes.module';
     ExclusionsResult,
     WageDeterminationResult,
     AwardsResult,
-    FHFeaturedResult
+    FHFeaturedResult,
+    SamContractTypeFilter
   ],
   providers: [],
 })

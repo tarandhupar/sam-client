@@ -160,26 +160,17 @@
             (modelChange)="awardIDVRadChanged($event)">
           </samRadioButton>
           <br/>
-          <sam-type-ahead class="usa-award-radio"
+          <sam-contract-type-filter class="usa-award-radio"
                           [selectModel]="awardTypeModel"
-                          [placeholder]="awardType.label"
-                          [name]="awardType.name"
-                          [selectedLabel]="'Award - IDV Types Selected'"
-                          [options]="awardType.options"
-                          [config]="awardType.config"
+                          [options]="awardType"
                           (modelChange)="awardTypeSelected($event)">
-
-          </sam-type-ahead>
+          </sam-contract-type-filter>
           <br/>
-          <sam-type-ahead class="usa-award-radio"
+          <sam-contract-type-filter class="usa-award-radio"
                           [selectModel]="contractTypeModel"
-                          [placeholder]="contractType.label"
-                          [name]="contractType.name"
-                          [selectedLabel]="'Contract Types Selected'"
-                          [options]="contractType.options"
-                          [config]="awardType.config"
+                          [options]="contractType"
                           (modelChange)="contractTypeSelected($event)">
-          </sam-type-ahead>
+          </sam-contract-type-filter>
           <button (click)='awardIdvFilterClear()'>Clear</button>
         </sam-collapsible>
         <hr>
