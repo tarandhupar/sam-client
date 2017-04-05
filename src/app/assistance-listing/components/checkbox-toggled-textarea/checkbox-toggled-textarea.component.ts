@@ -214,6 +214,16 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
         this.model.checkbox = [];
       }
 
+      if(this.checkboxOptions) {
+        for(let i = 0; i < this.checkboxOptions.length; i++) {
+          if(this.model.textarea.length <= i) {
+            this.model.textarea.push('');
+          }
+          if(this.model.textarea[i] == null) {
+            this.model.textarea[i] = '';
+          }
+        }
+      }
 
       for(let i = 0; i < this.checkboxOptions.length; i++) {
         this.textareaControls[i].setValue(this.model.textarea[i]);

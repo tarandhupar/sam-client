@@ -18,7 +18,7 @@ export class ComplianceRequirementsPage implements OnInit {
   public policyRequirementsModel: any = {};
   public reportsModel: any = {};
   public auditsModel: any = {};
-  public recordsModel: any = {};
+  public recordsModel: string = '';
   public additionalDocumentationModel: any = {};
 
   public policyRequirementsConfig: any = {
@@ -270,6 +270,8 @@ export class ComplianceRequirementsPage implements OnInit {
 
     if(this.auditsModel && this.auditsModel.checkbox) {
         audit.isApplicable = this.auditsModel.checkbox.indexOf('na') < 0;
+    } else {
+      audit.isApplicable = true;
     }
 
     if(this.auditsModel && this.auditsModel.textarea && this.auditsModel.textarea[0]) {
@@ -320,6 +322,8 @@ export class ComplianceRequirementsPage implements OnInit {
 
     if(this.additionalDocumentationModel && this.additionalDocumentationModel.checkbox) {
       documents.isApplicable = this.additionalDocumentationModel.checkbox.indexOf('na') < 0;
+    } else {
+      documents.isApplicable = true;
     }
 
     if(this.additionalDocumentationModel&& this.additionalDocumentationModel.textarea && this.additionalDocumentationModel.textarea[0]) {
