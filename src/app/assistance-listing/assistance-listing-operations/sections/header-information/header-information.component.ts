@@ -103,7 +103,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
           falNo = falNo.slice(3, 6);
 
         let selections = [];
-        this.relatedPrograms = api.data.relatedPrograms.relatedTo;
+        this.relatedPrograms = api.data.relatedPrograms;
         for (let relatedProgram of this.relatedPrograms) {
           this.getRelatedProgSub = this.programService.getProgramById(relatedProgram, this.sharedService.cookieValue)
             .subscribe(api => {
@@ -135,9 +135,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
       "organizationId": this.agency,
       "alternativeNames": [this.falHeaderInfoForm.value.alternativeNames],
       "programNumber": this.falHeaderInfoForm.value.programNumber,
-      "relatedPrograms": {
-        "relatedTo": this.falHeaderInfoForm.value.relatedTo
-      }
+      "relatedPrograms": this.falHeaderInfoForm.value.relatedTo
     };
 
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
