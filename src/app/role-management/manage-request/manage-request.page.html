@@ -51,6 +51,16 @@
         [(model)]="selectedOption"
       ></samRadioButton>
     </div>
+    <div class="m_T-4x" *ngIf="shouldShowTextarea()">
+      <samTextArea
+        name='message'
+        [(value)]="message"
+        [required]="true"
+        label="Message:"
+        [errorMessage]="messageError"
+        [placeholder]="'Provide a reason for rejecting this request...'"
+      ></samTextArea>
+    </div>
     <div class="clearfix">
       <button class="pull-right usa-button usa-button-primary"
               (click)="onSubmitClick()"

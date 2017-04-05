@@ -9,23 +9,30 @@ export class RequestAccessResolve implements Resolve<any> {
   constructor(
     private accessService: UserAccessService,
     private router: Router,
-    private footerAlerts: AlertFooterService,
-    private route: ActivatedRoute
+    private footerAlerts: AlertFooterService
   )
   {
 
   }
 
   resolve(route: ActivatedRouteSnapshot) {
-    let rid = this.route.params['requestId'];
+    let rid = route.params['requestId'];
 
-    return this.accessService.getPendingRequestById(rid).catch(() => {
-      this.router.navigateByUrl('/role-workspace');
-      this.footerAlerts.registerFooterAlert({
-        description: "There was an error with a required service",
-        type: 'error',
-      });
-      return Observable.throw('Error while fetching access request.');
+    return this.accessService.getPendingRequestById(rid)
+      .map(access => {
+        if (!access[0]) {
+          throw new Error('');
+        } else {
+          return access[0];
+        }
+      })
+      .catch(() => {
+        this.router.navigateByUrl('/role-workspace');
+        this.footerAlerts.registerFooterAlert({
+          description: "The request was not found or there was an error with a required service.",
+          type: 'error',
+        });
+        return Observable.throw('Error while fetching access request.');
     });
   }
 }
