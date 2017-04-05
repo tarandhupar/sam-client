@@ -1,0 +1,28 @@
+<labelWrapper #checkboxToggledTextareaLabel
+              [name]="name"
+              [label]="label"
+              [hint]="hint"
+              [required]="required">
+
+  <form novalidate [formGroup]="validationGroup">
+    <samCheckbox *ngIf="model"
+                 [model]="model.checkbox"
+                 [name]="name + '-checkbox'"
+                 [options]="checkboxOptions"
+                 [hasSelectAll]="checkboxHasSelectAll"
+                 (modelChange)="onCheckboxChange($event)"
+    ></samCheckbox>
+
+    <ng-container *ngFor="let option of checkboxOptions; let i = index;">
+      <ng-container *ngFor="let textboxName of textareaLabel[i]; let j = index;">
+      <samTextArea [name]="name + '-textarea' + i + '-' + j"
+                   [label]="textareaLabel[i][j]"
+                   [required]="textareaRequired[i][j]"
+                   [hidden]="textareaHidden[i]"
+                   [control]="validationGroup.get('textarea'+i + '-' +j)"
+                   [formControlName]="'textarea'+i + '-' + j"
+      ></samTextArea>
+      </ng-container>
+    </ng-container>
+  </form>
+</labelWrapper>

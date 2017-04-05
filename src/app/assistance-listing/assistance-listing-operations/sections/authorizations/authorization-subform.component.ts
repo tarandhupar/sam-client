@@ -19,14 +19,27 @@ export class FALAuthSubFormComponent {
   subFormLabel:string;
 
   // Checkboxes Component
-  checkboxConfig = {
-    options: [
-      {value: 'act', label: 'act', name: 'checkbox-act'},
-      {value: 'executiveOrder', label: 'executiveOrder', name: 'checkbox-executiveOrder'},
-      {value: 'publicLaw', label: 'publicLaw', name: 'checkbox-publicLaw'},
-      {value: 'statute', label: 'statute', name: 'checkbox-statute'},
-      {value: 'usc', label: 'USC', name: 'checkbox-usc'},
-    ],
+  public authTypeConfig: any = {
+    name: 'authorization-authType',
+    hint: 'Please select all that apply',
+    required: true,
+    validateComponentLevel: false,
+    checkbox: {
+      options: [
+        {value: 'act', label: 'Act', name: 'authType-checkbox-act'},
+        {value: 'executiveOrder', label: 'executiveOrder', name: 'authType-checkbox-executiveOrder'},
+       /* {value: 'publicLaw', label: 'publicLaw', name: 'authType-checkbox-publicLaw'},
+        {value: 'statute', label: 'statute', name: 'authType-checkbox-statute'},
+        {value: 'usc', label: 'USC', name: 'authType-checkbox-usc'},*/
+      ]
+    },
+
+    textarea:{
+      showWhenCheckbox: 'checked',
+      labels: [['Title', 'Part', 'Section', 'Description'], ['Title', 'Test']],
+      required: [[false, false, false, false], [false, false]]
+    }
+
   };
 
   constructor(private fb: FormBuilder){
