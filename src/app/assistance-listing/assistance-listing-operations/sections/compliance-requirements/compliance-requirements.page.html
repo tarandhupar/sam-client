@@ -1,3 +1,4 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="program?.data?.title">Edit Compliance Requirements - {{program.data.title}}</div>
 <div *ngIf="complianceRequirementsGroup" [formGroup]="complianceRequirementsGroup">
   <samCheckbox [name]="policyRequirementsConfig.checkbox.name"
                [label]="policyRequirementsConfig.checkbox.label"
