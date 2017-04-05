@@ -12,17 +12,14 @@
                [control]="complianceRequirementsGroup.get('policyRequirementsTextarea')"
                [formControlName]="'policyRequirementsTextarea'"
   ></samTextArea>
-  {{ policyRequirementsModel | json}}
 
   <samCheckboxToggledTextarea [options]="reportsConfig"
                               [formControlName]="'reports'"
   ></samCheckboxToggledTextarea>
-  {{ reportsModel | json}}
 
   <samCheckboxToggledTextarea [options]="auditsConfig"
                               [formControlName]="'audits'"
   ></samCheckboxToggledTextarea>
-  {{ auditsModel | json}}
 
   <samTextArea [label]="'Records'"
                [hint]="'Describe required records. Include the time period when the records must be'"
@@ -30,12 +27,10 @@
                [control]="records"
                [formControlName]="'records'"
   ></samTextArea>
-  {{ recordsModel | json}}
 
   <samCheckboxToggledTextarea [options]="additionalDocumentationConfig"
                               [formControlName]="'additionalDocumentation'"
   ></samCheckboxToggledTextarea>
-  {{ additionalDocumentationModel | json}}
 
   <div>
     <div class="pull-left">
