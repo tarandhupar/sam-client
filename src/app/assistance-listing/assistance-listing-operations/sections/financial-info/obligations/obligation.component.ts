@@ -21,20 +21,12 @@ export class FinancialObligationsComponent implements OnInit {
   obligationsInfo = [];
   obligationsData = [];
   data = [];
-  headerLabels = [];
-  headerData = ["obligations", "FY 15", "Actions"];
-  cookieValue: string;
   getProgramsSub: any;
-  id: string;
-  tableData: any;
-  estimate: string;
-  financial: any
   programId: string;
   finObligationsForm: FormGroup;
   getProgSub: any;
   saveProgSub: any;
   dictionarySub: any;
-  financialData: any;
   dictionaries: any;
   toggleNewObligationSection: boolean = false;
   pastYear: number;
@@ -52,13 +44,9 @@ export class FinancialObligationsComponent implements OnInit {
   redirectToWksp: boolean = false;
   redirectToViewPg: boolean = false;
   programTitle: string;
-
-  testtotalpFY = 0;
-  testtotalcFY = 0;
-  testtotalbFY = 0;
   totalvalue = {};
   assistanceTypeArray = [];
-  assistanceTypeLabel='Assistance Type';
+  assistanceTypeLabel = 'Assistance Type';
   @ViewChild('assistanceTypeWrapper') assistanceTypeWrapper;
 
 
@@ -175,6 +163,7 @@ export class FinancialObligationsComponent implements OnInit {
       this.getData();
     }
   }
+
   assistanceTypeChange(event, i) {
     const control = <FormArray> this.finObligationsForm.controls['obligations'];
     const controlGrp = <FormGroup> control.at(i);
@@ -233,7 +222,7 @@ export class FinancialObligationsComponent implements OnInit {
     if (obligation['isRecoveryAct']) {
       isRecoveryAct = (obligation['isRecoveryAct'] ? obligation['isRecoveryAct'] : '');
     }
-    if(isRecoveryAct) {
+    if (isRecoveryAct) {
       isRecoveryAct = 'isRecoveryAct';
     }
 
@@ -246,7 +235,7 @@ export class FinancialObligationsComponent implements OnInit {
           } else if (value['flag'] === 'nsi') {
             current = 'cFYNsi';
             currentText = value['explanation'];
-          } else if (value['flag'] === 'ena'){
+          } else if (value['flag'] === 'ena') {
             current = 'cFYNa';
             currentText = value['explanation'];
           }
@@ -272,7 +261,7 @@ export class FinancialObligationsComponent implements OnInit {
             past = 'pFYNa';
             pastText = value['explanation'];
           }
-        } else if(value['year'] !== this.pastYear || value['year'] === this.currentYear || value['year'] === this.pastYear) {
+        } else if (value['year'] !== this.pastYear || value['year'] === this.currentYear || value['year'] === this.pastYear) {
 
         }
       }
@@ -280,9 +269,9 @@ export class FinancialObligationsComponent implements OnInit {
 
     return this.fb.group({
       isRecoveryAct: [[isRecoveryAct]],
-      assistanceType:{
-        code:obligation['assistanceType'],
-        name:this.assistanceTypeArray[obligation['assistanceType']]
+      assistanceType: {
+        code: obligation['assistanceType'],
+        name: this.assistanceTypeArray[obligation['assistanceType']]
       },
       pFY: {
         radioOptionId: past,
@@ -306,7 +295,7 @@ export class FinancialObligationsComponent implements OnInit {
         this.programTitle = api.data.title;
         let isFundedCurrentFY = '';
         if (api.data) {
-          if(api.data.financial) {
+          if (api.data.financial) {
             if (api.data.financial.isFundedCurrentFY) {
               isFundedCurrentFY = (api.data.financial.isFundedCurrentFY ? api.data.financial.isFundedCurrentFY : '');
             }
@@ -323,7 +312,7 @@ export class FinancialObligationsComponent implements OnInit {
             }
           }
         }
-        if(isFundedCurrentFY) {
+        if (isFundedCurrentFY) {
           isFundedCurrentFY = 'isFundedCurrentFY';
         }
         this.finObligationsForm.patchValue({
@@ -378,22 +367,19 @@ export class FinancialObligationsComponent implements OnInit {
 
 
   caluclateTotal(obligations: any, flag: boolean) {
-    let totalpFY = 0;
-    let totalcFY = 0;
-    let totalbFY = 0;
+    let totalpFY: any = 0.00
+    let totalcFY: any = 0.00;
+    let totalbFY: any = 0.00;
 
     for (let obligation of obligations) {
-      if (Number.isInteger(parseInt(obligation.pFY.textboxValue))) {
-        totalpFY = totalpFY + parseInt(obligation.pFY.textboxValue);
-        this.testtotalpFY = totalpFY;
+      if (parseFloat(obligation.pFY.textboxValue) && (obligation.pFY.radioOptionId === "pFYActual")) {
+        totalpFY = totalpFY + parseFloat(obligation.pFY.textboxValue);
       }
-      if (Number.isInteger(parseInt(obligation.cFY.textboxValue))) {
-        totalcFY = totalcFY + parseInt(obligation.cFY.textboxValue);
-        this.testtotalcFY = totalcFY;
+      if (parseFloat(obligation.cFY.textboxValue) && (obligation.cFY.radioOptionId === "cFYEstimate")) {
+        totalcFY = totalcFY + parseFloat(obligation.cFY.textboxValue);
       }
-      if (Number.isInteger(parseInt(obligation.bFY.textboxValue))) {
-        totalbFY = totalbFY + parseInt(obligation.bFY.textboxValue);
-        this.testtotalbFY = totalbFY;
+      if (parseFloat(obligation.bFY.textboxValue) && (obligation.bFY.radioOptionId === "bFYEstimate")) {
+        totalbFY = totalbFY + parseFloat(obligation.bFY.textboxValue);
       }
       if (flag === true) {
         this.obligationsInfo.push(obligation);
@@ -433,8 +419,8 @@ export class FinancialObligationsComponent implements OnInit {
   saveData() {
     let uuid = UUID.UUID().replace(/-/g, "");
     let data = {};
-    let isFundedCurrentFY:boolean;
-    if(this.finObligationsForm.value.isFundedCurrentFY) {
+    let isFundedCurrentFY: boolean;
+    if (this.finObligationsForm.value.isFundedCurrentFY) {
       isFundedCurrentFY = this.finObligationsForm.value.isFundedCurrentFY.indexOf('isFundedCurrentFY') !== -1;
     }
     let obligationsData = [];
@@ -442,7 +428,7 @@ export class FinancialObligationsComponent implements OnInit {
       let isRecoveryAct: boolean;
       let valuesData = [];
       let obligation = this.obligationsInfo[i];
-        isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !==-1;
+      isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !== -1;
 
       let description = obligation.description;
       let assistanceType = obligation.assistanceType.code;
@@ -488,14 +474,14 @@ export class FinancialObligationsComponent implements OnInit {
       );
     }
     data = {
-      "financial":{
+      "financial": {
         "isFundedCurrentFY": isFundedCurrentFY,
         "obligations": obligationsData
       }
 
 
     };
-  this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
+    this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
           this.sharedService.programId = api._body;
           console.log('AJAX Completed Obligation Information', api);
@@ -518,8 +504,8 @@ export class FinancialObligationsComponent implements OnInit {
 
     let data = {
       "year": year,
-      "actual": parseInt(actual),
-      "estimate": parseInt(estimate),
+      "actual": parseFloat(actual),
+      "estimate": parseFloat(estimate),
       "flag": flag,
       "explanation": explanation
     };
