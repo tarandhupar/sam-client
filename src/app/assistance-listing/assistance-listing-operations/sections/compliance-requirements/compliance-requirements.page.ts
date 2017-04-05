@@ -69,7 +69,7 @@ export class ComplianceRequirementsPage implements OnInit {
 
   public auditsConfig: any = {
     name: 'compliance-audits',
-    label: 'Audits',
+    label: 'Other Audit Requirements',
     hint: 'Describe audit procedures for this program. Only include requirements not already covered by 2 CFR 200.',
     required: true,
 
