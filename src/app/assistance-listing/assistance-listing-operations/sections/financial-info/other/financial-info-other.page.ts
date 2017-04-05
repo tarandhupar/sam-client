@@ -135,16 +135,12 @@ export class FinancialInfoPage2 implements OnInit {
       accomplishments.isApplicable = this.accomplishmentsModel['checkbox'].indexOf('na') < 0;
     }
 
-    // todo: check what to put for fiscalYear
-    // todo: check whether to clear out list if not applicable
-    if(accomplishments.isApplicable) {
+    if(this.accomplishmentsModel && this.accomplishmentsModel['textarea']) {
       accomplishments.list = [
         {
-          description: this.accomplishmentsModel['textarea']
+          description: this.accomplishmentsModel['textarea'][0]
         }
       ]
-    } else {
-      accomplishments.list = [];
     }
 
     return accomplishments;
@@ -153,7 +149,7 @@ export class FinancialInfoPage2 implements OnInit {
   private loadAccomplishments() {
     let model: any = {
       checkbox: [],
-      description: ''
+      textarea: []
     };
 
     if(this.program.data.financial.accomplishments) {
@@ -163,7 +159,7 @@ export class FinancialInfoPage2 implements OnInit {
 
       if(this.program.data.financial.accomplishments.list
         && this.program.data.financial.accomplishments.list[0]) {
-        model.textarea = this.program.data.financial.accomplishments.list[0].description;
+        model.textarea.push(this.program.data.financial.accomplishments.list[0].description);
       }
     }
 
