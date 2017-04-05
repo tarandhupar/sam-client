@@ -13,6 +13,15 @@
            [label]="'Popular Name'"
            formControlName="alternativeNames"></samText>
 
+  <agencyPicker [label]="'Federal Agency'"
+                [multimode]="false"
+                [advancedMode]="false"
+                [required]="true"
+                [initial]="agency ? [agency] : []"
+                (organization)="onOrganizationChange($event)"
+                [levelLimit] = '2'>
+  </agencyPicker>
+
   <samNumber [maxlength]="3"
              [minlength]="3"
              [required]="true"
