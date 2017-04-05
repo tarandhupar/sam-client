@@ -21,7 +21,6 @@ export class UserAccessModel {
   }
 
   static CreateDeletePartial(user, roleId, domainId, orgIds): UserAccessWrapper {
-    console.log(arguments);
     let organizationMapContent = [{
       organizations: orgIds,
     }];
@@ -89,7 +88,6 @@ export class UserAccessModel {
     });
     existingAcc.domainContent = _.clone(existingAcc.domainMapContent);
     delete existingAcc.domainMapContent;
-    console.log('after', existingAcc);
 
     return {
       message: messages,

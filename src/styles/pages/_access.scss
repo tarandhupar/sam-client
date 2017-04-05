@@ -136,4 +136,22 @@
   .organizations-row {
     margin-top: 1em;
   }
+
+  .requests-container {
+    border: 2px solid $color-gold;
+
+    .request-block:not(:last-child) {
+      border-bottom: 2px solid black;
+    }
+
+    .request-block {
+      padding: .5em;
+    }
+  }
+
+  .text-ellipsis {
+    white-space: nowrap;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+  }
 }

@@ -29,6 +29,7 @@ export class UserAccessPage implements OnInit {
   private userName: string;
   private isAdmin: boolean = false;
   private organizations: Organization[];
+  private allDomains: any[] = [];
 
   @ViewChildren(SamAccordionComponent) allAccordions: QueryList<SamAccordionComponent>;
   @ViewChild('deleteModal') deleteModal: SamModalComponent;
@@ -48,6 +49,8 @@ export class UserAccessPage implements OnInit {
     id: null,
     val: null,
   };
+
+  private requests: any[] = [];
 
   constructor(
     private userService: UserAccessService,
@@ -75,6 +78,26 @@ export class UserAccessPage implements OnInit {
           description: "Unable to access information for: "+this.userName,
           type:'error',
           timer:3000
+        });
+      }
+    );
+
+    this.userService.getPendingRequests(this.userName).subscribe(reqs => {
+      this.requests = reqs;
+    }, err => {
+      this.showGenericError();
+    });
+
+    this.userService.getDomains().subscribe(
+      doms => {
+        this.allDomains = doms._embedded.domainList;
+      },
+      errs => {
+        this.footerAlert.registerFooterAlert({
+          title: "Error",
+          description: "There was an error with a required service",
+          type:'error',
+          timer:2000
         });
       }
     );
@@ -249,5 +272,42 @@ export class UserAccessPage implements OnInit {
 
   hasSelectAll(options) {
     return options.length > 4;
+  }
+
+  onCancelRequestClick(requestId, i) {
+    let newStatus = {
+      status: 'Canceled',
+    };
+    this.userService.updateRequest(requestId, newStatus).subscribe(
+      res => {
+        this.requests.splice(i);
+        this.footerAlert.registerFooterAlert({
+          title:"Request canceled.",
+          description:"Request for access successfully canceled.",
+          type:'success',
+          timer:3000
+        });
+      },
+      err => {
+        this.showGenericError();
+      }
+    );
+
+  }
+
+  getDomainNameById(domainId: any) {
+    let dom = this.allDomains.find(d => ''+d.id === ''+domainId);
+    if (dom) {
+      return dom.domainName;
+    }
+  }
+
+  showGenericError() {
+    this.footerAlert.registerFooterAlert({
+      title: "Service Error",
+      description: "There was an error with a required service",
+      type:'error',
+      timer:2000
+    });
   }
 }

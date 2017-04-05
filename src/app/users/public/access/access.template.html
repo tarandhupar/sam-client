@@ -1,5 +1,56 @@
 <div class="access-page">
-  <h1 class="m_T-0">Access</h1>
+  <h1 class="m_T-0">User Access</h1>
+
+  <!-- Pending Requests -->
+  <ng-container *ngIf="requests.length">
+    <h2>Pending Requests</h2>
+    <div class="requests-container">
+      <div class="request-block" *ngFor="let req of requests; let i = index">
+        <div class="usa-grid-full">
+          <!-- Details Column -->
+          <div class="usa-width-five-sixths">
+            <div class="usa-grid-full">
+              <div class="usa-width-one-third">
+                <div class="usa-grid-full">
+                  <div class="usa-width-one-half"><strong>Domain</strong></div>
+                  <div class="usa-width-one-half"><span>{{getDomainNameById(req.domain)}}</span></div>
+                </div>
+              </div>
+              <div class="usa-width-one-third">
+                <div class="usa-grid-full">
+                  <div class="usa-width-one-half"><strong>Status</strong></div>
+                  <div class="usa-width-one-half"><span>{{req.statusName}}</span></div>
+                </div>
+              </div>
+              <div class="usa-width-one-third">
+                <div class="usa-grid-full">
+                  <div class="usa-width-one-half"><strong>Date Requested</strong></div>
+                  <div class="usa-width-one-half"><span>{{req.createdDate | dateFormat: 'MMM DD, YYYY'}}</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="usa-grid-full">
+              <div class="usa-width-one-sixth">
+                <strong>Message</strong>
+              </div>
+              <div class="usa-width-five-sixths text-ellipsis">
+                <span>{{req.requestorMessage}}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cancel -->
+          <div class="usa-width-one-sixth">
+            <button class="usa-button-transparent" (click)="onCancelRequestClick(req.id)">
+              <i class="fa fa-close"></i>
+              <a>Cancel</a>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
   <div>
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.domains.options)" (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.roles.options)" (modelChange)="rolesChanged($event)" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [model]="filters.roles.value"></samMultiSelectDropdown>
@@ -8,28 +59,6 @@
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.permissions.options)" (modelChange)="permissionsChanged($event)" [options]="filters.permissions.options" [label]="filters.permissions.label" [name]="filters.permissions.label" [model]="filters.permissions.value"></samMultiSelectDropdown>
     <a [routerLink]="[isAdmin ? '../grant-access' : '../request-access']" class="usa-button usa-button-success pull-right">{{isAdmin ? 'Grant' : 'Request'}} Access</a>
   </div>
-
-  <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
-    <p>Are you sure you wish to remove the following access?</p>
-    <div>
-      <div class="modal-subtitle">
-        <strong class="modal-subtitle">Domain:</strong>
-      </div>
-      <div>{{modalDomain.val}}</div>
-    </div>
-    <div>
-      <div class="modal-subtitle"><strong>Role:</strong></div>
-      <div>{{modalRole.role.val}}</div>
-    </div>
-    <div>
-      <div class="modal-subtitle">
-        <strong>Organizations:</strong>
-      </div>
-      <div *ngFor="let org of modalRole.organizationMapContent[0].organizations">
-        {{orgName(org)}}
-      </div>
-    </div>
-  </samModal>
 
   <ng-container *ngIf="userAccessModel">
     <div *ngFor="let domain of userAccessModel.raw().domainMapContent">
@@ -89,4 +118,26 @@
       </div>
     </div>
   </ng-container>
+
+  <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
+    <p>Are you sure you wish to remove the following access?</p>
+    <div>
+      <div class="modal-subtitle">
+        <strong class="modal-subtitle">Domain:</strong>
+      </div>
+      <div>{{modalDomain.val}}</div>
+    </div>
+    <div>
+      <div class="modal-subtitle"><strong>Role:</strong></div>
+      <div>{{modalRole.role.val}}</div>
+    </div>
+    <div>
+      <div class="modal-subtitle">
+        <strong>Organizations:</strong>
+      </div>
+      <div *ngFor="let org of modalRole.organizationMapContent[0].organizations">
+        {{orgName(org)}}
+      </div>
+    </div>
+  </samModal>
 </div>
