@@ -12,7 +12,7 @@ export class RoleDetailsPage {
   mode: 'edit'|'new' = 'new';
 
   roles = [{ vals: [], name: 'Assistance Listing'}, {vals: [], name: 'IDV'}, {vals: [], name: 'Regional Offices'}];
-  role;
+  role = '';
   originalRole;
   roleId;
   domains: any[] = [];
