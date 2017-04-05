@@ -10,13 +10,14 @@ import { Title } from "@angular/platform-browser";
   templateUrl: 'manage-request.page.html'
 })
 export class ManageRequestPage implements OnInit {
-  private domains;
+  private allDomains;
   public options = [
     { label: 'Select access for this user', value: 'select', name: 'select' },
     { label: 'Reject request', value: 'reject', name: 'reject' },
     { label: 'Escalate request to a department administrator', value: 'escalate', name: 'escalate' }
   ];
   public selectedOption: 'select'|'reject'|'escalate'|undefined;
+  public statusNames: any[] = [];
   public request;
 
   constructor(
@@ -31,6 +32,7 @@ export class ManageRequestPage implements OnInit {
     this.setTitle();
     this.getAllDomains();
     this.getRequestObject();
+    this.getRequestStatusNames();
   }
 
   setTitle() {
@@ -41,8 +43,27 @@ export class ManageRequestPage implements OnInit {
     this.request = this.route.snapshot.data['request'];
   }
 
+  getRequestStatusNames() {
+    this.statusNames = this.route.snapshot.data['statusNames'];
+  }
+
+  getStatusNameById(statusId: number) {
+    let s = this.statusNames.find(status => +status.id === statusId);
+
+    if (s) {
+      return s.status;
+    }
+  }
+
+  getDomainNameById(domainId: any) {
+    let dom = this.allDomains.find(d => ''+d.id === ''+domainId);
+    if (dom) {
+      return dom.domainName;
+    }
+  }
+
   getAllDomains() {
-    this.domains = this.route.parent.snapshot.data['domains']._embedded.domainList;
+    this.allDomains = this.route.parent.snapshot.data['domains']._embedded.domainList;
   }
 
   showGenericServicesError() {
@@ -53,6 +74,20 @@ export class ManageRequestPage implements OnInit {
   }
 
   onSubmitClick() {
+    let newStatus = {};
+    switch (this.selectedOption) {
+      case 'select':
+        break;
+      case 'reject':
+        newStatus = { status: 'rejected' };
+        break;
+      case 'escalate':
+        newStatus = { status: 'escalated' };
+        break;
+      default:
+        console.error('an option was not selected');
+    }
+
 
   }
 }

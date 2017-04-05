@@ -82,7 +82,7 @@ export class UserAccessPage implements OnInit {
       }
     );
 
-    this.userService.getPendingRequests(this.userName).subscribe(reqs => {
+    this.userService.getPendingRequests(this.userName, { status: 'pending' }).subscribe(reqs => {
       this.requests = reqs;
     }, err => {
       this.showGenericError();
@@ -276,11 +276,11 @@ export class UserAccessPage implements OnInit {
 
   onCancelRequestClick(requestId, i) {
     let newStatus = {
-      status: 'Canceled',
+      status: 'cancel',
     };
     this.userService.updateRequest(requestId, newStatus).subscribe(
       res => {
-        this.requests.splice(i);
+        this.requests.splice(i, 1);
         this.footerAlert.registerFooterAlert({
           title:"Request canceled.",
           description:"Request for access successfully canceled.",

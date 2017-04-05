@@ -140,12 +140,16 @@
   .requests-container {
     border: 2px solid $color-gold;
 
+    .request-message {
+      margin-left: -8px;
+    }
+
     .request-block:not(:last-child) {
       border-bottom: 2px solid black;
     }
 
     .request-block {
-      padding: .5em;
+      padding: .8em;
     }
   }
 

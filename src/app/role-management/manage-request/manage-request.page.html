@@ -11,7 +11,7 @@
           <strong>Domain:</strong>
         </div>
         <div class="usa-width-three-fourths">
-          Federal Assistance
+          {{getDomainNameById(request.domainId)}}
         </div>
       </div>
       <div class="usa-grid-full m_T-2x">
@@ -19,7 +19,7 @@
           <strong>Requestor:</strong>
         </div>
         <div class="usa-width-three-fourths">
-          Alexandria Widtherspoon
+          {{request.requestorName}}
         </div>
       </div>
       <div class="usa-grid-full m_T-2x">
@@ -27,7 +27,7 @@
           <strong>Supervisor Name:</strong>
         </div>
         <div class="usa-width-three-fourths">
-          John Adams
+          {{request.supervisorName}}
         </div>
       </div>
       <div class="usa-grid-full m_T-2x">
@@ -35,21 +35,28 @@
           <strong>Supervisor Email:</strong>
         </div>
         <div class="usa-width-three-fourths">
-          John.Admin@gsa.gov
+          {{request.supervisorEmail}}
         </div>
       </div>
       <div class="m_T-2x"><strong>Message from Requestor:</strong></div>
       <p>
-        <em>
-        I need to have access to GSA as an Agency User because I want to be able to access reports, administer to employees undersnath me and view data only
-        </em>
+        <em>{{request.requestorMessage}}</em>
       </p>
     </div>
-    <div class="m_T-2x">
-      <samRadioButton [options]="options" label="How do you want to respond?" name='request-action'></samRadioButton>
+    <div class="m_T-4x">
+      <samRadioButton
+        [options]="options"
+        label="How do you want to respond?"
+        name='request-action'
+        [(model)]="selectedOption"
+      ></samRadioButton>
     </div>
     <div class="clearfix">
-      <button class="pull-right usa-button usa-button-primary" (click)="onSubmitClick()">Submit</button>
+      <button class="pull-right usa-button usa-button-primary"
+              (click)="onSubmitClick()"
+              [disabled]="!selectedOption"
+              [ngClass]="!selectedOption && 'usa-button-disabled'"
+      >Submit</button>
     </div>
   </div>
 </div><!-- page -->

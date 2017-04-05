@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 
 @Injectable()
-export class RequestAccessResolve implements Resolve<any> {
+export class RequestStatusNamesResolve implements Resolve<any[]> {
   constructor(
     private accessService: UserAccessService,
     private router: Router,
@@ -17,15 +17,13 @@ export class RequestAccessResolve implements Resolve<any> {
   }
 
   resolve(route: ActivatedRouteSnapshot) {
-    let rid = this.route.params['requestId'];
-
-    return this.accessService.getPendingRequestById(rid).catch(() => {
+    return this.accessService.getRequestStatuses().catch(() => {
       this.router.navigateByUrl('/role-workspace');
       this.footerAlerts.registerFooterAlert({
         description: "There was an error with a required service",
         type: 'error',
       });
-      return Observable.throw('Error while fetching access request.');
+      return Observable.throw('Error while fetching status names.');
     });
   }
 }

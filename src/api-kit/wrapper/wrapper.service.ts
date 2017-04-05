@@ -19,6 +19,7 @@ export class WrapperService {
         "access": "/rms/v1/access",
         "functions": "/rms/v1/functions",
         "requestaccess": "/rms/v1/requestaccess",
+        "accessstatus": "/rms/v1/accessstatus",
         "uiroles": "/rms/v1/uiroles",
         "domains": "/rms/v1/domains",
         "permissions": "/rms/v1/permissions",

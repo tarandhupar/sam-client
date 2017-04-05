@@ -16,6 +16,7 @@ import { DomainsResolve } from "./domains.resolve";
 import {RoleMainContent} from "./role-maincontent/role-maincontent.component.ts"
 import { RequestAccessResolve } from "./request-access.resolve";
 import { ManageRequestPage } from "./manage-request/manage-request";
+import { RequestStatusNamesResolve } from "./request-statuses.resolve";
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import { ManageRequestPage } from "./manage-request/manage-request";
   providers: [
     DomainsResolve,
     RequestAccessResolve,
+    RequestStatusNamesResolve,
     AlertFooterService
   ],
 })
