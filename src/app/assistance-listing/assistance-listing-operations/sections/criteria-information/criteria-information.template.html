@@ -53,17 +53,7 @@
     [label]="''"
     formControlName="awardedDescription"></samTextArea>
   <h4>Use and Use Restrictions</h4>
-  <sam-autocomplete [labelText]="'How is this assistance awarded and/or released?'"
-                    [options]="awardedTypesoptions"
-                    [name]="awardedTypes-control"
-                    formControlName="awardedTypes"
-                    [config]="awardedTypesConfig"></sam-autocomplete>
-  <samTextArea
-    [control]="falCriteriaForm.controls['awardedDescription']"
-    [name]="'awarded-description-input'"
-    [label]="''"
-    formControlName="awardedDescription"></samTextArea>
-  <sam-autocomplete [labelText]="'Use of Assistance'"
+   <sam-autocomplete [labelText]="'Use of Assistance'"
                     [options]="assiUsageTypesoptions"
                     [name]="assistance-usage-control"
                     formControlName="assiUsageTypes"
