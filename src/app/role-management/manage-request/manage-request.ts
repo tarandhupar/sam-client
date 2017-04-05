@@ -17,6 +17,7 @@ export class ManageRequestPage implements OnInit {
     { label: 'Escalate request to a department administrator', value: 'escalate', name: 'escalate' }
   ];
   public selectedOption: 'select'|'reject'|'escalate'|undefined;
+  public request;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,10 +30,15 @@ export class ManageRequestPage implements OnInit {
   ngOnInit() {
     this.setTitle();
     this.getAllDomains();
+    this.getRequestObject();
   }
 
   setTitle() {
     this.titleService.setTitle('Manage Requests');
+  }
+
+  getRequestObject() {
+    this.request = this.route.snapshot.data['request'];
   }
 
   getAllDomains() {

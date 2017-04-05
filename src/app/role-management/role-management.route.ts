@@ -16,7 +16,7 @@ export const routes: Routes = [{
     { path: 'roles/new', component: RoleDetailsPage},
     { path: 'objects/:objectId/edit', component: ObjectDetailsPage },
     { path: 'roles/:roleId/edit', component: RoleDetailsPage },
-    { path: 'request/:requestId', component: ManageRequestPage, resolve: { request: RequestAccessResolve } }
+    { path: 'requests/:requestId', component: ManageRequestPage, resolve: { request: RequestAccessResolve } }
   ]
 }];
 
