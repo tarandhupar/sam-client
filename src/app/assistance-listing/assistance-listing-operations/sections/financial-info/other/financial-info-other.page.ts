@@ -240,7 +240,7 @@ export class FinancialInfoFormPage2 implements OnInit {
   public onSaveContinueClick(event) {
     this.saveProgramData().subscribe(res => {
       let id = res._body;
-      this.router.navigate(['programs', id, 'edit', 'contact-information']);
+      this.router.navigate(['programs', id, 'edit', 'criteria-information']);
     }, err => {
       console.log("Error saving program ", err);
     });

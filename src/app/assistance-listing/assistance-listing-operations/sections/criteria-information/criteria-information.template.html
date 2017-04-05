@@ -15,10 +15,10 @@
     [options]="applicantTypes"
     formControlName="applicantTypes"></sam-list-input>
   <samTextArea
-    [control]="falCriteriaForm.controls['applicantDescription']"
+    [control]="falCriteriaForm.controls['applicantDesc']"
     [name]="'applicant-description-input'"
     [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
-    formControlName="applicantDescription"></samTextArea>
+    formControlName="applicantDesc"></samTextArea>
   <h4>Beneficiary Eligibility</h4>
   <samCheckbox
     [control]="falCriteriaForm.controls['benSameAsApplicant']"
@@ -48,10 +48,10 @@
                     formControlName="awardedTypes"
                     [config]="awardedTypesConfig"></sam-autocomplete>
   <samTextArea
-    [control]="falCriteriaForm.controls['awardedDescription']"
+    [control]="falCriteriaForm.controls['awardedDesc']"
     [name]="'awarded-description-input'"
     [label]="''"
-    formControlName="awardedDescription"></samTextArea>
+    formControlName="awardedDes"></samTextArea>
   <h4>Use and Use Restrictions</h4>
    <sam-autocomplete [labelText]="'Use of Assistance'"
                     [options]="assiUsageTypesoptions"
@@ -59,10 +59,10 @@
                     formControlName="assiUsageTypes"
                     [config]="assiUsageTypesConfig"></sam-autocomplete>
   <samTextArea
-    [control]="falCriteriaForm.controls['assiUsageDescription']"
+    [control]="falCriteriaForm.controls['assiUsageDesc']"
     [name]="'assistanceusage-description-input'"
     [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
-    formControlName="assiUsageDescription"></samTextArea>
+    formControlName="assiUsageDesc"></samTextArea>
   <samTextArea
     [control]="falCriteriaForm.controls['usageResDesc']"
     [name]="'usage-restriction-description-input'"

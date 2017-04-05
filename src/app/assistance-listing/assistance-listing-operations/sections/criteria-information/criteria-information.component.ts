@@ -76,17 +76,15 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     this.falCriteriaForm = this.fb.group({
       'documentation': '',
       'applicantTypes': '',
-      'applicantDescription': '',
+      'applicantDesc': '',
       'benSameAsApplicant': '',
       'benTypes': '',
       'benDescription': '',
       'lengthTimeDesc': '',
       'awardedTypes': '',
-      'awardedDescription':'',
-      'usageruleType':'',
-      'usageRuleTypes':'',
+      'awardedDesc':'',
       'assiUsageTypes': '',
-      'assiUsageDescription': '',
+      'assiUsageDesc': '',
       'usageResDesc':''
     });
   }
@@ -110,6 +108,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
     this.redirectToWksp = true;
     this.saveData();
+
   }
 
   onSaveContinueClick(event) {
