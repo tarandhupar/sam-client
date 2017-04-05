@@ -13,27 +13,27 @@
               <div class="usa-width-one-third">
                 <div class="usa-grid-full">
                   <div class="usa-width-one-half"><strong>Domain</strong></div>
-                  <div class="usa-width-one-half"><span>{{getDomainNameById(req.domain)}}</span></div>
+                  <div class="usa-width-one-half"><span>{{getDomainNameById(req.domainId)}}</span></div>
                 </div>
               </div>
-              <div class="usa-width-one-third">
+              <div class="usa-width-one-fourth">
                 <div class="usa-grid-full">
                   <div class="usa-width-one-half"><strong>Status</strong></div>
-                  <div class="usa-width-one-half"><span>{{req.statusName}}</span></div>
+                  <div class="usa-width-one-half"><span>Pending</span></div>
                 </div>
               </div>
-              <div class="usa-width-one-third">
+              <div class="usa-width-five-twelfths">
                 <div class="usa-grid-full">
                   <div class="usa-width-one-half"><strong>Date Requested</strong></div>
                   <div class="usa-width-one-half"><span>{{req.createdDate | dateFormat: 'MMM DD, YYYY'}}</span></div>
                 </div>
               </div>
             </div>
-            <div class="usa-grid-full">
+            <div class="usa-grid-full m_T-2x">
               <div class="usa-width-one-sixth">
                 <strong>Message</strong>
               </div>
-              <div class="usa-width-five-sixths text-ellipsis">
+              <div class="usa-width-five-sixths text-ellipsis request-message">
                 <span>{{req.requestorMessage}}</span>
               </div>
             </div>
@@ -51,7 +51,7 @@
     </div>
   </ng-container>
 
-  <div>
+  <div class="m_T-4x">
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.domains.options)" (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.roles.options)" (modelChange)="rolesChanged($event)" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [model]="filters.roles.value"></samMultiSelectDropdown>
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.organizations.options)" (modelChange)="orgsChanged($event)" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [model]="filters.organizations.value"></samMultiSelectDropdown>

@@ -199,12 +199,12 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
-  getPendingRequests(userId: string) {
+  getPendingRequests(userId: string, queryParams = {}) {
     let apiOptions: any = {
       name: 'requestaccess',
       suffix: '/' + userId + '/',
       method: 'GET',
-      oParam: {}
+      oParam: queryParams
     };
 
     return this.apiService.call(apiOptions);
@@ -219,6 +219,6 @@ export class UserAccessService {
       body: updatedRequest,
     };
 
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, false);
   }
 }
