@@ -361,13 +361,10 @@ let MockProgramService = {
           "0003001",
           "0003003"
         ],
-        "relatedPrograms": {
-          "flag": "yes",
-          "relatedTo": [
+        "relatedPrograms": [
             '39403d91bb81e9893cf57a2d53609a2f',
             '4fe03fb513d07749420618ff190d2ded'
-          ]
-        },
+        ],
         "alternativeNames": [
           "State and Private Forestry Technology, Marketing Assistance Program"
         ]

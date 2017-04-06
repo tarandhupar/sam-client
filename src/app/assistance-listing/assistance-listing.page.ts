@@ -198,8 +198,8 @@ export class ProgramPage implements OnInit, OnDestroy {
   private loadRelatedPrograms(apiSource: Observable<any>) {
     // construct a stream of related programs ids
     let relatedProgramsIdStream = apiSource.switchMap(api => {
-      if (api.data.relatedPrograms.flag !== 'na') {
-        return Observable.from(api.data.relatedPrograms.relatedTo);
+      if (api.data.relatedPrograms && api.data.relatedPrograms.length > 0) {
+        return Observable.from(api.data.relatedPrograms);
       }
       return Observable.empty<string>(); // if there are no related programs, don't trigger an update
     });
