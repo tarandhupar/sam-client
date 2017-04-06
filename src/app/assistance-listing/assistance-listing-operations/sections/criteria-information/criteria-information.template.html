@@ -1,9 +1,9 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Criteria for Applying - {{programTitle}}</div>
 <form [formGroup]="falCriteriaForm" novalidate (ngSubmit)="save(falCriteriaForm)">
   <h4>Credentials and Documentation</h4>
- <!-- <sam-list-display >
-    <sam-autocomplete-dropdown></sam-autocomplete-dropdown>
-  </sam-list-display>-->
+  <!-- <sam-list-display >
+     <sam-autocomplete-dropdown></sam-autocomplete-dropdown>
+   </sam-list-display>-->
   <!--<sam-autocomplete autofill-falProgram
   [(ngModel)]="keyword"
   (change)="searchbar.callSearch($event.target.value)"
@@ -30,11 +30,11 @@
     formControlName="isSameAsApplicant"
     (modelChange)="chkSameAsApp($event)"></samCheckbox>
   <div *ngIf="toggleBeneficiarySection">
-  <samTextArea
-    [control]="falCriteriaForm.controls['benDesc']"
-    [name]="'beneficiary-description-input'"
-    [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
-    formControlName="benDesc"></samTextArea>
+    <samTextArea
+      [control]="falCriteriaForm.controls['benDesc']"
+      [name]="'beneficiary-description-input'"
+      [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
+      formControlName="benDesc"></samTextArea>
   </div>
   <samTextArea
     [hint]="'Describe the period of time when assistance is available. Also, the period of time when funding must be spent.'"
@@ -43,30 +43,31 @@
     [label]="'Length and Time Phasing of Assistance'"
     [required]="true"
     formControlName="lengthTimeDesc"></samTextArea>
-<!-- <labelWrapper #awardedTypeWrapper [label]="'How is this assistance awarded and/or released?'" [required]="true"
-                [hint]="'Select the value that best represent how funding is released'">-->
+  <labelWrapper #awardedTypeWrapper [label]="'How is this assistance awarded and/or released?'" [required]="true"
+                [hint]="'Select the value that best represent how funding is released'">
     <sam-autocomplete
-      [options]="awardedTypesOptions"
       [name]="awardedTypes-control"
       formControlName="awardedTypes"
-      [config]="awardedTypesConfig" (change)="awardedTypeChange($event)" [allowAny]="true" required></sam-autocomplete>
-<!--  </labelWrapper>-->
-  <div *ngIf="awrdedTextarea">
-  <samTextArea
-    [control]="falCriteriaForm.controls['awardedDesc']"
-    [name]="'awarded-description-input'"
-    [label]="''"
-    formControlName="awardedDesc"></samTextArea>
+      [options]="awardedTypesOptions"
+      (change)="awardedTypeChange($event)"
+      [config]="awardedTypesConfig" [allowAny]="true"></sam-autocomplete>
+  </labelWrapper>
+  <div *ngIf="awardedTextarea">
+    <samTextArea
+      [control]="falCriteriaForm.controls['awardedDesc']"
+      [name]="'awarded-description-input'"
+      [label]="''"
+      formControlName="awardedDesc"></samTextArea>
   </div>
   <h4>Use and Use Restrictions</h4>
-<!--  <labelWrapper #assiUsageTypeWrapper [label]="'Use of Assistance'" [required]="true"
+  <labelWrapper #assiUsageTypeWrapper [label]="'Use of Assistance'" [required]="true"
                 [hint]="'Please select all that apply from the dropdown list'">
     <sam-autocomplete
       [options]="assUsageTypesoptions"
       [name]="assistance-usage-control"
       formControlName="assUsageTypes"
       [config]="assiUsageTypesConfig" (change)="assiUsageTypeChange($event)"></sam-autocomplete>
-  </labelWrapper>-->
+  </labelWrapper>
   <samTextArea
     [control]="falCriteriaForm.controls['assUsageDesc']"
     [name]="'assistanceusage-description-input'"

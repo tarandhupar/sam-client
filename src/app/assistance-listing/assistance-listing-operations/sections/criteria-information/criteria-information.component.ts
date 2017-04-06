@@ -28,14 +28,12 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   applicantTypes = ['applicant1', 'applicant2', 'applicant3'];
   assiUsageTypes = ['assiatnceuasage1', 'assiatnceuasage2', 'assiatnceuasage3'];
   benTypes = ['ben1', 'ben2', 'ben3'];
-  awardedTypesOptions = [{
-    code: 'other',
-    name: 'other'
-  }];
-
+  awardedTypesOptions = [];
+  awardedTypesArray = [];
 
   @ViewChild('awardedTypeWrapper') awardedTypeWrapper;
   @ViewChild('assiUsageTypeWrapper') assiUsageTypeWrapper;
+
 
   // Checkboxes Component
   benSameAsApplicantConfig = {
@@ -67,19 +65,29 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
               private dictionaryService: DictionaryService) {
     sharedService.setSideNavFocus();
     this.programId = sharedService.programId;
-    this.assUasageDictSub = dictionaryService.getDictionaryById('assistance_type')
+    // declare dictionaries to load
+    let dictionaries = [
+      'applicant_types',
+      'beneficiary_types',
+      'phasing_assistance',
+      'assistance_usage_types'
+    ];
+    this.assUasageDictSub = dictionaryService.getDictionaryById(dictionaries.join(','))
       .subscribe(data => {
-        for (let dictionaries of data['assistance_type']) {
-          for (let element of dictionaries.elements) {
-            let elementId = element.element_id;
-            let value = element.value;
-            let code = element.code;
-            this.assUsageOptions.push({
+     /*   let applicantTypesDicData=[];
+        let beneficiaryTypesDicData=[];*/
+        let phasingAssDicData = [];
+        //let assUsageTypesDicData= [];
+        phasingAssDicData = data['phasing_assistance'];
+        for (let phasingAssData of phasingAssDicData) {
+            let elementId = phasingAssData.element_id;
+            let value = phasingAssData.value;
+            this.awardedTypesOptions.push({
               code: elementId,
-              name: code + ' - ' + value
+              name: value
             });
-            this.assUsageTypeArray[elementId] = name;
-          }
+            console.log(this.assUsageOptions,'this.assUsageOptions');
+            this.awardedTypesArray[elementId] = value;
         }
       });
   }
@@ -98,8 +106,8 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     if (this.getProgSub)
       this.getProgSub.unsubscribe();
 
-    /*if (this.dictS)
-     this.dictSubState.unsubscribe();*/
+    if (this.assUasageDictSub)
+     this.assUasageDictSub.unsubscribe();
 
   }
 
@@ -112,7 +120,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
       //'benTypes': '',
       'benDesc': '',
       'lengthTimeDesc': '',
-      'awardedTypes': '',
+      'awardedTypes': ['', Validators.required],
       'awardedDesc': '',
       //'assUsageTypes': '',
       'assUsageDesc': '',
@@ -129,6 +137,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
           let isSameAsApplicant = '';
           let benDesc = '';
           let lengthTimeDesc = '';
+          let awardedType = '';
           let awardedDesc = '';
           let assUsageDesc = '';
           let usageResDesc = '';
@@ -143,6 +152,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
               documentation = api.data.eligibility.documentation.description ? api.data.eligibility.documentation.description : '';
               applicantDesc = api.data.eligibility.applicant.description ? api.data.eligibility.applicant.description : '';
               lengthTimeDesc = api.data.eligibility.limitation.description ? api.data.eligibility.limitation.description : '';
+              awardedType = api.data.eligibility.limitation.awarded ? api.data.eligibility.limitation.awarded : '';
               awardedDesc = api.data.eligibility.limitation.awardedDescription ? api.data.eligibility.limitation.awardedDescription : '';
               assUsageDesc = api.data.eligibility.assistanceUsage.description ? api.data.eligibility.assistanceUsage.description : '';
               usageResDesc = api.data.eligibility.usage.restrictions.description ? api.data.eligibility.usage.restrictions.description : '';
@@ -162,6 +172,10 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
             isSameAsApplicant: [isSameAsApplicant],
             benDesc: benDesc,
             lengthTimeDesc: lengthTimeDesc,
+            awardedTypes: {
+              code: awardedType,
+              name:this.awardedTypesArray[awardedType]
+            },
             awardedDesc: awardedDesc,
             assUsageDesc: assUsageDesc,
             usageResDesc: usageResDesc
@@ -174,14 +188,15 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   }
 
   awardedTypeChange(event) {
+    console.log(this.falCriteriaForm.controls['awardedTypes'], '');
     this.awardedTypeWrapper.formatErrors(this.falCriteriaForm.controls['awardedTypes']);
-    console.log('this.falCriteriaForm.value.awardedTypes........',this.falCriteriaForm.value.awardedTypes)
-    if(this.falCriteriaForm.value.awardedTypes==='other')
-    this.awardedTextarea = true;
-  }
 
-  assiUsageTypeChange(event) {
-    this.assiUsageTypeWrapper.formatErrors(this.falCriteriaForm.controls['assiUsageTypes'])
+    if(this.falCriteriaForm.value.awardedTypes==='other') {
+      this.awardedTextarea = true;
+    } else {
+      this.awardedTextarea = false;
+    }
+
   }
 
   onCancelClick(event) {
@@ -236,12 +251,13 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     let benDesc = this.falCriteriaForm.value.benDesc;
     let documentation = this.falCriteriaForm.value.documentation;
     let lengthTimeDesc = this.falCriteriaForm.value.lengthTimeDesc;
-    let awardedTypes = this.falCriteriaForm.value.awardedTypes;
+    let awardedType = this.falCriteriaForm.value.awardedTypes.code;
+    console.log();
     let awardedDesc = this.falCriteriaForm.value.awardedDesc;
     let usageResDesc = this.falCriteriaForm.value.usageResDesc;
 
     criteriaData = this.buildJson(applicantTypes, applicantDesc, assUsageTypes, assUsageDesc, isSameAsApplicant, benTypes, benDesc,
-      documentation, lengthTimeDesc, awardedTypes, awardedDesc, usageResDesc);
+      documentation, lengthTimeDesc, awardedType, awardedDesc, usageResDesc);
 
     data = {
       "eligibility": criteriaData
@@ -268,7 +284,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
   buildJson(applicantTypes: any, applicantDesc: string, assUsageTypes: any, assUsageDesc: string,
             isSameAsApplicant: boolean, benTypes: any, benDesc: string, documentation: string,
-            lengthTimeDesc: string, awardedTypes: any, awardedDesc: string, usageResDesc: string): any {
+            lengthTimeDesc: string, awardedType: string, awardedDesc: string, usageResDesc: string): any {
 
     let data = {
       "applicant": {
@@ -290,7 +306,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
       "limitation": {
         // 102 (Length and Time Phasing)
         "description": lengthTimeDesc,
-        "awarded": awardedTypes,
+        "awarded": awardedType,
         "awardedDescription": awardedDesc
       },
       "usage": {
