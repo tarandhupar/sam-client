@@ -182,6 +182,7 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
           }
         } else {
           this.textareaHidden[i] = true;
+          //this.textareaControls[k].setValue('');
           this.textareaControls[k].setValidators(null);
           this.textareaControls[k].updateValueAndValidity();
         }
@@ -229,7 +230,6 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
   }
 
   public writeValue(obj: any) : void {
-   console.log("obj", obj);
     if(obj) {
       this.model = obj;
 
@@ -242,11 +242,17 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
       }
 
       let k=0;
+      let val='';
       for(let i = 0; i < this.checkboxOptions.length; i++) {
         for(let j=0; j< this.textareaLabel[i].length; j++){
-          if(this.model.textareaGrp[i][j])
-            this.textareaControls[k].setValue(this.model.textareaGrp[i][j].value);
+          if(this.model.textareaGrp[i] && this.model.textareaGrp[i][j] && this.model.textareaGrp[i][j] != null){
+            val = this.model.textareaGrp[i][j].value;
+          }
+          else {
+            val = '';
+          }
 
+          this.textareaControls[k].setValue(val);
           k++;
         }
       }

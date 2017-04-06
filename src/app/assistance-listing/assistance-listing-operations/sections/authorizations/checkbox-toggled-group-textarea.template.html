@@ -23,6 +23,7 @@
                    [hidden]="textareaHidden[i]"
                    [control]="validationGroup.get('textarea'+i + '-' +j)"
                    [formControlName]="'textarea'+ i + '-' + j"
+                   [value]="validationGroup.get('textarea'+i + '-' +j).value"
       ></samTextArea>
       </ng-container>
     </ng-container>

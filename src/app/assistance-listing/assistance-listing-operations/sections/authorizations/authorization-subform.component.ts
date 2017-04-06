@@ -113,6 +113,7 @@ export class FALAuthSubFormComponent {
   }
 
   editAuth(i: number){
+    this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
     this.subFormLabel = "Edit Authorization";
     this.mode = "Edit";
     this.authIndex = i;
