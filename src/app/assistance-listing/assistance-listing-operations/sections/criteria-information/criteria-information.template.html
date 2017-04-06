@@ -1,72 +1,84 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Criteria for Applying - {{programTitle}}</div>
 <form [formGroup]="falCriteriaForm" novalidate (ngSubmit)="save(falCriteriaForm)">
   <h4>Credentials and Documentation</h4>
+ <!-- <sam-list-display >
+    <sam-autocomplete-dropdown></sam-autocomplete-dropdown>
+  </sam-list-display>-->
+  <!--<sam-autocomplete autofill-falProgram
+  [(ngModel)]="keyword"
+  (change)="searchbar.callSearch($event.target.value)"
+  [index]="index"
+  [showClearButton]="true"
+  name="falprogramsearch" ></sam-autocomplete>-->
   <samTextArea
     [control]="falCriteriaForm.controls['documentation']"
     [name]="'documentation-input'"
     [label]="'Please describe credentials or documentation required for applying. Do not include anything covered in 2CFR 200.'"
     formControlName="documentation"></samTextArea>
   <h4>Eligibility Requirements</h4>
-  <sam-list-input
-    [hint]="'Please select all that apply to help public users search for this listing'"
-    [control]="falCriteriaForm.controls['applicantTypes']"
-    [name]="'applicantTypes-control'"
-    [label]="'Applicant Eligibility'"
-    [options]="applicantTypes"
-    formControlName="applicantTypes"></sam-list-input>
   <samTextArea
     [control]="falCriteriaForm.controls['applicantDesc']"
     [name]="'applicant-description-input'"
     [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
     formControlName="applicantDesc"></samTextArea>
   <h4>Beneficiary Eligibility</h4>
+
   <samCheckbox
-    [control]="falCriteriaForm.controls['benSameAsApplicant']"
+    [control]="falCriteriaForm.controls['isSameAsApplicant']"
     [name]="'beneficiary-SameAsApplicant-input-checkbox'"
     [options]="benSameAsApplicantConfig.options"
-    formControlName="benSameAsApplicant"></samCheckbox>
-  <sam-list-input
-    [control]="falCriteriaForm.controls['benTypes']"
-    [name]="'beneficiaryTypes-control'"
-    [label]="'Please select all that apply to help public users search for this listing'"
-    [options]="benTypes"
-    formControlName="benTypes"></sam-list-input>
+    formControlName="isSameAsApplicant"
+    (modelChange)="chkSameAsApp($event)"></samCheckbox>
+  <div *ngIf="toggleBeneficiarySection">
   <samTextArea
-    [control]="falCriteriaForm.controls['benDescription']"
+    [control]="falCriteriaForm.controls['benDesc']"
     [name]="'beneficiary-description-input'"
     [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
-    formControlName="benDescription"></samTextArea>
-  <h4>Length and Time Phasing of Assistance</h4>
+    formControlName="benDesc"></samTextArea>
+  </div>
   <samTextArea
+    [hint]="'Describe the period of time when assistance is available. Also, the period of time when funding must be spent.'"
     [control]="falCriteriaForm.controls['lengthTimeDesc']"
     [name]="'lengthandtime-description-input'"
-    [label]="'Describe the period of time when assistance is available. Also, the period of time when funding must be spent.'"
+    [label]="'Length and Time Phasing of Assistance'"
+    [required]="true"
     formControlName="lengthTimeDesc"></samTextArea>
-  <sam-autocomplete [labelText]="'How is this assistance awarded and/or released?'"
-                    [options]="awardedTypesoptions"
-                    [name]="awardedTypes-control"
-                    formControlName="awardedTypes"
-                    [config]="awardedTypesConfig"></sam-autocomplete>
+<!-- <labelWrapper #awardedTypeWrapper [label]="'How is this assistance awarded and/or released?'" [required]="true"
+                [hint]="'Select the value that best represent how funding is released'">-->
+    <sam-autocomplete
+      [options]="awardedTypesOptions"
+      [name]="awardedTypes-control"
+      formControlName="awardedTypes"
+      [config]="awardedTypesConfig" (change)="awardedTypeChange($event)" [allowAny]="true" required></sam-autocomplete>
+<!--  </labelWrapper>-->
+  <div *ngIf="awrdedTextarea">
   <samTextArea
     [control]="falCriteriaForm.controls['awardedDesc']"
     [name]="'awarded-description-input'"
     [label]="''"
     formControlName="awardedDesc"></samTextArea>
+  </div>
   <h4>Use and Use Restrictions</h4>
-   <sam-autocomplete [labelText]="'Use of Assistance'"
-                    [options]="assiUsageTypesoptions"
-                    [name]="assistance-usage-control"
-                    formControlName="assiUsageTypes"
-                    [config]="assiUsageTypesConfig"></sam-autocomplete>
+<!--  <labelWrapper #assiUsageTypeWrapper [label]="'Use of Assistance'" [required]="true"
+                [hint]="'Please select all that apply from the dropdown list'">
+    <sam-autocomplete
+      [options]="assUsageTypesoptions"
+      [name]="assistance-usage-control"
+      formControlName="assUsageTypes"
+      [config]="assiUsageTypesConfig" (change)="assiUsageTypeChange($event)"></sam-autocomplete>
+  </labelWrapper>-->
   <samTextArea
-    [control]="falCriteriaForm.controls['assiUsageDesc']"
+    [control]="falCriteriaForm.controls['assUsageDesc']"
     [name]="'assistanceusage-description-input'"
     [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
-    formControlName="assiUsageDesc"></samTextArea>
+    [required]="true"
+    formControlName="assUsageDesc"></samTextArea>
   <samTextArea
+    [hint]="'List any restrictions on how assistance may be used. Only provide restrictions specific to your organization or this listing.'"
     [control]="falCriteriaForm.controls['usageResDesc']"
     [name]="'usage-restriction-description-input'"
-    [label]="''"
+    [label]="'Use Restrictions'"
+    [required]="true"
     formControlName="usageResDesc"></samTextArea>
   <div class="pull-left">
     <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
