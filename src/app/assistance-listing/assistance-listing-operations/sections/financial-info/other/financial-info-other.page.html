@@ -1,3 +1,4 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="program?.data?.title">Edit Financial Information - {{program.data.title}}</div>
 <div *ngIf="otherFinancialInfoGroup" [formGroup]="otherFinancialInfoGroup">
   <samTextArea [label]="'Range and Average of Financial Assistance'"
                [name]="'assitance-range-input'"
