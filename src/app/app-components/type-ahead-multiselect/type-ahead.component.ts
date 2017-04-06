@@ -15,7 +15,7 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
   selectedList: any;
 
   @Output()
-  modelChange1: EventEmitter<any> = new EventEmitter<any>();
+  modelChange: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(@Optional() public autocompleteService: AutocompleteService, public renderer: Renderer){
     super(autocompleteService, renderer);
@@ -28,8 +28,10 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
   }
 
   emitSelected(obj) {
-    this.modelChange1.emit(obj);
-    this.clearInput();
+    if(this.checkSelectedList(obj)) {
+      this.modelChange.emit(obj);
+      this.clearInput();
+    }
   }
 
   checkSelectedList(obj) {

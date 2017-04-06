@@ -1,32 +1,32 @@
 import {Component, EventEmitter, Output, ViewChild, Input} from '@angular/core';
 
 @Component({
-  selector: 'sam-contract-type-filter',
-  templateUrl: 'contract-type-filter.template.html'
+  selector: 'sam-naics-psc-filter',
+  templateUrl: 'naics-psc-filter.template.html'
 })
-export class SamContractTypeFilter {
+export class SamNaicsPscFilter {
 
   @ViewChild('listDisplay') listDisplay;
 
   @Input()
-  selectModel: string;
+  selectModel1: any = [];
 
   @Input()
-  options: any;
+  options1: any;
 
   @Output()
-  modelChange: EventEmitter<any> = new EventEmitter<any>();
+  modelChange1: EventEmitter<any> = new EventEmitter<any>();
 
   constructor(){}
 
   ngOnChanges() {
-    if(this.selectModel !== '') {
-      let selectArray = this.selectModel.split(",");
-      for(var i=0; i<this.options.options.length; i++) {
+    if(this.selectModel1 !== '') {
+      let selectArray = this.selectModel1.split(",");
+      for(var i=0; i<this.options1.options.length; i++) {
         for(var j=0; j<selectArray.length; j++) {
-          if(this.options.options[i].value == selectArray[j]) {
-            if(this.listDisplay.selectedItems.indexOf(this.options.options[i]) === -1) {
-              this.listDisplay.selectedItems.push(this.options.options[i]);
+          if(this.options1.options[i].value == selectArray[j]) {
+            if(this.listDisplay.selectedItems.indexOf(this.options1.options[i]) === -1) {
+              this.listDisplay.selectedItems.push(this.options1.options[i]);
               this.listDisplay.selectedItems.sort();
             }
           }
@@ -48,7 +48,7 @@ export class SamContractTypeFilter {
     for(var i=0; i<this.listDisplay.selectedItems.length; i++) {
       emitArray.push(this.listDisplay.selectedItems[i].value);
     }
-    this.modelChange.emit(emitArray);
+    this.modelChange1.emit(emitArray);
   }
 
 }

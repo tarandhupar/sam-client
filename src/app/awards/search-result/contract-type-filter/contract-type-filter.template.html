@@ -3,7 +3,7 @@
                   [name]="options.name"
                   [options]="options.options"
                   [config]="options.config"
-                  (modelChange1)="emitSelected($event)"
+                  (modelChange)="emitSelected($event)"
                   [selectedList]="listDisplay.selectedItems">
   </sam-type-ahead>
   <sam-list-display #listDisplay (modelChange)="emitSelectedList()"><div [innerHTML]="options.selectedLabel"></div></sam-list-display>

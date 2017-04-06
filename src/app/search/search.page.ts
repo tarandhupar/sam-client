@@ -224,10 +224,11 @@ export class SearchPage implements OnInit{
   };
 
   //Select NAICS Types
-  naicsTypeModel: string = '';
+  naicsTypeModel: any = [];
   naicsType = {
     "name": "NAICS Type",
-    "label": "NAICS Types",
+    "placeholder": "NAICS Types",
+    "selectedLabel": "Codes Selected",
     "options": [],
     "config": {
       keyValueConfig: {
@@ -246,6 +247,7 @@ export class SearchPage implements OnInit{
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       data => {
+        console.log(data);
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
@@ -264,7 +266,8 @@ export class SearchPage implements OnInit{
         this.awardIDVModel = data['awardOrIdv'] && data['awardOrIdv'] !== null ? data['awardOrIdv'] : '';
         this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
-
+        this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
+        console.log(this.naicsTypeModel);
         this.runSearch();
         this.loadParams();
       });
@@ -384,6 +387,10 @@ export class SearchPage implements OnInit{
       qsobj['contractType'] = this.contractTypeModel;
     }
 
+    if(this.naicsTypeModel.length>0){
+      qsobj['naics'] = this.naicsTypeModel;
+    }
+
     return qsobj;
   }
 
@@ -445,7 +452,8 @@ export class SearchPage implements OnInit{
       isStandard: this.isStandard,
       awardOrIdv: this.awardIDVModel,
       awardType: this.awardTypeModel,
-      contractType: this.contractTypeModel
+      contractType: this.contractTypeModel,
+      naics: this.naicsTypeModel
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -592,14 +600,13 @@ export class SearchPage implements OnInit{
   getAwardsDictionaryData(id) {
     this.opportunityService.getOpportunityDictionary(id).subscribe(
       data => {
-
         // formatting the array data according to api type to match what UI elements expect
         if(id === 'naics_code'){
           var reformattedArray = data._embedded.dictionaries[0].elements.map(function(naicsItem){
-            let newObj = {label:'', value:'', type: 'naics'};
+            let newObj = {label:'', value:''};
 
             newObj.label = naicsItem.value;
-            newObj.value = naicsItem.elementId;
+            newObj.value = naicsItem.code;
             return newObj;
           });
 
@@ -813,6 +820,13 @@ export class SearchPage implements OnInit{
 
   contractTypeSelected(evt) {
     this.contractTypeModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
+  naicsTypeSelected(evt) {
+    console.log(evt);
+    this.naicsTypeModel = evt.toString();
     this.pageNum = 0;
     this.searchResultsRefresh();
   }

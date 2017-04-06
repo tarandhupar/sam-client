@@ -20,6 +20,7 @@ import { AppComponentsModule } from '../app-components/app-components.module';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
+import {SamNaicsPscFilter} from "../awards/search-result/naics-psc-filter/naics-psc-filter.component";
 
 @NgModule({
   imports: [
@@ -55,7 +56,8 @@ import {SamContractTypeFilter} from "../awards/search-result/contract-type-filte
     WageDeterminationResult,
     AwardsResult,
     FHFeaturedResult,
-    SamContractTypeFilter
+    SamContractTypeFilter,
+    SamNaicsPscFilter
   ],
   providers: [],
 })
