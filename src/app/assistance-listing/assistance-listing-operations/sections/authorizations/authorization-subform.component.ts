@@ -18,50 +18,6 @@ export class FALAuthSubFormComponent {
   mode:string;
   subFormLabel:string;
 
-  // Checkboxes Component
-  /*public authTypeConfig: any = {
-    name: 'authorization-authType',
-    hint: 'Please select all that apply',
-    required: true,
-    validateComponentLevel: false,
-    checkbox: {
-      reuired:true,
-      options: [
-        {value: 'act', label: 'Act', name: 'authType-checkbox-act'},
-        {value: 'executiveOrder', label: 'Executive Order', name: 'authType-checkbox-executiveOrder'},
-        {value: 'publicLaw', label: 'Public Law', name: 'authType-checkbox-publicLaw'},
-        {value: 'statute', label: 'Statute', name: 'authType-checkbox-statute'},
-        {value: 'USC', label: 'USC', name: 'authType-checkbox-usc'},
-      ]
-    },
-
-    textarea:{
-      showWhenCheckbox: 'checked',
-      grpHeader:['Act', 'Executive Order', 'Public Law', 'Statute', 'USC'],
-      name:[
-        ['title','part', 'section', 'description'],
-        ['title', 'part', 'section', 'description'],
-        ['congressCode', 'number'],
-        ['volume', 'page'],
-        ['title', 'section']
-      ],
-      labels:[
-        ['Title', 'Part', 'Section', 'Description'],
-        ['Title', 'Part', 'Section', 'Description'],
-        ['Congress', 'Law Number'],
-        ['Volume', 'Page'],
-        ['Title', 'Section']
-      ],
-      required:[
-        [false, false, false, false],
-        [false, false, false, false],
-        [false, false],
-        [false, false],
-        [false, false]
-      ]
-    }
-  };*/
-
   checkboxConfig = {
     options: [
       {value: 'act', label: 'act', name: 'checkbox-act'},
@@ -130,7 +86,6 @@ export class FALAuthSubFormComponent {
     //this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
     this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
-    console.log(this.falAuthSubForm);
 
     this.authActionHandler.emit({
       type:'confirm',

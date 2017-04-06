@@ -26,7 +26,6 @@ import { FALAccountIdentificationComponent } from "./components/account-identifi
 import { FALTafsComponent } from "./components/tafs.component";
 import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
 import { FALAuthSubFormComponent } from "./assistance-listing-operations/sections/authorizations/authorization-subform.component";
-import { SamCheckboxToggledGroupTextareaComponent } from "./assistance-listing-operations/sections/authorizations/checkbox-toggled-group-textarea.component";
 
 @NgModule({
   imports: [
@@ -66,8 +65,7 @@ import { SamCheckboxToggledGroupTextareaComponent } from "./assistance-listing-o
     FinancialObligationsComponent,
     SamTextRadioButtonComponent,
     FALAuthorizationsComponent,
-    FALAuthSubFormComponent,
-    SamCheckboxToggledGroupTextareaComponent
+    FALAuthSubFormComponent
   ],
   providers: [],
 })
