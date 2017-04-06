@@ -19,7 +19,7 @@ export class FALAuthSubFormComponent {
   subFormLabel:string;
 
   // Checkboxes Component
-  public authTypeConfig: any = {
+  /*public authTypeConfig: any = {
     name: 'authorization-authType',
     hint: 'Please select all that apply',
     required: true,
@@ -60,7 +60,16 @@ export class FALAuthSubFormComponent {
         [false, false]
       ]
     }
+  };*/
 
+  checkboxConfig = {
+    options: [
+      {value: 'act', label: 'act', name: 'checkbox-act'},
+      {value: 'executiveOrder', label: 'executiveOrder', name: 'checkbox-executiveOrder'},
+      {value: 'publicLaw', label: 'publicLaw', name: 'checkbox-publicLaw'},
+      {value: 'statute', label: 'statute', name: 'checkbox-statute'},
+      {value: 'usc', label: 'USC', name: 'checkbox-usc'},
+    ],
   };
 
   constructor(private fb: FormBuilder){
@@ -75,7 +84,23 @@ export class FALAuthSubFormComponent {
 
   initAuth(){
     return this.fb.group({
-      authType:['']
+      authType:[''],
+      act: this.fb.group({
+        title: [''],
+        part:[''],
+        section:[''],
+        description:['']
+      }),
+      executiveOrder: this.fb.group({
+        title: [''],
+        part:[''],
+        section:[''],
+        description:['']
+      }),
+      publicLaw: this.fb.group({
+        congressCode:[''],
+        number:['']
+      })
     });
   }
 
@@ -94,8 +119,10 @@ export class FALAuthSubFormComponent {
   }
 
   onConfirmClick(){
-    this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
+    //this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
+    this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
+    console.log(this.falAuthSubForm);
 
     this.authActionHandler.emit({
       type:'confirm',
@@ -127,12 +154,14 @@ export class FALAuthSubFormComponent {
 
     const control = <FormArray>this.falAuthSubForm.controls['authorizations'];
     control.removeAt(i);
-    this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
+    //this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
+    this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
   }
 
   editAuth(i: number){
-    this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
+    //this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
+    //this.authInfo = this.falAuthSubForm.value.authorizations;
     this.subFormLabel = "Edit Authorization";
     this.mode = "Edit";
     this.authIndex = i;
