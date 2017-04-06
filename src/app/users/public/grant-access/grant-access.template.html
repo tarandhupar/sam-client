@@ -3,7 +3,7 @@
 
   <!-- Domain -->
   <div *ngIf="mode !== 'edit'">
-    <samSelect name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
+    <samSelect [disabled]="userCameFromRoleWorkspace" name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
   </div>
   <div *ngIf="mode === 'edit'" class="">
     <div class="usa-grid-full">

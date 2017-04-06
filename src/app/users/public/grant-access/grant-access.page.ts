@@ -11,6 +11,7 @@ import { FHService } from "../../../../api-kit/fh/fh.service";
 import { Observable } from "rxjs";
 import { Organization } from "../../../organization/organization.model";
 import { IRole } from "../../../../api-kit/access/role.interface";
+import { Title } from "@angular/platform-browser";
 
 @Component({
   templateUrl: 'grant-access.template.html'
@@ -46,6 +47,8 @@ export class GrantAccessPage implements OnInit {
   // Edit page only
   private userAccess: UserAccessModel;
 
+  private userCameFromRoleWorkspace: boolean = false;
+
   constructor(
     private userService: UserAccessService,
     private route: ActivatedRoute,
@@ -53,12 +56,21 @@ export class GrantAccessPage implements OnInit {
     public router: Router,
     private pageScrollService: PageScrollService,
     private fhService: FHService,
+    private titleService: Title,
   ) {
     PageScrollConfig.defaultDuration = 500;
   }
 
   ngOnInit() {
+    this.titleService.setTitle('User Access');
     this.userName = this.route.parent.snapshot.params['id'];
+    this.userCameFromRoleWorkspace = this.route.snapshot.queryParams['ref'];
+
+    if (this.userCameFromRoleWorkspace) {
+      this.domain = +this.route.snapshot.queryParams['domain'];
+      this.getRoles();
+    }
+
     this.determinePageModeFromURL();
     this.getDomains();
     if (this.mode === 'edit') {
@@ -297,6 +309,10 @@ export class GrantAccessPage implements OnInit {
     this.router.navigate(['../access'], { relativeTo: this.route });
   }
 
+  goToRoleWorkspace() {
+    this.router.navigate(['/rolespace']);
+  }
+
   isFormValid() {
     switch (this.mode) {
       case 'edit':
@@ -432,7 +448,11 @@ export class GrantAccessPage implements OnInit {
           timer:3000
         });
 
-        this.goToAccessPage();
+        if (this.userCameFromRoleWorkspace) {
+          this.goToRoleWorkspace();
+        } else {
+          this.goToAccessPage();
+        }
       },
       error => {
         if (error.status === 409) {
