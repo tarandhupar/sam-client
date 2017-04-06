@@ -207,7 +207,13 @@ export class UserAccessService {
       oParam: queryParams
     };
 
-    return this.apiService.call(apiOptions);
+    return this.apiService.call(apiOptions, false).map(res => {
+      if (res.status === 204) {
+        return [];
+      } else {
+        return res.json();
+      }
+    });
   }
 
   updateRequest(requestId: string, updatedRequest: any) {
