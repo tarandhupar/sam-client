@@ -37,7 +37,7 @@ export class FALAuthSubFormComponent {
 
     textarea:{
       showWhenCheckbox: 'checked',
-      grpHeader:['Act', 'Executive Order'],
+      grpHeader:['Act', 'Executive Order', 'Public Law', 'Statute', 'USC'],
       name:[
         ['title','part', 'section', 'description'],
         ['title', 'part', 'section', 'description'],
