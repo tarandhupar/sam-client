@@ -1,5 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import * as moment from 'moment/moment';
+import 'moment-timezone';
 
 @Pipe({name: 'dateFormat'})
 export class DateFormatPipe implements PipeTransform {
@@ -8,6 +9,6 @@ export class DateFormatPipe implements PipeTransform {
       return null;
     }
 
-    return moment(datetime).format(format);
+    return moment(datetime).tz(moment.tz.guess()).format(format)
   }
 }
