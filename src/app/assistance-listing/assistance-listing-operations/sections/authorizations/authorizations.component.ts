@@ -65,13 +65,13 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   }
 
   authActionHandler(event){
-    console.log(event);
+
     if(event.type == 'add'){
       this.hideAddButton = event.hideAddButton;
     }
     if(event.type == 'confirm'){
       this.hideAddButton = event.hideAddButton;
-      this.authInfo = event.authInfo;
+      this.authInfoFormat(event.authInfo);
     }
     if(event.type == 'cancel'){
       this.hideAddButton = event.hideAddButton;
@@ -84,5 +84,9 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
 
   removeAuth(i: number){
     this.authSubForm.removeAuth(i);
+  }
+
+  authInfoFormat(authInfo){
+    this.authInfo = authInfo;
   }
 }

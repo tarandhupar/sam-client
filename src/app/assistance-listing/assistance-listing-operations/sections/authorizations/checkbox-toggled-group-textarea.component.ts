@@ -35,6 +35,7 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
   // checkbox
   @Input() checkboxOptions: OptionsType[]; // required
   @Input() checkboxHasSelectAll: boolean;
+  @Input() checkboxRequired: boolean;
 
   // textarea
   @Input() textareaPlaceholder: string[]; // todo: implement this
@@ -64,13 +65,15 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
     // if an input is passed both ways, the value passed directly will take precedence
     if(this.options) {
       this.name = this.name || this.options.name;
-
       this.label = this.label || this.options.label;
       this.hint = this.hint || this.options.hint;
+
       if(this.required == null) { this.required = this.options.required; }
+
       if(this.validateComponentLevel == null) { this.validateComponentLevel = this.options.validateComponentLevel; }
 
       if(this.options.checkbox) {
+        this.checkboxRequired = this.checkboxRequired || this.options.checkbox.reuired;
         this.checkboxOptions = this.checkboxOptions || this.options.checkbox.options;
         if(this.checkboxHasSelectAll == null) { this.checkboxHasSelectAll = this.options.checkbox.hasSelectAll; }
       }
