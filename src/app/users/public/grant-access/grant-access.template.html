@@ -2,15 +2,15 @@
   <h1 id="form-top" class="m_T-0">{{modeName()}} Access</h1>
 
   <!-- Domain -->
-  <div *ngIf="mode !== 'edit'">
+  <div *ngIf="mode !== 'edit' && !userCameFromRoleWorkspace">
     <samSelect [disabled]="userCameFromRoleWorkspace" name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
   </div>
-  <div *ngIf="mode === 'edit'" class="">
+  <div *ngIf="mode === 'edit' || userCameFromRoleWorkspace">
     <div class="usa-grid-full">
-      <div class="usa-width-one-sixth">
-        <label><strong>Domain:</strong></label>
+      <div>
+        <strong>Domain</strong>
       </div>
-      <div class="usa-width-five-sixths">
+      <div class="m_T-2x">
         <span *ngIf="domain">{{labelForDomain(domain)}}</span>
         <span *ngIf="!domain"><i>Loading Domain...</i></span>
       </div>
@@ -53,18 +53,23 @@
 
   <!-- Permissions -->
   <ng-container *ngIf="objects && objects.length">
-    <div class="m_B-1x"><label>Permissions</label></div>
-    <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
-      <li  *ngFor="let object of objects; let evenObject=even" class="object-item">
-        <strong>{{object.function.val}}<span *ngIf="evenObject">&nbsp;<i class="fa fa-info-circle"></i></span></strong>
-        <div class="p_L-4x permission-list">
-          <span *ngFor="let permission of object.permission" class="permission-control-group">
-            <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
-            <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
-          </span>
-        </div>
-      </li>
-    </ul>
+    <ng-container *ngIf="mode === 'edit'">
+      <div class="m_B-1x"><label>Permissions</label></div>
+      <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
+        <li  *ngFor="let object of objects; let evenObject=even" class="object-item">
+          <strong>{{object.function.val}}<span *ngIf="evenObject">&nbsp;<i class="fa fa-info-circle"></i></span></strong>
+          <div class="p_L-4x permission-list">
+            <span *ngFor="let permission of object.permission" class="permission-control-group">
+              <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+              <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
+            </span>
+          </div>
+        </li>
+      </ul>
+    </ng-container>
+    <ng-container>
+      <objects-and-permissions [objects]="objects"></objects-and-permissions>
+    </ng-container>
   </ng-container>
 
   <!-- Optional Message -->

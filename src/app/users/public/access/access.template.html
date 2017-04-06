@@ -2,7 +2,7 @@
   <h1 class="m_T-0">User Access</h1>
 
   <!-- Pending Requests -->
-  <ng-container *ngIf="requests.length">
+  <ng-container *ngIf="requests && requests.length">
     <h2>Pending Requests</h2>
     <div class="requests-container">
       <div class="request-block" *ngFor="let req of requests; let i = index">
@@ -95,26 +95,27 @@
             </div>
           </div>
         </div>
-        <div class="background-white permissions-block" *ngIf="role.isOpen">
-          <div class="border-bottom-black permissions-table-header">
-            <div class="usa-grid-full">
-              <div class="usa-width-one-fourth">
-                Object
-              </div>
-              <div class="usa-width-one-fourth">
-                Permissions
-              </div>
-            </div>
-          </div>
-          <div class="usa-grid-full permissions-table" *ngFor="let obj of role.organizationMapContent[0].functionMapContent">
-            <div class="usa-width-one-fourth">
-              {{obj.function.val || 'object not found'}}
-            </div>
-            <div class="usa-width-three-fourths">
-              <span *ngFor="let perm of obj.permission; let lastPermission=last">{{perm.val || 'Permission not Found'}}<span *ngIf="!lastPermission">, </span></span>
-            </div>
-          </div>
-        </div>
+        <objects-and-permissions *ngIf="role.isOpen" [objects]="role.organizationMapContent[0].functionMapContent"></objects-and-permissions>
+        <!--<div class="background-white permissions-block" *ngIf="role.isOpen">-->
+          <!--<div class="border-bottom-black permissions-table-header">-->
+            <!--<div class="usa-grid-full">-->
+              <!--<div class="usa-width-one-fourth">-->
+                <!--Object-->
+              <!--</div>-->
+              <!--<div class="usa-width-one-fourth">-->
+                <!--Permissions-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="usa-grid-full permissions-table" *ngFor="let obj of role.organizationMapContent[0].functionMapContent">-->
+            <!--<div class="usa-width-one-fourth">-->
+              <!--{{obj.function.val || 'object not found'}}-->
+            <!--</div>-->
+            <!--<div class="usa-width-three-fourths">-->
+              <!--<span *ngFor="let perm of obj.permission; let lastPermission=last">{{perm.val || 'Permission not Found'}}<span *ngIf="!lastPermission">, </span></span>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
     </div>
   </ng-container>
