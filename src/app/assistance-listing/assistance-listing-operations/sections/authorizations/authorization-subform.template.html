@@ -6,12 +6,7 @@
 
     <ng-container *ngFor="let authGrp of falAuthSubForm.controls.authorizations.controls; let i=index">
       <div [formGroupName]="i" [class.hide]="authIndex !== i">
-        <!--<samCheckbox
-           [control]="falAuthSubForm.controls['authType']"
-           [hint]="'Please select all that apply'"
-           [name]="'authType'"
-           [options]="checkboxConfig.options"
-           formControlName="authType"></samCheckbox>-->
+
         <samCheckboxToggledGroupTextarea [options]="authTypeConfig"
                                     [formControlName]="'authType'"
         ></samCheckboxToggledGroupTextarea>

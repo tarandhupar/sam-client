@@ -27,16 +27,18 @@ export class FALAuthSubFormComponent {
     checkbox: {
       options: [
         {value: 'act', label: 'Act', name: 'authType-checkbox-act'},
-        {value: 'executiveOrder', label: 'executiveOrder', name: 'authType-checkbox-executiveOrder'},
-       /* {value: 'publicLaw', label: 'publicLaw', name: 'authType-checkbox-publicLaw'},
-        {value: 'statute', label: 'statute', name: 'authType-checkbox-statute'},
-        {value: 'usc', label: 'USC', name: 'authType-checkbox-usc'},*/
+        {value: 'executiveOrder', label: 'Executive Order', name: 'authType-checkbox-executiveOrder'},
+       /* {value: 'publicLaw', label: 'Public Law', name: 'authType-checkbox-publicLaw'},
+        {value: 'statute', label: 'Statute', name: 'authType-checkbox-statute'},
+        {value: 'USC', label: 'USC', name: 'authType-checkbox-usc'},*/
       ]
     },
 
     textarea:{
       showWhenCheckbox: 'checked',
-      labels: [['Title', 'Part', 'Section', 'Description'], ['Title', 'Test']],
+      grpHeader:['Act', 'Executive Order'],
+      name:[['title','part', 'section', 'description'],['title', 'part']],
+      labels: [['Title', 'Part', 'Section', 'Description'], ['Title', 'Part']],
       required: [[false, false, false, false], [false, false]]
     }
 
@@ -59,7 +61,6 @@ export class FALAuthSubFormComponent {
   }
 
   addAuth(){
-
     this.subFormLabel = "New Authorization";
     const control = <FormArray> this.falAuthSubForm.controls['authorizations'];
     this.authIndex = control.length;
@@ -74,8 +75,7 @@ export class FALAuthSubFormComponent {
   }
 
   onConfirmClick(){
-
-    this.authInfo = this.falAuthSubForm.value.authorizations;
+    this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
     this.hideAddButton = false;
 
     this.authActionHandler.emit({
@@ -105,9 +105,10 @@ export class FALAuthSubFormComponent {
   }
 
   removeAuth(i: number){
+
     const control = <FormArray>this.falAuthSubForm.controls['authorizations'];
     control.removeAt(i);
-    this.authInfo = this.falAuthSubForm.value.authorizations;
+    this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
     this.hideAddButton = false;
   }
 

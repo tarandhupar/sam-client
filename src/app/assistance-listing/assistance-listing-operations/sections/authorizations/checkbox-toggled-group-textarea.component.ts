@@ -20,7 +20,7 @@ import { OptionsType } from "sam-ui-kit/types";
 export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAccessor {
   public model = {
     checkbox: [],
-    textarea: []
+    textareaGrp: []
   };
 
   // general
@@ -42,6 +42,8 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
   @Input() textareaMaxlength: number[]; // todo: implement this
   @Input() textareaRequired: any[];
   @Input() textareaLabel: any[];
+  @Input() textareaName: any[];
+  @Input() grpHeader: string[];
   @Input() showWhenCheckbox: string; // 'checked' or 'unchecked'
   public textareaHidden: boolean[];
 
@@ -79,7 +81,9 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
         if(this.textareaMaxlength == null) { this.textareaMaxlength = this.options.textarea.maxlengths; }
         this.textareaRequired = this.textareaRequired || this.options.textarea.required;
         this.textareaLabel = this.textareaLabel || this.options.textarea.labels;
+        this.textareaName = this.textareaName || this.options.textarea.name;
         this.showWhenCheckbox = this.showWhenCheckbox || this.options.textarea.showWhenCheckbox;
+        this.grpHeader = this.grpHeader || this.options.textarea.grpHeader;
       }
     }
 
@@ -138,9 +142,11 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
 
         textareaControl.valueChanges.subscribe(value => {
           // todo: figure out why this is being called twice on population
-          if(!this.model.textarea[i])
-            this.model.textarea[i] =[];
-          this.model.textarea[i][j] = value;
+          if(!this.model.textareaGrp[i])
+            this.model.textareaGrp[i] =[];
+
+          this.model.textareaGrp[i][j] = {name:this.textareaName[i][j],
+                                          value:value};
           this.onChange();
         });
 
@@ -148,7 +154,6 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
         this.validationGroup.addControl('textarea' + i + '-' + j, textareaControl);
         k++;
       }
-      console.log(this.model.textarea);
     }
 
     this.toggleTextarea();
@@ -224,12 +229,12 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
   }
 
   public writeValue(obj: any) : void {
-
+   console.log("obj", obj);
     if(obj) {
       this.model = obj;
 
-      if(!this.model.textarea) {
-        this.model.textarea = [];
+      if(!this.model.textareaGrp) {
+        this.model.textareaGrp = [];
       }
 
       if(!this.model.checkbox) {
@@ -239,7 +244,9 @@ export class SamCheckboxToggledGroupTextareaComponent implements ControlValueAcc
       let k=0;
       for(let i = 0; i < this.checkboxOptions.length; i++) {
         for(let j=0; j< this.textareaLabel[i].length; j++){
-          this.textareaControls[k].setValue(this.model.textarea[k]);
+          if(this.model.textareaGrp[i][j])
+            this.textareaControls[k].setValue(this.model.textareaGrp[i][j].value);
+
           k++;
         }
       }

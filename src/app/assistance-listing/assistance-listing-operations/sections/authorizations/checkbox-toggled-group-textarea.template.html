@@ -14,13 +14,15 @@
     ></samCheckbox>
 
     <ng-container *ngFor="let option of checkboxOptions; let i = index;">
-      <ng-container *ngFor="let textboxName of textareaLabel[i]; let j = index;">
+      <h4 [class.hide]="textareaHidden[i]">{{grpHeader[i]}}</h4>
+      <ng-container *ngFor="let textboxLabel of textareaLabel[i]; let j = index;">
+
       <samTextArea [name]="name + '-textarea' + i + '-' + j"
-                   [label]="textareaLabel[i][j]"
+                   [label]="textboxLabel"
                    [required]="textareaRequired[i][j]"
                    [hidden]="textareaHidden[i]"
                    [control]="validationGroup.get('textarea'+i + '-' +j)"
-                   [formControlName]="'textarea'+i + '-' + j"
+                   [formControlName]="'textarea'+ i + '-' + j"
       ></samTextArea>
       </ng-container>
     </ng-container>
