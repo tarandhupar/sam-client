@@ -10,40 +10,25 @@
           <!-- Details Column -->
           <div class="usa-width-five-sixths">
             <div class="usa-grid-full">
-              <div class="usa-width-one-third">
-                <div class="usa-grid-full">
-                  <div class="usa-width-one-half"><strong>Domain</strong></div>
-                  <div class="usa-width-one-half"><span>{{getDomainNameById(req.domainId)}}</span></div>
-                </div>
+              <div class="usa-width-one-fourth">
+                <div><strong>Domain</strong></div>
+                <div class="m_T-2x"><span>{{getDomainNameById(req.domainId)}}</span></div>
               </div>
               <div class="usa-width-one-fourth">
-                <div class="usa-grid-full">
-                  <div class="usa-width-one-half"><strong>Status</strong></div>
-                  <div class="usa-width-one-half"><span>Pending</span></div>
-                </div>
+                <div><strong>Date Requested</strong></div>
+                <div class="m_T-2x"><span>{{req.createdDate | dateFormat: 'MMM DD, YYYY'}}</span></div>
               </div>
-              <div class="usa-width-five-twelfths">
-                <div class="usa-grid-full">
-                  <div class="usa-width-one-half"><strong>Date Requested</strong></div>
-                  <div class="usa-width-one-half"><span>{{req.createdDate | dateFormat: 'MMM DD, YYYY'}}</span></div>
-                </div>
-              </div>
-            </div>
-            <div class="usa-grid-full m_T-2x">
-              <div class="usa-width-one-sixth">
-                <strong>Message</strong>
-              </div>
-              <div class="usa-width-five-sixths text-ellipsis request-message">
-                <span>{{req.requestorMessage}}</span>
+              <div class="usa-width-one-half">
+                <div><strong>Message</strong></div>
+                <div class="m_T-2x"><span>{{req.requestorMessage}}</span></div>
               </div>
             </div>
           </div>
 
           <!-- Cancel -->
-          <div class="usa-width-one-sixth">
-            <button class="usa-button-transparent" (click)="onCancelRequestClick(req.id)">
-              <i class="fa fa-close"></i>
-              <a>Cancel</a>
+          <div class="usa-width-one-sixth clearfix">
+            <button class="usa-button-transparent pull-right" (click)="onCancelRequestClick(req.id)">
+              <a class="no-underline"><i class="fa fa-close"></i>&nbsp;Cancel</a>
             </button>
           </div>
         </div>
