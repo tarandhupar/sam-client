@@ -100,6 +100,42 @@
 
         </div>
 
+        <div formGroupName="statute" [class.hide]="authGrp.value.authType.indexOf('statute') == -1" >
+          <h4>Statute</h4>
+          <samText
+            [control]="authGrp.controls.statute.controls.volume"
+            [name]="'volume'"
+            [label]="'Volume'"
+            formControlName="volume"
+          ></samText>
+
+          <samText
+            [control]="authGrp.controls.statute.controls.page"
+            [name]="'page'"
+            [label]="'Page'"
+            formControlName="page"
+          ></samText>
+
+        </div>
+
+        <div formGroupName="USC" [class.hide]="authGrp.value.authType.indexOf('USC') == -1" >
+          <h4>USC</h4>
+          <samText
+            [control]="authGrp.controls.USC.controls.title"
+            [name]="'title'"
+            [label]="'Title'"
+            formControlName="title"
+          ></samText>
+
+          <samText
+            [control]="authGrp.controls.USC.controls.section"
+            [name]="'section'"
+            [label]="'Section'"
+            formControlName="section"
+          ></samText>
+
+        </div>
+
         <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></samButton>
         <samButton buttonText="Confirm" (onClick)="onConfirmClick()"></samButton>
       </div>

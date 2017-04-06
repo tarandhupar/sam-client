@@ -68,7 +68,7 @@ export class FALAuthSubFormComponent {
       {value: 'executiveOrder', label: 'executiveOrder', name: 'checkbox-executiveOrder'},
       {value: 'publicLaw', label: 'publicLaw', name: 'checkbox-publicLaw'},
       {value: 'statute', label: 'statute', name: 'checkbox-statute'},
-      {value: 'usc', label: 'USC', name: 'checkbox-usc'},
+      {value: 'USC', label: 'USC', name: 'checkbox-usc'},
     ],
   };
 
@@ -100,6 +100,14 @@ export class FALAuthSubFormComponent {
       publicLaw: this.fb.group({
         congressCode:[''],
         number:['']
+      }),
+      statute: this.fb.group({
+        volume:[''],
+        page:['']
+      }),
+      USC: this.fb.group({
+        title:[''],
+        section:['']
       })
     });
   }
