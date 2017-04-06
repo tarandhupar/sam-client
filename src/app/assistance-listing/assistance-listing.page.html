@@ -67,7 +67,7 @@
           </ng-container>
           <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.flag == 'na' || relatedProgram.length == 0">Not Applicable.</span>
         </span>
-        <a class="field" id="'grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">View available opportunities on Grants.gov related to this program</a>
+        <a target="_blank" class="field" id="'grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">View available opportunities on Grants.gov related to this program</a>
       </div>
     </section>
 
