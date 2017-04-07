@@ -68,11 +68,29 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   }
 
   saveData(){
-    console.log("form", this.falAuthForm.value);
-    console.log("authInfo", this.authInfo);
 
-    let data = {};
+    let data = {authorizations:{}};
 
+    if(this.falAuthForm.value.description != null && this.falAuthForm.value.description != '')
+      data.authorizations = {description: this.falAuthForm.value.description};
+
+    if(this.authInfo.length > 0){
+      data.authorizations['list']=[];
+      for(let auth of this.authInfo){
+        let list = {};
+        if(auth.authType.length > 0){
+          list['authorizationTypes'] = {};
+          for(let type of auth.authType){
+            list['authorizationTypes'][type] = true;
+            list[type] = auth[type];
+          }//end of inner for
+        }//end of if authType.length
+        data.authorizations['list'].push(list);
+      }//end of for
+
+    }
+
+    console.log("data", data);
     /*this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
           this.sharedService.programId = api._body;
@@ -167,6 +185,5 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       if(label != '')
         this.displayAuthInfo.push(label);
     }
-    console.log(this.displayAuthInfo);
   }
 }

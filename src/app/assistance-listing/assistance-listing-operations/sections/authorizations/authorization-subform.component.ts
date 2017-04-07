@@ -20,10 +20,10 @@ export class FALAuthSubFormComponent {
 
   checkboxConfig = {
     options: [
-      {value: 'act', label: 'act', name: 'checkbox-act'},
-      {value: 'executiveOrder', label: 'executiveOrder', name: 'checkbox-executiveOrder'},
-      {value: 'publicLaw', label: 'publicLaw', name: 'checkbox-publicLaw'},
-      {value: 'statute', label: 'statute', name: 'checkbox-statute'},
+      {value: 'act', label: 'Act', name: 'checkbox-act'},
+      {value: 'executiveOrder', label: 'Executive Order', name: 'checkbox-executiveOrder'},
+      {value: 'publicLaw', label: 'Public Law', name: 'checkbox-publicLaw'},
+      {value: 'statute', label: 'Statute', name: 'checkbox-statute'},
       {value: 'USC', label: 'USC', name: 'checkbox-usc'},
     ],
   };
