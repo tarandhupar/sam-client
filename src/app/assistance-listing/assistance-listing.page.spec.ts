@@ -59,20 +59,6 @@ let MockProgramService = {
           }
         },
         "title": "Wood Utilization Assistance",
-        "usage": {
-          "rules": {
-            "content": "Technical assistance or limited project grants to achieve long-term forest health through local enterprises that support forest management. No land acquisition or construction. "
-          },
-          "loanTerms": {
-            "flag": "na"
-          },
-          "restrictions": {
-            "flag": "na"
-          },
-          "discretionaryFund": {
-            "flag": "na"
-          }
-        },
         "website": "http://www.na.fs.fed.us/werc/",
         "contacts": {
           "list": [
@@ -303,6 +289,11 @@ let MockProgramService = {
           }
         },
         "eligibility": {
+          "usage": {
+            "rules": {
+              "description": "Technical assistance or limited project grants to achieve long-term forest health through local enterprises that support forest management. No land acquisition or construction. "
+            }
+          },
           "applicant": {
             "types": [
               "0009",

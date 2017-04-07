@@ -251,10 +251,10 @@
       </div>
 
       <p>
-        <span class="field" id="program-usage-rules">{{ program.data?.usage?.rules?.content }}</span>
-        <span class="field" id="program-usage-restrictions" *ngIf="program.data.usage?.restrictions?.flag=='yes'">{{ program.data.usage.restrictions.content }}</span>
-        <span class="field" id="program-usage-discretionary-fund" *ngIf="program.data.usage?.discretionaryFund?.flag=='yes'">{{ program.data.usage.discretionaryFund.content }}</span>
-        <span class="field" id="program-usage-loan-terms" *ngIf="program.data.usage?.loanTerms?.flag=='yes'">{{ program.data.usage.loanTerms.content }}</span>
+        <span class="field" id="program-usage-rules" *ngIf="program.data?.eligibility?.usage?.rules?.description">{{ program.data?.eligibility?.usage?.rules?.description }}</span>
+        <span class="field" id="program-usage-restrictions" *ngIf="program.data.eligibility?.usage?.restrictions?.description">{{ program.data.eligibility?.usage?.restrictions?.description }}</span>
+        <span class="field" id="program-usage-discretionary-fund" *ngIf="program.data.eligibility?.usage?.discretionaryFund?.description">{{ program.data.eligibility?.usage?.discretionaryFund?.description }}</span>
+        <span class="field" id="program-usage-loan-terms" *ngIf="program.data.eligibility?.usage?.loanTerms?.description">{{ program.data.eligibility?.usage?.loanTerms?.description }}</span>
       </p>
     </section>
 
