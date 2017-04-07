@@ -2,9 +2,10 @@
 
 <form [formGroup]="falAuthForm">
 
-  <div [class.hide]="authInfo.length == 0" *ngFor="let auth of authInfo; let i=index">
-    {{auth|json}}
+  <div [class.hide]="displayAuthInfo.length == 0" *ngFor="let auth of displayAuthInfo; let i=index">
+    {{auth | json}}
     <a class="fal-table-edit" (click)="editAuth(i)">Edit</a>
+    <a class="fal-table-remove" (click)="removeAuth(i)">Remove</a>
   </div>
 
   <authSubform [hideAddButton]="hideAddButton" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>

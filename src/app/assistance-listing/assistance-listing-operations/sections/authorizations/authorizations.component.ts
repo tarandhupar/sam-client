@@ -19,6 +19,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   hideAddButton: boolean = false;
   falAuthForm: FormGroup;
   authInfo = [];
+  displayAuthInfo = [];
   @ViewChild('authSubForm') authSubForm:FALAuthSubFormComponent;
 
   constructor(private fb: FormBuilder,
@@ -71,6 +72,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
     }
     if(event.type == 'confirm'){
       this.hideAddButton = event.hideAddButton;
+      this.authInfo = event.authInfo;
       this.authInfoFormat(event.authInfo);
     }
     if(event.type == 'cancel'){
@@ -84,9 +86,41 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
 
   removeAuth(i: number){
     this.authSubForm.removeAuth(i);
+    this.displayAuthInfo.splice(i, 1);
   }
 
   authInfoFormat(authInfo){
-    this.authInfo = authInfo;
+    this.displayAuthInfo = [];
+    for(let auth of authInfo){
+      let label = ',';
+      for(let authType of auth.authType){
+        switch(authType){
+          case 'act':{
+            label += "," + auth.act.description + ",Title " + auth.act.title + ",Part " + auth.act.part + ",Section " + auth.act.section;
+            break;
+          }
+          case 'executiveOrder':{
+            label += ",Executive Order- " + auth.executiveOrder.description + ", Title " + auth.executiveOrder.title + ",Part " + auth.executiveOrder.part + ",Section " + auth.executiveOrder.section;
+            break;
+          }
+          case 'publicLaw':{
+            label += ",Public Law " + auth.publicLaw.congressCode + "-" + auth.publicLaw.number;
+            break;
+          }
+          case 'statute':{
+            label += "," + auth.statute.volume + "-" + auth.statute.page;
+            break;
+          }
+          case 'USC':{
+            label += "," + auth.USC.title + " US Code " + auth.USC.section;
+            break;
+          }
+        }//end of switch
+      }//end of inner for
+
+      label = label.replace(",,", "");
+      this.displayAuthInfo.push(label);
+    }
+    console.log(this.displayAuthInfo);
   }
 }
