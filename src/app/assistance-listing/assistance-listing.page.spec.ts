@@ -79,25 +79,15 @@ let MockProgramService = {
           }
         },
         "projects": {
-          "flag": "yes",
+          "isApplicable": true,
           "list": [
             {
-              "year": "2015",
-              "content": {
-                "actual": "Establishment of statewide wood energy teams that are public-private partnerships setup to educate, inform, and promote the sustainable use of woody biomass for energy purposes; feasibility assessments for woody biomass energy systems; design of institutional building using cross laminated timber. "
-              }
+              "fiscalYear": "2015",
+              "description": "Establishment of statewide wood energy teams that are public-private partnerships setup to educate, inform, and promote the sustainable use of woody biomass for energy purposes; feasibility assessments for woody biomass energy systems; design of institutional building using cross laminated timber. "
             },
             {
-              "year": "2017",
-              "content": {
-
-              }
-            },
-            {
-              "year": "2016",
-              "content": {
-                "projection": "Establishment of statewide wood energy and wood utilization teams; feasibility assessments for woody biomass energy systems; addressing issues related to building with wood and cross-laminated timber (CLT), such as using beetle-killed trees for CLT manufacture, assessing seismic resiliency and wind performance of CLT, and overcoming building code barriers for tall wood buildings. "
-              }
+              "fiscalYear": "2016",
+              "description": "Establishment of statewide wood energy and wood utilization teams; feasibility assessments for woody biomass energy systems; addressing issues related to building with wood and cross-laminated timber (CLT), such as using beetle-killed trees for CLT manufacture, assessing seismic resiliency and wind performance of CLT, and overcoming building code barriers for tall wood buildings. "
             }
           ]
         },

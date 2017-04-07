@@ -91,15 +91,12 @@
 
       <h3>Examples of Funded Projects:</h3>
 
-      <div class="content-block" [ngSwitch]="program.data?.projects?.flag">
-        <ng-container *ngSwitchCase="'yes'">
+      <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
+        <ng-container *ngSwitchCase="true">
           <span *ngFor="let item of program.data.projects?.list; let i = index">
-            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.content?.actual">
-              Fiscal Year {{item.year}}: {{item.content.actual}}
+            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description">
+              Fiscal Year {{item.fiscalYear}}: {{item.description}}
             </span>
-            <!--          <span *ngIf="item.value.content.projection">
-                      , Projection: {{item.value.content.projection}}
-                    </span>-->
           </span>
         </ng-container>
 

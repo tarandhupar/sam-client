@@ -39,16 +39,16 @@
       </sam-subsection>
 
       <sam-subsection title="Examples of Funded Projects">
-        <div class="content-block" [ngSwitch]="program.data?.projects?.flag">
-          <ng-container *ngSwitchCase="'yes'">
+        <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
+          <ng-container *ngSwitchCase="true">
             <span *ngFor="let item of program.data.projects?.list | keys; let i = index">
-              <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.value?.content?.actual">
-                Fiscal Year {{item.key}}: {{item.value.content.actual}}
+              <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description">
+                Fiscal Year {{item.fiscalYear}}: {{item.description}}
               </span>
             </span>
           </ng-container>
           <p class="field" id="program-project-example-na" *ngSwitchDefault>Not Applicable</p>
-        </div>
+      </div>
       </sam-subsection>
     </sam-section>
 
