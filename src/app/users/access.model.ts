@@ -115,7 +115,7 @@ export class UserAccessModel {
       requestorName: requestor,
       supervisorName: supervisorName,
       supervisorEmail: supervisorEmail,
-      domain: domainId,
+      domainId: +domainId,
       requestorMessage: message
     };
   }
