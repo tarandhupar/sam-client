@@ -1,4 +1,4 @@
-<div class="background-white permissions-block" *ngIf="role.isOpen">
+<div class="background-white permissions-block" *ngIf="objects && objects.length">
   <div class="border-bottom-black permissions-table-header">
     <div class="usa-grid-full">
       <div class="usa-width-one-fourth">
@@ -9,7 +9,7 @@
       </div>
     </div>
   </div>
-  <div class="usa-grid-full permissions-table" *ngFor="let obj of role.organizationMapContent[0].functionMapContent">
+  <div class="usa-grid-full permissions-table-body" *ngFor="let obj of objects">
     <div class="usa-width-one-fourth">
       {{obj.function.val || 'object not found'}}
     </div>

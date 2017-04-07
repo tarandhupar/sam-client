@@ -52,24 +52,26 @@
   ></agencyPicker>
 
   <!-- Permissions -->
-  <ng-container *ngIf="objects && objects.length">
-    <ng-container *ngIf="mode === 'edit'">
-      <div class="m_B-1x"><label>Permissions</label></div>
-      <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
-        <li  *ngFor="let object of objects; let evenObject=even" class="object-item">
-          <strong>{{object.function.val}}<span *ngIf="evenObject">&nbsp;<i class="fa fa-info-circle"></i></span></strong>
-          <div class="p_L-4x permission-list">
-            <span *ngFor="let permission of object.permission" class="permission-control-group">
-              <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
-              <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
-            </span>
-          </div>
-        </li>
-      </ul>
-    </ng-container>
-    <ng-container>
+  <!--<ng-container *ngIf="role?.organizationMapContent[0]?.functionMapContent">-->
+    <!--<ng-container *ngIf="mode === 'edit'">-->
+      <!--<div class="m_B-1x"><label>Permissions</label></div>-->
+      <!--<ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">-->
+        <!--<li  *ngFor="let object of objects; let evenObject=even" class="object-item">-->
+          <!--<strong>{{object.function.val}}<span *ngIf="evenObject">&nbsp;<i class="fa fa-info-circle"></i></span></strong>-->
+          <!--<div class="p_L-4x permission-list">-->
+            <!--<span *ngFor="let permission of object.permission" class="permission-control-group">-->
+              <!--<input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">-->
+              <!--<label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>-->
+            <!--</span>-->
+          <!--</div>-->
+        <!--</li>-->
+      <!--</ul>-->
+    <!--</ng-container>-->
+  <!--</ng-container>-->
+  <ng-container *ngIf="objects">
+    <div class="m_T-4x">
       <objects-and-permissions [objects]="objects"></objects-and-permissions>
-    </ng-container>
+    </div>
   </ng-container>
 
   <!-- Optional Message -->
