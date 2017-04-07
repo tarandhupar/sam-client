@@ -1,13 +1,18 @@
 .permissions-block {
   border: 1px solid black;
 
-  .background-white {
-    background-color: white;
-  }
-
-  .permissions-table, .permissions-table-header {
+  .permissions-table-body, .permissions-table-header {
     padding: .5em;
   }
+
+}
+
+.background-white {
+  background-color: white;
+}
+
+.border-bottom-black {
+  border-bottom: 1px solid black;
 }
 
 .access-page {
@@ -20,14 +25,6 @@
   .modal-subtitle {
     margin-top: .8em;
   }
-
-
-
-  .border-bottom-black {
-    border-bottom: 1px solid black;
-  }
-
-
 
   .role-block:not(:last-child) {
     margin-bottom: 1em;
