@@ -12,6 +12,9 @@ export class SamNaicsPscFilter {
   selectModel1: any = [];
 
   @Input()
+  filteredResult: any = [];
+
+  @Input()
   options1: any;
 
   @Output()
@@ -20,15 +23,28 @@ export class SamNaicsPscFilter {
   constructor(){}
 
   ngOnChanges() {
+
     if(this.selectModel1 !== '') {
       let selectArray = this.selectModel1.split(",");
+
+      for(var j=0; j<selectArray.length; j++) {
       for(var i=0; i<this.options1.options.length; i++) {
-        for(var j=0; j<selectArray.length; j++) {
           if(this.options1.options[i].value == selectArray[j]) {
-            if(this.listDisplay.selectedItems.indexOf(this.options1.options[i]) === -1) {
+
+            let option = this.options1.options[i];
+            let filterArr = this.listDisplay.selectedItems.filter((obj)=>{
+              if(obj.value==option.value){
+                return true;
+              }
+              return false;
+            });
+
+            if(filterArr.length==0){
               this.listDisplay.selectedItems.push(this.options1.options[i]);
+
               this.listDisplay.selectedItems.sort();
             }
+
           }
         }
       }

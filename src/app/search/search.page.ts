@@ -247,7 +247,6 @@ export class SearchPage implements OnInit{
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
       data => {
-        console.log(data);
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
@@ -267,7 +266,7 @@ export class SearchPage implements OnInit{
         this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
-        console.log(this.naicsTypeModel);
+
         this.runSearch();
         this.loadParams();
       });
@@ -605,12 +604,13 @@ export class SearchPage implements OnInit{
           var reformattedArray = data._embedded.dictionaries[0].elements.map(function(naicsItem){
             let newObj = {label:'', value:''};
 
-            newObj.label = naicsItem.value;
+            newObj.label = naicsItem.value + "(NAICS)";
             newObj.value = naicsItem.code;
             return newObj;
           });
 
           this.naicsType.options = reformattedArray;
+          this.naicsType = Object.assign({}, this.naicsType);
         }
 
       },
@@ -825,7 +825,6 @@ export class SearchPage implements OnInit{
   }
 
   naicsTypeSelected(evt) {
-    console.log(evt);
     this.naicsTypeModel = evt.toString();
     this.pageNum = 0;
     this.searchResultsRefresh();
