@@ -78,15 +78,23 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
     if(event.type == 'cancel'){
       this.hideAddButton = event.hideAddButton;
     }
+    if(event.type == 'edit'){
+      this.editAuth(event.index);
+    }
+    if(event.type == 'remove'){
+      this.removeAuth(event.index);
+    }
   }//end of authActionHandler
 
   editAuth(i: number){
     this.authSubForm.editAuth(i);
+    this.hideAddButton = this.authSubForm.hideAddButton;
   }
 
   removeAuth(i: number){
     this.authSubForm.removeAuth(i);
     this.displayAuthInfo.splice(i, 1);
+    this.hideAddButton = this.authSubForm.hideAddButton;
   }
 
   authInfoFormat(authInfo){
