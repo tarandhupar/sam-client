@@ -307,9 +307,7 @@ let MockProgramService = {
               "4",
               "5"
             ],
-            "additionalInfo": {
-              "content": "Not applicable."
-            }
+            "description":  "Not applicable."
           },
           "documentation": {
             "flag": "yes",
