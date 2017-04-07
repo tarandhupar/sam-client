@@ -126,7 +126,7 @@ export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
       // run whenever api data is updated
       this.program = api;
       this.checkCurrentFY();
-      this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations, 'authorizationId'));
+      this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
     }, err => {
       console.log('Error logging', err);
     });

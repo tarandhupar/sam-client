@@ -341,16 +341,23 @@ let MockProgramService = {
           }
         },
         "programNumber": "10.674",
-        "authorizations": [
-          {
-            "act": {
-              "description": "Rural Revitalization Through Forestry, Public Law 101–624,  Section (d) Rural Revitalization Technologies (1990); P.L. 108-148 title II, Section 202 (2003); P. L. 110– 234, title VII (2008); P.L. 110-246 title VII (2008); and P.L. 113-79, title VIII, Section 8201 (2014) extending the program through 2018. "
-            },
-            "version": 1,
-            "authorizationId": "0e5d451f58ce9053ba16159c9321e8ba",
-            "authorizationType": "act"
-          }
-        ],
+        "authorizations": {
+          "list": [
+            {
+              "authorizationId": "0e5d451f58ce9053ba16159c9321e8ba",
+              "authorizationTypes": {
+                  "act": true,
+                  "executiveOrder": false,
+                  "publicLaw": false,
+                  "statute": false,
+                  "USC": false
+              },
+              "act": {
+                "description": "Rural Revitalization Through Forestry, Public Law 101–624,  Section (d) Rural Revitalization Technologies (1990); P.L. 108-148 title II, Section 202 (2003); P. L. 110– 234, title VII (2008); P.L. 110-246 title VII (2008); and P.L. 113-79, title VIII, Section 8201 (2014) extending the program through 2018. "
+              }
+            }
+          ]
+        },
         "organizationId": "100013241",
         "preApplication": {
           "coordination": {

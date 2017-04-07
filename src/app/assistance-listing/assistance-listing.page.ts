@@ -96,7 +96,7 @@ export class ProgramPage implements OnInit, OnDestroy {
       // run whenever api data is updated
       this.program = api;
       this.checkCurrentFY();
-      this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations, 'authorizationId'));
+      this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
     }, err => {
       console.log('Error loading program', err);
       if (err.status === 403) {
