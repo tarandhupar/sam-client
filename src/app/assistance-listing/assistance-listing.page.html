@@ -211,7 +211,7 @@
       </div>
 
       <p>
-        <span class="field" id="program-applicant-eligibility">{{program.data?.eligibility?.applicant?.additionalInfo?.content}}</span>
+        <span class="field" id="program-applicant-eligibility">{{program.data?.eligibility?.applicant?.description}}</span>
       </p>
 
 
@@ -242,7 +242,7 @@
 
       <div class="designation" *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
         <h4>Designations</h4>
-        <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.assistanceUsageTypes | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
+        <ng-container *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-usage-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
         </ng-container>
       </div>

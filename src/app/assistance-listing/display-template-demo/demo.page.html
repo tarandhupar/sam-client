@@ -133,7 +133,7 @@
           </ng-container>
         </sam-well>
         <p>
-          <span class="field" id="program-applicant-eligibility">{{program.data?.eligibility?.applicant?.additionalInfo?.content}}</span>
+          <span class="field" id="program-applicant-eligibility">{{program.data?.eligibility?.applicant?.description}}</span>
         </p>
       </sam-subsection>
       
@@ -160,7 +160,7 @@
       
       <sam-subsection title="Use of Assistance">
         <sam-well title="Designations" *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
-          <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.assistanceUsageTypes | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
+          <ng-container *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-usage-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
           </ng-container>
         </sam-well>

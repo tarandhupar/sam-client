@@ -280,6 +280,11 @@ let MockProgramService = {
           }
         },
         "eligibility": {
+          "assistanceUsage": {
+            "types": [
+              "2"
+            ]
+          },
           "usage": {
             "rules": {
               "description": "Technical assistance or limited project grants to achieve long-term forest health through local enterprises that support forest management. No land acquisition or construction. "
@@ -293,12 +298,7 @@ let MockProgramService = {
               "0033",
               "0035"
             ],
-            "additionalInfo": {
-              "content": "Entities eligible include: Non-profits, local, state, and Tribal governments, business, companies, corporations (for Profit), special purpose districts, (public utilities districts, fire districts, conservation districts, or ports).  "
-            },
-            "assistanceUsageTypes": [
-              "2"
-            ]
+            "description": "Entities eligible include: Non-profits, local, state, and Tribal governments, business, companies, corporations (for Profit), special purpose districts, (public utilities districts, fire districts, conservation districts, or ports).  "
           },
           "beneficiary": {
             "types": [
