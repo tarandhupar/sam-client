@@ -17,6 +17,8 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   programId : any;
   progTitle: string;
   hideAddButton: boolean = false;
+  redirectToViewPg: boolean = false;
+  redirectToWksp: boolean = false;
   falAuthForm: FormGroup;
   authInfo = [];
   displayAuthInfo = [];
@@ -63,6 +65,36 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
         error => {
           console.error('Error Retrieving Program!!', error);
         });//end of subscribe
+  }
+
+  saveData(){
+    console.log("form", this.falAuthForm.value);
+    console.log("authInfo", this.authInfo);
+
+    let data = {};
+
+    /*this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
+      .subscribe(api => {
+          this.sharedService.programId = api._body;
+          console.log('AJAX Completed Contact Information', api);
+
+          if(this.redirectToWksp) {
+            this.router.navigate(['falworkspace']);
+          }
+          else if(this.redirectToViewPg){
+            this.router.navigate(['/programs', this.sharedService.programId, 'view']);
+          }
+          else
+            this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/financial-information']);
+
+        },
+        error => {
+          console.error('Error saving Program - Authorization Section!!', error);
+        });*/ //end of subscribe
+  }
+
+  onSaveContinueClick(event){
+    this.saveData();
   }
 
   authActionHandler(event){
@@ -127,7 +159,13 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       }//end of inner for
 
       label = label.replace(",,", "");
-      this.displayAuthInfo.push(label);
+
+      if(label.charAt(0) == ','){
+        label = label.replace(",", "");
+      }
+
+      if(label != '')
+        this.displayAuthInfo.push(label);
     }
     console.log(this.displayAuthInfo);
   }
