@@ -491,12 +491,12 @@
     <sam-section id="program-contact-information" title="Contact Information" titleId="contact-information">
       <address>
         <sam-subsection title="Regional or Local Office">
-          <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.additionalInfo?.content}}</span>
-          <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.additionalInfo?.content}}</span>
+          <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.description }}</span>
+          <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.description }}</span>
         </sam-subsection>
         
         <sam-subsection title="Headquarters Office">
-          <div *ngFor="let item of program.data.contacts?.list; let i = index">
+          <div *ngFor="let item of program.data.contacts?.headquarters; let i = index">
             <samPOC [attr.id]="'program-contacts-poc-' + i" [data]="item"></samPOC>
           </div>
           <strong>Website: </strong>

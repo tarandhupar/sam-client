@@ -584,12 +584,12 @@
 
       <address>
         <h3 class="m_B-5x">Regional or Local Office:</h3>
-        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.additionalInfo?.content}}</span>
-        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.additionalInfo?.content}}</span>
+        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.description }}</span>
+        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.description }}</span>
 
         <h3 class="m_B-5x">Headquarters Office:</h3>
 
-        <div *ngFor="let item of program.data.contacts?.list; let i = index">
+        <div *ngFor="let item of program.data.contacts?.headquarters; let i = index">
           <samPOC [attr.id]="'program-contacts-poc-' + i" [data]="item"></samPOC>
         </div>
         <strong>Website: </strong>

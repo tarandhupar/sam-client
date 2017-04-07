@@ -61,7 +61,7 @@ let MockProgramService = {
         "title": "Wood Utilization Assistance",
         "website": "http://www.na.fs.fed.us/werc/",
         "contacts": {
-          "list": [
+          "headquarters": [
             {
               "zip": "20250",
               "city": "Washington",
@@ -75,7 +75,8 @@ let MockProgramService = {
             }
           ],
           "local": {
-            "flag": "appendix"
+            "flag": "appendix",
+            "description": "text ..."
           }
         },
         "projects": {
