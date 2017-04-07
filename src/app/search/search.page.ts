@@ -224,7 +224,7 @@ export class SearchPage implements OnInit{
   };
 
   //Select NAICS Types
-  naicsTypeModel: any = [];
+  naicsTypeModel: any = '';
   naicsType = {
     "name": "NAICS Type",
     "placeholder": "NAICS Types",

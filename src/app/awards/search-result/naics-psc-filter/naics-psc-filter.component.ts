@@ -9,10 +9,7 @@ export class SamNaicsPscFilter {
   @ViewChild('listDisplay') listDisplay;
 
   @Input()
-  selectModel1: any = [];
-
-  @Input()
-  filteredResult: any = [];
+  selectModel1: any = '';
 
   @Input()
   options1: any;
