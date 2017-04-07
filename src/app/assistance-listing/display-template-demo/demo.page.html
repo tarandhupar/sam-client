@@ -107,23 +107,26 @@
       
       <sam-subsection title="Credentials and Documentation">
         <p>
-          <ng-container [ngSwitch]="program.data?.eligibility?.documentation?.flag">
-            <ng-container *ngSwitchCase="'yes'">
-              <span class="field" id="program-elegibility-documentation">{{program.data.eligibility.documentation.content}}</span>
-              <ng-container [ngSwitch]="program.data.eligibility.documentation.questions?.OMBCircularA87?.flag">
-                <span class="field" id="program-elegibility-question-a87" *ngSwitchCase="'yes'">
+        <ng-container *ngIf="program.data?.eligibility?.documentation?.description">
+          <span class="field" id="program-elegibility-documentation">{{program.data.eligibility?.documentation?.description}}</span>
+
+          <ng-container *ngIf="program.data.compliance?.CFR200Requirements?.questions">
+            <ng-container *ngFor="let item of program.data.compliance?.CFR200Requirements?.questions">
+              <!-- OMBCircularA87 is subpartC-->
+              <ng-container *ngIf="item.code === 'subpartC'">
+                <span *ngIf="item.isSelected == true" class="field" id="program-elegibility-question-a87">
                   2 CFR 200, Subpart E - Cost Principles applies to this program.
                 </span>
-
-                <span class="field" id="program-elegibility-question-a87" *ngSwitchDefault>
+                <!-- flag can be both 'no' or null -->
+                <span *ngIf="item.isSelected == false" class="field" id="program-elegibility-question-a87">
                   This program is excluded from coverage under 2 CFR 200, Subpart E - Cost Principles.
                 </span>
               </ng-container>
             </ng-container>
-
-            <ng-container *ngSwitchDefault>None</ng-container>
           </ng-container>
-        </p>
+        </ng-container>
+        <ng-container *ngIf="!program.data?.eligibility?.documentation?.description">None</ng-container>
+      </p>
       </sam-subsection>
 
       <sam-subsection title="Applicant Eligibility">

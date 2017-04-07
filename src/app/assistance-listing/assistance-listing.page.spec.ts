@@ -310,14 +310,19 @@ let MockProgramService = {
             "description":  "Not applicable."
           },
           "documentation": {
-            "flag": "yes",
-            "content": "No credentials or documentation are required.",
+            "description": "No credentials or documentation are required.",
+          }
+        },
+        "compliance": {
+          "CFR200Requirements": {
             "questions": [
               {
-                "flag": "yes",
-                "questionCode": "OMBCircularA87"
+                // 'subpartB', 'subpartC'(OMBCA87), 'subpartD', 'subpartE'(OMBCA102/A110), 'subpartF'(OMBCA133)
+                "code": "subpartC",
+                "isSelected": true
               }
-            ]
+            ],
+            "description": "text ..."
           }
         },
         "programNumber": "10.674",
