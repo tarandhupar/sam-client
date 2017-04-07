@@ -105,6 +105,14 @@ export class UserAccessPage implements OnInit {
     this.fakeOutAdmin();
   }
 
+  trimRequest(message) {
+    if (message.length > 70) {
+      return message.slice(0, 70) + '...';
+    } else {
+      return message;
+    }
+  }
+
   fakeOutAdmin() {
     // for debugging, fake out admin role by setting 'admin=true' or 'admin=false' as a query parameter
     this.route.queryParams.subscribe(queryParams => {
