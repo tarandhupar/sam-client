@@ -344,10 +344,8 @@ let MockProgramService = {
           ]
         },
         "organizationId": "100013241",
-        "preApplication": {
-          "coordination": {
-            "flag": "no"
-          }
+        "preApplicationCoordination": {
+          "isApplicable": false
         },
         "assistanceTypes": [
           "0003001",

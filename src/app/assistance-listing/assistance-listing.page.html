@@ -287,43 +287,45 @@
       <h3>Preapplication Coordination:</h3>
 
       <div>
-        <ng-container [ngSwitch]="program.data?.preApplication?.coordination?.flag">
-          <p *ngSwitchCase="'yes'">
+        <ng-container [ngSwitch]="program.data?.assistance?.preApplicationCoordination?.isApplicable">
+          <p *ngSwitchCase="true">
             Preapplication coordination is required.
 
             <!-- Environmental statements-->
-            <ng-container [ngSwitch]="program.data.preApplication.coordination.environmentalImpact?.flag ">
-              <ng-container *ngSwitchCase="'yes'">
-                <ng-container *ngFor="let entry of program.data.preApplication.coordination.environmentalImpact?.reports; let i = index">
-                  <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.flag === 'yes'">
-                    An environmental impact {{entry.reportCode}} is required for this program.
-                  </span>
-                </ng-container>
+            <ng-container *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
+              <ng-container *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
+                <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.isSelected == true && entry.reportCode !== 'ExecutiveOrder12372'">
+                  An environmental impact {{entry.reportCode}} is required for this program.
+                </span>
               </ng-container>
 
-              <span *ngSwitchDefault class="field" id="program-preapplication-coorindation-environmental-na">
+              <span *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length==0" class="field" id="program-preapplication-coorindation-environmental-na">
                 Environmental impact information is not required for this program.
               </span>
+              
+              
             </ng-container>
 
             <!-- Executive Order  -->
-            <ng-container *ngFor="let entry of program.data.preApplication.coordination.questions; let i = index">
-              <ng-container *ngIf="entry.questionCode === 'ExecutiveOrder12372'">
-                <span *ngIf="entry.flag === 'yes'" class="field" id="program-preapplication-coordination-executive-order">
-                  This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
-                  An applicant should consult the office or official designated as the single point of contact in his or her State for more
-                  information on the process the State requires to be followed in applying for assistance, if the State has selected the program forreview.
-                </span>
+            <ng-container *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
+              <ng-container *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
+                <ng-container *ngIf="entry.reportCode === 'ExecutiveOrder12372'">
+                  <span *ngIf="entry.isSelected == true" class="field" id="program-preapplication-coordination-executive-order">
+                    This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
+                    An applicant should consult the office or official designated as the single point of contact in his or her State for more
+                    information on the process the State requires to be followed in applying for assistance, if the State has selected the program for review.
+                  </span>
 
-                <span *ngIf="entry.flag !== 'yes'" class="field" id="program-preapplication-coordination-executive-order">
-                  This program is excluded from coverage under E.O. 12372.
-                </span>
+                  <span *ngIf="entry.isSelected == false" class="field" id="program-preapplication-coordination-executive-order">
+                    This program is excluded from coverage under E.O. 12372.
+                  </span>
+                </ng-container>
               </ng-container>
             </ng-container>
 
             <!-- additional content-->
             <span class="field" id="program-preapplication-coordination">
-              {{program.data.preApplication.coordination.additionalInfo?.content}}
+              {{program.data.assistance?.preApplicationCoordination?.description}}
             </span>
           </p>
 
