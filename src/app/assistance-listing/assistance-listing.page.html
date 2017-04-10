@@ -262,10 +262,10 @@
 
       <h3>Deadlines:</h3>
 
-      <div class="content-block" [ngSwitch]="program.data?.application?.deadlines?.submission?.flag">
+      <div class="content-block" [ngSwitch]="program.data?.assistance?.deadlines?.flag">
         <ng-container *ngSwitchCase="'yes'">
           <!-- repeat over all deadlines. -->
-          <span *ngFor="let deadline of program.data.application.deadlines.submission.list; let i = index">
+          <span *ngFor="let deadline of program.data?.assistance?.deadlines?.list; let i = index">
             <span class="field" [attr.id]="'program-deadline-dates-' + i">
               <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
               <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
@@ -339,13 +339,13 @@
       <h3>Application Procedures:</h3>
 
       <p>
-        <ng-container *ngFor="let item of program.data?.application?.procedures?.questions">
-          <ng-container *ngIf="item.questionCode === 'OMBCircularA102'">
-            <span *ngIf="item.flag === 'yes'" class="field" id="program-application-procedures-a102">
+        <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+          <ng-container *ngIf="item.code === 'subpartE'">
+            <span *ngIf="item.isSelected == true" class="field" id="program-application-procedures-a102">
               2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards applies to this program.
             </span>
 
-            <span *ngIf="item.flag !== 'yes'" class="field" id="program-application-procedures-a102">
+            <span *ngIf="item.isSelected == false" class="field" id="program-application-procedures-a102">
               This program is excluded from coverage under 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit
               Requirements for Federal Awards.
             </span>
@@ -354,7 +354,7 @@
 
         <!-- additional content-->
         <span class="field" id="program-application-procedures">
-          {{program.data?.application?.procedures?.additionalInfo?.content}}
+          {{program.data?.assistance?.applicationProcedure?.description}}
         </span>
       </p>
 
@@ -362,14 +362,14 @@
       <h3>Criteria for Selecting Proposals:</h3>
 
       <p>
-        <ng-container [ngSwitch]="program.data?.application?.selectionCriteria?.flag">
-          <span class="field" id="program-selection-criteria" *ngSwitchCase="'yes'">
-            {{program.data.application.selectionCriteria.content}}
+        <ng-container [ngSwitch]="program.data?.assistance?.selectionCriteria?.isApplicable">
+          <span class="field" id="program-selection-criteria" *ngSwitchCase="true">
+            {{program.data?.assistance?.selectionCriteria?.description}}
           </span>
 
-          <span class="field" id="program-selection-criteria" *ngSwitchCase="'no'">
+<!--          <span class="field" id="program-selection-criteria" *ngSwitchCase="'no'">
             No
-          </span>
+          </span>-->
 
           <span class="field" id="program-selection-criteria" *ngSwitchDefault>
             Not Applicable
@@ -388,7 +388,7 @@
       <h3>Date Range for Approval/Disapproval:</h3>
 
 
-      <p class="field" id="program-application-approval-interval" [ngSwitch]="program.data?.application?.deadlines?.approval?.interval">
+      <p class="field" id="program-application-approval-interval" [ngSwitch]="program.data?.assistance?.approval?.interval">
         <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
         <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
         <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
@@ -399,14 +399,14 @@
         <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
         <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
         <span class="field" id="program-application-approval">
-          {{program.data?.application?.deadlines?.approval?.additionalInfo?.content}}
+          {{program.data?.assistance?.approval?.description}}
         </span>
       </p>
 
 
       <h3>Renewals:</h3>
 
-      <p class="field" id="program-application-renewal-interval" [ngSwitch]="program.data?.application?.deadlines?.renewal?.interval">
+      <p class="field" id="program-application-renewal-interval" [ngSwitch]="program.data?.assistance?.renewal?.interval">
         <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
         <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
         <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
@@ -417,14 +417,14 @@
         <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
         <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
         <span class="field" id="program-application-renewal">
-          {{program.data?.application?.deadlines?.renewal?.additionalInfo?.content}}
+          {{program.data?.assistance?.renewal?.description}}
         </span>
       </p>
 
 
       <h3>Appeals:</h3>
 
-      <p class="field" id="program-application-appeal-interval" [ngSwitch]="program.data?.application?.deadlines?.appeal?.interval">
+      <p class="field" id="program-application-appeal-interval" [ngSwitch]="program.data?.assistance?.appeal?.interval">
         <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
         <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
         <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
@@ -435,7 +435,7 @@
         <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
         <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
         <span class="field" id="program-application-appeal">
-          {{program.data?.application?.deadlines?.appeal?.additionalInfo?.content}}
+          {{program.data?.assistance?.appeal?.description}}
         </span>
       </p>
     </section>

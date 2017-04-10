@@ -259,20 +259,9 @@ let MockProgramService = {
               "flag": "contact"
             }
           },
-          "procedures": {
-            "questions": [
-              {
-                "flag": "yes",
-                "questionCode": "OMBCircularA102"
-              },
-              {
-                "flag": "yes",
-                "questionCode": "OMBCircularA110"
-              }
-            ],
-            "additionalInfo": {
-              "content": "Procedures for submitting technical assistance or grant applications can be found on www.fpl.fs.fed.us/tmu or contact the Program Manager as listed under Information Contacts. ."
-            }
+          "applicationProcedure": {
+            "isApplicable": true,
+            "description": "Procedures for submitting technical assistance or grant applications can be found on www.fpl.fs.fed.us/tmu or contact the Program Manager as listed under Information Contacts. ."
           },
           "selectionCriteria": {
             "flag": "yes",
