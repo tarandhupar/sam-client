@@ -143,11 +143,11 @@
 
       <h3>Accomplishments:</h3>
 
-      <div class="content-block" [ngSwitch]="program.data?.postAward?.accomplishments?.flag">
-        <ng-container *ngSwitchCase="'yes'">
-          <ng-container *ngFor="let item of program.data.postAward.accomplishments?.list; let i = index">
-            <span class="m_B-2x field" [attr.id]="'program-accomplishments-actual-' + i" *ngIf="item.content?.actual && item.content?.actual != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.actual}}</span>
-            <span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.content?.projection && item.content?.projection != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.projection}}</span>
+      <div class="content-block" [ngSwitch]="program.data?.financial?.accomplishments?.isApplicable">
+        <ng-container *ngSwitchCase="true">
+          <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list; let i = index">
+            <span class="m_B-2x field" [attr.id]="'program-accomplishments-' + i" *ngIf="item.description && item.description != ''"><strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}</span>
+            <!--<span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.content?.projection && item.content?.projection != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.projection}}</span>-->
           </ng-container>
         </ng-container>
 
@@ -448,31 +448,25 @@
       <h3>Reports:</h3>
 
       <div>
-        <ng-container [ngSwitch]="program.data?.postAward?.reports?.flag">
-          <p class="field" id="program-postaward-reports" *ngSwitchCase="'yes'">
-            <ng-container *ngFor="let item of program.data.postAward.reports.list">
-              <span *ngIf="item.flag === 'yes'" class="field" [attr.id]="'program-postaward-reports-' + item.reportCode">{{item.content}}</span>
-            </ng-container>
-          </p>
+        <p class="field" id="program-postaward-reports" *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.reports:'isSelected':false:null).length > 0">
+          <ng-container *ngFor="let item of program.data?.compliance?.reports">
+            <span *ngIf="item.isSelected == true" class="field" [attr.id]="'program-postaward-reports-' + item.code">{{item.description}}</span>
+          </ng-container>
+        </p>
 
-          <p class="m-a-0 field" id="program-postaward-reports" *ngSwitchCase="'no'">
-            No reports are required.
-          </p>
-
-          <p class="m-a-0 field" id="program-postaward-reports" *ngSwitchDefault>
-            Not Applicable
-          </p>
-        </ng-container>
+        <p class="m-a-0 field" id="program-postaward-reports" *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.reports:'isSelected':false:null).length == 0">
+          Not Applicable
+        </p>
       </div>
 
       <h3>Audits:</h3>
 
       <div>
-        <ng-container [ngSwitch]="program.data?.postAward?.audit?.flag">
-          <p *ngSwitchCase="'yes'">
-            <ng-container *ngFor="let item of program.data.postAward.audit.questions">
-              <ng-container *ngIf="item.questionCode === 'OMBCircularA133'">
-                <span *ngIf="item.flag === 'yes'" class="field" id="program-postaward-audit-a133">
+        <ng-container [ngSwitch]="program.data?.compliance?.audit?.isApplicable">
+          <p *ngSwitchCase="true">
+            <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+              <ng-container *ngIf="item.code === 'subpartF'">
+                <span *ngIf="item.isSelected == true" class="field" id="program-postaward-audit-a133">
                   In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
                   nonfederal entities that expend financial assistance of $750,000 or more in Federal
                   awards will have a single or a program-specific audit conducted for that year. Non-Federal
@@ -480,17 +474,13 @@
                   audit requirements for that year, except as noted in 2 CFR 200.503
                 </span>
 
-                <span *ngIf="item.flag !== 'yes'" class="field" id="program-postaward-audit-a133">
+                <span *ngIf="item.isSelected == false" class="field" id="program-postaward-audit-a133">
                   This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
                 </span>
               </ng-container>
             </ng-container>
 
-            <span class="field" id="program-postaward-audit">{{program.data.postAward.audit.content}}</span>
-          </p>
-
-          <p class="m-a-0 field" id="program-postaward-audit" *ngSwitchCase="'no'">
-            No audits are required for this program.
+            <span class="field" id="program-postaward-audit">{{program.data?.compliance?.audit?.description}}</span>
           </p>
 
           <p class="m-a-0 field" id="program-postaward-audit" *ngSwitchDefault>
@@ -501,19 +491,19 @@
 
       <h3>Records:</h3>
 
-      <p class="field" id="program-postaward-records" *ngIf="(program.data?.postAward?.records?.content) && (program.data?.postAward?.records.content != '')">
-        {{program.data?.postAward?.records?.content}}
+      <p class="field" id="program-postaward-records" *ngIf="(program.data?.compliance?.records?.description) && (program.data?.compliance?.records.description != '')">
+        {{program.data?.compliance?.records?.description}}
       </p>
 
-      <p class="field" id="program-postaward-records" *ngIf="!(program.data?.postAward?.records?.content) || (program.data?.postAward?.records?.content == '')">
+      <p class="field" id="program-postaward-records" *ngIf="!(program.data?.compliance?.records?.description) || (program.data?.compliance?.records?.description == '')">
         No Data Available.
       </p>
 
       <h3>Regulations, Guidelines, and Literature:</h3>
 
       <p>
-        <ng-container [ngSwitch]="program.data?.postAward?.documents?.flag">
-          <span class="field" id="program-postaward-documents" *ngSwitchCase="'yes'"> {{program.data.postAward.documents.content}}</span>
+        <ng-container [ngSwitch]="program.data?.compliance?.documents?.isApplicable">
+          <span class="field" id="program-postaward-documents" *ngSwitchCase="true"> {{program.data?.compliance?.documents?.description}}</span>
           <span class="field" id="program-postaward-documents" *ngSwitchDefault> Not Applicable.</span>
         </ng-container>
       </p>
