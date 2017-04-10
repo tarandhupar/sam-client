@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
 import { Router} from '@angular/router';
+import { UUID } from 'angular2-uuid';
 import { ProgramService } from 'api-kit';
 import { FALOpSharedService } from '../../assistance-listing-operations.service';
 import { FALAuthSubFormComponent } from './authorization-subform.component';
@@ -103,9 +104,19 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       data.authorizations = {description: this.falAuthForm.value.description};
 
     if(this.authSubForm.authInfo.length > 0){
+
       data.authorizations['list']=[];
       for(let auth of this.authSubForm.authInfo){
         let list = {};
+        let uuid;
+        if(auth.authorizationId == '' || auth.authorizationId == null){
+          uuid = UUID.UUID().replace(/-/g, "");
+        }
+        else {
+          uuid = auth.authorizationId;
+        }
+        list['authorizationId'] = uuid;
+
         if(auth.authType.length > 0){
           list['authorizationTypes'] = {};
           for(let type of authTypeKey){
