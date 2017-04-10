@@ -19,6 +19,11 @@ import { OptionsType } from "sam-ui-kit/types";
 })
 export class FALFormulaMatchingComponent implements ControlValueAccessor {
   public model = {};
+  public formulaMatchingOptions = [
+    { value: 'cfr', label: 'This listing has statutory formula/or administrative rule reference in the CFR', name: this.name + '-checkbox-cfr' },
+    { value: 'matching', label: 'This listing has matching requirements', name: this.name + '-checkbox-matching-requirements' },
+    { value: 'moe', label: 'This listing has maintenance of effort (MOE) requirements AND total allocations over $100 million for the current fiscal year.', name: this.name + '-checkbox-moe' }
+  ];
 
   @Input() options: any; // all inputs are passed through a single options object
   public name: string;
@@ -32,7 +37,7 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   ngOnInit() {
     this.parseInputsAndSetDefaults();
     this.validateInputs();
-    this.createTextareaControls();
+    this.createFormControls();
   }
 
   private parseInputsAndSetDefaults() {
@@ -52,7 +57,13 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
     }
   }
 
-  private createTextareaControls() {}
+  private createFormControls() {
+    // todo...
+  }
+
+  public onCheckboxChange(checkboxModel) {
+    // todo...
+  }
 
   private onChange() {
     this.onChangeCallback(this.model);

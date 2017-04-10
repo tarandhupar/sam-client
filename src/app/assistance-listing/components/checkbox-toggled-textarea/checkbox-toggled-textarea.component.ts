@@ -54,7 +54,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   ngOnInit() {
     this.parseInputsAndSetDefaults();
     this.validateInputs();
-    this.createTextareaControls();
+    this.createFormControls();
   }
 
   ngAfterViewInit() {
@@ -122,7 +122,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
     }
   }
 
-  private createTextareaControls() {
+  private createFormControls() {
     this.validationGroup = new FormGroup({});
     this.textareaControls = [];
 

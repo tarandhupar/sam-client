@@ -4,4 +4,9 @@
               [hint]="hint"
               [required]="required">
 
+  <samCheckbox [model]="model.checkbox || []"
+               [name]="name + '-checkbox'"
+               [options]="formulaMatchingOptions"
+               (modelChange)="onCheckboxChange($event)"
+  ></samCheckbox>
 </labelWrapper>
