@@ -84,11 +84,12 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   }
 
   public writeValue(obj: any) : void {
-    if(obj) {
-      this.model = obj;
-
-      this.onChange();
+    if(obj == null) {
+      obj = {};
     }
+
+    this.model = obj;
+    this.onChange();
   }
 
   public setDisabledState(isDisabled: boolean) : void {}
