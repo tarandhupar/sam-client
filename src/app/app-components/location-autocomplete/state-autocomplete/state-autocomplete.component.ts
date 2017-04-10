@@ -12,7 +12,6 @@ export class StateServiceImpl implements AutocompleteService {
   constructor(private locationService: LocationService) { }
 
   getAllStatesJSON(q:string, country:string): ReplaySubject<any> {
-    console.log(this.country);
     const results = new ReplaySubject();
     this.locationService.getAutoCompleteStates(q,country).subscribe(
       (res) => {
@@ -37,7 +36,6 @@ export class StateServiceImpl implements AutocompleteService {
   }
 
   fetch(val: string, pageEnd: boolean): Observable<any> {
-    console.log(this.country);
     return this.getAllStatesJSON(val, this.country).map(o => o);
   }
 }
@@ -45,7 +43,7 @@ export class StateServiceImpl implements AutocompleteService {
 @Directive({
   selector: 'sam-autocomplete[state]',
   providers: [
-    {provide: AutocompleteService, useClass: StateServiceImpl}
+    {provide: AutocompleteService, useExisting: StateServiceImpl}
   ]
 })
 export class SamStateServiceAutoDirective {
@@ -56,7 +54,6 @@ export class SamStateServiceAutoDirective {
 
 
   ngOnChanges() {
-    console.log(this.countryModel);
     let country = this.countryModel === undefined ? {value:'USA'}:this.countryModel;
     this.service.setFetchMethod(country);
   }

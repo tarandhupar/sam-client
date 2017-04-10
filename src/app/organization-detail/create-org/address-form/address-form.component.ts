@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild, Output, EventEmitter } from "@angular/core";
 import { ActivatedRoute, Router} from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
+import { LocationService } from "api-kit/location/location.service";
 import * as moment from 'moment/moment';
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
 import { SamDateComponent } from 'sam-ui-kit/form-controls/date/date.component';
@@ -26,9 +27,8 @@ export class OrgAddrFormComponent {
 
   addressForm:FormGroup;
 
+  @Input() showAddIcon:boolean = true;
   @Input() orgAddrModel:any = {};
-  @Input() orgAddrType = '';
-  @Input() orgAddrTypeSelected = false;
   @Output() onAdditionalAddrRequest:EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() onCancelAdditionalAddrRequest:EventEmitter<any> = new EventEmitter<any>();
 
@@ -42,9 +42,11 @@ export class OrgAddrFormComponent {
     name: 'Org Address Types',
   };
 
-  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute) {}
+  basicType = "Mailing Address";
 
-  ngOnInit(){
+  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute, private locationService:LocationService) {}
+
+  ngOnInit() {
     this.addressForm = this.builder.group({
       streetAddr1: ['', []],
       streetAddr2: ['', []],
@@ -54,8 +56,7 @@ export class OrgAddrFormComponent {
   }
 
   onAddrTypeSelect(val){
-    this.orgAddrTypeSelected = true;
-    this.orgAddrType = val;
+    this.orgAddrModel.addrType = val;
   }
 
   onAdditionalAddressFormClick(val){
@@ -63,7 +64,18 @@ export class OrgAddrFormComponent {
   }
 
   onCancelAddressFormClick(){
-    console.log(this.orgAddrType);
-    this.onCancelAdditionalAddrRequest.emit(this.orgAddrType);
+    this.onCancelAdditionalAddrRequest.emit(this.orgAddrModel);
+  }
+
+  isOrgTypeSelected(){
+    return this.orgAddrModel.addrType !== "";
+  }
+
+  isBasicAddressType(){
+    return this.orgAddrModel.addrType === this.basicType;
+  }
+
+  validateForm():boolean{
+    return !this.addressForm.invalid;
   }
 }

@@ -54,7 +54,7 @@
 
     <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-address-section" *ngIf="orgType==='Office'">
       <div class="usa-width-one-whole p_T-4x" *ngFor="let orgAddr of orgAddresses">
-        <samAddrForm [orgAddrTypeSelected]="orgAddr.orgAddrTypeSelected" [(orgAddrType)]="orgAddr.orgAddrType" (onAdditionalAddrRequest)="onAddAddressForm()" (onCancelAdditionalAddrRequest)="onDeleteAddressForm($event)"></samAddrForm>
+        <samAddrForm [orgAddrModel]="orgAddr.addrModel" [showAddIcon]="orgAddr.showAddIcon" (onAdditionalAddrRequest)="onAddAddressForm()" (onCancelAdditionalAddrRequest)="onDeleteAddressForm($event)"></samAddrForm>
 
       </div>
     </div>
@@ -74,7 +74,7 @@
         <span class="usa-width-two-thirds p_T-2x p_B-1x">&nbsp;{{pair.value}}</span>
       </p>
       <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
-        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addressType}}:</h4></span>
+        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{orgAddr.addrModel.addressType}}:</h4></span>
         <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.value.street}}<br>{{address.value.city}}, {{address.value.state}}&nbsp;{{address.value.postalCode}}<br>{{address.value.country}}</span>
       </p>
     </div>

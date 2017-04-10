@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from "@angular/core";
+import { Component, Input, ViewChild, ViewChildren, QueryList } from "@angular/core";
 import { ActivatedRoute, Router} from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 import { LocationService } from "api-kit/location/location.service";
@@ -8,6 +8,7 @@ import { SamDateComponent } from 'sam-ui-kit/form-controls/date/date.component';
 import { SamSelectComponent } from 'sam-ui-kit/form-controls/select/select.component';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { SamTextareaComponent } from 'sam-ui-kit/form-controls/textarea/textarea.component';
+import { OrgAddrFormComponent } from './address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 
 function validDateTime(c: FormControl) {
@@ -28,7 +29,7 @@ function validDateTime(c: FormControl) {
 })
 export class OrgCreatePage {
 
-
+  @ViewChildren(OrgAddrFormComponent) addrForms:QueryList<OrgAddrFormComponent>;
 
   @ViewChild('orgName') orgName: SamTextComponent;
   @ViewChild('orgStartDateWrapper') orgStartDateWrapper: LabelWrapper;
@@ -81,6 +82,8 @@ export class OrgCreatePage {
   stateOutput:any;
   cityOutput:any;
 
+  extraAddressTypes = ["Billing Address","Shipping Address"];
+
   constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(){
@@ -91,7 +94,7 @@ export class OrgCreatePage {
       orgShortName: ['', []],
     });
 
-    this.orgAddresses.push({orgAddrTypeSelected:true, orgAddrType:"Mailing Address"});
+    this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:true});
 
     this.route.queryParams.subscribe(queryParams => {
       this.orgType = queryParams["orgType"];
@@ -153,6 +156,7 @@ export class OrgCreatePage {
     this.orgInfo.push({des:"Shortname", value:this.basicInfoForm.get('orgShortName').value});
     this.orgInfo.push({des:"Indicate Funding", value:this.indicateFundRadioModel});
 
+    this.addrForms.forEach(e => {console.log(e.validateForm());});
 
     this.createOrgPage = false;
     this.reviewOrgPage = true;
@@ -174,14 +178,26 @@ export class OrgCreatePage {
   }
 
   onAddAddressForm(){
-    this.orgAddresses.push({orgAddrTypeSelected:false, orgAddrType:""});
+    if(this.orgAddresses.length === 2){
+      let addressTypeIndex = 1;
+      this.orgAddresses.forEach( e => {
+        e.showAddIcon = false;
+        if(e.addrModel.addrType !== "Mailing Address") addressTypeIndex = 1 - this.extraAddressTypes.indexOf(e.addrModel.addrType);
+      });
+      this.orgAddresses.push({addrModel:{addrType:this.extraAddressTypes[addressTypeIndex],country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:false});
+
+    }else{
+      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:true});
+    }
+
   }
 
-  onDeleteAddressForm(orgAddressType){
+  onDeleteAddressForm(orgAddrModel){
     this.orgAddresses = this.orgAddresses.filter( e => {
-      console.log(e.orgAddrType);
-      return orgAddressType !== e.orgAddrType;
+
+      return orgAddrModel.addrType !== e.addrModel.addrType;
     });
+    this.orgAddresses.forEach( e => {e.showAddIcon = true;});
   }
 
 }
