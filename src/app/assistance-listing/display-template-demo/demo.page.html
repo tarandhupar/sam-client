@@ -154,9 +154,9 @@
       
       <sam-subsection title="Length and Time Phasing of Assistance">
         <p>
-          <span class="field" id="program-assistance-lengthtime">{{program.data?.assistance?.limitation?.content}}</span>
-          <span class="field" id="program-assistance-method" *ngIf="program.data?.assistance?.limitation?.awarded">
-            Method of awarding/releasing assistance: {{program.data.assistance?.limitation?.awarded}}
+          <span class="field" id="program-assistance-lengthtime">{{program.data?.eligibility?.limitation?.description}}</span>
+          <span class="field" id="program-assistance-method" *ngIf="program.data?.eligibility?.limitation?.awarded">
+            Method of awarding/releasing assistance: {{program.data.eligibility?.limitation?.awarded}}
           </span>
         </p>
       </sam-subsection>
@@ -446,50 +446,38 @@
 
       <sam-subsection title="Formula and Matching Requirements">
         <!-- statutory formula-->
-        <ng-container [ngSwitch]="program.data?.assistance?.formula?.flag">
-          <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="'yes'">
-            Statutory Formula: Title {{program.data.assistance.formula.title}} Chapter {{program.data.assistance.formula.chapter}}
-            Part {{program.data.assistance.formula.part}} Subpart {{program.data.assistance.formula.subPart}} Public Law {{program.data.assistance.formula.publicLaw}}
-            {{program.data.assistance.formula.additionalInfo?.content}}
+        <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.formua">
+          <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="true">
+            Statutory Formula: Title {{program.data?.compliance?.formulaAndMatching?.formula?.title}} Chapter {{program.data?.compliance?.formulaAndMatching?.formula?.chapter}}
+            Part {{program.data?.compliance?.formulaAndMatching?.formula?.part}} Subpart {{program.data?.compliance?.formulaAndMatching?.formula?.subPart}} Public Law {{program.data?.compliance?.formulaAndMatching?.formula?.publicLaw}}
+            {{program.data?.compliance?.formulaAndMatching?.formula?.description}}
           </div>
 
-          <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="'no'">
-            This federal assistance listing has no statutory formula
-          </div>
-
-          <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchDefault>
+          <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="false">
             Statuary formula is not applicable to this federal assistance listing.
           </div>
         </ng-container>
 
         <!-- matching requirements -->
-        <ng-container [ngSwitch]="program.data?.assistance?.matching?.flag">
-          <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="'yes'">
-            Matching Requirements: <ng-container *ngIf="program.data.assistance.matching?.percent > 0">Percent: {{program.data.assistance.matching.percent}}</ng-container>
-            {{program.data.assistance.matching.otherInfo?.content}}
+        <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.matching">
+          <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="true">
+              Matching Requirements: <ng-container *ngIf="program.data?.compliance?.formulaAndMatching?.matching?.percent > 0">Percent: {{program.data?.compliance?.formulaAndMatching?.matching?.percent}}</ng-container>
+              {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
           </div>
 
-          <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="'no'">
-            This program has no matching requirements.
-          </div>
-
-          <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchDefault>
+          <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="false">
             Matching requirements are not applicable to this federal assistance listing.
           </div>
         </ng-container>
 
         <!-- moe-->
-        <ng-container [ngSwitch]="program.data?.assistance?.moe?.flag">
-          <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="'yes'">
-            This program has MOE requirements, see funding agency for further details. Additional Information:
-            {{program.data.assistance.moe.additionalInfo?.content}}
+        <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.moe">
+          <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="true">
+              This program has MOE requirements, see funding agency for further details. Additional Information:
+              {{program.data?.compliance?.formulaAndMatching?.moe?.description}}
           </div>
 
-          <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="'no'">
-            This program does not have MOE requirements.
-          </div>
-
-          <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchDefault>
+          <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="false">
             MOE requirements are not applicable to this federal assistance listing.
           </div>
         </ng-container>
