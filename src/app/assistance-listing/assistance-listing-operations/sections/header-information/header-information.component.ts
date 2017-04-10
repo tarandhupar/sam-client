@@ -95,7 +95,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
         let title = api.data.title;
-        let popularName = (api.data.alternativeNames ? api.data.alternativeNames[0] : '');
+        let popularName = (api.data.alternativeNames.length > 0 ? api.data.alternativeNames[0] : '');
         let falNo = (api.data.programNumber ? api.data.programNumber : '');
 
         if (falNo.trim().length == 6)
@@ -130,7 +130,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
     let data = {
       "title": this.falHeaderInfoForm.value.title,
-      "alternativeNames": [this.falHeaderInfoForm.value.alternativeNames],
+      "alternativeNames": (this.falHeaderInfoForm.value.alternativeNames? [this.falHeaderInfoForm.value.alternativeNames] : []),
       "programNumber": this.falHeaderInfoForm.value.programNumber,
       "relatedPrograms": {
         "relatedTo": this.falHeaderInfoForm.value.relatedTo
