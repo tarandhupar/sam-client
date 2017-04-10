@@ -91,7 +91,10 @@ export class ManageRequestPage implements OnInit {
       return;
     }
 
-    let newStatus = {};
+    let newStatus: any = {
+      adminMessage: '',
+      status: '',
+    };
     switch (this.selectedOption) {
       case 'select':
         let extras: NavigationExtras = {
@@ -113,6 +116,8 @@ export class ManageRequestPage implements OnInit {
       default:
         console.error('an option was not selected');
     }
+
+    newStatus.adminMessage = this.message;
 
     this.accessService.updateRequest(this.request.id, newStatus).subscribe(() => {
       let verb;
