@@ -12,51 +12,47 @@ import {AutocompleteConfig} from "sam-ui-kit/types";
 })
 export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   programId: any;
+  program: any;
   falCriteriaForm: FormGroup;
   redirectToViewPg: boolean;
   redirectToWksp: boolean;
+  programTitle: string;
   saveProgSub: any;
   getProgSub: any;
-  assUasageDictSub: any;
-  programTitle: string;
-  assUsageOptions = [];
-  assUsageTypeArray = [];
-  toggleBeneficiarySection: boolean = false;
+  dictSub: any;
+  //Assistance Usage Multiselect
+  assUsageTypeOptions = [];
+  assUsageKeyValue = [];
+  assUsageValueKey = [];
+  assUsageIntialSelection = [];
+  assUsageMultiArrayValues = [];
+  assUsageSelectedOption: any;
+  //Awarded Dropdown
   awardedTextarea: boolean = false;
-
-
-  applicantTypes = ['applicant1', 'applicant2', 'applicant3'];
-  assiUsageTypes = ['assiatnceuasage1', 'assiatnceuasage2', 'assiatnceuasage3'];
-  benTypes = ['ben1', 'ben2', 'ben3'];
-  awardedTypesOptions = [];
-  awardedTypesArray = [];
-
-  @ViewChild('awardedTypeWrapper') awardedTypeWrapper;
-  @ViewChild('assiUsageTypeWrapper') assiUsageTypeWrapper;
-
+  awardedTypeOptions = [{value: 'na', label: "None Selected"}];
+  //Applicant Multiselect
+  applicantTypeOptions = [];
+  applicantKeyValue = [];
+  applicantValueKey = [];
+  appIntialSelection = [];
+  applicantMultiArrayValues = [];
+  appSelectedOption: any;
+  //Beneficiary Multiselect
+  benTypeOptions = [];
+  benKeyValue = [];
+  benValueKey = [];
+  benIntialSelection = [];
+  benMultiArrayValues = [];
+  benSelectedOption: any;
+  toggleBeneficiarySection: boolean = false;
+  //Error Message configuration
+  @ViewChild('applicantTypeWrapper') applicantTypeWrapper;
+  @ViewChild('benTypeWrapper') benTypeWrapper;
+  @ViewChild ('assUsageTypeWrapper') assUsageTypeWrapper;
 
   // Checkboxes Component
-  benSameAsApplicantConfig = {
-    options: [
-      {
-        value: 'isSameAsApplicant',
-        label: 'Beneficiary eligibility is the same as applicant eligibility',
-        name: 'checkbox-isa'
-      },
-    ],
-  };
-  awardedTypesConfig: AutocompleteConfig = {
-    keyValueConfig: {
-      keyProperty: 'code',
-      valueProperty: 'name'
-    }
-  };
-  assiUsageTypesConfig: AutocompleteConfig = {
-    keyValueConfig: {
-      keyProperty: 'code',
-      valueProperty: 'name'
-    }
-  };
+  benSameAsApplicantConfig = {options: [{value: 'isSameAsApplicant', label: 'Beneficiary eligibility is the same as applicant eligibility', name: 'checkbox-isa'},],};
+  autocompleteConfig: AutocompleteConfig = {keyValueConfig: {keyProperty: 'code', valueProperty: 'name'}};
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -66,28 +62,27 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     sharedService.setSideNavFocus();
     this.programId = sharedService.programId;
     // declare dictionaries to load
-    let dictionaries = [
-      'applicant_types',
-      'beneficiary_types',
-      'phasing_assistance',
-      'assistance_usage_types'
+    let dictionaries = ['applicant_types', 'beneficiary_types', 'phasing_assistance', 'assistance_usage_types'
     ];
-    this.assUasageDictSub = dictionaryService.getDictionaryById(dictionaries.join(','))
+    this.dictSub = dictionaryService.getDictionaryById(dictionaries.join(','))
       .subscribe(data => {
-     /*   let applicantTypesDicData=[];
-        let beneficiaryTypesDicData=[];*/
-        let phasingAssDicData = [];
-        //let assUsageTypesDicData= [];
-        phasingAssDicData = data['phasing_assistance'];
-        for (let phasingAssData of phasingAssDicData) {
-            let elementId = phasingAssData.element_id;
-            let value = phasingAssData.value;
-            this.awardedTypesOptions.push({
-              code: elementId,
-              name: value
-            });
-            console.log(this.assUsageOptions,'this.assUsageOptions');
-            this.awardedTypesArray[elementId] = value;
+        for (let paData of data['phasing_assistance']) {
+          this.awardedTypeOptions.push({value: paData.element_id, label: paData.value});
+        }
+        for (let autData of data['assistance_usage_types']) {
+          this.assUsageTypeOptions.push({code: autData.element_id, name: autData.value});
+          this.assUsageKeyValue[autData.element_id] = autData.value;
+          this.assUsageValueKey[autData.value] = autData.element_id;
+        }
+        for (let atData of data['applicant_types']) {
+          this.applicantTypeOptions.push({code: atData.element_id, name: atData.value});
+          this.applicantKeyValue[atData.element_id] = atData.value;
+          this.applicantValueKey[atData.value] = atData.element_id;
+        }
+        for (let btData of data['beneficiary_types']) {
+          this.benTypeOptions.push({code: btData.element_id, name: btData.value});
+          this.benKeyValue[btData.element_id] = btData.value;
+          this.benValueKey[btData.value] = btData.element_id;
         }
       });
   }
@@ -106,23 +101,23 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     if (this.getProgSub)
       this.getProgSub.unsubscribe();
 
-    if (this.assUasageDictSub)
-     this.assUasageDictSub.unsubscribe();
+    if (this.dictSub)
+      this.dictSub.unsubscribe();
 
   }
 
   createForm() {
     this.falCriteriaForm = this.fb.group({
       'documentation': '',
-      // 'applicantTypes': '',
+      'applicantTypes': '',
       'applicantDesc': '',
       'isSameAsApplicant': '',
-      //'benTypes': '',
+      'benTypes': '',
       'benDesc': '',
       'lengthTimeDesc': '',
-      'awardedTypes': ['', Validators.required],
+      'awardedTypes': ['na'],
       'awardedDesc': '',
-      //'assUsageTypes': '',
+      'assUsageTypes': '',
       'assUsageDesc': '',
       'usageResDesc': ''
     });
@@ -131,31 +126,51 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   getData() {
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
+          this.program = api;
           this.programTitle = api.data.title;
           let documentation = '';
+          let applicantType = '';
           let applicantDesc = '';
           let isSameAsApplicant = '';
+          let benType = '';
           let benDesc = '';
           let lengthTimeDesc = '';
           let awardedType = '';
           let awardedDesc = '';
+          let assUsageType = '';
           let assUsageDesc = '';
           let usageResDesc = '';
           if (api.data) {
             if (api.data.eligibility) {
               if (api.data.eligibility.beneficiary) {
                 if (api.data.eligibility.beneficiary.isSameAsApplicant) {
-                  isSameAsApplicant = (api.data.eligibility.beneficiary.isSameAsApplicant ? api.data.eligibility.beneficiary.isSameAsApplicant : '');
+                  isSameAsApplicant = api.data.eligibility.beneficiary.isSameAsApplicant;
                 }
-                benDesc = api.data.eligibility.beneficiary.description ? api.data.eligibility.beneficiary.description : '';
+                this.populateMultiSelect(api.data.eligibility.beneficiary.types, this.benIntialSelection, this.benMultiArrayValues, this.benKeyValue);
+                benDesc = api.data.eligibility.beneficiary.description;
               }
-              documentation = api.data.eligibility.documentation.description ? api.data.eligibility.documentation.description : '';
-              applicantDesc = api.data.eligibility.applicant.description ? api.data.eligibility.applicant.description : '';
-              lengthTimeDesc = api.data.eligibility.limitation.description ? api.data.eligibility.limitation.description : '';
-              awardedType = api.data.eligibility.limitation.awarded ? api.data.eligibility.limitation.awarded : '';
-              awardedDesc = api.data.eligibility.limitation.awardedDescription ? api.data.eligibility.limitation.awardedDescription : '';
-              assUsageDesc = api.data.eligibility.assistanceUsage.description ? api.data.eligibility.assistanceUsage.description : '';
-              usageResDesc = api.data.eligibility.usage.restrictions.description ? api.data.eligibility.usage.restrictions.description : '';
+              documentation = api.data.eligibility.documentation.description;
+              if (api.data.eligibility.applicant) {
+                this.populateMultiSelect(api.data.eligibility.applicant.types, this.appIntialSelection, this.applicantMultiArrayValues, this.applicantKeyValue);
+                applicantDesc = api.data.eligibility.applicant.description;
+              }
+              if (api.data.eligibility.limitation) {
+                lengthTimeDesc = api.data.eligibility.limitation.description;
+                awardedType = api.data.eligibility.limitation.awarded !== '' ? api.data.eligibility.limitation.awarded : ['na'];
+                if (awardedType === 'other') {
+                  awardedDesc = api.data.eligibility.limitation.awardedDescription;
+                  this.awardedTextarea = true;
+                } else {
+                  this.awardedTextarea = false;
+                }
+              }
+              if (api.data.eligibility.assistanceUsage) {
+                this.populateMultiSelect(api.data.eligibility.assistanceUsage.types, this.assUsageIntialSelection, this.assUsageMultiArrayValues, this.assUsageKeyValue);
+                assUsageDesc = api.data.eligibility.assistanceUsage.description;
+              }
+              if (api.data.eligibility.usage) {
+                usageResDesc = api.data.eligibility.usage.restrictions.description;
+              }
             }
           }
 
@@ -168,14 +183,18 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
           }
           this.falCriteriaForm.patchValue({
             documentation: documentation,
+            applicantTypes: {
+              name: this.applicantMultiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'
+            },
             applicantDesc: applicantDesc,
             isSameAsApplicant: [isSameAsApplicant],
+            benTypes:  {
+              name: this.benMultiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'
+            },
             benDesc: benDesc,
             lengthTimeDesc: lengthTimeDesc,
-            awardedTypes: {
-              code: awardedType,
-              name:this.awardedTypesArray[awardedType]
-            },
+            awardedTypes: awardedType,
+            assUsageTypes: { name : this.assUsageMultiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'},
             awardedDesc: awardedDesc,
             assUsageDesc: assUsageDesc,
             usageResDesc: usageResDesc
@@ -187,16 +206,99 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
   }
 
-  awardedTypeChange(event) {
-    console.log(this.falCriteriaForm.controls['awardedTypes'], '');
-    this.awardedTypeWrapper.formatErrors(this.falCriteriaForm.controls['awardedTypes']);
+  populateMultiSelect(data: any, intialSelections: any, multiarrayValues: any, keyValueArray: any) {
+  /*  if (applicantTypes.length > 0) {
+      for (let appType of applicantTypes) {
+        this.appIntialSelection.push(this.applicantKeyValue[appType]);
+        this.applicantMultiArrayValues.push(appType);
+      }
+    }*/
+    if (data.length > 0) {
+      for (let item of data) {
+        intialSelections.push(keyValueArray[item]);
+        multiarrayValues.push(item);
+      }
+    }
+  }
 
-    if(this.falCriteriaForm.value.awardedTypes==='other') {
+  multiselectMsg(control: any, multiArrayValues: any) {
+    /* let name: any;
+     const control = this.falCriteriaForm.controls['applicantTypes'];
+     name = {name: this.applicantMultiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'}
+     control.patchValue(name);*/
+    let name: any;
+    name = {name: multiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'}
+    control.patchValue(name);
+  }
+
+  onawardedTypeChange(event) {
+    if (event === 'other') {
       this.awardedTextarea = true;
     } else {
       this.awardedTextarea = false;
     }
+  }
 
+  chkSameAsApp(event) {
+    if (event.indexOf('isSameAsApplicant') !== -1) {
+      this.toggleBeneficiarySection = false;
+      this.falCriteriaForm.value.benDesc = '';
+    } else {
+      this.toggleBeneficiarySection = true;
+    }
+
+  }
+
+  benTypeChange(event) {
+    const control = this.falCriteriaForm.controls['benTypes'];
+    this.benMultiArrayValues = this.benMultiArrayValues.filter(val => val !== control.value.code);
+    this.benMultiArrayValues.push(control.value.code);
+    this.benSelectedOption = this.benKeyValue[control.value.code];
+    this.multiselectMsg(control, this.benMultiArrayValues);
+    this.benTypeWrapper.formatErrors(this.falCriteriaForm.controls['benTypes'])
+  }
+
+  benlistChange(event) {
+    const control = this.falCriteriaForm.controls['benTypes'];
+    let removeItem: string;
+    removeItem = this.benValueKey[event];
+    this.benMultiArrayValues = this.benMultiArrayValues.filter(val => val !== removeItem);
+    this.multiselectMsg(control, this.benMultiArrayValues);
+  }
+
+
+  applicantTypeChange(event) {
+    const control = this.falCriteriaForm.controls['applicantTypes'];
+    this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => val !== control.value.code);
+    this.applicantMultiArrayValues.push(control.value.code);
+    this.appSelectedOption = this.applicantKeyValue[control.value.code];
+    this.multiselectMsg(control, this.applicantMultiArrayValues);
+    this.applicantTypeWrapper.formatErrors(this.falCriteriaForm.controls['applicantTypes'])
+  }
+
+  applicantlistChange(event) {
+    const control = this.falCriteriaForm.controls['applicantTypes'];
+    let removeItem: string;
+    removeItem = this.applicantValueKey[event];
+    this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => val !== removeItem);
+    this.multiselectMsg(control, this.applicantMultiArrayValues);
+  }
+
+  assUsageTypeChange(event) {
+    const control = this.falCriteriaForm.controls['assUsageTypes'];
+    this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => val !== control.value.code);
+    this.assUsageMultiArrayValues.push(control.value.code);
+    this.assUsageSelectedOption = this.assUsageKeyValue[control.value.code];
+    this.multiselectMsg(control, this.assUsageMultiArrayValues);
+    this.assUsageTypeWrapper.formatErrors(this.falCriteriaForm.controls['assUsageTypes'])
+  }
+
+  assUsagelistChange(event) {
+    const control = this.falCriteriaForm.controls['assUsageTypes'];
+    let removeItem: string;
+    removeItem = this.assUsageValueKey[event];
+    this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => val !== removeItem);
+    this.multiselectMsg(control, this.assUsageMultiArrayValues);
   }
 
   onCancelClick(event) {
@@ -215,10 +317,8 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   }
 
   onSaveExitClick(event) {
-
     this.redirectToWksp = true;
     this.saveData();
-
   }
 
   onSaveContinueClick(event) {
@@ -226,37 +326,26 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     this.saveData();
   }
 
-  chkSameAsApp(event) {
-    if (event.indexOf('isSameAsApplicant') !== -1) {
-      this.toggleBeneficiarySection = false;
-      this.falCriteriaForm.value.benDesc = '';
-    } else {
-      this.toggleBeneficiarySection = true;
-    }
-
-  }
-
   saveData() {
     let criteriaData = {};
     let data = {};
-    let applicantTypes = this.falCriteriaForm.value.applicantTypes;
     let applicantDesc = this.falCriteriaForm.value.applicantDesc;
-    let assUsageTypes = this.falCriteriaForm.value.assUsageTypes;
+    this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => val !== null || '' || undefined);
     let assUsageDesc = this.falCriteriaForm.value.assUsageDesc;
     let isSameAsApplicant: boolean;
     if (this.falCriteriaForm.value.isSameAsApplicant) {
       isSameAsApplicant = this.falCriteriaForm.value.isSameAsApplicant.indexOf('isSameAsApplicant') !== -1;
     }
-    let benTypes = this.falCriteriaForm.value.benTypes;
+    let benTypes = this.benMultiArrayValues.filter(val => val !== null || '' || undefined);
     let benDesc = this.falCriteriaForm.value.benDesc;
     let documentation = this.falCriteriaForm.value.documentation;
     let lengthTimeDesc = this.falCriteriaForm.value.lengthTimeDesc;
-    let awardedType = this.falCriteriaForm.value.awardedTypes.code;
-    console.log();
+    let awardedType = this.falCriteriaForm.value.awardedTypes;
     let awardedDesc = this.falCriteriaForm.value.awardedDesc;
     let usageResDesc = this.falCriteriaForm.value.usageResDesc;
+    this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => val !== null || '' || undefined);
 
-    criteriaData = this.buildJson(applicantTypes, applicantDesc, assUsageTypes, assUsageDesc, isSameAsApplicant, benTypes, benDesc,
+    criteriaData = this.buildJson(this.applicantMultiArrayValues, applicantDesc, this.assUsageMultiArrayValues, assUsageDesc, isSameAsApplicant, this.benMultiArrayValues, benDesc,
       documentation, lengthTimeDesc, awardedType, awardedDesc, usageResDesc);
 
     data = {
@@ -282,7 +371,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
         });
   }
 
-  buildJson(applicantTypes: any, applicantDesc: string, assUsageTypes: any, assUsageDesc: string,
+  buildJson(applicantTypes: any, applicantDesc: string, assUsageType: any, assUsageDesc: string,
             isSameAsApplicant: boolean, benTypes: any, benDesc: string, documentation: string,
             lengthTimeDesc: string, awardedType: string, awardedDesc: string, usageResDesc: string): any {
 
@@ -292,22 +381,21 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
         "description": applicantDesc
       },
       "assistanceUsage": {
-        "types": assUsageTypes,
+        "types": assUsageType,
         "description": assUsageDesc
       },
       "beneficiary": {
         "isSameAsApplicant": isSameAsApplicant,
-        "types": isSameAsApplicant ? '' : benTypes,
-        "description": isSameAsApplicant ? '' : benDesc
+        "types": isSameAsApplicant ? null : benTypes,
+        "description": isSameAsApplicant ? null : benDesc
       },
       "documentation": {
         "description": documentation
       },
       "limitation": {
-        // 102 (Length and Time Phasing)
         "description": lengthTimeDesc,
         "awarded": awardedType,
-        "awardedDescription": awardedDesc
+        "awardedDescription": awardedType === 'other' ? awardedDesc : null
       },
       "usage": {
         "restrictions": {

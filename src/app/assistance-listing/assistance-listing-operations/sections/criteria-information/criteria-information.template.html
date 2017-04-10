@@ -1,28 +1,37 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Criteria for Applying - {{programTitle}}</div>
 <form [formGroup]="falCriteriaForm" novalidate (ngSubmit)="save(falCriteriaForm)">
-  <h4>Credentials and Documentation</h4>
-  <!-- <sam-list-display >
-     <sam-autocomplete-dropdown></sam-autocomplete-dropdown>
-   </sam-list-display>-->
-  <!--<sam-autocomplete autofill-falProgram
-  [(ngModel)]="keyword"
-  (change)="searchbar.callSearch($event.target.value)"
-  [index]="index"
-  [showClearButton]="true"
-  name="falprogramsearch" ></sam-autocomplete>-->
-  <samTextArea
-    [control]="falCriteriaForm.controls['documentation']"
-    [name]="'documentation-input'"
-    [label]="'Please describe credentials or documentation required for applying. Do not include anything covered in 2CFR 200.'"
-    formControlName="documentation"></samTextArea>
-  <h4>Eligibility Requirements</h4>
+  <div class="fal-label-margin fal-label">Credentials and Documentation</div>
+  <div class="fal-label-margin">
+    <samTextArea
+      [control]="falCriteriaForm.controls['documentation']"
+      [name]="'documentation-input'"
+      [label]="'Please describe credentials or documentation required for applying. Do not include anything covered in 2CFR 200.'"
+      formControlName="documentation"></samTextArea>
+  </div>
+  <div class="fal-label-margin fal-label">Eligibility Requirements</div>
+  <ng-container *ngIf="program">
+    <sam-list-display [newValue]="appSelectedOption" [initialSelection]="appIntialSelection"
+                      (modelChange)="applicantlistChange($event)">
+      <labelWrapper #applicantTypeWrapper [label]="'Applicant Eligibility'" [required]="true"
+                    [hint]="'Please Select all that apply to help public users search for this listing.'">
+        <sam-autocomplete
+          [options]="applicantTypeOptions"
+          [name]="applicantTypes-control"
+          formControlName="applicantTypes"
+          (change)="applicantTypeChange($event)"
+          [config]="autocompleteConfig"
+          required></sam-autocomplete>
+      </labelWrapper>
+    </sam-list-display>
+  </ng-container>
+
   <samTextArea
     [control]="falCriteriaForm.controls['applicantDesc']"
     [name]="'applicant-description-input'"
     [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
     formControlName="applicantDesc"></samTextArea>
-  <h4>Beneficiary Eligibility</h4>
 
+  <div class="fal-label-margin fal-label">Beneficiary Eligibility</div>
   <samCheckbox
     [control]="falCriteriaForm.controls['isSameAsApplicant']"
     [name]="'beneficiary-SameAsApplicant-input-checkbox'"
@@ -30,6 +39,27 @@
     formControlName="isSameAsApplicant"
     (modelChange)="chkSameAsApp($event)"></samCheckbox>
   <div *ngIf="toggleBeneficiarySection">
+    <sam-list-display [newValue]="benSelectedOption" [initialSelection]="benIntialSelection"
+                      (modelChange)="benlistChange($event)">
+      <labelWrapper #benTypeWrapper [label]="'Beneficiary Eligibility'" [required]="true"
+                    [hint]="'Please select all that apply to help public users search for this listing.'">
+        <sam-autocomplete
+          [options]="benTypeOptions"
+          [name]="benificiaryTypes-control"
+          formControlName="benTypes"
+          (change)="benTypeChange($event)"
+          [config]="autocompleteConfig"
+          required></sam-autocomplete>
+      </labelWrapper>
+    </sam-list-display>
+<!--    <samSelect
+      [control]="falCriteriaForm.controls.benTypes"
+      [label]="'Beneficiary Eligibility'"
+      [name]="'Beneficiary-types-control'"
+      [required]="true"
+      [options]="benTypeOptions"
+      formControlName="benTypes"
+      [hint]="'Please select all that apply to help public users search for this listing.'" required></samSelect>-->
     <samTextArea
       [control]="falCriteriaForm.controls['benDesc']"
       [name]="'beneficiary-description-input'"
@@ -43,15 +73,17 @@
     [label]="'Length and Time Phasing of Assistance'"
     [required]="true"
     formControlName="lengthTimeDesc"></samTextArea>
-  <labelWrapper #awardedTypeWrapper [label]="'How is this assistance awarded and/or released?'" [required]="true"
-                [hint]="'Select the value that best represent how funding is released'">
-    <sam-autocomplete
-      [name]="awardedTypes-control"
-      formControlName="awardedTypes"
-      [options]="awardedTypesOptions"
-      (change)="awardedTypeChange($event)"
-      [config]="awardedTypesConfig" [allowAny]="true"></sam-autocomplete>
-  </labelWrapper>
+
+  <samSelect
+    [control]="falCriteriaForm.controls.awardedTypes"
+    [label]="'How is this assistance awarded and/or released?'"
+    [name]="'awardedtypes-control'"
+    [required]="true"
+    [options]="awardedTypeOptions"
+    formControlName="awardedTypes"
+    [hint]="'Select the value that best represent how funding is released'"
+    (modelChange)="onawardedTypeChange($event)"></samSelect>
+
   <div *ngIf="awardedTextarea">
     <samTextArea
       [control]="falCriteriaForm.controls['awardedDesc']"
@@ -59,15 +91,28 @@
       [label]="''"
       formControlName="awardedDesc"></samTextArea>
   </div>
-  <h4>Use and Use Restrictions</h4>
-  <labelWrapper #assiUsageTypeWrapper [label]="'Use of Assistance'" [required]="true"
-                [hint]="'Please select all that apply from the dropdown list'">
-    <sam-autocomplete
-      [options]="assUsageTypesoptions"
-      [name]="assistance-usage-control"
-      formControlName="assUsageTypes"
-      [config]="assiUsageTypesConfig" (change)="assiUsageTypeChange($event)"></sam-autocomplete>
-  </labelWrapper>
+  <div class="fal-label-margin fal-label">Use and Use Restrictions</div>
+  <sam-list-display [newValue]="assUsageSelectedOption" [initialSelection]="assUsageIntialSelection"
+                    (modelChange)="assUsagelistChange($event)">
+    <labelWrapper #assUsageTypeWrapper [label]="'Use of Assistance'" [required]="true"
+                  [hint]="'Please select all that apply from the dropdown list.'">
+      <sam-autocomplete
+        [options]="assUsageTypeOptions"
+        [name]="assUsageTypes-control"
+        formControlName="assUsageTypes"
+        (change)="assUsageTypeChange($event)"
+        [config]="autocompleteConfig"
+        required></sam-autocomplete>
+    </labelWrapper>
+  </sam-list-display>
+ <!-- <samSelect
+    [control]="falCriteriaForm.controls.assUsageTypes"
+    [label]="'Use of Assistance'"
+    [name]="'assUsageTypes-control'"
+    [required]="true"
+    [options]="assiUsageTypeOptions"
+    formControlName="assUsageTypes"
+    [hint]="'Please select all that apply from the dropdown list.'"></samSelect>-->
   <samTextArea
     [control]="falCriteriaForm.controls['assUsageDesc']"
     [name]="'assistanceusage-description-input'"
