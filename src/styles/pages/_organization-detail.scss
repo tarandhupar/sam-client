@@ -17,4 +17,17 @@
     bottom: 10px;
     font-size: 180%;
   }
+
+  .org-edit-input{
+    height: 36px;
+  }
+
+  .org-type-select{
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    opacity: 0;
+  }
 }
