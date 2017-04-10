@@ -172,6 +172,10 @@ export class ObjectDetailsPage implements OnInit {
   onAddPermissionClick(newValue: any) {
     let v = typeof newValue === 'string' ? newValue : newValue.inputValue;
 
+    if (!v || !v.length || !v.trim().length) {
+      return;
+    }
+
     if (this.selectedPermissions.findIndex(sp => sp.val === v) !== -1) {
       // No duplicates
       console.warn('duplicate permission');
