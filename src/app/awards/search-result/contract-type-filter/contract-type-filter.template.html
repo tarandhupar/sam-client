@@ -6,5 +6,5 @@
                   (modelChange)="emitSelected($event)"
                   [selectedList]="listDisplay.selectedItems">
   </sam-type-ahead>
-  <sam-list-display #listDisplay (modelChange)="emitSelectedList()"><div [innerHTML]="options.selectedLabel"></div></sam-list-display>
+  <sam-list-display #listDisplay (modelChange)="emitSelectedList()" [config]="options.config"><div [innerHTML]="options.selectedLabel"></div></sam-list-display>
 </labelWrapper>
