@@ -1,0 +1,77 @@
+<div class = "rolemgmt-content usa-grid-full ">
+  <div class = "p_T-6em">
+    <img src="src/assets/img/blank_icon.png" class = "img_size" alt="GSA Image" tabindex="0">
+  </div>
+  <div class = "usa-grid-full">
+    <div class = "usa-width-one-half p_T-3em">
+      <h2>Access Management</h2>
+    </div>
+    <div class = "usa-width-one-half">
+      <div>
+        <div class = "sort_pos"><h3>Sort</h3></div>
+        <div>
+          <samSelect class = "fil_sor"
+            [(model)]="selectModel"
+            [name]="'created-date-sort'"
+            [options]="selectConfig.options"
+            (modelChange)="onSelectChanged($event)"
+            >
+          </samSelect>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3>Showing 10 of 20 results</h3>
+  </div>
+  <div *ngFor = "let content of data">
+    <section class = "sec-bor">
+      <div><span class="usa-label-big">{{content.domain}}</span></div>
+      <div class = "usa-grid-full p_T-1em">
+        <div class = "usa-width-one-sixth"><h4>Requested By</h4></div>
+        <div class = "usa-width-one-sixth"><h4>Requested Date</h4></div>
+        <div class = "usa-width-one-sixth"><h4>Status</h4></div>
+        <div class = "usa-width-one-sixth">
+          <h4 *ngIf = "content.status === 'Escalated'">Escalated By</h4>
+          <h4 *ngIf = "content.status === 'Pending'">Supervisor Name</h4>
+          <h4 *ngIf = "content.status === 'Rejected'">Rejected By</h4>
+          <h4 *ngIf = "content.status === 'Approved'">Approved By</h4>
+        </div>
+        <div class = "usa-width-one-sixth">
+          <h4 *ngIf = "content.status === 'Escalated'">Escalted Date</h4>
+          <h4 *ngIf = "content.status === 'Rejected'">Rejected Date</h4>
+          <h4 *ngIf = "content.status === 'Approved'">Approved Date</h4>
+          <h4 *ngIf = "content.status === 'Pending'">Supervisor Email</h4>
+        </div>
+        <div class = "usa-width-one-sixth"><h4 *ngIf = "content.status === 'Escalated'">Escalted To</h4></div>
+      </div>
+      <div class = "usa-grid-full p_T-.5em">
+        <div class = "usa-width-one-sixth">{{content.requestedBy}}</div>
+        <div class = "usa-width-one-sixth">{{formatDate(content.requestedDate)}}</div>
+        <div class = "usa-width-one-sixth">{{content.status}}</div>
+        <div class = "usa-width-one-sixth">{{content.createdBy}}</div>
+        <div class = "usa-width-one-sixth" *ngIf = "content.status !== 'Pending'">{{formatDate(content.createdDate)}}</div>
+        <div class = "usa-width-one-sixth" *ngIf = "content.status === 'Pending'">{{content.createdEmail}}</div>
+        <div class = "usa-width-one-sixth" *ngIf = "content.status === 'Escalated'">{{content.escalatedTo}}</div>
+      </div>
+      <div class = "usa-grid-full p_T-1em">
+        <div [ngClass] = "content.status === 'Pending' ? 'usa-width-three-fourths' : 'usa-width-one-third'">
+          <h4>User Message</h4>
+        </div>
+        <div class = "usa-width-one-third" *ngIf = "content.status !== 'Pending'"><h4>Administrator Message</h4></div>
+      </div>
+      <div class = "usa-grid-full p_T-.5em">
+        <div [ngClass] = "content.status === 'Pending' ? 'usa-width-three-fourths' : 'usa-width-one-third'">
+          {{content.UserMessage}}
+        </div>
+        <div class = "usa-width-one-third" *ngIf = "content.status !== 'Pending'">{{content.AdministratorMessage}}</div>
+        <div [ngClass] = "content.status === 'Pending' ? 'usa-width-one-fourth' : 'usa-width-one-third'" *ngIf = "content.status === 'Pending'||content.status === 'Escalated'">
+          <button class="usa-button-active pull-right">Respond</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  <div class = "pag-com">
+    <samPagination [currentPage]="paginationConfig.currentPage" [totalPages]="paginationConfig.totalPages" (pageChange)="onPageChange($event)"></samPagination>
+  </div>
+</div>

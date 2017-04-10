@@ -1,0 +1,47 @@
+.rolemgmt-content{
+  &.usa-grid-full{
+    max-width: initial;
+  }
+  .p_T-6em{
+    padding-top: 6em;
+  }
+  .img_size{
+    width: 75em;
+    height: 17em;
+  }
+  .usa-grid-full{
+    max-width: initial;
+  }
+  .p_T-3em{
+    padding-top : 3em;
+  }
+  .sort_pos{
+    position: absolute;
+    top: 24em;
+    right: 22em;
+  }
+  .fil_sor{
+    width: 14em;
+    position: absolute;
+    top: 25em;
+    right: 7em;
+  }
+  .sec-bor{
+    border-bottom: black;
+    border-bottom-style: solid;
+    border-bottom-width: thin;
+    margin-right: 6em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+  }
+  .p_T-1em{
+    padding-top: 1em;
+  }
+  .p_T-.5em{
+    padding-top: 0.5em;
+  }
+  .pag-com{
+    padding-left: 22em;
+    padding-top: 2em;
+  }
+}

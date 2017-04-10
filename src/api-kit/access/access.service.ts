@@ -202,4 +202,16 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
+  getAccessStatus(view : string){
+    let apiOptions : any = {
+      name: 'rms',
+      suffix: '/accessstatus/',
+      method: 'GET',
+      oParam: {}
+    }
+    apiOptions.oParam.view = view;
+
+    return this.apiService.call(apiOptions);
+  }
+
 }
