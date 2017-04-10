@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import { Router} from '@angular/router';
 import { ProgramService } from 'api-kit';
 import { FALOpSharedService } from '../../assistance-listing-operations.service';
@@ -70,20 +70,27 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   saveData(){
 
     let data = {authorizations:{}};
+    let authTypeKey = ['act','executiveOrder', 'USC', 'publicLaw', 'statute'];
 
     if(this.falAuthForm.value.description != null && this.falAuthForm.value.description != '')
       data.authorizations = {description: this.falAuthForm.value.description};
 
+    console.log(this.authInfo);
     if(this.authInfo.length > 0){
       data.authorizations['list']=[];
       for(let auth of this.authInfo){
         let list = {};
         if(auth.authType.length > 0){
           list['authorizationTypes'] = {};
-          for(let type of auth.authType){
-            list['authorizationTypes'][type] = true;
+          for(let type of authTypeKey){
             list[type] = auth[type];
-          }//end of inner for
+            if(auth.authType.indexOf(type) !== -1){
+              list['authorizationTypes'][type] = true;
+            }
+            else {
+              list['authorizationTypes'][type] = false;
+            }
+          }
         }//end of if authType.length
         data.authorizations['list'].push(list);
       }//end of for
@@ -91,7 +98,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
     }
 
     console.log("data", data);
-    /*this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
+    this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
           this.sharedService.programId = api._body;
           console.log('AJAX Completed Contact Information', api);
@@ -108,7 +115,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
         },
         error => {
           console.error('Error saving Program - Authorization Section!!', error);
-        });*/ //end of subscribe
+        }); //end of subscribe
   }
 
   onSaveContinueClick(event){
