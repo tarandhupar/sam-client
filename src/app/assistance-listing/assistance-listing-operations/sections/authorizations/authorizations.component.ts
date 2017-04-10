@@ -21,7 +21,6 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   redirectToViewPg: boolean = false;
   redirectToWksp: boolean = false;
   falAuthForm: FormGroup;
-  //authInfo = [];
   displayAuthInfo = [];
   @ViewChild('authSubForm') authSubForm:FALAuthSubFormComponent;
 
@@ -230,5 +229,6 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       if(label != '')
         this.displayAuthInfo.push(label);
     }
+
   }
 }
