@@ -20,13 +20,13 @@ import { OptionsType } from "sam-ui-kit/types";
 export class FALFormulaMatchingComponent implements ControlValueAccessor {
   public model = {};
 
-  // general
-  @Input() options: any;
-  @Input() name: string;
-  @Input() label: string;
-  @Input() hint: string;
-  @Input() required: boolean;
+  @Input() options: any; // all inputs are passed through a single options object
+  public name: string;
+  public label: string;
+  public hint: string;
+  public required: boolean;
 
+  @ViewChild('formulaMatchingLabel') wrapper: LabelWrapper;
   constructor() { }
 
   ngOnInit() {
@@ -35,7 +35,14 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
     this.createTextareaControls();
   }
 
-  private parseInputsAndSetDefaults() {}
+  private parseInputsAndSetDefaults() {
+    if(this.options) {
+      this.name = this.options.name;
+      this.label = this.options.label;
+      this.hint = this.options.hint;
+      this.required = this.options.required;
+    }
+  }
 
   private validateInputs() {
     let errorPrefix = "<falFormulaMatchingInput> requires ";
