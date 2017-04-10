@@ -14,12 +14,14 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
   ]
 })
 export class FALFormulaMatchingComponent implements ControlValueAccessor {
-  public model: any = {};
+  private model: any = {}; // internally maintained model - should never be null or undefined
+
   public formulaMatchingOptions = [
     { value: 'cfr', label: 'This listing has statutory formula/or administrative rule reference in the CFR', name: this.name + '-checkbox-cfr' },
     { value: 'matching', label: 'This listing has matching requirements', name: this.name + '-checkbox-matching-requirements' },
     { value: 'moe', label: 'This listing has maintenance of effort (MOE) requirements AND total allocations over $100 million for the current fiscal year.', name: this.name + '-checkbox-moe' }
   ];
+  public formulaMatchingControl: FormControl;
 
   @Input() options: any; // all inputs are passed through a single options object
   public name: string;
@@ -27,31 +29,32 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   public hint: string;
   public required: boolean;
 
-  public formulaMatchingControl: FormControl;
   @ViewChild('formulaMatchingLabel') wrapper: LabelWrapper;
 
   constructor() { }
 
   ngOnInit() {
-    this.parseInputsAndSetDefaults();
+    this.parseOptionsAndSetDefaults();
     this.validateInputs();
     this.createFormControls();
   }
 
-  private parseInputsAndSetDefaults() {
+  private parseOptionsAndSetDefaults() {
     if(this.options) {
       this.name = this.options.name;
       this.label = this.options.label;
       this.hint = this.options.hint;
       this.required = this.options.required;
     }
+
+    if(this.required == null) {
+      this.required = false;
+    }
   }
 
   private validateInputs() {
-    let errorPrefix = "<falFormulaMatchingInput> requires ";
-
     if(!this.name) {
-      throw new Error(errorPrefix + "a [name] parameter for 508 compliance");
+      throw new Error('<falFormulaMatchingInput> requires a [name] parameter for 508 compliance');
     }
   }
 
@@ -69,6 +72,16 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   }
 
   private onChange() {
+    if(this.model.checkbox) {
+      // todo...
+      if(this.model.checkbox.indexOf('cfr') !== -1) {
+      }
+      if(this.model.checkbox.indexOf('matching') !== -1) {
+      }
+      if(this.model.checkbox.indexOf('moe') !== -1) {
+      }
+    }
+
     this.onChangeCallback(this.model);
   }
 
