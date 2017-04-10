@@ -18,7 +18,7 @@ import { OptionsType } from "sam-ui-kit/types";
   ]
 })
 export class FALFormulaMatchingComponent implements ControlValueAccessor {
-  public model = {};
+  public model: any = {};
   public formulaMatchingOptions = [
     { value: 'cfr', label: 'This listing has statutory formula/or administrative rule reference in the CFR', name: this.name + '-checkbox-cfr' },
     { value: 'matching', label: 'This listing has matching requirements', name: this.name + '-checkbox-matching-requirements' },
@@ -31,7 +31,9 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   public hint: string;
   public required: boolean;
 
+  public formulaMatchingControl: FormControl;
   @ViewChild('formulaMatchingLabel') wrapper: LabelWrapper;
+
   constructor() { }
 
   ngOnInit() {
@@ -58,7 +60,12 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   }
 
   private createFormControls() {
-    // todo...
+    this.formulaMatchingControl = new FormControl([]);
+    this.formulaMatchingControl.valueChanges.subscribe(value => {
+      // todo: figure out why this is being called twice on population
+      this.model.checkbox = value;
+      this.onChange();
+    });
   }
 
   public onCheckboxChange(checkboxModel) {

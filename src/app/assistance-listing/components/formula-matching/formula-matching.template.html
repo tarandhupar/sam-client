@@ -7,6 +7,6 @@
   <samCheckbox [model]="model.checkbox || []"
                [name]="name + '-checkbox'"
                [options]="formulaMatchingOptions"
-               (modelChange)="onCheckboxChange($event)"
+               [formControl]="formulaMatchingControl"
   ></samCheckbox>
 </labelWrapper>
