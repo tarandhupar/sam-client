@@ -20,6 +20,7 @@ export class ComplianceRequirementsPage implements OnInit {
   public auditsModel: any = {};
   public recordsModel: string = '';
   public additionalDocumentationModel: any = {};
+  public formulaMatchingModel: any = {};
 
   public policyRequirementsConfig: any = {
     checkbox: {
@@ -103,6 +104,13 @@ export class ComplianceRequirementsPage implements OnInit {
     }
   };
 
+  public formulaMatchingConfig: any = {
+    name: 'compliance-formula-matching',
+    label: 'Formula Matching Requirements Maintenance of Effort',
+    hint: '',
+    required: false,
+  };
+
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
               private route: ActivatedRoute,
@@ -128,7 +136,8 @@ export class ComplianceRequirementsPage implements OnInit {
       reports: null,
       audits: null,
       records: null,
-      additionalDocumentation: null
+      additionalDocumentation: null,
+      formulaMatching: null
     });
 
     this.complianceRequirementsGroup.get('policyRequirementsCheckbox').valueChanges.subscribe(model => {
@@ -153,6 +162,10 @@ export class ComplianceRequirementsPage implements OnInit {
 
     this.complianceRequirementsGroup.get('additionalDocumentation').valueChanges.subscribe(model => {
       this.additionalDocumentationModel = model;
+    });
+
+    this.complianceRequirementsGroup.get('formulaMatching').valueChanges.subscribe(model => {
+      this.formulaMatchingModel = model;
     });
   }
 

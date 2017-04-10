@@ -34,6 +34,11 @@
                               [formControlName]="'additionalDocumentation'"
   ></samCheckboxToggledTextarea>
 
+  <falFormulaMatchingInput [options]="formulaMatchingConfig"
+                           [formControlName]="'formulaMatching'"
+                           [name]="'compliance-formula-matching'"
+  ></falFormulaMatchingInput>
+
   <div>
     <div class="pull-left">
       <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>

@@ -8,7 +8,7 @@ import { OptionsType } from "sam-ui-kit/types";
 
 @Component({
   selector: 'falFormulaMatchingInput',
-  templateUrl: 'checkbox-toggled-textarea.template.html',
+  templateUrl: 'formula-matching.template.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

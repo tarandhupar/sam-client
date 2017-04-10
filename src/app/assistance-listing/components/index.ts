@@ -6,6 +6,7 @@ import { FALTafsComponent } from './tafs/tafs.component';
 import { SamTextRadioButtonComponent } from './text-radio/text-radio-button.component';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FALFormulaMatchingComponent } from "./formula-matching/formula-matching.component";
 
 @NgModule({
   imports: [
@@ -17,13 +18,15 @@ import { ReactiveFormsModule } from '@angular/forms';
     FALAccountIdentificationComponent,
     SamCheckboxToggledTextareaComponent,
     FALTafsComponent,
-    SamTextRadioButtonComponent
+    SamTextRadioButtonComponent,
+    FALFormulaMatchingComponent
   ],
   exports: [
     FALAccountIdentificationComponent,
     SamCheckboxToggledTextareaComponent,
     FALTafsComponent,
-    SamTextRadioButtonComponent
+    SamTextRadioButtonComponent,
+    FALFormulaMatchingComponent
   ]
 })
 export class FALComponentsModule {}
