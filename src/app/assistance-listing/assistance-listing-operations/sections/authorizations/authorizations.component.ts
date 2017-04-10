@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
 import { Router} from '@angular/router';
 import { ProgramService } from 'api-kit';
 import { FALOpSharedService } from '../../assistance-listing-operations.service';
@@ -61,6 +61,33 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       .subscribe(api => {
           this.progTitle = api.data.title;
           console.log("api", api);
+          if(api.data.authorizations){
+            this.falAuthForm.patchValue({
+              description: api.data.authorizations.description
+            });
+
+            if(api.data.authorizations.list.length > 0){
+              this.authInfo = api.data.authorizations.list;
+              let index = 0;
+              const control = <FormArray> this.authSubForm.falAuthSubForm.controls['authorizations'];
+
+              for(let auth of this.authInfo){
+                auth.authType= [];
+                for(let authType in auth.authorizationTypes){
+                  if(auth.authorizationTypes[authType] == true){
+                    auth.authType.push(authType);
+                  }
+                }//end of inner for
+                delete auth['authorizationTypes'];
+                control.push(this.authSubForm.initAuth());
+                control.at(index).patchValue(this.authInfo[index]);
+                index = index + 1;
+              }//end of main for
+
+              this.authInfoFormat(this.authInfo);
+              this.authSubForm.authInfo = this.authInfo;
+            }
+          }//if authorization exists
         },
         error => {
           console.error('Error Retrieving Program!!', error);
@@ -75,7 +102,6 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
     if(this.falAuthForm.value.description != null && this.falAuthForm.value.description != '')
       data.authorizations = {description: this.falAuthForm.value.description};
 
-    console.log(this.authInfo);
     if(this.authInfo.length > 0){
       data.authorizations['list']=[];
       for(let auth of this.authInfo){
@@ -94,10 +120,11 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
         }//end of if authType.length
         data.authorizations['list'].push(list);
       }//end of for
-
+    }
+    else{
+      data.authorizations['list'] = [];
     }
 
-    console.log("data", data);
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
           this.sharedService.programId = api._body;
@@ -150,6 +177,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
 
   removeAuth(i: number){
     this.authSubForm.removeAuth(i);
+    this.authInfo = this.authSubForm.authInfo;
     this.displayAuthInfo.splice(i, 1);
     this.hideAddButton = this.authSubForm.hideAddButton;
   }

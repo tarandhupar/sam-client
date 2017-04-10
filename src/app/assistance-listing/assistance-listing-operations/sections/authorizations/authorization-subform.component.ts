@@ -117,7 +117,6 @@ export class FALAuthSubFormComponent {
 
     const control = <FormArray>this.falAuthSubForm.controls['authorizations'];
     control.removeAt(i);
-    //this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
     this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
   }
