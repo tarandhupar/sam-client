@@ -132,11 +132,11 @@
 
       <h3>Range and Average of Financial Assistance:</h3>
 
-      <p class="field" id="program-financial-additional-info" *ngIf="(program.data?.financial?.additionalInfo?.content) && (program.data?.financial?.additionalInfo?.content != '')">
-        {{program.data.financial.additionalInfo.content}}
+      <p class="field" id="program-financial-additional-info" *ngIf="(program.data?.financial?.description) && (program.data?.financial?.description != '')">
+        {{program.data.financial?.description}}
       </p>
 
-      <p class="field" id="program-financial-additional-info" *ngIf="!(program.data?.financial?.additionalInfo?.content) || (program.data?.financial?.additionalInfo?.content == '')">
+      <p class="field" id="program-financial-additional-info" *ngIf="!(program.data?.financial?.description) || (program.data?.financial?.description == '')">
         No Data Available.
       </p>
 
