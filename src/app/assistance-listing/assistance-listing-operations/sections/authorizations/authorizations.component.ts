@@ -20,7 +20,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   redirectToViewPg: boolean = false;
   redirectToWksp: boolean = false;
   falAuthForm: FormGroup;
-  authInfo = [];
+  //authInfo = [];
   displayAuthInfo = [];
   @ViewChild('authSubForm') authSubForm:FALAuthSubFormComponent;
 
@@ -67,11 +67,12 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
             });
 
             if(api.data.authorizations.list.length > 0){
-              this.authInfo = api.data.authorizations.list;
+              this.authSubForm.authInfo = api.data.authorizations.list;
+
               let index = 0;
               const control = <FormArray> this.authSubForm.falAuthSubForm.controls['authorizations'];
 
-              for(let auth of this.authInfo){
+              for(let auth of this.authSubForm.authInfo){
                 auth.authType= [];
                 for(let authType in auth.authorizationTypes){
                   if(auth.authorizationTypes[authType] == true){
@@ -80,12 +81,11 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
                 }//end of inner for
                 delete auth['authorizationTypes'];
                 control.push(this.authSubForm.initAuth());
-                control.at(index).patchValue(this.authInfo[index]);
+                control.at(index).patchValue(this.authSubForm.authInfo[index]);
                 index = index + 1;
               }//end of main for
 
-              this.authInfoFormat(this.authInfo);
-              this.authSubForm.authInfo = this.authInfo;
+              this.authInfoFormat(this.authSubForm.authInfo);
             }
           }//if authorization exists
         },
@@ -102,9 +102,9 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
     if(this.falAuthForm.value.description != null && this.falAuthForm.value.description != '')
       data.authorizations = {description: this.falAuthForm.value.description};
 
-    if(this.authInfo.length > 0){
+    if(this.authSubForm.authInfo.length > 0){
       data.authorizations['list']=[];
-      for(let auth of this.authInfo){
+      for(let auth of this.authSubForm.authInfo){
         let list = {};
         if(auth.authType.length > 0){
           list['authorizationTypes'] = {};
@@ -156,7 +156,6 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
     }
     if(event.type == 'confirm'){
       this.hideAddButton = event.hideAddButton;
-      this.authInfo = event.authInfo;
       this.authInfoFormat(event.authInfo);
     }
     if(event.type == 'cancel'){
@@ -177,7 +176,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
 
   removeAuth(i: number){
     this.authSubForm.removeAuth(i);
-    this.authInfo = this.authSubForm.authInfo;
+    //this.authInfo = this.authSubForm.authInfo;
     this.displayAuthInfo.splice(i, 1);
     this.hideAddButton = this.authSubForm.hideAddButton;
   }

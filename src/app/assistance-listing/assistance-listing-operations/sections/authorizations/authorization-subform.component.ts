@@ -83,8 +83,7 @@ export class FALAuthSubFormComponent {
   }
 
   onConfirmClick(){
-    //this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
-    this.authInfo = this.falAuthSubForm.value.authorizations;
+       this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
 
     this.authActionHandler.emit({
@@ -122,8 +121,6 @@ export class FALAuthSubFormComponent {
   }
 
   editAuth(i: number){
-    //this.authInfo = JSON.parse(JSON.stringify(this.falAuthSubForm.value.authorizations));
-    //this.authInfo = this.falAuthSubForm.value.authorizations;
     this.subFormLabel = "Edit Authorization";
     this.mode = "Edit";
     this.authIndex = i;
