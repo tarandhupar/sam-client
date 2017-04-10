@@ -20,7 +20,7 @@
              [control]="falHeaderInfoForm.controls['programNumber']"
              [name]="'programNumber-input'"
              [label]="'FAL Number'"
-             [errorMessage]= "falHeaderInfoForm.controls['programNumber'].valid ? '': 'This number falls outside the range defined for this organization.'"
+             [errorMessage]= "falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
              formControlName="programNumber"></samNumber>
 
   <sam-list-input [hint]="'Are there any related federal assistance listings?'"
