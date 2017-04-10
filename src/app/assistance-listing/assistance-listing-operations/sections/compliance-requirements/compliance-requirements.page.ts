@@ -72,6 +72,7 @@ export class ComplianceRequirementsPage implements OnInit {
     label: 'Other Audit Requirements',
     hint: 'Describe audit procedures for this program. Only include requirements not already covered by 2 CFR 200.',
     required: true,
+    validateComponentLevel: false,
 
     checkbox: {
       options: [
@@ -89,6 +90,7 @@ export class ComplianceRequirementsPage implements OnInit {
     label: 'Regulations, Guidelines, and Literature',
     hint: 'Please reference additional documentation specific to your program Do not include government wide guidance.',
     required: true,
+    validateComponentLevel: false,
 
     checkbox: {
       options: [

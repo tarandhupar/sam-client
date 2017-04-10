@@ -57,6 +57,10 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
     this.createTextareaControls();
   }
 
+  ngAfterViewInit() {
+    this.toggleTextarea();
+  }
+
   private parseInputsAndSetDefaults() {
     // inputs can either be passed directly, or through an options object
     // if an input is passed both ways, the value passed directly will take precedence
