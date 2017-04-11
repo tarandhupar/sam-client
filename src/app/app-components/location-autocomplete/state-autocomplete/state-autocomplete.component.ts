@@ -17,7 +17,7 @@ export class StateServiceImpl implements AutocompleteService {
       (res) => {
         results.next(res._embedded.stateList.reduce( (prev, curr) => {
           const newObj = {
-            key: curr.stateId.toString(),
+            key: curr.stateCode.toString(),
             value: curr.state.toString()
           };
           prev.push(newObj);
@@ -32,7 +32,7 @@ export class StateServiceImpl implements AutocompleteService {
   }
 
   setFetchMethod(_?: any): any {
-    this.country = _.value;
+    this.country = _.key;
   }
 
   fetch(val: string, pageEnd: boolean): Observable<any> {
@@ -54,7 +54,7 @@ export class SamStateServiceAutoDirective {
 
 
   ngOnChanges() {
-    let country = this.countryModel === undefined ? {value:'USA'}:this.countryModel;
+    let country = this.countryModel === undefined ? {key:'USA'}:this.countryModel;
     this.service.setFetchMethod(country);
   }
 }

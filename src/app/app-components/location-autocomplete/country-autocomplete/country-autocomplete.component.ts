@@ -15,7 +15,7 @@ export class CountryServiceImpl implements AutocompleteService {
       (res) => {
         results.next(res._embedded.countryList.reduce( (prev, curr) => {
           const newObj = {
-            key: curr.countryId.toString(),
+            key: curr.countrycode.toString(),
             value: curr.country.toString()
           }
           prev.push(newObj);

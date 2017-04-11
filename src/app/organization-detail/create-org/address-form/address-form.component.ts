@@ -21,11 +21,17 @@ export class OrgAddrFormComponent {
       valueProperty: 'value'
     }
   };
-  countryOutput:any;
-  stateOutput:any;
-  cityOutput:any;
+  countryOutput:any = {};
+  stateOutput:any = {};
+  cityOutput:any = {};
 
   addressForm:FormGroup;
+
+  @ViewChild('countryWrapper') addrCountry:LabelWrapper;
+  @ViewChild('stateWrapper') addrState:LabelWrapper;
+  @ViewChild('MailAddrCity') addrCity:SamTextComponent;
+  @ViewChild('MailAddrPostalCode') addrPostalCode:SamTextComponent;
+  @ViewChild('MailAddrStreetAddr1') addrStreet1:SamTextComponent;
 
   @Input() showAddIcon:boolean = true;
   @Input() orgAddrModel:any = {};
@@ -44,7 +50,7 @@ export class OrgAddrFormComponent {
 
   basicType = "Mailing Address";
 
-  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute, private locationService:LocationService) {}
+  constructor(private builder: FormBuilder) {}
 
   ngOnInit() {
     this.addressForm = this.builder.group({
@@ -76,6 +82,29 @@ export class OrgAddrFormComponent {
   }
 
   validateForm():boolean{
-    return !this.addressForm.invalid;
+    if(this.addressForm.invalid || this.stateOutput == {} || this.countryOutput == {}){
+      this.addressForm.get("streetAddr1").markAsDirty();
+      this.addressForm.get("postalCode").markAsDirty();
+      this.addressForm.get("city").markAsDirty();
+
+      this.addrStreet1.wrapper.formatErrors(this.addressForm.get("streetAddr1"));
+      this.addrPostalCode.wrapper.formatErrors(this.addressForm.get("postalCode"));
+      this.addrCity.wrapper.formatErrors(this.addressForm.get("city"));
+
+      this.addrState.errorMessage = !!this.stateOutput.value?"":"This field cannot be empty";
+      this.addrCountry.errorMessage = !!this.countryOutput.value?"":"This field cannot be empty";
+
+
+      return false;
+    }else{
+      this.orgAddrModel.country = this.countryOutput.value;
+      this.orgAddrModel.state = this.stateOutput.value;
+      this.orgAddrModel.street = this.addressForm.get("streetAddr1").value+" "+this.addressForm.get("streetAddr2").value;
+      this.orgAddrModel.city = this.addressForm.get("city").value;
+      this.orgAddrModel.postalCode = this.addressForm.get("postalCode").value;
+
+
+    }
+    return true;
   }
 }

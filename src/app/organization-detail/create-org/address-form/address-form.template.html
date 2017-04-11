@@ -10,13 +10,13 @@
   </h3>
 
   <div class="usa-width-one-whole">
-    <labelWrapper class="p_T-3x org-create-label" [label]="'Country'" [name]="'Country'" [required]="true">
+    <labelWrapper #countryWrapper class="p_T-3x org-create-label" [label]="'Country'" [name]="'Country'" [required]="true">
       <sam-autocomplete country [ngModelOptions]="{standalone: true}" [(ngModel)]="countryOutput" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig"></sam-autocomplete>
     </labelWrapper>
   </div>
 
-  <samText #MailAddrStreetAddr1 [control]="addressForm.get('streetAddr1')" formControlName="streetAddr1" [required]='true' [name]="'street-1-input'" [label]="'Street address 1'"></samText>
-  <samText #MailAddrStreetAddr2 [control]="addressForm.get('streetAddr2')" formControlName="streetAddr2" [name]="'street-2-input'" [label]="'Street address 2'"></samText>
+  <samText class="usa-width-one-whole" #MailAddrStreetAddr1 [control]="addressForm.get('streetAddr1')" formControlName="streetAddr1" [required]='true' [name]="'street-1-input'" [label]="'Street address 1'"></samText>
+  <samText class="usa-width-one-whole" #MailAddrStreetAddr2 [control]="addressForm.get('streetAddr2')" formControlName="streetAddr2" [name]="'street-2-input'" [label]="'Street address 2'"></samText>
   <div class="usa-width-one-whole">
     <samText class="usa-width-one-half m_R-0 p_R-2x" #MailAddrCity [control]="addressForm.get('city')" formControlName="city" [name]="'city-input'" [label]="'City'" [required]="true"></samText>
 
@@ -32,7 +32,7 @@
   <div class="usa-width-one-whole">
 
     <div class="usa-width-one-half m_R-0 p_R-2x">
-      <labelWrapper class="p_T-1x org-create-label" [label]="'State'" [name]="'State'" [required]="true">
+      <labelWrapper #stateWrapper class="p_T-1x org-create-label" [label]="'State'" [name]="'State'" [required]="true">
         <sam-autocomplete state [countryModel]="countryOutput" [ngModelOptions]="{standalone: true}" [(ngModel)]="stateOutput" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="locationConfig"></sam-autocomplete>
       </labelWrapper>
     </div>

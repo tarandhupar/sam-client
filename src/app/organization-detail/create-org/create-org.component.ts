@@ -1,25 +1,15 @@
 import { Component, Input, ViewChild, ViewChildren, QueryList } from "@angular/core";
 import { ActivatedRoute, Router} from "@angular/router";
-import { FHService } from "api-kit/fh/fh.service";
-import { LocationService } from "api-kit/location/location.service";
-import * as moment from 'moment/moment';
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
-import { SamDateComponent } from 'sam-ui-kit/form-controls/date/date.component';
-import { SamSelectComponent } from 'sam-ui-kit/form-controls/select/select.component';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
-import { SamTextareaComponent } from 'sam-ui-kit/form-controls/textarea/textarea.component';
 import { OrgAddrFormComponent } from './address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 
 function validDateTime(c: FormControl) {
-  let error = {
-    validDateTime: {
-      message: 'Date is invalid'
-    }
-  };
-
   if (c.value === 'Invalid Date') {
-    return error;
+    return {message: 'Date is invalid'};
+  } else if(c.value === ''){
+    return {required: true};
   }
 }
 
@@ -33,15 +23,6 @@ export class OrgCreatePage {
 
   @ViewChild('orgName') orgName: SamTextComponent;
   @ViewChild('orgStartDateWrapper') orgStartDateWrapper: LabelWrapper;
-  @ViewChild('orgDescription') orgDescription: SamTextareaComponent;
-  @ViewChild('orgShortName') orgShortName: SamTextComponent;
-  @ViewChild('orgFPDSCode') FPDSCode: SamTextComponent;
-  @ViewChild('orgAACCode') ACCCode: SamTextComponent;
-  // @ViewChild('MailAddrStreetAddr1') MailAddrStreetAddr1: SamTextComponent;
-  // @ViewChild('MailAddrStreetAddr2') MailAddrStreetAddr2: SamTextComponent;
-  // @ViewChild('MailAddrCity') MailAddrCity: SamTextComponent;
-  // @ViewChild('MailAddrPostalCode') MailAddrPostalCode: SamTextComponent;
-  // @ViewChild('MailAddrState') MailAddrState: SamTextComponent;
 
   // Indicate Funding radio group
   indicateFundRadioModel:any = '';
@@ -78,11 +59,9 @@ export class OrgCreatePage {
       valueProperty: 'value'
     }
   };
-  countryOutput:any;
-  stateOutput:any;
-  cityOutput:any;
 
   extraAddressTypes = ["Billing Address","Shipping Address"];
+  orgTypeWithAddress = "Office";
 
   constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute) {}
 
@@ -141,25 +120,27 @@ export class OrgCreatePage {
 
   onReviewFormClick(){
     // Validate all the necessary fields in the organization creation form
-    console.log(this.basicInfoForm.get('orgName').value);
-    console.log(this.basicInfoForm.get('orgStartDate').value);
-    console.log(this.basicInfoForm.get('orgDescription').value);
-    console.log(this.basicInfoForm.get('orgShortName').value);
-    console.log(this.indicateFundRadioModel);
-    console.log(this.countryOutput);
-    console.log(this.cityOutput);
-    console.log(this.stateOutput);
-    this.orgInfo = [];
-    this.orgInfo.push({des:"Organization Name", value:this.basicInfoForm.get('orgName').value});
-    this.orgInfo.push({des:"Start Date", value:this.basicInfoForm.get('orgStartDate').value});
-    this.orgInfo.push({des:"Description", value:this.basicInfoForm.get('orgDescription').value});
-    this.orgInfo.push({des:"Shortname", value:this.basicInfoForm.get('orgShortName').value});
-    this.orgInfo.push({des:"Indicate Funding", value:this.indicateFundRadioModel});
+    this.basicInfoForm.get('orgName').markAsDirty();
+    this.basicInfoForm.get('orgStartDate').markAsDirty();
+    console.log(this.orgAddresses);
+    if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid())) && !this.basicInfoForm.invalid){
+      this.createOrgPage = false;
+      this.reviewOrgPage = true;
+      this.orgInfo = [];
+      this.orgInfo.push({des:"Organization Name", value:this.basicInfoForm.get('orgName').value});
+      this.orgInfo.push({des:"Start Date", value:this.basicInfoForm.get('orgStartDate').value});
+      this.orgInfo.push({des:"Description", value:this.basicInfoForm.get('orgDescription').value});
+      this.orgInfo.push({des:"Shortname", value:this.basicInfoForm.get('orgShortName').value});
+      this.orgInfo.push({des:"Indicate Funding", value:this.indicateFundRadioModel});
+    } else{
+      this.orgName.wrapper.formatErrors(this.basicInfoForm.get('orgName'));
+      this.orgStartDateWrapper.formatErrors(this.basicInfoForm.get('orgStartDate'));
+      if(this.isAddressNeeded()){
+        this.indicateFundRadioConfig.errorMessage = this.indicateFundRadioModel === ''? "This field cannot be empty": '';
+      }
+    }
 
-    this.addrForms.forEach(e => {console.log(e.validateForm());});
 
-    this.createOrgPage = false;
-    this.reviewOrgPage = true;
   }
 
   onEditFormClick(){
@@ -194,10 +175,19 @@ export class OrgCreatePage {
 
   onDeleteAddressForm(orgAddrModel){
     this.orgAddresses = this.orgAddresses.filter( e => {
-
       return orgAddrModel.addrType !== e.addrModel.addrType;
     });
     this.orgAddresses.forEach( e => {e.showAddIcon = true;});
   }
 
+  isAddressFormValid():boolean{
+    let isValid = true;
+    this.addrForms.forEach( e => {if(!e.validateForm()) isValid = false;});
+    console.log("Address validation:"+isValid);
+    return isValid;
+  }
+
+  isAddressNeeded():boolean{
+    return this.orgType === this.orgTypeWithAddress;
+  }
 }

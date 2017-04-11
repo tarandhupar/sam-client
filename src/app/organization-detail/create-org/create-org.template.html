@@ -1,6 +1,6 @@
 <section class="org-create-page usa-grid">
   <div class="usa-width-one-fourth">&nbsp;</div>
-  <div class="usa-width-one-half p_B-6x" *ngIf="createOrgPage">
+  <div class="usa-width-one-half p_B-6x" ng-show="createOrgPage">
     <h2 class="p_T-3x">Create New {{orgType}}</h2>
     <p>Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
     <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
@@ -10,7 +10,7 @@
       </labelWrapper>
       <samTextArea #orgDescription class="usa-width-one-whole" [control]="basicInfoForm.get('orgDescription')" formControlName="orgDescription" [label]="'Description'" name='description' [placeholder]="'Provide a description for your organization and its function.'"></samTextArea>
       <samText #orgShortName class="usa-width-one-whole" [control]="basicInfoForm.get('orgShortName')" formControlName="orgShortName" [name]="'orgShortName-input'" [label]="'Short Name'"></samText>
-      <div class="usa-width-one-half" *ngIf="orgType==='Office'">
+      <div class="usa-width-one-half" *ngIf="isAddressNeeded()">
         <labelWrapper class="p_T-3x" [label]="indicateFundRadioConfig.label" [name]="indicateFundRadioConfig.name" [required]="true">
           <samRadioButton
             [(model)]="indicateFundRadioModel"
@@ -25,7 +25,7 @@
     </form>
 
     <!--Office Codes Form-->
-    <form [formGroup]="officeCodesForm" *ngIf="orgType==='Office'">
+    <form [formGroup]="officeCodesForm" *ngIf="isAddressNeeded()">
       <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-code-section p_T-4x p_B-4x">
         <samText #orgFPDSCode [control]="basicInfoForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></samText>
         <samText #orgAACCode [control]="basicInfoForm.get('ACCCode')" formControlName="ACCCode" [name]="'aac-input'" [label]="'AAC Code'"></samText>
@@ -52,7 +52,7 @@
       </div>
     </form>
 
-    <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-address-section" *ngIf="orgType==='Office'">
+    <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-address-section" *ngIf="isAddressNeeded()">
       <div class="usa-width-one-whole p_T-4x" *ngFor="let orgAddr of orgAddresses">
         <samAddrForm [orgAddrModel]="orgAddr.addrModel" [showAddIcon]="orgAddr.showAddIcon" (onAdditionalAddrRequest)="onAddAddressForm()" (onCancelAdditionalAddrRequest)="onDeleteAddressForm($event)"></samAddrForm>
 
@@ -74,8 +74,8 @@
         <span class="usa-width-two-thirds p_T-2x p_B-1x">&nbsp;{{pair.value}}</span>
       </p>
       <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
-        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{orgAddr.addrModel.addressType}}:</h4></span>
-        <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.value.street}}<br>{{address.value.city}}, {{address.value.state}}&nbsp;{{address.value.postalCode}}<br>{{address.value.country}}</span>
+        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addrModel.addrType}}:</h4></span>
+        <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.addrModel.street}}<br>{{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.postalCode}}<br>{{address.addrModel.country}}</span>
       </p>
     </div>
     <button class="usa-button-primary p_R-4x p_L-4x pull-right" (click)="onConfirmFormClick()">Confirm</button>
