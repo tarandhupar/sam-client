@@ -107,6 +107,10 @@
 /*
   Temporary fixes
 */
+home samsearchbar{
+  color: $textColor;
+}
+
 .usa-unstyled-list {
   @include unstyled-list;
 }
@@ -163,7 +167,7 @@
 @import 'pages/exclusion';
 @import 'pages/assistance-listing';
 @import 'pages/help';
-@import 'pages/home';
+//@import 'pages/home';
 @import 'pages/opportunity';
 @import 'pages/organization';
 @import 'pages/search';
@@ -192,7 +196,7 @@ h2{
 
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{
-  min-height: 90vh;
+  min-height: 77vh;
 }
 
 .overlay{
