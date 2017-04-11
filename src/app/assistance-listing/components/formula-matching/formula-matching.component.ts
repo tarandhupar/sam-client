@@ -135,10 +135,6 @@ public formulaMatchingGroup: FormGroup;
     });
   }
 
-  public onCheckboxChange(checkboxModel) {
-    // todo...
-  }
-
   private onChange() {
     this.onChangeCallback(this.model);
   }
@@ -160,6 +156,47 @@ public formulaMatchingGroup: FormGroup;
     }
 
     this.model = obj;
+
+    if(this.model.checkbox) {
+      this.formulaMatchingGroup.get('formulaMatching').setValue(this.model.checkbox);
+    }
+
+    if(this.model.title) {
+      this.formulaMatchingGroup.get('title').setValue(this.model.title);
+    }
+
+    if(this.model.chapter) {
+      this.formulaMatchingGroup.get('chapter').setValue(this.model.chapter);
+    }
+
+    if(this.model.part) {
+      this.formulaMatchingGroup.get('part').setValue(this.model.part);
+    }
+
+    if(this.model.subpart) {
+      this.formulaMatchingGroup.get('subpart').setValue(this.model.subpart);
+    }
+
+    if(this.model.publicLaw) {
+      this.formulaMatchingGroup.get('publicLaw').setValue(this.model.publicLaw);
+    }
+
+    if(this.model.additionalInfo) {
+      this.formulaMatchingGroup.get('additionalInfo').setValue(this.model.additionalInfo);
+    }
+
+    if(this.model.matchingPercentage) {
+      this.formulaMatchingGroup.get('matchingPercentage').setValue(this.model.matchingPercentage);
+    }
+
+    if(this.model.matchingDescription) {
+      this.formulaMatchingGroup.get('matchingDescription').setValue(this.model.matchingDescription);
+    }
+
+    if(this.model.moeRequirements) {
+      this.formulaMatchingGroup.get('moeRequirements').setValue(this.model.moeRequirements);
+    }
+
     this.onChange();
   }
 

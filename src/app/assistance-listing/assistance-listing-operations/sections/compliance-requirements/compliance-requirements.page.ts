@@ -190,6 +190,7 @@ export class ComplianceRequirementsPage implements OnInit {
       this.complianceRequirementsGroup.get('audits').setValue(this.loadAudit());
       this.complianceRequirementsGroup.get('records').setValue(this.loadRecords());
       this.complianceRequirementsGroup.get('additionalDocumentation').setValue(this.loadDocuments());
+      this.complianceRequirementsGroup.get('formulaMatching').setValue(this.loadFormulaMatching());
     }
   }
 
@@ -202,6 +203,7 @@ export class ComplianceRequirementsPage implements OnInit {
     data.compliance.audit = this.saveAudit();
     data.compliance.records = this.saveRecords();
     data.compliance.documents = this.saveDocuments();
+    data.compliance.formulaAndMatching = this.saveFormulaMatching();
 
     return this.programService.saveProgram(this.programId, data, this.cookieValue);
   }
@@ -359,6 +361,125 @@ export class ComplianceRequirementsPage implements OnInit {
         model.checkbox.push('na');
       }
       model.textarea.push(this.program.data.compliance.documents.description);
+    }
+
+    return model;
+  }
+
+  private saveFormulaMatching() {
+    let formulaAndMatching: any = {
+      types: {},
+      formula: {},
+      matching: {},
+      moe: {}
+    };
+
+    if(this.formulaMatchingModel) {
+      if(this.formulaMatchingModel.checkbox) {
+        // todo: correct typo formua -> formula after schema is udpated
+        formulaAndMatching.types.formua = this.formulaMatchingModel.checkbox.indexOf('cfr') !== -1;
+        formulaAndMatching.types.matching = this.formulaMatchingModel.checkbox.indexOf('matching') !== -1;
+        formulaAndMatching.types.moe = this.formulaMatchingModel.checkbox.indexOf('moe') !== -1;
+      } else {
+        // todo: correct typo formua -> formula after schema is udpated
+        formulaAndMatching.types.formua = false;
+        formulaAndMatching.types.matching = false;
+        formulaAndMatching.types.moe = false;
+      }
+
+      if(this.formulaMatchingModel.title) {
+        formulaAndMatching.formula.title = this.formulaMatchingModel.title;
+      }
+
+      if(this.formulaMatchingModel.chapter) {
+        formulaAndMatching.formula.chapter = this.formulaMatchingModel.chapter;
+      }
+
+      if(this.formulaMatchingModel.part) {
+        formulaAndMatching.formula.part = this.formulaMatchingModel.part;
+      }
+
+      if(this.formulaMatchingModel.subPart) {
+        formulaAndMatching.formula.subPart = this.formulaMatchingModel.subPart;
+      }
+
+      if(this.formulaMatchingModel.publicLaw) {
+        formulaAndMatching.formula.publicLaw = this.formulaMatchingModel.publicLaw;
+      }
+
+      if(this.formulaMatchingModel.additionalInfo) {
+        formulaAndMatching.formula.description = this.formulaMatchingModel.additionalInfo;
+      }
+
+      if(this.formulaMatchingModel.matchingPercentage) {
+        formulaAndMatching.matching.percent = this.formulaMatchingModel.matchingPercentage;
+      }
+
+      if(this.formulaMatchingModel.matchingDescription) {
+        formulaAndMatching.matching.description = this.formulaMatchingModel.matchingDescription;
+      }
+
+      if(this.formulaMatchingModel.moeRequirements) {
+        formulaAndMatching.moe.description = this.formulaMatchingModel.moeRequirements;
+      }
+    }
+
+    return formulaAndMatching;
+  }
+
+  private loadFormulaMatching() {
+    let model: any = {};
+    model.checkbox = [];
+
+    if(this.program.data.compliance.formulaAndMatching) {
+      if(this.program.data.compliance.formulaAndMatching.types) {
+        // todo: correct typo formua -> formula after schema is udpated
+        if(this.program.data.compliance.formulaAndMatching.types.formua) {
+          model.checkbox.push('cfr');
+        }
+        if(this.program.data.compliance.formulaAndMatching.types.matching) {
+          model.checkbox.push('matching');
+        }
+        if(this.program.data.compliance.formulaAndMatching.types.moe) {
+          model.checkbox.push('moe');
+        }
+      }
+
+      if(this.program.data.compliance.formulaAndMatching.formula) {
+        if(this.program.data.compliance.formulaAndMatching.formula.title) {
+          model.title = this.program.data.compliance.formulaAndMatching.formula.title;
+        }
+        if(this.program.data.compliance.formulaAndMatching.formula.chapter) {
+          model.chapter = this.program.data.compliance.formulaAndMatching.formula.chapter;
+        }
+        if(this.program.data.compliance.formulaAndMatching.formula.part) {
+          model.part = this.program.data.compliance.formulaAndMatching.formula.part;
+        }
+        if(this.program.data.compliance.formulaAndMatching.formula.subPart) {
+          model.subPart = this.program.data.compliance.formulaAndMatching.formula.subPart;
+        }
+        if(this.program.data.compliance.formulaAndMatching.formula.publicLaw) {
+          model.publicLaw = this.program.data.compliance.formulaAndMatching.formula.publicLaw;
+        }
+        if(this.program.data.compliance.formulaAndMatching.formula.description) {
+          model.additionalInfo = this.program.data.compliance.formulaAndMatching.formula.description;
+        }
+      }
+
+      if(this.program.data.compliance.formulaAndMatching.matching) {
+        if(this.program.data.compliance.formulaAndMatching.matching.percent) {
+          model.matchingPercentage = this.program.data.compliance.formulaAndMatching.matching.percent;
+        }
+        if(this.program.data.compliance.formulaAndMatching.matching.description) {
+          model.matchingDescription = this.program.data.compliance.formulaAndMatching.matching.description;
+        }
+      }
+
+      if(this.program.data.compliance.formulaAndMatching.moe) {
+        if(this.program.data.compliance.formulaAndMatching.moe.description) {
+          model.moeRequirements = this.program.data.compliance.formulaAndMatching.moe.description;
+        }
+      }
     }
 
     return model;
