@@ -14,13 +14,18 @@ describe('AuthorizationPipe', () => {
       act: {
         description: "Food Security Act of 1985"
       },
-      version: 1,
       publicLaw: {
         number: "198",
         congressCode: "99"
       },
       authorizationId: "267dd7f6835044126fd8f7bb75563cdd",
-      authorizationType: "publiclaw"
+      "authorizationTypes": {
+        "act": true,
+        "executiveOrder": false,
+        "publicLaw": true,
+        "statute": false,
+        "USC": true
+      }
     }];
     let result1 = 'Food Security Act of 1985, Public Law 99-198, 7 US Code 427-427i, 1624';
     let oAuthorization2 = [{
@@ -31,9 +36,14 @@ describe('AuthorizationPipe', () => {
       act: {
         description: "Animal Welfare Act, as amended"
       },
-      version: 1,
       authorizationId: "1742fde5e30e4a248da6c5b22fa01a23",
-      authorizationType: "usc"
+      "authorizationTypes": {
+        "act": true,
+        "executiveOrder": false,
+        "publicLaw": false,
+        "statute": false,
+        "USC": true
+      }
     }];
     let result2 = 'Animal Welfare Act, as amended, 7 US Code 2131-2155';
     let oAuthorization3 = [{
@@ -44,13 +54,18 @@ describe('AuthorizationPipe', () => {
       act: {
         description: "Farm Security and Rural Investment Act of 2002"
       },
-      version: 1,
       publicLaw: {
         number: "171",
         congressCode: "107"
       },
       authorizationId: "19de595ca8d70fbce21e48282052d55f",
-      authorizationType: "publiclaw"
+      "authorizationTypes": {
+        "act": true,
+        "executiveOrder": false,
+        "publicLaw": true,
+        "statute": false,
+        "USC": true
+      }
     }];
     let result3 = 'Farm Security and Rural Investment Act of 2002, Public Law 107-171, E US Code 10401-10418';
     let oAuthorization4 = [{
@@ -61,13 +76,18 @@ describe('AuthorizationPipe', () => {
       act: {
         description: "Plant Protection Act"
       },
-      version: 1,
       publicLaw: {
         number: "224",
         congressCode: "106"
       },
       authorizationId: "7907af1123839132c1ddc7544ddc5c65",
-      authorizationType: "publiclaw"
+      "authorizationTypes": {
+        "act": true,
+        "executiveOrder": false,
+        "publicLaw": true,
+        "statute": false,
+        "USC": true
+      }
     }];
     let result4 = 'Plant Protection Act, Public Law 106-224, 7 US Code 7701-7772';
     expect(pipe.transform(oAuthorization1, [])).toBe(result1);

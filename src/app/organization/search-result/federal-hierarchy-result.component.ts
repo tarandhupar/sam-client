@@ -32,12 +32,12 @@ import 'rxjs/add/operator/map';
         	  <strong>{{ data.type=="Agency" ? 'Sub-Tier' : data.type }}</strong>
           </li>
           <li *ngIf="data.alternativeNames && data.alternativeNames !== null">
-            <strong>Also Known As</strong>
+            <strong>Also Known As:</strong>
             {{ data.alternativeNames }}
           </li>
           <li>
-            <strong>{{(data | organizationTypeCode).label}}</strong>
-            {{(data | organizationTypeCode).value}}
+            <strong>CGAC:</strong>
+            {{ data.cgac }}
           </li>    
         </ul>
       </div>
