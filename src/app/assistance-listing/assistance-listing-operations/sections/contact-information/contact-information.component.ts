@@ -316,9 +316,9 @@ export class FALContactInfoComponent implements OnInit, OnDestroy{
 
   onPreviousClick(event){
     if(this.sharedService.programId)
-      this.router.navigate(['programs/' + this.sharedService.programId + '/edit/financial-information/other-financial-info']);
+      this.router.navigate(['programs/' + this.sharedService.programId + '/edit/compliance-requirements']);
     else
-      this.router.navigate(['programs/add/financial-information/other-financial-info']);
+      this.router.navigate(['programs/add/compliance-requirements']);
 
   }
 

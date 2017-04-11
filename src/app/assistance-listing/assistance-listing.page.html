@@ -444,7 +444,17 @@
     <!--Compliance requirements-->
     <section id="program-compliance-requirements">
       <a name="#/programs/{{programID}}/view#compliance-requirements"></a>
-      <h2 id="compliance-requirements">Compliance Requirements</h2>
+
+      <div class="view-section-margin"></div>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="compliance-requirements">Compliance Requirements</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']"></i>
+        </div>
+      </div>
 
       <h3>Reports:</h3>
 

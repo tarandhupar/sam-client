@@ -17,7 +17,7 @@ export class PermissionSelectorComponent {
   @Input() options: PermissionOptionType[];
   @Input() optionsChange: EventEmitter<PermissionOptionType[]> = new EventEmitter();
   @Input() selectAllText: string = '';
-  @Input() title: string = '';
+  @Input() titleText: string = '';
   @Input() hideDefaultColumn: false;
   @Input() hideColumnHeader: false;
 
