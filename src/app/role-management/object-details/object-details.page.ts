@@ -203,7 +203,8 @@ export class ObjectDetailsPage implements OnInit {
       res => {
         this.footerAlerts.registerFooterAlert({
           title: 'Successfully created object',
-          type: 'success'
+          type: 'success',
+          timer: 3200,
         });
         this.router.navigate(['/access/workspace']);
       },
