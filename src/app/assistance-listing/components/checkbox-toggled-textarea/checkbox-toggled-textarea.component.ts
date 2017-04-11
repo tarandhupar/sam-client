@@ -58,7 +58,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   }
 
   ngAfterViewInit() {
-    this.toggleTextarea();
+    setTimeout(_=> this.toggleTextarea());
   }
 
   private parseInputsAndSetDefaults() {
