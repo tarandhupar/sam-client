@@ -47,7 +47,6 @@ describe('The Sam Type-ahead Component', () => {
     component.name = name;
     component.id = id;
     component.placeholder = placeholder;
-    component.selectedLabel = selectedLabel;
     component.options = options;
     component.config = config;
     component.allowAny = allowAny;
@@ -71,14 +70,5 @@ describe('The Sam Type-ahead Component', () => {
     fixture.detectChanges();
     component.filteredKeyValuePairs = component.filterKeyValuePairs('Alaska', component.options);
     expect(component.filteredKeyValuePairs).toEqual([{ label: 'Alaska', value: 'AK'}]);
-  });
-
-  it('Should display selected value in listDisplay', () => {
-    component.hasFocus = true;
-    component.setSelectedList({ label: 'Alabama', value: 'AL'});
-    component.setSelectedList({ label: 'Alaska', value: 'AK'});
-    fixture.detectChanges();
-    expect(component.listDisplay.selectedItems[0]).toEqual("Alabama");
-    expect(component.listDisplay.selectedItems).toContain("Alaska");
   });
 });

@@ -86,6 +86,10 @@ export class SearchService {
       oApiParam.oParam['contract_type'] = obj.contractType;
     }
 
+    if(typeof obj.naics !== 'undefined' && obj.naics !== null && obj.naics !== ''){
+      oApiParam.oParam['naics'] = obj.naics;
+    }
+
     return this.oAPIService.call(oApiParam);
   }
 
