@@ -17,6 +17,7 @@
                 [multimode]="false"
                 [advancedMode]="false"
                 [required]="true"
+                [orgId]="agency"
                 [initial]="agency ? [agency] : []"
                 (organization)="onOrganizationChange($event)"
                 [levelLimit] = '2'>
