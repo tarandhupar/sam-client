@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
 
@@ -16,6 +16,10 @@ export class RoleMgmtSidenav implements OnInit{
     DomiansCheckboxModel : any = [];
     permissionOptions : any = [];
     usersEntered : string;
+
+    @Output() statusSelected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() domainSelected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() autoCompleteSelected : EventEmitter<any> = new EventEmitter<any>();
 
     private filters = {
       status: { options: [ ], value: [] },
@@ -54,22 +58,21 @@ export class RoleMgmtSidenav implements OnInit{
     }
 
     activeFilter(event){
-      //this.checkSelected.emit(event.toString());
-      //window.scrollTo(0,0);
-      console.log(event);
-      //console.log("status");
-      //console.log(this.StatusCheckboxModel) ;
-
+      this.statusSelected.emit(event.toString());
+      window.scrollTo(0,0);
     }
 
     domainFilter(event){
-      console.log(event);
+      this.domainSelected.emit(event.toString());
+      window.scrollTo(0,0);
+      //console.log(event);
       //console.log("domains");
       //console.log(this.DomiansCheckboxModel);
     }
 
     onUserClick($event){
-      console.log(this.usersEntered);
+      this.autoCompleteSelected.emit(this.usersEntered);
+      //console.log(this.usersEntered);
       this.usersEntered = '';
     }
 }

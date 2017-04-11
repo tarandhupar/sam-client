@@ -46,12 +46,12 @@
         <div class = "usa-width-one-sixth"><h4 *ngIf = "content.status === 'Escalated'">Escalted To</h4></div>
       </div>
       <div class = "usa-grid-full p_T-.5em">
-        <div class = "usa-width-one-sixth">{{content.requestedBy}}</div>
+        <div class = "usa-width-one-sixth">{{content.requestorName}}</div>
         <div class = "usa-width-one-sixth">{{formatDate(content.requestedDate)}}</div>
         <div class = "usa-width-one-sixth">{{content.status}}</div>
-        <div class = "usa-width-one-sixth">{{content.createdBy}}</div>
+        <div class = "usa-width-one-sixth">{{content.supervisorName}}</div>
         <div class = "usa-width-one-sixth" *ngIf = "content.status !== 'Pending'">{{formatDate(content.createdDate)}}</div>
-        <div class = "usa-width-one-sixth" *ngIf = "content.status === 'Pending'">{{content.createdEmail}}</div>
+        <div class = "usa-width-one-sixth" *ngIf = "content.status === 'Pending'">{{content.supervisorEmail}}</div>
         <div class = "usa-width-one-sixth" *ngIf = "content.status === 'Escalated'">{{content.escalatedTo}}</div>
       </div>
       <div class = "usa-grid-full p_T-1em">
@@ -66,7 +66,7 @@
         </div>
         <div class = "usa-width-one-third" *ngIf = "content.status !== 'Pending'">{{content.AdministratorMessage}}</div>
         <div [ngClass] = "content.status === 'Pending' ? 'usa-width-one-fourth' : 'usa-width-one-third'" *ngIf = "content.status === 'Pending'||content.status === 'Escalated'">
-          <button class="usa-button-active pull-right">Respond</button>
+          <button class="usa-button-active pull-right" routerLink = "../requests/1">Respond</button>
         </div>
       </div>
     </section>

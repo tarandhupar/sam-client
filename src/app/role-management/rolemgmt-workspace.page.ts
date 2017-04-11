@@ -11,4 +11,24 @@ export class RoleMgmtWorkspace implements OnInit{
   ngOnInit(){
 
   }
+
+  StatusValue(event){
+    console.log(event);
+  }
+
+  DomainValue(event){
+    console.log(event);
+  }
+
+  AutoCompleteValue(event){
+    console.log(event);
+  }
+
+  SortValue(event){
+    console.log(event);
+  }
+
+  PageValue(event){
+    console.log(event);
+  }
 }
