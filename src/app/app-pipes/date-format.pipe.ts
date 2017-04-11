@@ -8,7 +8,10 @@ export class DateFormatPipe implements PipeTransform {
     if (datetime == null) {
       return null;
     }
-
-    return moment(datetime).tz(moment.tz.guess()).format(format)
+    if (format.includes('z')){
+      return moment(datetime).tz(moment.tz.guess()).format(format)
+    } else {
+      return moment(datetime).format(format);
+    }
   }
 }
