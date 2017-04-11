@@ -394,18 +394,22 @@ export class SearchPage implements OnInit{
   }
 
 	runSearch(){
-    if(this.index === 'wd') {
+    switch(this.index) {
       // fetching data for drop downs
-      this.getDictionaryData('wdStates');
-      this.getCountyByState(this.wdStateModel);
-      this.determineEnableCountySelect();
-      this.determineEnableServicesSelect();
-      this.getDictionaryData('dbraConstructionTypes');
-      this.getDictionaryData('scaServices');
+      case 'wd':
+        this.getDictionaryData('wdStates');
+        this.getCountyByState(this.wdStateModel);
+        this.determineEnableCountySelect();
+        this.determineEnableServicesSelect();
+        this.getDictionaryData('dbraConstructionTypes');
+        this.getDictionaryData('scaServices');
+            break;
+      case 'opp':
+      case 'ent':
+      case 'fpds':
+            this.getAwardsDictionaryData('naics_code');
     }
-    if(this.index === 'fpds') {
-      this.getAwardsDictionaryData('naics_code');
-    }
+
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
       this.searchService.featuredSearch({
