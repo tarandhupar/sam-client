@@ -22,7 +22,13 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
     { value: 'moe', label: 'This listing has maintenance of effort (MOE) requirements AND total allocations over $100 million for the current fiscal year.', name: this.name + '-checkbox-moe' }
   ];
 
-  public matchingRequirementsOptions = (() => {
+  public matchingRequirementsOptions = [
+    { value: 'mandatory', label: 'Matching requirements are mandatory', name: this.name + '-radio-mandatory'},
+    { value: 'voluntary', label: 'Matching requirements are voluntary', name: this.name + '-radio-voluntary'},
+    { value: 'voluntary_rating', label: 'Matching requirements are voluntary and part of the rating criteria', name: this.name + '-radio-voluntary-rating'}
+  ];
+
+  public matchingPercentageOptions = (() => {
     let percentages = [];
     for(let i = 0; i <= 100; i+=5) {
       percentages.push({value: i, label: i.toString(), name: this.name + '-percentage' + i});
@@ -77,6 +83,7 @@ public formulaMatchingGroup: FormGroup;
       subpart: new FormControl(''),
       publicLaw: new FormControl(''),
       additionalInfo: new FormControl(''),
+      matchingRequirements: new FormControl(''),
       matchingPercentage: new FormControl(null),
       matchingDescription: new FormControl(''),
       moeRequirements: new FormControl('')
@@ -116,6 +123,11 @@ public formulaMatchingGroup: FormGroup;
 
     this.formulaMatchingGroup.get('additionalInfo').valueChanges.subscribe(value => {
       this.model.additionalInfo = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('matchingRequirements').valueChanges.subscribe(value => {
+      this.model.matchingRequirements = value;
       this.onChange();
     });
 
@@ -183,6 +195,10 @@ public formulaMatchingGroup: FormGroup;
 
     if(this.model.additionalInfo) {
       this.formulaMatchingGroup.get('additionalInfo').setValue(this.model.additionalInfo);
+    }
+
+    if(this.model.matchingRequirements) {
+      this.formulaMatchingGroup.get('matchingRequirements').setValue(this.model.matchingRequirements);
     }
 
     if(this.model.matchingPercentage) {

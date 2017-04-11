@@ -54,10 +54,15 @@
                    [formControlName]="'additionalInfo'"
       ></samTextArea>
 
+      <samRadioButton [name]="name + '-matching-radio-buttons'"
+                      [options]="matchingRequirementsOptions"
+                      [formControlName]="'matchingRequirements'"
+      ></samRadioButton>
+
       <samSelect [label]="'Matching Requirements'"
                  [hint]="'Select the Percentage Below'"
                  [name]="name + '-matching-requirements-percentage'"
-                 [options]="matchingRequirementsOptions"
+                 [options]="matchingPercentageOptions"
                  [required]="false"
                  [hidden]="model.checkbox.indexOf('matching') === -1"
                  [formControlName]="'matchingPercentage'"

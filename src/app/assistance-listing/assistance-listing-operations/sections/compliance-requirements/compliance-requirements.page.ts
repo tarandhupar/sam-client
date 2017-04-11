@@ -411,6 +411,10 @@ export class ComplianceRequirementsPage implements OnInit {
         formulaAndMatching.formula.description = this.formulaMatchingModel.additionalInfo;
       }
 
+      if(this.formulaMatchingModel.matchingRequirements) {
+        formulaAndMatching.matching.requirementFlag = this.formulaMatchingModel.matchingRequirements;
+      }
+
       if(this.formulaMatchingModel.matchingPercentage) {
         formulaAndMatching.matching.percent = this.formulaMatchingModel.matchingPercentage;
       }
@@ -467,6 +471,9 @@ export class ComplianceRequirementsPage implements OnInit {
       }
 
       if(this.program.data.compliance.formulaAndMatching.matching) {
+        if(this.program.data.compliance.formulaAndMatching.matching.requirementFlag) {
+          model.matchingRequirements = this.program.data.compliance.formulaAndMatching.matching.requirementFlag;
+        }
         if(this.program.data.compliance.formulaAndMatching.matching.percent) {
           model.matchingPercentage = this.program.data.compliance.formulaAndMatching.matching.percent;
         }
