@@ -4,9 +4,49 @@
               [hint]="hint"
               [required]="required">
 
-  <samCheckbox [model]="model.checkbox || []"
-               [name]="name + '-checkbox'"
-               [options]="formulaMatchingOptions"
-               [formControl]="formulaMatchingControl"
-  ></samCheckbox>
+  <div *ngIf="formulaMatchingGroup" [formGroup]="formulaMatchingGroup">
+    <samCheckbox [model]="model.checkbox || []"
+                 [name]="name + '-checkbox'"
+                 [options]="formulaMatchingOptions"
+                 [formControlName]="'formulaMatching'"
+    ></samCheckbox>
+
+    <ng-container *ngIf="model.checkbox">
+      <samText [label]="'Title'"
+               [name]="name + '-title'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'title'"
+      ></samText>
+
+      <samText [label]="'Chapter'"
+               [name]="name + '-chapter'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'chapter'"
+      ></samText>
+
+      <samText [label]="'Part'"
+               [name]="name + '-part'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'part'"
+      ></samText>
+
+      <samText [label]="'Subpart'"
+               [name]="name + '-subpart'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'subpart'"
+      ></samText>
+
+      <samText [label]="'Public Law'"
+               [name]="name + '-public-law'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'publicLaw'"
+      ></samText>
+    </ng-container>
+  </div>
+
 </labelWrapper>

@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
 @Component({
@@ -21,7 +21,8 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
     { value: 'matching', label: 'This listing has matching requirements', name: this.name + '-checkbox-matching-requirements' },
     { value: 'moe', label: 'This listing has maintenance of effort (MOE) requirements AND total allocations over $100 million for the current fiscal year.', name: this.name + '-checkbox-moe' }
   ];
-  public formulaMatchingControl: FormControl;
+
+  public formulaMatchingGroup: FormGroup;
 
   @Input() options: any; // all inputs are passed through a single options object
   public name: string;
@@ -59,8 +60,17 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   }
 
   private createFormControls() {
-    this.formulaMatchingControl = new FormControl([]);
-    this.formulaMatchingControl.valueChanges.subscribe(value => {
+    this.formulaMatchingGroup = new FormGroup({
+      formulaMatching: new FormControl([]),
+      title: new FormControl(''),
+      chapter: new FormControl(''),
+      part: new FormControl(''),
+      subpart: new FormControl(''),
+      publicLaw: new FormControl('')
+    });
+
+
+    this.formulaMatchingGroup.get('formulaMatching').valueChanges.subscribe(value => {
       // todo: figure out why this is being called twice on population
       this.model.checkbox = value;
       this.onChange();
