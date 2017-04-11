@@ -7,7 +7,7 @@
     <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
     <div>
       <sam-filters-container>
-        <sam-collapsible [label]="'Status'" [startOpened]="true">
+        <sam-collapsible *ngIf="index !== 'fh'" [label]="'Status'" [startOpened]="true">
           <!--active checkbox-->
           <samCheckbox
             [(model)]="checkboxModel"

@@ -68,7 +68,12 @@ export class App{
     }
 
     qsobj['page'] = 1;
-    qsobj['isActive'] = this.isActive;
+
+    if(searchObject.searchField === 'fh') {
+      qsobj['isActive'] = true;
+    } else {
+      qsobj['isActive'] = this.isActive;
+    }
     if(searchObject.searchField !== 'wd') {
       qsobj['wdType'] = null;
       qsobj['state'] = null;
