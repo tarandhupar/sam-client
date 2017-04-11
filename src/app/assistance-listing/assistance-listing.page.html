@@ -60,13 +60,13 @@
 
         <span>
           <strong>Related Federal Assistance: </strong>
-          <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.flag != 'na' && relatedProgram.length > 0">
+          <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.length > 0 && relatedProgram.length > 0">
             <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
               <a class="field" [attr.id]="'program-related-' + i" href="/programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}
             </ng-container>
           </ng-container>
 
-          <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.flag == 'na' || relatedProgram.length == 0">Not Applicable.</span>
+          <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.length == 0 || relatedProgram.length == 0">Not Applicable.</span>
         </span>
       </div>
     </section>
@@ -91,15 +91,12 @@
 
       <h3>Examples of Funded Projects:</h3>
 
-      <div class="content-block" [ngSwitch]="program.data?.projects?.flag">
-        <ng-container *ngSwitchCase="'yes'">
+      <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
+        <ng-container *ngSwitchCase="true">
           <span *ngFor="let item of program.data.projects?.list; let i = index">
-            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.content?.actual">
-              Fiscal Year {{item.year}}: {{item.content.actual}}
+            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description">
+              Fiscal Year {{item.fiscalYear}}: {{item.description}}
             </span>
-            <!--          <span *ngIf="item.value.content.projection">
-                      , Projection: {{item.value.content.projection}}
-                    </span>-->
           </span>
         </ng-container>
 
@@ -145,22 +142,22 @@
 
       <h3>Range and Average of Financial Assistance:</h3>
 
-      <p class="field" id="program-financial-additional-info" *ngIf="(program.data?.financial?.additionalInfo?.content) && (program.data?.financial?.additionalInfo?.content != '')">
-        {{program.data.financial.additionalInfo.content}}
+      <p class="field" id="program-financial-additional-info" *ngIf="(program.data?.financial?.description) && (program.data?.financial?.description != '')">
+        {{program.data.financial?.description}}
       </p>
 
-      <p class="field" id="program-financial-additional-info" *ngIf="!(program.data?.financial?.additionalInfo?.content) || (program.data?.financial?.additionalInfo?.content == '')">
+      <p class="field" id="program-financial-additional-info" *ngIf="!(program.data?.financial?.description) || (program.data?.financial?.description == '')">
         No Data Available.
       </p>
 
 
       <h3>Accomplishments:</h3>
 
-      <div class="content-block" [ngSwitch]="program.data?.postAward?.accomplishments?.flag">
-        <ng-container *ngSwitchCase="'yes'">
-          <ng-container *ngFor="let item of program.data.postAward.accomplishments?.list; let i = index">
-            <span class="m_B-2x field" [attr.id]="'program-accomplishments-actual-' + i" *ngIf="item.content?.actual && item.content?.actual != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.actual}}</span>
-            <span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.content?.projection && item.content?.projection != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.projection}}</span>
+      <div class="content-block" [ngSwitch]="program.data?.financial?.accomplishments?.isApplicable">
+        <ng-container *ngSwitchCase="true">
+          <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list; let i = index">
+            <span class="m_B-2x field" [attr.id]="'program-accomplishments-' + i" *ngIf="item.description && item.description != ''"><strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}</span>
+            <!--<span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.content?.projection && item.content?.projection != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.projection}}</span>-->
           </ng-container>
         </ng-container>
 
@@ -192,25 +189,25 @@
       <h3>Credentials and Documentation:</h3>
 
       <p>
-        <ng-container [ngSwitch]="program.data?.eligibility?.documentation?.flag">
-          <ng-container *ngSwitchCase="'yes'">
-            <span class="field" id="program-elegibility-documentation">{{program.data.eligibility.documentation.content}}</span>
-            <ng-container *ngFor="let item of program.data.eligibility.documentation.questions">
-              <ng-container *ngIf="item.questionCode === 'OMBCircularA87'">
-                <span *ngIf="item.flag === 'yes'" class="field" id="program-elegibility-question-a87">
+        <ng-container *ngIf="program.data?.eligibility?.documentation?.description">
+          <span class="field" id="program-elegibility-documentation">{{program.data.eligibility?.documentation?.description}}</span>
+
+          <ng-container *ngIf="program.data.compliance?.CFR200Requirements?.questions">
+            <ng-container *ngFor="let item of program.data.compliance?.CFR200Requirements?.questions">
+              <!-- OMBCircularA87 is subpartC-->
+              <ng-container *ngIf="item.code === 'subpartC'">
+                <span *ngIf="item.isSelected == true" class="field" id="program-elegibility-question-a87">
                   2 CFR 200, Subpart E - Cost Principles applies to this program.
                 </span>
-
                 <!-- flag can be both 'no' or null -->
-                <span *ngIf="item.flag !== 'yes'" class="field" id="program-elegibility-question-a87">
+                <span *ngIf="item.isSelected == false" class="field" id="program-elegibility-question-a87">
                   This program is excluded from coverage under 2 CFR 200, Subpart E - Cost Principles.
                 </span>
               </ng-container>
             </ng-container>
           </ng-container>
-
-          <ng-container *ngSwitchDefault>None</ng-container>
         </ng-container>
+        <ng-container *ngIf="!program.data?.eligibility?.documentation?.description">None</ng-container>
       </p>
 
 
@@ -224,7 +221,7 @@
       </div>
 
       <p>
-        <span class="field" id="program-applicant-eligibility">{{program.data?.eligibility?.applicant?.additionalInfo?.content}}</span>
+        <span class="field" id="program-applicant-eligibility">{{program.data?.eligibility?.applicant?.description}}</span>
       </p>
 
 
@@ -238,15 +235,15 @@
       </div>
 
       <p>
-        <span class="field" id="program-beneficiary-eligibility">{{program.data?.eligibility?.beneficiary?.additionalInfo?.content}}</span>
+        <span class="field" id="program-beneficiary-eligibility">{{program.data?.eligibility?.beneficiary?.description}}</span>
       </p>
 
 
       <h3>Length and Time Phasing of Assistance:</h3>
       <p>
-        <span class="field" id="program-assistance-lengthtime">{{program.data?.assistance?.limitation?.content}}</span>
-        <span class="field" id="program-assistance-method" *ngIf="program.data?.assistance?.limitation?.awarded">
-          Method of awarding/releasing assistance: {{program.data.assistance?.limitation?.awarded}}
+        <span class="field" id="program-assistance-lengthtime">{{program.data?.eligibility?.limitation?.description}}</span>
+        <span class="field" id="program-assistance-method" *ngIf="program.data?.eligibility?.limitation?.awarded">
+          Method of awarding/releasing assistance: {{program.data.eligibility?.limitation?.awarded}}
         </span>
       </p>
 
@@ -255,16 +252,16 @@
 
       <div class="designation" *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
         <h4>Designations</h4>
-        <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.assistanceUsageTypes | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
+        <ng-container *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-usage-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
         </ng-container>
       </div>
 
       <p>
-        <span class="field" id="program-usage-rules">{{ program.data?.usage?.rules?.content }}</span>
-        <span class="field" id="program-usage-restrictions" *ngIf="program.data.usage?.restrictions?.flag=='yes'">{{ program.data.usage.restrictions.content }}</span>
-        <span class="field" id="program-usage-discretionary-fund" *ngIf="program.data.usage?.discretionaryFund?.flag=='yes'">{{ program.data.usage.discretionaryFund.content }}</span>
-        <span class="field" id="program-usage-loan-terms" *ngIf="program.data.usage?.loanTerms?.flag=='yes'">{{ program.data.usage.loanTerms.content }}</span>
+        <span class="field" id="program-usage-rules" *ngIf="program.data?.eligibility?.usage?.rules?.description">{{ program.data?.eligibility?.usage?.rules?.description }}</span>
+        <span class="field" id="program-usage-restrictions" *ngIf="program.data.eligibility?.usage?.restrictions?.description">{{ program.data.eligibility?.usage?.restrictions?.description }}</span>
+        <span class="field" id="program-usage-discretionary-fund" *ngIf="program.data.eligibility?.usage?.discretionaryFund?.description">{{ program.data.eligibility?.usage?.discretionaryFund?.description }}</span>
+        <span class="field" id="program-usage-loan-terms" *ngIf="program.data.eligibility?.usage?.loanTerms?.description">{{ program.data.eligibility?.usage?.loanTerms?.description }}</span>
       </p>
     </section>
 
@@ -275,10 +272,10 @@
 
       <h3>Deadlines:</h3>
 
-      <div class="content-block" [ngSwitch]="program.data?.application?.deadlines?.submission?.flag">
+      <div class="content-block" [ngSwitch]="program.data?.assistance?.deadlines?.flag">
         <ng-container *ngSwitchCase="'yes'">
           <!-- repeat over all deadlines. -->
-          <span *ngFor="let deadline of program.data.application.deadlines.submission.list; let i = index">
+          <span *ngFor="let deadline of program.data?.assistance?.deadlines?.list; let i = index">
             <span class="field" [attr.id]="'program-deadline-dates-' + i">
               <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
               <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
@@ -300,43 +297,45 @@
       <h3>Preapplication Coordination:</h3>
 
       <div>
-        <ng-container [ngSwitch]="program.data?.preApplication?.coordination?.flag">
-          <p *ngSwitchCase="'yes'">
+        <ng-container [ngSwitch]="program.data?.assistance?.preApplicationCoordination?.isApplicable">
+          <p *ngSwitchCase="true">
             Preapplication coordination is required.
 
             <!-- Environmental statements-->
-            <ng-container [ngSwitch]="program.data.preApplication.coordination.environmentalImpact?.flag ">
-              <ng-container *ngSwitchCase="'yes'">
-                <ng-container *ngFor="let entry of program.data.preApplication.coordination.environmentalImpact?.reports; let i = index">
-                  <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.flag === 'yes'">
-                    An environmental impact {{entry.reportCode}} is required for this program.
-                  </span>
-                </ng-container>
+            <ng-container *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
+              <ng-container *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
+                <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.isSelected == true && entry.reportCode !== 'ExecutiveOrder12372'">
+                  An environmental impact {{entry.reportCode}} is required for this program.
+                </span>
               </ng-container>
 
-              <span *ngSwitchDefault class="field" id="program-preapplication-coorindation-environmental-na">
+              <span *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length==0" class="field" id="program-preapplication-coorindation-environmental-na">
                 Environmental impact information is not required for this program.
               </span>
+              
+              
             </ng-container>
 
             <!-- Executive Order  -->
-            <ng-container *ngFor="let entry of program.data.preApplication.coordination.questions; let i = index">
-              <ng-container *ngIf="entry.questionCode === 'ExecutiveOrder12372'">
-                <span *ngIf="entry.flag === 'yes'" class="field" id="program-preapplication-coordination-executive-order">
-                  This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
-                  An applicant should consult the office or official designated as the single point of contact in his or her State for more
-                  information on the process the State requires to be followed in applying for assistance, if the State has selected the program forreview.
-                </span>
+            <ng-container *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
+              <ng-container *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
+                <ng-container *ngIf="entry.reportCode === 'ExecutiveOrder12372'">
+                  <span *ngIf="entry.isSelected == true" class="field" id="program-preapplication-coordination-executive-order">
+                    This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
+                    An applicant should consult the office or official designated as the single point of contact in his or her State for more
+                    information on the process the State requires to be followed in applying for assistance, if the State has selected the program for review.
+                  </span>
 
-                <span *ngIf="entry.flag !== 'yes'" class="field" id="program-preapplication-coordination-executive-order">
-                  This program is excluded from coverage under E.O. 12372.
-                </span>
+                  <span *ngIf="entry.isSelected == false" class="field" id="program-preapplication-coordination-executive-order">
+                    This program is excluded from coverage under E.O. 12372.
+                  </span>
+                </ng-container>
               </ng-container>
             </ng-container>
 
             <!-- additional content-->
             <span class="field" id="program-preapplication-coordination">
-              {{program.data.preApplication.coordination.additionalInfo?.content}}
+              {{program.data.assistance?.preApplicationCoordination?.description}}
             </span>
           </p>
 
@@ -350,13 +349,13 @@
       <h3>Application Procedures:</h3>
 
       <p>
-        <ng-container *ngFor="let item of program.data?.application?.procedures?.questions">
-          <ng-container *ngIf="item.questionCode === 'OMBCircularA102'">
-            <span *ngIf="item.flag === 'yes'" class="field" id="program-application-procedures-a102">
+        <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+          <ng-container *ngIf="item.code === 'subpartE'">
+            <span *ngIf="item.isSelected == true" class="field" id="program-application-procedures-a102">
               2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards applies to this program.
             </span>
 
-            <span *ngIf="item.flag !== 'yes'" class="field" id="program-application-procedures-a102">
+            <span *ngIf="item.isSelected == false" class="field" id="program-application-procedures-a102">
               This program is excluded from coverage under 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit
               Requirements for Federal Awards.
             </span>
@@ -365,7 +364,7 @@
 
         <!-- additional content-->
         <span class="field" id="program-application-procedures">
-          {{program.data?.application?.procedures?.additionalInfo?.content}}
+          {{program.data?.assistance?.applicationProcedure?.description}}
         </span>
       </p>
 
@@ -373,14 +372,14 @@
       <h3>Criteria for Selecting Proposals:</h3>
 
       <p>
-        <ng-container [ngSwitch]="program.data?.application?.selectionCriteria?.flag">
-          <span class="field" id="program-selection-criteria" *ngSwitchCase="'yes'">
-            {{program.data.application.selectionCriteria.content}}
+        <ng-container [ngSwitch]="program.data?.assistance?.selectionCriteria?.isApplicable">
+          <span class="field" id="program-selection-criteria" *ngSwitchCase="true">
+            {{program.data?.assistance?.selectionCriteria?.description}}
           </span>
 
-          <span class="field" id="program-selection-criteria" *ngSwitchCase="'no'">
+<!--          <span class="field" id="program-selection-criteria" *ngSwitchCase="'no'">
             No
-          </span>
+          </span>-->
 
           <span class="field" id="program-selection-criteria" *ngSwitchDefault>
             Not Applicable
@@ -392,14 +391,14 @@
       <h3>Award Procedure:</h3>
 
       <p class="field" id="program-award-procedure">
-        {{program.data?.award?.procedures?.content}}
+        {{program.data?.assistance?.awardProcedure?.description}}
       </p>
 
 
       <h3>Date Range for Approval/Disapproval:</h3>
 
 
-      <p class="field" id="program-application-approval-interval" [ngSwitch]="program.data?.application?.deadlines?.approval?.interval">
+      <p class="field" id="program-application-approval-interval" [ngSwitch]="program.data?.assistance?.approval?.interval">
         <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
         <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
         <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
@@ -410,14 +409,14 @@
         <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
         <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
         <span class="field" id="program-application-approval">
-          {{program.data?.application?.deadlines?.approval?.additionalInfo?.content}}
+          {{program.data?.assistance?.approval?.description}}
         </span>
       </p>
 
 
       <h3>Renewals:</h3>
 
-      <p class="field" id="program-application-renewal-interval" [ngSwitch]="program.data?.application?.deadlines?.renewal?.interval">
+      <p class="field" id="program-application-renewal-interval" [ngSwitch]="program.data?.assistance?.renewal?.interval">
         <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
         <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
         <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
@@ -428,14 +427,14 @@
         <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
         <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
         <span class="field" id="program-application-renewal">
-          {{program.data?.application?.deadlines?.renewal?.additionalInfo?.content}}
+          {{program.data?.assistance?.renewal?.description}}
         </span>
       </p>
 
 
       <h3>Appeals:</h3>
 
-      <p class="field" id="program-application-appeal-interval" [ngSwitch]="program.data?.application?.deadlines?.appeal?.interval">
+      <p class="field" id="program-application-appeal-interval" [ngSwitch]="program.data?.assistance?.appeal?.interval">
         <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
         <ng-container *ngSwitchCase="'2'"><em>From 15 to 30 days</em></ng-container>
         <ng-container *ngSwitchCase="'3'"><em>From 30 to 60 days</em></ng-container>
@@ -446,7 +445,7 @@
         <ng-container *ngSwitchCase="'8'"><em>Not Applicable</em></ng-container>
         <ng-container *ngSwitchCase="'9'"><em>Other</em></ng-container>
         <span class="field" id="program-application-appeal">
-          {{program.data?.application?.deadlines?.appeal?.additionalInfo?.content}}
+          {{program.data?.assistance?.appeal?.description}}
         </span>
       </p>
     </section>
@@ -469,31 +468,25 @@
       <h3>Reports:</h3>
 
       <div>
-        <ng-container [ngSwitch]="program.data?.postAward?.reports?.flag">
-          <p class="field" id="program-postaward-reports" *ngSwitchCase="'yes'">
-            <ng-container *ngFor="let item of program.data.postAward.reports.list">
-              <span *ngIf="item.flag === 'yes'" class="field" [attr.id]="'program-postaward-reports-' + item.reportCode">{{item.content}}</span>
-            </ng-container>
-          </p>
+        <p class="field" id="program-postaward-reports" *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.reports:'isSelected':false:null).length > 0">
+          <ng-container *ngFor="let item of program.data?.compliance?.reports">
+            <span *ngIf="item.isSelected == true" class="field" [attr.id]="'program-postaward-reports-' + item.code">{{item.description}}</span>
+          </ng-container>
+        </p>
 
-          <p class="m-a-0 field" id="program-postaward-reports" *ngSwitchCase="'no'">
-            No reports are required.
-          </p>
-
-          <p class="m-a-0 field" id="program-postaward-reports" *ngSwitchDefault>
-            Not Applicable
-          </p>
-        </ng-container>
+        <p class="m-a-0 field" id="program-postaward-reports" *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.reports:'isSelected':false:null).length == 0">
+          Not Applicable
+        </p>
       </div>
 
       <h3>Audits:</h3>
 
       <div>
-        <ng-container [ngSwitch]="program.data?.postAward?.audit?.flag">
-          <p *ngSwitchCase="'yes'">
-            <ng-container *ngFor="let item of program.data.postAward.audit.questions">
-              <ng-container *ngIf="item.questionCode === 'OMBCircularA133'">
-                <span *ngIf="item.flag === 'yes'" class="field" id="program-postaward-audit-a133">
+        <ng-container [ngSwitch]="program.data?.compliance?.audit?.isApplicable">
+          <p *ngSwitchCase="true">
+            <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+              <ng-container *ngIf="item.code === 'subpartF'">
+                <span *ngIf="item.isSelected == true" class="field" id="program-postaward-audit-a133">
                   In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
                   nonfederal entities that expend financial assistance of $750,000 or more in Federal
                   awards will have a single or a program-specific audit conducted for that year. Non-Federal
@@ -501,17 +494,13 @@
                   audit requirements for that year, except as noted in 2 CFR 200.503
                 </span>
 
-                <span *ngIf="item.flag !== 'yes'" class="field" id="program-postaward-audit-a133">
+                <span *ngIf="item.isSelected == false" class="field" id="program-postaward-audit-a133">
                   This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
                 </span>
               </ng-container>
             </ng-container>
 
-            <span class="field" id="program-postaward-audit">{{program.data.postAward.audit.content}}</span>
-          </p>
-
-          <p class="m-a-0 field" id="program-postaward-audit" *ngSwitchCase="'no'">
-            No audits are required for this program.
+            <span class="field" id="program-postaward-audit">{{program.data?.compliance?.audit?.description}}</span>
           </p>
 
           <p class="m-a-0 field" id="program-postaward-audit" *ngSwitchDefault>
@@ -522,69 +511,57 @@
 
       <h3>Records:</h3>
 
-      <p class="field" id="program-postaward-records" *ngIf="(program.data?.postAward?.records?.content) && (program.data?.postAward?.records.content != '')">
-        {{program.data?.postAward?.records?.content}}
+      <p class="field" id="program-postaward-records" *ngIf="(program.data?.compliance?.records?.description) && (program.data?.compliance?.records.description != '')">
+        {{program.data?.compliance?.records?.description}}
       </p>
 
-      <p class="field" id="program-postaward-records" *ngIf="!(program.data?.postAward?.records?.content) || (program.data?.postAward?.records?.content == '')">
+      <p class="field" id="program-postaward-records" *ngIf="!(program.data?.compliance?.records?.description) || (program.data?.compliance?.records?.description == '')">
         No Data Available.
       </p>
 
       <h3>Regulations, Guidelines, and Literature:</h3>
 
       <p>
-        <ng-container [ngSwitch]="program.data?.postAward?.documents?.flag">
-          <span class="field" id="program-postaward-documents" *ngSwitchCase="'yes'"> {{program.data.postAward.documents.content}}</span>
+        <ng-container [ngSwitch]="program.data?.compliance?.documents?.isApplicable">
+          <span class="field" id="program-postaward-documents" *ngSwitchCase="true"> {{program.data?.compliance?.documents?.description}}</span>
           <span class="field" id="program-postaward-documents" *ngSwitchDefault> Not Applicable.</span>
         </ng-container>
       </p>
 
       <h3 class="m_B-5x">Formula and Matching Requirements:</h3>
       <!-- statutory formula-->
-      <ng-container [ngSwitch]="program.data?.assistance?.formula?.flag">
-        <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="'yes'">
-          Statutory Formula: Title {{program.data.assistance.formula.title}} Chapter {{program.data.assistance.formula.chapter}}
-          Part {{program.data.assistance.formula.part}} Subpart {{program.data.assistance.formula.subPart}} Public Law {{program.data.assistance.formula.publicLaw}}
-          {{program.data.assistance.formula.additionalInfo?.content}}
+      <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.formua">
+        <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="true">
+          Statutory Formula: Title {{program.data?.compliance?.formulaAndMatching?.formula?.title}} Chapter {{program.data?.compliance?.formulaAndMatching?.formula?.chapter}}
+          Part {{program.data?.compliance?.formulaAndMatching?.formula?.part}} Subpart {{program.data?.compliance?.formulaAndMatching?.formula?.subPart}} Public Law {{program.data?.compliance?.formulaAndMatching?.formula?.publicLaw}}
+          {{program.data?.compliance?.formulaAndMatching?.formula?.description}}
         </div>
 
-        <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="'no'">
-          This federal assistance listing has no statutory formula
-        </div>
-
-        <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchDefault>
+        <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="false">
           Statuary formula is not applicable to this federal assistance listing.
         </div>
       </ng-container>
 
       <!-- matching requirements -->
-      <ng-container [ngSwitch]="program.data?.assistance?.matching?.flag">
-        <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="'yes'">
-          Matching Requirements: <ng-container *ngIf="program.data.assistance.matching?.percent > 0">Percent: {{program.data.assistance.matching.percent}}</ng-container>
-          {{program.data.assistance.matching.additionalInfo?.content}}
+      <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.matching">
+        <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="true">
+            Matching Requirements: <ng-container *ngIf="program.data?.compliance?.formulaAndMatching?.matching?.percent > 0">Percent: {{program.data?.compliance?.formulaAndMatching?.matching?.percent}}</ng-container>
+            {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
         </div>
 
-        <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="'no'">
-          This program has no matching requirements.
-        </div>
-
-        <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchDefault>
+        <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="false">
           Matching requirements are not applicable to this federal assistance listing.
         </div>
       </ng-container>
 
       <!-- moe-->
-      <ng-container [ngSwitch]="program.data?.assistance?.moe?.flag">
-        <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="'yes'">
-          This program has MOE requirements, see funding agency for further details. Additional Information:
-          {{program.data.assistance.moe.additionalInfo?.content}}
+      <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.moe">
+        <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="true">
+            This program has MOE requirements, see funding agency for further details. Additional Information:
+            {{program.data?.compliance?.formulaAndMatching?.moe?.description}}
         </div>
 
-        <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="'no'">
-          This program does not have MOE requirements.
-        </div>
-
-        <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchDefault>
+        <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="false">
           MOE requirements are not applicable to this federal assistance listing.
         </div>
       </ng-container>
@@ -607,12 +584,12 @@
 
       <address>
         <h3 class="m_B-5x">Regional or Local Office:</h3>
-        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.additionalInfo?.content}}</span>
-        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.additionalInfo?.content}}</span>
+        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.description }}</span>
+        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.description }}</span>
 
         <h3 class="m_B-5x">Headquarters Office:</h3>
 
-        <div *ngFor="let item of program.data.contacts?.list; let i = index">
+        <div *ngFor="let item of program.data.contacts?.headquarters; let i = index">
           <samPOC [attr.id]="'program-contacts-poc-' + i" [data]="item"></samPOC>
         </div>
         <strong>Website: </strong>
