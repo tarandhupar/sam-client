@@ -138,7 +138,7 @@ export class UserAccessService {
       oParam: {}
     };
 
-    let fun = { }
+    let fun = { };
 
     if (objectId) {
       fun['id'] = objectId;
@@ -214,6 +214,31 @@ export class UserAccessService {
         return res.json();
       }
     });
+  }
+
+  getPendingRequestById(requestId: any) {
+    //return Observable.of({"requestorName":"sumit","supervisorName":"super duper","supervisorEmail":"super@duper.com","domainId":1,"statusId":1,"requestorMessage":"help","createdBy":"sumit","createdDate":1491415287771,"id":6});
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/',
+      method: 'GET',
+      oParam: {
+        id: requestId
+      }
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  getRequestStatuses() {
+    let apiOptions: any = {
+      name: 'accessstatus',
+      suffix: '/',
+      method: 'GET',
+      oParam: {},
+    };
+
+    return this.apiService.call(apiOptions);
   }
 
   updateRequest(requestId: string, updatedRequest: any) {

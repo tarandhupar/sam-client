@@ -45,6 +45,28 @@
     <a [routerLink]="[isAdmin ? '../grant-access' : '../request-access']" class="usa-button usa-button-success pull-right">{{isAdmin ? 'Grant' : 'Request'}} Access</a>
   </div>
 
+  <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
+    <p>Are you sure you wish to remove the following access?</p>
+    <div>
+      <div class="modal-subtitle">
+        <strong class="modal-subtitle">Domain:</strong>
+      </div>
+      <div>{{modalDomain.val}}</div>
+    </div>
+    <div>
+      <div class="modal-subtitle"><strong>Role:</strong></div>
+      <div>{{modalRole.role.val}}</div>
+    </div>
+    <div>
+      <div class="modal-subtitle">
+        <strong>Organizations:</strong>
+      </div>
+      <div *ngFor="let org of modalRole.organizationMapContent[0].organizations">
+        {{orgName(org)}}
+      </div>
+    </div>
+  </samModal>
+
   <ng-container *ngIf="userAccessModel">
     <div *ngFor="let domain of userAccessModel.raw().domainMapContent">
       <h2>
@@ -91,7 +113,7 @@
               </div>
             </div>
           </div>
-          <div class="usa-grid-full permissions-table" *ngFor="let obj of role.organizationMapContent[0].functionMapContent">
+          <div class="usa-grid-full permissions-table-body" *ngFor="let obj of role.organizationMapContent[0].functionMapContent">
             <div class="usa-width-one-fourth">
               {{obj.function.val || 'object not found'}}
             </div>
@@ -103,26 +125,4 @@
       </div>
     </div>
   </ng-container>
-
-  <samModal #deleteModal title="Confirm Removal" cancelButtonLabel="Cancel" submitButtonLabel="Remove" (onSubmit)="onDeleteConfirm()" [closeOnOutsideClick]="false" type="error">
-    <p>Are you sure you wish to remove the following access?</p>
-    <div>
-      <div class="modal-subtitle">
-        <strong class="modal-subtitle">Domain:</strong>
-      </div>
-      <div>{{modalDomain.val}}</div>
-    </div>
-    <div>
-      <div class="modal-subtitle"><strong>Role:</strong></div>
-      <div>{{modalRole.role.val}}</div>
-    </div>
-    <div>
-      <div class="modal-subtitle">
-        <strong>Organizations:</strong>
-      </div>
-      <div *ngFor="let org of modalRole.organizationMapContent[0].organizations">
-        {{orgName(org)}}
-      </div>
-    </div>
-  </samModal>
 </div>

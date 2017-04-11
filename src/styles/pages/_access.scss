@@ -1,26 +1,29 @@
+.permissions-block {
+  border: 1px solid black;
+
+  .permissions-table-body, .permissions-table-header {
+    padding: .5em;
+  }
+
+}
+
+.background-white {
+  background-color: white;
+}
+
+.border-bottom-black {
+  border-bottom: 1px solid black;
+}
+
 .access-page {
   .no-wrap {
     white-space: nowrap;
   }
 
-  .background-white {
-    background-color: white;
-  }
+
 
   .modal-subtitle {
     margin-top: .8em;
-  }
-
-  .permissions-block {
-    border: 1px solid black;
-  }
-
-  .border-bottom-black {
-    border-bottom: 1px solid black;
-  }
-
-  .permissions-table, .permissions-table-header {
-    padding: .5em;
   }
 
   .role-block:not(:last-child) {
