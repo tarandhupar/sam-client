@@ -102,7 +102,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
           falNo = falNo.slice(3, 6);
 
         let selections = [];
-        this.relatedPrograms = api.data.relatedPrograms.relatedTo;
+        this.relatedPrograms = api.data.relatedPrograms;
         for (let relatedProgram of this.relatedPrograms) {
           this.getRelatedProgSub = this.programService.getProgramById(relatedProgram, this.sharedService.cookieValue)
             .subscribe(api => {
