@@ -131,7 +131,6 @@ export class UserAccessService {
   }
 
   createObject(domainId: number, objectName: number|string, permissions: {id?: any, val?: string}[], objectId: any) {
-    console.log(arguments);
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -161,8 +160,6 @@ export class UserAccessService {
       ],
 
     };
-
-    console.log(apiOptions.body);
 
     return this.apiService.call(apiOptions, false);
   }
@@ -202,4 +199,32 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
+  getPendingRequests(userId: string, queryParams = {}) {
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/' + userId + '/',
+      method: 'GET',
+      oParam: queryParams
+    };
+
+    return this.apiService.call(apiOptions, false).map(res => {
+      if (res.status === 204) {
+        return [];
+      } else {
+        return res.json();
+      }
+    });
+  }
+
+  updateRequest(requestId: string, updatedRequest: any) {
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/' + requestId + '/',
+      method: 'PUT',
+      oParam: {},
+      body: updatedRequest,
+    };
+
+    return this.apiService.call(apiOptions, false);
+  }
 }
