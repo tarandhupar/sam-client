@@ -205,13 +205,13 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   }//end of authActionHandler
 
   editAuth(i: number){
+    this.authSubForm.subFormLabel = 'Edit - ' + this.displayAuthInfo[i];
     this.authSubForm.editAuth(i);
     this.hideAddButton = this.authSubForm.hideAddButton;
   }
 
   removeAuth(i: number){
     this.authSubForm.removeAuth(i);
-    //this.authInfo = this.authSubForm.authInfo;
     this.displayAuthInfo.splice(i, 1);
     this.hideAddButton = this.authSubForm.hideAddButton;
   }
@@ -235,7 +235,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
             break;
           }
           case 'statute':{
-            label += "," + auth.statute.volume + "-" + auth.statute.page;
+            label += ",Statute " + auth.statute.volume + "-" + auth.statute.page;
             break;
           }
           case 'USC':{

@@ -122,7 +122,6 @@ export class FALAuthSubFormComponent {
   }
 
   editAuth(i: number){
-    this.subFormLabel = "Edit Authorization";
     this.mode = "Edit";
     this.authIndex = i;
     this.hideAddButton = true;
