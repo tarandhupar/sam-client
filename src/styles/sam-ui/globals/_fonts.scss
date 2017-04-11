@@ -25,6 +25,22 @@
 
 @include font-face(
   'Source Sans Pro',
+  '#{$font-path}/sourcesanspro-semibold-webfont',
+  600,
+  normal,
+  $file-formats: eot woff2 woff ttf
+);
+
+@include font-face(
+  'Source Sans Pro',
+  '#{$font-path}/sourcesanspro-semibold-italic-webfont',
+  600,
+  italic,
+  $file-formats: eot woff2 woff ttf
+);
+
+@include font-face(
+  'Source Sans Pro',
   '#{$font-path}/sourcesanspro-bold-webfont',
   700,
   normal,
