@@ -9,15 +9,17 @@ import { SamAPIKitModule } from "../../api-kit/api-kit.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { RoleDetailsPage } from "./role-details/role-details.page";
 import { ObjectDetailsPage } from "./object-details/object-details.page";
-import { RoleWorkspacePage } from "./role-workspace.page";
+import { RoleDefinitionPage } from "./role-definition/role-definition.page";
 import { RoleSideNav } from "./role-sidenav/role-sidenav.component.ts";
 import { PermissionSelectorComponent } from "./permission-selector/permission-selector";
 import { DomainsResolve } from "./domains.resolve";
-import {RoleMainContent} from "./role-maincontent/role-maincontent.component.ts"
 import { RequestAccessResolve } from "./request-access.resolve";
 import { ManageRequestPage } from "./manage-request/manage-request";
 import { RequestStatusNamesResolve } from "./request-statuses.resolve";
-
+import { RoleMainContent } from "./role-maincontent/role-maincontent.component.ts";
+import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
+import { RoleMgmtSidenav } from "./rolemgmt-sidenav/rolemgmt-sidenav.component.ts";
+import { RoleMgmtContent } from "./rolemgmt-content/rolemgmt-content.component.ts";
 
 @NgModule({
   imports: [
@@ -33,13 +35,16 @@ import { RequestStatusNamesResolve } from "./request-statuses.resolve";
 
   ],
   declarations: [
-    RoleWorkspacePage,
+    RoleDefinitionPage,
     RoleDetailsPage,
     ObjectDetailsPage,
     RoleSideNav,
     PermissionSelectorComponent,
     RoleMainContent,
     ManageRequestPage,
+    RoleMgmtWorkspace,
+    RoleMgmtSidenav,
+    RoleMgmtContent,
   ],
   providers: [
     DomainsResolve,

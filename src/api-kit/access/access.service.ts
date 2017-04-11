@@ -217,7 +217,6 @@ export class UserAccessService {
   }
 
   getPendingRequestById(requestId: any) {
-    //return Observable.of({"requestorName":"sumit","supervisorName":"super duper","supervisorEmail":"super@duper.com","domainId":1,"statusId":1,"requestorMessage":"help","createdBy":"sumit","createdDate":1491415287771,"id":6});
     let apiOptions: any = {
       name: 'requestaccess',
       suffix: '/',
@@ -226,6 +225,16 @@ export class UserAccessService {
         id: requestId
       }
     };
+  }
+
+  getAccessStatus(view : string){
+    let apiOptions : any = {
+      name: 'rms',
+      suffix: '/accessstatus/',
+      method: 'GET',
+      oParam: {}
+    };
+    apiOptions.oParam.view = view;
 
     return this.apiService.call(apiOptions);
   }

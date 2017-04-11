@@ -26,7 +26,8 @@ export class WrapperService {
         "wageDetermination": "/wdol/v1",
         "location": "/locationservices/v1/api",
         "domainDefinition" : "/rms/v1/domaindefinition",
-        "feedback": "/feedback/v1"
+        "feedback": "/feedback/v1",
+        "rms": "/rms/v1",
     };
 
     constructor(private _http: Http){}
