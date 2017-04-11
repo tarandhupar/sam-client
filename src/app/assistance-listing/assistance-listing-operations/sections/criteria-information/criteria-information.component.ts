@@ -17,9 +17,11 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   redirectToViewPg: boolean;
   redirectToWksp: boolean;
   programTitle: string;
+
   saveProgSub: any;
   getProgSub: any;
   dictSub: any;
+
   //Assistance Usage Multiselect
   assUsageTypeOptions = [];
   assUsageKeyValue = [];
@@ -27,9 +29,11 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   assUsageInitialSelection = [];
   assUsageMultiArrayValues = [];
   assUsageSelectedOption: any;
+
   //Awarded Dropdown
   awardedTextarea: boolean = false;
   awardedTypeOptions = [{value: 'na', label: "None Selected"}];
+
   //Applicant Multiselect
   applicantTypeOptions = [];
   applicantKeyValue = [];
@@ -37,6 +41,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   appInitialSelection = [];
   applicantMultiArrayValues = [];
   appSelectedOption: any;
+
   //Beneficiary Multiselect
   benTypeOptions = [];
   benKeyValue = [];
@@ -115,9 +120,9 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   createForm() {
     this.falCriteriaForm = this.fb.group({
       'documentation': '',
-      appInitialSelection: '',
-      benInitialSelection: '',
-      assUsageInitialSelection: '',
+      'appInitialSelection': '',
+      'benInitialSelection': '',
+      'assUsageInitialSelection': '',
       'applicantTypes': '',
       'applicantDesc': '',
       'isSameAsApplicant': '',
