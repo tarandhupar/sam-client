@@ -24,7 +24,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   assUsageTypeOptions = [];
   assUsageKeyValue = [];
   assUsageValueKey = [];
-  assUsageIntialSelection = [];
+  assUsageInitialSelection = [];
   assUsageMultiArrayValues = [];
   assUsageSelectedOption: any;
   //Awarded Dropdown
@@ -34,24 +34,30 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   applicantTypeOptions = [];
   applicantKeyValue = [];
   applicantValueKey = [];
-  appIntialSelection = [];
+  appInitialSelection = [];
   applicantMultiArrayValues = [];
   appSelectedOption: any;
   //Beneficiary Multiselect
   benTypeOptions = [];
   benKeyValue = [];
   benValueKey = [];
-  benIntialSelection = [];
+  benInitialSelection = [];
   benMultiArrayValues = [];
   benSelectedOption: any;
   toggleBeneficiarySection: boolean = false;
   //Error Message configuration
   @ViewChild('applicantTypeWrapper') applicantTypeWrapper;
   @ViewChild('benTypeWrapper') benTypeWrapper;
-  @ViewChild ('assUsageTypeWrapper') assUsageTypeWrapper;
+  @ViewChild('assUsageTypeWrapper') assUsageTypeWrapper;
 
   // Checkboxes Component
-  benSameAsApplicantConfig = {options: [{value: 'isSameAsApplicant', label: 'Beneficiary eligibility is the same as applicant eligibility', name: 'checkbox-isa'},],};
+  benSameAsApplicantConfig = {
+    options: [{
+      value: 'isSameAsApplicant',
+      label: 'Beneficiary eligibility is the same as applicant eligibility',
+      name: 'checkbox-isa'
+    },],
+  };
   autocompleteConfig: AutocompleteConfig = {keyValueConfig: {keyProperty: 'code', valueProperty: 'name'}};
 
   constructor(private fb: FormBuilder,
@@ -109,6 +115,9 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   createForm() {
     this.falCriteriaForm = this.fb.group({
       'documentation': '',
+      appInitialSelection: '',
+      benInitialSelection: '',
+      assUsageInitialSelection: '',
       'applicantTypes': '',
       'applicantDesc': '',
       'isSameAsApplicant': '',
@@ -129,47 +138,73 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
           this.program = api;
           this.programTitle = api.data.title;
           let documentation = '';
-          let applicantType = '';
           let applicantDesc = '';
           let isSameAsApplicant = '';
-          let benType = '';
           let benDesc = '';
           let lengthTimeDesc = '';
-          let awardedType = '';
+          let awardedType = ['na'];
           let awardedDesc = '';
-          let assUsageType = '';
           let assUsageDesc = '';
           let usageResDesc = '';
           if (api.data) {
             if (api.data.eligibility) {
               if (api.data.eligibility.beneficiary) {
-                if (api.data.eligibility.beneficiary.isSameAsApplicant) {
-                  isSameAsApplicant = api.data.eligibility.beneficiary.isSameAsApplicant;
+                isSameAsApplicant = api.data.eligibility.beneficiary.isSameAsApplicant;
+                if (api.data.eligibility.beneficiary.types) {
+                  for (let item of api.data.eligibility.beneficiary.types) {
+                    this.benInitialSelection.push(this.benKeyValue[item]);
+                    this.benMultiArrayValues.push(item);
+                  }
                 }
-                this.populateMultiSelect(api.data.eligibility.beneficiary.types, this.benIntialSelection, this.benMultiArrayValues, this.benKeyValue);
-                benDesc = api.data.eligibility.beneficiary.description;
+                if (api.data.eligibility.beneficiary.description) {
+                  benDesc = api.data.eligibility.beneficiary.description;
+                }
               }
-              documentation = api.data.eligibility.documentation.description;
+              if(api.data.eligibility.documentation.description) {
+                documentation = api.data.eligibility.documentation.description;
+              }
+
               if (api.data.eligibility.applicant) {
-                this.populateMultiSelect(api.data.eligibility.applicant.types, this.appIntialSelection, this.applicantMultiArrayValues, this.applicantKeyValue);
-                applicantDesc = api.data.eligibility.applicant.description;
+                if (api.data.eligibility.applicant.types) {
+                  for (let item of api.data.eligibility.applicant.types) {
+                    this.appInitialSelection.push(this.applicantKeyValue[item]);
+                    this.applicantMultiArrayValues.push(item);
+                  }
+                }
+                if(api.data.eligibility.applicant.description) {
+                  applicantDesc = api.data.eligibility.applicant.description;
+                }
               }
               if (api.data.eligibility.limitation) {
-                lengthTimeDesc = api.data.eligibility.limitation.description;
-                awardedType = api.data.eligibility.limitation.awarded !== '' ? api.data.eligibility.limitation.awarded : ['na'];
-                if (awardedType === 'other') {
-                  awardedDesc = api.data.eligibility.limitation.awardedDescription;
-                  this.awardedTextarea = true;
-                } else {
-                  this.awardedTextarea = false;
+                if(api.data.eligibility.limitation.description) {
+                  lengthTimeDesc = api.data.eligibility.limitation.description;
+                }
+
+                if (api.data.eligibility.limitation.awarded) {
+                  awardedType = api.data.eligibility.limitation.awarded;
+                  if (awardedType.toString() === 'other') {
+                    awardedDesc = api.data.eligibility.limitation.awardedDescription;
+                    this.awardedTextarea = true;
+                  } else {
+                    this.awardedTextarea = false;
+                  }
                 }
               }
               if (api.data.eligibility.assistanceUsage) {
-                this.populateMultiSelect(api.data.eligibility.assistanceUsage.types, this.assUsageIntialSelection, this.assUsageMultiArrayValues, this.assUsageKeyValue);
-                assUsageDesc = api.data.eligibility.assistanceUsage.description;
+                if (api.data.eligibility.assistanceUsage.types) {
+                  for (let item of api.data.eligibility.assistanceUsage.types) {
+                    this.assUsageInitialSelection.push(this.assUsageKeyValue[item]);
+                    this.assUsageMultiArrayValues.push(item);
+                  }
+                }
+                if(api.data.eligibility.assistanceUsage.description) {
+                  assUsageDesc = api.data.eligibility.assistanceUsage.description;
+                }
               }
               if (api.data.eligibility.usage) {
-                usageResDesc = api.data.eligibility.usage.restrictions.description;
+                if(api.data.eligibility.usage.restrictions.description) {
+                  usageResDesc = api.data.eligibility.usage.restrictions.description;
+                }
               }
             }
           }
@@ -183,18 +218,21 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
           }
           this.falCriteriaForm.patchValue({
             documentation: documentation,
+            appInitialSelection: this.appInitialSelection,
+            benInitialSelection: this.benInitialSelection,
+            assUsageInitialSelection: this.assUsageInitialSelection,
             applicantTypes: {
               name: this.applicantMultiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'
             },
             applicantDesc: applicantDesc,
             isSameAsApplicant: [isSameAsApplicant],
-            benTypes:  {
+            benTypes: {
               name: this.benMultiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'
             },
             benDesc: benDesc,
             lengthTimeDesc: lengthTimeDesc,
             awardedTypes: awardedType,
-            assUsageTypes: { name : this.assUsageMultiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'},
+            assUsageTypes: {name: this.assUsageMultiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'},
             awardedDesc: awardedDesc,
             assUsageDesc: assUsageDesc,
             usageResDesc: usageResDesc
@@ -206,26 +244,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
   }
 
-  populateMultiSelect(data: any, intialSelections: any, multiarrayValues: any, keyValueArray: any) {
-  /*  if (applicantTypes.length > 0) {
-      for (let appType of applicantTypes) {
-        this.appIntialSelection.push(this.applicantKeyValue[appType]);
-        this.applicantMultiArrayValues.push(appType);
-      }
-    }*/
-    if (data.length > 0) {
-      for (let item of data) {
-        intialSelections.push(keyValueArray[item]);
-        multiarrayValues.push(item);
-      }
-    }
-  }
-
   multiselectMsg(control: any, multiArrayValues: any) {
-    /* let name: any;
-     const control = this.falCriteriaForm.controls['applicantTypes'];
-     name = {name: this.applicantMultiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'}
-     control.patchValue(name);*/
     let name: any;
     name = {name: multiArrayValues.length !== 0 ? 'Multiple Types Selected' : 'None Selected'}
     control.patchValue(name);
@@ -251,53 +270,78 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
   benTypeChange(event) {
     const control = this.falCriteriaForm.controls['benTypes'];
-    this.benMultiArrayValues = this.benMultiArrayValues.filter(val => val !== control.value.code);
-    this.benMultiArrayValues.push(control.value.code);
-    this.benSelectedOption = this.benKeyValue[control.value.code];
-    this.multiselectMsg(control, this.benMultiArrayValues);
-    this.benTypeWrapper.formatErrors(this.falCriteriaForm.controls['benTypes'])
+    if (event.code) {
+      //if control value isn't up to date, manually set it
+      if (control.value.code != event.code) {
+        control.setValue(event);
+        return;
+      }
+      this.benMultiArrayValues = this.benMultiArrayValues.filter(val => val !== control.value.code);
+      this.benMultiArrayValues.push(control.value.code);
+      this.benSelectedOption = this.benKeyValue[control.value.code];
+      this.multiselectMsg(control, this.benMultiArrayValues);
+      this.benTypeWrapper.formatErrors(this.falCriteriaForm.controls['benTypes']);
+    }
   }
 
   benlistChange(event) {
     const control = this.falCriteriaForm.controls['benTypes'];
     let removeItem: string;
     removeItem = this.benValueKey[event];
-    this.benMultiArrayValues = this.benMultiArrayValues.filter(val => val !== removeItem);
+    this.benMultiArrayValues = this.benMultiArrayValues.filter(val => val !== removeItem || 'undefined');
     this.multiselectMsg(control, this.benMultiArrayValues);
   }
 
-
   applicantTypeChange(event) {
+
     const control = this.falCriteriaForm.controls['applicantTypes'];
-    this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => val !== control.value.code);
-    this.applicantMultiArrayValues.push(control.value.code);
-    this.appSelectedOption = this.applicantKeyValue[control.value.code];
-    this.multiselectMsg(control, this.applicantMultiArrayValues);
-    this.applicantTypeWrapper.formatErrors(this.falCriteriaForm.controls['applicantTypes'])
+    if (event.code) {
+      //if control value isn't up to date, manually set it
+      if (control.value.code != event.code) {
+        control.setValue(event);
+        return;
+      }
+      this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => (val !== control.value.code));
+      this.applicantMultiArrayValues.push(control.value.code);
+      this.appSelectedOption = this.applicantKeyValue[control.value.code];
+      this.multiselectMsg(control, this.applicantMultiArrayValues);
+      this.applicantTypeWrapper.formatErrors(this.falCriteriaForm.controls['applicantTypes'])
+    }
+
   }
 
   applicantlistChange(event) {
     const control = this.falCriteriaForm.controls['applicantTypes'];
-    let removeItem: string;
-    removeItem = this.applicantValueKey[event];
-    this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => val !== removeItem);
-    this.multiselectMsg(control, this.applicantMultiArrayValues);
+    if (event !== 'undefined') {
+      let removeItem: string;
+      removeItem = this.applicantValueKey[event];
+      this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => (val !== removeItem) || (val !== 'undefined'));
+      this.multiselectMsg(control, this.applicantMultiArrayValues);
+    }
+
   }
 
   assUsageTypeChange(event) {
     const control = this.falCriteriaForm.controls['assUsageTypes'];
-    this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => val !== control.value.code);
-    this.assUsageMultiArrayValues.push(control.value.code);
-    this.assUsageSelectedOption = this.assUsageKeyValue[control.value.code];
-    this.multiselectMsg(control, this.assUsageMultiArrayValues);
-    this.assUsageTypeWrapper.formatErrors(this.falCriteriaForm.controls['assUsageTypes'])
+    if (event.code) {
+      //if control value isn't up to date, manually set it
+      if (control.value.code != event.code) {
+        control.setValue(event);
+        return;
+      }
+      this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => val !== control.value.code);
+      this.assUsageMultiArrayValues.push(control.value.code);
+      this.assUsageSelectedOption = this.assUsageKeyValue[control.value.code];
+      this.multiselectMsg(control, this.assUsageMultiArrayValues);
+      this.assUsageTypeWrapper.formatErrors(this.falCriteriaForm.controls['assUsageTypes']);
+    }
   }
 
   assUsagelistChange(event) {
     const control = this.falCriteriaForm.controls['assUsageTypes'];
     let removeItem: string;
     removeItem = this.assUsageValueKey[event];
-    this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => val !== removeItem);
+    this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => val !== removeItem || 'undefined');
     this.multiselectMsg(control, this.assUsageMultiArrayValues);
   }
 
@@ -330,20 +374,20 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     let criteriaData = {};
     let data = {};
     let applicantDesc = this.falCriteriaForm.value.applicantDesc;
-    this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => val !== null || '' || undefined);
+    this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => (val !== null) || (val !== '') || (val !== 'undefined'));
     let assUsageDesc = this.falCriteriaForm.value.assUsageDesc;
     let isSameAsApplicant: boolean;
     if (this.falCriteriaForm.value.isSameAsApplicant) {
       isSameAsApplicant = this.falCriteriaForm.value.isSameAsApplicant.indexOf('isSameAsApplicant') !== -1;
     }
-    let benTypes = this.benMultiArrayValues.filter(val => val !== null || '' || undefined);
+    this.benMultiArrayValues = this.benMultiArrayValues.filter(val => (val !== null) || (val !== '') || (val !== 'undefined'));
     let benDesc = this.falCriteriaForm.value.benDesc;
     let documentation = this.falCriteriaForm.value.documentation;
     let lengthTimeDesc = this.falCriteriaForm.value.lengthTimeDesc;
     let awardedType = this.falCriteriaForm.value.awardedTypes;
     let awardedDesc = this.falCriteriaForm.value.awardedDesc;
     let usageResDesc = this.falCriteriaForm.value.usageResDesc;
-    this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => val !== null || '' || undefined);
+    this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => (val !== null) || (val !== '') || (val !== 'undefined'));
 
     criteriaData = this.buildJson(this.applicantMultiArrayValues, applicantDesc, this.assUsageMultiArrayValues, assUsageDesc, isSameAsApplicant, this.benMultiArrayValues, benDesc,
       documentation, lengthTimeDesc, awardedType, awardedDesc, usageResDesc);
@@ -351,7 +395,6 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     data = {
       "eligibility": criteriaData
     }
-    console.log('save data', data);
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
           this.sharedService.programId = api._body;
@@ -377,29 +420,29 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
     let data = {
       "applicant": {
-        "types": applicantTypes,
-        "description": applicantDesc
+        "types": applicantTypes.length > 0 ? applicantTypes : null,
+        "description": applicantDesc !== '' ? applicantDesc : null
       },
       "assistanceUsage": {
-        "types": assUsageType,
-        "description": assUsageDesc
+        "types": assUsageType.length > 0 ? assUsageType : null,
+        "description": assUsageDesc !== '' ? assUsageDesc : null
       },
       "beneficiary": {
         "isSameAsApplicant": isSameAsApplicant,
-        "types": isSameAsApplicant ? null : benTypes,
-        "description": isSameAsApplicant ? null : benDesc
+        "types": isSameAsApplicant ? null : (benTypes.length > 0 ? benTypes : null),
+        "description": isSameAsApplicant ? null : (benDesc !== '' ? benDesc : null)
       },
       "documentation": {
-        "description": documentation
+        "description": documentation !== '' ? documentation : null
       },
       "limitation": {
-        "description": lengthTimeDesc,
-        "awarded": awardedType,
-        "awardedDescription": awardedType === 'other' ? awardedDesc : null
+        "description": lengthTimeDesc !== '' ? lengthTimeDesc : null,
+        "awarded": awardedType !== '' ? awardedType : null,
+        "awardedDescription": awardedType !== 'other' ? null : (awardedDesc !== '' ? awardedDesc : null)
       },
       "usage": {
         "restrictions": {
-          "description": usageResDesc
+          "description": usageResDesc !== '' ? usageResDesc : null
         }
       }
     };
