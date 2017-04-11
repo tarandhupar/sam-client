@@ -60,7 +60,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
           this.progTitle = api.data.title;
-          console.log("api", api);
+
           if(api.data.authorizations){
             this.falAuthForm.patchValue({
               description: api.data.authorizations.description
@@ -98,9 +98,12 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
 
     let data = {authorizations:{}};
     let authTypeKey = ['act','executiveOrder', 'USC', 'publicLaw', 'statute'];
+    let description = '';
 
     if(this.falAuthForm.value.description != null && this.falAuthForm.value.description != '')
-      data.authorizations = {description: this.falAuthForm.value.description};
+      description = this.falAuthForm.value.description;
+
+    data.authorizations = {description: description};
 
     if(this.authSubForm.authInfo.length > 0){
 
