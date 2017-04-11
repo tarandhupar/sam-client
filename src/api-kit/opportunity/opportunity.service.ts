@@ -53,11 +53,13 @@ export class OpportunityService{
     return this.oAPIService.call(apiParam);
   }
 
-  getAttachmentById(id: string){
+  getPackages(noticeIds: string){
     let apiParam = {
       name: 'opportunity',
-      suffix: '/opportunities/' + id + '/attachments',
-      oParam: {},
+      suffix: '/opportunities/attachments',
+      oParam: {
+        'noticeIds':noticeIds
+      },
       method: 'GET'
     };
 

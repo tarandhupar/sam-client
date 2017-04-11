@@ -68,7 +68,12 @@ export class App{
     }
 
     qsobj['page'] = 1;
-    qsobj['isActive'] = this.isActive;
+
+    if(searchObject.searchField === 'fh') {
+      qsobj['isActive'] = true;
+    } else {
+      qsobj['isActive'] = this.isActive;
+    }
     if(searchObject.searchField !== 'wd') {
       qsobj['wdType'] = null;
       qsobj['state'] = null;
@@ -87,6 +92,7 @@ export class App{
       qsobj['awardOrIdv'] = null;
       qsobj['awardType'] = null;
       qsobj['contractType'] = null;
+      qsobj['naics'] = null;
     }
 
     let navigationExtras: NavigationExtras = {

@@ -14,17 +14,12 @@ export class OrganizationTypeCodePipe implements PipeTransform {
       response.label = "Activity Address Code (AAC):";
       response.value = data.aacCode;
     }
-    else if(data.fpdsOrgId){
-      response.label = "FPDS Org ID:";
-      response.value = data.fpdsOrgId;
-    }
-    else if(data.fpdsCode){
-      response.label = "FPDS Code:";
-      response.value = data.fpdsCode;
-    }
-    else if(data.oldFPDSCode){
-      // don't have to set label since it is this label by default
-      response.value = data.oldFPDSCode;
+    else if(data.cgac){
+      response.label = "CGAC Code:";
+      response.value = data.cgac;
+    }else{
+      response.label = "CGAC Code:";
+      response.value = '';
     }
 
     return response;
