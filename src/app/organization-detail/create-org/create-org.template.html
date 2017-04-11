@@ -1,6 +1,6 @@
 <section class="org-create-page usa-grid">
   <div class="usa-width-one-fourth">&nbsp;</div>
-  <div class="usa-width-one-half p_B-6x" ng-show="createOrgPage">
+  <div class="usa-width-one-half p_B-6x" [hidden]="!createOrgPage">
     <h2 class="p_T-3x">Create New {{orgType}}</h2>
     <p>Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
     <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
