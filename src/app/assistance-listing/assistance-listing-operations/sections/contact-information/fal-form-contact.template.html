@@ -1,0 +1,61 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Contact Information - {{progTitle}}</div>
+<form [formGroup]="falContactInfoForm">
+
+  <h4>Information Contacts</h4>
+
+  <samCheckbox
+    [control]="falContactInfoForm.controls['useRegionalOffice']"
+    [label]="'Regional or Local Office'"
+    [name]="'regional_local_office'"
+    [options]="checkboxConfig.options"
+    formControlName="useRegionalOffice"></samCheckbox>
+
+  <samTextArea [control]="falContactInfoForm.controls['additionalInfo']"
+               [name]="'addInfo-input'"
+               [label]="'Additional Information'"
+               formControlName="additionalInfo"></samTextArea>
+
+  <h4>Headquarters Office</h4>
+  <label>Add up to two points of Contacts for your headquarters office.</label>
+
+  <table [class.hide]="this.viewModel.contacts.length == 0">
+    <thead>
+    <th>Contacts</th>
+    <th>Actions</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let headquarter of this.viewModel.headquarters; let i=index">
+      <td>
+        {{headquarter.title}} {{headquarter.fullName}} <br/>
+        {{headquarter.streetAddress}} <br/>
+        {{headquarter.city}} {{headquarter.state}} {{headquarter.zip}} <br/>
+        Email: {{headquarter.email}} <br/>
+        Phone: {{headquarter.phone}} <br/>
+      </td>
+      <td>
+        <ng-container *ngIf="hideHeadquarterEditForm">
+          <a class="fal-table-edit" (click)="editHeadquarter(i)" >Edit</a>
+          <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editHeadquarter(i)"></i>
+          <a class="fal-table-delete" (click)="removeHeadquarter(i)">Remove</a>
+          <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeHeadquarter(i)"></i>
+        </ng-container>
+
+        <ng-container *ngIf="!hideHeadquarterEditForm">
+          <span class="fal-table-edit disabled">Edit</span>
+          <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+          <span class="fal-table-delete disabled">Remove</span>
+          <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
+        </ng-container>
+
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <samText
+    [control]="falContactInfoForm.controls['website']"
+    [hint]="'Provide the primary web page URL for this listing. When possible, the web page should be specific to this listing.'"
+    [name]="'website-input'"
+    [label]="'Website'"
+    formControlName="website"></samText>
+</form>
