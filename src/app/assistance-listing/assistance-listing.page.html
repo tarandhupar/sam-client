@@ -65,9 +65,9 @@
               <a class="field" [attr.id]="'program-related-' + i" href="/programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}
             </ng-container>
           </ng-container>
-
           <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.length == 0 || relatedProgram.length == 0">Not Applicable.</span>
         </span>
+        <a target="_blank" class="field" id="'grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">View available opportunities on Grants.gov related to this program</a>
       </div>
     </section>
 
