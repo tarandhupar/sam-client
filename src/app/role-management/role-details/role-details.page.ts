@@ -275,7 +275,7 @@ export class RoleDetailsPage {
     });
   }
 
-  validate() {
+  validate(): any {
     if (this.mode === 'edit') {
       return this.role;
     } else {

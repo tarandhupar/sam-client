@@ -6,7 +6,6 @@ import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.servi
 import * as _ from 'lodash';
 import { Title } from "@angular/platform-browser";
 
-
 @Component({
   templateUrl: 'object-details.page.html'
 })
@@ -27,7 +26,7 @@ export class ObjectDetailsPage implements OnInit {
   selectedPermissions = [];
   permissionOptions = [];
   originalPermissions = [];
-  permission = '';
+  permission = null;
 
   permissionSetter;
 
@@ -129,8 +128,8 @@ export class ObjectDetailsPage implements OnInit {
     this.accessService.getPermissions().subscribe(
       res => {
         this.originalPermissions = res._embedded.permissionList;
-        this.permissionOptions = res._embedded.permissionList.map(perm => {
-          return perm.permissionName;
+        this.permissionOptions = this.originalPermissions.map(p => {
+          return { id: ''+p.id, permissionName: p.permissionName };
         });
       },
       error => {
@@ -170,7 +169,12 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   onAddPermissionClick(newValue: any) {
-    let v = typeof newValue === 'string' ? newValue : newValue.inputValue;
+    console.log(newValue);
+    if (!newValue) {
+      return;
+    }
+    let isNew: boolean = typeof newValue === 'string';
+    let v: any = isNew ? newValue : newValue.permissionName; // object
 
     if (!v || !v.length || !v.trim().length) {
       return;
@@ -182,19 +186,19 @@ export class ObjectDetailsPage implements OnInit {
       return;
     }
 
-    // User has selected a value from the drop down
-    if (typeof newValue === 'string') {
+    if (!isNew) {
+      // newValue is a id/value pair
       this.selectedPermissions.push({
         val: v,
+        id: newValue.id,
       });
     // User has input a new value
     } else {
       this.selectedPermissions.push({
         val: v,
         isNew: true,
-      })
+      });
     }
-
   }
 
   onSubmitClick() {
