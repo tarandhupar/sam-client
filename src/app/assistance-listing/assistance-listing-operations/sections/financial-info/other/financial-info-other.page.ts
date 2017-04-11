@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
   providers: [ProgramService],
   templateUrl: 'financial-info-other.page.html'
 })
-export class FinancialInfoFormPage2 implements OnInit {
+export class FinancialInfoPage2 implements OnInit {
   public otherFinancialInfoGroup: FormGroup;
   public program: any;
 
@@ -29,7 +29,7 @@ export class FinancialInfoFormPage2 implements OnInit {
     },
 
     textarea: {
-      disabled: false
+      showWhenCheckbox: 'unchecked'
     }
   };
 
@@ -135,16 +135,12 @@ export class FinancialInfoFormPage2 implements OnInit {
       accomplishments.isApplicable = this.accomplishmentsModel['checkbox'].indexOf('na') < 0;
     }
 
-    // todo: check what to put for fiscalYear
-    // todo: check whether to clear out list if not applicable
-    if(accomplishments.isApplicable) {
+    if(this.accomplishmentsModel && this.accomplishmentsModel['textarea']) {
       accomplishments.list = [
         {
-          description: this.accomplishmentsModel['textarea']
+          description: this.accomplishmentsModel['textarea'][0]
         }
       ]
-    } else {
-      accomplishments.list = [];
     }
 
     return accomplishments;
@@ -153,7 +149,7 @@ export class FinancialInfoFormPage2 implements OnInit {
   private loadAccomplishments() {
     let model: any = {
       checkbox: [],
-      description: ''
+      textarea: []
     };
 
     if(this.program.data.financial.accomplishments) {
@@ -163,7 +159,7 @@ export class FinancialInfoFormPage2 implements OnInit {
 
       if(this.program.data.financial.accomplishments.list
         && this.program.data.financial.accomplishments.list[0]) {
-        model.textarea = this.program.data.financial.accomplishments.list[0].description;
+        model.textarea.push(this.program.data.financial.accomplishments.list[0].description);
       }
     }
 
@@ -179,7 +175,7 @@ export class FinancialInfoFormPage2 implements OnInit {
   private loadAccounts() {
     let model = {
       codeBoxes: [],
-      descriptionText: '',
+      descriptionText: [],
 
       accounts: []
     };
@@ -240,7 +236,7 @@ export class FinancialInfoFormPage2 implements OnInit {
   public onSaveContinueClick(event) {
     this.saveProgramData().subscribe(res => {
       let id = res._body;
-      this.router.navigate(['programs', id, 'edit', 'contact-information']);
+      this.router.navigate(['programs', id, 'edit', 'compliance-requirements']);
     }, err => {
       console.log("Error saving program ", err);
     });
