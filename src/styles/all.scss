@@ -42,7 +42,7 @@
 // Core -------------- //
 
 @import '~uswds/src/stylesheets/core/variables';
-@import '~uswds/src/stylesheets/core/fonts';
+//@import '~uswds/src/stylesheets/core/fonts';
 @import '~uswds/src/stylesheets/core/base';
 @import '~uswds/src/stylesheets/core/grid';
 @import '~uswds/src/stylesheets/core/utilities';
@@ -76,6 +76,13 @@
 //@import '~uswds/src/stylesheets/components/header';
 @import '~uswds/src/stylesheets/components/search';
 //@import '~uswds/src/stylesheets/components/skipnav';
+
+/*******************************
+        SAM UI
+*******************************/
+
+/* Global */
+@import 'sam-ui/globals/fonts';
 
 
 /*******************************
