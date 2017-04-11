@@ -181,6 +181,7 @@
                                 [options1]="naicsType"
                                 (modelChange1)="naicsTypeSelected($event)">
           </sam-naics-psc-filter>
+          <button (click)='naicsPscFilterClear()'>Clear</button>
         </sam-collapsible>
         <hr>
         <button (click)='clearAllFilters()'>Clear All</button>
