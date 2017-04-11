@@ -23,8 +23,6 @@ import { FinancialObligationsComponent } from './assistance-listing-operations/s
 import { ComplianceRequirementsPage } from './assistance-listing-operations/sections/compliance-requirements/compliance-requirements.page';
 import { FALComponentsModule } from './components/index';
 import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
-import { FALAuthSubFormComponent } from "./assistance-listing-operations/sections/authorizations/authorization-subform.component";
-import { FALAuthInfoTableComponent } from "./assistance-listing-operations/sections/authorizations/authorization-table.component";
 
 @NgModule({
   imports: [
@@ -61,9 +59,7 @@ import { FALAuthInfoTableComponent } from "./assistance-listing-operations/secti
     FALContactInfoComponent,
     FALContactInfoTableComponent,
     FinancialObligationsComponent,
-    FALAuthorizationsComponent,
-    FALAuthSubFormComponent,
-    FALAuthInfoTableComponent
+    FALAuthorizationsComponent
   ],
   providers: [],
 })

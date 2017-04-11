@@ -4,7 +4,7 @@ import { Router} from '@angular/router';
 import { UUID } from 'angular2-uuid';
 import { ProgramService } from 'api-kit';
 import { FALOpSharedService } from '../../assistance-listing-operations.service';
-import { FALAuthSubFormComponent } from './authorization-subform.component';
+import { FALAuthSubFormComponent } from '../../../components/authorization-subform/authorization-subform.component';
 
 @Component({
   providers: [ ProgramService ],
