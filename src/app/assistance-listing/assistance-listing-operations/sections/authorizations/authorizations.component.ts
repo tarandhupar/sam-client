@@ -158,9 +158,31 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
         }); //end of subscribe
   }
 
+  onCancelClick(event) {
+    if (this.sharedService.programId)
+      this.router.navigate(['/programs', this.sharedService.programId, 'view']);
+    else
+      this.router.navigate(['/falworkspace']);
+  }
+
+  onPreviousClick(event){
+    if(this.sharedService.programId)
+      this.router.navigate(['programs/' + this.sharedService.programId + '/edit/overview']);
+    else
+      this.router.navigate(['programs/add/overview']);
+
+  }
+
   onSaveContinueClick(event){
     this.saveData();
   }
+
+  onSaveExitClick(event) {
+
+    this.redirectToWksp = true;
+    this.saveData();
+  }
+
 
   authActionHandler(event){
 
