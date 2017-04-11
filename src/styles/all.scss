@@ -55,9 +55,9 @@
 @import '~uswds/src/stylesheets/elements/figure';
 @import '~uswds/src/stylesheets/elements/inputs';
 @import '~uswds/src/stylesheets/elements/labels';
-@import '~uswds/src/stylesheets/elements/list';
+//@import '~uswds/src/stylesheets/elements/list';
 @import '~uswds/src/stylesheets/elements/table';
-@import '~uswds/src/stylesheets/elements/typography';
+//@import '~uswds/src/stylesheets/elements/typography';
 
 
 // Components -------------- //
@@ -83,7 +83,33 @@
 
 /* Global */
 @import 'sam-ui/globals/fonts';
+@import 'sam-ui/globals/site';
 
+/* Elements */
+@import 'sam-ui/elements/button';
+@import 'sam-ui/elements/container';
+@import 'sam-ui/elements/label';
+@import 'sam-ui/elements/list';
+@import 'sam-ui/elements/segment';
+@import 'sam-ui/elements/header';
+@import 'sam-ui/elements/image';
+
+/* Collections */
+@import 'sam-ui/collections/grid';
+@import 'sam-ui/collections/table';
+
+/* Vendor Extentions */
+@import 'sam-ui/vendor/font-awesome';
+
+/*--------------
+ Transition Fixes
+---------------*/
+/*
+  Temporary fixes
+*/
+.usa-unstyled-list {
+  @include unstyled-list;
+}
 
 /*******************************
         Legacy 
@@ -157,16 +183,6 @@
 @import 'pages/assistance-listing-operations';
 @import 'pages/organization-detail';
 
-html, body{
-  height: 100%;
-}
-
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: rgba(0, 0, 0, 0.8);
-}
-
 h1,
 h2{
   letter-spacing: -0.5px;
@@ -223,9 +239,6 @@ h2{
   margin: 0 auto;
 }
 
-.usa-sidenav-list > li{
-  border-top: 1px solid #f1f1f1;
-}
 
 // Make sidenav use all availabe horizontal space on medium screen
 @media screen and (min-width: $medium-screen) and (max-width: $large-screen - 1) {
