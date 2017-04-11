@@ -46,6 +46,37 @@
                [hidden]="model.checkbox.indexOf('cfr') === -1"
                [formControlName]="'publicLaw'"
       ></samText>
+
+      <samTextArea [label]="'Additional Info'"
+                   [name]="name + '-additional-info'"
+                   [required]="false"
+                   [hidden]="model.checkbox.indexOf('cfr') === -1"
+                   [formControlName]="'additionalInfo'"
+      ></samTextArea>
+
+      <samSelect [label]="'Matching Requirements'"
+                 [hint]="'Select the Percentage Below'"
+                 [name]="name + '-matching-requirements-percentage'"
+                 [options]="matchingRequirementsOptions"
+                 [required]="false"
+                 [hidden]="model.checkbox.indexOf('matching') === -1"
+                 [formControlName]="'matchingPercentage'"
+      ></samSelect>
+
+      <samTextArea [hint]="'Describe'"
+                   [name]="name + '-matching-requirements-description'"
+                   [required]="false"
+                   [hidden]="model.checkbox.indexOf('matching') === -1"
+                   [formControlName]="'matchingDescription'"
+      ></samTextArea>
+
+      <samTextArea [label]="'Maintenance of Effort Requirements and Total Allocations'"
+                   [hint]="'Please enter description below:'"
+                   [name]="name + '-moe'"
+                   [required]="false"
+                   [hidden]="model.checkbox.indexOf('moe') === -1"
+                   [formControlName]="'moeRequirements'"
+      ></samTextArea>
     </ng-container>
   </div>
 

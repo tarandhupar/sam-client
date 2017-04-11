@@ -22,7 +22,16 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
     { value: 'moe', label: 'This listing has maintenance of effort (MOE) requirements AND total allocations over $100 million for the current fiscal year.', name: this.name + '-checkbox-moe' }
   ];
 
-  public formulaMatchingGroup: FormGroup;
+  public matchingRequirementsOptions = (() => {
+    let percentages = [];
+    for(let i = 0; i <= 100; i+=5) {
+      percentages.push({value: i, label: i.toString(), name: this.name + '-percentage' + i});
+    }
+
+    return percentages;
+  })();
+
+public formulaMatchingGroup: FormGroup;
 
   @Input() options: any; // all inputs are passed through a single options object
   public name: string;
@@ -66,13 +75,62 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
       chapter: new FormControl(''),
       part: new FormControl(''),
       subpart: new FormControl(''),
-      publicLaw: new FormControl('')
+      publicLaw: new FormControl(''),
+      additionalInfo: new FormControl(''),
+      matchingPercentage: new FormControl(null),
+      matchingDescription: new FormControl(''),
+      moeRequirements: new FormControl('')
     });
 
 
     this.formulaMatchingGroup.get('formulaMatching').valueChanges.subscribe(value => {
       // todo: figure out why this is being called twice on population
       this.model.checkbox = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('title').valueChanges.subscribe(value => {
+      this.model.title = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('chapter').valueChanges.subscribe(value => {
+      this.model.chapter = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('part').valueChanges.subscribe(value => {
+      this.model.part = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('subpart').valueChanges.subscribe(value => {
+      this.model.subpart = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('publicLaw').valueChanges.subscribe(value => {
+      this.model.publicLaw = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('additionalInfo').valueChanges.subscribe(value => {
+      this.model.additionalInfo = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('matchingPercentage').valueChanges.subscribe(value => {
+      this.model.matchingPercentage = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('matchingDescription').valueChanges.subscribe(value => {
+      this.model.matchingDescription = value;
+      this.onChange();
+    });
+
+    this.formulaMatchingGroup.get('moeRequirements').valueChanges.subscribe(value => {
+      this.model.moeRequirements = value;
       this.onChange();
     });
   }
@@ -82,16 +140,6 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   }
 
   private onChange() {
-    if(this.model.checkbox) {
-      // todo...
-      if(this.model.checkbox.indexOf('cfr') !== -1) {
-      }
-      if(this.model.checkbox.indexOf('matching') !== -1) {
-      }
-      if(this.model.checkbox.indexOf('moe') !== -1) {
-      }
-    }
-
     this.onChangeCallback(this.model);
   }
 
