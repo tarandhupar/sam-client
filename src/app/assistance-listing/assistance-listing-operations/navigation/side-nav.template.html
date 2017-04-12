@@ -1,0 +1,21 @@
+<aside class="usa-width-one-fourth">
+  <div>&nbsp;</div>
+  <div sam-sticky limit=1200 container="occupy-page">
+    <nav>
+      <!-- TODO: Migrate to SAM UI Side Nav Component -->
+      <ul class="usa-sidenav-list">
+        <li><a [ngClass]="{'usa-current': currentSection == 'header-information'}" href="{{currentUrl}}#header-information">1. Header Information</a></li>
+        <li><a [ngClass]="{'usa-current': currentSection == 'overview'}" href="{{currentUrl}}#overview">2. Overview</a></li>
+        <li>
+          <a [ngClass]="{'usa-current': currentSection == 'financial-information-obligations' || currentSection == 'financial-information-other'}" href="{{currentUrl}}#financial-information-obligations">4. Financial Information</a>
+          <ul *ngIf="currentSection == 'financial-information-obligations' || currentSection == 'financial-information-other'" class="usa-sidenav-sub_list">
+            <li><a [ngClass]="{'usa-current': currentSection == 'financial-information-obligations'}" href="{{currentUrl}}#financial-information-obligations">Obligations</a></li>
+            <li><a [ngClass]="{'usa-current': currentSection == 'financial-information-other'}" href="{{currentUrl}}#financial-information-other">Other Financial Info</a></li>
+          </ul>
+        </li>
+        <li><a [ngClass]="{'usa-current': currentSection == 'contact-information'}" href="{{currentUrl}}#contact-information">5. Contact Information</a></li>
+        <li><a [ngClass]="{'usa-current': currentSection == 'review'}" href="{{currentUrl}}#review">7. Review</a></li>
+      </ul>
+    </nav>
+  </div>
+</aside>
