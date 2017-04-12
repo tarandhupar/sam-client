@@ -20,10 +20,10 @@ export class RequestAccessResolve implements Resolve<any> {
 
     return this.accessService.getPendingRequestById(rid)
       .map(access => {
-        if (!access[0]) {
+        if (!access.userAccessRequestList[0]) {
           throw new Error('');
         } else {
-          return access[0];
+          return access.userAccessRequestList[0];
         }
       })
       .catch(() => {
