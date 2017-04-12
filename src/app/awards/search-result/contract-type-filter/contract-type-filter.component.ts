@@ -22,13 +22,23 @@ export class SamContractTypeFilter {
   ngOnChanges() {
     if(this.selectModel !== '') {
       let selectArray = this.selectModel.split(",");
-      for(var i=0; i<this.options.options.length; i++) {
-        for(var j=0; j<selectArray.length; j++) {
+
+      for(var j=0; j<selectArray.length; j++) {
+        for(var i=0; i<this.options.options.length; i++) {
           if(this.options.options[i].value == selectArray[j]) {
-            if(this.listDisplay.selectedItems.indexOf(this.options.options[i]) === -1) {
-              this.listDisplay.selectedItems.push(this.options.options[i]);
-              this.listDisplay.selectedItems.sort();
+
+            let option = this.options.options[i];
+            let filterArr = this.listDisplay.selectedItems.filter((obj)=>{
+              if(obj.value==option.value){
+                return true;
+              }
+                return false;
+            });
+
+            if(filterArr.length==0){
+              this.emitSelected(this.options.options[i]);
             }
+
           }
         }
       }
@@ -39,7 +49,18 @@ export class SamContractTypeFilter {
 
   emitSelected(obj) {
     this.listDisplay.selectedItems.push(obj);
-    this.listDisplay.selectedItems.sort();
+    this.listDisplay.selectedItems.sort(function (a, b){
+      var nameA = a.label.toUpperCase(); // ignore upper and lowercase
+      var nameB = b.label.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      // names must be equal
+      return 0;
+    });
     this.emitSelectedList();
   }
 
