@@ -1,6 +1,6 @@
-import { Component, forwardRef, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FHService } from 'api-kit';
+import { Component, forwardRef, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild, SimpleChanges } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { FHService } from "api-kit";
 import { ControlValueAccessor,NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -247,12 +247,16 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
     }
   }
 
-  ngOnChanges(changes) {
-    if (changes.initial && this.initial.length > 0) {
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes && changes['orgId'] && changes['orgId'].previousValue != changes['orgId'].currentValue) {
+      this.organizationId = this.orgId;
+      this.initDropdowns();
+    }
+    if (changes && changes['initial'] && this.initial.length > 0) {
       this.processInitial();
     }
   }
-  
+
   processInitial(){
     let comp = this;
     this.initial.forEach(function(element) {
@@ -286,7 +290,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
     this.orgLevels[4].label += " (L5)";
     this.orgLevels[5].label += " (L6)";
     this.orgLevels[6].label += " (L7)";
-    
+
     if(this.orgId) {
       this.organizationId = this.orgId;
       this.initDropdowns();
@@ -302,7 +306,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
               return el.trim();
             });
             this.organizationId = orgArray[0];
-            
+
           } else {
             orgArray.push(qsOrgStr);
           }
@@ -310,11 +314,11 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
           this.initial = this.initial.concat(orgArray);
           this.processInitial();
         }
-        
+
         //update the dropdowns
         this.initDropdowns();
       });
-      
+
     }
   }
 
@@ -845,7 +849,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
 
 		this.serviceCall(root, true).subscribe(res => {
       let orgPath = res._embedded[0]['org']['fullParentPath'].split(".");
-      
+
       //lock the hierachy to the defined orgroot
       if(this.orgRoot){
         if(this.levelLimit) {
@@ -879,7 +883,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
           }
         }
       }
-      //populate deparment dropdowns otherwise 
+      //populate deparment dropdowns otherwise
       else {
         res._embedded = res._embedded.sort(this._nameOrgSort);
         formattedData = this.formatHierarchy("department", res._embedded);
@@ -902,11 +906,11 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
         value: el['org']['orgKey'],
         label: el["org"]["name"] + this.levelFormatter(level),
         name: el["org"]["orgKey"],
-        
+
       };
       return obj;
     });
-    
+
     //add defaults
     switch(type) {
       case "department":
