@@ -35,7 +35,14 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
   }
 
   checkSelectedList(obj) {
-    if(this.selectedList.indexOf(obj)===-1) {
+    let filterArr = this.selectedList.filter((newobj)=>{
+      if(newobj.value==obj.value){
+        return true;
+      }
+        return false;
+    });
+
+    if(filterArr.length==0){
       return true;
     } else {
       return false;

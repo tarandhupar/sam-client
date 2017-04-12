@@ -175,12 +175,13 @@
         </sam-collapsible>
 
         <!--NAICS - PSC Filters-->
-        <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="index==='fpds'">
+        <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="index==='fpds' || index === 'opp' || index === 'ent'">
           <sam-naics-psc-filter class="usa-award-radio"
                                 [selectModel1]="naicsTypeModel"
                                 [options1]="naicsType"
                                 (modelChange1)="naicsTypeSelected($event)">
           </sam-naics-psc-filter>
+          <button (click)='naicsPscFilterClear()'>Clear</button>
         </sam-collapsible>
         <hr>
         <button (click)='clearAllFilters()'>Clear All</button>
