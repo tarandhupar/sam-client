@@ -31,33 +31,21 @@ export class StateServiceImpl implements AutocompleteService {
     return results;
   }
 
-  setFetchMethod(_?: any): any {
-    this.country = _.key;
-  }
+  setFetchMethod(_?: any): any {}
 
-  fetch(val: string, pageEnd: boolean): Observable<any> {
-    return this.getAllStatesJSON(val, this.country).map(o => o);
+  fetch(val: string, pageEnd: boolean, searchOptions?: any): Observable<any> {
+    if(searchOptions === null) searchOptions = {key:"USA"};
+    return this.getAllStatesJSON(val, searchOptions.key).map(o => o);
   }
 }
 
 @Directive({
   selector: 'sam-autocomplete[state]',
   providers: [
-    {provide: AutocompleteService, useExisting: StateServiceImpl}
+    {provide: AutocompleteService, useClass: StateServiceImpl}
   ]
 })
-export class SamStateServiceAutoDirective {
-
-  @Input() countryModel: any;
-
-  constructor(private service: StateServiceImpl) {}
-
-
-  ngOnChanges() {
-    let country = this.countryModel === undefined ? {key:'USA'}:this.countryModel;
-    this.service.setFetchMethod(country);
-  }
-}
+export class SamStateServiceAutoDirective {}
 
 
 

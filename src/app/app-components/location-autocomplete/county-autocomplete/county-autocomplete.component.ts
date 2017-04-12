@@ -31,7 +31,7 @@ export class CountyServiceImpl implements AutocompleteService {
 
   setFetchMethod(_?: any): any {}
 
-  fetch(val: string, pageEnd: boolean): Observable<any> {
+  fetch(val: string, pageEnd: boolean, searchOptions?: any): Observable<any> {
     return this.getAllCountiesJSON(val).map(o => o);
   }
 }

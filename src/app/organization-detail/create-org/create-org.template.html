@@ -72,7 +72,8 @@
       <div class="usa-width-one-whole m_L-3x m_B-1x" *ngFor="let pair of orgInfo">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.des}}:</h4></span>
         <!--<span class="usa-width-two-thirds p_T-2x p_B-1x">&nbsp;{{pair.value}}</span>-->
-        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x">&nbsp;{{pair.value}}</p>
+        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x" *ngIf="pair.des !== 'Description'">&nbsp;{{pair.value}}</p>
+        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x" *ngIf="pair.des === 'Description'">&nbsp;{{pair.value}}</p>
       </div>
       <div *ngIf="isAddressNeeded()">
         <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">

@@ -1,13 +1,6 @@
 import { Component, Input, ViewChild, Output, EventEmitter } from "@angular/core";
-import { ActivatedRoute, Router} from "@angular/router";
-import { FHService } from "api-kit/fh/fh.service";
-import { LocationService } from "api-kit/location/location.service";
-import * as moment from 'moment/moment';
-import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
-import { SamDateComponent } from 'sam-ui-kit/form-controls/date/date.component';
-import { SamSelectComponent } from 'sam-ui-kit/form-controls/select/select.component';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
-import { SamTextareaComponent } from 'sam-ui-kit/form-controls/textarea/textarea.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 
 @Component ({
@@ -15,15 +8,24 @@ import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.co
   templateUrl: 'address-form.template.html'
 })
 export class OrgAddrFormComponent {
+
+  stateOutput:any = null;
+  cityOutput:any = null;
+
   locationConfig = {
     keyValueConfig: {
       keyProperty: 'key',
       valueProperty: 'value'
     }
   };
-  countryOutput:any = {};
-  stateOutput:any = {};
-  cityOutput:any = {};
+
+  stateLocationConfig = {
+    keyValueConfig: {
+      keyProperty: 'key',
+      valueProperty: 'value'
+    },
+    serviceOptions:null
+  };
 
   addressForm:FormGroup;
 
@@ -82,7 +84,7 @@ export class OrgAddrFormComponent {
   }
 
   validateForm():boolean{
-    if(this.addressForm.invalid || this.stateOutput == {} || this.countryOutput == {}){
+    if(this.addressForm.invalid || this.stateOutput === null || this.stateLocationConfig.serviceOptions === null){
       this.addressForm.get("streetAddr1").markAsDirty();
       this.addressForm.get("postalCode").markAsDirty();
       this.addressForm.get("city").markAsDirty();
@@ -91,19 +93,18 @@ export class OrgAddrFormComponent {
       this.addrPostalCode.wrapper.formatErrors(this.addressForm.get("postalCode"));
       this.addrCity.wrapper.formatErrors(this.addressForm.get("city"));
 
-      this.addrState.errorMessage = !!this.stateOutput.value?"":"This field cannot be empty";
-      this.addrCountry.errorMessage = !!this.countryOutput.value?"":"This field cannot be empty";
-
+      this.addrState.errorMessage = !!this.stateOutput?"":"This field cannot be empty";
+      this.addrCountry.errorMessage = !!this.stateLocationConfig.serviceOptions?"":"This field cannot be empty";
 
       return false;
     }else{
-      this.orgAddrModel.country = this.countryOutput.value;
+      this.orgAddrModel.country = this.stateLocationConfig.serviceOptions.value;
       this.orgAddrModel.state = this.stateOutput.value;
-      this.orgAddrModel.street = this.addressForm.get("streetAddr1").value+" "+this.addressForm.get("streetAddr2").value;
       this.orgAddrModel.city = this.addressForm.get("city").value;
       this.orgAddrModel.postalCode = this.addressForm.get("postalCode").value;
-
-
+      let streetLine1 = this.addressForm.get("streetAddr1").value;
+      let streetLine2 = this.addressForm.get("streetAddr2").value;
+      this.orgAddrModel.street = streetLine2 !== ""? streetLine1+" "+streetLine2:streetLine1;
     }
     return true;
   }
