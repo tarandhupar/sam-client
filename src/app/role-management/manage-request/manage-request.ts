@@ -43,8 +43,13 @@ export class ManageRequestPage implements OnInit {
   }
 
   getRequestObject() {
-    console.log(this.route);
     this.request = this.route.snapshot.data['request'];
+  }
+
+  onMessageChanged() {
+    if (this.message) {
+      this.messageError = '';
+    }
   }
 
   getRequestStatusNames() {

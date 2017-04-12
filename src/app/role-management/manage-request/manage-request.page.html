@@ -55,10 +55,11 @@
       <samTextArea
         name='message'
         [(value)]="message"
+        (valueChange)="onMessageChanged()"
         [required]="true"
-        label="Message:"
+        [label]="'Message:'"
         [errorMessage]="messageError"
-        [placeholder]="messagePlaceholde()"
+        [placeholder]="messagePlaceholder()"
       ></samTextArea>
     </div>
     <div class="clearfix">
