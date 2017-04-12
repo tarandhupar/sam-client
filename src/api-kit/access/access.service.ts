@@ -225,6 +225,8 @@ export class UserAccessService {
         id: requestId
       }
     };
+
+    return this.apiService.call(apiOptions);
   }
 
   getAccessStatus(view : string){

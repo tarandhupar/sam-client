@@ -218,20 +218,6 @@ export class GrantAccessPage implements OnInit {
 
     if (r) {
       this.objects = r.functionContent;
-
-      // if (roleIsCurrentRole) {
-      //   // merge roles the user has with all available roles
-      //   this.objects.forEach(fun => {
-      //     let fid = fun.function.id;
-      //     fun.permission.forEach(perm => {
-      //       let pid = perm.id;
-      //
-      //       if (!this.userHasPermission(fid, pid)) {
-      //         perm.notChecked = true;
-      //       }
-      //     });
-      //   });
-      // }
     } else {
       // the user selected a role that is not in the roles table (it may not have been fetched yet)
       this.objects = [];
@@ -310,7 +296,7 @@ export class GrantAccessPage implements OnInit {
   }
 
   goToRoleWorkspace() {
-    this.router.navigate(['/rolespace']);
+    this.router.navigate(['/access/role-workspace']);
   }
 
   isFormValid() {
@@ -353,6 +339,12 @@ export class GrantAccessPage implements OnInit {
       }
     }
 
+    if (this.userCameFromRoleWorkspace) {
+      if (!this.messages) {
+        this.errors.messages = "A message is required";
+      }
+    }
+
     this.scrollToHead();
   }
 
@@ -372,7 +364,23 @@ export class GrantAccessPage implements OnInit {
     if (this.mode === 'request') {
       return "Send your Role Administrator the names of the organizations and roles you are requesting and why."
     } else {
-      return "(Optional) Include a message with your response";
+      if (this.userCameFromRoleWorkspace) {
+        return "Include a message with your response.";
+      } else {
+        return "(Optional) Include a message with your response.";
+      }
+    }
+  }
+
+  isMessageRequired() {
+    return this.mode === 'request' || this.userCameFromRoleWorkspace;
+  }
+
+  onCancelClick() {
+    if (this.userCameFromRoleWorkspace) {
+      this.goToRoleWorkspace();
+    } else {
+      this.goToAccessPage();
     }
   }
 

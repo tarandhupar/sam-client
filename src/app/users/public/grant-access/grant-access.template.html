@@ -75,12 +75,12 @@
   </ng-container>
 
   <!-- Optional Message -->
-  <samTextArea name="options-response" label="Messages:" [hint]="messagePlaceholder()" [(ngModel)]="messages" [required]="mode === 'request'" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></samTextArea>
+  <samTextArea name="options-response" label="Messages:" [hint]="messagePlaceholder()" [(ngModel)]="messages" [required]="isMessageRequired()" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></samTextArea>
 
   <!-- Cancel / Confirm -->
   <div>
     <p class="pull-right">
-      <a [routerLink]="['../access']"><button class="usa-button usa-button-outline">Cancel</button></a>
+      <button class="usa-button usa-button-outline" (click)="onCancelClick()">Cancel</button>
       &nbsp;
       <button id="grant-button" class="usa-button usa-button-primary" (click)="onGrantClick()">Submit</button>
     </p>
