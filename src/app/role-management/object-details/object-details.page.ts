@@ -62,6 +62,7 @@ export class ObjectDetailsPage implements OnInit {
         this.footerAlerts.registerFooterAlert({
           title: 'Object ID parameter missing',
           type: 'error',
+          timer: 3200,
         });
         return;
       }
@@ -141,7 +142,8 @@ export class ObjectDetailsPage implements OnInit {
   showGenericServicesError() {
     this.footerAlerts.registerFooterAlert({
       description: 'Something went wrong with a required service',
-      type: 'error'
+      type: 'error',
+      timer: 3200,
     })
   }
 
