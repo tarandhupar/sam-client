@@ -32,7 +32,7 @@ import { ReplaySubject, Observable } from 'rxjs';
                 {{ data.type=="Agency" ? 'Sub-Tier' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
               </li>
               <li *ngIf="data">
-                <strong>{{(data | organizationTypeCode).label}}</strong> {{(data | organizationTypeCode).value}}
+                <strong>CGAC: </strong> {{ data.cgac }}
               </li>  
               <br/>
               <li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
