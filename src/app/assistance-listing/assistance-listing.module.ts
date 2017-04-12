@@ -22,7 +22,6 @@ import { FALContactInfoTableComponent } from './assistance-listing-operations/se
 import { FinancialObligationsComponent } from './assistance-listing-operations/sections/financial-info/obligations/obligation.component';
 import { ComplianceRequirementsPage } from './assistance-listing-operations/sections/compliance-requirements/compliance-requirements.page';
 import { FALComponentsModule } from './components/index';
-import { SamTextRadioButtonComponent } from "./components/text-radio/text-radio-button.component";
 import { FALAccountIdentificationComponent } from "./components/account-identification.component";
 import { FALTafsComponent } from "./components/tafs.component";
 import {FALCriteriaInfoComponent} from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
@@ -62,7 +61,6 @@ import {FALCriteriaInfoComponent} from "./assistance-listing-operations/sections
     FALContactInfoComponent,
     FALContactInfoTableComponent,
     FinancialObligationsComponent,
-    SamTextRadioButtonComponent,
     FALCriteriaInfoComponent
   ],
   providers: [],
