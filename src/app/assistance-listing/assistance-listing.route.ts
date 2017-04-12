@@ -8,7 +8,8 @@ import { FALHeaderInfoComponent } from './assistance-listing-operations/sections
 import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
 import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
 import { FinancialObligationsComponent } from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
-import { FinancialInfoFormPage2 } from "./assistance-listing-operations/sections/financial-info/other/financial-info-other.page";
+import { FinancialInfoPage2 } from "./assistance-listing-operations/sections/financial-info/other/financial-info-other.page";
+import { ComplianceRequirementsPage } from "./assistance-listing-operations/sections/compliance-requirements/compliance-requirements.page";
 import {FALCriteriaInfoComponent} from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
 
 export const routes: Routes = [
@@ -32,7 +33,8 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'overview', component: FALOverviewComponent},
         {path: 'financial-information', pathMatch: 'full', redirectTo: 'financial-information/obligations'},
         {path: 'financial-information/obligations', component: FinancialObligationsComponent},
-        {path: 'financial-information/other-financial-info', component: FinancialInfoFormPage2},
+        {path: 'financial-information/other-financial-info', component: FinancialInfoPage2},
+        {path: 'compliance-requirements', component: ComplianceRequirementsPage},
         {path: 'criteria-information', component: FALCriteriaInfoComponent},
         {path: 'contact-information', component: FALContactInfoComponent},
       ]
@@ -45,7 +47,8 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'overview', component: FALOverviewComponent},
         {path: 'financial-information', pathMatch: 'full', redirectTo: 'financial-information/obligations'},
         {path: 'financial-information/obligations', component: FinancialObligationsComponent},
-        {path: 'financial-information/other-financial-info', component: FinancialInfoFormPage2},
+        {path: 'financial-information/other-financial-info', component: FinancialInfoPage2},
+        {path: 'compliance-requirements', component: ComplianceRequirementsPage},
         {path: 'criteria-information', component: FALCriteriaInfoComponent},
         {path: 'contact-information', component: FALContactInfoComponent},
       ]

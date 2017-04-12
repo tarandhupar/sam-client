@@ -30,45 +30,50 @@ export class FALOpSharedService {
 
     this.sidenavModel = {
       label: "Assistance Listings",
-      children: [
-        {
-          label: "1. Header Information",
-          route: this.baseURL + '/header-information',
-          path: 'header-information'
-        },
-        {
-          label: "2. Overview",
-          route: this.baseURL + '/overview',
-          path: 'overview'
-        },
-        {
-          label: "4. Financial Information",
-          route: this.baseURL + '/financial-information',
-          path: 'financial-information',
-          children: [
-            {
-              label: "Obligations",
-              route: '/obligations',
-              path: 'obligations'
-            },
-            {
-              label: "Other Financial Info",
-              route: '/other-financial-info',
-              path: 'other-financial-info'
-            }
-          ]
-        },
-        {
-          label: "5. Criteria for Applying",
-          route: this.baseURL + "/criteria-information",
-          path: "criteria-information"
-        },
-        {
-          label: "8. Contact Information",
-          route: this.baseURL + "/contact-information",
-          path: "contact-information"
-        }
-      ]
+        children: [
+      {
+        label: "1. Header Information",
+        route: this.baseURL + '/header-information',
+        path: 'header-information'
+      },
+      {
+        label: "2. Overview",
+        route: this.baseURL + '/overview',
+        path: 'overview'
+      },
+      {
+        label: "4. Financial Information",
+        route: this.baseURL + '/financial-information',
+        path: 'financial-information',
+        children:[
+          {
+            label: "Obligations",
+            route: '/obligations',
+            path: 'obligations'
+          },
+          {
+            label: "Other Financial Info",
+            route: '/other-financial-info',
+            path: 'other-financial-info'
+          }
+        ]
+      },
+          {
+            label: "5. Criteria for Applying",
+            route: this.baseURL + "/criteria-information",
+            path: "criteria-information"
+          },
+      {
+        label : "7. Compliance Requirements",
+        route: this.baseURL + "/compliance-requirements",
+        path: "compliance-requirements"
+      },
+      {
+        label : "8. Contact Information",
+        route: this.baseURL + "/contact-information",
+        path: "contact-information"
+      }
+    ]
     };
 
     return this.sidenavModel;

@@ -221,7 +221,7 @@ let MockOpportunityService = {
     });
   },
 
-  getAttachmentById(id: String) {
+  getPackages(id: String) {
     return Observable.of({
       packages: [
         {
@@ -283,7 +283,7 @@ let MockOpportunityService = {
       ],
       _links: {
         self: {
-          href: "http://10.98.29.81:122/v1/opportunity/7e5a8c7c4742472a1ac9faef90042e56/attachments"
+          href: "http://10.98.29.81:122/v1/opportunity/attachments?noticeIds=9e14590f674ab3ffbf8da6b85ddc8581&noticeIds=a2c630c37084d373200cc1bc6121bdf6"
         }
       }});
   },

@@ -1,0 +1,45 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="program?.data?.title">Edit Compliance Requirements - {{program.data.title}}</div>
+<div *ngIf="complianceRequirementsGroup" [formGroup]="complianceRequirementsGroup">
+  <samCheckbox [name]="policyRequirementsConfig.checkbox.name"
+               [label]="policyRequirementsConfig.checkbox.label"
+               [hint]="policyRequirementsConfig.checkbox.hint"
+               [options]="policyRequirementsConfig.checkbox.options"
+               [control]="complianceRequirementsGroup.get('policyRequirementsCheckbox')"
+               [formControlName]="'policyRequirementsCheckbox'"
+  ></samCheckbox>
+
+  <samTextArea [name]="policyRequirementsConfig.textarea.name"
+               [label]="policyRequirementsConfig.textarea.label"
+               [control]="complianceRequirementsGroup.get('policyRequirementsTextarea')"
+               [formControlName]="'policyRequirementsTextarea'"
+  ></samTextArea>
+
+  <samCheckboxToggledTextarea [options]="reportsConfig"
+                              [formControlName]="'reports'"
+  ></samCheckboxToggledTextarea>
+
+  <h2>Audits</h2>
+  <samCheckboxToggledTextarea [options]="auditsConfig"
+                              [formControlName]="'audits'"
+  ></samCheckboxToggledTextarea>
+
+  <samTextArea [label]="'Records'"
+               [hint]="'Describe required records. Include the time period when the records must be kept.'"
+               [name]="'compliance-records'"
+               [control]="records"
+               [formControlName]="'records'"
+  ></samTextArea>
+
+  <samCheckboxToggledTextarea [options]="additionalDocumentationConfig"
+                              [formControlName]="'additionalDocumentation'"
+  ></samCheckboxToggledTextarea>
+
+  <div>
+    <div class="pull-left">
+      <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+      <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+      <samButton buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+      <samButton buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+    </div>
+  </div>
+</div>
