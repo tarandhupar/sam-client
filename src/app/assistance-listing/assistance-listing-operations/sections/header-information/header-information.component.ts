@@ -19,6 +19,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
   relatedPrograms = [];
   listOfPrograms: string;
   listOptions = [];
+  public agency: string;
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -102,7 +103,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
           falNo = falNo.slice(3, 6);
 
         let selections = [];
-        this.relatedPrograms = api.data.relatedPrograms.relatedTo;
+        this.relatedPrograms = api.data.relatedPrograms;
         for (let relatedProgram of this.relatedPrograms) {
           this.getRelatedProgSub = this.programService.getProgramById(relatedProgram, this.sharedService.cookieValue)
             .subscribe(api => {
@@ -113,6 +114,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
               });
         }
 
+        this.agency = api.data.organizationId;
         this.falHeaderInfoForm.patchValue({
           title: title,
           alternativeNames: popularName,
@@ -130,11 +132,10 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
     let data = {
       "title": this.falHeaderInfoForm.value.title,
+      "organizationId": this.agency,
       "alternativeNames": [this.falHeaderInfoForm.value.alternativeNames],
       "programNumber": this.falHeaderInfoForm.value.programNumber,
-      "relatedPrograms": {
-        "relatedTo": this.falHeaderInfoForm.value.relatedTo
-      }
+      "relatedPrograms": this.falHeaderInfoForm.value.relatedTo
     };
 
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
@@ -151,6 +152,10 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
         error => {
           console.error('Error saving Program!!', error);
         }); //end of subscribe
+  }
+
+  public onOrganizationChange(org: any) {
+    this.agency = org.value;
   }
 
   onCancelClick(event) {
