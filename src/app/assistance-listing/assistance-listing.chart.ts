@@ -567,20 +567,23 @@ export class FinancialObligationChart {
         let obligation = "No Obligation";
         if (item.assistanceType && item.assistanceType.length > 0) {
           obligation = getAssistanceType(item.assistanceType);
-        } else if(item.questions) {
-          for (let question of item.questions) {
-            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
-              obligation = "Salary or Expense";
-              break;
-            }
-          }
+        } else if(item.isRecoveryAct != true) {
+            obligation = "Salary or Expense";
         }
+//        } else if(item.questions) {
+//          for (let question of item.questions) {
+//            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
+//              obligation = "Salary or Expense";
+//              break;
+//            }
+//          }
+//        }
 
         obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
 
         let financialItem = {
           "obligation": obligation,
-          "info": item.additionalInfo ? item.additionalInfo.content || "" : "",
+          "info": item.description ? item.description || "" : "",
           "year": +year,
           "amount": value["actual"] || value["estimate"] || 0,
           "estimate": !value["actual"],

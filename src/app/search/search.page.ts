@@ -5,6 +5,7 @@ import { SearchService } from 'api-kit';
 import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import {WageDeterminationService} from "../../api-kit/wage-determination/wage-determination.service";
 import { AlertFooterService } from '../alerts/alert-footer';
+import {OpportunityService} from "../../api-kit/opportunity/opportunity.service";
 
 @Component({
   moduleId: __filename,
@@ -161,7 +162,8 @@ export class SearchPage implements OnInit{
   awardTypeModel: string = '';
   awardType = {
     "name": "Award-IDV Type",
-    "label": "Award-IDV Types",
+    "placeholder": "Award-IDV Types",
+    "selectedLabel": "Award - IDV Types Selected",
     "options": [
       { label: 'BOA (IDV)', value: 'D_IDV', name: 'BOA' },
       { label: 'BPA CALL', value: 'A_AWARD', name: 'BPA CALL' },
@@ -192,7 +194,8 @@ export class SearchPage implements OnInit{
   contractTypeModel: string = '';
   contractType = {
     "name": "Contract Type",
-    "label": "Contract Types",
+    "placeholder": "Contract Types",
+    "selectedLabel": "Contract Types Selected",
     "options": [
       { label: 'COST NO FEE', value: 'S', name: 'COST NO FEE' },
       { label: 'COST PLUS AWARD FEE', value: 'R', name: 'COST PLUS AWARD FEE' },
@@ -220,10 +223,26 @@ export class SearchPage implements OnInit{
     }
   };
 
+  //Select NAICS Types
+  naicsTypeModel: any = '';
+  naicsType = {
+    "name": "NAICS Type",
+    "placeholder": "NAICS Types",
+    "selectedLabel": "Codes Selected",
+    "options": [],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
+
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,
               private wageDeterminationService: WageDeterminationService,
+              private opportunityService: OpportunityService,
               private alertFooterService: AlertFooterService) { }
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(
@@ -232,7 +251,7 @@ export class SearchPage implements OnInit{
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.isActive = data['isActive'] && data['isActive'] === "false" ? false : this.isActive;
+        this.isActive = data['isActive'] && data['isActive'] === "false" ? false : true;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : '';
         this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : '';
@@ -246,6 +265,7 @@ export class SearchPage implements OnInit{
         this.awardIDVModel = data['awardOrIdv'] && data['awardOrIdv'] !== null ? data['awardOrIdv'] : '';
         this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
+        this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
 
         this.runSearch();
         this.loadParams();
@@ -366,19 +386,30 @@ export class SearchPage implements OnInit{
       qsobj['contractType'] = this.contractTypeModel;
     }
 
+    if(this.naicsTypeModel.length>0){
+      qsobj['naics'] = this.naicsTypeModel;
+    }
+
     return qsobj;
   }
 
 	runSearch(){
-    if(this.index === 'wd') {
+    switch(this.index) {
       // fetching data for drop downs
-      this.getDictionaryData('wdStates');
-      this.getCountyByState(this.wdStateModel);
-      this.determineEnableCountySelect();
-      this.determineEnableServicesSelect();
-      this.getDictionaryData('dbraConstructionTypes');
-      this.getDictionaryData('scaServices');
+      case 'wd':
+        this.getDictionaryData('wdStates');
+        this.getCountyByState(this.wdStateModel);
+        this.determineEnableCountySelect();
+        this.determineEnableServicesSelect();
+        this.getDictionaryData('dbraConstructionTypes');
+        this.getDictionaryData('scaServices');
+            break;
+      case 'opp':
+      case 'ent':
+      case 'fpds':
+            this.getAwardsDictionaryData('naics_code');
     }
+
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
       this.searchService.featuredSearch({
@@ -424,7 +455,8 @@ export class SearchPage implements OnInit{
       isStandard: this.isStandard,
       awardOrIdv: this.awardIDVModel,
       awardType: this.awardTypeModel,
-      contractType: this.contractTypeModel
+      contractType: this.contractTypeModel,
+      naics: this.naicsTypeModel
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -565,6 +597,30 @@ export class SearchPage implements OnInit{
         console.error("Error!!", error);
       }
 
+    );
+  }
+
+  getAwardsDictionaryData(id) {
+    this.opportunityService.getOpportunityDictionary(id).subscribe(
+      data => {
+        // formatting the array data according to api type to match what UI elements expect
+        if(id === 'naics_code'){
+          var reformattedArray = data._embedded.dictionaries[0].elements.map(function(naicsItem){
+            let newObj = {label:'', value:'', type:'naics'};
+
+            newObj.label = naicsItem.value;
+            newObj.value = naicsItem.code;
+            return newObj;
+          });
+
+          this.naicsType.options = reformattedArray;
+          this.naicsType = Object.assign({}, this.naicsType);
+        }
+
+      },
+      error => {
+        console.error("Error!!", error);
+      }
     );
   }
 
@@ -772,6 +828,12 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  naicsTypeSelected(evt) {
+    this.naicsTypeModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
   // this calls function to set up ES query params again and re-call the search endpoint with updated params
   searchResultsRefresh(){
     var qsobj = this.setupQS(false);
@@ -833,6 +895,11 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  naicsPscFilterClear() {
+    this.naicsTypeModel = '';
+    this.searchResultsRefresh();
+  }
+
   clearAllFilters(){
 
     // clear/reset all top level filters
@@ -860,6 +927,7 @@ export class SearchPage implements OnInit{
     this.awardIDVModel = '';
     this.awardTypeModel = '';
     this.contractTypeModel = '';
+    this.naicsTypeModel = '';
 
     this.searchResultsRefresh();
 

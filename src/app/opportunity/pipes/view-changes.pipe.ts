@@ -877,7 +877,7 @@ export class ViewChangesPipe implements PipeTransform {
     }
 
     //checks posted date
-    postedDate = ("Changes from " + dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a'));
+    postedDate = ("Changes from " + dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a z'));
     differences = {
       changesExistGeneral: changesExistGeneral,
       changesExistSynopsis: changesExistSynopsis,
