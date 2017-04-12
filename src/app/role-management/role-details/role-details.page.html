@@ -22,7 +22,7 @@
       <permission-selector
         [options]="domainRoleOptions"
         selectAllText='Associate Roles'
-        title='Domain Roles'
+        titleText='Domain Roles'
         [hideDefaultColumn]="true">
         [hideColumnHeader]="true"
       </permission-selector>
@@ -37,7 +37,7 @@
       <permission-selector
         [options]="function.permissions"
         selectAllText="Permissions"
-        [title]="function.name"
+        [titleText]="function.name"
       ></permission-selector>
     </div>
     <div *ngIf="!permissionOptions.length">

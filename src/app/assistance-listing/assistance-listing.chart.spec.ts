@@ -53,11 +53,8 @@ describe('FinancialObligationChart Create Visualization', () => {
         { 'year': 2014, 'estimate': 16305218 },
         { 'year': 2015, 'estimate': 21300000 }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0003003'
     }];
 
@@ -143,11 +140,8 @@ describe('FinancialObligationChart Prepare Visualization', () => {
         { 'year': 2014, 'estimate': 16305218 },
         { 'year': 2015, 'estimate': 21300000 }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0001001'
     }];
 
@@ -187,11 +181,8 @@ describe('FinancialObligationChart Prepare Visualization', () => {
         { 'year': 2017, 'flag': 'na' },
         { 'year': 2018, 'flag': 'yes', 'estimate': 1000 }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0001001'
     }, {
       'values': [
@@ -199,11 +190,8 @@ describe('FinancialObligationChart Prepare Visualization', () => {
         { 'year': 2017, 'flag': 'no' },
         { 'year': 2018, 'flag': 'yes', 'estimate': 4000 }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0001001'
     }];
 
@@ -274,11 +262,8 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
         { 'year': 2016, 'estimate': 22 },
         { 'year': 2017, 'estimate': 12 },
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0003003'
     }, {
       'values': [
@@ -286,11 +271,8 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
         { 'year': 2017, 'flag': 'yes', 'estimate': 40 },
         { 'year': 2018, 'flag': 'yes', 'estimate': 62 }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0003003'
     }, {
       'values': [
@@ -298,11 +280,8 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
         { 'year': 2017, 'flag': 'yes', 'estimate': 20 },
         { 'year': 2018, 'flag': 'yes', 'estimate': 25 }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0001001'
     }];
 
@@ -430,11 +409,8 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
         { 'year': 2017, 'flag': 'no' },
         { 'year': 2018, 'flag': 'na' }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0003003'
     }, {
       'values': [
@@ -442,11 +418,8 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
         { 'year': 2017, 'flag': 'no' },
         { 'year': 2018, 'flag': 'na' }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0003003'
     }];
 
@@ -499,11 +472,8 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
         { 'year': 2018, 'flag': 'no' },
         { 'year': 2019, 'flag': 'na' }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0003003'
     }, {
       'values': [
@@ -511,11 +481,8 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
         { 'year': 2018, 'flag': 'na' },
         { 'year': 2019, 'flag': 'no' }
       ],
-      'questions': [
-        { 'questionCode': 'recovery', 'flag': 'na' },
-        { 'questionCode': 'salary_or_expense', 'flag': 'na'}
-      ],
-      'additionalInfo': {},
+      'isRecoveryAct': false,
+      'description': '',
       'assistanceType': '0003003'
     }];
 
