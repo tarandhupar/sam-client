@@ -18,7 +18,7 @@ export class RequestStatusNamesResolve implements Resolve<any[]> {
 
   resolve(route: ActivatedRouteSnapshot) {
     return this.accessService.getRequestStatuses().catch(() => {
-      this.router.navigateByUrl('/role-workspace');
+      this.router.navigateByUrl('/access/role-workspace');
       this.footerAlerts.registerFooterAlert({
         description: "There was an error with a required service",
         type: 'error',
