@@ -1,6 +1,6 @@
-import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FHService } from 'api-kit';
+import { Component, Input, Output, OnInit, EventEmitter, ViewChild, SimpleChanges } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { FHService } from "api-kit";
 
 @Component({
   selector: 'agencyPicker',
