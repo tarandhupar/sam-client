@@ -25,7 +25,7 @@ export class SamNaicsPscFilter {
       let selectArray = this.selectModel1.split(",");
 
       for(var j=0; j<selectArray.length; j++) {
-      for(var i=0; i<this.options1.options.length; i++) {
+        for(var i=0; i<this.options1.options.length; i++) {
           if(this.options1.options[i].value == selectArray[j]) {
 
             let option = this.options1.options[i];
@@ -33,13 +33,11 @@ export class SamNaicsPscFilter {
               if(obj.value==option.value){
                 return true;
               }
-              return false;
+                return false;
             });
 
             if(filterArr.length==0){
-              this.listDisplay.selectedItems.push(this.options1.options[i]);
-
-              this.listDisplay.selectedItems.sort();
+              this.emitSelected(this.options1.options[i]);
             }
 
           }
@@ -51,8 +49,22 @@ export class SamNaicsPscFilter {
   }
 
   emitSelected(obj) {
+    if(obj.type === 'naics') {
+      obj.label += " (NAICS)";
+    }
     this.listDisplay.selectedItems.push(obj);
-    this.listDisplay.selectedItems.sort();
+    this.listDisplay.selectedItems.sort(function (a, b){
+      var nameA = a.label.toUpperCase(); // ignore upper and lowercase
+      var nameB = b.label.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      // names must be equal
+      return 0;
+    });
     this.emitSelectedList();
   }
 
