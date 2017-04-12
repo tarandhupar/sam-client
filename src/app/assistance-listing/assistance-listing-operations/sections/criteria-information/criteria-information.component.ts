@@ -392,7 +392,6 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   }
 
   onSaveContinueClick(event) {
-    this.redirectToViewPg = true;
     this.saveData();
   }
 
