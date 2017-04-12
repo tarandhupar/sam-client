@@ -14,19 +14,20 @@
       [(filterValue)]="index"
       [selectConfig]="searchSelectConfig">
       <div custom-input>
-        <samInputAutocomplete 
+        <!--samInputAutocomplete 
           [serviceName]="'suggestions'"
           [index]="index"
           (searchTermEmit)="searchbar.callSearch($event)"
           [searchTerm]="keyword"
           (keyEnterEmit)="searchbar.onSearchClick()">
-        </samInputAutocomplete>
-        <!--sam-autocomplete autofill-suggestions 
+        </samInputAutocomplete-->
+        <sam-autocomplete autofill-suggestions 
           [(ngModel)]="keyword" 
-          (change)="searchbar.callSearch($event.target.value)"
+          (ngModelChange)="searchbar.callSearch($event);searchbar.onSearchClick();"
           [index]="index" 
           [showClearButton]="true"
-          name="appsearch" ></sam-autocomplete-->
+          [allowAny]="true"
+          name="appsearch" ></sam-autocomplete>
       </div>
     </samSearchbar>
   </div>
