@@ -482,4 +482,12 @@ export class GrantAccessPage implements OnInit {
   onPermissionClick(perm) {
     perm.notChecked = !perm.notChecked;
   }
+
+  submitButtonText() {
+    if (this.userCameFromRoleWorkspace) {
+      return "Approve";
+    } else {
+      return "Submit";
+    }
+  }
 }

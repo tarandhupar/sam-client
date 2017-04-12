@@ -27,7 +27,7 @@ export class RequestAccessResolve implements Resolve<any> {
         }
       })
       .catch(() => {
-        this.router.navigateByUrl('/role-workspace');
+        this.router.navigateByUrl('/access/role-workspace');
         this.footerAlerts.registerFooterAlert({
           description: "The request ID was not found or there was an error with a required service.",
           type: 'error',

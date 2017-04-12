@@ -135,7 +135,16 @@ export class ManageRequestPage implements OnInit {
         description: `The request was ${verb}.`,
         type: 'success',
       });
-      this.router.navigate(['/role-workspace']);
+      this.router.navigate(['/access/role-workspace']);
     });
+  }
+
+  messagePlaceholder() {
+    switch (this.selectedOption) {
+      case 'reject':
+        return 'Provide a reason for rejecting this request...';
+      case 'escalate':
+        return 'Send a message to the administrator';
+    }
   }
 }
