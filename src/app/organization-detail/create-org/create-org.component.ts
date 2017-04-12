@@ -6,13 +6,16 @@ import { OrgAddrFormComponent } from './address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 
 function validDateTime(c: FormControl) {
+  let invalidError = {message: 'Date is invalid'};
+
   if (c.value === 'Invalid Date') {
-    return {message: 'Date is invalid'};
-  } else if(c.value === ''){
-    return {required: true};
+    return invalidError;
   }
 }
 
+function isRequired(c: FormControl) {
+  if(c.value === '') return {required:true};
+}
 
 @Component ({
   templateUrl: 'create-org.template.html'
@@ -68,7 +71,7 @@ export class OrgCreatePage {
   ngOnInit(){
     this.basicInfoForm = this.builder.group({
       orgName: ['', []],
-      orgStartDate: ['', [validDateTime]],
+      orgStartDate: ['', [validDateTime, isRequired]],
       orgDescription: ['', []],
       orgShortName: ['', []],
     });
@@ -122,7 +125,12 @@ export class OrgCreatePage {
     // Validate all the necessary fields in the organization creation form
     this.basicInfoForm.get('orgName').markAsDirty();
     this.basicInfoForm.get('orgStartDate').markAsDirty();
-    console.log(this.orgAddresses);
+    this.orgName.wrapper.formatErrors(this.basicInfoForm.get('orgName'));
+    this.orgStartDateWrapper.formatErrors(this.basicInfoForm.get('orgStartDate'));
+    if(this.isAddressNeeded()){
+      this.indicateFundRadioConfig.errorMessage = this.indicateFundRadioModel === ''? "This field cannot be empty": '';
+    }
+
     if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid())) && !this.basicInfoForm.invalid){
       this.createOrgPage = false;
       this.reviewOrgPage = true;
@@ -131,16 +139,8 @@ export class OrgCreatePage {
       this.orgInfo.push({des:"Start Date", value:this.basicInfoForm.get('orgStartDate').value});
       this.orgInfo.push({des:"Description", value:this.basicInfoForm.get('orgDescription').value});
       this.orgInfo.push({des:"Shortname", value:this.basicInfoForm.get('orgShortName').value});
-      this.orgInfo.push({des:"Indicate Funding", value:this.indicateFundRadioModel});
-    } else{
-      this.orgName.wrapper.formatErrors(this.basicInfoForm.get('orgName'));
-      this.orgStartDateWrapper.formatErrors(this.basicInfoForm.get('orgStartDate'));
-      if(this.isAddressNeeded()){
-        this.indicateFundRadioConfig.errorMessage = this.indicateFundRadioModel === ''? "This field cannot be empty": '';
-      }
+      if(this.isAddressNeeded()) this.orgInfo.push({des:"Indicate Funding", value:this.indicateFundRadioModel});
     }
-
-
   }
 
   onEditFormClick(){

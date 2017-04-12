@@ -1,8 +1,8 @@
-<section class="org-create-page usa-grid">
+<section class="org-create-page usa-grid relative">
   <div class="usa-width-one-fourth">&nbsp;</div>
   <div class="usa-width-one-half p_B-6x" [hidden]="!createOrgPage">
     <h2 class="p_T-3x">Create New {{orgType}}</h2>
-    <p>Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
+    <p class="p_T-3x">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
     <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
       <samText #orgName [required]='true' [control]="basicInfoForm.get('orgName')" formControlName="orgName" [name]="'orgName-input'" [label]="'Organization Name'"></samText>
       <labelWrapper #orgStartDateWrapper class="usa-width-one-half" [label]="'Start Date'" [name]="'start-date'" [required]="true">
@@ -63,22 +63,28 @@
     <button class="usa-button-outline p_R-6x p_L-6x pull-right" (click)="onCancelFormClick()">Cancel</button>
   </div>
   <div class="usa-width-one-half" *ngIf="reviewOrgPage">
-    <div class="usa-width-one-whole org-confirm-header">
-      <h2 class="p_T-3x">Confirm Office Details</h2>
-      <p>Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
+    <div class="usa-width-one-whole org-confirm-header p_B-6x">
+      <h2 class="p_T-3x">Confirm {{orgType}} Details</h2>
+      <p class="p_T-3x">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
     </div>
 
     <div class="usa-width-one-whole org-confirm-body p_T-3x">
-      <p class="m_L-3x m_B-1x" *ngFor="let pair of orgInfo">
+      <div class="usa-width-one-whole m_L-3x m_B-1x" *ngFor="let pair of orgInfo">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.des}}:</h4></span>
-        <span class="usa-width-two-thirds p_T-2x p_B-1x">&nbsp;{{pair.value}}</span>
-      </p>
-      <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
-        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addrModel.addrType}}:</h4></span>
-        <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.addrModel.street}}<br>{{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.postalCode}}<br>{{address.addrModel.country}}</span>
-      </p>
+        <!--<span class="usa-width-two-thirds p_T-2x p_B-1x">&nbsp;{{pair.value}}</span>-->
+        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x">&nbsp;{{pair.value}}</p>
+      </div>
+      <div *ngIf="isAddressNeeded()">
+        <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
+          <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addrModel.addrType}}:</h4></span>
+          <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.addrModel.street}}<br>{{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.postalCode}}<br>{{address.addrModel.country}}</span>
+        </p>
+      </div>
+
     </div>
     <button class="usa-button-primary p_R-4x p_L-4x pull-right" (click)="onConfirmFormClick()">Confirm</button>
     <button class="usa-button-outline p_R-6x p_L-4x pull-right" (click)="onEditFormClick()"><i class="fa fa-arrow-left"></i>Edit</button>
   </div>
+
+  <!--<samAlert [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+basicInfoForm.get('orgName').value" *ngIf="showAlert"></samAlert>-->
 </section>
