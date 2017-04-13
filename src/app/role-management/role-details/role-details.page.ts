@@ -12,7 +12,7 @@ export class RoleDetailsPage {
   mode: 'edit'|'new' = 'new';
 
   roles = [{ vals: [], name: 'Assistance Listing'}, {vals: [], name: 'IDV'}, {vals: [], name: 'Regional Offices'}];
-  role;
+  role = '';
   originalRole;
   roleId;
   domains: any[] = [];
@@ -133,12 +133,17 @@ export class RoleDetailsPage {
 
         let func0 = this.domainDefinitions.functionMapContent.find(func => +func.function.id === 0);
 
-        this.domainRoleOptions = func0.permission.map(dr => {
-          return {
-            label: dr.val,
-            id: dr.id,
-          };
-        });
+        if (func0 && func0.permission) {
+          this.domainRoleOptions = func0.permission.map(dr => {
+            return {
+              label: dr.val,
+              id: dr.id,
+            };
+          });
+        } else {
+          this.domainRoleOptions = [];
+        }
+
 
         if (this.domainDefinitions.functionMapContent && this.domainDefinitions.functionMapContent.length){
           this.permissionOptions = this.domainDefinitions.functionMapContent.map(f => {
@@ -191,7 +196,8 @@ export class RoleDetailsPage {
           } else {
             this.footerAlert.registerFooterAlert({
               title: 'Role '+this.roleId+' not found',
-              type: 'error'
+              type: 'error',
+              timer: 3200,
             });
             this.domainRoleOptions = null;
             this.domainDefinitions = null;
@@ -209,7 +215,8 @@ export class RoleDetailsPage {
   showGenericServicesError() {
     this.footerAlert.registerFooterAlert({
       description: 'Something went wrong with a required service',
-      type: 'error'
+      type: 'error',
+      timer: 3200,
     })
   }
 
@@ -270,7 +277,7 @@ export class RoleDetailsPage {
     });
   }
 
-  validate() {
+  validate(): any {
     if (this.mode === 'edit') {
       return this.role;
     } else {
@@ -305,7 +312,8 @@ export class RoleDetailsPage {
           let verb = this.mode === 'new' ? 'created' : 'editted';
           this.footerAlert.registerFooterAlert({
             description: 'Successfully '+verb+' new role.',
-            type: 'success'
+            type: 'success',
+            timer: 3200,
           });
           this.router.navigateByUrl('/access/workspace');
         },
@@ -334,6 +342,7 @@ export class RoleDetailsPage {
       if (+obj.id === 0) {
         return;
       }
+
       let permissions = obj.permissions.filter(perm => perm.isSelected);
       permissions = permissions.map(perm => {
         return {

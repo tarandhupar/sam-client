@@ -1,5 +1,4 @@
-<labelWrapper class="sam-list-input" [label]="label" [name]="name" [hint]="hint">
-  <div class="input-area" samClickOutside (clickOutside)="checkForFocus($event)" samTabOutside (tabOutside)="checkForFocus($event)">
+<div class="input-area" samClickOutside (clickOutside)="checkForFocus($event)" samTabOutside (tabOutside)="checkForFocus($event)">
     <div class="input-wrapper">
       <div class="sam-autocomplete">
         <!-- Text input -->
@@ -14,7 +13,7 @@
         </ul>
         <!-- Lists data if array of objects with key/value pair is passed to component -->
         <ul id="sam-autocomplete-results" #resultsListKV *ngIf="filteredKeyValuePairs && hasFocus">
-          <li *ngFor="let obj of filteredKeyValuePairs" (click)="setSelectedList(obj)" (keydown)="$event.which==13 ? setSelectedList(obj) : ''">
+          <li *ngFor="let obj of filteredKeyValuePairs" (click)="emitSelected(obj)" (keydown)="$event.which==13 ? emitSelected(obj) : ''">
             {{obj.label}}
             <i *ngIf="checkSelectedList(obj)" tabindex="0" class="fa fa-plus-square fa-pull-right"></i>
           </li>
@@ -25,5 +24,3 @@
       </div>
     </div>
   </div>
-  <sam-list-display #listDisplay (modelChange)="emitSelected()"><div [innerHTML]="selectedLabel"></div></sam-list-display>
-</labelWrapper>

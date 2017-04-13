@@ -19,13 +19,15 @@ export class WrapperService {
         "access": "/rms/v1/access",
         "functions": "/rms/v1/functions",
         "requestaccess": "/rms/v1/requestaccess",
+        "accessstatus": "/rms/v1/accessstatus",
         "uiroles": "/rms/v1/uiroles",
         "domains": "/rms/v1/domains",
         "permissions": "/rms/v1/permissions",
         "wageDetermination": "/wdol/v1",
         "location": "/locationservices/v1/api",
         "domainDefinition" : "/rms/v1/domaindefinition",
-        "feedback": "/feedback/v1"
+        "feedback": "/feedback/v1",
+        "rms": "/rms/v1",
     };
 
     constructor(private _http: Http){}
