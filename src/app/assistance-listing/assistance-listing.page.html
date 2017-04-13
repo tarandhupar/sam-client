@@ -168,7 +168,7 @@
       <h3>Account Identification:</h3>
 
       <p *ngFor="let account of program.data?.financial?.accounts; let i = index">
-        <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="account.description">{{account.code}}-{{account.description}};</span>
+        <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="account.description">{{account.code}}-{{account.description}}</span>
         <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="!account.description">{{account.code}}</span>
       </p>
     </section>
