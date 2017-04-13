@@ -7,43 +7,54 @@ import { ReplaySubject, Observable } from 'rxjs';
   moduleId: __filename,
   selector: 'fh-featured-result',
   template: `
-    <div class="featured-result">
+    <div class="sam-ui vertically very padded grid">
 
-      <div class="card">
-        <div class="card-header-secure">
-          <h3>
-            <a [routerLink]="['/organization', data._id]" [queryParams]="qParams">{{ data.name }}</a>
-          </h3>
-          <ng-container *ngIf="data.alternativeNames && data.alternativeNames !== null">
-              Also known as <strong><em>{{ data.alternativeNames }}</em></strong>
-          </ng-container>
-        </div>
-        <div class="card-secure-content clearfix">
-          <div *ngIf="errorOrganization || logoUrl===null" class="logo-small"  style="float: left; margin-right: 10px;">
-            <img src="src/assets/img/logo-not-available.png" alt="Logo Not Available">
+      <div class="column">
+        <div class="sam-ui raised segment">
+          
+          <div class="sam-ui top right attached mini label">
+          <i class="fa fa-star" aria-hidden="true"></i>
+            Featured Result
           </div>
-          <div *ngIf="logoUrl && !errorOrganization" class="logo-small"  style="float: left; margin-right: 10px;">
-            <img [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
+          
+          <div class="sam-ui attached grid">
+            <div class="row">
+              <div class="two wide column">
+                <div *ngIf="errorOrganization || logoUrl===null">
+                  <img class="sam-ui image" src="src/assets/img/logo-not-available.png" alt="Logo Not Available">
+                </div>
+                <div *ngIf="logoUrl && !errorOrganization">
+                  <img class="sam-ui image" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
+                </div>
+              </div>
+              <div class="ten wide column">  
+                <h3 class="sam-ui sub header">
+                  <a [routerLink]="['/organization', data._id]" [queryParams]="qParams">
+                    {{ data.name }}
+                  </a>
+                </h3>
+                <ng-container *ngIf="data.alternativeNames && data.alternativeNames !== null">
+                    Also known as <strong><em>{{ data.alternativeNames }}</em></strong>
+                </ng-container><br>
+                <ul class="sam-ui horizontal divided small list">
+                  <li class="item">
+                    <strong>
+                    {{ data.type=="Agency" ? 'Sub-Tier' : '' }}
+                    {{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}
+                    {{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
+                    </strong>
+                  </li>
+                  <li class="item" *ngIf="data">
+                    <strong>{{(data | organizationTypeCode).label}}</strong> {{(data | organizationTypeCode).value}}
+                  </li>  
+                </ul><br>
+                <div *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
+                  Department/Ind. Agency: {{ data.parentOrganizationHierarchy.name }}
+                </div>
+              </div>
+            </div>
           </div>
-
-          <div>
-            <ul class="usa-unstyled-list">
-              <li>
-                {{ data.type=="Agency" ? 'Sub-Tier' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
-              </li>
-              <li *ngIf="data">
-                <strong>CGAC: </strong> {{ data.cgac }}
-              </li>  
-              <br/>
-              <li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
-                Department/Ind. Agency: {{ data.parentOrganizationHierarchy.name }}
-              </li>
-            </ul>
-          </div>
-
-        </div>
-        <div class="card-extra-content">
-          <i class="fa fa-star" aria-hidden="true" style="color:#fdb81e;"></i> <strong>Featured Result</strong>
+        
         </div>
       </div>
 

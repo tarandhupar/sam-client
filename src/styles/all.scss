@@ -93,6 +93,7 @@
 @import 'sam-ui/elements/segment';
 @import 'sam-ui/elements/header';
 @import 'sam-ui/elements/image';
+@import 'sam-ui/elements/divider';
 
 /* Collections */
 @import 'sam-ui/collections/grid';
@@ -166,7 +167,7 @@
 @import 'pages/home';
 @import 'pages/opportunity';
 @import 'pages/organization';
-@import 'pages/search';
+//@import 'pages/search';
 @import 'pages/reference-library';
 @import 'pages/reports';
 @import 'pages/alerts';
