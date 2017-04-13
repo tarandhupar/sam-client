@@ -60,6 +60,7 @@
         [label]="'Message:'"
         [errorMessage]="messageError"
         [placeholder]="messagePlaceholder()"
+        (focusEvent)="onFocusMessage($event)"
       ></samTextArea>
     </div>
     <div class="clearfix">
