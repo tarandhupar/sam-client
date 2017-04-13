@@ -1,26 +1,29 @@
+.permissions-block {
+  border: 1px solid black;
+
+  .permissions-table-body, .permissions-table-header {
+    padding: .5em;
+  }
+
+}
+
+.background-white {
+  background-color: white;
+}
+
+.border-bottom-black {
+  border-bottom: 1px solid black;
+}
+
 .access-page {
   .no-wrap {
     white-space: nowrap;
   }
 
-  .background-white {
-    background-color: white;
-  }
+
 
   .modal-subtitle {
     margin-top: .8em;
-  }
-
-  .permissions-block {
-    border: 1px solid black;
-  }
-
-  .border-bottom-black {
-    border-bottom: 1px solid black;
-  }
-
-  .permissions-table, .permissions-table-header {
-    padding: .5em;
   }
 
   .role-block:not(:last-child) {
@@ -135,5 +138,30 @@
 
   .organizations-row {
     margin-top: 1em;
+  }
+
+  .requests-container {
+    border: 2px solid black;
+    background-color: $color-gray-lightest;
+
+    .usa-button-transparent {
+      padding: .2em;
+    }
+
+    .request-message {
+      margin-left: -8px;
+    }
+
+    .request-block:not(:last-child) {
+      border-bottom: 2px solid black;
+    }
+
+    .request-block {
+      padding: .8em;
+    }
+  }
+
+  .no-underline {
+    text-decoration: none;
   }
 }

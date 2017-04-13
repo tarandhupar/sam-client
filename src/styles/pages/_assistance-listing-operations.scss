@@ -13,6 +13,10 @@
     max-width: 480px;
   }
 
+  agencyPicker .organization-container {
+    max-width: 480px;
+  }
+
   .sticky-label{
     color: #a6a6a6;
     letter-spacing: -0.3px;
@@ -36,5 +40,22 @@
   .code-separator{
     float: left;
     padding: 12px 5px;
+  }
+
+  .fal-label-margin {
+    margin-top: 12px;
+    margin-bottom: -1em;
+  }
+
+  .fal-obligations-label {
+    font-weight: bold;
+    color: black;
+    font-size:30px;
+    margin-top: 10px;
+    margin-bottom: 0em;
+  }
+
+  .text-radio-padding {
+    padding-left: 20px;
   }
 }
