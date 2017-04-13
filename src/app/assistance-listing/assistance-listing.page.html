@@ -113,7 +113,17 @@
 
     <section id="program-authorizations">
       <a name="#/programs/{{programID}}/view#authorizations"></a>
-      <h2 id="authorizations">Authorizations</h2>
+
+      <div class="view-section-margin"></div>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="authorizations">Authorizations</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']"></i>
+        </div>
+      </div>
 
       <div *ngFor="let item of authorizationIdsGrouped; let i = index">
         <p class="field" [attr.id]="'program-authorization-' + i">{{ item | authorization }}</p>
@@ -134,8 +144,8 @@
           <h2 id="financial-information">Financial Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'other-financial-info']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'other-financial-info']"></i>
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']"></i>
         </div>
       </div>
 

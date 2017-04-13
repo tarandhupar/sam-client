@@ -1,0 +1,94 @@
+<section class="org-create-page usa-grid relative">
+  <div class="usa-width-one-fourth">&nbsp;</div>
+  <div class="usa-width-two-thirds p_B-6x" [hidden]="!createOrgPage">
+    <h2 class="p_T-3x">Create New {{orgType}}</h2>
+    <p class="p_T-3x">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
+    <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
+      <samText #orgName [required]='true' [control]="basicInfoForm.get('orgName')" formControlName="orgName" [name]="'orgName-input'" [label]="'Organization Name'"></samText>
+      <labelWrapper #orgStartDateWrapper class="usa-width-one-half" [label]="'Start Date'" [name]="'start-date'" [required]="true">
+        <samDate (valueChange)="setOrgStartDate($event)" [label]="'Start Date'" name='start-date'></samDate>
+      </labelWrapper>
+      <samTextArea #orgDescription class="usa-width-one-whole" [control]="basicInfoForm.get('orgDescription')" formControlName="orgDescription" [label]="'Description'" name='description' [placeholder]="'Provide a description for your organization and its function.'"></samTextArea>
+      <samText #orgShortName class="usa-width-one-whole" [control]="basicInfoForm.get('orgShortName')" formControlName="orgShortName" [name]="'orgShortName-input'" [label]="'Short Name'"></samText>
+      <div class="usa-width-one-half" *ngIf="isAddressNeeded()">
+        <labelWrapper class="p_T-3x" [label]="indicateFundRadioConfig.label" [name]="indicateFundRadioConfig.name" [required]="true">
+          <samRadioButton
+            [(model)]="indicateFundRadioModel"
+            [options]="indicateFundRadioConfig.options"
+            [label]="''"
+            [hint]="indicateFundRadioConfig.hint"
+            [name]="indicateFundRadioConfig.name"
+            [errorMessage]="indicateFundRadioConfig.errorMessage">
+          </samRadioButton>
+        </labelWrapper>
+      </div>
+    </form>
+
+    <!--Office Codes Form-->
+    <form [formGroup]="officeCodesForm" *ngIf="isAddressNeeded()">
+      <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-code-section p_T-4x p_B-4x">
+        <samText #orgFPDSCode [control]="basicInfoForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></samText>
+        <samText #orgAACCode [control]="basicInfoForm.get('ACCCode')" formControlName="ACCCode" [name]="'aac-input'" [label]="'AAC Code'"></samText>
+      </div>
+    </form>
+
+    <!--Agency, subcommand, majorcommand Codes Form-->
+    <form [formGroup]="agencyCodesForm" *ngIf="orgType==='Agency' || orgType==='SubCommand' || orgType==='MajorCommand'">
+      <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-code-section p_T-4x p_B-4x">
+        <samText #orgFPDSCode [control]="agencyCodesForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></samText>
+        <samText #orgOMBBureauCode [control]="agencyCodesForm.get('OMBBureauCode')" formControlName="OMBBureauCode" [name]="'omb-input'" [label]="'OMB Code'"></samText>
+      </div>
+    </form>
+
+    <!--Department Codes Form-->
+    <form [formGroup]="deptCodesForm" *ngIf="orgType==='Department'">
+      <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-code-section p_T-4x p_B-4x">
+        <samText #orgFPDSCode [control]="deptCodesForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></samText>
+        <samText #orgTAS2Code [control]="deptCodesForm.get('TAS2Code')" formControlName="TAS2Code" [name]="'tas2-input'" [label]="'TAS2 Code'"></samText>
+        <samText #orgTAS3Code [control]="deptCodesForm.get('TAS3Code')" formControlName="TAS3Code" [name]="'tas3-input'" [label]="'TAS3 Code'"></samText>
+        <samText #orgA11Code [control]="deptCodesForm.get('A11Code')" formControlName="A11Code" [name]="'a11-input'" [label]="'A11 Code'"></samText>
+        <samText #orgCFDACode [control]="deptCodesForm.get('CFDACode')" formControlName="CFDACode" [name]="'cfda-input'" [label]="'CFDA Code'"></samText>
+        <samText #orgOMBAgencyCode [control]="deptCodesForm.get('OMBAgencyCode')" formControlName="OMBAgencyCode" [name]="'omb-agency-input'" [label]="'OMB Agency Code'"></samText>
+      </div>
+    </form>
+
+    <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-address-section" *ngIf="isAddressNeeded()">
+      <div class="usa-width-one-whole p_T-4x" *ngFor="let orgAddr of orgAddresses">
+        <samAddrForm [orgAddrModel]="orgAddr.addrModel" [showAddIcon]="orgAddr.showAddIcon" (onAdditionalAddrRequest)="onAddAddressForm()" (onCancelAdditionalAddrRequest)="onDeleteAddressForm($event)"></samAddrForm>
+
+      </div>
+    </div>
+
+    <button class="usa-button-primary p_R-4x p_L-6x pull-right" (click)="onReviewFormClick()">Review <i class="fa fa-arrow-right"></i></button>
+    <button class="usa-button-outline p_R-6x p_L-6x pull-right" (click)="onCancelFormClick()">Cancel</button>
+  </div>
+  <div class="usa-width-two-thirds p_B-6x" *ngIf="reviewOrgPage">
+    <div class="usa-width-one-whole org-confirm-header p_B-6x">
+      <h2 class="p_T-3x">Confirm {{orgType}} Details</h2>
+      <p class="p_T-3x">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
+    </div>
+
+    <div class="usa-width-one-whole org-confirm-body p_T-3x">
+      <div class="usa-width-one-whole m_L-3x m_B-1x" *ngFor="let pair of orgInfo">
+        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.des}}:</h4></span>
+        <!--<span class="usa-width-two-thirds p_T-2x p_B-1x">&nbsp;{{pair.value}}</span>-->
+        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x" *ngIf="pair.des !== 'Description'">&nbsp;{{pair.value}}</p>
+        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x" *ngIf="pair.des === 'Description'">
+          <span *ngIf="pair.value.length < 500 || showFullDes">{{pair.value}}<span *ngIf="pair.value.length >= 500 && showFullDes">&nbsp;&nbsp;<a class="org-create-expand-link" (click)="hideFullDescription()">read less</a></span></span>
+          <span *ngIf="pair.value.length >= 500 && !showFullDes">{{pair.value.substr(0,500)}}...<a class="org-create-expand-link" (click)="showFullDescription()">read more</a></span>
+        </p>
+      </div>
+      <div *ngIf="isAddressNeeded()">
+        <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
+          <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addrModel.addrType}}:</h4></span>
+          <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.addrModel.street}}<br>{{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.postalCode}}<br>{{address.addrModel.country}}</span>
+        </p>
+      </div>
+
+    </div>
+    <button class="usa-button-primary p_R-4x p_L-4x pull-right" (click)="onConfirmFormClick()">Confirm</button>
+    <button class="usa-button-outline p_R-6x p_L-4x pull-right" (click)="onEditFormClick()"><i class="fa fa-arrow-left"></i>Edit</button>
+  </div>
+
+  <!--<samAlert [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+basicInfoForm.get('orgName').value" *ngIf="showAlert"></samAlert>-->
+</section>
