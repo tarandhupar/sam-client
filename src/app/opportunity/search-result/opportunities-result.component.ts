@@ -9,7 +9,7 @@ import * as moment from 'moment/moment';
     <div class="sam-ui grid">
       <div class="row">
         <div class="eight wide column">        
-          <h3 class="opportunity-title">
+          <h3 class="opportunity-title break-word">
             <a [routerLink]="['/opportunities', data._id]" [queryParams]="qParams">{{ data.title }}</a>
           </h3>
           
@@ -51,7 +51,7 @@ import * as moment from 'moment/moment';
             </li>
             <li>
               <strong>Solicitation Number</strong><br>
-              {{ data.solicitationNumber }}
+              <span class="break-word">{{ data.solicitationNumber }}</span>
             </li>
             <li>
               <strong>Posted Date</strong><br>
