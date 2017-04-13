@@ -63,7 +63,6 @@ export class OrgDetailProfilePage {
       val => {
         let orgDetail = val._embedded[0].org;
         this.orgObj = orgDetail;
-        console.log(this.orgObj);
         this.setCurrentHierarchyType(orgDetail.type);
         this.setCUrrentHierarchyLevel(orgDetail.level);
         this.setupHierarchyPathMap(orgDetail.fullParentPath, orgDetail.fullParentPathName);
@@ -72,12 +71,8 @@ export class OrgDetailProfilePage {
         this.setupOrganizationAddress(orgDetail);
         this.isDataAvailable = true;
         this.orgTypes = val._embedded[0].orgTypes;
-        console.log(this.orgTypes);
         this.getSubLayerTypes();
       }
-    ,error => {
-        console.log(error);
-      });
   }
 
   onChangeOrgDetail(hierarchyName){
@@ -265,7 +260,6 @@ export class OrgDetailProfilePage {
   }
 
   onSelect(val){
-    console.log(val);
     let navigationExtras: NavigationExtras = {
       queryParams: { parentID: this.orgId, orgType: val},
     };
