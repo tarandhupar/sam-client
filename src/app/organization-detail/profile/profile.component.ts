@@ -72,7 +72,7 @@ export class OrgDetailProfilePage {
         this.isDataAvailable = true;
         this.orgTypes = val._embedded[0].orgTypes;
         this.getSubLayerTypes();
-      }
+      });
   }
 
   onChangeOrgDetail(hierarchyName){
