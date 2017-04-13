@@ -25,6 +25,7 @@ export class OrgDetailProfilePage {
   isDataAvailable:boolean = false;
 
   isEdit:boolean = false;
+  showFullDes: boolean = false;
 
   editedDescription:string = "";
   editedShortname:string = "";
@@ -132,7 +133,7 @@ export class OrgDetailProfilePage {
     }
 
     this.orgDetails.push({description:this.capitalizeFirstLetter(org.type)+" Name", value:this.capitalizeFirstLetter(org.name)});
-    this.orgDetails.push({description:"Description", value:description.substr(0,500)});
+    this.orgDetails.push({description:"Description", value:description});
     this.orgDetails.push({description:"Shortname", value:shortName});
     this.orgDetails.push({description:"Start Date", value:startDateStr});
 
@@ -275,5 +276,7 @@ export class OrgDetailProfilePage {
     return str.split(' ').map(str => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()).join(' ');
   }
 
+  showFullDescription(){this.showFullDes = true;}
+  hideFullDescription(){this.showFullDes = false;}
 
 }

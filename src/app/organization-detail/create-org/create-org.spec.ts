@@ -2,24 +2,16 @@ import { inject, TestBed } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
-import * as moment from 'moment/moment';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder } from '@angular/forms';
-import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
-import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Load the implementations that should be tested
 import { OrgCreatePage } from "./create-org.component";
 import { OrgAddrFormComponent } from "./address-form/address-form.component";
 import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
-import { OrganizationDetailModule } from "../organization-detail.module";
 
-class RouterStub {
-  navigate(url: string) { return url; }
-}
 
-fdescribe('Create Organization Form Page', () => {
+describe('Create Organization Form Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgCreatePage;
   let fixture:any;
@@ -51,7 +43,6 @@ fdescribe('Create Organization Form Page', () => {
 
   it('should be able to set up values and add or delete address form', () => {
     fixture.detectChanges();
-
     component.setOrgStartDate("2016-12-12");
     component.onAddAddressForm();
     expect(component.orgAddresses.length).toBe(2);
@@ -60,5 +51,46 @@ fdescribe('Create Organization Form Page', () => {
     expect(component.isAddressFormValid()).toBeFalsy();
   });
 
+  it('should be able to validate an empty create organization form', () => {
+    fixture.detectChanges();
+    component.onReviewFormClick();
+    expect(component.createOrgPage).toBeTruthy();
+    expect(component.reviewOrgPage).toBeFalsy();
+  });
 
+  it('should be able to validate an valid create organization form', () => {
+    fixture.detectChanges();
+    component.basicInfoForm.get('orgName').setValue("OrgA");
+    component.setOrgStartDate("2016-12-12");
+    component.basicInfoForm.get('orgDescription').setValue("OrgA");
+    component.basicInfoForm.get('orgShortName').setValue("OrgA");
+    component.officeCodesForm.get('FPDSCode').setValue("FPDS");
+    component.indicateFundRadioModel = "other";
+    component.addrForms.forEach(e=>{
+      e.stateLocationConfig.serviceOptions = {value:"United States", key:"USA"};
+      e.stateOutput = {value:"Virginia"};
+      e.addressForm.get("streetAddr1").setValue("street 123");
+      e.addressForm.get("postalCode").setValue("123456");
+      e.addressForm.get("city").setValue("fairfax");
+    });
+    component.onReviewFormClick();
+    expect(component.reviewOrgPage).toBeTruthy();
+    expect(component.createOrgPage).toBeFalsy();
+    expect(component.orgInfo).toEqual([{ des: 'Organization Name', value: 'OrgA' }, { des: 'Start Date', value: '2016-12-12' }, { des: 'Description', value: 'OrgA' }, { des: 'Shortname', value: 'OrgA' },
+      { des: 'Indicate Funding', value: 'other' }, { des: 'FPDS Code', value: 'FPDS' }]);
+    component.onEditFormClick();
+    expect(component.reviewOrgPage).toBeFalsy();
+    expect(component.createOrgPage).toBeTruthy();
+  });
+
+  it('should be able to set up create department codes form', () => {
+    fixture.detectChanges();
+    component.orgType = "Department";
+    component.setupOrgForms(component.orgType);
+    component.deptCodesForm.get('FPDSCode').setValue("FPDS");
+    component.deptCodesForm.get('TAS2Code').setValue("TAS2Code");
+    component.deptCodesForm.get('TAS3Code').setValue("TAS3Code");
+    component.getOrgTypeSpecialInfo(component.orgType);
+    expect(component.orgInfo).toEqual([{ des: 'FPDS Code', value: 'FPDS' },{ des: 'TAS2 Code', value: 'TAS2Code' },{ des: 'TAS3 Code', value: 'TAS3Code' }]);
+  })
 });

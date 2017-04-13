@@ -30,7 +30,11 @@
       <div class="usa-width-one-whole m_B-4x">
         <p class="m_L-3x m_B-1x" *ngFor="let pair of orgDetails">
           <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.description}}:</h4></span>
-          <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="!isEdit || !isEditableField(pair.description)">&nbsp;{{pair.value}}</span>
+          <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="(!isEdit || !isEditableField(pair.description)) && pair.description !== 'Description'">&nbsp;{{pair.value}}</span>
+          <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="!isEdit  && pair.description === 'Description'">
+            <span *ngIf="pair.value.length < 500 || showFullDes">{{pair.value}}</span>
+            <span *ngIf="pair.value.length >= 500 && !showFullDes">{{pair.value.substr(0,500)}}...<a class="org-detail-expand-link" (click)="showFullDescription()">read more</a></span>
+          </span>
           <textarea class="usa-width-two-thirds m_T-2x" rows="4" *ngIf="isEdit && pair.description === 'Description'" [(ngModel)]="editedDescription">{{editedDescription}}</textarea>
           <input class="usa-width-two-thirds org-edit-input" *ngIf="isEdit && pair.description === 'Shortname'" [(ngModel)]="editedShortname">
         </p>
@@ -50,8 +54,5 @@
         </p>
       </div>
     </div>
-    <p>{{orgObj | json}}</p>
   </div>
 </div>
-
-

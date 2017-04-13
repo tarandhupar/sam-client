@@ -65,6 +65,7 @@ export class OrgCreatePage {
 
   extraAddressTypes = ["Billing Address","Shipping Address"];
   orgTypeWithAddress = "Office";
+  showFullDes:boolean = false;
 
   constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute) {}
 
@@ -116,6 +117,35 @@ export class OrgCreatePage {
     }
   }
 
+  getOrgTypeSpecialInfo(orgType){
+    switch (orgType){
+      case "Office":
+        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code");
+        this.getOrgCodes(this.officeCodesForm,"ACCCode","AAC Code");
+        break;
+      case "Agency": case "MajorCommand": case "SubCommand":
+        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code");
+        this.getOrgCodes(this.agencyCodesForm,"OMBBureauCode","OMB Code");
+        break;
+      case "Department":
+        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code");
+        this.getOrgCodes(this.deptCodesForm,"TAS2Code","TAS2 Code");
+        this.getOrgCodes(this.deptCodesForm,"TAS3Code","TAS3 Code");
+        this.getOrgCodes(this.deptCodesForm,"A11Code","A11 Code");
+        this.getOrgCodes(this.deptCodesForm,"CFDACode","CFDA Code");
+        this.getOrgCodes(this.deptCodesForm,"OMBAgencyCode","OMB Agency Code");
+        break;
+      default:
+        break;
+    }
+  }
+
+  getOrgCodes(orgForm:FormGroup, codeType:string, desc:string){
+    if(orgForm.get(codeType).value !== ''){
+      this.orgInfo.push({des:desc, value:orgForm.get(codeType).value});
+    }
+  }
+
   setOrgStartDate(val){
     this.basicInfoForm.get('orgStartDate').setValue(val);
   }
@@ -131,7 +161,7 @@ export class OrgCreatePage {
       this.indicateFundRadioConfig.errorMessage = this.indicateFundRadioModel === ''? "This field cannot be empty": '';
     }
 
-    if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid())) && !this.basicInfoForm.invalid){
+    if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid){
       this.createOrgPage = false;
       this.reviewOrgPage = true;
       this.orgInfo = [];
@@ -140,6 +170,7 @@ export class OrgCreatePage {
       this.orgInfo.push({des:"Description", value:this.basicInfoForm.get('orgDescription').value});
       this.orgInfo.push({des:"Shortname", value:this.basicInfoForm.get('orgShortName').value});
       if(this.isAddressNeeded()) this.orgInfo.push({des:"Indicate Funding", value:this.indicateFundRadioModel});
+      this.getOrgTypeSpecialInfo(this.orgType);
     }
   }
 
@@ -183,11 +214,13 @@ export class OrgCreatePage {
   isAddressFormValid():boolean{
     let isValid = true;
     this.addrForms.forEach( e => {if(!e.validateForm()) isValid = false;});
-    console.log("Address validation:"+isValid);
     return isValid;
   }
 
   isAddressNeeded():boolean{
     return this.orgType === this.orgTypeWithAddress;
   }
+
+  showFullDescription(){this.showFullDes = true;}
+  hideFullDescription(){this.showFullDes = false;}
 }
