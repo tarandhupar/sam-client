@@ -1,11 +1,12 @@
 import { Component, Input, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
+import {DictionaryService} from "api-kit";
 
 @Component({
   selector: 'falFormulaMatchingInput',
   templateUrl: 'formula-matching.template.html',
-  providers: [
+  providers: [ DictionaryService,
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FALFormulaMatchingComponent),
@@ -28,14 +29,7 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
     { value: 'voluntary_rating', label: 'Matching requirements are voluntary and part of the rating criteria', name: this.name + '-radio-voluntary-rating'}
   ];
 
-  public matchingPercentageOptions = (() => {
-    let percentages = [];
-    for(let i = 0; i <= 100; i+=5) {
-      percentages.push({value: i, label: i.toString(), name: this.name + '-percentage' + i});
-    }
-
-    return percentages;
-  })();
+  public matchingPercentageOptions = [];
 
 public formulaMatchingGroup: FormGroup;
 
@@ -47,7 +41,17 @@ public formulaMatchingGroup: FormGroup;
 
   @ViewChild('formulaMatchingLabel') wrapper: LabelWrapper;
 
-  constructor() { }
+  constructor(private dictService: DictionaryService) {
+    dictService.getDictionaryById('match_percent').subscribe(data => {
+      for(let percent of data['match_percent']) {
+        this.matchingPercentageOptions.push({
+          value: percent.code,
+          label: percent.value,
+          name: this.name + '-percentage' + percent.value
+        });
+      }
+    });
+  }
 
   ngOnInit() {
     this.parseOptionsAndSetDefaults();

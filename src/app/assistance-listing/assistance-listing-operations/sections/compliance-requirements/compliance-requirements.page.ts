@@ -15,7 +15,6 @@ export class ComplianceRequirementsPage implements OnInit {
   private cookieValue;
 
   public program: any;
-  public cfr200dict: any;
   public complianceRequirementsGroup: FormGroup;
   public policyRequirementsModel: any = {};
   public reportsModel: any = {};
@@ -117,7 +116,6 @@ export class ComplianceRequirementsPage implements OnInit {
     this.cookieValue = this.sharedService.cookieValue;
 
     dictService.getDictionaryById('cfr200_requirements').subscribe(data => {
-      this.cfr200dict = data;
       for(let requirement of data['cfr200_requirements']) {
         this.policyRequirementsConfig.checkbox.options.push({
           value: requirement.code,
