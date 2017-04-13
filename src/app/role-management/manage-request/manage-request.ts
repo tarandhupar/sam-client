@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import {Component, OnInit, ViewChild, ElementRef} from "@angular/core";
 import { Router, ActivatedRoute, NavigationExtras } from "@angular/router";
 import { SamAutocompleteComponent } from "sam-ui-kit/form-controls/autocomplete";
 import { UserAccessService } from "../../../api-kit/access/access.service";
@@ -21,6 +21,8 @@ export class ManageRequestPage implements OnInit {
   public message = '';
   public messageError = '';
 
+  private textarea;
+
   constructor(
     private route: ActivatedRoute,
     private footerAlerts: AlertFooterService,
@@ -28,7 +30,6 @@ export class ManageRequestPage implements OnInit {
     private accessService: UserAccessService,
     private router: Router
   ) {
-
   }
 
   ngOnInit() {
@@ -62,6 +63,10 @@ export class ManageRequestPage implements OnInit {
     if (s) {
       return s.status;
     }
+  }
+
+  onFocusMessage(event) {
+    this.messageError = '';
   }
 
   getDomainNameById(domainId: any) {
