@@ -176,5 +176,4 @@ describe('Organization Detail Profile Page', () => {
   //   ]);
   // });
 
-
 });
