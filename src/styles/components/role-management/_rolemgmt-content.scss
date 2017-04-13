@@ -37,11 +37,20 @@
   .p_T-1em{
     padding-top: 1em;
   }
-  .p_T-.5em{
+  .p_T-05em{
     padding-top: 0.5em;
   }
   .pag-com{
     padding-left: 22em;
     padding-top: 2em;
+  }
+  .ellipsis{
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .ellipsis:hover{
+    overflow: visible; 
+    white-space: normal;
+    font-weight: bold;
   }
 }
