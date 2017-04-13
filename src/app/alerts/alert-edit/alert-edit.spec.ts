@@ -1,5 +1,3 @@
-/*
-todo: fix these tests
 import { TestBed, ComponentFixtureAutoDetect } from '@angular/core/testing';
 
 // Load the implementations that should be tested
@@ -62,4 +60,3 @@ describe('The <alert-edit> component', () => {
     });
   });
 });
-*/
