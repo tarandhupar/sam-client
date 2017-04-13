@@ -14,8 +14,9 @@ export class RoleMgmtSidenav implements OnInit{
 
     StatusCheckboxModel : any = [];
     DomiansCheckboxModel : any = [];
-    permissionOptions : any = [];
-    usersEntered : string;
+    requestorIds : any = [];
+    statusIds : string = '';
+    usersEntered : any;
 
     @Output() statusSelected: EventEmitter<any> = new EventEmitter<any>();
     @Output() domainSelected: EventEmitter<any> = new EventEmitter<any>();
@@ -26,27 +27,51 @@ export class RoleMgmtSidenav implements OnInit{
       domains : { options: [ ], value: [ ]}
     };
 
+
     constructor(private router: Router, private route: ActivatedRoute,private role: UserAccessService){
+      
+      
+    }
+
+    ngOnInit(){
       this.accordionHeading1 = 'Status';
       this.accordionName1 = 'Status-Filter-Check-Box';
       this.accordionHeading2 = 'Domains';
       this.accordionName2 = 'Domains-Filter-Check-Box';
+      
 
       this.getAccessStatus();
-      this.permissionOptions = ["Sumit", "Nithin", "Taran","Justin"];
       this.filters.domains.options = this.route.parent.snapshot.data['domains']._embedded.domainList.map(this.mapDomainLabelAndVal);
-    }
-
-    ngOnInit(){
-
+      this.getRequestorIds();
+      //this.requestorIds = [{key: 'sumit', value: 'sumit'},{key: 'nithin', value: 'nithin'},{key: 'taran', value: 'taran'},{key: 'justin', value: 'justin'}]
     }
 
     getAccessStatus(){
       this.role.getAccessStatus('Admin').subscribe(res => {
         if(res.length > 0 ){
+          res.forEach(status => {
+            if(this.statusIds === ''){
+              this.statusIds = this.statusIds + status.id;
+            }
+            else{
+              this.statusIds = this.statusIds + "," + status.id;
+            }
+          });
+         
           this.filters.status.options = res.map(this.mapLabelAndValue);
         }
       });
+    }
+
+    getRequestorIds(){
+      this.role.getRequestorIds().subscribe( res => {
+        if(res.length !=  0)
+          this.requestorIds = res.map(this.mapKeyAndVal);
+      });
+    }
+
+    mapKeyAndVal(val){
+      return {key : val, value : val};
     }
 
     mapLabelAndValue(val){
@@ -58,7 +83,10 @@ export class RoleMgmtSidenav implements OnInit{
     }
 
     activeFilter(event){
-      this.statusSelected.emit(event.toString());
+      if(event.length < 1)
+        this.statusSelected.emit(this.statusIds);
+      else
+        this.statusSelected.emit(event.toString());
       window.scrollTo(0,0);
     }
 
