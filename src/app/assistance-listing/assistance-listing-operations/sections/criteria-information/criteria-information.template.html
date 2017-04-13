@@ -7,7 +7,6 @@
     ></samCheckboxToggledTextarea>
   </div>
   <div class="fal-label-margin fal-label">Eligibility Requirements</div>
-  <ng-container *ngIf="program">
     <sam-list-display #appListDisplay [newValue]="appSelectedOption" formControlName="appInitialSelection"
                       (modelChange)="applicantlistChange($event)" [config]="listConfig">
       <labelWrapper #applicantTypeWrapper [label]="'Applicant Eligibility'" [required]="true"
@@ -21,7 +20,6 @@
           required [showClearButton]="'true'" class="search-bar sam-autocomplete-width"></sam-autocomplete>
       </labelWrapper>
     </sam-list-display>
-  </ng-container>
   <samTextArea
     [control]="falCriteriaForm.controls['applicantDesc']"
     [name]="'applicant-description-input'"
@@ -70,7 +68,7 @@
     [required]="true"
     [options]="awardedTypeOptions"
     formControlName="awardedTypes"
-    [hint]="'Select the value that best represent how funding is released'"
+    [hint]="'Select the value that best represent how funding is released.'"
     (modelChange)="onawardedTypeChange($event)"></samSelect>
 
   <div *ngIf="awardedTextarea">

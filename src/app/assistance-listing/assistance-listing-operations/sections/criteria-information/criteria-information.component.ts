@@ -105,7 +105,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 };
   public useLoanTermsConfig: Object = {
     name: 'use-Loan-Terms',
-    label: 'Are loans a type of assistance in this program',
+    label: 'Are loans a type of assistance in this program?',
     required: true,
 
     checkbox: {
@@ -122,7 +122,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   public documentationConfig: Object = {
     name: 'documentation',
     label: 'Credentials and Documentation',
-    hint: 'Please describe credentials or documentation required for applying. Do not include anything covered in 2 CFR 200',
+    hint: 'Please describe credentials or documentation required for applying. Do not include anything covered in 2 CFR 200.',
     required: true,
 
     checkbox: {
