@@ -1,5 +1,4 @@
 <div class="usa-grid assistance-listing-page" *ngIf="program">
-
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
@@ -93,7 +92,7 @@
 
       <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
         <ng-container *ngSwitchCase="true">
-          <span *ngFor="let item of program.data.projects?.list; let i = index">
+          <span *ngFor="let item of program.data?.projects?.list; let i = index">
             <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description">
               Fiscal Year {{item.fiscalYear}}: {{item.description}}
             </span>
@@ -321,8 +320,8 @@
               <span *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length==0" class="field" id="program-preapplication-coorindation-environmental-na">
                 Environmental impact information is not required for this program.
               </span>
-              
-              
+
+
             </ng-container>
 
             <!-- Executive Order  -->
@@ -473,7 +472,7 @@
           <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']"></i>
         </div>
       </div>
-      
+
       <h3>Policy Requirements</h3>
       <div>
         <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>

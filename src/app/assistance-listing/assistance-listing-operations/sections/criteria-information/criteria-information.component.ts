@@ -46,7 +46,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   benInitialSelection = [];
   benMultiArrayValues = [];
   benSelectedOption: any;
-  toggleBeneficiarySection: boolean = false;
+  toggleBeneficiarySection: boolean = true;
 
   //multiselect placeholders
   appPlaceholder = 'None Selected';
@@ -196,6 +196,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   }
 
   placeholderMsg(multiArray: any) {
+    console.log(multiArray,'multiArray................');
     let PlaceholderMsg = '';
     if(multiArray.length === 1) {
       PlaceholderMsg = 'One Type Selected';
@@ -209,9 +210,9 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
   createForm() {
     this.falCriteriaForm = this.fb.group({
-      'appInitialSelection': '',
-      'benInitialSelection': '',
-      'assUsageInitialSelection': '',
+      'appInitialSelection': [''],
+      'benInitialSelection': [''],
+      'assUsageInitialSelection': [''],
       'applicantTypes': '',
       'applicantDesc': '',
       'isSameAsApplicant': '',
@@ -240,6 +241,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
       this.useLoanTermsModel = model;
     });
   }
+
 
   getData() {
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
@@ -318,9 +320,9 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
             this.toggleBeneficiarySection = true;
           }
           this.falCriteriaForm.patchValue({
-            appInitialSelection: this.appInitialSelection,
-            benInitialSelection: this.benInitialSelection,
-            assUsageInitialSelection: this.assUsageInitialSelection,
+            appInitialSelection: this.appInitialSelection === null ? [] : this.appInitialSelection,
+            benInitialSelection: this.benInitialSelection === null ? [] : this.benInitialSelection,
+            assUsageInitialSelection: this.assUsageInitialSelection === null ? [] : this.assUsageInitialSelection,
             applicantDesc: applicantDesc,
             isSameAsApplicant: [isSameAsApplicant],
             benDesc: benDesc,
@@ -363,9 +365,10 @@ console.log(obj,'obj');
   }
   removeDuplicates(obj: any, list: any) {
     for (let i = 0; i < list.length; i++) {
+      console.log("list[i].code", list[i].code);
+      console.log("obj.code", obj.code);
       if (list[i].code === obj.code) {
         return true;
-        //break;
       } else {
         return false;
       }
@@ -402,6 +405,7 @@ console.log(obj,'obj');
       }
       isDuplicate = this.removeDuplicates(control.value, this.benListDisplay.selectedItems);
       if(!isDuplicate) {
+        console.log('going inside even duplicate');
         this.benSelectedOption = control.value;
         this.benMultiArrayValues.push(control.value.code);
         this.benAutocompleteConfig.placeholder = this.placeholderMsg(this.benMultiArrayValues);
@@ -432,10 +436,7 @@ console.log(obj,'obj');
         this.appSelectedOption = control.value;
         this.applicantMultiArrayValues.push(control.value.code);
         this.appAutocompleteConfig.placeholder = this.placeholderMsg(this.applicantMultiArrayValues);
-        //this.appAutoComplete.clearInput();
-        //this.appAutoComplete.checkForFocus();
       }
-
     }
   }
 
@@ -502,18 +503,15 @@ console.log(obj,'obj');
     let criteriaData = {};
     let data = {};
     let applicantDesc = this.falCriteriaForm.value.applicantDesc;
-    //this.assUsageMultiArrayValues = this.assUsageMultiArrayValues.filter(val => (val !== null) || (val !== '') || (val !== 'undefined'));
     let assUsageDesc = this.falCriteriaForm.value.assUsageDesc;
     let isSameAsApplicant: boolean;
     if (this.falCriteriaForm.value.isSameAsApplicant) {
       isSameAsApplicant = this.falCriteriaForm.value.isSameAsApplicant.indexOf('isSameAsApplicant') !== -1;
     }
-    //this.benMultiArrayValues = this.benMultiArrayValues.filter(val => (val !== null) || (val !== '') || (val !== 'undefined'));
     let benDesc = this.falCriteriaForm.value.benDesc;
     let lengthTimeDesc = this.falCriteriaForm.value.lengthTimeDesc;
     let awardedType = this.falCriteriaForm.value.awardedTypes === 'na' ? null : this.falCriteriaForm.value.awardedTypes;
     let awardedDesc = this.falCriteriaForm.value.awardedDesc;
-    //this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => (val !== null) || (val !== '') || (val !== 'undefined'));
 
     criteriaData = this.buildJson(this.applicantMultiArrayValues, applicantDesc, this.assUsageMultiArrayValues, assUsageDesc, isSameAsApplicant, this.benMultiArrayValues, benDesc,
       this.saveDocumentaiton(), lengthTimeDesc, awardedType, awardedDesc, this.saveUseRestrictions(), this.saveUseDisFunds(), this.saveUseLoanTerms());
