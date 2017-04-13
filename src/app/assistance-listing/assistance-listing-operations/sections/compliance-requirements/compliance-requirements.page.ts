@@ -4,9 +4,10 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ProgramService } from "api-kit";
 import { Observable } from "rxjs";
 import { FALOpSharedService } from "../../assistance-listing-operations.service";
+import { DictionaryService } from "api-kit";
 
 @Component({
-  providers: [ProgramService],
+  providers: [ProgramService, DictionaryService],
   templateUrl: 'compliance-requirements.page.html'
 })
 export class ComplianceRequirementsPage implements OnInit {
@@ -14,6 +15,7 @@ export class ComplianceRequirementsPage implements OnInit {
   private cookieValue;
 
   public program: any;
+  public cfr200dict: any;
   public complianceRequirementsGroup: FormGroup;
   public policyRequirementsModel: any = {};
   public reportsModel: any = {};
@@ -26,16 +28,9 @@ export class ComplianceRequirementsPage implements OnInit {
     checkbox: {
       name: 'compliance-policy-requirements',
       label: 'Policy Requirements',
-      // todo: check what * is for in hint
       hint: 'Does 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards apply to this federal assistance listing?',
 
-      options: [
-        { value: 'subpartB', label: 'Subpart B, General Provisions', name: 'policy-requirements-checkbox-subB' },
-        { value: 'subpartC', label: 'Subpart C, Pre-Federal Award Requirements and Contents of Federal Awards', name: 'policy-requirements-checkbox-subC' },
-        { value: 'subpartD', label: 'Subpart D, Post Federal Award Requirements', name: 'policy-requirements-checkbox-subD' },
-        { value: 'subpartE', label: 'Subpart E, Cost Principles', name: 'policy-requirements-checkbox-subE' },
-        { value: 'subpartF', label: 'Subpart F, Audit Requirements', name: 'policy-requirements-checkbox-subF' }
-      ]
+      options: []
     },
 
     textarea: {
@@ -115,10 +110,22 @@ export class ComplianceRequirementsPage implements OnInit {
               private programService: ProgramService,
               private route: ActivatedRoute,
               private router: Router,
-              private sharedService: FALOpSharedService) {
+              private sharedService: FALOpSharedService,
+              private dictService: DictionaryService) {
     this.sharedService.setSideNavFocus();
     this.programId = this.sharedService.programId;
     this.cookieValue = this.sharedService.cookieValue;
+
+    dictService.getDictionaryById('cfr200_requirements').subscribe(data => {
+      this.cfr200dict = data;
+      for(let requirement of data['cfr200_requirements']) {
+        this.policyRequirementsConfig.checkbox.options.push({
+          value: requirement.code,
+          label: requirement.displayValue,
+          name: 'policy-requirements-checkbox-' + requirement.code
+        });
+      }
+    });
   }
 
   ngOnInit() {
