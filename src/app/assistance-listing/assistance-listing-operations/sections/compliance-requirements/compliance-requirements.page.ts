@@ -121,7 +121,7 @@ export class ComplianceRequirementsPage implements OnInit {
       for(let requirement of data['cfr200_requirements']) {
         this.policyRequirementsConfig.checkbox.options.push({
           value: requirement.code,
-          label: requirement.displayValue,
+          label: requirement.value,
           name: 'policy-requirements-checkbox-' + requirement.code
         });
       }

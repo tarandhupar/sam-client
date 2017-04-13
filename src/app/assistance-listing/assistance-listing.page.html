@@ -324,8 +324,8 @@
               <span *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length==0" class="field" id="program-preapplication-coorindation-environmental-na">
                 Environmental impact information is not required for this program.
               </span>
-              
-              
+
+
             </ng-container>
 
             <!-- Executive Order  -->
@@ -476,14 +476,14 @@
           <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']"></i>
         </div>
       </div>
-      
+
       <h3>Policy Requirements</h3>
       <div>
         <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == true">
-                {{ item.code }}
+              <ng-container *ngIf="item.isSelected == true && dictionaries">
+                {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>
         </ng-container>
@@ -493,8 +493,8 @@
         <span class="field">The following 2CFR policy requirements are excluded from coverage under this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == false">
-                {{ item.code }}
+              <ng-container *ngIf="item.isSelected == false && dictionaries">
+                {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>
         </ng-container>
