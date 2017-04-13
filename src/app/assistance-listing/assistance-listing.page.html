@@ -102,6 +102,13 @@
 
         <p class="field" id="program-project-example-na" *ngSwitchDefault>Not Applicable</p>
       </div>
+
+      <ng-container *ngIf="program.data?.description && program.data?.description != ''">
+        <h3 >Federal Assistance Listing Description:</h3>
+        <div class="content-block">
+          {{ program.data?.description }}
+        </div>
+      </ng-container>
     </section>
 
     <section id="program-authorizations">
@@ -111,6 +118,10 @@
       <div *ngFor="let item of authorizationIdsGrouped; let i = index">
         <p class="field" [attr.id]="'program-authorization-' + i">{{ item | authorization }}</p>
       </div>
+
+      <p *ngIf="program.data?.authorizations?.description && program.data?.authorizations?.description != ''">
+        {{ program.data?.authorizations?.description }}
+      </p>
     </section>
 
     <!--Financials-->
@@ -169,8 +180,8 @@
 
       <h3>Types of Assistance:</h3>
 
-      <p *ngIf="dictionaries && dictionaries.assistance_type">
-        <ng-container *ngFor="let item of program.data?.assistanceTypes | filterMultiArrayObject:dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
+      <p *ngIf="dictionaries && dictionaries.assistance_type && assistanceTypes">
+        <ng-container *ngFor="let item of assistanceTypes | filterMultiArrayObject:dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-assistance-type-' + i">{{ item.displayValue }}{{isLast ? '' : ', '}}</span>
         </ng-container>
       </p>
@@ -222,6 +233,7 @@
         <ng-container *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-beneficiary-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
         </ng-container>
+        <span class="field" *ngIf="program.data?.eligibility?.beneficiary?.isSameAsApplicant==true" [attr.id]="'program-beneficiary-designation-sameasapplicant'">Beneficiary eligibility is the same as applicant eligibility.</span>
       </div>
 
       <p>
@@ -454,6 +466,29 @@
           <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']"></i>
         </div>
       </div>
+      
+      <h3>Policy Requirements</h3>
+      <div>
+        <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
+        <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+            <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
+              <ng-container *ngIf="item.isSelected == true">
+                {{ item.code }}
+              </ng-container>
+            </p>
+        </ng-container>
+      </div>
+
+      <div>
+        <span class="field">The following 2CFR policy requirements are excluded from coverage under this assistance listing:</span>
+        <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+            <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
+              <ng-container *ngIf="item.isSelected == false">
+                {{ item.code }}
+              </ng-container>
+            </p>
+        </ng-container>
+      </div>
 
       <h3>Reports:</h3>
 
@@ -537,6 +572,18 @@
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="true">
             Matching Requirements: <ng-container *ngIf="program.data?.compliance?.formulaAndMatching?.matching?.percent > 0">Percent: {{program.data?.compliance?.formulaAndMatching?.matching?.percent}}</ng-container>
             {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
+
+          <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.matching?.requirementFlag">
+            <p *ngSwitchCase="'mandatory'">
+              Matching requirements are mandatory.
+            </p>
+            <p *ngSwitchCase="'voluntary'">
+              Matching requirements are voluntary.
+            </p>
+            <p *ngSwitchCase="'voluntary_percent'">
+              Matching requirements are voluntary and part of the rating criteria.
+            </p>
+          </ng-container>
         </div>
 
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="false">

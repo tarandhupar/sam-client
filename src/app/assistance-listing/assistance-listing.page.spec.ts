@@ -596,6 +596,7 @@ describe('ProgramPage', () => {
     expect(comp.historicalIndex).toBeDefined();
     expect(comp.alert).toBeDefined();
     expect(comp.dictionaries).toBeDefined();
+    expect(comp.assistanceTypes).toBeDefined();
 
     expect(fixture.debugElement.query(By.css('#program-title')).nativeElement.innerHTML).toContain('Wood Utilization Assistance')
   });
@@ -609,6 +610,11 @@ describe('ProgramPage', () => {
   it('Should have related FAL', () => {
     //mocked program should show the related fal -> Verifying it
     expect(comp.relatedProgram.length).toBe(2);
+  });
+
+  it('Should have assistance types', () => {
+    //mocked program should show all the assistance types -> Verifying it
+    expect(comp.assistanceTypes.length).toBe(2);
   });
 
   it('Should show labels for designation types', () => {
