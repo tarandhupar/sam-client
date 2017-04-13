@@ -401,9 +401,9 @@ export class FinancialObligationsComponent implements OnInit {
 
   onPreviousClick(event) {
     if (this.sharedService.programId)
-      this.router.navigate(['programs/' + this.sharedService.programId + '/edit/overview']);
+      this.router.navigate(['programs/' + this.sharedService.programId + '/edit/authorization']);
     else
-      this.router.navigate(['programs/add/overview']);
+      this.router.navigate(['programs/add/authorization']);
 
   }
 
