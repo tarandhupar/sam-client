@@ -1,0 +1,29 @@
+<table [class.hide]="displayAuthInfo.length == 0">
+  <thead>
+  <th>Authorization(s)/Amendments</th>
+  <th>Actions</th>
+  </thead>
+  <tbody>
+  <tr *ngFor="let auth of displayAuthInfo; let i=index">
+    <td>
+      {{auth}}
+    </td>
+    <td>
+      <ng-container *ngIf="!hideAddButton">
+        <a class="fal-table-edit" (click)="editAuth(i)" >Edit</a>
+        <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editAuth(i)"></i>
+        <a class="fal-table-delete" (click)="removeAuth(i)">Remove</a>
+        <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeAuth(i)"></i>
+      </ng-container>
+
+      <ng-container *ngIf="hideAddButton">
+        <span class="fal-table-edit disabled">Edit</span>
+        <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+        <span class="fal-table-delete disabled">Remove</span>
+        <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
+      </ng-container>
+
+    </td>
+  </tr>
+  </tbody>
+</table>

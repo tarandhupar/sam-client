@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable } from 'rxjs';
 import * as moment from 'moment/moment';
+import { FormsModule } from '@angular/forms';
 
 // Load the implementations that should be tested
 import { OrgDetailProfilePage } from "./profile.component";
@@ -132,7 +133,7 @@ describe('Organization Detail Profile Page', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ OrgDetailProfilePage ],
-      imports:[ SamUIKitModule, SamAPIKitModule, RouterTestingModule],
+      imports:[ SamUIKitModule, SamAPIKitModule, RouterTestingModule, FormsModule],
       providers: [
         { provide: Router, useClass: RouterStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub},
@@ -162,18 +163,17 @@ describe('Organization Detail Profile Page', () => {
     ]);
   });
 
-  it('should switch to correct organization details if click on the link', () => {
-    fixture.detectChanges();
-    component.onChangeOrgDetail("RMAC");
-    expect(component.getNextLayer()).toBe("Office");
-    expect(component.currentHierarchyType).toBe("Sub Command");
-    expect(component.orgDetails).toEqual([
-      {description:"Sub Command Name", value:"Rmac"},
-      {description:"Description", value:""},
-      {description:"Shortname", value:""},
-      {description:"Start Date", value:""},
-    ]);
-  });
-
+  // it('should switch to correct organization details if click on the link', () => {
+  //   fixture.detectChanges();
+  //   component.onChangeOrgDetail("RMAC");
+  //   expect(component.getNextLayer()).toBe("Office");
+  //   expect(component.currentHierarchyType).toBe("Sub Command");
+  //   expect(component.orgDetails).toEqual([
+  //     {description:"Sub Command Name", value:"Rmac"},
+  //     {description:"Description", value:""},
+  //     {description:"Shortname", value:""},
+  //     {description:"Start Date", value:""},
+  //   ]);
+  // });
 
 });
