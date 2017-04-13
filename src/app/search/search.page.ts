@@ -394,18 +394,22 @@ export class SearchPage implements OnInit{
   }
 
 	runSearch(){
-    if(this.index === 'wd') {
+    switch(this.index) {
       // fetching data for drop downs
-      this.getDictionaryData('wdStates');
-      this.getCountyByState(this.wdStateModel);
-      this.determineEnableCountySelect();
-      this.determineEnableServicesSelect();
-      this.getDictionaryData('dbraConstructionTypes');
-      this.getDictionaryData('scaServices');
+      case 'wd':
+        this.getDictionaryData('wdStates');
+        this.getCountyByState(this.wdStateModel);
+        this.determineEnableCountySelect();
+        this.determineEnableServicesSelect();
+        this.getDictionaryData('dbraConstructionTypes');
+        this.getDictionaryData('scaServices');
+            break;
+      case 'opp':
+      case 'ent':
+      case 'fpds':
+            this.getAwardsDictionaryData('naics_code');
     }
-    if(this.index === 'fpds') {
-      this.getAwardsDictionaryData('naics_code');
-    }
+
     //make featuredSearch api call only for first page
     if(this.pageNum<=0 && this.keyword!=='') {
       this.searchService.featuredSearch({
@@ -602,9 +606,9 @@ export class SearchPage implements OnInit{
         // formatting the array data according to api type to match what UI elements expect
         if(id === 'naics_code'){
           var reformattedArray = data._embedded.dictionaries[0].elements.map(function(naicsItem){
-            let newObj = {label:'', value:''};
+            let newObj = {label:'', value:'', type:'naics'};
 
-            newObj.label = naicsItem.value + "(NAICS)";
+            newObj.label = naicsItem.value;
             newObj.value = naicsItem.code;
             return newObj;
           });
@@ -891,6 +895,11 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  naicsPscFilterClear() {
+    this.naicsTypeModel = '';
+    this.searchResultsRefresh();
+  }
+
   clearAllFilters(){
 
     // clear/reset all top level filters
@@ -918,6 +927,7 @@ export class SearchPage implements OnInit{
     this.awardIDVModel = '';
     this.awardTypeModel = '';
     this.contractTypeModel = '';
+    this.naicsTypeModel = '';
 
     this.searchResultsRefresh();
 
