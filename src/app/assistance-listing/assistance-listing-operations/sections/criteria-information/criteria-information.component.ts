@@ -340,7 +340,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
       checkbox: [],
       textarea: []
     };
-
+console.log(obj,'obj');
     if(obj) {
       if(!obj.isApplicable) {
         model.checkbox.push('na');
@@ -543,14 +543,16 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
   private saveDocumentaiton() {
     let documentation: any = {};
-
     if(this.documentationModel&& this.documentationModel['checkbox']) {
       documentation.isApplicable = this.documentationModel['checkbox'].indexOf('na') < 0;
+    } else {
+      documentation.isApplicable = true;
     }
 
     if(this.documentationModel && this.documentationModel['textarea']) {
       documentation.description = documentation.isApplicable ? this.documentationModel['textarea'][0] : null
     }
+
     return documentation;
   }
   private saveUseRestrictions() {
@@ -558,6 +560,8 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
     if(this.useResModel && this.useResModel['checkbox']) {
       useRes.isApplicable = this.useResModel['checkbox'].indexOf('na') < 0;
+    } else {
+      useRes.isApplicable = true;
     }
 
     if(this.useResModel && this.useResModel['textarea']) {
@@ -570,6 +574,8 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
     if(this.useDisFundsModel && this.useDisFundsModel['checkbox']) {
       useDisFunds.isApplicable = this.useDisFundsModel['checkbox'].indexOf('na') < 0;
+    } else {
+      useDisFunds.isApplicable = true;
     }
 
     if(this.useDisFundsModel && this.useDisFundsModel['textarea']) {
@@ -583,6 +589,8 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
 
     if(this.useLoanTermsModel && this.useLoanTermsModel['checkbox']) {
       useLoanTerms.isApplicable = this.useLoanTermsModel['checkbox'].indexOf('na') < 0;
+    } else {
+      useLoanTerms.isApplicable = true;
     }
 
     if(this.useLoanTermsModel && this.useLoanTermsModel['textarea']) {
