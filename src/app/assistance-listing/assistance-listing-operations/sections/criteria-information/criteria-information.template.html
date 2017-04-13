@@ -1,12 +1,10 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Criteria for Applying - {{programTitle}}</div>
 <form [formGroup]="falCriteriaForm" novalidate (ngSubmit)="save(falCriteriaForm)">
-  <div class="fal-label-margin fal-label">Credentials and Documentation</div>
+ <!-- <div class="fal-label-margin fal-label">Credentials and Documentation</div>-->
   <div class="fal-label-margin">
-    <samTextArea
-      [control]="falCriteriaForm.controls['documentation']"
-      [name]="'documentation-input'"
-      [label]="'Please describe credentials or documentation required for applying. Do not include anything covered in 2 CFR 200'"
-      formControlName="documentation"></samTextArea>
+    <samCheckboxToggledTextarea [options]="documentationConfig"
+                                [formControlName]="'documentation'"
+    ></samCheckboxToggledTextarea>
   </div>
   <div class="fal-label-margin fal-label">Eligibility Requirements</div>
   <ng-container *ngIf="program">
