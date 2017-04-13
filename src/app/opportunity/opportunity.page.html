@@ -54,7 +54,7 @@
       <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
         <h2>Award Details
         <samButton *ngIf="differences?.changesExistAwardDetails" [buttonId]="'defaultBtnAwardDetails'" [buttonText]="!showChangesAwardDetails ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideAwardDetails()"></samButton>
-          <span *ngIf="showChangesAwardDetails" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+          <span *ngIf="showChangesAwardDetails" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.AwardDate)" *ngIf="shouldBeDisplayed(opportunityFields.AwardDate)">
@@ -119,7 +119,7 @@
           General Information
           <samButton *ngIf="differences?.changesExistGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="!showChangesGeneral ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
 
-          <span *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+          <span *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
 
 
@@ -208,7 +208,7 @@
       <section [attr.id]="generateID(opportunityFields.Classification)" *ngIf="shouldBeDisplayed(opportunityFields.Classification)">
         <h2>Classification
           <samButton *ngIf="differences?.changesExistClassification" [buttonId]="'defaultBtnClassification'" [buttonText]="!showChangesClassification ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideClassification()"></samButton>
-          <span *ngIf="showChangesClassification" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+          <span *ngIf="showChangesClassification" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.OriginalSetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.OriginalSetAside)">
@@ -292,7 +292,7 @@
 
         <h2>Synopsis
           <samButton *ngIf="differences?.changesExistSynopsis " [buttonId]="'defaultBtnSynopsis'" [buttonText]="!showChangesSynopsis ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
-          <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+          <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
         <!-- <samLabel *ngIf="differences?.description" [labelType]="'small'" [labelText]="' '"></samLabel> -->
         <h3>
@@ -322,7 +322,7 @@
       <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
         <h2>Contact Information
           <samButton *ngIf="differences?.changesExistContactInformation" [buttonId]="'defaultBtnContactInformation'" [buttonText]="!showChangesContactInformation ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideContactInformation()"></samButton>
-          <span *ngIf="showChangesContactInformation" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate + ' EST'"></span>
+          <span *ngIf="showChangesContactInformation" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
         <div class="usa-grid-full">
           <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">

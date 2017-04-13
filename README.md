@@ -1,5 +1,6 @@
 The following explains how to get set up locally. For instructions regarding branching, merging, and so on; please see the [CONTRIBUTING](https://csp-github.sam.gov/joshuabruce/sam-front-end/blob/comp/CONTRIBUTING.md) documentation.
 
+
 <ul>
   <li><a href="#pipeline-workaround">!!!***Pipeline 2.0 workaround***!!!</a></li>
   <li>
@@ -77,9 +78,13 @@ Git submodules allows nesting of git repositories. We're currently pulling in sa
 Please make sure you're on the CSP develop branch when starting this. Add the following to your local ~/.gitconfig file (this is not tied to the repo). This is a redirect needed to access the submodules locally and keep the builds working
 
 ```
-[url "https://csp-github.sam.gov/"]
-    insteadOf = git@csp-github.sam.gov:
+[url "https://github.helix.gsa.gov/"]
+    insteadOf = git@github.helix.gsa.gov:
 ```
+
+or this equivalent command
+
+`git config url.https://github.helix.gsa.gov/.insteadof git@github.helix.gsa.gov:`
 
 Initialize the submodule(s)
 
@@ -245,3 +250,4 @@ npm run webdriver:start
 npm run e2e:live 
 ```
  \
+

@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { ActivatedRoute, Router} from "@angular/router";
+import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 import * as moment from 'moment/moment';
 
@@ -10,9 +10,11 @@ import * as moment from 'moment/moment';
 export class OrgDetailProfilePage {
   orgId:string = "100000121";
 
+  orgObj = {};
   orgDetails = [];
   orgCodes = [];
   orgAddresses = [];
+  orgTypes = [];
 
   hierarchyPathMap = [];
   hierarchyPath = [];
@@ -21,6 +23,23 @@ export class OrgDetailProfilePage {
   currentHierarchyLevel: number;
 
   isDataAvailable:boolean = false;
+
+  isEdit:boolean = false;
+  showFullDes: boolean = false;
+
+  editedDescription:string = "";
+  editedShortname:string = "";
+
+  noneDodHierarchy = ["Department", "Agency", "Office"];
+  dodHierarchy = ["Department", "Agency", "Major Command", "Sub Command", "Office"];
+
+  selectConfig = {
+    options:[],
+    label: '',
+    name: 'Org Types',
+  };
+
+  subCommandBaseLevel = 4;
 
   constructor(private fhService: FHService, private route: ActivatedRoute, private _router: Router){
   }
@@ -34,13 +53,16 @@ export class OrgDetailProfilePage {
   }
 
   isLastHierarchy(index):boolean{return index === this.hierarchyPath.length-1;}
-  isNextLayerCreatable():boolean{return this.getNextLayer() !== "";}
+  isNextLayerCreatable():boolean{return this.currentHierarchyType !== "Office";}
+  isEditableField(field):boolean{return field === "Description" || field === "Shortname";}
+  isDoD():boolean{return this.hierarchyPath.some(e=> {return e.includes("DEFENSE");})}
 
   getOrgDetail(orgId){
     this.isDataAvailable = false;
     this.fhService.getOrganizationById(orgId,false,true).subscribe(
       val => {
         let orgDetail = val._embedded[0].org;
+        this.orgObj = orgDetail;
         this.setCurrentHierarchyType(orgDetail.type);
         this.setCUrrentHierarchyLevel(orgDetail.level);
         this.setupHierarchyPathMap(orgDetail.fullParentPath, orgDetail.fullParentPathName);
@@ -48,8 +70,9 @@ export class OrgDetailProfilePage {
         this.setupOrganizationCodes(orgDetail);
         this.setupOrganizationAddress(orgDetail);
         this.isDataAvailable = true;
+        this.orgTypes = val._embedded[0].orgTypes;
+        this.getSubLayerTypes();
       });
-
   }
 
   onChangeOrgDetail(hierarchyName){
@@ -58,6 +81,22 @@ export class OrgDetailProfilePage {
       this.getOrgDetail(this.hierarchyPathMap[hierarchyName]);
       this._router.navigate(["/organization-detail",this.hierarchyPathMap[hierarchyName],"profile"]);
     }
+  }
+
+  onCancelEditPageClick(){
+    this.isEdit = false;
+  }
+
+  onSaveEditPageClick(){
+    this.isEdit = false;
+    this.orgDetails.forEach( e => {
+      if(e.description === "Description") e.value = this.editedDescription;
+      if(e.description === "Shortname") e.value = this.editedShortname;
+    });
+  }
+
+  onEditPageClick(){
+    this.isEdit = true;
   }
 
   setupHierarchyPathMap(fullParentPath:string, fullParentPathName:string){
@@ -92,6 +131,9 @@ export class OrgDetailProfilePage {
     this.orgDetails.push({description:"Description", value:description});
     this.orgDetails.push({description:"Shortname", value:shortName});
     this.orgDetails.push({description:"Start Date", value:startDateStr});
+
+    this.editedDescription = description;
+    this.editedShortname = shortName;
 
     if(org.type === "OFFICE"){
       let fundingStrs = [];
@@ -164,8 +206,11 @@ export class OrgDetailProfilePage {
       case "Department":
         res = "Sub-tier Agency";
         break;
-      case "Agency": case "Sub Command": case "Major Command":
-        res = "Office";
+      case "Agency":
+        res = "Major Command";
+        break;
+      case "Major Command":
+        res= "Sub Command 1";
         break;
       case "Office":
         res= this.currentHierarchyLevel <= 5? "Office":"";
@@ -177,7 +222,55 @@ export class OrgDetailProfilePage {
     return res;
   }
 
+  getSubLayerTypes(){
+    let curHierarchy = this.isDoD()? this.dodHierarchy: this.noneDodHierarchy;
+    let curHierarchyType = this.currentHierarchyType;
+    let subLayers = [];
+    let index = curHierarchy.indexOf(curHierarchyType);
+    let subCommandIndex = 0;
+    if(curHierarchyType === "Sub Command"){
+      subCommandIndex = this.currentHierarchyLevel - this.subCommandBaseLevel + 1;
+      if(subCommandIndex < 3){
+        let nextSubCommand = "Sub Command "+(subCommandIndex+1);
+        subLayers.push({value: 'SubCommand', label: nextSubCommand, name: nextSubCommand});
+
+      }
+    }else{
+      switch (this.currentHierarchyType) {
+        case "Department":
+          subLayers.push({value: 'Agency', label: 'Sub-tier Agency', name: 'Sub-tier Agency'});
+          break;
+        case "Agency":
+          subLayers.push({value: 'MajorCommand', label: 'Major Command', name: 'Major Command'});
+          break;
+        case "Major Command":
+          subLayers.push({value: 'SubCommand', label: 'Sub Command 1', name: 'Sub Command 1'});
+          break;
+        default:
+          break;
+      }
+    }
+
+    if(curHierarchyType !== "Office" && curHierarchyType !== "Department"){
+      subLayers.push({value: 'Office', label: 'Office', name: 'Office'});
+    }
+
+    this.selectConfig.options = subLayers;
+    return subLayers;
+  }
+
+  onSelect(val){
+    let navigationExtras: NavigationExtras = {
+      queryParams: { parentID: this.orgId, orgType: val},
+    };
+    this._router.navigate(["/create-organization"],navigationExtras);
+  }
+
   capitalizeFirstLetter(str:string):string {
     return str.split(' ').map(str => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()).join(' ');
   }
+
+  showFullDescription(){this.showFullDes = true;}
+  hideFullDescription(){this.showFullDes = false;}
+
 }
