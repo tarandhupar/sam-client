@@ -61,6 +61,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   @ViewChild('appListDisplay') appListDisplay;
   @ViewChild('benListDisplay') benListDisplay;
   @ViewChild('assUsageListDisplay') assUsageListDisplay;
+  @ViewChild('appAutoComplete') appAutoComplete;
 
   // Checkboxes Component
   benSameAsApplicantConfig = {
@@ -70,6 +71,58 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
       name: 'checkbox-isa'
     },],
   };
+
+  public useResConfig: Object = {
+    name: 'use-restrictions',
+    label: 'Use Restrictions ',
+    hint: 'List any restrictions on how assistance may be used. Only provide restrictions specific to your organization or this listing.',
+    required: true,
+
+    checkbox: {
+      options: [
+        { value: 'na', label: 'Not Applicable', name: 'useRestrictions-checkbox-na' }
+      ]
+    },
+
+    textarea: {
+      showWhenCheckbox: 'unchecked'
+    }
+  };
+  public useDisFundsConfig: Object = {
+    name: 'use-Discretionary-Funds',
+    label: 'Are there discretionary funds available?',
+    required: true,
+
+    checkbox: {
+      options: [
+        { value: 'na', label: 'Not Applicable', name: 'use-Discretionary-Funds-checkbox-na' }
+      ]
+    },
+
+    textarea: {
+      showWhenCheckbox: 'unchecked'
+    }
+  };
+  public useLoanTermsConfig: Object = {
+    name: 'use-Loan-Terms',
+    label: 'Are loans a type of assistance in this program',
+    required: true,
+
+    checkbox: {
+      options: [
+        { value: 'na', label: 'Not Applicable', name: 'use-Loan-Terms-checkbox-na' }
+      ]
+    },
+
+    textarea: {
+      showWhenCheckbox: 'unchecked'
+    }
+  };
+
+  public useResModel: Object = {};
+  public useDisFundsModel: Object = {};
+  public useLoanTermsModel: Object = {};
+
   appAutocompleteConfig: AutocompleteConfig = {keyValueConfig: {keyProperty: 'code', valueProperty: 'name'}, placeholder: 'None Selected'};
   benAutocompleteConfig: AutocompleteConfig = {keyValueConfig: {keyProperty: 'code', valueProperty: 'name'}, placeholder: 'None Selected'};
   assUsageAutocompleteConfig: AutocompleteConfig = {keyValueConfig: {keyProperty: 'code', valueProperty: 'name'}, placeholder: 'None Selected'};
@@ -152,7 +205,18 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
       'awardedDesc': '',
       'assUsageTypes': '',
       'assUsageDesc': '',
-      'usageResDesc': ''
+      usageRes: null,
+      useDisFunds: null,
+      useLoanTerms: null
+    });
+    this.falCriteriaForm.get('usageRes').valueChanges.subscribe(model => {
+      this.useResModel = model;
+    });
+    this.falCriteriaForm.get('useDisFunds').valueChanges.subscribe(model => {
+      this.useDisFundsModel = model;
+    });
+    this.falCriteriaForm.get('useLoanTerms').valueChanges.subscribe(model => {
+      this.useLoanTermsModel = model;
     });
   }
 
@@ -169,7 +233,6 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
           let awardedType = ['na'];
           let awardedDesc = '';
           let assUsageDesc = '';
-          let usageResDesc = '';
           if (api.data) {
             if (api.data.eligibility) {
               if (api.data.eligibility.beneficiary) {
@@ -220,9 +283,9 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
                 }
               }
               if (api.data.eligibility.usage) {
-                if(api.data.eligibility.usage.restrictions.description) {
-                  usageResDesc = api.data.eligibility.usage.restrictions.description;
-                }
+                this.falCriteriaForm.get('usageRes').setValue(this.loadToggleCheckboxText(api.data.eligibility.usage.restrictions));
+                this.falCriteriaForm.get('useDisFunds').setValue(this.loadToggleCheckboxText(api.data.eligibility.usage.discretionaryFund));
+                this.falCriteriaForm.get('useLoanTerms').setValue(this.loadToggleCheckboxText(api.data.eligibility.usage.loanTerms));
               }
             }
           }
@@ -245,8 +308,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
             lengthTimeDesc: lengthTimeDesc,
             awardedTypes: awardedType,
             awardedDesc: awardedDesc,
-            assUsageDesc: assUsageDesc,
-            usageResDesc: usageResDesc
+            assUsageDesc: assUsageDesc
           });
         },
         error => {
@@ -254,6 +316,25 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
         });//end of subscribe
 
   }
+  loadToggleCheckboxText(obj: any) {
+    let model: any = {
+      checkbox: [],
+      textarea: []
+    };
+
+    if(obj) {
+      if(!obj.isApplicable) {
+        model.checkbox.push('na');
+      }
+
+      if(obj.description) {
+        model.textarea.push(obj.description);
+      }
+    }
+
+    return model;
+  }
+
 
   populateMultiSelect(intialSelection: any, multiArrayValues: any, appTypes: any,keyValueArray: any) {
       for (let id of appTypes) {
@@ -332,7 +413,10 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
         this.appSelectedOption = control.value;
         this.applicantMultiArrayValues.push(control.value.code);
         this.appAutocompleteConfig.placeholder = this.placeholderMsg(this.applicantMultiArrayValues);
+        //this.appAutoComplete.clearInput();
+        //this.appAutoComplete.checkForFocus();
       }
+
     }
   }
 
@@ -411,11 +495,10 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     let lengthTimeDesc = this.falCriteriaForm.value.lengthTimeDesc;
     let awardedType = this.falCriteriaForm.value.awardedTypes === 'na' ? null : this.falCriteriaForm.value.awardedTypes;
     let awardedDesc = this.falCriteriaForm.value.awardedDesc;
-    let usageResDesc = this.falCriteriaForm.value.usageResDesc;
     //this.applicantMultiArrayValues = this.applicantMultiArrayValues.filter(val => (val !== null) || (val !== '') || (val !== 'undefined'));
 
     criteriaData = this.buildJson(this.applicantMultiArrayValues, applicantDesc, this.assUsageMultiArrayValues, assUsageDesc, isSameAsApplicant, this.benMultiArrayValues, benDesc,
-      documentation, lengthTimeDesc, awardedType, awardedDesc, usageResDesc);
+      documentation, lengthTimeDesc, awardedType, awardedDesc, this.saveUseRestrictions(), this.saveUseDisFunds(), this.saveUseLoanTerms());
 
     data = {
       "eligibility": criteriaData
@@ -440,9 +523,47 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     });
 }
 
+  private saveUseRestrictions() {
+    let useRes: any = {};
+
+    if(this.useResModel && this.useResModel['checkbox']) {
+      useRes.isApplicable = this.useResModel['checkbox'].indexOf('na') < 0;
+    }
+
+    if(this.useResModel && this.useResModel['textarea']) {
+      useRes.description = useRes.isApplicable ? this.useResModel['textarea'][0] : null
+    }
+    return useRes;
+  }
+  private saveUseDisFunds() {
+    let useDisFunds: any = {};
+
+    if(this.useDisFundsModel && this.useDisFundsModel['checkbox']) {
+      useDisFunds.isApplicable = this.useDisFundsModel['checkbox'].indexOf('na') < 0;
+    }
+
+    if(this.useDisFundsModel && this.useDisFundsModel['textarea']) {
+      useDisFunds.description = useDisFunds.isApplicable ? this.useDisFundsModel['textarea'][0] : null
+    }
+    return useDisFunds;
+  }
+
+  private saveUseLoanTerms() {
+    let useLoanTerms: any = {};
+
+    if(this.useLoanTermsModel && this.useLoanTermsModel['checkbox']) {
+      useLoanTerms.isApplicable = this.useLoanTermsModel['checkbox'].indexOf('na') < 0;
+    }
+
+    if(this.useLoanTermsModel && this.useLoanTermsModel['textarea']) {
+      useLoanTerms.description = useLoanTerms.isApplicable ? this.useLoanTermsModel['textarea'][0] : null
+    }
+    return useLoanTerms;
+  }
+
   buildJson(applicantTypes: any, applicantDesc: string, assUsageType: any, assUsageDesc: string,
             isSameAsApplicant: boolean, benTypes: any, benDesc: string, documentation: string,
-            lengthTimeDesc: string, awardedType: string, awardedDesc: string, usageResDesc: string): any {
+            lengthTimeDesc: string, awardedType: string, awardedDesc: string, usageRes: any, usageDisFunds: any, usageLoanTerms: any): any {
 
     let data = {
       "applicant": {
@@ -467,9 +588,9 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
         "awardedDescription": awardedType !== 'other' ? null : (awardedDesc !== '' ? awardedDesc : null)
       },
       "usage": {
-        "restrictions": {
-          "description": usageResDesc !== '' ? usageResDesc : null
-        }
+        "restrictions": usageRes,
+        "discretionaryFund": usageDisFunds,
+        "loanTerms": usageLoanTerms
       }
     };
     return data;

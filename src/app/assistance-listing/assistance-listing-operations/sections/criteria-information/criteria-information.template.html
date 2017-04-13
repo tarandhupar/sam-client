@@ -5,7 +5,7 @@
     <samTextArea
       [control]="falCriteriaForm.controls['documentation']"
       [name]="'documentation-input'"
-      [label]="'Please describe credentials or documentation required for applying. Do not include anything covered in 2CFR 200.'"
+      [label]="'Please describe credentials or documentation required for applying. Do not include anything covered in 2 CFR 200'"
       formControlName="documentation"></samTextArea>
   </div>
   <div class="fal-label-margin fal-label">Eligibility Requirements</div>
@@ -13,8 +13,8 @@
     <sam-list-display #appListDisplay [newValue]="appSelectedOption" formControlName="appInitialSelection"
                       (modelChange)="applicantlistChange($event)" [config]="listConfig">
       <labelWrapper #applicantTypeWrapper [label]="'Applicant Eligibility'" [required]="true"
-                    [hint]="'Please Select all that apply to help public users search for this listing.'">
-        <sam-autocomplete
+                    [hint]="'Please select all that apply to help public users search for this listing.'">
+        <sam-autocomplete #appAutoComplete
           [options]="applicantTypeOptions"
           [name]="applicantTypes-control"
           formControlName="applicantTypes"
@@ -54,7 +54,7 @@
     <samTextArea
       [control]="falCriteriaForm.controls['benDesc']"
       [name]="'beneficiary-description-input'"
-      [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
+      [label]="'Describe who may benefit from the assistance.'"
       formControlName="benDesc"></samTextArea>
   </div>
   <samTextArea
@@ -79,7 +79,7 @@
     <samTextArea
       [control]="falCriteriaForm.controls['awardedDesc']"
       [name]="'awarded-description-input'"
-      [label]="''"
+      [label]="'Additional Information'"
       formControlName="awardedDesc"></samTextArea>
   </div>
   <div class="fal-label-margin fal-label">Use and Use Restrictions</div>
@@ -99,16 +99,18 @@
   <samTextArea
     [control]="falCriteriaForm.controls['assUsageDesc']"
     [name]="'assistanceusage-description-input'"
-    [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
+    [label]="'Describe how assistance may be used.'"
     [required]="true"
     formControlName="assUsageDesc"></samTextArea>
-  <samTextArea
-    [hint]="'List any restrictions on how assistance may be used. Only provide restrictions specific to your organization or this listing.'"
-    [control]="falCriteriaForm.controls['usageResDesc']"
-    [name]="'usage-restriction-description-input'"
-    [label]="'Use Restrictions'"
-    [required]="true"
-    formControlName="usageResDesc"></samTextArea>
+  <samCheckboxToggledTextarea [options]="useResConfig"
+                              [formControlName]="'usageRes'" [textareaLabel] = "['Please describe']"
+  ></samCheckboxToggledTextarea>
+  <samCheckboxToggledTextarea [options]="useDisFundsConfig"
+                              [formControlName]="'useDisFunds'" [textareaLabel] = "['Please describe']"
+  ></samCheckboxToggledTextarea>
+  <samCheckboxToggledTextarea [options]="useLoanTermsConfig"
+                              [formControlName]="'useLoanTerms'" [textareaLabel] = "['Please describe']"
+  ></samCheckboxToggledTextarea>
   <div class="pull-left">
     <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
     <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
