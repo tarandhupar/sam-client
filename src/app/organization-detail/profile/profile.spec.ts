@@ -125,7 +125,7 @@ let activatedRouteStub = {
   }
 };
 
-fdescribe('Organization Detail Profile Page', () => {
+describe('Organization Detail Profile Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgDetailProfilePage;
   let fixture:any;
@@ -175,6 +175,5 @@ fdescribe('Organization Detail Profile Page', () => {
   //     {description:"Start Date", value:""},
   //   ]);
   // });
-
 
 });
