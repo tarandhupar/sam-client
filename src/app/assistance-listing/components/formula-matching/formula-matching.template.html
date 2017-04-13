@@ -56,6 +56,7 @@
 
       <samRadioButton [name]="name + '-matching-radio-buttons'"
                       [options]="matchingRequirementsOptions"
+                      [hidden]="model.checkbox.indexOf('matching') === -1"
                       [formControlName]="'matchingRequirements'"
       ></samRadioButton>
 
