@@ -83,7 +83,8 @@ export class ManageRequestPage implements OnInit {
   showGenericServicesError() {
     this.footerAlerts.registerFooterAlert({
       description: 'Something went wrong with a required service',
-      type: 'error'
+      type: 'error',
+      timer: 3200
     })
   }
 
@@ -144,6 +145,7 @@ export class ManageRequestPage implements OnInit {
         title: 'Success',
         description: `The request was ${verb}.`,
         type: 'success',
+        timer: 3200
       });
       this.router.navigate(['/access/role-workspace']);
     });
