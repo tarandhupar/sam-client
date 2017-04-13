@@ -1,6 +1,6 @@
 <section class="org-create-page usa-grid relative">
   <div class="usa-width-one-fourth">&nbsp;</div>
-  <div class="usa-width-one-half p_B-6x" [hidden]="!createOrgPage">
+  <div class="usa-width-two-thirds p_B-6x" [hidden]="!createOrgPage">
     <h2 class="p_T-3x">Create New {{orgType}}</h2>
     <p class="p_T-3x">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
     <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
@@ -62,7 +62,7 @@
     <button class="usa-button-primary p_R-4x p_L-6x pull-right" (click)="onReviewFormClick()">Review <i class="fa fa-arrow-right"></i></button>
     <button class="usa-button-outline p_R-6x p_L-6x pull-right" (click)="onCancelFormClick()">Cancel</button>
   </div>
-  <div class="usa-width-one-half" *ngIf="reviewOrgPage">
+  <div class="usa-width-two-thirds p_B-6x" *ngIf="reviewOrgPage">
     <div class="usa-width-one-whole org-confirm-header p_B-6x">
       <h2 class="p_T-3x">Confirm {{orgType}} Details</h2>
       <p class="p_T-3x">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
@@ -73,9 +73,9 @@
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.des}}:</h4></span>
         <!--<span class="usa-width-two-thirds p_T-2x p_B-1x">&nbsp;{{pair.value}}</span>-->
         <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x" *ngIf="pair.des !== 'Description'">&nbsp;{{pair.value}}</p>
-        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x" *ngIf="pair.des === 'Description'">&nbsp;
-            <span *ngIf="pair.value.length < 500 || showFullDes">{{pair.value}}</span>
-            <span *ngIf="pair.value.length >= 500 && !showFullDes">{{pair.value.substr(0,500)}}...<a class="org-create-expand-link" (click)="showFullDescription()">read more</a></span>
+        <p class="usa-width-two-thirds m_T-0 p_T-2x p_B-1x" *ngIf="pair.des === 'Description'">
+          <span *ngIf="pair.value.length < 500 || showFullDes">{{pair.value}}<span *ngIf="pair.value.length >= 500 && showFullDes">&nbsp;&nbsp;<a class="org-create-expand-link" (click)="hideFullDescription()">read less</a></span></span>
+          <span *ngIf="pair.value.length >= 500 && !showFullDes">{{pair.value.substr(0,500)}}...<a class="org-create-expand-link" (click)="showFullDescription()">read more</a></span>
         </p>
       </div>
       <div *ngIf="isAddressNeeded()">

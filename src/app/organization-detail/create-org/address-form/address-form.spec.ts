@@ -14,7 +14,7 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FHService } from "../../../api-kit/fh/fh.service";
 
-describe('Organization Address Form component', () => {
+fdescribe('Organization Address Form component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgAddrFormComponent;
   let fixture:any;

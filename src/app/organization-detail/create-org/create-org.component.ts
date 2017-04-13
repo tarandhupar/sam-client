@@ -141,9 +141,7 @@ export class OrgCreatePage {
   }
 
   getOrgCodes(orgForm:FormGroup, codeType:string, desc:string){
-    if(orgForm.get(codeType).value !== ''){
       this.orgInfo.push({des:desc, value:orgForm.get(codeType).value});
-    }
   }
 
   setOrgStartDate(val){
@@ -161,15 +159,15 @@ export class OrgCreatePage {
       this.indicateFundRadioConfig.errorMessage = this.indicateFundRadioModel === ''? "This field cannot be empty": '';
     }
 
-    if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid){
+    if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid) {
       this.createOrgPage = false;
       this.reviewOrgPage = true;
       this.orgInfo = [];
-      this.orgInfo.push({des:"Organization Name", value:this.basicInfoForm.get('orgName').value});
-      this.orgInfo.push({des:"Start Date", value:this.basicInfoForm.get('orgStartDate').value});
-      this.orgInfo.push({des:"Description", value:this.basicInfoForm.get('orgDescription').value});
-      this.orgInfo.push({des:"Shortname", value:this.basicInfoForm.get('orgShortName').value});
-      if(this.isAddressNeeded()) this.orgInfo.push({des:"Indicate Funding", value:this.indicateFundRadioModel});
+      this.orgInfo.push({des: "Organization Name", value: this.basicInfoForm.get('orgName').value});
+      this.orgInfo.push({des: "Start Date", value: this.basicInfoForm.get('orgStartDate').value});
+      this.orgInfo.push({des: "Description", value: this.basicInfoForm.get('orgDescription').value});
+      this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
+      if (this.isAddressNeeded()) this.orgInfo.push({des: "Indicate Funding", value: this.indicateFundRadioModel});
       this.getOrgTypeSpecialInfo(this.orgType);
     }
   }

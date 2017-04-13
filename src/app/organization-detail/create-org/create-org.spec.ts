@@ -77,7 +77,7 @@ describe('Create Organization Form Page', () => {
     expect(component.reviewOrgPage).toBeTruthy();
     expect(component.createOrgPage).toBeFalsy();
     expect(component.orgInfo).toEqual([{ des: 'Organization Name', value: 'OrgA' }, { des: 'Start Date', value: '2016-12-12' }, { des: 'Description', value: 'OrgA' }, { des: 'Shortname', value: 'OrgA' },
-      { des: 'Indicate Funding', value: 'other' }, { des: 'FPDS Code', value: 'FPDS' }]);
+      { des: 'Indicate Funding', value: 'other' }, { des: 'FPDS Code', value: 'FPDS' }, { des: 'AAC Code', value: '' }]);
     component.onEditFormClick();
     expect(component.reviewOrgPage).toBeFalsy();
     expect(component.createOrgPage).toBeTruthy();
@@ -91,6 +91,7 @@ describe('Create Organization Form Page', () => {
     component.deptCodesForm.get('TAS2Code').setValue("TAS2Code");
     component.deptCodesForm.get('TAS3Code').setValue("TAS3Code");
     component.getOrgTypeSpecialInfo(component.orgType);
-    expect(component.orgInfo).toEqual([{ des: 'FPDS Code', value: 'FPDS' },{ des: 'TAS2 Code', value: 'TAS2Code' },{ des: 'TAS3 Code', value: 'TAS3Code' }]);
+    expect(component.orgInfo).toEqual([{ des: 'FPDS Code', value: 'FPDS' },{ des: 'TAS2 Code', value: 'TAS2Code' },{ des: 'TAS3 Code', value: 'TAS3Code' },
+      { des: 'A11 Code', value: '' }, { des: 'CFDA Code', value: '' }, { des: 'OMB Agency Code', value: '' }]);
   })
 });
