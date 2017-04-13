@@ -107,6 +107,10 @@
 /*
   Temporary fixes
 */
+home samsearchbar{
+  color: $textColor;
+}
+
 .usa-unstyled-list {
   @include unstyled-list;
 }
@@ -157,13 +161,14 @@
 @import 'components/organization-profile';
 @import 'components/role-management/role-managment';
 @import 'components/fal-table';
+@import 'components/address-form';
 
 @import 'pages/awards';
 @import 'pages/entity-object-view';
 @import 'pages/exclusion';
 @import 'pages/assistance-listing';
 @import 'pages/help';
-@import 'pages/home';
+//@import 'pages/home';
 @import 'pages/opportunity';
 @import 'pages/organization';
 @import 'pages/search';
@@ -182,6 +187,7 @@
 @import 'pages/wage-determination';
 @import 'pages/assistance-listing-operations';
 @import 'pages/organization-detail';
+@import 'pages/organization-create';
 
 h1,
 h2{
@@ -192,7 +198,7 @@ h2{
 
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{
-  min-height: 90vh;
+  min-height: 77vh;
 }
 
 .overlay{
