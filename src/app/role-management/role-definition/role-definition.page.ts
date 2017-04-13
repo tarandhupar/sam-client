@@ -1,12 +1,12 @@
 import { Input, Output,Component,OnInit, ViewChild } from "@angular/core";
-import { UserAccessService } from "../../api-kit/access/access.service";
+import { UserAccessService } from "../../../api-kit/access/access.service";
 
 
 @Component({
   providers: [ UserAccessService ],
-  templateUrl: 'role-workspace.page.html'
+  templateUrl: 'role-definition.page.html'
 })
-export class RoleWorkspacePage implements OnInit {
+export class RoleDefinitionPage implements OnInit {
   path: 'roles' | 'objects' = 'roles' ;
   mode: 'role' | 'object' = 'role';
   domainKey = '';

@@ -42,6 +42,11 @@ export class FALOpSharedService {
         path: 'overview'
       },
       {
+        label: "3. Authorization",
+        route: this.baseURL + '/authorization',
+        path: 'authorization'
+      },
+      {
         label: "4. Financial Information",
         route: this.baseURL + '/financial-information',
         path: 'financial-information',

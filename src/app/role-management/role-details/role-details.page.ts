@@ -196,7 +196,8 @@ export class RoleDetailsPage {
           } else {
             this.footerAlert.registerFooterAlert({
               title: 'Role '+this.roleId+' not found',
-              type: 'error'
+              type: 'error',
+              timer: 3200,
             });
             this.domainRoleOptions = null;
             this.domainDefinitions = null;
@@ -214,7 +215,8 @@ export class RoleDetailsPage {
   showGenericServicesError() {
     this.footerAlert.registerFooterAlert({
       description: 'Something went wrong with a required service',
-      type: 'error'
+      type: 'error',
+      timer: 3200,
     })
   }
 
@@ -310,7 +312,8 @@ export class RoleDetailsPage {
           let verb = this.mode === 'new' ? 'created' : 'editted';
           this.footerAlert.registerFooterAlert({
             description: 'Successfully '+verb+' new role.',
-            type: 'success'
+            type: 'success',
+            timer: 3200,
           });
           this.router.navigateByUrl('/access/workspace');
         },
