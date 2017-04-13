@@ -139,7 +139,6 @@ export class OpportunityDisplayPageDemoPage implements OnInit {
     let parentOpportunityAPI = this.loadParentOpportunity(opportunityAPI);
     this.loadOrganization(opportunityAPI);
     this.loadOpportunityLocation(opportunityAPI);
-    this.loadAttachments(opportunityAPI);
     let combinedOpportunityAPI = opportunityAPI.zip(parentOpportunityAPI);
     this.loadRelatedOpportunitiesByIdAndType(opportunityAPI);
     this.setDisplayFields(combinedOpportunityAPI);
@@ -242,27 +241,6 @@ export class OpportunityDisplayPageDemoPage implements OnInit {
     });
   }
 
-  private loadAttachments(opportunityAPI: Observable<any>){
-    let attachmentSubject = new ReplaySubject(1); // broadcasts the attachments to multiple subscribers
-    opportunityAPI.subscribe(api => {
-      this.opportunityService.getAttachmentById(api.opportunityId).subscribe(attachmentSubject);
-    });
-
-    attachmentSubject.subscribe(attachment => { // do something with the organization api
-      this.attachment = attachment;
-      this.attachment.packages.forEach((key: any) => {
-        key.accordionState = 'collapsed';
-      });
-      this.attachment.resources.forEach((res: any) => {
-        res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
-      });
-    }, err => {
-      console.log('Error loading attachments: ', err)
-        this.attachmentError = true;
-    });
-
-    return attachmentSubject;
-  }
 
   private loadDictionary() {
     this.opportunityService.getOpportunityDictionary('classification_code,naics_code,set_aside_type,fo_justification_authority').subscribe(data => {
