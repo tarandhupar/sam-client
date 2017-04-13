@@ -189,6 +189,7 @@ export class ComplianceRequirementsPage implements OnInit {
   }
 
   private populateForm() {
+    console.log(this.program.data);
     if(this.program.data && this.program.data.compliance) {
       let CFR200 = this.loadCFR200();
       this.complianceRequirementsGroup.get('policyRequirementsCheckbox').setValue(CFR200.checkbox);
@@ -204,6 +205,7 @@ export class ComplianceRequirementsPage implements OnInit {
   private saveProgramData(): Observable<any> {
     let data: any = (this.program && this.program.data) || {};
 
+    console.log(data);
     data.compliance = data.compliance || {};
     data.compliance.CFR200Requirements = this.saveCFR200();
     data.compliance.reports = this.saveReports();
@@ -217,17 +219,20 @@ export class ComplianceRequirementsPage implements OnInit {
 
   private saveCFR200() {
     let CFR200: any = {};
+    CFR200.questions = [];
 
-    if(this.policyRequirementsModel && this.policyRequirementsModel.checkbox) {
-      CFR200.questions = [];
-      for(let checkbox of this.policyRequirementsConfig.checkbox.options) {
-        let selected = this.policyRequirementsModel.checkbox.indexOf(checkbox.value) >= 0;
-        CFR200.questions.push({code: checkbox.value, isSelected: selected});
+    for(let checkbox of this.policyRequirementsConfig.checkbox.options) {
+      let selected = false;
+      if(this.policyRequirementsModel && this.policyRequirementsModel.checkbox) {
+        selected = this.policyRequirementsModel.checkbox.indexOf(checkbox.value) >= 0;
       }
+      CFR200.questions.push({code: checkbox.value, isSelected: selected});
     }
 
     if(this.policyRequirementsModel && this.policyRequirementsModel.textarea) {
       CFR200.description = this.policyRequirementsModel.textarea;
+    } else {
+      CFR200.description = '';
     }
 
     return CFR200;
@@ -300,6 +305,8 @@ export class ComplianceRequirementsPage implements OnInit {
 
     if(this.auditsModel && this.auditsModel.textarea && this.auditsModel.textarea[0]) {
       audit.description = this.auditsModel.textarea[0];
+    } else {
+      audit.description = '';
     }
 
     return audit;
@@ -326,6 +333,8 @@ export class ComplianceRequirementsPage implements OnInit {
 
     if(this.recordsModel) {
       records.description = this.recordsModel;
+    } else {
+      records.description = '';
     }
 
     return records;
@@ -352,6 +361,8 @@ export class ComplianceRequirementsPage implements OnInit {
 
     if(this.additionalDocumentationModel&& this.additionalDocumentationModel.textarea && this.additionalDocumentationModel.textarea[0]) {
       documents.description = this.additionalDocumentationModel.textarea[0];
+    } else {
+      documents.description = '';
     }
 
     return documents;
@@ -396,26 +407,38 @@ export class ComplianceRequirementsPage implements OnInit {
 
       if(this.formulaMatchingModel.title) {
         formulaAndMatching.formula.title = this.formulaMatchingModel.title;
+      } else {
+        formulaAndMatching.formula.title = '';
       }
 
       if(this.formulaMatchingModel.chapter) {
         formulaAndMatching.formula.chapter = this.formulaMatchingModel.chapter;
+      } else {
+        formulaAndMatching.formula.chapter = '';
       }
 
       if(this.formulaMatchingModel.part) {
         formulaAndMatching.formula.part = this.formulaMatchingModel.part;
+      } else {
+        formulaAndMatching.formula.part = '';
       }
 
       if(this.formulaMatchingModel.subPart) {
         formulaAndMatching.formula.subPart = this.formulaMatchingModel.subPart;
+      } else {
+        formulaAndMatching.formula.subPart = '';
       }
 
       if(this.formulaMatchingModel.publicLaw) {
         formulaAndMatching.formula.publicLaw = this.formulaMatchingModel.publicLaw;
+      } else {
+        formulaAndMatching.formula.publicLaw = '';
       }
 
       if(this.formulaMatchingModel.additionalInfo) {
         formulaAndMatching.formula.description = this.formulaMatchingModel.additionalInfo;
+      } else {
+        formulaAndMatching.formula.description = '';
       }
 
       if(this.formulaMatchingModel.matchingRequirements) {
@@ -428,10 +451,14 @@ export class ComplianceRequirementsPage implements OnInit {
 
       if(this.formulaMatchingModel.matchingDescription) {
         formulaAndMatching.matching.description = this.formulaMatchingModel.matchingDescription;
+      } else {
+        formulaAndMatching.matching.description = '';
       }
 
       if(this.formulaMatchingModel.moeRequirements) {
         formulaAndMatching.moe.description = this.formulaMatchingModel.moeRequirements;
+      } else {
+        formulaAndMatching.moe.description = '';
       }
     }
 
