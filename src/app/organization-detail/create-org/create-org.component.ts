@@ -4,6 +4,7 @@ import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/f
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { OrgAddrFormComponent } from './address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { FHService } from "../../../api-kit/fh/fh.service";
 
 function validDateTime(c: FormControl) {
   let invalidError = {message: 'Date is invalid'};
@@ -49,7 +50,8 @@ export class OrgCreatePage {
   orgAddresses:any = [];
   orgType:string = "";
   orgParentId:string = "";
-
+  fullParentPath:string = "";
+  fullParentPathName:string = "";
 
   reviewOrgPage:boolean = false;
   createOrgPage:boolean = true;
@@ -67,7 +69,7 @@ export class OrgCreatePage {
   orgTypeWithAddress = "Office";
   showFullDes:boolean = false;
 
-  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute) {}
+  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute, private fhService: FHService) {}
 
   ngOnInit(){
     this.basicInfoForm = this.builder.group({
@@ -83,8 +85,19 @@ export class OrgCreatePage {
       this.orgType = queryParams["orgType"];
       this.orgParentId = queryParams["parentID"];
       this.setupOrgForms(this.orgType);
+      this.getOrgDetail(this.orgParentId);
     });
 
+  }
+
+  getOrgDetail(orgId){
+    this.fhService.getOrganizationById(orgId,false,true).subscribe(
+      val => {
+        let orgDetail = val._embedded[0].org;
+        console.log(orgDetail);
+        this.fullParentPath = orgDetail.fullParentPath;
+        this.fullParentPathName = orgDetail.fullParentPathName;
+      });
   }
 
   //Set up organization specific forms according to the org type

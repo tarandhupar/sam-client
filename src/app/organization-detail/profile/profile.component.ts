@@ -26,6 +26,7 @@ export class OrgDetailProfilePage {
 
   isEdit:boolean = false;
   showFullDes: boolean = false;
+  isCFDASource:boolean = false;
 
   editedDescription:string = "";
   editedShortname:string = "";
@@ -70,6 +71,7 @@ export class OrgDetailProfilePage {
         this.setupOrganizationCodes(orgDetail);
         this.setupOrganizationAddress(orgDetail);
         this.isDataAvailable = true;
+        this.isCFDASource = !!orgDetail.isSourceCfda?orgDetail.isSourceCfda:false;
         this.orgTypes = val._embedded[0].orgTypes;
         this.getSubLayerTypes();
       });
