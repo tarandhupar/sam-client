@@ -98,7 +98,7 @@
     [label]="'Describe how assistance may be used. Use specific terms that will help public users find this listing.'"
     [required]="true"
     formControlName="assUsageDesc"></samTextArea>
-  <samCheckboxToggledTextarea [options]="useResConfig"
+  <samCheckboxToggledTextarea class = "toggle-text-checkbox" [options]="useResConfig"
                               [formControlName]="'usageRes'" [textareaLabel] = "['Please describe']"
   ></samCheckboxToggledTextarea>
   <samCheckboxToggledTextarea [options]="useDisFundsConfig"
