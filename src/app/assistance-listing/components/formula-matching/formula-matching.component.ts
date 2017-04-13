@@ -112,7 +112,7 @@ public formulaMatchingGroup: FormGroup;
     });
 
     this.formulaMatchingGroup.get('subpart').valueChanges.subscribe(value => {
-      this.model.subpart = value;
+      this.model.subPart = value;
       this.onChange();
     });
 
@@ -185,8 +185,8 @@ public formulaMatchingGroup: FormGroup;
       this.formulaMatchingGroup.get('part').setValue(this.model.part);
     }
 
-    if(this.model.subpart) {
-      this.formulaMatchingGroup.get('subpart').setValue(this.model.subpart);
+    if(this.model.subPart) {
+      this.formulaMatchingGroup.get('subpart').setValue(this.model.subPart);
     }
 
     if(this.model.publicLaw) {
