@@ -1,24 +1,20 @@
 
-<div class="usa-grid-full help-title" id="help-page">
-    <div class="jumbotron" *ngIf="currentSection==='overview'">
-      <h1 class="centered">Help Center</h1>
+
+<div class="usa-grid-full help-title" id="help-page" *ngIf="currentSection!=='overview'">  
+  <div class="usa-grid-full m_B-3x p_T-4x">
+    <div class="usa-width-one-sixth p_L-6x">
+      <a><img src="src/assets/img/blank_icon.png" alt="Help Center Logo"></a>
     </div>
-    <div class="usa-grid-full m_B-3x p_T-4x" *ngIf="currentSection!=='overview'">
-      <div class="usa-width-one-sixth p_L-6x">
-        <a><img src="src/assets/img/blank_icon.png" alt="Help Center Logo"></a>
-      </div>
-      <div class="usa-width-five-sixths p_T-4x p_L-8x">
-        <h1>Help Center</h1>
-      </div>
+    <div class="usa-width-five-sixths p_T-4x p_L-8x">
+      <h1>Help Center</h1>
     </div>
-    <hr *ngIf="currentSection!=='overview'">
   </div>
+  <hr>
+</div>
 
 
-
-
-<div class="usa-grid-full p_B-6x help-content relative" >
-  <aside class="usa-width-one-fourth p_T-2x">
+<div [class.usa-grid-full]="currentSection!=='overview'" class="p_B-6x help-content relative">
+  <aside class="usa-width-one-fourth p_T-2x" *ngIf="currentSection!=='overview'">
     <div sam-sticky limit=1200 container="help-content">
       <ul class="usa-sidenav-list">
         <li><a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/help/overview']">Help Center Home</a></li>
@@ -98,15 +94,13 @@
     </div>
 
   </aside>
+  
   <sam-feedback #feedback></sam-feedback>
 
-
-  <div class="usa-width-three-fourths">
-    <div class="usa-width-one-whole m_L-4x">
+  <div [class.usa-width-three-fourths]="currentSection!=='overview'">
+    <div [class.usa-width-one-whole]="currentSection!=='overview'">
       <!--Content for Sections-->
       <router-outlet></router-outlet>
-
-
     </div>
   </div>
 </div>
