@@ -35,7 +35,7 @@
     text-decoration: underline;
   }
 
-  .usa-award-radio{
+  .usa-award-filter{
     .usa-type-ahead-search{
       position:absolute;
       top:20%;
@@ -53,21 +53,5 @@
     .sam-list-input .input-area .input-wrapper{
       width: 100%;
     }
-
-    button {
-      //margin: 0.25rem 0 0 0;
-      margin: 3px 0 0 0;
-      padding: 1.3rem 0.5rem;
-      border-radius: 0;
-
-      i {
-        margin: 0;
-      }
-    }
-      li{
-        button {
-          padding: 0;
-        }
-      }
     }
 }
