@@ -9,6 +9,7 @@ import { OrgCreatePage } from "./create-org.component";
 import { OrgAddrFormComponent } from "./address-form/address-form.component";
 import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
+import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 
 
 describe('Create Organization Form Page', () => {
@@ -18,9 +19,10 @@ describe('Create Organization Form Page', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrgCreatePage, OrgAddrFormComponent],
+      declarations: [ OrgCreatePage, OrgAddrFormComponent ],
       imports:[ SamUIKitModule, SamAPIKitModule,  ReactiveFormsModule, FormsModule, RouterTestingModule ],
       providers: [
+        FlashMsgService,
         { provide: Router,  useValue:{events:Observable.of({url:"/create-organization"})} },
         { provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{ 'orgType': 'Office',  'parentID': '100000000',}])}},
       ]

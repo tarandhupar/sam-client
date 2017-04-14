@@ -55,7 +55,7 @@ describe('Organization Address Form component', () => {
     component.addressForm.get("postalCode").setValue("123456");
     component.addressForm.get("city").setValue("fairfax");
     expect(component.validateForm()).toBeTruthy();
-    expect(component.orgAddrModel).toEqual({addrType:"Mailing Address",country:"United States",state:"Virginia",city:"fairfax",street:"street 123",postalCode:"123456"});
+    expect(component.orgAddrModel).toEqual({addrType:"Mailing Address",country:"USA",state:"Virginia",city:"fairfax",street:"street 123",postalCode:"123456"});
   });
 
   it('should be able to validate a invalid form', () => {

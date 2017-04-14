@@ -38,4 +38,11 @@
   .org-detail-expand-link:hover{
     cursor: pointer;
   }
+
+  .org-detail-alert-message{
+    position:absolute;
+    width: 450px;
+    left:10%;
+    top:30%;
+  }
 }

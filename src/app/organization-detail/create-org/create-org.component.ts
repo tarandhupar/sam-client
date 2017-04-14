@@ -4,6 +4,8 @@ import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/f
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { OrgAddrFormComponent } from './address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { FHService } from "../../../api-kit/fh/fh.service";
+import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 
 function validDateTime(c: FormControl) {
   let invalidError = {message: 'Date is invalid'};
@@ -46,10 +48,12 @@ export class OrgCreatePage {
   deptCodesForm: FormGroup;
 
   orgInfo:any = [];
+  orgObj:any = {};
   orgAddresses:any = [];
   orgType:string = "";
   orgParentId:string = "";
-
+  fullParentPath:string = "";
+  fullParentPathName:string = "";
 
   reviewOrgPage:boolean = false;
   createOrgPage:boolean = true;
@@ -67,7 +71,7 @@ export class OrgCreatePage {
   orgTypeWithAddress = "Office";
   showFullDes:boolean = false;
 
-  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute) {}
+  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute, private fhService: FHService, public flashMsgService:FlashMsgService) {}
 
   ngOnInit(){
     this.basicInfoForm = this.builder.group({
@@ -83,8 +87,18 @@ export class OrgCreatePage {
       this.orgType = queryParams["orgType"];
       this.orgParentId = queryParams["parentID"];
       this.setupOrgForms(this.orgType);
+      this.getOrgDetail(this.orgParentId);
     });
 
+  }
+
+  getOrgDetail(orgId){
+    this.fhService.getOrganizationById(orgId,false,true).subscribe(
+      val => {
+        let orgDetail = val._embedded[0].org;
+        this.fullParentPath = orgDetail.fullParentPath;
+        this.fullParentPathName = orgDetail.fullParentPathName;
+      });
   }
 
   //Set up organization specific forms according to the org type
@@ -120,28 +134,51 @@ export class OrgCreatePage {
   getOrgTypeSpecialInfo(orgType){
     switch (orgType){
       case "Office":
-        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code");
-        this.getOrgCodes(this.officeCodesForm,"ACCCode","AAC Code");
+        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.officeCodesForm,"ACCCode","AAC Code","aacCode");
         break;
       case "Agency": case "MajorCommand": case "SubCommand":
-        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code");
-        this.getOrgCodes(this.agencyCodesForm,"OMBBureauCode","OMB Code");
+        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.agencyCodesForm,"OMBBureauCode","OMB Code","ombAgencyCode");
         break;
       case "Department":
-        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code");
-        this.getOrgCodes(this.deptCodesForm,"TAS2Code","TAS2 Code");
-        this.getOrgCodes(this.deptCodesForm,"TAS3Code","TAS3 Code");
-        this.getOrgCodes(this.deptCodesForm,"A11Code","A11 Code");
-        this.getOrgCodes(this.deptCodesForm,"CFDACode","CFDA Code");
-        this.getOrgCodes(this.deptCodesForm,"OMBAgencyCode","OMB Agency Code");
+        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.deptCodesForm,"TAS2Code","TAS2 Code","tas2Code");
+        this.getOrgCodes(this.deptCodesForm,"TAS3Code","TAS3 Code","tas3Code");
+        this.getOrgCodes(this.deptCodesForm,"A11Code","A11 Code","a11TacCode");
+        this.getOrgCodes(this.deptCodesForm,"CFDACode","CFDA Code","cfdaCode");
+        this.getOrgCodes(this.deptCodesForm,"OMBAgencyCode","OMB Agency Code","ombAgencyCode");
         break;
       default:
         break;
     }
   }
 
-  getOrgCodes(orgForm:FormGroup, codeType:string, desc:string){
-      this.orgInfo.push({des:desc, value:orgForm.get(codeType).value});
+  getOrgCodes(orgForm:FormGroup, codeType:string, desc:string, fieldName:string){
+    this.orgInfo.push({des:desc, value:orgForm.get(codeType).value});
+    this.orgObj[fieldName] = orgForm.get(codeType).value;
+  }
+
+  generateBasicOrgObj(){
+    this.orgObj['name'] = this.basicInfoForm.get('orgName').value;
+    this.orgObj['createdDate'] = this.basicInfoForm.get('orgStartDate').value;
+    this.orgObj['summary'] = this.basicInfoForm.get('orgDescription').value;
+    this.orgObj['shortName'] = this.basicInfoForm.get('orgShortName').value;
+    if (this.isAddressNeeded()){
+      this.orgObj['newIsAward'] = this.indicateFundRadioModel === "Funding/Awarding"?true:false;
+      this.orgObj['newIsFunding'] = this.indicateFundRadioModel === "Funding/Awarding" || this.indicateFundRadioModel == "Funding"?true:false;
+      this.orgObj['orgAddresses'] = [];
+      this.orgAddresses.forEach( e => {
+        this.orgObj['orgAddresses'].push({
+          "city": e.addrModel.city,
+          "countryCode": e.addrModel.country,
+          "createdDate": 1145045439000,
+          "state": e.addrModel.state,
+          "streetAddress": e.addrModel.street,
+          "zipcode": e.addrModel.postalCode,
+        });
+      });
+    }
   }
 
   setOrgStartDate(val){
@@ -169,6 +206,7 @@ export class OrgCreatePage {
       this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
       if (this.isAddressNeeded()) this.orgInfo.push({des: "Indicate Funding", value: this.indicateFundRadioModel});
       this.getOrgTypeSpecialInfo(this.orgType);
+      this.generateBasicOrgObj();
     }
   }
 
@@ -179,7 +217,13 @@ export class OrgCreatePage {
 
   onConfirmFormClick(){
     //submit the form and navigate to the new created organization detail page
-    this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+    this.fhService.createOrganization(this.orgObj).subscribe(
+      val => {
+        this.flashMsgService.showFlashMsg();
+        this.flashMsgService.isCreateOrgSuccess = true;
+        this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+      }
+    );
   }
 
   onCancelFormClick(){

@@ -15,6 +15,7 @@ import { OrgDetailPage } from "./organization-detail.page";
 import { OrgDetailProfilePage } from "./profile/profile.component";
 import { OrgCreatePage } from "./create-org/create-org.component";
 import { OrgAddrFormComponent } from "./create-org/address-form/address-form.component";
+import { FlashMsgService } from "./flash-msg-service/flash-message.service";
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { OrgAddrFormComponent } from "./create-org/address-form/address-form.com
     OrgAddrFormComponent,
   ],
   providers: [
-    AlertFooterService
+    AlertFooterService,
+    FlashMsgService
   ],
 })
 export class OrganizationDetailModule { }

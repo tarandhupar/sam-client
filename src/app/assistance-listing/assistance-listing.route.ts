@@ -10,6 +10,7 @@ import { FALContactInfoComponent } from './assistance-listing-operations/section
 import { FinancialObligationsComponent } from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
 import { FinancialInfoPage2 } from "./assistance-listing-operations/sections/financial-info/other/financial-info-other.page";
 import { ComplianceRequirementsPage } from "./assistance-listing-operations/sections/compliance-requirements/compliance-requirements.page";
+import {FALCriteriaInfoComponent} from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
 import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
 
 export const routes: Routes = [
@@ -35,6 +36,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'financial-information/obligations', component: FinancialObligationsComponent},
         {path: 'financial-information/other-financial-info', component: FinancialInfoPage2},
         {path: 'compliance-requirements', component: ComplianceRequirementsPage},
+        {path: 'criteria-information', component: FALCriteriaInfoComponent},
         {path: 'contact-information', component: FALContactInfoComponent},
         {path: 'authorization', component: FALAuthorizationsComponent }
       ]
@@ -49,6 +51,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'financial-information/obligations', component: FinancialObligationsComponent},
         {path: 'financial-information/other-financial-info', component: FinancialInfoPage2},
         {path: 'compliance-requirements', component: ComplianceRequirementsPage},
+        {path: 'criteria-information', component: FALCriteriaInfoComponent},
         {path: 'contact-information', component: FALContactInfoComponent},
         {path: 'authorization', component: FALAuthorizationsComponent }
       ]

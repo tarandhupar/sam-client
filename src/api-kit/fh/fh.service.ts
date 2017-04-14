@@ -103,4 +103,25 @@ export class FHService {
     return this.oAPIService.call(oApiParam);
   }
 
+  updateOrganization(org) {
+    let apiOptions: any = {
+      name: 'federalHierarchy',
+      suffix: '/cfda/' + org.orgKey,
+      method: 'PUT',
+      body: org
+    };
+    return this.oAPIService.call(apiOptions);
+  }
+
+  createOrganization(org) {
+    let apiOptions: any = {
+      name: 'federalCreateOrg',
+      suffix: '',
+      method: 'POST',
+      body: org
+    };
+
+    return this.oAPIService.call(apiOptions);
+  }
+
 }

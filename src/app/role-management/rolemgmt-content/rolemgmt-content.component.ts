@@ -1,4 +1,4 @@
-import {Component,OnInit,Output,EventEmitter} from '@angular/core';
+import {Component,OnInit,Output,EventEmitter,Input} from '@angular/core';
 import * as moment from 'moment/moment';
 
 @Component({
@@ -6,6 +6,11 @@ import * as moment from 'moment/moment';
   templateUrl: './rolemgmt-content.template.html'
 })
 export class RoleMgmtContent implements OnInit{
+
+  @Input() requestDetails = '';
+  @Input() count; 
+  @Input() currCount; 
+
   @Output() sortOrder : EventEmitter<any> = new EventEmitter<any>();
   @Output() pageNumber : EventEmitter<any> = new EventEmitter<any>();
 
@@ -14,8 +19,10 @@ export class RoleMgmtContent implements OnInit{
   }
 
   ngOnInit(){
-
+   
   }
+  Pagelimit : number = 10;
+
   selectModel = 'desc';
   selectConfig = {
     options: [
@@ -46,53 +53,8 @@ export class RoleMgmtContent implements OnInit{
 
   paginationConfig = {
     currentPage: 1,
-    totalPages: 2
+    totalPages: Math.ceil(this.count/this.Pagelimit),
   };
 
-  data = [
-    {
-      domain : "Federal Assistance Listing",
-      requestorName : "Alexandria Witherspoon",
-      requestedDate : "2021-07-25T21:41:00.000-0400",
-      status : "Escalated",
-      supervisorName : "John Admin",
-      createdDate : "2021-07-25T21:41:00.000-0400",
-      escalatedTo : "GSA",
-      UserMessage : "I am requesting access for this domain",
-      AdministratorMessage : "I am escalating the request",
-      id : 1,
-    },
-    {
-      domain : "Oppurtunities",
-      requestorName : "Alexandria Witherspoon",
-      requestedDate : "2021-07-25T21:41:00.000-0400",
-      status : "Pending",
-      supervisorName : "John Admin",
-      supervisorEmail : "john.admin@gsa.gov",
-      UserMessage : "I am requesting access for this domain",
-      id : 2,
-    },
-    {
-      domain : "Award",
-      requestorName : "Alexandria Witherspoon",
-      requestedDate : "2021-07-25T21:41:00.000-0400",
-      status : "Rejected",
-      supervisorName : "John Admin",
-      createdDate : "2021-07-25T21:41:00.000-0400",
-      UserMessage : "I am requesting access for this domain",
-      AdministratorMessage : "I Rejected this because",
-      id : 3,
-    },
-    {
-      domain : "Award",
-      requestorName : "Alexandria Witherspoon",
-      requestedDate : "2021-07-25T21:41:00.000-0400",
-      status : "Approved",
-      supervisorName : "John Admin",
-      createdDate : "2021-07-25T21:41:00.000-0400",
-      UserMessage : "I am requesting access for this domain",
-      AdministratorMessage : "I Approved this because",
-      id : 4,
-    }
-  ]
+  
 }

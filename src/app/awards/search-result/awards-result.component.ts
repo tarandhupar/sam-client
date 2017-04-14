@@ -16,45 +16,45 @@ import Moment = moment.Moment;
     	</h3>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-      	  <li><strong>{{ data.vendor?.name }}</strong></li>
-      	  <li><span>{{ data.vendor?.address?.city }}, {{ data.vendor?.address?.state?.code }} {{ data.vendor?.address?.zip }}</span></li>
+      	  <li class="vendor-name"><strong>{{ data.vendor?.name }}</strong></li>
+      	  <li class="vendor-address"><span>{{ data.vendor?.address?.city }}, {{ data.vendor?.address?.state?.code }} {{ data.vendor?.address?.zip }}</span></li>
         	<li>&nbsp;</li>
-        	<li><strong>DUNS: </strong><span>{{ data.vendor?.dunsNumber }}</span></li>
-          <li><strong>Global Vendor: </strong><span>{{ data.vendor?.globalName }}</span></li>
-          <li><strong>Global DUNS: </strong><span>{{ data.vendor?.globalDunsNumber }}</span></li>
+        	<li class="duns-number"><strong>DUNS: </strong><span>{{ data.vendor?.dunsNumber }}</span></li>
+          <li class="global-vendor-name"><strong>Global Vendor: </strong><span>{{ data.vendor?.globalName }}</span></li>
+          <li class="global-duns-number"><strong>Global DUNS: </strong><span>{{ data.vendor?.globalDunsNumber }}</span></li>
           <li>&nbsp;</li>
-          <li><strong>Department/Ind. Agency: </strong><span>{{ data.purchaser?.contractingOrganizationHierarchy[0]?.name }}</span></li>
-          <li><strong>Office: </strong><span>{{ data.purchaser?.contractingOrganizationHierarchy[1]?.name }}</span></li>
+          <li class="department-agency-name"><strong>Department/Ind. Agency: </strong><span>{{ data.purchaser?.contractingOrganizationHierarchy[0]?.name }}</span></li>
+          <li class="office-name"><strong>Office: </strong><span>{{ data.purchaser?.contractingOrganizationHierarchy[1]?.name }}</span></li>
         </ul>
     	</div>
     	<div class="usa-width-one-third">
       	<ul class="usa-text-small m_B-0">
-          <li><strong>Action Obligation </strong>
+          <li class="action-obligation"><strong>Action Obligation </strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.contract?.obligatedAmount | currency:'USD':true }}</span></li>
             </ul>
           </li>    
-          <li><strong>{{ data.type=='AWARD' ? 'Award Type' : 'IDV Type' }} </strong>
+          <li class="award-or-idv-type"><strong>{{ data.type=='AWARD' ? 'Award Type' : 'IDV Type' }} </strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.awardType?.value }}</span></li>
             </ul>
           </li>      
-          <li><strong>Referenced IDV </strong>
+          <li class="referenced-idv"><strong>Referenced IDV </strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.identifiers[0]?.referencePiid }}</span></li>
             </ul>
           </li>
-          <li><strong>Date Signed </strong>
+          <li class="date-signed"><strong>Date Signed </strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.contract?.signedDate }}</span></li>
             </ul>
           </li>
-          <li><strong>NAICS Code </strong>
+          <li class="naics-code"><strong>NAICS Code </strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.productOrService?.naics?.value }} ({{ data.productOrService?.naics?.code }})</span></li>
             </ul>
           </li>
-          <li><strong>PSC Code </strong>
+          <li class="psc-code"><strong>PSC Code </strong>
             <ul class="usa-unstyled-list">
               <li><span>{{ data.productOrService?.psc?.value }} ({{ data.productOrService?.psc?.code }})</span></li>
             </ul>
