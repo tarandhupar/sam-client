@@ -96,7 +96,6 @@ export class OrgCreatePage {
     this.fhService.getOrganizationById(orgId,false,true).subscribe(
       val => {
         let orgDetail = val._embedded[0].org;
-        console.log(orgDetail);
         this.fullParentPath = orgDetail.fullParentPath;
         this.fullParentPathName = orgDetail.fullParentPathName;
       });
