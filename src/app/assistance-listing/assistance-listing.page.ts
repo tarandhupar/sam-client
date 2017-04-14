@@ -97,7 +97,6 @@ export class ProgramPage implements OnInit, OnDestroy {
     this.apiSubjectSub = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.program = api;
-      console.log(this.program,'this.program....................');
       this.checkCurrentFY();
       if(this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));

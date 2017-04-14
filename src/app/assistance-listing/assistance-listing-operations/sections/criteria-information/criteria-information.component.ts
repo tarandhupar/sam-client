@@ -196,7 +196,6 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
   }
 
   placeholderMsg(multiArray: any) {
-    console.log(multiArray,'multiArray................');
     let PlaceholderMsg = '';
     if(multiArray.length === 1) {
       PlaceholderMsg = 'One Type Selected';
@@ -342,7 +341,6 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
       checkbox: [],
       textarea: []
     };
-console.log(obj,'obj');
     if(obj) {
       if(!obj.isApplicable) {
         model.checkbox.push('na');
@@ -364,16 +362,13 @@ console.log(obj,'obj');
       }
   }
   removeDuplicates(obj: any, list: any) {
+    let unique: boolean = false;
     for (let i = 0; i < list.length; i++) {
-      console.log("list[i].code", list[i].code);
-      console.log("obj.code", obj.code);
       if (list[i].code === obj.code) {
-        return true;
-      } else {
-        return false;
+        unique = true;
       }
-
     }
+    return unique;
   }
 
   onawardedTypeChange(event) {
@@ -405,9 +400,9 @@ console.log(obj,'obj');
       }
       isDuplicate = this.removeDuplicates(control.value, this.benListDisplay.selectedItems);
       if(!isDuplicate) {
-        console.log('going inside even duplicate');
         this.benSelectedOption = control.value;
         this.benMultiArrayValues.push(control.value.code);
+        this.removeListDuplicates(this.benMultiArrayValues);
         this.benAutocompleteConfig.placeholder = this.placeholderMsg(this.benMultiArrayValues);
       }
     }
@@ -418,26 +413,36 @@ console.log(obj,'obj');
     for (let selItem of this.benListDisplay.selectedItems) {
       this.benMultiArrayValues.push(selItem.code);
     }
-    this.benAutocompleteConfig.placeholder = this.placeholderMsg(this.benListDisplay.selectedItems);
+    this.benAutocompleteConfig.placeholder = this.placeholderMsg(this.benMultiArrayValues);
   }
 
   applicantTypeChange(event) {
 
-    let isDuplicate: boolean;
-    const control = this.falCriteriaForm.controls['applicantTypes'];
-    if (event.code) {
-      //if control value isn't up to date, manually set it
-      if (control.value.code != event.code) {
-        control.setValue(event);
-        return;
+   let isDuplicate: boolean;
+     const control = this.falCriteriaForm.controls['applicantTypes'];
+     if (event.code) {
+     //if control value isn't up to date, manually set it
+     if (control.value.code != event.code) {
+     control.setValue(event);
+     return;
+     }
+     isDuplicate = this.removeDuplicates(control.value, this.appListDisplay.selectedItems);
+     if(!isDuplicate) {
+     this.appSelectedOption = control.value;
+     this.applicantMultiArrayValues.push(control.value.code);
+     this.removeListDuplicates(this.applicantMultiArrayValues);
+     this.appAutocompleteConfig.placeholder = this.placeholderMsg(this.applicantMultiArrayValues);
+     }
+     }
+  }
+  removeListDuplicates(arr: any) {
+      for(var i = 0; i < arr.length; i++) {
+        for(var j = i+1; j < arr.length; j++) {
+          if(arr[i] === arr[j])
+            arr.splice(j,1);
+        }
       }
-      isDuplicate = this.removeDuplicates(control.value, this.appListDisplay.selectedItems);
-      if(!isDuplicate) {
-        this.appSelectedOption = control.value;
-        this.applicantMultiArrayValues.push(control.value.code);
-        this.appAutocompleteConfig.placeholder = this.placeholderMsg(this.applicantMultiArrayValues);
-      }
-    }
+      return arr;
   }
 
   applicantlistChange(event) {
@@ -445,7 +450,8 @@ console.log(obj,'obj');
     for (let selItem of this.appListDisplay.selectedItems) {
       this.applicantMultiArrayValues.push(selItem.code);
     }
-    this.appAutocompleteConfig.placeholder = this.placeholderMsg(this.appListDisplay.selectedItems);
+    this.appAutocompleteConfig.placeholder = this.placeholderMsg(this.applicantMultiArrayValues);
+
   }
 
   assUsageTypeChange(event) {
@@ -461,6 +467,7 @@ console.log(obj,'obj');
       if(!isDuplicate) {
         this.assUsageSelectedOption = control.value;
         this.assUsageMultiArrayValues.push(control.value.code);
+        this.removeListDuplicates(this.assUsageMultiArrayValues);
         this.assUsageAutocompleteConfig.placeholder = this.placeholderMsg(this.assUsageMultiArrayValues);
       }
     }
@@ -471,7 +478,7 @@ console.log(obj,'obj');
     for (let selItem of this.assUsageListDisplay.selectedItems) {
       this.assUsageMultiArrayValues.push(selItem.code);
     }
-    this.assUsageAutocompleteConfig.placeholder = this.placeholderMsg(this.assUsageListDisplay.selectedItems);
+    this.assUsageAutocompleteConfig.placeholder = this.placeholderMsg(this.assUsageMultiArrayValues);
   }
 
 
