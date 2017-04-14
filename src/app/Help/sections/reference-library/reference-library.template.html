@@ -8,12 +8,12 @@
   <h3 id="featuredReference" class="p_L-3x">Featured References</h3>
   <h4 class="p_L-8x">Federal Assistance</h4>
   <div class="usa-grid m_L-3x">
-    <imageLibrary [name]="'federal'" [data]="data.Federal" [closeNotification]="imageLibraryNotification" (updateNotification)="onImageLibrarySelect($event)"></imageLibrary>
+    <sam-info-accordion [name]="'federal'" [data]="data.Federal" [closeNotification]="imageLibraryNotification" (updateNotification)="onImageLibrarySelect($event)"></sam-info-accordion>
   </div>
 
   <h4 class="p_L-8x">Contracts</h4>
   <div class="usa-grid m_L-3x">
-    <imageLibrary [name]="'contract'" [data]="data.Contract" [closeNotification]="imageLibraryNotification" (updateNotification)="onImageLibrarySelect($event)"></imageLibrary>
+    <sam-info-accordion [name]="'contract'" [data]="data.Contract" [closeNotification]="imageLibraryNotification" (updateNotification)="onImageLibrarySelect($event)"></sam-info-accordion>
   </div>
 
   <h3 id="additionalReference" class="p_L-3x">Additional References</h3>

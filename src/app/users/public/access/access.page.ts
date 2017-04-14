@@ -284,7 +284,7 @@ export class UserAccessPage implements OnInit {
 
   onCancelRequestClick(requestId, i) {
     let newStatus = {
-      status: 'cancel',
+      status: 'CANCELED',
     };
     this.userService.updateRequest(requestId, newStatus).subscribe(
       res => {

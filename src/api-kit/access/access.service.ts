@@ -211,7 +211,7 @@ export class UserAccessService {
       if (res.status === 204) {
         return [];
       } else {
-        return res.json();
+        return res.json().userAccessRequestList;
       }
     });
   }
@@ -282,7 +282,7 @@ export class UserAccessService {
       method : 'GET',
       oParam: {},
     };
-    
+
     if(statusKey.length > 0){
       apiOptions.oParam.statusKey = statusKey;
     }
@@ -296,5 +296,5 @@ export class UserAccessService {
 
     return this.apiService.call(apiOptions);
 
-  }  
+  }
 }

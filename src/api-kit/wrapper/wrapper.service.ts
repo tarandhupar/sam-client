@@ -10,6 +10,7 @@ export class WrapperService {
         "featuredSearch": "/sgs/v1/search/featured",
         "program": "/fac/v1/programs",
         "federalHierarchy": "/federalorganizations/v1/organizations",
+        "federalCreateOrg": "/federalorganizations/v1/organization",
         "entities": "/entities",
         "exclusions": "/exclusions",
         "awards": "/awards",
