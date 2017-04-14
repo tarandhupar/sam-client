@@ -3,11 +3,12 @@ import { Observable, ReplaySubject } from 'rxjs';
 
 import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
 import { LocationService } from 'api-kit/location/location.service';
+import { AlertFooterService } from '../../../alerts/alert-footer/alert-footer.service'
 
 @Injectable()
 export class CountryServiceImpl implements AutocompleteService {
 
-  constructor(private locationService: LocationService) { }
+  constructor(private locationService: LocationService, private alertFooterService: AlertFooterService) { }
 
   getAllCountriesJSON(q:string): ReplaySubject<any> {
     const results = new ReplaySubject();
@@ -23,6 +24,12 @@ export class CountryServiceImpl implements AutocompleteService {
         }, []));
       },
       (error) => {
+        this.alertFooterService.registerFooterAlert({
+          title:"The location service encountered an error.",
+          description:"",
+          type:'error',
+          timer:0
+        });
         return error;
       }
     );

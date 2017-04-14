@@ -32,12 +32,12 @@
       </div>
       <div class="usa-width-one-whole m_T-2x" *ngIf="isCurrentFilter('feature')" >
         <div class="usa-width-one-whole m_T-4x">
-          <imageLibrary [name]="'transition-by-feature'" [data]="featureData" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></imageLibrary>
+          <sam-info-accordion [name]="'transition-by-feature'" [data]="featureData" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></sam-info-accordion>
         </div>
       </div>
       <div class="usa-width-one-whole m_T-2x" *ngIf="isCurrentFilter('legacy')">
         <div class="usa-width-one-whole m_T-4x">
-          <imageLibrary [name]="'transition-by-legacy'" [data]="legacyData" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></imageLibrary>
+          <sam-info-accordion [name]="'transition-by-legacy'" [data]="legacyData" [showDetailTitle]="false" [isExternalLink]="false" [isReleaseDetail]="true"></sam-info-accordion>
         </div>
       </div>
     </div>
