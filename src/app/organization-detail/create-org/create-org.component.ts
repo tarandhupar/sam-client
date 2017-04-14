@@ -5,6 +5,7 @@ import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { OrgAddrFormComponent } from './address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { FHService } from "../../../api-kit/fh/fh.service";
+import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 
 function validDateTime(c: FormControl) {
   let invalidError = {message: 'Date is invalid'};
@@ -69,7 +70,7 @@ export class OrgCreatePage {
   orgTypeWithAddress = "Office";
   showFullDes:boolean = false;
 
-  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute, private fhService: FHService) {}
+  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute, private fhService: FHService, public flashMsgService:FlashMsgService) {}
 
   ngOnInit(){
     this.basicInfoForm = this.builder.group({
@@ -172,7 +173,7 @@ export class OrgCreatePage {
       this.indicateFundRadioConfig.errorMessage = this.indicateFundRadioModel === ''? "This field cannot be empty": '';
     }
 
-    if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid) {
+    // if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid) {
       this.createOrgPage = false;
       this.reviewOrgPage = true;
       this.orgInfo = [];
@@ -182,7 +183,7 @@ export class OrgCreatePage {
       this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
       if (this.isAddressNeeded()) this.orgInfo.push({des: "Indicate Funding", value: this.indicateFundRadioModel});
       this.getOrgTypeSpecialInfo(this.orgType);
-    }
+    // }
   }
 
   onEditFormClick(){
@@ -192,6 +193,8 @@ export class OrgCreatePage {
 
   onConfirmFormClick(){
     //submit the form and navigate to the new created organization detail page
+    this.flashMsgService.showFlashMsg();
+    this.flashMsgService.isCreateOrgSuccess = true;
     this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
   }
 

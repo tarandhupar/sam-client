@@ -2,10 +2,10 @@ import { Component, Input } from "@angular/core";
 import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 import * as moment from 'moment/moment';
-
+import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 
 @Component ({
-  templateUrl: 'profile.template.html'
+  templateUrl: 'profile.template.html',
 })
 export class OrgDetailProfilePage {
   orgId:string = "100000121";
@@ -27,7 +27,7 @@ export class OrgDetailProfilePage {
   isEdit:boolean = false;
   showFullDes: boolean = false;
   isCFDASource:boolean = false;
-
+  showEditOrgFlashAlert:boolean = false;
   editedDescription:string = "";
   editedShortname:string = "";
 
@@ -42,7 +42,7 @@ export class OrgDetailProfilePage {
 
   subCommandBaseLevel = 4;
 
-  constructor(private fhService: FHService, private route: ActivatedRoute, private _router: Router){
+  constructor(private fhService: FHService, private route: ActivatedRoute, private _router: Router, public flashMsgService:FlashMsgService){
   }
 
   ngOnInit(){
@@ -95,6 +95,7 @@ export class OrgDetailProfilePage {
       if(e.description === "Description") e.value = this.editedDescription;
       if(e.description === "Shortname") e.value = this.editedShortname;
     });
+    this.showEditOrgFlashAlert = true;
   }
 
   onEditPageClick(){
@@ -275,4 +276,12 @@ export class OrgDetailProfilePage {
   showFullDescription(){this.showFullDes = true;}
   hideFullDescription(){this.showFullDes = false;}
 
+  dismissCreateOrgFlashAlert(){
+    this.flashMsgService.hideFlashMsg();
+    this.flashMsgService.resetFlags();
+  }
+
+  dismissEditOrgFlashAlert(){
+    this.showEditOrgFlashAlert = false;
+  }
 }
