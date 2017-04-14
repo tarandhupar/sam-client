@@ -16,7 +16,7 @@ var searchServiceStub = {
   featuredSearch: ()=>{
     return Observable.of({
       alternativeNames: null,
-      code: "abcd1234",
+      cgac: "abcd1234",
       name: "ML Test Dept",
       description: "",
       _id: "12345",

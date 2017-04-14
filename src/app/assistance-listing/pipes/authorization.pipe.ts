@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 
 @Pipe({name: 'authorization'})
 export class AuthorizationPipe implements PipeTransform {
-  sortBy: string = 'version';
+  //SAM-9136: Remove sort by `version` field is removed, use `parentAuthorizationId` instead
+  sortBy: string = 'parentAuthorizationId';
 
   // TODO: Promote to its own file or pipe to make reusable labels.
   titleString: string = 'Title';
@@ -17,8 +18,8 @@ export class AuthorizationPipe implements PipeTransform {
 
   transform(authorizations, args:string[]):any {
 
-    //make sure sorted by version number
-    authorizations = _.sortBy(authorizations, this.sortBy);
+    //make sure sorted by parentAuthorizationId null first to be shown first them rest is amended by
+    authorizations = _.sortBy(authorizations, this.sortBy).reverse();
 
     // TODO, review implementation of string building of the the authorizations
     var title = [];
@@ -27,27 +28,29 @@ export class AuthorizationPipe implements PipeTransform {
       // TODO: No test in the scpec for this...??
       // TODO: Would prefer the conditionals before the call be in the method;
       //       however, title.push is creating empty indeces within title
-      if (authorization.version > 1) {
+      //`version` field is remove, based on condition, we're checking if it has parent (amended by)
+      //if (authorization.version > 1) {
+      if (authorization.parentAuthorizationId != null && authorization.parentAuthorizationId != "") {
         title.push(this.getAmendedBy(authorization));
       }
 
-      if (authorization.act != null) {
+      if (authorization.act != null && authorization.authorizationTypes.act) {
         title.push(this.getAuthorizationAct(authorization));
       }
 
-      if (authorization.executiveOrder != null && authorization.executiveOrder.description) {
+      if (authorization.executiveOrder != null && authorization.executiveOrder.description && authorization.authorizationTypes.executiveOrder) {
         title.push(this.getExecutiveOrder(authorization));
       }
 
-      if (authorization.publicLaw != null) {
+      if (authorization.publicLaw != null && authorization.authorizationTypes.publicLaw) {
         title.push(this.getPublicLaw(authorization));
       }
 
-      if (authorization.statute != null){
+      if (authorization.statute != null && authorization.authorizationTypes.statute){
         title.push(this.getStatute(authorization));
       }
 
-      if (authorization.USC != null){
+      if (authorization.USC != null && authorization.authorizationTypes.USC){
         title.push(this.getUSCode(authorization));
       }
     });

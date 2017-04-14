@@ -1,0 +1,55 @@
+<div class = "rolemgmt-sidenav">
+  <div class = "m_T-3em">
+    <div class = "p_B-1em">
+      <i class="fa fa-arrow-circle-left icn_pos" aria-hidden="true"></i>
+      <h3 class = "p_L-1em">Back to Workspace Home</h3>
+    </div>
+    <img src="src/assets/img/blank_icon.png" class = "img_size" alt="GSA Image" tabindex="0">
+  </div>
+  <div class = "p_L-1em">
+    <h2 class = "min_txt">General Services Administration</h2>
+  </div>
+  <div class = "m_T-1em">
+    <div class = "pull-left filter-color">
+      <h3>Filters</h3>
+    </div>
+    <div class = "pull-right filter-icon filter-color">
+      <i class="fa fa-sliders fa-2x" aria-hidden="true"></i>
+    </div>
+    <div class = "def-filter">
+      <sam-autocomplete
+        name="'users-search'"
+        [options]="requestorIds"
+        [config]="{addOnIconClass:'fa fa-search',placeholder:'Search for a user', keyValueConfig: {keyProperty: 'key', valueProperty: 'value'}}"
+        [(ngModel)]="usersEntered"
+        (ngModelChange)="onUserClick($event)"
+      ></sam-autocomplete>
+
+      <samAccordion [expandIndex]="0">
+        <samAccordionSection [headerText]="accordionHeading1" [name]="accordionName1">
+          <samCheckbox (modelChange)="activeFilter($event)"
+            [(model)]="StatusCheckboxModel"
+            [name]="'Access-Status-Checkbox-Filter'"
+            [options]="filters.status.options"
+            [label]="filters.status.label"
+            [hasSelectAll]="'Yes'"
+            >
+          </samCheckbox>
+        </samAccordionSection>
+      </samAccordion>
+
+      <samAccordion [expandIndex]="0">
+        <samAccordionSection [headerText]="accordionHeading2" [name]="accordionName2">
+          <samCheckbox (modelChange)="domainFilter($event)"
+            [(model)]="DomiansCheckboxModel"
+            [name]="'Domains-Checkbox-Filter'"
+            [options]="filters.domains.options"
+            [label]="filters.domains.label"
+            [hasSelectAll]="'Yes'"
+            >
+          </samCheckbox>
+        </samAccordionSection>
+      </samAccordion>
+    </div>
+  </div>
+</div>

@@ -7,7 +7,7 @@
     <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
     <div>
       <sam-filters-container>
-        <sam-collapsible [label]="'Status'" [startOpened]="true">
+        <sam-collapsible *ngIf="index !== 'fh'" [label]="'Status'" [startOpened]="true">
           <!--active checkbox-->
           <samCheckbox
             [(model)]="checkboxModel"
@@ -160,13 +160,13 @@
             (modelChange)="awardIDVRadChanged($event)">
           </samRadioButton>
           <br/>
-          <sam-contract-type-filter class="usa-award-filter"
+          <sam-contract-type-filter class="usa-award-filter award-type-dropdown-list"
                                     [selectModel]="awardTypeModel"
                                     [options]="awardType"
                                     (modelChange)="awardTypeSelected($event)">
           </sam-contract-type-filter>
           <br/>
-          <sam-contract-type-filter class="usa-award-filter"
+          <sam-contract-type-filter class="usa-award-filter contract-type-dropdown-list"
                                     [selectModel]="contractTypeModel"
                                     [options]="contractType"
                                     (modelChange)="contractTypeSelected($event)">

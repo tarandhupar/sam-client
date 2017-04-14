@@ -11,6 +11,7 @@ import { FHService } from "../../../../api-kit/fh/fh.service";
 import { Observable } from "rxjs";
 import { Organization } from "../../../organization/organization.model";
 import { IRole } from "../../../../api-kit/access/role.interface";
+import { Title } from "@angular/platform-browser";
 
 @Component({
   templateUrl: 'grant-access.template.html'
@@ -46,6 +47,8 @@ export class GrantAccessPage implements OnInit {
   // Edit page only
   private userAccess: UserAccessModel;
 
+  private userCameFromRoleWorkspace: boolean = false;
+
   constructor(
     private userService: UserAccessService,
     private route: ActivatedRoute,
@@ -53,12 +56,21 @@ export class GrantAccessPage implements OnInit {
     public router: Router,
     private pageScrollService: PageScrollService,
     private fhService: FHService,
+    private titleService: Title,
   ) {
     PageScrollConfig.defaultDuration = 500;
   }
 
   ngOnInit() {
+    this.titleService.setTitle('User Access');
     this.userName = this.route.parent.snapshot.params['id'];
+    this.userCameFromRoleWorkspace = this.route.snapshot.queryParams['ref'];
+
+    if (this.userCameFromRoleWorkspace) {
+      this.domain = +this.route.snapshot.queryParams['domain'];
+      this.getRoles();
+    }
+
     this.determinePageModeFromURL();
     this.getDomains();
     if (this.mode === 'edit') {
@@ -206,20 +218,6 @@ export class GrantAccessPage implements OnInit {
 
     if (r) {
       this.objects = r.functionContent;
-
-      if (roleIsCurrentRole) {
-        // merge roles the user has with all available roles
-        this.objects.forEach(fun => {
-          let fid = fun.function.id;
-          fun.permission.forEach(perm => {
-            let pid = perm.id;
-
-            if (!this.userHasPermission(fid, pid)) {
-              perm.notChecked = true;
-            }
-          });
-        });
-      }
     } else {
       // the user selected a role that is not in the roles table (it may not have been fetched yet)
       this.objects = [];
@@ -297,7 +295,15 @@ export class GrantAccessPage implements OnInit {
     this.router.navigate(['../access'], { relativeTo: this.route });
   }
 
+  goToRoleWorkspace() {
+    this.router.navigate(['/access/role-workspace']);
+  }
+
   isFormValid() {
+    if (this.userCameFromRoleWorkspace) {
+      return this.orgs && this.orgs.length && this.domain && this.role && this.messages;
+    }
+
     switch (this.mode) {
       case 'edit':
       case 'grant':
@@ -337,6 +343,12 @@ export class GrantAccessPage implements OnInit {
       }
     }
 
+    if (this.userCameFromRoleWorkspace) {
+      if (!this.messages) {
+        this.errors.messages = "A message is required";
+      }
+    }
+
     this.scrollToHead();
   }
 
@@ -356,7 +368,23 @@ export class GrantAccessPage implements OnInit {
     if (this.mode === 'request') {
       return "Send your Role Administrator the names of the organizations and roles you are requesting and why."
     } else {
-      return "(Optional) Include a message with your response";
+      if (this.userCameFromRoleWorkspace) {
+        return "Include a message with your response.";
+      } else {
+        return "(Optional) Include a message with your response.";
+      }
+    }
+  }
+
+  isMessageRequired() {
+    return this.mode === 'request' || this.userCameFromRoleWorkspace;
+  }
+
+  onCancelClick() {
+    if (this.userCameFromRoleWorkspace) {
+      this.goToRoleWorkspace();
+    } else {
+      this.goToAccessPage();
     }
   }
 
@@ -383,7 +411,7 @@ export class GrantAccessPage implements OnInit {
             title:"There was an error while trying to grant access.",
             description:"",
             type:'error',
-            timer:0
+            timer:3200
           });
         }
       );
@@ -432,7 +460,11 @@ export class GrantAccessPage implements OnInit {
           timer:3000
         });
 
-        this.goToAccessPage();
+        if (this.userCameFromRoleWorkspace) {
+          this.goToRoleWorkspace();
+        } else {
+          this.goToAccessPage();
+        }
       },
       error => {
         if (error.status === 409) {
@@ -443,7 +475,7 @@ export class GrantAccessPage implements OnInit {
             title:"Unable to save access information.",
             description:"",
             type:'error',
-            timer:0
+            timer:3200
           });
         }
 
@@ -453,5 +485,13 @@ export class GrantAccessPage implements OnInit {
 
   onPermissionClick(perm) {
     perm.notChecked = !perm.notChecked;
+  }
+
+  submitButtonText() {
+    if (this.userCameFromRoleWorkspace) {
+      return "Approve";
+    } else {
+      return "Submit";
+    }
   }
 }

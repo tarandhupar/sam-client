@@ -4,7 +4,6 @@
                [label]="policyRequirementsConfig.checkbox.label"
                [hint]="policyRequirementsConfig.checkbox.hint"
                [options]="policyRequirementsConfig.checkbox.options"
-               [control]="complianceRequirementsGroup.get('policyRequirementsCheckbox')"
                [formControlName]="'policyRequirementsCheckbox'"
   ></samCheckbox>
 
@@ -33,6 +32,10 @@
   <samCheckboxToggledTextarea [options]="additionalDocumentationConfig"
                               [formControlName]="'additionalDocumentation'"
   ></samCheckboxToggledTextarea>
+
+  <falFormulaMatchingInput [options]="formulaMatchingConfig"
+                           [formControlName]="'formulaMatching'"
+  ></falFormulaMatchingInput>
 
   <div>
     <div class="pull-left">

@@ -251,7 +251,7 @@ export class SearchPage implements OnInit{
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
         this.organizationId = typeof data['organizationId'] === "string" ? decodeURI(data['organizationId']) : "";
-        this.isActive = data['isActive'] && data['isActive'] === "false" ? false : this.isActive;
+        this.isActive = data['isActive'] && data['isActive'] === "false" ? false : true;
         this.checkboxModel = this.isActive === false ? [] : ['true'];
         this.wdTypeModel = data['wdType'] && data['wdType'] !== null ? data['wdType'] : '';
         this.wdStateModel = data['state'] && data['state'] !== null ? data['state'] : '';

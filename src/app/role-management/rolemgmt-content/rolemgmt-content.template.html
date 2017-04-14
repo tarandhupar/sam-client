@@ -1,0 +1,84 @@
+<div class = "rolemgmt-content usa-grid-full ">
+  <div class = "p_T-6em">
+    <img src="src/assets/img/blank_icon.png" class = "img_size" alt="GSA Image" tabindex="0">
+  </div>
+  <div class = "usa-grid-full">
+    <div class = "usa-width-one-half p_T-3em">
+      <h2>Access Management</h2>
+    </div>
+    <div class = "usa-width-one-half">
+      <div>
+        <div class = "sort_pos"><h3>Sort</h3></div>
+        <div>
+          <samSelect class = "fil_sor"
+            [(model)]="selectModel"
+            [name]="'created-date-sort'"
+            [options]="selectConfig.options"
+            (modelChange)="onSelectChanged($event)"
+            >
+          </samSelect>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3>Showing {{(paginationConfig.currentPage - 1)*10 + currCount}} of {{count}} results</h3>
+  </div>
+  <div *ngIf = "currCount < 1" >
+    <em>No records were found</em>
+  </div>
+  <div *ngIf = "currCount > 0">  
+    <div  *ngFor = "let content of requestDetails" >
+      <section class = "sec-bor">
+        <div><span class="usa-label-big">{{content.domain}}</span></div>
+        <div class = "usa-grid-full p_T-1em">
+          <div class = "usa-width-one-sixth"><h4>Requested By</h4></div>
+          <div class = "usa-width-one-sixth"><h4>Requested Date</h4></div>
+          <div class = "usa-width-one-sixth"><h4>Status</h4></div>
+          <div class = "usa-width-one-sixth">
+            <h4 *ngIf = "content.status === 'ESCALATED'">Escalated By</h4>
+            <h4 *ngIf = "content.status === 'PENDING'">Supervisor Name</h4>
+            <h4 *ngIf = "content.status === 'REJECTED'">Rejected By</h4>
+            <h4 *ngIf = "content.status === 'APPROVED'">Approved By</h4>
+          </div>
+          <div class = "usa-width-one-sixth">
+            <h4 *ngIf = "content.status === 'ESCALATED'">Escalted Date</h4>
+            <h4 *ngIf = "content.status === 'REJECTED'">Rejected Date</h4>
+            <h4 *ngIf = "content.status === 'APPROVED'">Approved Date</h4>
+            <h4 *ngIf = "content.status === 'PENDING'">Supervisor Email</h4>
+          </div>
+          <div class = "usa-width-one-sixth"><h4 *ngIf = "content.status === 'ESCALATED'">Escalted To</h4></div>
+        </div>
+        <div class = "usa-grid-full p_T-.5em">
+          <div class = "usa-width-one-sixth ellipsis">{{content.requestorName.toUpperCase()}}</div>
+          <div class = "usa-width-one-sixth">{{formatDate(content.createdDate)}}</div>
+          <div class = "usa-width-one-sixth">{{content.status}}</div>
+          <div class = "usa-width-one-sixth ellipsis">{{content.supervisorName.toUpperCase()}}</div>
+          <div class = "usa-width-one-sixth" *ngIf = "content.status !== 'PENDING'">{{formatDate(content.createdDate)}}</div>
+          <div class = "usa-width-one-sixth" *ngIf = "content.status === 'PENDING'">{{content.supervisorEmail}}</div>
+          <div class = "usa-width-one-sixth" *ngIf = "content.status === 'ESCALATED'">{{content.escalatedTo}}</div>
+        </div>
+        <div class = "usa-grid-full p_T-1em">
+          <div [ngClass] = "content.status === 'PENDING' || !content.administratorMessage ? 'usa-width-three-fourths' : 'usa-width-one-third'">
+            <h4>User Message</h4>
+          </div>
+          <div class = "usa-width-one-third" *ngIf = "content.status !== 'PENDING' && content.administratorMessage"><h4>Administrator Message</h4></div>
+        </div>
+        <div class = "usa-grid-full p_T-.5em">
+          <div [ngClass] = "content.status === 'PENDING' || !content.administratorMessage ? 'usa-width-three-fourths' : 'usa-width-one-third'">
+            {{content.requestorMessage}}
+          </div>
+          <div class = "usa-width-one-third" *ngIf = "content.status !== 'PENDING' && content.administratorMessage">{{content.administratorMessage}}</div>
+          <div [ngClass] = "content.status === 'PENDING' || !content.administratorMessage ? 'usa-width-one-fourth' : 'usa-width-one-third'" *ngIf = "content.status === 'PENDING'||content.status === 'ESCALATED'">
+            <button class="usa-button-active pull-right" routerLink = "../requests/{{content.id}}">Respond</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class = "pag-com">
+    <div *ngIf =  "paginationConfig.totalPages > 1 ">
+      <samPagination [currentPage]="paginationConfig.currentPage" [totalPages]="paginationConfig.totalPages" (pageChange)="onPageChange($event)"></samPagination>
+    </div>  
+  </div>
+</div>

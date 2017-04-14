@@ -20,6 +20,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
 import { GrantAccessPage } from "./public/grant-access/grant-access.page";
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
+import { ObjectsAndPermissionsComponent } from "./objects-and-permissions/objects-and-permissions.component";
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service"
     UserDirectoryPage,
     ParentOrgsComponent,
     GroupByDomainPipe,
+    ObjectsAndPermissionsComponent,
   ],
   providers: [
     AlertFooterService
