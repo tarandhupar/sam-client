@@ -11,6 +11,7 @@ export class RoleMgmtContent implements OnInit{
   @Input() count; 
   @Input() currCount; 
   @Input() totalPages;
+  @Input() currPage;
 
   @Output() sortOrder : EventEmitter<any> = new EventEmitter<any>();
   @Output() pageNumber : EventEmitter<any> = new EventEmitter<any>();
@@ -39,7 +40,6 @@ export class RoleMgmtContent implements OnInit{
   }
 
   onSelectChanged(event){
-    this.pageNo = 1;
     this.sortOrder.emit(event);
     //window.scrollTo(0,0);
     //console.log(event);
