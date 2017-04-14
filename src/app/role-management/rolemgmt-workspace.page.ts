@@ -26,18 +26,21 @@ export class RoleMgmtWorkspace implements OnInit{
 
   StatusValue(event){
     this.statusKey = event;
+    this.page =1;
     this.getRequestAccess();
 
   }
 
   DomainValue(event){
     this.domainKey = event;
+    this.page =1;
     this.getRequestAccess();
   }
 
   AutoCompleteValue(event){
     if(this.autocompleteInput !== event.value){
       this.autocompleteInput = event.value;
+      this.page = 1;
       this.getRequestAccess();  
     }
   }

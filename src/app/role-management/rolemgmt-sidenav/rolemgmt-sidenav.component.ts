@@ -87,7 +87,7 @@ export class RoleMgmtSidenav implements OnInit{
         this.statusSelected.emit(this.statusIds);
       else
         this.statusSelected.emit(event.toString());
-      window.scrollTo(0,0);
+      
     }
 
     domainFilter(event){
