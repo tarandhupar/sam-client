@@ -7,7 +7,7 @@ import { routing } from './assistance-listing.route';
 import { AuthorizationPipe } from './pipes/authorization.pipe';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { SamUIKitModule } from 'sam-ui-kit';
-import { PipesModule } from "../app-pipes/app-pipes.module";
+import { PipesModule } from '../app-pipes/app-pipes.module';
 import { ProgramDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { ProgramPageOperations } from './assistance-listing-operations/assistance-listing-operations.page';
@@ -22,6 +22,9 @@ import { FALContactInfoTableComponent } from './assistance-listing-operations/se
 import { FinancialObligationsComponent } from './assistance-listing-operations/sections/financial-info/obligations/obligation.component';
 import { ComplianceRequirementsPage } from './assistance-listing-operations/sections/compliance-requirements/compliance-requirements.page';
 import { FALComponentsModule } from './components/index';
+import { FALAccountIdentificationComponent } from "./components/account-identification.component";
+import { FALTafsComponent } from "./components/tafs.component";
+import {FALCriteriaInfoComponent} from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
 import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
 
 @NgModule({
@@ -59,7 +62,8 @@ import { FALAuthorizationsComponent } from "./assistance-listing-operations/sect
     FALContactInfoComponent,
     FALContactInfoTableComponent,
     FinancialObligationsComponent,
-    FALAuthorizationsComponent
+    FALAuthorizationsComponent,
+    FALCriteriaInfoComponent
   ],
   providers: [],
 })
