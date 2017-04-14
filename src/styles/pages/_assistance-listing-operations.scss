@@ -41,15 +41,12 @@
     float: left;
     padding: 12px 5px;
   }
-  .toggle-text-checkbox .label-wrapper label {
-    margin-top: 0;
-  }
   .fal-obligations-label {
     font-weight: bold;
     color: black;
     font-size:30px;
     margin-top: 10px;
-    margin-bottom: 0em;
+    margin-bottom: 1em;
   }
 
   .fal-label {
@@ -66,5 +63,19 @@
   .sam-autocomplete-width > .sam-autocomplete {
     max-width: 46rem;
   }
+
+  label[for=use-restrictions-textarea0]
+  {
+    margin-top: 0;
+  }
+  label[for=use-Discretionary-Funds-textarea0]
+  {
+    margin-top: 0;
+  }
+  label[for=use-Loan-Terms-textarea0]
+  {
+    margin-top: 0;
+  }
+
 
 }
