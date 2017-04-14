@@ -10,7 +10,8 @@ export class RoleMgmtWorkspace implements OnInit{
   domainKey: string = '';
   order : string = 'desc';
   page : number = 1;
-  
+  pages : number = 0;
+
   Details : any;
   totalRequest : number = 0;
   currCount : number = 0;
@@ -19,9 +20,8 @@ export class RoleMgmtWorkspace implements OnInit{
   }
 
   ngOnInit(){
-    this.getStatusIds();
-    //console.log(this.statusKey);
-    //this.getRequestAccess();    
+    this.getStatusIds();   
+    
   }
 
   StatusValue(event){
@@ -44,6 +44,7 @@ export class RoleMgmtWorkspace implements OnInit{
 
   SortValue(event){
     this.order = event;
+    this.page = 1;
     this.getRequestAccess();
   }
 
@@ -53,12 +54,15 @@ export class RoleMgmtWorkspace implements OnInit{
   }
 
   getRequestAccess(){
+    //console.log("Access " + this.page);
     this.role.getRequestAccess(this.autocompleteInput, this.statusKey,this.domainKey,this.order,this.page).subscribe(res => {
       //console.log(res);
       this.Details = res.userAccessRequestList;
       this.totalRequest = res.count;
       this.currCount = res.userAccessRequestList.length;
+      this.pages = Math.ceil(res.count/10);
     });
+    
   }
 
   getStatusIds(){
@@ -74,7 +78,7 @@ export class RoleMgmtWorkspace implements OnInit{
           });      
           
         }
-        console.log("Now " + this.statusKey);
+        //console.log("Now " + this.statusKey);
         this.getRequestAccess();
       });
     }
