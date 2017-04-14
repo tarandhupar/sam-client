@@ -37,6 +37,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   errorLogo: any;
   cookieValue: string;
   isCookie: boolean = false;
+  assistanceTypes: any[] = [];
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -70,6 +71,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     this.loadFederalHierarchy(programAPISource);
     this.loadHistoricalIndex(programAPISource);
     this.loadRelatedPrograms(programAPISource);
+    this.loadAssistanceTypes(programAPISource);
   }
 
   ngOnDestroy() {
@@ -96,7 +98,9 @@ export class ProgramPage implements OnInit, OnDestroy {
       // run whenever api data is updated
       this.program = api;
       this.checkCurrentFY();
-      this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
+      if(this.program.data && this.program.data.authorizations) {
+        this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
+      }
     }, err => {
       console.log('Error loading program', err);
       if (err.status === 403) {
@@ -120,7 +124,8 @@ export class ProgramPage implements OnInit, OnDestroy {
       'applicant_types',
       'assistance_usage_types',
       'beneficiary_types',
-      'functional_codes'
+      'functional_codes',
+      'cfr200_requirements'
     ];
 
     let dictionaryServiceSubject = new ReplaySubject(1); // broadcasts the dictionary data to multiple subscribers
@@ -229,5 +234,17 @@ export class ProgramPage implements OnInit, OnDestroy {
 This Federal Assistance Listing was not updated by the issuing agency in ' +(new Date()).getFullYear()+ '. \n\
 Please contact the issuing agency listed under "Contact Information" for more information.' }});
     }
+  }
+
+  private loadAssistanceTypes(apiSource: Observable<any>) {
+    apiSource.subscribe(api => {
+      if(api.data.financial && api.data.financial.obligations && api.data.financial.obligations.length > 0) {
+        this.assistanceTypes = _.map(api.data.financial.obligations, 'assistanceType');
+      }
+
+      if(api.data.assistanceTypes && api.data.assistanceTypes.length > 0) {
+        this.assistanceTypes = _.union(this.assistanceTypes, api.data.assistanceTypes);
+      }
+    });
   }
 }

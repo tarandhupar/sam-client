@@ -1,26 +1,26 @@
 import {Injectable} from '@angular/core';
-import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
-import { ActivatedRoute } from '@angular/router';
+import {SidenavService} from "sam-ui-kit/components/sidenav/services/sidenav.service";
+import {ActivatedRoute} from '@angular/router';
 import * as Cookies from 'js-cookie';
 
 @Injectable()
 
-export class FALOpSharedService{
+export class FALOpSharedService {
 
-  baseURL : string;
+  baseURL: string;
   programId: string;
   sidenavModel = {};
   cookieValue: string;
 
-  constructor(private sidenavService: SidenavService, private route: ActivatedRoute){
+  constructor(private sidenavService: SidenavService, private route: ActivatedRoute) {
 
-    if(!this.cookieValue)
+    if (!this.cookieValue)
       this.cookieValue = Cookies.get('iPlanetDirectoryPro');
   }
 
-  getSideNavModel(){
+  getSideNavModel() {
 
-    if(this.route.snapshot.params['id']){
+    if (this.route.snapshot.params['id']) {
       this.programId = this.route.snapshot.params['id'];
       this.baseURL = "programs/" + this.route.snapshot.params['id'] + "/edit";
     }
@@ -42,6 +42,11 @@ export class FALOpSharedService{
         path: 'overview'
       },
       {
+        label: "3. Authorization",
+        route: this.baseURL + '/authorization',
+        path: 'authorization'
+      },
+      {
         label: "4. Financial Information",
         route: this.baseURL + '/financial-information',
         path: 'financial-information',
@@ -58,6 +63,11 @@ export class FALOpSharedService{
           }
         ]
       },
+          {
+            label: "5. Criteria for Applying",
+            route: this.baseURL + "/criteria-information",
+            path: "criteria-information"
+          },
       {
         label : "7. Compliance Requirements",
         route: this.baseURL + "/compliance-requirements",
@@ -74,19 +84,19 @@ export class FALOpSharedService{
     return this.sidenavModel;
   }
 
-  setSideNavFocus(){
+  setSideNavFocus() {
 
-    let grandChildPath : string;
+    let grandChildPath: string;
     let childPath = this.route.snapshot.children[0].url[0].path;
 
-    if(this.route.snapshot.children[0].url.length > 1){
+    if (this.route.snapshot.children[0].url.length > 1) {
       grandChildPath = this.route.snapshot.children[0].url[1].path;
     }
 
-    for(let child of this.sidenavModel['children']) {
-      if(child.path == childPath) {
+    for (let child of this.sidenavModel['children']) {
+      if (child.path == childPath) {
         this.sidenavService.updateData(0, this.sidenavModel['children'].indexOf(child));
-        if(child['children']) {
+        if (child['children']) {
           for (let grandChild of child['children']) {
             if (grandChild.path == grandChildPath) {
               this.sidenavService.updateData(1, child['children'].indexOf(grandChild));
@@ -98,7 +108,7 @@ export class FALOpSharedService{
 
   }
 
-  selectedItem(item){
+  selectedItem(item) {
     return this.sidenavService.getData()[0];
   }
 

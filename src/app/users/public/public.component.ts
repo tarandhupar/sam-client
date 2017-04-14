@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   templateUrl: 'public.component.html'
@@ -7,10 +7,14 @@ import { ActivatedRoute } from "@angular/router";
 export class UserViewComponent implements OnInit {
 
   private userName: string;
+  private hideNav: boolean = false;
 
-  constructor(private router: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    this.userName = this.router.snapshot.params['id'];
+    this.userName = this.route.snapshot.params['id'];
+    if (/grant-access.*role-workspace/.test(this.router.url)) {
+      this.hideNav = true;
+    }
   }
 }

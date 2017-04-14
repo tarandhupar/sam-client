@@ -15,6 +15,7 @@ export class DomainsResolve implements Resolve<IDomain> {
       this.footerAlerts.registerFooterAlert({
         description: "There was an error with a required service",
         type: 'error',
+        timer: 3200,
       });
       return Observable.throw('Domain endpoint down.');
     });

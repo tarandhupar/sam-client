@@ -1,5 +1,4 @@
 <div class="usa-grid assistance-listing-page" *ngIf="program">
-
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
@@ -93,7 +92,7 @@
 
       <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
         <ng-container *ngSwitchCase="true">
-          <span *ngFor="let item of program.data.projects?.list; let i = index">
+          <span *ngFor="let item of program.data?.projects?.list; let i = index">
             <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description">
               Fiscal Year {{item.fiscalYear}}: {{item.description}}
             </span>
@@ -102,15 +101,36 @@
 
         <p class="field" id="program-project-example-na" *ngSwitchDefault>Not Applicable</p>
       </div>
+
+      <ng-container *ngIf="program.data?.description && program.data?.description != ''">
+        <h3 >Federal Assistance Listing Description:</h3>
+        <div class="content-block">
+          {{ program.data?.description }}
+        </div>
+      </ng-container>
     </section>
 
     <section id="program-authorizations">
       <a name="#/programs/{{programID}}/view#authorizations"></a>
-      <h2 id="authorizations">Authorizations</h2>
+
+      <div class="view-section-margin"></div>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="authorizations">Authorizations</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']"></i>
+        </div>
+      </div>
 
       <div *ngFor="let item of authorizationIdsGrouped; let i = index">
         <p class="field" [attr.id]="'program-authorization-' + i">{{ item | authorization }}</p>
       </div>
+
+      <p *ngIf="program.data?.authorizations?.description && program.data?.authorizations?.description != ''">
+        {{ program.data?.authorizations?.description }}
+      </p>
     </section>
 
     <!--Financials-->
@@ -123,8 +143,8 @@
           <h2 id="financial-information">Financial Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'other-financial-info']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'other-financial-info']"></i>
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']"></i>
         </div>
       </div>
 
@@ -157,7 +177,7 @@
       <h3>Account Identification:</h3>
 
       <p *ngFor="let account of program.data?.financial?.accounts; let i = index">
-        <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="account.description">{{account.code}}-{{account.description}};</span>
+        <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="account.description">{{account.code}}-{{account.description}}</span>
         <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="!account.description">{{account.code}}</span>
       </p>
     </section>
@@ -165,12 +185,19 @@
     <!--Should I apply?-->
     <section id="program-application-criteria">
       <a name="#/programs/{{programID}}/view#criteria-for-applying"></a>
-      <h2 id="criteria-for-applying">Criteria for Applying</h2>
-
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="criteria-for-applying">Criteria for Applying</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'criteria-information']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'criteria-information']"></i>
+        </div>
+      </div>
       <h3>Types of Assistance:</h3>
 
-      <p *ngIf="dictionaries && dictionaries.assistance_type">
-        <ng-container *ngFor="let item of program.data?.assistanceTypes | filterMultiArrayObject:dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
+      <p *ngIf="dictionaries && dictionaries.assistance_type && assistanceTypes">
+        <ng-container *ngFor="let item of assistanceTypes | filterMultiArrayObject:dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-assistance-type-' + i">{{ item.displayValue }}{{isLast ? '' : ', '}}</span>
         </ng-container>
       </p>
@@ -222,6 +249,7 @@
         <ng-container *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-beneficiary-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
         </ng-container>
+        <span class="field" *ngIf="program.data?.eligibility?.beneficiary?.isSameAsApplicant==true" [attr.id]="'program-beneficiary-designation-sameasapplicant'">Beneficiary eligibility is the same as applicant eligibility.</span>
       </div>
 
       <p>
@@ -248,6 +276,7 @@
       </div>
 
       <p>
+        <span class="field" id="program-usage-assistance-usage" *ngIf="program.data?.eligibility?.assistanceUsage?.description">{{ program.data?.eligibility?.assistanceUsage?.description }}</span>
         <span class="field" id="program-usage-rules" *ngIf="program.data?.eligibility?.usage?.rules?.description">{{ program.data?.eligibility?.usage?.rules?.description }}</span>
         <span class="field" id="program-usage-restrictions" *ngIf="program.data.eligibility?.usage?.restrictions?.description">{{ program.data.eligibility?.usage?.restrictions?.description }}</span>
         <span class="field" id="program-usage-discretionary-fund" *ngIf="program.data.eligibility?.usage?.discretionaryFund?.description">{{ program.data.eligibility?.usage?.discretionaryFund?.description }}</span>
@@ -302,8 +331,8 @@
               <span *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length==0" class="field" id="program-preapplication-coorindation-environmental-na">
                 Environmental impact information is not required for this program.
               </span>
-              
-              
+
+
             </ng-container>
 
             <!-- Executive Order  -->
@@ -455,6 +484,29 @@
         </div>
       </div>
 
+      <h3>Policy Requirements</h3>
+      <div>
+        <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
+        <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+            <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
+              <ng-container *ngIf="item.isSelected == true && dictionaries">
+                {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+              </ng-container>
+            </p>
+        </ng-container>
+      </div>
+
+      <div>
+        <span class="field">The following 2CFR policy requirements are excluded from coverage under this assistance listing:</span>
+        <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+            <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
+              <ng-container *ngIf="item.isSelected == false && dictionaries">
+                {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+              </ng-container>
+            </p>
+        </ng-container>
+      </div>
+
       <h3>Reports:</h3>
 
       <div>
@@ -537,6 +589,18 @@
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="true">
             Matching Requirements: <ng-container *ngIf="program.data?.compliance?.formulaAndMatching?.matching?.percent > 0">Percent: {{program.data?.compliance?.formulaAndMatching?.matching?.percent}}</ng-container>
             {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
+
+          <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.matching?.requirementFlag">
+            <p *ngSwitchCase="'mandatory'">
+              Matching requirements are mandatory.
+            </p>
+            <p *ngSwitchCase="'voluntary'">
+              Matching requirements are voluntary.
+            </p>
+            <p *ngSwitchCase="'voluntary_percent'">
+              Matching requirements are voluntary and part of the rating criteria.
+            </p>
+          </ng-container>
         </div>
 
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="false">

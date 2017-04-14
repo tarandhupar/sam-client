@@ -1,0 +1,75 @@
+<div class="manage-request m_A-4x clearfix">
+  <div class="usa-width-one-fourth">
+    <button class="usa-button usa-button-transparent back-button" [routerLink]="['/access/role-workspace']"><i class="fa fa-arrow-circle-left"></i>&nbsp;Back to Role Workspace</button>
+  </div>
+  <div class="usa-width-one-half">
+    <!--<div class="usa-alert usa-alert-error"><code>{{request | json}}</code></div>-->
+    <h1>Access Request</h1>
+    <div class="description-block">
+      <div class="usa-grid-full">
+        <div class="usa-width-one-fourth">
+          <strong>Domain:</strong>
+        </div>
+        <div class="usa-width-three-fourths">
+          {{getDomainNameById(request.domainId)}}
+        </div>
+      </div>
+      <div class="usa-grid-full m_T-2x">
+        <div class="usa-width-one-fourth">
+          <strong>Requested By:</strong>
+        </div>
+        <div class="usa-width-three-fourths">
+          {{request.requestorName}}
+        </div>
+      </div>
+      <div class="usa-grid-full m_T-2x">
+        <div class="usa-width-one-fourth">
+          <strong>Supervisor Name:</strong>
+        </div>
+        <div class="usa-width-three-fourths">
+          {{request.supervisorName}}
+        </div>
+      </div>
+      <div class="usa-grid-full m_T-2x">
+        <div class="usa-width-one-fourth">
+          <strong>Supervisor Email:</strong>
+        </div>
+        <div class="usa-width-three-fourths">
+          {{request.supervisorEmail}}
+        </div>
+      </div>
+      <div class="m_T-2x"><strong>Message from Requestor:</strong></div>
+      <p>
+        <em>{{request.requestorMessage}}</em>
+      </p>
+    </div>
+    <div class="m_T-4x">
+      <samRadioButton
+        [options]="options"
+        label="How do you want to respond?"
+        name='request-action'
+        [(model)]="selectedOption"
+      ></samRadioButton>
+    </div>
+    <div class="m_T-4x" *ngIf="shouldShowTextarea()">
+      <samTextArea
+        name='message'
+        [(value)]="message"
+        (valueChange)="onMessageChanged()"
+        [required]="true"
+        [label]="'Message:'"
+        [errorMessage]="messageError"
+        [placeholder]="messagePlaceholder()"
+        (focusEvent)="onFocusMessage($event)"
+      ></samTextArea>
+    </div>
+    <div class="clearfix">
+      <button class="pull-right usa-button usa-button-primary"
+              (click)="onSubmitClick()"
+              [disabled]="!selectedOption"
+              [ngClass]="!selectedOption && 'usa-button-disabled'"
+      >Submit</button>
+    </div>
+  </div>
+  <div class="usa-width-one-fourth">&nbsp;</div>
+</div><!-- page -->
