@@ -33,11 +33,11 @@
       </samAccordion>
       <div class = "tx-pad">
         <labelWrapper [name]="'Domain-Text-Wrapper'" [errorMessage]="textErrorMessage">
-          <input type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">
-        </labelWrapper>
-        <!--<samText [(ngModel)]="newDomain" [name]="'New-Domain-Text-Input'" [errorMessage]="textErrorMessage"></samText>-->
+          <input type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">                     
+        </labelWrapper> 
         <span class="fa fa-plus-circle"  [ngClass] = "textErrorMessage.length > 0 ? 'btn-plus-error' : 'btn-plus' " aria-hidden="true" (click) = SubmitDomain()></span>
       </div>
+      
     </div>
   </div>
 </div>
