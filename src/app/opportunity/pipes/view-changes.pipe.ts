@@ -292,8 +292,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else if (currentUpdateSetAside != previousUpdateSetAside && previousUpdateSetAside != null){
       let result = filterMultiArrayObjectPipe.transform([previousUpdateSetAside], this.findDictionary('set_aside_type', dictionaries), 'elementId', false, "");
       updateSetAside = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
-      updateSetAsideAria = "Previous Update Set Aside is " + (result instanceof Array && result.length > 0) ? result[0].value : [];
-
+      let updateSetAsideAriaIncomplete = (result instanceof Array && result.length > 0) ? result[0].value : [];
+      updateSetAsideAria = "Previous Update Set Aside is " + updateSetAsideAriaIncomplete;
       changesExistClassification = true;
     }
 
@@ -315,8 +315,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else if (currentClassificationCode != previousClassificationCode && previousClassificationCode != null){
       let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], this.findDictionary('classification_code', dictionaries), 'elementId', false, '');
       classificationCode = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
-      classificationCodeAria = "Previous Classification Code is " + (result instanceof Array && result.length > 0) ? result[0].value : [];
-
+      let classificationCodeAriaIncomplete = (result instanceof Array && result.length > 0) ? result[0].value : [];
+      classificationCodeAria = "Previous Classification Code is " + classificationCodeAriaIncomplete;
       changesExistClassification = true;
     }
 
@@ -338,7 +338,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else if (currentNaicsCode != previousNaicsCode && previousNaicsCode != null){
       let result = filterMultiArrayObjectPipe.transform([previousNaicsCode], this.findDictionary('naics_code', dictionaries), 'elementId', false, '');
       naicsCode =(result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
-      naicsCodeAria = "Previous NAICS Code is " + (result instanceof Array && result.length > 0) ? result[0].value : [];
+      let naicsCodeAriaIncomplete = (result instanceof Array && result.length > 0) ? result[0].value : [];
+      naicsCodeAria = "Previous NAICS Code is " + naicsCodeAriaIncomplete;
       changesExistClassification = true;
     }
 
