@@ -300,6 +300,10 @@ export class GrantAccessPage implements OnInit {
   }
 
   isFormValid() {
+    if (this.userCameFromRoleWorkspace) {
+      return this.orgs && this.orgs.length && this.domain && this.role && this.messages;
+    }
+
     switch (this.mode) {
       case 'edit':
       case 'grant':
