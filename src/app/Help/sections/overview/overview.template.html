@@ -19,9 +19,15 @@
         <div class="sam-ui segment">
           <h3>Top Help Topics</h3>
           <div class="sam-ui list">
-            <div class="item"><a href="">Frequentely Asked Questions</a></div>
-            <div class="item"><a href="">User Guides</a></div>
-            <div class="item"><a href="">Demostration Videos</a></div>
+            <div class="item">
+              <a href="">Frequentely Asked Questions</a>
+            </div>
+            <div class="item">
+              <a href="">User Guides</a>
+            </div>
+            <div class="item">
+              <a href="">Demostration Videos</a>
+            </div>
           </div>
         </div>
       </div>
@@ -51,7 +57,7 @@
       <div class="column">
         <div class="sam-ui segment center aligned icon top">
           <i class="icon fa fa-map-signs fa-3x" aria-hidden="true"></i>
-          <a href="">Transition Roadmap</a>
+          <a [routerLink]="['/help/transition']">Transition Roadmap</a>
           <p>
             The New SAM.gov provides a unified entry point for the award process for federal buyers and sellers.
           </p>
@@ -69,7 +75,7 @@
       <div class="column">
         <div class="sam-ui segment center aligned icon top">
           <i class="icon fa fa-book fa-3x" aria-hidden="true"></i>
-          <a href="">External Resources</a>
+          <a [routerLink]="['/help/reference']">External Resources</a>
           <p>
             In-depth resources on SAM.gov systems from data to policy and how to et started.
           </p>
@@ -92,10 +98,10 @@
                 Search across GSA, view reports, perform data entry, and access a wide variety of usuful resources. Federal 
                 government users have access to additional features that support their jobs.
               </p>
-              <button class="sam-ui inverted button right labeled icon">
+              <a [routerLink]="['/help/features']" class="sam-ui inverted button right labeled icon">
                 <i class="icon fa fa-arrow-circle-right" aria-hidden="true"></i>
                 Learn more about SAM.gov features 
-              </button>
+              </a>
             </div>
           </div>
           <div class="column fa fa-pie-chart fa-7x background">
@@ -105,10 +111,10 @@
                 SAM.gov provides access to data that enables you to conduct searches across data sets, run reports, and download data 
                 extracts for deeper analysis.
               </p>
-              <button class="sam-ui inverted button right labeled icon">
+              <a [routerLink]="['/help/award']" class="sam-ui inverted button right labeled icon">
                 <i class="icon fa fa-arrow-circle-right" aria-hidden="true"></i>
                 Learn more about our data sets
-              </button>
+              </a>
             </div> 
           </div>
         </div>
@@ -121,59 +127,18 @@
 <div class="sam-ui vertically very padded stackable grid container">
   <div class="two column row">
     <div class="column">
+      <img class="sam-ui left floated image" src="src/assets/img/fsd_logo.jpg" alt="Federal Service Desk Logo">
       <p>
-        The Federal Service Desk provides help with U.S. Government contracts and grants systems. <a href="">Visit Federal Service Desk</a>
+        The Federal Service Desk provides help with U.S. Government contracts and grants systems. 
+        <a target="blank" href="https://fsd.gov">Visit Federal Service Desk</a>
       </p>
     </div>
     <div class="column">
+      <img class="sam-ui left floated image" src="src/assets/img/interact.png" alt="Interact Logo">
       <p>
-        GSA Interact is a collaborative community for connecting, communicating, learning and engaging across GSA topics. <a href="">Visit GSA Interact</a>
+        GSA Interact is a collaborative community for connecting, communicating, learning and engaging across GSA topics. 
+        <a target="blank" href="https://interact.gsa.gov/">Visit GSA Interact</a>
       </p>
     </div>
   </div>
 </div>
-
-
-<section style="display: none;">
-  <h2 class="m_T-2x">Welcome to the SAM.gov Help Center!</h2>
-  <p class="p_L-8x">
-    Welcome to the new SAM.gov help section page. Many answers to your questions and concerns can be found here online in either, FAQs, self-help, or our chat feature.
-  </p>
-
-  <div class="usa-grid-full">
-
-    <h3 class="p_L-3x">Federal Service Desk</h3>
-    <div class="usa-grid-full">
-      <div class="usa-width-one-fourth p_L-8x">
-          <a><img src="src/assets/img/fsd_logo.jpg" alt="Federal Service Desk Logo"></a>
-      </div>
-      <div class="usa-width-three-fourths">
-        <p>Welcome to The Federal Service Desk (FSD.gov), an interactive help desk that assists you with obtaining the information and support you need.
-        </p>
-      </div>
-    </div>
-    <h3 class="p_L-3x">Interact</h3>
-    <div class="usa-grid-full">
-      <div class="usa-width-one-fourth p_L-8x">
-        <a><img src="src/assets/img/interact.png" alt="Interact Logo"></a>
-      </div>
-      <div class="usa-width-three-fourths">
-        <p>Welcome to GSA Interact, an open, collaborative community for connecting, communicating, learning and engaging across GSA topics. Our goal is to help increase
-          government’s effectiveness through better communication and collaboration.
-        </p>
-      </div>
-    </div>
-    <h3 class="p_L-3x">Get answers when you chat with the Federal Service Desk (FSD).</h3>
-    <div class="usa-grid-full">
-        <p class="p_L-8x">
-          Hours of Operation<br>
-          Monday - Friday 8 a.m. to 8 p.m. ET<br>
-          U.S. Calls: 866-606-8220<br>
-          International Calls: +1 334-206-7828<br>
-          DSN: 94-866-606-8220
-        </p>
-    </div>
-
-  </div>
-
-</section>
