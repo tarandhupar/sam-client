@@ -13,6 +13,16 @@
            [label]="'Popular Name'"
            formControlName="alternativeNames"></samText>
 
+  <agencyPicker [label]="'Federal Agency'"
+                [multimode]="false"
+                [advancedMode]="false"
+                [required]="true"
+                [orgId]="agency"
+                [initial]="agency ? [agency] : []"
+                (organization)="onOrganizationChange($event)"
+                [levelLimit] = '2'>
+  </agencyPicker>
+
   <samNumber [maxlength]="3"
              [minlength]="3"
              [required]="true"
@@ -20,7 +30,7 @@
              [control]="falHeaderInfoForm.controls['programNumber']"
              [name]="'programNumber-input'"
              [label]="'FAL Number'"
-             [errorMessage]= "falHeaderInfoForm.controls['programNumber'].valid ? '': 'This number falls outside the range defined for this organization.'"
+             [errorMessage]= "falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
              formControlName="programNumber"></samNumber>
 
   <sam-list-input [hint]="'Are there any related federal assistance listings?'"

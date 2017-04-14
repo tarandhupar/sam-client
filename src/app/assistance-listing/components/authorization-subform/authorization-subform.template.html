@@ -1,0 +1,140 @@
+<samButton buttonText="Add Authorization" (onClick)="addAuth()" [class.hide]="hideAddButton"></samButton>
+
+<div [formGroup]="falAuthSubForm" [class.hide]="!hideAddButton">
+  <div formArrayName="authorizations">
+    <h4>{{subFormLabel}}</h4>
+
+    <ng-container *ngFor="let authGrp of falAuthSubForm.controls.authorizations.controls; let i=index">
+      <div [formGroupName]="i" [class.hide]="authIndex !== i">
+
+        <samCheckbox
+          [control]="authGrp.controls.authType"
+          [hint]="'Please select all that apply'"
+          [name]="'authType'"
+          [options]="checkboxConfig.options"
+          formControlName="authType"></samCheckbox>
+
+        <div formGroupName="act" [class.hide]="authGrp.value.authType.indexOf('act') == -1" >
+          <h4>Act</h4>
+          <samText
+            [control]="authGrp.controls.act.controls.title"
+            [name]="'title'"
+            [label]="'Title'"
+            formControlName="title"
+          ></samText>
+
+          <samText
+            [control]="authGrp.controls.act.controls.part"
+            [name]="'part'"
+            [label]="'Part'"
+            formControlName="part"
+          ></samText>
+
+          <samText
+            [control]="authGrp.controls.act.controls.section"
+            [name]="'section'"
+            [label]="'Section'"
+            formControlName="section"
+          ></samText>
+
+          <samTextArea
+            [control]="authGrp.controls.act.controls.description"
+            [name]="'description'"
+            [label]="'Description'"
+            formControlName="description"
+          ></samTextArea>
+
+        </div>
+
+        <div formGroupName="executiveOrder" [class.hide]="authGrp.value.authType.indexOf('executiveOrder') == -1" >
+          <h4>Executive Order</h4>
+          <samText
+            [control]="authGrp.controls.executiveOrder.controls.title"
+            [name]="'title'"
+            [label]="'Title'"
+            formControlName="title"
+          ></samText>
+
+          <samText
+            [control]="authGrp.controls.executiveOrder.controls.part"
+            [name]="'part'"
+            [label]="'Part'"
+            formControlName="part"
+          ></samText>
+
+          <samText
+            [control]="authGrp.controls.executiveOrder.controls.section"
+            [name]="'section'"
+            [label]="'Section'"
+            formControlName="section"
+          ></samText>
+
+          <samTextArea
+            [control]="authGrp.controls.executiveOrder.controls.description"
+            [name]="'description'"
+            [label]="'Description'"
+            formControlName="description"
+          ></samTextArea>
+
+        </div>
+
+        <div formGroupName="publicLaw" [class.hide]="authGrp.value.authType.indexOf('publicLaw') == -1" >
+          <h4>Public Law</h4>
+          <samText
+            [control]="authGrp.controls.publicLaw.controls.congressCode"
+            [name]="'congressCode'"
+            [label]="'Congress'"
+            formControlName="congressCode"
+          ></samText>
+
+          <samText
+            [control]="authGrp.controls.publicLaw.controls.number"
+            [name]="'number'"
+            [label]="'Law Number'"
+            formControlName="number"
+          ></samText>
+
+        </div>
+
+        <div formGroupName="statute" [class.hide]="authGrp.value.authType.indexOf('statute') == -1" >
+          <h4>Statute</h4>
+          <samText
+            [control]="authGrp.controls.statute.controls.volume"
+            [name]="'volume'"
+            [label]="'Volume'"
+            formControlName="volume"
+          ></samText>
+
+          <samText
+            [control]="authGrp.controls.statute.controls.page"
+            [name]="'page'"
+            [label]="'Page'"
+            formControlName="page"
+          ></samText>
+
+        </div>
+
+        <div formGroupName="USC" [class.hide]="authGrp.value.authType.indexOf('USC') == -1" >
+          <h4>USC</h4>
+          <samText
+            [control]="authGrp.controls.USC.controls.title"
+            [name]="'title'"
+            [label]="'Title'"
+            formControlName="title"
+          ></samText>
+
+          <samText
+            [control]="authGrp.controls.USC.controls.section"
+            [name]="'section'"
+            [label]="'Section'"
+            formControlName="section"
+          ></samText>
+
+        </div>
+
+        <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></samButton>
+        <samButton buttonText="Confirm" (onClick)="onConfirmClick()"></samButton>
+      </div>
+    </ng-container>
+  </div>
+</div>

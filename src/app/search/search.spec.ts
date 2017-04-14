@@ -17,7 +17,8 @@ import { FHFeaturedResult } from '../organization/featured-result/featured-resul
 import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AlertFooterService } from '../alerts/alert-footer';
-import {printLine} from "tslint/lib/test/lines";
+import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
+import {SamNaicsPscFilter} from "../awards/search-result/naics-psc-filter/naics-psc-filter.component";
 
 let fixture;
 
@@ -95,7 +96,7 @@ let awardType = {
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult ],
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult, SamContractTypeFilter, SamNaicsPscFilter ],
       providers: [AlertFooterService ],
       imports: [
         SamUIKitModule,

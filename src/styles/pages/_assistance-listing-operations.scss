@@ -13,6 +13,10 @@
     max-width: 480px;
   }
 
+  agencyPicker .organization-container {
+    max-width: 480px;
+  }
+
   .sticky-label{
     color: #a6a6a6;
     letter-spacing: -0.3px;
@@ -37,4 +41,30 @@
     float: left;
     padding: 12px 5px;
   }
+  .toggle-text-checkbox .label-wrapper label {
+    margin-top: 0;
+  }
+  .fal-obligations-label {
+    font-weight: bold;
+    color: black;
+    font-size:30px;
+    margin-top: 10px;
+    margin-bottom: 0em;
+  }
+
+  .fal-label {
+    font-weight: bold;
+    color: black;
+    font-size:18px;
+    margin-top: 2em;
+    margin-bottom: 0em;
+  }
+
+  .text-radio-padding {
+    padding-left: 20px;
+  }
+  .sam-autocomplete-width > .sam-autocomplete {
+    max-width: 46rem;
+  }
+
 }

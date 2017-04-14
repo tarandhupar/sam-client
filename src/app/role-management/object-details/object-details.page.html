@@ -29,9 +29,10 @@
           labelText="Permissions"
           name="permissions"
           [options]="permissionOptions"
-          [config]="{addOnIconClass:'fa fa-search'}"
+          [config]="{addOnIconClass:'fa fa-search', keyValueConfig: { valueProperty: 'permissionName', keyProperty: 'id'} }"
+          [allowAny]="true"
           [ngModel]="permission"
-          (ngModelChange)="onAddPermissionClick($event)"
+          (enterEvent)="onAddPermissionClick($event)"
         ></sam-autocomplete>
         <!--<button class="usa-button usa-button-transparent add-permission-button" (click)="onAddPermissionClick()">-->
           <!--<i class="fa fa-plus-circle"></i>-->

@@ -4,7 +4,7 @@
               [hint]="hint"
               [required]="required">
 
-  <form novalidate [formGroup]="validationGroup">
+  <div *ngIf="validationGroup" [formGroup]="validationGroup">
     <samCheckbox *ngIf="model"
                  [model]="model.checkbox"
                  [name]="name + '-checkbox'"
@@ -22,5 +22,6 @@
                    [formControlName]="'textarea'+i"
       ></samTextArea>
     </ng-container>
-  </form>
+  </div>
+
 </labelWrapper>
