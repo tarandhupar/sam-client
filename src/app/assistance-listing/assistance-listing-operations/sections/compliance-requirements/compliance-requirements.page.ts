@@ -359,9 +359,9 @@ export class ComplianceRequirementsPage implements OnInit {
 
   public onPreviousClick(event){
     if(this.programId) {
-      this.router.navigate(['programs', this.programId, 'edit', 'financial-information', 'other-financial-info']);
+      this.router.navigate(['programs', this.programId, 'edit', 'criteria-information']);
     } else {
-      this.router.navigate(['programs', 'add', 'financial-information', 'other-financial-info']);
+      this.router.navigate(['programs', 'add', 'criteria-information']);
     }
   }
 
