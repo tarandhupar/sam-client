@@ -48,6 +48,7 @@ export class OrgCreatePage {
   deptCodesForm: FormGroup;
 
   orgInfo:any = [];
+  orgObj:any = {};
   orgAddresses:any = [];
   orgType:string = "";
   orgParentId:string = "";
@@ -134,28 +135,51 @@ export class OrgCreatePage {
   getOrgTypeSpecialInfo(orgType){
     switch (orgType){
       case "Office":
-        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code");
-        this.getOrgCodes(this.officeCodesForm,"ACCCode","AAC Code");
+        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.officeCodesForm,"ACCCode","AAC Code","aacCode");
         break;
       case "Agency": case "MajorCommand": case "SubCommand":
-        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code");
-        this.getOrgCodes(this.agencyCodesForm,"OMBBureauCode","OMB Code");
+        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.agencyCodesForm,"OMBBureauCode","OMB Code","ombAgencyCode");
         break;
       case "Department":
-        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code");
-        this.getOrgCodes(this.deptCodesForm,"TAS2Code","TAS2 Code");
-        this.getOrgCodes(this.deptCodesForm,"TAS3Code","TAS3 Code");
-        this.getOrgCodes(this.deptCodesForm,"A11Code","A11 Code");
-        this.getOrgCodes(this.deptCodesForm,"CFDACode","CFDA Code");
-        this.getOrgCodes(this.deptCodesForm,"OMBAgencyCode","OMB Agency Code");
+        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.deptCodesForm,"TAS2Code","TAS2 Code","tas2Code");
+        this.getOrgCodes(this.deptCodesForm,"TAS3Code","TAS3 Code","tas3Code");
+        this.getOrgCodes(this.deptCodesForm,"A11Code","A11 Code","a11TacCode");
+        this.getOrgCodes(this.deptCodesForm,"CFDACode","CFDA Code","cfdaCode");
+        this.getOrgCodes(this.deptCodesForm,"OMBAgencyCode","OMB Agency Code","ombAgencyCode");
         break;
       default:
         break;
     }
   }
 
-  getOrgCodes(orgForm:FormGroup, codeType:string, desc:string){
-      this.orgInfo.push({des:desc, value:orgForm.get(codeType).value});
+  getOrgCodes(orgForm:FormGroup, codeType:string, desc:string, fieldName:string){
+    this.orgInfo.push({des:desc, value:orgForm.get(codeType).value});
+    this.orgObj[fieldName] = orgForm.get(codeType).value;
+  }
+
+  generateBasicOrgObj(){
+    this.orgObj['name'] = this.basicInfoForm.get('orgName').value;
+    this.orgObj['createdDate'] = this.basicInfoForm.get('orgStartDate').value;
+    this.orgObj['summary'] = this.basicInfoForm.get('orgDescription').value;
+    this.orgObj['shortName'] = this.basicInfoForm.get('orgShortName').value;
+    if (this.isAddressNeeded()){
+      this.orgObj['newIsAward'] = this.indicateFundRadioModel === "Funding/Awarding"?true:false;
+      this.orgObj['newIsFunding'] = this.indicateFundRadioModel === "Funding/Awarding" || this.indicateFundRadioModel == "Funding"?true:false;
+      this.orgObj['orgAddresses'] = [];
+      this.orgAddresses.forEach( e => {
+        this.orgObj['orgAddresses'].push({
+          "city": e.addrModel.city,
+          "countryCode": e.addrModel.country,
+          "createdDate": 1145045439000,
+          "state": e.addrModel.state,
+          "streetAddress": e.addrModel.street,
+          "zipcode": e.addrModel.postalCode,
+        });
+      });
+    }
   }
 
   setOrgStartDate(val){
@@ -173,7 +197,7 @@ export class OrgCreatePage {
       this.indicateFundRadioConfig.errorMessage = this.indicateFundRadioModel === ''? "This field cannot be empty": '';
     }
 
-    // if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid) {
+    if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid) {
       this.createOrgPage = false;
       this.reviewOrgPage = true;
       this.orgInfo = [];
@@ -183,7 +207,8 @@ export class OrgCreatePage {
       this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
       if (this.isAddressNeeded()) this.orgInfo.push({des: "Indicate Funding", value: this.indicateFundRadioModel});
       this.getOrgTypeSpecialInfo(this.orgType);
-    // }
+      this.generateBasicOrgObj();
+    }
   }
 
   onEditFormClick(){
@@ -193,9 +218,14 @@ export class OrgCreatePage {
 
   onConfirmFormClick(){
     //submit the form and navigate to the new created organization detail page
-    this.flashMsgService.showFlashMsg();
-    this.flashMsgService.isCreateOrgSuccess = true;
-    this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+    console.log(this.orgObj);
+    // this.fhService.createOrganization(this.orgObj).subscribe(
+    //   val => {
+    //     this.flashMsgService.showFlashMsg();
+    //     this.flashMsgService.isCreateOrgSuccess = true;
+    //     this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+    //   }
+    // );
   }
 
   onCancelFormClick(){

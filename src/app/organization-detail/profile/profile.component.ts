@@ -95,7 +95,13 @@ export class OrgDetailProfilePage {
       if(e.description === "Description") e.value = this.editedDescription;
       if(e.description === "Shortname") e.value = this.editedShortname;
     });
-    this.showEditOrgFlashAlert = true;
+    this.orgObj['summary'] = this.editedDescription;
+    this.orgObj['shortName'] = this.editedShortname;
+    this.fhService.updateOrganization(this.orgObj).subscribe(
+      val => {
+        this.showEditOrgFlashAlert = true;
+      });
+
   }
 
   onEditPageClick(){
