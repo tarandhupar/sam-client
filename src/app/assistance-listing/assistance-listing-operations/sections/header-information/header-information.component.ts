@@ -155,7 +155,11 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
   }
 
   public onOrganizationChange(org: any) {
-    this.agency = org.value;
+    if(org) {
+      this.agency = org.value;
+    } else {
+      this.agency = null;
+    }
   }
 
   onCancelClick(event) {
