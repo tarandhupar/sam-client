@@ -22,7 +22,7 @@
     </div>
   </div>
   <div>
-    <h3>Showing {{(paginationConfig.currentPage - 1)*10 + currCount}} of {{count}} results</h3>
+    <h3>Showing {{(pageNo - 1)*10 + currCount}} of {{count}} results</h3>
   </div>
   <div *ngIf = "currCount < 1" >
     <em>No records were found</em>
@@ -77,8 +77,8 @@
     </div>
   </div>
   <div class = "pag-com">
-    <div *ngIf =  "paginationConfig.totalPages > 1 ">
-      <samPagination [currentPage]="paginationConfig.currentPage" [totalPages]="paginationConfig.totalPages" (pageChange)="onPageChange($event)"></samPagination>
+    <div *ngIf ="totalPages > 1">
+      <samPagination [currentPage]="paginationConfig.currentPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></samPagination>      
     </div>  
   </div>
 </div>

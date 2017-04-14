@@ -290,9 +290,9 @@ export class UserAccessService {
     if(domainKey.length > 0){
       apiOptions.oParam.domainKey = domainKey;
     }
-
+    
     apiOptions.oParam.order = order;
-    apiOptions.oParam.page = page | 1;
+    apiOptions.oParam.page = page;
 
     return this.apiService.call(apiOptions);
 
