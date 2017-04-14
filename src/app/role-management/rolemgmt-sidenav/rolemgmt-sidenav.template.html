@@ -19,8 +19,8 @@
     <div class = "def-filter">
       <sam-autocomplete
         name="'users-search'"
-        [options]="permissionOptions"
-        [config]="{addOnIconClass:'fa fa-search',placeholder:'Search for a user'}"
+        [options]="requestorIds"
+        [config]="{addOnIconClass:'fa fa-search',placeholder:'Search for a user', keyValueConfig: {keyProperty: 'key', valueProperty: 'value'}}"
         [(ngModel)]="usersEntered"
         (ngModelChange)="onUserClick($event)"
       ></sam-autocomplete>

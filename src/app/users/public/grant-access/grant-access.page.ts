@@ -300,6 +300,10 @@ export class GrantAccessPage implements OnInit {
   }
 
   isFormValid() {
+    if (this.userCameFromRoleWorkspace) {
+      return this.orgs && this.orgs.length && this.domain && this.role && this.messages;
+    }
+
     switch (this.mode) {
       case 'edit':
       case 'grant':
@@ -407,7 +411,7 @@ export class GrantAccessPage implements OnInit {
             title:"There was an error while trying to grant access.",
             description:"",
             type:'error',
-            timer:0
+            timer:3200
           });
         }
       );
@@ -471,7 +475,7 @@ export class GrantAccessPage implements OnInit {
             title:"Unable to save access information.",
             description:"",
             type:'error',
-            timer:0
+            timer:3200
           });
         }
 

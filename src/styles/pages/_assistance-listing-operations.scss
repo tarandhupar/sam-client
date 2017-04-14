@@ -41,12 +41,9 @@
     float: left;
     padding: 12px 5px;
   }
-
-  .fal-label-margin {
-    margin-top: 12px;
-    margin-bottom: -1em;
+  .toggle-text-checkbox .label-wrapper label {
+    margin-top: 0;
   }
-
   .fal-obligations-label {
     font-weight: bold;
     color: black;
@@ -55,7 +52,19 @@
     margin-bottom: 0em;
   }
 
+  .fal-label {
+    font-weight: bold;
+    color: black;
+    font-size:18px;
+    margin-top: 2em;
+    margin-bottom: 0em;
+  }
+
   .text-radio-padding {
     padding-left: 20px;
   }
+  .sam-autocomplete-width > .sam-autocomplete {
+    max-width: 46rem;
+  }
+
 }
