@@ -1,0 +1,89 @@
+<labelWrapper #formulaMatchingLabel
+              [name]="name"
+              [label]="label"
+              [hint]="hint"
+              [required]="required">
+
+  <div *ngIf="formulaMatchingGroup" [formGroup]="formulaMatchingGroup">
+    <samCheckbox [model]="model.checkbox || []"
+                 [name]="name + '-checkbox'"
+                 [options]="formulaMatchingOptions"
+                 [formControlName]="'formulaMatching'"
+    ></samCheckbox>
+
+    <ng-container *ngIf="model.checkbox">
+      <samText [label]="'Title'"
+               [name]="name + '-title'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'title'"
+      ></samText>
+
+      <samText [label]="'Chapter'"
+               [name]="name + '-chapter'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'chapter'"
+      ></samText>
+
+      <samText [label]="'Part'"
+               [name]="name + '-part'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'part'"
+      ></samText>
+
+      <samText [label]="'Subpart'"
+               [name]="name + '-subpart'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'subpart'"
+      ></samText>
+
+      <samText [label]="'Public Law'"
+               [name]="name + '-public-law'"
+               [required]="false"
+               [hidden]="model.checkbox.indexOf('cfr') === -1"
+               [formControlName]="'publicLaw'"
+      ></samText>
+
+      <samTextArea [label]="'Additional Info'"
+                   [name]="name + '-additional-info'"
+                   [required]="false"
+                   [hidden]="model.checkbox.indexOf('cfr') === -1"
+                   [formControlName]="'additionalInfo'"
+      ></samTextArea>
+
+      <samRadioButton [label]="'Matching Requirements'"
+                      [name]="name + '-matching-radio-buttons'"
+                      [options]="matchingRequirementsOptions"
+                      [hidden]="model.checkbox.indexOf('matching') === -1"
+                      [formControlName]="'matchingRequirements'"
+      ></samRadioButton>
+
+      <samSelect [hint]="'Select the Percentage Below'"
+                 [name]="name + '-matching-requirements-percentage'"
+                 [options]="matchingPercentageOptions"
+                 [required]="false"
+                 [hidden]="model.checkbox.indexOf('matching') === -1"
+                 [formControlName]="'matchingPercentage'"
+      ></samSelect>
+
+      <samTextArea [hint]="'Describe'"
+                   [name]="name + '-matching-requirements-description'"
+                   [required]="false"
+                   [hidden]="model.checkbox.indexOf('matching') === -1"
+                   [formControlName]="'matchingDescription'"
+      ></samTextArea>
+
+      <samTextArea [label]="'Maintenance of Effort Requirements and Total Allocations'"
+                   [hint]="'Please enter description below:'"
+                   [name]="name + '-moe'"
+                   [required]="false"
+                   [hidden]="model.checkbox.indexOf('moe') === -1"
+                   [formControlName]="'moeRequirements'"
+      ></samTextArea>
+    </ng-container>
+  </div>
+
+</labelWrapper>

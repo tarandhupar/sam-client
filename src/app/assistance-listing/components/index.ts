@@ -7,8 +7,8 @@ import { SamTextRadioButtonComponent } from './text-radio/text-radio-button.comp
 import { FALAuthSubFormComponent } from './authorization-subform/authorization-subform.component';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FALFormulaMatchingComponent } from "./formula-matching/formula-matching.component";
 import { FALAuthInfoTableComponent } from "./authorization-table/authorization-table.component";
-
 
 @NgModule({
   imports: [
@@ -21,6 +21,7 @@ import { FALAuthInfoTableComponent } from "./authorization-table/authorization-t
     SamCheckboxToggledTextareaComponent,
     FALTafsComponent,
     SamTextRadioButtonComponent,
+    FALFormulaMatchingComponent,
     FALAuthSubFormComponent,
     FALAuthInfoTableComponent
   ],
@@ -29,6 +30,7 @@ import { FALAuthInfoTableComponent } from "./authorization-table/authorization-t
     SamCheckboxToggledTextareaComponent,
     FALTafsComponent,
     SamTextRadioButtonComponent,
+    FALFormulaMatchingComponent,
     FALAuthSubFormComponent,
     FALAuthInfoTableComponent
   ]
