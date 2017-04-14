@@ -218,14 +218,13 @@ export class OrgCreatePage {
 
   onConfirmFormClick(){
     //submit the form and navigate to the new created organization detail page
-    console.log(this.orgObj);
-    // this.fhService.createOrganization(this.orgObj).subscribe(
-    //   val => {
-    //     this.flashMsgService.showFlashMsg();
-    //     this.flashMsgService.isCreateOrgSuccess = true;
-    //     this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
-    //   }
-    // );
+    this.fhService.createOrganization(this.orgObj).subscribe(
+      val => {
+        this.flashMsgService.showFlashMsg();
+        this.flashMsgService.isCreateOrgSuccess = true;
+        this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+      }
+    );
   }
 
   onCancelFormClick(){

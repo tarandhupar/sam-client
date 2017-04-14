@@ -62,19 +62,23 @@ export class OrgDetailProfilePage {
     this.isDataAvailable = false;
     this.fhService.getOrganizationById(orgId,false,true).subscribe(
       val => {
-        let orgDetail = val._embedded[0].org;
-        this.orgObj = orgDetail;
-        this.setCurrentHierarchyType(orgDetail.type);
-        this.setCUrrentHierarchyLevel(orgDetail.level);
-        this.setupHierarchyPathMap(orgDetail.fullParentPath, orgDetail.fullParentPathName);
-        this.setupOrganizationDetail(orgDetail);
-        this.setupOrganizationCodes(orgDetail);
-        this.setupOrganizationAddress(orgDetail);
+        this.orgObj = val._embedded[0].org;
+        this.setupOrgFields(this.orgObj);
         this.isDataAvailable = true;
-        this.isCFDASource = !!orgDetail.isSourceCfda?orgDetail.isSourceCfda:false;
         this.orgTypes = val._embedded[0].orgTypes;
         this.getSubLayerTypes();
       });
+  }
+
+  setupOrgFields(orgDetail){
+    this.setCurrentHierarchyType(orgDetail.type);
+    this.setCUrrentHierarchyLevel(orgDetail.level);
+    this.setupHierarchyPathMap(orgDetail.fullParentPath, orgDetail.fullParentPathName);
+    this.setupOrganizationDetail(orgDetail);
+    this.setupOrganizationCodes(orgDetail);
+    this.setupOrganizationAddress(orgDetail);
+    this.isCFDASource = !!orgDetail.isSourceCfda?orgDetail.isSourceCfda:false;
+
   }
 
   onChangeOrgDetail(hierarchyName){
@@ -91,16 +95,17 @@ export class OrgDetailProfilePage {
 
   onSaveEditPageClick(){
     this.isEdit = false;
-    this.orgDetails.forEach( e => {
-      if(e.description === "Description") e.value = this.editedDescription;
-      if(e.description === "Shortname") e.value = this.editedShortname;
-    });
-    this.orgObj['summary'] = this.editedDescription;
-    this.orgObj['shortName'] = this.editedShortname;
-    this.fhService.updateOrganization(this.orgObj).subscribe(
-      val => {
-        this.showEditOrgFlashAlert = true;
-      });
+    if(this.orgObj['summary'] !== this.editedDescription || this.orgObj['shortName'] !== this.editedShortname){
+      this.orgObj['summary'] = this.editedDescription;
+      this.orgObj['shortName'] = this.editedShortname;
+      this.fhService.updateOrganization(this.orgObj).subscribe(
+        val => {
+          this.orgObj = val._embedded[0].org;
+          this.setupOrgFields(this.orgObj);
+          this.showEditOrgFlashAlert = true;
+        });
+    }
+
 
   }
 

@@ -106,7 +106,7 @@ export class FHService {
   updateOrganization(org) {
     let apiOptions: any = {
       name: 'federalHierarchy',
-      suffix: '/cfda/' + org.id,
+      suffix: '/cfda/' + org.orgKey,
       method: 'PUT',
       body: org
     };
