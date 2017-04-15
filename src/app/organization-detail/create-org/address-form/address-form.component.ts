@@ -98,7 +98,7 @@ export class OrgAddrFormComponent {
 
       return false;
     }else{
-      this.orgAddrModel.country = this.stateLocationConfig.serviceOptions.value;
+      this.orgAddrModel.country = this.stateLocationConfig.serviceOptions.key;
       this.orgAddrModel.state = this.stateOutput.value;
       this.orgAddrModel.city = this.addressForm.get("city").value;
       this.orgAddrModel.postalCode = this.addressForm.get("postalCode").value;

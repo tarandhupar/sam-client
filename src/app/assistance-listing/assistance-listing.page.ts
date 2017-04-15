@@ -98,7 +98,9 @@ export class ProgramPage implements OnInit, OnDestroy {
       // run whenever api data is updated
       this.program = api;
       this.checkCurrentFY();
-      this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
+      if(this.program.data && this.program.data.authorizations) {
+        this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
+      }
     }, err => {
       console.log('Error loading program', err);
       if (err.status === 403) {
@@ -122,7 +124,8 @@ export class ProgramPage implements OnInit, OnDestroy {
       'applicant_types',
       'assistance_usage_types',
       'beneficiary_types',
-      'functional_codes'
+      'functional_codes',
+      'cfr200_requirements'
     ];
 
     let dictionaryServiceSubject = new ReplaySubject(1); // broadcasts the dictionary data to multiple subscribers

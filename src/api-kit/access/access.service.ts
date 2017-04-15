@@ -211,7 +211,7 @@ export class UserAccessService {
       if (res.status === 204) {
         return [];
       } else {
-        return res.json();
+        return res.json().userAccessRequestList;
       }
     });
   }
@@ -262,5 +262,39 @@ export class UserAccessService {
     };
 
     return this.apiService.call(apiOptions, false);
+  }
+
+  getRequestorIds(){
+    let apiOptions : any = {
+      name : 'rms',
+      suffix : '/autocomplete/requestorids/',
+      method : 'GET',
+      oParam : {},
+    }
+
+    return this.apiService.call(apiOptions);
+  }
+
+  getRequestAccess(username : string, statusKey : string, domainKey : string, order : string, page : number ){
+    let apiOptions : any = {
+      name : 'rms',
+      suffix : '/requestaccess/' + username + '/',
+      method : 'GET',
+      oParam: {},
+    };
+
+    if(statusKey.length > 0){
+      apiOptions.oParam.statusKey = statusKey;
+    }
+
+    if(domainKey.length > 0){
+      apiOptions.oParam.domainKey = domainKey;
+    }
+    
+    apiOptions.oParam.order = order;
+    apiOptions.oParam.page = page;
+
+    return this.apiService.call(apiOptions);
+
   }
 }

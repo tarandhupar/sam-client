@@ -65,26 +65,26 @@
       <div class="sam-ui horizontally padded grid">      
         <div class="row">
           <div class="column">
-            <button class="sam-ui big dark blue fluid button">
+            <a [routerLink]="['/help/new']" class="sam-ui big dark blue fluid button">
               <i class="icon fa fa-map-marker"></i>
               New to SAM.gov
-            </button>
+            </a>
           </div>
         </div>
         <div class="row">
           <div class="column">
-            <button class="sam-ui big dark blue fluid button">
+            <a [routerLink]="['/help/accounts']" class="sam-ui big dark blue fluid button">
               <i class="icon fa fa-user"></i>
               User Accounts
-            </button>
+            </a>
           </div>
         </div>
         <div class="row">
           <div class="column">
-            <button class="sam-ui big dark blue fluid button">
+            <a [routerLink]="['/help/transition']" class="sam-ui big dark blue fluid button">
               <i class="icon fa fa-map-signs"></i>
               Sam.gov Transition Roadmap
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -96,14 +96,14 @@
           <p>
             Gain access to data in a variety of formats. Perform searches, download extracts, and retrieve data through web services.
           </p>
-          <a href="">Learn more about SAM.gov data sets</a>
+          <a [routerLink]="['/help/award']">Learn more about SAM.gov data sets</a>
         </div>
         <div class="column">
           <h2><i class="fa fa-book" aria-hidden="true"></i> Quick Start Guides</h2>
           <p>
             If you've used one of the following systems, click below to learn how to do the same things in beta.sam.gov.
           </p>
-          <div class="sam-ui two column grid">
+          <div class="sam-ui two column grid" *ngIf="linkToggle()">
             <div class="column">
               <ul class="sam-ui bulleted list">
                 <li><a href="">WDOL</a></li>

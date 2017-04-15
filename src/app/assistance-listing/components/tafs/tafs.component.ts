@@ -63,7 +63,7 @@ export class FALTafsComponent implements ControlValueAccessor {
   }
 
   private validateInputs() {
-    let errorPrefix = "<samTAFSInput> requires ";
+    let errorPrefix = "<falTAFSInput> requires ";
 
     if(!this.name) {
       throw new Error(errorPrefix + "a [name] parameter for 508 compliance");

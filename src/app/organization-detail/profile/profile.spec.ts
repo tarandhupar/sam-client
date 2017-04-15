@@ -12,7 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { OrgDetailProfilePage } from "./profile.component";
 import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
-import {FHService} from "../../../api-kit/fh/fh.service";
+import { FHService } from "../../../api-kit/fh/fh.service";
+import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 
 class RouterStub {
   navigate(url: string) { return url; }
@@ -135,6 +136,7 @@ describe('Organization Detail Profile Page', () => {
       declarations: [ OrgDetailProfilePage ],
       imports:[ SamUIKitModule, SamAPIKitModule, RouterTestingModule, FormsModule],
       providers: [
+        FlashMsgService,
         { provide: Router, useClass: RouterStub },
         { provide: ActivatedRoute, useValue: activatedRouteStub},
         { provide: FHService ,useClass:FHServiceStub}

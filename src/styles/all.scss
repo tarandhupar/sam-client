@@ -116,6 +116,13 @@ home samsearchbar{
   @include unstyled-list;
 }
 
+.usa-font-lead {
+  font-family: $font-serif;
+  font-size: $lead-font-size;
+  line-height: $lead-line-height;
+  max-width: $lead-max-width;
+}
+
 /*******************************
         Legacy 
 *******************************/
@@ -142,6 +149,7 @@ home samsearchbar{
 @import 'components/header';
 @import 'components/header-links';
 @import 'components/header-menu';
+@import 'components/info-accordion';
 @import 'components/agency-picker';
 @import 'components/input';
 @import 'components/multiselect';
