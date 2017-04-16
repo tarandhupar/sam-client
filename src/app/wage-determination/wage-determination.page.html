@@ -17,7 +17,9 @@
   <div class="usa-width-three-fourths">
 
     <section id="wage-determination" *ngIf="wageDetermination">
-
+        
+      <div class="sam-ui hidden divider"></div>  
+      
       <ng-container *ngIf = "isSCA">
         <h1 class="m_B-0" id="wd-reference-number">SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
         <p class="m_T-0 usa-font-lead" id="wd-type">Service Contract Act</p>
@@ -74,7 +76,10 @@
 
       <!-- Print Link -->
       <div id="wd-print-link" *ngIf="wageDetermination?.document" class="text-right m_B-5x m_T-5x">
-        <a target="blank" class="print-link" tabindex="0" [routerLink]="['/wage-determination', referenceNumber, revisionNumber, 'document']">Printer Friendly</a>
+        <a target="blank" class="sam-ui small basic primary button" tabindex="0" [routerLink]="['/wage-determination', referenceNumber, revisionNumber, 'document']">
+          <i class="icon fa fa-print" aria-hidden="true"></i> 
+          Printer Friendly
+        </a>
       </div>
 
       <!-- Document -->
