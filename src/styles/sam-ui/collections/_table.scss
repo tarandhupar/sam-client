@@ -323,7 +323,8 @@ $veryCompactHorizontalPadding: 0.6em;
 }
 
 /* Table Row */
-.#{$prefix}.table tr td {
+.#{$prefix}.table tr td,
+.#{$prefix}.table tbody th {
   border-top: $rowBorder;
 }
 .#{$prefix}.table tr:first-child td {
@@ -331,7 +332,8 @@ $veryCompactHorizontalPadding: 0.6em;
 }
 
 /* Table Cells */
-.#{$prefix}.table td {
+.#{$prefix}.table td,
+.#{$prefix}.table tbody th {
   padding: $cellVerticalPadding $cellHorizontalPadding;
   text-align: $cellTextAlign;
 }

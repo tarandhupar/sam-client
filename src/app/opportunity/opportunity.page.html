@@ -28,6 +28,8 @@
 
     <section [attr.id]="generateID(opportunityFields.Header)" *ngIf="shouldBeDisplayed(opportunityFields.Header)">
       
+      <div class="sam-ui hidden divider"></div>
+      
       <h1 [attr.id]="generateID(opportunityFields.Title, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Title)">
         {{ opportunity.data?.title }}
       </h1>

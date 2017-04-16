@@ -42,6 +42,7 @@ export class FinancialObligationChart {
 
     d3.select("#visualization")
       .insert("table")
+      .attr("class", "sam-ui lightest blue celled table")
       .attr("id", "chart-table");
 
     /**

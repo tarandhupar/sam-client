@@ -21,8 +21,9 @@
 	<div class="usa-width-three-fourths">
 		<div *ngIf="coreData">
 			
-			<h1>{{coreData.legalBusinessName}}</h1>
+			<div class="sam-ui hidden divider"></div>
 			
+			<h1>{{coreData.legalBusinessName}}</h1>
 			
 			<div class="sam-ui padded raised segment">
 				<div class="sam-ui top right attached mini label">
@@ -116,7 +117,7 @@
 				</div>
 			</div>
 			
-			<div class="sam-ui hidden divider"></div>
+			<div class="sam-ui hidden section divider"></div>
 			
 			<h2 id="core-data">Core Data</h2>
 			
@@ -173,7 +174,7 @@
 				</p>
 			</div>
 			
-			<div class="sam-ui hidden section divider"></div>
+			<div class="sam-ui hidden divider"></div>
 			
 			<h3 class="sam-ui dividing header">
 				Business Information
@@ -222,7 +223,7 @@
 				</div>
 			</div>
 			
-			<div class="sam-ui hidden section divider"></div>
+			<div class="sam-ui hidden divider"></div>
 			
 			<h3 class="sam-ui dividing header">
 				CAGE/NCAGE Code
@@ -276,7 +277,7 @@
 			<br />
 			<br />
 			
-			<div class="sam-ui hidden section divider"></div>
+			<div class="sam-ui hidden divider"></div>
 			
 			<h3 class="sam-ui dividing header">
 				Financial Information
@@ -284,7 +285,7 @@
 			
 			<strong>Do you accept credit cards as a method of payment? </strong>{{coreData.creditCardUsage}}
 			
-			<div class="sam-ui hidden section divider"></div>
+			<div class="sam-ui hidden divider"></div>
 			
 			<h3 class="sam-ui dividing header">
 				Executive Compensation Questions
@@ -298,7 +299,7 @@
 				</i>
 			</div>
 				
-			<div class="sam-ui hidden section divider"></div>
+			<div class="sam-ui hidden divider"></div>
 				
 			<h3 class="sam-ui dividing header">
 				Proceedings Questions
@@ -310,10 +311,10 @@
 				</div>
 			</div>
 			
+			<div class="sam-ui hidden section divider"></div>
 				
 				<div *ngIf="assertions">
 					<div class="usa-grid-full">
-						<br><br>
 						<h2 id="assertions">Assertions</h2>
 					</div>
 					
@@ -358,14 +359,14 @@
 						</table>
 					</div>
 					
-					<div class="sam-ui hidden section divider"></div>
+					<div class="sam-ui hidden divider"></div>
 					
 					<h3 class="sam-ui dividing header">
 						EDI Information
 					</h3>
 					{{assertions.ediInformationFlag}}
 					
-					<div class="sam-ui hidden section divider"></div>
+					<div class="sam-ui hidden divider"></div>
 				
 					<h3 class="sam-ui dividing header">
 						Disaster Response Information
@@ -393,9 +394,11 @@
 						</table>
 					</div>
 				</div>
+				
+				<div class="sam-ui hidden section divider"></div>
+				
 				<div *ngIf="repsAndCerts">
 					<div class="usa-grid-full">
-						<br><br>
 						<h2 id="reps-certs">Representations and Certifications</h2>
 					</div>
 					<h3 class="sam-ui dividing header">FAR Report</h3>
@@ -407,7 +410,7 @@
 						Download FAR Report
 					</a>
 					
-					<div class="sam-ui hidden section divider"></div>
+					<div class="sam-ui hidden divider"></div>
 					
 					<div *ngIf="repsAndCerts.linkForDFARSReport">
 						<h3 class="sam-ui dividing header">FAR &amp; DFARS Report</h3>
@@ -421,9 +424,11 @@
 					</div>
 					
 				</div>
+				
+				<div class="sam-ui hidden section divider"></div>
+				
 				<div class="usa-grid-full">
 					<div *ngIf="mandatoryPOCs || optionalPOCs">
-						<br><br>
 						<h2 id="pocs">Points of Contact</h2>
 						<div class="usa-width-one-half">
 							<div *ngIf="mandatoryPOCs.length" >
