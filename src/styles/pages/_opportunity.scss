@@ -1,60 +1,60 @@
 .opportunity-page, .featured-result {
-  h1{
-    margin-top: 50px !important;
-  }
-
-  .usa-text-center{
-    text-align: center;
-  }
-
-  /* Segment */
-  /*============================*/
-  .segment{
-    background-color: #f5f5f5;
-    padding:20px 0px;
-    border-radius: 4px;
-  }
-
-  .segment-with-select{
-    strong{
-      margin-top: 20px;
-      display: block;
-    }
-    label{
-      margin: 0;
-    }
-  }
-
-  /* Label List */
-  /*============================*/
-  .usa-label-list{
-    list-style-type: none;
-    padding-left: 0;
-    margin: 0;
-    overflow: hidden;
-  }
-
-  .usa-label-list > li:first-child{
-    border-top: none;
-  }
-
-  .usa-label-list > li{
-    margin-bottom: 5px;
-    margin-top: 5px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(204, 204, 204, 0.30);
-  }
-
-  .usa-label-list li > span:first-child{
-    // width: 80px;
-    font-weight: 700;
-    font-size: 15px;
-  }
-
-  .usa-label-list li > span:first-child,
-  .usa-label-list li > span:last-child{
-    display: inline-block;
-  }
+  // h1{
+  //   margin-top: 50px !important;
+  // }
+  // 
+  // .usa-text-center{
+  //   text-align: center;
+  // }
+  // 
+  // /* Segment */
+  // /*============================*/
+  // .segment{
+  //   //background-color: #f5f5f5;
+  //   padding:20px 0px;
+  //   border-radius: 4px;
+  // }
+  // 
+  // .segment-with-select{
+  //   strong{
+  //     margin-top: 20px;
+  //     display: block;
+  //   }
+  //   label{
+  //     margin: 0;
+  //   }
+  // }
+  // 
+  // /* Label List */
+  // /*============================*/
+  // .usa-label-list{
+  //   list-style-type: none;
+  //   padding-left: 0;
+  //   margin: 0;
+  //   overflow: hidden;
+  // }
+  // 
+  // .usa-label-list > li:first-child{
+  //   border-top: none;
+  // }
+  // 
+  // .usa-label-list > li{
+  //   margin-bottom: 5px;
+  //   margin-top: 5px;
+  //   padding-top: 8px;
+  //   border-top: 1px solid rgba(204, 204, 204, 0.30);
+  // }
+  // 
+  // .usa-label-list li > span:first-child{
+  //   // width: 80px;
+  //   font-weight: 700;
+  //   font-size: 15px;
+  // }
+  // 
+  // .usa-label-list li > span:first-child,
+  // .usa-label-list li > span:last-child{
+  //   display: inline-block;
+  // }
 
   /* View Changes */
   /*============================*/

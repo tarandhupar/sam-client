@@ -116,6 +116,10 @@ home samsearchbar{
   @include unstyled-list;
 }
 
+.usa-unstyled-list > li {
+    padding-bottom: 2px;
+}
+
 .usa-font-lead {
   font-family: $font-serif;
   font-size: $lead-font-size;
