@@ -32,8 +32,8 @@ $textAlign: left;
 $rowBorder: 1px solid $internalBorderColor;
 
 /* Table Cell */
-$cellVerticalPadding: 1em;
-$cellHorizontalPadding: $relativeMini;
+$cellVerticalPadding: .5em;
+$cellHorizontalPadding: $cellVerticalPadding;
 $cellVerticalAlign: inherit;
 $cellTextAlign: inherit;
 $cellBorder: 1px solid $internalBorderColor;
@@ -45,7 +45,7 @@ $headerBackground: $offWhite;
 $headerAlign: inherit;
 $headerVerticalAlign: inherit;
 $headerColor: $textColor;
-$headerVerticalPadding: 1em;
+$headerVerticalPadding: .5em;
 $headerHorizontalPadding: $cellHorizontalPadding;
 $headerFontStyle: none;
 $headerFontWeight: bold;

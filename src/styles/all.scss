@@ -56,7 +56,7 @@
 @import '~uswds/src/stylesheets/elements/inputs';
 @import '~uswds/src/stylesheets/elements/labels';
 //@import '~uswds/src/stylesheets/elements/list';
-@import '~uswds/src/stylesheets/elements/table';
+//@import '~uswds/src/stylesheets/elements/table';
 //@import '~uswds/src/stylesheets/elements/typography';
 
 
@@ -93,6 +93,7 @@
 @import 'sam-ui/elements/segment';
 @import 'sam-ui/elements/header';
 @import 'sam-ui/elements/image';
+@import 'sam-ui/elements/divider';
 
 /* Collections */
 @import 'sam-ui/collections/grid';
@@ -197,12 +198,12 @@ home samsearchbar{
 @import 'pages/organization-detail';
 @import 'pages/organization-create';
 
-h1,
-h2{
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-  color: black;
-}
+// h1,
+// h2{
+//   letter-spacing: -0.5px;
+//   line-height: 1.1;
+//   color: black;
+// }
 
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{

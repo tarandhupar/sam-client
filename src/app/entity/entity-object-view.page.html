@@ -1,6 +1,6 @@
 <div class="usa-grid-full entity-object-view">
 	<div class="usa-width-one-fourth">
-		<h1>Entity</h1>
+		<h1>&nbsp;</h1>
 		<!--Sidebar-->
 		<aside>
 			<!--Side Navigation-->
@@ -17,117 +17,171 @@
 			</div>
 		</aside>
 	</div>
-	<div class="usa-width-three-fourths" >
+	
+	<div class="usa-width-three-fourths">
 		<div *ngIf="coreData">
-			<div class="usa-grid-full">
-				<h1>{{coreData.legalBusinessName}}</h1>
-			</div>
-			<div class="usa-grid-full">
-				<div class="usa-width-one-half">
-					<strong>DUNS: </strong>{{coreData.generalInfo.duns}}
-					<br />
-					<strong>CAGE Code: </strong>{{coreData.cageCode}}
-					<br />
-					<br />
-					<entityObjectAddress [address]="coreData.mailAddress"></entityObjectAddress>
+			
+			<h1>{{coreData.legalBusinessName}}</h1>
+			
+			
+			<div class="sam-ui raised segment">
+				<div class="sam-ui top right attached mini label">
+					Entity
 				</div>
-				<div class="usa-width-one-half">
-					<p class="display-inline">
-						<strong>Activation Date: </strong>{{coreData.activeDate}}
-						<br />
-						<strong>Expiration Date: </strong>{{coreData.generalInfo.expirationDate}}
-						<br />
-						<strong>Purpose of Registration: </strong>{{coreData.purposeOfRegistration}}
-						<br />
-						<strong>Has Active Exclusion?: </strong>{{coreData.exclusionStatusFlag}}
-						<br />
-						<strong>Delinquent Federal Debt?: </strong>{{coreData.delinquentFedDebtFlag}}
-					</p>
-				</div>
-			</div>
-			<br />
-			<div class="usa-grid-full bottom-border">
-				<div class="usa-width-one-sixth padding-bottom-10px">
-					<a href="">Registration</a>
-				</div>
-				<div class="usa-width-one-sixth">
-					<a href="">Hierarchy</a>
-				</div>
-				<div class="usa-width-one-sixth">
-					<a href="">Opportunities</a>
-				</div>
-				<div class="usa-width-one-sixth">
-					<a href="">Awards</a>
-				</div>
-				<div class="usa-width-one-sixth">
-					<a href="">Exclusions</a>
-				</div>
-			</div>
-			<div class="usa-grid-full padding-top-10px">
-				Show
-				<select name="options" id="options" class="drop-down-size display-inline">
-					<option value="value1">Current Record</option>
-				</select>
-			</div>
-				<div class="usa-grid-full">
-					<h2 id="core-data">Core Data</h2>
-				</div>
-				<i class="fa fa-info-circle fa-1x" ></i><h3 class="padding-left-5px display-inline">General Information</h3>
-				<div class="usa-grid-full">
-					<div class="usa-width-one-half">
-						<strong>Country of Incorporation: </strong>{{coreData.countryOfIncorporation}}
+				
+				<div class="sam-ui two column attached grid">
+					<div class="column">		
+						<div class="sam-ui divided list">
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										DUNS
+									</div>
+									<div class="description">
+										{{coreData.generalInfo.duns}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										CAGE Code
+									</div>
+									<div class="description">
+										{{coreData.cageCode}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<br>
+								<entityObjectAddress [address]="coreData.mailAddress">
+								</entityObjectAddress>
+							</div>
+						</div>
 					</div>
-					<div class="usa-width-one-half">
-						<strong>State of Incorporation: </strong>{{coreData.stateOfIncorporation}}
+					<div class="column">
+						<div class="sam-ui divided list">
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Activation Date
+									</div>
+									<div class="description">
+										{{coreData.activeDate}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Expiration Date
+									</div>
+									<div class="description">
+										{{coreData.generalInfo.expirationDate}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Purpose of Registration
+									</div>
+									<div class="description">
+										{{coreData.purposeOfRegistration}}
+									</div>
+								</div>
+							</div>
+							<div class="item" *ngIf="coreData.exclusionStatusFlag">
+								<div class="content">
+									<div class="header">
+										Has Active Exclusion?
+									</div>
+									<div class="description">
+										{{coreData.exclusionStatusFlag}}
+									</div>
+								</div>
+							</div>
+							<div class="item">
+								<div class="content">
+									<div class="header">
+										Delinquent Federal Debt?
+									</div>
+									<div class="description">
+										{{coreData.delinquentFedDebtFlag}}
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
-				<br />
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<h2 id="core-data">Core Data</h2>
+			
+			<!-- General Information -->
+			
+			<h3 class="sam-ui dividing header">
+				General Information
+			</h3>
+			
+			<div class="sam-ui two column grid">
+				<p class="column">
+					<strong>Country of Incorporation: </strong>{{coreData.countryOfIncorporation}}
+				</p>
+				<p class="column">
+					<strong>State of Incorporation: </strong>{{coreData.stateOfIncorporation}}
+				</p>
+			</div>
+			
+			<p>
 				<strong>Business Types</strong>
 				<br />
-				<i>Check the registrant's Reps &amp; Certs, if present, under FAR 52.212-3 or FAR 52.219-1 to determine if the entity is on SAB-certified HUBZone small business concern
-				Additional small business information may be found in the  <a>SBA's Dynamic Small Business Search</a> if the entity completed the SBA supplemental pages during
-				registration.</i>
-				<br />
-				<br />
-				<div class="usa-grid-full">
-					<div class="usa-width-one-half">
-						<p>
-							<strong>Entity Structure</strong>
-							<br />
-							{{coreData.entityStructure}}
-						</p>
-					</div>
-					<div class="usa-width-one-half">
-						<p>
-							<strong>Purpose of Registration</strong>
-							<br />
-							{{coreData.purposeOfRegistration}}
-						</p>
-					</div>
-				</div>
-				<br />
-				<div class="usa-grid-full">
-					<div class="usa-width-one-half">
-						<strong>Profit Structure</strong>
-						<br />
-						{{coreData.profitStructure}}
-					</div>
-					<div class="usa-width-one-half">
-						<strong>Organization Factors</strong>
-						<br />
-						{{coreData.organizationStructure}}
-					</div>
-				</div>
-				<p>
+				<i>
+					Check the registrant's Reps &amp; Certs, if present, under FAR 52.212-3 or FAR 52.219-1 to determine if the entity is on SAB-certified HUBZone small business concern
+					Additional small business information may be found in the  <a>SBA's Dynamic Small Business Search</a> if the entity completed the SBA supplemental pages during
+					registration.
+				</i>
+			</p>
+			
+			<div class="sam-ui two column grid">
+				<p class="column">
+					<strong>Entity Structure</strong>
+					<br />
+					{{coreData.entityStructure}}
+				</p>
+				<p class="column">
+					<strong>Purpose of Registration</strong>
+					<br />
+					{{coreData.purposeOfRegistration}}
+				</p>
+				<p class="column">
+					<strong>Profit Structure</strong>
+					<br />
+					{{coreData.profitStructure}}
+				</p>
+				<p class="column">
+					<strong>Organization Factors</strong>
+					<br />
+					{{coreData.organizationStructure}}
+				</p>
+				<p class="column" *ngIf="coreData.entityType">
 					<strong>Entity Type</strong>
 					<br />
 					{{coreData.entityType}}
 				</p>
-				<i class="fa fa-briefcase fa-1x" ></i><h3 class="padding-left-5px display-inline">Business &amp; TIN Information</h3>
-				<br />
-				<strong>Business Information</strong>
-				<div class="usa-grid-full">
-					<div class="usa-width-one-half">
+			</div>
+			
+			<div class="sam-ui hidden section divider"></div>
+			
+			<h3 class="sam-ui dividing header">
+				Business Information
+			</h3>
+			
+			<div class="sam-ui two column grid">
+				<div class="column">
+					<p>
 						<strong>Business Start Date: </strong>{{coreData.businessStartDate}}
 						<br />
 						<strong>Fiscal Year End Close Date: </strong>{{coreData.fiscalYearEndCloseDate}}
@@ -139,8 +193,10 @@
 						<strong>Corporate URL: </strong><a href="{{coreData.corporateURL}}">{{coreData.corporateURL}}</a>
 						<br />
 						<strong>Congressional District: </strong>{{coreData.congressionalDistrict}}
-					</div>
-					<div class="usa-width-one-half">
+					</p>
+				</div>
+				<div class="column">
+					<p>
 						<strong>Initial Registration Date: </strong>{{coreData.registrationDate}}
 						<br />
 						<strong>Submission Date: </strong>{{coreData.submissionDate}}
@@ -148,194 +204,254 @@
 						<strong>Activation Date: </strong>{{coreData.activeDate}}
 						<br />
 						<strong>Expiration Date: </strong>{{coreData.generalInfo.expirationDate}}
-					</div>
+					</p>
 				</div>
-				<br />
-				<div class="usa-grid-full">
-					<div class="usa-width-one-half">
+				<div class="column">
+					<p>
 						<strong>Physical Address</strong>
 						<br />
 						<entityObjectAddress [address]="coreData.generalInfo.samAddress"></entityObjectAddress>
-					</div>
-					<div class="usa-width-one-half">
+					</p>
+				</div>
+				<div class="column">
+					<p>
 						<strong>Mailing Address</strong>
 						<br />
 						<entityObjectAddress [address]="coreData.mailAddress"></entityObjectAddress>
-					</div>
+					</p>
 				</div>
-				<br />
-				<i class="fa fa-users fa-1x" ></i><h3 class="padding-left-5px display-inline">CAGE/NCAGE Code</h3>
-				<br />
-				<strong>CAGE: </strong>{{coreData.cageCode}}
-				<br />
-				<br />
-				<div class="usa-grid-full">
-					<div class="usa-width-one-half">
-						<strong>Most Recent Predecessor</strong>
-						<br />
-						<strong>CAGE/NCAGE Code: </strong>{{coreData.recentPredecessorCageCode}}
-						<br />
-						<strong>Legal Business Name: </strong>{{coreData.recentPredecessorBusName}}
-						<br />
-					</div>
-					<div class="usa-width-one-half">
-						<strong>Immediate Owner</strong>
-						<br />
-						<strong>CAGE/NCAGE Code: </strong>{{coreData.immedOwnerPredecessorCageCode}}
-						<br />
-						<strong>Legal Business Name: </strong>{{coreData.immedOwnerRecentPredecessorBusName}}
-					</div>
+			</div>
+			
+			<div class="sam-ui hidden section divider"></div>
+			
+			<h3 class="sam-ui dividing header">
+				CAGE/NCAGE Code
+			</h3>
+			
+			<strong>CAGE: </strong>{{coreData.cageCode}}
+			<br />
+			<br />
+			<div class="usa-grid-full">
+				<div class="usa-width-one-half">
+					<strong>Most Recent Predecessor</strong>
+					<br />
+					<strong>CAGE/NCAGE Code: </strong>{{coreData.recentPredecessorCageCode}}
+					<br />
+					<strong>Legal Business Name: </strong>{{coreData.recentPredecessorBusName}}
+					<br />
 				</div>
-				<br />
-				<div class="usa-grid-full">
-					<div class="usa-width-one-half">
-						<strong>Second Most Recent Predecessor</strong>
-						<br />
-						<strong>CAGE/NCAGE Code: </strong>{{coreData.secondRecentPredecessorCageCode}}
-						<br />
-						<strong>Legal Business Name: </strong>{{coreData.secondRecentPredecessorBusName}}
-						<br />
-					</div>
-					<div class="usa-width-one-half">
-						<strong>Highest Level Owner</strong>
-						<br />
-						<strong>CAGE/NCAGE Code: </strong>{{coreData.highestOwnerPredecessorCageCode}}
-						<br />
-						<strong>Legal Business Name: </strong>{{coreData.highestOwnerRecentPredecessorBusName}}
-						<br />
-					</div>
+				<div class="usa-width-one-half">
+					<strong>Immediate Owner</strong>
+					<br />
+					<strong>CAGE/NCAGE Code: </strong>{{coreData.immedOwnerPredecessorCageCode}}
+					<br />
+					<strong>Legal Business Name: </strong>{{coreData.immedOwnerRecentPredecessorBusName}}
 				</div>
-				<br />
-				<strong>Third Most Recent Predecessor</strong>
-				<br />
-				<strong>CAGE/NCAGE Code: </strong>{{coreData.thirdRecentPredecessorCageCode}}
-				<br />
-				<strong>Legal Business Name: </strong>{{coreData.thirdRecentPredecessorBusName}}
-				<br />
-				<br />
-				<i class="fa fa-bank fa-1x" ></i><h3 class="padding-left-5px display-inline">Financial Information</h3>
-				<br />					
-				<strong>Do you accept credit cards as a method of payment? </strong>{{coreData.creditCardUsage}}
-				<br />
-				<h3>Executive Compensation Questions</h3>
-				<i><strong>This information is not displayed in SAM.</strong> Registrants in the System for Award Management (SAM) respond to the Executive Compensation
-				questions in accordance with Section 6202 of P.L. 110&#45;252, amending the Federal Funding Accountability and Transparency Act (P.L. 109&#45;282).
-				This information is sent to USASpending.gov for display in association with an eligible award. Maintaining an active registration in SAM demonstrates the
-				registrant responded to the questions.</i>
-				<h3>Proceedings Questions</h3>
+			</div>
+			<br />
+			<div class="usa-grid-full">
+				<div class="usa-width-one-half">
+					<strong>Second Most Recent Predecessor</strong>
+					<br />
+					<strong>CAGE/NCAGE Code: </strong>{{coreData.secondRecentPredecessorCageCode}}
+					<br />
+					<strong>Legal Business Name: </strong>{{coreData.secondRecentPredecessorBusName}}
+					<br />
+				</div>
+				<div class="usa-width-one-half">
+					<strong>Highest Level Owner</strong>
+					<br />
+					<strong>CAGE/NCAGE Code: </strong>{{coreData.highestOwnerPredecessorCageCode}}
+					<br />
+					<strong>Legal Business Name: </strong>{{coreData.highestOwnerRecentPredecessorBusName}}
+					<br />
+				</div>
+			</div>
+			<br />
+			<strong>Third Most Recent Predecessor</strong>
+			<br />
+			<strong>CAGE/NCAGE Code: </strong>{{coreData.thirdRecentPredecessorCageCode}}
+			<br />
+			<strong>Legal Business Name: </strong>{{coreData.thirdRecentPredecessorBusName}}
+			<br />
+			<br />
+			
+			<div class="sam-ui hidden section divider"></div>
+			
+			<h3 class="sam-ui dividing header">
+				Financial Information
+			</h3>
+			
+			<strong>Do you accept credit cards as a method of payment? </strong>{{coreData.creditCardUsage}}
+			
+			<div class="sam-ui hidden section divider"></div>
+			
+			<h3 class="sam-ui dividing header">
+				Executive Compensation Questions
+			</h3>
+			<div class="sam-ui lightest blue segment">
+				<i>
+					<strong>This information is not displayed in SAM.</strong> Registrants in the System for Award Management (SAM) respond to the Executive Compensation
+					questions in accordance with Section 6202 of P.L. 110&#45;252, amending the Federal Funding Accountability and Transparency Act (P.L. 109&#45;282).
+					This information is sent to USASpending.gov for display in association with an eligible award. Maintaining an active registration in SAM demonstrates the
+					registrant responded to the questions.
+				</i>
+			</div>
+				
+			<div class="sam-ui hidden section divider"></div>
+				
+			<h3 class="sam-ui dividing header">
+				Proceedings Questions
+			</h3>
+			<div class="sam-ui lightest blue segment">
 				<i><strong>Entity responses are not displayed in SAM.</strong> Registrants in the System for Award Management (SAM) respond to Proceedings
-				questions in accordance with FAR 52.209&#45;7&#44; FAR 52.209&#45;8&#44; or 2.C.R.F 200 Appendix XII. Responses are sent to FAPIIS.gov for display as
-				applicable. Maintaining an active registration in SAM demonstrates the registrant responded to the proceedings questions.</i>
-		</div>
-		<div *ngIf="assertions">
-				<div class="usa-grid-full">
-					<h2 id="assertions">Assertions</h2>
-				</div>
-				<i class="fa fa-pie-chart fa-1x" ></i><h3 class="padding-left-5px display-inline">Goods &amp; Services</h3>
-				<br />
-				<div *ngIf="assertions.naicsList">
-				<strong>NAICS Codes Selected: </strong>
-				<table>
-					<tr>
-						<th scope="col"><b>Primary</b></th>
-						<th scope="col"><b>NAICS Code</b></th>
-						<th scope="col"><b>Description</b></th>
-					</tr>
-					<tr *ngFor="let naics of assertions.naicsList">
-						<td>
-							<span *ngIf="naics==assertions.primaryNaics">
-								<i class="fa fa-check fa-1x" ></i>
-							</span>
-						</td>
-						<td>{{naics}}</td>
-						<td>Currently not available</td>
-					</tr>
-				</table>
-				</div>
-				<div *ngIf="assertions.pscList">
-				<strong>PSC Codes Selected: </strong>
-				<table>
-					<tr class="table-header">
-						<th scope="col"><b>PSC Code</b></th>
-						<th scope="col"><b>Description</b></th>
-					</tr>
-					<tr *ngFor="let pscCode of assertions.pscList">
-						<td>{{pscCode}}</td>
-						<td>Currently not available</td>
-					</tr>
-				</table>
-				</div>
-				<i class="fa fa-database fa-1x" ></i><h3 class="padding-left-5px display-inline">EDI Information</h3>
-				<br />
-				{{assertions.ediInformationFlag}}
-				<br />
-				<br />
-				<i class="fa fa-ambulance fa-1x" ></i><h3 class="padding-left-5px display-inline">Disaster Response Information</h3>
-				<br />
-				<strong>Included in Registry?</strong> {{assertions.registryFlag}}
-				<br />
-				<strong>Require bonding to bid on Contracts?</strong> {{assertions.bondingFlag}}
-				<br />
-				<div *ngIf="assertions.geographicalAreaServed">
-				<strong>Geographic Area Served:</strong>
-				<br />
-				<table>
-				<tr>
-					<th scope="col"><b>State</b></th>
-					<th scope="col"><b>County</b></th>
-					<th scope="col"><b>MSA</b></th>
-				</tr>
-				<tr *ngFor="let area of assertions.geographicalAreaServed">
-					<td>{{area.state || 'No provided data'}}</td>
-					<td>{{area.county || 'No provided data'}}</td>
-					<td>{{area.msa || 'No provided data'}}</td>
-				</tr>
-				</table>
-				</div>
-		</div>
-		<div *ngIf="repsAndCerts">
-				<div class="usa-grid-full">
-					<h2 id="reps-certs">Representations and Certifications</h2>
-				</div>
-				<p>Select Download FAR Report to review the Representations and Certifications for <b>{{coreData.legalBusinessName}}</b></p>
-				<p><a target="_blank" href="{{repsAndCerts.linkForFARReport}}">Download FAR Report</a></p>
-				<div *ngIf="repsAndCerts.linkForDFARSReport">
-					<p>Select Download FAR &amp; DFARS Report to review the Representations and Certifications for <b>{{coreData.legalBusinessName}}</b></p>
-					<p><a target="_blank" href="{{repsAndCerts.linkForDFARSReport}}">Download FAR &amp; DFARS Report</a></p>
-				</div>
-		</div>
-		<div class="usa-grid-full">
-		<div *ngIf="mandatoryPOCs || optionalPOCs">
-			<h2 id="pocs">Points of Contact</h2>
-			<div class="usa-width-one-half">
-				<div *ngIf="mandatoryPOCs.length" >
-					<i class="fa fa-envelope fa-1x" ></i><h3 class="padding-left-5px display-inline">Mandatory Points of Contacts</h3>
-				<br />
-				<br />
-				<div *ngFor="let poc of mandatoryPOCs">
-					<entityObjectPOC [poc]="poc"></entityObjectPOC>
-					<div *ngIf="poc.pocAddress">
-						<entityObjectAddress [address]="poc.pocAddress"></entityObjectAddress>
-					</div>
-					<br />
-				</div>
+					questions in accordance with FAR 52.209&#45;7&#44; FAR 52.209&#45;8&#44; or 2.C.R.F 200 Appendix XII. Responses are sent to FAPIIS.gov for display as
+					applicable. Maintaining an active registration in SAM demonstrates the registrant responded to the proceedings questions.</i>
 				</div>
 			</div>
-			<div class="usa-width-one-half">
-				<div *ngIf="optionalPOCs.length" >
-					<i class="fa fa-envelope fa-1x" ></i><h3 class="padding-left-5px display-inline">Optional Points of Contacts</h3>
-				<br />
-				<br />
-				<div *ngFor="let poc of optionalPOCs">
-					<entityObjectPOC [poc]="poc"></entityObjectPOC>
-					<div *ngIf="poc.pocAddress">
-						<entityObjectAddress [address]="poc.pocAddress"></entityObjectAddress>
+			
+				
+				<div *ngIf="assertions">
+					<div class="usa-grid-full">
+						<br><br>
+						<h2 id="assertions">Assertions</h2>
 					</div>
+					
+					<h3 class="sam-ui dividing header">
+						Goods &amp; Services
+					</h3>
+					<div *ngIf="assertions.naicsList">
+						<strong>NAICS Codes Selected: </strong>
+						<table class="sam-ui lightest blue celled table">
+							<thead>
+								<tr>
+									<th scope="col"><b>Primary</b></th>
+									<th scope="col"><b>NAICS Code</b></th>
+									<th scope="col"><b>Description</b></th>
+								</tr>
+							</thead>
+							<tr *ngFor="let naics of assertions.naicsList">
+								<td class="center aligned">
+									<span *ngIf="naics==assertions.primaryNaics">
+										<i class="fa fa-check fa-lg" ></i>
+									</span>
+								</td>
+								<td>{{naics}}</td>
+								<td>Currently not available</td>
+							</tr>
+						</table>
+					</div>
+					
+					<div *ngIf="assertions.pscList">
+						<strong>PSC Codes Selected: </strong>
+						<table class="sam-ui lightest blue celled table">
+							<thead>
+								<tr>
+									<th scope="col"><b>PSC Code</b></th>
+									<th scope="col"><b>Description</b></th>
+								</tr>
+							</thead>
+							<tr *ngFor="let pscCode of assertions.pscList">
+								<td>{{pscCode}}</td>
+								<td>Currently not available</td>
+							</tr>
+						</table>
+					</div>
+					
+					<div class="sam-ui hidden section divider"></div>
+					
+					<h3 class="sam-ui dividing header">
+						EDI Information
+					</h3>
+					{{assertions.ediInformationFlag}}
+					
+					<div class="sam-ui hidden section divider"></div>
+				
+					<h3 class="sam-ui dividing header">
+						Disaster Response Information
+					</h3>
+					<strong>Included in Registry?</strong> {{assertions.registryFlag}}
 					<br />
+					<strong>Require bonding to bid on Contracts?</strong> {{assertions.bondingFlag}}
+					<br />
+					<div *ngIf="assertions.geographicalAreaServed">
+						<strong>Geographic Area Served:</strong>
+						<br />
+						<table class="sam-ui lightest blue celled table">
+							<thead>
+								<tr>
+									<th scope="col"><b>State</b></th>
+									<th scope="col"><b>County</b></th>
+									<th scope="col"><b>MSA</b></th>
+								</tr>
+							</thead>
+							<tr *ngFor="let area of assertions.geographicalAreaServed">
+								<td>{{area.state || 'No provided data'}}</td>
+								<td>{{area.county || 'No provided data'}}</td>
+								<td>{{area.msa || 'No provided data'}}</td>
+							</tr>
+						</table>
+					</div>
 				</div>
+				<div *ngIf="repsAndCerts">
+					<div class="usa-grid-full">
+						<br><br>
+						<h2 id="reps-certs">Representations and Certifications</h2>
+					</div>
+					<h3 class="sam-ui dividing header">FAR Report</h3>
+					<p>
+						Select Download FAR Report to review the Representations and Certifications for <b>{{coreData.legalBusinessName}}</b> 
+					</p>
+					<a class="sam-ui dark blue button" target="_blank" href="{{repsAndCerts.linkForFARReport}}">
+						<i class="fa fa-download" aria-hidden="true"></i> 
+						Download FAR Report
+					</a>
+					
+					<div class="sam-ui hidden section divider"></div>
+					
+					<div *ngIf="repsAndCerts.linkForDFARSReport">
+						<h3 class="sam-ui dividing header">FAR &amp; DFARS Report</h3>
+						<p>
+							Select Download FAR &amp; DFARS Report to review the Representations and Certifications for <b>{{coreData.legalBusinessName}}</b>
+						</p>
+						<a class="sam-ui dark blue button" target="_blank" href="{{repsAndCerts.linkForDFARSReport}}">
+							<i class="fa fa-download" aria-hidden="true"></i> 
+							Download FAR &amp; DFARS Report
+						</a>
+					</div>
+					
+				</div>
+				<div class="usa-grid-full">
+					<div *ngIf="mandatoryPOCs || optionalPOCs">
+						<br><br>
+						<h2 id="pocs">Points of Contact</h2>
+						<div class="usa-width-one-half">
+							<div *ngIf="mandatoryPOCs.length" >
+								<h3 class="sam-ui dividing header">Mandatory Points of Contacts</h3>
+								<div *ngFor="let poc of mandatoryPOCs">
+									<entityObjectPOC [poc]="poc"></entityObjectPOC>
+									<div *ngIf="poc.pocAddress">
+										<entityObjectAddress [address]="poc.pocAddress"></entityObjectAddress>
+									</div>
+									<br />
+								</div>
+							</div>
+						</div>
+						<div class="usa-width-one-half">
+							<div *ngIf="optionalPOCs.length" >
+								<h3 class="sam-ui dividing header">Optional Points of Contacts</h3>
+								<div *ngFor="let poc of optionalPOCs">
+									<entityObjectPOC [poc]="poc"></entityObjectPOC>
+									<div *ngIf="poc.pocAddress">
+										<entityObjectAddress [address]="poc.pocAddress"></entityObjectAddress>
+									</div>
+									<br />
+								</div>
+							</div>
+						</div>
+					</div>	
 				</div>
 			</div>
-		</div>	
 		</div>
-</div>
-</div>
+		
+		<br><br>

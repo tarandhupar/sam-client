@@ -47,7 +47,7 @@ h5 {
 h1 {
   min-height: 1rem;
   font-size: $h1;
-  letter-spacing: -.5px;
+  letter-spacing: -1px;
   font-weight: 700;
   line-height: 1em;
   margin-bottom: 3rem;
@@ -58,6 +58,7 @@ h2 {
 }
 h3 {
   font-size: $h3;
+  letter-spacing: -.5px;
 }
 h4 {
   font-size: $h4;
@@ -96,6 +97,13 @@ p:first-child {
 }
 p:last-child {
   margin-bottom: 0em;
+}
+
+/*-------------------
+      Bold
+--------------------*/
+b, bold, strong{
+  font-weight: 600;
 }
 
 /*-------------------
