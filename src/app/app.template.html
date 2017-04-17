@@ -2,6 +2,7 @@
 <samBanner #banner *ngIf="!isHeaderWithSearch"></samBanner>
 <div [style.height]="!isHeaderWithSearch ? '22px' : '0'">&nbsp;</div>
 <alertHeader></alertHeader>
+
 <samSearchHeader #searchheader *ngIf="isHeaderWithSearch" [filterValue]="index" (searchEvent)="onHeaderSearchEvent($event)">
   <div header-links>
     <SamHeaderLinks (onDropdownToggle)="toggleOverlay($event)"></SamHeaderLinks>
@@ -32,9 +33,28 @@
     </samSearchbar>
   </div>
 </samSearchHeader>
+
 <samHeader *ngIf="!isHeaderWithSearch" (headerDropdownControl)="toggleOverlay($event)">
   <div header-links>
-    <SamHeaderLinks (onDropdownToggle)="toggleOverlay($event)"></SamHeaderLinks>
+    <SamHeaderLinks>
+      <div class="search-bar" search-bar>
+        <samSearchbar #searchbar
+          [size]="'large'" 
+          [keyword]="keyword"
+          (onSearch)="onHeaderSearchEvent($event)"
+          [(filterValue)]="index"
+          [selectConfig]="searchSelectConfig">
+          <div custom-input>
+            <samInputAutocomplete
+              [serviceName]="'suggestions'"
+              [index]="index"
+              (searchTermEmit)="searchbar.callSearch($event)"
+              (keyEnterEmit)="searchbar.onSearchClick()">
+            </samInputAutocomplete>
+          </div>
+        </samSearchbar>
+      </div>
+    </SamHeaderLinks>
   </div>
 </samHeader>
 

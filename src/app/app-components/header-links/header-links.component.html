@@ -1,35 +1,62 @@
-<div class="pull-right align-top relative header-links">
-  <div class="align-top m_B-0x p_R-3x " >
-    <button class="menu-link header-link" title="menu" [ngClass]="{'link-disabled':showDropdown}" (click)="onMenuClick()">
-      <i class="fa fa-bars white-text"></i>
-      <span class="usa-sr-only">menu option</span>
-    </button>
+<nav class="sam-ui attached lighter grey borderless menu" aria-label="Main navigation">
+  
+  <div class="sam-ui container">
+    <a class="item" tabindex="0" (click)="refreshPage()" (keyup.enter)="refreshPage()">
+      <img style="width:150px;" src="src/assets/img/transition-sam-logo.png"  alt="Transition.sam.gov Logo">
+    </a>
+    
+    <div class="right menu">
+      <!-- Menu -->
+      <a class="item" title="menu" [ngClass]="{'active':menuLink}" (click)="onMenuLinkClick()">
+        <i class="fa fa-bars" aria-hidden="true"></i>
+        <span class="usa-sr-only">menu option</span>
+      </a>
+      <!-- Search -->
+      <a class="item" [ngClass]="{'active':searchLink}" (click)="onSearchLinkClick()">
+        <i class="fa fa-search fa-lg" aria-hidden="true"></i>
+        <span class="usa-sr-only">Search</span>
+      </a>
+      <!-- Signed in -->
+      <a *ngIf="states.isSignedIn" class="item" (click)="states.menu = !states.menu">
+        {{ user.fullName }}
+      </a>
+      <!-- Signed out -->
+      <a class="item" [hidden]="states.isSignedIn" routerLink="/signin">
+        Sign in
+      </a>
+    </div>
   </div>
-  <div class="arrow-up"  *ngIf="showDropdown"></div>
-  <div class="dropdown usa-grid-full p_B-2x" *ngIf="showDropdown" samClickOutside (clickOutside)="onClickOutside()">
-    <div class="usa-width-one-half m_R-0" *ngFor="let item of dropdownData;let i=index" >
-      <div class="item-margin usa-width-one-half m_T-2x"  *ngIf="itemToggle(item)">
-        <button class="usa-width-one-whole dropdown-button" (click)="dropdownItemClick(item)">
-          <i class="fa big-icon" [ngClass]="item.linkClass"></i>
-          <span class="marginCenter dropdown-button-title">{{item.linkTitle}}</span>
-        </button>
+  
+</nav>
+
+<!-- Sign in menu -->
+<sam-header-menu *ngIf="states.isSignedIn" [items]="store.menu" [(open)]="states.menu"></sam-header-menu>
+
+<!-- Content -->
+<div [@flyInOut]="'in'" *ngIf="showDropdown" samClickOutside (clickOutside)="onClickOutside()">
+  
+  <div [@flyInOut]="'in'" *ngIf="menuLink" class="sam-ui inverted attached menu">
+    <div class="sam-ui labeled icon right inverted menu">
+      <ng-container *ngFor="let item of dropdownData;let i=index">
+        <a class="item" *ngIf="itemToggle(item)" (click)="dropdownItemClick(item)">
+          <i class="icon fa" [ngClass]="item.linkClass"></i>
+          {{item.linkTitle}}
+        </a>
+      </ng-container>
+    </div>
+  </div>
+  
+  <div [@flyInOut]="'in'" *ngIf="searchLink" class="sam-ui padded grid">
+    <div class="dark grey row">
+      <div class="sam-ui text container">
+        <div class="sam-ui very padded grid">
+          <div class="column">
+            <ng-content select="[search-bar]"></ng-content>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
-  <span [hidden]="states.isSignedIn">
-    <div class=" m_R-3x align-top m_B-0x">
-      <a class="white-text header-link signin-link" routerLink="/signin">Sign In</a>
-    </div>
-    <div class="white-text align-top m_B-0x"><span class="header-item">|</span></div>
-    <div class="m_L-3x m_R-3x align-top m_B-0x">
-      <a class=" white-text header-link signup-link" routerLink="/signup">Sign Up</a>
-    </div>
-  </span>
-  <span *ngIf="states.isSignedIn">
-    <div class=" m_R-3x align-top m_B-0x relative">
-      <div class="white-text header-link user-link" (click)="states.menu = !states.menu">{{ user.fullName }}</div>
-      <sam-header-menu *ngIf="states.isSignedIn" [items]="store.menu" [(open)]="states.menu"></sam-header-menu>
-    </div>
-  </span>
+  
 </div>
+
