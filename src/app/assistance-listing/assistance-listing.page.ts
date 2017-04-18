@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
+import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
 import * as Cookies from 'js-cookie';
 
 import * as _ from 'lodash';
@@ -38,6 +39,14 @@ export class ProgramPage implements OnInit, OnDestroy {
   cookieValue: string;
   isCookie: boolean = false;
   assistanceTypes: any[] = [];
+  //SideNav: On load select first item on sidenav component
+  selectedPage: number = 0;
+  pageRoute: string;
+  pageFragment: string;
+  sidenavModel = {
+    "label": "FAL",
+    "children": []
+  };
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -47,13 +56,27 @@ export class ProgramPage implements OnInit, OnDestroy {
   private relatedProgramsSub: Subscription;
 
   constructor(
+    private sidenavService: SidenavService,
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
     private historicalIndexService: HistoricalIndexService,
     private programService: ProgramService,
     private fhService: FHService,
-    private dictionaryService: DictionaryService) {}
+    private dictionaryService: DictionaryService) {
+      router.events.subscribe(s => {
+        if (s instanceof NavigationEnd) {
+          const tree = router.parseUrl(router.url);
+          this.pageFragment = tree.fragment;
+          if (this.pageFragment) {
+            const element = document.getElementById(tree.fragment);
+            if (element) {
+              element.scrollIntoView();
+            }
+          }
+        }
+      });
+    }
 
   ngOnInit() {
     // Using document.location.href instead of
@@ -69,9 +92,72 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     this.loadDictionaries();
     this.loadFederalHierarchy(programAPISource);
-    this.loadHistoricalIndex(programAPISource);
+    let historicalIndexAPISource = this.loadHistoricalIndex(programAPISource);
     this.loadRelatedPrograms(programAPISource);
     this.loadAssistanceTypes(programAPISource);
+    let DOMReady$ = Observable.zip(programAPISource, historicalIndexAPISource).delay(2000);
+    this.DOMComplete(DOMReady$);
+    this.sidenavService.updateData(this.selectedPage, 0);
+  }
+
+  private DOMComplete(observable){
+    observable.subscribe(
+      () => {
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
+        }
+      },
+      () => {
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
+        }
+      });
+  }
+
+  sidenavPathEvtHandler(data){
+    data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
+
+    if (this.pageFragment == data.substring(1)) {
+      document.getElementById(this.pageFragment).scrollIntoView();
+    }
+    else if(data.charAt(0)=="#"){
+            this.router.navigate([], { fragment: data.substring(1) });
+    } else {
+            this.router.navigate([data]);
+    }
+  }
+
+  private updateSideNav(content?){
+
+    let self = this;
+
+    if(content){
+      // Items in first level (pages) have to have a unique name
+      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
+      // If page has a unique name added to the sidenav
+      if(repeatedItem === -1){
+        this.sidenavModel.children.push(content);
+      }
+    }
+
+    updateContent();
+
+    function updateContent(){
+      let children = _.map(self.sidenavModel.children, function(possiblePage){
+        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
+          possibleSection.route = possibleSection.field;
+          return possibleSection;
+        });
+        _.remove(possiblePagechildren, _.isUndefined);
+        possiblePage.children = possiblePagechildren;
+        return possiblePage;
+      });
+      self.sidenavModel.children = children;
+    }
+  }
+
+  selectedItem(item){
+    this.selectedPage = this.sidenavService.getData()[0];
   }
 
   ngOnDestroy() {
@@ -101,6 +187,54 @@ export class ProgramPage implements OnInit, OnDestroy {
       if(this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
       }
+
+      this.pageRoute = "programs/" + this.program.id + "/view";
+      let falSideNavContent = {
+        "label": "Federal Assistance Listing",
+        "route": this.pageRoute,
+        "children": []
+      };
+      if(this.program.status.code != 'published') {
+        falSideNavContent.children.push({
+          "label": "Header Information",
+          "field": "#program-information",
+        });
+      }
+
+      falSideNavContent.children.push.apply(falSideNavContent.children, [{
+        "label": "Overview",
+        "field": "#overview",
+      },
+      {
+        "label": "Authorizations",
+        "field": "#authorizations",
+      },
+      {
+        "label": "Financial Information",
+        "field": "#financial-information",
+      },
+      {
+        "label": "Criteria for Applying",
+        "field": "#criteria-for-applying",
+      },
+      {
+        "label": "Applying for Assistance",
+        "field": "#applying-for-assistance",
+      },
+      {
+        "label": "Compliance Requirements",
+        "field": "#compliance-requirements",
+      },
+      {
+        "label": "Contact Information",
+        "field": "#contact-information",
+      },
+      {
+        "label": "History",
+        "field": "#history",
+      }]);
+
+      this.updateSideNav(falSideNavContent);
     }, err => {
       console.log('Error loading program', err);
       if (err.status === 403) {
