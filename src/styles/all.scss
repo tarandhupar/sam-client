@@ -11,7 +11,7 @@
 /*-------------------
      Variables
 --------------------*/
-// Internal variable should be declared before uswds 
+// Internal variable should be declared before uswds
 // variable to take higher precendence
 @import 'variables';
 
@@ -123,7 +123,7 @@ home samsearchbar{
 }
 
 /*******************************
-        Legacy 
+        Legacy
 *******************************/
 
 @import 'utilities';
@@ -196,6 +196,7 @@ home samsearchbar{
 @import 'pages/assistance-listing-operations';
 @import 'pages/organization-detail';
 @import 'pages/organization-create';
+@import 'pages/aac-request';
 
 h1,
 h2{

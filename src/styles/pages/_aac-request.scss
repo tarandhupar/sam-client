@@ -1,0 +1,20 @@
+.aac-request-page{
+  .aac-request-div-underline{
+    border-bottom: 1px solid black;
+  }
+
+  .aac-information-section label{
+    margin-top: 10px;
+    font-weight: bold;
+    max-width: none;
+  }
+
+  .aac-information-section .fieldset-wrapper fieldset ul li label{
+    font-weight: 400;
+  }
+
+  .aac-address-section label, .aac-contractor-section label, .aac-fpds-report-code-section label{
+    margin-top: 10px;
+    font-weight: 400;
+  }
+}
