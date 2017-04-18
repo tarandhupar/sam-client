@@ -131,7 +131,6 @@ export class UserAccessService {
   }
 
   createObject(domainId: number, objectName: number|string, permissions: {id?: any, val?: string}[], objectId: any) {
-    console.log(arguments);
     let apiOptions: any = {
       name: 'domainDefinition',
       suffix: '/',
@@ -139,7 +138,7 @@ export class UserAccessService {
       oParam: {}
     };
 
-    let fun = { }
+    let fun = { };
 
     if (objectId) {
       fun['id'] = objectId;
@@ -161,8 +160,6 @@ export class UserAccessService {
       ],
 
     };
-
-    console.log(apiOptions.body);
 
     return this.apiService.call(apiOptions, false);
   }
@@ -202,16 +199,102 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
+  getPendingRequests(userId: string, queryParams = {}) {
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/' + userId + '/',
+      method: 'GET',
+      oParam: queryParams
+    };
+
+    return this.apiService.call(apiOptions, false).map(res => {
+      if (res.status === 204) {
+        return [];
+      } else {
+        return res.json().userAccessRequestList;
+      }
+    });
+  }
+
+  getPendingRequestById(requestId: any) {
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/',
+      method: 'GET',
+      oParam: {
+        id: requestId
+      }
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
   getAccessStatus(view : string){
     let apiOptions : any = {
       name: 'rms',
       suffix: '/accessstatus/',
       method: 'GET',
       oParam: {}
-    }
+    };
     apiOptions.oParam.view = view;
 
     return this.apiService.call(apiOptions);
   }
 
+  getRequestStatuses() {
+    let apiOptions: any = {
+      name: 'accessstatus',
+      suffix: '/',
+      method: 'GET',
+      oParam: {},
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
+  updateRequest(requestId: string, updatedRequest: any) {
+    let apiOptions: any = {
+      name: 'requestaccess',
+      suffix: '/' + requestId + '/',
+      method: 'PUT',
+      oParam: {},
+      body: updatedRequest,
+    };
+
+    return this.apiService.call(apiOptions, false);
+  }
+
+  getRequestorIds(){
+    let apiOptions : any = {
+      name : 'rms',
+      suffix : '/autocomplete/requestorids/',
+      method : 'GET',
+      oParam : {},
+    }
+
+    return this.apiService.call(apiOptions);
+  }
+
+  getRequestAccess(username : string, statusKey : string, domainKey : string, order : string, page : number ){
+    let apiOptions : any = {
+      name : 'rms',
+      suffix : '/requestaccess/' + username + '/',
+      method : 'GET',
+      oParam: {},
+    };
+
+    if(statusKey.length > 0){
+      apiOptions.oParam.statusKey = statusKey;
+    }
+
+    if(domainKey.length > 0){
+      apiOptions.oParam.domainKey = domainKey;
+    }
+    
+    apiOptions.oParam.order = order;
+    apiOptions.oParam.page = page;
+
+    return this.apiService.call(apiOptions);
+
+  }
 }
