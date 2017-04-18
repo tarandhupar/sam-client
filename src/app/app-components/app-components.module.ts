@@ -29,6 +29,7 @@ import { SamCountryServiceAutoDirective } from "./location-autocomplete/country-
 import { SamStateServiceAutoDirective, StateServiceImpl } from "./location-autocomplete/state-autocomplete/state-autocomplete.component";
 import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./location-autocomplete/county-autocomplete/county-autocomplete.component";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
+import { OrgAddrFormComponent } from "./address-form/address-form.component";
 
 /**
  * A module for reusable SAM Web Design components
@@ -58,6 +59,7 @@ import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service"
     SamCountryServiceAutoDirective,
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,
+    OrgAddrFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -91,6 +93,7 @@ import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service"
     SamCountryServiceAutoDirective,
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,
+    OrgAddrFormComponent,
   ],
   providers: [
     SamFeedbackComponent,

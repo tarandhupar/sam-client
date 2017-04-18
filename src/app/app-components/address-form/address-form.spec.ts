@@ -9,10 +9,10 @@ import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 
 // Load the implementations that should be tested
-import { OrgAddrFormComponent } from "./address-form.component";
+import { OrgAddrFormComponent } from "./address-form.component.ts";
 import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
-import { FHService } from "../../../api-kit/fh/fh.service";
+import { FHService } from "../../../api-kit/fh/fh.service.ts";
 
 describe('Organization Address Form component', () => {
   // provide our implementations or mocks to the dependency injector
