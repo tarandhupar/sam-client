@@ -55,10 +55,6 @@ export class WageDeterminationPage implements OnInit {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
         this.pageFragment = tree.fragment;
-        if (this.pageFragment) {
-          const element = document.getElementById(tree.fragment);
-          if (element) { element.scrollIntoView(); }
-        }
       }
     });
   }
