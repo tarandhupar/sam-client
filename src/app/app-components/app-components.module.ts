@@ -25,6 +25,10 @@ import { ObjectFormModel } from "./object-form/object-form.component";
 import { ObjectSidebarComponent } from "./object-form/object-sidebar/object-sidebar.component";
 import { SamTypeAheadComponent } from "./type-ahead-multiselect/type-ahead.component";
 import { FalTableComponent } from "./fal-table/fal-table.component";
+import { SamCountryServiceAutoDirective } from "./location-autocomplete/country-autocomplete/country-autocomplete.component";
+import { SamStateServiceAutoDirective, StateServiceImpl } from "./location-autocomplete/state-autocomplete/state-autocomplete.component";
+import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./location-autocomplete/county-autocomplete/county-autocomplete.component";
+import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -50,7 +54,10 @@ import { FalTableComponent } from "./fal-table/fal-table.component";
     SamSearchbarComponent,
     SamFeedbackComponent,
     SamTypeAheadComponent,
-    FalTableComponent
+    FalTableComponent,
+    SamCountryServiceAutoDirective,
+    SamStateServiceAutoDirective,
+    SamCountyServiceAutoDirective,
   ],
   imports: [
     BrowserModule,
@@ -80,10 +87,16 @@ import { FalTableComponent } from "./fal-table/fal-table.component";
     ObjectFormModel,
     ObjectSidebarComponent,
     SamTypeAheadComponent,
-    FalTableComponent
+    FalTableComponent,
+    SamCountryServiceAutoDirective,
+    SamStateServiceAutoDirective,
+    SamCountyServiceAutoDirective,
   ],
   providers: [
-    SamFeedbackComponent
+    SamFeedbackComponent,
+    StateServiceImpl,
+    CountyServiceImpl,
+    AlertFooterService,
   ]
 })
 export class AppComponentsModule { }

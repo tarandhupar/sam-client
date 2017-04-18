@@ -16,11 +16,11 @@
     <div class = "pull-right filter-icon filter-color">
       <i class="fa fa-sliders fa-2x" aria-hidden="true"></i>
     </div>
-    <div class = "def-filter">
+    <div>
       <sam-autocomplete
         name="'users-search'"
-        [options]="permissionOptions"
-        [config]="{addOnIconClass:'fa fa-search',placeholder:'Search for a user'}"
+        [options]="requestorIds"
+        [config]="{addOnIconClass:'fa fa-search',placeholder:'Search for a user', keyValueConfig: {keyProperty: 'key', valueProperty: 'value'}}"
         [(ngModel)]="usersEntered"
         (ngModelChange)="onUserClick($event)"
       ></sam-autocomplete>

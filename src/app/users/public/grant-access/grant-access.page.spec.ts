@@ -20,6 +20,7 @@ import { UserViewComponent } from "../public.component";
 import { UserProfilePage } from "../profile/profile.page";
 import { UserMigrationsPage } from "../migrations/migrations.page";
 import { PageScrollService } from "ng2-page-scroll";
+import {ObjectsAndPermissionsComponent} from "../../objects-and-permissions/objects-and-permissions.component";
 
 
 let userAccessStub = {
@@ -63,6 +64,7 @@ describe('The GrantAccessPage component', () => {
         GroupByDomainPipe,
         UserViewComponent,
         UserProfilePage,
+        ObjectsAndPermissionsComponent,
         UserMigrationsPage
       ],
       imports: [SamUIKitModule,RouterTestingModule.withRoutes(routes),FormsModule,AppComponentsModule, PipesModule],

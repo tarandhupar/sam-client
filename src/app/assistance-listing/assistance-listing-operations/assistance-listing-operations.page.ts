@@ -1,6 +1,5 @@
 import {Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { globals } from '../../app/globals.ts';
 import { FALOpSharedService } from './assistance-listing-operations.service';
 import * as Cookies from 'js-cookie';
 
@@ -25,6 +24,7 @@ export class ProgramPageOperations implements OnInit {
   }
 
   ngOnInit(){
+    //this.sharedService.setSideNavFocus();
 
     if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
       if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {

@@ -5,6 +5,7 @@ import { IAMService } from "api-kit/iam/iam.service";
 import { Observable, Subscription } from 'rxjs/Rx';
 import { Validators as $Validators } from '../../authentication/shared/validators';
 import { FormControl, Validators } from '@angular/forms';
+import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
 
 
 export let navigateAwayObj = {
@@ -63,7 +64,8 @@ export class SamFeedbackComponent {
   constructor(private router: Router,
               private feedbackService: FeedbackService,
               private iamService: IAMService,
-              private zone: NgZone){
+              private zone: NgZone,
+              private alertFooterService: AlertFooterService){
     this.createBackdrop();
   }
 
@@ -93,6 +95,10 @@ export class SamFeedbackComponent {
   }
 
   toggleFeedback(){
+    if(this.questionData.length === 0){
+      return;
+    }
+
     this.showFeedback = !this.showFeedback;
     if(this.showFeedback){
       navigateAwayObj.formStarted = true;
@@ -214,10 +220,6 @@ export class SamFeedbackComponent {
     }
   }
 
-  onEmailEnter(val){
-    this.showEmailError = false;
-  }
-
   showProceedModal(){
     this.proceedModal.openModal();
   }
@@ -325,7 +327,6 @@ export class SamFeedbackComponent {
   }
 
   setRadioEmailResult(val) {
-    this.showEmailError = false;
     this.emailRadioBtnValue = val;
     if (this.emailRadioBtnValue === "Yes") {
       if(this.isSignedIn){
@@ -336,6 +337,7 @@ export class SamFeedbackComponent {
       if(!this.emailModelEdited && this.userEmailModel.length > 0) this.emailModelEdited = true;
     }
     if (this.emailRadioBtnValue === "No") {
+      this.showEmailError = false;
       this.emailModelEdited = false;
       this.setCurQAnswer({selectedValue:val,userEmail:""});
     }
@@ -377,8 +379,20 @@ export class SamFeedbackComponent {
           this.questionData.push(questionItem);
         });
         this.resetAll();
+      },
+      error => {
+        this.showFooter();
       }
     );
+  }
+
+  showFooter() {
+    this.alertFooterService.registerFooterAlert({
+      title:"The feedback service encountered an error.",
+      description:"",
+      type:'error',
+      timer:0
+    });
   }
 
   resetAll(){

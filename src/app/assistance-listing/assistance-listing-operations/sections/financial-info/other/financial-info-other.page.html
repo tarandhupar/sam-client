@@ -1,0 +1,31 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="program?.data?.title">Edit Financial Information - {{program.data.title}}</div>
+<div *ngIf="otherFinancialInfoGroup" [formGroup]="otherFinancialInfoGroup">
+  <samTextArea [label]="'Range and Average of Financial Assistance'"
+               [name]="'assitance-range-input'"
+               [hint]="'Provide a range that best represents the smallest and largest awards available. Provide an approximate average award size.'"
+               [required]="false"
+               [control]="otherFinancialInfoGroup.get('assistanceRange')"
+               [formControlName]="'assistanceRange'"
+  ></samTextArea>
+
+  <samCheckboxToggledTextarea [options]="accomplishmentsConfig"
+                              [formControlName]="'accomplishments'"
+  ></samCheckboxToggledTextarea>
+
+  <falAccountIdentificationInput [options]="accountIdentificationConfig"
+                                 [formControlName]="'accountIdentification'"
+  ></falAccountIdentificationInput>
+
+  <falTAFSInput [options]="tafsConfig"
+                [formControlName]="'tafs'"
+  ></falTAFSInput>
+
+  <div>
+    <div class="pull-left">
+      <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+      <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+      <samButton [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+      <samButton [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+    </div>
+  </div>
+</div>

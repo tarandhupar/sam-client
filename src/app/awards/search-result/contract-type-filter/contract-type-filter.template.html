@@ -1,0 +1,10 @@
+<labelWrapper class="sam-list-input">
+  <sam-type-ahead [placeholder]="options.placeholder"
+                  [name]="options.name"
+                  [options]="options.options"
+                  [config]="options.config"
+                  (modelChange)="emitSelected($event)"
+                  [selectedList]="listDisplay.selectedItems">
+  </sam-type-ahead>
+  <sam-list-display #listDisplay (modelChange)="emitSelectedList()" [config]="options.config"><div [innerHTML]="options.selectedLabel"></div></sam-list-display>
+</labelWrapper>

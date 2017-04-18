@@ -1,10 +1,16 @@
-import { Component, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { FHService } from 'api-kit';
+import { Component, forwardRef, Directive, Input, ElementRef, Renderer, Output, OnInit, EventEmitter, ViewChild, SimpleChanges } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { FHService } from "api-kit";
+import { ControlValueAccessor,NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'agencyPicker',
-  templateUrl:'agency-picker.template.html'
+  templateUrl:'agency-picker.template.html',
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => AgencyPickerComponent),
+    multi: true
+  }]
 })
 /**
  * AgencyPickerComponent - Connects to backend FH services to select a single/multiple organizations
@@ -20,7 +26,7 @@ import { FHService } from 'api-kit';
  * @Output() department - emits a single department object with value property (note: in case later we need organization label emitted)
  * @Output() organization - emits array/single (Depending on `multimode` setting) of selected organizations when user closes the selection area
  */
-export class AgencyPickerComponent implements OnInit {
+export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   @Input() label: string = "Multiple Organization(s):";
   @Input() multimode: boolean = true;
   @Input() advancedMode: boolean = false;
@@ -130,7 +136,9 @@ export class AgencyPickerComponent implements OnInit {
   resetIconClass:string = "usa-agency-picker-search-reset";
 
   constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService) {}
-
+  private onChange: (_: any) => void = (_: any) => {};
+  private onTouched: () => void = () => {};
+  
   /**
    * Autocomplete
    */
@@ -239,12 +247,16 @@ export class AgencyPickerComponent implements OnInit {
     }
   }
 
-  ngOnChanges(changes) {
-    if (changes.initial && this.initial.length > 0) {
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes && changes['orgId'] && changes['orgId'].previousValue != changes['orgId'].currentValue) {
+      this.organizationId = this.orgId;
+      this.initDropdowns();
+    }
+    if (changes && changes['initial'] && this.initial.length > 0) {
       this.processInitial();
     }
   }
-  
+
   processInitial(){
     let comp = this;
     this.initial.forEach(function(element) {
@@ -278,7 +290,7 @@ export class AgencyPickerComponent implements OnInit {
     this.orgLevels[4].label += " (L5)";
     this.orgLevels[5].label += " (L6)";
     this.orgLevels[6].label += " (L7)";
-    
+
     if(this.orgId) {
       this.organizationId = this.orgId;
       this.initDropdowns();
@@ -294,7 +306,7 @@ export class AgencyPickerComponent implements OnInit {
               return el.trim();
             });
             this.organizationId = orgArray[0];
-            
+
           } else {
             orgArray.push(qsOrgStr);
           }
@@ -302,11 +314,11 @@ export class AgencyPickerComponent implements OnInit {
           this.initial = this.initial.concat(orgArray);
           this.processInitial();
         }
-        
+
         //update the dropdowns
         this.initDropdowns();
       });
-      
+
     }
   }
 
@@ -783,15 +795,12 @@ export class AgencyPickerComponent implements OnInit {
    this.searchMessage = "";
    this.addToSelectedOrganizations(obj);
    this.autoComplete.length = 0;
-   this.organization.emit(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);
+   this.emitSelectedOrganizations();
   }
 
   removeOrg(value) {
     this.selectedOrganizations = this.selectedOrganizations.filter(obj => (obj.value != value));
-
-    if(this.multimode) {
-      this.organization.emit(this.selectedOrganizations);
-    }
+    this.emitSelectedOrganizations();
   }
 
   addToSelectedOrganizations(data) {
@@ -807,7 +816,9 @@ export class AgencyPickerComponent implements OnInit {
   }
 
   emitSelectedOrganizations() {
-    this.organization.emit(this.selectedOrganizations);
+    this.onTouched();
+    this.onChange(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);
+    this.organization.emit(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);
   }
 
   toggleSelectorArea() {
@@ -838,7 +849,7 @@ export class AgencyPickerComponent implements OnInit {
 
 		this.serviceCall(root, true).subscribe(res => {
       let orgPath = res._embedded[0]['org']['fullParentPath'].split(".");
-      
+
       //lock the hierachy to the defined orgroot
       if(this.orgRoot){
         if(this.levelLimit) {
@@ -872,7 +883,7 @@ export class AgencyPickerComponent implements OnInit {
           }
         }
       }
-      //populate deparment dropdowns otherwise 
+      //populate deparment dropdowns otherwise
       else {
         res._embedded = res._embedded.sort(this._nameOrgSort);
         formattedData = this.formatHierarchy("department", res._embedded);
@@ -895,11 +906,11 @@ export class AgencyPickerComponent implements OnInit {
         value: el['org']['orgKey'],
         label: el["org"]["name"] + this.levelFormatter(level),
         name: el["org"]["orgKey"],
-        
+
       };
       return obj;
     });
-    
+
     //add defaults
     switch(type) {
       case "department":
@@ -954,5 +965,23 @@ export class AgencyPickerComponent implements OnInit {
     this.autocompletePreselect = "";
     this.searchTerm = "";
     this.resetIconClass = "usa-agency-picker-search-reset";
+  }
+
+  setDisabledState(disabled) {
+    //this.disabled = disabled;
+  }
+
+  writeValue(value) {
+    if(value && Array.isArray(value)){
+      this.selectedOrganizations = value;
+    }
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {
+    this.onTouched = fn;
   }
 }

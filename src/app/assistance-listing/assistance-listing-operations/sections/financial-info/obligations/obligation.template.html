@@ -1,0 +1,153 @@
+<div id="stickyLabel" class="sticky-label focus" *ngIf="programId">Edit Financial Information - {{programTitle}}</div>
+<form [formGroup]="finObligationsForm" novalidate (ngSubmit)="save(finObligationsForm)">
+  <div class="usa-grid">
+    <div class="fal-label-margin"> Select if applicable</div>
+    <samCheckbox
+      [control]="finObligationsForm.controls['isFundedCurrentFY']"
+      [name]="currentFiscalYearCheckboxConfig.name"
+      [options]="currentFiscalYearCheckboxConfig.options"
+      class="form-control" formControlName="isFundedCurrentFY">
+    </samCheckbox>
+    <div class="fal-obligations-label">Obligations</div>
+    <div [class.hide]="obligationsInfo.length == 0">
+      <table>
+        <thead>
+        <tr>
+          <th scope="col">Obligations</th>
+          <th scope="col">FY {{pFYtableHeaderText}}</th>
+          <th scope="col">FY {{cFYtableHeaderText}} (est.)</th>
+          <th scope="col">FY {{bFYtableHeaderText}} (est.)</th>
+          <th>Actions</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
+          <tr>
+            <td>{{obligation.assistanceType.name}}</td>
+            <td *ngIf="obligation['pFY']['radioOptionId']==='pFYActual'">
+              {{obligation['pFY']['radioOptionId']==='pFYActual' && obligation['pFY']['textboxValue']!==''?'$' +
+              obligation['pFY']['textboxValue']:'$0'}}
+            </td>
+            <td *ngIf="obligation['pFY']['radioOptionId']==='pFYNsi'">Not Separately Identifiable</td>
+            <td *ngIf="obligation['pFY']['radioOptionId']==='pFYNa'">Not available</td>
+
+            <td *ngIf="obligation['cFY']['radioOptionId']==='cFYEstimate'">
+              {{obligation['cFY']['radioOptionId']==='cFYEstimate' && obligation['cFY']['textboxValue']!==''?'$' +
+              obligation['cFY']['textboxValue']:'$0'}}
+            </td>
+            <td *ngIf="obligation['cFY']['radioOptionId']==='cFYNsi'">Not Separately Identifiable</td>
+            <td *ngIf="obligation['cFY']['radioOptionId']==='cFYNa'">Not available</td>
+
+            <td *ngIf="obligation['bFY']['radioOptionId']==='bFYEstimate'">
+              {{obligation['bFY']['radioOptionId']==='bFYEstimate' && obligation['bFY']['textboxValue']!==''?'$' +
+              obligation['bFY']['textboxValue']:'$0'}}
+            </td>
+            <td *ngIf="obligation['bFY']['radioOptionId']==='bFYNsi'">Not Separately Identifiable</td>
+            <td *ngIf="obligation['bFY']['radioOptionId']==='bFYNa'">Not available</td>
+            <td>
+              <ng-container *ngIf="hideObligationsForm">
+                <a class="fal-table-edit" (click)="editObligation(i)">Edit</a>
+                <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editObligation(i)"></i>
+                <a class="fal-table-delete" (click)="removeObligation(i)">Remove</a>
+                <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeObligation(i)"></i>
+              </ng-container>
+
+              <ng-container *ngIf="!hideObligationsForm">
+                <span class="fal-table-edit disabled">Edit</span>
+                <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+                <span class="fal-table-delete disabled">Remove</span>
+                <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
+              </ng-container>
+            </td>
+          </tr>
+
+        </ng-container>
+        <tr>
+          <td>Total</td>
+          <td>${{totalvalue.totalpFY}}</td>
+          <td>${{totalvalue.totalcFY}}</td>
+          <td>${{totalvalue.totalbFY}}</td>
+          <td></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <samButton buttonText="Add New Obligation" (onClick)="onAddNewObliClick()"
+               [class.hide]="hideAddButton"></samButton>
+    <div #subForm formArrayName="obligations" *ngIf="!hideObligationsForm">
+      <h2>{{mode}} Obligation</h2>
+      <div *ngFor="let obligation of finObligationsForm.controls.obligations.controls; let i=index">
+        <div [formGroupName]="i" *ngIf="obligationIndex == i">
+          <div class="fal-label-margin">Select if applicable</div>
+          <samCheckbox
+            [control]="finObligationsForm.controls['isRecoveryAct']"
+            [name]="recReinveCheckboxConfig.name"
+            [options]="recReinveCheckboxConfig.options"
+            class="form-control" formControlName="isRecoveryAct">
+          </samCheckbox>
+          <labelWrapper #assistanceTypeWrapper [label]="assistanceTypeLabel" [required]="true"
+                        [hint]="'Search or browse to select an Assistance Type, or select Salaries and Expenses if applicable.'">
+            <sam-autocomplete [options]="options" [name]="autoAssistanceType" formControlName="assistanceType"
+                              (change)="assistanceTypeChange($event,i)"
+                              [config]="autocompleteConfig" [allowAny]="true" required></sam-autocomplete>
+          </labelWrapper>
+          <div class="fal-obligations-label">Past Fiscal Year - {{pastYear}}</div>
+          <div class="text-radio-padding">
+            <samTextRadioButton
+              [options]="pastFiscalYearConfig.options"
+              [label]="pastFiscalYearConfig.label"
+              [hint]="pastFiscalYearConfig.hint"
+              [name]="pastFiscalYearConfig.name"
+              [errorMessage]="pastFiscalYearConfig.errorMessage"
+              [formControlName]="'pFY'">
+            </samTextRadioButton>
+          </div>
+          <div class="fal-obligations-label">Current Fiscal Year - {{currentYear}}</div>
+          <div class="text-radio-padding">
+            <samTextRadioButton
+              [options]="currentFiscalYearConfig.options"
+              [label]="currentFiscalYearConfig.label"
+              [hint]="currentFiscalYearConfig.hint"
+              [name]="currentFiscalYearConfig.name"
+              [errorMessage]="currentFiscalYearConfig.errorMessage" formControlName="cFY">
+            </samTextRadioButton>
+          </div>
+          <div class="fal-obligations-label">Budget Fiscal Year - {{budgetYear}}</div>
+          <div class="text-radio-padding">
+            <samTextRadioButton
+              [options]="budgetFiscalYearConfig.options"
+              [label]="budgetFiscalYearConfig.label"
+              [hint]="budgetFiscalYearConfig.hint"
+              [name]="budgetFiscalYearConfig.name"
+              [errorMessage]="budgetFiscalYearConfig.errorMessage" formControlName="bFY">
+            </samTextRadioButton>
+          </div>
+          <samTextArea
+            [name]="textareaConfig.name"
+            [label]="textareaConfig.label"
+            formControlName="description">
+          </samTextArea>
+          <div class="pull-center">
+            <samButton buttonText="Cancel" (click)="onObligationCancelClick(i)"></samButton>
+            <samButton buttonText="Confirm Obligation"
+                       (onClick)="onObligationConfirmClick()"></samButton>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="pull-left">
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Cancel"
+               (onClick)="onCancelClick($event)"></samButton>
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Previous"
+               (onClick)="onPreviousClick($event)"></samButton>
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Exit"
+               (onClick)="onSaveExitClick($event)"></samButton>
+    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Continue"
+               (onClick)="onSaveContinueClick($event)"></samButton>
+  </div>
+</form>

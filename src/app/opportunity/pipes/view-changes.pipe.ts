@@ -132,6 +132,34 @@ export class ViewChangesPipe implements PipeTransform {
     let changesExistClassification = false;
     let changesExistContactInformation = false;
     let changesExistAwardDetails = false;
+    let descriptionAria = null;
+    let updateResponseDateAria = null;
+    let archivingPolicyAria = null;
+    let updateArchiveDateAria = null;
+    let specialLegislationAria = null;
+    let updateSetAsideAria = null;
+    let classificationCodeAria = null;
+    let naicsCodeAria = null;
+    let placeOfPerformanceAria = null;
+    let contractingOfficeAddressAria = null;
+    let primaryFullNameAria = null;
+    let primaryTitleAria = null;
+    let primaryEmailAria = null;
+    let primaryPhoneAria = null;
+    let primaryFaxAria = null;
+    let secondaryFullNameAria = null;
+    let secondaryTitleAria = null;
+    let secondaryEmailAria = null;
+    let secondaryPhoneAria = null;
+    let secondaryFaxAria = null;
+    let awardDateAria = null;
+    let awardNumberAria = null;
+    let awardedDunsAria = null;
+    let orderNumberAria = null;
+    let awardedNameAria = null;
+    let awardedAddressAria = null;
+    let awardAmountAria = null;
+    let lineItemNumberAria = null;
 
     //checks for Update Response Date
     if (currentOpportunity.data && currentOpportunity.data.solicitation && currentOpportunity.data.solicitation.deadlines && currentOpportunity.data.solicitation.deadlines.response){
@@ -148,11 +176,15 @@ export class ViewChangesPipe implements PipeTransform {
       updateResponseDate = "New Data".italics().fontcolor("003264");
       changesExistGeneral = true;
     } else if (previousUpdateResponseDate != null && currentUpdateResponseDate == null){
-      updateResponseDate = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY').strike();
+      let updateResponseDateNoStrike = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY');
+      updateResponseDate = updateResponseDateNoStrike.strike();
+      updateResponseDateAria = "Previous Update Response Date is " + updateResponseDateNoStrike;
       changesExistGeneral = true;
     } else if (previousUpdateResponseDate != null && currentUpdateResponseDate != null) {
       if (moment(currentUpdateResponseDate).format('YYYY-MM-DD') != moment(previousUpdateResponseDate).format('YYYY-MM-DD')){
-        updateResponseDate = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY').strike();
+        let updateResponseDateNoStrike = dateFormatPipe.transform(previousUpdateResponseDate, 'MMM DD, YYYY');
+        updateResponseDate = updateResponseDateNoStrike.strike();
+        updateResponseDateAria = "Previous Update Response Date is " + updateResponseDateNoStrike;
         changesExistGeneral = true;
       }
     }
@@ -176,14 +208,17 @@ export class ViewChangesPipe implements PipeTransform {
       switch (previousArchivingPolicy){
         case "manual": {
           archivingPolicy = "Manual Archive".strike();
+          archivingPolicyAria = "Previous Archiving Policy is Manual Archive";
           break;
         }
         case "auto15": {
           archivingPolicy = "Automatic, 15 days after response date".strike();
+          archivingPolicyAria = "Previous Archiving Policy is Automatic, 15 days after response date";
           break;
         }
         case "autocustom": {
           archivingPolicy = "Automatic, on specified date".strike();
+          archivingPolicyAria = "Previous Archiving Policy is Automatic, on specified date";
           break;
         }
       }
@@ -206,11 +241,15 @@ export class ViewChangesPipe implements PipeTransform {
       updateArchiveDate = "New Data".italics().fontcolor("003264");
       changesExistGeneral = true;
     } else if (previousUpdateArchiveDate != null && currentUpdateArchiveDate == null){
-      updateArchiveDate = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY').strike();
+      let updateArchiveDateNoStrike = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY')
+      updateArchiveDate = updateArchiveDateNoStrike.strike();
+      updateArchiveDateAria = "Previous Update Archive Date is " + updateArchiveDateNoStrike;
       changesExistGeneral = true;
     } else if (previousUpdateArchiveDate != null && currentUpdateArchiveDate != null) {
       if (moment(currentUpdateArchiveDate).format('YYYY-MM-DD') != moment(previousUpdateArchiveDate).format('YYYY-MM-DD')){
-        updateArchiveDate = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY').strike();
+        let updateArchiveDateNoStrike = dateFormatPipe.transform(previousUpdateArchiveDate, 'MMM DD, YYYY');
+        updateArchiveDate = updateArchiveDateNoStrike.strike();
+        updateArchiveDateAria = "Previous Update Archive Date is " + updateArchiveDateNoStrike;
         changesExistGeneral = true;
       }
     }
@@ -232,6 +271,7 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistGeneral = true;
     } else if (currentSpecialLegislation != previousSpecialLegislation && previousSpecialLegislation == true){
       specialLegislation = "Recovery and Reinvestment Act".strike();
+      specialLegislationAria = "Previous Special Legislation is Recovery and Reinvestment Act";
       changesExistGeneral = true;
     }
 
@@ -252,7 +292,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else if (currentUpdateSetAside != previousUpdateSetAside && previousUpdateSetAside != null){
       let result = filterMultiArrayObjectPipe.transform([previousUpdateSetAside], this.findDictionary('set_aside_type', dictionaries), 'elementId', false, "");
       updateSetAside = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
-
+      let updateSetAsideAriaIncomplete = (result instanceof Array && result.length > 0) ? result[0].value : [];
+      updateSetAsideAria = "Previous Update Set Aside is " + updateSetAsideAriaIncomplete;
       changesExistClassification = true;
     }
 
@@ -274,7 +315,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else if (currentClassificationCode != previousClassificationCode && previousClassificationCode != null){
       let result = filterMultiArrayObjectPipe.transform([previousClassificationCode], this.findDictionary('classification_code', dictionaries), 'elementId', false, '');
       classificationCode = (result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
-
+      let classificationCodeAriaIncomplete = (result instanceof Array && result.length > 0) ? result[0].value : [];
+      classificationCodeAria = "Previous Classification Code is " + classificationCodeAriaIncomplete;
       changesExistClassification = true;
     }
 
@@ -296,6 +338,8 @@ export class ViewChangesPipe implements PipeTransform {
     } else if (currentNaicsCode != previousNaicsCode && previousNaicsCode != null){
       let result = filterMultiArrayObjectPipe.transform([previousNaicsCode], this.findDictionary('naics_code', dictionaries), 'elementId', false, '');
       naicsCode =(result instanceof Array && result.length > 0) ? result[0].value.strike() : [];
+      let naicsCodeAriaIncomplete = (result instanceof Array && result.length > 0) ? result[0].value : [];
+      naicsCodeAria = "Previous NAICS Code is " + naicsCodeAriaIncomplete;
       changesExistClassification = true;
     }
 
@@ -355,7 +399,9 @@ export class ViewChangesPipe implements PipeTransform {
       placeOfPerformance = "New Data".italics().fontcolor("003264");
       changesExistClassification = true;
     } else if (((currentPlaceOfPerformanceStreet != previousPlaceOfPerformanceStreet && previousPlaceOfPerformanceStreet != null) || (currentPlaceOfPerformanceCity != previousPlaceOfPerformanceCity && previousPlaceOfPerformanceCity != null) || (currentPlaceOfPerformanceState != previousPlaceOfPerformanceState && previousPlaceOfPerformanceState != null) || (currentPlaceOfPerformanceCountry != previousPlaceOfPerformanceCountry && previousPlaceOfPerformanceCountry != null) || currentPlaceOfPerformanceZip != previousPlaceOfPerformanceZip && previousPlaceOfPerformanceZip != null)){
-      placeOfPerformance = ((previousPlaceOfPerformanceStreet ? previousPlaceOfPerformanceStreet : "") + " " + (previousPlaceOfPerformanceCity ? previousPlaceOfPerformanceCity + "," : "") + " " + (previousPlaceOfPerformanceState ? previousPlaceOfPerformanceState : "") + " " + (previousPlaceOfPerformanceCountry ? previousPlaceOfPerformanceCountry : "") + " " + (previousPlaceOfPerformanceZip ? previousPlaceOfPerformanceZip : "")).strike();
+      let placeOfPerformanceNoStrike = ((previousPlaceOfPerformanceStreet ? previousPlaceOfPerformanceStreet : "") + " " + (previousPlaceOfPerformanceCity ? previousPlaceOfPerformanceCity + "," : "") + " " + (previousPlaceOfPerformanceState ? previousPlaceOfPerformanceState : "") + " " + (previousPlaceOfPerformanceCountry ? previousPlaceOfPerformanceCountry : "") + " " + (previousPlaceOfPerformanceZip ? previousPlaceOfPerformanceZip : ""));
+      placeOfPerformance = placeOfPerformanceNoStrike.strike();
+      placeOfPerformanceAria = "Previous Place of Performance is " + placeOfPerformanceNoStrike;
       changesExistClassification = true;
     }
 
@@ -391,6 +437,7 @@ export class ViewChangesPipe implements PipeTransform {
         finalString = finalString + part[1];
       });
       description = finalString;
+      descriptionAria = "Previous Description is " + previousDescription + " Current Description is " + currentDescription;
       changesExistSynopsis = true;
     }
 
@@ -449,7 +496,9 @@ export class ViewChangesPipe implements PipeTransform {
       contractingOfficeAddress = "New Data".italics().fontcolor("003264");
       changesExistContactInformation = true;
     } else if (((currentContractingOfficeAddressStreet != previousContractingOfficeAddressStreet && previousContractingOfficeAddressStreet != null) || (currentContractingOfficeAddressCity != previousContractingOfficeAddressCity && previousContractingOfficeAddressCity != null) || (currentContractingOfficeAddressState != previousContractingOfficeAddressState && previousContractingOfficeAddressState != null) || (currentContractingOfficeAddressCountry != previousContractingOfficeAddressCountry && previousContractingOfficeAddressCountry != null) || currentContractingOfficeAddressZip != previousContractingOfficeAddressZip && previousContractingOfficeAddressZip != null)){
-      contractingOfficeAddress = ((previousContractingOfficeAddressStreet ? previousContractingOfficeAddressStreet : "") + " " + (previousContractingOfficeAddressCity ? previousContractingOfficeAddressCity + "," : "") + " " + (previousContractingOfficeAddressState ? previousContractingOfficeAddressState : "") + " " + (previousContractingOfficeAddressCountry ? previousContractingOfficeAddressCountry : "") + " " + (previousContractingOfficeAddressZip ? previousContractingOfficeAddressZip : "")).strike();
+      let contractingOfficeAddressNoStrike = ((previousContractingOfficeAddressStreet ? previousContractingOfficeAddressStreet : "") + " " + (previousContractingOfficeAddressCity ? previousContractingOfficeAddressCity + "," : "") + " " + (previousContractingOfficeAddressState ? previousContractingOfficeAddressState : "") + " " + (previousContractingOfficeAddressCountry ? previousContractingOfficeAddressCountry : "") + " " + (previousContractingOfficeAddressZip ? previousContractingOfficeAddressZip : ""));
+      contractingOfficeAddress = contractingOfficeAddressNoStrike.strike();
+      contractingOfficeAddressAria = "Previous Contracting Office Address is " + contractingOfficeAddressNoStrike;
       changesExistContactInformation = true;
     }
 
@@ -472,6 +521,7 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistContactInformation = true;
     } else if (currentPrimaryFullName != previousPrimaryFullName && previousPrimaryFullName != null) {
       primaryFullName = previousPrimaryFullName.strike();
+      primaryFullNameAria = "Previous Primary Full Name is " + previousPrimaryFullName;
       primaryPointOfContact = true;
       changesExistContactInformation = true;
     }
@@ -493,6 +543,7 @@ export class ViewChangesPipe implements PipeTransform {
       primaryPointOfContact = true;
     } else if (currentPrimaryTitle != previousPrimaryTitle && previousPrimaryTitle != null) {
       primaryTitle = previousPrimaryTitle.strike();
+      primaryTitleAria = "Previous Primary Title is " + previousPrimaryTitle;
       changesExistContactInformation = true;
       primaryPointOfContact = true;
     }
@@ -514,6 +565,7 @@ export class ViewChangesPipe implements PipeTransform {
       primaryPointOfContact = true;
     } else if (currentPrimaryEmail != previousPrimaryEmail && previousPrimaryEmail != null) {
       primaryEmail = previousPrimaryEmail.strike();
+      primaryEmailAria = "Previous Primary Email is " + previousPrimaryEmail;
       changesExistContactInformation = true;
       primaryPointOfContact = true;
     }
@@ -535,6 +587,7 @@ export class ViewChangesPipe implements PipeTransform {
       primaryPointOfContact = true;
     } else if (currentPrimaryPhone != previousPrimaryPhone && previousPrimaryPhone != null) {
       primaryPhone = previousPrimaryPhone.strike();
+      primaryPhoneAria = "Previous Primary Phone is " + previousPrimaryPhone;
       changesExistContactInformation = true;
       primaryPointOfContact = true;
     }
@@ -556,6 +609,7 @@ export class ViewChangesPipe implements PipeTransform {
       primaryPointOfContact = true;
     } else if (currentPrimaryFax != previousPrimaryFax && previousPrimaryFax != null) {
       primaryFax = previousPrimaryFax.strike();
+      primaryFaxAria = "Previous Primary Fax is " + previousPrimaryFax;
       changesExistContactInformation = true;
       primaryPointOfContact = true;
     }
@@ -582,6 +636,7 @@ export class ViewChangesPipe implements PipeTransform {
       secondaryPointOfContact = true;
     } else if (currentSecondaryFullName != previousSecondaryFullName && previousSecondaryFullName != null) {
       secondaryFullName = previousSecondaryFullName.strike();
+      secondaryFullNameAria = "Previous Secondary Full Name is " + previousSecondaryFullName;
       changesExistContactInformation = true;
       secondaryPointOfContact = true;
     }
@@ -603,6 +658,7 @@ export class ViewChangesPipe implements PipeTransform {
       secondaryPointOfContact = true;
     } else if (currentSecondaryTitle != previousSecondaryTitle && previousSecondaryTitle != null) {
       secondaryTitle = previousSecondaryTitle.strike();
+      secondaryTitleAria = "Previous Secondary Title is " + previousSecondaryTitle;
       changesExistContactInformation = true;
       secondaryPointOfContact = true;
     }
@@ -624,6 +680,7 @@ export class ViewChangesPipe implements PipeTransform {
       secondaryPointOfContact = true;
     } else if (currentSecondaryEmail != previousSecondaryEmail && previousSecondaryEmail != null) {
       secondaryEmail = previousSecondaryEmail.strike();
+      secondaryEmailAria = "Previous Secondary Email is " + previousSecondaryEmail;
       changesExistContactInformation = true;
       secondaryPointOfContact = true;
     }
@@ -645,6 +702,7 @@ export class ViewChangesPipe implements PipeTransform {
       secondaryPointOfContact = true;
     } else if (currentSecondaryPhone != previousSecondaryPhone && previousSecondaryPhone != null) {
       secondaryPhone = previousSecondaryPhone.strike();
+      secondaryPhoneAria = "Previous Secondary Phone is " + previousSecondaryPhone;
       changesExistContactInformation = true;
       secondaryPointOfContact = true;
     }
@@ -666,6 +724,7 @@ export class ViewChangesPipe implements PipeTransform {
       secondaryPointOfContact = true;
     } else if (currentSecondaryFax != previousSecondaryFax && previousSecondaryFax != null) {
       secondaryFax = previousSecondaryFax.strike();
+      secondaryFaxAria = "Previous Secondary Fax is " + previousSecondaryFax;
       changesExistContactInformation = true;
       secondaryPointOfContact = true;
     }
@@ -688,10 +747,12 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistAwardDetails = true;
     } else if (previousAwardDate != null && currentAwardDate == null) {
       awardDate = dateFormatPipe.transform(previousAwardDate, 'MMM DD, YYYY').strike();
+      awardDateAria = "Previous Award Date is " + awardDate;
       changesExistAwardDetails = true;
     } else if (previousAwardDate != null && currentAwardDate != null) {
       if (moment(currentAwardDate).format('YYYY-MM-DD') != moment(previousAwardDate).format('YYYY-MM-DD')) {
         awardDate = dateFormatPipe.transform(previousAwardDate, 'MMM DD, YYYY').strike();
+        awardDateAria = "Previous Award Date is " + previousAwardDate;
         changesExistAwardDetails = true;
       }
     }
@@ -712,7 +773,7 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistAwardDetails = true;
     } else if (currentAwardNumber != previousAwardNumber && previousAwardNumber != null){
       awardNumber = previousAwardNumber.strike();
-
+      awardNumberAria = "Previous Award Number is " + previousAwardNumber;
       changesExistAwardDetails = true;
     }
 
@@ -732,7 +793,7 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistAwardDetails = true;
     } else if (currentOrderNumber != previousOrderNumber && previousOrderNumber != null){
       orderNumber = previousOrderNumber.strike();
-
+      orderNumberAria = "Previous Delivery Order Number is " + previousOrderNumber;
       changesExistAwardDetails = true;
     }
 
@@ -752,7 +813,7 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistAwardDetails = true;
     } else if (currentAwardedDuns != previousAwardedDuns && previousAwardedDuns != null){
       awardedDuns = previousAwardedDuns.strike();
-
+      awardedDunsAria = "Previous Contractor Awarded DUNS is " + previousAwardedDuns;
       changesExistAwardDetails = true;
     }
 
@@ -772,7 +833,7 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistAwardDetails = true;
     } else if (currentAwardedName != previousAwardedName && previousAwardedName != null){
       awardedName = previousAwardedName.strike();
-
+      awardedNameAria = "Previous Contractor Awarded Name is " + previousAwardedName;
       changesExistAwardDetails = true;
     }
 
@@ -831,7 +892,9 @@ export class ViewChangesPipe implements PipeTransform {
       awardedAddress = "New Data".italics().fontcolor("003264");
       changesExistContactInformation = true;
     } else if (((currentAwardedAddressStreet != previousAwardedAddressStreet && previousAwardedAddressStreet != null) || (currentAwardedAddressCity != previousAwardedAddressCity && previousAwardedAddressCity != null) || (currentAwardedAddressState != previousAwardedAddressState && previousAwardedAddressState != null) || (currentAwardedAddressCountry != previousAwardedAddressCountry && previousAwardedAddressCountry != null) || currentAwardedAddressZip != previousAwardedAddressZip && previousAwardedAddressZip != null)){
-      awardedAddress = ((previousAwardedAddressStreet ? previousAwardedAddressStreet : "") + " " + (previousAwardedAddressCity ? previousAwardedAddressCity + "," : "") + " " + (previousAwardedAddressState ? previousAwardedAddressState : "") + " " + (previousAwardedAddressCountry ? previousAwardedAddressCountry : "") + " " + (previousAwardedAddressZip ? previousAwardedAddressZip : "")).strike();
+      let awardedAddressNoStrike = ((previousAwardedAddressStreet ? previousAwardedAddressStreet : "") + " " + (previousAwardedAddressCity ? previousAwardedAddressCity + "," : "") + " " + (previousAwardedAddressState ? previousAwardedAddressState : "") + " " + (previousAwardedAddressCountry ? previousAwardedAddressCountry : "") + " " + (previousAwardedAddressZip ? previousAwardedAddressZip : ""));
+      awardedAddress = awardedAddressNoStrike.strike();
+      awardedAddressAria = "Previous Contractor Awarded Address is " + awardedAddressNoStrike;
       changesExistAwardDetails = true;
     }
 
@@ -851,6 +914,7 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistAwardDetails = true;
     } else if (currentAwardAmount != previousAwardAmount && previousAwardAmount != null) {
       awardAmount = previousAwardAmount.strike();
+      awardAmountAria = "Previous Contract Award Dollar Amount is " + previousAwardAmount;
 
       changesExistAwardDetails = true;
     }
@@ -872,12 +936,12 @@ export class ViewChangesPipe implements PipeTransform {
       changesExistAwardDetails = true;
     } else if (currentLineItemNumber != previousLineItemNumber && previousLineItemNumber != null) {
       lineItemNumber = previousLineItemNumber.strike();
-
+      lineItemNumberAria = "Previous Contract Line Item Number is " + previousLineItemNumber;
       changesExistAwardDetails = true;
     }
 
     //checks posted date
-    postedDate = ("Changes from " + dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a'));
+    postedDate = ("Changes from " + dateFormatPipe.transform(previousOpportunity.postedDate, 'MM/DD/YYYY h:mm a z'));
     differences = {
       changesExistGeneral: changesExistGeneral,
       changesExistSynopsis: changesExistSynopsis,
@@ -914,7 +978,35 @@ export class ViewChangesPipe implements PipeTransform {
       awardedAddress: awardedAddress,
       awardAmount: awardAmount,
       lineItemNumber: lineItemNumber,
-      postedDate: postedDate
+      postedDate: postedDate,
+      descriptionAria: descriptionAria,
+      updateResponseDateAria: updateResponseDateAria,
+      archivingPolicyAria: archivingPolicyAria,
+      updateArchiveDateAria: updateArchiveDateAria,
+      specialLegislationAria: specialLegislationAria,
+      updateSetAsideAria: updateSetAsideAria,
+      classificationCodeAria: classificationCodeAria,
+      naicsCodeAria: naicsCodeAria,
+      placeOfPerformanceAria: placeOfPerformanceAria,
+      contractingOfficeAddressAria: contractingOfficeAddressAria,
+      primaryFullNameAria: primaryFullNameAria,
+      primaryTitleAria: primaryTitleAria,
+      primaryEmailAria: primaryEmailAria,
+      primaryPhoneAria: primaryPhoneAria,
+      primaryFaxAria: primaryFaxAria,
+      secondaryFullNameAria: secondaryFullNameAria,
+      secondaryTitleAria: secondaryTitleAria,
+      secondaryEmailAria: secondaryEmailAria,
+      secondaryPhoneAria: secondaryPhoneAria,
+      secondaryFaxAria: secondaryFaxAria,
+      awardDateAria: awardDateAria,
+      awardNumberAria: awardNumberAria,
+      awardedDunsAria: awardedDunsAria,
+      orderNumberAria: orderNumberAria,
+      awardedNameAria: awardedNameAria,
+      awardedAddressAria: awardedAddressAria,
+      awardAmountAria: awardAmountAria,
+      lineItemNumberAria: lineItemNumberAria
     };
     return differences;
   }

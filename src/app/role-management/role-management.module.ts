@@ -13,6 +13,9 @@ import { RoleDefinitionPage } from "./role-definition/role-definition.page";
 import { RoleSideNav } from "./role-sidenav/role-sidenav.component.ts";
 import { PermissionSelectorComponent } from "./permission-selector/permission-selector";
 import { DomainsResolve } from "./domains.resolve";
+import { RequestAccessResolve } from "./request-access.resolve";
+import { ManageRequestPage } from "./manage-request/manage-request";
+import { RequestStatusNamesResolve } from "./request-statuses.resolve";
 import { RoleMainContent } from "./role-maincontent/role-maincontent.component.ts";
 import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
 import { RoleMgmtSidenav } from "./rolemgmt-sidenav/rolemgmt-sidenav.component.ts";
@@ -38,12 +41,15 @@ import { RoleMgmtContent } from "./rolemgmt-content/rolemgmt-content.component.t
     RoleSideNav,
     PermissionSelectorComponent,
     RoleMainContent,
+    ManageRequestPage,
     RoleMgmtWorkspace,
     RoleMgmtSidenav,
     RoleMgmtContent,
   ],
   providers: [
     DomainsResolve,
+    RequestAccessResolve,
+    RequestStatusNamesResolve,
     AlertFooterService
   ],
 })

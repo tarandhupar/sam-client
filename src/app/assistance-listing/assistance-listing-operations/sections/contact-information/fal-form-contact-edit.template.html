@@ -1,0 +1,102 @@
+<div formArrayName="contacts">
+
+  <h4>{{mode}} Contact</h4>
+
+  <ng-container *ngFor="let contactGrp of falContactInfoForm.controls.contacts.controls; let i=index">
+
+    <div [formGroupName]="i" [class.hide]="contactIndex !== i">
+
+      <samSelect
+        [control]="falContactInfoForm.controls.contacts.controls[i].controls.contactId"
+        [label]="'Contact'"
+        [name]="'contact-control'"
+        [required]="true"
+        [options]="contactDrpDwnOptions"
+        [disabled]="(mode == 'Edit' ? true : false)"
+        formControlName="contactId"
+        (modelChange)="onParamChanged($event)"></samSelect>
+
+      <div id="newContact" *ngIf="contactGrp.controls.contactId.value == 'new' || mode == 'Edit'">
+
+        <samText
+          [control]="falContactInfoForm.controls.contacts.controls[i].controls.title"
+          [name]="'title-input'"
+          [label]="'Title'"
+          formControlName="title"></samText>
+
+        <samText
+          [control]="contactGrp.controls.fullName"
+          [name]="'fullName-input'"
+          [label]="'Full Name'"
+          [required]="true"
+          formControlName="fullName"></samText>
+
+        <samText
+          [control]="contactGrp.controls.email"
+          [name]="'email-input'"
+          [label]="'Email'"
+          [required]="true"
+          formControlName="email"></samText>
+
+        <samNumber
+          [control]="contactGrp.controls.phone"
+          [minlength]="10"
+          [maxlength]="10"
+          [name]="'phone-input'"
+          [label]="'Phone'"
+          [required]="true"
+          formControlName="phone"></samNumber>
+
+        <samNumber
+          [control]="contactGrp.controls.fax"
+          [minlength]="10"
+          [maxlength]="10"
+          [name]="'fax-input'"
+          [label]="'Fax'"
+          formControlName="fax"></samNumber>
+
+        <samTextArea
+          [control]="contactGrp.controls.streetAddress"
+          [name]="'street-input'"
+          [label]="'Street'"
+          [required]="true"
+          formControlName="streetAddress"></samTextArea>
+
+        <samText
+          [control]="contactGrp.controls.city"
+          [name]="'city-input'"
+          [label]="'City'"
+          [required]="true"
+          formControlName="city"></samText>
+
+        <samSelect
+          [control]="contactGrp.controls.state"
+          [label]="'State'"
+          [name]="'state-control'"
+          [required]="true"
+          [options]="stateDrpDwnOptions"
+          formControlName="state"></samSelect>
+
+        <samText
+          [control]="contactGrp.controls.zip"
+          [name]="'zip-input'"
+          [label]="'Zip'"
+          [required]="true"
+          formControlName="zip"></samText>
+
+        <samSelect
+          [label]="'Country'"
+          [name]="'country-control'"
+          [options]="countryDrpDwnOptions"
+          formControlName="country"></samSelect>
+
+      </div> <!-- End of newcontact -->
+      <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></samButton>
+      <samButton
+        buttonText="Confirm"
+        (onClick)="onConfirmClick()"
+        *ngIf="contactGrp.controls.contactId.value != 'na'"></samButton>
+
+    </div> <!-- End of formgroup div -->
+  </ng-container>
+</div>

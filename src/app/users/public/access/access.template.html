@@ -1,6 +1,42 @@
 <div class="access-page">
-  <h1 class="m_T-0">Access</h1>
-  <div>
+  <h1 class="m_T-0">User Access</h1>
+
+  <!-- Pending Requests -->
+  <ng-container *ngIf="requests.length">
+    <h2>Pending Requests</h2>
+    <div class="requests-container">
+      <div class="request-block" *ngFor="let req of requests; let i = index">
+        <div class="usa-grid-full">
+          <!-- Details Column -->
+          <div class="usa-width-five-sixths">
+            <div class="usa-grid-full">
+              <div class="usa-width-one-fourth">
+                <div><strong>Domain</strong></div>
+                <div class="m_T-2x"><span>{{getDomainNameById(req.domainId)}}</span></div>
+              </div>
+              <div class="usa-width-one-fourth">
+                <div><strong>Date Requested</strong></div>
+                <div class="m_T-2x"><span>{{req.createdDate | dateFormat: 'MMM DD, YYYY'}}</span></div>
+              </div>
+              <div class="usa-width-one-half">
+                <div><strong>Message</strong></div>
+                <div class="m_T-2x"><span>{{trimRequest(req.requestorMessage)}}</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cancel -->
+          <div class="usa-width-one-sixth clearfix">
+            <button class="usa-button-transparent pull-right" (click)="onCancelRequestClick(req.id, i)">
+              <a class="no-underline"><i class="fa fa-close"></i>&nbsp;Cancel</a>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="m_T-4x">
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.domains.options)" (modelChange)="domainsChanged($event)" [options]="filters.domains.options" [label]="filters.domains.label" [name]="filters.domains.label" [model]="filters.domains.value"></samMultiSelectDropdown>
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.roles.options)" (modelChange)="rolesChanged($event)" [options]="filters.roles.options" [label]="filters.roles.label" [name]="filters.roles.label" [model]="filters.roles.value"></samMultiSelectDropdown>
     <samMultiSelectDropdown [hasSelectAll]="hasSelectAll(filters.organizations.options)" (modelChange)="orgsChanged($event)" [options]="filters.organizations.options" [label]="filters.organizations.label" [name]="filters.organizations.label" [model]="filters.organizations.value"></samMultiSelectDropdown>
@@ -77,7 +113,7 @@
               </div>
             </div>
           </div>
-          <div class="usa-grid-full permissions-table" *ngFor="let obj of role.organizationMapContent[0].functionMapContent">
+          <div class="usa-grid-full permissions-table-body" *ngFor="let obj of role.organizationMapContent[0].functionMapContent">
             <div class="usa-width-one-fourth">
               {{obj.function.val || 'object not found'}}
             </div>
