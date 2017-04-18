@@ -49,6 +49,8 @@ export class GrantAccessPage implements OnInit {
 
   private userCameFromRoleWorkspace: boolean = false;
 
+  private objectsEditable: boolean = true;
+
   constructor(
     private userService: UserAccessService,
     private route: ActivatedRoute,
