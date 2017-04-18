@@ -140,9 +140,12 @@ export class OpportunityPage implements OnInit {
           if (element) {
             element.scrollIntoView();
           }
+        } else {
+          window.scrollTo(0,0);
         }
       }
     });
+        
     route.queryParams.subscribe(data => {
       this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
     });

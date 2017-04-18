@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, NavigationEnd, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs/Subscription';
 import { AwardsService } from 'api-kit';
@@ -24,7 +24,21 @@ export class AwardsPage implements OnInit, OnDestroy {
     private activatedRoute:ActivatedRoute,
     private router: Router,
     private location: Location,
-    private AwardsService: AwardsService) {}
+    private AwardsService: AwardsService) {
+      router.events.subscribe(s => {
+        if (s instanceof NavigationEnd) {
+          const tree = router.parseUrl(router.url);
+          if (tree.fragment) {
+            const element = document.getElementById(tree.fragment);
+            if (element) {
+              element.scrollIntoView();
+            }
+          } else {
+            window.scrollTo(0,0);
+          }
+        }
+      });
+    }
 
   ngOnInit() {
     this.currentUrl = this.location.path();

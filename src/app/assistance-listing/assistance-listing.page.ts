@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
@@ -53,7 +53,21 @@ export class ProgramPage implements OnInit, OnDestroy {
     private historicalIndexService: HistoricalIndexService,
     private programService: ProgramService,
     private fhService: FHService,
-    private dictionaryService: DictionaryService) {}
+    private dictionaryService: DictionaryService) {
+      router.events.subscribe(s => {
+        if (s instanceof NavigationEnd) {
+          const tree = router.parseUrl(router.url);
+          if (tree.fragment) {
+            const element = document.getElementById(tree.fragment);
+            if (element) {
+              element.scrollIntoView();
+            }
+          } else {
+            window.scrollTo(0,0);
+          }
+        }
+      });
+    }
 
   ngOnInit() {
     // Using document.location.href instead of

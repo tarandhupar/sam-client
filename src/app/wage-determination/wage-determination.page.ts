@@ -58,6 +58,8 @@ export class WageDeterminationPage implements OnInit {
         if (this.pageFragment) {
           const element = document.getElementById(tree.fragment);
           if (element) { element.scrollIntoView(); }
+        } else {
+          window.scrollTo(0,0);
         }
       }
     });
