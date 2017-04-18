@@ -4,15 +4,15 @@ const getExpiration = ((minutes: number) => {
 
 export default {
   localResource: {
-    comp:     'https://csp-api.sam.gov/comp/iam',
-    minc:     'https://csp-api.sam.gov/minc/iam',
-    prodlike: 'https://csp-api.sam.gov/prodlike/iam'
+    comp:     'http://api-umbrella.prod-iae.bsp.gsa.gov//comp/iam',
+    minc:     'http://api-umbrella.prod-iae.bsp.gsa.gov//minc/iam',
+    prodlike: 'http://api-umbrella.prod-iae.bsp.gsa.gov//prodlike/iam'
   },
 
   remoteResource: {
-    comp:     'https://csp-api.sam.gov/comp/iam',
-    minc:     'https://csp-api.sam.gov/minc/iam',
-    prodlike: 'https://csp-api.sam.gov/prodlike/iam'
+    comp:     'http://api-umbrella.prod-iae.bsp.gsa.gov//comp/iam',
+    minc:     'http://api-umbrella.prod-iae.bsp.gsa.gov//minc/iam',
+    prodlike: 'http://api-umbrella.prod-iae.bsp.gsa.gov//prodlike/iam'
   },
 
   cookies: {
@@ -20,8 +20,8 @@ export default {
     expires: getExpiration(15)
   },
 
-  session:   'https://csp-api.sam.gov/{environment}/IdentityandAccess/v3/auth/session',
-  timeout:   'https://csp-api.sam.gov/{environment}/IdentityandAccess/v4/auth/session/getTimeLeft',
+  session:   'http://api-umbrella.prod-iae.bsp.gsa.gov//{environment}/IdentityandAccess/v3/auth/session',
+  timeout:   'http://api-umbrella.prod-iae.bsp.gsa.gov//{environment}/IdentityandAccess/v4/auth/session/getTimeLeft',
 
   mergeWith: '/users/v3/mergeWith/{email}',
 
@@ -47,8 +47,8 @@ export default {
   },
 
   kba: {
-    questions: 'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/getAnswerIds',
-    update:    'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/updateAnswers'
+    questions: 'http://api-umbrella.prod-iae.bsp.gsa.gov//{environment}/IdentityandAccess/v1/kba/getAnswerIds',
+    update:    'http://api-umbrella.prod-iae.bsp.gsa.gov//{environment}/IdentityandAccess/v1/kba/updateAnswers'
   },
 
   import: {
