@@ -135,14 +135,6 @@ export class OpportunityPage implements OnInit {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
         this.pageFragment = tree.fragment;
-        if (this.pageFragment) {
-          const element = document.getElementById(tree.fragment);
-          if (element) {
-            element.scrollIntoView();
-          }
-        } else {
-          window.scrollTo(0,0);
-        }
       }
     });
         

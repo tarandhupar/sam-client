@@ -37,22 +37,7 @@ export class OrganizationPage implements OnInit, OnDestroy {
     private activatedRoute:ActivatedRoute,
     private router: Router,
     private location: Location,
-    private fhService:FHService) {
-
-    router.events.subscribe(s => {
-        if (s instanceof NavigationEnd) {
-          const tree = router.parseUrl(router.url);
-          if (tree.fragment) {
-            const element = document.getElementById(tree.fragment);
-            if (element) {
-              element.scrollIntoView();
-            }
-          } else {
-            window.scrollTo(0,0);
-          }
-        }
-      });
-  }
+    private fhService:FHService) {}
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe(data => {

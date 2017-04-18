@@ -24,21 +24,7 @@ export class AwardsPage implements OnInit, OnDestroy {
     private activatedRoute:ActivatedRoute,
     private router: Router,
     private location: Location,
-    private AwardsService: AwardsService) {
-      router.events.subscribe(s => {
-        if (s instanceof NavigationEnd) {
-          const tree = router.parseUrl(router.url);
-          if (tree.fragment) {
-            const element = document.getElementById(tree.fragment);
-            if (element) {
-              element.scrollIntoView();
-            }
-          } else {
-            window.scrollTo(0,0);
-          }
-        }
-      });
-    }
+    private AwardsService: AwardsService) {}
 
   ngOnInit() {
     this.currentUrl = this.location.path();
