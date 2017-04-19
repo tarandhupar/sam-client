@@ -49,7 +49,16 @@
         </tbody>
       </table>
 
+      <samSelect *ngIf="showForm"
+                 [hint]="'Select a Year'"
+                 [name]="name + '-year-select'"
+                 [required]="false"
+                 [options]="yearOptions"
+                 [formControlName]="'year'"
+      ></samSelect>
+
       <samTextArea *ngIf="showForm"
+                   [hint]="'Please describe funded projects:'"
                    [name]="name + '-textarea'"
                    [required]="false"
                    [formControlName]="'textarea'"

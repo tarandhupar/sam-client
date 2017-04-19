@@ -22,6 +22,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   public required: boolean;
 
   public checkboxOptions: OptionsType[];
+  public yearOptions: OptionsType[];
 
   private model: any = {
     checkbox: [],
@@ -57,6 +58,13 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     if(this.required == null) {
       this.required = false;
     }
+
+    // todo: don't hardcode years
+    this.yearOptions = [
+      { value: '2016', label: '2016', name: 'funded-projects-2016' },
+      { value: '2017', label: '2017', name: 'funded-projects-2017' },
+      { value: '2018', label: '2018', name: 'funded-projects-2018' }
+    ];
   }
 
   private validateInputs() {
@@ -70,7 +78,8 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   private createFormControls() {
     this.fyTableGroup = new FormGroup({
       naCheckbox: new FormControl([]),
-      textarea: new FormControl('')
+      textarea: new FormControl(''),
+      year: new FormControl('')
     });
 
     this.fyTableGroup.get('naCheckbox').valueChanges.subscribe(value => {
@@ -80,6 +89,11 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
     this.fyTableGroup.get('textarea').valueChanges.subscribe(value => {
       this.model.textarea = value;
+      this.onChange();
+    });
+
+    this.fyTableGroup.get('year').valueChanges.subscribe(value => {
+      this.model.year = value;
       this.onChange();
     });
   }
@@ -99,7 +113,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   public addEntry() {
     let fyEntry: any = {};
 
-    fyEntry.year = 'year';
+    fyEntry.year = this.model.year;
     fyEntry.text = this.model.textarea;
 
     this.model.entries[this.currentIndex] = fyEntry;
@@ -110,6 +124,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     let entry = this.model.entries[index];
 
     this.fyTableGroup.get('textarea').setValue(entry.text);
+    this.fyTableGroup.get('year').setValue(entry.year);
 
     this.currentIndex = index;
     this.showForm = true;
@@ -156,6 +171,10 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
     if(this.model.textarea) {
       this.fyTableGroup.get('textarea').setValue(this.model.textarea);
+    }
+
+    if(this.model.year) {
+      this.fyTableGroup.get('year').setValue(this.model.year);
     }
 
     this.onChange();
