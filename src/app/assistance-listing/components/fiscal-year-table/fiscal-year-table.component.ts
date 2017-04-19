@@ -65,11 +65,17 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
   private createFormControls() {
     this.fyTableGroup = new FormGroup({
-      naCheckbox: new FormControl([])
+      naCheckbox: new FormControl([]),
+      textarea: new FormControl('')
     });
 
     this.fyTableGroup.get('naCheckbox').valueChanges.subscribe(value => {
       this.model.checkbox = value;
+      this.onChange();
+    });
+
+    this.fyTableGroup.get('textarea').valueChanges.subscribe(value => {
+      this.model.textarea = value;
       this.onChange();
     });
   }
@@ -98,6 +104,10 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
     if(this.model.checkbox) {
       this.fyTableGroup.get('naCheckbox').setValue(this.model.checkbox);
+    }
+
+    if(this.model.textarea) {
+      this.fyTableGroup.get('textarea').setValue(this.model.textarea);
     }
 
     this.onChange();

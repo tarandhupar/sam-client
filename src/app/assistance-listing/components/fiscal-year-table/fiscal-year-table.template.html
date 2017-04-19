@@ -9,6 +9,12 @@
                  [options]="checkboxOptions"
                  [formControlName]="'naCheckbox'"
     ></samCheckbox>
+
+    <samTextArea [name]="name + '-textarea'"
+                 [required]="false"
+                 [hidden]="model.checkbox.indexOf('na') !== -1"
+                 [formControlName]="'textarea'"
+    ></samTextArea>
   </div>
 
 </labelWrapper>
