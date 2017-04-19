@@ -23,7 +23,7 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   redirectToWksp: boolean = false;
   falAssistanceForm: FormGroup;
 
-  public deadlinesOptions = [];
+  public deadlinesFlagOptions = [];
   public dateRangeOptions = [{ label: 'None Selected', value: 'na'}];
 
   public preAppCordOptions = [
@@ -49,7 +49,7 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
     this.dictSubDeadlineFlag = dictService.getDictionaryById('deadline_flag')
       .subscribe(data => {
         for(let flag of data['deadline_flag']){
-          this.deadlinesOptions.push({label:flag.value, value:flag.code});
+          this.deadlinesFlagOptions.push({label:flag.value, value:flag.code});
         }
     });
 
@@ -85,14 +85,41 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
 
   createForm(){
     this.falAssistanceForm = this.fb.group({
-      'deadlines': this.fb.group({
-        'flag': '',
-        'description': ''
+      deadlines: this.fb.group({
+        flag: '',
+        description: ''
       }),
-      'preApplicationCoordination': this.fb.group({
-
+      preApplicationCoordination: this.fb.group({
+        reports: '',
+        description: ''
       }),
-
+      applicationProcedure: this.fb.group({
+        isApplicable: '',
+        description: ''
+      }),
+      selectionCriteria: this.fb.group({
+        isApplicable: '',
+        description: ''
+      }),
+      awardProcedure: this.fb.group({
+        description: ''
+      }),
+      approval: this.fb.group({
+        interval: 'na',
+        description: ''
+      }),
+      appeal: this.fb.group({
+        interval: 'na',
+        description: ''
+      }),
+      renewal: this.fb.group({
+        interval: 'na',
+        description: ''
+      }),
     });
+  }
+
+  onSaveContinueClick(){
+    console.log("form", this.falAssistanceForm);
   }
 }
