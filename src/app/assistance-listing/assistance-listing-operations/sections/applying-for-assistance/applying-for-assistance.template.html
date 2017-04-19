@@ -53,8 +53,12 @@
 ></samTextArea>
 
 <samSelect [label]="'Renewals'"
-           [hint]="'Select the range that best represents when an awardee may apply for a renewal or extension. Read More'"
+           [hint]="'Select the range that best represents when an awardee may apply for a renewal or extension'"
            [name]="'approval-input'"
            [options]="approvalOptions"
            [required]="true"
 ></samSelect>
+<samTextArea [label]="'Other Renewal Information'"
+             [hint]="'Describe renewal or extension procedures.'"
+             [name]="'renewal-description'"
+></samTextArea>
