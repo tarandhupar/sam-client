@@ -58,7 +58,6 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   getData(){
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
-          console.log("api", api);
           this.progTitle = api.data.title;
 
           if(api.data.authorizations){
@@ -233,8 +232,6 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       this.displayAuthInfo.splice(index, 1);
     }
 
-    console.log("this.authSubForm.authInfo", this.authSubForm.authInfo);
-    console.log("this.displayAuthInfo", this.displayAuthInfo);
     this.hideAddButton = this.authSubForm.hideAddButton;
   }
 
