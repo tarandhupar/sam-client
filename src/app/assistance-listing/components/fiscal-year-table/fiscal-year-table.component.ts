@@ -1,6 +1,7 @@
 import { Component, Input, forwardRef, ViewChild } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, Validators } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
+import { OptionsType } from "sam-ui-kit/types";
 
 @Component({
   selector: 'falFYTable',
@@ -20,7 +21,11 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   public hint: string;
   public required: boolean;
 
-  private model: any = {}; // internally maintained model - should never be null or undefined
+  public checkboxOptions: OptionsType[];
+
+  private model: any = {
+    checkbox: []
+  }; // internally maintained model - should never be null or undefined
   public fyTableGroup: FormGroup;
 
   @ViewChild('fyTableWrapper') fyTableWrapper: LabelWrapper;
@@ -39,6 +44,10 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
       this.label = this.options.label;
       this.hint = this.options.hint;
       this.required = this.options.required;
+
+      if(this.options.checkbox) {
+        this.checkboxOptions = this.options.checkbox.options;
+      }
     }
 
     if(this.required == null) {
@@ -55,7 +64,14 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   }
 
   private createFormControls() {
-    this.fyTableGroup = new FormGroup({});
+    this.fyTableGroup = new FormGroup({
+      naCheckbox: new FormControl([])
+    });
+
+    this.fyTableGroup.get('naCheckbox').valueChanges.subscribe(value => {
+      this.model.checkbox = value;
+      this.onChange();
+    });
   }
 
   private onChange() {
@@ -74,6 +90,16 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   }
 
   public writeValue(obj: any) : void {
+    if(obj == null) {
+      obj = {};
+    }
+
+    this.model = obj;
+
+    if(this.model.checkbox) {
+      this.fyTableGroup.get('naCheckbox').setValue(this.model.checkbox);
+    }
+
     this.onChange();
   }
 

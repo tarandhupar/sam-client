@@ -4,4 +4,11 @@
               [hint]="hint"
               [required]="required">
 
+  <div *ngIf="fyTableGroup" [formGroup]="fyTableGroup">
+    <samCheckbox [name]="name + '-checkbox'"
+                 [options]="checkboxOptions"
+                 [formControlName]="'naCheckbox'"
+    ></samCheckbox>
+  </div>
+
 </labelWrapper>
