@@ -14,7 +14,7 @@ import * as moment from 'moment/moment';
       <a [routerLink]="['/opportunities', data._id]" [queryParams]="qParams">{{ data.title }}</a>
     </h3>
     <div class="usa-width-two-thirds">
-      <p class="m_T-2x" *ngIf="latestDescription!=null>150">
+      <p class="m_T-2x" *ngIf="latestDescription!=null">
         <span [innerHTML]="latestDescription.content | slice:0:150"></span>...
       </p>
       <p class="m_T-2x" *ngIf="data.description!=null && data.description.length<150">
