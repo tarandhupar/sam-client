@@ -1,22 +1,32 @@
-<div class = "rolemgmt-workspace usa-grid-full">
-  <div class = "usa-width-one-fourth m_W-3em">
-    <rolemgmt-sidenav
-      (statusSelected) = "StatusValue($event)"
-      (domainSelected) = "DomainValue($event)"
-      (autoCompleteSelected) = "AutoCompleteValue($event)"
-    >
-    </rolemgmt-sidenav>
+<div class="rolemgmt-workspace">
+  <div class = "usa-grid-full">
+    <div class="usa-width-one-fourth">
+      &nbsp;
+    </div>
+    <div class="usa-width-three-fourths">
+      <h1 class="page-title">Role Management Workspace</h1>
+    </div>
   </div>
-  <div class = "usa-width-three-fourths m_W-3em">
-    <rolemgmt-content
-      (sortOrder) = "SortValue($event)"
-      (pageNumber) = "PageValue($event)"
-      [requestDetails] = "Details" 
-      [count] = "totalRequest"
-      [currCount] = "currCount"
-      [totalPages] = "pages"
-      [currPage] = "page"
-    >
-    </rolemgmt-content>
+  <div class = "usa-grid-full">
+    <div class = "usa-width-one-fourth role-filters-column">
+      <rolemgmt-sidenav
+        (statusSelected) = "StatusValue($event)"
+        (domainSelected) = "DomainValue($event)"
+        (autoCompleteSelected) = "AutoCompleteValue($event)"
+      >
+      </rolemgmt-sidenav>
+    </div>
+    <div class = "usa-width-three-fourths">
+      <rolemgmt-content
+        (sortOrder) = "SortValue($event)"
+        (pageNumber) = "PageValue($event)"
+        [requestDetails] = "Details"
+        [count] = "totalRequest"
+        [currCount] = "currCount"
+        [totalPages] = "pages"
+        [currPage] = "page"
+      >
+      </rolemgmt-content>
+    </div>
   </div>
 </div>

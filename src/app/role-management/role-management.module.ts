@@ -20,6 +20,7 @@ import { RoleMainContent } from "./role-maincontent/role-maincontent.component.t
 import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
 import { RoleMgmtSidenav } from "./rolemgmt-sidenav/rolemgmt-sidenav.component.ts";
 import { RoleMgmtContent } from "./rolemgmt-content/rolemgmt-content.component.ts";
+import {AppComponentsModule} from "../app-components/app-components.module";
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { RoleMgmtContent } from "./rolemgmt-content/rolemgmt-content.component.t
     FormsModule,
     SamUIKitModule,
     SamAPIKitModule,
+    AppComponentsModule,
   ],
   exports: [
 

@@ -8,8 +8,8 @@ import * as moment from 'moment/moment';
 export class RoleMgmtContent implements OnInit{
 
   @Input() requestDetails = '';
-  @Input() count; 
-  @Input() currCount; 
+  @Input() count;
+  @Input() currCount;
   @Input() totalPages;
   @Input() currPage;
 
@@ -17,19 +17,19 @@ export class RoleMgmtContent implements OnInit{
   @Output() pageNumber : EventEmitter<any> = new EventEmitter<any>();
   Pagelimit : number;
   paginationConfig = {
-      currentPage: 1,      
+      currentPage: 1,
   };
   pageNo = 1;
   constructor(){
-    
+
     this.Pagelimit = 10;
-    
+
   }
 
   ngOnInit(){
-        
+
   }
-  
+
 
   selectModel = 'desc';
   selectConfig = {
@@ -49,7 +49,7 @@ export class RoleMgmtContent implements OnInit{
     this.pageNo = event;
     this.pageNumber.emit(event);
     window.scrollTo(0,0);
-    
+
   }
 
   formatDate(dateString) {
@@ -60,8 +60,12 @@ export class RoleMgmtContent implements OnInit{
     }
   }
 
-  
-
-  
-  
+  classForRequest(request) {
+    switch (request.status.toLowerCase()) {
+      case 'pending': return 'fa-spinner pending-icon';
+      case 'approved': return 'fa-check-circle-o approved-icon';
+      case 'rejected': return 'fa-user-times rejected-icon';
+      case 'escalated': return 'fa-exclamation-triangle escalated-icon';
+    }
+  }
 }
