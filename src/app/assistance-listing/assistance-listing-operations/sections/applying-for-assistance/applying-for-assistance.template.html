@@ -1,0 +1,60 @@
+<samRadioButton [label]="'Deadlines'"
+                [name]="'deadline-radio-buttons'"
+                [options]="deadlinesOptions"
+></samRadioButton>
+
+<samCheckbox [label]="'Pre-Application Coordination'"
+             [name]="'preAppCord-checkbox'"
+             [hint]="'Select all that apply'"
+             [options]="preAppCordOptions"
+></samCheckbox>
+
+<samTextArea [label]="'Additional Information'"
+             [name]="'preAppCord-addInfo'"
+></samTextArea>
+
+<samCheckbox [label]="'Application Procedures'"
+             [name]="'appProc-checkbox'"
+             [hint]="'Select if applicable.'"
+             [options]="appProcOptions"
+></samCheckbox>
+
+<samTextArea [label]="'Please list the steps for applying for assistance. Only include instructions not already covered by 2 CFR 200.'"
+             [name]="'appProc-description'"
+></samTextArea>
+
+<samCheckbox [label]="'Criteria for Selecting Proposals'"
+             [name]="'selectionCriteria-checkbox'"
+             [hint]="'Select if applicable.'"
+             [options]="selectionCriteriaOptions"
+></samCheckbox>
+
+<samTextArea [label]="'Please describe.'"
+             [name]="'selectionCriteria-description'"
+             [required]="true"
+></samTextArea>
+
+<samTextArea [label]="'Award Procedure'"
+             [hint]="'Describe how assistance is awarded. Include who approves the award and how assistance is distributed.'"
+             [name]="'awardProcedure-description'"
+             [required]="true"
+></samTextArea>
+
+<samSelect [label]="'Date Range for Approval/Disapproval'"
+           [hint]="'Select the range that best represents how much time the approval process takes.'"
+           [name]="'approval-input'"
+           [options]="approvalOptions"
+           [required]="true"
+></samSelect>
+
+<samTextArea [label]="'Other Approval Information'"
+             [hint]="'Provide an additional information if appropriate.'"
+             [name]="'approval-description'"
+></samTextArea>
+
+<samSelect [label]="'Renewals'"
+           [hint]="'Select the range that best represents when an awardee may apply for a renewal or extension. Read More'"
+           [name]="'approval-input'"
+           [options]="approvalOptions"
+           [required]="true"
+></samSelect>
