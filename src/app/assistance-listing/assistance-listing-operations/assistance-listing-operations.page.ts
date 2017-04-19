@@ -24,7 +24,7 @@ export class ProgramPageOperations implements OnInit {
   }
 
   ngOnInit(){
-    //this.sharedService.setSideNavFocus();
+    this.sharedService.setSideNavFocus();
 
     if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
       if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
