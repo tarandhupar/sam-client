@@ -24,9 +24,13 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   public checkboxOptions: OptionsType[];
 
   private model: any = {
-    checkbox: []
+    checkbox: [],
+    entries: []
   }; // internally maintained model - should never be null or undefined
   public fyTableGroup: FormGroup;
+
+  public showForm: boolean = false;
+  public currentIndex: number = 0;
 
   @ViewChild('fyTableWrapper') fyTableWrapper: LabelWrapper;
 
@@ -80,6 +84,46 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     });
   }
 
+  public displayForm() {
+    this.showForm = true;
+  }
+
+  public resetForm() {
+    this.currentIndex = this.model.entries.length;
+    this.fyTableGroup.reset();
+    this.showForm = false;
+
+    this.onChange();
+  }
+
+  public addEntry() {
+    let fyEntry: any = {};
+
+    fyEntry.year = 'year';
+    fyEntry.text = this.model.textarea;
+
+    this.model.entries[this.currentIndex] = fyEntry;
+    this.resetForm();
+  }
+
+  public editEntry(index: number) {
+    let entry = this.model.entries[index];
+
+    this.fyTableGroup.get('textarea').setValue(entry.text);
+
+    this.currentIndex = index;
+    this.showForm = true;
+  }
+
+  public removeEntry(index: number) {
+    this.model.entries.splice(index, 1);
+    if(index < this.currentIndex) {
+      this.currentIndex--;
+    }
+
+    this.onChange();
+  }
+
   private onChange() {
     this.onChangeCallback(this.model);
   }
@@ -101,6 +145,10 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     }
 
     this.model = obj;
+
+    if(this.model.entries == null) {
+      this.model.entries = [];
+    }
 
     if(this.model.checkbox) {
       this.fyTableGroup.get('naCheckbox').setValue(this.model.checkbox);

@@ -111,6 +111,18 @@ export class FALTafsComponent implements ControlValueAccessor {
     });
   }
 
+  public displayForm() {
+    this.showForm = true;
+  }
+
+  public resetForm() {
+    this.currentIndex = this.model.tafs.length;
+    this.tafsFormGroup.reset();
+    this.showForm = false;
+
+    this.onChange();
+  }
+
   public addTafs() {
     let tafs = {};
 
@@ -123,18 +135,6 @@ export class FALTafsComponent implements ControlValueAccessor {
 
     this.model.tafs[this.currentIndex] = tafs;
     this.resetForm();
-  }
-
-  public removeTafs(index: number) {
-    this.model.tafs.splice(index, 1);
-    if(index === this.currentIndex) {
-      this.tafsFormGroup.reset();
-      this.currentIndex = this.model.tafs.length;
-    } else if(index < this.currentIndex) {
-      this.currentIndex--;
-    }
-
-    this.onChange();
   }
 
   public editTafs(index: number) {
@@ -151,14 +151,14 @@ export class FALTafsComponent implements ControlValueAccessor {
     this.showForm = true;
   }
 
-  public displayForm() {
-    this.showForm = true;
-  }
-
-  public resetForm() {
-    this.currentIndex = this.model.tafs.length;
-    this.tafsFormGroup.reset();
-    this.showForm = false;
+  public removeTafs(index: number) {
+    this.model.tafs.splice(index, 1);
+    if(index === this.currentIndex) {
+      this.tafsFormGroup.reset();
+      this.currentIndex = this.model.tafs.length;
+    } else if(index < this.currentIndex) {
+      this.currentIndex--;
+    }
 
     this.onChange();
   }

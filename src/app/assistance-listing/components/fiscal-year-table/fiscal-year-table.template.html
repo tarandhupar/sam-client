@@ -10,11 +10,55 @@
                  [formControlName]="'naCheckbox'"
     ></samCheckbox>
 
-    <samTextArea [name]="name + '-textarea'"
-                 [required]="false"
-                 [hidden]="model.checkbox.indexOf('na') !== -1"
-                 [formControlName]="'textarea'"
-    ></samTextArea>
+    <div [hidden]="model.checkbox.indexOf('na') !== -1">
+      <table *ngIf="model.entries && model.entries.length > 0">
+        <thead>
+        <tr>
+          <th scope="col">
+            Fiscal Year
+          </th>
+          <th scope="col">
+            Thingy
+          </th>
+          <th scope="col">
+            Actions
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <ng-container *ngFor="let entry of model.entries; let i=index">
+          <tr>
+            <td>{{ entry.year }}</td>
+            <td>{{ entry.text }}</td>
+            <td>
+              <ng-container *ngIf="currentIndex === model.entries.length && !showForm">
+                <a class="fal-table-edit" (click)="editEntry(i)">Edit</a>
+                <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editEntry(i)"></i>
+                <a class="fal-table-delete" (click)="removeEntry(i)">Delete</a>
+                <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeEntry(i)"></i>
+              </ng-container>
+              <ng-container *ngIf="currentIndex < model.entries.length || showForm">
+                <span class="fal-table-edit disabled">Edit</span>
+                <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
+                <span class="fal-table-delete disabled">Delete</span>
+                <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
+              </ng-container>
+            </td>
+          </tr>
+        </ng-container>
+        </tbody>
+      </table>
+
+      <samTextArea *ngIf="showForm"
+                   [name]="name + '-textarea'"
+                   [required]="false"
+                   [formControlName]="'textarea'"
+      ></samTextArea>
+
+      <samButton *ngIf="!showForm" buttonText="Add" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
+      <samButton *ngIf="showForm" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
+      <samButton *ngIf="showForm" buttonText="Confirm" (onClick)="addEntry()" [buttonType]="(!fyTableGroup.valid ? 'disabled' : 'default')"></samButton>
+    </div>
   </div>
 
 </labelWrapper>
