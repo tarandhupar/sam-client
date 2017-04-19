@@ -8,6 +8,9 @@
                [required]="true"
                formControlName="objective"></samTextArea>
 
+  <falFYTable [options]="fundedProjectsConfig"
+  ></falFYTable>
+
   <samTextArea [hint]="'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.'"
                [control]="falOverviewForm.controls['falDesc']"
                [name]="'falDesc-input'"

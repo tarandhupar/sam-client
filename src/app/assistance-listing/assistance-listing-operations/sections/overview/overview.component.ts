@@ -9,6 +9,22 @@ import { FALOpSharedService } from '../../assistance-listing-operations.service'
   templateUrl: 'overview.template.html',
 })
 export class FALOverviewComponent implements OnInit, OnDestroy{
+  public fundedProjectsConfig: any = {
+    name: 'funded-projects',
+    label: 'Examples of Funded Projects',
+    hint: 'Provide examples that demonstrate how funding might be used. Describe the subject area without using program names or locations.',
+    required: false,
+
+    checkbox: {
+      options: [
+        { value: 'na', label: 'Not Applicable', name: 'funded-projects-checkbox-na' }
+      ]
+    },
+
+    textarea: {
+      showWhenCheckbox: 'unchecked'
+    }
+  };
 
   getProgSub: any;
   saveProgSub: any;
