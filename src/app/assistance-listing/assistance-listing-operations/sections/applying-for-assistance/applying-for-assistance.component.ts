@@ -18,9 +18,13 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   dictSubDateRange: any;
   programId : any;
   progTitle: string;
+  hideAddButton: boolean = false;
+  redirectToViewPg: boolean = false;
+  redirectToWksp: boolean = false;
+  falAssistanceForm: FormGroup;
 
   public deadlinesOptions = [];
-  public approvalOptions = [{ label: 'None Selected', value: 'na'}];
+  public dateRangeOptions = [{ label: 'None Selected', value: 'na'}];
 
   public preAppCordOptions = [
     { label: 'An environmental impact statement is required for this program.', value: 'statement' },
@@ -52,12 +56,43 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
     this.dictSubDateRange = dictService.getDictionaryById('date_range')
       .subscribe(data => {
         for(let dr of data['date_range']){
-          this.approvalOptions.push({ label: dr.value, value:dr.code });
+          this.dateRangeOptions.push({ label: dr.value, value:dr.code });
         }
       });
-
   }
 
-  ngOnInit(){}
-  ngOnDestroy(){}
+  ngOnInit(){
+    this.createForm();
+
+    /*if (this.sharedService.programId) {
+      this.getData();
+    }*/
+  }
+
+  ngOnDestroy(){
+    if(this.saveProgSub)
+      this.saveProgSub.unsubscribe();
+
+    if(this.getProgSub)
+      this.getProgSub.unsubscribe();
+
+    if(this.dictSubDeadlineFlag)
+      this.dictSubDeadlineFlag.unsubscribe();
+
+    if(this.dictSubDateRange)
+      this.dictSubDateRange.unsubscribe();
+  }
+
+  createForm(){
+    this.falAssistanceForm = this.fb.group({
+      'deadlines': this.fb.group({
+        'flag': '',
+        'description': ''
+      }),
+      'preApplicationCoordination': this.fb.group({
+
+      }),
+
+    });
+  }
 }

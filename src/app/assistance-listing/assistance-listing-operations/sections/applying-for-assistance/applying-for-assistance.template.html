@@ -1,7 +1,13 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Applying for Assistance - {{progTitle}}</div>
+
 <samRadioButton [label]="'Deadlines'"
                 [name]="'deadline-radio-buttons'"
                 [options]="deadlinesOptions"
 ></samRadioButton>
+
+<samTextArea [label]="'Other Deadline Information'"
+             [name]="'deadlines-otherInfo'"
+></samTextArea>
 
 <samCheckbox [label]="'Pre-Application Coordination'"
              [name]="'preAppCord-checkbox'"
@@ -43,7 +49,7 @@
 <samSelect [label]="'Date Range for Approval/Disapproval'"
            [hint]="'Select the range that best represents how much time the approval process takes.'"
            [name]="'approval-input'"
-           [options]="approvalOptions"
+           [options]="dateRangeOptions"
            [required]="true"
 ></samSelect>
 
@@ -53,12 +59,24 @@
 ></samTextArea>
 
 <samSelect [label]="'Renewals'"
-           [hint]="'Select the range that best represents when an awardee may apply for a renewal or extension'"
+           [hint]="'Select the range that best represents when an awardee may apply for a renewal or extension.'"
            [name]="'approval-input'"
-           [options]="approvalOptions"
+           [options]="dateRangeOptions"
            [required]="true"
 ></samSelect>
+
 <samTextArea [label]="'Other Renewal Information'"
              [hint]="'Describe renewal or extension procedures.'"
              [name]="'renewal-description'"
+></samTextArea>
+
+<samSelect [label]="'Appeals'"
+           [hint]="'Select the range that best represents how long an applicant has to appeal a decision.'"
+           [name]="'appeals-input'"
+           [options]="dateRangeOptions"
+           [required]="true"
+></samSelect>
+<samTextArea [label]="'Other Appeals Information'"
+             [hint]="'Describe appeal, rework, or other options for applications that are not approved.'"
+             [name]="'appeals-description'"
 ></samTextArea>
