@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
 
 @Component({
   selector : 'authSubform',

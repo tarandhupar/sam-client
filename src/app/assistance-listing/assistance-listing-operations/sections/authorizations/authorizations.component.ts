@@ -251,8 +251,9 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
         label = label.replace(",", "");
       }
 
-      if(label != '')
+      if(label != '') {
         this.displayAuthInfo.push(label);
+      }
     }
 
   }

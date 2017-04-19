@@ -7,6 +7,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 
 export class FALAuthInfoTableComponent{
+
   @Input() displayAuthInfo: any [];
   @Input() hideAddButton: boolean;
   @Output() public authTableActionHandler = new EventEmitter();
