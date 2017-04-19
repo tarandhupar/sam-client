@@ -221,18 +221,20 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
     if(parentIndex !== null){
       controlIndex = this.displayAuthInfo[parentIndex].children[index].index;
       this.authSubForm.removeAuth(controlIndex);
-      this.displayAuthInfo[parentIndex].children.splice(index, 1);
+      //this.displayAuthInfo[parentIndex].children.splice(index, 1);
     }
     else {
+
       for(let child of this.displayAuthInfo[index].children){
         controlIndex = child.index;
         this.authSubForm.removeAuth(controlIndex);
       }
       this.authSubForm.removeAuth(this.displayAuthInfo[index].index);
-      this.displayAuthInfo.splice(index, 1);
+      //this.displayAuthInfo.splice(index, 1);
     }
 
     this.hideAddButton = this.authSubForm.hideAddButton;
+    this.authInfoFormat(this.authSubForm.authInfo);
   }
 
 
