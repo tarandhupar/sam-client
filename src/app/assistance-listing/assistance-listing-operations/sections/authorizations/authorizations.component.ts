@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
 import { Router} from '@angular/router';
-import { UUID } from 'angular2-uuid';
 import { ProgramService } from 'api-kit';
 import { FALOpSharedService } from '../../assistance-listing-operations.service';
 import { FALAuthSubFormComponent } from '../../../components/authorization-subform/authorization-subform.component';
@@ -21,7 +20,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   redirectToViewPg: boolean = false;
   redirectToWksp: boolean = false;
   falAuthForm: FormGroup;
-  displayAuthInfo = [];
+  displayAuthInfo: any = [];
   @ViewChild('authSubForm') authSubForm:FALAuthSubFormComponent;
 
   constructor(private fb: FormBuilder,
@@ -59,6 +58,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   getData(){
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
+          console.log("api", api);
           this.progTitle = api.data.title;
 
           if(api.data.authorizations){
@@ -110,14 +110,9 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       data.authorizations['list']=[];
       for(let auth of this.authSubForm.authInfo){
         let list = {};
-        let uuid;
-        if(auth.authorizationId == '' || auth.authorizationId == null){
-          uuid = UUID.UUID().replace(/-/g, "");
-        }
-        else {
-          uuid = auth.authorizationId;
-        }
-        list['authorizationId'] = uuid;
+
+        list['authorizationId'] = auth.authorizationId;
+        list['parentAuthorizationId'] = auth.parentAuthorizationId || null;
 
         if(auth.authType.length > 0){
           list['authorizationTypes'] = {};
@@ -183,7 +178,6 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
     this.saveData();
   }
 
-
   authActionHandler(event){
 
     if(event.type == 'add'){
@@ -197,27 +191,59 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       this.hideAddButton = event.hideAddButton;
     }
     if(event.type == 'edit'){
-      this.editAuth(event.index);
+      this.editAuth(event.index, event.parentIndex);
     }
     if(event.type == 'remove'){
-      this.removeAuth(event.index);
+      this.removeAuth(event.index, event.parentIndex);
+    }
+    if(event.type == 'amend'){
+      this.authSubForm.addAuth(event.index);
     }
   }//end of authActionHandler
 
-  editAuth(i: number){
-    this.authSubForm.subFormLabel = 'Edit - ' + this.displayAuthInfo[i];
-    this.authSubForm.editAuth(i);
+  editAuth(index: number, parentIndex: number = null){
+    let controlIndex: number;
+    if(parentIndex !== null) {
+      this.authSubForm.subFormLabel = 'Edit - ' + this.displayAuthInfo[parentIndex].children[index].label;
+      controlIndex = this.displayAuthInfo[parentIndex].children[index].index;
+    }
+    else {
+      this.authSubForm.subFormLabel = 'Edit - ' + this.displayAuthInfo[index].label;
+      controlIndex = this.displayAuthInfo[index].index;
+    }
+
+    this.authSubForm.editAuth(controlIndex);
     this.hideAddButton = this.authSubForm.hideAddButton;
   }
 
-  removeAuth(i: number){
-    this.authSubForm.removeAuth(i);
-    this.displayAuthInfo.splice(i, 1);
+  removeAuth(index: number, parentIndex: number = null){
+    let controlIndex: number;
+
+    if(parentIndex !== null){
+      controlIndex = this.displayAuthInfo[parentIndex].children[index].index;
+      this.authSubForm.removeAuth(controlIndex);
+      this.displayAuthInfo[parentIndex].children.splice(index, 1);
+    }
+    else {
+      for(let child of this.displayAuthInfo[index].children){
+        controlIndex = child.index;
+        this.authSubForm.removeAuth(controlIndex);
+      }
+      this.authSubForm.removeAuth(this.displayAuthInfo[index].index);
+      this.displayAuthInfo.splice(index, 1);
+    }
+
+    console.log("this.authSubForm.authInfo", this.authSubForm.authInfo);
+    console.log("this.displayAuthInfo", this.displayAuthInfo);
     this.hideAddButton = this.authSubForm.hideAddButton;
   }
+
 
   authInfoFormat(authInfo){
     this.displayAuthInfo = [];
+    let tempArr = [];
+    let counter = 0;
+
     for(let auth of authInfo){
       let label = ',';
       for(let authType of auth.authType){
@@ -251,10 +277,27 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
         label = label.replace(",", "");
       }
 
-      if(label != '') {
-        this.displayAuthInfo.push(label);
+      if(label != ''){
+        if(auth.parentAuthorizationId == null){
+
+          this.displayAuthInfo.push({
+            label: label,
+            children: [],
+            index: counter,
+            authorizationId: auth.authorizationId
+          });
+
+          tempArr[auth.authorizationId] = counter;
+        }
+        else {
+          let parentIndex = tempArr[auth.parentAuthorizationId];
+          this.displayAuthInfo[parentIndex].children.push({label: label, index:counter});
+        }
+
       }
-    }
+      counter = counter + 1;
+
+    }//end of for
 
   }
 }
