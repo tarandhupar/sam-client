@@ -1,4 +1,17 @@
 import { Component } from "@angular/core";
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+
+function validDateTime(c: FormControl) {
+  let invalidError = {message: 'Date is invalid'};
+
+  if (c.value === 'Invalid Date') {
+    return invalidError;
+  }
+}
+
+function isRequired(c: FormControl) {
+  if(c.value === '') return {required:true};
+}
 
 @Component ({
   templateUrl: 'AAC-request.template.html'
@@ -37,6 +50,8 @@ export class AACRequestPage {
     label: 'Is the request for a Federal Office, State/Local Office or Contractor?',
     errorMessage: ''
   };
+  aacStateOrgName:string = '';
+  aacFederalOrgName:any;
 
   aacReasonCbxModel:any = [];
   aacReasonCbxConfig = {
@@ -54,16 +69,93 @@ export class AACRequestPage {
   };
 
   orgAddresses:any = [];
+  contractorForm:FormGroup;
+  fpdsReportForm:FormGroup;
+  aacObj:any = {};
+  requestIsEdit = true;
+  requestIsReview = false;
 
-  constructor(){}
+  constructor(private builder:FormBuilder){}
 
   ngOnInit(){
     this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:false});
+    this.contractorForm = this.builder.group({
+      contractName: ['', []],
+      contractNum: ['', []],
+      OAGECode: ['', []],
+      contractAdmin: ['', []],
+      contractExpireDate: ['', [validDateTime, isRequired]],
+    });
+    this.fpdsReportForm = this.builder.group({
+      agencyCode: ['', []],
+      cgacCode: ['', []],
+    })
   }
 
   isSingleAACRequest():boolean {return this.aacTypeRadioModel === 'single';}
   isMultiAACRequest():boolean {return this.aacTypeRadioModel === 'mulitple';}
   isReasonContainsFPDSReport():boolean {return this.aacReasonCbxModel.indexOf('Used for Reporting with FPDS') !== -1;}
 
-  setContractExpireDate(val){}
+  setContractExpireDate(val){this.contractorForm.get('contractExpireDate').setValue(val);}
+
+  generateACCRequestObj(){
+    this.aacObj = {};
+    // generate Requesting Office Information
+    this.aacObj.officeInfo = this.generateRequestOfficeInfo();
+    // generate Reason for Requesting
+    this.aacObj.reasonInfo = this.generateRequestReasonInfo();
+    console.log(this.aacObj);
+  }
+
+  onReviewAACRequestClick(){
+    this.requestIsEdit = false;
+    this.requestIsReview = true;
+    this.generateACCRequestObj();
+    console.log(this.orgAddresses);
+  }
+
+  onEditFormClick(){
+    this.requestIsEdit = true;
+    this.requestIsReview = false;
+  }
+
+  onCancelAACRequestClick(){
+
+  }
+
+  generateRequestReasonInfo():any{
+    let requestReasonInfo = [];
+    requestReasonInfo.push({desc:'Provide purpose for AAC Request',value:this.aacReasonCbxModel.join('/')});
+    if(this.aacReasonCbxModel.indexOf("Used for Reporting with FPDS") !== -1){
+      requestReasonInfo.push({desc:'Sub-tier Agency Code',value:this.fpdsReportForm.get("agencyCode").value});
+      requestReasonInfo.push({desc:'CGAC Code',value:this.fpdsReportForm.get("cgacCode").value});
+    }
+    return requestReasonInfo;
+  }
+
+  generateRequestOfficeInfo():any{
+    let requestOfficeInfo = [];
+    requestOfficeInfo.push({desc:'Does an AAC exist for this organization',value:this.aacExistRadioModel});
+    requestOfficeInfo.push({desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: this.aacOfficeRadioModel});
+    switch (this.aacOfficeRadioModel){
+      case 'Contractor Office':
+        requestOfficeInfo.push({desc:'Contractor Name', value: this.contractorForm.get("contractName").value});
+        requestOfficeInfo.push({desc:'Contract Number', value: this.contractorForm.get("contractNum").value});
+        requestOfficeInfo.push({desc:'CAGE Code', value: this.contractorForm.get("cageCode").value});
+        requestOfficeInfo.push({desc:'Contract Administrator Name', value: this.contractorForm.get("contractAdmin").value});
+        requestOfficeInfo.push({desc:'Contract Expiry Date', value: this.contractorForm.get("contractExpireDate").value});
+        break;
+      case 'Federal Office':
+        requestOfficeInfo.push({desc:'Organization Name', value: this.aacFederalOrgName.name});
+        break;
+      case 'State/Local Office':
+        requestOfficeInfo.push({desc:'Organization Name', value: this.aacStateOrgName});
+        break;
+    }
+    return requestOfficeInfo;
+  }
+
+  getFederalOrgName(org){
+    this.aacFederalOrgName = org;
+  }
 }
