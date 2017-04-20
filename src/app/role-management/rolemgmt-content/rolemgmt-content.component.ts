@@ -34,8 +34,8 @@ export class RoleMgmtContent implements OnInit{
   selectModel = 'desc';
   selectConfig = {
     options: [
-      {value: 'desc', label: 'Newest First', name: 'sort-desc'},
       {value: 'asc', label: 'Oldest First', name: 'sort-asc'},
+      {value: 'desc', label: 'Newest First', name: 'sort-desc'},
     ]
   }
 
