@@ -60,13 +60,15 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
       this.required = false;
     }
 
-    let currentFY = this.getCurrentFY();
+    let currentFY = this.getCurrentFY().toString();
+    let prevFY = (this.getCurrentFY() - 1).toString();
+    let nextFY = (this.getCurrentFY() + 1).toString();
 
     // todo: remove default checkmark
     this.yearOptions = [
-      { value: currentFY - 1, label: currentFY - 1, name: this.name + currentFY - 1 },
+      { value: prevFY, label: prevFY, name: this.name + prevFY },
       { value: currentFY, label: currentFY, name: this.name + currentFY },
-      { value: currentFY + 1, label: currentFY + 1, name: this.name + currentFY + 1 }
+      { value: nextFY, label: nextFY, name: this.name + nextFY }
     ];
   }
 
@@ -122,6 +124,12 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
     fyEntry.year = this.model.year;
     fyEntry.text = this.model.textarea;
+
+    for(let i = 0; i < this.yearOptions.length; ++i) {
+      if(this.yearOptions[i].value === this.model.year) {
+        this.yearOptions.splice(i, 1);
+      }
+    }
 
     this.model.entries[this.currentIndex] = fyEntry;
     this.resetForm();
