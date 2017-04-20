@@ -189,6 +189,19 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
     this.model = obj;
 
+    // todo: clean this up
+    if(this.model.entries) {
+      for(let entry of this.model.entries) {
+        for(let i = 0; i < this.yearOptions.length; ++i) {
+          if(this.yearOptions[i].value === entry.year) {
+            this.yearOptions.splice(i, 1);
+          }
+        }
+      }
+
+      this.currentIndex = this.model.entries.length;
+    }
+
     if(this.model.entries == null) {
       this.model.entries = [];
     }
