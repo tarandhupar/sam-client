@@ -41,8 +41,6 @@ export class RoleMgmtContent implements OnInit{
 
   onSelectChanged(event){
     this.sortOrder.emit(event);
-    //window.scrollTo(0,0);
-    //console.log(event);
   }
 
   onPageChange(event){
