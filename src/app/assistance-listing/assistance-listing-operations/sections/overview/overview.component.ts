@@ -122,7 +122,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
     projects.list = [];
     for(let entry of projectsForm.entries) {
       projects.list.push({
-        fiscalYear: Number(entry.year),
+        fiscalYear: entry.year ? Number(entry.year) : null,
         description: entry.text
       });
     }
@@ -137,13 +137,13 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
       entries: []
     };
 
-    if(projects.isApplicable) {
+    if(!projects.isApplicable) {
       projectsForm.checkbox.push('na');
     }
 
     for(let project of projects.list) {
       projectsForm.entries.push({
-        year: project.fiscalYear.toString(),
+        year: project.fiscalYear ? project.fiscalYear.toString() : '',
         text: project.description
       });
     }

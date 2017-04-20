@@ -131,7 +131,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     // todo: clean this up
     let fyEntry: any = {};
 
-    fyEntry.year = this.model.year;
+    fyEntry.year = this.model.year || '';
     fyEntry.text = this.model.textarea || '';
 
     for(let i = 0; i < this.yearOptions.length; ++i) {
