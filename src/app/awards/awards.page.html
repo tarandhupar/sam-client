@@ -1,20 +1,18 @@
 <div class="usa-grid-full awards">
-<div *ngIf="awardData">
-	<div class="usa-width-one-fourth">
+<ng-container *ngIf="awardData">
+	<aside class="usa-width-one-fourth">
 		<br />
-		<aside>
-			<div class="side-nav-position" sam-sticky limit=1200 container="occupy-page">
-				<img src="">
-				<nav>
-					<ul class="usa-sidenav-list">
-						<li><a href="{{currentUrl}}#general-information">General Information</a></li>
-						<li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
-						<li><a href="{{currentUrl}}#business-information">Business Information</a></li>
-					</ul>
-				</nav>
-			</div>
-		</aside>
-	</div>
+		<div  sam-sticky limit=1200 container="awards">
+			<img src="">
+			<nav>
+				<ul class="usa-sidenav-list">
+					<li><a href="{{currentUrl}}#general-information">General Information</a></li>
+					<li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
+					<li><a href="{{currentUrl}}#business-information">Business Information</a></li>
+				</ul>
+			</nav>
+		</div>
+	</aside>
 	<div class="usa-width-three-fourths" >
 		<div>
 			<div class="usa-grid-full">
@@ -381,5 +379,5 @@
 			</div>
 		</div>
 	</div>
-</div>
+</ng-container>
 </div>

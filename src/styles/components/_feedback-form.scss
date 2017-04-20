@@ -131,7 +131,12 @@ body.feedback-open {
     background: #fff1d2;
     height: 36px;
     font-weight: 400;
+    font-size: 85%;
     padding-top: 8px;
+  }
+
+  .feedback-alert-warning i{
+    font-size: 100%;
   }
 
   .feedback-alert-placeholder{
@@ -142,6 +147,7 @@ body.feedback-open {
 
   .usa-input-error{
     padding-top: 0;
+    margin-top: 0;
     border: none;
   }
 }

@@ -1,14 +1,13 @@
 import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {FHService} from "../../../api-kit/fh/fh.service";
-import { ReplaySubject, Observable } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
   moduleId: __filename,
   selector: 'fh-featured-result',
   template: `
     <div class="featured-result">
-
       <div class="card">
         <div class="card-header-secure">
           <h3>
@@ -25,28 +24,27 @@ import { ReplaySubject, Observable } from 'rxjs';
           <div *ngIf="logoUrl && !errorOrganization" class="logo-small"  style="float: left; margin-right: 10px;">
             <img [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
           </div>
-
           <div>
             <ul class="usa-unstyled-list">
               <li>
                 {{ data.type=="Agency" ? 'Sub-Tier' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
               </li>
-              <li *ngIf="data">
+              <li>
                 <strong>CGAC: </strong> {{ data.cgac }}
-              </li>  
-              <br/>
-              <li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
-                Department/Ind. Agency: {{ data.parentOrganizationHierarchy.name }}
+              </li>
+              <li *ngIf="department">
+                Department/Ind. Agency: {{ department.name }}
+              </li>
+              <li>
+                <a href="/search?keyword={{qParams.keyword}}&index=fpds&page=1&organizationId={{data._id}}" target="_blank">View Awards contracted by this federal organization</a>
               </li>
             </ul>
           </div>
-
         </div>
         <div class="card-extra-content">
           <i class="fa fa-star" aria-hidden="true" style="color:#fdb81e;"></i> <strong>Featured Result</strong>
         </div>
       </div>
-
     </div>
   `
 })
@@ -56,9 +54,20 @@ export class FHFeaturedResult implements OnInit {
   public logoUrl: string;
   public logoInfo: any;
   errorOrganization: any;
+  department: {};
+
   constructor(private fhService: FHService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.data.organizationHierarchy && this.data.organizationHierarchy.length > 1) {
+      for (let o of this.data.organizationHierarchy) {
+        if (o.level == 1) {
+          this.department = o;
+          break;
+        }
+      }
+    }
+  }
 
   ngOnChanges(changes) {
     if(this.data['_id']) {
