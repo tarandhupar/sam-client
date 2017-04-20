@@ -30,6 +30,7 @@ export class FinancialInfoPage2 implements OnInit {
     },
 
     textarea: {
+      hint: 'Please describe accomplishment:',
       showWhenCheckbox: 'unchecked'
     }
   };
