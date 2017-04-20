@@ -64,9 +64,9 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
     // todo: remove default checkmark
     this.yearOptions = [
-      { value: currentFY - 1, label: currentFY - 1, name: this.name + '-2016' },
-      { value: currentFY, label: currentFY, name: this.name + '-2017' },
-      { value: currentFY + 1, label: currentFY + 1, name: this.name + '-2018' }
+      { value: currentFY - 1, label: currentFY - 1, name: this.name + currentFY - 1 },
+      { value: currentFY, label: currentFY, name: this.name + currentFY },
+      { value: currentFY + 1, label: currentFY + 1, name: this.name + currentFY + 1 }
     ];
   }
 
