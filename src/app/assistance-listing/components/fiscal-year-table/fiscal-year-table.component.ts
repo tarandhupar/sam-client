@@ -120,6 +120,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   }
 
   public addEntry() {
+    // todo: clean this up
     let fyEntry: any = {};
 
     fyEntry.year = this.model.year;
@@ -132,6 +133,11 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     }
 
     this.model.entries[this.currentIndex] = fyEntry;
+
+    this.model.entries.sort((a, b) => {
+      return a.year - b.year;
+    });
+
     this.resetForm();
   }
 
@@ -146,6 +152,13 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   }
 
   public removeEntry(index: number) {
+    // todo: clean this up
+    let FY = this.model.entries[index].year;
+    this.yearOptions.push({ value: FY, label: FY, name: this.name + FY });
+    this.yearOptions.sort((a, b) => {
+      return Number(a.value) - Number(b.value);
+    });
+
     this.model.entries.splice(index, 1);
     if(index < this.currentIndex) {
       this.currentIndex--;
