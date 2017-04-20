@@ -79,7 +79,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     if (this.getRelatedProgSub)
       this.getRelatedProgSub.unsubscribe();
 
-    if(this.relatedProgSub)
+    if (this.relatedProgSub)
       this.relatedProgSub.unsubscribe();
   }
 
@@ -100,15 +100,15 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
    * @return Observable of Related Program API
    */
   private populateRelatedProgramMultiList(relatedPrograms: any) {
-    this.relatedProgSub  = this.programService.falautosearch('',relatedPrograms.join(','))
+    this.relatedProgSub = this.programService.falautosearch('', relatedPrograms.join(','))
       .subscribe(data => {
         this.data = data;
-        for(let dataItem of data) {
-          this.relatedProgInitialSelection.push({code:dataItem.id, name:dataItem.value});
+        for (let dataItem of data) {
+          this.relatedProgInitialSelection.push({code: dataItem.id, name: dataItem.value});
           this.realtedProgMultiArrayValues.push(dataItem.id);
         }
         this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.realtedProgMultiArrayValues);
-      },error => {
+      }, error => {
         console.error('Error Retrieving Related Program!!', error);
       });
   }
@@ -123,7 +123,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
           if (falNo.trim().length == 6)
             falNo = falNo.slice(3, 6);
-          if (api.data.relatedPrograms.length>0) {
+          if (api.data.relatedPrograms.length > 0) {
             this.populateRelatedProgramMultiList(api.data.relatedPrograms);
 
           }
@@ -140,6 +140,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
         });//end of subscribe
 
   }
+
   relatedProgramTypeChange(event) {
     let isDuplicate: boolean;
     const control = this.falHeaderInfoForm.controls['relatedTo'];
@@ -158,11 +159,12 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
       }
     }
   }
+
   removeListDuplicates(arr: any) {
-    for(var i = 0; i < arr.length; i++) {
-      for(var j = i+1; j < arr.length; j++) {
-        if(arr[i] === arr[j])
-          arr.splice(j,1);
+    for (var i = 0; i < arr.length; i++) {
+      for (var j = i + 1; j < arr.length; j++) {
+        if (arr[i] === arr[j])
+          arr.splice(j, 1);
       }
     }
     return arr;
@@ -177,11 +179,12 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     }
     return unique;
   }
+
   placeholderMsg(multiArray: any) {
     let PlaceholderMsg = '';
-    if(multiArray.length === 1) {
+    if (multiArray.length === 1) {
       PlaceholderMsg = 'One Type Selected';
-    } else if(multiArray.length > 1) {
+    } else if (multiArray.length > 1) {
       PlaceholderMsg = 'Multiple Types Selected';
     } else {
       PlaceholderMsg = 'None Selected';
