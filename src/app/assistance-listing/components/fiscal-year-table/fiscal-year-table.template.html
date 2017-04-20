@@ -18,7 +18,7 @@
             Fiscal Year
           </th>
           <th scope="col">
-            Thingy
+            {{ options.itemName }}
           </th>
           <th scope="col">
             Actions
@@ -65,7 +65,7 @@
                    [formControlName]="'textarea'"
       ></samTextArea>
 
-      <samButton *ngIf="!showForm && yearOptions && yearOptions.length > 0" buttonText="Add" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
+      <samButton *ngIf="!showForm && yearOptions && yearOptions.length > 0" [buttonText]="'Add ' + options.itemName" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
       <samButton *ngIf="showForm" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
       <samButton *ngIf="showForm" buttonText="Confirm" (onClick)="addEntry()" [buttonType]="(!fyTableGroup.valid ? 'disabled' : 'default')"></samButton>
     </div>
