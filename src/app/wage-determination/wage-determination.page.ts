@@ -38,7 +38,7 @@ export class WageDeterminationPage implements OnInit {
   pageRoute: string;
   pageFragment: string;
   sidenavModel = {
-    "label": "Wage Determination",
+    "label": "WD",
     "children": []
   };
 
@@ -55,10 +55,6 @@ export class WageDeterminationPage implements OnInit {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
         this.pageFragment = tree.fragment;
-        if (this.pageFragment) {
-          const element = document.getElementById(tree.fragment);
-          if (element) { element.scrollIntoView(); }
-        }
       }
     });
   }
@@ -72,7 +68,9 @@ export class WageDeterminationPage implements OnInit {
     let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
     this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
     this.getLocations(wgAndDictionariesAPI);
-    this.loadHistory(wdAPI);
+    let wdHistoryAPI = this.loadHistory(wdAPI);
+    let DOMReady$ = Observable.zip(wgAndDictionariesAPI, wdHistoryAPI).delay(2000);
+    this.DOMComplete(DOMReady$);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
 
@@ -87,20 +85,25 @@ export class WageDeterminationPage implements OnInit {
       wgSubject.subscribe(api => { // do something with the wg api
         this.wageDetermination = api;
 
-        let wageDeterminationSideNavContent = [
-          {
-            "label": "Overview",
-            "route": "#wage-determination",
-          },
-          {
-            "label": "Wage Determination",
-            "route": "#wd-document",
-          },
-          {
-            "label": "History",
-            "route": "#wd-history",
-          }
-        ];
+        this.pageRoute = "wage-determination/" + this.referenceNumber + "/" + this.revisionNumber;
+        let wageDeterminationSideNavContent = {
+          "label": "Wage Determination",
+          "route": this.pageRoute,
+          "children": [
+            {
+              "label": "Overview",
+              "field": "#wage-determination",
+            },
+            {
+              "label": "Document",
+              "field": "#wd-document",
+            },
+            {
+              "label": "History",
+              "field": "#wd-history",
+            }
+          ]
+        };
         this.updateSideNav(wageDeterminationSideNavContent);
       }, err => {
         console.log('Error logging', err);
@@ -110,19 +113,21 @@ export class WageDeterminationPage implements OnInit {
     return wgSubject;
   }
 
+  selectedItem(item){
+    this.selectedPage = this.sidenavService.getData()[0];
+  }
+
   private updateSideNav(content?){
 
     let self = this;
 
     if(content){
       // Items in first level (pages) have to have a unique name
-      _.map(content, function(contentItem){
-        let repeatedItem = _.findIndex(self.sidenavModel.children, item => item.label == contentItem.label );
-        // If page has a unique name added to the sidenav
-        if(repeatedItem === -1){
-          self.sidenavModel.children.push(contentItem);
-        }
-      });
+      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
+      // If page has a unique name added to the sidenav
+      if(repeatedItem === -1){
+        this.sidenavModel.children.push(content);
+      }
     }
 
     updateContent();
@@ -130,7 +135,7 @@ export class WageDeterminationPage implements OnInit {
     function updateContent(){
       let children = _.map(self.sidenavModel.children, function(possiblePage){
         let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
-          possibleSection.route = "#" + possibleSection.field;
+          possibleSection.route = possibleSection.field;
           return possibleSection;
         });
         _.remove(possiblePagechildren, _.isUndefined);
@@ -139,7 +144,6 @@ export class WageDeterminationPage implements OnInit {
       });
       self.sidenavModel.children = children;
     }
-
   }
 
   private loadDictionary() {
@@ -154,18 +158,32 @@ export class WageDeterminationPage implements OnInit {
     return dictionariesSubject;
   }
 
+  private DOMComplete(observable){
+    observable.subscribe(
+      () => {
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
+        }
+      },
+      () => {
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
+      }
+    });
+  }
+
   sidenavPathEvtHandler(data){
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
 
     if (this.pageFragment == data.substring(1)) {
       document.getElementById(this.pageFragment).scrollIntoView();
     }
-		else if(data.charAt(0)=="#"){
-			this.router.navigate([], { fragment: data.substring(1) });
-		} else {
-			this.router.navigate([data]);
-		}
-	}
+    else if(data.charAt(0)=="#"){
+            this.router.navigate([], { fragment: data.substring(1) });
+    } else {
+            this.router.navigate([data]);
+    }
+  }
 
   private getLocations(combinedAPI: Observable<any>){
     combinedAPI.subscribe(([wageDetermination, dictionaries]) => {
