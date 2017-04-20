@@ -64,9 +64,9 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   ngOnInit(){
     this.createForm();
 
-    /*if (this.sharedService.programId) {
+    if (this.sharedService.programId) {
       this.getData();
-    }*/
+    }
   }
 
   ngOnDestroy(){
@@ -119,7 +119,121 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
     });
   }
 
+  getData() {
+
+    this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
+      .subscribe(api => {
+          this.progTitle = api.data.title;
+          let flag = (api.data.assistance.deadlines.flag ? api.data.assistance.deadlines.flag : '');
+          let deadline_desc = (api.data.assistance.deadlines.description ? api.data.assistance.deadlines.description : '');
+          let reports = [];
+
+          if(api.data.assistance.preApplicationCoordination.environmentalImpact){
+            for(let report of api.data.assistance.preApplicationCoordination.environmentalImpact.reports){
+              reports.push(report.reportCode);
+            }
+          }
+
+          this.falAssistanceForm.patchValue({
+            deadlines:{
+              flag: flag,
+              description: deadline_desc
+            },
+            preApplicationCoordination:{
+              reports: reports
+            }
+          });
+          console.log("api", api);
+        },
+        error => {
+          console.error('Error Retrieving Program!!', error);
+        });//end of subscribe
+
+  }
+
+  saveData(){
+
+    let data = this.buildData();
+
+    console.log("data", data);
+
+    this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
+      .subscribe(api => {
+          this.sharedService.programId = api._body;
+          console.log('AJAX Completed Applying for Assistance Section', api);
+
+          if(this.redirectToWksp)
+            this.router.navigate(['falworkspace']);
+          else
+            this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/compliance-requirements']);
+
+        },
+        error => {
+          console.error('Error saving Program!!', error);
+        }); //end of subscribe
+  }
+
+  buildData(){
+    let data = {assistance: JSON.parse(JSON.stringify(this.falAssistanceForm.value))};
+    let reports = [];
+
+    for(let report of this.falAssistanceForm.value.preApplicationCoordination.reports){
+
+      reports.push( {
+        reportCode: report,
+        isSelected: true
+      } );
+    }
+
+    data.assistance.preApplicationCoordination['environmentalImpact'] = { reports: reports};
+    delete data.assistance.preApplicationCoordination['reports'];
+
+    if(data.assistance.renewal.interval == 'na'){
+      data.assistance.renewal.interval = '';
+    }
+
+    if(data.assistance.appeal.interval == 'na'){
+      data.assistance.appeal.interval = '';
+    }
+
+    if(data.assistance.approval.interval == 'na'){
+      data.assistance.approval.interval = '';
+    }
+
+    if(data.assistance.applicationProcedure.isApplicable.length > 0)
+      data.assistance.applicationProcedure.isApplicable = true;
+    else
+      data.assistance.applicationProcedure.isApplicable = false;
+
+    if(data.assistance.selectionCriteria.isApplicable.length > 0)
+      data.assistance.selectionCriteria.isApplicable = true;
+    else
+      data.assistance.selectionCriteria.isApplicable = false;
+
+    return data;
+  }
+
   onSaveContinueClick(){
-    console.log("form", this.falAssistanceForm);
+    this.saveData();
+  }
+
+  onCancelClick(event) {
+    if (this.sharedService.programId)
+      this.router.navigate(['/programs', this.sharedService.programId, 'view']);
+    else
+      this.router.navigate(['/falworkspace']);
+  }
+
+  onPreviousClick(event){
+    if(this.sharedService.programId)
+      this.router.navigate(['programs/' + this.sharedService.programId + '/edit/criteria-information']);
+    else
+      this.router.navigate(['programs/add/criteria-information']);
+
+  }
+
+  onSaveExitClick(event) {
+    this.redirectToWksp = true;
+    this.saveData();
   }
 }

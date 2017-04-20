@@ -61,6 +61,7 @@
                  [name]="'selectionCriteria-description'"
                  [required]="true"
                  formControlName="description"
+                 [class.hide]="falAssistanceForm.value.selectionCriteria.isApplicable[0] != true"
     ></samTextArea>
   </div>
 
