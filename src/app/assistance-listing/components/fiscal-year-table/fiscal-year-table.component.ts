@@ -2,6 +2,7 @@ import { Component, Input, forwardRef, ViewChild } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, Validators } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 import { OptionsType } from "sam-ui-kit/types";
+import * as moment from "moment";
 
 @Component({
   selector: 'falFYTable',
@@ -59,12 +60,18 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
       this.required = false;
     }
 
-    // todo: don't hardcode years
+    let currentFY = this.getCurrentFY();
+
+    // todo: remove default checkmark
     this.yearOptions = [
-      { value: '2016', label: '2016', name: 'funded-projects-2016' },
-      { value: '2017', label: '2017', name: 'funded-projects-2017' },
-      { value: '2018', label: '2018', name: 'funded-projects-2018' }
+      { value: currentFY - 1, label: currentFY - 1, name: this.name + '-2016' },
+      { value: currentFY, label: currentFY, name: this.name + '-2017' },
+      { value: currentFY + 1, label: currentFY + 1, name: this.name + '-2018' }
     ];
+  }
+
+  public getCurrentFY() {
+    return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
   }
 
   private validateInputs() {
