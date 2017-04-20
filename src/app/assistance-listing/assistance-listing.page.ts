@@ -56,6 +56,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     private dictionaryService: DictionaryService) {}
 
   ngOnInit() {
+    console.log("Related Programs: ", this.relatedProgram);
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
@@ -64,14 +65,19 @@ export class ProgramPage implements OnInit, OnDestroy {
         this.cookieValue = Cookies.get('iPlanetDirectoryPro');
       }
     }
-
+    console.log("ngOnInit 1");
     let programAPISource = this.loadProgram();
-
+    console.log("ngOnInit 2");
     this.loadDictionaries();
+    console.log("ngOnInit 3");
     this.loadFederalHierarchy(programAPISource);
+    console.log("ngOnInit 4");
     this.loadHistoricalIndex(programAPISource);
+    console.log("ngOnInit 5");
     this.loadRelatedPrograms(programAPISource);
+    console.log("ngOnInit 6");
     this.loadAssistanceTypes(programAPISource);
+    console.log("ngOnInit 7");
   }
 
   ngOnDestroy() {
@@ -87,15 +93,19 @@ export class ProgramPage implements OnInit, OnDestroy {
    * @return Observable of Program API
    */
   private loadProgram() {
+    console.log("loadProgram() before api");
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = params['id'];
+      this.alert = [];
+      this.relatedProgram = [];
       return this.programService.getProgramById(params['id'], this.cookieValue);
     });
     this.apiStreamSub = apiStream.subscribe(apiSubject);
 
     this.apiSubjectSub = apiSubject.subscribe(api => {
       // run whenever api data is updated
+      console.log("program is loaded: ", api);
       this.program = api;
       this.checkCurrentFY();
       if(this.program.data && this.program.data.authorizations) {
@@ -115,6 +125,7 @@ export class ProgramPage implements OnInit, OnDestroy {
    * @return Observable of Dictionary API
    */
   private loadDictionaries() {
+    console.log("loadDictionaries() before api");
     // declare dictionaries to load
     let dictionaries = [
       'program_subject_terms',
@@ -134,6 +145,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     var temp: any = {};
     dictionaryServiceSubject.subscribe(res => {
+      console.log("loadDictionaries() after api");
       // run whenever dictionary data is updated
       for (let key in res) {
         temp[key] = res[key]; // store the dictionary
@@ -145,16 +157,19 @@ export class ProgramPage implements OnInit, OnDestroy {
   }
 
   private loadFederalHierarchy(apiSource: Observable<any>) {
+    console.log("loadFederalHierarchy() before api");
     let apiSubject = new ReplaySubject(1);
 
     // construct a stream of federal hierarchy data
     let apiStream = apiSource.switchMap(api => {
+      console.log("loadFederalHierarchy() after api1");
       return this.fhService.getOrganizationById(api.data.organizationId, false);
     })  ;
 
     apiStream.subscribe(apiSubject);
 
     this.federalHierarchySub = apiSubject.subscribe(res => {
+      console.log("loadFederalHierarchy() after api2");
       this.federalHierarchy = res['_embedded'][0]['org'];
       this.fhService.getOrganizationLogo(apiSubject,
         (logoData) => {
@@ -176,12 +191,15 @@ export class ProgramPage implements OnInit, OnDestroy {
   }
 
   private loadHistoricalIndex(apiSource: Observable<any>) {
+    console.log("loadHistoricalIndex() before api");
     // construct a stream of historical index data
     let historicalIndexStream = apiSource.switchMap(api => {
+      console.log("loadHistoricalIndex() after api1");
       return this.historicalIndexService.getHistoricalIndexByProgramNumber(api.id, api.data.programNumber);
     });
 
     this.historicalIndexSub = historicalIndexStream.subscribe(res => {
+      console.log("loadHistoricalIndex() after api2");
       // run whenever historical index data is updated
       this.historicalIndex = res._embedded ? res._embedded.historicalIndex : []; // store the historical index
       let pipe = new HistoricalIndexLabelPipe();
@@ -201,8 +219,10 @@ export class ProgramPage implements OnInit, OnDestroy {
   }
 
   private loadRelatedPrograms(apiSource: Observable<any>) {
+    console.log("loadRelatedPrograms() before api");
     // construct a stream of related programs ids
     let relatedProgramsIdStream = apiSource.switchMap(api => {
+      console.log("loadRelatedPrograms() after api1: ", api);
       if (api.data.relatedPrograms && api.data.relatedPrograms.length > 0) {
         return Observable.from(api.data.relatedPrograms);
       }
@@ -211,10 +231,12 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     // construct a stream that contains all related programs from related program ids
     let relatedProgramsStream = relatedProgramsIdStream.flatMap((relatedId: any) => {
+      console.log("Related Id: ", relatedId);
       return this.programService.getLatestProgramById(relatedId, this.cookieValue);
     });
 
-    this.relatedProgramsSub = relatedProgramsStream.subscribe((relatedProgram: any) => {
+    this.relatedProgramsSub = Observable.onErrorResumeNext(relatedProgramsStream).subscribe((relatedProgram: any) => {
+      console.log("loadRelatedPrograms() after api2: ", relatedProgram);
       // run whenever related programs are updated
       if (typeof relatedProgram !== 'undefined') {
         this.relatedProgram.push({ // store the related program
@@ -222,6 +244,10 @@ export class ProgramPage implements OnInit, OnDestroy {
           'id': relatedProgram.id
         });
       }
+    }, error => {
+      console.log("loadRelatedPrograms() after api2: error ", error)
+    }, () => {
+      console.log("loadRelatedPrograms() after api3: completed")
     });
 
     return relatedProgramsStream;
@@ -237,7 +263,9 @@ Please contact the issuing agency listed under "Contact Information" for more in
   }
 
   private loadAssistanceTypes(apiSource: Observable<any>) {
+    console.log("loadAssistanceTypes() after api1")
     apiSource.subscribe(api => {
+      console.log("loadAssistanceTypes() after api2")
       if(api.data.financial && api.data.financial.obligations && api.data.financial.obligations.length > 0) {
         this.assistanceTypes = _.map(api.data.financial.obligations, 'assistanceType');
       }
@@ -246,5 +274,9 @@ Please contact the issuing agency listed under "Contact Information" for more in
         this.assistanceTypes = _.union(this.assistanceTypes, api.data.assistanceTypes);
       }
     });
+  }
+
+  private updateRelatedProgram(){
+    this.relatedProgram = [];
   }
 }
