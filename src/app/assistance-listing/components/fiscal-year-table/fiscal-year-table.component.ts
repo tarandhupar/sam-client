@@ -112,6 +112,14 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   }
 
   public resetForm() {
+    if(this.currentIndex != this.model.entries.length) {
+      for(let i = 0; i < this.yearOptions.length; ++i) {
+        if(this.yearOptions[i].value === this.model.entries[this.currentIndex].year) {
+          this.yearOptions.splice(i, 1);
+        }
+      }
+    }
+
     this.currentIndex = this.model.entries.length;
     this.fyTableGroup.reset();
     this.showForm = false;
@@ -124,7 +132,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     let fyEntry: any = {};
 
     fyEntry.year = this.model.year;
-    fyEntry.text = this.model.textarea;
+    fyEntry.text = this.model.textarea || '';
 
     for(let i = 0; i < this.yearOptions.length; ++i) {
       if(this.yearOptions[i].value === this.model.year) {
@@ -143,6 +151,9 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
   public editEntry(index: number) {
     let entry = this.model.entries[index];
+
+    let FY = entry.year;
+    this.yearOptions.push({ value: FY, label: FY, name: this.name + FY });
 
     this.fyTableGroup.get('textarea').setValue(entry.text);
     this.fyTableGroup.get('year').setValue(entry.year);
