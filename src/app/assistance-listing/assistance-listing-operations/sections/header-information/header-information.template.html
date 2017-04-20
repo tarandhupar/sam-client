@@ -20,7 +20,7 @@
                 [orgId]="agency"
                 [initial]="agency ? [agency] : []"
                 (organization)="onOrganizationChange($event)"
-                [levelLimit] = '2'>
+                [levelLimit]='2'>
   </agencyPicker>
 
   <samNumber [maxlength]="3"
@@ -30,16 +30,20 @@
              [control]="falHeaderInfoForm.controls['programNumber']"
              [name]="'programNumber-input'"
              [label]="'FAL Number'"
-             [errorMessage]= "falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
+             [errorMessage]="falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
              formControlName="programNumber"></samNumber>
 
-  <sam-list-input [hint]="'Are there any related federal assistance listings?'"
-                  [control]="falHeaderInfoForm.controls['relatedTo']"
-                  [name]="'relatedTo-control'"
-                  [label]="'Related Federal Assistance Listing'"
-                  [options]="listOptions"
-                  formControlName="relatedTo"></sam-list-input>
-
+  <sam-list-display #relatedProgListDisplay [newValue]="relatedProgSelectedOption" formControlName="relatedProgInitialSelection"
+                    (modelChange)="relatedProglistChange($event)" [config]="listConfig">
+    <labelWrapper  [label]="'Related Federal Assistance Listing'" [required]="true"
+                   [hint]="'Are there any related federal assistance listings?'">
+      <sam-autocomplete autofill-falRelProgram
+                        [showClearButton]="true"
+                        formControlName="relatedTo"
+                        (ngModelChange)="relatedProgramTypeChange($event)"
+                        name="relatedProgramSearch" [config]="relProAutocompleteConfig" class="search-bar sam-autocomplete-width"></sam-autocomplete>
+    </labelWrapper>
+  </sam-list-display>
   <div>
     <div class="pull-left">
       <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
