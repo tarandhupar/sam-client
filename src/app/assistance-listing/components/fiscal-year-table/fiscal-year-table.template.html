@@ -27,7 +27,7 @@
         </thead>
         <tbody>
         <ng-container *ngFor="let entry of model.entries; let i=index">
-          <tr>
+          <tr *ngIf="entry.year >= getCurrentFY() - 1 && entry.year <= getCurrentFY() + 1">
             <td>{{ entry.year }}</td>
             <td>{{ entry.text }}</td>
             <td>
