@@ -22,6 +22,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
     },
 
     textarea: {
+      hint: 'Please describe funded projects:',
       showWhenCheckbox: 'unchecked'
     }
   };
@@ -137,15 +138,17 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
       entries: []
     };
 
-    if(!projects.isApplicable) {
-      projectsForm.checkbox.push('na');
-    }
+    if(projects) {
+      if (!projects.isApplicable) {
+        projectsForm.checkbox.push('na');
+      }
 
-    for(let project of projects.list) {
-      projectsForm.entries.push({
-        year: project.fiscalYear ? project.fiscalYear.toString() : '',
-        text: project.description
-      });
+      for (let project of projects.list) {
+        projectsForm.entries.push({
+          year: project.fiscalYear ? project.fiscalYear.toString() : '',
+          text: project.description
+        });
+      }
     }
 
     return projectsForm;

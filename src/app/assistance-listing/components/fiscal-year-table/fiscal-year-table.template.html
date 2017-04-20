@@ -59,7 +59,7 @@
       ></samSelect>
 
       <samTextArea *ngIf="showForm"
-                   [hint]="'Please describe funded projects:'"
+                   [hint]="options?.textarea?.hint"
                    [name]="name + '-textarea'"
                    [required]="false"
                    [formControlName]="'textarea'"
