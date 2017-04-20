@@ -232,10 +232,14 @@ export class ProgramPage implements OnInit, OnDestroy {
     // construct a stream that contains all related programs from related program ids
     let relatedProgramsStream = relatedProgramsIdStream.flatMap((relatedId: any) => {
       console.log("Related Id: ", relatedId);
-      return this.programService.getLatestProgramById(relatedId, this.cookieValue);
+      return this.programService.getLatestProgramById(relatedId, this.cookieValue).retryWhen(
+        errors => {
+          return this.route.params;
+        }
+      );
     });
 
-    this.relatedProgramsSub = Observable.onErrorResumeNext(relatedProgramsStream).subscribe((relatedProgram: any) => {
+    this.relatedProgramsSub = relatedProgramsStream.subscribe((relatedProgram: any) => {
       console.log("loadRelatedPrograms() after api2: ", relatedProgram);
       // run whenever related programs are updated
       if (typeof relatedProgram !== 'undefined') {
