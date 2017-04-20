@@ -31,6 +31,7 @@ export class SearchPage implements OnInit{
   qParams:any = {};
   isActive: boolean = true;
   isStandard: string = '';
+  showRegionalOffices: boolean = false;
 
   @ViewChild('agencyPicker') agencyPicker;
 
@@ -245,6 +246,13 @@ export class SearchPage implements OnInit{
               private opportunityService: OpportunityService,
               private alertFooterService: AlertFooterService) { }
   ngOnInit() {
+    if(window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0){
+      this.showRegionalOffices = true;
+    }
+    else{
+      this.showRegionalOffices = false;
+    }
+
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
@@ -266,7 +274,6 @@ export class SearchPage implements OnInit{
         this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
-
         this.runSearch();
         this.loadParams();
       });
@@ -287,7 +294,7 @@ export class SearchPage implements OnInit{
         organizationStringList += organizationItem.value;
       }
       else{
-        organizationStringList += ', ' + organizationItem.value;
+        organizationStringList += ',' + organizationItem.value;
       }
 
       return organizationStringList;
@@ -456,7 +463,8 @@ export class SearchPage implements OnInit{
       awardOrIdv: this.awardIDVModel,
       awardType: this.awardTypeModel,
       contractType: this.contractTypeModel,
-      naics: this.naicsTypeModel
+      naics: this.naicsTypeModel,
+      showRO: this.showRegionalOffices
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -632,7 +640,14 @@ export class SearchPage implements OnInit{
     };
 
     document.getElementById('search-results').getElementsByTagName('div')[0].focus();
-    this.router.navigate(['/search'],navigationExtras);
+    if(this.showRegionalOffices){
+      this.router.navigate(['/search/fal/regionalOffices'],navigationExtras);
+    }
+    else{
+      this.router.navigate(['/search'],navigationExtras);
+    }
+
+
   }
 
   // FILTER SELECTION CHANGE FUNCTIONS
@@ -840,7 +855,12 @@ export class SearchPage implements OnInit{
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
-    this.router.navigate(['/search'], navigationExtras);
+    if(this.showRegionalOffices){
+      this.router.navigate(['/search/fal/regionalOffices'],navigationExtras);
+    }
+    else{
+      this.router.navigate(['/search'],navigationExtras);
+    }
   }
 
   wdTypeRadClear(){

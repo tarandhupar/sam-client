@@ -90,6 +90,11 @@ export class SearchService {
       oApiParam.oParam['naics'] = obj.naics;
     }
 
+    //showRegionalOffices only when
+    if(obj.showRO) {
+      oApiParam.oParam['index'] = 'ro';
+    }
+
     return this.oAPIService.call(oApiParam);
   }
 
