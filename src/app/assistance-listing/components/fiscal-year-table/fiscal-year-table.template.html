@@ -27,7 +27,8 @@
         </thead>
         <tbody>
         <ng-container *ngFor="let entry of model.entries; let i=index">
-          <tr *ngIf="entry.year >= getCurrentFY() - 1 && entry.year <= getCurrentFY() + 1">
+          <!--<tr *ngIf="entry.year >= getCurrentFY() - 1 && entry.year <= getCurrentFY() + 1">-->
+          <tr>
             <td>{{ entry.year }}</td>
             <td>{{ entry.text }}</td>
             <td>
@@ -64,7 +65,7 @@
                    [formControlName]="'textarea'"
       ></samTextArea>
 
-      <samButton *ngIf="!showForm" buttonText="Add" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
+      <samButton *ngIf="!showForm && yearOptions && yearOptions.length > 0" buttonText="Add" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
       <samButton *ngIf="showForm" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
       <samButton *ngIf="showForm" buttonText="Confirm" (onClick)="addEntry()" [buttonType]="(!fyTableGroup.valid ? 'disabled' : 'default')"></samButton>
     </div>
