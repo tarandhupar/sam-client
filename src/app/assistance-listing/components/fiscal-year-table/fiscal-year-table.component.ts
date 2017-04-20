@@ -210,6 +210,10 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
       this.fyTableGroup.get('naCheckbox').setValue(this.model.checkbox);
     }
 
+    if(this.model.checkbox == null) {
+      this.model.checkbox = [];
+    }
+
     if(this.model.textarea) {
       this.fyTableGroup.get('textarea').setValue(this.model.textarea);
     }
