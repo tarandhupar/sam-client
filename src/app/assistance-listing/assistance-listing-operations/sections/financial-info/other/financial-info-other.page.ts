@@ -21,7 +21,7 @@ export class FinancialInfoPage2 implements OnInit {
     label: 'Program Accomplishments',
     hint: 'Showcase for public users the achievements associated with this listing. Use clear, plain language and provide compelling examples.',
     required: true,
-    itemName: 'Accomplishment',
+    itemName: 'Accomplishments',
 
     checkbox: {
       options: [

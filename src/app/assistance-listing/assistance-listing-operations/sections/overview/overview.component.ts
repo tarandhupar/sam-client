@@ -14,7 +14,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
     label: 'Examples of Funded Projects',
     hint: 'Provide examples that demonstrate how funding might be used. Describe the subject area without using program names or locations.',
     required: false,
-    itemName: 'Project',
+    itemName: 'Examples',
 
     checkbox: {
       options: [
