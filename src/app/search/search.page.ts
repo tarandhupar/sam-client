@@ -162,7 +162,7 @@ export class SearchPage implements OnInit{
   awardTypeModel: string = '';
   awardType = {
     "name": "Award-IDV Type",
-    "placeholder": "Award-IDV Types",
+    "placeholder": "Search Award-IDV Types",
     "selectedLabel": "Award - IDV Types Selected",
     "options": [
       { label: 'BOA (IDV)', value: 'D_IDV', name: 'BOA' },
@@ -194,7 +194,7 @@ export class SearchPage implements OnInit{
   contractTypeModel: string = '';
   contractType = {
     "name": "Contract Type",
-    "placeholder": "Contract Types",
+    "placeholder": "Search Contract Types",
     "selectedLabel": "Contract Types Selected",
     "options": [
       { label: 'COST NO FEE', value: 'S', name: 'COST NO FEE' },
@@ -227,8 +227,22 @@ export class SearchPage implements OnInit{
   naicsTypeModel: any = '';
   naicsType = {
     "name": "NAICS Type",
-    "placeholder": "NAICS Types",
+    "placeholder": "Search NAICS Types",
     "selectedLabel": "Codes Selected",
+    "options": [],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
+
+  //Select PSC Types
+  pscTypeModel: any = '';
+  pscType = {
+    "name": "PSC Type",
+    "placeholder": "Search PSC Types",
     "options": [],
     "config": {
       keyValueConfig: {
@@ -266,6 +280,7 @@ export class SearchPage implements OnInit{
         this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
+        this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
 
         this.runSearch();
         this.loadParams();
@@ -390,6 +405,10 @@ export class SearchPage implements OnInit{
       qsobj['naics'] = this.naicsTypeModel;
     }
 
+    if(this.pscTypeModel.length>0){
+      qsobj['psc'] = this.pscTypeModel;
+    }
+
     return qsobj;
   }
 
@@ -408,6 +427,7 @@ export class SearchPage implements OnInit{
       case 'ent':
       case 'fpds':
             this.getAwardsDictionaryData('naics_code');
+            this.getAwardsDictionaryData('classification_code');
     }
 
     //make featuredSearch api call only for first page
@@ -456,7 +476,8 @@ export class SearchPage implements OnInit{
       awardOrIdv: this.awardIDVModel,
       awardType: this.awardTypeModel,
       contractType: this.contractTypeModel,
-      naics: this.naicsTypeModel
+      naics: this.naicsTypeModel,
+      psc: this.pscTypeModel
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -615,6 +636,19 @@ export class SearchPage implements OnInit{
 
           this.naicsType.options = reformattedArray;
           this.naicsType = Object.assign({}, this.naicsType);
+        }
+
+        if(id === 'classification_code'){
+          var reformattedArray = data._embedded.dictionaries[0].elements.map(function(pscItem){
+            let newObj = {label:'', value:'', type:'psc'};
+
+            newObj.label = pscItem.value;
+            newObj.value = pscItem.code;
+            return newObj;
+          });
+
+          this.pscType.options = reformattedArray;
+          this.pscType = Object.assign({}, this.pscType);
         }
 
       },
@@ -834,6 +868,12 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  pscTypeSelected(evt) {
+    this.pscTypeModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
   // this calls function to set up ES query params again and re-call the search endpoint with updated params
   searchResultsRefresh(){
     var qsobj = this.setupQS(false);
@@ -897,6 +937,7 @@ export class SearchPage implements OnInit{
 
   naicsPscFilterClear() {
     this.naicsTypeModel = '';
+    this.pscTypeModel = '';
     this.searchResultsRefresh();
   }
 
@@ -928,6 +969,7 @@ export class SearchPage implements OnInit{
     this.awardTypeModel = '';
     this.contractTypeModel = '';
     this.naicsTypeModel = '';
+    this.pscTypeModel = '';
 
     this.searchResultsRefresh();
 

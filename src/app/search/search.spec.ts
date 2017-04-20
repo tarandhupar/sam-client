@@ -172,6 +172,8 @@ describe('SearchPage', () => {
       fixture.detectChanges();
       expect(fixture.componentInstance.awardType).toBeDefined();
       expect(fixture.componentInstance.contractType).toBeDefined();
+      expect(fixture.componentInstance.naicsType).toBeDefined();
+      expect(fixture.componentInstance.pscType).toBeDefined();
     });
   });
 

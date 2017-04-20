@@ -93,6 +93,7 @@ export class App{
       qsobj['awardType'] = null;
       qsobj['contractType'] = null;
       qsobj['naics'] = null;
+      qsobj['psc'] = null;
     }
 
     let navigationExtras: NavigationExtras = {
