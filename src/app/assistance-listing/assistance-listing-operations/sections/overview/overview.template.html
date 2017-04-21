@@ -1,18 +1,48 @@
+<script src="../../../../../api-kit/autoCompleteWrapper/falProgramautoCompleteWrapper.service.ts"></script>
 <div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Overview - {{title}}</div>
 <form [formGroup]="falOverviewForm">
 
-  <samTextArea [hint]="'Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.'"
-               [control]="falOverviewForm.controls['objective']"
-               [name]="'objectives-input'"
-               [label]="'Objectives'"
-               [required]="true"
-               formControlName="objective"></samTextArea>
+  <samTextArea
+    [hint]="'Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.'"
+    [control]="falOverviewForm.controls['objective']"
+    [name]="'objectives-input'"
+    [label]="'Objectives'"
+    [required]="true"
+    formControlName="objective"></samTextArea>
 
-  <samTextArea [hint]="'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.'"
-               [control]="falOverviewForm.controls['falDesc']"
-               [name]="'falDesc-input'"
-               [label]="'Federal Assistance Listing Description'"
-               formControlName="falDesc"></samTextArea>
+  <samTextArea
+    [hint]="'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.'"
+    [control]="falOverviewForm.controls['falDesc']"
+    [name]="'falDesc-input'"
+    [label]="'Federal Assistance Listing Description'"
+    formControlName="falDesc"></samTextArea>
+  <sam-list-display #fcListDisplay [newValue]="fcSelectedOption" formControlName="fcInitialSelection"
+                    (modelChange)="fclistChange($event)" [config]="listConfig">
+    <labelWrapper #fcTypeWrapper [label]="'Functional Codes'" [required]="true"
+                  [hint]="'Select one or more Functional Codes to help public users search for this listing.'">
+      <sam-autocomplete
+        [options]="fcTypeOptions"
+        [name]="functional-codes-control"
+        formControlName="functionalCodes"
+        (ngModelChange)="fcTypeChange($event)"
+        [config]="fcAutocompleteConfig"
+        [required]="true" [showClearButton]="'true'" class="search-bar sam-autocomplete-width"></sam-autocomplete>
+    </labelWrapper>
+  </sam-list-display>
+  <sam-list-display #stListDisplay [newValue]="stSelectedOption"
+                    formControlName="stInitialSelection"
+                    (modelChange)="stlistChange($event)"
+                    [config]="listConfig">
+    <labelWrapper [label]="'Subject Terms'"
+                  [hint]="'Select one or more Subject Terms to help public users search for this listing.'" [required]="true">
+      <sam-autocomplete autofill-falProgram
+                        formControlName="subjectTerms"
+                        (ngModelChange)="stTypeChange($event)"
+                        name="subjectTermsSearch" [config]="stAutocompleteConfig"
+                        [required]="true" [showClearButton]="true"
+                        class="search-bar sam-autocomplete-width"></sam-autocomplete>
+    </labelWrapper>
+  </sam-list-display>
 
   <div>
     <div class="pull-left">

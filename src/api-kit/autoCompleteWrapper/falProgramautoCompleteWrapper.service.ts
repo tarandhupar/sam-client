@@ -1,37 +1,69 @@
-import { Injectable, Directive, Input, OnChanges } from '@angular/core';
+import {Injectable, Directive, Input, OnChanges} from '@angular/core';
 import 'rxjs/add/operator/map';
-import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
-import { Observable }    from 'rxjs/Observable';
+import {AutocompleteService} from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
+import {Observable}    from 'rxjs/Observable';
 import {ProgramService} from "../program/program.service";
+import {ReplaySubject} from "rxjs";
+import {DictionaryService} from "../dictionary/dictionary.service";
 
 @Injectable()
-export class FALProgramAutoCompleteWrapper implements AutocompleteService{
+export class FALProgramAutoCompleteWrapper implements AutocompleteService {
   private target = "search";
-  autocompleteIndex = "";
-  constructor(private oProgramService:ProgramService) {}
 
-  //sam-ui-kit autocomplete
-  fetch(val: any, endOfList: boolean) {
-    if(this.target=="search"){
-      if(val.length>3){
-        return this.oProgramService.falautosearch({
-          index: this.autocompleteIndex,
-          keyword: val
-        });
-      }
-    }
-    return Observable.of([/*{
-      keyProperty: 'test1',
-    valueProperty: 'test1'
-    },
-      {
-        keyProperty: 'test2',
-        valueProperty: 'test2'
-      },*/
-    ]);
+  constructor(private oProgramService: ProgramService, private oDictionaryService: DictionaryService) {
   }
 
-  setFetchMethod(newVal){
+  getData(q: string, index: string): ReplaySubject<any> {
+    let dictionaryName = 'program_subject_terms';
+    let size = '100';
+    const results = new ReplaySubject();
+    if (index === 'RP') {
+      this.oProgramService.falautosearch(q, '').subscribe(
+        (res) => {
+          results.next(res.reduce((prev, curr) => {
+            const newObj = {
+              code: curr.id,
+              name: curr.value
+            }
+            prev.push(newObj);
+            return prev;
+          }, []));
+        },
+        (error) => {
+          return error;
+        }
+      );
+    }
+
+    if (index === 'D') {
+      this.oDictionaryService.getDictionaryById(dictionaryName, size,'',q).subscribe((res) => {
+          results.next(res['program_subject_terms'].reduce((prev, curr) => {
+            const newObj = {
+              code: curr.element_id,
+              name: curr.value
+            }
+            prev.push(newObj);
+            return prev;
+          }, []));
+        },
+        (error) => {
+          return error;
+        }
+      );
+    }
+    return results;
+
+  }
+
+  fetch(val: string, pageEnd: boolean, serviceOptions: any): Observable<any> {
+    if (val.length >= 2) {
+      return this.getData(val, serviceOptions.index).map(o => o);
+    } else {
+      return Observable.of([]);
+    }
+  }
+
+  setFetchMethod(newVal) {
     this.target = newVal;
   }
 }
@@ -39,16 +71,8 @@ export class FALProgramAutoCompleteWrapper implements AutocompleteService{
 @Directive({
   selector: 'sam-autocomplete[autofill-falProgram]',
   providers: [
-    { provide: AutocompleteService, useClass: FALProgramAutoCompleteWrapper }
+    {provide: AutocompleteService, useExisting: FALProgramAutoCompleteWrapper}
   ]
 })
-export class FAlProgramServiceDirective implements OnChanges {
-  @Input('index') index: string;
-  constructor(private autocompleteService: AutocompleteService){}
-  ngOnInit(){
-    this.autocompleteService['autocompleteIndex'] = this.index;
-  }
-  ngOnChanges(){
-    this.autocompleteService['autocompleteIndex'] = this.index;
-  }
+export class FAlProgramServiceDirective {
 }
