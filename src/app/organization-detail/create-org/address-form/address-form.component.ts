@@ -51,6 +51,7 @@ export class OrgAddrFormComponent {
   };
 
   basicType = "Mailing Address";
+  isStateDisabled: boolean = true;
 
   constructor(private builder: FormBuilder) {}
 
@@ -61,6 +62,14 @@ export class OrgAddrFormComponent {
       postalCode: ['', []],
       city: ['', []],
     });
+
+    this.addressForm.get('city').disable();
+    this.isStateDisabled = true;
+    this.addressForm.get('postalCode').disable();
+  }
+
+  onCountryChange(country) {
+    console.log(country);
   }
 
   onAddrTypeSelect(val){

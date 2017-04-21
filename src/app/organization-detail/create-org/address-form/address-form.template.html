@@ -11,7 +11,7 @@
 
   <div class="usa-width-one-whole">
     <labelWrapper #countryWrapper class="p_T-3x org-create-label" [label]="'Country'" [name]="'Country'" [required]="true">
-      <sam-autocomplete country [ngModelOptions]="{standalone: true}" [(ngModel)]="stateLocationConfig.serviceOptions" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig"></sam-autocomplete>
+      <sam-autocomplete (ngModelChange)="onCountryChange($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="stateLocationConfig.serviceOptions" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig"></sam-autocomplete>
     </labelWrapper>
   </div>
 
@@ -33,7 +33,7 @@
 
     <div class="usa-width-one-half m_R-0 p_R-2x">
       <labelWrapper #stateWrapper class="p_T-1x org-create-label" [label]="'State'" [name]="'State'" [required]="true">
-        <sam-autocomplete state [ngModelOptions]="{standalone: true}" [(ngModel)]="stateOutput" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="stateLocationConfig"></sam-autocomplete>
+        <sam-autocomplete [disabled]="isStateDisabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="stateOutput" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="stateLocationConfig"></sam-autocomplete>
       </labelWrapper>
     </div>
   </div>
