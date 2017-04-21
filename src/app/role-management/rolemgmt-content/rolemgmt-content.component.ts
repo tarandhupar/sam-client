@@ -66,4 +66,8 @@ export class RoleMgmtContent implements OnInit{
       case 'escalated': return 'fa-exclamation-triangle escalated-icon';
     }
   }
+
+  shouldShowRespondButton(content) {
+    return content.status === 'PENDING' || content.status === 'ESCALATED';
+  }
 }
