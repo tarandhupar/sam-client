@@ -92,6 +92,7 @@ export class SearchService {
 
     //showRegionalOffices only when
     if(obj.showRO) {
+      oApiParam.oParam['q'] = obj.ro_keyword;
       oApiParam.oParam['index'] = 'ro';
     }
 

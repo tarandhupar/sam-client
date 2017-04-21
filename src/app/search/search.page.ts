@@ -32,6 +32,7 @@ export class SearchPage implements OnInit{
   isActive: boolean = true;
   isStandard: string = '';
   showRegionalOffices: boolean = false;
+  ro_keyword: string = "";
 
   @ViewChild('agencyPicker') agencyPicker;
 
@@ -239,6 +240,10 @@ export class SearchPage implements OnInit{
     }
   };
 
+  regionalType = {
+    "placeholder": "Regional Agency Search",
+  }
+
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,
@@ -274,6 +279,7 @@ export class SearchPage implements OnInit{
         this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
+        this.ro_keyword = typeof data['ro_keyword'] === "string" ? decodeURI(data['ro_keyword']) : this.ro_keyword;
         this.runSearch();
         this.loadParams();
       });
@@ -397,6 +403,10 @@ export class SearchPage implements OnInit{
       qsobj['naics'] = this.naicsTypeModel;
     }
 
+    if(this.ro_keyword.length>0){
+      qsobj['ro_keyword'] = this.ro_keyword;
+    }
+
     return qsobj;
   }
 
@@ -464,7 +474,8 @@ export class SearchPage implements OnInit{
       awardType: this.awardTypeModel,
       contractType: this.contractTypeModel,
       naics: this.naicsTypeModel,
-      showRO: this.showRegionalOffices
+      showRO: this.showRegionalOffices,
+      ro_keyword: this.ro_keyword
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -952,6 +963,12 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
 
 
+  }
+
+  regionalOfficeSearchEvent(evt) {
+    this.ro_keyword = evt;
+    this.pageNum = 0;
+    this.searchResultsRefresh();
   }
 
 }

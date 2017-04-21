@@ -20,7 +20,7 @@ import * as moment from 'moment/moment';
     	
     	
     	<ul class="usa-unstyled-list">    
-    	    <li>
+    	    <li class="region-name">
     	      <strong>State/Region: </strong>
     	      <span>{{data.region}}</span>
           </li>
@@ -29,12 +29,12 @@ import * as moment from 'moment/moment';
       
       <div class="usa-width-two-thirds">
         <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-          <li>  
+          <li class="address-regional-office-listing">  
             <strong>Address: </strong>
             <span>{{data.address?.streetAddress }}<ng-container *ngIf="data.address?.streetAddress2 && data.address?.streetAddress">, </ng-container>{{data.address?.streetAddress2}}<ng-container *ngIf="data.address?.city && data.address?.streetAddress">,</ng-container> {{ data.address.city }}<ng-container *ngIf="data.address?.state && data.address?.city">,</ng-container> {{ data.address.state}} {{data.address.zip}}</span>
           </li>
         
-          <li>  
+          <li class="phone-info">  
             <strong>Phone: </strong>
             <span>{{data.phone}}</span>
           </li>
@@ -43,11 +43,11 @@ import * as moment from 'moment/moment';
       
       <div class="usa-width-one-third">
       <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-          <li>  
+          <li class="subbranch-name">  
             <strong>Sub-Branch: </strong>
             <span>{{data.subbranch}}</span>
           </li>
-          <li>  
+          <li class="division-name">  
             <strong>Division: </strong>
             <span>{{data.division}}</span>
           </li>
