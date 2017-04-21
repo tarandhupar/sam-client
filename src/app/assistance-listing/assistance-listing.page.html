@@ -575,7 +575,7 @@
       <!-- matching requirements -->
       <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.matching">
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="true">
-            Matching Requirements: <ng-container *ngIf="program.data?.compliance?.formulaAndMatching?.matching?.percent > 0">Percent: {{program.data?.compliance?.formulaAndMatching?.matching?.percent}}</ng-container>
+            Matching Requirements: <ng-container *ngIf="dictionaries">Percent: {{ ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaries.match_percent:'element_id':false:'')[0].value }}</ng-container>
             {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
 
           <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.matching?.requirementFlag">
