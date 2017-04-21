@@ -154,7 +154,7 @@ let MockWageDeterminationService = {
   getWageDeterminationByReferenceNumberAndRevisionNumber: (referenceNumber: string, revisionNumber: number) => {
     return Observable.of({
       "fullReferenceNumber": "1998-0642",
-      "revisionNumber": 31,
+      "revisionNumber": 3,
       "location": [{
         "state": "KS",
         "statewideFlag": false,
@@ -192,7 +192,7 @@ export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
   }
 }
 
-describe('WageDeterminationPage', () => {
+fdescribe('WageDeterminationPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ WageDeterminationPage,
@@ -249,5 +249,7 @@ describe('WageDeterminationPage', () => {
     expect(comp.processedHistory).toBeDefined();
     expect(comp.longProcessedHistory).toBeDefined();
     expect(comp.shortProcessedHistory).toBeDefined();
+    expect(comp.showRevisonMessage).toBeDefined();
+    expect(comp.showRevisonMessage).toBe(true);
   });
 });
