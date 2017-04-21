@@ -14,7 +14,7 @@
         </ul>
         <!-- Lists data if array of objects with key/value pair is passed to component -->
         <ul id="sam-autocomplete-results" #resultsListKV *ngIf="filteredKeyValuePairs && hasFocus">
-          <li *ngFor="let obj of filteredKeyValuePairs" (click)="emitSelected(obj)" (keydown)="$event.which==13 ? emitSelected(obj) : ''">
+          <li *ngFor="let obj of filteredKeyValuePairs | sortBy : config.keyValueConfig.valueProperty" (click)="emitSelected(obj)" (keydown)="$event.which==13 ? emitSelected(obj) : ''">
             {{obj[config.keyValueConfig.valueProperty]}}
             <i *ngIf="checkSelectedList(obj) && showSpecialIndicator" tabindex="0" class="fa fa-plus-square fa-pull-right"></i>
           </li>

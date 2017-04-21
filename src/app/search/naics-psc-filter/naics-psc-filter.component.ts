@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Output, ViewChild, Input} from '@angular/core';
+import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
 
 @Component({
   selector: 'sam-naics-psc-filter',
@@ -47,18 +48,7 @@ export class SamNaicsPscFilter {
       obj.label += " (PSC)";
     }
     this.listDisplay.selectedItems.push(obj);
-    this.listDisplay.selectedItems.sort(function (a, b){
-      var nameA = a.label.toUpperCase(); // ignore upper and lowercase
-      var nameB = b.label.toUpperCase(); // ignore upper and lowercase
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      // names must be equal
-      return 0;
-    });
+    this.listDisplay.selectedItems = new SortArrayOfObjects().transform(this.listDisplay.selectedItems, 'label');
     this.emitSelectedList();
   }
 

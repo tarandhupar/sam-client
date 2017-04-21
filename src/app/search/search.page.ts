@@ -6,6 +6,7 @@ import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import {WageDeterminationService} from "../../api-kit/wage-determination/wage-determination.service";
 import { AlertFooterService } from '../alerts/alert-footer';
 import {OpportunityService} from "../../api-kit/opportunity/opportunity.service";
+import {SortArrayOfObjects} from "../app-pipes/sort-array-object.pipe";
 
 @Component({
   moduleId: __filename,
@@ -596,19 +597,7 @@ export class SearchPage implements OnInit{
           return newObj;
         });
 
-        reformattedArray.sort(function (a, b){
-          var nameA = a.label.toUpperCase(); // ignore upper and lowercase
-          var nameB = b.label.toUpperCase(); // ignore upper and lowercase
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-
-          // names must be equal
-          return 0;
-        });
+        reformattedArray = new SortArrayOfObjects().transform(reformattedArray, 'label');
 
         // adding the default selection row to the array
         reformattedArray.unshift(defaultSelection);
