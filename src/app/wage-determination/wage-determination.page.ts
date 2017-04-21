@@ -63,16 +63,28 @@ export class WageDeterminationPage implements OnInit {
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
+    console.log("1");
     let dictionariesAPI = this.loadDictionary();
+    console.log("2");
     let wdAPI = this.loadWageDetermination();
-    let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
+    console.log("3");
+    let wgAndDictionariesAPI = Observable.zip(wdAPI, dictionariesAPI, this.route.params);
+    console.log("4");
     this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
+    console.log("5");
     this.getLocations(wgAndDictionariesAPI);
+    console.log("6");
     let wdHistoryAPI = this.loadHistory(wdAPI);
+    console.log("7");
     let DOMReady$ = Observable.zip(wgAndDictionariesAPI, wdHistoryAPI).delay(2000);
+    console.log("8");
     this.DOMComplete(DOMReady$);
+    console.log("9");
     this.sidenavService.updateData(this.selectedPage, 0);
+    console.log("10");
   }
+
+  ngOnChange(){}
 
   private loadWageDetermination() {
     let wgSubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
@@ -315,7 +327,7 @@ export class WageDeterminationPage implements OnInit {
           this.processedHistory = this.longProcessedHistory;
         }
 
-        //use processedHistory to show Revision Message 
+        //use processedHistory to show Revision Message
         this.showRevisionMessage();
       }, err => {
         console.log('Error loading history: ', err);
