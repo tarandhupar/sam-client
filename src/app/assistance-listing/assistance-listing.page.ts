@@ -150,7 +150,6 @@ export class ProgramPage implements OnInit, OnDestroy {
 
   selectedItem(item){
     this.selectedPage = this.sidenavService.getData()[0];
->>>>>>> bsp-develop
   }
 
   ngOnDestroy() {
