@@ -3,15 +3,17 @@
     <samSelect class="org-type-select usa-width-one-half" [(model)]="orgAddrModel.addrType" [name]="orgAddrSelectConfig.name" [options]="orgAddrSelectConfig.options" [label]="orgAddrSelectConfig.label" [disabled]="orgAddrSelectConfig.disabled" (modelChange)='onAddrTypeSelect($event)'></samSelect>
     <i class="p_T-3x p_L-3x fa fa-times-circle org-address-icons" (click)="onCancelAddressFormClick()"></i>
   </h3>
-  <h3 class="m_T-3x" *ngIf="isOrgTypeSelected()">
-    <span>{{orgAddrModel.addrType}}</span>
+  <h3 class="m_T-3x usa-width-one-whole relative" *ngIf="isOrgTypeSelected()">
+    <span class="usa-width-one-forth">{{orgAddrModel.addrType}}</span>
     <i class="p_L-3x fa fa-plus-circle org-address-icons" *ngIf="showAddIcon" (click)="onAdditionalAddressFormClick()"></i>
-    <i class="p_L-3x fa fa-times-circle org-address-icons" *ngIf="!isBasicAddressType()" (click)="onCancelAddressFormClick()"></i>
+    <i class="p_L-3x fa fa-times-circle org-address-icons" *ngIf="!isBasicAddressType() && showCloseIcon" (click)="onCancelAddressFormClick()"></i>
+    <!--<samCheckbox class="pull-right usa-width-one-half" *ngIf="showDuplicateFillIcon" (modelChange)="onDuplicateFillChecked()" [(model)]="duplicateAddrCbxModel" [name]="duplicateAddrCbxConfig.name" [options]="duplicateAddrCbxConfig.options" [label]="''" [errorMessage]="duplicateAddrCbxConfig.errorMessage" [hasSelectAll]="false">-->
+    <!--</samCheckbox>-->
   </h3>
 
   <div class="usa-width-one-whole">
     <labelWrapper #countryWrapper class="p_T-3x org-create-label" [label]="'Country'" [name]="'Country'" [required]="true">
-      <sam-autocomplete country [ngModelOptions]="{standalone: true}" [(ngModel)]="stateLocationConfig.serviceOptions" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig"></sam-autocomplete>
+      <sam-autocomplete country [ngModelOptions]="{standalone: true}" [allowAny]="true" [(ngModel)]="stateLocationConfig.serviceOptions" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig"></sam-autocomplete>
     </labelWrapper>
   </div>
 
@@ -33,7 +35,7 @@
 
     <div class="usa-width-one-half m_R-0 p_R-2x">
       <labelWrapper #stateWrapper class="p_T-1x org-create-label" [label]="'State'" [name]="'State'" [required]="true">
-        <sam-autocomplete state [ngModelOptions]="{standalone: true}" [(ngModel)]="stateOutput" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="stateLocationConfig"></sam-autocomplete>
+        <sam-autocomplete state [ngModelOptions]="{standalone: true}" [(ngModel)]="stateOutput" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="stateLocationConfig"  [allowAny]="true"></sam-autocomplete>
       </labelWrapper>
     </div>
   </div>
