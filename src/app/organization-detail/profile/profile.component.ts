@@ -9,7 +9,6 @@ import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 })
 export class OrgDetailProfilePage {
   orgId:string = "100000121";
-
   orgObj = {};
   orgDetails = [];
   orgCodes = [];
@@ -255,7 +254,7 @@ export class OrgDetailProfilePage {
           subLayers.push({value: 'Agency', label: 'Sub-tier Agency', name: 'Sub-tier Agency'});
           break;
         case "Agency":
-          subLayers.push({value: 'MajorCommand', label: 'Major Command', name: 'Major Command'});
+          if(this.isDoD()) subLayers.push({value: 'MajorCommand', label: 'Major Command', name: 'Major Command'});
           break;
         case "Major Command":
           subLayers.push({value: 'SubCommand', label: 'Sub Command 1', name: 'Sub Command 1'});

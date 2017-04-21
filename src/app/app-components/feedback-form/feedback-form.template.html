@@ -12,7 +12,7 @@
 
     <div class="feedback-question-div usa-grid-full m_T-2x m_B-1x m_R-4x">
       <h4 *ngIf="(!showEmptyFeedbackWarning || !isFeedbackAnswerEmpty()) && !showThanksNote" class="feedback-alert-placeholder">&nbsp;</h4>
-      <h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning">&nbsp;&nbsp;<i class="fa fa-exclamation-triangle"></i><span>&nbsp;Please provide at least one feedback!</span></h4>
+      <h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning">&nbsp;&nbsp;<i class="fa fa-exclamation-triangle"></i><span>&nbsp;You need to answer at least one of the feedback questions before submitting.</span></h4>
 
       <span class="m_T-2x" style="display: block" *ngIf="!showThanksNote">{{curQueIndex+1}}. {{curQuestion.description}}</span>
 
@@ -54,7 +54,7 @@
             <div [ngClass]="{'usa-input-error':showEmailError}">
                 <span class="usa-input-error-message" *ngIf="!showEmailError">&nbsp;</span>
                 <span class="usa-input-error-message" *ngIf="showEmailError">Enter a valid email address</span>
-                <input aria-describedby="input-error-message" type="email" id="email" name="email" [formControl]="email" class="usa-width-one-whole m_L-3x feedback-email-input" *ngIf="emailRadioBtnValue == 'Yes'" placeholder="Please provide your email" [(ngModel)]="userEmailModel" (change)="onEmailTextChange()" (focus)="onEmailEnter($event)">
+                <input aria-describedby="input-error-message" type="email" id="email" name="email" [formControl]="email" class="usa-width-one-whole m_L-3x feedback-email-input" *ngIf="emailRadioBtnValue == 'Yes'" placeholder="Please provide your email" [(ngModel)]="userEmailModel" (change)="onEmailTextChange()">
             </div>
 
             <h3>&nbsp;</h3>

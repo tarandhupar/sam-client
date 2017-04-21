@@ -135,14 +135,9 @@ export class OpportunityPage implements OnInit {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
         this.pageFragment = tree.fragment;
-        if (this.pageFragment) {
-          const element = document.getElementById(tree.fragment);
-          if (element) {
-            element.scrollIntoView();
-          }
-        }
       }
     });
+        
     route.queryParams.subscribe(data => {
       this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
     });

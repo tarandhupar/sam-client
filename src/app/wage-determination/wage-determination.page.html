@@ -4,12 +4,12 @@
   <aside class="usa-width-one-fourth">
     <br />
     <br />
-    <div sam-sticky limit=1200 container="occupy-page">
+    <div sam-sticky limit=1200 container="wage-determination-page">
       <!--Logo-->
       <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
 
       <!--Side Navigation-->
-      <samSidenav class="m_T-3x" *ngIf="sidenavModel" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+      <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
 
     </div>
   </aside>
@@ -17,6 +17,9 @@
   <div class="usa-width-three-fourths">
 
     <section id="wage-determination" *ngIf="wageDetermination">
+      <ng-container *ngIf="showRevisonMessage == true">
+        <samAlert [type]="'info'" [title]="''">Note: There have been revisions to this wage determination. To view the most recent version click <a [routerLink]="['/wage-determination', referenceNumber, processedHistory[0].index]">here</a>.</samAlert>
+      </ng-container>
 
       <ng-container *ngIf = "isSCA">
         <h1 class="m_B-0" id="wd-reference-number">SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>

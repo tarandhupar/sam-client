@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
+import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
 import * as Cookies from 'js-cookie';
 
 import * as _ from 'lodash';
@@ -38,6 +39,14 @@ export class ProgramPage implements OnInit, OnDestroy {
   cookieValue: string;
   isCookie: boolean = false;
   assistanceTypes: any[] = [];
+  //SideNav: On load select first item on sidenav component
+  selectedPage: number = 0;
+  pageRoute: string;
+  pageFragment: string;
+  sidenavModel = {
+    "label": "FAL",
+    "children": []
+  };
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -47,16 +56,23 @@ export class ProgramPage implements OnInit, OnDestroy {
   private relatedProgramsSub: Subscription;
 
   constructor(
+    private sidenavService: SidenavService,
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
     private historicalIndexService: HistoricalIndexService,
     private programService: ProgramService,
     private fhService: FHService,
-    private dictionaryService: DictionaryService) {}
+    private dictionaryService: DictionaryService) {
+      router.events.subscribe(s => {
+        if (s instanceof NavigationEnd) {
+          const tree = router.parseUrl(router.url);
+          this.pageFragment = tree.fragment;
+        }
+      });
+    }
 
   ngOnInit() {
-    console.log("Related Programs: ", this.relatedProgram);
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
@@ -65,19 +81,76 @@ export class ProgramPage implements OnInit, OnDestroy {
         this.cookieValue = Cookies.get('iPlanetDirectoryPro');
       }
     }
-    console.log("ngOnInit 1");
     let programAPISource = this.loadProgram();
-    console.log("ngOnInit 2");
     this.loadDictionaries();
-    console.log("ngOnInit 3");
     this.loadFederalHierarchy(programAPISource);
-    console.log("ngOnInit 4");
-    this.loadHistoricalIndex(programAPISource);
-    console.log("ngOnInit 5");
+    let historicalIndexAPISource = this.loadHistoricalIndex(programAPISource);
     this.loadRelatedPrograms(programAPISource);
-    console.log("ngOnInit 6");
     this.loadAssistanceTypes(programAPISource);
-    console.log("ngOnInit 7");
+    let DOMReady$ = Observable.zip(programAPISource, historicalIndexAPISource).delay(2000);
+    this.DOMComplete(DOMReady$);
+    this.sidenavService.updateData(this.selectedPage, 0);
+  }
+
+  private DOMComplete(observable){
+    observable.subscribe(
+      () => {
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
+        }
+      },
+      () => {
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
+        }
+      });
+  }
+
+  sidenavPathEvtHandler(data){
+    data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
+
+    if (this.pageFragment == data.substring(1)) {
+      document.getElementById(this.pageFragment).scrollIntoView();
+    }
+    else if(data.charAt(0)=="#"){
+            this.router.navigate([], { fragment: data.substring(1) });
+    } else {
+            this.router.navigate([data]);
+    }
+  }
+
+  private updateSideNav(content?){
+
+    let self = this;
+
+    if(content){
+      // Items in first level (pages) have to have a unique name
+      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
+      // If page has a unique name added to the sidenav
+      if(repeatedItem === -1){
+        this.sidenavModel.children.push(content);
+      }
+    }
+
+    updateContent();
+
+    function updateContent(){
+      let children = _.map(self.sidenavModel.children, function(possiblePage){
+        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
+          possibleSection.route = possibleSection.field;
+          return possibleSection;
+        });
+        _.remove(possiblePagechildren, _.isUndefined);
+        possiblePage.children = possiblePagechildren;
+        return possiblePage;
+      });
+      self.sidenavModel.children = children;
+    }
+  }
+
+  selectedItem(item){
+    this.selectedPage = this.sidenavService.getData()[0];
+>>>>>>> bsp-develop
   }
 
   ngOnDestroy() {
@@ -93,7 +166,6 @@ export class ProgramPage implements OnInit, OnDestroy {
    * @return Observable of Program API
    */
   private loadProgram() {
-    console.log("loadProgram() before api");
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = params['id'];
@@ -105,12 +177,59 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     this.apiSubjectSub = apiSubject.subscribe(api => {
       // run whenever api data is updated
-      console.log("program is loaded: ", api);
       this.program = api;
       this.checkCurrentFY();
       if(this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
       }
+
+      this.pageRoute = "programs/" + this.program.id + "/view";
+      let falSideNavContent = {
+        "label": "Federal Assistance Listing",
+        "route": this.pageRoute,
+        "children": []
+      };
+      if(this.program.status.code != 'published') {
+        falSideNavContent.children.push({
+          "label": "Header Information",
+          "field": "#program-information",
+        });
+      }
+
+      falSideNavContent.children.push.apply(falSideNavContent.children, [{
+        "label": "Overview",
+        "field": "#overview",
+      },
+      {
+        "label": "Authorizations",
+        "field": "#authorizations",
+      },
+      {
+        "label": "Financial Information",
+        "field": "#financial-information",
+      },
+      {
+        "label": "Criteria for Applying",
+        "field": "#criteria-for-applying",
+      },
+      {
+        "label": "Applying for Assistance",
+        "field": "#applying-for-assistance",
+      },
+      {
+        "label": "Compliance Requirements",
+        "field": "#compliance-requirements",
+      },
+      {
+        "label": "Contact Information",
+        "field": "#contact-information",
+      },
+      {
+        "label": "History",
+        "field": "#history",
+      }]);
+
+      this.updateSideNav(falSideNavContent);
     }, err => {
       console.log('Error loading program', err);
       if (err.status === 403) {
@@ -125,7 +244,6 @@ export class ProgramPage implements OnInit, OnDestroy {
    * @return Observable of Dictionary API
    */
   private loadDictionaries() {
-    console.log("loadDictionaries() before api");
     // declare dictionaries to load
     let dictionaries = [
       'program_subject_terms',
@@ -145,7 +263,6 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     var temp: any = {};
     dictionaryServiceSubject.subscribe(res => {
-      console.log("loadDictionaries() after api");
       // run whenever dictionary data is updated
       for (let key in res) {
         temp[key] = res[key]; // store the dictionary
@@ -157,19 +274,16 @@ export class ProgramPage implements OnInit, OnDestroy {
   }
 
   private loadFederalHierarchy(apiSource: Observable<any>) {
-    console.log("loadFederalHierarchy() before api");
     let apiSubject = new ReplaySubject(1);
 
     // construct a stream of federal hierarchy data
     let apiStream = apiSource.switchMap(api => {
-      console.log("loadFederalHierarchy() after api1");
       return this.fhService.getOrganizationById(api.data.organizationId, false);
     })  ;
 
     apiStream.subscribe(apiSubject);
 
     this.federalHierarchySub = apiSubject.subscribe(res => {
-      console.log("loadFederalHierarchy() after api2");
       this.federalHierarchy = res['_embedded'][0]['org'];
       this.fhService.getOrganizationLogo(apiSubject,
         (logoData) => {
@@ -191,15 +305,12 @@ export class ProgramPage implements OnInit, OnDestroy {
   }
 
   private loadHistoricalIndex(apiSource: Observable<any>) {
-    console.log("loadHistoricalIndex() before api");
     // construct a stream of historical index data
     let historicalIndexStream = apiSource.switchMap(api => {
-      console.log("loadHistoricalIndex() after api1");
       return this.historicalIndexService.getHistoricalIndexByProgramNumber(api.id, api.data.programNumber);
     });
 
     this.historicalIndexSub = historicalIndexStream.subscribe(res => {
-      console.log("loadHistoricalIndex() after api2");
       // run whenever historical index data is updated
       this.historicalIndex = res._embedded ? res._embedded.historicalIndex : []; // store the historical index
       let pipe = new HistoricalIndexLabelPipe();
@@ -219,10 +330,8 @@ export class ProgramPage implements OnInit, OnDestroy {
   }
 
   private loadRelatedPrograms(apiSource: Observable<any>) {
-    console.log("loadRelatedPrograms() before api");
     // construct a stream of related programs ids
     let relatedProgramsIdStream = apiSource.switchMap(api => {
-      console.log("loadRelatedPrograms() after api1: ", api);
       if (api.data.relatedPrograms && api.data.relatedPrograms.length > 0) {
         return Observable.from(api.data.relatedPrograms);
       }
@@ -231,7 +340,6 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     // construct a stream that contains all related programs from related program ids
     let relatedProgramsStream = relatedProgramsIdStream.flatMap((relatedId: any) => {
-      console.log("Related Id: ", relatedId);
       return this.programService.getLatestProgramById(relatedId, this.cookieValue).retryWhen(
         errors => {
           return this.route.params;
@@ -240,7 +348,6 @@ export class ProgramPage implements OnInit, OnDestroy {
     });
 
     this.relatedProgramsSub = relatedProgramsStream.subscribe((relatedProgram: any) => {
-      console.log("loadRelatedPrograms() after api2: ", relatedProgram);
       // run whenever related programs are updated
       if (typeof relatedProgram !== 'undefined') {
         this.relatedProgram.push({ // store the related program
@@ -249,9 +356,9 @@ export class ProgramPage implements OnInit, OnDestroy {
         });
       }
     }, error => {
-      console.log("loadRelatedPrograms() after api2: error ", error)
+      console.log("loadRelatedPrograms() Error ", error)
     }, () => {
-      console.log("loadRelatedPrograms() after api3: completed")
+      console.log("loadRelatedPrograms() Completed")
     });
 
     return relatedProgramsStream;
@@ -267,9 +374,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
   }
 
   private loadAssistanceTypes(apiSource: Observable<any>) {
-    console.log("loadAssistanceTypes() after api1")
     apiSource.subscribe(api => {
-      console.log("loadAssistanceTypes() after api2")
       if(api.data.financial && api.data.financial.obligations && api.data.financial.obligations.length > 0) {
         this.assistanceTypes = _.map(api.data.financial.obligations, 'assistanceType');
       }

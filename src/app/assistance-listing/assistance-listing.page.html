@@ -2,7 +2,7 @@
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
-    <div sam-sticky limit=1200 container="occupy-page">
+    <div sam-sticky limit=1200 container="assistance-listing-page">
       <!--Logo-->
       <ng-container *ngIf="program && (errorOrganization || logoUrl===null || errorLogo)">
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
@@ -11,19 +11,7 @@
         <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
       </ng-container>
       <!--Side Navigation-->
-      <nav>
-        <ul class="usa-sidenav-list">
-          <li *ngIf="program.status?.code!='published'"><a href="{{currentUrl}}#program-information">Header Information</a></li>
-          <li><a href="{{currentUrl}}#overview">Overview</a></li>
-          <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
-          <li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
-          <li><a href="{{currentUrl}}#criteria-for-applying">Criteria for Applying</a></li>
-          <li><a href="{{currentUrl}}#applying-for-assistance">Applying for Assistance</a></li>
-          <li><a href="{{currentUrl}}#compliance-requirements">Compliance Requirements</a></li>
-          <li><a href="{{currentUrl}}#contact-information">Contact Information</a></li>
-          <li><a href="{{currentUrl}}#history">History</a></li>
-        </ul>
-      </nav>
+      <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
     </div>
   </aside>
 
