@@ -111,9 +111,12 @@ export class ManageRequestPage implements OnInit {
         let extras: NavigationExtras = {
           queryParams: {
             domain: this.request.domainId,
-            ref: '/role-workspace'
+            ref: '/role-workspace',
+            request: this.request.id,
           }
         };
+
+        console.log(this.request);
 
         this.router.navigate(['/users', this.request.createdBy, 'grant-access'], extras);
         return;
