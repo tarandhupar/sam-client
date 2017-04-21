@@ -276,7 +276,7 @@ export class WageDeterminationPage implements OnInit {
           processedHistoryItem['id'] = historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['title'] = historyItem.fullReferenceNumber + ' - Revision ' + historyItem.revisionNumber;
           processedHistoryItem['date'] = dateFormat.transform(historyItem.publishDate, 'MMMM DD, YYYY');
-          processedHistoryItem['url'] = 'wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
+          processedHistoryItem['url'] = '/wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['index'] = historyItem.revisionNumber;
           processedHistoryItem['authoritative'] = historyItem.active;
           return processedHistoryItem;

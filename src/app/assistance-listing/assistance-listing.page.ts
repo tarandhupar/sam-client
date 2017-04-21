@@ -280,7 +280,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
     });
   }
 
-  private updateRelatedProgram(){
-    this.relatedProgram = [];
+  private toTheTop() {
+    document.body.scrollTop = 0;
   }
 }
