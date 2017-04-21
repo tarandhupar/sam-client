@@ -116,8 +116,6 @@ export class ManageRequestPage implements OnInit {
           }
         };
 
-        console.log(this.request);
-
         this.router.navigate(['/users', this.request.createdBy, 'grant-access'], extras);
         return;
         // break;
