@@ -108,21 +108,17 @@ export class ProgramService{
     }
     return this.oAPIService.call(oApiParam);
   }
-
-  falautosearch(oData) {
+  
+  falautosearch(q:string, ids: string) {
     let oApiParam = {
-      name: 'programs',
+      name: 'relatedPrograms',
       suffix: '/',
-   /*   oParam: {
-        index: oData.index,
-        q: oData.keyword
-      },*/
+      oParam: {
+        keyword: q,
+        ids: ids
+      },
       method: 'GET'
     };
- /*   if (oData['pageSize']) {
-      oApiParam.oParam['size'] = oData['pageSize'];
-    }*/
-
     return this.oAPIService.call(oApiParam);
   }
 }

@@ -90,6 +90,10 @@ export class SearchService {
       oApiParam.oParam['naics'] = obj.naics;
     }
 
+    if(typeof obj.psc !== 'undefined' && obj.psc !== null && obj.psc !== ''){
+      oApiParam.oParam['psc'] = obj.psc;
+    }
+
     return this.oAPIService.call(oApiParam);
   }
 
