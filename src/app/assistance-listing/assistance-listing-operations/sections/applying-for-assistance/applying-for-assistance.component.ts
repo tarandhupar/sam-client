@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
 import { Router} from '@angular/router';
 import { DictionaryService } from 'api-kit';
 import { ProgramService } from 'api-kit';
 import { FALOpSharedService } from '../../assistance-listing-operations.service';
+import { FALAssistSubFormComponent } from '../../../components/applying-assistance-subform/applying-assistance-subform.component';
 
 @Component({
   providers: [ ProgramService, DictionaryService ],
@@ -20,6 +21,7 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   progTitle: string;
   hideAddButton: boolean = false;
   redirectToWksp: boolean = false;
+  assistInfo: any = [];
   falAssistanceForm: FormGroup;
 
   public deadlinesFlagOptions = [];
@@ -35,6 +37,7 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
 
   public selectionCriteriaOptions = [{ label: 'There are criteria for selection proposals.', value: true }];
 
+  @ViewChild('assistSubForm') assistSubForm:FALAssistSubFormComponent;
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -238,6 +241,38 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
 
   assistActionHandler(event){
     console.log("event", event);
+    if(event.type == 'add'){
+      this.hideAddButton = event.hideAddButton;
+    }
+    if(event.type == 'confirm'){
+      this.hideAddButton = event.hideAddButton;
+      this.assistInfo = event.assistInfo;
+    }
+    if(event.type == 'cancel'){
+      this.hideAddButton = event.hideAddButton;
+    }
+    if(event.type == 'edit'){
+      this.editAssist(event.index);
+    }
+    if(event.type == 'remove'){
+      this.removeAssist(event.index);
+    }
+  }
+
+  editAssist(i: number){
+    this.assistSubForm.editAssist(i);
+    this.hideAddButton = this.assistSubForm.hideAddButton;
+  }
+
+  removeAssist(i: number){
+    this.assistSubForm.removeAssist(i);
+    this.assistInfo = this.assistSubForm.assistInfo;
+    this.hideAddButton = this.assistSubForm.hideAddButton;
+  }
+
+  formatAssistInfo(assistInfo){
+
+    console.log(assistInfo);
   }
 
   onSaveContinueClick(){

@@ -58,6 +58,7 @@ export class FALAssistSubFormComponent {
     const control = <FormArray>this.falAssistSubForm.controls['deadlineList'];
     control.removeAt(i);
     this.assistIndex = this.falAssistSubForm.value.deadlineList;
+    this.assistInfo = this.falAssistSubForm.value.deadlineList;
     this.hideAddButton = false;
   }
 

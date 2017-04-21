@@ -3,6 +3,7 @@
 <form [formGroup]="falAssistanceForm">
 
   <div formGroupName="deadlines">
+
     <samRadioButton [label]="'Deadlines'"
                     [name]="'deadlineFlag-radio-buttons'"
                     [options]="deadlinesFlagOptions"
@@ -11,7 +12,15 @@
 
     <div [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
 
-      <assistSubform [hideAddButton]="hideAddButton" (assistActionHandler)="assistActionHandler($event)"  #assistSubForm></assistSubform>
+      <assistInfoTable
+        [hideAddButton]="hideAddButton"
+        [assistInfo]="assistInfo"
+        (assistTableActionHandler)="assistActionHandler($event)"></assistInfoTable>
+
+      <assistSubform #assistSubForm
+                     [hideAddButton]="hideAddButton"
+                     (assistActionHandler)="assistActionHandler($event)"
+      ></assistSubform>
 
       <samTextArea [label]="'Other Deadline Information'"
                    [name]="'deadlines-description'"
