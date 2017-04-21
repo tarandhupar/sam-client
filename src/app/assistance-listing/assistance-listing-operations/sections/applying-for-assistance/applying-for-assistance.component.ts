@@ -19,7 +19,6 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   programId : any;
   progTitle: string;
   hideAddButton: boolean = false;
-  redirectToViewPg: boolean = false;
   redirectToWksp: boolean = false;
   falAssistanceForm: FormGroup;
 
@@ -115,7 +114,7 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
       renewal: this.fb.group({
         interval: 'na',
         description: ''
-      }),
+      })
     });
   }
 
@@ -140,10 +139,34 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
               description: deadline_desc
             },
             preApplicationCoordination:{
-              reports: reports
+              reports: reports,
+              description: api.data.assistance.preApplicationCoordination.description
+            },
+            applicationProcedure:{
+              isApplicable: [api.data.assistance.applicationProcedure.isApplicable],
+              description: api.data.assistance.applicationProcedure.description
+            },
+            selectionCriteria: {
+              isApplicable: [api.data.assistance.selectionCriteria.isApplicable],
+              description: api.data.assistance.selectionCriteria.description
+            },
+            awardProcedure: {
+              description: api.data.assistance.awardProcedure.description
+            },
+            approval: {
+              interval: (api.data.assistance.approval.interval || 'na'),
+              description: api.data.assistance.approval.description
+            },
+            appeal: {
+              interval: (api.data.assistance.appeal.interval || 'na'),
+              description: api.data.assistance.appeal.description
+            },
+            renewal: {
+              interval: (api.data.assistance.renewal.interval || 'na'),
+              description: api.data.assistance.renewal.description
             }
           });
-          console.log("api", api);
+
         },
         error => {
           console.error('Error Retrieving Program!!', error);
@@ -211,6 +234,10 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
       data.assistance.selectionCriteria.isApplicable = false;
 
     return data;
+  }
+
+  assistActionHandler(event){
+    console.log("event", event);
   }
 
   onSaveContinueClick(){

@@ -1,0 +1,29 @@
+<samButton buttonText="Add Deadline" (onClick)="addAssist()" [class.hide]="hideAddButton"></samButton>
+
+<div [formGroup]="falAssistSubForm" [class.hide]="!hideAddButton">
+  <div formArrayName="deadlineList">
+    <h4>{{subFormLabel}}</h4>
+    <ng-container *ngFor="let assistGrp of falAssistSubForm.controls.deadlineList.controls; let i=index">
+      <div [formGroupName]="i" [class.hide]="assistIndex !== i">
+
+        <samDate [name]="'start-date'"
+                 [label]="'Start Date'"
+                 formControlName="start"
+        ></samDate>
+
+        <samDate [name]="'end-date'"
+                 [label]="'End Date'"
+                 formControlName="end"
+        ></samDate>
+
+        <samTextArea [name]="'list-desc'"
+                     [label]="'Deadline'"
+                     formControlName="description"
+        ></samTextArea>
+
+        <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></samButton>
+        <samButton buttonText="Confirm" (onClick)="onConfirmClick(i)"></samButton>
+      </div>
+    </ng-container>
+  </div>
+</div>

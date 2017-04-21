@@ -10,6 +10,9 @@
     ></samRadioButton>
 
     <div [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
+
+      <assistSubform [hideAddButton]="hideAddButton" (assistActionHandler)="assistActionHandler($event)"  #assistSubForm></assistSubform>
+
       <samTextArea [label]="'Other Deadline Information'"
                    [name]="'deadlines-description'"
                    formControlName="description"
