@@ -41,8 +41,10 @@
             <h1><span class="field" id="program-title">{{program?.data?.title}}</span></h1>
           </div>
           <div class="usa-width-one-third">
-            <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']">Edit</a>
-            <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']"></i>
+            <a *ngIf="cookieValue" (click)="onEditClick(['/programs', program.id, 'edit'])">
+              Edit
+              <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
 
@@ -79,8 +81,10 @@
           <h2 id="overview">Overview</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'overview']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'overview']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'overview'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
       <h3>Objectives:</h3>
@@ -120,8 +124,10 @@
           <h2 id="authorizations">Authorizations</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'authorization'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -144,8 +150,10 @@
           <h2 id="financial-information">Financial Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'financial-information', 'obligations'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -191,8 +199,10 @@
           <h2 id="criteria-for-applying">Criteria for Applying</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'criteria-information']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'criteria-information']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'criteria-information'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
       <h3>Types of Assistance:</h3>
@@ -480,8 +490,10 @@
           <h2 id="compliance-requirements">Compliance Requirements</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'compliance-requirements'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -632,8 +644,10 @@
           <h2 id="contact-information">Contact Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'contact-information']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'contact-information']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'contact-information'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 

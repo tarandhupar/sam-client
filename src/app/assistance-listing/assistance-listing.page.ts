@@ -379,6 +379,14 @@ Please contact the issuing agency listed under "Contact Information" for more in
     });
   }
 
+  public onEditClick(path: string[]) {
+    if(this.program.status && this.program.status.code!='published') {
+      this.router.navigate(path);
+    } else {
+      this.editModal.openModal();
+    }
+  }
+
   public onEditModalSubmit() {
     this.editModal.closeModal();
     this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
