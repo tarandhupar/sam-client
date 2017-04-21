@@ -34,8 +34,6 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
 
   public matchingPercentageOptions = [];
 
-public formulaMatchingGroup: FormGroup;
-
   @Input() options: any; // all inputs are passed through a single options object
   public name: string;
   public label: string;
@@ -43,6 +41,7 @@ public formulaMatchingGroup: FormGroup;
   public required: boolean;
 
   private _ordering: any;
+  public formulaMatchingGroup: FormGroup;
 
   @ViewChild('formulaMatchingLabel') wrapper: LabelWrapper;
 

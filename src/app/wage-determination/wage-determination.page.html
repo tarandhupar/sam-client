@@ -17,6 +17,9 @@
   <div class="usa-width-three-fourths">
 
     <section id="wage-determination" *ngIf="wageDetermination">
+      <ng-container *ngIf="showRevisonMessage == true">
+        <samAlert [type]="'info'" [title]="''">Note: There have been revisions to this wage determination. To view the most recent version click <a [routerLink]="['/wage-determination', referenceNumber, processedHistory[0].index]">here</a>.</samAlert>
+      </ng-container>
 
       <ng-container *ngIf = "isSCA">
         <h1 class="m_B-0" id="wd-reference-number">SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
