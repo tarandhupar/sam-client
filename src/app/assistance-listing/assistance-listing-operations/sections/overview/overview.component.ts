@@ -11,6 +11,24 @@ import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.se
   templateUrl: 'overview.template.html',
 })
 export class FALOverviewComponent implements OnInit, OnDestroy{
+  public fundedProjectsConfig: any = {
+    name: 'funded-projects',
+    label: 'Examples of Funded Projects',
+    hint: 'Provide examples that demonstrate how funding might be used. Describe the subject area without using program names or locations.',
+    required: false,
+    itemName: 'Examples',
+
+    checkbox: {
+      options: [
+        { value: 'na', label: 'Not Applicable', name: 'funded-projects-checkbox-na' }
+      ]
+    },
+
+    textarea: {
+      hint: 'Please describe funded projects:',
+      showWhenCheckbox: 'unchecked'
+    }
+  };
 
   getProgSub: any;
   saveProgSub: any;
@@ -81,7 +99,8 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
       'functionalCodes': '',
       'fcInitialSelection': '',
       'subjectTerms' :[''],
-      'stInitialSelection':['']
+      'stInitialSelection':[''],
+      'fundedProjects': null
     });
   }
 
@@ -103,6 +122,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
             falDesc:desc,
             stInitialSelection: this.stInitialSelection === null ? [] : this.stInitialSelection,
             fcInitialSelection: this.fcInitialSelection === null ? [] : this.fcInitialSelection,
+            fundedProjects: this.loadProjects(api.data.projects)
           });
       },
         error => {
@@ -217,12 +237,12 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
   }
 
   saveData() {
-
     let data = {
       "objective": this.falOverviewForm.value.objective,
       "description": this.falOverviewForm.value.falDesc,
       "functionalCodes": this.fcMultiArrayValues.length > 0 ? this.fcMultiArrayValues : null,
-      "subjectTerms": this.stMultiArrayValues.length > 0 ? this.stMultiArrayValues : null
+      "subjectTerms": this.stMultiArrayValues.length > 0 ? this.stMultiArrayValues : null,
+      "projects": this.saveProjects()
     };
     console.log(data, 'final save');
 
@@ -240,6 +260,45 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
         error => {
           console.error('Error saving Program!!', error);
         }); //end of subscribe
+  }
+
+  private saveProjects() {
+    let projects: any = {};
+    let projectsForm = this.falOverviewForm.value.fundedProjects;
+
+    projects.isApplicable = projectsForm.checkbox.indexOf('na') === -1;
+    projects.list = [];
+    for(let entry of projectsForm.entries) {
+      projects.list.push({
+        fiscalYear: entry.year ? Number(entry.year) : null,
+        description: entry.text
+      });
+    }
+
+    return projects;
+  }
+
+
+  private loadProjects(projects: any) {
+    let projectsForm = {
+      checkbox: [],
+      entries: []
+    };
+
+    if(projects) {
+      if (!projects.isApplicable) {
+        projectsForm.checkbox.push('na');
+      }
+
+      for (let project of projects.list) {
+        projectsForm.entries.push({
+          year: project.fiscalYear ? project.fiscalYear.toString() : '',
+          text: project.description
+        });
+      }
+    }
+
+    return projectsForm;
   }
 
   onCancelClick(event) {

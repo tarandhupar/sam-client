@@ -1,4 +1,3 @@
-<script src="../../../../../api-kit/autoCompleteWrapper/falProgramautoCompleteWrapper.service.ts"></script>
 <div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Overview - {{title}}</div>
 <form [formGroup]="falOverviewForm">
 
@@ -8,14 +7,20 @@
     [name]="'objectives-input'"
     [label]="'Objectives'"
     [required]="true"
-    formControlName="objective"></samTextArea>
+    formControlName="objective"
+  ></samTextArea>
 
-  <samTextArea
-    [hint]="'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.'"
-    [control]="falOverviewForm.controls['falDesc']"
-    [name]="'falDesc-input'"
-    [label]="'Federal Assistance Listing Description'"
-    formControlName="falDesc"></samTextArea>
+  <falFYTable [options]="fundedProjectsConfig"
+              [formControlName]="'fundedProjects'"
+  ></falFYTable>
+
+  <samTextArea [hint]="'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.'"
+               [control]="falOverviewForm.controls['falDesc']"
+               [name]="'falDesc-input'"
+               [label]="'Federal Assistance Listing Description'"
+               formControlName="falDesc"
+  ></samTextArea>
+
   <sam-list-display #fcListDisplay [newValue]="fcSelectedOption" formControlName="fcInitialSelection"
                     (modelChange)="fclistChange($event)" [config]="listConfig">
     <labelWrapper #fcTypeWrapper [label]="'Functional Codes'" [required]="true"

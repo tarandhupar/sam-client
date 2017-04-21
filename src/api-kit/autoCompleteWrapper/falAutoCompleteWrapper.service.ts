@@ -41,7 +41,7 @@ export class FALProgramAutoCompleteWrapper implements AutocompleteService {
             const newObj = {
               code: curr.element_id,
               name: curr.value
-            }
+            };
             prev.push(newObj);
             return prev;
           }, []));

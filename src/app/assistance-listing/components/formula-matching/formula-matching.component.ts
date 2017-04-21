@@ -15,8 +15,6 @@ import {DictionaryService} from "api-kit";
   ]
 })
 export class FALFormulaMatchingComponent implements ControlValueAccessor {
-  private model: any = {}; // internally maintained model - should never be null or undefined
-
   public formulaMatchingOptions = [
     { value: 'cfr', label: 'This listing has statutory formula/or administrative rule reference in the CFR', name: this.name + '-checkbox-cfr' },
     { value: 'matching', label: 'This listing has matching requirements', name: this.name + '-checkbox-matching-requirements' },
@@ -31,13 +29,14 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
 
   public matchingPercentageOptions = [];
 
-public formulaMatchingGroup: FormGroup;
-
   @Input() options: any; // all inputs are passed through a single options object
   public name: string;
   public label: string;
   public hint: string;
   public required: boolean;
+
+  private model: any = {}; // internally maintained model - should never be null or undefined
+  public formulaMatchingGroup: FormGroup;
 
   @ViewChild('formulaMatchingLabel') wrapper: LabelWrapper;
 
