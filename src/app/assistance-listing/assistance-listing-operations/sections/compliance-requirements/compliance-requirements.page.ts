@@ -187,7 +187,6 @@ export class ComplianceRequirementsPage implements OnInit {
   }
 
   private populateForm() {
-    console.log(this.program.data);
     if(this.program.data && this.program.data.compliance) {
       let CFR200 = this.loadCFR200();
       this.complianceRequirementsGroup.get('policyRequirementsCheckbox').setValue(CFR200.checkbox);
@@ -203,7 +202,6 @@ export class ComplianceRequirementsPage implements OnInit {
   private saveProgramData(): Observable<any> {
     let data: any = (this.program && this.program.data) || {};
 
-    console.log(data);
     data.compliance = data.compliance || {};
     data.compliance.CFR200Requirements = this.saveCFR200();
     data.compliance.reports = this.saveReports();
