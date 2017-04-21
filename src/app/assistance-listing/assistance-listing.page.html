@@ -15,6 +15,19 @@
     </div>
   </aside>
 
+  <!--Edit Modal-->
+  <samModal #editModal
+            [showClose]="true"
+            [closeOnOutsideClick]="true"
+            [closeOnEscape]="true"
+            [type]="'info'"
+            [title]="'Revise -  Federal Assistance Listing'"
+            [description]="'A draft revision for this published program will be utilized for editing.  Please click ok to edit a draft of this FAL.'"
+            [submitButtonLabel]="'Ok'"
+            [cancelButtonLabel]="'Cancel'"
+            (onSubmit)="onEditModalSubmit()"
+  ></samModal>
+
   <!--Main Content-->
   <div *ngIf="program" class="usa-width-three-fourths">
     <ng-container *ngIf="alert.length > 0">
