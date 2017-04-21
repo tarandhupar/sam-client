@@ -192,7 +192,7 @@ export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
   }
 }
 
-fdescribe('WageDeterminationPage', () => {
+describe('WageDeterminationPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ WageDeterminationPage,
