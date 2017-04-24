@@ -74,9 +74,16 @@ export class SamHeaderLinksComponent {
   ];
 
   constructor(private _router:Router, private zone: NgZone, private api: IAMService) {
-    this._router.events.subscribe((event) => {
-      if(event.constructor.name === 'NavigationEnd') {
+    this._router.events.subscribe((event: any) => {
+      if (event.constructor.name === 'NavigationEnd') {
         this.checkSession();
+      }
+      if (event.constructor.name === 'RoutesRecognized') {
+        if (event.urlAfterRedirects === '/search' || event.urlAfterRedirects === '/') {
+          setTimeout(() => {
+            this.onSearchLinkClick();
+          });
+        }
       }
     });
   }
@@ -96,22 +103,29 @@ export class SamHeaderLinksComponent {
     });
   }
   
-  searchLink = true;
+  searchLink = false;
   menuLink = false;
   
   onSearchLinkClick(){
-    this.showDropdown = !this.searchLink;
-    this.searchLink = this.showDropdown;
-    
-    this.menuLink = false;
-    
+    if (this.showDropdown === true && this.menuLink === true) {
+      this.menuLink = false;
+      this.searchLink = true;
+    } else {
+      this.showDropdown = !this.searchLink;
+      this.searchLink = this.showDropdown;
+      this.menuLink = false;
+    }
   }
   
-  onMenuLinkClick(){
-    this.showDropdown = !this.menuLink;
-    this.menuLink = this.showDropdown;
-    
-    this.searchLink = false;
+  onMenuLinkClick() {
+    if (this.showDropdown === true && this.searchLink === true) {
+      this.searchLink = false;
+      this.menuLink = true;
+    } else {
+      this.showDropdown = !this.menuLink;
+      this.menuLink = this.showDropdown;
+      this.searchLink = false;
+    }
   }
 
   onMenuClick(){
@@ -124,6 +138,8 @@ export class SamHeaderLinksComponent {
 
   dropdownItemClick(item){
     this.closeDropdown();
+    this.menuLink = false;
+    this.searchLink = false;
     this._router.navigateByUrl(item.linkUrl);
   }
 
@@ -136,7 +152,7 @@ export class SamHeaderLinksComponent {
   }
 
   onClickOutside(){
-    if(this.startCheckOutsideClick){
+    if (this.startCheckOutsideClick) {
       this.startCheckOutsideClick = false;
       this.closeDropdown();
     }
