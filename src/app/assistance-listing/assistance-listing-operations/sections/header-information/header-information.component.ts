@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {ProgramService} from 'api-kit';
 import {FALOpSharedService} from '../../assistance-listing-operations.service';
 import {AutocompleteConfig} from "sam-ui-kit/types";
-import {ReplaySubject, Subscription} from "rxjs";
+import {Subscription} from "rxjs";
 
 
 @Component({
@@ -12,41 +12,23 @@ import {ReplaySubject, Subscription} from "rxjs";
   templateUrl: 'header-information.template.html',
 })
 export class FALHeaderInfoComponent implements OnInit, OnDestroy {
-  data: any;
   getProgSub: any;
   saveProgSub: any;
   redirectToWksp: boolean = false;
   falHeaderInfoForm: FormGroup;
-  getRelatedProgSub: any;
-  getProgramsSub: any;
-  relatedPrograms = [];
-  listOfPrograms: string;
-  listOptions = [];
   public agency: string;
 
   // Related Program multi-select
   private relatedProgSub: Subscription;
-  realtedProgramsData = [];
   relatedProgInitialSelection = [];
-  relatedProgKeyValue = [];
   realtedProgMultiArrayValues = [];
   relatedProgSelectedOption: any;
   @ViewChild('relatedProgListDisplay') relatedProgListDisplay;
   listConfig: AutocompleteConfig = {keyValueConfig: {keyProperty: 'code', valueProperty: 'name'}};
-  relatedProgModel: any = '';
-  relatedProgramConfig = {
-    config: {
-      keyValueConfig: {
-        keyProperty: 'code',
-        valueProperty: 'name'
-      }
-    },
-    placeholder: 'None Selected',
-    name: 'test'
-  };
   relProAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
-    placeholder: 'None Selected'
+    placeholder: 'None Selected',
+    serviceOptions:{index:'RP'}
   };
 
 
@@ -73,12 +55,6 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     if (this.getProgSub)
       this.getProgSub.unsubscribe();
 
-    if (this.getProgramsSub)
-      this.getProgramsSub.unsubscribe();
-
-    if (this.getRelatedProgSub)
-      this.getRelatedProgSub.unsubscribe();
-
     if (this.relatedProgSub)
       this.relatedProgSub.unsubscribe();
   }
@@ -102,7 +78,6 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
   private populateRelatedProgramMultiList(relatedPrograms: any) {
     this.relatedProgSub = this.programService.falautosearch('', relatedPrograms.join(','))
       .subscribe(data => {
-        this.data = data;
         for (let dataItem of data) {
           this.relatedProgInitialSelection.push({code: dataItem.id, name: dataItem.value});
           this.realtedProgMultiArrayValues.push(dataItem.id);
@@ -123,7 +98,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
           if (falNo.trim().length == 6)
             falNo = falNo.slice(3, 6);
-          if (api.data.relatedPrograms.length > 0) {
+          if ((api.data.relatedPrograms) && (api.data.relatedPrograms.length > 0)) {
             this.populateRelatedProgramMultiList(api.data.relatedPrograms);
 
           }
