@@ -123,7 +123,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
     if(projectsForm && projectsForm.checkbox) {
       projects.isApplicable = projectsForm.checkbox.indexOf('na') === -1;
     } else {
-      projects.isApplicable = false;
+      projects.isApplicable = true;
     }
 
     projects.list = [];
