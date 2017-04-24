@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
 import { Router} from '@angular/router';
+import * as moment from 'moment';
 import { DictionaryService } from 'api-kit';
 import { ProgramService } from 'api-kit';
 import { FALOpSharedService } from '../../assistance-listing-operations.service';
 import { FALAssistSubFormComponent } from '../../../components/applying-assistance-subform/applying-assistance-subform.component';
+
 
 @Component({
   providers: [ ProgramService, DictionaryService ],
@@ -21,7 +23,8 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   progTitle: string;
   hideAddButton: boolean = false;
   redirectToWksp: boolean = false;
-  assistInfo: any = [];
+  //assistInfo: any = [];
+  assistInfoDisp: any = [];
   falAssistanceForm: FormGroup;
 
   public deadlinesFlagOptions = [];
@@ -125,11 +128,26 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
 
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
+          console.log("api", api);
+
           this.progTitle = api.data.title;
           let flag = (api.data.assistance.deadlines.flag ? api.data.assistance.deadlines.flag : '');
           let deadline_desc = (api.data.assistance.deadlines.description ? api.data.assistance.deadlines.description : '');
-          let reports = [];
 
+          if(api.data.assistance.deadlines.list.length > 0){
+            this.assistSubForm.assistInfo = api.data.assistance.deadlines.list;
+            let index = 0;
+            for(let assist of this.assistSubForm.assistInfo){
+              const control = <FormArray> this.assistSubForm.falAssistSubForm.controls['deadlineList'];
+              control.push(this.assistSubForm.initAssist());
+              control.at(index).patchValue(assist);
+              index = index + 1;
+            }
+
+            this.formatAssistInfo(this.assistSubForm.assistInfo);
+          }
+
+          let reports = [];
           if(api.data.assistance.preApplicationCoordination.environmentalImpact){
             for(let report of api.data.assistance.preApplicationCoordination.environmentalImpact.reports){
               reports.push(report.reportCode);
@@ -181,8 +199,6 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
 
     let data = this.buildData();
 
-    console.log("data", data);
-
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
           this.sharedService.programId = api._body;
@@ -200,9 +216,14 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   }
 
   buildData(){
-    let data = {assistance: JSON.parse(JSON.stringify(this.falAssistanceForm.value))};
-    let reports = [];
 
+    let list = this.assistSubForm.assistInfo;
+
+    let data = {assistance: JSON.parse(JSON.stringify(this.falAssistanceForm.value))};
+
+    data.assistance.deadlines['list'] = list;
+
+    let reports = [];
     for(let report of this.falAssistanceForm.value.preApplicationCoordination.reports){
 
       reports.push( {
@@ -240,13 +261,13 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   }
 
   assistActionHandler(event){
-    console.log("event", event);
     if(event.type == 'add'){
       this.hideAddButton = event.hideAddButton;
     }
     if(event.type == 'confirm'){
       this.hideAddButton = event.hideAddButton;
-      this.assistInfo = event.assistInfo;
+      //this.assistInfo = event.assistInfo;
+      this.formatAssistInfo(event.assistInfo);
     }
     if(event.type == 'cancel'){
       this.hideAddButton = event.hideAddButton;
@@ -266,13 +287,33 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
 
   removeAssist(i: number){
     this.assistSubForm.removeAssist(i);
-    this.assistInfo = this.assistSubForm.assistInfo;
+    //this.assistInfo = this.assistSubForm.assistInfo;
+    this.formatAssistInfo(this.assistSubForm.assistInfo);
     this.hideAddButton = this.assistSubForm.hideAddButton;
   }
 
   formatAssistInfo(assistInfo){
+    this.assistInfoDisp = [];
+    for(let assist of assistInfo) {
+      let m = moment();
+      let startM = moment(assist.start);
+      let endM = moment(assist.end);
 
-    console.log(assistInfo);
+      let sMonth = m.month(startM.month()).format('MMMM');
+      let sYear = startM.year();
+      let sDate = startM.date();
+      let startDate = sMonth + ' ' + sDate + ', ' + sYear;
+
+      let eMonth = m.month(endM.month()).format('MMMM');
+      let eYear = endM.year();
+      let eDate = endM.date();
+      let endDate = eMonth + ' ' + eDate + ', ' + eYear;
+
+      if(assist.end !== null)
+        this.assistInfoDisp.push(startDate + " - " + endDate + " " + assist.description);
+      else
+        this.assistInfoDisp.push(startDate + " " + assist.description);
+    }
   }
 
   onSaveContinueClick(){
