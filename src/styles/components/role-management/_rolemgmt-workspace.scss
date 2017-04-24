@@ -1,8 +1,16 @@
 .rolemgmt-workspace{
-  &.usa-grid-full{
+  padding: 0 2.0rem !important;
+
+  .usa-grid-full{
     max-width: initial;
   }
-  .m_W-3em{
-    padding-left:2.4em;
+
+  .page-title {
+    margin-top: 3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .role-filters-column {
+    padding-right: 2rem;
   }
 }

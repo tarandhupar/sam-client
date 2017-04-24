@@ -28,6 +28,7 @@
     font-size: 2.5rem;
     margin-bottom: 0em;
     margin-top: .5em;
+    text-align: center;
   }
   .icn_pos{
     position: absolute;
@@ -36,5 +37,15 @@
   .p_B-1em{
     padding-bottom: 1em;
     cursor: pointer;
+  }
+
+  .usa-accordion-content {
+    padding-left: 0.1rem;
+  }
+
+  samAccordion {
+    button {
+      text-align: center;
+    }
   }
 }

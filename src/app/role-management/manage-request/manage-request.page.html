@@ -68,7 +68,7 @@
               (click)="onSubmitClick()"
               [disabled]="!selectedOption"
               [ngClass]="!selectedOption && 'usa-button-disabled'"
-      >Submit</button>
+      >{{submitLabel()}}</button>
     </div>
   </div>
   <div class="usa-width-one-fourth">&nbsp;</div>
