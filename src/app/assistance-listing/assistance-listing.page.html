@@ -2,7 +2,7 @@
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
-    <div sam-sticky limit=1200 container="occupy-page">
+    <div sam-sticky limit=1200 container="assistance-listing-page">
       <!--Logo-->
       <ng-container *ngIf="program && (errorOrganization || logoUrl===null || errorLogo)">
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
@@ -11,21 +11,22 @@
         <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
       </ng-container>
       <!--Side Navigation-->
-      <nav>
-        <ul class="usa-sidenav-list">
-          <li *ngIf="program.status?.code!='published'"><a href="{{currentUrl}}#program-information">Header Information</a></li>
-          <li><a href="{{currentUrl}}#overview">Overview</a></li>
-          <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
-          <li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
-          <li><a href="{{currentUrl}}#criteria-for-applying">Criteria for Applying</a></li>
-          <li><a href="{{currentUrl}}#applying-for-assistance">Applying for Assistance</a></li>
-          <li><a href="{{currentUrl}}#compliance-requirements">Compliance Requirements</a></li>
-          <li><a href="{{currentUrl}}#contact-information">Contact Information</a></li>
-          <li><a href="{{currentUrl}}#history">History</a></li>
-        </ul>
-      </nav>
+      <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
     </div>
   </aside>
+
+  <!--Edit Modal-->
+  <samModal #editModal
+            [showClose]="true"
+            [closeOnOutsideClick]="true"
+            [closeOnEscape]="true"
+            [type]="'info'"
+            [title]="'Revise -  Federal Assistance Listing'"
+            [description]="'A draft revision for this published program will be utilized for editing.  Please click ok to edit a draft of this FAL.'"
+            [submitButtonLabel]="'Ok'"
+            [cancelButtonLabel]="'Cancel'"
+            (onSubmit)="onEditModalSubmit()"
+  ></samModal>
 
   <!--Main Content-->
   <div *ngIf="program" class="usa-width-three-fourths">
@@ -40,8 +41,10 @@
             <h1><span class="field" id="program-title">{{program?.data?.title}}</span></h1>
           </div>
           <div class="usa-width-one-third">
-            <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']">Edit</a>
-            <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit']"></i>
+            <a *ngIf="cookieValue" (click)="onEditClick(['/programs', program.id, 'edit'])">
+              Edit
+              <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
 
@@ -78,8 +81,10 @@
           <h2 id="overview">Overview</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'overview']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'overview']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'overview'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
       <h3>Objectives:</h3>
@@ -119,8 +124,10 @@
           <h2 id="authorizations">Authorizations</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'authorization'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -143,8 +150,10 @@
           <h2 id="financial-information">Financial Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'financial-information', 'obligations'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -190,8 +199,10 @@
           <h2 id="criteria-for-applying">Criteria for Applying</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'criteria-information']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'criteria-information']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'criteria-information'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
       <h3>Types of Assistance:</h3>
@@ -488,8 +499,10 @@
           <h2 id="compliance-requirements">Compliance Requirements</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'compliance-requirements'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -596,7 +609,7 @@
       <!-- matching requirements -->
       <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.matching">
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="true">
-            Matching Requirements: <ng-container *ngIf="program.data?.compliance?.formulaAndMatching?.matching?.percent > 0">Percent: {{program.data?.compliance?.formulaAndMatching?.matching?.percent}}</ng-container>
+            Matching Requirements: <ng-container *ngIf="dictionaries">Percent: {{ ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaries.match_percent:'element_id':false:'')[0].value }}</ng-container>
             {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
 
           <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.matching?.requirementFlag">
@@ -640,8 +653,10 @@
           <h2 id="contact-information">Contact Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'contact-information']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'contact-information']"></i>
+          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'contact-information'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 

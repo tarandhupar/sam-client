@@ -1,10 +1,10 @@
 <div class="usa-width-one-whole organization-profile relative">
   <div class="usa-width-one-whole" *ngIf="isDataAvailable">
 
-    <div class="org-notification p_T-4x m_B-6x ">&nbsp;
+    <div class="org-notification p_T-4x m_B-6x">&nbsp;
 
-      <button *ngIf="isNextLayerCreatable()" class="usa-button-big pull-right relative">
-        Create <i class="fa fa-angle-down"></i>
+      <button *ngIf="isNextLayerCreatable() && selectConfig.options.length > 1" class="usa-button-big pull-right relative">
+        Create &nbsp; <i class="fa fa-angle-down"></i>
         <samSelect class="org-type-select"
                    [name]="selectConfig.name"
                    [options]="selectConfig.options"
@@ -13,6 +13,8 @@
                    (modelChange)='onSelect($event)'>
         </samSelect>
       </button>
+      <button class="usa-button-big pull-right relative" *ngIf="isNextLayerCreatable() && selectConfig.options.length === 1" (click)="onSelect(selectConfig.options[0].value)">
+        Create {{selectConfig.options[0].label}}</button>
     </div>
     <div class="usa-width-one-whole">
       <span *ngFor="let hierarchyName of hierarchyPath; let i = index">
