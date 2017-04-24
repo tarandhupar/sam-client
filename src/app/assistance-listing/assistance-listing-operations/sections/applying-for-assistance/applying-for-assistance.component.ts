@@ -128,8 +128,6 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
 
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
-          console.log("api", api);
-
           this.progTitle = api.data.title;
           let flag = (api.data.assistance.deadlines.flag ? api.data.assistance.deadlines.flag : '');
           let deadline_desc = (api.data.assistance.deadlines.description ? api.data.assistance.deadlines.description : '');
