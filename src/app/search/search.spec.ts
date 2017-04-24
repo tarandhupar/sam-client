@@ -20,7 +20,7 @@ import { AlertFooterService } from '../alerts/alert-footer';
 import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
 import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 import { RegionalOfficeListingResult } from "../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component";
-//import { AutoCompleteWrapper } from '../../api-kit/autoCompleteWrapper/autoCompleteWrapper.service';
+import {FormsModule} from "@angular/forms";
 let fixture;
 
 let searchServiceStub = {
@@ -106,7 +106,8 @@ describe('SearchPage', () => {
         RouterTestingModule.withRoutes([
           { path: 'search', component: SearchPage }
         ]),
-        PipesModule
+        PipesModule,
+        FormsModule
       ]
     }).overrideComponent(SearchPage, {
        set: {
