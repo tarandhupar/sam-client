@@ -12,6 +12,8 @@ export class RoleMgmtContent implements OnInit{
   @Input() currCount;
   @Input() totalPages;
   @Input() currPage;
+  @Input() pendingCount;
+  @Input() escalatedCount;
 
   @Output() sortOrder : EventEmitter<any> = new EventEmitter<any>();
   @Output() pageNumber : EventEmitter<any> = new EventEmitter<any>();
