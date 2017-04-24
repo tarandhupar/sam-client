@@ -4,6 +4,7 @@ import { SearchLayoutDemoPage }   from './search-layout-demo/search-layout-demo.
 
 export const routes: Routes = [
   { path: 'search',  component: SearchPage },
+  { path: 'search/fal/regionalOffices', component: SearchPage}
 ];
 if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
   routes.unshift({ path: 'search/demo', component: SearchLayoutDemoPage });

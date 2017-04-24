@@ -94,6 +94,12 @@ export class SearchService {
       oApiParam.oParam['psc'] = obj.psc;
     }
 
+    //showRegionalOffices only when
+    if(obj.showRO) {
+      oApiParam.oParam['q'] = obj.ro_keyword;
+      oApiParam.oParam['index'] = 'ro';
+    }
+
     return this.oAPIService.call(oApiParam);
   }
 
