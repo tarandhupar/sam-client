@@ -43,6 +43,7 @@ export class ManageRequestPage implements OnInit {
 
   getRequestObject() {
     this.request = this.route.snapshot.data['request'];
+    this.request.domainName = this.getDomainNameById(this.request.domainId);
   }
 
   onMessageChanged() {

@@ -5,44 +5,7 @@
   <div class="usa-width-one-half">
     <!--<div class="usa-alert usa-alert-error"><code>{{request | json}}</code></div>-->
     <h1>Access Request</h1>
-    <div class="description-block">
-      <div class="usa-grid-full">
-        <div class="usa-width-one-fourth">
-          <strong>Domain:</strong>
-        </div>
-        <div class="usa-width-three-fourths">
-          {{getDomainNameById(request.domainId)}}
-        </div>
-      </div>
-      <div class="usa-grid-full m_T-2x">
-        <div class="usa-width-one-fourth">
-          <strong>Requested By:</strong>
-        </div>
-        <div class="usa-width-three-fourths">
-          {{request.requestorName}}
-        </div>
-      </div>
-      <div class="usa-grid-full m_T-2x">
-        <div class="usa-width-one-fourth">
-          <strong>Supervisor Name:</strong>
-        </div>
-        <div class="usa-width-three-fourths">
-          {{request.supervisorName}}
-        </div>
-      </div>
-      <div class="usa-grid-full m_T-2x">
-        <div class="usa-width-one-fourth">
-          <strong>Supervisor Email:</strong>
-        </div>
-        <div class="usa-width-three-fourths">
-          {{request.supervisorEmail}}
-        </div>
-      </div>
-      <div class="m_T-2x"><strong>Message from Requestor:</strong></div>
-      <p>
-        <em>{{request.requestorMessage}}</em>
-      </p>
-    </div>
+    <request-details [requestObject]="request"></request-details>
     <div class="m_T-4x">
       <samRadioButton
         [options]="options"

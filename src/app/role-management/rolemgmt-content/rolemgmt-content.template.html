@@ -116,7 +116,7 @@
                 </div>
                 <div class="usa-width-one-third">
                   <div><strong>Escalation Date</strong></div>
-                  <div>{{content.supervisorEmail}}</div>
+                  <div>{{formatDate(content.updatedDate)}}</div>
                 </div>
               </ng-container>
 
@@ -128,7 +128,7 @@
                 </div>
                 <div class="usa-width-one-third">
                   <div><strong>Rejection Date</strong></div>
-                  <div>---</div>
+                  <div>{{formatDate(content.updatedDate)}}</div>
                 </div>
                 <div class="usa-width-one-third">
                   <div><strong>Rejection Organization</strong></div>
@@ -144,7 +144,7 @@
                 </div>
                 <div class="usa-width-one-third">
                   <div><strong>Approved Date</strong></div>
-                  <div>---</div>
+                  <div>{{formatDate(content.updatedDate)}}</div>
                 </div>
                 <div class="usa-width-one-third">
                   <div><strong>Approval Organization</strong></div>

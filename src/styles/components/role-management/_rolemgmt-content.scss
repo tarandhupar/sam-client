@@ -82,8 +82,7 @@
   }
 
   .overview-header {
-    margin: 0 -1.5rem;
-    padding: 1.5rem;
+    padding: 1.5rem 3.0rem;
     border: 1px solid black;
     border-radius: 1.5rem;
   }
@@ -104,6 +103,10 @@
   .back-to-workspace-button {
     text-align: left;
     padding-left: 0;
+  }
+
+  .request-block {
+    padding: 0;
   }
 
   .request-block .usa-accordion-button {
