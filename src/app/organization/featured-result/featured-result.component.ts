@@ -16,7 +16,7 @@ import { ReplaySubject } from 'rxjs';
             <i class="fa fa-star" aria-hidden="true"></i>
             Featured Result
           </div>
-          
+
           <div class="sam-ui attached grid">
             <div class="row">
               <div class="two wide column">
@@ -39,12 +39,12 @@ import { ReplaySubject } from 'rxjs';
                 <ul class="sam-ui horizontal divided small list">
                   <li class="item">
                     <strong>
-                    {{ data.type=="Agency" ? 'Sub-Tier' : '' }}
-                    {{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}
-                    {{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
+                      {{ data.type=="Agency" ? 'Sub-Tier' : '' }}
+                      {{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}
+                      {{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
                     </strong>
                   </li>
-                  <li class="item" *ngIf="data">
+                  <li class="item">
                     <strong>CGAC: </strong> {{ data.cgac }}
                   </li>  
                 </ul><br>
@@ -52,7 +52,7 @@ import { ReplaySubject } from 'rxjs';
                   <strong>Department/Ind. Agency:</strong> {{ department.name }}
                 </div>
                 <p>
-                  <a href="/search?keyword={{qParams.keyword}}&index=fpds&page=1&organizationId={{data._id}}" target="_blank">
+                  <a href="/search?keyword=&index=fpds&page=1&organizationId={{data._id}}" target="_blank">
                     View Awards contracted by this federal organization
                   </a>
                 </p>
