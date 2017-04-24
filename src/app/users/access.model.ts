@@ -20,6 +20,32 @@ export class UserAccessModel {
     return a;
   }
 
+  static CreateGrantAndAcceptObject(messages, userName, domain, role, organizations, objects) {
+    return {
+      message: messages,
+      mode: 'approve',
+      updatedAccessContent: {
+        user: userName,
+        domainContent: [
+          {
+            domain: domain,
+            roleContent: [
+              {
+                role: role,
+                organizationContent: [
+                  {
+                    organizations: organizations,
+                    functionContent: objects
+                  }
+                ]
+              }
+            ]
+          },
+        ]
+      }
+    };
+  }
+
   static CreateDeletePartial(user, roleId, domainId, orgIds): UserAccessWrapper {
     let organizationMapContent = [{
       organizations: orgIds,

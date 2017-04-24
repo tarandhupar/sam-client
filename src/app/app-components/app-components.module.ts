@@ -30,6 +30,7 @@ import { SamStateServiceAutoDirective, StateServiceImpl } from "./location-autoc
 import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./location-autocomplete/county-autocomplete/county-autocomplete.component";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { OrgAddrFormComponent } from "./address-form/address-form.component";
+import {PipesModule} from "../app-pipes/app-pipes.module";
 
 /**
  * A module for reusable SAM Web Design components
@@ -67,7 +68,8 @@ import { OrgAddrFormComponent } from "./address-form/address-form.component";
     FormsModule,
     RouterModule,
     SamAPIKitModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PipesModule
   ],
   exports: [
     AgencyPickerComponent,
