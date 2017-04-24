@@ -16,7 +16,7 @@ export class RequestAccessResolve implements Resolve<any> {
 
   resolve(route: ActivatedRouteSnapshot) {
     let rid = route.queryParams['request'];
-    console.log(route);
+
     if (!rid) {
       return Observable.of(null);
     }

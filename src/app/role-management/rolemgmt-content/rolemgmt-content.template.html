@@ -18,7 +18,7 @@
           </div>
         </div>
         <div class="usa-width-one-third">
-          <h3>Favority Organizations</h3>
+          <h3>Favorite Organizations</h3>
           <div>
             <a>GSA</a>
           </div>
@@ -172,48 +172,6 @@
             </samAccordionSection>
           </samAccordion>
         </div>
-        <!--<div class = "usa-grid-full p_T-1em">-->
-          <!--<div class = "usa-width-one-sixth"><h4>Requested By</h4></div>-->
-          <!--<div class = "usa-width-one-sixth"><h4>Requested Date</h4></div>-->
-          <!--<div class = "usa-width-one-sixth"><h4>Status</h4></div>-->
-          <!--<div class = "usa-width-one-sixth">-->
-            <!--<h4 *ngIf = "content.status === 'ESCALATED'">Escalated By</h4>-->
-            <!--<h4 *ngIf = "content.status === 'PENDING'">Supervisor Name</h4>-->
-            <!--<h4 *ngIf = "content.status === 'REJECTED'">Rejected By</h4>-->
-            <!--<h4 *ngIf = "content.status === 'APPROVED'">Approved By</h4>-->
-          <!--</div>-->
-          <!--<div class = "usa-width-one-sixth">-->
-            <!--<h4 *ngIf = "content.status === 'ESCALATED'">Escalted Date</h4>-->
-            <!--<h4 *ngIf = "content.status === 'REJECTED'">Rejected Date</h4>-->
-            <!--<h4 *ngIf = "content.status === 'APPROVED'">Approved Date</h4>-->
-            <!--<h4 *ngIf = "content.status === 'PENDING'">Supervisor Email</h4>-->
-          <!--</div>-->
-          <!--<div class = "usa-width-one-sixth"><h4 *ngIf = "content.status === 'ESCALATED'">Escalted To</h4></div>-->
-        <!--</div>-->
-        <!--<div class = "usa-grid-full p_T-.5em">-->
-          <!--<div class = "usa-width-one-sixth ellipsis">{{content.requestorName.toUpperCase()}}</div>-->
-          <!--<div class = "usa-width-one-sixth">{{formatDate(content.createdDate)}}</div>-->
-          <!--<div class = "usa-width-one-sixth">{{content.status}}</div>-->
-          <!--<div class = "usa-width-one-sixth ellipsis">{{content.supervisorName.toUpperCase()}}</div>-->
-          <!--<div class = "usa-width-one-sixth" *ngIf = "content.status !== 'PENDING'">{{formatDate(content.createdDate)}}</div>-->
-          <!--<div class = "usa-width-one-sixth" *ngIf = "content.status === 'PENDING'">{{content.supervisorEmail}}</div>-->
-          <!--<div class = "usa-width-one-sixth" *ngIf = "content.status === 'ESCALATED'">{{content.escalatedTo}}</div>-->
-        <!--</div>-->
-        <!--<div class = "usa-grid-full p_T-1em">-->
-          <!--<div [ngClass] = "content.status === 'PENDING' || !content.adminMessage ? 'usa-width-three-fourths' : 'usa-width-one-third'">-->
-            <!--<h4>User Message</h4>-->
-          <!--</div>-->
-          <!--<div class = "usa-width-one-third" *ngIf = "content.status !== 'PENDING' && content.adminMessage"><h4>Administrator Message</h4></div>-->
-        <!--</div>-->
-        <!--<div class = "usa-grid-full p_T-.5em">-->
-          <!--<div [ngClass] = "content.status === 'PENDING' || !content.adminMessage ? 'usa-width-three-fourths' : 'usa-width-one-third'">-->
-            <!--{{content.requestorMessage}}-->
-          <!--</div>-->
-          <!--<div class = "usa-width-one-third" *ngIf = "content.status !== 'PENDING' && content.adminMessage">{{content.adminMessage}}</div>-->
-          <!--<div [ngClass] = "content.status === 'PENDING' || !content.adminMessage ? 'usa-width-one-fourth' : 'usa-width-one-third'" *ngIf = "content.status === 'PENDING'||content.status === 'ESCALATED'">-->
-            <!--<button class="usa-button-active pull-right" routerLink = "../requests/{{content.id}}">Respond</button>-->
-          <!--</div>-->
-        <!--</div>-->
       </section>
     </div>
   </div>
