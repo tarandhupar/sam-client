@@ -35,6 +35,45 @@ export class SearchPage implements OnInit{
   showRegionalOffices: boolean = false;
   ro_keyword: string = "";
 
+  //TODO: Remove these
+  dunsModel: any = '';
+  myOptions: any = [];
+  testConfiguration = {
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    }
+};
+
+  //TODO: remove this
+  listOptions = [
+    {
+      label:'test org 1 (831006053)',
+      value: '831006053',
+      name: 'test org 1'
+    },
+    {
+      label:'test org 2',
+      value: '831006054',
+      name: 'test org 2'
+    },
+    {
+      label:'test org 3',
+      value: '831006055',
+      name: 'test org 3'
+    },
+    {
+      label:'test org 4',
+      value: '831006056',
+      name: 'test org 4'
+    },
+    {
+      label:'test org 5',
+      value: '831006057',
+      name: 'test org 5'
+    }];
+
+
   @ViewChild('agencyPicker') agencyPicker;
 
   // Active Checkbox config
@@ -1006,6 +1045,15 @@ export class SearchPage implements OnInit{
     }
     this.pageNum = 0;
     this.searchResultsRefresh();
+  }
+
+  entityDunsSearchEvent(event){
+
+    console.log('you made it into test function congrats!', event);
+  }
+
+  getDropdownListItems(event){
+    console.log('hey here is modelChange emitter much wow! ', event);
   }
 
 }

@@ -199,8 +199,36 @@
           </sam-naics-psc-filter>
           <button (click)='naicsPscFilterClear()'>Clear</button>
         </sam-collapsible>
+
+        <!--Entity Name - DUNS Filter-->
+        <sam-collapsible [label]="'Entity Name/UEI'" [startOpened]="true" *ngIf="index==='fpds' || index === 'opp' || index === 'ent'">
+
+          <!--<duns-entity-filter-->
+            <!--[ngModel]="myValue">-->
+          <!--</duns-entity-filter>-->
+          <labelWrapper>
+
+            <sam-autocomplete autofill-entityduns
+              [name]="'Test'"
+              [id]="name + 'autocompletecomponent'"
+              [config]="testConfiguration"
+              [(ngModel)]="dunsModel"
+              (ngModelChange)="entityDunsSearchEvent($event)">
+            </sam-autocomplete>
+
+            <sam-list-display
+              class="usa-award-filter"
+              [newValue]="dunsModel.label"
+              (modelChange)="getDropdownListItems($event)"
+              [(ngModel)]="testModel1">
+            </sam-list-display>
+          </labelWrapper>
+        </sam-collapsible>
+
         <hr>
         <button (click)='clearAllFilters()'>Clear All</button>
+
+
 
       </sam-filters-container>
     </div>
