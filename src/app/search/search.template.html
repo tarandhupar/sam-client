@@ -191,8 +191,11 @@
         <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="(index==='fpds' || index === 'opp' || index === 'ent') && showRegionalOffices==false">
           <sam-naics-psc-filter class="usa-award-filter"
                                 [selectModel1]="naicsTypeModel"
+                                [selectModel2]="pscTypeModel"
                                 [options1]="naicsType"
-                                (modelChange1)="naicsTypeSelected($event)">
+                                [options2]="pscType"
+                                (modelChange1)="naicsTypeSelected($event)"
+                                (modelChange2)="pscTypeSelected($event)">
           </sam-naics-psc-filter>
           <button (click)='naicsPscFilterClear()'>Clear</button>
         </sam-collapsible>

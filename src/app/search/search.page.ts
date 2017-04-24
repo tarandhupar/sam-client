@@ -6,6 +6,7 @@ import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
 import {WageDeterminationService} from "../../api-kit/wage-determination/wage-determination.service";
 import { AlertFooterService } from '../alerts/alert-footer';
 import {OpportunityService} from "../../api-kit/opportunity/opportunity.service";
+import {SortArrayOfObjects} from "../app-pipes/sort-array-object.pipe";
 
 @Component({
   moduleId: __filename,
@@ -164,7 +165,7 @@ export class SearchPage implements OnInit{
   awardTypeModel: string = '';
   awardType = {
     "name": "Award-IDV Type",
-    "placeholder": "Award-IDV Types",
+    "placeholder": "Search Award-IDV Types",
     "selectedLabel": "Award - IDV Types Selected",
     "options": [
       { label: 'BOA (IDV)', value: 'D_IDV', name: 'BOA' },
@@ -196,7 +197,7 @@ export class SearchPage implements OnInit{
   contractTypeModel: string = '';
   contractType = {
     "name": "Contract Type",
-    "placeholder": "Contract Types",
+    "placeholder": "Search Contract Types",
     "selectedLabel": "Contract Types Selected",
     "options": [
       { label: 'COST NO FEE', value: 'S', name: 'COST NO FEE' },
@@ -229,8 +230,22 @@ export class SearchPage implements OnInit{
   naicsTypeModel: any = '';
   naicsType = {
     "name": "NAICS Type",
-    "placeholder": "NAICS Types",
+    "placeholder": "Search NAICS Types",
     "selectedLabel": "Codes Selected",
+    "options": [],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
+
+  //Select PSC Types
+  pscTypeModel: any = '';
+  pscType = {
+    "name": "PSC Type",
+    "placeholder": "Search PSC Types",
     "options": [],
     "config": {
       keyValueConfig: {
@@ -279,7 +294,9 @@ export class SearchPage implements OnInit{
         this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
+        this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
         this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
+
         this.runSearch();
         this.loadParams();
       });
@@ -329,9 +346,9 @@ export class SearchPage implements OnInit{
     }
 
     if(this.index.length>0){
-        qsobj['index'] = this.index;
+      qsobj['index'] = this.index;
     } else {
-        qsobj['index'] = '';
+      qsobj['index'] = '';
     }
 
     if(!newsearch && this.pageNum>=0){
@@ -405,6 +422,10 @@ export class SearchPage implements OnInit{
       qsobj['naics'] = this.naicsTypeModel;
     }
 
+    if(this.pscTypeModel.length>0){
+      qsobj['psc'] = this.pscTypeModel;
+    }
+
     if(this.ro_keyword.length>0){
       qsobj['ro_keyword'] = this.ro_keyword;
     }
@@ -427,6 +448,7 @@ export class SearchPage implements OnInit{
       case 'ent':
       case 'fpds':
             this.getAwardsDictionaryData('naics_code');
+            this.getAwardsDictionaryData('classification_code');
     }
 
     //make featuredSearch api call only for first page
@@ -476,6 +498,7 @@ export class SearchPage implements OnInit{
       awardType: this.awardTypeModel,
       contractType: this.contractTypeModel,
       naics: this.naicsTypeModel,
+      psc: this.pscTypeModel,
       showRO: this.showRegionalOffices,
       ro_keyword: this.ro_keyword
     }).subscribe(
@@ -596,19 +619,7 @@ export class SearchPage implements OnInit{
           return newObj;
         });
 
-        reformattedArray.sort(function (a, b){
-          var nameA = a.label.toUpperCase(); // ignore upper and lowercase
-          var nameB = b.label.toUpperCase(); // ignore upper and lowercase
-          if (nameA < nameB) {
-            return -1;
-          }
-          if (nameA > nameB) {
-            return 1;
-          }
-
-          // names must be equal
-          return 0;
-        });
+        reformattedArray = new SortArrayOfObjects().transform(reformattedArray, 'label');
 
         // adding the default selection row to the array
         reformattedArray.unshift(defaultSelection);
@@ -638,6 +649,19 @@ export class SearchPage implements OnInit{
           this.naicsType = Object.assign({}, this.naicsType);
         }
 
+        if(id === 'classification_code'){
+          var reformattedArray = data._embedded.dictionaries[0].elements.map(function(pscItem){
+            let newObj = {label:'', value:'', type:'psc'};
+
+            newObj.label = pscItem.value;
+            newObj.value = pscItem.code;
+            return newObj;
+          });
+
+          this.pscType.options = reformattedArray;
+          this.pscType = Object.assign({}, this.pscType);
+        }
+
       },
       error => {
         console.error("Error!!", error);
@@ -645,7 +669,7 @@ export class SearchPage implements OnInit{
     );
   }
 
-  pageChange(pagenumber){
+  pageChange(pagenumber) {
     this.pageNum = pagenumber;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
@@ -653,12 +677,11 @@ export class SearchPage implements OnInit{
     };
 
     document.getElementById('search-results').getElementsByTagName('div')[0].focus();
-    if(this.showRegionalOffices){
-      this.router.navigate(['/search/fal/regionalOffices'],navigationExtras);
-    } else{
-      this.router.navigate(['/search'],navigationExtras);
+    if (this.showRegionalOffices) {
+      this.router.navigate(['/search/fal/regionalOffices'], navigationExtras);
+    } else {
+      this.router.navigate(['/search'], navigationExtras);
     }
-
 
   }
 
@@ -861,6 +884,12 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  pscTypeSelected(evt) {
+    this.pscTypeModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
   // this calls function to set up ES query params again and re-call the search endpoint with updated params
   searchResultsRefresh(){
     var qsobj = this.setupQS(false);
@@ -928,6 +957,7 @@ export class SearchPage implements OnInit{
 
   naicsPscFilterClear() {
     this.naicsTypeModel = '';
+    this.pscTypeModel = '';
     this.searchResultsRefresh();
   }
 
@@ -959,12 +989,12 @@ export class SearchPage implements OnInit{
     this.awardTypeModel = '';
     this.contractTypeModel = '';
     this.naicsTypeModel = '';
+    this.pscTypeModel = '';
 
     //clear regional office filter
     this.ro_keyword='';
 
     this.searchResultsRefresh();
-
 
   }
 

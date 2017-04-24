@@ -44,7 +44,24 @@
 @import '~uswds/src/stylesheets/core/variables';
 //@import '~uswds/src/stylesheets/core/fonts';
 @import '~uswds/src/stylesheets/core/base';
+/*
+  Variables moved here to avoid 
+  overriding USWDS grid variables
+*/
+// Store current variable values
+$current-small: $small;
+$current-medium: $medium;
+$current-large: $large;
+// Override current variables values for grid only
+$small: new-breakpoint(min-width $small-screen $grid-columns-small);
+$medium: new-breakpoint(min-width $medium-screen $grid-columns-medium);
+$large: new-breakpoint(min-width $large-screen $grid-columns-large);
 @import '~uswds/src/stylesheets/core/grid';
+// Restore variables to values defined in variables.scss
+$small: $current-small;
+$medium: $current-medium;
+$large: $current-large;
+
 @import '~uswds/src/stylesheets/core/utilities';
 
 
@@ -113,6 +130,10 @@ home samsearchbar{
 
 .usa-unstyled-list {
   @include unstyled-list;
+}
+
+samsearchheader .search-header > .usa-width-one-whole{
+  height: 40px;
 }
 
 .usa-font-lead {
@@ -197,12 +218,12 @@ home samsearchbar{
 @import 'pages/organization-detail';
 @import 'pages/organization-create';
 
-h1,
-h2{
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-  color: black;
-}
+// h1,
+// h2{
+//   letter-spacing: -0.5px;
+//   line-height: 1.1;
+//   color: black;
+// }
 
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{

@@ -90,6 +90,10 @@ export class SearchService {
       oApiParam.oParam['naics'] = obj.naics;
     }
 
+    if(typeof obj.psc !== 'undefined' && obj.psc !== null && obj.psc !== ''){
+      oApiParam.oParam['psc'] = obj.psc;
+    }
+
     //showRegionalOffices only when
     if(obj.showRO) {
       oApiParam.oParam['q'] = obj.ro_keyword;

@@ -85,12 +85,13 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  postAccess(access: UserAccessWrapper, userName) {
+  postAccess(access: UserAccessWrapper, userName, queryParams = {}) {
     let apiOptions: any = {
       name: 'access',
       suffix: '/' + userName + '/',
       method: 'POST',
-      body: access
+      body: access,
+      oParam: queryParams
     };
 
     return this.apiService.call(apiOptions, false);
@@ -219,11 +220,9 @@ export class UserAccessService {
   getPendingRequestById(requestId: any) {
     let apiOptions: any = {
       name: 'requestaccess',
-      suffix: '/',
+      suffix: '/'+requestId+'/',
       method: 'GET',
-      oParam: {
-        id: requestId
-      }
+      oParam: { }
     };
 
     return this.apiService.call(apiOptions);
@@ -290,7 +289,7 @@ export class UserAccessService {
     if(domainKey.length > 0){
       apiOptions.oParam.domainKey = domainKey;
     }
-    
+
     apiOptions.oParam.order = order;
     apiOptions.oParam.page = page;
 
