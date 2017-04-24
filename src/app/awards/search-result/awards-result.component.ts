@@ -14,10 +14,11 @@ import Moment = moment.Moment;
     	<h3 class="award-title">
     	<a *ngIf="data.isActive==true" [routerLink]="['/awards', uniqueIdentifier]" [queryParams]="qParams">{{ data.identifiers[0]?.piid }}</a>
     	</h3>
+    	<ul class="usa-unstyled-list">
+    	<li class="modification-number"><strong>Modification: </strong><span>{{ data.identifiers[0]?.modificationNumber }}</span></li>
+      </ul>
     	<div class="usa-width-two-thirds">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-      	  <li class="modification-number"><strong>Modification: </strong><span>{{ data.identifiers[0]?.modificationNumber }}</span></li>
-      	  <li>&nbsp;</li>
       	  <li class="vendor-name"><strong>{{ data.vendor?.name }}</strong></li>
       	  <li class="vendor-address"><span>{{ data.vendor?.address?.city }}, {{ data.vendor?.address?.state?.code }} {{ data.vendor?.address?.zip }}</span></li>
         	<li>&nbsp;</li>

@@ -220,6 +220,16 @@ npm run watch
 npm run test
 ```
 
+running tests without linter
+```bash
+npm run test:no-lint
+```
+
+running tests against common components
+```bash
+npm run test:sam-ui-elements
+```
+
 **Tests + watch**
 
 ```bash
@@ -250,3 +260,4 @@ npm run webdriver:start
 npm run e2e:live 
 ```
  \
+
