@@ -85,12 +85,13 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  postAccess(access: UserAccessWrapper, userName) {
+  postAccess(access: UserAccessWrapper, userName, queryParams = {}) {
     let apiOptions: any = {
       name: 'access',
       suffix: '/' + userName + '/',
       method: 'POST',
-      body: access
+      body: access,
+      oParam: queryParams
     };
 
     return this.apiService.call(apiOptions, false);
@@ -211,7 +212,7 @@ export class UserAccessService {
       if (res.status === 204) {
         return [];
       } else {
-        return res.json();
+        return res.json().userAccessRequestList;
       }
     });
   }
@@ -219,11 +220,9 @@ export class UserAccessService {
   getPendingRequestById(requestId: any) {
     let apiOptions: any = {
       name: 'requestaccess',
-      suffix: '/',
+      suffix: '/'+requestId+'/',
       method: 'GET',
-      oParam: {
-        id: requestId
-      }
+      oParam: { }
     };
 
     return this.apiService.call(apiOptions);
@@ -282,7 +281,7 @@ export class UserAccessService {
       method : 'GET',
       oParam: {},
     };
-    
+
     if(statusKey.length > 0){
       apiOptions.oParam.statusKey = statusKey;
     }
@@ -292,9 +291,9 @@ export class UserAccessService {
     }
 
     apiOptions.oParam.order = order;
-    apiOptions.oParam.page = page | 1;
+    apiOptions.oParam.page = page;
 
     return this.apiService.call(apiOptions);
 
-  }  
+  }
 }

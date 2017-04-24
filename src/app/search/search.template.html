@@ -160,13 +160,13 @@
             (modelChange)="awardIDVRadChanged($event)">
           </samRadioButton>
           <br/>
-          <sam-contract-type-filter class="usa-award-radio award-type-dropdown-list"
+          <sam-contract-type-filter class="usa-award-filter award-type-dropdown-list"
                                     [selectModel]="awardTypeModel"
                                     [options]="awardType"
                                     (modelChange)="awardTypeSelected($event)">
           </sam-contract-type-filter>
           <br/>
-          <sam-contract-type-filter class="usa-award-radio contract-type-dropdown-list"
+          <sam-contract-type-filter class="usa-award-filter contract-type-dropdown-list"
                                     [selectModel]="contractTypeModel"
                                     [options]="contractType"
                                     (modelChange)="contractTypeSelected($event)">
@@ -176,10 +176,13 @@
 
         <!--NAICS - PSC Filters-->
         <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="index==='fpds' || index === 'opp' || index === 'ent'">
-          <sam-naics-psc-filter class="usa-award-radio"
+          <sam-naics-psc-filter class="usa-award-filter"
                                 [selectModel1]="naicsTypeModel"
+                                [selectModel2]="pscTypeModel"
                                 [options1]="naicsType"
-                                (modelChange1)="naicsTypeSelected($event)">
+                                [options2]="pscType"
+                                (modelChange1)="naicsTypeSelected($event)"
+                                (modelChange2)="pscTypeSelected($event)">
           </sam-naics-psc-filter>
           <button (click)='naicsPscFilterClear()'>Clear</button>
         </sam-collapsible>

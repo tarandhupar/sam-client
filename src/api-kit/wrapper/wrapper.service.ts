@@ -29,6 +29,7 @@ export class WrapperService {
         "domainDefinition" : "/rms/v1/domaindefinition",
         "feedback": "/feedback/v1",
         "rms": "/rms/v1",
+      "relatedPrograms": "/fac/v1/programs/relatedprograms"
     };
 
     constructor(private _http: Http){}

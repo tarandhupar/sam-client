@@ -1,5 +1,6 @@
 The following explains how to get set up locally. For instructions regarding branching, merging, and so on; please see the [CONTRIBUTING](https://csp-github.sam.gov/joshuabruce/sam-front-end/blob/comp/CONTRIBUTING.md) documentation.
 
+
 <ul>
   <li><a href="#pipeline-workaround">!!!***Pipeline 2.0 workaround***!!!</a></li>
   <li>
@@ -217,6 +218,16 @@ npm run watch
 
 ```bash
 npm run test
+```
+
+running tests without linter
+```bash
+npm run test:no-lint
+```
+
+running tests against common components
+```bash
+npm run test:sam-ui-elements
 ```
 
 **Tests + watch**

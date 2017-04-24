@@ -220,10 +220,6 @@ export class SamFeedbackComponent {
     }
   }
 
-  onEmailEnter(val){
-    this.showEmailError = false;
-  }
-
   showProceedModal(){
     this.proceedModal.openModal();
   }
@@ -331,7 +327,6 @@ export class SamFeedbackComponent {
   }
 
   setRadioEmailResult(val) {
-    this.showEmailError = false;
     this.emailRadioBtnValue = val;
     if (this.emailRadioBtnValue === "Yes") {
       if(this.isSignedIn){
@@ -342,6 +337,7 @@ export class SamFeedbackComponent {
       if(!this.emailModelEdited && this.userEmailModel.length > 0) this.emailModelEdited = true;
     }
     if (this.emailRadioBtnValue === "No") {
+      this.showEmailError = false;
       this.emailModelEdited = false;
       this.setCurQAnswer({selectedValue:val,userEmail:""});
     }

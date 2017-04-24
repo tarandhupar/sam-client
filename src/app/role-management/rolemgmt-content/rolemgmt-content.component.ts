@@ -10,18 +10,26 @@ export class RoleMgmtContent implements OnInit{
   @Input() requestDetails = '';
   @Input() count; 
   @Input() currCount; 
+  @Input() totalPages;
+  @Input() currPage;
 
   @Output() sortOrder : EventEmitter<any> = new EventEmitter<any>();
   @Output() pageNumber : EventEmitter<any> = new EventEmitter<any>();
-
+  Pagelimit : number;
+  paginationConfig = {
+      currentPage: 1,      
+  };
+  pageNo = 1;
   constructor(){
-
+    
+    this.Pagelimit = 10;
+    
   }
 
   ngOnInit(){
-   
+        
   }
-  Pagelimit : number = 10;
+  
 
   selectModel = 'desc';
   selectConfig = {
@@ -33,14 +41,15 @@ export class RoleMgmtContent implements OnInit{
 
   onSelectChanged(event){
     this.sortOrder.emit(event);
-    window.scrollTo(0,0);
+    //window.scrollTo(0,0);
     //console.log(event);
   }
 
   onPageChange(event){
+    this.pageNo = event;
     this.pageNumber.emit(event);
     window.scrollTo(0,0);
-    //console.log(event);
+    
   }
 
   formatDate(dateString) {
@@ -51,10 +60,8 @@ export class RoleMgmtContent implements OnInit{
     }
   }
 
-  paginationConfig = {
-    currentPage: 1,
-    totalPages: Math.ceil(this.count/this.Pagelimit),
-  };
+  
 
+  
   
 }

@@ -44,7 +44,24 @@
 @import '~uswds/src/stylesheets/core/variables';
 //@import '~uswds/src/stylesheets/core/fonts';
 @import '~uswds/src/stylesheets/core/base';
+/*
+  Variables moved here to avoid 
+  overriding USWDS grid variables
+*/
+// Store current variable values
+$current-small: $small;
+$current-medium: $medium;
+$current-large: $large;
+// Override current variables values for grid only
+$small: new-breakpoint(min-width $small-screen $grid-columns-small);
+$medium: new-breakpoint(min-width $medium-screen $grid-columns-medium);
+$large: new-breakpoint(min-width $large-screen $grid-columns-large);
 @import '~uswds/src/stylesheets/core/grid';
+// Restore variables to values defined in variables.scss
+$small: $current-small;
+$medium: $current-medium;
+$large: $current-large;
+
 @import '~uswds/src/stylesheets/core/utilities';
 
 
@@ -152,6 +169,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/header';
 @import 'components/header-links';
 @import 'components/header-menu';
+@import 'components/info-accordion';
 @import 'components/agency-picker';
 @import 'components/input';
 @import 'components/multiselect';
