@@ -132,6 +132,10 @@ home samsearchbar{
   @include unstyled-list;
 }
 
+samsearchheader .search-header > .usa-width-one-whole{
+  height: 40px;
+}
+
 .usa-font-lead {
   font-family: $font-serif;
   font-size: $lead-font-size;
@@ -214,12 +218,12 @@ home samsearchbar{
 @import 'pages/organization-detail';
 @import 'pages/organization-create';
 
-h1,
-h2{
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-  color: black;
-}
+// h1,
+// h2{
+//   letter-spacing: -0.5px;
+//   line-height: 1.1;
+//   color: black;
+// }
 
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{
