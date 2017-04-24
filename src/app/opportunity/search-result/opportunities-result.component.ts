@@ -8,19 +8,18 @@ import * as moment from 'moment/moment';
   template: `
     <div class="sam-ui grid">
       <div class="row">
-        <div class="eight wide column">        
-          <h3 class="opportunity-title break-word">
-            <a [routerLink]="['/opportunities', data._id]" [queryParams]="qParams">{{ data.title }}</a>
+        <div class="eight wide column">
+          <h3 class="opportunity-title">
+            <a [routerLink]="['/opportunities', data._id]" [queryParams]="qParams">
+              {{ data.title }}
+            </a>
           </h3>
-          
-          <p *ngIf="data.description!=null && data.description.length>150">
-            <span [innerHTML]="data.description | slice:0:150"></span>...
+          <p *ngIf="latestDescription!=null">
+            <span [innerHTML]="latestDescription.content | slice:0:150"></span>...
           </p>
-          
           <p *ngIf="data.description!=null && data.description.length<150">
             <span [innerHTML]="data.description"></span>
           </p>
-          
           <ul class="sam-ui small list">
             <li *ngIf="data.organizationHierarchy!=null">
               <strong>Department/Ind. Agency</strong><br>
@@ -39,25 +38,29 @@ import * as moment from 'moment/moment';
               <strong>Office</strong><br>
               {{ data.organizationHierarchy[2].name }}
             </li>
-          </ul>  
+          </ul>
         </div>
-        <div class="four wide column">    
+        <div class="four wide column">
           <ul class="sam-ui small list">
-            <li *ngIf="data.isActive==false" >
-              <span class="sam-ui mini label">Archived</span>
+            <li *ngIf="data.isActive==false" class="item">
+              <span class="sam-ui mini label">
+                Archived
+              </span>
             </li>
-            <li>
-              <span class="sam-ui mini label">Opportunity</span>
+            <li class="item">
+              <span class="sam-ui mini label">
+                Opportunity
+              </span>
             </li>
-            <li>
+            <li class="item">
               <strong>Solicitation Number</strong><br>
-              <span class="break-word">{{ data.solicitationNumber }}</span>
+              {{ data.solicitationNumber }}
             </li>
-            <li>
+            <li class="item">
               <strong>Posted Date</strong><br>
               {{ data.publishDate  }}
             </li>
-            <li>
+            <li class="item">
               <strong>Type</strong><br>
               <ng-container *ngIf="data.type?.code !== 'm'">Original {{data.type?.value}}</ng-container>
               <ng-container *ngIf="data.type?.code === 'm'">
@@ -70,15 +73,30 @@ import * as moment from 'moment/moment';
         </div>
       </div>
     </div>
-    
   `,
 })
 export class OpportunitiesResult implements OnInit{
   @Input() data: any;
   @Input() qParams:any = {};
+  latestDescription: string;
   constructor() {}
 
   ngOnInit(){
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+    if (this.data.descriptions) {
+      let sorted = this.data.descriptions.sort((d1, d2) => {
+        if (d1['lastModifiedDate'] > d2['lastModifiedDate']) {
+          return -1;
+        }
+
+        if (d1['lastModifiedDate'] < d2['lastModifiedDate']) {
+          return 1;
+        }
+
+        return 0
+      });
+
+      this.latestDescription = sorted[0];
+    }
   }
 }

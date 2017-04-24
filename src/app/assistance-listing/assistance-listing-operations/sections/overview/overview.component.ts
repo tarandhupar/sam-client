@@ -9,6 +9,24 @@ import { FALOpSharedService } from '../../assistance-listing-operations.service'
   templateUrl: 'overview.template.html',
 })
 export class FALOverviewComponent implements OnInit, OnDestroy{
+  public fundedProjectsConfig: any = {
+    name: 'funded-projects',
+    label: 'Examples of Funded Projects',
+    hint: 'Provide examples that demonstrate how funding might be used. Describe the subject area without using program names or locations.',
+    required: false,
+    itemName: 'Examples',
+
+    checkbox: {
+      options: [
+        { value: 'na', label: 'Not Applicable', name: 'funded-projects-checkbox-na' }
+      ]
+    },
+
+    textarea: {
+      hint: 'Please describe funded projects:',
+      showWhenCheckbox: 'unchecked'
+    }
+  };
 
   getProgSub: any;
   saveProgSub: any;
@@ -49,7 +67,8 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
     this.falOverviewForm = this.fb.group({
       'objective': '',
-      'falDesc':''
+      'falDesc':'',
+      'fundedProjects': null
     });
   }
 
@@ -64,7 +83,8 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
 
         this.falOverviewForm.patchValue({
             objective:objective,
-            falDesc:desc
+            falDesc:desc,
+            fundedProjects: this.loadProjects(api.data.projects)
           });
       },
         error => {
@@ -74,10 +94,10 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
   }
 
   saveData() {
-
     let data = {
       "objective": this.falOverviewForm.value.objective,
-      "description": this.falOverviewForm.value.falDesc
+      "description": this.falOverviewForm.value.falDesc,
+      "projects": this.saveProjects()
     };
 
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
@@ -94,6 +114,45 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
         error => {
           console.error('Error saving Program!!', error);
         }); //end of subscribe
+  }
+
+  private saveProjects() {
+    let projects: any = {};
+    let projectsForm = this.falOverviewForm.value.fundedProjects;
+
+    projects.isApplicable = projectsForm.checkbox.indexOf('na') === -1;
+    projects.list = [];
+    for(let entry of projectsForm.entries) {
+      projects.list.push({
+        fiscalYear: entry.year ? Number(entry.year) : null,
+        description: entry.text
+      });
+    }
+
+    return projects;
+  }
+
+
+  private loadProjects(projects: any) {
+    let projectsForm = {
+      checkbox: [],
+      entries: []
+    };
+
+    if(projects) {
+      if (!projects.isApplicable) {
+        projectsForm.checkbox.push('na');
+      }
+
+      for (let project of projects.list) {
+        projectsForm.entries.push({
+          year: project.fiscalYear ? project.fiscalYear.toString() : '',
+          text: project.description
+        });
+      }
+    }
+
+    return projectsForm;
   }
 
   onCancelClick(event) {

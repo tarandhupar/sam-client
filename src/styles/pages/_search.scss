@@ -36,15 +36,21 @@
   }
 
   .usa-award-filter{
-    .usa-type-ahead-search{
-      position:absolute;
-      top:20%;
-      right:10px;
-      z-index:10;
+    .usa-type-ahead-search {
+      position: absolute;
+      top: 20%;
+      left: 5px;
+      z-index: 10;
 
-      .fa-search{
+      .fa-search {
         color: #d9d9d9;
       }
+    }
+    .usa-type-ahead-dropdown {
+      position: absolute;
+      top: 20%;
+      right: 10px;
+      z-index: 10;
       .fa-chevron-down{
         color: #003264;
       }
@@ -52,6 +58,14 @@
 
     .sam-list-input .input-area .input-wrapper{
       width: 100%;
+
+      #type-search{
+        text-indent: 10px;
+      }
+    }
+
+    .sam-autocomplete #sam-autocomplete-results{
+      z-index: 20;
     }
     }
 }

@@ -3,7 +3,7 @@
  * Angular 2 decorators and services
  */
 import { Component } from '@angular/core';
-import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
+import { Router, NavigationExtras,NavigationEnd,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
 
@@ -47,6 +47,17 @@ export class App{
     this._router.events.subscribe(
       val => {
         this.showOverlay = false;
+        if (val instanceof NavigationEnd) {
+          const tree = this._router.parseUrl(this._router.url);
+          if (tree.fragment) {
+            const element = document.getElementById(tree.fragment);
+            if (element) {
+              element.scrollIntoView();
+            }
+          } else {
+            window.scrollTo(0,0);
+          }
+        }
       });
   }
 
@@ -93,6 +104,7 @@ export class App{
       qsobj['awardType'] = null;
       qsobj['contractType'] = null;
       qsobj['naics'] = null;
+      qsobj['psc'] = null;
     }
 
     let navigationExtras: NavigationExtras = {

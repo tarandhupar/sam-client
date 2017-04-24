@@ -1,7 +1,7 @@
 import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {FHService} from "../../../api-kit/fh/fh.service";
-import { ReplaySubject, Observable } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
   moduleId: __filename,
@@ -13,7 +13,7 @@ import { ReplaySubject, Observable } from 'rxjs';
         <div class="sam-ui raised segment">
           
           <div class="sam-ui top right attached mini label">
-          <i class="fa fa-star" aria-hidden="true"></i>
+            <i class="fa fa-star" aria-hidden="true"></i>
             Featured Result
           </div>
           
@@ -45,19 +45,23 @@ import { ReplaySubject, Observable } from 'rxjs';
                     </strong>
                   </li>
                   <li class="item" *ngIf="data">
-                    <strong>{{(data | organizationTypeCode).label}}</strong> {{(data | organizationTypeCode).value}}
+                    <strong>CGAC: </strong> {{ data.cgac }}
                   </li>  
                 </ul><br>
-                <div *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
-                  Department/Ind. Agency: {{ data.parentOrganizationHierarchy.name }}
+                <div *ngIf="department">
+                  <strong>Department/Ind. Agency:</strong> {{ department.name }}
                 </div>
+                <p>
+                  <a href="/search?keyword={{qParams.keyword}}&index=fpds&page=1&organizationId={{data._id}}" target="_blank">
+                    View Awards contracted by this federal organization
+                  </a>
+                </p>
               </div>
             </div>
           </div>
-        
+          
         </div>
       </div>
-
     </div>
   `
 })
@@ -67,9 +71,20 @@ export class FHFeaturedResult implements OnInit {
   public logoUrl: string;
   public logoInfo: any;
   errorOrganization: any;
+  department: {};
+
   constructor(private fhService: FHService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.data.organizationHierarchy && this.data.organizationHierarchy.length > 1) {
+      for (let o of this.data.organizationHierarchy) {
+        if (o.level == 1) {
+          this.department = o;
+          break;
+        }
+      }
+    }
+  }
 
   ngOnChanges(changes) {
     if(this.data['_id']) {
