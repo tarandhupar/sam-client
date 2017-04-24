@@ -4,6 +4,7 @@ import { FilterMultiArrayObjectPipe } from './filter-multi-array-object.pipe';
 import { NgModule } from '@angular/core';
 import { CapitalizePipe } from './capitalize.pipe';
 import { OrganizationTypeCodePipe } from './organization-type-code.pipe';
+import {SortArrayOfObjects} from "./sort-array-object.pipe";
 
 @NgModule({
   imports: [],
@@ -12,14 +13,16 @@ import { OrganizationTypeCodePipe } from './organization-type-code.pipe';
     DateFormatPipe,
     KeysPipe,
     CapitalizePipe,
-    OrganizationTypeCodePipe
+    OrganizationTypeCodePipe,
+    SortArrayOfObjects
   ],
   declarations: [
     KeysPipe,
     FilterMultiArrayObjectPipe,
     DateFormatPipe,
     CapitalizePipe,
-    OrganizationTypeCodePipe
+    OrganizationTypeCodePipe,
+    SortArrayOfObjects
   ],
   providers: [],
 })

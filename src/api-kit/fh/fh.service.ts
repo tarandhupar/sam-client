@@ -25,7 +25,8 @@ export class FHService {
       oApiParam.name = 'federalHierarchy';
       oApiParam.suffix = ((includeChildrenLevels) ? '/hierarchy/' : '/') + id;
       oApiParam.oParam = {
-        'sort': 'name'
+        'sort': 'name',
+        'mode': 'slim'
       };
     }
 

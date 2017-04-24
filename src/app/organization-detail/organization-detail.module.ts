@@ -15,6 +15,7 @@ import { OrgDetailPage } from "./organization-detail.page";
 import { OrgDetailProfilePage } from "./profile/profile.component";
 import { OrgCreatePage } from "./create-org/create-org.component";
 import { FlashMsgService } from "./flash-msg-service/flash-message.service";
+import { AACRequestPage } from "./AAC-request/AAC-request.component";
 
 @NgModule({
   imports: [
@@ -34,6 +35,7 @@ import { FlashMsgService } from "./flash-msg-service/flash-message.service";
     OrgDetailPage,
     OrgDetailProfilePage,
     OrgCreatePage,
+    AACRequestPage,
   ],
   providers: [
     AlertFooterService,
