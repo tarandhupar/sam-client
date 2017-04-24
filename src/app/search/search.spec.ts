@@ -93,7 +93,7 @@ let awardType = {
   }
 };
 
-fdescribe('SearchPage', () => {
+describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult, SamContractTypeFilter, SamNaicsPscFilter ],
