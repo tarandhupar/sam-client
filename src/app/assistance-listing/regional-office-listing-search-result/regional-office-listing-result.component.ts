@@ -3,8 +3,6 @@
  */
 import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
-import * as _ from 'lodash';
-import * as moment from 'moment/moment';
 
 @Component({
   moduleId: __filename,
@@ -42,14 +40,18 @@ import * as moment from 'moment/moment';
       </div>
       
       <div class="usa-width-one-third">
-      <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
+      <ul class="usa-text-small m_T-3x m_B-2x"> 
           <li class="subbranch-name">  
-            <strong>Sub-Branch: </strong>
+            <strong>Sub-Branch </strong>
+            <ul class="usa-unstyled-list">
             <span>{{data.subbranch}}</span>
+            </ul>
           </li>
           <li class="division-name">  
-            <strong>Division: </strong>
+            <strong>Division </strong>
+            <ul class="usa-unstyled-list">
             <span>{{data.division}}</span>
+            </ul>
           </li>
       </ul>
       </div>

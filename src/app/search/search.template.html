@@ -22,23 +22,16 @@
         </sam-collapsible>
 
         <sam-collapsible *ngIf="showRegionalOffices==true" [label]="'Keyword'" [startOpened]="true">
-          <labelWrapper>
-        <sam-autocomplete class="search-bar sam-autocomplete-width" autofill-suggestions
+        <sam-autocomplete class="search-bar sam-autocomplete-width usa-regional-filter" autofill-suggestions
                           [(ngModel)]="ro_keyword"
                           (ngModelChange)="regionalOfficeSearchEvent($event)"
                           [index]="'ro'"
+                          [id]="'regional-office'"
                           [showClearButton]="true"
                           [allowAny]="true"
                           [config]="regionalType"
                           name="regionalsearch" >
         </sam-autocomplete>
-            <!--<a (click)="regionalOfficeSearchEvent()" class="usa-agency-picker-submit-text">-->
-              <!--<i class="usa-agency-picker-icon fa fa-search-plus" aria-hidden="true"></i>-->
-            <!--</a>-->
-          </labelWrapper>
-          <!--<a (click)="regionalOfficeSearchEvent()" class="usa-agency-picker-submit-text">-->
-            <!--<i class="usa-agency-picker-icon fa fa-search-plus" aria-hidden="true"></i>-->
-          <!--</a>-->
         </sam-collapsible>
 
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">

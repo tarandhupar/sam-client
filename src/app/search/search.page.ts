@@ -241,7 +241,8 @@ export class SearchPage implements OnInit{
   };
 
   regionalType = {
-    "placeholder": "Regional Agency Search",
+    "placeholder": "Regional Agency Office",
+    "addOnIconClass": "fa fa-search"
   }
 
   constructor(private activatedRoute: ActivatedRoute,
@@ -253,8 +254,7 @@ export class SearchPage implements OnInit{
   ngOnInit() {
     if(window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0){
       this.showRegionalOffices = true;
-    }
-    else{
+    } else{
       this.showRegionalOffices = false;
     }
 
@@ -279,7 +279,7 @@ export class SearchPage implements OnInit{
         this.awardTypeModel = data['awardType'] && data['awardType'] !== null ? data['awardType'] : '';
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
-        this.ro_keyword = typeof data['ro_keyword'] === "string" ? decodeURI(data['ro_keyword']) : this.ro_keyword;
+        this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
         this.runSearch();
         this.loadParams();
       });
@@ -327,11 +327,13 @@ export class SearchPage implements OnInit{
     } else {
       qsobj['keyword'] = '';
     }
+
     if(this.index.length>0){
-      qsobj['index'] = this.index;
+        qsobj['index'] = this.index;
     } else {
-      qsobj['index'] = '';
+        qsobj['index'] = '';
     }
+
     if(!newsearch && this.pageNum>=0){
       qsobj['page'] = this.pageNum+1;
     }
@@ -653,8 +655,7 @@ export class SearchPage implements OnInit{
     document.getElementById('search-results').getElementsByTagName('div')[0].focus();
     if(this.showRegionalOffices){
       this.router.navigate(['/search/fal/regionalOffices'],navigationExtras);
-    }
-    else{
+    } else{
       this.router.navigate(['/search'],navigationExtras);
     }
 
@@ -868,8 +869,7 @@ export class SearchPage implements OnInit{
     };
     if(this.showRegionalOffices){
       this.router.navigate(['/search/fal/regionalOffices'],navigationExtras);
-    }
-    else{
+    } else{
       this.router.navigate(['/search'],navigationExtras);
     }
   }
@@ -959,6 +959,9 @@ export class SearchPage implements OnInit{
     this.awardTypeModel = '';
     this.contractTypeModel = '';
     this.naicsTypeModel = '';
+
+    //clear regional office filter
+    this.ro_keyword='';
 
     this.searchResultsRefresh();
 
