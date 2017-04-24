@@ -241,7 +241,7 @@ export class SearchPage implements OnInit{
   };
 
   regionalType = {
-    "placeholder": "Regional Agency Office",
+    "placeholder": "Regional Agency Location",
     "addOnIconClass": "fa fa-search"
   }
 
