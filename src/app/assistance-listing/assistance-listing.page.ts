@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
@@ -54,6 +54,9 @@ export class ProgramPage implements OnInit, OnDestroy {
   private federalHierarchySub: Subscription;
   private historicalIndexSub: Subscription;
   private relatedProgramsSub: Subscription;
+
+  @ViewChild('editModal') editModal;
+
 
   constructor(
     private sidenavService: SidenavService,
@@ -373,6 +376,21 @@ Please contact the issuing agency listed under "Contact Information" for more in
       if(api.data.assistanceTypes && api.data.assistanceTypes.length > 0) {
         this.assistanceTypes = _.union(this.assistanceTypes, api.data.assistanceTypes);
       }
+    });
+  }
+
+  public onEditClick(path: string[]) {
+    if(this.program.status && this.program.status.code!='published') {
+      this.router.navigate(path);
+    } else {
+      this.editModal.openModal();
+    }
+  }
+
+  public onEditModalSubmit() {
+    this.editModal.closeModal();
+    this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
+      this.router.navigate(['/programs', JSON.parse(res._body).id, 'edit']);
     });
   }
 }
