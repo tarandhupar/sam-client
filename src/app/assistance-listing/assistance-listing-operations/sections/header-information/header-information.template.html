@@ -38,7 +38,7 @@
                     (modelChange)="relatedProglistChange($event)" [config]="listConfig">
     <labelWrapper [label]="'Related Federal Assistance Listing'"
                   [hint]="'Are there any related federal assistance listings?'">
-      <sam-autocomplete autofill-falRelProgram
+      <sam-autocomplete autofill-falProgram
                         [showClearButton]="true"
                         formControlName="relatedTo"
                         (ngModelChange)="relatedProgramTypeChange($event)"
