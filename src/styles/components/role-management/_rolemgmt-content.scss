@@ -96,8 +96,12 @@
     color: white;
     background: $color-primary;
     border: 1rem solid $color-primary;
-    line-height: 1rem;
+    line-height: 2rem;
     border-radius: 50%;
+    min-width: 4rem;
+    text-align: center;
+    align-content: center;
+    box-sizing: border-box;
   }
 
   .back-to-workspace-button {
