@@ -18,7 +18,7 @@ import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AlertFooterService } from '../alerts/alert-footer';
 import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
-import {SamNaicsPscFilter} from "naics-psc-filter/naics-psc-filter.component";
+import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 
 let fixture;
 
@@ -184,6 +184,6 @@ describe('SearchPage', () => {
       expect(fixture.componentInstance.data.page.size).toBe(10);
       expect(fixture.componentInstance.data.page.totalElements).toBe(123);
     });
-  })
+  });
 
 });
