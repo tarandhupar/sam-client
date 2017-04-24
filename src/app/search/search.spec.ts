@@ -94,7 +94,7 @@ let awardType = {
   }
 };
 
-fdescribe('SearchPage', () => {
+describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult, SamContractTypeFilter, SamNaicsPscFilter, RegionalOfficeListingResult ],
@@ -185,6 +185,6 @@ fdescribe('SearchPage', () => {
       expect(fixture.componentInstance.data.page.size).toBe(10);
       expect(fixture.componentInstance.data.page.totalElements).toBe(123);
     });
-  })
+  });
 
 });

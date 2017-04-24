@@ -266,7 +266,12 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
     let projects: any = {};
     let projectsForm = this.falOverviewForm.value.fundedProjects;
 
-    projects.isApplicable = projectsForm.checkbox.indexOf('na') === -1;
+    if(projectsForm.checkbox) {
+      projects.isApplicable = projectsForm.checkbox.indexOf('na') === -1;
+    } else {
+      projects.isApplicable = false;
+    }
+
     projects.list = [];
     for(let entry of projectsForm.entries) {
       projects.list.push({
