@@ -89,6 +89,8 @@ export class AACRequestPage {
     errorMessage: ''
   };
 
+  hideBillingForm = false;
+  hideShippingForm = false;
   billingAddrFillCbxModel:any = [];
   shippingAddrFillCbxModel:any = [];
   duplicateAddrCbxConfig = {
@@ -282,8 +284,10 @@ export class AACRequestPage {
   onDuplicateFillChecked(addrType, val){
     if(addrType === "Billing Address"){
       this.billAddr = this.updateAddressFromMailAddr(val,addrType);
+      this.hideBillingForm = val.length > 0;
     }else if (addrType === "Shipping Address"){
       this.shipAddr = this.updateAddressFromMailAddr(val,addrType);
+      this.hideShippingForm = val.length > 0;
     }
   }
 

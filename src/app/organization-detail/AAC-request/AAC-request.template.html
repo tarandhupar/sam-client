@@ -69,12 +69,12 @@
       <div class="usa-width-one-whole aac-address-section relative m_T-2x" *ngIf="isBillingAddrRequired()">
         <samCheckbox class="aac-address-duplicate-fill-cbx" (modelChange)="onDuplicateFillChecked('Billing Address', $event)" [(model)]="billingAddrFillCbxModel" [name]="duplicateAddrCbxConfig.name" [options]="duplicateAddrCbxConfig.options" [label]="''" [errorMessage]="''" [hasSelectAll]="false">
         </samCheckbox>
-        <samAddrForm  [orgAddrModel]="billAddr" [showAddIcon]="false" [showCloseIcon]="false"></samAddrForm>
+        <samAddrForm  [orgAddrModel]="billAddr" [showAddIcon]="false" [showCloseIcon]="false" [hideAddrForm]="hideBillingForm"></samAddrForm>
       </div>
       <div class="usa-width-one-whole aac-address-section relative m_T-2x" *ngIf="isShippingAddrRequired()">
         <samCheckbox class="aac-address-duplicate-fill-cbx" (modelChange)="onDuplicateFillChecked('Shipping Address', $event)" [(model)]="shippingAddrFillCbxModel" [name]="duplicateAddrCbxConfig.name" [options]="duplicateAddrCbxConfig.options" [label]="''" [errorMessage]="''" [hasSelectAll]="false">
         </samCheckbox>
-        <samAddrForm  [orgAddrModel]="shipAddr" [showAddIcon]="false" [showCloseIcon]="false"></samAddrForm>
+        <samAddrForm  [orgAddrModel]="shipAddr" [showAddIcon]="false" [showCloseIcon]="false" [hideAddrForm]="hideShippingForm"></samAddrForm>
       </div>
     </div>
     <div class="usa-width-one-whole p_B-6x" *ngIf="isSingleAACRequest() || isMultiAACRequest()">

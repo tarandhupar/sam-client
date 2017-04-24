@@ -27,16 +27,6 @@ export class OrgAddrFormComponent {
     serviceOptions:null
   };
 
-  duplicateAddrCbxModel:any = [];
-  duplicateAddrCbxConfig = {
-    options: [
-      {value: 'same as mailing address', label: 'Same as Mailing Address', name: 'Same as Mailing Address'},
-    ],
-    name: 'duplicate-address-filling',
-    label: '',
-    errorMessage: ''
-  };
-
   addressForm:FormGroup;
 
   @ViewChild('countryWrapper') addrCountry:LabelWrapper;
@@ -47,6 +37,7 @@ export class OrgAddrFormComponent {
 
   @Input() showAddIcon:boolean = true;
   @Input() showCloseIcon:boolean = true;
+  @Input() hideAddrForm:boolean = false;
   @Input() orgAddrModel:any;
   @Output() onAdditionalAddrRequest:EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() onCancelAdditionalAddrRequest:EventEmitter<any> = new EventEmitter<any>();
@@ -63,7 +54,6 @@ export class OrgAddrFormComponent {
   };
 
   basicType = "Mailing Address";
-  initialized:boolean = false;
 
   constructor(private builder: FormBuilder) {}
 
@@ -77,22 +67,6 @@ export class OrgAddrFormComponent {
     this.addressForm.valueChanges.subscribe( data => {
       this.updateAddressFormField();
     });
-    this.initialized = true;
-  }
-
-  ngOnChanges(){
-    if(this.initialized) {
-      this.addressForm.setValue({
-        streetAddr1: this.orgAddrModel.street1,
-        streetAddr2: this.orgAddrModel.street2,
-        postalCode: this.orgAddrModel.postalCode,
-        city: this.orgAddrModel.city,
-      });
-      this.stateLocationConfig.serviceOptions = {
-        keyProperty: 'key',
-        valueProperty: this.orgAddrModel.country
-      };
-    }
   }
 
   onAddrTypeSelect(val){
@@ -116,6 +90,7 @@ export class OrgAddrFormComponent {
   }
 
   validateForm():boolean{
+    if(this.hideAddrForm) return true;
     this.formatError();
     if(this.addressForm.invalid || this.stateOutput === null || this.stateLocationConfig.serviceOptions === null){
       return false;
@@ -147,5 +122,8 @@ export class OrgAddrFormComponent {
     this.orgAddrModel.street1 = this.addressForm.get("streetAddr1").value;
     this.orgAddrModel.street2 = this.addressForm.get("streetAddr2").value;
   }
+
+  updateCountryField(val){this.orgAddrModel.country = val.key;}
+  updateStateField(val){this.orgAddrModel.state = val.value;}
 
 }
