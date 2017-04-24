@@ -18,9 +18,9 @@ import { FHService } from '../../api-kit/fh/fh.service';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AlertFooterService } from '../alerts/alert-footer';
 import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
-import {SamNaicsPscFilter} from "naics-psc-filter/naics-psc-filter.component";
+import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 import { RegionalOfficeListingResult } from "../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component";
-
+//import { AutoCompleteWrapper } from '../../api-kit/autoCompleteWrapper/autoCompleteWrapper.service';
 let fixture;
 
 let searchServiceStub = {
@@ -94,7 +94,7 @@ let awardType = {
   }
 };
 
-describe('SearchPage', () => {
+fdescribe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult, SamContractTypeFilter, SamNaicsPscFilter, RegionalOfficeListingResult ],
