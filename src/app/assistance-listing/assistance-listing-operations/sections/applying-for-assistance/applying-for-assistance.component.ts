@@ -132,7 +132,7 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
           let flag = (api.data.assistance.deadlines.flag ? api.data.assistance.deadlines.flag : '');
           let deadline_desc = (api.data.assistance.deadlines.description ? api.data.assistance.deadlines.description : '');
 
-          if(api.data.assistance.deadlines.list.length > 0){
+          if(api.data.assistance.deadlines.list && api.data.assistance.deadlines.list.length > 0){
             this.assistSubForm.assistInfo = api.data.assistance.deadlines.list;
             let index = 0;
             for(let assist of this.assistSubForm.assistInfo){
