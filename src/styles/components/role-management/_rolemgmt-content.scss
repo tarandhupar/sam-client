@@ -2,9 +2,6 @@
   &.usa-grid-full{
     max-width: initial;
   }
-  .p_T-6em{
-    padding-top: 6em;
-  }
   .img_size{
     width: 75em;
     height: 17em;
@@ -20,17 +17,7 @@
     top: 25.6em;
     right: 22em;
   }
-  .fil_sor{
-    width: 14em;
-    position: absolute;
-    top: 25em;
-    right: 7em;
-  }
   .sec-bor{
-    border-bottom: black;
-    border-bottom-style: solid;
-    border-bottom-width: thin;
-    margin-right: 6em;
     padding-top: 1em;
     padding-bottom: 1em;
   }
@@ -49,8 +36,84 @@
     overflow: hidden;
   }
   .ellipsis:hover{
-    overflow: visible; 
+    overflow: visible;
     white-space: normal;
     font-weight: bold;
+  }
+
+  .pending-icon, .escalated-icon {
+    color: red;
+  }
+
+  .approved-icon {
+    color: green;
+  }
+
+  .request-block {
+    border: 1px solid black;
+    margin-top: .5em;
+  }
+
+  .respond-button {
+    margin-right: 0;
+    padding-left: .5rem;
+    padding-right: .5rem;
+  }
+
+  .request-top-block {
+    padding: 1.5rem 3rem 1.5rem 3rem;
+  }
+
+  .accordion-list {
+    margin-top: 0;
+  }
+
+  .sort-options {
+    display: inline-block;
+    margin-left: .5em;
+  }
+
+  .showing-count {
+    margin-top: .25em;
+  }
+
+  .sort-label {
+    font-size: 2.2rem;
+  }
+
+  .overview-header {
+    padding: 1.5rem 3.0rem;
+    border: 1px solid black;
+    border-radius: 1.5rem;
+  }
+
+  .inline-block {
+    display: inline-block;
+  }
+
+  .badge-primary {
+    display: inline-block;
+    color: white;
+    background: $color-primary;
+    border: 1rem solid $color-primary;
+    line-height: 2rem;
+    border-radius: 50%;
+    min-width: 4rem;
+    text-align: center;
+    align-content: center;
+    box-sizing: border-box;
+  }
+
+  .back-to-workspace-button {
+    text-align: left;
+    padding-left: 0;
+  }
+
+  .request-block {
+    padding: 0;
+  }
+
+  .request-block .usa-accordion-button {
+    background-position: left .5em center;
   }
 }

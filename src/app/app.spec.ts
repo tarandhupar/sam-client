@@ -50,7 +50,7 @@ let searchServiceStub = {};
 let fhServiceStub = {};
 
 describe('App', () => {
-  // provide our implementations or mocks to the dependency injector
+// provide our implementations or mocks to the dependency injector
 //  beforeEach(() => TestBed.configureTestingModule({
 //    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, ExclusionsResult, WageDeterminationResult, AwardsResult, FHFeaturedResult, OpportunityPage, PageNotFoundErrorPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe],
 //    imports: [PipesModule, SamUIKitModule, AppComponentsModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],

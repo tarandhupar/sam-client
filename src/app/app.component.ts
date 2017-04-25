@@ -80,6 +80,9 @@ export class App{
 
     qsobj['page'] = 1;
 
+    //set regionalOffice filter keyword to null on header search event
+    qsobj['ro_keyword'] = null;
+
     if(searchObject.searchField === 'fh') {
       qsobj['isActive'] = true;
     } else {
@@ -104,6 +107,7 @@ export class App{
       qsobj['awardType'] = null;
       qsobj['contractType'] = null;
       qsobj['naics'] = null;
+      qsobj['psc'] = null;
     }
 
     let navigationExtras: NavigationExtras = {

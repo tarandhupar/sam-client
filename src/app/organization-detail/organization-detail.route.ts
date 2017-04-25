@@ -2,7 +2,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { OrgDetailPage } from './organization-detail.page';
 import { OrgDetailProfilePage } from './profile/profile.component';
 import { OrgCreatePage } from './create-org/create-org.component';
-
+import { AACRequestPage } from "./AAC-request/AAC-request.component";
 
 export const routes: Routes = [
   {
@@ -16,6 +16,10 @@ export const routes: Routes = [
   {
     path: 'create-organization',
     component: OrgCreatePage,
+  },
+  {
+    path: 'aac-request',
+    component: AACRequestPage,
   }
 ];
 

@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, ViewChildren, QueryList } from "@angular/c
 import { ActivatedRoute, Router} from "@angular/router";
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
-import { OrgAddrFormComponent } from './address-form/address-form.component';
+import { OrgAddrFormComponent } from '../../app-components/address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
@@ -81,7 +81,7 @@ export class OrgCreatePage {
       orgShortName: ['', []],
     });
 
-    this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:true});
+    this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
 
     this.route.queryParams.subscribe(queryParams => {
       this.orgType = queryParams["orgType"];
@@ -172,9 +172,8 @@ export class OrgCreatePage {
         this.orgObj['orgAddresses'].push({
           "city": e.addrModel.city,
           "countryCode": e.addrModel.country,
-          "createdDate": 1145045439000,
           "state": e.addrModel.state,
-          "streetAddress": e.addrModel.street,
+          "streetAddress": e.addrModel.street1 +" "+ e.addrModel.street2,
           "zipcode": e.addrModel.postalCode,
         });
       });
@@ -238,10 +237,10 @@ export class OrgCreatePage {
         e.showAddIcon = false;
         if(e.addrModel.addrType !== "Mailing Address") addressTypeIndex = 1 - this.extraAddressTypes.indexOf(e.addrModel.addrType);
       });
-      this.orgAddresses.push({addrModel:{addrType:this.extraAddressTypes[addressTypeIndex],country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:false});
+      this.orgAddresses.push({addrModel:{addrType:this.extraAddressTypes[addressTypeIndex],country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:false});
 
     }else{
-      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:true});
+      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
     }
 
   }

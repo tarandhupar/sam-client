@@ -81,7 +81,7 @@
       <div *ngIf="isAddressNeeded()">
         <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
           <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addrModel.addrType}}:</h4></span>
-          <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.addrModel.street}}<br>{{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.postalCode}}<br>{{address.addrModel.country}}</span>
+          <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.addrModel.street1}}<br>{{address.addrModel.street2}}<br>{{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.postalCode}}<br>{{address.addrModel.country}}</span>
         </p>
       </div>
 

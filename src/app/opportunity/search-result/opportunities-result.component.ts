@@ -14,8 +14,8 @@ import * as moment from 'moment/moment';
       <a [routerLink]="['/opportunities', data._id]" [queryParams]="qParams">{{ data.title }}</a>
     </h3>
     <div class="usa-width-two-thirds">
-      <p class="m_T-2x" *ngIf="data.description!=null && data.description.length>150">
-        <span [innerHTML]="data.description | slice:0:150"></span>...
+      <p class="m_T-2x" *ngIf="latestDescription!=null">
+        <span [innerHTML]="latestDescription.content | slice:0:150"></span>...
       </p>
       <p class="m_T-2x" *ngIf="data.description!=null && data.description.length<150">
         <span [innerHTML]="data.description"></span>
@@ -55,9 +55,25 @@ import * as moment from 'moment/moment';
 export class OpportunitiesResult implements OnInit{
   @Input() data: any;
   @Input() qParams:any = {};
+  latestDescription: string;
   constructor() {}
 
   ngOnInit(){
     this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+    if (this.data.descriptions) {
+      let sorted = this.data.descriptions.sort((d1, d2) => {
+        if (d1['lastModifiedDate'] > d2['lastModifiedDate']) {
+          return -1;
+        }
+
+        if (d1['lastModifiedDate'] < d2['lastModifiedDate']) {
+          return 1;
+        }
+
+        return 0
+      });
+
+      this.latestDescription = sorted[0];
+    }
   }
 }
