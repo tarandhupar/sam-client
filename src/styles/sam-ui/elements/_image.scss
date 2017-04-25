@@ -20,3 +20,10 @@ img.#{$prefix}.image {
   max-width: 100%;
   height: auto;
 }
+
+.#{$prefix}.floated.image, 
+.#{$prefix}.floated.images {
+    float: left;
+    margin-right: 1em;
+    margin-bottom: 1em;
+}

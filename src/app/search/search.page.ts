@@ -32,6 +32,8 @@ export class SearchPage implements OnInit{
   qParams:any = {};
   isActive: boolean = true;
   isStandard: string = '';
+  showRegionalOffices: boolean = false;
+  ro_keyword: string = "";
 
   @ViewChild('agencyPicker') agencyPicker;
 
@@ -253,6 +255,11 @@ export class SearchPage implements OnInit{
     }
   };
 
+  regionalType = {
+    "placeholder": "Regional Agency Location",
+    "addOnIconClass": "fa fa-search"
+  }
+
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,
@@ -260,6 +267,12 @@ export class SearchPage implements OnInit{
               private opportunityService: OpportunityService,
               private alertFooterService: AlertFooterService) { }
   ngOnInit() {
+    if(window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0){
+      this.showRegionalOffices = true;
+    } else{
+      this.showRegionalOffices = false;
+    }
+
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
@@ -282,6 +295,7 @@ export class SearchPage implements OnInit{
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
         this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
+        this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
 
         this.runSearch();
         this.loadParams();
@@ -303,7 +317,7 @@ export class SearchPage implements OnInit{
         organizationStringList += organizationItem.value;
       }
       else{
-        organizationStringList += ', ' + organizationItem.value;
+        organizationStringList += ',' + organizationItem.value;
       }
 
       return organizationStringList;
@@ -330,11 +344,13 @@ export class SearchPage implements OnInit{
     } else {
       qsobj['keyword'] = '';
     }
+
     if(this.index.length>0){
       qsobj['index'] = this.index;
     } else {
       qsobj['index'] = '';
     }
+
     if(!newsearch && this.pageNum>=0){
       qsobj['page'] = this.pageNum+1;
     }
@@ -410,6 +426,10 @@ export class SearchPage implements OnInit{
       qsobj['psc'] = this.pscTypeModel;
     }
 
+    if(this.ro_keyword.length>0){
+      qsobj['ro_keyword'] = this.ro_keyword;
+    }
+
     return qsobj;
   }
 
@@ -478,7 +498,9 @@ export class SearchPage implements OnInit{
       awardType: this.awardTypeModel,
       contractType: this.contractTypeModel,
       naics: this.naicsTypeModel,
-      psc: this.pscTypeModel
+      psc: this.pscTypeModel,
+      showRO: this.showRegionalOffices,
+      ro_keyword: this.ro_keyword
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -647,7 +669,7 @@ export class SearchPage implements OnInit{
     );
   }
 
-  pageChange(pagenumber){
+  pageChange(pagenumber) {
     this.pageNum = pagenumber;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
@@ -655,7 +677,12 @@ export class SearchPage implements OnInit{
     };
 
     document.getElementById('search-results').getElementsByTagName('div')[0].focus();
-    this.router.navigate(['/search'],navigationExtras);
+    if (this.showRegionalOffices) {
+      this.router.navigate(['/search/fal/regionalOffices'], navigationExtras);
+    } else {
+      this.router.navigate(['/search'], navigationExtras);
+    }
+
   }
 
   // FILTER SELECTION CHANGE FUNCTIONS
@@ -869,7 +896,11 @@ export class SearchPage implements OnInit{
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
-    this.router.navigate(['/search'], navigationExtras);
+    if(this.showRegionalOffices){
+      this.router.navigate(['/search/fal/regionalOffices'],navigationExtras);
+    } else{
+      this.router.navigate(['/search'],navigationExtras);
+    }
   }
 
   wdTypeRadClear(){
@@ -960,9 +991,17 @@ export class SearchPage implements OnInit{
     this.naicsTypeModel = '';
     this.pscTypeModel = '';
 
+    //clear regional office filter
+    this.ro_keyword='';
+
     this.searchResultsRefresh();
 
+  }
 
+  regionalOfficeSearchEvent(evt) {
+    this.ro_keyword = evt;
+    this.pageNum = 0;
+    this.searchResultsRefresh();
   }
 
 }

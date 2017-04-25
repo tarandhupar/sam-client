@@ -21,8 +21,6 @@ export class ManageRequestPage implements OnInit {
   public message = '';
   public messageError = '';
 
-  private textarea;
-
   constructor(
     private route: ActivatedRoute,
     private footerAlerts: AlertFooterService,
@@ -45,11 +43,21 @@ export class ManageRequestPage implements OnInit {
 
   getRequestObject() {
     this.request = this.route.snapshot.data['request'];
+    this.request.domainName = this.getDomainNameById(this.request.domainId);
   }
 
   onMessageChanged() {
     if (this.message) {
       this.messageError = '';
+    }
+  }
+
+  submitLabel() {
+    switch (this.selectedOption) {
+      case 'reject': return 'Reject';
+      case 'select': return 'Grant Access';
+      case 'escalate': return 'Escalate';
+      default: return 'Submit';
     }
   }
 

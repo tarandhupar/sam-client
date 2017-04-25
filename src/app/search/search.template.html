@@ -7,7 +7,7 @@
     <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
     <div>
       <sam-filters-container>
-        <sam-collapsible *ngIf="index !== 'fh'" [label]="'Status'" [startOpened]="true">
+        <sam-collapsible *ngIf="index !== 'fh' && showRegionalOffices==false" [label]="'Status'" [startOpened]="true">
           <!--active checkbox-->
           <samCheckbox
             [(model)]="checkboxModel"
@@ -21,6 +21,19 @@
           </samCheckbox>
         </sam-collapsible>
 
+        <sam-collapsible *ngIf="showRegionalOffices==true" [label]="'Keyword'" [startOpened]="true">
+        <sam-autocomplete class="search-bar sam-autocomplete-width usa-regional-filter" autofill-suggestions
+                          [(ngModel)]="ro_keyword"
+                          (ngModelChange)="regionalOfficeSearchEvent($event)"
+                          [index]="'ro'"
+                          [id]="'regional-office'"
+                          [showClearButton]="true"
+                          [allowAny]="true"
+                          [config]="regionalType"
+                          name="regionalsearch" >
+        </sam-autocomplete>
+        </sam-collapsible>
+
         <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
           <agencyPicker #agencyPicker
             [label]="'Search Federal Organizations'"
@@ -29,7 +42,7 @@
           </agencyPicker>
         </sam-collapsible>
 
-        <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd'">
+        <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd' && showRegionalOffices==false">
           <!--state drop down-->
           <samSelect
             [(model)]="wdStateModel"
@@ -56,7 +69,7 @@
         </sam-collapsible>
 
 
-        <sam-collapsible [label]="'Wage Determination Type'" [startOpened]="true" *ngIf="index === 'wd'">
+        <sam-collapsible  [label]="'Wage Determination Type'" [startOpened]="true" *ngIf="index === 'wd' && showRegionalOffices==false">
 
           <!--wage determination radio buttons-->
           <samRadioButton
@@ -72,7 +85,7 @@
         </sam-collapsible>
 
         <!--*** DBA Specif Filters ***-->
-        <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra'">
+        <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra' && showRegionalOffices==false">
 
           <!--construction type drop down-->
           <samSelect
@@ -89,7 +102,7 @@
         </sam-collapsible>
 
         <!--*** SCA Specific Filters ***-->
-        <sam-collapsible [label]="'SCA: Previously Performed'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'sca'">
+        <sam-collapsible [label]="'SCA: Previously Performed'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'sca' && showRegionalOffices==false">
 
           <!--previously performed-->
           <samRadioButton
@@ -105,7 +118,7 @@
         </sam-collapsible>
 
         <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true"
-                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality'">
+                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality' && showRegionalOffices==false">
 
           <!--Subject to CBA-->
           <samRadioButton
@@ -121,7 +134,7 @@
         </sam-collapsible>
 
         <sam-collapsible [label]="'SCA: Non-Standard Services'" [startOpened]="true"
-                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA' ">
+                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA'  && showRegionalOffices==false">
 
           <!--Non-Standard Services radio buttons-->
           <samRadioButton
@@ -149,7 +162,7 @@
         </sam-collapsible>
 
         <!--Awards specific Filters-->
-        <sam-collapsible [label]="'Contract Type'" [startOpened]="true" *ngIf="index==='fpds'">
+        <sam-collapsible  [label]="'Contract Type'" [startOpened]="true" *ngIf="index==='fpds' && showRegionalOffices==false">
           <samRadioButton
             [(model)]="awardIDVModel"
             [options]="awardIDVRadConfig.options"
@@ -175,7 +188,7 @@
         </sam-collapsible>
 
         <!--NAICS - PSC Filters-->
-        <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="index==='fpds' || index === 'opp' || index === 'ent'">
+        <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="(index==='fpds' || index === 'opp' || index === 'ent') && showRegionalOffices==false">
           <sam-naics-psc-filter class="usa-award-filter"
                                 [selectModel1]="naicsTypeModel"
                                 [selectModel2]="pscTypeModel"
@@ -197,7 +210,8 @@
     <div class="usa-width-one">
       <samAlert *ngIf="wdTypeModel && wdTypeModel === 'dbra'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
       <samAlert *ngIf="wdTypeModel && wdTypeModel === 'sca'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="scaSearchDescription"></div></samAlert>
-      <h1 class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
+      <h1 *ngIf="!showRegionalOffices" class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
+      <h1 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h1>
       <p *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'" class="usa-font-lead">
         Please navigate to the <a href="https://www.wdol.gov/sca.aspx">Service Contract Act</a> section of the legacy WDOL site to retrieve
         a Collective Bargaining Agreement (CBA) WD or to create a new CBA WD
@@ -217,6 +231,7 @@
           <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
           <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
           <awards-result *ngIf="row._type=='award'" class="usa-grid-full" [data]="row" [qParams]="qParams"></awards-result>
+          <regional-office-listing-result *ngIf="showRegionalOffices" class="usa-grid-full" [data]="row" [qParams]="qParams" ></regional-office-listing-result>
           <hr class="m_T-5x"/>
         </div>
       </div>
