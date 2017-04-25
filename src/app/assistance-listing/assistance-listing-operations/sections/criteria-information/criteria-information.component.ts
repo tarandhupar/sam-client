@@ -538,7 +538,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
         this.router.navigate(['/programs', this.sharedService.programId, 'view']);
       }
       else
-        this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/compliance-requirements']);
+        this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/applying-for-assistance']);
 
     },
     error => {
