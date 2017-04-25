@@ -307,10 +307,13 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
       let eDate = endM.date();
       let endDate = eMonth + ' ' + eDate + ', ' + eYear;
 
-      if(assist.end !== null)
-        this.assistInfoDisp.push(startDate + " - " + endDate + " " + assist.description);
+      if(assist.end !== null) {
+        this.assistInfoDisp.push(startDate + " - " + endDate + ". " + assist.description);
+      }
+      else if(assist.start !== null)
+        this.assistInfoDisp.push(startDate + ". " + assist.description);
       else
-        this.assistInfoDisp.push(startDate + " " + assist.description);
+        this.assistInfoDisp.push(assist.description);
     }
   }
 
