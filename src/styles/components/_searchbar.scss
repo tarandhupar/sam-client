@@ -14,7 +14,7 @@
     border: none;
     border-radius: 5px 0 0 5px;
     padding: 3px 24px 8px 10px;
-    height: 33px;
+    height: 4.4rem;
     background-size: 10px;
     background-position: right 63px center;
     background-image: url($assets-path + '/img/arrow-down.png');
@@ -31,12 +31,13 @@
   .search-btn{
     width: auto;
     margin: 0;
-    padding: 8px 10px 8px 10px;
-    height: 3.3rem;
+    padding: 0 10px;
+    height: 4.4rem;
   }
 
   .usa-search {
     display: table;
+    overflow: visible;
   }
 
   /** Adjust the width of the input search bar**/
@@ -44,8 +45,9 @@
     display: table-cell;
     width: 100%;
     overflow: visible;
-    height: 3.3rem;
+    height: 4.4rem;
     vertical-align: top;
+    margin-top: -7px;
   }
 
   .div-left {
