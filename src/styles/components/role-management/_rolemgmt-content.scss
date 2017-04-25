@@ -54,10 +54,16 @@
     margin-top: .5em;
   }
 
+  .icon-and-respond {
+    display: flex;
+    align-items: center;
+  }
+
   .respond-button {
     margin-right: 0;
     padding-left: .5rem;
     padding-right: .5rem;
+    margin-left: 3em;
   }
 
   .request-top-block {

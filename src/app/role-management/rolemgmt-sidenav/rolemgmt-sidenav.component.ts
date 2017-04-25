@@ -29,8 +29,8 @@ export class RoleMgmtSidenav implements OnInit{
 
 
     constructor(private router: Router, private route: ActivatedRoute,private role: UserAccessService){
-      
-      
+
+
     }
 
     ngOnInit(){
@@ -38,7 +38,7 @@ export class RoleMgmtSidenav implements OnInit{
       this.accordionName1 = 'Status-Filter-Check-Box';
       this.accordionHeading2 = 'Domains';
       this.accordionName2 = 'Domains-Filter-Check-Box';
-      
+
 
       this.getAccessStatus();
       this.filters.domains.options = this.route.parent.snapshot.data['domains']._embedded.domainList.map(this.mapDomainLabelAndVal);
@@ -57,7 +57,7 @@ export class RoleMgmtSidenav implements OnInit{
               this.statusIds = this.statusIds + "," + status.id;
             }
           });
-         
+
           this.filters.status.options = res.map(this.mapLabelAndValue);
         }
       });
@@ -87,20 +87,15 @@ export class RoleMgmtSidenav implements OnInit{
         this.statusSelected.emit(this.statusIds);
       else
         this.statusSelected.emit(event.toString());
-      
+
     }
 
     domainFilter(event){
       this.domainSelected.emit(event.toString());
-      window.scrollTo(0,0);
-      //console.log(event);
-      //console.log("domains");
-      //console.log(this.DomiansCheckboxModel);
     }
 
     onUserClick($event){
       this.autoCompleteSelected.emit(this.usersEntered);
-      //console.log(this.usersEntered);
       this.usersEntered = '';
     }
 }

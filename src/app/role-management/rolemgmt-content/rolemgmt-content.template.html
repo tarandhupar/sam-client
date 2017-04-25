@@ -2,10 +2,12 @@
   <div>
     <div class="overview-header">
       <div class="usa-grid-full">
+        <!--
         <div class="usa-width-five-twelfths">
           <h3>Select an Organization</h3>
           <agencyPicker [multimode]="false"></agencyPicker>
         </div>
+        -->
         <div class="usa-width-one-fourth">
           <h3>Requests</h3>
           <div>
@@ -60,7 +62,7 @@
             </samSelect>
           </div>
         </h2>
-        <h3 class="showing-count">Showing {{(currPage - 1)*10 + currCount}} of {{count}} results</h3>
+        <h3 class="showing-count">{{showingCountText()}}</h3>
 
       </div>
     </div>
@@ -75,7 +77,8 @@
         <div class="request-block">
           <div class="request-top-block">
             <div class="usa-grid-full clearfix">
-              <div class="pull-right">
+              <div class="pull-right icon-and-respond">
+                <i class="fa fa-2x" [ngClass]="classForRequest(content)"></i>
                 <button *ngIf = "shouldShowRespondButton(content)" routerLink = "../requests/{{content.id}}" class="respond-button usa-button usa-button-primary m_T-0">Respond</button>
               </div>
               <div class="usa-width-one-third">
@@ -89,7 +92,6 @@
               <div class="usa-width-one-sixth">
                 <div>
                   <strong>Status</strong>
-                  <div class="pull-right"><i class="fa fa-2x" [ngClass]="classForRequest(content)"></i></div>
                 </div>
                 <div>{{content.status}}</div>
               </div>
@@ -123,7 +125,7 @@
               <!-- Rejected -->
               <ng-container *ngIf="content.status.toLowerCase() === 'rejected'">
                 <div class="usa-width-one-third">
-                  <div><strong>Reject By</strong></div>
+                  <div><strong>Rejected By</strong></div>
                   <div>---</div>
                 </div>
                 <div class="usa-width-one-third">
@@ -162,11 +164,11 @@
               <div class="usa-grid-full">
                 <div class="usa-width-one-third">
                   <div><strong>Role Granted</strong></div>
-                  <div>Agency User - OFA</div>
+                  <div>{{getRolesGranted(content)}}</div>
                 </div>
                 <div class="usa-width-two-thirds">
                   <div><strong>Organizations</strong></div>
-                  <div>Office of Family Assistance, Office of Supplies Management, Office of Innovation, Office of Social Services, Health and Human services</div>
+                  <div>{{getOrganizations(content)}}</div>
                 </div>
               </div>
             </samAccordionSection>

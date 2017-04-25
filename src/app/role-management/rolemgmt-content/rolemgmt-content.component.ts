@@ -33,7 +33,7 @@ export class RoleMgmtContent implements OnInit{
   }
 
 
-  selectModel = 'desc';
+  selectModel = 'asc';
   selectConfig = {
     options: [
       {value: 'asc', label: 'Oldest First', name: 'sort-asc'},
@@ -71,5 +71,21 @@ export class RoleMgmtContent implements OnInit{
 
   shouldShowRespondButton(content) {
     return content.status === 'PENDING' || content.status === 'ESCALATED';
+  }
+
+  showingCountText() {
+    const first = (this.currPage - 1)* 10 + 1;
+    const last = (this.currPage - 1)*10 + this.currCount;
+    return `Showing ${first}-${last} of ${this.count} results`;
+  }
+
+  getRolesGranted(request) {
+    const roleId = request.userAccessContent.domainContent[0].roleContent[0].role;
+    return '---';
+  }
+
+  getOrganizations(request) {
+    const orgIds = request.userAccessContent.domainContent[0].roleContent[0].organizationContent[0].organizations;
+    return '---';
   }
 }
