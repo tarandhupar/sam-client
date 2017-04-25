@@ -63,28 +63,16 @@ export class WageDeterminationPage implements OnInit {
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
-    console.log("1");
     let dictionariesAPI = this.loadDictionary();
-    console.log("2");
     let wdAPI = this.loadWageDetermination();
-    console.log("3");
-    let wgAndDictionariesAPI = Observable.zip(wdAPI, dictionariesAPI, this.route.params);
-    console.log("4");
+    let wgAndDictionariesAPI = Observable.combineLatest(wdAPI, dictionariesAPI, this.route.params);
     this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
-    console.log("5");
     this.getLocations(wgAndDictionariesAPI);
-    console.log("6");
     let wdHistoryAPI = this.loadHistory(wdAPI);
-    console.log("7");
     let DOMReady$ = Observable.zip(wgAndDictionariesAPI, wdHistoryAPI).delay(2000);
-    console.log("8");
     this.DOMComplete(DOMReady$);
-    console.log("9");
     this.sidenavService.updateData(this.selectedPage, 0);
-    console.log("10");
   }
-
-  ngOnChange(){}
 
   private loadWageDetermination() {
     let wgSubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
@@ -209,6 +197,7 @@ export class WageDeterminationPage implements OnInit {
     combinedAPI.subscribe(([wageDetermination, dictionaries]) => {
       /** Check that locations exist **/
       if (!wageDetermination.location) {
+        this.locations = null;
         return;
       }
 
@@ -273,6 +262,8 @@ export class WageDeterminationPage implements OnInit {
         }
         servicesString = servicesString.substring(0, servicesString.length - 2);
         this.services = servicesString;
+      } else {
+        this.services = null;
       }
     })
   }
@@ -286,6 +277,8 @@ export class WageDeterminationPage implements OnInit {
         }
         constructionTypeString = constructionTypeString.substring(0, constructionTypeString.length - 2);
         this.constructionTypes = constructionTypeString;
+      } else {
+        this.constructionTypes = null;
       }
     })
   }
