@@ -483,22 +483,8 @@ let MockHistoricalIndexService = {
   }
 };
 
-export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
-  transform(value: any[], data: any[], fieldName: string, isNested: boolean, nestedFieldName: string): any[] {
-    // TODO: REMOVE THIS WORKAROUND & FIX MOCK SERVICE DICTIONARY
-    return [{
-      code: 'B',
-      elements: null,
-      description: null,
-      element_id: '0003001',
-      value: 'Cooperative Agreements',
-      displayValue: 'B - Cooperative Agreements'
-    }];
-    // END TODO
-  }
-}
 
-describe('ProgramPage', () => {
+fdescribe('ProgramPage', () => {
   // TODO: Fix spies
 //  var spyMockProgramService:any, spyMockApiService:any, spyMockHistoricalIndexService:any, spyMockFHService:any, spyMockDictionaryService:any;
 
@@ -540,7 +526,7 @@ describe('ProgramPage', () => {
         { provide: Location, useClass: Location },
         { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '3077ea1df409265fb4378e0e844b8811' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectCustomPipe },
+        { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectPipe },
         KeysPipe,
         AuthorizationPipe,
         HistoricalIndexLabelPipe,
