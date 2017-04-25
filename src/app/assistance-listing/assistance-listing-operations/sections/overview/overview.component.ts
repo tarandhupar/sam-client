@@ -297,11 +297,13 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
         projectsForm.checkbox.push('na');
       }
 
-      for (let project of projects.list) {
-        projectsForm.entries.push({
-          year: project.fiscalYear ? project.fiscalYear.toString() : '',
-          text: project.description
-        });
+      if(projects.list) {
+        for (let project of projects.list) {
+          projectsForm.entries.push({
+            year: project.fiscalYear ? project.fiscalYear.toString() : '',
+            text: project.description
+          });
+        }
       }
     }
 
