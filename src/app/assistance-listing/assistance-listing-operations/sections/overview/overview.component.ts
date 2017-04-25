@@ -266,18 +266,20 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
     let projects: any = {};
     let projectsForm = this.falOverviewForm.value.fundedProjects;
 
-    if(projectsForm.checkbox) {
+    if(projectsForm && projectsForm.checkbox) {
       projects.isApplicable = projectsForm.checkbox.indexOf('na') === -1;
     } else {
-      projects.isApplicable = false;
+      projects.isApplicable = true;
     }
 
     projects.list = [];
-    for(let entry of projectsForm.entries) {
-      projects.list.push({
-        fiscalYear: entry.year ? Number(entry.year) : null,
-        description: entry.text
-      });
+    if(projectsForm) {
+      for (let entry of projectsForm.entries) {
+        projects.list.push({
+          fiscalYear: entry.year ? Number(entry.year) : null,
+          description: entry.text
+        });
+      }
     }
 
     return projects;
@@ -295,11 +297,13 @@ export class FALOverviewComponent implements OnInit, OnDestroy{
         projectsForm.checkbox.push('na');
       }
 
-      for (let project of projects.list) {
-        projectsForm.entries.push({
-          year: project.fiscalYear ? project.fiscalYear.toString() : '',
-          text: project.description
-        });
+      if(projects.list) {
+        for (let project of projects.list) {
+          projectsForm.entries.push({
+            year: project.fiscalYear ? project.fiscalYear.toString() : '',
+            text: project.description
+          });
+        }
       }
     }
 
