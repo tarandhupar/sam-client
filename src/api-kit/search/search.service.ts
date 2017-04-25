@@ -17,11 +17,15 @@ export class SearchService {
       oParam: {
         index: obj.index,
         q: obj.keyword,
-        page: obj.pageNum,
-        is_active: obj.isActive
+        page: obj.pageNum
       },
       method: 'GET'
     };
+
+    //Active Only filter
+    if(obj.isActive === true) {
+      oApiParam.oParam['is_active'] = obj.isActive;
+    }
 
     // wage determination type filter
     if(typeof obj.wdType !== 'undefined' && obj.organizationId !== null && obj.wdType !== '') {

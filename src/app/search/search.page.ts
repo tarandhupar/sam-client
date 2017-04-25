@@ -39,7 +39,7 @@ export class SearchPage implements OnInit{
   checkboxModel: any = ['true'];
   checkboxConfig = {
     options: [
-      {value: 'true', label: 'Active', name: 'checkbox-active'},
+      {value: 'true', label: 'Active Only', name: 'checkbox-active'},
     ],
     name: 'active-filter'
   };
