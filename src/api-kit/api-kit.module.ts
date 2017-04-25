@@ -17,6 +17,7 @@ import { UserDirService } from './user-directory/user-directory.service';
 import { UserAccessService } from "./access/access.service";
 import { LocationService } from "./location/location.service";
 import { FeedbackService } from "./feedback/feedback.service";
+import { AACRequestService } from "./aac-request/aac-request.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -47,7 +48,8 @@ import { FeedbackService } from "./feedback/feedback.service";
     UserAccessService,
     WageDeterminationService,
     LocationService,
-    FeedbackService
+    FeedbackService,
+    AACRequestService
   ]
 })
 export class SamAPIKitModule { }

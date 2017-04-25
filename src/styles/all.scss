@@ -45,7 +45,7 @@
 //@import '~uswds/src/stylesheets/core/fonts';
 @import '~uswds/src/stylesheets/core/base';
 /*
-  Variables moved here to avoid 
+  Variables moved here to avoid
   overriding USWDS grid variables
 */
 // Store current variable values
@@ -214,6 +214,7 @@ home samsearchbar{
 @import 'pages/organization-detail';
 @import 'pages/organization-create';
 @import 'pages/aac-request';
+@import 'pages/aac-confirm';
 
 h1,
 h2{

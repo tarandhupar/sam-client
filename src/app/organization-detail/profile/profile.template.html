@@ -60,5 +60,4 @@
 
   <samAlert class="org-detail-alert-message" (dismiss)="dismissCreateOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+ orgObj.name" *ngIf="flashMsgService.isCreateOrgSuccess && flashMsgService.isFlashMsgShow" ></samAlert>
   <samAlert class="org-detail-alert-message" (dismiss)="dismissEditOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your edits have been saved'" *ngIf="showEditOrgFlashAlert" ></samAlert>
-
 </div>
