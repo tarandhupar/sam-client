@@ -484,7 +484,7 @@ let MockHistoricalIndexService = {
 };
 
 
-fdescribe('ProgramPage', () => {
+describe('ProgramPage', () => {
   // TODO: Fix spies
 //  var spyMockProgramService:any, spyMockApiService:any, spyMockHistoricalIndexService:any, spyMockFHService:any, spyMockDictionaryService:any;
 
