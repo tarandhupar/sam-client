@@ -632,8 +632,6 @@ export class OpportunityPage implements OnInit {
 
   // Sets the correct displayField flags for this opportunity type
   private setDisplayFields(combinedOpportunityAPI: Observable<any>) {
-    combinedOpportunityAPI.subscribe(test => {
-    });
     combinedOpportunityAPI.subscribe(([opportunity, parent]) => {
       if(opportunity.data == null || opportunity.data.type == null) {
         console.log('Error: No opportunity type');
