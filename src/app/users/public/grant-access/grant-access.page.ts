@@ -51,6 +51,7 @@ export class GrantAccessPage implements OnInit {
 
   private objectsEditable: boolean = true;
   private requestId: any = null;
+  private request: any;
 
   constructor(
     private userService: UserAccessService,
@@ -72,6 +73,7 @@ export class GrantAccessPage implements OnInit {
     if (this.userCameFromRoleWorkspace) {
       this.domain = +this.route.snapshot.queryParams['domain'];
       this.requestId = this.route.snapshot.queryParams['request'];
+      this.request = this.route.snapshot.data['request'];
       this.getRoles();
     }
 
@@ -96,6 +98,10 @@ export class GrantAccessPage implements OnInit {
         this.domainOptions = domains._embedded.domainList.map(domain => {
           return { value: domain.id, label: domain.domainName };
         });
+
+        if (this.userCameFromRoleWorkspace) {
+          this.request.domainName = this.labelForDomain(this.request.domainId);
+        }
       },
       error => {
         this.footerAlert.registerFooterAlert({

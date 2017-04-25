@@ -9,6 +9,7 @@ import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 })
 export class OrgDetailProfilePage {
   orgId:string = "100000121";
+
   orgObj = {};
   orgDetails = [];
   orgCodes = [];
