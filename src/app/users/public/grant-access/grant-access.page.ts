@@ -49,6 +49,10 @@ export class GrantAccessPage implements OnInit {
 
   private userCameFromRoleWorkspace: boolean = false;
 
+  private objectsEditable: boolean = true;
+  private requestId: any = null;
+  private request: any;
+
   constructor(
     private userService: UserAccessService,
     private route: ActivatedRoute,
@@ -64,10 +68,12 @@ export class GrantAccessPage implements OnInit {
   ngOnInit() {
     this.titleService.setTitle('User Access');
     this.userName = this.route.parent.snapshot.params['id'];
-    this.userCameFromRoleWorkspace = this.route.snapshot.queryParams['ref'];
+    this.userCameFromRoleWorkspace = !!this.route.snapshot.queryParams['ref'];
 
     if (this.userCameFromRoleWorkspace) {
       this.domain = +this.route.snapshot.queryParams['domain'];
+      this.requestId = this.route.snapshot.queryParams['request'];
+      this.request = this.route.snapshot.data['request'];
       this.getRoles();
     }
 
@@ -92,6 +98,10 @@ export class GrantAccessPage implements OnInit {
         this.domainOptions = domains._embedded.domainList.map(domain => {
           return { value: domain.id, label: domain.domainName };
         });
+
+        if (this.userCameFromRoleWorkspace) {
+          this.request.domainName = this.labelForDomain(this.request.domainId);
+        }
       },
       error => {
         this.footerAlert.registerFooterAlert({
@@ -427,22 +437,41 @@ export class GrantAccessPage implements OnInit {
         permissions: perms
       }
     });
+    let role = parseInt(this.role);
+    let domain = parseInt(this.domain);
 
     let access;
+    let params = {};
     if (this.mode === 'grant') {
-      access = UserAccessModel.CreateGrantObject(
-        this.userName,
-        parseInt(this.role),
-        parseInt(this.domain),
-        orgIds,
-        funcs,
-        this.messages,
-      );
+      if (!this.userCameFromRoleWorkspace) {
+        access = UserAccessModel.CreateGrantObject(
+          this.userName,
+          role,
+          domain,
+          orgIds,
+          funcs,
+          this.messages,
+        );
+      } else {
+        let funcs2: any = this.objects.map(obj => {
+          let perms = obj.permission.filter(p => !p.notChecked).map(p => p.id);
+          return {
+            function: obj.function.id,
+            permission: perms
+          }
+        });
+
+        params = {
+          userAccessRequestId: this.requestId
+        };
+        access = UserAccessModel.CreateGrantAndAcceptObject(this.messages, this.userName, domain, role, orgIds, funcs2);
+      }
+
     } else if (this.mode === 'edit') {
       access = UserAccessModel.CreateEditObject(
         this.userName,
-        parseInt(this.role),
-        parseInt(this.domain),
+        role,
+        domain,
         orgIds,
         funcs,
         this.messages,
@@ -450,7 +479,7 @@ export class GrantAccessPage implements OnInit {
       );
     }
 
-    this.userService.postAccess(access, this.userName).delay(2000).subscribe(
+    this.userService.postAccess(access, this.userName, params).delay(2000).subscribe(
       res => {
         let verb = this.mode === 'edit' ? 'Updated' : this.mode === 'grant' ? 'Granted' : 'Updated';
         this.footerAlert.registerFooterAlert({

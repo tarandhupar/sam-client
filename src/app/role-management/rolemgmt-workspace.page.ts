@@ -15,13 +15,16 @@ export class RoleMgmtWorkspace implements OnInit{
   Details : any;
   totalRequest : number = 0;
   currCount : number = 0;
+  pendingCount: number = 0;
+  escalatedCount: number = 0;
+
   constructor(private role: UserAccessService){
-     
+
   }
 
   ngOnInit(){
-    this.getStatusIds();   
-    
+    this.getStatusIds();
+
   }
 
   StatusValue(event){
@@ -41,7 +44,7 @@ export class RoleMgmtWorkspace implements OnInit{
     if(this.autocompleteInput !== event.value){
       this.autocompleteInput = event.value;
       this.page = 1;
-      this.getRequestAccess();  
+      this.getRequestAccess();
     }
   }
 
@@ -64,8 +67,10 @@ export class RoleMgmtWorkspace implements OnInit{
       this.totalRequest = res.count;
       this.currCount = res.userAccessRequestList.length;
       this.pages = Math.ceil(res.count/10);
+      this.pendingCount = res.pendingCount;
+      this.escalatedCount = res.escalatedCount;
     });
-    
+
   }
 
   getStatusIds(){
@@ -78,12 +83,12 @@ export class RoleMgmtWorkspace implements OnInit{
             else{
               this.statusKey = this.statusKey + "," + status.id;
             }
-          });      
-          
+          });
+
         }
         //console.log("Now " + this.statusKey);
         this.getRequestAccess();
       });
     }
-  
+
 }

@@ -1,7 +1,7 @@
 <div class="role-sidenav">
   <div class = "m_T-5em ">
     <div class = "pull-left filter-color">
-      <h3>Filters</h3>
+      <h3 class="filters-title">Filters</h3>
     </div>
     <div class = "pull-right filter-icon filter-color">
       <i class="fa fa-sliders fa-2x" aria-hidden="true"></i>
@@ -33,11 +33,11 @@
       </samAccordion>
       <div class = "tx-pad">
         <labelWrapper [name]="'Domain-Text-Wrapper'" [errorMessage]="textErrorMessage">
-          <input type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">                     
-        </labelWrapper> 
+          <input type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">
+        </labelWrapper>
         <span class="fa fa-plus-circle"  [ngClass] = "textErrorMessage.length > 0 ? 'btn-plus-error' : 'btn-plus' " aria-hidden="true" (click) = SubmitDomain()></span>
       </div>
-      
+
     </div>
   </div>
 </div>

@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { SearchPage }   from './search.page';
 import { SearchLayoutDemoPage }   from './search-layout-demo/search-layout-demo.page';
 import { AssistanceListingResult } from '../assistance-listing/search-result/assistance-listing-result.component';
+import {RegionalOfficeListingResult} from '../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component'
 import { OpportunitiesResult } from '../opportunity/search-result/opportunities-result.component';
 import { FederalHierarchyResult } from '../organization/search-result/federal-hierarchy-result.component';
 import { EntitiesResult } from '../entity/search-result/entities-result.component';
@@ -20,7 +21,7 @@ import { AppComponentsModule } from '../app-components/app-components.module';
 import { FHFeaturedResult } from '../organization/featured-result/featured-result.component';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
-import {SamNaicsPscFilter} from "../awards/search-result/naics-psc-filter/naics-psc-filter.component";
+import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 
 @NgModule({
   imports: [
@@ -43,7 +44,8 @@ import {SamNaicsPscFilter} from "../awards/search-result/naics-psc-filter/naics-
     ExclusionsResult,
     WageDeterminationResult,
     AwardsResult,
-    FHFeaturedResult
+    FHFeaturedResult,
+    RegionalOfficeListingResult
   ],
   declarations: [
     SearchPage,
@@ -57,7 +59,8 @@ import {SamNaicsPscFilter} from "../awards/search-result/naics-psc-filter/naics-
     AwardsResult,
     FHFeaturedResult,
     SamContractTypeFilter,
-    SamNaicsPscFilter
+    SamNaicsPscFilter,
+    RegionalOfficeListingResult
   ],
   providers: [],
 })

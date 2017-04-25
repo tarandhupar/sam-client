@@ -1,15 +1,9 @@
 .role-workspace{
-  &.usa-grid-full{
-    max-width: initial;
-  }
-  .m_W-3em{
-    padding-left:2.4em;
-  }
+  max-width: initial;
+  padding: 0 1.5em;
+
   .create-btn{
     padding-right:5em;
     padding-top:1em;
-  }
-  .main-content{
-    padding-top: 1.2em;
   }
 }
