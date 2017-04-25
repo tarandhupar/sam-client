@@ -169,12 +169,19 @@ export class OrgCreatePage {
       this.orgObj['newIsFunding'] = this.indicateFundRadioModel === "Funding/Awarding" || this.indicateFundRadioModel == "Funding"?true:false;
       this.orgObj['orgAddresses'] = [];
       this.orgAddresses.forEach( e => {
+        // this.orgObj['orgAddresses'].push({
+        //   "city": e.addrModel.city,
+        //   "countryCode": e.addrModel.country,
+        //   "state": e.addrModel.state,
+        //   "streetAddress": e.addrModel.street1 +" "+ e.addrModel.street2,
+        //   "zipcode": e.addrModel.postalCode,
+        // });
         this.orgObj['orgAddresses'].push({
-          "city": e.addrModel.city,
-          "countryCode": e.addrModel.country,
-          "state": e.addrModel.state,
-          "streetAddress": e.addrModel.street1 +" "+ e.addrModel.street2,
-          "zipcode": e.addrModel.postalCode,
+          "city": "Test City",
+          "countryCode": "USA",
+          "state": "Virginia",
+          "streetAddress": "Street address 1",
+          "zipcode": "12345",
         });
       });
     }
@@ -186,6 +193,15 @@ export class OrgCreatePage {
 
 
   onReviewFormClick(){
+    let obj = { "fpdsOrgId": "", "aacCode": "", "name": "Test Org", "createdDate": "2017-12-12", "summary": "", "shortName": "TO", "newIsAward": true, "newIsFunding": true, "orgAddresses": [ { "city": "Test City", "countryCode": "USA", "state": "Virginia", "streetAddress": "Street address 1", "zipcode": "12345" } ] };
+    this.fhService.createOrganization(obj,"100000000.100000012.100000117.10000012","DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC").subscribe(
+      val => {
+        this.flashMsgService.showFlashMsg();
+        this.flashMsgService.isCreateOrgSuccess = true;
+        this.router.navigate(['/organization-detail',val,'profile']);
+      }
+    );
+
     // Validate all the necessary fields in the organization creation form
     this.basicInfoForm.get('orgName').markAsDirty();
     this.basicInfoForm.get('orgStartDate').markAsDirty();
@@ -216,11 +232,11 @@ export class OrgCreatePage {
 
   onConfirmFormClick(){
     //submit the form and navigate to the new created organization detail page
-    this.fhService.createOrganization(this.orgObj).subscribe(
+    this.fhService.createOrganization(this.orgObj,this.fullParentPath,this.fullParentPathName).subscribe(
       val => {
         this.flashMsgService.showFlashMsg();
         this.flashMsgService.isCreateOrgSuccess = true;
-        this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+        this.router.navigate(['/organization-detail',val,'profile']);
       }
     );
   }
