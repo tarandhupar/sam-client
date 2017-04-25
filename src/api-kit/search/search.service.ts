@@ -17,7 +17,8 @@ export class SearchService {
       oParam: {
         index: obj.index,
         q: obj.keyword,
-        page: obj.pageNum
+        page: obj.pageNum,
+        is_active: obj.isActive
       },
       method: 'GET'
     };
@@ -106,6 +107,10 @@ export class SearchService {
     if(obj.showRO) {
       oApiParam.oParam['q'] = obj.ro_keyword;
       oApiParam.oParam['index'] = 'ro';
+    }
+
+    if(typeof obj.duns !== 'undefined' && obj.duns !== null && obj.duns !== ''){
+      oApiParam.oParam['duns'] = obj.duns;
     }
 
     return this.oAPIService.call(oApiParam);

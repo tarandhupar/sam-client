@@ -35,43 +35,19 @@ export class SearchPage implements OnInit{
   showRegionalOffices: boolean = false;
   ro_keyword: string = "";
 
-  //TODO: Remove these
+  // duns entity objects
   dunsModel: any = '';
+  dunsModelList: any = [];
+  dunsListString = '';
   myOptions: any = [];
   testConfiguration = {
     keyValueConfig: {
       keyProperty: 'value',
       valueProperty: 'label'
-    }
+    },
+    dropdownLimit: 3
 };
 
-  //TODO: remove this
-  listOptions = [
-    {
-      label:'test org 1 (831006053)',
-      value: '831006053',
-      name: 'test org 1'
-    },
-    {
-      label:'test org 2',
-      value: '831006054',
-      name: 'test org 2'
-    },
-    {
-      label:'test org 3',
-      value: '831006055',
-      name: 'test org 3'
-    },
-    {
-      label:'test org 4',
-      value: '831006056',
-      name: 'test org 4'
-    },
-    {
-      label:'test org 5',
-      value: '831006057',
-      name: 'test org 5'
-    }];
 
 
   @ViewChild('agencyPicker') agencyPicker;
@@ -335,6 +311,7 @@ export class SearchPage implements OnInit{
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
         this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
         this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
+        this.dunsListString = data['duns'] && data['duns'] !== null ? data['duns'] : '';
 
         this.runSearch();
         this.loadParams();
@@ -469,6 +446,11 @@ export class SearchPage implements OnInit{
       qsobj['ro_keyword'] = this.ro_keyword;
     }
 
+    if(this.dunsModelList.length>0){
+      console.log('qsObject duns model list ', this.dunsListString);
+      qsobj['duns'] = this.dunsListString;
+    }
+
     return qsobj;
   }
 
@@ -539,7 +521,8 @@ export class SearchPage implements OnInit{
       naics: this.naicsTypeModel,
       psc: this.pscTypeModel,
       showRO: this.showRegionalOffices,
-      ro_keyword: this.ro_keyword
+      ro_keyword: this.ro_keyword,
+      duns: this.dunsListString
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -708,7 +691,7 @@ export class SearchPage implements OnInit{
     );
   }
 
-  pageChange(pagenumber) {
+  pageChange(pagenumber){
     this.pageNum = pagenumber;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
@@ -1047,13 +1030,38 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
-  entityDunsSearchEvent(event){
+  testListModelChange(object){
+    console.log('testListModel ran');
 
-    console.log('you made it into test function congrats!', event);
+    // create comma-separated string to feed to es obj
+    this.dunsListString = this.buildDunsListString();
+
+    // call data refresh
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+
   }
 
   getDropdownListItems(event){
-    console.log('hey here is modelChange emitter much wow! ', event);
+  }
+
+  buildDunsListString(){
+
+
+    let finalString = '';
+    console.log('made it into build duns list string method');
+
+
+    finalString = this.dunsModelList.map(function(dunsObj){
+      //console.log('went into the mapping function');
+      //console.log('current duns object ', dunsObj);
+
+      finalString = dunsObj.value;
+
+
+      return finalString;
+    }).join(',');
+    return finalString
   }
 
 }

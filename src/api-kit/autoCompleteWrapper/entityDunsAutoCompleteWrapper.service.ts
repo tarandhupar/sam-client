@@ -17,10 +17,10 @@ export class DunsEntityAutoCompleteWrapper implements AutocompleteService{
     const results = new ReplaySubject();
     this.oSearchService.dunsEntityAutoSearch(q).subscribe(
       (res) => {
-        results.next(res.reduce((prev, curr) => {
+        results.next(res._embedded.dictionaries[0].elements.reduce((prev, curr) => {
           const newObj = {
             value: curr.elementId,
-            label: curr.value
+            label: curr.value + "(" + curr.elementId + ")"
           }
           prev.push(newObj);
           return prev;
