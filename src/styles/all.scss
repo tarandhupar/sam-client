@@ -11,7 +11,7 @@
 /*-------------------
      Variables
 --------------------*/
-// Internal variable should be declared before uswds 
+// Internal variable should be declared before uswds
 // variable to take higher precendence
 @import 'variables';
 
@@ -45,7 +45,7 @@
 //@import '~uswds/src/stylesheets/core/fonts';
 @import '~uswds/src/stylesheets/core/base';
 /*
-  Variables moved here to avoid 
+  Variables moved here to avoid
   overriding USWDS grid variables
 */
 // Store current variable values
@@ -155,7 +155,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 }
 
 /*******************************
-        Legacy 
+        Legacy
 *******************************/
 
 @import 'utilities';
@@ -228,7 +228,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'pages/assistance-listing-operations';
 @import 'pages/organization-detail';
 @import 'pages/organization-create';
-
+@import 'pages/aac-request';
 // h1,
 // h2{
 //   letter-spacing: -0.5px;
