@@ -417,7 +417,6 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
   }
 
   saveData() {
-    let uuid = UUID.UUID().replace(/-/g, "");
     let data = {};
     let isFundedCurrentFY: boolean;
     if (this.finObligationsForm.value.isFundedCurrentFY) {
@@ -425,6 +424,7 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
     }
     let obligationsData = [];
     for (let i = 0; i < this.obligationsInfo.length; i++) {
+      let uuid = UUID.UUID().replace(/-/g, "");
       let isRecoveryAct: boolean;
       let valuesData = [];
       let obligation = this.obligationsInfo[i];

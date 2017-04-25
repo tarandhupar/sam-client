@@ -13,11 +13,11 @@ describe('SortArrayOfObjects', () => {
     ];
 
     let result1 = [
-      {label: "Kellog", value: "1"},
       {label: "Anurag", value: "2"},
       {label: "Dmitriy", value: "3"},
-      {label: "Prashanth", value: "4"},
-      {label: "Jihad", value: "5"}
+      {label: "Jihad", value: "5"},
+      {label: "Kellog", value: "1"},
+      {label: "Prashanth", value: "4"}
     ];
 
     let array2 = [
