@@ -41,6 +41,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   assistanceTypes: any[] = [];
   //SideNav: On load select first item on sidenav component
   selectedPage: number = 0;
+  private gotoPage;
   pageRoute: string;
   pageFragment: string;
   sidenavModel = {
@@ -379,18 +380,19 @@ Please contact the issuing agency listed under "Contact Information" for more in
     });
   }
 
-  public onEditClick(path: string[]) {
+  public onEditClick(page: string[]) {
     if(this.program.status && this.program.status.code!='published') {
-      this.router.navigate(path);
+      this.router.navigate(['/programs', this.programID, 'edit'].concat(page));
     } else {
       this.editModal.openModal();
+      this.gotoPage = page;
     }
   }
 
   public onEditModalSubmit() {
     this.editModal.closeModal();
     this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
-      this.router.navigate(['/programs', JSON.parse(res._body).id, 'edit']);
+      this.router.navigate(['/programs', JSON.parse(res._body).id, 'edit'].concat(this.gotoPage));
     });
   }
 }
