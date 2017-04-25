@@ -133,7 +133,12 @@ export class FinancialInfoPage2 implements OnInit {
   private saveAccomplishments() {
     let accomplishments: any = {};
 
-    accomplishments.isApplicable = this.accomplishmentsModel.checkbox.indexOf('na') === -1;
+    if(this.accomplishmentsModel.checkbox) {
+      accomplishments.isApplicable = this.accomplishmentsModel.checkbox.indexOf('na') === -1;
+    } else {
+      accomplishments.isApplicable = false;
+    }
+    
     accomplishments.list = [];
 
     for(let entry of this.accomplishmentsModel.entries) {

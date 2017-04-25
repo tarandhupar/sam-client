@@ -11,7 +11,7 @@
 /*-------------------
      Variables
 --------------------*/
-// Internal variable should be declared before uswds 
+// Internal variable should be declared before uswds
 // variable to take higher precendence
 @import 'variables';
 
@@ -45,7 +45,7 @@
 //@import '~uswds/src/stylesheets/core/fonts';
 @import '~uswds/src/stylesheets/core/base';
 /*
-  Variables moved here to avoid 
+  Variables moved here to avoid
   overriding USWDS grid variables
 */
 // Store current variable values
@@ -132,6 +132,10 @@ home samsearchbar{
   @include unstyled-list;
 }
 
+samsearchheader .search-header > .usa-width-one-whole{
+  height: 40px;
+}
+
 .usa-font-lead {
   font-family: $font-serif;
   font-size: $lead-font-size;
@@ -140,7 +144,7 @@ home samsearchbar{
 }
 
 /*******************************
-        Legacy 
+        Legacy
 *******************************/
 
 @import 'utilities';
@@ -213,13 +217,13 @@ home samsearchbar{
 @import 'pages/assistance-listing-operations';
 @import 'pages/organization-detail';
 @import 'pages/organization-create';
-
-h1,
-h2{
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-  color: black;
-}
+@import 'pages/aac-request';
+// h1,
+// h2{
+//   letter-spacing: -0.5px;
+//   line-height: 1.1;
+//   color: black;
+// }
 
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{

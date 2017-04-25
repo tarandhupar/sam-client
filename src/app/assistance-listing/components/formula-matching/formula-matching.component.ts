@@ -15,7 +15,12 @@ import {DictionaryService} from "api-kit";
   ]
 })
 export class FALFormulaMatchingComponent implements ControlValueAccessor {
+  private model: any = {
+    checkbox: []
+  }; // internally maintained model - should never be null or undefined
+
   public formulaMatchingOptions = [
+    // todo: fix undefined names
     { value: 'cfr', label: 'This listing has statutory formula/or administrative rule reference in the CFR', name: this.name + '-checkbox-cfr' },
     { value: 'matching', label: 'This listing has matching requirements', name: this.name + '-checkbox-matching-requirements' },
     { value: 'moe', label: 'This listing has maintenance of effort (MOE) requirements AND total allocations over $100 million for the current fiscal year.', name: this.name + '-checkbox-moe' }
@@ -35,7 +40,7 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   public hint: string;
   public required: boolean;
 
-  private model: any = {}; // internally maintained model - should never be null or undefined
+  private _ordering: any;
   public formulaMatchingGroup: FormGroup;
 
   @ViewChild('formulaMatchingLabel') wrapper: LabelWrapper;
@@ -56,6 +61,13 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
     this.parseOptionsAndSetDefaults();
     this.validateInputs();
     this.createFormControls();
+
+    // initialize the order lookup map
+    this._ordering = {};
+    for (let i = 0; i < this.formulaMatchingOptions.length; i++) {
+      let val = this.formulaMatchingOptions[i].value;
+      this._ordering[val] = i;
+    }
   }
 
   private parseOptionsAndSetDefaults() {
@@ -172,6 +184,10 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
 
     this.model = obj;
 
+    if(this.model.checkbox == null) {
+      this.model.checkbox = [];
+    }
+
     if(this.model.checkbox) {
       this.formulaMatchingGroup.get('formulaMatching').setValue(this.model.checkbox);
     }
@@ -220,4 +236,34 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
   }
 
   public setDisabledState(isDisabled: boolean) : void {}
+
+  public onCheckChanged(value, isChecked) {
+    if (!isChecked) {
+      // If the option was unchecked, remove it from the model
+      this.model.checkbox = this.model.checkbox.filter(val => val !== value);
+    } else {
+      // Else, insert the checked item into the model in the correct order
+      let i = 0;
+      let thisOrder = this._ordering[value];
+      while (i < this.model.checkbox.length) {
+        let otherValue = this.model.checkbox[i];
+        // If the item being inserted is after the current value, break and insert it
+        if (thisOrder <= this._ordering[otherValue]){
+          break;
+        }
+        i++;
+      }
+      let clone = this.model.checkbox.slice(0);
+      clone.splice(i, 0, value);
+      this.model.checkbox = clone;
+    }
+  }
+
+  isChecked(value) {
+    if(this.model && this.model.checkbox){
+      return this.model.checkbox.indexOf(value) !== -1;
+    } else {
+      return false;
+    }
+  }
 }

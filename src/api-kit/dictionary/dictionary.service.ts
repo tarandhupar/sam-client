@@ -7,12 +7,15 @@ export class DictionaryService {
 
   constructor(private oAPIService: WrapperService){}
 
-  public getDictionaryById(id: string) {
+  public getDictionaryById(ids: string, size: string = '', filterElementIds: string = '', keyword = '') {
     let oApiParam = {
         name: 'program',
         suffix: '/dictionaries',
         oParam: {
-            ids: id
+            ids: ids,
+            size: size,
+            filterElementIds: filterElementIds,
+            keyword: keyword
         },
         method: 'GET'
     };
