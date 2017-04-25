@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { OrgAddrFormComponent } from '../../app-components/address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 
 function validDateTime(c: FormControl) {
   let invalidError = {message: 'Date is invalid'};
@@ -76,14 +77,7 @@ export class AACRequestPage {
 
   aacReasonCbxModel:any = [];
   aacReasonCbxConfig = {
-    options: [
-      {value: 'Used for Ordering/Requisitioning Purposes', label: 'Used for Ordering/Requisitioning Purposes', name: 'Used for Ordering/Requisitioning Purposes'},
-      {value: 'Used for Personal Property Reporting or Transfer', label: 'Used for Personal Property Reporting or Transfer', name: 'Used for Personal Property Reporting or Transfer'},
-      {value: 'Used for Grants or Financial Assistance Reporting', label: 'Used for Grants or Financial Assistance Reporting', name: 'Used for Grants or Financial Assistance Reporting'},
-      {value: 'Used for Shipping Purposes', label: 'Used for Shipping Purposes', name: 'Used for Shipping Purposes'},
-      {value: 'Used for Billing Purposes', label: 'Used for Billing Purposes', name: 'Used for Billing Purposes'},
-      {value: 'Used for Reporting with FPDS', label: 'Used for Reporting with FPDS', name: 'Used for Reporting with FPDS'},
-    ],
+    options: [],
     name: 'aacReason',
     label: 'Provide purpose for AAC Request:',
     errorMessage: ''
@@ -102,7 +96,7 @@ export class AACRequestPage {
     errorMessage: ''
   };
 
-
+  addrTypePerReason:any = [];
   aacOfficeInfo:any = [];
   orgAddresses:any = [];
   mailAddr:any = {addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",postalCode:""};
@@ -116,8 +110,10 @@ export class AACRequestPage {
   aacObj:any = {};
   requestIsEdit = true;
   requestIsReview = false;
+  requestIsConfirm = false;
+  successAlertMsg = false;
 
-  constructor(private builder:FormBuilder){}
+  constructor(private builder:FormBuilder, private aacRequestService:AACRequestService){}
 
   ngOnInit(){
     this.stateOfficeForm = this.builder.group({
@@ -133,6 +129,15 @@ export class AACRequestPage {
     this.fpdsReportForm = this.builder.group({
       agencyCode: ['', []],
       cgacCode: ['', []],
+    });
+    this.aacRequestService.getAACReasons().subscribe(
+      reasonData => {
+        this.aacReasonCbxConfig.options = [];
+        this.addrTypePerReason = {};
+        reasonData.reasons.forEach( e => {
+          this.aacReasonCbxConfig.options.push({value:e.value,label:e.value,name:e.value});
+          this.addrTypePerReason[e.value] = e.addrType;
+        });
     });
   }
 
@@ -153,8 +158,14 @@ export class AACRequestPage {
     if(this.isAddressFormValid() && this.isOfficeInfoValid() && this.isReasonInfoValid()){
       this.aacOfficeInfo = this.generateRequestOfficeInfo();
       this.orgAddresses = [this.mailAddr];
-      if(this.isBillingAddrRequired())this.orgAddresses.push(this.billAddr);
-      if(this.isShippingAddrRequired())this.orgAddresses.push(this.shipAddr);
+      if(this.isAddrTypeRequired("Billing Address")){
+        if(this.hideBillingForm)this.billAddr = Object.assign({},this.mailAddr);
+        this.orgAddresses.push(this.billAddr);
+      }
+      if(this.isAddrTypeRequired("Shipping Address")){
+        if(this.hideShippingForm)this.shipAddr = Object.assign({},this.mailAddr);
+        this.orgAddresses.push(this.shipAddr);
+      }
       this.requestIsEdit = false;
       this.requestIsReview = true;
     }
@@ -169,6 +180,13 @@ export class AACRequestPage {
   }
 
   onCancelAACRequestClick(){}
+
+  onSubmitFormClick(){
+    this.requestIsReview = false;
+    this.requestIsConfirm = true;
+    this.successAlertMsg = true;
+    setTimeout(()=>{this.successAlertMsg = false;}, 3000);
+  }
 
   generateRequestOfficeInfo():any{
     let requestOfficeInfo = [];
@@ -228,18 +246,14 @@ export class AACRequestPage {
 
   isSingleAACRequest():boolean {return this.aacTypeRadioModel === 'single';}
   isMultiAACRequest():boolean {return this.aacTypeRadioModel === 'mulitple';}
-  isReasonContainsFPDSReport():boolean {return this.aacReasonCbxModel.indexOf(this.aacReasonCbxConfig.options[5].value) !== -1;}
+  isReasonContainsFPDSReport():boolean {return this.aacReasonCbxModel.indexOf("Used for Reporting with FPDS") !== -1;}
 
-  isBillingAddrRequired():boolean{
-    return this.aacReasonCbxModel.indexOf(this.aacReasonCbxConfig.options[0].value) !== -1 ||
-        this.aacReasonCbxModel.indexOf(this.aacReasonCbxConfig.options[1].value) !== -1 ||
-        this.aacReasonCbxModel.indexOf(this.aacReasonCbxConfig.options[4].value) !== -1;
-  }
-
-  isShippingAddrRequired():boolean{
-    return this.aacReasonCbxModel.indexOf(this.aacReasonCbxConfig.options[0].value) !== -1 ||
-      this.aacReasonCbxModel.indexOf(this.aacReasonCbxConfig.options[1].value) !== -1 ||
-      this.aacReasonCbxModel.indexOf(this.aacReasonCbxConfig.options[3].value) !== -1;
+  isAddrTypeRequired(addrType):boolean{
+    let addrRequired = false;
+    this.aacReasonCbxModel.forEach( e => {
+      if(this.addrTypePerReason[e].indexOf(addrType) !== -1) addrRequired = true;
+    });
+    return addrRequired;
   }
 
   formatReasonInfoError(){
@@ -283,17 +297,16 @@ export class AACRequestPage {
 
   onDuplicateFillChecked(addrType, val){
     if(addrType === "Billing Address"){
-      this.billAddr = this.updateAddressFromMailAddr(val,addrType);
       this.hideBillingForm = val.length > 0;
+      this.billAddr = this.updateFromMailAddr(this.hideBillingForm, addrType);
     }else if (addrType === "Shipping Address"){
-      this.shipAddr = this.updateAddressFromMailAddr(val,addrType);
       this.hideShippingForm = val.length > 0;
+      this.shipAddr = this.updateFromMailAddr(this.hideShippingForm, addrType);
     }
   }
 
-  updateAddressFromMailAddr(addrCbxModel, addrType):any{
-    let addr;
-    addr = addrCbxModel.length > 0? Object.assign({},this.mailAddr):Object.assign({},this.emptyAddrObj);
+  updateFromMailAddr(update:boolean, addrType):any{
+    let addr = update? Object.assign({},this.mailAddr):Object.assign({},this.emptyAddrObj);
     addr.addrType = addrType;
     return addr;
   }

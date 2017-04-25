@@ -11,8 +11,24 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 
-describe('Create AAC Request Form Page', () => {
+class AACRequestServiceStub{
+  getAACReasons(){
+    return Observable.of({
+      reasons: [
+        {value: 'Used for Ordering/Requisitioning Purposes', addrType:["Mailing Address", "Billing Address", "Shipping Address"]},
+        {value: 'Used for Personal Property Reporting or Transfer', addrType:["Mailing Address", "Billing Address", "Shipping Address"]},
+        {value: 'Used for Grants or Financial Assistance Reporting', addrType:["Mailing Address"]},
+        {value: 'Used for Shipping Purposes', addrType:["Mailing Address", "Shipping Address"]},
+        {value: 'Used for Billing Purposes', addrType:["Mailing Address", "Billing Address"]},
+        {value: 'Used for Reporting with FPDS', addrType:["Mailing Address"]},
+      ],
+    });
+  }
+}
+
+fdescribe('Create AAC Request Form Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:AACRequestPage;
   let fixture:any;
@@ -21,7 +37,9 @@ describe('Create AAC Request Form Page', () => {
     TestBed.configureTestingModule({
       declarations: [ AACRequestPage],
       imports:[ SamUIKitModule, SamAPIKitModule,  ReactiveFormsModule, FormsModule, RouterTestingModule, AppComponentsModule ],
-      providers: []
+      providers: [
+        {provide: AACRequestService, useClass: AACRequestServiceStub}
+      ]
     });
     fixture = TestBed.createComponent(AACRequestPage);
     component = fixture.componentInstance;
@@ -114,26 +132,26 @@ describe('Create AAC Request Form Page', () => {
 
   it('should have correct address form when select different aac reasons', () => {
     fixture.detectChanges();
-    expect(component.isBillingAddrRequired()).toBe(false);
-    expect(component.isShippingAddrRequired()).toBe(false);
+    expect(component.isAddrTypeRequired("Billing Address")).toBe(false);
+    expect(component.isAddrTypeRequired("Shipping Address")).toBe(false);
     component.aacReasonCbxModel = ["Used for Ordering/Requisitioning Purposes"];
-    expect(component.isBillingAddrRequired()).toBe(true);
-    expect(component.isShippingAddrRequired()).toBe(true);
+    expect(component.isAddrTypeRequired("Billing Address")).toBe(true);
+    expect(component.isAddrTypeRequired("Shipping Address")).toBe(true);
     component.aacReasonCbxModel = ["Used for Personal Property Reporting or Transfer"];
-    expect(component.isBillingAddrRequired()).toBe(true);
-    expect(component.isShippingAddrRequired()).toBe(true);
+    expect(component.isAddrTypeRequired("Billing Address")).toBe(true);
+    expect(component.isAddrTypeRequired("Shipping Address")).toBe(true);
     component.aacReasonCbxModel = ["Used for Grants or Financial Assistance Reporting"];
-    expect(component.isBillingAddrRequired()).toBe(false);
-    expect(component.isShippingAddrRequired()).toBe(false);
+    expect(component.isAddrTypeRequired("Billing Address")).toBe(false);
+    expect(component.isAddrTypeRequired("Shipping Address")).toBe(false);
     component.aacReasonCbxModel = ["Used for Shipping Purposes"];
-    expect(component.isBillingAddrRequired()).toBe(false);
-    expect(component.isShippingAddrRequired()).toBe(true);
+    expect(component.isAddrTypeRequired("Billing Address")).toBe(false);
+    expect(component.isAddrTypeRequired("Shipping Address")).toBe(true);
     component.aacReasonCbxModel = ["Used for Billing Purposes"];
-    expect(component.isBillingAddrRequired()).toBe(true);
-    expect(component.isShippingAddrRequired()).toBe(false);
+    expect(component.isAddrTypeRequired("Billing Address")).toBe(true);
+    expect(component.isAddrTypeRequired("Shipping Address")).toBe(false);
     component.aacReasonCbxModel = ["Used for Reporting with FPDS"];
-    expect(component.isBillingAddrRequired()).toBe(false);
-    expect(component.isShippingAddrRequired()).toBe(false);
+    expect(component.isAddrTypeRequired("Billing Address")).toBe(false);
+    expect(component.isAddrTypeRequired("Shipping Address")).toBe(false);
   });
 
   it('should update billing or shipping address when quick fill checkbox is checked', () => {
@@ -167,4 +185,5 @@ describe('Create AAC Request Form Page', () => {
     component.onReviewAACRequestClick();
     component.onEditFormClick();
   });
+
 });

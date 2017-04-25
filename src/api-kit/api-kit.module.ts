@@ -18,6 +18,7 @@ import { UserAccessService } from "./access/access.service";
 import { LocationService } from "./location/location.service";
 import { FeedbackService } from "./feedback/feedback.service";
 import { DictionaryService } from "./dictionary/dictionary.service";
+import { AACRequestService } from "./aac-request/aac-request.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -49,7 +50,8 @@ import { DictionaryService } from "./dictionary/dictionary.service";
     WageDeterminationService,
     LocationService,
     FeedbackService,
-    DictionaryService
+    DictionaryService,
+    AACRequestService
   ]
 })
 export class SamAPIKitModule { }
