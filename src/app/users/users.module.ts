@@ -21,6 +21,8 @@ import { GrantAccessPage } from "./public/grant-access/grant-access.page";
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { ObjectsAndPermissionsComponent } from "./objects-and-permissions/objects-and-permissions.component";
+import { RoleManagementModule } from "../role-management/role-management.module";
+import {RequestAccessResolve} from "./request-access.resolve";
 
 
 @NgModule({
@@ -34,6 +36,7 @@ import { ObjectsAndPermissionsComponent } from "./objects-and-permissions/object
     SamAPIKitModule,
     PipesModule,
     AppComponentsModule,
+    RoleManagementModule,
     Ng2PageScrollModule.forRoot()
   ],
   exports: [
@@ -51,7 +54,8 @@ import { ObjectsAndPermissionsComponent } from "./objects-and-permissions/object
     ObjectsAndPermissionsComponent,
   ],
   providers: [
-    AlertFooterService
+    AlertFooterService,
+    RequestAccessResolve
   ],
 })
 export class UserDirectoryModule { }

@@ -102,7 +102,7 @@ export class WageDeterminationResult implements OnInit {
 
   ngOnInit(){
     if(this.data.publishDate!==null) {
-    this.data.publishDate = moment(this.data.publishDate).format("MMM D, Y");
+    this.data.publishDate = moment(this.data.publishDate).format("MMM DD, YYYY");
     }
     if(this.data.location!==null) {
       if (this.data.location.states && this.data.location.states !== null) {
