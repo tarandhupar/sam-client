@@ -30,4 +30,10 @@
     display: inline-block;
     max-width: 46rem;
   }
+
+  samTextArea {
+    label, textarea {
+      max-width: initial;
+    }
+  }
 }

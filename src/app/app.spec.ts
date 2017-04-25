@@ -50,20 +50,20 @@ let searchServiceStub = {};
 let fhServiceStub = {};
 
 describe('App', () => {
-  // provide our implementations or mocks to the dependency injector
-  beforeEach(() => TestBed.configureTestingModule({
-    declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, ExclusionsResult, WageDeterminationResult, AwardsResult, FHFeaturedResult, OpportunityPage, PageNotFoundErrorPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe],
-    imports: [PipesModule, SamUIKitModule, AppComponentsModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
-    providers: [
-      App,
-      {provide: Router, useClass: RouterStub},
-      {provide: ActivatedRoute, useValue: activatedRouteStub},
-      {provide: SearchService, useValue: searchServiceStub},
-      {provide: FHService, useValue: fhServiceStub}
-    ]
-  }));
+//   // provide our implementations or mocks to the dependency injector
+//   beforeEach(() => TestBed.configureTestingModule({
+//     declarations: [HomePage, SearchPage, OpportunitiesResult, AssistanceListingResult, FederalHierarchyResult, EntitiesResult, ExclusionsResult, WageDeterminationResult, AwardsResult, FHFeaturedResult, OpportunityPage, PageNotFoundErrorPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe],
+//     imports: [PipesModule, SamUIKitModule, AppComponentsModule, RouterTestingModule.withRoutes(ROUTES), ProgramModule],
+//     providers: [
+//       App,
+//       {provide: Router, useClass: RouterStub},
+//       {provide: ActivatedRoute, useValue: activatedRouteStub},
+//       {provide: SearchService, useValue: searchServiceStub},
+//       {provide: FHService, useValue: fhServiceStub}
+//     ]
+//   }));
 
-  it('should have a test value', inject([App], (app) => {
+ it('should have a test value', inject([App], (app) => {
     // expect(app.testValue.value).toEqual('Test');
     // app.ngOnInit();
     // expect(app.testValue.value).toEqual('Test' );
