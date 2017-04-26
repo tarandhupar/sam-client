@@ -93,7 +93,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
           let title = api.data.title;
-          let popularName = (api.data.alternativeNames.length > 0 ? api.data.alternativeNames[0] : '');
+          let popularName = ((api.data.alternativeNames  && api.data.alternativeNames.length > 0) ? api.data.alternativeNames[0] : '');
           let falNo = (api.data.programNumber ? api.data.programNumber : '');
 
           if (falNo.trim().length == 6)
@@ -136,30 +136,37 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
   }
 
   removeListDuplicates(arr: any) {
-    for (var i = 0; i < arr.length; i++) {
-      for (var j = i + 1; j < arr.length; j++) {
-        if (arr[i] === arr[j])
-          arr.splice(j, 1);
+    if(arr) {
+      for (var i = 0; i < arr.length; i++) {
+        for (var j = i + 1; j < arr.length; j++) {
+          if (arr[i] === arr[j])
+            arr.splice(j, 1);
+        }
       }
     }
+
     return arr;
   }
 
   removeDuplicates(obj: any, list: any) {
     let unique: boolean = false;
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].code === obj.code) {
-        unique = true;
+
+    if(list) {
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].code === obj.code) {
+          unique = true;
+        }
       }
     }
+
     return unique;
   }
 
   placeholderMsg(multiArray: any) {
     let PlaceholderMsg = '';
-    if (multiArray.length === 1) {
+    if (multiArray && multiArray.length === 1) {
       PlaceholderMsg = 'One Type Selected';
-    } else if (multiArray.length > 1) {
+    } else if (multiArray && multiArray.length > 1) {
       PlaceholderMsg = 'Multiple Types Selected';
     } else {
       PlaceholderMsg = 'None Selected';
@@ -169,8 +176,10 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
   relatedProglistChange(event) {
     this.realtedProgMultiArrayValues = [];
-    for (let selItem of this.relatedProgListDisplay.selectedItems) {
-      this.realtedProgMultiArrayValues.push(selItem.code);
+    if(this.relatedProgListDisplay) {
+      for (let selItem of this.relatedProgListDisplay.selectedItems) {
+        this.realtedProgMultiArrayValues.push(selItem.code);
+      }
     }
     this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.realtedProgMultiArrayValues);
   }
@@ -183,7 +192,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
       "organizationId": this.agency,
       "alternativeNames": (this.falHeaderInfoForm.value.alternativeNames ? [this.falHeaderInfoForm.value.alternativeNames] : []),
       "programNumber": this.falHeaderInfoForm.value.programNumber,
-      "relatedPrograms": this.realtedProgMultiArrayValues.length > 0 ? this.realtedProgMultiArrayValues : null
+      "relatedPrograms": (this.realtedProgMultiArrayValues && this.realtedProgMultiArrayValues.length > 0) ? this.realtedProgMultiArrayValues : null
     };
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {

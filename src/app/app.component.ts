@@ -20,7 +20,7 @@ export class App{
 
   keyword: string = "";
   index: string = "";
-  isActive: boolean = false;
+  isActive: boolean = true;
   qs: any = {};
   searchSelectConfig = {
     options: globals.searchFilterConfig,
@@ -40,6 +40,7 @@ export class App{
       });
     this.activatedRoute.queryParams.subscribe(
       data => {
+        console.log(typeof data['isActive']);
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.isActive = typeof data['isActive'] === "string" ? data['isActive'] : this.isActive;
@@ -106,6 +107,8 @@ export class App{
       qsobj['awardOrIdv'] = null;
       qsobj['awardType'] = null;
       qsobj['contractType'] = null;
+    }
+    if(searchObject.searchField !== 'fpds' && searchObject.searchField !== 'opp' && searchObject.searchField !== 'ent') {
       qsobj['naics'] = null;
       qsobj['psc'] = null;
     }
