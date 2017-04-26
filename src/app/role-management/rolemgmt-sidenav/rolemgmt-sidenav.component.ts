@@ -1,6 +1,7 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
+import { SamCheckboxComponent } from "sam-ui-kit/form-controls/checkbox/checkbox.component";
 
 @Component({
   selector: 'rolemgmt-sidenav',
@@ -12,7 +13,7 @@ export class RoleMgmtSidenav implements OnInit{
     accordionHeading2 : string;
     accordionName2 : string;
 
-    StatusCheckboxModel : any = [];
+    public StatusCheckboxModel : any = [];
     DomiansCheckboxModel : any = [];
     requestorIds : any = [];
     statusIds : string = '';
@@ -21,6 +22,9 @@ export class RoleMgmtSidenav implements OnInit{
     @Output() statusSelected: EventEmitter<any> = new EventEmitter<any>();
     @Output() domainSelected: EventEmitter<any> = new EventEmitter<any>();
     @Output() autoCompleteSelected : EventEmitter<any> = new EventEmitter<any>();
+
+    @ViewChild('statusCheckboxes')
+    public statusCheckboxes: SamCheckboxComponent;
 
     private filters = {
       status: { options: [ ], value: [] },
@@ -43,7 +47,6 @@ export class RoleMgmtSidenav implements OnInit{
       this.getAccessStatus();
       this.filters.domains.options = this.route.parent.snapshot.data['domains']._embedded.domainList.map(this.mapDomainLabelAndVal);
       this.getRequestorIds();
-      //this.requestorIds = [{key: 'sumit', value: 'sumit'},{key: 'nithin', value: 'nithin'},{key: 'taran', value: 'taran'},{key: 'justin', value: 'justin'}]
     }
 
     getAccessStatus(){

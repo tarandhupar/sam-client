@@ -63,11 +63,21 @@
     margin-right: 0;
     padding-left: .5rem;
     padding-right: .5rem;
-    margin-left: 3em;
+    margin-left: 3rem;
+    margin-bottom: 0;
   }
 
   .request-top-block {
     padding: 1.5rem 3rem 1.5rem 3rem;
+  }
+
+  .comment-user-icon {
+    position: absolute;
+    left: -1.2em;
+  }
+
+  .comment-section {
+    position: relative;
   }
 
   .accordion-list {

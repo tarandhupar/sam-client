@@ -1,5 +1,9 @@
-import {Component,OnInit,Output,EventEmitter,Input} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
 import * as moment from 'moment/moment';
+import {FHService} from "../../../api-kit/fh/fh.service";
+import {PropertyCollector} from "../../app-utils/property-collector";
+import * as _ from 'lodash';
+import {UserAccessService} from "../../../api-kit/access/access.service";
 
 @Component({
   selector: 'rolemgmt-content',
@@ -22,16 +26,6 @@ export class RoleMgmtContent implements OnInit{
       currentPage: 1,
   };
   pageNo = 1;
-  constructor(){
-
-    this.Pagelimit = 10;
-
-  }
-
-  ngOnInit(){
-
-  }
-
 
   selectModel = 'asc';
   selectConfig = {
@@ -39,6 +33,64 @@ export class RoleMgmtContent implements OnInit{
       {value: 'asc', label: 'Oldest First', name: 'sort-asc'},
       {value: 'desc', label: 'Newest First', name: 'sort-desc'},
     ]
+  };
+
+  organizationMap: any = {};
+  roleMap: any = {};
+
+  constructor(private fhService: FHService, private accessService: UserAccessService){
+
+    this.Pagelimit = 10;
+
+  }
+
+  ngOnChanges(changeEvent) {
+    if (changeEvent.requestDetails) {
+      this.getOrganizationNames();
+      this.getRoleNames();
+    }
+  }
+
+  ngOnInit(){
+
+  }
+
+  private getOrganizationNames() {
+    let pc: PropertyCollector = new PropertyCollector(this.requestDetails);
+    let allOrgIds = pc.collect([[], 'userAccessContent', 'domainContent', [], 'roleContent', [], 'organizationContent', [], 'organizations', []]);
+    allOrgIds = _.uniq(allOrgIds);
+
+    if (allOrgIds.length) {
+      this.fhService.getOrganizations({orgKey: allOrgIds.join(',')}).subscribe(res => {
+        let orgs = res._embedded.orgs.map(o => o.org);
+        this.organizationMap = _.keyBy(orgs, 'orgKey');
+      });
+    }
+  }
+
+  private getRoleNames() {
+    this.accessService.getAllRoles().subscribe(res => {
+      let roles = res._embedded.roleList;
+      this.roleMap = _.keyBy(roles, 'id');
+    });
+  }
+
+  roleNameForId(roleId) {
+    if (!this.roleMap[roleId]) {
+      return;
+    }
+    else {
+      return this.roleMap[roleId].roleName;
+    }
+  }
+
+  organizationNameForId(orgId) {
+    if (!this.organizationMap[orgId]) {
+      return;
+    }
+    else {
+      return this.organizationMap[orgId].name;
+    }
   }
 
   onSelectChanged(event){
@@ -81,11 +133,25 @@ export class RoleMgmtContent implements OnInit{
 
   getRolesGranted(request) {
     const roleId = request.userAccessContent.domainContent[0].roleContent[0].role;
-    return '---';
+    return this.roleNameForId(roleId) || '---';
   }
 
   getOrganizations(request) {
     const orgIds = request.userAccessContent.domainContent[0].roleContent[0].organizationContent[0].organizations;
-    return '---';
+    const names = orgIds.map(oid => {
+      return this.organizationNameForId(oid);
+    }).filter(oname => oname);
+    return names.join(', ');
+  }
+
+
+  @Output() clickPendingRequestsCountEvent: EventEmitter<any> = new EventEmitter();
+  onPendingClick() {
+    this.clickPendingRequestsCountEvent.emit();
+  }
+
+  @Output() clickEscalatedRequestsCountEvent: EventEmitter<any> = new EventEmitter();
+  onEscalatedClick() {
+    this.clickEscalatedRequestsCountEvent.emit();
   }
 }

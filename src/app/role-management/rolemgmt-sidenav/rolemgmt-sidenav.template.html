@@ -25,7 +25,9 @@
 
       <samAccordion [expandIndex]="0">
         <samAccordionSection [headerText]="accordionHeading1" [name]="accordionName1">
-          <samCheckbox (modelChange)="activeFilter($event)"
+          <samCheckbox
+            #statusCheckboxes
+            (modelChange)="activeFilter($event)"
             [(model)]="StatusCheckboxModel"
             [name]="'Access-Status-Checkbox-Filter'"
             [options]="filters.status.options"
@@ -38,7 +40,8 @@
 
       <samAccordion [expandIndex]="0">
         <samAccordionSection [headerText]="accordionHeading2" [name]="accordionName2">
-          <samCheckbox (modelChange)="domainFilter($event)"
+          <samCheckbox
+            (modelChange)="domainFilter($event)"
             [(model)]="DomiansCheckboxModel"
             [name]="'Domains-Checkbox-Filter'"
             [options]="filters.domains.options"
