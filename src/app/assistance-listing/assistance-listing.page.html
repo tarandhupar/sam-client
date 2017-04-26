@@ -511,7 +511,7 @@
         <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == true && dictionaries">
+              <ng-container *ngIf="item.isSelected == true && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                 {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>
@@ -522,7 +522,7 @@
         <span class="field">The following 2CFR policy requirements are excluded from coverage under this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == false && dictionaries">
+              <ng-container *ngIf="item.isSelected == false && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                 {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>
