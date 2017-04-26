@@ -40,7 +40,6 @@ export class App{
       });
     this.activatedRoute.queryParams.subscribe(
       data => {
-        console.log(typeof data['isActive']);
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.isActive = typeof data['isActive'] === "string" ? data['isActive'] : this.isActive;
