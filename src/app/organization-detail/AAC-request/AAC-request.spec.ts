@@ -28,7 +28,7 @@ class AACRequestServiceStub{
   }
 }
 
-fdescribe('Create AAC Request Form Page', () => {
+describe('Create AAC Request Form Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:AACRequestPage;
   let fixture:any;

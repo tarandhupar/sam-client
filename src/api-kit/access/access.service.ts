@@ -277,7 +277,7 @@ export class UserAccessService {
   getRequestAccess(username : string, statusKey : string, domainKey : string, order : string, page : number ){
     let apiOptions : any = {
       name : 'rms',
-      suffix : '/requestaccess/' + username + '/',
+      suffix : '/requestaccess/',
       method : 'GET',
       oParam: {},
     };
@@ -288,6 +288,10 @@ export class UserAccessService {
 
     if(domainKey.length > 0){
       apiOptions.oParam.domainKey = domainKey;
+    }
+
+    if (username.length) {
+      apiOptions.oParam.user = username;
     }
 
     apiOptions.oParam.order = order;

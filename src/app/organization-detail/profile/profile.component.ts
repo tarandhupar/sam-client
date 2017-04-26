@@ -26,7 +26,7 @@ export class OrgDetailProfilePage {
 
   isEdit:boolean = false;
   showFullDes: boolean = false;
-  isCFDASource:boolean = false;
+  isFPDSSource:boolean = false;
   showEditOrgFlashAlert:boolean = false;
   editedDescription:string = "";
   editedShortname:string = "";
@@ -63,6 +63,7 @@ export class OrgDetailProfilePage {
     this.fhService.getOrganizationById(orgId,false,true).subscribe(
       val => {
         this.orgObj = val._embedded[0].org;
+        console.log(this.orgObj);
         this.setupOrgFields(this.orgObj);
         this.isDataAvailable = true;
         this.orgTypes = val._embedded[0].orgTypes;
@@ -77,7 +78,7 @@ export class OrgDetailProfilePage {
     this.setupOrganizationDetail(orgDetail);
     this.setupOrganizationCodes(orgDetail);
     this.setupOrganizationAddress(orgDetail);
-    this.isCFDASource = !!orgDetail.isSourceCfda?orgDetail.isSourceCfda:false;
+    this.isFPDSSource = !!orgDetail.isSourceFpds?orgDetail.isSourceFpds:false;
 
   }
 
@@ -100,13 +101,10 @@ export class OrgDetailProfilePage {
       this.orgObj['shortName'] = this.editedShortname;
       this.fhService.updateOrganization(this.orgObj).subscribe(
         val => {
-          this.orgObj = val._embedded[0].org;
-          this.setupOrgFields(this.orgObj);
+          this.getOrgDetail(this.orgId);
           this.showEditOrgFlashAlert = true;
         });
     }
-
-
   }
 
   onEditPageClick(){
@@ -164,10 +162,10 @@ export class OrgDetailProfilePage {
     switch (org.type) {
       case "OFFICE":
         this.orgCodes.push({code:"AAC Code", value:this.getOrgFieldData(org,"aacCode")});
-        this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsOrgId")});
+        this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
         break;
       case "AGENCY": case "MAJOR COMMAND": case "SUB COMMAND":
-        this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsOrgId")});
+        this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
         this.orgCodes.push({code:"OMB Bureau Code", value:this.getOrgFieldData(org,"ombAgencyCode")});
         break;
       case "DEPARTMENT":

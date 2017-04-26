@@ -25,14 +25,14 @@
     <!-- Detail Section-->
     <div class="usa-width-one-whole m_T-4x">
       <h3>{{currentHierarchyType}} Detail
-        <button class="usa-button-transparent pull-right m_0 p_T-0" (click)="onEditPageClick()" *ngIf="!isEdit && isCFDASource"><i class="fa fa-pencil"></i></button>
+        <button class="usa-button-transparent pull-right m_0 p_T-0" (click)="onEditPageClick()" *ngIf="!isEdit && !isFPDSSource"><i class="fa fa-pencil"></i></button>
         <button class="usa-button-transparent pull-right m_0 p_T-0 " (click)="onCancelEditPageClick()" *ngIf="isEdit"> <i class="fa fa-times"></i></button>
         <button class="usa-button-transparent pull-right m_0 p_T-0" (click)="onSaveEditPageClick()" *ngIf="isEdit"> <i class="fa fa-save"></i></button>
       </h3>
       <div class="usa-width-one-whole m_B-4x">
         <p class="usa-width-one-whole m_L-3x m_B-1x" *ngFor="let pair of orgDetails">
           <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.description}}:</h4></span>
-          <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="(!isEdit || !isEditableField(pair.description)) && pair.description !== 'Description'">&nbsp;{{pair.value}}</span>
+          <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="(!isEdit || !isEditableField(pair.description)) && pair.description !== 'Description'">{{pair.value}}</span>
           <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="!isEdit  && pair.description === 'Description'">
             <span *ngIf="pair.value.length < 500 || showFullDes">{{pair.value}}<span *ngIf="pair.value.length >= 500 && showFullDes">&nbsp;&nbsp;<a class="org-detail-expand-link" (click)="hideFullDescription()">read less</a></span></span>
             <span *ngIf="pair.value.length >= 500 && !showFullDes">{{pair.value.substr(0,500)}}...<a class="org-detail-expand-link" (click)="showFullDescription()">read more</a></span>
@@ -60,4 +60,5 @@
 
   <samAlert class="org-detail-alert-message" (dismiss)="dismissCreateOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+ orgObj.name" *ngIf="flashMsgService.isCreateOrgSuccess && flashMsgService.isFlashMsgShow" ></samAlert>
   <samAlert class="org-detail-alert-message" (dismiss)="dismissEditOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your edits have been saved'" *ngIf="showEditOrgFlashAlert" ></samAlert>
+
 </div>

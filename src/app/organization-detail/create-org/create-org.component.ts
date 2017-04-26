@@ -134,15 +134,15 @@ export class OrgCreatePage {
   getOrgTypeSpecialInfo(orgType){
     switch (orgType){
       case "Office":
-        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code","fpdsCode");
         this.getOrgCodes(this.officeCodesForm,"ACCCode","AAC Code","aacCode");
         break;
       case "Agency": case "MajorCommand": case "SubCommand":
-        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code","fpdsCode");
         this.getOrgCodes(this.agencyCodesForm,"OMBBureauCode","OMB Code","ombAgencyCode");
         break;
       case "Department":
-        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code","fpdsCode");
         this.getOrgCodes(this.deptCodesForm,"TAS2Code","TAS2 Code","tas2Code");
         this.getOrgCodes(this.deptCodesForm,"TAS3Code","TAS3 Code","tas3Code");
         this.getOrgCodes(this.deptCodesForm,"A11Code","A11 Code","a11TacCode");
@@ -186,6 +186,7 @@ export class OrgCreatePage {
 
 
   onReviewFormClick(){
+
     // Validate all the necessary fields in the organization creation form
     this.basicInfoForm.get('orgName').markAsDirty();
     this.basicInfoForm.get('orgStartDate').markAsDirty();
@@ -216,11 +217,11 @@ export class OrgCreatePage {
 
   onConfirmFormClick(){
     //submit the form and navigate to the new created organization detail page
-    this.fhService.createOrganization(this.orgObj).subscribe(
+    this.fhService.createOrganization(this.orgObj,this.fullParentPath,this.fullParentPathName).subscribe(
       val => {
         this.flashMsgService.showFlashMsg();
         this.flashMsgService.isCreateOrgSuccess = true;
-        this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+        this.router.navigate(['/organization-detail',val,'profile']);
       }
     );
   }
