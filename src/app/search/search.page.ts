@@ -7,6 +7,8 @@ import {WageDeterminationService} from "../../api-kit/wage-determination/wage-de
 import { AlertFooterService } from '../alerts/alert-footer';
 import {OpportunityService} from "../../api-kit/opportunity/opportunity.service";
 import {SortArrayOfObjects} from "../app-pipes/sort-array-object.pipe";
+import {SearchDictionariesService} from "../../api-kit/search/search-dictionaries.service";
+import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 
 @Component({
   moduleId: __filename,
@@ -280,7 +282,9 @@ export class SearchPage implements OnInit{
               private searchService: SearchService,
               private wageDeterminationService: WageDeterminationService,
               private opportunityService: OpportunityService,
-              private alertFooterService: AlertFooterService) { }
+              private alertFooterService: AlertFooterService,
+              private searchDictionariesService: SearchDictionariesService,
+              private dunsEntityAutoCompleteWrapper:  DunsEntityAutoCompleteWrapper) { }
   ngOnInit() {
     if(window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0){
       this.showRegionalOffices = true;
@@ -316,6 +320,12 @@ export class SearchPage implements OnInit{
         this.runSearch();
         this.loadParams();
       });
+
+    // grabs data to persist duns filters
+    if(this.dunsListString !== ''){
+      this.grabPersistData(this.dunsListString);
+    }
+    console.log('ngoninit ran!!!!!!!!');
   }
 
   loadParams(){
@@ -447,7 +457,6 @@ export class SearchPage implements OnInit{
     }
 
     if(this.dunsModelList.length>0){
-      console.log('qsObject duns model list ', this.dunsListString);
       qsobj['duns'] = this.dunsListString;
     }
 
@@ -628,9 +637,9 @@ export class SearchPage implements OnInit{
 
 
     this.wageDeterminationService.getWageDeterminationFilterCountyData({
-      state: state
-    }).subscribe(
-      data => {
+        state: state
+      }).subscribe(
+        data => {
         // county data
         let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: false};
 
@@ -1031,7 +1040,6 @@ export class SearchPage implements OnInit{
   }
 
   testListModelChange(object){
-    console.log('testListModel ran');
 
     // create comma-separated string to feed to es obj
     this.dunsListString = this.buildDunsListString();
@@ -1047,21 +1055,34 @@ export class SearchPage implements OnInit{
 
   buildDunsListString(){
 
-
     let finalString = '';
-    console.log('made it into build duns list string method');
-
 
     finalString = this.dunsModelList.map(function(dunsObj){
-      //console.log('went into the mapping function');
-      //console.log('current duns object ', dunsObj);
 
       finalString = dunsObj.value;
-
 
       return finalString;
     }).join(',');
     return finalString
   }
+
+  grabPersistData(dunsString: string){
+
+    //TODO: update this function to hit new endpoint developed in ip sprint for persisting g
+
+    // if duns string from url is not empty make api call to get results for duns numbers
+    this.dunsEntityAutoCompleteWrapper.getEntityDuns(dunsString)
+      .subscribe(
+        data => {
+
+          this.dunsModelList = data;
+        },
+        error => {
+          console.error("Error!!", error);
+        }
+      );
+  }
+
+
 
 }
