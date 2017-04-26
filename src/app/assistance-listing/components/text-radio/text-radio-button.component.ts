@@ -107,7 +107,6 @@ export class SamTextRadioButtonComponent  implements ControlValueAccessor {
   }
 
   public writeValue(obj: any) : void {
-    console.log("obj",obj);
     if(obj) {
       this.model = obj;
 
