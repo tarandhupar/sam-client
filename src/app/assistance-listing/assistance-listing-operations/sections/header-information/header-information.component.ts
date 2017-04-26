@@ -20,16 +20,13 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
   // Related Program multi-select
   private relatedProgSub: Subscription;
-  relatedProgInitialSelection = [];
-  realtedProgMultiArrayValues = [];
-  relatedProgSelectedOption: any;
-  @ViewChild('relatedProgListDisplay') relatedProgListDisplay;
-  listConfig: AutocompleteConfig = {keyValueConfig: {keyProperty: 'code', valueProperty: 'name'}};
+  rpNGModel: any;
+  rpListDisplay = [];
   relProAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
     placeholder: 'None Selected',
-    serviceOptions:{index:'RP'}
-  };
+    serviceOptions:{index:'RP'},
+ clearOnSelection: true, showOnEmptyInput: false  };
 
 
   constructor(private fb: FormBuilder,
@@ -68,7 +65,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
       'alternativeNames': '',
       'programNumber': '',
       'relatedTo': '',
-      relatedProgInitialSelection: ['']
+      rpListDisplay: ['']
     });
   }
 
@@ -79,10 +76,9 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     this.relatedProgSub = this.programService.falautosearch('', relatedPrograms.join(','))
       .subscribe(data => {
         for (let dataItem of data) {
-          this.relatedProgInitialSelection.push({code: dataItem.id, name: dataItem.value});
-          this.realtedProgMultiArrayValues.push(dataItem.id);
+          this.rpListDisplay.push({code: dataItem.id, name: dataItem.value});
         }
-        this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.realtedProgMultiArrayValues);
+        this.relProAutocompleteConfig.placeholder = this.placeholderMsg(relatedPrograms);
       }, error => {
         console.error('Error Retrieving Related Program!!', error);
       });
@@ -107,7 +103,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
             title: title,
             alternativeNames: popularName,
             programNumber: falNo,
-            relatedProgInitialSelection: this.relatedProgInitialSelection === null ? [] : this.relatedProgInitialSelection,
+            rpListDisplay: this.rpListDisplay === null ? [] : this.rpListDisplay,
           });
         },
         error => {
@@ -117,42 +113,10 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
   }
 
   relatedProgramTypeChange(event) {
-    let isDuplicate: boolean;
-    const control = this.falHeaderInfoForm.controls['relatedTo'];
-    if (event.code) {
-      //if control value isn't up to date, manually set it
-      if (control.value.code != event.code) {
-        control.setValue(event);
-        return;
-      }
-      isDuplicate = this.removeDuplicates(control.value, this.relatedProgListDisplay.selectedItems);
-      if (!isDuplicate) {
-        this.relatedProgSelectedOption = control.value;
-        this.realtedProgMultiArrayValues.push(control.value.code);
-        this.removeListDuplicates(this.realtedProgMultiArrayValues);
-        this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.realtedProgMultiArrayValues);
-      }
-    }
+    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(event);
   }
-
-  removeListDuplicates(arr: any) {
-    for (var i = 0; i < arr.length; i++) {
-      for (var j = i + 1; j < arr.length; j++) {
-        if (arr[i] === arr[j])
-          arr.splice(j, 1);
-      }
-    }
-    return arr;
-  }
-
-  removeDuplicates(obj: any, list: any) {
-    let unique: boolean = false;
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].code === obj.code) {
-        unique = true;
-      }
-    }
-    return unique;
+  relatedProglistChange() {
+    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.falHeaderInfoForm.value.rpListDisplay);
   }
 
   placeholderMsg(multiArray: any) {
@@ -167,23 +131,20 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     return PlaceholderMsg;
   }
 
-  relatedProglistChange(event) {
-    this.realtedProgMultiArrayValues = [];
-    for (let selItem of this.relatedProgListDisplay.selectedItems) {
-      this.realtedProgMultiArrayValues.push(selItem.code);
-    }
-    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.realtedProgMultiArrayValues);
-  }
 
 
   saveData() {
+    let relatedPrograms= [];
+    for(let rp of this.falHeaderInfoForm.value.rpListDisplay) {
+      relatedPrograms.push(rp.code);
+    }
 
     let data = {
       "title": this.falHeaderInfoForm.value.title,
       "organizationId": this.agency,
       "alternativeNames": (this.falHeaderInfoForm.value.alternativeNames ? [this.falHeaderInfoForm.value.alternativeNames] : []),
       "programNumber": this.falHeaderInfoForm.value.programNumber,
-      "relatedPrograms": this.realtedProgMultiArrayValues.length > 0 ? this.realtedProgMultiArrayValues : null
+      "relatedPrograms": relatedPrograms.length > 0 ? relatedPrograms : null
     };
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {
