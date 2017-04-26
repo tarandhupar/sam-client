@@ -123,20 +123,11 @@ export class FHService {
       method: 'POST',
       body: org,
       oParam: {
-        'fullParentPath': fullParentPath,
-        'fullParentPathName': fullParentPathName
+        'fullparentpath': fullParentPath,
+        'fullparentpathname': fullParentPathName
       }
     };
-    console.log(ENV);
-    console.log(org);
     return this.fhAPIService.call(apiOptions);
-
-
-    // let headers = new Headers({ 'Content-Type': 'application/json' });
-    // let options = new RequestOptions({ headers: headers });
-    //
-    // return this._http.post("https://57federalhierarchyapicomp.apps.prod-iae.bsp.gsa.gov/v1/organization?fullParentPath=100000000.100000012.100000117.100000120&fullParentPathName=DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",  org, options)
-    //   .map((res: Response) => { return  res.json(); });
 
   }
 

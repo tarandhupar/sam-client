@@ -134,15 +134,15 @@ export class OrgCreatePage {
   getOrgTypeSpecialInfo(orgType){
     switch (orgType){
       case "Office":
-        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code","fpdsCode");
         this.getOrgCodes(this.officeCodesForm,"ACCCode","AAC Code","aacCode");
         break;
       case "Agency": case "MajorCommand": case "SubCommand":
-        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code","fpdsCode");
         this.getOrgCodes(this.agencyCodesForm,"OMBBureauCode","OMB Code","ombAgencyCode");
         break;
       case "Department":
-        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code","fpdsCode");
         this.getOrgCodes(this.deptCodesForm,"TAS2Code","TAS2 Code","tas2Code");
         this.getOrgCodes(this.deptCodesForm,"TAS3Code","TAS3 Code","tas3Code");
         this.getOrgCodes(this.deptCodesForm,"A11Code","A11 Code","a11TacCode");
@@ -169,19 +169,12 @@ export class OrgCreatePage {
       this.orgObj['newIsFunding'] = this.indicateFundRadioModel === "Funding/Awarding" || this.indicateFundRadioModel == "Funding"?true:false;
       this.orgObj['orgAddresses'] = [];
       this.orgAddresses.forEach( e => {
-        // this.orgObj['orgAddresses'].push({
-        //   "city": e.addrModel.city,
-        //   "countryCode": e.addrModel.country,
-        //   "state": e.addrModel.state,
-        //   "streetAddress": e.addrModel.street1 +" "+ e.addrModel.street2,
-        //   "zipcode": e.addrModel.postalCode,
-        // });
         this.orgObj['orgAddresses'].push({
-          "city": "Test City",
-          "countryCode": "USA",
-          "state": "Virginia",
-          "streetAddress": "Street address 1",
-          "zipcode": "12345",
+          "city": e.addrModel.city,
+          "countryCode": e.addrModel.country,
+          "state": e.addrModel.state,
+          "streetAddress": e.addrModel.street1 +" "+ e.addrModel.street2,
+          "zipcode": e.addrModel.postalCode,
         });
       });
     }
@@ -193,14 +186,6 @@ export class OrgCreatePage {
 
 
   onReviewFormClick(){
-    let obj = { "fpdsOrgId": "", "aacCode": "", "name": "Test Org", "createdDate": "2017-12-12", "summary": "", "shortName": "TO", "newIsAward": true, "newIsFunding": true, "orgAddresses": [ { "city": "Test City", "countryCode": "USA", "state": "Virginia", "streetAddress": "Street address 1", "zipcode": "12345" } ] };
-    this.fhService.createOrganization(obj,"100000000.100000012.100000117.10000012","DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC").subscribe(
-      val => {
-        this.flashMsgService.showFlashMsg();
-        this.flashMsgService.isCreateOrgSuccess = true;
-        this.router.navigate(['/organization-detail',val,'profile']);
-      }
-    );
 
     // Validate all the necessary fields in the organization creation form
     this.basicInfoForm.get('orgName').markAsDirty();

@@ -8,7 +8,7 @@ export class FHWrapperService {
   private API_KEY:string = "";
   private fhAPI_URLs = {
     "development":"https://57federalhierarchyapicomp.apps.prod-iae.bsp.gsa.gov",
-    "minc":"https://57federalhierarchyapiminc.apps.prod-iae.bsp.gsa.gov",
+    "production":"https://57federalhierarchyapiminc.apps.prod-iae.bsp.gsa.gov",
   };
   private APIs: any = {
     'federalCreateOrg':'/v1/organization',
