@@ -126,6 +126,9 @@ export class RoleMgmtContent implements OnInit{
   }
 
   showingCountText() {
+    if (this.count === 0) {
+      return 'Showing 0 results';
+    }
     const first = (this.currPage - 1)* 10 + 1;
     const last = (this.currPage - 1)*10 + this.currCount;
     return `Showing ${first}-${last} of ${this.count} results`;

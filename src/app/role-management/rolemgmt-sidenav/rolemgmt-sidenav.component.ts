@@ -98,6 +98,7 @@ export class RoleMgmtSidenav implements OnInit{
     }
 
     onUserClick($event){
+      console.log($event);
       this.autoCompleteSelected.emit(this.usersEntered);
       this.usersEntered = '';
     }
