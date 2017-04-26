@@ -221,14 +221,14 @@ export class FALOverviewComponent implements OnInit, OnDestroy {
     let projects: any = {};
     let projectsForm = this.falOverviewForm.value.fundedProjects;
 
-    if (projectsForm && projectsForm.checkbox) {
+    if(projectsForm && projectsForm.checkbox) {
       projects.isApplicable = projectsForm.checkbox.indexOf('na') === -1;
     } else {
       projects.isApplicable = true;
     }
 
     projects.list = [];
-    if (projectsForm) {
+    if(projectsForm) {
       for (let entry of projectsForm.entries) {
         projects.list.push({
           fiscalYear: entry.year ? Number(entry.year) : null,
@@ -252,7 +252,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy {
         projectsForm.checkbox.push('na');
       }
 
-      if (projects.list) {
+      if(projects.list) {
         for (let project of projects.list) {
           projectsForm.entries.push({
             year: project.fiscalYear ? project.fiscalYear.toString() : '',

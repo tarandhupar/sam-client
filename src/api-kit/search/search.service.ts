@@ -17,11 +17,15 @@ export class SearchService {
       oParam: {
         index: obj.index,
         q: obj.keyword,
-        page: obj.pageNum,
-        is_active: obj.isActive
+        page: obj.pageNum
       },
       method: 'GET'
     };
+
+    //Active Only filter
+    if(obj.isActive === true) {
+      oApiParam.oParam['is_active'] = obj.isActive;
+    }
 
     // wage determination type filter
     if(typeof obj.wdType !== 'undefined' && obj.organizationId !== null && obj.wdType !== '') {
@@ -92,6 +96,12 @@ export class SearchService {
 
     if(typeof obj.psc !== 'undefined' && obj.psc !== null && obj.psc !== ''){
       oApiParam.oParam['psc'] = obj.psc;
+    }
+
+    //showRegionalOffices only when
+    if(obj.showRO) {
+      oApiParam.oParam['q'] = obj.ro_keyword;
+      oApiParam.oParam['index'] = 'ro';
     }
 
     return this.oAPIService.call(oApiParam);

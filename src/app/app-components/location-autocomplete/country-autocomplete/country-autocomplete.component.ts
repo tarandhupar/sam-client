@@ -24,12 +24,6 @@ export class CountryServiceImpl implements AutocompleteService {
         }, []));
       },
       (error) => {
-        this.alertFooterService.registerFooterAlert({
-          title:"The location service encountered an error.",
-          description:"",
-          type:'error',
-          timer:0
-        });
         return error;
       }
     );
