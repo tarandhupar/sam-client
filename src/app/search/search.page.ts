@@ -7,6 +7,8 @@ import {WageDeterminationService} from "../../api-kit/wage-determination/wage-de
 import { AlertFooterService } from '../alerts/alert-footer';
 import {OpportunityService} from "../../api-kit/opportunity/opportunity.service";
 import {SortArrayOfObjects} from "../app-pipes/sort-array-object.pipe";
+import {SearchDictionariesService} from "../../api-kit/search/search-dictionaries.service";
+import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 
 @Component({
   moduleId: __filename,
@@ -34,6 +36,15 @@ export class SearchPage implements OnInit{
   isStandard: string = '';
   showRegionalOffices: boolean = false;
   ro_keyword: string = "";
+
+  // duns entity objects
+  dunsModel: any = '';
+  dunsModelList: any = [];
+  dunsListString = '';
+  myOptions: any = [];
+
+
+
 
   @ViewChild('agencyPicker') agencyPicker;
 
@@ -258,14 +269,27 @@ export class SearchPage implements OnInit{
   regionalType = {
     "placeholder": "Regional Agency Location",
     "addOnIconClass": "fa fa-search"
-  }
+  };
+
+  // duns config
+  dunsConfiguration = {
+    placeholder: "Search Entity/UEI",
+    selectedLabel: "Codes Selected",
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    },
+    dropdownLimit: 10
+  };
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,
               private wageDeterminationService: WageDeterminationService,
               private opportunityService: OpportunityService,
-              private alertFooterService: AlertFooterService) { }
+              private alertFooterService: AlertFooterService,
+              private searchDictionariesService: SearchDictionariesService,
+              private dunsEntityAutoCompleteWrapper:  DunsEntityAutoCompleteWrapper) { }
   ngOnInit() {
     if(window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0){
       this.showRegionalOffices = true;
@@ -296,10 +320,16 @@ export class SearchPage implements OnInit{
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
         this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
         this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
+        this.dunsListString = data['duns'] && data['duns'] !== null ? data['duns'] : '';
 
         this.runSearch();
         this.loadParams();
       });
+
+    // grabs data to persist duns filters
+    if(this.dunsListString !== ''){
+      this.grabPersistData(this.dunsListString);
+    }
   }
 
   loadParams(){
@@ -430,6 +460,10 @@ export class SearchPage implements OnInit{
       qsobj['ro_keyword'] = this.ro_keyword;
     }
 
+    if(this.dunsModelList.length>0){
+      qsobj['duns'] = this.dunsListString;
+    }
+
     return qsobj;
   }
 
@@ -500,7 +534,8 @@ export class SearchPage implements OnInit{
       naics: this.naicsTypeModel,
       psc: this.pscTypeModel,
       showRO: this.showRegionalOffices,
-      ro_keyword: this.ro_keyword
+      ro_keyword: this.ro_keyword,
+      duns: this.dunsListString
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -606,9 +641,9 @@ export class SearchPage implements OnInit{
 
 
     this.wageDeterminationService.getWageDeterminationFilterCountyData({
-      state: state
-    }).subscribe(
-      data => {
+        state: state
+      }).subscribe(
+        data => {
         // county data
         let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: false};
 
@@ -669,7 +704,7 @@ export class SearchPage implements OnInit{
     );
   }
 
-  pageChange(pagenumber) {
+  pageChange(pagenumber){
     this.pageNum = pagenumber;
     var qsobj = this.setupQS(false);
     let navigationExtras: NavigationExtras = {
@@ -961,6 +996,13 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  dunsFilterClear(){
+    this.dunsModelList = [];
+    this.dunsModel = '';
+    this.dunsListString = '';
+    this.searchResultsRefresh();
+  }
+
   clearAllFilters(){
 
     // clear/reset all top level filters
@@ -994,6 +1036,11 @@ export class SearchPage implements OnInit{
     //clear regional office filter
     this.ro_keyword='';
 
+    // clear duns filter
+    this.dunsModelList = [];
+    this.dunsModel = '';
+    this.dunsListString = '';
+
     this.searchResultsRefresh();
 
   }
@@ -1007,5 +1054,49 @@ export class SearchPage implements OnInit{
     this.pageNum = 0;
     this.searchResultsRefresh();
   }
+
+  dunsListModelChange(object){
+
+    // create comma-separated string to feed to es obj
+    this.dunsListString = this.buildDunsListString();
+
+    // call data refresh
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+
+  }
+
+
+  buildDunsListString(){
+
+    let finalString = '';
+
+    finalString = this.dunsModelList.map(function(dunsObj){
+
+      finalString = dunsObj.value;
+
+      return finalString;
+    }).join(',');
+    return finalString
+  }
+
+  grabPersistData(dunsString: string){
+
+    //TODO: update this function to hit new endpoint developed in ip sprint for persisting
+
+    // if duns string from url is not empty make api call to get results for duns numbers
+    this.dunsEntityAutoCompleteWrapper.getEntityDuns(dunsString)
+      .subscribe(
+        data => {
+
+          this.dunsModelList = data;
+        },
+        error => {
+          console.error("Error!!", error);
+        }
+      );
+  }
+
+
 
 }

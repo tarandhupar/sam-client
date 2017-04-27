@@ -16,7 +16,7 @@ import * as moment from 'moment/moment';
     	</h3>
     	<div class="usa-width-two-thirds">
     	  <span *ngIf="data.location==null">&nbsp;</span>
-    	  <div *ngIf="data.location?.states!=null">
+    	  <div *ngIf="data.location?.additionalInfo?.content==null && data.location?.states!=null">
       	<ul *ngFor="let state of data.location?.states; let i=index" class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
         	<li [attr.id]="'wd-state-' + i"><strong>State: </strong>
         	  <span>{{ state?.name }}</span>
@@ -31,6 +31,13 @@ import * as moment from 'moment/moment';
             <ng-container *ngFor="let county of state.counties?.exclude; let isLast=last">
               {{county?.value}}{{ isLast ? '' : ', '}}
             </ng-container>
+        	</li>
+        </ul>
+        </div>
+        <div *ngIf="data.location?.additionalInfo?.content!=null">
+      	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
+        	<li [attr.id]="'wd-description-' + i"><strong>Location Description: </strong>
+        	  <span>{{ data.location?.additionalInfo?.content }}</span>
         	</li>
         </ul>
         </div>

@@ -13,5 +13,5 @@
                   (modelChange)="emitSelected($event)"
                   [selectedList]="listDisplay.selectedItems">
   </sam-type-ahead>
-  <sam-list-display #listDisplay (modelChange)="emitSelectedList()" [config]="options1.config"><div [innerHTML]="options1.selectedLabel"></div></sam-list-display>
+  <sam-list-display #listDisplay id="naics-psc-display" (modelChange)="emitSelectedList()" [config]="options1.config"><div [innerHTML]="options1.selectedLabel"></div></sam-list-display>
 </labelWrapper>

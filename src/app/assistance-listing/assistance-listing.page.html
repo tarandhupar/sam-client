@@ -342,7 +342,7 @@
       <h3>Preapplication Coordination:</h3>
 
       <div>
-        <ng-container [ngSwitch]="program.data?.assistance?.preApplicationCoordination?.isApplicable">
+        <ng-container [ngSwitch]="([true] | filterMultiArrayObject:program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports:'isSelected':false:null).length > 0">
           <p *ngSwitchCase="true">
             Preapplication coordination is required.
 
