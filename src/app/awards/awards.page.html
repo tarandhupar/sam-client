@@ -322,7 +322,7 @@
 					Bundled Contract: {{awardData.productServiceInformation.contractBundlingDesc}}}<br />
 					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
 						DOD Acquisition Program: {{awardData.productServiceInformation.dodAcquisitionProgram}}}<br />
-						Description: {{awardData.productServiceInformation}}}<br />
+						Description: {{awardData.productServiceInformation.dodAcquisitionProgramDesc}}}<br />
 						<br />
 						Country of Product or Service Origin: {{awardData.productServiceInformation.countryOfProductOrServiceOrigin}}}<br />
 						Place of Manufacture: {{awardData.productServiceInformation.placeOfManufacture}}}<br />
@@ -332,7 +332,7 @@
 					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
 						InfoTech Commercial Item Category: {{awardData.productServiceInformation.itCommercialItemCatDesc}}}
 					</div>
-					Claimant Program Code: {{awardData.productServiceInformation}}}<br />
+					Claimant Program Code: {{awardData.productServiceInformation.claimantProgramCode}}}<br />
 					Description: {{awardData.productServiceInformation.claimantProgramDescription}}}<br />
 					Sea Transportation: {{awardData.productServiceInformation.seaTransportation}}}
 					<br />
