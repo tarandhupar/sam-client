@@ -15,17 +15,14 @@ import 'rxjs/add/operator/map';
     	<h3 class="regional-office-listing-title">
       	<span>{{data.title}}</span>
     	</h3>
-    	
-    	
-    	<ul class="usa-unstyled-list">    
+      
+      <div class="usa-width-two-thirds">
+      <ul class="usa-unstyled-list">    
     	    <li class="region-name">
     	      <strong>State/Region: </strong>
     	      <span>{{data.region}}</span>
           </li>
       </ul>
-      
-      
-      <div class="usa-width-two-thirds">
         <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
           <li class="address-regional-office-listing">  
             <strong>Address: </strong>
