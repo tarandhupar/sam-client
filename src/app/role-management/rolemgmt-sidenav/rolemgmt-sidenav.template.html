@@ -18,6 +18,7 @@
       <sam-autocomplete
         name="'users-search'"
         [options]="requestorIds"
+        [allowAny]="true"
         [config]="{addOnIconClass:'fa fa-search',placeholder:'Search for a user', keyValueConfig: {keyProperty: 'key', valueProperty: 'value'}}"
         [(ngModel)]="usersEntered"
         (ngModelChange)="onUserClick($event)"

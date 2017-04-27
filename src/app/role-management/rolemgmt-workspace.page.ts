@@ -43,8 +43,8 @@ export class RoleMgmtWorkspace implements OnInit{
   }
 
   AutoCompleteValue(event){
-    if(this.autocompleteInput !== event.value){
-      this.autocompleteInput = event.value;
+    if(this.autocompleteInput !== event){
+      this.autocompleteInput = event;
       this.page = 1;
       this.getRequestAccess();
     }

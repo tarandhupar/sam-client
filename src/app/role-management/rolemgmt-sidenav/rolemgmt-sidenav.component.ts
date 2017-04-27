@@ -98,18 +98,14 @@ export class RoleMgmtSidenav implements OnInit{
     }
 
     onUserClick(newValue){
-      console.log(newValue, this.usersEntered);
-      // if (!newValue) {
-      //   return;
-      // }
-      // let isInList: boolean = typeof newValue === 'string';
-      // let v: any = isInList ? newValue : newValue.permissionName;
-      //
-      // if (!v || !v.length || !v.trim().length) {
-      //   return;
-      // }
+      let c = '';
+      if (typeof newValue === 'object') {
+        c = newValue.value;
+      } else if (typeof newValue === 'string') {
+        c = newValue;
+      }
 
-      this.autoCompleteSelected.emit(this.usersEntered);
+      this.autoCompleteSelected.emit(c);
       this.usersEntered = '';
     }
 
