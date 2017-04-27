@@ -36,7 +36,7 @@ import { ReplaySubject } from 'rxjs';
                 Department/Ind. Agency: {{ department.name }}
               </li>
               <li>
-                <a href="/search?keyword=&index=fpds&page=1&organizationId={{data._id}}" target="_blank">View Awards contracted by this federal organization</a>
+                <a href="/search?keyword={{qParams.keyword}}&index=fpds&page=1&isActive=true&organizationId={{data._id}}" target="_blank">View Awards contracted by this federal organization</a>
               </li>
             </ul>
           </div>
