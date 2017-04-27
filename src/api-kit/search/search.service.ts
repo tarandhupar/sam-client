@@ -17,8 +17,7 @@ export class SearchService {
       oParam: {
         index: obj.index,
         q: obj.keyword,
-        page: obj.pageNum,
-        is_active: obj.isActive
+        page: obj.pageNum
       },
       method: 'GET'
     };
