@@ -97,9 +97,20 @@ export class RoleMgmtSidenav implements OnInit{
       this.domainSelected.emit(event.toString());
     }
 
-    onUserClick($event){
-      console.log($event);
+    onUserClick(newValue){
+      console.log(newValue, this.usersEntered);
+      // if (!newValue) {
+      //   return;
+      // }
+      // let isInList: boolean = typeof newValue === 'string';
+      // let v: any = isInList ? newValue : newValue.permissionName;
+      //
+      // if (!v || !v.length || !v.trim().length) {
+      //   return;
+      // }
+
       this.autoCompleteSelected.emit(this.usersEntered);
       this.usersEntered = '';
     }
+
 }
