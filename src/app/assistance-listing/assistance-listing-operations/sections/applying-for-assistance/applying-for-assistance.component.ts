@@ -91,7 +91,7 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   createForm(){
     this.falAssistanceForm = this.fb.group({
       deadlines: this.fb.group({
-        flag: ['', [Validators.required]],
+        flag: '',
         description: ''
       }),
       preApplicationCoordination: this.fb.group({
