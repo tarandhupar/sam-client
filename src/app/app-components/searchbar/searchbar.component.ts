@@ -30,10 +30,10 @@ export class SamSearchbarComponent {
 
   @Input()
   selectConfig: any;
-  
+
   @Output()
   filterValueChange:EventEmitter<any> = new EventEmitter<any>();
-  
+
   @Output()
   onSearch:EventEmitter<any> = new EventEmitter<any>();
 
@@ -99,7 +99,11 @@ export class SamSearchbarComponent {
   }
 
   callSearch(searchTerm):void {
-    this.keyword=searchTerm;
+    if(!searchTerm) {
+      this.keyword = "";
+    } else {
+      this.keyword=searchTerm;
+    }
   }
 
   onSearchClick():void{

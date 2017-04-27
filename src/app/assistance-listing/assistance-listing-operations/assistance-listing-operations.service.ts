@@ -63,20 +63,25 @@ export class FALOpSharedService {
           }
         ]
       },
-          {
-            label: "5. Criteria for Applying",
-            route: this.baseURL + "/criteria-information",
-            path: "criteria-information"
-          },
+      {
+        label: "5. Criteria for Applying",
+        route: this.baseURL + '/criteria-information',
+        path: 'criteria-information'
+      },
+      {
+        label: "6. Applying for Assistance",
+        route: this.baseURL + '/applying-for-assistance',
+        path: 'applying-for-assistance'
+      },
       {
         label : "7. Compliance Requirements",
-        route: this.baseURL + "/compliance-requirements",
-        path: "compliance-requirements"
+        route: this.baseURL + '/compliance-requirements',
+        path: 'compliance-requirements'
       },
       {
         label : "8. Contact Information",
-        route: this.baseURL + "/contact-information",
-        path: "contact-information"
+        route: this.baseURL + '/contact-information',
+        path: 'contact-information'
       }
     ]
     };
