@@ -230,7 +230,7 @@ export class AACRequestPage {
     requestOfficeInfo.push({desc: 'Does an AAC exist for this organization', value: this.aacExistRadioModel});
     requestOfficeInfo.push({
       desc: 'Is the request for a Federal Office, State/Local Office or Contractor',
-      value: this.aacOfficeRadioModel.split('-')[1]
+      value: this.aacOfficeRadioModel.substr(this.aacOfficeRadioModel.indexOf('-')+1,this.aacOfficeRadioModel.length - this.aacOfficeRadioModel.indexOf('-'))
     });
     if (this.aacOfficeRadioModel.includes('Contractor')) {
       requestOfficeInfo.push({desc: 'Contractor Name', value: this.contractorForm.get("contractName").value});
@@ -290,6 +290,7 @@ export class AACRequestPage {
 
   isAddrTypeRequired(addrType):boolean{
     let addrRequired = false;
+
     this.aacReasonCbxModel.forEach( e => {
       if(this.addrTypePerReason[e].indexOf(addrType) !== -1) addrRequired = true;
     });

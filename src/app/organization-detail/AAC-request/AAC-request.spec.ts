@@ -14,17 +14,18 @@ import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.co
 import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 
 class AACRequestServiceStub{
-  getAACReasons(){
-    return Observable.of({
-      reasons: [
-        {value: 'Used for Ordering/Requisitioning Purposes', addrType:["Mailing Address", "Billing Address", "Shipping Address"]},
-        {value: 'Used for Personal Property Reporting or Transfer', addrType:["Mailing Address", "Billing Address", "Shipping Address"]},
-        {value: 'Used for Grants or Financial Assistance Reporting', addrType:["Mailing Address"]},
-        {value: 'Used for Shipping Purposes', addrType:["Mailing Address", "Shipping Address"]},
-        {value: 'Used for Billing Purposes', addrType:["Mailing Address", "Billing Address"]},
-        {value: 'Used for Reporting with FPDS', addrType:["Mailing Address"]},
-      ],
-    });
+  getAACRequestFormDetail(){
+    return Observable.of(
+      {"orgTypes": [{"orgTypeId": 1,"orgTypeName": "Federal Organization"},{"orgTypeId": 2,"orgTypeName": "State Organization"},{"orgTypeId": 3,"orgTypeName": "Contractor Organization"}],
+        "requestAddressTypes": [
+          {"requestAddressType": {"requestTypeId": 1,"requestTypeName": "Used for Ordering/Requisitioning Purposes"},"requestAddressMapping": [{"requestAddressId": 1,"requestTypeId": 1,"addressTypeId": 1,"addressTypeName": "Mailing Address"},{"requestAddressId": 2,"requestTypeId": 1,"addressTypeId": 2,"addressTypeName": "Shipping Address"},{"requestAddressId": 3,"requestTypeId": 1,"addressTypeId": 3,"addressTypeName": "Billing Address"}]},
+          {"requestAddressType": {"requestTypeId": 2,"requestTypeName": "Used for Personal Property Reporting or Transfer"},"requestAddressMapping": [{"requestAddressId": 4,"requestTypeId": 2,"addressTypeId": 1,"addressTypeName": "Mailing Address"},{"requestAddressId": 5,"requestTypeId": 2,"addressTypeId": 2,"addressTypeName": "Shipping Address"},{"requestAddressId": 6,"requestTypeId": 2,"addressTypeId": 3,"addressTypeName": "Billing Address"}]},
+          {"requestAddressType": {"requestTypeId": 3,"requestTypeName": "Used for Grants or Financial Assistance Reporting"},"requestAddressMapping": [{"requestAddressId": 7,"requestTypeId": 3,"addressTypeId": 1,"addressTypeName": "Mailing Address"}]},
+          {"requestAddressType": {"requestTypeId": 4,"requestTypeName": "Used for Shipping Purposes"},"requestAddressMapping": [{"requestAddressId": 8,"requestTypeId": 4,"addressTypeId": 1,"addressTypeName": "Mailing Address"},{"requestAddressId": 9,"requestTypeId": 4,"addressTypeId": 2,"addressTypeName": "Shipping Address"}]},
+          {"requestAddressType": {"requestTypeId": 5,"requestTypeName": "Used for Billing Purposes"},"requestAddressMapping": [{"requestAddressId": 10,"requestTypeId": 5,"addressTypeId": 1,"addressTypeName": "Mailing Address"},{"requestAddressId": 11,"requestTypeId": 5,"addressTypeId": 3,"addressTypeName": "Billing Address"}]},
+          {"requestAddressType": {"requestTypeId": 6,"requestTypeName": "Used for Reporting with FPDS"},"requestAddressMapping": [{"requestAddressId": 12,"requestTypeId": 6,"addressTypeId": 1,"addressTypeName": "Mailing Address"}]}]
+      }
+    );
   }
 }
 
@@ -57,8 +58,13 @@ describe('Create AAC Request Form Page', () => {
   });
 
   it('should be able to fill in contractor org', () => {
+    fixture.detectChanges();
+    let contractorTypeName:any = '';
+    component.aacOfficeConfig.options.forEach( e => {
+      if(e.label.includes("Contract")) contractorTypeName = e.label;
+    });
     component.aacTypeRadioModel = 'single';
-    component.aacOfficeRadioModel = 'Contractor Office';
+    component.aacOfficeRadioModel = contractorTypeName;
     fixture.detectChanges();
     component.contractorForm.setValue({
       contractName: 'orgA',
@@ -70,7 +76,7 @@ describe('Create AAC Request Form Page', () => {
     expect(component.isOfficeInfoValid()).toBe(true);
     expect(component.generateRequestOfficeInfo()).toEqual([
       {desc:'Does an AAC exist for this organization', value: 'No'},
-      {desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: 'Contractor Office'},
+      {desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: contractorTypeName},
       {desc:'Contractor Name', value: 'orgA'},
       {desc:'Contract Number', value: '123'},
       {desc:'CAGE Code', value: '123'},
@@ -81,22 +87,33 @@ describe('Create AAC Request Form Page', () => {
   });
 
   it('should be able to fill in state/local office org', () => {
+    fixture.detectChanges();
+    let stateTypeName:any = "";
+    component.aacOfficeConfig.options.forEach( e => {
+      if(e.label.includes("State")) stateTypeName = e.label;
+    });
     component.aacTypeRadioModel = 'single';
-    component.aacOfficeRadioModel = 'State/Local Office';
+    component.aacOfficeRadioModel = stateTypeName;
     fixture.detectChanges();
     component.stateOfficeForm.setValue({stateOfficeName:'orgA'});
     expect(component.isOfficeInfoValid()).toBe(true);
     expect(component.generateRequestOfficeInfo()).toEqual([
       {desc:'Does an AAC exist for this organization', value: 'No'},
-      {desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: 'State/Local Office'},
+      {desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: stateTypeName},
       {desc:'Organization Name', value: 'orgA'},
     ]);
     component.formatOfficeInfoError();
   });
 
   it('should be able to fill in federal office org', () => {
+    fixture.detectChanges();
+    let federalTypeName:any = "";
+    component.aacOfficeConfig.options.forEach( e => {
+      if(e.label.includes("Federal")) federalTypeName = e.label;
+    });
+
     component.aacTypeRadioModel = 'single';
-    component.aacOfficeRadioModel = 'Federal Office';
+    component.aacOfficeRadioModel = federalTypeName;
     fixture.detectChanges();
     component.formatOfficeInfoError();
     expect(component.aacFederalOrgNameErrorMsg).toBe('This field cannot be empty');
@@ -104,7 +121,7 @@ describe('Create AAC Request Form Page', () => {
     expect(component.isOfficeInfoValid()).toBe(true);
     expect(component.generateRequestOfficeInfo()).toEqual([
       {desc:'Does an AAC exist for this organization', value: 'No'},
-      {desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: 'Federal Office'},
+      {desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: federalTypeName},
       {desc:'Organization Name', value: 'orgA'},
     ]);
     component.formatOfficeInfoError();
@@ -137,18 +154,23 @@ describe('Create AAC Request Form Page', () => {
     component.aacReasonCbxModel = ["Used for Ordering/Requisitioning Purposes"];
     expect(component.isAddrTypeRequired("Billing Address")).toBe(true);
     expect(component.isAddrTypeRequired("Shipping Address")).toBe(true);
+
     component.aacReasonCbxModel = ["Used for Personal Property Reporting or Transfer"];
     expect(component.isAddrTypeRequired("Billing Address")).toBe(true);
     expect(component.isAddrTypeRequired("Shipping Address")).toBe(true);
+
     component.aacReasonCbxModel = ["Used for Grants or Financial Assistance Reporting"];
     expect(component.isAddrTypeRequired("Billing Address")).toBe(false);
     expect(component.isAddrTypeRequired("Shipping Address")).toBe(false);
+
     component.aacReasonCbxModel = ["Used for Shipping Purposes"];
     expect(component.isAddrTypeRequired("Billing Address")).toBe(false);
     expect(component.isAddrTypeRequired("Shipping Address")).toBe(true);
+
     component.aacReasonCbxModel = ["Used for Billing Purposes"];
     expect(component.isAddrTypeRequired("Billing Address")).toBe(true);
     expect(component.isAddrTypeRequired("Shipping Address")).toBe(false);
+
     component.aacReasonCbxModel = ["Used for Reporting with FPDS"];
     expect(component.isAddrTypeRequired("Billing Address")).toBe(false);
     expect(component.isAddrTypeRequired("Shipping Address")).toBe(false);
