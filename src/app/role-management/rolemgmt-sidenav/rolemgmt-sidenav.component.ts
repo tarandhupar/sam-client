@@ -1,6 +1,7 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { UserAccessService } from "../../../api-kit/access/access.service";
+import { SamCheckboxComponent } from "sam-ui-kit/form-controls/checkbox/checkbox.component";
 
 @Component({
   selector: 'rolemgmt-sidenav',
@@ -12,7 +13,7 @@ export class RoleMgmtSidenav implements OnInit{
     accordionHeading2 : string;
     accordionName2 : string;
 
-    StatusCheckboxModel : any = [];
+    public StatusCheckboxModel : any = [];
     DomiansCheckboxModel : any = [];
     requestorIds : any = [];
     statusIds : string = '';
@@ -22,6 +23,9 @@ export class RoleMgmtSidenav implements OnInit{
     @Output() domainSelected: EventEmitter<any> = new EventEmitter<any>();
     @Output() autoCompleteSelected : EventEmitter<any> = new EventEmitter<any>();
 
+    @ViewChild('statusCheckboxes')
+    public statusCheckboxes: SamCheckboxComponent;
+
     private filters = {
       status: { options: [ ], value: [] },
       domains : { options: [ ], value: [ ]}
@@ -29,8 +33,8 @@ export class RoleMgmtSidenav implements OnInit{
 
 
     constructor(private router: Router, private route: ActivatedRoute,private role: UserAccessService){
-      
-      
+
+
     }
 
     ngOnInit(){
@@ -38,12 +42,11 @@ export class RoleMgmtSidenav implements OnInit{
       this.accordionName1 = 'Status-Filter-Check-Box';
       this.accordionHeading2 = 'Domains';
       this.accordionName2 = 'Domains-Filter-Check-Box';
-      
+
 
       this.getAccessStatus();
       this.filters.domains.options = this.route.parent.snapshot.data['domains']._embedded.domainList.map(this.mapDomainLabelAndVal);
       this.getRequestorIds();
-      //this.requestorIds = [{key: 'sumit', value: 'sumit'},{key: 'nithin', value: 'nithin'},{key: 'taran', value: 'taran'},{key: 'justin', value: 'justin'}]
     }
 
     getAccessStatus(){
@@ -57,7 +60,7 @@ export class RoleMgmtSidenav implements OnInit{
               this.statusIds = this.statusIds + "," + status.id;
             }
           });
-         
+
           this.filters.status.options = res.map(this.mapLabelAndValue);
         }
       });
@@ -87,20 +90,23 @@ export class RoleMgmtSidenav implements OnInit{
         this.statusSelected.emit(this.statusIds);
       else
         this.statusSelected.emit(event.toString());
-      
+
     }
 
     domainFilter(event){
       this.domainSelected.emit(event.toString());
-      window.scrollTo(0,0);
-      //console.log(event);
-      //console.log("domains");
-      //console.log(this.DomiansCheckboxModel);
     }
 
-    onUserClick($event){
-      this.autoCompleteSelected.emit(this.usersEntered);
-      //console.log(this.usersEntered);
+    onUserClick(newValue){
+      let c = '';
+      if (typeof newValue === 'object') {
+        c = newValue.value;
+      } else if (typeof newValue === 'string') {
+        c = newValue;
+      }
+
+      this.autoCompleteSelected.emit(c);
       this.usersEntered = '';
     }
+
 }
