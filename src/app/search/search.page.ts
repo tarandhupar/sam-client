@@ -41,7 +41,7 @@ export class SearchPage implements OnInit{
   checkboxModel: any = ['true'];
   checkboxConfig = {
     options: [
-      {value: 'true', label: 'Active', name: 'checkbox-active'},
+      {value: 'true', label: 'Active Only', name: 'checkbox-active'},
     ],
     name: 'active-filter'
   };
@@ -999,7 +999,11 @@ export class SearchPage implements OnInit{
   }
 
   regionalOfficeSearchEvent(evt) {
-    this.ro_keyword = evt;
+    if(!evt) {
+      this.ro_keyword = "";
+    } else {
+      this.ro_keyword = evt;
+    }
     this.pageNum = 0;
     this.searchResultsRefresh();
   }

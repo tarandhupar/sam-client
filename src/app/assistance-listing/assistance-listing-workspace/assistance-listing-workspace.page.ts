@@ -25,27 +25,36 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   addFALButtonText: string = 'Add Federal Assistance Listing';
   cookieValue: string;
   runProgSub: any;
+  public permissions: any;
 
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {
   }
 
   ngOnInit() {
-    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
-      if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
+    this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+
+    if (this.cookieValue === null || this.cookieValue === undefined) {
+      this.router.navigate(['signin']);
+    }
+
+    if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
+      this.router.navigate(['accessrestricted']);
+    }
+
+    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS').subscribe(res => {
+      this.permissions = JSON.parse(res['_body']);
+      if (!this.permissions['FAL_LISTING']) {
+        this.router.navigate['accessrestricted'];
+      } else {
         this.setupQS();
         this.activatedRoute.queryParams.subscribe(
           data => {
             this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
-            this.cookieValue = Cookies.get('iPlanetDirectoryPro');
             this.runProgram();
           });
-      } else {
-        this.router.navigate(['accessrestricted']);
       }
-    } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
-      this.router.navigate(['signin']);
-    }
+    });
   }
 
   ngOnDestroy() {

@@ -41,7 +41,7 @@
             <h1><span class="field" id="program-title">{{program?.data?.title}}</span></h1>
           </div>
           <div class="usa-width-one-third">
-            <a *ngIf="cookieValue" (click)="onEditClick(['/programs', program.id, 'edit'])">
+            <a *ngIf="canEdit()" (click)="onEditClick(['header-information'])">
               Edit
               <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
             </a>
@@ -81,7 +81,7 @@
           <h2 id="overview">Overview</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'overview'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['overview'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -124,7 +124,7 @@
           <h2 id="authorizations">Authorizations</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'authorization'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['authorization'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -150,7 +150,7 @@
           <h2 id="financial-information">Financial Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'financial-information', 'obligations'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['financial-information', 'obligations'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -199,7 +199,7 @@
           <h2 id="criteria-for-applying">Criteria for Applying</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'criteria-information'])">
+          <a *ngIf="canEdit()" (click)="onEditClick('criteria-information')">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -298,7 +298,18 @@
     <!--How do I apply?-->
     <section id="program-application-information">
       <a name="#/programs/{{programID}}/view#applying-for-assistance"></a>
-      <h2 id="applying-for-assistance">Applying for Assistance</h2>
+      <div class="view-section-margin"></div>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="applying-for-assistance">Applying for Assistance</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="canEdit()" (click)="onEditClick(['applying-for-assistance'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
 
       <h3>Deadlines:</h3>
 
@@ -490,7 +501,7 @@
           <h2 id="compliance-requirements">Compliance Requirements</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'compliance-requirements'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['compliance-requirements'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -502,7 +513,7 @@
         <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == true && dictionaries">
+              <ng-container *ngIf="item.isSelected == true && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                 {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>
@@ -513,7 +524,7 @@
         <span class="field">The following 2CFR policy requirements are excluded from coverage under this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == false && dictionaries">
+              <ng-container *ngIf="item.isSelected == false && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                 {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>
@@ -644,7 +655,7 @@
           <h2 id="contact-information">Contact Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['/programs',program.id, 'edit', 'contact-information'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['contact-information'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
