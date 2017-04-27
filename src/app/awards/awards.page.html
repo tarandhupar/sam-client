@@ -1,18 +1,20 @@
 <div class="usa-grid-full awards">
-<ng-container *ngIf="awardData">
-	<aside class="usa-width-one-fourth">
+<div *ngIf="awardData">
+	<div class="usa-width-one-fourth">
 		<br />
-		<div  sam-sticky limit=1200 container="awards">
-			<img src="">
-			<nav>
-				<ul class="usa-sidenav-list">
-					<li><a href="{{currentUrl}}#general-information">General Information</a></li>
-					<li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
-					<li><a href="{{currentUrl}}#business-information">Business Information</a></li>
-				</ul>
-			</nav>
-		</div>
-	</aside>
+		<aside>
+			<div class="side-nav-position" sam-sticky limit=1200 container="occupy-page">
+				<img src="">
+				<nav>
+					<ul class="usa-sidenav-list">
+						<li><a href="{{currentUrl}}#general-information">General Information</a></li>
+						<li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
+						<li><a href="{{currentUrl}}#business-information">Business Information</a></li>
+					</ul>
+				</nav>
+			</div>
+		</aside>
+	</div>
 	<div class="usa-width-three-fourths" >
 		<div>
 			<div class="usa-grid-full">
@@ -193,6 +195,7 @@
 				<br />
 				Phone: {{awardData.contractorInformation.address.phoneNumber | phone}}<br />
 				Fax: {{awardData.contractorInformation.address.faxNumber | phone}}
+				<h2 id="business-information">Business Information</h2>
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 					<h3 id="businessCategory">Business Category</h3>
 					Organization Type: {{awardData.businessCategory.organizationType}}<br />
@@ -251,35 +254,31 @@
 						</div>
 					</div>
 					<h3 id="contractData">Contract Data</h3>
-					Type of Contract: {{typeOfContract}}<br />
-					Multiyear Contract: {{multiyearContract}}<br />
-					Major Program: {{majorProgram}}<br />
-					National Interest Action: {{nationalInterestAction}}<br />
+					Type of Contract: {{awardData.contractData.typeOfContract}}<br />
+					Multiyear Contract: {{awardData.contractData.multiyearContract}}<br />
+					Major Program: {{awardData.contractData.majorProgramCode}}<br />
+					National Interest Action: {{awardData.contractData.nationalInterestCode}}<br />
 					<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
-						Types of IDC: {{idcTypes}}<br />
-						Multiple or Single Award IDV: {{msaidv}}<br />
-						Program Acronym: {{programAcronym}}<br />
+						Type of IDC: {{awardData.contractData.typeOfIdcDesc}}<br />
+						Multiple or Single Award IDV: {{awardData.contractData.multipleOrSingleAwardIdc}}<br />
+						Program Acronym: {{awardData.contractData.programAcronym}}<br />
+					</div>
+					<div *ngIf="awardData.templateType == 'AWARD' || 'IDV'">
+						Cost or Pricing Data: {{awardData.contractData.costOrPricingData}}<br />
 					</div>
 					<div *ngIf="awardData.templateType == 'AWARD'">
-						Cost or Pricing Data: {{costOrPricingData}}<br />
-						Purchase Card Used as Payment Method: {{paymentMethod}}<br />
+						Purchase Card Used as Payment Method: {{awardData.contractData.purchaseCardPaymentMethod}}<br />
 					</div>
-					Undefinitized Action: {{undefinitizedAction}}<br />
-					Performance Based Service Acquisition: {{PBSA}}<br />
-					<i>
-						FY 2004 and prior - 80% or more specified as performance requirement.<br />
-						FY 2005 and later - 50% or more specified as performance requirement.
-						<br />
-						<br />
-					</i>
-					Contigency Humanitarian Peacekeeping Operation: {{chpo}}<br />
+					Undefinitized Action: {{awardData.contractData.undefinitizedActionDesc}}<br />
+					Performance Based Service Acquisition: {{awardData.contractData.performBasedServiceContract}}<br />
+					Contingency Humanitarian Peacekeeping Operation: {{awardData.contractData.contingencyOpsDesc}}<br />
 					<div *ngIf="awardData.templateType == 'AWARD'">
-						Contract Financing: {{contractFinancing}}<br />
+						Contract Financing: {{awardData.contractData.contractFinancing}}<br />
 					</div>
-					Cost Accounting Standards Clause: {{casc}}<br />
-					Consolidated Contract: {{consolidatedContract}}<br />
+					Cost Accounting Standards Clause: {{awardData.contractData.costAccountStandards}}<br />
+					Consolidated Contract: {{awardData.contractData.consolidatedContract}}<br />
 					<div *ngIf="awardData.templateType == 'AWARD'">
-						Number of Actions: {{numberOfActions}}
+						Number of Actions: {{awardData.contractData.numberOfActions}}
 					</div>
 					<h3 id="legislativeMandates">Legislative Mandates</h3>
 					Clinger-Cohen Act: {{cca}}<br />
@@ -289,7 +288,6 @@
 					Interagency Contracting Authority: {{ica}}<br />
 					Other Interagency Contracting Statutory Authority (1000 Characters) {{oicsa}}
 				</div>
-				<h2 id="business-information">Business Information</h2>
 				<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
 					<h3 id="contractMarketingData">Contract Marketing Data</h3>
 					Website URL: {{websiteURL}}<br />
@@ -379,5 +377,5 @@
 			</div>
 		</div>
 	</div>
-</ng-container>
+</div>
 </div>
