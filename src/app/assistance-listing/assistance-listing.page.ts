@@ -395,13 +395,26 @@ Please contact the issuing agency listed under "Contact Information" for more in
     return false;
   }
 
+  public canDelete() {
+    return this.program.status && this.program.status.code!='published' && this.program._links['program:delete'];
+  }
+
   public onEditClick(page: string[]) {
-    if(this.program.status && this.program.status.code!='published') {
+    if(this.program.status && this.program.status.code === 'draft') {
       this.router.navigate(['/programs', this.programID, 'edit'].concat(page));
     } else {
       this.editModal.openModal();
       this.gotoPage = page;
     }
+  }
+
+  public onDeleteClick() {
+    this.programService.deleteProgram(this.programID, this.cookieValue).subscribe(res => {
+      this.router.navigate(['/falworkspace']);
+    }, err => {
+      // todo: show error message when failing to delete
+      console.log('Error deleting program ', err);
+    });
   }
 
   public onEditModalSubmit() {

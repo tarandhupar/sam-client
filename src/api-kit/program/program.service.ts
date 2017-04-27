@@ -92,6 +92,24 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam, false);
   }
 
+  deleteProgram(id: String, cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/' + id,
+      oParam: {},
+      headers: {},
+      method: 'DELETE'
+    };
+
+    if(typeof cookie !== 'undefined' && cookie !== ''){
+      oApiParam.headers = {
+        "X-Auth-Token": cookie
+      };
+    }
+
+    return this.oAPIService.call(oApiParam, false);
+  }
+
   getPermissions(cookie: string, permissions: any) {
     let oApiParam = {
       name: 'program',
@@ -124,7 +142,7 @@ export class ProgramService{
     }
     return this.oAPIService.call(oApiParam);
   }
-  
+
   falautosearch(q:string, ids: string) {
     let oApiParam = {
       name: 'relatedPrograms',

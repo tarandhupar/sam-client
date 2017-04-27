@@ -45,6 +45,10 @@
               Edit
               <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
             </a>
+            <a *ngIf="canDelete()" (click)="onDeleteClick()">
+              Delete
+              <i class="fa fa-trash fal-delete" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
 
