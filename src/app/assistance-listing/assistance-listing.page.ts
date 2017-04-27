@@ -181,6 +181,11 @@ export class ProgramPage implements OnInit, OnDestroy {
     this.apiSubjectSub = apiSubject.subscribe(api => {
       // run whenever api data is updated
       this.program = api;
+
+      if(!this.program._links.self) {
+        this.router.navigate['accessrestricted'];
+      }
+
       this.checkCurrentFY();
       if(this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
@@ -378,6 +383,16 @@ Please contact the issuing agency listed under "Contact Information" for more in
         this.assistanceTypes = _.union(this.assistanceTypes, api.data.assistanceTypes);
       }
     });
+  }
+
+  public canEdit() {
+    if(this.program.status && this.program.status.code!='published' && this.program._links['program:update']) {
+      return true;
+    } else if(this.program._links['program:revise']) {
+      return true;
+    }
+
+    return false;
   }
 
   public onEditClick(page: string[]) {
