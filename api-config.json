@@ -1,6 +1,4 @@
 {
-  "API_UMBRELLA_URL": "https://gsaiae-dev02.reisys.com/dev",
-  "API_UMBRELLA_KEY": "ZkxTIWSlctvTe2io8k5gKlj3tOCS3heyw1N0DAFe"
-
-
+  "API_UMBRELLA_URL": "https://api-umbrella.prod-iae.bsp.gsa.gov/comp",
+  "API_UMBRELLA_KEY": "O4kzViWGVYNumPqhAzUhYGiZZZwW3RKUEYJOI6ii"
 }
