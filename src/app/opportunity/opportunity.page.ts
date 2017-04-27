@@ -99,7 +99,6 @@ export class OpportunityPage implements OnInit {
   showChangesAwardDetails = false;
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
-  temporaryHistoryApi: any;
 
 
   errorOrganization: any;
@@ -201,6 +200,9 @@ export class OpportunityPage implements OnInit {
     let apiStream = this.route.params.switchMap((params) => { // construct a stream of opportunity data
       //this.opportunityService.getOpportunityById(params['id']).subscribe(opportunitySubject); // attach subject to stream
       this.alert = [];
+      this.differences = null;
+      this.packages = [];
+      this.packagesWarning = null;
       return this.opportunityService.getOpportunityById(params['id']);
     });
 
@@ -285,16 +287,21 @@ export class OpportunityPage implements OnInit {
 
   private loadPreviousOpportunityVersion(historyAPI: Observable<any>) { 
     let opportunitySubject = new ReplaySubject(1);
-     historyAPI.subscribe(opportunity => {
-       if (!(this.opportunity.data.type === "m") || opportunity.content.history.length < 2){ 
-         return null; 
+
+
+    let opportunityStream = historyAPI.switchMap(opportunity => {
+       if (!(this.opportunity.data.type === "m") || opportunity.content.history.length < 2){
+         return Observable.of(null); 
        } else {
          let index = _.result(_.find(opportunity.content.history, { 'notice_id': this.opportunity.opportunityId }), 'index');
          index--;
          let id = _.result(_.find(opportunity.content.history, { 'index': index }), 'notice_id');
-         this.opportunityService.getOpportunityById(id).subscribe(opportunitySubject);
+         return this.opportunityService.getOpportunityById(id);
        } 
      });// attach subject to stream  
+    opportunityStream.subscribe(opportunitySubject);
+    opportunitySubject.subscribe(api => {
+    });
     return opportunitySubject; 
   }
 
@@ -406,9 +413,10 @@ export class OpportunityPage implements OnInit {
 
   private getTotalAttachmentsCount(opportunity: Observable<any>, historyAPI: Observable<any>, packagesOpportunities: Observable<any>){
     let attachmentCountSubject = new ReplaySubject(1);
-    opportunity.subscribe(opportunityAPI => {
-      this.opportunityService.getPackagesCount(opportunityAPI.opportunityId).subscribe(attachmentCountSubject);
+    let attachmentCountStream = opportunity.switchMap(opportunityAPI => {
+      return this.opportunityService.getPackagesCount(opportunityAPI.opportunityId);
     });
+    attachmentCountStream.subscribe(attachmentCountSubject);
     attachmentCountSubject.subscribe(data => {
         historyAPI.subscribe(historyAPI => {
           //let packagesObservable:Observable<any> = Observable.forkJoin(Observable.onErrorResumeNext.apply(Observable, packagesOpportunities));
@@ -422,7 +430,9 @@ export class OpportunityPage implements OnInit {
                   description: 'An update has been made to this opportunity with new packages added. Please click <a href="opportunities/' + latestNotice + '">here</a> to view the latest update and packages.'
                 }
               };
-            }
+            } else {
+                this.packagesWarning = null;
+              }
           });
         });
     });
@@ -432,8 +442,9 @@ export class OpportunityPage implements OnInit {
 
   private loadPackages(historyAPI: Observable<any>){
     let packagesSubject = new ReplaySubject(1);
-    let historyNoticeIds: string = '';
+    let historyNoticeIds: string;
     let packagesStream = historyAPI.switchMap(api =>{
+      historyNoticeIds = '';
            let current = _.filter(api.content.history, historyItem => {
              return historyItem.notice_id == this.opportunity.opportunityId;
            })[0];
@@ -443,12 +454,15 @@ export class OpportunityPage implements OnInit {
              }
            });
            historyNoticeIds = historyNoticeIds.substring(0, historyNoticeIds.length - 1);
-
-          return this.opportunityService.getPackages(historyNoticeIds);
+          return this.opportunityService.getPackages(historyNoticeIds).retryWhen(
+            errors => {
+              this.attachmentError = true;
+              return this.route.params;
+            }
+          );
     });
     packagesStream.subscribe(packagesSubject);
-
-         packagesSubject.subscribe((data: any) =>{
+    packagesSubject.subscribe((data: any) =>{
            this.packages = [];
              let filesizePipe = new FilesizePipe();
              let dateformatPipe = new DateFormatPipe();
@@ -889,15 +903,17 @@ export class OpportunityPage implements OnInit {
   }
   private checkChanges(previousOpportunityAPI: Observable<any>){
     previousOpportunityAPI.subscribe(api => {
-      this.previousOpportunityVersion = api;
-      let viewChangesPipe = new ViewChangesPipe();
-      if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined'){
-        this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
-          this.previousOpportunityLocation = data;
-          this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
-        });
-      } else{
-        this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
+      if(api != null) {
+        this.previousOpportunityVersion = api;
+        let viewChangesPipe = new ViewChangesPipe();
+        if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined') {
+          this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
+            this.previousOpportunityLocation = data;
+            this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary, this.opportunityLocation, this.previousOpportunityLocation);
+          });
+        } else {
+          this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary, this.opportunityLocation, this.previousOpportunityLocation);
+        }
       }
     }, err => {
       console.log('Error loading opportunity: ', err);
