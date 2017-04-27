@@ -313,8 +313,8 @@
           [packages]="packages"
           [downloadAllUrl]="getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)"></sam-download>
 
-        <ng-container *ngIf="packagesWarning">
-          <samAlert [type]="packagesWarning.config?.type"><div [innerHTML]="packagesWarning.config?.description"></div></samAlert>
+        <ng-container *ngIf="packagesWarning == true">
+          <samAlert [type]="'warning'" [title]="''">An update has been made to this opportunity with new packages added. Please click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a> to view the latest update and packages.</samAlert>
         </ng-container>
         </section>
 

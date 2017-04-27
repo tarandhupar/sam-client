@@ -72,7 +72,7 @@ export class OpportunityPage implements OnInit {
   public opportunityFields = OpportunityFields; // expose the OpportunityFields enum for use in html template
   public displayField = {}; // object containing boolean flags for whether fields should be displayed
 
-  packagesWarning : any;
+  packagesWarning : any = false;
   originalOpportunity: any;
   opportunityLocation: any;
   opportunity: any;
@@ -201,7 +201,7 @@ export class OpportunityPage implements OnInit {
       //this.opportunityService.getOpportunityById(params['id']).subscribe(opportunitySubject); // attach subject to stream
       this.differences = null;
       this.packages = [];
-      this.packagesWarning = null;
+      this.packagesWarning = false;
       this.showRevisonMessage = false;
       return this.opportunityService.getOpportunityById(params['id']);
     });
@@ -430,15 +430,9 @@ export class OpportunityPage implements OnInit {
           packagesOpportunities.subscribe(res =>{
               if(data > this.packages.length) {
               historyAPI.content.history = _.sortBy(historyAPI.content.history, 'index');
-              let latestNotice = historyAPI.content.history[historyAPI.content.history.length - 1]['notice_id'];
-              this.packagesWarning = {
-                config: {
-                  type: 'warning',
-                  description: 'An update has been made to this opportunity with new packages added. Please click <a href="opportunities/' + latestNotice + '">here</a> to view the latest update and packages.'
-                }
-              };
+              this.packagesWarning = true;
             } else {
-                this.packagesWarning = null;
+                this.packagesWarning = false;
               }
           });
         });
