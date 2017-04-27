@@ -164,6 +164,7 @@ export class OrgCreatePage {
     this.orgObj['createdDate'] = this.basicInfoForm.get('orgStartDate').value;
     this.orgObj['summary'] = this.basicInfoForm.get('orgDescription').value;
     this.orgObj['shortName'] = this.basicInfoForm.get('orgShortName').value;
+    this.orgObj['type'] = this.orgType.toUpperCase();
     if (this.isAddressNeeded()){
       this.orgObj['newIsAward'] = this.indicateFundRadioModel === "Funding/Awarding"?true:false;
       this.orgObj['newIsFunding'] = this.indicateFundRadioModel === "Funding/Awarding" || this.indicateFundRadioModel == "Funding"?true:false;

@@ -32,17 +32,17 @@
           </samRadioButton>
         </labelWrapper>
 
-        <agencyPicker *ngIf="aacOfficeRadioModel === 'Federal Office'" (organization)="getFederalOrgName($event)" [label]="'Organization Name'" [multimode]="false" [required]="true" [searchMessage]="aacFederalOrgNameErrorMsg"></agencyPicker>
-        <form class="usa-width-two-thirds aac-contractor-section" *ngIf="aacOfficeRadioModel === 'State/Local Office'" [formGroup]="stateOfficeForm">
+        <agencyPicker *ngIf="aacOfficeRadioModel.includes('Federal')" (organization)="getFederalOrgName($event)" [label]="'Organization Name'" [multimode]="false" [required]="true" [searchMessage]="aacFederalOrgNameErrorMsg"></agencyPicker>
+        <form class="usa-width-two-thirds aac-contractor-section" *ngIf="aacOfficeRadioModel.includes('State')" [formGroup]="stateOfficeForm">
           <samText #stateOfficeName  [control]="contractorForm.get('stateOfficeName')" formControlName="stateOfficeName" [name]="'org-name-input'" [label]="'Organization Name'" [required]="true"></samText>
         </form>
-        <form class="usa-width-two-thirds aac-contractor-section" *ngIf="aacOfficeRadioModel === 'Contractor Office'" [formGroup]="contractorForm">
+        <form class="usa-width-two-thirds aac-contractor-section" *ngIf="aacOfficeRadioModel.includes('Contract')" [formGroup]="contractorForm">
           <samText #contractName [required]='true' [control]="contractorForm.get('contractName')" formControlName="contractName" [name]="'contract-name-input'" [label]="'Contractor Name'"></samText>
           <samText #contractNum [required]='true' [control]="contractorForm.get('contractNum')" formControlName="contractNum" [name]="'contract-number-input'" [label]="'Contract Name'"></samText>
           <samText #contractCAGECode [required]='true' [control]="contractorForm.get('cageCode')" formControlName="cageCode" [name]="'cage-input'" [label]="'CAGE Code (For CAGE code reference: https://cage.dla.mil/)'"></samText>
           <samText #contractAdmin [required]='true' [control]="contractorForm.get('contractAdmin')" formControlName="contractAdmin" [name]="'admin-name-input'" [label]="'Contract Administration Name'"></samText>
           <labelWrapper #contractorExpireDateWrapper [required]='true' class="usa-width-two-thirds" [label]="'Contract Expire Date'" [name]="'expire-date'">
-            <samDate (valueChange)="setContractExpireDate($event)" [label]="'Expire Date'" name='expire-date'></samDate>
+            <samDate (valueChange)="setContractExpireDate($event)" [label]="''" name='expire-date'></samDate>
           </labelWrapper>
         </form>
 

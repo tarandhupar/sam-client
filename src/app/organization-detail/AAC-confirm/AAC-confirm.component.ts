@@ -19,7 +19,7 @@ export class AACConfirmPage {
       params => {
         this.requestId = params['requestId'];
         this.aacObj = this.getAACRequestDetail(this.requestId);
-        this.officeInfo = this.generateRequestOfficeInfo(this.aacObj);
+        this.officeInfo = this.generateRequestOfficeInfo(this.aacObj.aac);
       });
     setTimeout(()=>{this.successAlertMsg = false;}, 3000);
   }
@@ -27,34 +27,31 @@ export class AACConfirmPage {
   getAACRequestDetail(requestId):any{
     let aacObj:any = {};
     this.aacRequestService.getAACRequestDetail(requestId).subscribe(
-      val => {
-        aacObj = val._embedded.aac;
-      }
+      val => {aacObj = val;}
     );
     return aacObj;
   }
 
-  generateRequestOfficeInfo(aacObj):any{
+
+  generateRequestOfficeInfo(aacOfficeObj):any{
     let requestOfficeInfo = [];
-    requestOfficeInfo.push({desc:'Does an AAC exist for this organization',value:aacObj.isAACExist});
-    requestOfficeInfo.push({desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: aacObj.aacType});
-    switch (aacObj.aacType){
-      case 'Contractor Office':
-        requestOfficeInfo.push({desc:'Contractor Name', value: aacObj.contractorName});
-        requestOfficeInfo.push({desc:'Contract Number', value: aacObj.contractNum});
-        requestOfficeInfo.push({desc:'CAGE Code', value: aacObj.cgacCode});
-        requestOfficeInfo.push({desc:'Contract Administrator Name', value: aacObj.contractAdmin});
-        requestOfficeInfo.push({desc:'Contract Expiry Date', value: aacObj.contractExpireDate});
-        break;
-      case 'Federal Office':
-        requestOfficeInfo.push({desc:'Organization Name', value: aacObj.organizationName});
-        break;
-      case 'State/Local Office':
-        requestOfficeInfo.push({desc:'Organization Name', value: aacObj.organizationName});
-        break;
+    requestOfficeInfo.push({desc:'Does an AAC exist for this organization',value:aacOfficeObj.aacExists});
+    requestOfficeInfo.push({desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: aacOfficeObj.orgTypeName});
+    if (aacOfficeObj.orgTypeName.includes('Contractor')) {
+      requestOfficeInfo.push({desc: 'Contractor Name', value: aacOfficeObj.orgName});
+      requestOfficeInfo.push({desc: 'Contract Number', value: aacOfficeObj.contractNumber});
+      requestOfficeInfo.push({desc: 'CAGE Code', value: aacOfficeObj.cageCode});
+      requestOfficeInfo.push({desc: 'Contract Administrator Name', value: aacOfficeObj.contractAdminName});
+      requestOfficeInfo.push({desc: 'Contract Expiry Date', value: aacOfficeObj.contractExpiryDate});
+    }else{
+      requestOfficeInfo.push({desc:'Organization Name', value: aacOfficeObj.orgName});
     }
     return requestOfficeInfo;
   }
 
-  isReasonContainsFPDSReport(){return this.aacObj.requestReasons.indexOf('Used for Reporting with FPDS') !== -1;}
+  isReasonContainsFPDSReport(){
+    let isFPDSReport = false;
+    this.aacObj.requestReasonList.forEach( e => {if(e.requestReasonName.includes('Used for Reporting with FPDS')) isFPDSReport = true;});
+    return isFPDSReport;
+  }
 }

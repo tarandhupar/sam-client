@@ -60,13 +60,9 @@ export class AACRequestPage {
     errorMessage: ''
   };
 
-  aacOfficeRadioModel:any = 'Federal Office';
+  aacOfficeRadioModel:any = '';
   aacOfficeConfig = {
-    options: [
-      {value: 'Federal Office', label: 'Federal Office', name: 'Federal Office'},
-      {value: 'State/Local Office', label: 'State/Local Office', name: 'State/Local Office'},
-      {value: 'Contractor Office', label: 'Contractor Office', name: 'Contractor Office'},
-    ],
+    options: [],
     name: 'aacOffice',
     label: 'Is the request for a Federal Office, State/Local Office or Contractor?',
     errorMessage: ''
@@ -96,6 +92,7 @@ export class AACRequestPage {
     errorMessage: ''
   };
 
+  reasonValueMap: any = {};
   addrTypePerReason:any = [];
   aacOfficeInfo:any = [];
   orgAddresses:any = [];
@@ -130,25 +127,64 @@ export class AACRequestPage {
       agencyCode: ['', []],
       cgacCode: ['', []],
     });
-    this.aacRequestService.getAACReasons().subscribe(
-      reasonData => {
+    this.aacRequestService.getAACRequestFormDetail().subscribe(
+      data => {
         this.aacReasonCbxConfig.options = [];
         this.addrTypePerReason = {};
-        reasonData.reasons.forEach( e => {
-          this.aacReasonCbxConfig.options.push({value:e.value,label:e.value,name:e.value});
-          this.addrTypePerReason[e.value] = e.addrType;
+        data.requestAddressTypes.forEach( e => {
+          let name = e.requestAddressType.requestTypeName;
+          this.aacReasonCbxConfig.options.push({value:name, label:name, name:name});
+          this.addrTypePerReason[name] = [];
+          e.requestAddressMapping.forEach(addr => {this.addrTypePerReason[name].push(addr.addressTypeName)});
+          this.reasonValueMap[name] = e.requestAddressType.requestTypeId;
         });
+
+        this.aacOfficeConfig.options = [];
+        data.orgTypes.forEach( e => {
+          this.aacOfficeConfig.options.push({value:e.orgTypeId+"-"+e.orgTypeName,label:e.orgTypeName,name:e.orgTypeName});
+        });
+        this.aacOfficeRadioModel = this.aacOfficeConfig.options[0].value;
     });
   }
 
   setContractExpireDate(val){this.contractorForm.get('contractExpireDate').setValue(val);}
 
   generateAACRequestPostObj():any{
-    let aacPostObj = {
-      isAACExistOrg: this.aacExistRadioModel === 'Yes',
-      requestFor: this.aacOfficeRadioModel,
-      officeAddresses: this.orgAddresses
-    };
+    let aacPostObj:any = {};
+    aacPostObj.aacExists = this.aacExistRadioModel === 'Yes';
+    aacPostObj.orgTypeId = this.aacOfficeRadioModel.split('-')[0];
+    aacPostObj.requestorEmailId = "simiao.sun@gsa.gov";
+    aacPostObj.username = "Nathan Sun";
+    aacPostObj.aacLink = "/aac-confirm";
+
+    if (this.aacOfficeRadioModel.includes('Contractor')) {
+      aacPostObj.orgName = this.contractorForm.get("contractName").value;
+      aacPostObj.contractNumber = this.contractorForm.get("contractNum").value;
+      aacPostObj.cageCode = this.contractorForm.get("cageCode").value;
+      aacPostObj.contractAdminName = this.contractorForm.get("contractAdmin").value;
+      aacPostObj.contractExpiryDate = this.contractorForm.get("contractExpireDate").value;
+    } else if (this.aacOfficeRadioModel.includes('Federal')) {
+      aacPostObj.orgName = this.aacFederalOrgName.name;
+    } else if (this.aacOfficeRadioModel.includes('State')){
+      aacPostObj.orgName = this.stateOfficeForm.get("stateOfficeName").value;
+    }
+
+    aacPostObj.requestIds = [];
+    this.aacReasonCbxModel.forEach( e => {aacPostObj.requestIds.push(this.reasonValueMap[e])});
+
+    aacPostObj.addressDetails = [];
+    this.orgAddresses.forEach( e => {
+      aacPostObj.addressDetails.push({
+        street1:e.street1,
+        street2:e.street2,
+        code:e.postalCode,
+        state:e.state,
+        city:e.city,
+        country:e.country,
+        addressTypeName:e.addrType
+      });
+    });
+
     return aacPostObj;
   }
 
@@ -185,27 +221,34 @@ export class AACRequestPage {
     this.requestIsReview = false;
     this.requestIsConfirm = true;
     this.successAlertMsg = true;
+    this.aacRequestService.postAACRequest(this.generateAACRequestPostObj());
     setTimeout(()=>{this.successAlertMsg = false;}, 3000);
   }
 
-  generateRequestOfficeInfo():any{
+  generateRequestOfficeInfo():any {
     let requestOfficeInfo = [];
-    requestOfficeInfo.push({desc:'Does an AAC exist for this organization',value:this.aacExistRadioModel});
-    requestOfficeInfo.push({desc:'Is the request for a Federal Office, State/Local Office or Contractor', value: this.aacOfficeRadioModel});
-    switch (this.aacOfficeRadioModel){
-      case 'Contractor Office':
-        requestOfficeInfo.push({desc:'Contractor Name', value: this.contractorForm.get("contractName").value});
-        requestOfficeInfo.push({desc:'Contract Number', value: this.contractorForm.get("contractNum").value});
-        requestOfficeInfo.push({desc:'CAGE Code', value: this.contractorForm.get("cageCode").value});
-        requestOfficeInfo.push({desc:'Contract Administrator Name', value: this.contractorForm.get("contractAdmin").value});
-        requestOfficeInfo.push({desc:'Contract Expiry Date', value: this.contractorForm.get("contractExpireDate").value});
-        break;
-      case 'Federal Office':
-        requestOfficeInfo.push({desc:'Organization Name', value: this.aacFederalOrgName.name});
-        break;
-      case 'State/Local Office':
-        requestOfficeInfo.push({desc:'Organization Name', value: this.stateOfficeForm.get("stateOfficeName").value});
-        break;
+    requestOfficeInfo.push({desc: 'Does an AAC exist for this organization', value: this.aacExistRadioModel});
+    requestOfficeInfo.push({
+      desc: 'Is the request for a Federal Office, State/Local Office or Contractor',
+      value: this.aacOfficeRadioModel.substr(this.aacOfficeRadioModel.indexOf('-')+1,this.aacOfficeRadioModel.length - this.aacOfficeRadioModel.indexOf('-'))
+    });
+    if (this.aacOfficeRadioModel.includes('Contractor')) {
+      requestOfficeInfo.push({desc: 'Contractor Name', value: this.contractorForm.get("contractName").value});
+      requestOfficeInfo.push({desc: 'Contract Number', value: this.contractorForm.get("contractNum").value});
+      requestOfficeInfo.push({desc: 'CAGE Code', value: this.contractorForm.get("cageCode").value});
+      requestOfficeInfo.push({
+        desc: 'Contract Administrator Name',
+        value: this.contractorForm.get("contractAdmin").value
+      });
+      requestOfficeInfo.push({
+        desc: 'Contract Expiry Date',
+        value: this.contractorForm.get("contractExpireDate").value
+      });
+
+    } else if (this.aacOfficeRadioModel.includes('Federal')) {
+      requestOfficeInfo.push({desc: 'Organization Name', value: this.aacFederalOrgName.name});
+    } else if (this.aacOfficeRadioModel.includes('State')){
+      requestOfficeInfo.push({desc:'Organization Name', value: this.stateOfficeForm.get("stateOfficeName").value});
     }
     return requestOfficeInfo;
   }
@@ -223,16 +266,13 @@ export class AACRequestPage {
 
   isOfficeInfoValid():boolean{
     let isValid = true;
-    switch (this.aacOfficeRadioModel){
-      case 'Contractor Office':
-        isValid = this.contractorForm.valid;
-        break;
-      case 'Federal Office':
-        isValid = !!this.aacFederalOrgName;
-        break;
-      case 'State/Local Office':
-        isValid = this.stateOfficeForm.valid;
-        break;
+
+    if(this.aacOfficeRadioModel.includes('Contract')){
+      isValid = this.contractorForm.valid;
+    }else if(this.aacOfficeRadioModel.includes('Federal')){
+      isValid = !!this.aacFederalOrgName;
+    }else if(this.aacOfficeRadioModel.includes('State')){
+      isValid = this.stateOfficeForm.valid;
     }
     return isValid;
   }
@@ -250,6 +290,7 @@ export class AACRequestPage {
 
   isAddrTypeRequired(addrType):boolean{
     let addrRequired = false;
+
     this.aacReasonCbxModel.forEach( e => {
       if(this.addrTypePerReason[e].indexOf(addrType) !== -1) addrRequired = true;
     });
@@ -258,7 +299,6 @@ export class AACRequestPage {
 
   formatReasonInfoError(){
     this.aacReasonCbxConfig.errorMessage = this.aacReasonCbxModel.length === 0?"This field cannot be empty":"";
-
     if(this.isReasonContainsFPDSReport()){
       this.fpdsReportForm.get("agencyCode").markAsDirty();
       this.fpdsReportForm.get("cgacCode").markAsDirty();
@@ -268,18 +308,15 @@ export class AACRequestPage {
   }
 
   formatOfficeInfoError(){
-    switch (this.aacOfficeRadioModel){
-      case 'Contractor Office':
-        this.formatContractFormError();
-        break;
-      case 'Federal Office':
-        this.aacFederalOrgNameErrorMsg = !!this.aacFederalOrgName?'':'This field cannot be empty';
-        break;
-      case 'State/Local Office':
-        this.stateOfficeForm.get("stateOfficeName").markAsDirty();
-        this.stateOfficeName.wrapper.formatErrors(this.stateOfficeForm.get("stateOfficeName"));
-        break;
+    if(this.aacOfficeRadioModel.includes('Contract')){
+      this.formatContractFormError();
+    }else if(this.aacOfficeRadioModel.includes('Federal')){
+      this.aacFederalOrgNameErrorMsg = !!this.aacFederalOrgName?'':'This field cannot be empty';
+    }else if(this.aacOfficeRadioModel.includes('State')){
+      this.stateOfficeForm.get("stateOfficeName").markAsDirty();
+      this.stateOfficeName.wrapper.formatErrors(this.stateOfficeForm.get("stateOfficeName"));
     }
+
   }
 
   formatContractFormError(){
@@ -296,10 +333,10 @@ export class AACRequestPage {
   }
 
   onDuplicateFillChecked(addrType, val){
-    if(addrType === "Billing Address"){
+    if(addrType.includes("Billing")){
       this.hideBillingForm = val.length > 0;
       this.billAddr = this.updateFromMailAddr(this.hideBillingForm, addrType);
-    }else if (addrType === "Shipping Address"){
+    }else if (addrType.includes("Shipping")){
       this.hideShippingForm = val.length > 0;
       this.shipAddr = this.updateFromMailAddr(this.hideShippingForm, addrType);
     }

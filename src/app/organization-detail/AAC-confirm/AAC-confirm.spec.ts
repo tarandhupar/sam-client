@@ -14,48 +14,21 @@ import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 class AACRequestServiceStub{
   getAACRequestDetail(){
     return Observable.of({
-      _embedded: {
-        aac: {
-          requestId: 1,
-          isAACExist: false,
-          orgName: "Form Supply Management",
-          aacType: "Contractor Office",
-          requestReasons: ["Used for Ordering/Requisitioning Purposes", "Used for Reporting with FPDS"],
-          agencyCode: "ABC",
-          cgacCode: "ABC",
-          contractorName: "Temp Contractor",
-          contractNum: "DOC123456",
-          cageCode: "123456",
-          contractAdmin: "Jane Doe",
-          contractExpireDate: "2017-12-12",
-          orgAddresses: [
-            {
-              addrType: "Mailing Address",
-              country: "USA",
-              state: "DC",
-              city: "Washington",
-              street: "813 Rosewood Lane",
-              postalCode: "20007"
-            },
-            {
-              addrType: "Billing Address",
-              country: "USA",
-              state: "DC",
-              city: "Washington",
-              street: "813 Rosewood Lane",
-              postalCode: "20007"
-            },
-            {
-              addrType: "Shipping Address",
-              country: "USA",
-              state: "DC",
-              city: "Washington",
-              street: "813 Rosewood Lane",
-              postalCode: "20007"
-            },
-          ]
-        }
-      }
+      "aac": {
+        "aacId": 1,"orgTypeId": 2,"orgName": "ABC","contractNumber": null,"cageCode": null,"contractExpiryDate": null,
+        "aacExists": true,"requestorEmailId": "nithin@gsa.gov","aacLink": "/test",
+        "createdBy": "admin","createdDate": "2017-04-25T21:55:48.695-0400",
+        "lastModifiedBy": "admin","lastModifiedDate": "2017-04-25T21:55:48.695-0400",
+        "orgTypeName": "State Organization","contractAdminName": null
+      },
+      "addressList": [
+        {"addressId": 4,"aacId": 1,"addressTypeId": 1,"street1": "Eisenhover","street2": null,"code": "20170","state": "Virginia","city": "Alexandria","country": "USA","addressTypeName": "Mailing Address"},
+        {"addressId": 5,"aacId": 1,"addressTypeId": 2,"street1": "Internation Drive","street2": null,"code": "20170","state": "Virginia","city": "McLean","country": "USA","addressTypeName": "Shipping Address"}
+      ],
+      "requestReasonList": [
+        {"requestReasonId": 1,"aacId": 1,"requestTypeId": 1,"requestReasonName": "Used for Ordering/Requistioning Purposes"},
+        {"requestReasonId": 2,"aacId": 1,"requestTypeId": 2,"requestReasonName": "Used for Personal Property Reporting or Transfer"}
+      ]
     });
   }
 }
@@ -85,23 +58,18 @@ describe('Create AAC Confirm Form Page', () => {
 
   it('should contain FPDS Report in the reasons for aac request', () => {
     fixture.detectChanges();
-    expect(component.isReasonContainsFPDSReport()).toBe(true);
+    expect(component.isReasonContainsFPDSReport()).toBe(false);
   });
 
   it('should have correct fields set for Federal Office AAC request', () => {
     fixture.detectChanges();
-    let federalOfficeInfo = component.generateRequestOfficeInfo(
-      {
-        requestId: 1,
-        isAACExist: false,
-        orgName: "Form Supply Management",
-        aacType: "Federal Office",
-        requestReasons: ["Used for Ordering/Requisitioning Purposes", "Used for Reporting with FPDS"],
-        agencyCode: "ABC",
-        cgacCode: "ABC",
-        organizationName: "Temp Federal Office",
-      }
-    );
+    let federalOfficeInfo = component.generateRequestOfficeInfo({
+      "aacId": 1,"orgTypeId": 2,"orgName": "Temp Federal Office","contractNumber": null,"cageCode": null,"contractExpiryDate": null,
+      "aacExists": false,"requestorEmailId": "nithin@gsa.gov","aacLink": "/test",
+      "createdBy": "admin","createdDate": "2017-04-25T21:55:48.695-0400",
+      "lastModifiedBy": "admin","lastModifiedDate": "2017-04-25T21:55:48.695-0400",
+      "orgTypeName": "Federal Office","contractAdminName": null
+    });
     expect(federalOfficeInfo).toEqual([
       {desc:'Does an AAC exist for this organization',value:false},
       {desc:'Is the request for a Federal Office, State/Local Office or Contractor',value:"Federal Office"},
@@ -109,24 +77,4 @@ describe('Create AAC Confirm Form Page', () => {
     ]);
   });
 
-  it('should have correct fields set for State/Local Office AAC request', () => {
-    fixture.detectChanges();
-    let federalOfficeInfo = component.generateRequestOfficeInfo(
-      {
-        requestId: 1,
-        isAACExist: true,
-        orgName: "Form Supply Management",
-        aacType: "State/Local Office",
-        requestReasons: ["Used for Ordering/Requisitioning Purposes", "Used for Reporting with FPDS"],
-        agencyCode: "ABC",
-        cgacCode: "ABC",
-        organizationName: "Temp State Office",
-      }
-    );
-    expect(federalOfficeInfo).toEqual([
-      {desc:'Does an AAC exist for this organization',value:true},
-      {desc:'Is the request for a Federal Office, State/Local Office or Contractor',value:"State/Local Office"},
-      {desc:'Organization Name',value:"Temp State Office"},
-    ]);
-  });
 });

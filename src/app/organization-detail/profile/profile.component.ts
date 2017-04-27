@@ -63,7 +63,6 @@ export class OrgDetailProfilePage {
     this.fhService.getOrganizationById(orgId,false,true).subscribe(
       val => {
         this.orgObj = val._embedded[0].org;
-        console.log(this.orgObj);
         this.setupOrgFields(this.orgObj);
         this.isDataAvailable = true;
         this.orgTypes = val._embedded[0].orgTypes;
