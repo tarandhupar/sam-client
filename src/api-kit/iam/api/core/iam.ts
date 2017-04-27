@@ -679,10 +679,23 @@ class IAM {
     ping();
   }
 
-  removeSession() {
-    Cookies.remove('iPlanetDirectoryPro', config.cookies);
-    Cookies.remove('IAMSession', config.cookies);
-    Cookies.remove('IAMSystemAccount', config.cookies);
+  removeSession($success, $error) {
+    let endpoint = utilities.getUrl(config.session),
+        auth = getAuthHeaders();
+
+    $success = $success || function(data) {};
+    $error = $error || function(data) {};
+
+    request
+      .delete(endpoint)
+      .set(auth)
+      .end((error, response) => {
+        error ? $error() : $success();
+
+        Cookies.remove('iPlanetDirectoryPro', config.cookies);
+        Cookies.remove('IAMSession', config.cookies);
+        Cookies.remove('IAMSystemAccount', config.cookies);
+      });
   }
 
   isLocal() {
@@ -694,12 +707,17 @@ class IAM {
   }
 
   logout(refresh) {
-    refresh = refresh || true;
-    this.removeSession();
+    let cb;
 
-    if(refresh) {
-      window.location.reload(true);
-    }
+    refresh = refresh || true;
+
+    cb = (() => {
+      if(refresh) {
+        window.location.reload(true);
+      }
+    });
+
+    this.removeSession(cb, cb);
   }
 }
 

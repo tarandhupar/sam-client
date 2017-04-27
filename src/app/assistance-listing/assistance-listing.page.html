@@ -298,7 +298,16 @@
     <!--How do I apply?-->
     <section id="program-application-information">
       <a name="#/programs/{{programID}}/view#applying-for-assistance"></a>
-      <h2 id="applying-for-assistance">Applying for Assistance</h2>
+      <div class="view-section-margin"></div>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="applying-for-assistance">Applying for Assistance</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'applying-for-assistance']">Edit</a>
+          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'applying-for-assistance']"></i>
+        </div>
+      </div>
 
       <h3>Deadlines:</h3>
 
@@ -502,7 +511,7 @@
         <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == true && dictionaries">
+              <ng-container *ngIf="item.isSelected == true && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                 {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>
@@ -513,7 +522,7 @@
         <span class="field">The following 2CFR policy requirements are excluded from coverage under this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == false && dictionaries">
+              <ng-container *ngIf="item.isSelected == false && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                 {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>

@@ -91,7 +91,7 @@
                         [hint]="'Search or browse to select an Assistance Type, or select Salaries and Expenses if applicable.'">
             <sam-autocomplete [options]="options" [name]="autoAssistanceType" formControlName="assistanceType"
                               (change)="assistanceTypeChange($event,i)"
-                              [config]="autocompleteConfig" [allowAny]="true" required></sam-autocomplete>
+                              [config]="autocompleteConfig" [allowAny]="true" required class="search-bar sam-autocomplete-width"></sam-autocomplete>
           </labelWrapper>
           <div class="fal-obligations-label">Past Fiscal Year - {{pastYear}}</div>
           <div class="text-radio-padding">
