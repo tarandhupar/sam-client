@@ -412,6 +412,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
     this.programService.deleteProgram(this.programID, this.cookieValue).subscribe(res => {
       this.router.navigate(['/falworkspace']);
     }, err => {
+      // todo: show error message when failing to delete
       console.log('Error deleting program ', err);
     });
   }
