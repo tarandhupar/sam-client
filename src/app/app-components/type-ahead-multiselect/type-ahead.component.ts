@@ -13,7 +13,7 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
 
   @Input()
   selectedList: any;
-  
+
   @Input() //optional
   showSpecialIndicator: boolean = true;
 
@@ -34,6 +34,7 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
     if(this.checkSelectedList(obj)) {
       this.modelChange.emit(obj);
       this.clearInput();
+      this.clearDropdown();
     }
   }
 

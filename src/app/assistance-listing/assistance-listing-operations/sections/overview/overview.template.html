@@ -14,37 +14,41 @@
               [formControlName]="'fundedProjects'"
   ></falFYTable>
 
-  <samTextArea [hint]="'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.'"
-               [control]="falOverviewForm.controls['falDesc']"
-               [name]="'falDesc-input'"
-               [label]="'Federal Assistance Listing Description'"
-               formControlName="falDesc"
+  <samTextArea
+    [hint]="'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.'"
+    [control]="falOverviewForm.controls['falDesc']"
+    [name]="'falDesc-input'"
+    [label]="'Federal Assistance Listing Description'"
+    formControlName="falDesc"
   ></samTextArea>
 
-  <sam-list-display #fcListDisplay [newValue]="fcSelectedOption" formControlName="fcInitialSelection"
-                    (modelChange)="fclistChange($event)" [config]="listConfig">
+  <sam-list-display [newValue]="fcNGModel" formControlName="fcListDisplay"
+                    (ngModelChange)="fcTypeChange($event)" (modelChange)="fclistChange()"
+                    [config]="fcAutocompleteConfig">
     <labelWrapper #fcTypeWrapper [label]="'Functional Codes'" [required]="true"
                   [hint]="'Select one or more Functional Codes to help public users search for this listing.'">
       <sam-autocomplete
         [options]="fcTypeOptions"
         [name]="functional-codes-control"
         formControlName="functionalCodes"
-        (ngModelChange)="fcTypeChange($event)"
+        [(ngModel)]="fcNGModel"
         [config]="fcAutocompleteConfig"
-        [required]="true" [showClearButton]="'true'" class="search-bar sam-autocomplete-width"></sam-autocomplete>
+        [required]="true" class="search-bar sam-autocomplete-width"></sam-autocomplete>
     </labelWrapper>
   </sam-list-display>
-  <sam-list-display #stListDisplay [newValue]="stSelectedOption"
-                    formControlName="stInitialSelection"
-                    (modelChange)="stlistChange($event)"
-                    [config]="listConfig">
+  <sam-list-display [newValue]="stNGModel"
+                    formControlName="stListDisplay"
+                    (ngModelChange)="stTypeChange($event)"
+                    (modelChange)="stlistChange()"
+                    [config]="stAutocompleteConfig">
     <labelWrapper [label]="'Subject Terms'"
-                  [hint]="'Select one or more Subject Terms to help public users search for this listing.'" [required]="true">
+                  [hint]="'Select one or more Subject Terms to help public users search for this listing.'"
+                  [required]="true">
       <sam-autocomplete autofill-falProgram
                         formControlName="subjectTerms"
-                        (ngModelChange)="stTypeChange($event)"
+                        [(ngModel)]="stNGModel"
                         name="subjectTermsSearch" [config]="stAutocompleteConfig"
-                        [required]="true" [showClearButton]="true"
+                        [required]="true"
                         class="search-bar sam-autocomplete-width"></sam-autocomplete>
     </labelWrapper>
   </sam-list-display>

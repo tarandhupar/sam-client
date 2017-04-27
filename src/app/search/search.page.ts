@@ -999,7 +999,11 @@ export class SearchPage implements OnInit{
   }
 
   regionalOfficeSearchEvent(evt) {
-    this.ro_keyword = evt;
+    if(!evt) {
+      this.ro_keyword = "";
+    } else {
+      this.ro_keyword = evt;
+    }
     this.pageNum = 0;
     this.searchResultsRefresh();
   }

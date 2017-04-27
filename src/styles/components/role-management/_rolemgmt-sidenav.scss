@@ -44,5 +44,12 @@
     button {
       text-align: center;
     }
+
+    // uswds buttons are 46rem wide regardless of there container width (because they are absolutely positioned)
+    // this creates all kinds of bugs.
+    // this fix should probably be global;
+    input[type="checkbox"] {
+      max-width: 30rem;
+    }
   }
 }

@@ -22,6 +22,10 @@ export class SearchService {
       method: 'GET'
     };
 
+    if(obj.index=="") {
+      oApiParam.oParam['index'] = "cfda,opp,fh,ent,ex,wd,fpds";
+    }
+
     //Active Only filter
     if(obj.isActive === true) {
       oApiParam.oParam['is_active'] = obj.isActive;

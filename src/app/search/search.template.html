@@ -189,7 +189,7 @@
 
         <!--NAICS - PSC Filters-->
         <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="(index==='fpds' || index === 'opp' || index === 'ent') && showRegionalOffices==false">
-          <sam-naics-psc-filter class="usa-award-filter"
+          <sam-naics-psc-filter class="usa-award-filter naics-psc-dropdown-list"
                                 [selectModel1]="naicsTypeModel"
                                 [selectModel2]="pscTypeModel"
                                 [options1]="naicsType"
