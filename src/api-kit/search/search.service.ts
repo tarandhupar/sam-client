@@ -21,7 +21,6 @@ export class SearchService {
       },
       method: 'GET'
     };
-    console.log("object", obj);
 
     if(obj.index=="") {
       oApiParam.oParam['index'] = "cfda,opp,fh,ent,ex,wd,fpds";
