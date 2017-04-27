@@ -8,6 +8,7 @@ import {SamUIKitModule} from "../../../sam-ui-elements/src/ui-kit/index";
 
 import {SamTypeAheadComponent} from "./type-ahead.component";
 import {AutocompleteConfig} from "../../../sam-ui-elements/src/ui-kit/types";
+import {PipesModule} from "../../app-pipes/app-pipes.module";
 
 describe('The Sam Type-ahead Component', () => {
   let component: SamTypeAheadComponent;
@@ -38,7 +39,8 @@ describe('The Sam Type-ahead Component', () => {
       imports: [
         CommonModule,
         FormsModule,
-        SamUIKitModule
+        SamUIKitModule,
+        PipesModule
       ],
     });
 

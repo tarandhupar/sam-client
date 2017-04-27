@@ -22,6 +22,7 @@ import { FHFeaturedResult } from '../organization/featured-result/featured-resul
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
 import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
+import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 
 @NgModule({
   imports: [
@@ -62,6 +63,6 @@ import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
     SamNaicsPscFilter,
     RegionalOfficeListingResult
   ],
-  providers: [],
+  providers: [DunsEntityAutoCompleteWrapper],
 })
 export class SearchModule { }
