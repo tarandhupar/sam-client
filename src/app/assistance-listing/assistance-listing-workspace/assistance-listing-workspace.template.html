@@ -1,6 +1,6 @@
-<workspace-layout (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"
+<workspace-layout *ngIf="permissions" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"
                   [totalElements]="totalCount" [loadFlag]="data.length > 0"
-                  titleText="Sam.gov Assistance Listings Workspace" [addBtnText]="addFALButtonText" (addBtnClick)="addBtnClick($event)">
+                  titleText="Sam.gov Assistance Listings Workspace" [addBtnText]="permissions['CREATE_FALS'] ? addFALButtonText : null" (addBtnClick)="addBtnClick($event)">
   <div workspace-sidebar></div>
   <div workspace-content class="workspace-content">
     <div *ngFor="let row of data" tabindex="-1">

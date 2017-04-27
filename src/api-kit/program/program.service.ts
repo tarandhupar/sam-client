@@ -92,6 +92,22 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam, false);
   }
 
+  getPermissions(cookie: string, permissions: any) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/permissions',
+      oParam: {
+        permissions: permissions
+      },
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam, false);
+  }
+
   getContacts(cookie: string) {
     let oApiParam = {
       name: 'program',
