@@ -380,6 +380,16 @@ Please contact the issuing agency listed under "Contact Information" for more in
     });
   }
 
+  public canEdit() {
+    if(this.program.status && this.program.status.code!='published' && this.program._links['program:update']) {
+      return true;
+    } else if(this.program._links['program:revise']) {
+      return true;
+    }
+
+    return false;
+  }
+
   public onEditClick(page: string[]) {
     if(this.program.status && this.program.status.code!='published') {
       this.router.navigate(['/programs', this.programID, 'edit'].concat(page));
