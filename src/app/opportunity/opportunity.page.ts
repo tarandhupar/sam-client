@@ -72,7 +72,6 @@ export class OpportunityPage implements OnInit {
   public opportunityFields = OpportunityFields; // expose the OpportunityFields enum for use in html template
   public displayField = {}; // object containing boolean flags for whether fields should be displayed
 
-  alert: any = [];
   packagesWarning : any;
   originalOpportunity: any;
   opportunityLocation: any;
@@ -99,6 +98,7 @@ export class OpportunityPage implements OnInit {
   showChangesAwardDetails = false;
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
+  showRevisonMessage: boolean = false;
 
 
   errorOrganization: any;
@@ -199,10 +199,10 @@ export class OpportunityPage implements OnInit {
 
     let apiStream = this.route.params.switchMap((params) => { // construct a stream of opportunity data
       //this.opportunityService.getOpportunityById(params['id']).subscribe(opportunitySubject); // attach subject to stream
-      this.alert = [];
       this.differences = null;
       this.packages = [];
       this.packagesWarning = null;
+      this.showRevisonMessage = false;
       return this.opportunityService.getOpportunityById(params['id']);
     });
 
@@ -245,6 +245,8 @@ export class OpportunityPage implements OnInit {
           }
         ]
       };
+
+      this.sidenavModel.children = [];
       this.updateSideNav(opportunitySideNavContent);
     }, err => {
       console.log('Error loading opportunity: ', err);
@@ -256,7 +258,7 @@ export class OpportunityPage implements OnInit {
   private updateSideNav(content?){
 
     let self = this;
-
+    
     if(content){
       // Items in first level (pages) have to have a unique name
       let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
@@ -629,12 +631,7 @@ export class OpportunityPage implements OnInit {
         let authoritative = _.filter(this.processedHistory, isAuthoritative)[0];
 
         if(authoritative && current.id !== authoritative.id) {
-          this.alert.push({
-            config: {
-              type: 'info',
-              description: 'Note: There have been updates to this opportunity. To view the most recent update/amendment, click <a href="' + authoritative.url + '">here</a>'
-            }
-          });
+          this.showRevisonMessage = true;
         }
       }, err => {
         console.log('Error loading history: ', err);

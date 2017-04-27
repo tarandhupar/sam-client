@@ -21,8 +21,8 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths" *ngIf="opportunity">
-    <ng-container *ngIf="alert.length > 0">
-      <samAlert *ngFor="let alert of alert" [type]="alert.config.type" [title]="alert.config.title"><div [innerHTML]="alert.config.description"></div></samAlert>
+    <ng-container *ngIf="showRevisonMessage == true">
+      <samAlert [type]="'info'" [title]="''">Note: There have been updates to this opportunity. To view the most recent update/amendment, click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a>.</samAlert>
     </ng-container>
 
     <section [attr.id]="generateID(opportunityFields.Header)" *ngIf="shouldBeDisplayed(opportunityFields.Header)">
