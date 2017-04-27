@@ -18,22 +18,24 @@
       <h3 class="p_T-2x p_B-4x">Reason for AAC Request</h3>
       <div class="usa-width-one-whole m_L-3x m_B-1x">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>Provide Purpose for AAC Request:</h4></span>
-        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x"><span *ngFor="let val of aacObj.requestReasons">&nbsp;{{val}}<br></span></p>
+        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x"><span *ngFor="let val of aacObj.requestReasonList">&nbsp;{{val.requestReasonName}}<br></span></p>
       </div>
       <div class="usa-width-one-whole m_L-3x m_B-1x" *ngIf="isReasonContainsFPDSReport()">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>Sub-tier Agency Code:</h4></span>
-        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">&nbsp;{{aacObj.agencyCode}}</p>
+        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">&nbsp;{{aacObj.aac.agencyCode}}</p>
       </div>
       <div class="usa-width-one-whole m_L-3x m_B-1x" *ngIf="isReasonContainsFPDSReport()">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>CGAC Code:</h4></span>
-        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">&nbsp;{{aacObj.cgacCode}}</p>
+        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">&nbsp;{{aacObj.aac.cgacCode}}</p>
       </div>
     </div>
     <div class="usa-width-one-whole aac-confirm-div-underline p_B-3x m_B-5x">
       <h3 class="p_T-2x p_B-4x">Office Address Information</h3>
-      <p class="m_L-3x m_B-1x" *ngFor="let address of aacObj.orgAddresses">
-        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addrType}}:</h4></span>
-        <span class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">{{address.street}}<br>{{address.city}}, {{address.state}}&nbsp;{{address.postalCode}}<br>{{address.country}}</span>
+      <p class="m_L-3x m_B-1x" *ngFor="let address of aacObj.addressList">
+        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addressTypeName}}:</h4></span>
+        <span class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">{{address.street1}}<br>
+          <span *ngIf="address.street2 != null">{{address.street2}}<br></span>
+          {{address.city}}, {{address.state}}&nbsp;{{address.code}}<br>{{address.country}}</span>
       </p>
     </div>
   </div>
