@@ -186,9 +186,7 @@ class Utilities {
     }
 
     // Apply API Key
-    if(url.search(/^https?:\/\/api-umbrella\.prod-iae\.bsp\.gsa\.gov/) > -1) {
-      url += '?api_key=8NNLSvVq9ozqkA1BA7KCey9ocE0iovWXs5dmjTu5';
-    }
+    url += '?api_key=8NNLSvVq9ozqkA1BA7KCey9ocE0iovWXs5dmjTu5';
 
     return url;
   }
