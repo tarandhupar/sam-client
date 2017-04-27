@@ -1,0 +1,21 @@
+<div class="usa-kba">
+  <div class="question">
+    <samSelect [name]="store.question.name"
+               [(model)]="$question"
+               [options]="$questions"
+               [errorMessage]="states.submitted ? states.errors.question : ''"
+               (modelChange)="changeQuestion($event)"
+               [label]="label">
+    </samSelect>
+  </div>
+  <div class="answer">
+  <labelWrapper [errorMessage]="(states.submitted && answer.invalid ? states.errors.answer : '')" required="true">
+      <input [type]="states.type"
+             [name]="store.answer.name"
+             [formControl]="answer"
+             (blur)="secureAnswer($event)"
+             (focus)="selectAnswer($event)"
+             (keyup)="unsecureAnswer($event)" />
+    </labelWrapper>
+  </div>
+</div>

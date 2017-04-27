@@ -1,0 +1,19 @@
+<div class="usa-grid-full usa-authentication">
+  <aside class="usa-width-one-fourth">
+    <h1 [innerText]="store.title"></h1>
+    <ul class="usa-sidenav-list">
+      <li *ngFor="let nav of store.nav; let $index = index;">
+        <a *ngIf="nav.routerLink" [routerLink]="[nav.routerLink]" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
+        <a *ngIf="!nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
+      </li>
+      <ng-container *ngIf="states.system">
+        <li *ngFor="let systemNav of store.systemNav; let $index = index;">
+          <a *ngIf="systemNav.routerLink" [routerLink]="[systemNav.routerLink]" [routerLinkActive]="[systemNav.routerLinkActive]" [innerText]="systemNav.text"></a>
+        </li>
+      </ng-container>
+    </ul>
+  </aside>
+  <section class="usa-width-three-fourths usa-profile" [ngClass]="[activeRouteClass]">
+     <router-outlet></router-outlet>
+  </section>
+</div>

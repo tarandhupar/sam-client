@@ -1,0 +1,39 @@
+<div class="usa-grid" *ngIf="loadFlag">
+  <!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <div>&nbsp;</div>
+    <div sam-sticky limit=1200 container="occupy-page">
+      <object-sidebar [sidenavModel]="sidenavModel" (sideNavClick)="setSelectedPage($event)"></object-sidebar>
+    </div>
+  </aside>
+
+  <div class="usa-width-three-fourths">
+
+    <form [formGroup] = "mainForm">
+
+      <div *ngFor="let item of objectFormData; let i=index;" [id]="item.section" [class.hide]="selectedPage !== i">
+        <a [routerLink]="['#' + item.section , {id: i}]" fragment="item.section"></a>
+        <div id="stickyLabel" class="sticky-label" *ngIf="i>0 && mode=='edit'">Edit {{item.label}} - {{stickyLabel}}</div>
+        <ng-container *ngFor="let field of item.fields; let j=index;">
+        <form-field
+          [field]="field"
+          [control]="mainForm.controls[item.section].controls[field.name]"
+          [value]="mainForm.get( item.section + '.' + field.name).value"
+          [fieldFormGroup] = "mainForm.get(item.section)"
+          ></form-field>
+
+        </ng-container>
+
+
+        <div class="pull-left">
+          <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+          <samButton *ngIf="i > 0" buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
+          <samButton [buttonId]="item.section + '_se'" [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+          <samButton *ngIf="i != objectFormData.length - 1" [buttonId]="item.section + '_sc'" [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,133 @@
+
+<!-- Help Topics -->
+<div class="sam-ui container">
+  <div class="sam-ui padded four column stackable grid">
+    <div class="row" style="background: url(src/assets/img/help-main.png); background-size: cover;">
+      <div class="column">
+        <!-- Hidding until we have URL's for the links below -->
+        <div class="sam-ui segment" style="visibility: hidden;">
+          <h3>Top Help Topics</h3>
+          <div class="sam-ui list">
+            <div class="item">
+              <a href="">Frequentely Asked Questions</a>
+            </div>
+            <div class="item">
+              <a href="">User Guides</a>
+            </div>
+            <div class="item">
+              <a href="">Demostration Videos</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+<!-- About SAM.gov -->
+<div class="sam-ui container">
+  <div class="sam-ui vertically very padded stackable doubling grid">
+    <div class="row">
+      <div class="column">
+        <h2>About SAM.gov</h2>
+        <h3>The new SAM.gov has integrated all ten systems under one unified system.</h3>
+      </div>
+    </div>
+    <div class="stretched four column row">
+      <div class="column">
+        <div class="sam-ui segment center aligned icon top">
+          <i class="icon fa fa-map-marker fa-3x" aria-hidden="true"></i>
+          <a [routerLink]="['/help/new']">New to SAM.gov</a>
+          <p>
+            New to the site? See step by step information on the federal award process
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="sam-ui segment center aligned icon top">
+          <i class="icon fa fa-map-signs fa-3x" aria-hidden="true"></i>
+          <a [routerLink]="['/help/transition']">Transition Roadmap</a>
+          <p>
+            The New SAM.gov provides a unified entry point for the award process for federal buyers and sellers.
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="sam-ui segment center aligned icon top">
+          <i class="icon fa fa-user fa-3x" aria-hidden="true"></i>
+          <a [routerLink]="['/help/accounts']">User Accounts</a>
+          <p>
+            Access information on how to sign up, update registration, and other ways to manage your user account.
+          </p>
+        </div>
+      </div>
+      <div class="column">
+        <div class="sam-ui segment center aligned icon top">
+          <i class="icon fa fa-book fa-3x" aria-hidden="true"></i>
+          <a [routerLink]="['/help/reference']">External Resources</a>
+          <p>
+            In-depth resources on SAM.gov systems from data to policy and how to et started.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+<!-- Blue Row  -->
+<div class="sam-ui vertically very padded grid">
+  <div class="light blue row">
+    <div class="sam-ui container">
+      <div class="sam-ui padded stackable grid">
+        <div class="two column row">
+          <div class="column fa fa-map fa-7x background">
+            <div class="sam-ui basic segment">
+              <h2>What can I do at SAM.gov</h2>
+              <p>
+                Search across GSA, view reports, perform data entry, and access a wide variety of usuful resources. Federal 
+                government users have access to additional features that support their jobs.
+              </p>
+              <a [routerLink]="['/help/features']" class="sam-ui inverted button right labeled icon">
+                <i class="icon fa fa-arrow-circle-right" aria-hidden="true"></i>
+                Learn more about SAM.gov features 
+              </a>
+            </div>
+          </div>
+          <div class="column fa fa-pie-chart fa-7x background">
+            <div class="sam-ui basic segment">
+              <h2>Award Data</h2>
+              <p>
+                SAM.gov provides access to data that enables you to conduct searches across data sets, run reports, and download data 
+                extracts for deeper analysis.
+              </p>
+              <a [routerLink]="['/help/award']" class="sam-ui inverted button right labeled icon">
+                <i class="icon fa fa-arrow-circle-right" aria-hidden="true"></i>
+                Learn more about our data sets
+              </a>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Row -->
+<div class="sam-ui vertically very padded stackable grid container">
+  <div class="two column row">
+    <div class="column">
+      <img class="sam-ui left floated image" src="src/assets/img/fsd_logo.jpg" alt="Federal Service Desk Logo">
+      <p>
+        The Federal Service Desk provides help with U.S. Government contracts and grants systems. 
+        <a target="blank" href="https://fsd.gov">Visit Federal Service Desk</a>
+      </p>
+    </div>
+    <div class="column">
+      <img class="sam-ui left floated image" src="src/assets/img/interact.png" alt="Interact Logo">
+      <p>
+        GSA Interact is a collaborative community for connecting, communicating, learning and engaging across GSA topics. 
+        <a target="blank" href="https://interact.gsa.gov/">Visit GSA Interact</a>
+      </p>
+    </div>
+  </div>
+</div>

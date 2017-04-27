@@ -5,32 +5,42 @@ import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
 import { removeNgStyles, createNewHosts } from '@angularclass/hmr';
 
-import { SamAngularModule } from '../sam-angular';
-
 /*
  * Platform and Environment providers/directives/pipes
  */
 import { ENV_PROVIDERS } from './environment';
-import { ROUTES } from './app.routes';
+import { ROUTES } from './app.route';
 // App is our top level component
 import { App } from './app.component';
-import { APP_RESOLVER_PROVIDERS } from './app.resolver';
 import { AppState } from './app.service';
-import { Home } from './home';
-import { NoContent } from './common/no-content';
-import { SamFooter } from "./common/samuikit/sam-footer";
-import { SamHeader } from "./common/samuikit/sam-header";
-import { SamSpace } from "./common/samuikit/sam-space";
-import { SamAngularDemo } from "./sam-angular-demo";
-import { SamButton } from "./common/samuikit/sam-button";
-import { SamLabel } from "./common/samuikit/sam-label";
-import { SamAccordions } from "./common/samuikit/sam-accordions";
-import { SamSelect } from "./common/samuikit/sam-select";
+import { AuthenticationModule } from './authentication';
+import { HomeModule } from './application-content/home';
+import { AlertsModule } from './alerts';
+import { HelpModule } from './Help';
+import { ReportsModule } from './Reports';
+import { PageNotFoundErrorPage } from './application-content/404';
+import { ErrorModule } from './application-content/error/error.module';
+import { ProgramModule } from './assistance-listing';
+import { OpportunityModule } from './opportunity';
+import { WageDeterminationModule } from './wage-determination';
+import { EntityModule } from './entity';
+import { ExclusionModule } from './exclusion';
+import { AwardsModule } from './awards';
+import { OrganizationModule } from './organization';
+import { SearchModule } from './search';
+import { UIKitDemoModule } from "./application-content/ui-kit-demo/ui-kit-demo.module";
 
+
+import { SamUIKitModule } from 'sam-ui-kit';
+import { SamAPIKitModule } from 'api-kit';
+import { AppComponentsModule } from './app-components/app-components.module';
+import { UserDirectoryModule } from './users';
+import { OrganizationDetailModule } from "./organization-detail/organization-detail.module";
+import { RoleManagementModule } from "./role-management/role-management.module";
+import {FALFormModule} from "./assistance-listing/assistance-listing-operations/fal-form.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
-  ...APP_RESOLVER_PROVIDERS,
   AppState
 ];
 
@@ -41,23 +51,44 @@ const APP_PROVIDERS = [
   bootstrap: [ App ],
   declarations: [
     App,
-    Home,
-    NoContent,
-    SamAngularDemo,
-    SamFooter,
-    SamHeader,
-    SamSpace,
-    SamButton,
-    SamLabel,
-    SamAccordions,
-    SamSelect,
+    PageNotFoundErrorPage
   ],
-  imports: [ // import Angular's modules
+  imports: [
+    // Angular Modules
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(ROUTES, { useHash: false }),
-    SamAngularModule,
+
+    // Router
+    RouterModule.forRoot(ROUTES),
+
+    // Page View Modules
+    UserDirectoryModule,
+    AuthenticationModule,
+    ProgramModule,
+    OpportunityModule,
+    EntityModule,
+    ExclusionModule,
+    AwardsModule,
+    OrganizationModule,
+    HomeModule,
+    AlertsModule,
+    HelpModule,
+    ReportsModule,
+    SearchModule,
+    ErrorModule,
+    UIKitDemoModule,
+    WageDeterminationModule,
+    OrganizationDetailModule,
+    RoleManagementModule,
+
+    //  Data Entry
+    FALFormModule,
+
+    // Other Modules
+    SamAPIKitModule,
+    SamUIKitModule,
+    AppComponentsModule
   ],
   providers: [ // expose our Services and Providers into Angular's dependency injection
     ENV_PROVIDERS,

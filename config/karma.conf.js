@@ -26,8 +26,14 @@ module.exports = function(config) {
      * we are building the test environment in ./spec-bundle.js
      */
     files: [
-      { pattern: './config/spec-bundle.js', watched: false }
+      { pattern: './config/spec-bundle.js', watched: false },
+      { pattern: './src/assets/**/*.jpg', watched: false, included: false, served: true },
+      { pattern: './src/assets/**/*.png', watched: false, included: false, served: true },
     ],
+
+    proxies: {
+      '/src/assets': '/base/src/assets'
+    },
 
     /*
      * preprocess matching files before serving them to the browser
@@ -69,6 +75,8 @@ module.exports = function(config) {
     // enable / disable colors in the output (reporters and logs)
     colors: true,
 
+    browserNoActivityTimeout: 200000,
+
     /*
      * level of logging
      * possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
@@ -83,7 +91,7 @@ module.exports = function(config) {
      * available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
      */
     browsers: [
-      'Chrome'
+      'PhantomJS'
     ],
 
     customLaunchers: {
@@ -93,6 +101,9 @@ module.exports = function(config) {
       }
     },
 
+    client: {
+        captureConsole: true
+    },
     /*
      * Continuous Integration mode
      * if true, Karma captures browsers, runs the tests and exits

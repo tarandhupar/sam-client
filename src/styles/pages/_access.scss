@@ -1,0 +1,167 @@
+.permissions-block {
+  border: 1px solid black;
+
+  .permissions-table-body, .permissions-table-header {
+    padding: .5em;
+  }
+
+}
+
+.background-white {
+  background-color: white;
+}
+
+.border-bottom-black {
+  border-bottom: 1px solid black;
+}
+
+.access-page {
+  .no-wrap {
+    white-space: nowrap;
+  }
+
+
+
+  .modal-subtitle {
+    margin-top: .8em;
+  }
+
+  .role-block:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  .show-permissions-button {
+    margin-top: -8px !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .fieldset-wrapper {
+    min-width: 250px;
+  }
+
+  .usa-width-eleven-twelfths {
+    @include span-columns(11);
+  }
+
+  .dropdown-list {
+    overflow-y: auto;
+    max-height:400px;
+
+    input {
+      height: initial;
+    }
+  }
+
+  /* For the scroll bar to visible on mac */
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+  }
+
+  .modify-role-buttons {
+    margin-right: -5px;
+    margin-top: -10px;
+
+    button {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  .access-cell {
+    color: black;
+    padding: 10px 0;
+  }
+
+  .dropdown-list {
+    // should this be global?
+    z-index: 10;
+  }
+
+  .background-grey {
+    background-color: $color-gray-lightest;
+  }
+
+  .functions-row {
+    padding-left: .5em;
+    padding-right: .5em;
+  }
+
+  .functions-row:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  .object-col {
+    word-break: break-all;
+  }
+
+  .first-function {
+    margin-top: 1em;
+  }
+
+  .functions-col {
+    position: relative;
+  }
+
+  .pip-left {
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -10px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right:10px solid $color-gray-lightest;
+  }
+
+  .usa-accordion-button {
+    padding: 1em;
+  }
+
+  .usa-accordion-content {
+    padding: 1em;
+  }
+
+  .row-action-button {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .underline {
+    text-decoration: underline;
+  }
+
+  .organizations-row {
+    margin-top: 1em;
+  }
+
+  .requests-container {
+    border: 2px solid black;
+    background-color: $color-gray-lightest;
+
+    .usa-button-transparent {
+      padding: .2em;
+    }
+
+    .request-message {
+      margin-left: -8px;
+    }
+
+    .request-block:not(:last-child) {
+      border-bottom: 2px solid black;
+    }
+
+    .request-block {
+      padding: .8em;
+    }
+  }
+
+  .no-underline {
+    text-decoration: none;
+  }
+}

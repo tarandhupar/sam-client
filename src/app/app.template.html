@@ -1,21 +1,46 @@
 <!-- includes HTML for app component-->
-<div>
+<samBanner #banner *ngIf="!isHeaderWithSearch"></samBanner>
+<div [style.height]="!isHeaderWithSearch ? '22px' : '0'">&nbsp;</div>
+<alertHeader></alertHeader>
+<samSearchHeader #searchheader *ngIf="isHeaderWithSearch" [filterValue]="index" (searchEvent)="onHeaderSearchEvent($event)">
+  <div header-links>
+    <SamHeaderLinks (onDropdownToggle)="toggleOverlay($event)"></SamHeaderLinks>
+  </div>
+  <div header-searchbar>
+    <samSearchbar #searchbar
+      [size]="'small'" 
+      [keyword]="keyword"
+      (onSearch)="onHeaderSearchEvent($event)"
+      [(filterValue)]="index"
+      [selectConfig]="searchSelectConfig">
+      <div custom-input>
+        <!--samInputAutocomplete 
+          [serviceName]="'suggestions'"
+          [index]="index"
+          (searchTermEmit)="searchbar.callSearch($event)"
+          [searchTerm]="keyword"
+          (keyEnterEmit)="searchbar.onSearchClick()">
+        </samInputAutocomplete-->
+        <sam-autocomplete autofill-suggestions 
+          [(ngModel)]="keyword" 
+          (ngModelChange)="searchbar.callSearch($event);searchbar.onSearchClick();"
+          [index]="index" 
+          [showClearButton]="true"
+          [allowAny]="true"
+          name="appsearch" ></sam-autocomplete>
+      </div>
+    </samSearchbar>
+  </div>
+</samSearchHeader>
+<samHeader *ngIf="!isHeaderWithSearch" (headerDropdownControl)="toggleOverlay($event)">
+  <div header-links>
+    <SamHeaderLinks (onDropdownToggle)="toggleOverlay($event)"></SamHeaderLinks>
+  </div>
+</samHeader>
 
-   <samSpace labelname = "space" ></samSpace>
-   <samHeader labelname = "header" ></samHeader>
-  <nav class="usa-grid">
-    <a [routerLinkActive]="['active', 'router-link-active']" [routerLink]=" ['./home'] ">Home</a>
-    <a [routerLinkActive]="['active', 'router-link-active']" [routerLink]="['./sam-angular']">Sam Angular Components</a>
-  </nav>
-</div>
-
- <main>
-       <router-outlet></router-outlet>
- </main>
-
-
- <samButton (click)='clicked()' labelname = "button" [config] = buttonValue></samButton>
- <samLabel labelname="label" [config] = labelValue></samLabel>
- <samAccordions labelname = "accordions" [config] = accordionsValue></samAccordions>
- <samSelect labelname = "select" [config] = selectValue></samSelect>
- <samFooter labelname = "footer" ></samFooter>
+<main id="main-container" class="occupy-page relative">
+  <router-outlet></router-outlet>
+  <div [ngClass]="{'overlay':showOverlay}"></div>
+</main>
+<alertFooter></alertFooter>
+<samFooter labelname = "footer" ></samFooter>

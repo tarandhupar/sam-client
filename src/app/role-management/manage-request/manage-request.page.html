@@ -1,0 +1,38 @@
+<div class="manage-request m_A-4x clearfix">
+  <div class="usa-width-one-fourth">
+    <button class="usa-button usa-button-transparent back-button" [routerLink]="['/access/role-workspace']"><i class="fa fa-arrow-circle-left"></i>&nbsp;Back to Role Workspace</button>
+  </div>
+  <div class="usa-width-one-half">
+    <!--<div class="usa-alert usa-alert-error"><code>{{request | json}}</code></div>-->
+    <h1>Access Request</h1>
+    <request-details [requestObject]="request"></request-details>
+    <div class="m_T-4x">
+      <samRadioButton
+        [options]="options"
+        label="How do you want to respond?"
+        name='request-action'
+        [(model)]="selectedOption"
+      ></samRadioButton>
+    </div>
+    <div class="m_T-4x" *ngIf="shouldShowTextarea()">
+      <samTextArea
+        name='message'
+        [(value)]="message"
+        (valueChange)="onMessageChanged()"
+        [required]="true"
+        [label]="'Message:'"
+        [errorMessage]="messageError"
+        [placeholder]="messagePlaceholder()"
+        (focusEvent)="onFocusMessage($event)"
+      ></samTextArea>
+    </div>
+    <div class="clearfix">
+      <button class="pull-right usa-button usa-button-primary"
+              (click)="onSubmitClick()"
+              [disabled]="!selectedOption"
+              [ngClass]="!selectedOption && 'usa-button-disabled'"
+      >{{submitLabel()}}</button>
+    </div>
+  </div>
+  <div class="usa-width-one-fourth">&nbsp;</div>
+</div><!-- page -->

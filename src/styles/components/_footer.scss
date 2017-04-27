@@ -1,0 +1,27 @@
+.sam-footer {
+  
+  p{
+    font-size: $small;
+    line-height: 1.4;
+    padding: 1em 0em 3em 0em;
+    strong {
+      font-weight: 600;
+    }
+  }
+  
+  .sam-footer-logo {
+    a {
+      display: inline-block;
+      min-height: 10rem;
+      min-width: 10rem;
+      @include background-image(url($assets-path + '/img/logos/gsa-reverse.svg'), url($assets-path + '/img/logos/gsa-reverse.png'));
+      background-size: 10rem auto;
+      background-repeat: no-repeat;
+    }
+
+    span {
+      @include sr-only();
+    }
+  }
+  
+}

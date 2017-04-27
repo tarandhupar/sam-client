@@ -1,0 +1,39 @@
+.new-to-sam{
+  .small-text{
+    font-size: 14px;
+  }
+
+  .new-to-sam-back:hover, .square-button:hover{
+    cursor: pointer;
+  }
+
+  .new-to-sam-question{
+    font-weight: bold;
+    text-align: left;
+  }
+
+  .table-cell-one-forth{
+    width: 25%;
+  }
+
+  .no-border{
+    border:none;
+  }
+
+  .square-button{
+    background: dodgerblue;
+    border-radius: 20px;
+    color: $color-white;
+  }
+
+  table{
+    border-spacing: 10px;
+    border-collapse: inherit;
+    padding-top: 0;
+    table-layout: fixed;
+  }
+
+  .p_T-0{
+    padding-top: 0;
+  }
+}

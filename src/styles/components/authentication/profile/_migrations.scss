@@ -1,0 +1,113 @@
+.usa-profile-migrations {
+  .usa-grid {
+    padding: 0rem;
+  }
+
+  > h3 {
+    margin-top: 5rem !important;
+  }
+
+  .usa-alert {
+    position: absolute;
+    bottom: -60px;
+    right: 0px;
+  }
+
+  .usa-alerts {
+    position: absolute;
+  }
+
+  .usa-alert-text {
+    max-width: inherit !important;
+  }
+
+  .label-wrapper:nth-child(1) {
+    width: 96%;
+  }
+
+  select {
+    width: 100% !important;
+  }
+
+  .button-controls {
+    text-align: right;
+  }
+
+  .usa-migration-history {
+    margin-bottom: 1.5em;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #000000;
+
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    tbody {
+      td {
+        padding-top: 0px;
+        border-top-width: 0px;
+        border-right-width: 0px;
+        border-bottom-width: 0px;
+
+        &:nth-child(1) {
+          padding-right: 4px;
+        }
+
+        &:nth-child(4) {
+          padding-left: 4px;
+        }
+      }
+
+      .group {
+        td:nth-child(1),
+        td:nth-child(4) {
+          padding-bottom: 0em;
+          vertical-align: bottom;
+        }
+
+        td:nth-child(2),
+        td:nth-child(3) {
+          border-right-width: 0px;
+          border-bottom-width: 1px;
+          border-bottom-style: dotted;
+        }
+
+        td:nth-child(2) {
+          min-width: 150px;
+          width: 150px;
+        }
+      }
+
+      &:last-child {
+        td {
+          padding-bottom: 2em !important;
+        }
+      }
+    }
+
+    .key {
+      position: relative;
+      bottom: -6px;
+    }
+
+    dl {
+      display: inline-block;
+      text-align: left;
+
+      dd {
+        margin-left: 0px;
+        line-height: 2;
+      }
+    }
+  }
+
+  .usa-legacy-systems {
+    tr {
+      td {
+        width: (100% / 3);
+      }
+    }
+  }
+}

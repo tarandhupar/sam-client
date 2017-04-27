@@ -1,0 +1,47 @@
+<div class='organization-container' [class.usa-input-error]="searchMessage">
+  <label [class.usa-input-error-label]="searchMessage">{{label}}<span *ngIf="required" class="usa-additional_text">Required</span></label>
+  <span *ngIf="hint" class="usa-form-hint">{{hint}}</span>
+  <div *ngIf="searchMessage">
+    <span class="usa-input-error-message">{{ searchMessage }}</span>
+  </div>
+  <div class="usa-agency-picker-dropdown-area usa-grid">
+    <div class="usa-agency-picker-search-area" *ngIf="!orgRoot">
+      <div class="usa-agency-picker-search-input-wrapper">
+        <input title="search text box" type="text" class="usa-agency-picker-search-input" (blur)="autocompleteBlur($event)" aria-autocomplete="list" aria-haspopup="true" (keydown)="keydownHandler($event)" [(ngModel)]="searchTerm" (ngModelChange)="searchTermChange($event)" maxlength="75"/>
+        <span [ngClass]="resetIconClass"><i class="fa fa-times-circle" (click)="onResetClick()" tabindex="0" (keyup.enter)="onResetClick()"></i></span>
+      </div>
+      <ul (blur)="autocompleteBlur($event)" #autocompletelist tabindex="0" *ngIf="autoCompleteToggle" class="usa-agency-picker-autocomplete" (mousedown)="cancelBlurMethod()">
+        <li *ngIf="showAutocompleteMsg" class="autocomplete-msg">{{autocompleteMsg}}</li>
+        <li *ngFor="let result of autoComplete; let i = index;" (mouseover)='autocompleteMouseover(i)' [ngClass]="i === autocompleteIndex?'autocomplete-selected':''" (mousedown)="autocompleteSelection(result)">{{result.name}}</li>
+      </ul>
+      <div class="usa-agency-picker-icon-area">
+        <a (click)="setOrganizationFromSearch()" class="usa-agency-picker-submit-text">
+          <i class="usa-agency-picker-icon fa fa-search-plus" aria-hidden="true"></i>
+        </a>
+      </div>
+      <div class="usa-agency-picker-browse-toggle-area" *ngIf="!advancedMode">
+        <a (click)="toggleSelectorArea()" *ngIf="!selectorToggle" (keyup.enter)="toggleSelectorArea()" tabindex="0">Advanced</a>
+        <a (click)="toggleSelectorArea()" *ngIf="selectorToggle" (keyup.enter)="toggleSelectorArea()" tabindex="0">Simple</a>
+      </div>
+    </div>
+    <div class="usa-width-one usa-agency-picker-browse-area" *ngIf="selectorToggle || orgRoot">
+      <div class='fh-form-alt'>
+        <div *ngFor="let orgLevel of orgLevels; let idx = index;">
+          <div *ngIf="orgLevel['show']">
+            <samSelect [(model)]="orgLevel.selectedOrg" [name]="orgLevel.name" [options]="orgLevel.options" [label]="orgLevel.label" (modelChange)="loadChildOrganizations(idx)" ></samSelect>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="usa-agency-picker-button-area usa-width-one" *ngIf="selectorToggle || orgRoot">
+      <button type="button" (click)="setOrganizationFromBrowse()" (keyup.enter)="setOrganizationFromBrowse()" tabindex="0">Add</button>
+      <button type="button" (click)="resetBrowse()" (keyup.enter)="resetBrowse()" tabindex="0">Clear</button>
+    </div>
+  </div>
+
+  <div class="usa-agency-picker-readonly-area">
+    <ul>
+      <li *ngFor="let org of selectedOrganizations"><span (click)="removeOrg(org.value)" tabindex="0" (keyup.enter)="removeOrg(org.value)"><i class="fa fa-times" aria-hidden="true"></i></span> {{org.name}}</li>
+    </ul>
+  </div>
+</div>

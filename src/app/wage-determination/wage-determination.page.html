@@ -1,0 +1,98 @@
+<div class="usa-grid wage-determination-page">
+
+  <!--Sidebar-->
+  <aside class="usa-width-one-fourth">
+    <br />
+    <br />
+    <div sam-sticky limit=1200 container="wage-determination-page">
+      <!--Logo-->
+      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
+
+      <!--Side Navigation-->
+      <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+
+    </div>
+  </aside>
+
+  <div class="usa-width-three-fourths">
+
+    <section id="wage-determination" *ngIf="wageDetermination">
+      <ng-container *ngIf="showRevisonMessage == true">
+        <samAlert [type]="'info'" [title]="''">Note: There have been revisions to this wage determination. To view the most recent version click <a [routerLink]="['/wage-determination', referenceNumber, processedHistory[0].index]">here</a>.</samAlert>
+      </ng-container>
+
+      <ng-container *ngIf = "isSCA">
+        <h1 class="m_B-0" id="wd-reference-number">SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p class="m_T-0 usa-font-lead" id="wd-type">Service Contract Act</p>
+      </ng-container>
+      <ng-container *ngIf = "!isSCA">
+        <h1 class="m_B-0" id="wd-reference-number">DBA WD # {{wageDetermination.fullReferenceNumber}} </h1>
+        <p class="m_T-0 usa-font-lead" id="wd-type">Davis-Bacon Act</p>
+      </ng-container>
+
+      <div class="usa-grid-full">
+
+        <div class="usa-width-two-thirds">
+          <ul class="usa-unstyled-list">
+            <div class="m_B-3x" *ngFor="let location of locations; let i = index">
+              <li [attr.id]="'wd-state-' + i">
+                <strong>State: </strong> {{location.stateString}}
+              </li>
+              <li [attr.id]="'wd-counties-' + i">
+                <strong>Counties: </strong> {{location.countiesString}}
+              </li>
+            </div>
+          </ul>
+        </div>
+
+        <div class="usa-width-one-third">
+          <ul class="usa-unstyled-list">
+            <li id="wd-revision-number" *ngIf = "revisionNumber">
+              <strong>Revision #: </strong>
+              {{revisionNumber}}
+            </li>
+            <li id="wd-services" *ngIf = "services">
+              <strong>Service/Services: </strong>
+              {{services}}
+            </li>
+            <li id="wd-construction-types" *ngIf = "constructionTypes">
+              <strong>Construction: </strong>
+              {{constructionTypes}}
+            </li>
+            <li id="wd-date" *ngIf = "wageDetermination.publishDate">
+              <ng-container *ngIf="isSCA">
+                <strong *ngIf="revisionNumber && revisionNumber === '1'">Published Date: </strong>
+                <strong *ngIf="revisionNumber && revisionNumber !== '1'">Last Revised Date: </strong>
+              </ng-container>
+              <ng-container *ngIf="!isSCA">
+                <strong *ngIf="revisionNumber && revisionNumber === '0'">Published Date: </strong>
+                <strong *ngIf="revisionNumber && revisionNumber !== '0'">Last Revised Date: </strong>
+              </ng-container>
+              {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Print Link -->
+      <div id="wd-print-link" *ngIf="wageDetermination?.document" class="text-right m_B-5x m_T-5x">
+        <a target="blank" class="print-link" tabindex="0" [routerLink]="['/wage-determination', referenceNumber, revisionNumber, 'document']">Printer Friendly</a>
+      </div>
+
+      <!-- Document -->
+      <pre id="wd-document" *ngIf="wageDetermination?.document">
+        {{ wageDetermination.document }}
+      </pre>
+    </section>
+
+    <section id="wd-history" *ngIf="history">
+      <h2>History
+        <samButton *ngIf="shortProcessedHistory" [buttonId]="'defaultBtnHistory'" [buttonText]="!showingLongHistory ? 'Show More' : 'Show Less'" [buttonType]="btnType" (click)="showHideLongHistory()"></samButton>
+      </h2>
+      <sam-history [data]="processedHistory" [currentId]="wageDetermination.fullReferenceNumber + '/' + wageDetermination.revisionNumber"></sam-history>
+    </section>
+
+  </div>
+
+</div>

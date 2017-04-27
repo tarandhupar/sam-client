@@ -1,0 +1,341 @@
+<div class="usa-grid-full entity-object-view">
+	<div class="usa-width-one-fourth">
+		<h1>Entity</h1>
+		<!--Sidebar-->
+		<aside>
+			<!--Side Navigation-->
+			<div class="side-nav-position" sam-sticky limit=1200 container="entity-object-view">
+				<img src="">
+				<nav>
+					<ul class="usa-sidenav-list">
+						<li><a href="{{ currentUrl }}#core-data">Core Data</a></li>
+						<li><a href="{{ currentUrl }}#assertions">Assertions</a></li>
+						<li><a href="{{ currentUrl }}#reps-certs">Reps &amp; Certs</a></li>
+						<li><a href="{{ currentUrl }}#pocs">POCs</a></li>
+					</ul>
+				</nav>
+			</div>
+		</aside>
+	</div>
+	<div class="usa-width-three-fourths" >
+		<div *ngIf="coreData">
+			<div class="usa-grid-full">
+				<h1>{{coreData.legalBusinessName}}</h1>
+			</div>
+			<div class="usa-grid-full">
+				<div class="usa-width-one-half">
+					<strong>DUNS: </strong>{{coreData.generalInfo.duns}}
+					<br />
+					<strong>CAGE Code: </strong>{{coreData.cageCode}}
+					<br />
+					<br />
+					<entityObjectAddress [address]="coreData.mailAddress"></entityObjectAddress>
+				</div>
+				<div class="usa-width-one-half">
+					<p class="display-inline">
+						<strong>Activation Date: </strong>{{coreData.activeDate}}
+						<br />
+						<strong>Expiration Date: </strong>{{coreData.generalInfo.expirationDate}}
+						<br />
+						<strong>Purpose of Registration: </strong>{{coreData.purposeOfRegistration}}
+						<br />
+						<strong>Has Active Exclusion?: </strong>{{coreData.exclusionStatusFlag}}
+						<br />
+						<strong>Delinquent Federal Debt?: </strong>{{coreData.delinquentFedDebtFlag}}
+					</p>
+				</div>
+			</div>
+			<br />
+			<div class="usa-grid-full bottom-border">
+				<div class="usa-width-one-sixth padding-bottom-10px">
+					<a href="">Registration</a>
+				</div>
+				<div class="usa-width-one-sixth">
+					<a href="">Hierarchy</a>
+				</div>
+				<div class="usa-width-one-sixth">
+					<a href="">Opportunities</a>
+				</div>
+				<div class="usa-width-one-sixth">
+					<a href="">Awards</a>
+				</div>
+				<div class="usa-width-one-sixth">
+					<a href="">Exclusions</a>
+				</div>
+			</div>
+			<div class="usa-grid-full padding-top-10px">
+				Show
+				<select name="options" id="options" class="drop-down-size display-inline">
+					<option value="value1">Current Record</option>
+				</select>
+			</div>
+				<div class="usa-grid-full">
+					<h2 id="core-data">Core Data</h2>
+				</div>
+				<i class="fa fa-info-circle fa-1x" ></i><h3 class="padding-left-5px display-inline">General Information</h3>
+				<div class="usa-grid-full">
+					<div class="usa-width-one-half">
+						<strong>Country of Incorporation: </strong>{{coreData.countryOfIncorporation}}
+					</div>
+					<div class="usa-width-one-half">
+						<strong>State of Incorporation: </strong>{{coreData.stateOfIncorporation}}
+					</div>
+				</div>
+				<br />
+				<strong>Business Types</strong>
+				<br />
+				<i>Check the registrant's Reps &amp; Certs, if present, under FAR 52.212-3 or FAR 52.219-1 to determine if the entity is on SAB-certified HUBZone small business concern
+				Additional small business information may be found in the  <a>SBA's Dynamic Small Business Search</a> if the entity completed the SBA supplemental pages during
+				registration.</i>
+				<br />
+				<br />
+				<div class="usa-grid-full">
+					<div class="usa-width-one-half">
+						<p>
+							<strong>Entity Structure</strong>
+							<br />
+							{{coreData.entityStructure}}
+						</p>
+					</div>
+					<div class="usa-width-one-half">
+						<p>
+							<strong>Purpose of Registration</strong>
+							<br />
+							{{coreData.purposeOfRegistration}}
+						</p>
+					</div>
+				</div>
+				<br />
+				<div class="usa-grid-full">
+					<div class="usa-width-one-half">
+						<strong>Profit Structure</strong>
+						<br />
+						{{coreData.profitStructure}}
+					</div>
+					<div class="usa-width-one-half">
+						<strong>Organization Factors</strong>
+						<br />
+						{{coreData.organizationStructure}}
+					</div>
+				</div>
+				<p>
+					<strong>Entity Type</strong>
+					<br />
+					{{coreData.entityType}}
+				</p>
+				<i class="fa fa-briefcase fa-1x" ></i><h3 class="padding-left-5px display-inline">Business &amp; TIN Information</h3>
+				<br />
+				<strong>Business Information</strong>
+				<div class="usa-grid-full">
+					<div class="usa-width-one-half">
+						<strong>Business Start Date: </strong>{{coreData.businessStartDate}}
+						<br />
+						<strong>Fiscal Year End Close Date: </strong>{{coreData.fiscalYearEndCloseDate}}
+						<br />
+						<strong>Company Division Name: </strong>{{coreData.companyDivision}}
+						<br />
+						<strong>Company Division Number: </strong>{{coreData.divisionNumber}}
+						<br />
+						<strong>Corporate URL: </strong><a href="{{coreData.corporateURL}}">{{coreData.corporateURL}}</a>
+						<br />
+						<strong>Congressional District: </strong>{{coreData.congressionalDistrict}}
+					</div>
+					<div class="usa-width-one-half">
+						<strong>Initial Registration Date: </strong>{{coreData.registrationDate}}
+						<br />
+						<strong>Submission Date: </strong>{{coreData.submissionDate}}
+						<br />
+						<strong>Activation Date: </strong>{{coreData.activeDate}}
+						<br />
+						<strong>Expiration Date: </strong>{{coreData.generalInfo.expirationDate}}
+					</div>
+				</div>
+				<br />
+				<div class="usa-grid-full">
+					<div class="usa-width-one-half">
+						<strong>Physical Address</strong>
+						<br />
+						<entityObjectAddress [address]="coreData.generalInfo.samAddress"></entityObjectAddress>
+					</div>
+					<div class="usa-width-one-half">
+						<strong>Mailing Address</strong>
+						<br />
+						<entityObjectAddress [address]="coreData.mailAddress"></entityObjectAddress>
+					</div>
+				</div>
+				<br />
+				<i class="fa fa-users fa-1x" ></i><h3 class="padding-left-5px display-inline">CAGE/NCAGE Code</h3>
+				<br />
+				<strong>CAGE: </strong>{{coreData.cageCode}}
+				<br />
+				<br />
+				<div class="usa-grid-full">
+					<div class="usa-width-one-half">
+						<strong>Most Recent Predecessor</strong>
+						<br />
+						<strong>CAGE/NCAGE Code: </strong>{{coreData.recentPredecessorCageCode}}
+						<br />
+						<strong>Legal Business Name: </strong>{{coreData.recentPredecessorBusName}}
+						<br />
+					</div>
+					<div class="usa-width-one-half">
+						<strong>Immediate Owner</strong>
+						<br />
+						<strong>CAGE/NCAGE Code: </strong>{{coreData.immedOwnerPredecessorCageCode}}
+						<br />
+						<strong>Legal Business Name: </strong>{{coreData.immedOwnerRecentPredecessorBusName}}
+					</div>
+				</div>
+				<br />
+				<div class="usa-grid-full">
+					<div class="usa-width-one-half">
+						<strong>Second Most Recent Predecessor</strong>
+						<br />
+						<strong>CAGE/NCAGE Code: </strong>{{coreData.secondRecentPredecessorCageCode}}
+						<br />
+						<strong>Legal Business Name: </strong>{{coreData.secondRecentPredecessorBusName}}
+						<br />
+					</div>
+					<div class="usa-width-one-half">
+						<strong>Highest Level Owner</strong>
+						<br />
+						<strong>CAGE/NCAGE Code: </strong>{{coreData.highestOwnerPredecessorCageCode}}
+						<br />
+						<strong>Legal Business Name: </strong>{{coreData.highestOwnerRecentPredecessorBusName}}
+						<br />
+					</div>
+				</div>
+				<br />
+				<strong>Third Most Recent Predecessor</strong>
+				<br />
+				<strong>CAGE/NCAGE Code: </strong>{{coreData.thirdRecentPredecessorCageCode}}
+				<br />
+				<strong>Legal Business Name: </strong>{{coreData.thirdRecentPredecessorBusName}}
+				<br />
+				<br />
+				<i class="fa fa-bank fa-1x" ></i><h3 class="padding-left-5px display-inline">Financial Information</h3>
+				<br />					
+				<strong>Do you accept credit cards as a method of payment? </strong>{{coreData.creditCardUsage}}
+				<br />
+				<h3>Executive Compensation Questions</h3>
+				<i><strong>This information is not displayed in SAM.</strong> Registrants in the System for Award Management (SAM) respond to the Executive Compensation
+				questions in accordance with Section 6202 of P.L. 110&#45;252, amending the Federal Funding Accountability and Transparency Act (P.L. 109&#45;282).
+				This information is sent to USASpending.gov for display in association with an eligible award. Maintaining an active registration in SAM demonstrates the
+				registrant responded to the questions.</i>
+				<h3>Proceedings Questions</h3>
+				<i><strong>Entity responses are not displayed in SAM.</strong> Registrants in the System for Award Management (SAM) respond to Proceedings
+				questions in accordance with FAR 52.209&#45;7&#44; FAR 52.209&#45;8&#44; or 2.C.R.F 200 Appendix XII. Responses are sent to FAPIIS.gov for display as
+				applicable. Maintaining an active registration in SAM demonstrates the registrant responded to the proceedings questions.</i>
+		</div>
+		<div *ngIf="assertions">
+				<div class="usa-grid-full">
+					<h2 id="assertions">Assertions</h2>
+				</div>
+				<i class="fa fa-pie-chart fa-1x" ></i><h3 class="padding-left-5px display-inline">Goods &amp; Services</h3>
+				<br />
+				<div *ngIf="assertions.naicsList">
+				<strong>NAICS Codes Selected: </strong>
+				<table>
+					<tr>
+						<th scope="col"><b>Primary</b></th>
+						<th scope="col"><b>NAICS Code</b></th>
+						<th scope="col"><b>Description</b></th>
+					</tr>
+					<tr *ngFor="let naics of assertions.naicsList">
+						<td>
+							<span *ngIf="naics==assertions.primaryNaics">
+								<i class="fa fa-check fa-1x" ></i>
+							</span>
+						</td>
+						<td>{{naics}}</td>
+						<td>Currently not available</td>
+					</tr>
+				</table>
+				</div>
+				<div *ngIf="assertions.pscList">
+				<strong>PSC Codes Selected: </strong>
+				<table>
+					<tr class="table-header">
+						<th scope="col"><b>PSC Code</b></th>
+						<th scope="col"><b>Description</b></th>
+					</tr>
+					<tr *ngFor="let pscCode of assertions.pscList">
+						<td>{{pscCode}}</td>
+						<td>Currently not available</td>
+					</tr>
+				</table>
+				</div>
+				<i class="fa fa-database fa-1x" ></i><h3 class="padding-left-5px display-inline">EDI Information</h3>
+				<br />
+				{{assertions.ediInformationFlag}}
+				<br />
+				<br />
+				<i class="fa fa-ambulance fa-1x" ></i><h3 class="padding-left-5px display-inline">Disaster Response Information</h3>
+				<br />
+				<strong>Included in Registry?</strong> {{assertions.registryFlag}}
+				<br />
+				<strong>Require bonding to bid on Contracts?</strong> {{assertions.bondingFlag}}
+				<br />
+				<div *ngIf="assertions.geographicalAreaServed">
+				<strong>Geographic Area Served:</strong>
+				<br />
+				<table>
+				<tr>
+					<th scope="col"><b>State</b></th>
+					<th scope="col"><b>County</b></th>
+					<th scope="col"><b>MSA</b></th>
+				</tr>
+				<tr *ngFor="let area of assertions.geographicalAreaServed">
+					<td>{{area.state || 'No provided data'}}</td>
+					<td>{{area.county || 'No provided data'}}</td>
+					<td>{{area.msa || 'No provided data'}}</td>
+				</tr>
+				</table>
+				</div>
+		</div>
+		<div *ngIf="repsAndCerts">
+				<div class="usa-grid-full">
+					<h2 id="reps-certs">Representations and Certifications</h2>
+				</div>
+				<p>Select Download FAR Report to review the Representations and Certifications for <b>{{coreData.legalBusinessName}}</b></p>
+				<p><a target="_blank" href="{{repsAndCerts.linkForFARReport}}">Download FAR Report</a></p>
+				<div *ngIf="repsAndCerts.linkForDFARSReport">
+					<p>Select Download FAR &amp; DFARS Report to review the Representations and Certifications for <b>{{coreData.legalBusinessName}}</b></p>
+					<p><a target="_blank" href="{{repsAndCerts.linkForDFARSReport}}">Download FAR &amp; DFARS Report</a></p>
+				</div>
+		</div>
+		<div class="usa-grid-full">
+		<div *ngIf="mandatoryPOCs || optionalPOCs">
+			<h2 id="pocs">Points of Contact</h2>
+			<div class="usa-width-one-half">
+				<div *ngIf="mandatoryPOCs.length" >
+					<i class="fa fa-envelope fa-1x" ></i><h3 class="padding-left-5px display-inline">Mandatory Points of Contacts</h3>
+				<br />
+				<br />
+				<div *ngFor="let poc of mandatoryPOCs">
+					<entityObjectPOC [poc]="poc"></entityObjectPOC>
+					<div *ngIf="poc.pocAddress">
+						<entityObjectAddress [address]="poc.pocAddress"></entityObjectAddress>
+					</div>
+					<br />
+				</div>
+				</div>
+			</div>
+			<div class="usa-width-one-half">
+				<div *ngIf="optionalPOCs.length" >
+					<i class="fa fa-envelope fa-1x" ></i><h3 class="padding-left-5px display-inline">Optional Points of Contacts</h3>
+				<br />
+				<br />
+				<div *ngFor="let poc of optionalPOCs">
+					<entityObjectPOC [poc]="poc"></entityObjectPOC>
+					<div *ngIf="poc.pocAddress">
+						<entityObjectAddress [address]="poc.pocAddress"></entityObjectAddress>
+					</div>
+					<br />
+				</div>
+				</div>
+			</div>
+		</div>	
+		</div>
+</div>
+</div>

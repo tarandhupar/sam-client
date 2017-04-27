@@ -1,0 +1,100 @@
+<div #feedbackRoot class="sam-feedback">
+
+  <samModal [showClose]="false" #proceedModal [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [submitButtonLabel]="'Confirm'" [cancelButtonLabel]="'Cancel'" (onSubmit)="onProceedModalConfirm()" (onClose)="onProceedModalClose()"  [closeOnOutsideClick]="false">
+  </samModal>
+
+  <div *ngIf="showFeedback" class="feedback-form-div relative">
+    <div class="usa-grid-full m_0 p_L-2x p_T-2x p_B-2x feedback-background feedback-header-span">
+      <i class="fa fa-comments" aria-hidden="true"></i>
+      &nbsp;What you think matters!
+      <i class="pull-right fa fa-times-circle-o m_R-2x" (click)="toggleFeedback()"></i>
+    </div>
+
+    <div class="feedback-question-div usa-grid-full m_T-2x m_B-1x m_R-4x">
+      <h4 *ngIf="(!showEmptyFeedbackWarning || !isFeedbackAnswerEmpty()) && !showThanksNote" class="feedback-alert-placeholder">&nbsp;</h4>
+      <h4 *ngIf="showEmptyFeedbackWarning && isFeedbackAnswerEmpty()" class="feedback-alert-warning">&nbsp;&nbsp;<i class="fa fa-exclamation-triangle"></i><span>&nbsp;You need to answer at least one of the feedback questions before submitting.</span></h4>
+
+      <span class="m_T-2x" style="display: block" *ngIf="!showThanksNote">{{curQueIndex+1}}. {{curQuestion.description}}</span>
+
+       <!--Rating Question-->
+      <div class="feedback-question-rating m_T-2x" *ngIf="isCurrentQType('rating')">
+        <span class="usa-width-one-half m_R-0 feedback-icon-font"><i class="fa {{ratingThumbUpClass}} thumb" aria-hidden="true" (click)="onRatingClick(true)"></i></span>
+        <span class="usa-width-one-half feedback-icon-font"><i class="fa {{ratingThumbDownClass}} thumb" aria-hidden="true" (click)="onRatingClick(false)"></i></span>
+      </div>
+
+      <!--Checkbox Question-->
+      <div class="feedback-question-checkbox m_T-2x usa-grid" *ngIf="isCurrentQType('multiSelection')">
+        <div class="usa-width-one-half m_R-0 m_B-1x" *ngFor="let option of curQuestion.selections">
+          <input class="usa-width-one-half" type="checkbox" (change)="onCbxChange(option, $event.target.checked)" [(ngModel)]="multiSelectionModel[option]"><label class="m_T-0">{{option}}</label>
+        </div>
+      </div>
+
+      <!--Radio Button Question-->
+      <div class="feedback-question-radio m_T-2x usa-grid" *ngIf="isCurrentQType('singleSelection')">
+        <div class="usa-width-one-half m_B-1x p_L-4x m_R-0" *ngFor="let option of curQuestion.selections">
+          <input class="usa-width-one-fourth" type="radio" (change)="onRadioBtnChange(option)" [checked]="radioBtnValue === option"><label class="m_T-0 marginCenter" (click)="onRadioBtnChange(option)">{{option}}</label>
+        </div>
+      </div>
+
+      <!--TextBox Question-->
+      <div class="feedback-question-textarea m_T-2x" *ngIf="isCurrentQType('textarea')">
+        <textarea class="usa-width-one-whole" name="text" rows="3" placeholder="Leave a comment" (change)="onTextAreaChange()" [(ngModel)]="textAreaModel"></textarea>
+      </div>
+
+      <!--Radio Email Question-->
+      <div class="feedback-question-fin m_T-2x m_B-2x usa-grid" *ngIf="isCurrentQType('radio-text') && !showThanksNote">
+        <div class="usa-width-one-half m_B-1x p_L-4x m_R-0">
+          <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('Yes')" [checked]="isEmailBtnChecked('Yes')"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('Yes')">Yes</label>
+        </div>
+        <div class="usa-width-one-half m_B-1x p_L-4x">
+          <input class="usa-width-one-fourth" type="radio" (change)="onEmailRadioBtnChange('No')" [checked]="isEmailBtnChecked('No')"><label class="m_T-0 marginCenter" (click)="onEmailRadioBtnChange('No')">No</label>
+        </div>
+        <div class="usa-width-one-whole">
+          <div class="usa-width-two-thirds m_R-0 text-align-center">
+            <div [ngClass]="{'usa-input-error':showEmailError}">
+                <span class="usa-input-error-message" *ngIf="!showEmailError">&nbsp;</span>
+                <span class="usa-input-error-message" *ngIf="showEmailError">Enter a valid email address</span>
+                <input aria-describedby="input-error-message" type="email" id="email" name="email" [formControl]="email" class="usa-width-one-whole m_L-3x feedback-email-input" *ngIf="emailRadioBtnValue == 'Yes'" placeholder="Please provide your email" [(ngModel)]="userEmailModel" (change)="onEmailTextChange()">
+            </div>
+
+            <h3>&nbsp;</h3>
+          </div>
+          <div class="usa-width-one-third p_T-6x">
+            <button class="usa-button-primary m_0 pull-right" (click)="onSubmitFeedbackClick()">Submit</button>
+          </div>
+        </div>
+      </div>
+
+      <!--Thanks for giving feedback div-->
+      <div class="feedback-question-thanks m_T-2x m_B-2x usa-grid text-align-center" *ngIf="showThanksNote">
+        <h3>Thanks for your feedback!</h3>
+        <span>Window will automatically close in: {{curSec}}s </span>
+      </div>
+
+      <!--Previous and Next button-->
+      <div class="usa-width-one-whole m_T-3x relative feedback-btns-div" *ngIf="!showThanksNote">
+        <button class="usa-button-transparent pull-left m_0 prev-btn" (click)="onPreviousClick()" *ngIf="isPrevButtonOn()"><span><i class="fa fa-angle-left"></i>Previous</span></button>
+        <button class="usa-button-transparent pull-right m_0 next-btn" (click)="onNextClick()" *ngIf="isNextButtonOn()"><span>Next<i class="fa fa-angle-right"></i></span></button>
+      </div>
+
+      <div class="usa-width-one-whole m_T-3x text-align-center" *ngIf="!showThanksNote">
+        <a class="usa-nav-link feedback-form-link"  fragment="OMB" (click)="OnOMBlinkClick()">Form Approved OMB#3090-0297 Exp. Date 07/31/2019</a>
+      </div>
+
+      <!--Pagination Div-->
+      <div class="usa-width-one-whole feedback-pagination" *ngIf="!showThanksNote">
+          <span class="feedback-pagination-span">
+            <span *ngFor="let page of getPaginationArray()">
+              <span class="feedback-page" [ngClass]="getPageClass(page)">
+                <span *ngIf="!isPageEdited(page) || isCurrentPage(page)">{{page+1}}</span>
+                <i class="fa fa-check" *ngIf="isPageEdited(page) && !isCurrentPage(page)"></i>
+              </span>
+              <span *ngIf="!isLastPage(page)"><hr class="feedback-dash"></span>
+            </span>
+
+          </span>
+      </div>
+    </div>
+  </div>
+
+</div>

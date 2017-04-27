@@ -1,0 +1,198 @@
+<div class="exclusion">
+<br />
+<div class="usa-grid message-background-color">
+	<div class="usa-width-one-twelfth padding-top-25px height-100px">
+		<i class="fa fa-info-circle fa-3x"></i>
+	</div>
+	<div class="usa-width-eleven-twelfths">
+		<i>There may be instances when an individual or firm has the same or similar name as your search criteria, but is actually a different
+		party. Therefore, it is important that you verify a potential match with the excluding agency identified in the exclusion's details. To confirm
+		or obtain additional information, contact the federal agency that took the action against the listed party. Agency points of contact,
+		including name and telephone number, may be found by navigating to the Agency Exclusion POCs page within SAM Help.</i>
+	</div>
+</div>
+<div class="usa-grid-full">
+	<h1>Exclusion</h1>
+</div>
+<div *ngIf="exclusion">
+<div class="usa-grid-full">
+	<div class="padding-left-180px" *ngIf="exclusion.classificationType=='Individual'">
+		<h2>{{exclusion.identityInfo.prefix}} {{exclusion.identityInfo.firstName}} {{exclusion.identityInfo.middleName}} {{exclusion.identityInfo.lastName}}</h2>
+	</div>
+	<div class="padding-left-180px" *ngIf="exclusion.classificationType!='Individual'">
+		<h2>{{exclusion.identityInfo.companyName}}</h2>
+	</div>
+</div>
+<div class="usa-grid-full bottom-border">
+	<table class="usa-table-borderless">
+	<tr>
+		<td class="padding-left-180px" valign="bottom">
+			<div *ngIf="exclusion.classificationType!='Individual' && exclusion.classificationType!='Vessel'">
+				<strong>DUNS:</strong> {{exclusion.identityInfo.duns}}
+				<br />
+				<strong>+4:</strong> {{exclusion.identityInfo.duns4}}
+				<br />
+				<strong>CAGE Code:</strong> {{exclusion.identityInfo.cageCode}}
+				<br />
+				<br /> 
+			</div>
+			<exclusionAddress [address]="exclusion.identityInfo.address"></exclusionAddress>
+			<br />
+			<br />
+			<strong>Excluding Agency:</strong> {{exclusion.excludingAgency}}
+		</td>
+		<td class="width-350px" valign="bottom">
+			<strong>Exclusion Status:</strong> {{exclusion.exclusionStatus}}
+			<br />
+			<strong>Activation Date:</strong> {{exclusion.activateDate}}
+			<br />
+			<strong>Termination Date:</strong> {{exclusion.terminationDate}}
+			<br />
+			<strong>Exclusion Type:</strong> {{exclusion.exclusionType}}
+			</td>
+			<td class="text-align-right width-100px" valign="bottom">
+				<exclusionIcon [classificationType]="exclusion.classificationType"></exclusionIcon>
+			</td>
+	</tr>
+</table>
+</div>
+<div class="usa-grid-full padding-top-10px padding-left-180px">
+	Show
+	<select name="options" id="options" class="drop-down-size display-inline">
+		<option value="value1">Current Record</option>
+	</select>
+</div>
+<div class="usa-grid-full padding-left-180px">
+	<h2>Current Record Details</h2>
+</div>
+<div class="usa-grid-full padding-left-170px" *ngIf="exclusion.classificationType=='Individual'">
+	<div class="padding-left-10px message-background-color border-1px-solid">
+		<i class="fa fa-envelope fa-1x" ></i><h3 class="padding-left-5px display-inline">Verify Primary Address</h3>
+		<br />
+		<h4>Match</h4>
+		<br />
+		<strong>Street Address 1</strong>
+		<input #address1 (keyup)="0">
+		<br />
+		<strong>Street Address 2</strong>
+		<input #address2 (keyup)="0">
+		<br />
+		<exclusionAddress [address]="exclusion.identityInfo.address"></exclusionAddress>
+		<br />
+		<button>Submit</button>
+	</div>
+	<br />
+</div>
+<div class="usa-grid-full padding-left-180px" *ngIf="exclusion.classificationType=='Vessel'">
+	<div class="usa-width-one-half">
+		<i class="fa fa-ship fa-1x" ></i><h3 class="padding-left-5px display-inline">Vessel Details</h3>
+		<br />
+		<strong>Call Sign:</strong> {{exclusion.vesselDetails.callSign}}
+		<br />
+		<strong>Type:</strong> {{exclusion.vesselDetails.type}}
+		<br />
+		<strong>Tonnage:</strong> {{exclusion.vesselDetails.tonnage}}
+		<br />
+		<strong>GRT:</strong> {{exclusion.vesselDetails.grt}}
+		<br />
+		<strong>Flag:</strong> {{exclusion.vesselDetails.flag}}
+		<br />
+		<strong>Owner:</strong> {{exclusion.vesselDetails.owner}}
+	</div>
+	<div class="usa-width-one-half">
+	<strong>Secondary Address:</strong>
+	<br />
+	<ng-container [ngSwitch]="exclusion.vesselDetails.secondaryAddress">
+		<div id="exclusion-secondary-address" *ngIf="exclusion.vesselDetails.secondaryAddress">
+			<div id="exclusion-secondary-address" *ngSwitchCase="exclusion.vesselDetails.secondaryAddress">
+				<div *ngFor="let address of exclusion.vesselDetails.secondaryAddress">
+				<exclusionAddress [address]="address"></exclusionAddress>
+				</div>
+			</div>
+		</div>
+		<div id="exclusion-secondary-address" *ngSwitchDefault>
+			none provided
+		</div>
+		</ng-container>
+	</div>
+</div>
+<br />
+<div class="usa-grid-full padding-left-180px">
+	<i class="fa fa-ban fa-1x" ></i><h3 class="padding-left-5px display-inline">Exclusion Details</h3>
+	<br />
+	<div *ngIf="exclusion.classificationType=='Special Entity Designation'">
+		<strong>D&amp;B Investigation Status:</strong> {{exclusion.dnbInvestigationStatus}}
+	</div>
+	<div *ngIf="exclusion.classificationType=='Firm'">
+		<strong>NPI:</strong> {{exclusion.identityInfo.npi}}
+	</div>
+	<strong>Exclusion Program: </strong>{{exclusion.exclusionProgram}}
+</div>
+<div class="usa-grid-full">
+<div class="margin-left-170px">
+	<exclusionNatureEffect [classificationType]="exclusion.classificationType"></exclusionNatureEffect>
+	</div>
+</div>
+<div class="usa-grid-full">
+	<div class="padding-left-180px">
+		<strong>Additional Comments</strong>
+		<br />
+		<ng-container [ngSwitch]="exclusion.additionalComments">
+		<div id="exclusion-comments" *ngIf="exclusion.additionalComments">
+			<div id="exclusion-comments" *ngSwitchCase="exclusion.additionalComments">
+				{{exclusion.additionalComments}}
+			</div>
+		</div>
+		<div id="exclusion-comments" *ngSwitchDefault>
+			None provided
+		</div>
+		</ng-container>
+		<br />
+		<strong>CT Code:</strong> {{exclusion.ctCode}}
+		<br />
+		Reference CT Codes (from legacy system) at the <a href="">CT Code Help Page.</a>
+		<br />
+		<br />
+		<strong>Record</strong>
+		<br />
+		<strong>Create Date: </strong>{{exclusion.recordCreateDate}}
+		<br />
+		<strong>Update Date: </strong>{{exclusion.recordUpdateDate}}
+		<br />
+		<br />
+		<i class="fa fa-chain fa-1x" ></i><h3 class="padding-left-5px display-inline">Cross References</h3>
+		<br />
+		<ng-container [ngSwitch]="exclusion.crossReferences">
+		<div id="exclusion-cross-reference" *ngIf="exclusion.crossReferences.length">
+			<div id="exclusion-cross-reference" *ngSwitchCase="exclusion.crossReferences">
+				<div *ngFor="let crossReference of exclusion.crossReferences">
+				<exclusionCrossReference [crossReference]="crossReference"></exclusionCrossReference>
+				</div>
+			</div>
+		</div>
+		<div id="exclusion-cross-reference" *ngSwitchDefault>
+			No Cross References
+			<br />
+			<br />
+		</div>
+		</ng-container>
+		<strong>More Locations</strong>
+		<br />
+		<ng-container [ngSwitch]="exclusion.moreLocations">
+		<div id="exclusion-more-locations" *ngIf="exclusion.moreLocations.length">
+			<div id="exclusion-more-locations" *ngSwitchCase="exclusion.moreLocations">
+				<div *ngFor="let location of exclusion.moreLocations">
+				<exclusionCrossReference [crossReference]="location"></exclusionCrossReference>
+				</div>
+			</div>
+		</div>
+		<div id="exclusion-more-locations" *ngSwitchDefault>
+			No Locations
+		</div>
+		</ng-container>
+		<br />
+		<br />
+	</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,18 @@
+<div class="assistance-listing-operations">
+  <div class="usa-grid" >
+    <!--Sidebar-->
+    <aside class="usa-width-one-fourth">
+      <div>&nbsp;</div>
+      <div sam-sticky limit=1200 container="occupy-page">
+        <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+      </div>
+    </aside>
+
+    <div class="usa-width-three-fourths">
+      <div class="usa-width-one-whole m_L-4x">
+        <!--Content for Sections-->
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>

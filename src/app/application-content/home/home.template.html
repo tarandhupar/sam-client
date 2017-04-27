@@ -1,0 +1,126 @@
+
+<!--   Search -->
+<div class="sam-ui padded grid">
+  <div class="dark grey row">
+    <div class="sam-ui text container">
+      <div class="sam-ui very padded grid">
+        <div class="column">
+          <samSearchbar #searchbar [size]="'large'" [selectConfig]="searchSelectConfig" (onSearch)="runSearch($event)">
+            <div custom-input>
+              <samInputAutocomplete
+                [serviceName]="'suggestions'"
+                [index]="searchbar.filterValue"
+                (searchTermEmit)="searchbar.callSearch($event)"
+                (keyEnterEmit)="searchbar.onSearchClick()">
+              </samInputAutocomplete>
+            </div>
+          </samSearchbar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--  Intro Text -->
+<div class="sam-ui text container">
+  <div class="sam-ui vertically very padded center aligned grid">
+    <div class="column">
+      <h2 class="sam-ui light header">
+        SAM.gov is the official U.S. government website for people who make, 
+        receive, and track federal awards.
+      </h2>
+    </div>
+  </div>
+</div>
+
+<!-- Images -->  
+<div class="sam-ui container">
+  <div class="sam-ui grid images-section">
+    <div class="column center aligned">
+      <img class="sam-ui image" src="src/assets/img/home-main.jpg">
+    </div>
+  </div>
+</div>
+
+<!--  Free Banner  -->
+ <div class="sam-ui container">
+   <div class="sam-ui center aligned padded grid">
+     <div class="light blue row">
+       <div class="column">
+         <ul class="sam-ui horizontal bulleted large list">
+           <li class="item">100% Free to Use</li>
+           <li class="item">Free to Search</li>
+           <li class="item">Free to Run Reports</li>
+           <li class="item">Free to Register</li>
+         </ul>
+       </div>
+     </div>
+   </div>
+</div> 
+
+<!-- Main Content -->
+<div class="sam-ui container">
+  <div class="sam-ui vertically very padded stackable grid">
+    <div class="twelve wide tablet four wide computer column">      
+      <div class="sam-ui grid">      
+        <div class="row">
+          <div class="column">
+            <a [routerLink]="['/help/new']" class="sam-ui dark blue fluid button">
+              <i class="icon fa fa-map-marker"></i>
+              New to SAM.gov
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <a [routerLink]="['/help/accounts']" class="sam-ui dark blue fluid button">
+              <i class="icon fa fa-user"></i>
+              User Accounts
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column">
+            <a [routerLink]="['/help/transition']" class="sam-ui dark blue fluid button">
+              <i class="icon fa fa-map-signs"></i>
+              Sam.gov Transition Roadmap
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="twelve wide tablet eight wide computer column">
+      <div class="sam-ui two column stackable padded grid">
+        <div class="column">
+          <h2><i class="fa fa-line-chart" aria-hidden="true"></i> Award Data</h2>
+          <p>
+            Gain access to data in a variety of formats. Perform searches, download extracts, and retrieve data through web services.
+          </p>
+          <a [routerLink]="['/help/award']">Learn more about SAM.gov data sets</a>
+        </div>
+        <div class="column">
+          <h2><i class="fa fa-book" aria-hidden="true"></i> Quick Start Guides</h2>
+          <p>
+            If you've used one of the following systems, click below to learn how to do the same things in beta.sam.gov.
+          </p>
+          <div class="sam-ui two column grid" *ngIf="linkToggle()">
+            <div class="column">
+              <ul class="sam-ui bulleted list">
+                <li><a href="">WDOL</a></li>
+                <li><a href="">FPDS</a></li>
+                <li><a href="">SAM</a></li>
+              </ul>
+            </div>
+            <div class="column">
+              <ul class="sam-ui bulleted list">
+                <li><a href="">CFDA</a></li>
+                <li><a href="">FBO</a></li>
+                <li><a href="">Federal Hierarchy</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </div>
+</div>

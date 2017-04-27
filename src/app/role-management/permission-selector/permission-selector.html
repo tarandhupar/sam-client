@@ -1,0 +1,87 @@
+<div class="permission-selector">
+  <div class="permission-selector-title">
+    <strong>{{titleText}}</strong>
+  </div>
+  <div class="permissions-body">
+
+    <!-- Column Headers -->
+    <ng-container *ngIf="!hideColumnHeader">
+      <div class="usa-grid-fullpermission-row">
+        <div class="usa-width-one-twelfth">
+          <div class="empty-space">&nbsp;</div>
+        </div>
+        <div class="usa-width-one-third">
+          <strong>Permissions</strong>
+        </div>
+        <div class="usa-width-one-fourth">
+          <strong>Associate</strong>
+        </div>
+        <ng-container *ngIf="!hideDefaultColumn">
+          <div class="usa-width-one-fourth">
+            <strong>Default</strong>
+          </div>
+          <div class="usa-width-one-twelfth">
+            &nbsp;
+          </div>
+        </ng-container>
+        <ng-container *ngIf="hideDefaultColumn">
+          <div class="usa-width-one-third">
+            &nbsp;
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <!-- All Column -->
+    <div class="usa-grid-full permission-row">
+      <div class="usa-width-one-twelfth">
+        &nbsp;
+      </div>
+      <div class="usa-width-one-third">
+        <span>All</span>
+      </div>
+      <div class="usa-width-one-fourth">
+        <input class='check-all' type="checkbox" (click)="onCheckAllClick($event.target.checked)" [(ngModel)]="isAllChecked">&nbsp;
+      </div>
+      <ng-container *ngIf="!hideDefaultColumn">
+        <div class="usa-width-one-fourth">
+          <input class='check-all-defaults' type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked">&nbsp;
+        </div>
+        <div class="usa-width-one-twelfth">
+          &nbsp;
+        </div>
+      </ng-container>
+      <ng-container *ngIf="hideDefaultColumn">
+        <div class="usa-width-one-third">
+          &nbsp;
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Table Data -->
+    <div class="usa-grid-full permission-row" *ngFor="let option of options; let i = index">
+      <div class="usa-width-one-twelfth">
+        <em *ngIf="option.isNew">New</em>&nbsp;
+      </div>
+      <div class="usa-width-one-third">
+        <span>{{option.label}}&nbsp;</span>
+      </div>
+      <div class="usa-width-one-fourth">
+        <input type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [(ngModel)]="option.isSelected" [disabled]="option.isDefault">&nbsp;
+      </div>
+      <ng-container *ngIf="!hideDefaultColumn">
+        <div class="usa-width-one-fourth">
+          <input type="checkbox" (click)="onDefaultClick($event.target.checked, option)" [(ngModel)]="option.isDefault">&nbsp;
+        </div>
+        <div class="usa-width-one-twelfth">
+          &nbsp;
+        </div>
+      </ng-container>
+      <ng-container *ngIf="hideDefaultColumn">
+        <div class="usa-width-one-third">
+          &nbsp;
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

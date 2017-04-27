@@ -1,0 +1,85 @@
+<h2 [innerText]="store.title"></h2>
+
+<div>
+  <form *ngIf="detailsForm" class="usa-form-large" [formGroup]="detailsForm">
+    <section class="system-information">
+      <h3 id="system-information">System Information</h3>
+
+      <labelWrapper name="system-email" label="System Email Address" required="true" [errorMessage]="$errors('email')">
+        <input type="text" id="system-email" formControlName="email" />
+      </labelWrapper>
+      <labelWrapper name="system-id" label="Unique ID" required="true" [errorMessage]="$errors('_id')">
+        <input type="text" id="system-email" formControlName="_id" />
+      </labelWrapper>
+      <labelWrapper name="system-name" label="System Name" required="true" [errorMessage]="$errors('systemName')">
+        <input type="text" id="system-name" formControlName="systemName" />
+      </labelWrapper>
+      <labelWrapper name="system-comments" label="Comments" [errorMessage]="$errors('comments')">
+        <textarea id="system-comments" formControlName="comments"></textarea>
+      </labelWrapper>
+    </section>
+
+    <section [class]="states.gov ? 'organization-information' : 'business-information'">
+      <h3 id="organization-information" [innerText]="states.gov ? 'Organization Information' : 'Business Information'"></h3>
+      <agencyPicker [advancedMode]="false"
+                    [multimode]="false"
+                    [label]="'Select the office you work for:'"
+                    [orgRoot]="user.department"
+                    (organization)="setOrganization($event)"
+                    *ngIf="states.gov"></agencyPicker>
+
+      <labelWrapper name="system-duns-search" label="Duns Search" *ngIf="!states.gov">
+        <input type="text" id="system-duns-search" formControlName="duns" />
+      </labelWrapper>
+
+      <!--
+      <labelWrapper name="system-ip" label="System IP Address">
+        <input type="text" id="system-ip" formControlName="ipAddress" />
+      </labelWrapper>
+      -->
+      <labelWrapper name="system-business-name" label="Business Name" [errorMessage]="$errors('businessName')" *ngIf="!states.gov">
+        <input type="text" id="system-business-name" formControlName="businessName" />
+      </labelWrapper>
+      <labelWrapper name="system-primary-owner" label="Business Address" [errorMessage]="$errors('businessAddress')" *ngIf="!states.gov">
+        <input type="text" id="system-business-name" formControlName="businessAddress" />
+      </labelWrapper>
+
+      <labelWrapper name="system-primary-owner" label="Primary Owner Name" required="true" [errorMessage]="$errors('primaryOwnerName')">
+        <input type="text" id="system-primary-owner" formControlName="primaryOwnerName" />
+      </labelWrapper>
+      <labelWrapper name="system-primary-email" label="Primary Owner Email" required="true" [errorMessage]="$errors('primaryOwnerEmail')">
+        <input type="text" id="system-primary-email" formControlName="primaryOwnerEmail" />
+      </labelWrapper>
+    </section>
+
+    <section class="point-of-contact">
+      <h3 id="point-of-contact">Point of Contact</h3>
+
+      <labelWrapper name="system-user-search" label="User Search Capability">
+        <input type="text" id="system-user-search" [(ngModel)]="store.search.users" [ngModelOptions]="{ standalone: true }" />
+      </labelWrapper>
+
+      <div class="usa-grid usa-system-pocs">
+        <!-- <ng-container *ngFor="let poc of user.system.pocs.value; let $index = index;" class="usa-form-group poc">
+          <div>
+            <a [innerText]="poc.firstName.value + ' ' + poc.lastName.value"></a>
+          </div>
+          <div>
+            <div class="usa-label usa-width-one-half">Email</div>
+            <div class="usa-width-one-half" [innerText]="poc.email.value"></div>
+          </div>
+          <div>
+            <div class="usa-label usa-width-one-half">Business Phone</div>
+            <div class="usa-width-one-half" [innerText]="poc.phone.value"></div>
+          </div>
+        </ng-container> -->
+      </div>
+    </section>
+
+    <div class="usa-button-controls">
+      <button type="button" class="usa-button-outline">Cancel</button>
+      <button type="button" (click)="save()">Save</button>
+      <samAlert class="usa-alert-static" [type]="states.alert.type" [title]="states.alert.message" [hidden]="!states.alert.show"></samAlert>
+    </div>
+  </form>
+</div>

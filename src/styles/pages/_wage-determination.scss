@@ -1,0 +1,37 @@
+.wage-determination-page{
+  h1{
+    margin-top: 50px !important;
+  }
+
+  .usa-unstyled-list li{
+    margin-bottom: 5px;
+  }
+
+  .print-link{
+    cursor: pointer;
+  }
+
+  h2 button{
+    margin: 0;
+    padding: 5px 10px;
+    font-size: 1.4rem;
+    vertical-align: middle;
+    margin-left: 10px;
+  }
+
+  pre{
+    background-color: #fff;
+    border-radius: .25rem;
+    box-shadow: 0 1px 0 rgba(0,0,0,.25);
+    padding: 3rem 3rem 1rem;
+    margin: 0 auto 2rem;
+    border: 1px solid #E8E8E8;
+    font-size: 1.4rem;
+  }
+
+  /* MISC */
+  /*============================*/
+  samsidenav{
+    display: block;
+  }
+}

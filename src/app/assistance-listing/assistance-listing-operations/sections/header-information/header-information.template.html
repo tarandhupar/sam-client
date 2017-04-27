@@ -1,0 +1,55 @@
+<form [formGroup]="falHeaderInfoForm">
+  <samText [maxlength]="144"
+           [hint]="'Spell out any acronyms and limit to 144 characters.'"
+           [control]="falHeaderInfoForm.controls['title']"
+           [name]="'title-input'"
+           [label]="'Title'"
+           [required]="true"
+           formControlName="title"></samText>
+
+  <samText [hint]="'The Popular Name should be different than the Program Title.'"
+           [control]="falHeaderInfoForm.controls['alternativeNames']"
+           [name]="'alternativeNames-input'"
+           [label]="'Popular Name'"
+           formControlName="alternativeNames"></samText>
+
+  <agencyPicker [label]="'Federal Agency'"
+                [multimode]="false"
+                [advancedMode]="false"
+                [required]="true"
+                [orgId]="agency"
+                [initial]="agency ? [agency] : []"
+                (organization)="onOrganizationChange($event)"
+                [levelLimit]='2'>
+  </agencyPicker>
+
+  <samNumber [maxlength]="3"
+             [minlength]="3"
+             [required]="true"
+             [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
+             [control]="falHeaderInfoForm.controls['programNumber']"
+             [name]="'programNumber-input'"
+             [label]="'FAL Number'"
+             [errorMessage]="falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
+             formControlName="programNumber"></samNumber>
+
+  <sam-list-display  [newValue]="rpNGModel"
+                    formControlName="rpListDisplay"
+                     (ngModelChange)="relatedProgramTypeChange($event)" (modelChange)="relatedProglistChange()" [config]="relProAutocompleteConfig">
+    <labelWrapper [label]="'Related Federal Assistance Listing'"
+                  [hint]="'Are there any related federal assistance listings?'">
+      <sam-autocomplete autofill-falProgram
+                        [(ngModel)] = "rpNGModel"
+                        formControlName="relatedTo"
+                        name="relatedProgramSearch" [config]="relProAutocompleteConfig"
+                        class="search-bar sam-autocomplete-width"></sam-autocomplete>
+    </labelWrapper>
+  </sam-list-display>
+  <div>
+    <div class="pull-left">
+      <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
+      <samButton buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
+      <samButton buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+    </div>
+  </div>
+</form>

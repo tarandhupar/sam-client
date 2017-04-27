@@ -1,0 +1,60 @@
+<div class="usa-grid role-details-page">
+  <h1>{{mode === 'edit' ? 'Edit' : 'New' }} Role</h1>
+
+  <!-- Domain label or dropdown -->
+  <ng-container *ngIf="mode === 'edit'">
+    <label>Domain</label>
+    <p>{{getLabelForDomain(domain)}}</p>
+  </ng-container>
+  <ng-container *ngIf="mode === 'new'">
+    <samSelect (focus)="onDomainFocus()" name='domain' label="Domain" [options]="domainOptions" [(ngModel)]="selectedDomain" (modelChange)="onDomainChange()" [errorMessage]="errors.domain"></samSelect>
+  </ng-container>
+
+  <ng-container *ngIf="domainDefinitions">
+
+    <!-- Role text -->
+    <labelWrapper name="role" label="Role" [errorMessage]="errors.role">
+      <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()" (focus)="onRoleFocus()">
+    </labelWrapper>
+
+    <!-- Domain Roles -->
+    <div class="domain-roles m_T-3em">
+      <permission-selector
+        [options]="domainRoleOptions"
+        selectAllText='Associate Roles'
+        titleText='Domain Roles'
+        [hideDefaultColumn]="true">
+        [hideColumnHeader]="true"
+      </permission-selector>
+    </div>
+
+    <div class="m_T-4x">
+      <strong>Objects and Permissions</strong>
+    </div>
+
+    <!-- Objects and permission -->
+    <div class="m_T-4x object-block" *ngFor="let function of permissionOptions">
+      <permission-selector
+        [options]="function.permissions"
+        selectAllText="Permissions"
+        [titleText]="function.name"
+      ></permission-selector>
+    </div>
+    <div *ngIf="!permissionOptions.length">
+      <em>No permissions found for selected domain</em>
+    </div>
+  </ng-container>
+
+  <samAlert type='warning' *ngIf='showNameModifiedAlert()' description="Are you sure you want to edit this role name. This will impact all users with this role in the system"></samAlert>
+  <div class="clearfix">
+    <div class="pull-right">
+      <button class="usa-button-outline" routerLink="/access/workspace">Cancel</button>
+      <button class="usa-button-primary" (click)="onSubmitClick()">Submit</button>
+    </div>
+  </div>
+
+</div>
+
+
+
+

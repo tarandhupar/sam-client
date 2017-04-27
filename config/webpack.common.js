@@ -4,6 +4,7 @@
 
 const webpack = require('webpack');
 const helpers = require('./helpers');
+const path = require('path');
 
 /*
  * Webpack Plugins
@@ -13,14 +14,18 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkCheckerPlugin = require('awesome-typescript-loader').ForkCheckerPlugin;
 const HtmlElementsPlugin = require('./html-elements-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 /*
  * Webpack Constants
+ * SHOW_HIDE_RESTRICTED_PAGES : created to hide components in MINC Environment
  */
 const METADATA = {
   title: 'SAM Client Starter',
   baseUrl: '/',
-  isDevServer: helpers.isWebpackDevServer()
+  isDevServer: helpers.isWebpackDevServer(),
+  SHOW_OPTIONAL: process.env.SHOW_OPTIONAL === 'true',
+  SHOW_HIDE_RESTRICTED_PAGES: process.env.SHOW_HIDE_RESTRICTED_PAGES === 'true'
 };
 
 /*
@@ -56,8 +61,8 @@ module.exports = {
 
     'polyfills': './src/polyfills.browser.ts',
     'vendor':    './src/vendor.browser.ts',
-    'main':      './src/main.browser.ts'
-
+    'main':      './src/main.browser.ts',
+    'styles':    './src/styles.ts',
   },
 
   /*
@@ -66,7 +71,6 @@ module.exports = {
    * See: http://webpack.github.io/docs/configuration.html#resolve
    */
   resolve: {
-
     /*
      * An array of extensions that should be used to resolve modules.
      *
@@ -77,8 +81,13 @@ module.exports = {
     // Make sure root is src
     root: helpers.root('src'),
 
+    // aliases
+    alias: {
+      "sam-ui-kit": helpers.root('src/sam-ui-elements/src/ui-kit')
+    },
+
     // remove other default values
-    modulesDirectories: ['node_modules'],
+    modulesDirectories: ['node_modules']
 
   },
 
@@ -117,6 +126,36 @@ module.exports = {
      * See: http://webpack.github.io/docs/configuration.html#module-loaders
      */
     loaders: [
+      /*
+       * Font loaders
+       */
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/font-woff"
+      },
+      {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/font-woff"
+      },
+      {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=application/octet-stream"
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "file-loader"
+      },
+      {
+        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader?limit=10000&mimetype=image/svg+xml"
+      },
+
+      /* File loader for supporting images
+       */
+      {
+        test: /\.(jpg|png|gif)$/,
+        loader: 'url-loader'
+      },
 
       /*
        * Typescript loader support for .ts and Angular 2 async routes via .async.ts
@@ -150,10 +189,10 @@ module.exports = {
        * Returns file content as string
        *
        */
-      {
-        test: /\.css$/,
-        loaders: ['to-string-loader', 'css-loader']
-      },
+      // {
+      //   test: /\.css$/,
+      //   loaders: ['to-string-loader', 'css-loader']
+      // },
 
       /* Raw loader support for *.html
        * Returns file content as string
@@ -166,14 +205,23 @@ module.exports = {
         exclude: [helpers.root('src/index.html')]
       },
 
-      /* File loader for supporting images, for example, in CSS files.
-      */
+      /// Sass Loader
       {
-        test: /\.(jpg|png|gif)$/,
-        loader: 'file'
-      }
+        // [\\\/] is a platform independent path seperator
+        test: /src[\\\/]styles[\\\/]all\.scss/,
+        exclude: /node_modules/,
+        loader: ExtractTextPlugin.extract("style","css?sourceMap!sass?sourceMap")
+      },
     ]
 
+  },
+
+  sassLoader: {
+    /*
+     * Uncomment to allow sass files to easily include other sass files without using long paths
+     * I prefer not to use this to allow ideas to more easily find the paths of imported files
+     */
+    // includePaths: ['src/styles']
   },
 
   /*
@@ -182,6 +230,8 @@ module.exports = {
    * See: http://webpack.github.io/docs/configuration.html#plugins
    */
   plugins: [
+
+    new ExtractTextPlugin("app.css"),
 
     /*
      * Plugin: ForkCheckerPlugin
@@ -210,13 +260,12 @@ module.exports = {
      *
      * See: https://www.npmjs.com/package/copy-webpack-plugin
      */
-    new CopyWebpackPlugin([{
-
-      from: 'src/assets',
-      to: 'assets'
-    },
-    { from: 'node_modules/samwds/dist', 
-      to: 'assets' }]),
+    new CopyWebpackPlugin([
+      {
+        from: 'src/assets',
+        to: 'src/assets'
+      }
+    ]),
 
     /*
      * Plugin: HtmlWebpackPlugin

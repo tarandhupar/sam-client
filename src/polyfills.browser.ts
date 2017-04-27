@@ -1,9 +1,30 @@
 // TODO(gdi2290): switch to DLLs
 
+
+// Console-polyfill. MIT license.
+// https://github.com/paulmillr/console-polyfill
+// Make it safe to do console.log() always.
+(function(global) {
+  'use strict';
+  if (!global.console) {
+    global.console = {};
+  }
+  var con = global.console;
+  var prop, method;
+  var dummy = function() {};
+  var properties = ['memory'];
+  var methods = ('assert,clear,count,debug,dir,dirxml,error,exception,group,' +
+     'groupCollapsed,groupEnd,info,log,markTimeline,profile,profiles,profileEnd,' +
+     'show,table,time,timeEnd,timeline,timelineEnd,timeStamp,trace,warn').split(',');
+  while (prop = properties.pop()) if (!con[prop]) con[prop] = {};
+  while (method = methods.pop()) if (typeof con[method] !== 'function') con[method] = dummy;
+  // Using `this` for web workers & supports Browserify / Webpack.
+})(typeof window === 'undefined' ? this : window);
+
 // Polyfills
 
-// import 'ie-shim'; // Internet Explorer 9 support
-
+import 'core-js/shim'; // Internet Explorer 9 support
+import 'classlist-polyfill';
 
 // import 'core-js/es6';
 // Added parts of es6 which are necessary for your project or your browser support requirements.
@@ -45,3 +66,9 @@ if ('production' === ENV) {
   require('zone.js/dist/long-stack-trace-zone');
 
 }
+
+// Compatibility implementation of the ECMAScript
+// Internationalization API (ECMA-402) for JavaScript
+// https://github.com/andyearnshaw/Intl.js/
+import 'intl';
+import 'intl/locale-data/jsonp/en.js';

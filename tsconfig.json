@@ -6,12 +6,13 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
+    "sourceMap":  true,
     "noEmitHelpers": true,
     "strictNullChecks": false,
     "baseUrl": "./src",
-    "paths": [
-    ],
+    "paths": {
+      "sam-ui-kit/*": ["sam-ui-elements/src/ui-kit/*"]
+    },
     "lib": [
       "dom",
       "es6"
@@ -29,6 +30,7 @@
   },
   "exclude": [
     "node_modules",
+    "src/sam-ui-elements/node_modules",
     "dist"
   ],
   "awesomeTypescriptLoaderOptions": {

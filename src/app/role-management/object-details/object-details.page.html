@@ -1,0 +1,71 @@
+<div class="usa-grid object-details-page">
+  <h1>{{mode === 'edit' ? 'Edit' : 'New' }} Object</h1>
+
+  <!-- Domain select -->
+  <!--<labelWrapper name="domain" label="Domain">-->
+    <!--<samMultiSelectDropdown name='domain' label="Domain" [options]="domainOptions" [(model)]="selectedDomains" (modelChange)="onDomainsChange()"></samMultiSelectDropdown>-->
+  <!--</labelWrapper>-->
+  <ng-container *ngIf="mode === 'edit'">
+    <label for="domain">Domain</label>
+    <span id="domain">{{domainName}}</span>
+  </ng-container>
+  <ng-container *ngIf="mode === 'new'">
+    <samSelect name="domain" label="Domain" [options]="domainOptions" [(model)]="selectedDomain" (modelChange)="onDomainChange()"></samSelect>
+  </ng-container>
+
+
+  <!-- Object name -->
+  <labelWrapper name="object" label="Object Name">
+    <input id="object" type="text" [(ngModel)]="objectName">
+  </labelWrapper>
+
+  <!-- Permissions -->
+  <div class="usa-grid-full">
+    <div class="usa-width-one-half">
+      <!--<sam-list-display #permissionList [newValue]="permissionSetter" [(ngModel)]="selectedPermissions" [showNewIndicator]="true">-->
+      <div class="input-and-add">
+        <sam-autocomplete
+          #permission
+          labelText="Permissions"
+          name="permissions"
+          [options]="permissionOptions"
+          [config]="{addOnIconClass:'fa fa-search', keyValueConfig: { valueProperty: 'permissionName', keyProperty: 'id'} }"
+          [allowAny]="true"
+          [ngModel]="permission"
+          (enterEvent)="onAddPermissionClick($event)"
+        ></sam-autocomplete>
+        <!--<button class="usa-button usa-button-transparent add-permission-button" (click)="onAddPermissionClick()">-->
+          <!--<i class="fa fa-plus-circle"></i>-->
+        <!--</button>-->
+      </div>
+      <!--</sam-list-display>-->
+      <div class="selected-permissions">
+        <ul class="usa-unstyled-list">
+          <li *ngFor="let permission of selectedPermissions; let i = index">
+            <button class="usa-button-link" (click)="removePermission(i)">
+              <span class="usa-sr-only">Click button to delete</span>
+              <i class="fa fa-times"></i>
+              {{permission.val}}
+              <span *ngIf="permission.isNew"><em>&nbsp;New</em></span>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel / Submit -->
+  <div class="clearfix">
+    <div class="pull-right">
+      <button class="usa-button-outline" routerLink="/access/workspace">Cancel</button>
+      <button class="usa-button-primary" (click)="onSubmitClick()">Submit</button>
+    </div>
+  </div>
+
+  <pre><code>{{requestObject | json}}</code></pre>
+</div>
+
+
+
+
+

@@ -17,11 +17,29 @@ const DedupePlugin = require('webpack/lib/optimize/DedupePlugin');
 const UglifyJsPlugin = require('webpack/lib/optimize/UglifyJsPlugin');
 const WebpackMd5Hash = require('webpack-md5-hash');
 
+var apiConfig;
+try{
+  apiConfig = require('../api-config');
+}
+catch(Error){
+  console.log('api-config.json not found, moving on ...', Error)
+}
+
+const API_UMBRELLA_KEY = process.env.API_UMBRELLA_KEY || apiConfig.API_UMBRELLA_KEY;
+const API_UMBRELLA_URL = process.env.API_UMBRELLA_URL || apiConfig.API_UMBRELLA_URL;
+const SHOW_OPTIONAL = process.env.SHOW_OPTIONAL || apiConfig.SHOW_OPTIONAL;
+const SHOW_HIDE_RESTRICTED_PAGES = process.env.SHOW_HIDE_RESTRICTED_PAGES || apiConfig.SHOW_HIDE_RESTRICTED_PAGES;
+
+if (!API_UMBRELLA_URL || !API_UMBRELLA_KEY) {
+  console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY not set. Exiting...");
+  process.exit(1);
+}
+
 /**
  * Webpack Constants
  */
-const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
-const HOST = process.env.HOST || 'localhost';
+const ENV = 'production';
+const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 8080;
 const METADATA = webpackMerge(commonConfig.metadata, {
   host: HOST,
@@ -125,11 +143,10 @@ module.exports = webpackMerge(commonConfig, {
     new DefinePlugin({
       'ENV': JSON.stringify(METADATA.ENV),
       'HMR': METADATA.HMR,
-      'process.env': {
-        'ENV': JSON.stringify(METADATA.ENV),
-        'NODE_ENV': JSON.stringify(METADATA.ENV),
-        'HMR': METADATA.HMR,
-      }
+      'API_UMBRELLA_URL': JSON.stringify(API_UMBRELLA_URL),
+      'API_UMBRELLA_KEY': JSON.stringify(API_UMBRELLA_KEY),
+      'SHOW_OPTIONAL': JSON.stringify(SHOW_OPTIONAL),
+      'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(SHOW_HIDE_RESTRICTED_PAGES)
     }),
 
     /**

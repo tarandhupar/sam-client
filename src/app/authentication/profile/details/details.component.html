@@ -1,0 +1,123 @@
+<samAlert type="info" class="usa-alert-static" title="Migrate Your Roles">
+  If you have a user account at any of the <a routerLink="/profile/migrations" fragment="legacy-sites">websites</a> that are moving to the new SAM.gov,
+  you may migrate your roles and keep your same permissions. <a routerLink="/profile/migrations" fragment="top">Begin Now</a>.
+</samAlert>
+
+<h2 [innerText]="store.title"></h2>
+<div>
+  <form *ngIf="detailsForm" [formGroup]="detailsForm">
+    <!--============================-->
+    <!--=== Identity Information ===-->
+    <!--============================-->
+    <section class="identity" [ngClass]="{ 'usa-editable': isEdit('identity') }">
+      <h3>Identifying Information<a class="usa-edit" href="javascript:void(0);" (click)="edit('identity')">Edit</a></h3>
+      <div class="usa-form-group">
+        <label>Name:</label>
+        <div class="usa-form-control" [innerText]="name"></div>
+      </div>
+      <div class="usa-form-group">
+        <label>Suffix:</label>
+        <div class="usa-form-control" [innerText]="user.suffix"></div>
+      </div>
+      <div class="usa-form-group">
+        <label>Email:</label>
+        <div class="usa-form-control" [innerText]="user.email"></div>
+      </div>
+
+      <samNameEntry class="usa-form-editable" [model]="user" legend=""></samNameEntry>
+
+      <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('identity')"></samButton>
+    </section>
+    <!--============================-->
+    <!--=== Business Information ===-->
+    <!--============================-->
+    <section class="business" [ngClass]="{ 'usa-editable': isEdit('business') }">
+      <h3>Business Information<a class="usa-edit" href="javascript:void(0);" (click)="edit('business')">Edit</a></h3>
+
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Department:</label>
+        <div class="usa-form-control" [innerText]="department"></div>
+      </div>
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Agency:</label>
+        <div class="usa-form-control" [innerText]="agency"></div>
+      </div>
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Office:</label>
+        <div class="usa-form-control" [innerText]="office"></div>
+      </div>
+      <div class="usa-form-group" *ngIf="states.isGov">
+        <label>Activity Access Code:</label>
+        <div class="usa-form-control" [innerText]="aac"></div>
+      </div>
+
+      <div class="usa-form-group">
+        <label>Business Phone:</label>
+        <div class="usa-form-control" [innerText]="phone"></div>
+      </div>
+
+      <agencyPicker class="usa-form-editable"
+                    [advancedMode]="true"
+                    [multimode]="false"
+                    [orgRoot]="user.department"
+                    [(orgId)]="user.orgID"
+                    [label]="'Select the office you work for:'"
+                    (department)="setDepartment($event)"
+                    (organization)="setOrganization($event)"
+                    *ngIf="states.isGov">
+      </agencyPicker>
+
+      <samPhoneEntry class="usa-form-editable" [model]="user.workPhone" [numbersOnly]="true" (emitter)="updatePhoneNumber($event)" label="Business Phone"></samPhoneEntry>
+
+      <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('business')"></samButton>
+    </section>
+    <!--==========================-->
+    <!--=== Security Questions ===-->
+    <!--==========================-->
+    <section *ngIf="user.kbaAnswerList.length" class="kba" [ngClass]="{ 'usa-editable': isEdit('kba') }">
+      <h3>Security Questions<a class="usa-edit" href="javascript:void(0);" (click)="edit('kba')">Edit</a></h3>
+
+      <div *ngFor="let kbaAnswer of user.kbaAnswerList; let $index = index;" class="usa-form-group kba">
+        <label [innerText]="question(kbaAnswer.questionId)"></label>
+        <div class="usa-form-control" [innerHtml]="getHashedAnswer(kbaAnswer.answer)"></div>
+      </div>
+
+      <div class="usa-form-editable" *ngIf="questions.length">
+        <sam-kba-entry #kba
+                       *ngFor="let kbaAnswer of detailsForm.controls.kbaAnswerList.controls; let $index = index;"
+                       [(questions)]="questions[$index]"
+                       [question]="detailsForm.controls.kbaAnswerList.controls[$index].controls.questionId"
+                       [(answer)]="detailsForm.controls.kbaAnswerList.controls[$index].controls.answer"
+                       (onQuestionChange)="changeQuestion($event, $index)"
+                       label="Question {{ $index + 1 }}"></sam-kba-entry>
+      </div>
+
+      <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('kba')"></samButton>
+    </section>
+    <section>
+      <h3>Deactivate Account</h3>
+      <div>
+        Once you deactivate your account, you will not be able to recover any of your account information or permissions. Your account will
+        be permanently inaccessible and you will need to re-register to access SAM.gov.
+      </div>
+      <samButton [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></samButton>
+    </section>
+  </form>
+</div>
+
+<samModal #confirmModal
+          type="warning"
+          title="Are you sure you want to deactivate your account?"
+          showClose="true"
+          submitButtonLabel="Yes, deactivate my account"
+          cancelButtonLabel="No, cancel account deactivation"
+          (onSubmit)="reconfirmDeactivation()"></samModal>
+
+<samModal #reconfirmModal
+          type="warning"
+          title="Warning"
+          description="If you deactivate your account it cannot be reactivated for future use and you will be immediately logged out of the system. Are you sure you want to deactivate your account?"
+          showClose="true"
+          submitButtonLabel="Yes, continue with deactivation"
+          cancelButtonLabel="No, cancel deactivation"
+          (onSubmit)="deactivate()"></samModal>

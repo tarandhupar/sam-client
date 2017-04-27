@@ -1,0 +1,258 @@
+<div class="usa-grid search-page">
+
+  <!--filters aside-->
+  <aside class="{{index === 'wd' ? 'usa-width-one-third' : 'usa-width-one-fourth'}}">
+
+    <div>&nbsp;</div>
+    <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
+    <div>
+      <sam-filters-container>
+        <sam-collapsible *ngIf="index !== 'fh' && showRegionalOffices==false" [label]="'Status'" [startOpened]="true">
+          <!--active checkbox-->
+          <samCheckbox
+            [(model)]="checkboxModel"
+            [name]="checkboxConfig.name"
+            [options]="checkboxConfig.options"
+            [label]="checkboxConfig.label"
+            [hint]="checkboxConfig.hint"
+            [errorMessage]="checkboxConfig.errorMessage"
+            [hasSelectAll]="checkboxConfig.hasSelectAll"
+            (modelChange)="activeFilter($event)">
+          </samCheckbox>
+        </sam-collapsible>
+
+        <sam-collapsible *ngIf="showRegionalOffices==true" [label]="'Keyword'" [startOpened]="true">
+        <sam-autocomplete class="search-bar sam-autocomplete-width usa-regional-filter" autofill-suggestions
+                          [(ngModel)]="ro_keyword"
+                          (ngModelChange)="regionalOfficeSearchEvent($event)"
+                          [index]="'ro'"
+                          [id]="'regional-office'"
+                          [showClearButton]="true"
+                          [allowAny]="true"
+                          [config]="regionalType"
+                          name="regionalsearch" >
+        </sam-autocomplete>
+        </sam-collapsible>
+
+        <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
+          <agencyPicker #agencyPicker
+            [label]="'Search Federal Organizations'"
+            (organization)="onOrganizationChange($event)"
+            [levelLimit] = '2'>
+          </agencyPicker>
+        </sam-collapsible>
+
+        <sam-collapsible [label]="'Location'" [startOpened]="true" *ngIf="index === 'wd' && showRegionalOffices==false">
+          <!--state drop down-->
+          <samSelect
+            [(model)]="wdStateModel"
+            [name]="selectStateConfig.name"
+            [options]="selectStateConfig.options"
+            [label]="selectStateConfig.label"
+            [hint]="selectStateConfig.hint"
+            [errorMessage]="selectStateConfig.errorMessage"
+            [disabled]="selectStateConfig.disabled"
+            (modelChange)="stateChange($event)">
+          </samSelect>
+          <!--county drop down-->
+          <samSelect
+            [(model)]="wdCountyModel"
+            [name]="selectCountyConfig.name"
+            [options]="selectCountyConfig.options"
+            [label]="selectCountyConfig.label"
+            [hint]="selectCountyConfig.hint"
+            [errorMessage]="selectCountyConfig.errorMessage"
+            [disabled]="selectCountyConfig.disabled"
+            (modelChange)="countyChange($event)">
+          </samSelect>
+          <button (click)='wdStateCountyClear()'>Clear</button>
+        </sam-collapsible>
+
+
+        <sam-collapsible  [label]="'Wage Determination Type'" [startOpened]="true" *ngIf="index === 'wd' && showRegionalOffices==false">
+
+          <!--wage determination radio buttons-->
+          <samRadioButton
+            [(model)]="wdTypeModel"
+            [options]="wdTypeConfig.options"
+            [label]="wdTypeConfig.label"
+            [hint]="wdTypeConfig.hint"
+            [name]="wdTypeConfig.name"
+            [errorMessage]="wdTypeConfig.errorMessage"
+            (modelChange)="wdFilterChange($event)">
+          </samRadioButton>
+          <button (click)='wdTypeRadClear()'>Clear</button>
+        </sam-collapsible>
+
+        <!--*** DBA Specif Filters ***-->
+        <sam-collapsible [label]="'DBA: Construction Type'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'dbra' && showRegionalOffices==false">
+
+          <!--construction type drop down-->
+          <samSelect
+            [(model)]="wdConstructModel"
+            [name]="selectConstructConfig.name"
+            [options]="selectConstructConfig.options"
+            [label]="selectConstructConfig.label"
+            [hint]="selectConstructConfig.hint"
+            [errorMessage]="selectConstructConfig.errorMessage"
+            [disabled]="selectConstructConfig.disabled"
+            (modelChange)="constructionTypeChange($event)">>
+          </samSelect>
+          <button (click)='wdConstructionClear()'>Clear</button>
+        </sam-collapsible>
+
+        <!--*** SCA Specific Filters ***-->
+        <sam-collapsible [label]="'SCA: Previously Performed'" [startOpened]="true" *ngIf="index === 'wd' && wdTypeModel === 'sca' && showRegionalOffices==false">
+
+          <!--previously performed-->
+          <samRadioButton
+            [(model)]="wdPreviouslyPerformedModel"
+            [options]="wdPreviouslyPerformedConfig.options"
+            [label]="wdPreviouslyPerformedConfig.label"
+            [hint]="wdPreviouslyPerformedConfig.hint"
+            [name]="wdPreviouslyPerformedConfig.name"
+            [errorMessage]="wdPreviouslyPerformedConfig.errorMessage"
+            (modelChange)="wdPreviouslyPerformedChanged($event)">
+          </samRadioButton>
+          <button (click)='wdPreviouslyPerformedClear()'>Clear</button>
+        </sam-collapsible>
+
+        <sam-collapsible [label]="'SCA: Subject to CBA'" [startOpened]="true"
+                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && wdPreviouslyPerformedModel === 'prevPerfYesLocality' && showRegionalOffices==false">
+
+          <!--Subject to CBA-->
+          <samRadioButton
+            [(model)]="wdSubjectToCBAModel"
+            [options]="wdSubjectToCBAConfig.options"
+            [label]="wdSubjectToCBAConfig.label"
+            [hint]="wdSubjectToCBAConfig.hint"
+            [name]="wdSubjectToCBAConfig.name"
+            [errorMessage]="wdSubjectToCBAConfig.errorMessage"
+            (modelChange)="wdSubjectToCBAChanged($event)">
+          </samRadioButton>
+          <button (click)='wdSubjectToCBAClear()'>Clear</button>
+        </sam-collapsible>
+
+        <sam-collapsible [label]="'SCA: Non-Standard Services'" [startOpened]="true"
+                         *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA'  && showRegionalOffices==false">
+
+          <!--Non-Standard Services radio buttons-->
+          <samRadioButton
+            [(model)]="wdNonStandardRadModel"
+            [options]="wdNonStandardRadConfig.options"
+            [label]="wdNonStandardRadConfig.label"
+            [hint]="wdNonStandardRadConfig.hint"
+            [name]="wdNonStandardRadConfig.name"
+            [errorMessage]="wdNonStandardRadConfig.errorMessage"
+            (modelChange)="wdNonStandardRadChanged($event)">
+          </samRadioButton>
+
+          <!--Non-Standard Services drop down select-->
+          <samSelect
+            [(model)]="wdNonStandardSelectModel"
+            [name]="wdNonStandardSelectConfig.name"
+            [options]="wdNonStandardSelectConfig.options"
+            [label]="wdNonStandardSelectConfig.label"
+            [hint]="wdNonStandardSelectConfig.hint"
+            [errorMessage]="wdNonStandardSelectConfig.errorMessage"
+            [disabled]="wdNonStandardSelectConfig.disabled"
+            (modelChange)="wdNonStandardSelectChanged($event)">
+          </samSelect>
+          <button (click)='wdNonStandardServicesSelectClear()'>Clear</button>
+        </sam-collapsible>
+
+        <!--Awards specific Filters-->
+        <sam-collapsible  [label]="'Contract Type'" [startOpened]="true" *ngIf="index==='fpds' && showRegionalOffices==false">
+          <samRadioButton
+            [(model)]="awardIDVModel"
+            [options]="awardIDVRadConfig.options"
+            [label]="awardIDVRadConfig.label"
+            [hint]="awardIDVRadConfig.hint"
+            [name]="awardIDVRadConfig.name"
+            [errorMessage]="awardIDVRadConfig.errorMessage"
+            (modelChange)="awardIDVRadChanged($event)">
+          </samRadioButton>
+          <br/>
+          <sam-contract-type-filter class="usa-award-filter award-type-dropdown-list"
+                                    [selectModel]="awardTypeModel"
+                                    [options]="awardType"
+                                    (modelChange)="awardTypeSelected($event)">
+          </sam-contract-type-filter>
+          <br/>
+          <sam-contract-type-filter class="usa-award-filter contract-type-dropdown-list"
+                                    [selectModel]="contractTypeModel"
+                                    [options]="contractType"
+                                    (modelChange)="contractTypeSelected($event)">
+          </sam-contract-type-filter>
+          <button (click)='awardIdvFilterClear()'>Clear</button>
+        </sam-collapsible>
+
+        <!--NAICS - PSC Filters-->
+        <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="(index==='fpds' || index === 'opp' || index === 'ent') && showRegionalOffices==false">
+          <sam-naics-psc-filter class="usa-award-filter"
+                                [selectModel1]="naicsTypeModel"
+                                [selectModel2]="pscTypeModel"
+                                [options1]="naicsType"
+                                [options2]="pscType"
+                                (modelChange1)="naicsTypeSelected($event)"
+                                (modelChange2)="pscTypeSelected($event)">
+          </sam-naics-psc-filter>
+          <button (click)='naicsPscFilterClear()'>Clear</button>
+        </sam-collapsible>
+        <hr>
+        <button (click)='clearAllFilters()'>Clear All</button>
+
+      </sam-filters-container>
+    </div>
+  </aside>
+
+  <div class="{{index === 'wd' ? 'usa-width-two-thirds' : 'usa-width-three-fourths'}}">
+    <div class="usa-width-one">
+      <samAlert *ngIf="wdTypeModel && wdTypeModel === 'dbra'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
+      <samAlert *ngIf="wdTypeModel && wdTypeModel === 'sca'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="scaSearchDescription"></div></samAlert>
+      <h1 *ngIf="!showRegionalOffices" class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
+      <h1 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h1>
+      <p *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'" class="usa-font-lead">
+        Please navigate to the <a href="https://www.wdol.gov/sca.aspx">Service Contract Act</a> section of the legacy WDOL site to retrieve
+        a Collective Bargaining Agreement (CBA) WD or to create a new CBA WD
+      </p>
+    </div>
+    <div class="usa-width-one" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
+      <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
+      <strong><list-results-message *ngIf="totalCount > 0 && wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'"[showing]="10" [currentPage]="pageNum+1" [total]="totalCount" [suffix]="listMessageSuffix"></list-results-message></strong>
+      <br><br>
+      <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
+      <div id="search-results">
+        <div tabindex="-1" *ngFor="let row of data.results">
+          <opportunities-result *ngIf="row._type=='opportunity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
+          <assistance-listing-result  *ngIf="row._type=='assistanceListing'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
+          <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
+          <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
+          <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
+          <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
+          <awards-result *ngIf="row._type=='award'" class="usa-grid-full" [data]="row" [qParams]="qParams"></awards-result>
+          <regional-office-listing-result *ngIf="showRegionalOffices" class="usa-grid-full" [data]="row" [qParams]="qParams" ></regional-office-listing-result>
+          <hr class="m_T-5x"/>
+        </div>
+      </div>
+      <div *ngIf="!initLoad && !data.results && index !== 'wd'">
+        <br/>
+        <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
+        <div style="height:300px;"></div>
+      </div>
+      <div *ngIf="!initLoad && !data.results && index === 'wd'">
+        <br/>
+        <h3>No Wage Determinations were found using the criteria you have selected.</h3>
+        <h3>If you would like to request a SCA WDOL using an e98 form, please click <a href="https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp">here.</a></h3>
+        <div style="height:300px;"></div>
+      </div>
+    </div>
+    <div *ngIf="data.results">
+      <div class="usa-width-one-whole" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
+        <samPagination (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
+      </div>
+    </div>
+    <br/><br/>
+  </div>
+
+</div>

@@ -50,14 +50,23 @@ declare module '*';
 declare var ENV: string;
 declare var HMR: boolean;
 declare var System: SystemJS;
+//API Umbrella info
+declare var API_UMBRELLA_URL: string;
+declare var API_UMBRELLA_KEY: string;
+declare var SHOW_OPTIONAL: string;
+declare var SHOW_HIDE_RESTRICTED_PAGES: string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
 }
-
+/** SHOW_HIDE_RESTRICTED_PAGES : defined to hide components in Prodlike/Prod*/
 interface GlobalEnvironment {
   ENV;
   HMR;
+  API_UMBRELLA_URL;
+  API_UMBRELLA_KEY;
+  SHOW_OPTIONAL;
+  SHOW_HIDE_RESTRICTED_PAGES;
   SystemJS: SystemJS;
   System: SystemJS;
 }

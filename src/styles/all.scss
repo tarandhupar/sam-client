@@ -1,0 +1,300 @@
+/*******************************
+         Global
+*******************************/
+
+/*-------------------
+       Helpers
+--------------------*/
+@import '~uswds/src/stylesheets/lib/bourbon';
+@import '~uswds/src/stylesheets/lib/neat';
+
+/*-------------------
+     Variables
+--------------------*/
+// Internal variable should be declared before uswds
+// variable to take higher precendence
+@import 'variables';
+
+/*-------------------
+       Reset
+--------------------*/
+@import '~uswds/src/stylesheets/lib/normalize';
+
+/*-------------------
+       Icons
+--------------------*/
+@import '~font-awesome/scss/font-awesome';
+
+
+/*******************************
+        USWDS 0.13.3
+*******************************/
+/*
+  Vendor scss files moved to the top
+  of this file to be used by all files
+*/
+
+//@import '~uswds/src/stylesheets/lib/bourbon';
+//@import '~uswds/src/stylesheets/lib/neat';
+//@import '~uswds/src/stylesheets/lib/normalize';
+
+
+// Core -------------- //
+
+@import '~uswds/src/stylesheets/core/variables';
+//@import '~uswds/src/stylesheets/core/fonts';
+@import '~uswds/src/stylesheets/core/base';
+/*
+  Variables moved here to avoid
+  overriding USWDS grid variables
+*/
+// Store current variable values
+$current-small: $small;
+$current-medium: $medium;
+$current-large: $large;
+// Override current variables values for grid only
+$small: new-breakpoint(min-width $small-screen $grid-columns-small);
+$medium: new-breakpoint(min-width $medium-screen $grid-columns-medium);
+$large: new-breakpoint(min-width $large-screen $grid-columns-large);
+@import '~uswds/src/stylesheets/core/grid';
+// Restore variables to values defined in variables.scss
+$small: $current-small;
+$medium: $current-medium;
+$large: $current-large;
+
+@import '~uswds/src/stylesheets/core/utilities';
+
+
+// Elements -------------- //
+// Styles basic HTML elements
+
+@import '~uswds/src/stylesheets/elements/buttons';
+@import '~uswds/src/stylesheets/elements/figure';
+@import '~uswds/src/stylesheets/elements/inputs';
+@import '~uswds/src/stylesheets/elements/labels';
+//@import '~uswds/src/stylesheets/elements/list';
+@import '~uswds/src/stylesheets/elements/table';
+//@import '~uswds/src/stylesheets/elements/typography';
+
+
+// Components -------------- //
+
+@import '~uswds/src/stylesheets/components/accordions';
+@import '~uswds/src/stylesheets/components/alerts';
+//@import '~uswds/src/stylesheets/components/banner';
+//@import '~uswds/src/stylesheets/components/footer';
+@import '~uswds/src/stylesheets/components/forms';
+//import '~uswds/src/stylesheets/components/graphic-list';
+//@import '~uswds/src/stylesheets/components/hero';
+//@import '~uswds/src/stylesheets/components/layout';
+//@import '~uswds/src/stylesheets/components/media-block';
+//@import '~uswds/src/stylesheets/components/section';
+@import '~uswds/src/stylesheets/components/sidenav';
+//@import '~uswds/src/stylesheets/components/header';
+@import '~uswds/src/stylesheets/components/search';
+//@import '~uswds/src/stylesheets/components/skipnav';
+
+/*******************************
+        SAM UI
+*******************************/
+
+/* Global */
+@import 'sam-ui/globals/fonts';
+@import 'sam-ui/globals/site';
+
+/* Elements */
+@import 'sam-ui/elements/button';
+@import 'sam-ui/elements/container';
+@import 'sam-ui/elements/label';
+@import 'sam-ui/elements/list';
+@import 'sam-ui/elements/segment';
+@import 'sam-ui/elements/header';
+@import 'sam-ui/elements/image';
+
+/* Collections */
+@import 'sam-ui/collections/grid';
+@import 'sam-ui/collections/table';
+
+/* Vendor Extentions */
+@import 'sam-ui/vendor/font-awesome';
+
+/*--------------
+ Transition Fixes
+---------------*/
+/*
+  Temporary fixes
+*/
+home samsearchbar{
+  color: $textColor;
+}
+
+.usa-unstyled-list {
+  @include unstyled-list;
+}
+
+samsearchheader .search-header > .usa-width-one-whole{
+  height: 40px;
+}
+
+.usa-font-lead {
+  font-family: $font-serif;
+  font-size: $lead-font-size;
+  line-height: $lead-line-height;
+  max-width: $lead-max-width;
+}
+
+/*******************************
+        Legacy
+*******************************/
+
+@import 'utilities';
+@import 'margin-padding';
+@import 'global';
+@import 'typography';
+@import 'grid-offsets';
+
+@import 'components/parent-orgs.scss';
+@import 'components/card';
+@import 'components/date-entry';
+@import 'components/download';
+@import 'components/label-wrapper';
+@import 'components/accordion';
+@import 'components/alert';
+@import 'components/authentication';
+@import 'components/collapsible';
+@import 'components/list-input';
+@import 'components/footer';
+@import 'components/button';
+@import 'components/pagination';
+@import 'components/header';
+@import 'components/header-links';
+@import 'components/header-menu';
+@import 'components/info-accordion';
+@import 'components/agency-picker';
+@import 'components/input';
+@import 'components/multiselect';
+@import 'components/banner';
+@import 'components/searchbar';
+@import 'components/search-header';
+@import 'components/multiselect-dropdown';
+@import 'components/image-library';
+@import 'components/tabs';
+@import 'components/modal';
+@import 'components/alphabet-selector';
+@import 'components/history';
+@import 'components/toggle-switch';
+@import 'components/feedback-form';
+@import 'components/well';
+@import 'components/autocomplete';
+@import 'components/autocomplete-dropdown';
+@import 'components/organization-profile';
+@import 'components/role-management/role-managment';
+@import 'components/fal-table';
+@import 'components/address-form';
+
+@import 'pages/awards';
+@import 'pages/entity-object-view';
+@import 'pages/exclusion';
+@import 'pages/assistance-listing';
+@import 'pages/help';
+//@import 'pages/home';
+@import 'pages/opportunity';
+@import 'pages/organization';
+@import 'pages/search';
+@import 'pages/reference-library';
+@import 'pages/reports';
+@import 'pages/alerts';
+@import 'pages/new-to-sam';
+@import 'pages/help-accounts';
+@import 'pages/help-roadmap';
+@import 'pages/help-awards';
+@import 'pages/users-directory';
+@import 'pages/ui-kit-demo';
+@import 'pages/access';
+@import 'pages/grant-access';
+@import 'pages/public-profile';
+@import 'pages/wage-determination';
+@import 'pages/assistance-listing-operations';
+@import 'pages/organization-detail';
+@import 'pages/organization-create';
+@import 'pages/aac-request';
+// h1,
+// h2{
+//   letter-spacing: -0.5px;
+//   line-height: 1.1;
+//   color: black;
+// }
+
+/* Let content occupy most of the page and show footer when scroll down*/
+.occupy-page{
+  min-height: 77vh;
+}
+
+.overlay{
+  background-color:rgba(0,0,0,0.5);
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.content-block span {
+  display: block;
+  margin: 3px 0px 3px 0px;
+}
+
+.usa-input-error{
+  .usa-agency-picker-dropdown-area{
+    select{
+      width:100%;
+    }
+  }
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+
+
+.sidenav-logo {
+  width:160px;
+  height: 160px;
+  display: block;
+  margin: 0 auto;
+}
+
+
+// Make sidenav use all availabe horizontal space on medium screen
+@media screen and (min-width: $medium-screen) and (max-width: $large-screen - 1) {
+  aside.usa-width-one-fourth{
+    margin-right: 0;
+    width: 100%;
+  }
+}
+
+.search-layout{
+  .showing-results-meta{
+    margin-top:3rem!important;
+  }
+  samselect{
+    label{
+      margin-top:0;
+    }
+  }
+}
+
+select {
+  background-position: right .65rem center;
+  padding: 1rem 2.6rem 1rem 0.7em;
+}

@@ -13,14 +13,14 @@ const DefinePlugin = require('webpack/lib/DefinePlugin');
 /**
  * Webpack Constants
  */
-const ENV = process.env.ENV = process.env.NODE_ENV = 'test';
+const ENV = 'test';
 
 /**
  * Webpack configuration
  *
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
-module.exports = {
+var conf = {
 
   /**
    * Source map for Karma from the help of karma-sourcemap-loader &  karma-webpack
@@ -48,7 +48,10 @@ module.exports = {
      * Make sure root is src
      */
     root: helpers.root('src'),
-
+    // aliases
+    alias: {
+      "sam-ui-kit": helpers.root('src') + '/sam-ui-elements/src/ui-kit'
+    },
   },
 
   /**
@@ -73,7 +76,7 @@ module.exports = {
       {
         test: /\.ts$/,
         loader: 'tslint-loader',
-        exclude: [helpers.root('node_modules')]
+        exclude: [helpers.root('node_modules'),helpers.root('src/sam-ui-elements')]
       },
 
       /**
@@ -102,7 +105,6 @@ module.exports = {
      * See: http://webpack.github.io/docs/configuration.html#module-loaders
      */
     loaders: [
-
       /**
        * Typescript loader support for .ts and Angular 2 async routes via .async.ts
        *
@@ -110,8 +112,8 @@ module.exports = {
        */
       {
         test: /\.ts$/,
-        loader: 'awesome-typescript-loader',
-        query: {
+        loaders: ['awesome-typescript-loader','angular2-template-loader'],
+        /*query: {
           compilerOptions: {
 
             // Remove TypeScript helpers to be injected
@@ -119,7 +121,7 @@ module.exports = {
             removeComments: true
 
           }
-        },
+        },*/
         exclude: [/\.e2e\.ts$/]
       },
 
@@ -144,7 +146,12 @@ module.exports = {
        *
        * See: https://github.com/webpack/raw-loader
        */
-      { test: /\.html$/, loader: 'raw-loader', exclude: [helpers.root('src/index.html')] }
+      { test: /\.html$/, loader: 'raw-loader', exclude: [helpers.root('src/index.html')] },
+
+      /**
+       * Compile css
+       */
+      { test: /\.scss$/, loaders: ['raw-loader', 'sass'], exclude: /node_modules/ },
 
     ],
 
@@ -193,11 +200,10 @@ module.exports = {
     new DefinePlugin({
       'ENV': JSON.stringify(ENV),
       'HMR': false,
-      'process.env': {
-        'ENV': JSON.stringify(ENV),
-        'NODE_ENV': JSON.stringify(ENV),
-        'HMR': false,
-      }
+      'API_UMBRELLA_URL': JSON.stringify("dummy"), // we do not test with a real backend, but the url and key must be defined
+      'API_UMBRELLA_KEY': JSON.stringify("dummy"),
+      'SHOW_OPTIONAL': JSON.stringify(process.env.SHOW_OPTIONAL === 'true'),
+      'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(process.env.SHOW_HIDE_RESTRICTED_PAGES === 'true')
     }),
 
 
@@ -213,6 +219,10 @@ module.exports = {
     emitErrors: false,
     failOnHint: false,
     resourcePath: 'src'
+  },
+
+  sassLoader: {
+    includePaths: ["src/app/styles"]
   },
 
   /**
@@ -231,3 +241,12 @@ module.exports = {
   }
 
 };
+
+if (helpers.hasProcessFlag('no-lint')) {
+  conf.module.preLoaders = conf.module.preLoaders.filter(function(f) {
+    return f.loader !== 'tslint-loader';
+  });
+  delete conf.tslint;
+}
+
+module.exports = conf;
