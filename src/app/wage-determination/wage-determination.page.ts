@@ -25,6 +25,7 @@ export class WageDeterminationPage implements OnInit {
   dictionaries: any;
   services: string;
   constructionTypes: string;
+  locationDescription: String = null;
   public locations: any;
   history: any;
   processedHistory: any;
@@ -199,9 +200,12 @@ export class WageDeterminationPage implements OnInit {
       if (!wageDetermination.location) {
         return;
       }
-
+      if(wageDetermination.location.description != 'na'){
+        this.locationDescription = wageDetermination.location.description;
+        return;
+      }
       /** Process each location data into a usable state **/
-      for (let eachLocation of wageDetermination.location) {
+      for (let eachLocation of wageDetermination.location.mapping) {
         /** Process States **/
         // given a state code, look up the dictionary entry for that state (returns array of matches)
         let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
@@ -224,7 +228,7 @@ export class WageDeterminationPage implements OnInit {
         }
       }
 
-      this.locations = wageDetermination.location;
+      this.locations = wageDetermination.location.mapping;
     })
   }
 
@@ -315,7 +319,7 @@ export class WageDeterminationPage implements OnInit {
           this.processedHistory = this.longProcessedHistory;
         }
 
-        //use processedHistory to show Revision Message 
+        //use processedHistory to show Revision Message
         this.showRevisionMessage();
       }, err => {
         console.log('Error loading history: ', err);
