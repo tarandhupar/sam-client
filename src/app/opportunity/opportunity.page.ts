@@ -210,7 +210,17 @@ export class OpportunityPage implements OnInit {
 
     this.apiSubjectSub = opportunitySubject.subscribe(api => { // do something with the opportunity api
       this.opportunity = api;
-      this.pageRoute = "opportunities/" + this.opportunity.opportunityId;
+      //setup side nav menu
+      this.setupSideNavMenus();
+    }, err => {
+      console.log('Error loading opportunity: ', err);
+    });
+
+    return opportunitySubject;
+  }
+
+  private setupSideNavMenus(){
+    this.pageRoute = "opportunities/" + this.opportunity.opportunityId;
       let opportunitySideNavContent = {
         "label": "Opportunity",
         "route": this.pageRoute,
@@ -245,14 +255,9 @@ export class OpportunityPage implements OnInit {
           }
         ]
       };
-
+      
       this.sidenavModel.children = [];
       this.updateSideNav(opportunitySideNavContent);
-    }, err => {
-      console.log('Error loading opportunity: ', err);
-    });
-
-    return opportunitySubject;
   }
 
   private updateSideNav(content?){
@@ -718,6 +723,7 @@ export class OpportunityPage implements OnInit {
 
       this.ready = true;
 
+      this.setupSideNavMenus();
       this.updateSideNav();
     });
   }
