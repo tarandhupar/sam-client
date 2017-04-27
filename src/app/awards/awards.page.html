@@ -281,12 +281,12 @@
 						Number of Actions: {{awardData.contractData.numberOfActions}}
 					</div>
 					<h3 id="legislativeMandates">Legislative Mandates</h3>
-					Clinger-Cohen Act: {{cca}}<br />
-					Service Contract Act: {{sca}}<br />
-					Walsh-Healey Act: {{wha}}<br />
-					Davis Bacon Act: {{dba}}<br />
-					Interagency Contracting Authority: {{ica}}<br />
-					Other Interagency Contracting Statutory Authority (1000 Characters) {{oicsa}}
+					Clinger-Cohen Act: {{awardData.legislativeMandates.clingerCohenAct}}<br />
+					Service Contract Act: {{awardData.legislativeMandates.laborStandards}}<br />
+					Walsh-Healey Act: {{awardData.legislativeMandates.materialsSuppliesArticlesEquip}}<br />
+					Davis Bacon Act: {{awardData.legislativeMandates.contructionWageRateRequirements}}<br />
+					Interagency Contracting Authority: {{awardData.legislativeMandates.interAgencyContractingAuthority}}<br />
+					Other Interagency Contracting Statutory Authority (1000 Characters) {{awardData.legislativeMandates.otherInterAgencyContractingStatutoryAuthority}}
 				</div>
 				<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
 					<h3 id="contractMarketingData">Contract Marketing Data</h3>
@@ -301,20 +301,17 @@
 				</div>
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA'">
 					<h3 id="principalPlaceOfPerformance">Principal Place of Performance</h3>
-					Principal Place of Performance Code: {{pppc}}<br />
-					County Name: {{countyName}}<br />
-					City Name: {{cityName}}<br />
-					Congressional District: {{congDist}}<br />
-					Zip Code (+4): {{zipPlus4}}
+					Location: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceLocation}}<br />
+					City: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCity}}<br />
+					County: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCounty}}<br />
+					State: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceState}}<br />
+					Zip Code (+4): {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceZipCode | zipCode}}
+					Country: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCountry}}
+					Congressional District: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCongDistrict}}<br />
 				</div>
 				<h3 id="ProductOrServiceInformation">Product or Service Information</h3>
 				Product/Service Code: {{psCode}}<br />
-				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
-					Description: {{description}}
-				</div>
-				<div id="award-type" *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
-					Description of Requirement (4000 Characters): {{description}}
-				</div>
+				Description: {{description}}
 				<br />
 				<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
@@ -323,27 +320,36 @@
 					<br />
 					<br />
 					Bundled Contract: {{bundledContract}}<br />
-					DOD Acquisition Program: {{dodAcquisitionProgram}}<br />
-					Description: {{description}}<br />
-					<br />
-					Country of Product or Service Origin: {{country}}<br />
-					Place of Manufacture: {{placeOfManufacture}}<br />
+					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
+						DOD Acquisition Program: {{dodAcquisitionProgram}}<br />
+						Description: {{description}}<br />
+						<br />
+						Country of Product or Service Origin: {{country}}<br />
+						Place of Manufacture: {{placeOfManufacture}}<br />
+					</div>
 					Domestic or Foreign Entity: {{domesticOrForeignEntity}}<br />
 					Recovered Materials/Sustainability: {{rms}}<br />
-					InfoTech Commercial Item Category: {{icic}}
-					<br />
-					<br />
+					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
+						InfoTech Commercial Item Category: {{icic}}
+					</div>
 					Claimant Program Code: {{cpc}}<br />
-					Description: {{description}}
+					Description: {{description}}<br />
+					Sea Transportation: {{seaTransportation}}
 					<br />
 					<br />
-					Sea Transportation: {{seaTransportation}}<br />
 					GFP Provided Under This Action: {{gfp}}<br />
-					Use of EPA Designated Products: {{desProds}}<br />
-					Description of Requirement (4000 Characters): {{description}}
+					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
+						Use of EPA Designated Products: {{desProds}}<br />
+						Description of Requirement: {{description}}
+					</div>
+					<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
+						Description of Contract Requirement: {{}}
+					</div>
 				</div>
 				<h3 id="competitionInformation">Competition Information</h3>
-				Extent Competed for Referenced IDV: {{extent}}<br />
+				<div id="award-type" *ngIf="awardData.templateType != 'IDV'">
+					Extent Competed for Referenced IDV: {{extent}}<br />
+				</div>
 				Extent Competed: {{extentCompeted}}<br />
 				Solicitation Procedures: {{solicitationProcedures}}<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
@@ -351,7 +357,8 @@
 					Evaluated Preference: {{evaluatedPreference}}<br />
 					SBIR/STTR: {{sbirSttr}}<br />
 					Fair Opportunity/Limited Sources: {{fairOpp}}<br />
-					Other than Full and Open Communication: {{otfaoc}}<br />
+					Other than Full and Open Competition: {{otfaoc}}<br />
+					Competetive Procedures/Other than Full and Open Competition: {{otfaoc}}<br />
 					Local Area Set Aside: {{localArea}}<br />
 					FedBizOpps: {{fedBizOpps}}<br />
 					A76 Action: {{a76Action}}<br />
@@ -359,6 +366,12 @@
 					Number of Offers Received: {{numberOfOffersReceived}}<br />
 					Small Business Competitiveness Demonstration Program: {{sbcdp}}<br />
 					Commercial Item Test Program {{citp}}<br />
+					<br />
+				<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
+					Pre Award FBO Synopsis: {{}}<br />
+					SBA/OFPP Synopsis Waiver Pilot: {{}}<br />
+					Alternative Advertising: {{}}
+				</div>
 				</div>
 				<div id="award-type" *ngIf="awardData.templateType == 'OTA' || awardData.templateType == 'OTI'">
 					Nontraditional Government Contractor Participation: {{ngcp}}<br />
@@ -370,6 +383,10 @@
 					Subcontract Plan: {{subcontractPlan}}<br />
 					<div *ngIf="awardData.templateType == 'AWARD'">
 						Price Evaluation Percent Difference: {{pepd}}
+						<br />
+						<br />
+						Reason Not Awarded To Small Disadvantaged Business: {{}}<br />
+						Reason Not Awarded To Small Business: {{}}<br />
 					</div>
 				</div>
 				<br />
