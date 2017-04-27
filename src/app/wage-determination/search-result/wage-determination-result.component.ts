@@ -36,7 +36,7 @@ import * as moment from 'moment/moment';
         </div>
         <div *ngIf="data.location?.additionalInfo?.content!=null">
       	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li [attr.id]="'wd-description-' + i"><strong>Original Description: </strong>
+        	<li [attr.id]="'wd-description-' + i"><strong>Location Description: </strong>
         	  <span>{{ data.location?.additionalInfo?.content }}</span>
         	</li>
         </ul>
