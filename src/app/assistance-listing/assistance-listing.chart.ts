@@ -25,6 +25,7 @@ export class FinancialObligationChart implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     d3.select("#visualization svg").remove();
     d3.select("#visualization table").remove();
+    d3.select("#visualization em").remove();
     let visualizationData = this.prepareVisualizationData();
     if(visualizationData.length > 0){
       this.createVisualization(visualizationData);
