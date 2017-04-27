@@ -202,24 +202,24 @@
 
         <!--Entity Name - DUNS Filter-->
         <sam-collapsible [label]="'Entity Name/UEI'" [startOpened]="true" *ngIf="index==='fpds' || index === 'opp' || index === 'ent'">
-          <labelWrapper>
-            <sam-autocomplete autofill-entityduns
+          <labelWrapper class="sam-list-input">
+            <sam-autocomplete class="search-bar sam-autocomplete-width usa-regional-filter" autofill-entityduns
               [name]="'Test'"
               [id]="name + 'autocompletecomponent'"
-              [config]="testConfiguration"
+              [config]="dunsConfiguration"
               [(ngModel)]="dunsModel"
               [showClearButton]="true">
             </sam-autocomplete>
 
-            <sam-list-display #dunsListDisplay
-              class="usa-award-filter"
-              [config]="testConfiguration"
+            <sam-list-display
+
+              [config]="dunsConfiguration"
               [newValue]="dunsModel"
-              (modelChange)="getDropdownListItems($event)"
               [(ngModel)]="dunsModelList"
-              (ngModelChange)="testListModelChange($event)">
+              (ngModelChange)="dunsListModelChange($event)"><div [innerHTML]="dunsConfiguration.selectedLabel"></div>
             </sam-list-display>
           </labelWrapper>
+          <button (click)='dunsFilterClear()'>Clear</button>
         </sam-collapsible>
 
         <hr>

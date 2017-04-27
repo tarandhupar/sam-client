@@ -42,13 +42,7 @@ export class SearchPage implements OnInit{
   dunsModelList: any = [];
   dunsListString = '';
   myOptions: any = [];
-  testConfiguration = {
-    keyValueConfig: {
-      keyProperty: 'value',
-      valueProperty: 'label'
-    },
-    dropdownLimit: 3
-};
+
 
 
 
@@ -275,7 +269,18 @@ export class SearchPage implements OnInit{
   regionalType = {
     "placeholder": "Regional Agency Location",
     "addOnIconClass": "fa fa-search"
-  }
+  };
+
+  // duns config
+  dunsConfiguration = {
+    placeholder: "Search Entity/UEI",
+    selectedLabel: "Codes Selected",
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    },
+    dropdownLimit: 10
+  };
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -325,7 +330,6 @@ export class SearchPage implements OnInit{
     if(this.dunsListString !== ''){
       this.grabPersistData(this.dunsListString);
     }
-    console.log('ngoninit ran!!!!!!!!');
   }
 
   loadParams(){
@@ -992,6 +996,13 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  dunsFilterClear(){
+    this.dunsModelList = [];
+    this.dunsModel = '';
+    this.dunsListString = '';
+    this.searchResultsRefresh();
+  }
+
   clearAllFilters(){
 
     // clear/reset all top level filters
@@ -1025,6 +1036,11 @@ export class SearchPage implements OnInit{
     //clear regional office filter
     this.ro_keyword='';
 
+    // clear duns filter
+    this.dunsModelList = [];
+    this.dunsModel = '';
+    this.dunsListString = '';
+
     this.searchResultsRefresh();
 
   }
@@ -1039,7 +1055,7 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
-  testListModelChange(object){
+  dunsListModelChange(object){
 
     // create comma-separated string to feed to es obj
     this.dunsListString = this.buildDunsListString();
@@ -1050,8 +1066,6 @@ export class SearchPage implements OnInit{
 
   }
 
-  getDropdownListItems(event){
-  }
 
   buildDunsListString(){
 
@@ -1068,7 +1082,7 @@ export class SearchPage implements OnInit{
 
   grabPersistData(dunsString: string){
 
-    //TODO: update this function to hit new endpoint developed in ip sprint for persisting g
+    //TODO: update this function to hit new endpoint developed in ip sprint for persisting
 
     // if duns string from url is not empty make api call to get results for duns numbers
     this.dunsEntityAutoCompleteWrapper.getEntityDuns(dunsString)
