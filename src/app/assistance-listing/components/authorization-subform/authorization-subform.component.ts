@@ -139,9 +139,19 @@ export class FALAuthSubFormComponent {
   }
 
   removeAuth(i: number){
-
     const control = <FormArray>this.falAuthSubForm.controls['authorizations'];
     control.removeAt(i);
+    this.authInfo = this.falAuthSubForm.value.authorizations;
+    this.hideAddButton = false;
+  }
+
+  removeBulkAuth(ids){
+    const control = <FormArray>this.falAuthSubForm.controls['authorizations'];
+    let counter = 0;
+    for(let id of ids){
+      control.removeAt(id - counter);
+      counter = counter + 1;
+    }
     this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
   }

@@ -62,7 +62,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
 
           if(api.data.authorizations){
             this.falAuthForm.patchValue({
-              description: api.data.authorizations.description
+              description: api.data.authorizations.description || ''
             });
 
             if(api.data.authorizations.list.length > 0){
@@ -216,34 +216,34 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
   }
 
   removeAuth(index: number, parentIndex: number = null){
+
     let controlIndex: number;
 
     if(parentIndex !== null){
       controlIndex = this.displayAuthInfo[parentIndex].children[index].index;
       this.authSubForm.removeAuth(controlIndex);
-      //this.displayAuthInfo[parentIndex].children.splice(index, 1);
     }
     else {
-
+      let children = [];
       for(let child of this.displayAuthInfo[index].children){
-        controlIndex = child.index;
-        this.authSubForm.removeAuth(controlIndex);
+         children.push(child.index);
       }
+      this.authSubForm.removeBulkAuth(children);
       this.authSubForm.removeAuth(this.displayAuthInfo[index].index);
-      //this.displayAuthInfo.splice(index, 1);
     }
-
     this.hideAddButton = this.authSubForm.hideAddButton;
     this.authInfoFormat(this.authSubForm.authInfo);
   }
 
 
   authInfoFormat(authInfo){
+
     this.displayAuthInfo = [];
     let tempArr = [];
     let counter = 0;
 
     for(let auth of authInfo){
+
       let label = ',';
       for(let authType of auth.authType){
         switch(authType){
@@ -286,7 +286,7 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
             authorizationId: auth.authorizationId
           });
 
-          tempArr[auth.authorizationId] = counter;
+          tempArr[auth.authorizationId] = this.displayAuthInfo.length - 1;
         }
         else {
           let parentIndex = tempArr[auth.parentAuthorizationId];
@@ -297,6 +297,5 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       counter = counter + 1;
 
     }//end of for
-
   }
 }
