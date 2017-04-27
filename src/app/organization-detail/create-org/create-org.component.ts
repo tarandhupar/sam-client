@@ -161,10 +161,13 @@ export class OrgCreatePage {
 
   generateBasicOrgObj(){
     this.orgObj['name'] = this.basicInfoForm.get('orgName').value;
-    this.orgObj['createdDate'] = this.basicInfoForm.get('orgStartDate').value;
+    this.orgObj['startDate'] = this.basicInfoForm.get('orgStartDate').value;
     this.orgObj['summary'] = this.basicInfoForm.get('orgDescription').value;
     this.orgObj['shortName'] = this.basicInfoForm.get('orgShortName').value;
-    this.orgObj['type'] = this.orgType.toUpperCase();
+    let type = this.orgType.toUpperCase();
+    if(type === "SUBCOMMAND") type = "SUB COMMAND";
+    if(type === "MAJORCOMMAND") type = "MAJOR COMMAND";
+    this.orgObj['type'] = type;
     if (this.isAddressNeeded()){
       this.orgObj['newIsAward'] = this.indicateFundRadioModel === "Funding/Awarding"?true:false;
       this.orgObj['newIsFunding'] = this.indicateFundRadioModel === "Funding/Awarding" || this.indicateFundRadioModel == "Funding"?true:false;
@@ -174,7 +177,7 @@ export class OrgCreatePage {
           "city": e.addrModel.city,
           "countryCode": e.addrModel.country,
           "state": e.addrModel.state,
-          "streetAddress": e.addrModel.street1 +" "+ e.addrModel.street2,
+          "streetAddress": e.addrModel.street2.length > 0 ? e.addrModel.street1 +" "+ e.addrModel.street2: e.addrModel.street1,
           "zipcode": e.addrModel.postalCode,
         });
       });

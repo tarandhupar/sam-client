@@ -218,11 +218,15 @@ export class AACRequestPage {
   onCancelAACRequestClick(){}
 
   onSubmitFormClick(){
-    this.requestIsReview = false;
-    this.requestIsConfirm = true;
-    this.successAlertMsg = true;
-    this.aacRequestService.postAACRequest(this.generateAACRequestPostObj());
-    setTimeout(()=>{this.successAlertMsg = false;}, 3000);
+
+    this.aacRequestService.postAACRequest(this.generateAACRequestPostObj()).subscribe(
+      val => {
+        this.requestIsReview = false;
+        this.requestIsConfirm = true;
+        this.successAlertMsg = true;
+        setTimeout(()=>{this.successAlertMsg = false;}, 3000);
+      }
+    );
   }
 
   generateRequestOfficeInfo():any {

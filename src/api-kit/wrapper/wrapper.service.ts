@@ -30,7 +30,7 @@ export class WrapperService {
         "feedback": "/feedback/v1",
         "rms": "/rms/v1",
         "relatedPrograms": "/fac/v1/programs/relatedprograms",
-        "aac": "/aac/v1/requestDetails"
+        "aac": "/aac/v1"
     };
 
     constructor(private _http: Http){}
