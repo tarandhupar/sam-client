@@ -226,6 +226,7 @@ export class OrgCreatePage {
         this.flashMsgService.showFlashMsg();
         this.flashMsgService.isCreateOrgSuccess = true;
         this.router.navigate(['/organization-detail',val,'profile']);
+        setTimeout(()=>{this.flashMsgService.hideFlashMsg()}, 3000);
       }
     );
   }
