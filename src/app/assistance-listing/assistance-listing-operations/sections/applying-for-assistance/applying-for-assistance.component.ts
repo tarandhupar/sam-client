@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
 import { Router} from '@angular/router';
 import * as moment from 'moment';
 import { DictionaryService } from 'api-kit';
@@ -91,7 +91,7 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   createForm(){
     this.falAssistanceForm = this.fb.group({
       deadlines: this.fb.group({
-        flag: '',
+        flag: ['', [Validators.required]],
         description: ''
       }),
       preApplicationCoordination: this.fb.group({

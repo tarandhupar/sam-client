@@ -321,8 +321,9 @@
               <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
               <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
               <ng-container *ngIf="deadline.end">{{deadline.end | dateFormat: 'MMM DD, YYYY'}}</ng-container>
+              {{deadline.description}}
             </span>
-            <span class="field" [attr.id]="'program-deadline-description-' + i">{{deadline.description}}</span>
+            <!--<span class="field" [attr.id]="'program-deadline-description-' + i">{{deadline.description}}</span>-->
           </span>
         </ng-container>
 
@@ -333,6 +334,10 @@
         <span id="program-deadline-na" *ngSwitchDefault>
           Not Applicable.
         </span>
+
+        <span>
+          {{program.data?.assistance?.deadlines?.description}}
+        </span>
       </div>
 
       <h3>Preapplication Coordination:</h3>
@@ -340,6 +345,7 @@
       <div>
         <ng-container [ngSwitch]="program.data?.assistance?.preApplicationCoordination?.isApplicable">
           <p *ngSwitchCase="true">
+
             Preapplication coordination is required.
 
             <!-- Environmental statements-->
@@ -405,7 +411,9 @@
 
         <!-- additional content-->
         <span class="field" id="program-application-procedures">
-          {{program.data?.assistance?.applicationProcedure?.description}}
+      <p *ngIf="program.data?.assistance?.applicationProcedure?.isApplicable">Funding opportunities notices for this listing will be posted on <a href="https://www.grants.gov" target="_blank">Grants.gov</a>.</p>
+
+          <p>{{program.data?.assistance?.applicationProcedure?.description}}</p>
         </span>
       </p>
 
