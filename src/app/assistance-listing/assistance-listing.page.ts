@@ -386,9 +386,9 @@ Please contact the issuing agency listed under "Contact Information" for more in
   }
 
   public canEdit() {
-    if(this.program.status && this.program.status.code!='published' && this.program._links['program:update']) {
+    if(this.program.status && this.program.status.code != 'published' && this.program._links && this.program._links['program:update']) {
       return true;
-    } else if(this.program._links['program:revise']) {
+    } else if(this.program._links && this.program._links['program:revise']) {
       return true;
     }
 
@@ -396,11 +396,11 @@ Please contact the issuing agency listed under "Contact Information" for more in
   }
 
   public canDelete() {
-    return this.program.status && this.program.status.code!='published' && this.program._links['program:delete'];
+    return this.program.status && this.program.status.code === 'draft' && this.program._links && this.program._links['program:delete'];
   }
 
   public onEditClick(page: string[]) {
-    if(this.program.status && this.program.status.code === 'draft') {
+    if(this.program.status && this.program.status.code !== 'published') {
       this.router.navigate(['/programs', this.programID, 'edit'].concat(page));
     } else {
       this.editModal.openModal();
