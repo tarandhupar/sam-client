@@ -52,7 +52,7 @@ import { ReplaySubject } from 'rxjs';
                   <strong>Department/Ind. Agency:</strong> {{ department.name }}
                 </div>
                 <p>
-                  <a href="/search?keyword=&index=fpds&page=1&organizationId={{data._id}}" target="_blank">
+                  <a href="/search?keyword={{qParams.keyword}}&index=fpds&page=1&isActive=true&organizationId={{data._id}}" target="_blank">
                     View Awards contracted by this federal organization
                   </a>
                 </p>

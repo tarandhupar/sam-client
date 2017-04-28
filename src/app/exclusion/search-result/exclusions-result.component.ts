@@ -86,6 +86,7 @@ export class ExclusionsResult implements OnInit {
       this.samNumberConcat='NA';
     }
 
+    //Refactor this later with appropriate solution
     if(this.data.type!=null && this.data.type.length > 0){
       if(this.data.type.indexOf("/")>-1) {
         this.typeConcat = this.data.type.replace(/[/]/g, "SLASH");

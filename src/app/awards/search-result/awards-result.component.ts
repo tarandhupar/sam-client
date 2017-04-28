@@ -81,7 +81,7 @@ import Moment = moment.Moment;
             </li>
             <li class="psc-code">
               <strong>PSC Code </strong>
-              <span>{{ data.productOrService?.psc?.value }} ({{ data.productOrService?.psc?.code }})</span>
+              <span>{{ data.productOrService?.psc[0]?.value }} ({{ data.productOrService?.psc[0]?.code }})</span>
             </li>   
           </ul>
         </div>

@@ -7,17 +7,17 @@
     ></samCheckboxToggledTextarea>
   </div>
   <div class="fal-label-margin fal-label">Eligibility Requirements</div>
-    <sam-list-display #appListDisplay [newValue]="appSelectedOption" formControlName="appInitialSelection"
-                      (modelChange)="applicantlistChange($event)" [config]="listConfig">
+    <sam-list-display  [newValue]="appNGModel" formControlName="appListDisplay"
+                       (ngModelChange)="applicantTypeChange($event)" (modelChange)="applicantlistChange()" [config]="appAutocompleteConfig">
       <labelWrapper #applicantTypeWrapper [label]="'Applicant Eligibility'" [required]="true"
                     [hint]="'Please select all that apply to help public users search for this listing.'">
         <sam-autocomplete #appAutoComplete
           [options]="applicantTypeOptions"
           [name]="applicantTypes-control"
           formControlName="applicantTypes"
-          (ngModelChange)="applicantTypeChange($event)"
+          [(ngModel)]="appNGModel"
           [config]="appAutocompleteConfig"
-          required [showClearButton]="'true'" class="search-bar sam-autocomplete-width"></sam-autocomplete>
+          required  class="search-bar sam-autocomplete-width"></sam-autocomplete>
       </labelWrapper>
     </sam-list-display>
   <samTextArea
@@ -34,17 +34,17 @@
     formControlName="isSameAsApplicant"
     (modelChange)="chkSameAsApp($event)"></samCheckbox>
   <div *ngIf="toggleBeneficiarySection">
-    <sam-list-display #benListDisplay [newValue]="benSelectedOption" formControlName="benInitialSelection"
-                      (modelChange)="benlistChange($event)" [config]="listConfig">
+    <sam-list-display  [newValue]="benNGModel" formControlName="benListDisplay"
+                      (ngModelChange)="benTypeChange($event)" (modelChange)="benlistChange()" [config]="benAutocompleteConfig">
       <labelWrapper #benTypeWrapper [label]="'Beneficiary Eligibility'" [required]="true"
                     [hint]="'Please select all that apply to help public users search for this listing.'">
         <sam-autocomplete
           [options]="benTypeOptions"
           [name]="benificiaryTypes-control"
           formControlName="benTypes"
-          (ngModelChange)="benTypeChange($event)"
+          [(ngModel)]="benNGModel"
           [config]="benAutocompleteConfig"
-          required [showClearButton]="'true'" class="search-bar sam-autocomplete-width"></sam-autocomplete>
+          required  class="search-bar sam-autocomplete-width"></sam-autocomplete>
       </labelWrapper>
     </sam-list-display>
     <samTextArea
@@ -79,17 +79,17 @@
       formControlName="awardedDesc"></samTextArea>
   </div>
   <div class="fal-label-margin fal-label">Use and Use Restrictions</div>
-  <sam-list-display #assUsageListDisplay [newValue]="assUsageSelectedOption" formControlName="assUsageInitialSelection"
-                    (modelChange)="assUsagelistChange($event)" [config]="listConfig">
+  <sam-list-display  [newValue]="assUsageNGModel" formControlName="assListDisplay"
+                    (ngModelChange)="assUsageTypeChange($event)" (modelChange)="assUsagelistChange()" [config]="assUsageAutocompleteConfig">
     <labelWrapper #assUsageTypeWrapper [label]="'Use of Assistance'" [required]="true"
                   [hint]="'Please select all that apply from the dropdown list.'">
       <sam-autocomplete
         [options]="assUsageTypeOptions"
         [name]="assUsageTypes-control"
         formControlName="assUsageTypes"
-        (ngModelChange)="assUsageTypeChange($event)"
+        [(ngModel)]="assUsageNGModel"
         [config]="assUsageAutocompleteConfig"
-        required [showClearButton]="'true'" class="search-bar sam-autocomplete-width"></sam-autocomplete>
+        required class="search-bar sam-autocomplete-width"></sam-autocomplete>
     </labelWrapper>
   </sam-list-display>
   <samTextArea
