@@ -108,6 +108,10 @@ export class SearchService {
       oApiParam.oParam['index'] = 'ro';
     }
 
+    if(typeof obj.duns !== 'undefined' && obj.duns !== null && obj.duns !== ''){
+      oApiParam.oParam['duns'] = obj.duns;
+    }
+
     return this.oAPIService.call(oApiParam);
   }
 
