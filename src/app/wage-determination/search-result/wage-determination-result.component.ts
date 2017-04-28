@@ -17,7 +17,7 @@ import * as moment from 'moment/moment';
             </a>
           </h3>
           
-          <ng-container *ngIf="data.location?.states!=null">
+          <ng-container *ngIf="data.location?.additionalInfo?.content==null && data.location?.states!=null">
             <ul *ngFor="let state of data.location?.states; let i=index" class="sam-ui small list">
               <li [attr.id]="'wd-state-' + i">
                 <strong>State </strong><br>
@@ -39,6 +39,12 @@ import * as moment from 'moment/moment';
             </ul>
           </ng-container>
           
+          <ul *ngIf="data.location?.additionalInfo?.content!=null" class="sam-ui small list">
+            <li [attr.id]="'wd-description-' + i">
+              <strong>Location Description </strong><br>
+              <span>{{ data.location?.additionalInfo?.content }}</span>
+            </li>
+          </ul>
 
           <ul *ngIf="data.location?.state!=null" class="sam-ui small list" >
             <li class="wd-state-0">
@@ -52,7 +58,6 @@ import * as moment from 'moment/moment';
               </ng-container>
             </li>
           </ul>
-
   	    </div>
   	    <div class="four wide column">
           <ul class="sam-ui small list">

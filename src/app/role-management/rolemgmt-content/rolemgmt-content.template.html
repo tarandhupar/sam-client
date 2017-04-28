@@ -2,19 +2,21 @@
   <div>
     <div class="overview-header">
       <div class="usa-grid-full">
+        <!--
         <div class="usa-width-five-twelfths">
           <h3>Select an Organization</h3>
           <agencyPicker [multimode]="false"></agencyPicker>
         </div>
+        -->
         <div class="usa-width-one-fourth">
           <h3>Requests</h3>
           <div>
             <span class="badge-primary">{{escalatedCount}}</span>
-            <a>Escalated Requests</a>
+            <a (click)="onEscalatedClick()">Escalated Requests</a>
           </div>
           <div class="m_T-2x">
             <span class="badge-primary">{{pendingCount}}</span>
-            <a>Pending Requests</a>
+            <a (click)="onPendingClick()">Pending Requests</a>
           </div>
         </div>
         <div class="usa-width-one-third">
@@ -24,16 +26,6 @@
           </div>
           <div>
             <a>Office of Management and Budget</a>
-          </div>
-          <div>
-            <ul class="usa-unstyled-list">
-              <a>Office of Family Assistance</a>
-              <li>
-                <ul class="usa-unstyled-list">
-                  <li><a>Some Org Under OFA</a></li>
-                </ul>
-              </li>
-            </ul>
           </div>
         </div>
       </div>
@@ -50,7 +42,7 @@
       <div>
         <h2>Access Management
           <div class="pull-right">
-            <strong class="sort-label">Sort</strong>
+            <strong class="sort-label">Sort (Requested Date)</strong>
             <samSelect
               class="sort-options"
               [(model)]="selectModel"
@@ -60,7 +52,7 @@
             </samSelect>
           </div>
         </h2>
-        <h3 class="showing-count">Showing {{(currPage - 1)*10 + currCount}} of {{count}} results</h3>
+        <h3 class="showing-count">{{showingCountText()}}</h3>
 
       </div>
     </div>
@@ -75,7 +67,8 @@
         <div class="request-block">
           <div class="request-top-block">
             <div class="usa-grid-full clearfix">
-              <div class="pull-right">
+              <div class="pull-right icon-and-respond">
+                <i class="fa fa-2x" [ngClass]="classForRequest(content)"></i>
                 <button *ngIf = "shouldShowRespondButton(content)" routerLink = "../requests/{{content.id}}" class="respond-button usa-button usa-button-primary m_T-0">Respond</button>
               </div>
               <div class="usa-width-one-third">
@@ -89,7 +82,6 @@
               <div class="usa-width-one-sixth">
                 <div>
                   <strong>Status</strong>
-                  <div class="pull-right"><i class="fa fa-2x" [ngClass]="classForRequest(content)"></i></div>
                 </div>
                 <div>{{content.status}}</div>
               </div>
@@ -118,12 +110,16 @@
                   <div><strong>Escalation Date</strong></div>
                   <div>{{formatDate(content.updatedDate)}}</div>
                 </div>
+                <div class="usa-width-one-third">
+                  <div><strong>Escalated To</strong></div>
+                  <div>---</div>
+                </div>
               </ng-container>
 
               <!-- Rejected -->
               <ng-container *ngIf="content.status.toLowerCase() === 'rejected'">
                 <div class="usa-width-one-third">
-                  <div><strong>Reject By</strong></div>
+                  <div><strong>Rejected By</strong></div>
                   <div>---</div>
                 </div>
                 <div class="usa-width-one-third">
@@ -155,18 +151,41 @@
           </div>
 
           <samAccordion>
-            <samAccordionSection [name]="'comments'" [headerText]="'Comments'"></samAccordionSection>
+            <samAccordionSection [name]="'comments'" [headerText]="'Comments'">
+              <section class="comment-section" *ngIf="content.requestorMessage">
+                <div class="comment-user-icon">
+                  <i class="fa fa-user"></i>
+                </div>
+                <div class="comment-user-name">
+                  <strong>Requestor said:</strong>
+                </div>
+                <div class="comment">
+                  {{content.requestorMessage}}
+                </div>
+              </section>
+              <section class="comment-section" *ngIf="content.adminMessage">
+                <div class="comment-user-icon">
+                  <i class="fa fa-user"></i>
+                </div>
+                <div class="comment-user-name">
+                  <strong>Admin said:</strong>
+                </div>
+                <div class="comment">
+                  {{content.adminMessage}}
+                </div>
+              </section>
+            </samAccordionSection>
           </samAccordion>
           <samAccordion *ngIf='content.status.toLowerCase() === "approved"' class="details-accordion">
             <samAccordionSection [name]="'details'" [headerText]="'Details'">
               <div class="usa-grid-full">
                 <div class="usa-width-one-third">
                   <div><strong>Role Granted</strong></div>
-                  <div>Agency User - OFA</div>
+                  <div>{{getRolesGranted(content)}}</div>
                 </div>
                 <div class="usa-width-two-thirds">
                   <div><strong>Organizations</strong></div>
-                  <div>Office of Family Assistance, Office of Supplies Management, Office of Innovation, Office of Social Services, Health and Human services</div>
+                  <div>{{getOrganizations(content)}}</div>
                 </div>
               </div>
             </samAccordionSection>
