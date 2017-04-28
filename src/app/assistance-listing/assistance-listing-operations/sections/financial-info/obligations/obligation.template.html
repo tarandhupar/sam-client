@@ -28,21 +28,21 @@
             <td>{{obligation.assistanceType.name}}</td>
             <td *ngIf="obligation['pFY']['radioOptionId']==='pFYActual'">
               {{obligation['pFY']['radioOptionId']==='pFYActual' && obligation['pFY']['textboxValue']!==''?'$' +
-              obligation['pFY']['textboxValue']:'$0'}}
+              obligation['pFY']['textboxValue']:''}}
             </td>
             <td *ngIf="obligation['pFY']['radioOptionId']==='pFYNsi'">Not Separately Identifiable</td>
             <td *ngIf="obligation['pFY']['radioOptionId']==='pFYNa'">Not available</td>
 
             <td *ngIf="obligation['cFY']['radioOptionId']==='cFYEstimate'">
               {{obligation['cFY']['radioOptionId']==='cFYEstimate' && obligation['cFY']['textboxValue']!==''?'$' +
-              obligation['cFY']['textboxValue']:'$0'}}
+              obligation['cFY']['textboxValue']:''}}
             </td>
             <td *ngIf="obligation['cFY']['radioOptionId']==='cFYNsi'">Not Separately Identifiable</td>
             <td *ngIf="obligation['cFY']['radioOptionId']==='cFYNa'">Not available</td>
 
             <td *ngIf="obligation['bFY']['radioOptionId']==='bFYEstimate'">
               {{obligation['bFY']['radioOptionId']==='bFYEstimate' && obligation['bFY']['textboxValue']!==''?'$' +
-              obligation['bFY']['textboxValue']:'$0'}}
+              obligation['bFY']['textboxValue']:''}}
             </td>
             <td *ngIf="obligation['bFY']['radioOptionId']==='bFYNsi'">Not Separately Identifiable</td>
             <td *ngIf="obligation['bFY']['radioOptionId']==='bFYNa'">Not available</td>

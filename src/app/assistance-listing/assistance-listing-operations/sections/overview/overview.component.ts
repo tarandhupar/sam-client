@@ -5,6 +5,7 @@ import {ProgramService} from 'api-kit';
 import {FALOpSharedService} from '../../assistance-listing-operations.service';
 import {AutocompleteConfig} from "sam-ui-kit/types";
 import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.service";
+import {FilterMultiArrayObjectPipe} from "../../../../app-pipes/filter-multi-array-object.pipe";
 
 @Component({
   providers: [ProgramService, DictionaryService],
@@ -72,9 +73,14 @@ export class FALOverviewComponent implements OnInit, OnDestroy {
     this.programId = sharedService.programId;
     this.dictFCSub = dictionaryService.getDictionaryById('functional_codes')
       .subscribe(data => {
+        let parentData = [];
+        let childData = [];
         for (let fcData of data['functional_codes']) {
-          this.fcTypeOptions.push({code: fcData.element_id, name: fcData.value});
-          this.fcKeyValue[fcData.element_id] = fcData.value;
+          for(let data of fcData.elements){
+            let value = data.code+ ' - ' +data.value;
+            this.fcTypeOptions.push({code: data.element_id, name:value});
+            this.fcKeyValue[data.element_id] = value;
+          }
         }
       });
   }
@@ -112,6 +118,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy {
   getData() {
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
+        if(api.data) {
           this.title = api.data.title;
           let objective = (api.data.objective ? api.data.objective : '');
           let desc = (api.data.description ? api.data.description : '');
@@ -129,6 +136,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy {
             fcListDisplay: this.fcListDisplay === null ? [] : this.fcListDisplay,
             fundedProjects: this.loadProjects(api.data.projects)
           });
+        }
         },
         error => {
           console.error('Error Retrieving Program!!', error);
@@ -141,9 +149,10 @@ export class FALOverviewComponent implements OnInit, OnDestroy {
       this.dictSTSub = this.dictionaryService.getDictionaryById('program_subject_terms', '100', multiTypeData.join(','))
         .subscribe(data => {
           for (let dataItem of data['program_subject_terms']) {
-            this.stListDisplay.push({code: dataItem.element_id, name: dataItem.value});
+            let value = dataItem.code + ' - ' + dataItem.value
+            this.stListDisplay.push({code: dataItem.element_id, name: value});
           }
-          this.stAutocompleteConfig.placeholder = this.placeholderMsg(multiTypeData);
+          this.stAutocompleteConfig.placeholder = this.placeholderMsg(this.stListDisplay);
         }, error => {
           console.error('Error Retrieving Related Program!!', error);
         });
@@ -151,7 +160,7 @@ export class FALOverviewComponent implements OnInit, OnDestroy {
       for (let id of multiTypeData) {
         this.fcListDisplay.push({code: id, name: this.fcKeyValue[id]});
       }
-      this.fcAutocompleteConfig.placeholder = this.placeholderMsg(multiTypeData);
+      this.fcAutocompleteConfig.placeholder = this.placeholderMsg(this.fcListDisplay);
     }
 
   }
