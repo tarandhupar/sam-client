@@ -171,6 +171,7 @@ export class AACRequestPage {
 
     aacPostObj.requestIds = [];
     this.aacReasonCbxModel.forEach( e => {aacPostObj.requestIds.push(this.reasonValueMap[e])});
+
     if(this.isReasonContainsFPDSReport()){
       aacPostObj.cgacCode = this.fpdsReportForm.get("cgacCode").value;
       aacPostObj.subTierAgencyCode = this.fpdsReportForm.get("agencyCode").value;
