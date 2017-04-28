@@ -254,9 +254,12 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
             budgetText = value['explanation'];
           }
         } else if (value['year'] === this.pastYear) {
-          if ((value['actual'])) {
+          if ((value['actual'] && value['estimate'])||value['actual']) {
             past = 'pFYActual';
             pastText = value['actual'];
+          } else if(value['estimate']){
+            past = 'pFYActual';
+            pastText = value['estimate'];
           } else if (value['flag'] === 'nsi') {
             past = 'pFYNsi';
             pastText = value['explanation'];
