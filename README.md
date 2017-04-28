@@ -260,5 +260,3 @@ npm run webdriver:start
 npm run e2e:live 
 ```
  \
-
-
