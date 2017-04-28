@@ -24,7 +24,7 @@ export class FALProgramAutoCompleteWrapper implements AutocompleteService {
 
             const newObj = {
               code: curr.id,
-              name: curr.code +' - '+ curr.value
+              name: curr.value
             }
             prev.push(newObj);
             return prev;
@@ -41,7 +41,7 @@ export class FALProgramAutoCompleteWrapper implements AutocompleteService {
           results.next(res['program_subject_terms'].reduce((prev, curr) => {
             const newObj = {
               code: curr.element_id,
-              name: curr.value
+              name: curr.code +' - '+ curr.value
             };
             prev.push(newObj);
             return prev;
