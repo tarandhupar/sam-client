@@ -184,7 +184,6 @@ export class AACRequestPage {
         addressTypeName:e.addrType
       });
     });
-
     return aacPostObj;
   }
 
