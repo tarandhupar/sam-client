@@ -18,7 +18,7 @@ describe('ExclusionsResultComponent', () => {
       fixture = TestBed.createComponent(ExclusionsResult);
       comp = fixture.componentInstance;
       titleEl  = fixture.debugElement.query(By.css('.exclusion-title')); // find title element
-      labelEl = fixture.debugElement.query(By.css('.usa-label'));
+      labelEl = fixture.debugElement.query(By.css('.sam-ui.label'));
       comp.data = {
         name: "SAMPLE NAME",
         cageCode: "1234",

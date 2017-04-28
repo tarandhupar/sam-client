@@ -66,7 +66,7 @@ export class WageDeterminationPage implements OnInit {
     this.currentUrl = document.location.href;
     let dictionariesAPI = this.loadDictionary();
     let wdAPI = this.loadWageDetermination();
-    let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
+    let wgAndDictionariesAPI = Observable.combineLatest(wdAPI, dictionariesAPI, this.route.params);
     this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
     this.getLocations(wgAndDictionariesAPI);
     let wdHistoryAPI = this.loadHistory(wdAPI);
@@ -198,6 +198,7 @@ export class WageDeterminationPage implements OnInit {
     combinedAPI.subscribe(([wageDetermination, dictionaries]) => {
       /** Check that locations exist **/
       if (!wageDetermination.location || typeof wageDetermination.location === 'undefined') {
+        this.locations = null;
         return;
       }
 
@@ -269,6 +270,8 @@ export class WageDeterminationPage implements OnInit {
         }
         servicesString = servicesString.substring(0, servicesString.length - 2);
         this.services = servicesString;
+      } else {
+        this.services = null;
       }
     })
   }
@@ -282,6 +285,8 @@ export class WageDeterminationPage implements OnInit {
         }
         constructionTypeString = constructionTypeString.substring(0, constructionTypeString.length - 2);
         this.constructionTypes = constructionTypeString;
+      } else {
+        this.constructionTypes = null;
       }
     })
   }
@@ -310,7 +315,7 @@ export class WageDeterminationPage implements OnInit {
           processedHistoryItem['id'] = historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['title'] = historyItem.fullReferenceNumber + ' - Revision ' + historyItem.revisionNumber;
           processedHistoryItem['date'] = dateFormat.transform(historyItem.publishDate, 'MMMM DD, YYYY');
-          processedHistoryItem['url'] = 'wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
+          processedHistoryItem['url'] = '/wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['index'] = historyItem.revisionNumber;
           processedHistoryItem['authoritative'] = historyItem.active;
           return processedHistoryItem;

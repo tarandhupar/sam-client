@@ -30,13 +30,16 @@ export class PermissionSelectorComponent {
 
   onPermissionClick(isChecked, option) {
     option.isSelected = isChecked;
+    if (isChecked) {
+      option.isDefault = false;
+    }
     this.optionsChange.emit(this.options);
   }
 
   onDefaultClick(isChecked, option) {
     option.isDefault = isChecked;
     if (isChecked) {
-      option.isSelected = true;
+      option.isSelected = false;
     }
     this.optionsChange.emit(this.options);
   }
