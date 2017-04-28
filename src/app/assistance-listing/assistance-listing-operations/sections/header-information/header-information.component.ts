@@ -88,8 +88,9 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
+        if(api.data) {
           let title = api.data.title;
-          let popularName = (api.data.alternativeNames.length > 0 ? api.data.alternativeNames[0] : '');
+          let popularName = (api.data.alternativeNames && api.data.alternativeNames.length > 0 ? api.data.alternativeNames[0] : '');
           let falNo = (api.data.programNumber ? api.data.programNumber : '');
 
           if (falNo.trim().length == 6)
@@ -105,6 +106,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
             programNumber: falNo,
             rpListDisplay: this.rpListDisplay === null ? [] : this.rpListDisplay,
           });
+        }
         },
         error => {
           console.error('Error Retrieving Program!!', error);

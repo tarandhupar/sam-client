@@ -6,8 +6,7 @@ import utilities from '../../utilities';
 
 const config = merge({}, $config.endpoints.iam),
       utils = new utilities({
-        localResource: config.localResource,
-        remoteResource: config.remoteResource
+        baseUri: `${API_UMBRELLA_URL}/iam`
       });
 
 export { config };

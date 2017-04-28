@@ -44,10 +44,18 @@ h5 {
   padding: 0em;
 }
 
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a{
+  font-weight: $headerFontWeight;
+}
+
 h1 {
   min-height: 1rem;
   font-size: $h1;
-  letter-spacing: -.5px;
+  letter-spacing: -1px;
   font-weight: 700;
   line-height: 1em;
   margin-bottom: 3rem;
@@ -96,6 +104,15 @@ p:first-child {
 }
 p:last-child {
   margin-bottom: 0em;
+}
+
+/*******************************
+          Bold
+*******************************/
+
+b, strong {
+    font-weight: 600;
+    color: #333333;
 }
 
 /*-------------------

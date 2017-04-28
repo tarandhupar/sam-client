@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, SimpleChanges, OnChanges } from '@angular/core';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 
 import * as d3 from 'd3';
@@ -13,14 +13,19 @@ import {start} from "repl";
     FilterMultiArrayObjectPipe
   ]
 })
-export class FinancialObligationChart {
+export class FinancialObligationChart implements OnChanges {
   @Input() financialData:any[];
   @Input() dictionaries:any;
 
   constructor(private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe) {
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    d3.select("#visualization svg").remove();
+    d3.select("#visualization table").remove();
+    d3.select("#visualization em").remove();
     let visualizationData = this.prepareVisualizationData();
     if(visualizationData.length > 0){
       this.createVisualization(visualizationData);
@@ -43,7 +48,7 @@ export class FinancialObligationChart {
     d3.select("#visualization")
       .insert("table")
       .attr("id", "chart-table");
-
+      
     /**
      * --------------------------------------------------
      * Data Grouping
@@ -299,10 +304,10 @@ export class FinancialObligationChart {
      */
 
     function actualOrEstimate(year: number): string {
-      if (new Date(year, null).getFullYear() <= new Date().getFullYear()) {
-        return "Actual Not Available"
+      if (new Date(year, null).getFullYear() >= new Date().getFullYear() - 1) {
+        return "Estimate Not Available"
       } else {
-        return "Estimate Not Available";
+        return "Actual Not Available";
       }
     }
 

@@ -387,7 +387,7 @@ export class FALCriteriaInfoComponent implements OnInit, OnDestroy {
     this.appAutocompleteConfig.placeholder = this.placeholderMsg(this.falCriteriaForm.value.appListDisplay);
   }
 
-  assUsageTypeChange() {
+  assUsageTypeChange(event) {
     this.assUsageAutocompleteConfig.placeholder = this.placeholderMsg(event);
   }
 
