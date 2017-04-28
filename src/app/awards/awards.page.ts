@@ -40,7 +40,7 @@ export class AwardsPage implements OnInit, OnDestroy {
 
     this.subscription = apiSubject.subscribe(api => { // run whenever api data is updated
       let jsonData:any = api;
-      this.awardData = jsonData.awardsDetails;
+      this.awardData = jsonData.response;
     }, err => {
       console.log('Error logging', err);
     });
