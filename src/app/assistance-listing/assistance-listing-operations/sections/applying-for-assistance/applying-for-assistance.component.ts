@@ -293,27 +293,41 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   formatAssistInfo(assistInfo){
     this.assistInfoDisp = [];
     for(let assist of assistInfo) {
-      let m = moment();
-      let startM = moment(assist.start);
-      let endM = moment(assist.end);
 
-      let sMonth = m.month(startM.month()).format('MMMM');
-      let sYear = startM.year();
-      let sDate = startM.date();
-      let startDate = sMonth + ' ' + sDate + ', ' + sYear;
+      let startDate = moment(assist.start).format('MMMM DD, YYYY');
+      let endDate = moment(assist.end).format('MMMM DD, YYYY');
 
-      let eMonth = m.month(endM.month()).format('MMMM');
-      let eYear = endM.year();
-      let eDate = endM.date();
-      let endDate = eMonth + ' ' + eDate + ', ' + eYear;
-
-      if(assist.end !== null && assist.end !== '') {
+      /*if(assist.end !== null && assist.end !== '') {
         this.assistInfoDisp.push(startDate + " - " + endDate + ". " + assist.description);
       }
       else if(assist.start !== null && assist.start !== '')
         this.assistInfoDisp.push(startDate + ". " + assist.description);
       else
-        this.assistInfoDisp.push(assist.description);
+        this.assistInfoDisp.push(assist.description);*/
+
+      let label = '';
+
+      if(assist.start !== null && assist.start !== '')
+        label += startDate;
+
+      if(assist.end !== null && assist.end !== '') {
+        if(label == '')
+          label = endDate + ". ";
+        else
+          label += " - " + endDate + ". ";
+      }
+      else {
+        label += ". ";
+      }
+
+      if((assist.start == null || assist.start == '' ) && (assist.end == null || assist.end == ''))
+        label = '';
+
+      if(assist.description !== null || assist.description !== '')
+        label += assist.description;
+
+      this.assistInfoDisp.push(label);
+
     }
 
   }
