@@ -36,4 +36,10 @@
       max-width: initial;
     }
   }
+
+  [type="checkbox"]:disabled:checked + label::before {
+    background-image: url('#{$image-path}/correct8.png');
+    background-position: 50%;
+    background-repeat: no-repeat;
+  }
 }
