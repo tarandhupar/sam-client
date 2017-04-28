@@ -203,6 +203,11 @@ export class OpportunityPage implements OnInit {
       this.packages = [];
       this.packagesWarning = false;
       this.showRevisonMessage = false;
+      this.showChangesGeneral = false;
+      this.showChangesSynopsis = false;
+      this.showChangesClassification = false;
+      this.showChangesContactInformation = false;
+      this.showChangesAwardDetails = false;
       return this.opportunityService.getOpportunityById(params['id']);
     });
 
@@ -255,7 +260,7 @@ export class OpportunityPage implements OnInit {
           }
         ]
       };
-      
+
       this.sidenavModel.children = [];
       this.updateSideNav(opportunitySideNavContent);
   }
@@ -263,7 +268,7 @@ export class OpportunityPage implements OnInit {
   private updateSideNav(content?){
 
     let self = this;
-    
+
     if(content){
       // Items in first level (pages) have to have a unique name
       let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
