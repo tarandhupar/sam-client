@@ -25,8 +25,11 @@
 
         <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
           <tr>
+           <!-- <td *ngFor="let pyCell of pyCellData">{{pyCell}}</td>-->
             <td>{{obligation.assistanceType.name}}</td>
             <td *ngIf="obligation['pFY']['radioOptionId']==='pFYActual'">
+              <!--{{ obligation['pFY']['radioOptionId']==='pFYActual' && obligation['pFY']['textboxValue']===undefined ? '' :
+              (obligation['pFY']['textboxValue']===null ? '$0' : '$' + obligation['pFY']['textboxValue'])}}-->
               {{obligation['pFY']['radioOptionId']==='pFYActual' && obligation['pFY']['textboxValue']!==''?'$' +
               obligation['pFY']['textboxValue']:'$0'}}
             </td>
