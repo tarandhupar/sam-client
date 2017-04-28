@@ -69,8 +69,6 @@ import Moment = moment.Moment;
 export class AwardsResult implements OnInit {
   @Input() data: any={};
   @Input() qParams:any = {};
-  idConcat:string;
-  typeConcat:string;
   uniqueIdentifier:string;
   constructor() { }
 
@@ -82,20 +80,8 @@ export class AwardsResult implements OnInit {
     }
 
     if(this.data._id!=null && this.data._id.length >0){
-      this.idConcat = this.data._id;
+      this.uniqueIdentifier = this.data._id;
     }
-    else{
-      this.idConcat = 'NA';
-    }
-
-    if(this.data.type != null && this.data.type.length > 0){
-      this.typeConcat = this.data.type;
-    }
-    else{
-      this.typeConcat = 'NA';
-    }
-
-    this.uniqueIdentifier = this.idConcat + '+' + this.typeConcat;
 
   }
 }
