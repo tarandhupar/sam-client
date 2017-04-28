@@ -55,9 +55,7 @@ import Moment = moment.Moment;
         <div class="four wide column">
           <ul class="sam-ui small list">
             <li>
-              <span class="sam-ui mini label">
-                Award
-              </span>
+              <span class="sam-ui mini label">Award</span>
             </li>
             <li class="action-obligation">
               <strong>Action Obligation </strong><br>
