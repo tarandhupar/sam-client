@@ -48,6 +48,14 @@
     height: 4.4rem;
     vertical-align: top;
     margin-top: -7px;
+
+    .sam-autocomplete {
+      max-width: 100%;
+    }
+
+    input {
+      max-width: 100%;
+    }
   }
 
   .div-left {
