@@ -78,10 +78,10 @@ describe('AwardsComponent', () => {
           "dunsNumber": "5678"
         },
         productOrService: {
-          "psc": {
+          "psc": [{
             "code": "1234",
             "value": ""
-          },
+          }],
           "naics": {
             "code": "1234",
             "value": ""

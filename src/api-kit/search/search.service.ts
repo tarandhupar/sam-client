@@ -22,6 +22,10 @@ export class SearchService {
       method: 'GET'
     };
 
+    if(obj.index=="") {
+      oApiParam.oParam['index'] = "cfda,opp,fh,ent,ex,wd,fpds";
+    }
+
     //Active Only filter
     if(obj.isActive === true) {
       oApiParam.oParam['is_active'] = obj.isActive;
@@ -102,6 +106,10 @@ export class SearchService {
     if(obj.showRO) {
       oApiParam.oParam['q'] = obj.ro_keyword;
       oApiParam.oParam['index'] = 'ro';
+    }
+
+    if(typeof obj.duns !== 'undefined' && obj.duns !== null && obj.duns !== ''){
+      oApiParam.oParam['duns'] = obj.duns;
     }
 
     return this.oAPIService.call(oApiParam);

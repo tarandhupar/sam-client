@@ -40,7 +40,6 @@ export class App{
       });
     this.activatedRoute.queryParams.subscribe(
       data => {
-        console.log(typeof data['isActive']);
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
         this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
         this.isActive = typeof data['isActive'] === "string" ? data['isActive'] : this.isActive;
@@ -111,6 +110,7 @@ export class App{
     if(searchObject.searchField !== 'fpds' && searchObject.searchField !== 'opp' && searchObject.searchField !== 'ent') {
       qsobj['naics'] = null;
       qsobj['psc'] = null;
+      qsobj['duns'] = null;
     }
 
     let navigationExtras: NavigationExtras = {
