@@ -114,7 +114,6 @@ export class RoleDetailsPage {
             }
           });
         }
-        console.log(fun);
       }
     });
   }
