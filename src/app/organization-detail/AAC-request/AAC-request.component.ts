@@ -171,6 +171,10 @@ export class AACRequestPage {
 
     aacPostObj.requestIds = [];
     this.aacReasonCbxModel.forEach( e => {aacPostObj.requestIds.push(this.reasonValueMap[e])});
+    if(this.isReasonContainsFPDSReport()){
+      aacPostObj.cgacCode = this.fpdsReportForm.get("cgacCode").value;
+      aacPostObj.subTierAgencyCode = this.fpdsReportForm.get("agencyCode").value;
+    }
 
     aacPostObj.addressDetails = [];
     this.orgAddresses.forEach( e => {
@@ -195,10 +199,12 @@ export class AACRequestPage {
       this.orgAddresses = [this.mailAddr];
       if(this.isAddrTypeRequired("Billing Address")){
         if(this.hideBillingForm)this.billAddr = Object.assign({},this.mailAddr);
+        this.billAddr.addrType = "Billing Address";
         this.orgAddresses.push(this.billAddr);
       }
       if(this.isAddrTypeRequired("Shipping Address")){
         if(this.hideShippingForm)this.shipAddr = Object.assign({},this.mailAddr);
+        this.shipAddr.addrType = "Shipping Address";
         this.orgAddresses.push(this.shipAddr);
       }
       this.requestIsEdit = false;
