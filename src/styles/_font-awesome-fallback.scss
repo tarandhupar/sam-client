@@ -1,538 +1,307 @@
-$fa_fallback_sm: 1.4;
 $fa_fallback_md: 15px;
-$fa_fallback_lg: 46px;
-$fa_fallback_xl: 1.4;
 .fa-fallback-icons{
     .fa-ambulance{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-ambulance.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-bars{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-bars.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-comments{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-comments.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-file-text-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-file-text-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-pie-chart{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-pie-chart.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-star-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-star-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-angle-down{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-angle-down.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-book{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-book.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-database{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-database.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-file-word-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-file-word-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-plus-circle{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-plus-circle.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-star{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-star.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-angle-left{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-angle-left.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-briefcase{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-briefcase.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-edit{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-edit.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-file{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-file.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-plus-square-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-plus-square-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-table{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-table.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-angle-right{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-angle-right.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-building{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-building.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-envelope-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-envelope-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-home{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-home.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-plus-square{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-plus-square.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-tag{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-tag.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-area-chart{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-area-chart.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-calendar-check-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-calendar-check-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-envelope{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-envelope.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-html5{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-html5.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-plus{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-plus.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-times-circle-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-times-circle-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-arrow-circle-left{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-arrow-circle-left.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-caret-square-o-down{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-caret-square-o-down.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-exclamation-triangle{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-exclamation-triangle.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-info-circle{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-info-circle.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-save{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-save.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-times-circle{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-times-circle.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-arrow-circle-o-left{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-arrow-circle-o-left.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-chain{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-chain.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-external-link{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-external-link.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-line-chart{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-line-chart.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-search-plus{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-search-plus.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-times{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-times.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-arrow-circle-o-right{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-arrow-circle-o-right.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-check{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-check.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-fax{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-fax.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-link{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-link.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-search{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-search.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-trash{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-trash.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-arrow-circle-right{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-arrow-circle-right.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-chevron-down{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-chevron-down.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-file-archive-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-file-archive-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-map-marker{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-map-marker.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-ship{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-ship.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-user-plus{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-user-plus.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-arrow-left{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-arrow-left.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-circle-thin{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-circle-thin.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-file-excel-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-file-excel-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-map-signs{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-map-signs.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-sitemap{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-sitemap.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-user{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-user.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-arrow-right{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-arrow-right.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-circle{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-circle.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-file-image-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-file-image-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-minus{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-minus.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-sliders{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-sliders.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-users{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-users.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-ban{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-ban.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-close{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-close.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-file-pdf-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-file-pdf-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-pencil-square-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-pencil-square-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-spinner{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-spinner.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-bank{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-bank.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-cloud-download{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-cloud-download.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-file-powerpoint-o{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-file-powerpoint-o.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-pencil{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-pencil.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
     .fa-square{ 
         content: url('/src/assets/fonts/font-awesome/fallback/fa-square.png');
         width: $fa_fallback_md;
-        &.big-icon {
-            width: $fa_fallback_lg;
-        }
     }
 }
