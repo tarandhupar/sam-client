@@ -21,9 +21,10 @@ export class FALProgramAutoCompleteWrapper implements AutocompleteService {
       this.oProgramService.falautosearch(q, '').subscribe(
         (res) => {
           results.next(res.reduce((prev, curr) => {
+
             const newObj = {
               code: curr.id,
-              name: curr.value
+              name: curr.code +' - '+ curr.value
             }
             prev.push(newObj);
             return prev;
