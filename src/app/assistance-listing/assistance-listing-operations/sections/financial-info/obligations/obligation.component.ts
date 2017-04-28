@@ -454,7 +454,6 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
 
 
     };
-    console.log(data, 'final save.........');
       this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
      .subscribe(api => {
      this.sharedService.programId = api._body;
