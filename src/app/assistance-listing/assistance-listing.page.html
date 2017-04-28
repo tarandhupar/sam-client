@@ -102,7 +102,7 @@
       <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
         <ng-container *ngSwitchCase="true">
           <span *ngFor="let item of program.data?.projects?.list; let i = index">
-            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description">
+            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description && item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1">
               Fiscal Year {{item.fiscalYear}}: {{item.description}}
             </span>
           </span>
@@ -180,7 +180,7 @@
       <div class="content-block" [ngSwitch]="program.data?.financial?.accomplishments?.isApplicable">
         <ng-container *ngSwitchCase="true">
           <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list; let i = index">
-            <span class="m_B-2x field" [attr.id]="'program-accomplishments-' + i" *ngIf="item.description && item.description != ''"><strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}</span>
+            <span class="m_B-2x field" [attr.id]="'program-accomplishments-' + i" *ngIf="item.description && item.description != '' && item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1"><strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}</span>
             <!--<span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.content?.projection && item.content?.projection != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.projection}}</span>-->
           </ng-container>
         </ng-container>
