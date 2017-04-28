@@ -5,7 +5,7 @@ import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
 import * as Cookies from 'js-cookie';
-
+import * as moment from "moment";
 import * as _ from 'lodash';
 
 // Todo: avoid importing all of observable
@@ -432,5 +432,9 @@ Please contact the issuing agency listed under "Contact Information" for more in
     this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
       this.router.navigate(['/programs', JSON.parse(res._body).id, 'edit'].concat(this.gotoPage));
     });
+  }
+
+  public getCurrentFY() {
+    return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
   }
 }
