@@ -248,23 +248,23 @@ export class FALAuthorizationsComponent implements OnInit, OnDestroy {
       for(let authType of auth.authType){
         switch(authType){
           case 'act':{
-            label += "," + auth.act.description + ",Title " + auth.act.title + ",Part " + auth.act.part + ",Section " + auth.act.section;
+            label += "," + (auth.act.description || '') + ",Title " + (auth.act.title || '') + ",Part " + (auth.act.part || '') + ",Section " + (auth.act.section || '');
             break;
           }
           case 'executiveOrder':{
-            label += ",Executive Order- " + auth.executiveOrder.description + ", Title " + auth.executiveOrder.title + ",Part " + auth.executiveOrder.part + ",Section " + auth.executiveOrder.section;
+            label += ",Executive Order- " + (auth.executiveOrder.description || '') + ", Title " + (auth.executiveOrder.title || '') + ",Part " + (auth.executiveOrder.part || '') + ",Section " + (auth.executiveOrder.section || '');
             break;
           }
           case 'publicLaw':{
-            label += ",Public Law " + auth.publicLaw.congressCode + "-" + auth.publicLaw.number;
+            label += ",Public Law " + (auth.publicLaw.congressCode || '') + "-" + (auth.publicLaw.number || '');
             break;
           }
           case 'statute':{
-            label += ",Statute " + auth.statute.volume + "-" + auth.statute.page;
+            label += ",Statute " + (auth.statute.volume || '') + "-" + (auth.statute.page || '');
             break;
           }
           case 'USC':{
-            label += "," + auth.USC.title + " US Code " + auth.USC.section;
+            label += "," + (auth.USC.title || '') + " US Code " + (auth.USC.section || '');
             break;
           }
         }//end of switch
