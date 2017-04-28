@@ -286,7 +286,7 @@
 					Walsh-Healey Act: {{awardData.legislativeMandates.materialsSuppliesArticlesEquip}}<br />
 					Davis Bacon Act: {{awardData.legislativeMandates.contructionWageRateRequirements}}<br />
 					Interagency Contracting Authority: {{awardData.legislativeMandates.interAgencyContractingAuthority}}<br />
-					Other Interagency Contracting Statutory Authority (1000 Characters) {{awardData.legislativeMandates.otherInterAgencyContractingStatutoryAuthority}}
+					Other Interagency Contracting Statutory Authority: {{awardData.legislativeMandates.otherInterAgencyContractingStatutoryAuthority}}<br /><br />
 				</div>
 				<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
 					<h3 id="contractMarketingData">Contract Marketing Data</h3>
@@ -305,59 +305,62 @@
 					City: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCity}}<br />
 					County: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCounty}}<br />
 					State: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceState}}<br />
-					Zip Code (+4): {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceZipCode | zipCode}}
-					Country: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCountry}}
+					Zip Code (+4): {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceZipCode | zipCode}}<br />
+					Country: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCountry}}<br />
 					Congressional District: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCongDistrict}}<br />
 				</div>
 				<h3 id="ProductOrServiceInformation">Product or Service Information</h3>
 				Product/Service Code: {{awardData.productServiceInformation.productOrServiceCode}}<br />
 				Description: {{awardData.productServiceInformation.productOrServiceDescription}}
-				<br />
+				<div id="award-type" *ngIf="awardData.templateType == 'OTI'">
+					Description of Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}
+				</div>
 				<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+					<br />
 					Principal NAICS Code: {{awardData.productServiceInformation.naicsCode}}<br />
-					Description: {{awardData.productServiceInformation.naicsDescription}}}
+					Description: {{awardData.productServiceInformation.naicsDescription}}
 					<br />
 					<br />
-					Bundled Contract: {{awardData.productServiceInformation.contractBundlingDesc}}}<br />
+					Bundled Contract: {{awardData.productServiceInformation.contractBundlingDesc}}<br />
 					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
-						DOD Acquisition Program: {{awardData.productServiceInformation.dodAcquisitionProgram}}}<br />
-						Description: {{awardData.productServiceInformation.dodAcquisitionProgramDesc}}}<br />
+						DOD Acquisition Program: {{awardData.productServiceInformation.dodAcquisitionProgram}}<br />
+						Description: {{awardData.productServiceInformation.dodAcquisitionProgramDesc}}<br />
 						<br />
-						Country of Product or Service Origin: {{awardData.productServiceInformation.countryOfProductOrServiceOrigin}}}<br />
-						Place of Manufacture: {{awardData.productServiceInformation.placeOfManufacture}}}<br />
+						Country of Product or Service Origin: {{awardData.productServiceInformation.countryOfProductOrServiceOrigin}}<br />
+						Place of Manufacture: {{awardData.productServiceInformation.placeOfManufacture}}<br /><br />
 					</div>
-					Domestic or Foreign Entity: {{awardData.productServiceInformation.domesticOrForeignEntity}}}<br />
-					Recovered Materials/Sustainability: {{awardData.productServiceInformation.recoveredMaterialsSustainability}}}<br />
+					Domestic or Foreign Entity: {{awardData.productServiceInformation.domesticOrForeignEntity}}<br />
+					Recovered Materials/Sustainability: {{awardData.productServiceInformation.recoveredMaterialsSustainability}}<br />
 					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
-						InfoTech Commercial Item Category: {{awardData.productServiceInformation.itCommercialItemCatDesc}}}
+						InfoTech Commercial Item Category: {{awardData.productServiceInformation.itCommercialItemCatDesc}}
 					</div>
-					Claimant Program Code: {{awardData.productServiceInformation.claimantProgramCode}}}<br />
-					Description: {{awardData.productServiceInformation.claimantProgramDescription}}}<br />
-					Sea Transportation: {{awardData.productServiceInformation.seaTransportation}}}
+					Claimant Program Code: {{awardData.productServiceInformation.claimantProgramCode}}<br />
+					Description: {{awardData.productServiceInformation.claimantProgramDescription}}<br />
+					Sea Transportation: {{awardData.productServiceInformation.seaTransportation}}
 					<br />
 					<br />
-					GFP Provided Under This Action: {{awardData.productServiceInformation.gfpProvided}}}<br />
+					GFP Provided Under This Action: {{awardData.productServiceInformation.gfpProvided}}<br />
 					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
-						Use of EPA Designated Products: {{awardData.productServiceInformation.useOfEpaProductsDesc}}}<br />
-						Description of Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}}
+						Use of EPA Designated Products: {{awardData.productServiceInformation.useOfEpaProductsDesc}}<br />
+						Description of Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}
 					</div>
 					<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
-						Description of Contract Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}}
+						Description of Contract Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}
 					</div>
 				</div>
 				<h3 id="competitionInformation">Competition Information</h3>
-				<div id="award-type" *ngIf="awardData.templateType != 'IDV'">
+				<div id="award-type" *ngIf="awardData.templateType != 'OTI'">
 					Extent Competed for Referenced IDV: {{awardData.competitionInformation.idvExtentCompetedDesc}}<br />
 				</div>
 				Extent Competed: {{awardData.competitionInformation.extentCompetedDescription}}<br />
 				Solicitation Procedures: {{awardData.competitionInformation.solicitationProcedures}}<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
-					Type of Set Aside: {{awardData.competitionInformation.typeOfSetAsideDescription}}<br />
+					Type of Set Aside: {{awardData.competitionInformation.typeOfSetAsideDescription}}<br /><br />
 					Evaluated Preference: {{awardData.competitionInformation.evaluatedPrefDescription}}<br />
 					SBIR/STTR: {{awardData.competitionInformation.sbbirSttr}}<br />
 					Fair Opportunity/Limited Sources: {{awardData.competitionInformation.fairOpportunityDescription}}<br />
-					Other than Full and Open Competition: {{awardData.competitionInformation.otherThanFullOpenCompetition}}<br />
+					Other than Full and Open Competition: {{awardData.competitionInformation.otherThanFullOpenCompetition}}<br /><br />
 					Local Area Set Aside: {{awardData.competitionInformation.localAreaSetAside}}<br />
 					FedBizOpps: {{awardData.competitionInformation.fedBizOppsDesc}}<br />
 					A76 Action: {{awardData.competitionInformation.a76Desc}}<br />
@@ -376,6 +379,7 @@
 					Nontraditional Government Contractor Participation: {{awardData.competitionInformation.nontraditionalGovContParticipation}}<br />
 					Type of Agreement: {{awardData.competitionInformation.typeOfAgreement}}
 				</div>
+				<br /><br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 					<h3 id="preferenceProgramsOtherData">Preference Programs/Other Data</h3>
 					Contracting Officer's Business Size Selection: {{awardData.preferencePrograms.contractingOfficerBusSizeDetermination}}<br />
