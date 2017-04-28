@@ -119,6 +119,9 @@ $large: $current-large;
 /* Vendor Extentions */
 @import 'sam-ui/vendor/font-awesome';
 
+/* Font Awesome Fallback when fonts are blocked */
+@import 'font-awesome-fallback';
+
 /*--------------
  Transition Fixes
 ---------------*/
