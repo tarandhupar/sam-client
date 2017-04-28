@@ -109,11 +109,12 @@ export class RoleDetailsPage {
           fun.permissions.forEach(pp => {
             let ppx = perms.find(p => +p.id === pp.value );
             if (ppx) {
-              pp.isSelected = true;
               pp.isDefault = !!ppx.isDefault;
+              pp.isSelected = !pp.isDefault;
             }
           });
         }
+        console.log(fun);
       }
     });
   }
@@ -161,13 +162,6 @@ export class RoleDetailsPage {
                 })
               };
             } else if (this.mode === 'edit') {
-              // Check to see if the permission is set for this domain/role combo
-
-              //let roleDefitionMapContent = this.domainDefinitions.roleDefinitionMapContent;
-
-              // Find this function
-              //let fun = roleDefitionMapContent.find(r => +r.role.id === f.)
-
               return {
                 id: f.function.id,
                 name: f.function.val,
@@ -343,7 +337,7 @@ export class RoleDetailsPage {
         return;
       }
 
-      let permissions = obj.permissions.filter(perm => perm.isSelected);
+      let permissions = obj.permissions.filter(perm => (perm.isSelected || perm.isDefault));
       permissions = permissions.map(perm => {
         return {
           id: perm.value,
