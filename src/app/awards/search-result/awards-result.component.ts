@@ -12,7 +12,7 @@ import Moment = moment.Moment;
     	  <span class="usa-label">Award</span>
     	</p>
     	<h3 class="award-title">
-    	<a *ngIf="data.isActive==true" [routerLink]="['/awards', uniqueIdentifier]" [queryParams]="qParams">{{ data.identifiers[0]?.piid }}</a>
+    	<a *ngIf="data.isActive==true" [routerLink]="['/awards', data._id]" [queryParams]="qParams">{{ data.identifiers[0]?.piid }}</a>
     	</h3>
     	<ul class="usa-unstyled-list">
     	<li class="modification-number"><strong>Modification: </strong><span>{{ data.identifiers[0]?.modificationNumber }}</span></li>
@@ -69,7 +69,6 @@ import Moment = moment.Moment;
 export class AwardsResult implements OnInit {
   @Input() data: any={};
   @Input() qParams:any = {};
-  uniqueIdentifier:string;
   constructor() { }
 
   ngOnInit(){
@@ -77,10 +76,6 @@ export class AwardsResult implements OnInit {
     if(this.data.contract!==null && this.data.contract.signedDate!==null) {
       let exp = moment(this.data.contract.signedDate);
       this.data.contract.signedDate = exp.format("MMM D, Y");
-    }
-
-    if(this.data._id!=null && this.data._id.length >0){
-      this.uniqueIdentifier = this.data._id;
     }
 
   }
