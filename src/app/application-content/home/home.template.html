@@ -1,26 +1,4 @@
 
-<!--   Search -->
-<div class="sam-ui padded grid">
-  <div class="dark grey row">
-    <div class="sam-ui text container">
-      <div class="sam-ui very padded grid">
-        <div class="column">
-          <samSearchbar #searchbar [size]="'large'" [selectConfig]="searchSelectConfig" (onSearch)="runSearch($event)">
-            <div custom-input>
-              <samInputAutocomplete
-                [serviceName]="'suggestions'"
-                [index]="searchbar.filterValue"
-                (searchTermEmit)="searchbar.callSearch($event)"
-                (keyEnterEmit)="searchbar.onSearchClick()">
-              </samInputAutocomplete>
-            </div>
-          </samSearchbar>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!--  Intro Text -->
 <div class="sam-ui text container">
   <div class="sam-ui vertically very padded center aligned grid">

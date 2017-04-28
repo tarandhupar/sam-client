@@ -3,7 +3,7 @@ export let globals = {
   isDefaultHeader: true,
   showOptional : SHOW_OPTIONAL === 'true' || ENV === 'development',
   searchFilterConfig: [
-    {value: '', label: 'All', width: '60'},
+    {value: '', label: 'All Domains', width: '130'},
     {value: 'opp', label: 'Opportunities', width: '145'},
     {value: 'cfda', label: 'Assistance Listings', width: '180'},
     {value: 'fh', label: 'Federal Hierarchy', width: '175'},

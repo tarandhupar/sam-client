@@ -115,6 +115,7 @@ $large: $current-large;
 /* Collections */
 @import 'sam-ui/collections/grid';
 @import 'sam-ui/collections/table';
+@import 'sam-ui/collections/menu';
 
 /* Vendor Extentions */
 @import 'sam-ui/vendor/font-awesome';
@@ -142,6 +143,16 @@ samsearchheader .search-header > .usa-width-one-whole{
   font-size: $lead-font-size;
   line-height: $lead-line-height;
   max-width: $lead-max-width;
+}
+
+.div-fill{
+  color: $textColor;
+  .reset-icon, .reset-icon-active{
+    top: 4% !important;
+  }
+}
+.div-right .usa-button-primary{
+  background-color: #02bfe7;
 }
 
 /*******************************
