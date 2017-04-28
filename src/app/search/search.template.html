@@ -235,29 +235,39 @@
     <div class="usa-width-one">
       <samAlert *ngIf="wdTypeModel && wdTypeModel === 'dbra'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="wdSearchDescription"></div></samAlert>
       <samAlert *ngIf="wdTypeModel && wdTypeModel === 'sca'" [type]="'info'" [showClose]="'true'" [title]="'Wage Determinations Search'"><div [innerHTML]="scaSearchDescription"></div></samAlert>
-      <h1 *ngIf="!showRegionalOffices" class="m_T-0 p_T-6x">SAM.gov Search Results</h1>
+
+      <h1 *ngIf="!showRegionalOffices" class="m_T-0 p_T-6x">Search Results</h1>
       <h1 *ngIf="showRegionalOffices" class="m_T-0 p_T-6x">Federal Assistance Regional Agency Locations</h1>
+
       <p *ngIf="wdSubjectToCBAModel === 'yesBasedCBA' || wdSubjectToCBAModel === 'yesUnbasedCBA'" class="usa-font-lead">
         Please navigate to the <a href="https://www.wdol.gov/sca.aspx">Service Contract Act</a> section of the legacy WDOL site to retrieve
         a Collective Bargaining Agreement (CBA) WD or to create a new CBA WD
       </p>
     </div>
     <div class="usa-width-one" *ngIf="wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'">
+      
       <fh-featured-result *ngFor="let row of featuredData.featuredResult" [data]="row" [qParams]="qParams"></fh-featured-result>
-      <strong><list-results-message *ngIf="totalCount > 0 && wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'"[showing]="10" [currentPage]="pageNum+1" [total]="totalCount" [suffix]="listMessageSuffix"></list-results-message></strong>
-      <br><br>
-      <hr *ngIf="featuredData.featuredResult!==null" class="m_T-5x"/>
+      
+      <strong>
+        <list-results-message *ngIf="totalCount > 0 && wdSubjectToCBAModel !== 'yesBasedCBA' && wdSubjectToCBAModel !== 'yesUnbasedCBA'"[showing]="10" [currentPage]="pageNum+1" [total]="totalCount" [suffix]="listMessageSuffix"></list-results-message>
+      </strong>
+      
+      <div class="sam-ui hidden divider"></div>
+      
       <div id="search-results">
         <div tabindex="-1" *ngFor="let row of data.results">
+          
           <opportunities-result *ngIf="row._type=='opportunity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></opportunities-result>
-          <assistance-listing-result  *ngIf="row._type=='assistanceListing'" class="usa-grid-full" [data]="row" [qParams]="qParams"></assistance-listing-result>
+          
+          <assistance-listing-result  *ngIf="row._type=='assistanceListing'" [data]="row" [qParams]="qParams"></assistance-listing-result>
+          
           <federal-hierarchy-result  *ngIf="row._type=='federalOrganization'" class="usa-grid-full" [data]="row" [qParams]="qParams"></federal-hierarchy-result>
           <entities-result *ngIf="row._type=='entity'" class="usa-grid-full" [data]="row" [qParams]="qParams"></entities-result>
           <exclusions-result *ngIf="row._type=='exclusion'" class="usa-grid-full" [data]="row" [qParams]="qParams"></exclusions-result>
           <wage-determination-result *ngIf="row._type=='wdSCA'|| row._type=='wdDBRA'" class="usa-grid-full" [data]="row" [qParams]="qParams"></wage-determination-result>
           <awards-result *ngIf="row._type=='award'" class="usa-grid-full" [data]="row" [qParams]="qParams"></awards-result>
           <regional-office-listing-result *ngIf="showRegionalOffices" class="usa-grid-full" [data]="row" [qParams]="qParams" ></regional-office-listing-result>
-          <hr class="m_T-5x"/>
+          <div class="sam-ui section divider"></div>
         </div>
       </div>
       <div *ngIf="!initLoad && !data.results && index !== 'wd'">

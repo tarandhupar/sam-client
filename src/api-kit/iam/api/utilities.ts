@@ -186,9 +186,7 @@ class Utilities {
     }
 
     // Apply API Key
-    if(url.search(/^https?:\/\/csp-api\.sam\.gov/) > -1) {
-      url += '?api_key=rkkGBk7AU8UQs9LHT6rM0rFkg3A3rGaiBntKSGEC';
-    }
+    url += '?api_key=8NNLSvVq9ozqkA1BA7KCey9ocE0iovWXs5dmjTu5';
 
     return url;
   }

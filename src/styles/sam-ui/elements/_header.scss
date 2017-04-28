@@ -8,3 +8,10 @@
 .#{$prefix}.light.header {
   font-weight: 600;
 }
+
+/*-------------------
+      Sub header
+--------------------*/
+.#{$prefix}.sub.header {
+  margin-bottom: 0 !important;
+}
