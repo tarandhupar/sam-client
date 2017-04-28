@@ -297,7 +297,7 @@
 					Maximum Order Limit: {{maxOrderLimit}}<br />
 					Fee for Use of Service: {{feeForUseOfService}}<br />
 					Fee Range: {{feeRange}}<br />
-					Ordering Procedure (1000 Characters) <i>Optional if Website URL is provided - otherwise, mandatory</i>: {{orderingProcedure}}
+					Ordering Procedure (1000 Characters) <i>Optional if Website URL is provided - otherwise, mandatory</i>: {{orderingProcedure}}<br />
 				</div>
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA'">
 					<h3 id="principalPlaceOfPerformance">Principal Place of Performance</h3>
@@ -305,45 +305,45 @@
 					City: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCity}}<br />
 					County: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCounty}}<br />
 					State: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceState}}<br />
-					Zip Code (+4): {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceZipCode | zipCode}}
-					Country: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCountry}}
+					Zip Code (+4): {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceZipCode | zipCode}}<br />
+					Country: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCountry}}<br />
 					Congressional District: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCongDistrict}}<br />
 				</div>
 				<h3 id="ProductOrServiceInformation">Product or Service Information</h3>
-				Product/Service Code: {{awardData.productServiceInformation.productOrServiceCode}}<br />
-				Description: {{awardData.productServiceInformation.productOrServiceDescription}}
+				Product/Service Code: {{productOrServiceCode}}<br />
+				Description: {{productOrServiceDescription}}
 				<br />
 				<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
-					Principal NAICS Code: {{awardData.productServiceInformation.naicsCode}}<br />
-					Description: {{awardData.productServiceInformation.naicsDescription}}}
+					Principal NAICS Code: {{naicsCode}}<br />
+					Description: {{naicsDescription}}}
 					<br />
 					<br />
-					Bundled Contract: {{awardData.productServiceInformation.contractBundlingDesc}}}<br />
+					Bundled Contract: {{contractBundlingDesc}}}<br />
 					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
-						DOD Acquisition Program: {{awardData.productServiceInformation.dodAcquisitionProgram}}}<br />
-						Description: {{awardData.productServiceInformation.dodAcquisitionProgramDesc}}}<br />
+						DOD Acquisition Program: {{dodAcquisitionProgram}}}<br />
+						Description: {{dodAcquisitionProgramDesc}}}<br />
 						<br />
-						Country of Product or Service Origin: {{awardData.productServiceInformation.countryOfProductOrServiceOrigin}}}<br />
-						Place of Manufacture: {{awardData.productServiceInformation.placeOfManufacture}}}<br />
+						Country of Product or Service Origin: {{countryOfProductOrServiceOrigin}}}<br />
+						Place of Manufacture: {{placeOfManufacture}}}<br />
 					</div>
-					Domestic or Foreign Entity: {{awardData.productServiceInformation.domesticOrForeignEntity}}}<br />
-					Recovered Materials/Sustainability: {{awardData.productServiceInformation.recoveredMaterialsSustainability}}}<br />
+					Domestic or Foreign Entity: {{domesticOrForeignEntity}}}<br />
+					Recovered Materials/Sustainability: {{recoveredMaterialsSustainability}}}<br />
 					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
-						InfoTech Commercial Item Category: {{awardData.productServiceInformation.itCommercialItemCatDesc}}}
+						InfoTech Commercial Item Category: {{itCommercialItemCatDesc}}}
 					</div>
-					Claimant Program Code: {{awardData.productServiceInformation.claimantProgramCode}}}<br />
-					Description: {{awardData.productServiceInformation.claimantProgramDescription}}}<br />
-					Sea Transportation: {{awardData.productServiceInformation.seaTransportation}}}
+					Claimant Program Code: {{claimantProgramCode}}}<br />
+					Description: {{claimantProgramDescription}}}<br />
+					Sea Transportation: {{seaTransportation}}}
 					<br />
 					<br />
-					GFP Provided Under This Action: {{awardData.productServiceInformation.gfpProvided}}}<br />
+					GFP Provided Under This Action: {{gfpProvided}}}<br />
 					<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
-						Use of EPA Designated Products: {{awardData.productServiceInformation.useOfEpaProductsDesc}}}<br />
-						Description of Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}}
+						Use of EPA Designated Products: {{useOfEpaProductsDesc}}}<br />
+						Description of Requirement: {{descriptionOfRequirement}}}
 					</div>
 					<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
-						Description of Contract Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}}
+						Description of Contract Requirement: {{descriptionOfRequirement}}}
 					</div>
 				</div>
 				<h3 id="competitionInformation">Competition Information</h3>
