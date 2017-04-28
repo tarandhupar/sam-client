@@ -20,16 +20,13 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
 
   // Related Program multi-select
   private relatedProgSub: Subscription;
-  relatedProgInitialSelection = [];
-  realtedProgMultiArrayValues = [];
-  relatedProgSelectedOption: any;
-  @ViewChild('relatedProgListDisplay') relatedProgListDisplay;
-  listConfig: AutocompleteConfig = {keyValueConfig: {keyProperty: 'code', valueProperty: 'name'}};
+  rpNGModel: any;
+  rpListDisplay = [];
   relProAutocompleteConfig: AutocompleteConfig = {
     keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
     placeholder: 'None Selected',
-    serviceOptions:{index:'RP'}
-  };
+    serviceOptions:{index:'RP'},
+ clearOnSelection: true, showOnEmptyInput: false  };
 
 
   constructor(private fb: FormBuilder,
@@ -68,7 +65,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
       'alternativeNames': '',
       'programNumber': '',
       'relatedTo': '',
-      relatedProgInitialSelection: ['']
+      rpListDisplay: ['']
     });
   }
 
@@ -79,10 +76,9 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     this.relatedProgSub = this.programService.falautosearch('', relatedPrograms.join(','))
       .subscribe(data => {
         for (let dataItem of data) {
-          this.relatedProgInitialSelection.push({code: dataItem.id, name: dataItem.value});
-          this.realtedProgMultiArrayValues.push(dataItem.id);
+          this.rpListDisplay.push({code: dataItem.id, name: dataItem.value});
         }
-        this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.realtedProgMultiArrayValues);
+        this.relProAutocompleteConfig.placeholder = this.placeholderMsg(relatedPrograms);
       }, error => {
         console.error('Error Retrieving Related Program!!', error);
       });
@@ -93,7 +89,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     this.getProgSub = this.programService.getProgramById(this.sharedService.programId, this.sharedService.cookieValue)
       .subscribe(api => {
           let title = api.data.title;
-          let popularName = ((api.data.alternativeNames  && api.data.alternativeNames.length > 0) ? api.data.alternativeNames[0] : '');
+          let popularName = (api.data.alternativeNames.length > 0 ? api.data.alternativeNames[0] : '');
           let falNo = (api.data.programNumber ? api.data.programNumber : '');
 
           if (falNo.trim().length == 6)
@@ -107,7 +103,7 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
             title: title,
             alternativeNames: popularName,
             programNumber: falNo,
-            relatedProgInitialSelection: this.relatedProgInitialSelection === null ? [] : this.relatedProgInitialSelection,
+            rpListDisplay: this.rpListDisplay === null ? [] : this.rpListDisplay,
           });
         },
         error => {
@@ -117,56 +113,17 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
   }
 
   relatedProgramTypeChange(event) {
-    let isDuplicate: boolean;
-    const control = this.falHeaderInfoForm.controls['relatedTo'];
-    if (event.code) {
-      //if control value isn't up to date, manually set it
-      if (control.value.code != event.code) {
-        control.setValue(event);
-        return;
-      }
-      isDuplicate = this.removeDuplicates(control.value, this.relatedProgListDisplay.selectedItems);
-      if (!isDuplicate) {
-        this.relatedProgSelectedOption = control.value;
-        this.realtedProgMultiArrayValues.push(control.value.code);
-        this.removeListDuplicates(this.realtedProgMultiArrayValues);
-        this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.realtedProgMultiArrayValues);
-      }
-    }
+    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(event);
   }
-
-  removeListDuplicates(arr: any) {
-    if(arr) {
-      for (var i = 0; i < arr.length; i++) {
-        for (var j = i + 1; j < arr.length; j++) {
-          if (arr[i] === arr[j])
-            arr.splice(j, 1);
-        }
-      }
-    }
-
-    return arr;
-  }
-
-  removeDuplicates(obj: any, list: any) {
-    let unique: boolean = false;
-
-    if(list) {
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].code === obj.code) {
-          unique = true;
-        }
-      }
-    }
-
-    return unique;
+  relatedProglistChange() {
+    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.falHeaderInfoForm.value.rpListDisplay);
   }
 
   placeholderMsg(multiArray: any) {
     let PlaceholderMsg = '';
-    if (multiArray && multiArray.length === 1) {
+    if (multiArray.length === 1) {
       PlaceholderMsg = 'One Type Selected';
-    } else if (multiArray && multiArray.length > 1) {
+    } else if (multiArray.length > 1) {
       PlaceholderMsg = 'Multiple Types Selected';
     } else {
       PlaceholderMsg = 'None Selected';
@@ -174,25 +131,20 @@ export class FALHeaderInfoComponent implements OnInit, OnDestroy {
     return PlaceholderMsg;
   }
 
-  relatedProglistChange(event) {
-    this.realtedProgMultiArrayValues = [];
-    if(this.relatedProgListDisplay) {
-      for (let selItem of this.relatedProgListDisplay.selectedItems) {
-        this.realtedProgMultiArrayValues.push(selItem.code);
-      }
-    }
-    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.realtedProgMultiArrayValues);
-  }
 
 
   saveData() {
+    let relatedPrograms= [];
+    for(let rp of this.falHeaderInfoForm.value.rpListDisplay) {
+      relatedPrograms.push(rp.code);
+    }
 
     let data = {
       "title": this.falHeaderInfoForm.value.title,
       "organizationId": this.agency,
       "alternativeNames": (this.falHeaderInfoForm.value.alternativeNames ? [this.falHeaderInfoForm.value.alternativeNames] : []),
       "programNumber": this.falHeaderInfoForm.value.programNumber,
-      "relatedPrograms": (this.realtedProgMultiArrayValues && this.realtedProgMultiArrayValues.length > 0) ? this.realtedProgMultiArrayValues : null
+      "relatedPrograms": relatedPrograms.length > 0 ? relatedPrograms : null
     };
     this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
       .subscribe(api => {

@@ -12,8 +12,8 @@ $borderWidth: 1px;
 $border: $borderWidth solid $borderColor;
 
 $boxShadow: none; //$subtleShadow
-$verticalPadding: 1em;
-$horizontalPadding: 1em;
+$verticalPadding: 2em;
+$horizontalPadding: 2em;
 // Temporary adding !important to solve grid overriding
 // segment when .grid.segment
 $padding: $verticalPadding $horizontalPadding !important;

@@ -1130,10 +1130,15 @@ ol.#{$prefix}.horizontal.list li:before,
 .#{$prefix}.tiny.horizontal.list > .item {
   font-size: $tiny;
 }
+
+.#{$prefix}.small.horizontal.list {
+  margin: .5em 0;
+}
 .#{$prefix}.small.horizontal.list .list > .item,
 .#{$prefix}.small.horizontal.list > .item {
   font-size: $small;
 }
+
 .#{$prefix}.horizontal.list .list > .item,
 .#{$prefix}.horizontal.list > .item {
   font-size: $medium;

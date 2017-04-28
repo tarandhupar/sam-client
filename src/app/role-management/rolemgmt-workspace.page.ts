@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { UserAccessService } from "../../api-kit/access/access.service";
+import {RoleMgmtSidenav} from "./rolemgmt-sidenav/rolemgmt-sidenav.component";
 
 @Component({
   templateUrl: './rolemgmt-workspace.page.html'
@@ -18,14 +19,15 @@ export class RoleMgmtWorkspace implements OnInit{
   pendingCount: number = 0;
   escalatedCount: number = 0;
 
+  @ViewChild('sideNav') sideNav: RoleMgmtSidenav;
+
   constructor(private role: UserAccessService){
 
   }
 
   ngOnInit(){
     this.getStatusIds();
-
-  }
+}
 
   StatusValue(event){
     this.statusKey = event;
@@ -41,8 +43,8 @@ export class RoleMgmtWorkspace implements OnInit{
   }
 
   AutoCompleteValue(event){
-    if(this.autocompleteInput !== event.value){
-      this.autocompleteInput = event.value;
+    if(this.autocompleteInput !== event){
+      this.autocompleteInput = event;
       this.page = 1;
       this.getRequestAccess();
     }
@@ -59,10 +61,18 @@ export class RoleMgmtWorkspace implements OnInit{
     this.getRequestAccess();
   }
 
+  onClickEscalated() {
+    this.sideNav.statusCheckboxes.value = [4];
+    this.StatusValue("4");
+  }
+
+  onClickPending() {
+    this.sideNav.statusCheckboxes.value = [1];
+    this.StatusValue("1");
+  }
+
   getRequestAccess(){
-    //console.log("Access " + this.page);
     this.role.getRequestAccess(this.autocompleteInput, this.statusKey,this.domainKey,this.order,this.page).subscribe(res => {
-      //console.log(res);
       this.Details = res.userAccessRequestList;
       this.totalRequest = res.count;
       this.currCount = res.userAccessRequestList.length;
@@ -86,7 +96,6 @@ export class RoleMgmtWorkspace implements OnInit{
           });
 
         }
-        //console.log("Now " + this.statusKey);
         this.getRequestAccess();
       });
     }
