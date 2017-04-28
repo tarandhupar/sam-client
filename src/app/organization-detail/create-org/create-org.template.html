@@ -6,7 +6,7 @@
     <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
       <samText #orgName [required]='true' [control]="basicInfoForm.get('orgName')" formControlName="orgName" [name]="'orgName-input'" [label]="'Organization Name'"></samText>
       <labelWrapper #orgStartDateWrapper class="usa-width-one-half" [label]="'Start Date'" [name]="'start-date'" [required]="true">
-        <samDate (valueChange)="setOrgStartDate($event)" [label]="'Start Date'" name='start-date'></samDate>
+        <samDate (valueChange)="setOrgStartDate($event)" [label]="''" name='start-date'></samDate>
       </labelWrapper>
       <samTextArea #orgDescription class="usa-width-one-whole" [control]="basicInfoForm.get('orgDescription')" formControlName="orgDescription" [label]="'Description'" name='description' [placeholder]="'Provide a description for your organization and its function.'"></samTextArea>
       <samText #orgShortName class="usa-width-one-whole" [control]="basicInfoForm.get('orgShortName')" formControlName="orgShortName" [name]="'orgShortName-input'" [label]="'Short Name'"></samText>
@@ -81,7 +81,9 @@
       <div *ngIf="isAddressNeeded()">
         <p class="m_L-3x m_B-1x" *ngFor="let address of orgAddresses">
           <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addrModel.addrType}}:</h4></span>
-          <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.addrModel.street1}}<br>{{address.addrModel.street2}}<br>{{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.postalCode}}<br>{{address.addrModel.country}}</span>
+          <span class="usa-width-two-thirds p_T-2x p_B-1x">{{address.addrModel.street1}}<br>
+            <span *ngIf="address.addrModel.street2.length > 0">{{address.addrModel.street2}}<br></span>
+            {{address.addrModel.city}}, {{address.addrModel.state}}&nbsp;{{address.addrModel.postalCode}}<br>{{address.addrModel.country}}</span>
         </p>
       </div>
 
@@ -89,5 +91,4 @@
     <button class="usa-button-primary p_R-4x p_L-4x pull-right" (click)="onConfirmFormClick()">Confirm</button>
     <button class="usa-button-outline p_R-6x p_L-4x pull-right" (click)="onEditFormClick()"><i class="fa fa-arrow-left"></i>Edit</button>
   </div>
-
 </section>
