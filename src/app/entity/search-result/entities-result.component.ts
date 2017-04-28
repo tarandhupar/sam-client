@@ -7,41 +7,61 @@ import Moment = moment.Moment;
   moduleId: __filename,
   selector: 'entities-result',
   template: `
-      <p>
-    	  <span class="usa-label">Entity</span>
-    	  <span *ngIf="data.isActive==false" class="usa-label">INACTIVE</span>
-    	</p>
-    	<h3 class="entity-title">
-      	<a *ngIf="data.isActive==true" [routerLink]="['/entity', data.dunsNumber]" [queryParams]="qParams">{{ data.name }}</a>
-      	<span *ngIf="data.isActive==false">{{ data.name }}</span>
-    	</h3>
-    	<div class="usa-width-two-thirds">
-      	<ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-        	<li><strong>DUNS: </strong><span>{{ data.dunsNumber }}</span></li>
-          <li><strong>NCAGE Code: </strong><span>{{ data.cageCode }}</span></li>
-          <li *ngIf="data.aac && data.aac!==null"><strong>DODAAC: </strong><span>{{ data.aac }}</span></li>
-          <li><strong>Entity Address: </strong><span>{{ data.address.streetAddress }}, {{ data.address.city }}, {{ data.address.state}} {{data.address.zip}}</span></li>
-        </ul>
-    	</div>
-    	<div class="usa-width-one-third">
-      	<ul class="usa-text-small m_B-0">
-          <li><strong>Expiration Date: </strong>
-            <ul class="usa-unstyled-list">
-              <li><span>{{ data.registrationExpirationDate }}</span></li>
-            </ul>
-          </li>    
-          <li><strong>Purpose of Registration: </strong>
-            <ul class="usa-unstyled-list">
-              <li><span>{{ data.registrationPurpose }}</span></li>
-            </ul>
-          </li>      
-          <li><strong>Delinquent Federal Debt: </strong>
-            <ul class="usa-unstyled-list">
-              <li><span>{{ data.hasDelinquentDebt==true ? 'Yes' : 'No' }}</span></li>
-            </ul>
-          </li>    
-        </ul>
-      </div>
+  	<div class="sam-ui grid">
+  	  <div class="row">
+  	    <div class="eight wide column">
+          <h3 class="entity-title">
+            <a *ngIf="data.isActive==true" [routerLink]="['/entity', data.dunsNumber]" [queryParams]="qParams">
+              {{ data.name }}
+            </a>
+            <span *ngIf="data.isActive==false">
+              {{ data.name }}
+            </span>
+          </h3>
+          <ul class="sam-ui small list">
+            <li>
+              <strong>DUNS</strong><br>
+              {{ data.dunsNumber }}
+            </li>
+            <li>
+              <strong>NCAGE Code</strong><br>
+              {{ data.cageCode }}
+            </li>
+            <li *ngIf="data.aac && data.aac!==null">
+              <strong>DODAAC</strong><br>
+              {{ data.aac }}
+            </li>
+            <li>
+              <strong>Entity Address</strong><br>
+              {{ data.address.streetAddress }}, {{ data.address.city }}, 
+              {{ data.address.state}} {{data.address.zip}}
+              </li>
+          </ul>
+  	    </div>
+  	    <div class="four wide column">
+          <ul class="sam-ui small list">
+            <li *ngIf="data.isActive==false">
+              <span  class="sam-ui mini label">Inactive</span>
+            </li>
+            <li>
+              <span class="sam-ui mini label">Entity</span>
+            </li>
+            <li>
+              <strong>Expiration Date</strong><br>
+              {{ data.registrationExpirationDate }}
+            </li>    
+            <li>
+            <strong>Purpose of Registration</strong><br>
+              {{ data.registrationPurpose }}
+            </li>      
+            <li>
+              <strong>Delinquent Federal Debt: </strong><br>
+              {{ data.hasDelinquentDebt==true ? 'Yes' : 'No' }}
+            </li>    
+          </ul>
+        </div>
+  	  </div>
+  	</div>
   `
 })
 export class EntitiesResult implements OnInit {
