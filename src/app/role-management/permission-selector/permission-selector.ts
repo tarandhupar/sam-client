@@ -46,9 +46,8 @@ export class PermissionSelectorComponent {
 
   onCheckAllClick(isChecked) {
     this.options.forEach(v => {
-      if (!v.isDefault) {
-        v.isSelected = isChecked;
-      }
+      v.isSelected = isChecked;
+      v.isDefault = !isChecked;
     });
     this.optionsChange.emit(this.options);
   }
@@ -56,9 +55,7 @@ export class PermissionSelectorComponent {
   onCheckAllDefaultClick(isChecked) {
     this.options.forEach(v => {
       v.isDefault = isChecked;
-      if (isChecked) {
-        v.isSelected = true;
-      }
+      v.isSelected = !isChecked;
     });
     this.optionsChange.emit(this.options);
   }
