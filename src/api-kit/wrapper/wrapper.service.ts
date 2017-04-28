@@ -32,7 +32,6 @@ export class WrapperService {
         "relatedPrograms": "/fac/v1/programs/relatedprograms",
         "aac": "/aac/v1",
         "searchDictionaries": "/sgs/v1/dictionaries",
-      "relatedPrograms": "/fac/v1/programs/relatedprograms",
     };
 
     constructor(private _http: Http){}

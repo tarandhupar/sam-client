@@ -33,7 +33,7 @@ export class AACRequestService {
   postAACRequest(aacObj){
     let apiOptions: any = {
       name: 'aac',
-      suffix: '',
+      suffix: '/aacDetails',
       method: 'POST',
       body: aacObj,
       oParam: {}
