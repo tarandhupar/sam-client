@@ -25,6 +25,7 @@ export class WageDeterminationPage implements OnInit {
   dictionaries: any;
   services: string;
   constructionTypes: string;
+  locationDescription: String = null;
   public locations: any;
   history: any;
   processedHistory: any;
@@ -196,36 +197,43 @@ export class WageDeterminationPage implements OnInit {
   private getLocations(combinedAPI: Observable<any>) {
     combinedAPI.subscribe(([wageDetermination, dictionaries]) => {
       /** Check that locations exist **/
-      if (!wageDetermination.location) {
+      if (!wageDetermination.location || typeof wageDetermination.location === 'undefined') {
         this.locations = null;
         return;
       }
 
-      /** Process each location data into a usable state **/
-      for (let eachLocation of wageDetermination.location) {
-        /** Process States **/
-        // given a state code, look up the dictionary entry for that state (returns array of matches)
-        let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
-        let stateDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdStates' }).elements;
-        let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
-
-        // if a matching state was found, display its name otherwise display a warning message
-        eachLocation.stateString = (resultStates.length > 0) ? resultStates[0].value : 'Unknown state';
-
-        /** Process Counties **/
-        // if statewide flag is set AND counties are listed, those counties are exceptions within that state
-        if (eachLocation.statewideFlag && eachLocation.counties == null) {
-          // no exceptions so just display 'Statewide'
-          eachLocation.countiesString = 'Statewide';
-        } else if (eachLocation.counties != null) {
-          // if there are any exceptions, display 'All counties except' before the list of counties
-          let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
-          let countiesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdCounties' }).elements;
-          eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
-        }
+      if(wageDetermination.location.description != 'na'){
+        this.locationDescription = wageDetermination.location.description;
+        return;
       }
 
-      this.locations = wageDetermination.location;
+      if(typeof wageDetermination.location !== 'undefined' && typeof wageDetermination.location.mapping !== 'undefined'){
+        /** Process each location data into a usable state **/
+        for (let eachLocation of wageDetermination.location.mapping) {
+          /** Process States **/
+          // given a state code, look up the dictionary entry for that state (returns array of matches)
+          let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
+          let stateDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdStates' }).elements;
+          let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
+
+          // if a matching state was found, display its name otherwise display a warning message
+          eachLocation.stateString = (resultStates.length > 0) ? resultStates[0].value : 'Unknown state';
+
+          /** Process Counties **/
+          // if statewide flag is set AND counties are listed, those counties are exceptions within that state
+          if (eachLocation.statewideFlag && eachLocation.counties == null) {
+            // no exceptions so just display 'Statewide'
+            eachLocation.countiesString = 'Statewide';
+          } else if (eachLocation.counties != null) {
+            // if there are any exceptions, display 'All counties except' before the list of counties
+            let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
+            let countiesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdCounties' }).elements;
+            eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
+          }
+        }
+
+        this.locations = wageDetermination.location.mapping;
+      }
     })
   }
 

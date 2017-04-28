@@ -16,6 +16,7 @@ import { OrgDetailProfilePage } from "./profile/profile.component";
 import { OrgCreatePage } from "./create-org/create-org.component";
 import { FlashMsgService } from "./flash-msg-service/flash-message.service";
 import { AACRequestPage } from "./AAC-request/AAC-request.component";
+import { AACConfirmPage } from "./AAC-confirm/AAC-confirm.component";
 
 @NgModule({
   imports: [
@@ -36,6 +37,7 @@ import { AACRequestPage } from "./AAC-request/AAC-request.component";
     OrgDetailProfilePage,
     OrgCreatePage,
     AACRequestPage,
+    AACConfirmPage,
   ],
   providers: [
     AlertFooterService,

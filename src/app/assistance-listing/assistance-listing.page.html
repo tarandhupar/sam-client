@@ -73,7 +73,7 @@
           </ng-container>
           <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.length == 0 || relatedProgram.length == 0">Not Applicable.</span>
         </span>
-        <a target="_blank" class="field" id="'grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">View available opportunities on Grants.gov related to this program</a>
+        <a target="_blank" class="field" id="'grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">View available opportunities on Grants.gov related to this Federal Assistance Listing</a>
       </div>
     </section>
 
@@ -102,7 +102,7 @@
       <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
         <ng-container *ngSwitchCase="true">
           <span *ngFor="let item of program.data?.projects?.list; let i = index">
-            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description">
+            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description && item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1">
               Fiscal Year {{item.fiscalYear}}: {{item.description}}
             </span>
           </span>
@@ -160,6 +160,7 @@
           </a>
         </div>
       </div>
+      <i>These funding amounts do not reflect the award amounts that are displayed on USASpending.gov</i>
 
       <financial-obligation-chart *ngIf='dictionaries && program.data?.financial?.obligations' [financialData]='program.data?.financial?.obligations' [dictionaries]='dictionaries'></financial-obligation-chart>
 
@@ -179,7 +180,7 @@
       <div class="content-block" [ngSwitch]="program.data?.financial?.accomplishments?.isApplicable">
         <ng-container *ngSwitchCase="true">
           <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list; let i = index">
-            <span class="m_B-2x field" [attr.id]="'program-accomplishments-' + i" *ngIf="item.description && item.description != ''"><strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}</span>
+            <span class="m_B-2x field" [attr.id]="'program-accomplishments-' + i" *ngIf="item.description && item.description != '' && item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1"><strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}</span>
             <!--<span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.content?.projection && item.content?.projection != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.projection}}</span>-->
           </ng-container>
         </ng-container>
@@ -325,8 +326,9 @@
               <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
               <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
               <ng-container *ngIf="deadline.end">{{deadline.end | dateFormat: 'MMM DD, YYYY'}}</ng-container>
+              {{deadline.description}}
             </span>
-            <span class="field" [attr.id]="'program-deadline-description-' + i">{{deadline.description}}</span>
+            <!--<span class="field" [attr.id]="'program-deadline-description-' + i">{{deadline.description}}</span>-->
           </span>
         </ng-container>
 
@@ -337,6 +339,10 @@
         <span id="program-deadline-na" *ngSwitchDefault>
           Not Applicable.
         </span>
+
+        <span>
+          {{program.data?.assistance?.deadlines?.description}}
+        </span>
       </div>
 
       <h3>Preapplication Coordination:</h3>
@@ -344,6 +350,7 @@
       <div>
         <ng-container [ngSwitch]="([true] | filterMultiArrayObject:program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports:'isSelected':false:null).length > 0">
           <p *ngSwitchCase="true">
+
             Preapplication coordination is required.
 
             <!-- Environmental statements-->
@@ -409,7 +416,9 @@
 
         <!-- additional content-->
         <span class="field" id="program-application-procedures">
-          {{program.data?.assistance?.applicationProcedure?.description}}
+      <p *ngIf="program.data?.assistance?.applicationProcedure?.isApplicable">Funding opportunities notices for this listing will be posted on <a href="https://www.grants.gov" target="_blank">Grants.gov</a>.</p>
+
+          <p>{{program.data?.assistance?.applicationProcedure?.description}}</p>
         </span>
       </p>
 
