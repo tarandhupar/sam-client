@@ -41,9 +41,13 @@
             <h1><span class="field" id="program-title">{{program?.data?.title}}</span></h1>
           </div>
           <div class="usa-width-one-third">
-            <a *ngIf="cookieValue" (click)="onEditClick(['header-information'])">
+            <a *ngIf="canEdit()" (click)="onEditClick(['header-information'])">
               Edit
               <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+            </a>
+            <a *ngIf="canDelete()" (click)="onDeleteClick()">
+              Delete
+              <i class="fa fa-trash fal-delete" aria-hidden="true"></i>
             </a>
           </div>
         </div>
@@ -81,7 +85,7 @@
           <h2 id="overview">Overview</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['overview'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['overview'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -124,7 +128,7 @@
           <h2 id="authorizations">Authorizations</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['authorization'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['authorization'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -150,7 +154,7 @@
           <h2 id="financial-information">Financial Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['financial-information', 'obligations'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['financial-information', 'obligations'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -199,7 +203,7 @@
           <h2 id="criteria-for-applying">Criteria for Applying</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick('criteria-information')">
+          <a *ngIf="canEdit()" (click)="onEditClick('criteria-information')">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -304,7 +308,7 @@
           <h2 id="applying-for-assistance">Applying for Assistance</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['applying-for-assistance'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['applying-for-assistance'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -338,7 +342,7 @@
       <h3>Preapplication Coordination:</h3>
 
       <div>
-        <ng-container [ngSwitch]="program.data?.assistance?.preApplicationCoordination?.isApplicable">
+        <ng-container [ngSwitch]="([true] | filterMultiArrayObject:program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports:'isSelected':false:null).length > 0">
           <p *ngSwitchCase="true">
             Preapplication coordination is required.
 
@@ -501,7 +505,7 @@
           <h2 id="compliance-requirements">Compliance Requirements</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['compliance-requirements'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['compliance-requirements'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
@@ -655,7 +659,7 @@
           <h2 id="contact-information">Contact Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="cookieValue" (click)="onEditClick(['contact-information'])">
+          <a *ngIf="canEdit()" (click)="onEditClick(['contact-information'])">
             Edit
             <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>

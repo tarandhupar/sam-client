@@ -110,6 +110,7 @@ export class App{
     if(searchObject.searchField !== 'fpds' && searchObject.searchField !== 'opp' && searchObject.searchField !== 'ent') {
       qsobj['naics'] = null;
       qsobj['psc'] = null;
+      qsobj['duns'] = null;
     }
 
     let navigationExtras: NavigationExtras = {
