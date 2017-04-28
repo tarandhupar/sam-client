@@ -159,30 +159,30 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
             },
             preApplicationCoordination:{
               reports: reports,
-              description: api.data.assistance.preApplicationCoordination.description
+              description: api.data.assistance.preApplicationCoordination.description || ''
             },
             applicationProcedure:{
               isApplicable: [api.data.assistance.applicationProcedure.isApplicable],
-              description: api.data.assistance.applicationProcedure.description
+              description: api.data.assistance.applicationProcedure.description || ''
             },
             selectionCriteria: {
               isApplicable: [api.data.assistance.selectionCriteria.isApplicable],
-              description: api.data.assistance.selectionCriteria.description
+              description: api.data.assistance.selectionCriteria.description || ''
             },
             awardProcedure: {
-              description: api.data.assistance.awardProcedure.description
+              description: api.data.assistance.awardProcedure.description || ''
             },
             approval: {
               interval: (api.data.assistance.approval.interval || 'na'),
-              description: api.data.assistance.approval.description
+              description: api.data.assistance.approval.description || ''
             },
             appeal: {
               interval: (api.data.assistance.appeal.interval || 'na'),
-              description: api.data.assistance.appeal.description
+              description: api.data.assistance.appeal.description || ''
             },
             renewal: {
               interval: (api.data.assistance.renewal.interval || 'na'),
-              description: api.data.assistance.renewal.description
+              description: api.data.assistance.renewal.description || ''
             }
           });
 
@@ -307,14 +307,15 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
       let eDate = endM.date();
       let endDate = eMonth + ' ' + eDate + ', ' + eYear;
 
-      if(assist.end !== null) {
+      if(assist.end !== null && assist.end !== '') {
         this.assistInfoDisp.push(startDate + " - " + endDate + ". " + assist.description);
       }
-      else if(assist.start !== null)
+      else if(assist.start !== null && assist.start !== '')
         this.assistInfoDisp.push(startDate + ". " + assist.description);
       else
         this.assistInfoDisp.push(assist.description);
     }
+
   }
 
   onSaveContinueClick(){
