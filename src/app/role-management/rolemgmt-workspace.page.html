@@ -9,7 +9,7 @@
   </div>
   <div class = "usa-grid-full">
     <div class = "usa-width-one-fourth role-filters-column">
-      <rolemgmt-sidenav
+      <rolemgmt-sidenav #sideNav
         (statusSelected) = "StatusValue($event)"
         (domainSelected) = "DomainValue($event)"
         (autoCompleteSelected) = "AutoCompleteValue($event)"
@@ -20,6 +20,8 @@
       <rolemgmt-content
         (sortOrder) = "SortValue($event)"
         (pageNumber) = "PageValue($event)"
+        (clickEscalatedRequestsCountEvent)="onClickEscalated()"
+        (clickPendingRequestsCountEvent)="onClickPending()"
         [requestDetails] = "Details"
         [count] = "totalRequest"
         [currCount] = "currCount"
