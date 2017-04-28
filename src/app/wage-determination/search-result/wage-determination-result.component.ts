@@ -1,6 +1,7 @@
 import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
 import * as moment from 'moment/moment';
+import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
 
 
 @Component({
@@ -113,31 +114,16 @@ export class WageDeterminationResult implements OnInit {
       if (this.data.location.states && this.data.location.states !== null) {
         for (var i = 0; i < this.data.location.states.length; i++) {
           if (this.data.location.states[i].counties && this.data.location.states[i].counties.include !== null) {
-            this.data.location.states[i].counties.include = this.sortCounties(this.data.location.states[i].counties.include);
+            this.data.location.states[i].counties.include = new SortArrayOfObjects().transform(this.data.location.states[i].counties.include, 'value');
           }
           if (this.data.location.states[i].counties && this.data.location.states[i].counties.exclude !== null) {
-            this.data.location.states[i].counties.exclude = this.sortCounties(this.data.location.states[i].counties.exclude);
+            this.data.location.states[i].counties.exclude = new SortArrayOfObjects().transform(this.data.location.states[i].counties.exclude, 'value');
           }
         }
       }
       if (this.data.location.state && this.data.location.state.counties && this.data.location.state.counties !== null) {
-        this.data.location.state.counties = this.sortCounties(this.data.location.state.counties);
+        this.data.location.state.counties = new SortArrayOfObjects().transform(this.data.location.state.counties, 'value');
       }
     }
     }
-
-  sortCounties(countiesArray) {
-    return countiesArray.sort(function (a, b) {
-      var nameA = a.value.toUpperCase(); // ignore upper and lowercase
-      var nameB = b.value.toUpperCase(); // ignore upper and lowercase
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      // names must be equal
-      return 0;
-    });
-  }
 }

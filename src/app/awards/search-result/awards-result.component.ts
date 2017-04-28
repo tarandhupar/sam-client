@@ -12,7 +12,7 @@ import Moment = moment.Moment;
       <div class="row">
         <div class="eight wide column">
           <h3 class="award-title">
-            <a *ngIf="data.isActive==true" [routerLink]="['/awards', uniqueIdentifier]" [queryParams]="qParams">
+            <a *ngIf="data.isActive==true" [routerLink]="['/awards', data._id]" [queryParams]="qParams">
               {{ data.identifiers[0]?.piid }}
             </a>
           </h3>
@@ -90,9 +90,6 @@ import Moment = moment.Moment;
 export class AwardsResult implements OnInit {
   @Input() data: any={};
   @Input() qParams:any = {};
-  idConcat:string;
-  typeConcat:string;
-  uniqueIdentifier:string;
   constructor() { }
 
   ngOnInit(){
@@ -101,22 +98,6 @@ export class AwardsResult implements OnInit {
       let exp = moment(this.data.contract.signedDate);
       this.data.contract.signedDate = exp.format("MMM D, Y");
     }
-
-    if(this.data._id!=null && this.data._id.length >0){
-      this.idConcat = this.data._id;
-    }
-    else{
-      this.idConcat = 'NA';
-    }
-
-    if(this.data.type != null && this.data.type.length > 0){
-      this.typeConcat = this.data.type;
-    }
-    else{
-      this.typeConcat = 'NA';
-    }
-
-    this.uniqueIdentifier = this.idConcat + '+' + this.typeConcat;
 
   }
 }
