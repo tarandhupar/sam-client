@@ -29,6 +29,7 @@ export class WrapperService {
         "domainDefinition" : "/rms/v1/domaindefinition",
         "feedback": "/feedback/v1",
         "rms": "/rms/v1",
+        "searchDictionaries": "/sgs/v1/dictionaries",
       "relatedPrograms": "/fac/v1/programs/relatedprograms"
     };
 
