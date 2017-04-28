@@ -14,6 +14,7 @@
   <li><a href="#where-things-go">Where things go</a></li>
 </ul>
 
+
 <h2 id="rules-of-engagement">Rules of engangement (operations)</h2>
 
 Those working in the project have decided on the following guidelines with regard to working with the project in GitHub.
