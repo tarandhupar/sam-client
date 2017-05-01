@@ -2,11 +2,8 @@
   .m_T-5em {
     margin-top: 5em;
   }
-  .filter-icon{
-    padding-right: 0.5em;
-  }
   .def-filter{
-    padding-top: 3em;
+    padding-top: .2em;
   }
   .filter-color{
     color: #0071bc;
@@ -28,6 +25,7 @@
     font-size: 2.5rem;
     margin-bottom: 0em;
     margin-top: .5em;
+    text-align: center;
   }
   .icn_pos{
     position: absolute;
@@ -36,5 +34,22 @@
   .p_B-1em{
     padding-bottom: 1em;
     cursor: pointer;
+  }
+
+  .usa-accordion-content {
+    padding-left: 0.3rem;
+  }
+
+  samAccordion {
+    button {
+      text-align: center;
+    }
+
+    // uswds buttons are 46rem wide regardless of there container width (because they are absolutely positioned)
+    // this creates all kinds of bugs.
+    // this fix should probably be global;
+    input[type="checkbox"] {
+      max-width: 30rem;
+    }
   }
 }

@@ -5,7 +5,7 @@
   <div *ngIf="mode !== 'edit' && !userCameFromRoleWorkspace">
     <samSelect [disabled]="userCameFromRoleWorkspace" name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
   </div>
-  <div *ngIf="mode === 'edit' || userCameFromRoleWorkspace">
+  <div *ngIf="mode === 'edit' && !userCameFromRoleWorkspace">
     <div class="usa-grid-full">
       <div>
         <label>Domain</label>
@@ -15,6 +15,9 @@
         <span *ngIf="!domain"><i>Loading Domain...</i></span>
       </div>
     </div>
+  </div>
+  <div *ngIf="userCameFromRoleWorkspace">
+    <request-details [requestObject]="request"></request-details>
   </div>
 
   <!-- Supervisor Name and email -->
@@ -65,7 +68,7 @@
           <strong>{{object.function.val}}</strong>
           <div class="p_L-4x permission-list">
           <span *ngFor="let permission of object.permission" class="permission-control-group">
-            <input [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+            <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
             <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
           </span>
           </div>

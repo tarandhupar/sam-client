@@ -1,84 +1,202 @@
 <div class = "rolemgmt-content usa-grid-full ">
-  <div class = "p_T-6em">
-    <img src="src/assets/img/blank_icon.png" class = "img_size" alt="GSA Image" tabindex="0">
-  </div>
-  <div class = "usa-grid-full">
-    <div class = "usa-width-one-half p_T-3em">
-      <h2>Access Management</h2>
-    </div>
-    <div class = "usa-width-one-half">
-      <div>
-        <div class = "sort_pos"><h3>Sort</h3></div>
-        <div>
-          <samSelect class = "fil_sor"
-            [(model)]="selectModel"
-            [name]="'created-date-sort'"
-            [options]="selectConfig.options"
-            (modelChange)="onSelectChanged($event)"
-            >
-          </samSelect>
+  <div>
+    <div class="overview-header">
+      <div class="usa-grid-full">
+        <!--
+        <div class="usa-width-five-twelfths">
+          <h3>Select an Organization</h3>
+          <agencyPicker [multimode]="false"></agencyPicker>
         </div>
+        -->
+        <div class="usa-width-one-fourth">
+          <h3>Requests</h3>
+          <div>
+            <span class="badge-primary">{{escalatedCount}}</span>
+            <a (click)="onEscalatedClick()">Escalated Requests</a>
+          </div>
+          <div class="m_T-2x">
+            <span class="badge-primary">{{pendingCount}}</span>
+            <a (click)="onPendingClick()">Pending Requests</a>
+          </div>
+        </div>
+        <div class="usa-width-one-third">
+          <h3>Favorite Organizations</h3>
+          <div>
+            <a>GSA</a>
+          </div>
+          <div>
+            <a>Office of Management and Budget</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button class="usa-button-transparent back-to-workspace-button p_L-0" [routerLink]="'/'">
+          <i class="fa fa-arrow-circle-left icn_pos" aria-hidden="true"></i>
+          <span class = "inline-block">Back to Workspace Home</span>
+        </button>
       </div>
     </div>
   </div>
-  <div>
-    <h3>Showing {{(currPage - 1)*10 + currCount}} of {{count}} results</h3>
+  <div class = "usa-grid-full">
+    <div class="p_T-3em">
+      <div>
+        <h2>Access Management
+          <div class="pull-right">
+            <strong class="sort-label">Sort (Requested Date)</strong>
+            <samSelect
+              class="sort-options"
+              [(model)]="selectModel"
+              [name]="'created-date-sort'"
+              [options]="selectConfig.options"
+              (modelChange)="onSelectChanged($event)">
+            </samSelect>
+          </div>
+        </h2>
+        <h3 class="showing-count">{{showingCountText()}}</h3>
+
+      </div>
+    </div>
   </div>
   <div *ngIf = "currCount < 1" >
     <em>No records were found</em>
   </div>
-  <div *ngIf = "currCount > 0">  
+  <div *ngIf = "currCount > 0">
     <div  *ngFor = "let content of requestDetails" >
       <section class = "sec-bor">
         <div><span class="usa-label-big">{{content.domain}}</span></div>
-        <div class = "usa-grid-full p_T-1em">
-          <div class = "usa-width-one-sixth"><h4>Requested By</h4></div>
-          <div class = "usa-width-one-sixth"><h4>Requested Date</h4></div>
-          <div class = "usa-width-one-sixth"><h4>Status</h4></div>
-          <div class = "usa-width-one-sixth">
-            <h4 *ngIf = "content.status === 'ESCALATED'">Escalated By</h4>
-            <h4 *ngIf = "content.status === 'PENDING'">Supervisor Name</h4>
-            <h4 *ngIf = "content.status === 'REJECTED'">Rejected By</h4>
-            <h4 *ngIf = "content.status === 'APPROVED'">Approved By</h4>
+        <div class="request-block">
+          <div class="request-top-block">
+            <div class="usa-grid-full clearfix">
+              <div class="pull-right icon-and-respond">
+                <i class="fa fa-2x" [ngClass]="classForRequest(content)"></i>
+                <button *ngIf = "shouldShowRespondButton(content)" routerLink = "../requests/{{content.id}}" class="respond-button usa-button usa-button-primary m_T-0">Respond</button>
+              </div>
+              <div class="usa-width-one-third">
+                <div><strong>Requested By</strong></div>
+                <div>{{content.requestorName.toUpperCase()}}</div>
+              </div>
+              <div class="usa-width-one-third">
+                <div><strong>Requested Date</strong></div>
+                <div>{{formatDate(content.createdDate)}}</div>
+              </div>
+              <div class="usa-width-one-sixth">
+                <div>
+                  <strong>Status</strong>
+                </div>
+                <div>{{content.status}}</div>
+              </div>
+            </div>
+
+            <div class="usa-grid-full m_T-2x">
+              <!-- Pending -->
+              <ng-container *ngIf="content.status.toLowerCase() === 'pending'">
+                <div class="usa-width-one-third">
+                  <div><strong>Supervisor Name</strong></div>
+                  <div>{{content.supervisorName.toUpperCase()}}</div>
+                </div>
+                <div class="usa-width-one-third">
+                  <div><strong>Supervisor Email</strong></div>
+                  <div>{{content.supervisorEmail}}</div>
+                </div>
+              </ng-container>
+
+              <!-- Escalated -->
+              <ng-container *ngIf="content.status.toLowerCase() === 'escalated'">
+                <div class="usa-width-one-third">
+                  <div><strong>Escalated By</strong></div>
+                  <div>{{content.escalatedTo}}</div>
+                </div>
+                <div class="usa-width-one-third">
+                  <div><strong>Escalation Date</strong></div>
+                  <div>{{formatDate(content.updatedDate)}}</div>
+                </div>
+                <div class="usa-width-one-third">
+                  <div><strong>Escalated To</strong></div>
+                  <div>---</div>
+                </div>
+              </ng-container>
+
+              <!-- Rejected -->
+              <ng-container *ngIf="content.status.toLowerCase() === 'rejected'">
+                <div class="usa-width-one-third">
+                  <div><strong>Rejected By</strong></div>
+                  <div>---</div>
+                </div>
+                <div class="usa-width-one-third">
+                  <div><strong>Rejection Date</strong></div>
+                  <div>{{formatDate(content.updatedDate)}}</div>
+                </div>
+                <div class="usa-width-one-third">
+                  <div><strong>Rejection Organization</strong></div>
+                  <div>---</div>
+                </div>
+              </ng-container>
+
+              <!-- Approved -->
+              <ng-container *ngIf="content.status.toLowerCase() === 'approved'">
+                <div class="usa-width-one-third">
+                  <div><strong>Approved By</strong></div>
+                  <div>---</div>
+                </div>
+                <div class="usa-width-one-third">
+                  <div><strong>Approved Date</strong></div>
+                  <div>{{formatDate(content.updatedDate)}}</div>
+                </div>
+                <div class="usa-width-one-third">
+                  <div><strong>Approval Organization</strong></div>
+                  <div>---</div>
+                </div>
+              </ng-container>
+            </div>
           </div>
-          <div class = "usa-width-one-sixth">
-            <h4 *ngIf = "content.status === 'ESCALATED'">Escalted Date</h4>
-            <h4 *ngIf = "content.status === 'REJECTED'">Rejected Date</h4>
-            <h4 *ngIf = "content.status === 'APPROVED'">Approved Date</h4>
-            <h4 *ngIf = "content.status === 'PENDING'">Supervisor Email</h4>
-          </div>
-          <div class = "usa-width-one-sixth"><h4 *ngIf = "content.status === 'ESCALATED'">Escalted To</h4></div>
-        </div>
-        <div class = "usa-grid-full p_T-.5em">
-          <div class = "usa-width-one-sixth ellipsis">{{content.requestorName.toUpperCase()}}</div>
-          <div class = "usa-width-one-sixth">{{formatDate(content.createdDate)}}</div>
-          <div class = "usa-width-one-sixth">{{content.status}}</div>
-          <div class = "usa-width-one-sixth ellipsis">{{content.supervisorName.toUpperCase()}}</div>
-          <div class = "usa-width-one-sixth" *ngIf = "content.status !== 'PENDING'">{{formatDate(content.createdDate)}}</div>
-          <div class = "usa-width-one-sixth" *ngIf = "content.status === 'PENDING'">{{content.supervisorEmail}}</div>
-          <div class = "usa-width-one-sixth" *ngIf = "content.status === 'ESCALATED'">{{content.escalatedTo}}</div>
-        </div>
-        <div class = "usa-grid-full p_T-1em">
-          <div [ngClass] = "content.status === 'PENDING' || !content.adminMessage ? 'usa-width-three-fourths' : 'usa-width-one-third'">
-            <h4>User Message</h4>
-          </div>
-          <div class = "usa-width-one-third" *ngIf = "content.status !== 'PENDING' && content.adminMessage"><h4>Administrator Message</h4></div>
-        </div>
-        <div class = "usa-grid-full p_T-.5em">
-          <div [ngClass] = "content.status === 'PENDING' || !content.adminMessage ? 'usa-width-three-fourths' : 'usa-width-one-third'">
-            {{content.requestorMessage}}
-          </div>
-          <div class = "usa-width-one-third" *ngIf = "content.status !== 'PENDING' && content.adminMessage">{{content.adminMessage}}</div>
-          <div [ngClass] = "content.status === 'PENDING' || !content.adminMessage ? 'usa-width-one-fourth' : 'usa-width-one-third'" *ngIf = "content.status === 'PENDING'||content.status === 'ESCALATED'">
-            <button class="usa-button-active pull-right" routerLink = "../requests/{{content.id}}">Respond</button>
-          </div>
+
+          <samAccordion>
+            <samAccordionSection [name]="'comments'" [headerText]="'Comments'">
+              <section class="comment-section" *ngIf="content.requestorMessage">
+                <div class="comment-user-icon">
+                  <i class="fa fa-user"></i>
+                </div>
+                <div class="comment-user-name">
+                  <strong>Requestor said:</strong>
+                </div>
+                <div class="comment">
+                  {{content.requestorMessage}}
+                </div>
+              </section>
+              <section class="comment-section" *ngIf="content.adminMessage">
+                <div class="comment-user-icon">
+                  <i class="fa fa-user"></i>
+                </div>
+                <div class="comment-user-name">
+                  <strong>Admin said:</strong>
+                </div>
+                <div class="comment">
+                  {{content.adminMessage}}
+                </div>
+              </section>
+            </samAccordionSection>
+          </samAccordion>
+          <samAccordion *ngIf='content.status.toLowerCase() === "approved"' class="details-accordion">
+            <samAccordionSection [name]="'details'" [headerText]="'Details'">
+              <div class="usa-grid-full">
+                <div class="usa-width-one-third">
+                  <div><strong>Role Granted</strong></div>
+                  <div>{{getRolesGranted(content)}}</div>
+                </div>
+                <div class="usa-width-two-thirds">
+                  <div><strong>Organizations</strong></div>
+                  <div>{{getOrganizations(content)}}</div>
+                </div>
+              </div>
+            </samAccordionSection>
+          </samAccordion>
         </div>
       </section>
     </div>
   </div>
   <div class = "pag-com">
     <div *ngIf ="totalPages > 1">
-      <samPagination [currentPage]="currPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></samPagination>      
-    </div>  
+      <samPagination [currentPage]="currPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></samPagination>
+    </div>
   </div>
 </div>

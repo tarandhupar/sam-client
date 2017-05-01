@@ -10,8 +10,9 @@ import { FALContactInfoComponent } from './assistance-listing-operations/section
 import { FinancialObligationsComponent } from "./assistance-listing-operations/sections/financial-info/obligations/obligation.component";
 import { FinancialInfoPage2 } from "./assistance-listing-operations/sections/financial-info/other/financial-info-other.page";
 import { ComplianceRequirementsPage } from "./assistance-listing-operations/sections/compliance-requirements/compliance-requirements.page";
-import {FALCriteriaInfoComponent} from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
+import { FALCriteriaInfoComponent } from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
 import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
+import { FALAssistanceComponent } from "./assistance-listing-operations/sections/applying-for-assistance/applying-for-assistance.component";
 
 export const routes: Routes = [
   {path: 'programs/:id/view', component: ProgramPage},
@@ -38,7 +39,8 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'compliance-requirements', component: ComplianceRequirementsPage},
         {path: 'criteria-information', component: FALCriteriaInfoComponent},
         {path: 'contact-information', component: FALContactInfoComponent},
-        {path: 'authorization', component: FALAuthorizationsComponent }
+        {path: 'authorization', component: FALAuthorizationsComponent },
+        {path: 'applying-for-assistance', component: FALAssistanceComponent }
       ]
     },
     {
@@ -53,7 +55,8 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'compliance-requirements', component: ComplianceRequirementsPage},
         {path: 'criteria-information', component: FALCriteriaInfoComponent},
         {path: 'contact-information', component: FALContactInfoComponent},
-        {path: 'authorization', component: FALAuthorizationsComponent }
+        {path: 'authorization', component: FALAuthorizationsComponent },
+        {path: 'applying-for-assistance', component: FALAssistanceComponent }
       ]
     },
   );

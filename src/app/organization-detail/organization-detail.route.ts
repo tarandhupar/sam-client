@@ -3,6 +3,7 @@ import { OrgDetailPage } from './organization-detail.page';
 import { OrgDetailProfilePage } from './profile/profile.component';
 import { OrgCreatePage } from './create-org/create-org.component';
 import { AACRequestPage } from "./AAC-request/AAC-request.component";
+import { AACConfirmPage } from "./AAC-confirm/AAC-confirm.component";
 
 export const routes: Routes = [
   {
@@ -20,6 +21,10 @@ export const routes: Routes = [
   {
     path: 'aac-request',
     component: AACRequestPage,
+  },
+  {
+    path: 'aac-confirm/:requestId',
+    component: AACConfirmPage,
   }
 ];
 

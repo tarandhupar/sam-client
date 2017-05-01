@@ -7,6 +7,8 @@ import {WageDeterminationService} from "../../api-kit/wage-determination/wage-de
 import { AlertFooterService } from '../alerts/alert-footer';
 import {OpportunityService} from "../../api-kit/opportunity/opportunity.service";
 import {SortArrayOfObjects} from "../app-pipes/sort-array-object.pipe";
+import {SearchDictionariesService} from "../../api-kit/search/search-dictionaries.service";
+import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 
 @Component({
   moduleId: __filename,
@@ -32,6 +34,17 @@ export class SearchPage implements OnInit{
   qParams:any = {};
   isActive: boolean = true;
   isStandard: string = '';
+  showRegionalOffices: boolean = false;
+  ro_keyword: string = "";
+
+  // duns entity objects
+  dunsModel: any = '';
+  dunsModelList: any = [];
+  dunsListString = '';
+  myOptions: any = [];
+
+
+
 
   @ViewChild('agencyPicker') agencyPicker;
 
@@ -39,7 +52,7 @@ export class SearchPage implements OnInit{
   checkboxModel: any = ['true'];
   checkboxConfig = {
     options: [
-      {value: 'true', label: 'Active', name: 'checkbox-active'},
+      {value: 'true', label: 'Active Only', name: 'checkbox-active'},
     ],
     name: 'active-filter'
   };
@@ -253,13 +266,37 @@ export class SearchPage implements OnInit{
     }
   };
 
+  regionalType = {
+    "placeholder": "Regional Agency Location",
+    "addOnIconClass": "fa fa-search"
+  };
+
+  // duns config
+  dunsConfiguration = {
+    placeholder: "Search Entity/UEI",
+    selectedLabel: "Codes Selected",
+    keyValueConfig: {
+      keyProperty: 'value',
+      valueProperty: 'label'
+    },
+    dropdownLimit: 10
+  };
+
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private searchService: SearchService,
               private wageDeterminationService: WageDeterminationService,
               private opportunityService: OpportunityService,
-              private alertFooterService: AlertFooterService) { }
+              private alertFooterService: AlertFooterService,
+              private searchDictionariesService: SearchDictionariesService,
+              private dunsEntityAutoCompleteWrapper:  DunsEntityAutoCompleteWrapper) { }
   ngOnInit() {
+    if(window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0){
+      this.showRegionalOffices = true;
+    } else{
+      this.showRegionalOffices = false;
+    }
+
     this.activatedRoute.queryParams.subscribe(
       data => {
         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
@@ -282,10 +319,17 @@ export class SearchPage implements OnInit{
         this.contractTypeModel = data['contractType'] && data['contractType'] !== null ? data['contractType'] : '';
         this.naicsTypeModel = data['naics'] && data['naics'] !== null ? data['naics'] : '';
         this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
+        this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
+        this.dunsListString = data['duns'] && data['duns'] !== null ? data['duns'] : '';
 
         this.runSearch();
         this.loadParams();
       });
+
+    // grabs data to persist duns filters
+    if(this.dunsListString !== ''){
+      this.grabPersistData(this.dunsListString);
+    }
   }
 
   loadParams(){
@@ -303,7 +347,7 @@ export class SearchPage implements OnInit{
         organizationStringList += organizationItem.value;
       }
       else{
-        organizationStringList += ', ' + organizationItem.value;
+        organizationStringList += ',' + organizationItem.value;
       }
 
       return organizationStringList;
@@ -330,11 +374,13 @@ export class SearchPage implements OnInit{
     } else {
       qsobj['keyword'] = '';
     }
+
     if(this.index.length>0){
       qsobj['index'] = this.index;
     } else {
       qsobj['index'] = '';
     }
+
     if(!newsearch && this.pageNum>=0){
       qsobj['page'] = this.pageNum+1;
     }
@@ -410,6 +456,14 @@ export class SearchPage implements OnInit{
       qsobj['psc'] = this.pscTypeModel;
     }
 
+    if(this.ro_keyword.length>0){
+      qsobj['ro_keyword'] = this.ro_keyword;
+    }
+
+    if(this.dunsModelList.length>0){
+      qsobj['duns'] = this.dunsListString;
+    }
+
     return qsobj;
   }
 
@@ -478,7 +532,10 @@ export class SearchPage implements OnInit{
       awardType: this.awardTypeModel,
       contractType: this.contractTypeModel,
       naics: this.naicsTypeModel,
-      psc: this.pscTypeModel
+      psc: this.pscTypeModel,
+      showRO: this.showRegionalOffices,
+      ro_keyword: this.ro_keyword,
+      duns: this.dunsListString
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -584,9 +641,9 @@ export class SearchPage implements OnInit{
 
 
     this.wageDeterminationService.getWageDeterminationFilterCountyData({
-      state: state
-    }).subscribe(
-      data => {
+        state: state
+      }).subscribe(
+        data => {
         // county data
         let defaultSelection = {value:'', label: 'Default option', name: 'empty', disabled: false};
 
@@ -655,7 +712,12 @@ export class SearchPage implements OnInit{
     };
 
     document.getElementById('search-results').getElementsByTagName('div')[0].focus();
-    this.router.navigate(['/search'],navigationExtras);
+    if (this.showRegionalOffices) {
+      this.router.navigate(['/search/fal/regionalOffices'], navigationExtras);
+    } else {
+      this.router.navigate(['/search'], navigationExtras);
+    }
+
   }
 
   // FILTER SELECTION CHANGE FUNCTIONS
@@ -869,7 +931,11 @@ export class SearchPage implements OnInit{
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
-    this.router.navigate(['/search'], navigationExtras);
+    if(this.showRegionalOffices){
+      this.router.navigate(['/search/fal/regionalOffices'],navigationExtras);
+    } else{
+      this.router.navigate(['/search'],navigationExtras);
+    }
   }
 
   wdTypeRadClear(){
@@ -930,6 +996,13 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  dunsFilterClear(){
+    this.dunsModelList = [];
+    this.dunsModel = '';
+    this.dunsListString = '';
+    this.searchResultsRefresh();
+  }
+
   clearAllFilters(){
 
     // clear/reset all top level filters
@@ -960,9 +1033,70 @@ export class SearchPage implements OnInit{
     this.naicsTypeModel = '';
     this.pscTypeModel = '';
 
+    //clear regional office filter
+    this.ro_keyword='';
+
+    // clear duns filter
+    this.dunsModelList = [];
+    this.dunsModel = '';
+    this.dunsListString = '';
+
     this.searchResultsRefresh();
 
+  }
+
+  regionalOfficeSearchEvent(evt) {
+    if(!evt) {
+      this.ro_keyword = "";
+    } else {
+      this.ro_keyword = evt;
+    }
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
+  dunsListModelChange(object){
+
+    // create comma-separated string to feed to es obj
+    this.dunsListString = this.buildDunsListString();
+
+    // call data refresh
+    this.pageNum = 0;
+    this.searchResultsRefresh();
 
   }
+
+
+  buildDunsListString(){
+
+    let finalString = '';
+
+    finalString = this.dunsModelList.map(function(dunsObj){
+
+      finalString = dunsObj.value;
+
+      return finalString;
+    }).join(',');
+    return finalString
+  }
+
+  grabPersistData(dunsString: string){
+
+    //TODO: update this function to hit new endpoint developed in ip sprint for persisting
+
+    // if duns string from url is not empty make api call to get results for duns numbers
+    this.dunsEntityAutoCompleteWrapper.getEntityDuns(dunsString)
+      .subscribe(
+        data => {
+
+          this.dunsModelList = data;
+        },
+        error => {
+          console.error("Error!!", error);
+        }
+      );
+  }
+
+
 
 }

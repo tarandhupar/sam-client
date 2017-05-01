@@ -2,39 +2,29 @@
 <samBanner #banner *ngIf="!isHeaderWithSearch"></samBanner>
 <div [style.height]="!isHeaderWithSearch ? '22px' : '0'">&nbsp;</div>
 <alertHeader></alertHeader>
-<samSearchHeader #searchheader *ngIf="isHeaderWithSearch" [filterValue]="index" (searchEvent)="onHeaderSearchEvent($event)">
+
+<samHeader (headerDropdownControl)="toggleOverlay($event)">
   <div header-links>
-    <SamHeaderLinks (onDropdownToggle)="toggleOverlay($event)"></SamHeaderLinks>
-  </div>
-  <div header-searchbar>
-    <samSearchbar #searchbar
-      [size]="'small'" 
-      [keyword]="keyword"
-      (onSearch)="onHeaderSearchEvent($event)"
-      [(filterValue)]="index"
-      [selectConfig]="searchSelectConfig">
-      <div custom-input>
-        <!--samInputAutocomplete 
-          [serviceName]="'suggestions'"
-          [index]="index"
-          (searchTermEmit)="searchbar.callSearch($event)"
-          [searchTerm]="keyword"
-          (keyEnterEmit)="searchbar.onSearchClick()">
-        </samInputAutocomplete-->
-        <sam-autocomplete autofill-suggestions 
-          [(ngModel)]="keyword" 
-          (ngModelChange)="searchbar.callSearch($event);searchbar.onSearchClick();"
-          [index]="index" 
-          [showClearButton]="true"
-          [allowAny]="true"
-          name="appsearch" ></sam-autocomplete>
+    <SamHeaderLinks>
+      <div class="search-bar" search-bar>
+        <samSearchbar #searchbar
+          [size]="'large'" 
+          [keyword]="keyword"
+          (onSearch)="onHeaderSearchEvent($event)"
+          [(filterValue)]="index"
+          [selectConfig]="searchSelectConfig">
+          <div custom-input>
+            <sam-autocomplete autofill-suggestions 
+              [(ngModel)]="keyword" 
+              (ngModelChange)="searchbar.callSearch($event);searchbar.onSearchClick();"
+              [index]="index" 
+              [showClearButton]="true"
+              [allowAny]="true"
+              name="appsearch" ></sam-autocomplete>
+          </div>
+        </samSearchbar>
       </div>
-    </samSearchbar>
-  </div>
-</samSearchHeader>
-<samHeader *ngIf="!isHeaderWithSearch" (headerDropdownControl)="toggleOverlay($event)">
-  <div header-links>
-    <SamHeaderLinks (onDropdownToggle)="toggleOverlay($event)"></SamHeaderLinks>
+    </SamHeaderLinks>
   </div>
 </samHeader>
 

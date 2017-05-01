@@ -168,7 +168,7 @@ export class UserAccessService {
   requestAccess(req: any, userName) {
     let apiOptions: any = {
       name: 'requestaccess',
-      suffix: '/' + userName + '/',
+      suffix: '/',
       method: 'POST',
       body: req
     };
@@ -203,10 +203,12 @@ export class UserAccessService {
   getPendingRequests(userId: string, queryParams = {}) {
     let apiOptions: any = {
       name: 'requestaccess',
-      suffix: '/' + userId + '/',
+      suffix: '/',
       method: 'GET',
       oParam: queryParams
     };
+
+    apiOptions.oParam.user = userId;
 
     return this.apiService.call(apiOptions, false).map(res => {
       if (res.status === 204) {
@@ -263,6 +265,17 @@ export class UserAccessService {
     return this.apiService.call(apiOptions, false);
   }
 
+  getAllRoles() {
+    let apiOptions : any = {
+      name : 'rms',
+      suffix : '/roles/',
+      method : 'GET',
+      oParam : {},
+    };
+
+    return this.apiService.call(apiOptions);
+  }
+
   getRequestorIds(){
     let apiOptions : any = {
       name : 'rms',
@@ -277,7 +290,7 @@ export class UserAccessService {
   getRequestAccess(username : string, statusKey : string, domainKey : string, order : string, page : number ){
     let apiOptions : any = {
       name : 'rms',
-      suffix : '/requestaccess/' + username + '/',
+      suffix : '/requestaccess/',
       method : 'GET',
       oParam: {},
     };
@@ -288,6 +301,10 @@ export class UserAccessService {
 
     if(domainKey.length > 0){
       apiOptions.oParam.domainKey = domainKey;
+    }
+
+    if (username.length) {
+      apiOptions.oParam.user = username;
     }
 
     apiOptions.oParam.order = order;

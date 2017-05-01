@@ -45,7 +45,7 @@
 //@import '~uswds/src/stylesheets/core/fonts';
 @import '~uswds/src/stylesheets/core/base';
 /*
-  Variables moved here to avoid 
+  Variables moved here to avoid
   overriding USWDS grid variables
 */
 // Store current variable values
@@ -110,10 +110,12 @@ $large: $current-large;
 @import 'sam-ui/elements/segment';
 @import 'sam-ui/elements/header';
 @import 'sam-ui/elements/image';
+@import 'sam-ui/elements/divider';
 
 /* Collections */
 @import 'sam-ui/collections/grid';
 @import 'sam-ui/collections/table';
+@import 'sam-ui/collections/menu';
 
 /* Vendor Extentions */
 @import 'sam-ui/vendor/font-awesome';
@@ -132,11 +134,25 @@ home samsearchbar{
   @include unstyled-list;
 }
 
+samsearchheader .search-header > .usa-width-one-whole{
+  height: 40px;
+}
+
 .usa-font-lead {
   font-family: $font-serif;
   font-size: $lead-font-size;
   line-height: $lead-line-height;
   max-width: $lead-max-width;
+}
+
+.div-fill{
+  color: $textColor;
+  .reset-icon, .reset-icon-active{
+    top: 4% !important;
+  }
+}
+.div-right .usa-button-primary{
+  background-color: #02bfe7;
 }
 
 /*******************************
@@ -214,13 +230,13 @@ home samsearchbar{
 @import 'pages/organization-detail';
 @import 'pages/organization-create';
 @import 'pages/aac-request';
-
-h1,
-h2{
-  letter-spacing: -0.5px;
-  line-height: 1.1;
-  color: black;
-}
+@import 'pages/aac-confirm';
+// h1,
+// h2{
+//   letter-spacing: -0.5px;
+//   line-height: 1.1;
+//   color: black;
+// }
 
 /* Let content occupy most of the page and show footer when scroll down*/
 .occupy-page{

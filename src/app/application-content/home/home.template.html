@@ -1,26 +1,4 @@
 
-<!--   Search -->
-<div class="sam-ui padded grid">
-  <div class="dark grey row">
-    <div class="sam-ui text container">
-      <div class="sam-ui very padded grid">
-        <div class="column">
-          <samSearchbar #searchbar [size]="'large'" [selectConfig]="searchSelectConfig" (onSearch)="runSearch($event)">
-            <div custom-input>
-              <samInputAutocomplete
-                [serviceName]="'suggestions'"
-                [index]="searchbar.filterValue"
-                (searchTermEmit)="searchbar.callSearch($event)"
-                (keyEnterEmit)="searchbar.onSearchClick()">
-              </samInputAutocomplete>
-            </div>
-          </samSearchbar>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!--  Intro Text -->
 <div class="sam-ui text container">
   <div class="sam-ui vertically very padded center aligned grid">
@@ -62,10 +40,10 @@
 <div class="sam-ui container">
   <div class="sam-ui vertically very padded stackable grid">
     <div class="twelve wide tablet four wide computer column">      
-      <div class="sam-ui horizontally padded grid">      
+      <div class="sam-ui grid">      
         <div class="row">
           <div class="column">
-            <a [routerLink]="['/help/new']" class="sam-ui big dark blue fluid button">
+            <a [routerLink]="['/help/new']" class="sam-ui dark blue fluid button">
               <i class="icon fa fa-map-marker"></i>
               New to SAM.gov
             </a>
@@ -73,7 +51,7 @@
         </div>
         <div class="row">
           <div class="column">
-            <a [routerLink]="['/help/accounts']" class="sam-ui big dark blue fluid button">
+            <a [routerLink]="['/help/accounts']" class="sam-ui dark blue fluid button">
               <i class="icon fa fa-user"></i>
               User Accounts
             </a>
@@ -81,7 +59,7 @@
         </div>
         <div class="row">
           <div class="column">
-            <a [routerLink]="['/help/transition']" class="sam-ui big dark blue fluid button">
+            <a [routerLink]="['/help/transition']" class="sam-ui dark blue fluid button">
               <i class="icon fa fa-map-signs"></i>
               Sam.gov Transition Roadmap
             </a>
@@ -107,14 +85,14 @@
             <div class="column">
               <ul class="sam-ui bulleted list">
                 <li><a href="">WDOL</a></li>
-                <li><a href="">SPDS</a></li>
+                <li><a href="">FPDS</a></li>
                 <li><a href="">SAM</a></li>
               </ul>
             </div>
             <div class="column">
               <ul class="sam-ui bulleted list">
                 <li><a href="">CFDA</a></li>
-                <li><a href="">FDO</a></li>
+                <li><a href="">FBO</a></li>
                 <li><a href="">Federal Hierarchy</a></li>
               </ul>
             </div>
