@@ -34,7 +34,7 @@
 
       <div class="usa-width-one-half m_R-0 p_R-2x">
         <labelWrapper #stateWrapper class="p_T-1x org-create-label" [label]="'State'" [name]="'State'" [required]="true">
-          <sam-autocomplete state [ngModelOptions]="{standalone: true}" [(ngModel)]="stateOutput" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="stateLocationConfig"  [allowAny]="true" (enterEvent)="updateStateField($event)"></sam-autocomplete>
+          <sam-autocomplete [disabled]="isStateDisabled" state [ngModelOptions]="{standalone: true}" [(ngModel)]="stateOutput" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="stateLocationConfig"  [allowAny]="true" (enterEvent)="updateStateField($event)"></sam-autocomplete>
         </labelWrapper>
       </div>
     </div>

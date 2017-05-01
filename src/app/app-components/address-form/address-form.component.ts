@@ -71,6 +71,11 @@ export class OrgAddrFormComponent {
   }
 
   onCountryChange(country) {
+    console.log(country);
+    this.addressForm.get('city').enable();
+    this.isStateDisabled = false;
+    this.addressForm.get('postalCode').enable();
+
     this.addressForm.valueChanges.subscribe( data => {
       this.updateAddressFormField();
     });
