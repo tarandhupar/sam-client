@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
+import { UUID } from 'angular2-uuid';
 
 @Component({
   selector : 'authSubform',
@@ -65,17 +66,28 @@ export class FALAuthSubFormComponent {
         title:[''],
         section:['']
       }),
-      authorizationId:[]
+      authorizationId:[],
+      parentAuthorizationId:[]
     });
   }
 
-  addAuth(){
-    this.subFormLabel = "New Authorization";
+  addAuth(index=null){
+
+    if(index == null)
+      this.subFormLabel = "New Authorization";
+    else
+      this.subFormLabel = "New Amendment";
+
     const control = <FormArray> this.falAuthSubForm.controls['authorizations'];
     this.authIndex = control.length;
     control.push(this.initAuth());
     this.hideAddButton = true;
     this.mode = "Add";
+
+    if(index !== null){
+      let parentAuthId = this.falAuthSubForm.value.authorizations[index].authorizationId;
+      control.at(this.authIndex).patchValue({parentAuthorizationId:parentAuthId});
+    }
 
     this.authActionHandler.emit({
       type:'add',
@@ -83,8 +95,21 @@ export class FALAuthSubFormComponent {
     });
   }
 
-  onConfirmClick(){
-       this.authInfo = this.falAuthSubForm.value.authorizations;
+  onConfirmClick(index){
+
+    let uuid;
+    let authId = this.falAuthSubForm.value.authorizations[index].authorizationId;
+
+    if(authId == '' || authId == null){
+      uuid = UUID.UUID().replace(/-/g, "");
+    }
+    else {
+      uuid = authId;
+    }
+
+    this.falAuthSubForm.value.authorizations[index].authorizationId = uuid;
+
+    this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
 
     this.authActionHandler.emit({
@@ -114,9 +139,19 @@ export class FALAuthSubFormComponent {
   }
 
   removeAuth(i: number){
-
     const control = <FormArray>this.falAuthSubForm.controls['authorizations'];
     control.removeAt(i);
+    this.authInfo = this.falAuthSubForm.value.authorizations;
+    this.hideAddButton = false;
+  }
+
+  removeBulkAuth(ids){
+    const control = <FormArray>this.falAuthSubForm.controls['authorizations'];
+    let counter = 0;
+    for(let id of ids){
+      control.removeAt(id - counter);
+      counter = counter + 1;
+    }
     this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
   }

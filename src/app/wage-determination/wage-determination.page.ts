@@ -25,6 +25,7 @@ export class WageDeterminationPage implements OnInit {
   dictionaries: any;
   services: string;
   constructionTypes: string;
+  locationDescription: String = null;
   public locations: any;
   history: any;
   processedHistory: any;
@@ -65,7 +66,7 @@ export class WageDeterminationPage implements OnInit {
     this.currentUrl = document.location.href;
     let dictionariesAPI = this.loadDictionary();
     let wdAPI = this.loadWageDetermination();
-    let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
+    let wgAndDictionariesAPI = Observable.combineLatest(wdAPI, dictionariesAPI, this.route.params);
     this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
     this.getLocations(wgAndDictionariesAPI);
     let wdHistoryAPI = this.loadHistory(wdAPI);
@@ -196,35 +197,43 @@ export class WageDeterminationPage implements OnInit {
   private getLocations(combinedAPI: Observable<any>) {
     combinedAPI.subscribe(([wageDetermination, dictionaries]) => {
       /** Check that locations exist **/
-      if (!wageDetermination.location) {
+      if (!wageDetermination.location || typeof wageDetermination.location === 'undefined') {
+        this.locations = null;
         return;
       }
 
-      /** Process each location data into a usable state **/
-      for (let eachLocation of wageDetermination.location) {
-        /** Process States **/
-        // given a state code, look up the dictionary entry for that state (returns array of matches)
-        let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
-        let stateDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdStates' }).elements;
-        let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
-
-        // if a matching state was found, display its name otherwise display a warning message
-        eachLocation.stateString = (resultStates.length > 0) ? resultStates[0].value : 'Unknown state';
-
-        /** Process Counties **/
-        // if statewide flag is set AND counties are listed, those counties are exceptions within that state
-        if (eachLocation.statewideFlag && eachLocation.counties == null) {
-          // no exceptions so just display 'Statewide'
-          eachLocation.countiesString = 'Statewide';
-        } else if (eachLocation.counties != null) {
-          // if there are any exceptions, display 'All counties except' before the list of counties
-          let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
-          let countiesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdCounties' }).elements;
-          eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
-        }
+      if(wageDetermination.location.description != 'na'){
+        this.locationDescription = wageDetermination.location.description;
+        return;
       }
 
-      this.locations = wageDetermination.location;
+      if(typeof wageDetermination.location !== 'undefined' && typeof wageDetermination.location.mapping !== 'undefined'){
+        /** Process each location data into a usable state **/
+        for (let eachLocation of wageDetermination.location.mapping) {
+          /** Process States **/
+          // given a state code, look up the dictionary entry for that state (returns array of matches)
+          let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
+          let stateDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdStates' }).elements;
+          let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
+
+          // if a matching state was found, display its name otherwise display a warning message
+          eachLocation.stateString = (resultStates.length > 0) ? resultStates[0].value : 'Unknown state';
+
+          /** Process Counties **/
+          // if statewide flag is set AND counties are listed, those counties are exceptions within that state
+          if (eachLocation.statewideFlag && eachLocation.counties == null) {
+            // no exceptions so just display 'Statewide'
+            eachLocation.countiesString = 'Statewide';
+          } else if (eachLocation.counties != null) {
+            // if there are any exceptions, display 'All counties except' before the list of counties
+            let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
+            let countiesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdCounties' }).elements;
+            eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
+          }
+        }
+
+        this.locations = wageDetermination.location.mapping;
+      }
     })
   }
 
@@ -261,6 +270,8 @@ export class WageDeterminationPage implements OnInit {
         }
         servicesString = servicesString.substring(0, servicesString.length - 2);
         this.services = servicesString;
+      } else {
+        this.services = null;
       }
     })
   }
@@ -274,6 +285,8 @@ export class WageDeterminationPage implements OnInit {
         }
         constructionTypeString = constructionTypeString.substring(0, constructionTypeString.length - 2);
         this.constructionTypes = constructionTypeString;
+      } else {
+        this.constructionTypes = null;
       }
     })
   }
@@ -302,7 +315,7 @@ export class WageDeterminationPage implements OnInit {
           processedHistoryItem['id'] = historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['title'] = historyItem.fullReferenceNumber + ' - Revision ' + historyItem.revisionNumber;
           processedHistoryItem['date'] = dateFormat.transform(historyItem.publishDate, 'MMMM DD, YYYY');
-          processedHistoryItem['url'] = 'wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
+          processedHistoryItem['url'] = '/wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['index'] = historyItem.revisionNumber;
           processedHistoryItem['authoritative'] = historyItem.active;
           return processedHistoryItem;
@@ -315,7 +328,7 @@ export class WageDeterminationPage implements OnInit {
           this.processedHistory = this.longProcessedHistory;
         }
 
-        //use processedHistory to show Revision Message 
+        //use processedHistory to show Revision Message
         this.showRevisionMessage();
       }, err => {
         console.log('Error loading history: ', err);

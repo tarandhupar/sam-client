@@ -20,7 +20,7 @@ export class App{
 
   keyword: string = "";
   index: string = "";
-  isActive: boolean = false;
+  isActive: boolean = true;
   qs: any = {};
   searchSelectConfig = {
     options: globals.searchFilterConfig,
@@ -80,6 +80,9 @@ export class App{
 
     qsobj['page'] = 1;
 
+    //set regionalOffice filter keyword to null on header search event
+    qsobj['ro_keyword'] = null;
+
     if(searchObject.searchField === 'fh') {
       qsobj['isActive'] = true;
     } else {
@@ -103,8 +106,11 @@ export class App{
       qsobj['awardOrIdv'] = null;
       qsobj['awardType'] = null;
       qsobj['contractType'] = null;
+    }
+    if(searchObject.searchField !== 'fpds' && searchObject.searchField !== 'opp' && searchObject.searchField !== 'ent') {
       qsobj['naics'] = null;
       qsobj['psc'] = null;
+      qsobj['duns'] = null;
     }
 
     let navigationExtras: NavigationExtras = {

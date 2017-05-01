@@ -133,14 +133,21 @@ export class FinancialInfoPage2 implements OnInit {
   private saveAccomplishments() {
     let accomplishments: any = {};
 
-    accomplishments.isApplicable = this.accomplishmentsModel.checkbox.indexOf('na') === -1;
+    if(this.accomplishmentsModel.checkbox) {
+      accomplishments.isApplicable = this.accomplishmentsModel.checkbox.indexOf('na') === -1;
+    } else {
+      accomplishments.isApplicable = false;
+    }
+
     accomplishments.list = [];
 
-    for(let entry of this.accomplishmentsModel.entries) {
-      accomplishments.list.push({
-        fiscalYear: entry.year ? Number(entry.year) : null,
-        description: entry.text
-      });
+    if(this.accomplishmentsModel.entries) {
+      for(let entry of this.accomplishmentsModel.entries) {
+        accomplishments.list.push({
+          fiscalYear: entry.year ? Number(entry.year) : null,
+          description: entry.text
+        });
+      }
     }
 
     return accomplishments;

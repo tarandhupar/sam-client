@@ -19,7 +19,8 @@ import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AlertFooterService } from '../alerts/alert-footer';
 import {SamContractTypeFilter} from "../awards/search-result/contract-type-filter/contract-type-filter.component";
 import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
-
+import { RegionalOfficeListingResult } from "../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component";
+import {FormsModule} from "@angular/forms";
 let fixture;
 
 let searchServiceStub = {
@@ -96,7 +97,7 @@ let awardType = {
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult, SamContractTypeFilter, SamNaicsPscFilter ],
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult, SamContractTypeFilter, SamNaicsPscFilter, RegionalOfficeListingResult ],
       providers: [AlertFooterService ],
       imports: [
         SamUIKitModule,
@@ -105,7 +106,8 @@ describe('SearchPage', () => {
         RouterTestingModule.withRoutes([
           { path: 'search', component: SearchPage }
         ]),
-        PipesModule
+        PipesModule,
+        FormsModule
       ]
     }).overrideComponent(SearchPage, {
        set: {
@@ -184,6 +186,6 @@ describe('SearchPage', () => {
       expect(fixture.componentInstance.data.page.size).toBe(10);
       expect(fixture.componentInstance.data.page.totalElements).toBe(123);
     });
-  })
+  });
 
 });

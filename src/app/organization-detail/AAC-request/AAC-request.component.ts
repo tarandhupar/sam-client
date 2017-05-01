@@ -172,6 +172,11 @@ export class AACRequestPage {
     aacPostObj.requestIds = [];
     this.aacReasonCbxModel.forEach( e => {aacPostObj.requestIds.push(this.reasonValueMap[e])});
 
+    if(this.isReasonContainsFPDSReport()){
+      aacPostObj.cgacCode = this.fpdsReportForm.get("cgacCode").value;
+      aacPostObj.subTierAgencyCode = this.fpdsReportForm.get("agencyCode").value;
+    }
+
     aacPostObj.addressDetails = [];
     this.orgAddresses.forEach( e => {
       aacPostObj.addressDetails.push({
@@ -196,10 +201,14 @@ export class AACRequestPage {
       this.orgAddresses = [this.mailAddr];
       if(this.isAddrTypeRequired("Billing Address")){
         if(this.hideBillingForm)this.billAddr = Object.assign({},this.mailAddr);
+
+        this.billAddr.addrType = "Billing Address";
         this.orgAddresses.push(this.billAddr);
       }
       if(this.isAddrTypeRequired("Shipping Address")){
         if(this.hideShippingForm)this.shipAddr = Object.assign({},this.mailAddr);
+
+        this.shipAddr.addrType = "Shipping Address";
         this.orgAddresses.push(this.shipAddr);
       }
       this.requestIsEdit = false;
@@ -218,11 +227,16 @@ export class AACRequestPage {
   onCancelAACRequestClick(){}
 
   onSubmitFormClick(){
-    this.requestIsReview = false;
-    this.requestIsConfirm = true;
-    this.successAlertMsg = true;
-    this.aacRequestService.postAACRequest(this.generateAACRequestPostObj());
-    setTimeout(()=>{this.successAlertMsg = false;}, 3000);
+
+
+    this.aacRequestService.postAACRequest(this.generateAACRequestPostObj()).subscribe(
+      val => {
+        this.requestIsReview = false;
+        this.requestIsConfirm = true;
+        this.successAlertMsg = true;
+        setTimeout(()=>{this.successAlertMsg = false;}, 3000);
+      }
+    );
   }
 
   generateRequestOfficeInfo():any {

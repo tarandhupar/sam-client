@@ -171,7 +171,6 @@ export class ObjectDetailsPage implements OnInit {
   }
 
   onAddPermissionClick(newValue: any) {
-    console.log(newValue);
     if (!newValue) {
       return;
     }

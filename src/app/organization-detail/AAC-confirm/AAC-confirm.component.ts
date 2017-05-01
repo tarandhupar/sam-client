@@ -9,8 +9,14 @@ export class AACConfirmPage {
 
   aacObj:any = {};
   requestId:string;
+<<<<<<< HEAD
   successAlertMsg = true;
   officeInfo:any = [];
+=======
+  successAlertMsg:boolean = true;
+  officeInfo:any = [];
+  dataLoaded:boolean = false;
+>>>>>>> bsp-update-develop
 
   constructor(private route: ActivatedRoute, private aacRequestService: AACRequestService){}
 
@@ -18,18 +24,26 @@ export class AACConfirmPage {
     this.route.params.subscribe(
       params => {
         this.requestId = params['requestId'];
+<<<<<<< HEAD
         this.aacObj = this.getAACRequestDetail(this.requestId);
         this.officeInfo = this.generateRequestOfficeInfo(this.aacObj.aac);
+=======
+        this.getAACRequestDetail(this.requestId);
+
+>>>>>>> bsp-update-develop
       });
     setTimeout(()=>{this.successAlertMsg = false;}, 3000);
   }
-
-  getAACRequestDetail(requestId):any{
+  
+  getAACRequestDetail(requestId){
     let aacObj:any = {};
     this.aacRequestService.getAACRequestDetail(requestId).subscribe(
-      val => {aacObj = val;}
+      val => {
+        this.aacObj = val;
+        this.officeInfo = this.generateRequestOfficeInfo(val.aac);
+        this.dataLoaded = true;
+      }
     );
-    return aacObj;
   }
 
 
@@ -50,6 +64,7 @@ export class AACConfirmPage {
   }
 
   isReasonContainsFPDSReport(){
+    if(!this.dataLoaded) return false;
     let isFPDSReport = false;
     this.aacObj.requestReasonList.forEach( e => {if(e.requestReasonName.includes('Used for Reporting with FPDS')) isFPDSReport = true;});
     return isFPDSReport;

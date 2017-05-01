@@ -7,8 +7,9 @@ export class FHWrapperService {
 
   private API_KEY:string = "";
   private fhAPI_URLs = {
-    "development":"https://57federalhierarchyapicomp.apps.prod-iae.bsp.gsa.gov",
-    "production":"https://57federalhierarchyapiminc.apps.prod-iae.bsp.gsa.gov",
+    "comp":"https://57federalhierarchyapicomp.apps.prod-iae.bsp.gsa.gov",
+    "minc":"https://57federalhierarchyapiminc.apps.prod-iae.bsp.gsa.gov",
+    "prodlike":"https://57federalhierarchyapiprodlike.apps.prod-iae.bsp.gsa.gov",
   };
   private APIs: any = {
     'federalCreateOrg':'/v1/organization',
@@ -33,6 +34,10 @@ export class FHWrapperService {
     let method: string = oApiParam.method;
     let oHeader = new Headers({});
     let oURLSearchParams = new URLSearchParams();
+<<<<<<< HEAD
+=======
+    let env = API_UMBRELLA_URL.substr(API_UMBRELLA_URL.lastIndexOf('/')+1);
+>>>>>>> bsp-update-develop
 
     //add Headers
     if(typeof oApiParam.headers !== undefined && typeof oApiParam.headers === "object" && oApiParam.headers !== null) {
@@ -50,7 +55,13 @@ export class FHWrapperService {
     }
 
     //Use fh api url
+<<<<<<< HEAD
     var baseUrl = this.fhAPI_URLs[ENV];
+=======
+
+    var baseUrl = this.fhAPI_URLs[env];
+
+>>>>>>> bsp-update-develop
     //TODO: Implement Post DATA to request
     let jsonOption = {
       "search": oURLSearchParams,

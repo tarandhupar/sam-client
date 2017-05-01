@@ -103,6 +103,7 @@ export class OrgDetailProfilePage {
         val => {
           this.getOrgDetail(this.orgId);
           this.showEditOrgFlashAlert = true;
+          setTimeout(()=>{this.showEditOrgFlashAlert = false;}, 3000);
         });
     }
   }

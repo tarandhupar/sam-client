@@ -22,7 +22,7 @@
       </div>
       <div class="usa-width-one-whole m_L-3x m_B-1x" *ngIf="isReasonContainsFPDSReport()">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>Sub-tier Agency Code:</h4></span>
-        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">&nbsp;{{aacObj.aac.agencyCode}}</p>
+        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">&nbsp;{{aacObj.aac.subTierAgencyCode}}</p>
       </div>
       <div class="usa-width-one-whole m_L-3x m_B-1x" *ngIf="isReasonContainsFPDSReport()">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>CGAC Code:</h4></span>
@@ -34,7 +34,7 @@
       <p class="m_L-3x m_B-1x" *ngFor="let address of aacObj.addressList">
         <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addressTypeName}}:</h4></span>
         <span class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">{{address.street1}}<br>
-          <span *ngIf="address.street2 != null">{{address.street2}}<br></span>
+          <span *ngIf="address.street2 != null && address.street2.length > 0">{{address.street2}}<br></span>
           {{address.city}}, {{address.state}}&nbsp;{{address.code}}<br>{{address.country}}</span>
       </p>
     </div>

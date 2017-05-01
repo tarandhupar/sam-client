@@ -33,15 +33,14 @@
              [errorMessage]="falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
              formControlName="programNumber"></samNumber>
 
-  <sam-list-display #relatedProgListDisplay [newValue]="relatedProgSelectedOption"
-                    formControlName="relatedProgInitialSelection"
-                    (modelChange)="relatedProglistChange($event)" [config]="listConfig">
+  <sam-list-display  [newValue]="rpNGModel"
+                    formControlName="rpListDisplay"
+                     (ngModelChange)="relatedProgramTypeChange($event)" (modelChange)="relatedProglistChange()" [config]="relProAutocompleteConfig">
     <labelWrapper [label]="'Related Federal Assistance Listing'"
                   [hint]="'Are there any related federal assistance listings?'">
-      <sam-autocomplete autofill-falRelProgram
-                        [showClearButton]="true"
+      <sam-autocomplete autofill-falProgram
+                        [(ngModel)] = "rpNGModel"
                         formControlName="relatedTo"
-                        (ngModelChange)="relatedProgramTypeChange($event)"
                         name="relatedProgramSearch" [config]="relProAutocompleteConfig"
                         class="search-bar sam-autocomplete-width"></sam-autocomplete>
     </labelWrapper>
