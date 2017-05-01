@@ -31,6 +31,9 @@
     font-size: 1.7rem;
     font-weight: 400;
     margin-bottom: 1em;
+    .usa-additional_text{
+      padding-left: 315px;
+    }
   }
 
   .code-box{
@@ -76,5 +79,17 @@
   {
     margin-top: 0;
   }
+  .amend-table-col{
+    padding-left:40px;
+  }
 
+  .start-date {
+    width: 35%;
+    float: left;
+  }
+
+  .end-date {
+    width: 65%;
+    float: right;
+  }
 }

@@ -14,8 +14,9 @@ import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service"
 import { OrgDetailPage } from "./organization-detail.page";
 import { OrgDetailProfilePage } from "./profile/profile.component";
 import { OrgCreatePage } from "./create-org/create-org.component";
-import { OrgAddrFormComponent } from "./create-org/address-form/address-form.component";
 import { FlashMsgService } from "./flash-msg-service/flash-message.service";
+import { AACRequestPage } from "./AAC-request/AAC-request.component";
+import { AACConfirmPage } from "./AAC-confirm/AAC-confirm.component";
 
 @NgModule({
   imports: [
@@ -30,14 +31,13 @@ import { FlashMsgService } from "./flash-msg-service/flash-message.service";
     AppComponentsModule,
     Ng2PageScrollModule.forRoot()
   ],
-  exports: [
-    OrgAddrFormComponent
-  ],
+  exports: [],
   declarations: [
     OrgDetailPage,
     OrgDetailProfilePage,
     OrgCreatePage,
-    OrgAddrFormComponent,
+    AACRequestPage,
+    AACConfirmPage,
   ],
   providers: [
     AlertFooterService,

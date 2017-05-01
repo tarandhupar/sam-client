@@ -5,13 +5,25 @@
               [required]="required">
 
   <div *ngIf="formulaMatchingGroup" [formGroup]="formulaMatchingGroup">
-    <samCheckbox [model]="model.checkbox || []"
-                 [name]="name + '-checkbox'"
-                 [options]="formulaMatchingOptions"
-                 [formControlName]="'formulaMatching'"
-    ></samCheckbox>
+    <ul class="usa-unstyled-list">
+      <li *ngFor="let option of formulaMatchingOptions; let i = index">
+        <input [attr.id]="option.name" type="checkbox"
+               (change)="onCheckChanged(option.value, $event.target.checked)" [checked]="isChecked(option.value)">
+        <label [attr.for]="option.name">{{option.label}}</label>
+        <div class="m_L-5x">
+          <samRadioButton *ngIf="i === 1"
+                          [name]="name + '-matching-radio-buttons'"
+                          [options]="matchingRequirementsOptions"
+                          [hidden]="model.checkbox.indexOf('matching') === -1"
+                          [formControlName]="'matchingRequirements'"
+          ></samRadioButton>
+        </div>
+      </li>
+    </ul>
 
     <ng-container *ngIf="model.checkbox">
+      <div [hidden]="model.checkbox.indexOf('cfr') === -1">Formula Requirements</div>
+
       <samText [label]="'Title'"
                [name]="name + '-title'"
                [required]="false"
@@ -54,14 +66,8 @@
                    [formControlName]="'additionalInfo'"
       ></samTextArea>
 
-      <samRadioButton [label]="'Matching Requirements'"
-                      [name]="name + '-matching-radio-buttons'"
-                      [options]="matchingRequirementsOptions"
-                      [hidden]="model.checkbox.indexOf('matching') === -1"
-                      [formControlName]="'matchingRequirements'"
-      ></samRadioButton>
-
-      <samSelect [hint]="'Select the Percentage Below'"
+      <samSelect [label]="'Matching Requirements'"
+                 [hint]="'Select the Percentage Below'"
                  [name]="name + '-matching-requirements-percentage'"
                  [options]="matchingPercentageOptions"
                  [required]="false"

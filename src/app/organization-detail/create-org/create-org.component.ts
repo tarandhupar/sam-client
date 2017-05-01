@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, ViewChildren, QueryList } from "@angular/c
 import { ActivatedRoute, Router} from "@angular/router";
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
-import { OrgAddrFormComponent } from './address-form/address-form.component';
+import { OrgAddrFormComponent } from '../../app-components/address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
@@ -81,7 +81,7 @@ export class OrgCreatePage {
       orgShortName: ['', []],
     });
 
-    this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:true});
+    this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
 
     this.route.queryParams.subscribe(queryParams => {
       this.orgType = queryParams["orgType"];
@@ -134,15 +134,15 @@ export class OrgCreatePage {
   getOrgTypeSpecialInfo(orgType){
     switch (orgType){
       case "Office":
-        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.officeCodesForm,"FPDSCode","FPDS Code","fpdsCode");
         this.getOrgCodes(this.officeCodesForm,"ACCCode","AAC Code","aacCode");
         break;
       case "Agency": case "MajorCommand": case "SubCommand":
-        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.agencyCodesForm,"FPDSCode","FPDS Code","fpdsCode");
         this.getOrgCodes(this.agencyCodesForm,"OMBBureauCode","OMB Code","ombAgencyCode");
         break;
       case "Department":
-        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code","fpdsOrgId");
+        this.getOrgCodes(this.deptCodesForm,"FPDSCode","FPDS Code","fpdsCode");
         this.getOrgCodes(this.deptCodesForm,"TAS2Code","TAS2 Code","tas2Code");
         this.getOrgCodes(this.deptCodesForm,"TAS3Code","TAS3 Code","tas3Code");
         this.getOrgCodes(this.deptCodesForm,"A11Code","A11 Code","a11TacCode");
@@ -161,9 +161,13 @@ export class OrgCreatePage {
 
   generateBasicOrgObj(){
     this.orgObj['name'] = this.basicInfoForm.get('orgName').value;
-    this.orgObj['createdDate'] = this.basicInfoForm.get('orgStartDate').value;
+    this.orgObj['startDate'] = this.basicInfoForm.get('orgStartDate').value;
     this.orgObj['summary'] = this.basicInfoForm.get('orgDescription').value;
     this.orgObj['shortName'] = this.basicInfoForm.get('orgShortName').value;
+    let type = this.orgType.toUpperCase();
+    if(type === "SUBCOMMAND") type = "SUB COMMAND";
+    if(type === "MAJORCOMMAND") type = "MAJOR COMMAND";
+    this.orgObj['type'] = type;
     if (this.isAddressNeeded()){
       this.orgObj['newIsAward'] = this.indicateFundRadioModel === "Funding/Awarding"?true:false;
       this.orgObj['newIsFunding'] = this.indicateFundRadioModel === "Funding/Awarding" || this.indicateFundRadioModel == "Funding"?true:false;
@@ -172,9 +176,8 @@ export class OrgCreatePage {
         this.orgObj['orgAddresses'].push({
           "city": e.addrModel.city,
           "countryCode": e.addrModel.country,
-          "createdDate": 1145045439000,
           "state": e.addrModel.state,
-          "streetAddress": e.addrModel.street,
+          "streetAddress": e.addrModel.street2.length > 0 ? e.addrModel.street1 +" "+ e.addrModel.street2: e.addrModel.street1,
           "zipcode": e.addrModel.postalCode,
         });
       });
@@ -187,6 +190,7 @@ export class OrgCreatePage {
 
 
   onReviewFormClick(){
+
     // Validate all the necessary fields in the organization creation form
     this.basicInfoForm.get('orgName').markAsDirty();
     this.basicInfoForm.get('orgStartDate').markAsDirty();
@@ -217,11 +221,12 @@ export class OrgCreatePage {
 
   onConfirmFormClick(){
     //submit the form and navigate to the new created organization detail page
-    this.fhService.createOrganization(this.orgObj).subscribe(
+    this.fhService.createOrganization(this.orgObj,this.fullParentPath,this.fullParentPathName).subscribe(
       val => {
         this.flashMsgService.showFlashMsg();
         this.flashMsgService.isCreateOrgSuccess = true;
-        this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+        this.router.navigate(['/organization-detail',val,'profile']);
+        setTimeout(()=>{this.flashMsgService.hideFlashMsg()}, 3000);
       }
     );
   }
@@ -238,10 +243,10 @@ export class OrgCreatePage {
         e.showAddIcon = false;
         if(e.addrModel.addrType !== "Mailing Address") addressTypeIndex = 1 - this.extraAddressTypes.indexOf(e.addrModel.addrType);
       });
-      this.orgAddresses.push({addrModel:{addrType:this.extraAddressTypes[addressTypeIndex],country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:false});
+      this.orgAddresses.push({addrModel:{addrType:this.extraAddressTypes[addressTypeIndex],country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:false});
 
     }else{
-      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street:"",postalCode:""},showAddIcon:true});
+      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
     }
 
   }

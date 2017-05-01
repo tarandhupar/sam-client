@@ -14,6 +14,9 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
   @Input()
   selectedList: any;
 
+  @Input() //optional
+  showSpecialIndicator: boolean = true;
+
   @Output()
   modelChange: EventEmitter<any> = new EventEmitter<any>();
 
@@ -31,12 +34,13 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
     if(this.checkSelectedList(obj)) {
       this.modelChange.emit(obj);
       this.clearInput();
+      this.clearDropdown();
     }
   }
 
   checkSelectedList(obj) {
     let filterArr = this.selectedList.filter((newobj)=>{
-      if(newobj.value==obj.value){
+      if(newobj[this.config.keyValueConfig.keyProperty]==obj[this.config.keyValueConfig.keyProperty]){
         return true;
       }
         return false;

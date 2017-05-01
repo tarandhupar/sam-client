@@ -36,9 +36,12 @@ export class OrgAddrFormComponent {
   @ViewChild('MailAddrStreetAddr1') addrStreet1:SamTextComponent;
 
   @Input() showAddIcon:boolean = true;
-  @Input() orgAddrModel:any = {};
+  @Input() showCloseIcon:boolean = true;
+  @Input() hideAddrForm:boolean = false;
+  @Input() orgAddrModel:any;
   @Output() onAdditionalAddrRequest:EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() onCancelAdditionalAddrRequest:EventEmitter<any> = new EventEmitter<any>();
+  @Output() orgAddrModelChange:EventEmitter<any> = new EventEmitter<any>();
 
   orgAddrSelectConfig = {
     options:[
@@ -62,14 +65,15 @@ export class OrgAddrFormComponent {
       postalCode: ['', []],
       city: ['', []],
     });
-
     this.addressForm.get('city').disable();
     this.isStateDisabled = true;
     this.addressForm.get('postalCode').disable();
   }
 
   onCountryChange(country) {
-    console.log(country);
+    this.addressForm.valueChanges.subscribe( data => {
+      this.updateAddressFormField();
+    });
   }
 
   onAddrTypeSelect(val){
@@ -93,28 +97,40 @@ export class OrgAddrFormComponent {
   }
 
   validateForm():boolean{
+    if(this.hideAddrForm) return true;
+    this.formatError();
     if(this.addressForm.invalid || this.stateOutput === null || this.stateLocationConfig.serviceOptions === null){
-      this.addressForm.get("streetAddr1").markAsDirty();
-      this.addressForm.get("postalCode").markAsDirty();
-      this.addressForm.get("city").markAsDirty();
-
-      this.addrStreet1.wrapper.formatErrors(this.addressForm.get("streetAddr1"));
-      this.addrPostalCode.wrapper.formatErrors(this.addressForm.get("postalCode"));
-      this.addrCity.wrapper.formatErrors(this.addressForm.get("city"));
-
-      this.addrState.errorMessage = !!this.stateOutput?"":"This field cannot be empty";
-      this.addrCountry.errorMessage = !!this.stateLocationConfig.serviceOptions?"":"This field cannot be empty";
-
       return false;
     }else{
       this.orgAddrModel.country = this.stateLocationConfig.serviceOptions.key;
       this.orgAddrModel.state = this.stateOutput.value;
-      this.orgAddrModel.city = this.addressForm.get("city").value;
-      this.orgAddrModel.postalCode = this.addressForm.get("postalCode").value;
-      let streetLine1 = this.addressForm.get("streetAddr1").value;
-      let streetLine2 = this.addressForm.get("streetAddr2").value;
-      this.orgAddrModel.street = streetLine2 !== ""? streetLine1+" "+streetLine2:streetLine1;
+      this.updateAddressFormField();
+      this.orgAddrModelChange.emit(this.orgAddrModel);
     }
     return true;
   }
+
+  formatError(){
+    this.addressForm.get("streetAddr1").markAsDirty();
+    this.addressForm.get("postalCode").markAsDirty();
+    this.addressForm.get("city").markAsDirty();
+
+    this.addrStreet1.wrapper.formatErrors(this.addressForm.get("streetAddr1"));
+    this.addrPostalCode.wrapper.formatErrors(this.addressForm.get("postalCode"));
+    this.addrCity.wrapper.formatErrors(this.addressForm.get("city"));
+
+    this.addrState.errorMessage = !!this.stateOutput?"":"This field cannot be empty";
+    this.addrCountry.errorMessage = !!this.stateLocationConfig.serviceOptions?"":"This field cannot be empty";
+  }
+
+  updateAddressFormField(){
+    this.orgAddrModel.city = this.addressForm.get("city").value;
+    this.orgAddrModel.postalCode = this.addressForm.get("postalCode").value;
+    this.orgAddrModel.street1 = this.addressForm.get("streetAddr1").value;
+    this.orgAddrModel.street2 = this.addressForm.get("streetAddr2").value;
+  }
+
+  updateCountryField(val){this.orgAddrModel.country = val.key;}
+  updateStateField(val){this.orgAddrModel.state = val.value;}
+
 }

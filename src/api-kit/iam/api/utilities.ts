@@ -3,9 +3,9 @@ import config from './config';
 
 function $params() {
   let pattern = /([^&=]+)=?([^&]*)/g,
-      decodePattern = /\+/g,
-      decode,
-      parse;
+    decodePattern = /\+/g,
+    decode,
+    parse;
 
   decode = function(strValue) {
     return decodeURIComponent(
@@ -15,13 +15,13 @@ function $params() {
 
   parse = function(query) {
     let params = {},
-        output,
-        key,
-        val;
+      output,
+      key,
+      val;
 
     while (output = pattern.exec(query) ) {
-     key = decode(output[1])
-     val = decode(output[2]);
+      key = decode(output[1])
+      val = decode(output[2]);
 
       if(key.substring(key.length - 2) === '[]') {
         key = key.substring(0, key.length - 2);
@@ -39,7 +39,7 @@ function $params() {
 
 function $matcher(payload, pattern) {
   let matches = [],
-      output;
+    output;
 
   while(output = pattern.exec(payload)) {
     if(indexOf(matches, output[1]) == -1) {
@@ -52,10 +52,10 @@ function $matcher(payload, pattern) {
 
 function $sprintf(payload, data) {
   let pattern = new RegExp('\{([a-z0-9\-]+)\}', 'g'),
-      replace,
-      matches = $matcher(payload, pattern),
-      match,
-      intMatch;
+    replace,
+    matches = $matcher(payload, pattern),
+    match,
+    intMatch;
 
   if(isObject(data)) {
     for(intMatch = 0; intMatch < matches.length; intMatch++) {
@@ -72,10 +72,10 @@ function $sprintf(payload, data) {
 
 function parseUrlQuery() {
   let params = {},
-      query = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
-        params[key] = value.toString().match(/true|false/) ? (/^true$/i).test(value) : value;
-        return undefined;
-      });
+    query = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
+      params[key] = value.toString().match(/true|false/) ? (/^true$/i).test(value) : value;
+      return undefined;
+    });
 
   return params;
 }
@@ -85,8 +85,6 @@ class Utilities {
   debug;
   environment;
   baseUri;
-  localResource;
-  remoteResource;
   log;
   queryparams;
 
@@ -99,14 +97,7 @@ class Utilities {
     this.baseUri = '';
 
     if(isObject(options)) {
-      options.localResource = options.localResource || {};
-      options.remoteResource = options.remoteResource || {};
-
-      this.localResource = isObject(options.localResource) ? options.localResource : {};
-      this.remoteResource = isObject(options.remoteResource) ? options.remoteResource : false;
-    } else {
-      this.localResource = {};
-      this.remoteResource = {};
+      this.baseUri = options.baseUri || false;
     }
 
     this.log = this.isLocal() || (!this.isLocal && this.debug) || (params.debug !== undefined && params.debug);
@@ -130,11 +121,11 @@ class Utilities {
 
   getEnvironment(environments?) {
     let environment,
-    		hostname = location.host,
-    		active = 'local',
-    		patterns,
-    		pattern,
-    		intPattern;
+      hostname = location.host,
+      active = 'local',
+      patterns,
+      pattern,
+      intPattern;
 
     environments = environments || this.environments || {};
 
@@ -185,8 +176,8 @@ class Utilities {
 
   getUrl(endpoint, params?) {
     let $environment = (this.environment == 'local') ? 'comp' : this.environment,
-        routeParams = merge({}, (params || {}), { environment: $environment }),
-        url = $sprintf(endpoint, routeParams);
+      routeParams = merge({}, (params || {}), { environment: $environment }),
+      url = $sprintf(endpoint, routeParams);
 
     if(this.isRelative(url)) {
       url = [this.baseUri, url]
@@ -195,25 +186,13 @@ class Utilities {
     }
 
     // Apply API Key
-    if(url.search(/^https?:\/\/api-umbrella\.prod-iae\.bsp\.gsa\.gov/) > -1) {
-      url += '?api_key=8NNLSvVq9ozqkA1BA7KCey9ocE0iovWXs5dmjTu5';
-    }
+    url += '?api_key=8NNLSvVq9ozqkA1BA7KCey9ocE0iovWXs5dmjTu5';
 
     return url;
   }
 
   getBaseUri() {
-    let baseUri = '';
-
-    if(this.isLocal()) {
-      baseUri = this.localResource[this.getLocalEnvironment()] || this.localResource.comp || '';
-    } else {
-      if(this.remoteResource) {
-        baseUri = this.remoteResource[this.getEnvironment()] || this.remoteResource.comp || '';
-      }
-    }
-
-    return baseUri;
+    return this.baseUri;
   }
 }
 

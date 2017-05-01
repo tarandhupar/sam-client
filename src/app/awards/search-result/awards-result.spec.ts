@@ -18,7 +18,7 @@ describe('AwardsComponent', () => {
       fixture = TestBed.createComponent(AwardsResult);
       comp = fixture.componentInstance;
       titleEl  = fixture.debugElement.query(By.css('.award-title')); // find title element
-      labelEl = fixture.debugElement.query(By.css('.usa-label'));
+      labelEl = fixture.debugElement.query(By.css('.sam-ui.label'));
       comp.data = {
         isActive: true,
         identifiers: [{
@@ -78,10 +78,10 @@ describe('AwardsComponent', () => {
           "dunsNumber": "5678"
         },
         productOrService: {
-          "psc": {
+          "psc": [{
             "code": "1234",
             "value": ""
-          },
+          }],
           "naics": {
             "code": "1234",
             "value": ""

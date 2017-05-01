@@ -21,6 +21,7 @@ export class FinancialInfoPage2 implements OnInit {
     label: 'Program Accomplishments',
     hint: 'Showcase for public users the achievements associated with this listing. Use clear, plain language and provide compelling examples.',
     required: true,
+    itemName: 'Accomplishments',
 
     checkbox: {
       options: [
@@ -29,6 +30,7 @@ export class FinancialInfoPage2 implements OnInit {
     },
 
     textarea: {
+      hint: 'Please describe accomplishment:',
       showWhenCheckbox: 'unchecked'
     }
   };
@@ -48,9 +50,9 @@ export class FinancialInfoPage2 implements OnInit {
     required: true
   };
 
-  public accomplishmentsModel: Object = {};
-  public accountIdentificationModel: Object = {};
-  public tafsModel: Object = {};
+  public accomplishmentsModel: any = {};
+  public accountIdentificationModel: any = {};
+  public tafsModel: any = {};
 
   constructor(private fb: FormBuilder,
               private programService: ProgramService,
@@ -131,25 +133,30 @@ export class FinancialInfoPage2 implements OnInit {
   private saveAccomplishments() {
     let accomplishments: any = {};
 
-    if(this.accomplishmentsModel && this.accomplishmentsModel['checkbox']) {
-      accomplishments.isApplicable = this.accomplishmentsModel['checkbox'].indexOf('na') < 0;
+    if(this.accomplishmentsModel.checkbox) {
+      accomplishments.isApplicable = this.accomplishmentsModel.checkbox.indexOf('na') === -1;
+    } else {
+      accomplishments.isApplicable = false;
     }
 
-    if(this.accomplishmentsModel && this.accomplishmentsModel['textarea']) {
-      accomplishments.list = [
-        {
-          description: this.accomplishmentsModel['textarea'][0]
-        }
-      ]
+    accomplishments.list = [];
+
+    if(this.accomplishmentsModel.entries) {
+      for(let entry of this.accomplishmentsModel.entries) {
+        accomplishments.list.push({
+          fiscalYear: entry.year ? Number(entry.year) : null,
+          description: entry.text
+        });
+      }
     }
 
     return accomplishments;
   }
 
   private loadAccomplishments() {
-    let model: any = {
+    let model = {
       checkbox: [],
-      textarea: []
+      entries: []
     };
 
     if(this.program.data.financial.accomplishments) {
@@ -157,9 +164,13 @@ export class FinancialInfoPage2 implements OnInit {
         model.checkbox.push('na');
       }
 
-      if(this.program.data.financial.accomplishments.list
-        && this.program.data.financial.accomplishments.list[0]) {
-        model.textarea.push(this.program.data.financial.accomplishments.list[0].description);
+      if(this.program.data.financial.accomplishments.list) {
+        for(let accomplishment of this.program.data.financial.accomplishments.list) {
+          model.entries.push({
+            year: accomplishment.fiscalYear ? accomplishment.fiscalYear.toString() : '',
+            text: accomplishment.description
+          });
+        }
       }
     }
 

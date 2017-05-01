@@ -47,6 +47,8 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
   totalvalue = {};
   assistanceTypeArray = [];
   assistanceTypeLabel = 'Assistance Type';
+  persistPreYearsData = [];
+  pyCellData = [];
   @ViewChild('assistanceTypeWrapper') assistanceTypeWrapper;
 
 
@@ -212,6 +214,7 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
   }
 
   initobligations(obligation: {}) {
+    let pyValues = [];
     let past = 'pFYActual';
     let pastText = '';
     let current = 'cFYEstimate';
@@ -225,7 +228,6 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
     if (isRecoveryAct) {
       isRecoveryAct = 'isRecoveryAct';
     }
-
     if (obligation['values']) {
       for (let value of obligation['values']) {
         if (value['year'] === this.currentYear) {
@@ -239,6 +241,7 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
             current = 'cFYNa';
             currentText = value['explanation'];
           }
+          pyValues.push(value);
         } else if (value['year'] === this.budgetYear) {
           if (value['estimate']) {
             budget = 'bFYEstimate';
@@ -251,9 +254,12 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
             budgetText = value['explanation'];
           }
         } else if (value['year'] === this.pastYear) {
-          if (value['actual']) {
+          if ((value['actual'] && value['estimate'])||value['actual']) {
             past = 'pFYActual';
             pastText = value['actual'];
+          } else if(value['estimate']){
+            past = 'pFYActual';
+            pastText = value['estimate'];
           } else if (value['flag'] === 'nsi') {
             past = 'pFYNsi';
             pastText = value['explanation'];
@@ -261,11 +267,18 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
             past = 'pFYNa';
             pastText = value['explanation'];
           }
-        } else if (value['year'] !== this.pastYear || value['year'] === this.currentYear || value['year'] === this.pastYear) {
-
+          pyValues.push(value);
+        } else if (value['year'] !== this.pastYear || value['year'] !== this.currentYear || value['year'] !== this.budgetYear) {
+          pyValues.push(value);
         }
       }
     }
+    this.persistPreYearsData.push(
+      {
+        obligationId: obligation['obligationId'],
+        values: pyValues
+      }
+    );
 
     return this.fb.group({
       isRecoveryAct: [[isRecoveryAct]],
@@ -285,8 +298,10 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
         radioOptionId: budget,
         textboxValue: budgetText ? budgetText : ''
       },
-      description: obligation['description']
+      description: obligation['description'],
+      obligationId: obligation['obligationId']
     });
+
   }
 
   getData() {
@@ -299,16 +314,17 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
             if (api.data.financial.isFundedCurrentFY) {
               isFundedCurrentFY = (api.data.financial.isFundedCurrentFY ? api.data.financial.isFundedCurrentFY : '');
             }
+
             if (api.data.financial.obligations) {
               let index = 0;
               const control = <FormArray> this.finObligationsForm.controls['obligations'];
               for (let obligation of api.data.financial.obligations) {
                 control.push(this.initobligations(obligation));
-                let initObligations = this.initobligations(obligation);
+                // let initObligations = this.initobligations(obligation);
+                let initObligations = control.value;
                 control.at(index).patchValue(initObligations);
                 index = index + 1;
               }
-
             }
           }
         }
@@ -417,62 +433,19 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
   }
 
   saveData() {
-    let uuid = UUID.UUID().replace(/-/g, "");
     let data = {};
     let isFundedCurrentFY: boolean;
-    if (this.finObligationsForm.value.isFundedCurrentFY) {
+    if (this.finObligationsForm.value.isFundedCurrentFY !== undefined) {
       isFundedCurrentFY = this.finObligationsForm.value.isFundedCurrentFY.indexOf('isFundedCurrentFY') !== -1;
     }
     let obligationsData = [];
-    for (let i = 0; i < this.obligationsInfo.length; i++) {
-      let isRecoveryAct: boolean;
-      let valuesData = [];
-      let obligation = this.obligationsInfo[i];
-      isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !== -1;
-
-      let description = obligation.description;
-      let assistanceType = obligation.assistanceType.code;
-      let value: any;
-      if (obligation.pFY) {
-        if (obligation.pFY.radioOptionId === 'pFYActual') {
-          value = this.buildJson(this.pastYear, obligation.pFY.textboxValue, '', '', '')
-        } else if (obligation.pFY.radioOptionId === 'pFYNsi') {
-          value = this.buildJson(this.pastYear, '', '', 'nsi', obligation.pFY.textboxValue);
-        } else if (obligation.pFY.radioOptionId === 'pFYNa') {
-          value = this.buildJson(this.pastYear, '', '', 'ena', obligation.pFY.textboxValue);
-        }
+    if (this.obligationsInfo) {
+      for (let i = 0; i < this.obligationsInfo.length; i++) {
+        let obligation = this.obligationsInfo[i];
+        obligationsData.push(this.buildJSON(obligation));
       }
-      valuesData.push(value);
-      if (obligation.cFY) {
-        if (obligation.cFY.radioOptionId === 'cFYEstimate') {
-          value = this.buildJson(this.currentYear, '', obligation.cFY.textboxValue, '', '')
-        } else if (obligation.cFY.radioOptionId === 'cFYNsi') {
-          value = this.buildJson(this.currentYear, '', '', 'nsi', obligation.cFY.textboxValue)
-        } else if (obligation.cFY.radioOptionId === 'cFYNa') {
-          value = this.buildJson(this.currentYear, '', '', 'ena', obligation.cFY.textboxValue);
-        }
-      }
-      valuesData.push(value);
-      if (obligation.bFY) {
-        if (obligation.bFY.radioOptionId === 'bFYEstimate') {
-          value = this.buildJson(this.budgetYear, '', obligation.bFY.textboxValue, '', '')
-        } else if (obligation.bFY.radioOptionId === 'bFYNsi') {
-          value = this.buildJson(this.budgetYear, '', '', 'nsi', obligation.bFY.textboxValue);
-        } else if (obligation.bFY.radioOptionId === 'bFYNa') {
-          value = this.buildJson(this.budgetYear, '', '', 'ena', obligation.bFY.textboxValue);
-        }
-      }
-      valuesData.push(value);
-      obligationsData.push(
-        {
-          "isRecoveryAct": isRecoveryAct,
-          "obligationId": uuid,
-          "assistanceType": assistanceType,
-          "values": valuesData,
-          "description": description
-        }
-      );
     }
+
     data = {
       "financial": {
         "isFundedCurrentFY": isFundedCurrentFY,
@@ -481,35 +454,148 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
 
 
     };
-    this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
-      .subscribe(api => {
-          this.sharedService.programId = api._body;
-          console.log('AJAX Completed Obligation Information', api);
+      this.saveProgSub = this.programService.saveProgram(this.sharedService.programId, data, this.sharedService.cookieValue)
+     .subscribe(api => {
+     this.sharedService.programId = api._body;
+     console.log('AJAX Completed Obligation Information', api);
 
-          if (this.redirectToWksp)
-            this.router.navigate(['falworkspace']);
-          else if (this.redirectToViewPg) {
-            this.router.navigate(['/programs', this.sharedService.programId, 'view']);
-          }
-          else
-            this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/financial-information/other-financial-info']);
+     if (this.redirectToWksp)
+     this.router.navigate(['falworkspace']);
+     else if (this.redirectToViewPg) {
+     this.router.navigate(['/programs', this.sharedService.programId, 'view']);
+     }
+     else
+     this.router.navigate(['/programs/' + this.sharedService.programId + '/edit/financial-information/other-financial-info']);
 
-        },
-        error => {
-          console.error('Error saving Program - Obligations Information Section!!', error);
-        });
+     },
+     error => {
+     console.error('Error saving Program - Obligations Information Section!!', error);
+     });
   }
 
-  buildJson(year: number, actual: string, estimate: string, flag: string, explanation: string): any {
+  buildJSON(obligation: any): any {
+    let obligationData = {};
+    let values = [];
+    let uuid = '';
+    let isRecoveryAct: boolean;
+    let description = obligation.description;
+    let assistanceType = obligation.assistanceType.code ? obligation.assistanceType.code : null;
+    if (obligation.isRecoveryAct !== undefined) {
+      isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !== -1;
+    }
+    if (obligation.obligationId == '' || obligation.obligationId == null)
+      uuid = UUID.UUID().replace(/-/g, "");
+    else
+      uuid = obligation.obligationId;
+    values = this.buildValues(uuid, obligation);
+    obligationData['isRecoveryAct'] = isRecoveryAct;
+    obligationData['obligationId'] = uuid;
+    obligationData['values'] = values;
+    obligationData['assistanceType'] = assistanceType;
+    obligationData['description'] = description;
 
-    let data = {
-      "year": year,
-      "actual": parseFloat(actual),
-      "estimate": parseFloat(estimate),
-      "flag": flag,
-      "explanation": explanation
-    };
+    return obligationData;
+  }
 
-    return data;
+  buildValues(uuid: string, obligation: any): any {
+    let valuesData = [];
+    valuesData.push(this.pastYearData(uuid, obligation));
+    valuesData.push(this.currentYearData(uuid, obligation));
+    valuesData.push(this.budgetYearData('',obligation));
+    if(this.persistPreYearsData && this.persistPreYearsData.length>0) {
+      for (let pyData of this.persistPreYearsData) {
+        if (uuid == pyData.obligationId) {
+          for (let value of pyData.values) {
+            if (value.year != this.pastYear && value.year != this.currentYear && value.year != this.budgetYear) {
+              valuesData.push(value);
+            }
+          }
+        }
+      }
+    }
+
+    return valuesData;
+  }
+
+  pastYearData(uuid: string, obligation: any): any {
+    let pastObj = {};
+    if (obligation.pFY) {
+      pastObj['year'] = this.pastYear;
+      if (obligation.pFY.radioOptionId === 'pFYActual') {
+        pastObj['actual'] = parseFloat(obligation.pFY.textboxValue) > 0 ? parseFloat(obligation.pFY.textboxValue) : null;
+      }
+      if (obligation.pFY.radioOptionId === 'pFYNsi') {
+        pastObj['flag'] = 'nsi';
+        pastObj['explanation'] = obligation.pFY.textboxValue != '' ? obligation.pFY.textboxValue : null;
+      }
+      if (obligation.pFY.radioOptionId === 'pFYNa') {
+        pastObj['flag'] = 'ena';
+        pastObj['explanation'] = obligation.pFY.textboxValue != '' ? obligation.pFY.textboxValue : null;
+      }
+    }
+    if(this.persistPreYearsData && this.persistPreYearsData.length>0) {
+      for (let pyData of this.persistPreYearsData) {
+        for (let pValue of pyData.values) {
+          if ((pValue.year === this.pastYear && uuid === pyData.obligationId)) {
+            if((pValue.estimate) && (pValue.estimate !== null || pValue.estimate !== null || pValue.estimate !== undefined)) {
+              pastObj['estimate'] = pValue.estimate
+            }
+          }
+        }
+      }
+    }
+
+    return pastObj;
+  }
+
+  currentYearData(uuid: string, obligation: any) {
+    let currentObj = {};
+    if (obligation.cFY) {
+      currentObj['year'] = this.currentYear;
+      if (obligation.cFY.radioOptionId === 'cFYEstimate') {
+        currentObj['estimate'] = parseFloat(obligation.cFY.textboxValue) > 0 ? parseFloat(obligation.cFY.textboxValue) : null;
+      }
+      if (obligation.cFY.radioOptionId === 'cFYNsi') {
+        currentObj['flag'] = 'nsi';
+        currentObj['explanation'] = obligation.cFY.textboxValue != '' ? obligation.cFY.textboxValue : null;
+      }
+      if (obligation.cFY.radioOptionId === 'cFYNa') {
+        currentObj['flag'] = 'ena';
+        currentObj['explanation'] = obligation.cFY.textboxValue != '' ? obligation.cFY.textboxValue : null;
+      }
+    }
+    if(this.persistPreYearsData && this.persistPreYearsData.length>0) {
+      for (let cyData of this.persistPreYearsData) {
+        for (let cValue of cyData.values) {
+          if ((cValue.year == this.currentYear&& uuid === cValue.obligationId)) {
+            if((cValue.estimate) && (cValue.estimate !== null || cValue.estimate !== null || cValue.estimate !== undefined)) {
+              currentObj['estimate'] = cValue.estimate
+            }
+          }
+        }
+      }
+    }
+
+    return currentObj;
+  }
+
+  budgetYearData(uuid: string, obligation: any) {
+    let budgetObj = {};
+
+    if (obligation.bFY) {
+      budgetObj['year'] = this.budgetYear;
+      if (obligation.bFY.radioOptionId === 'bFYEstimate') {
+        budgetObj['estimate'] =  parseFloat(obligation.bFY.textboxValue) > 0 ? parseFloat(obligation.bFY.textboxValue) : null;
+      }
+      if (obligation.bFY.radioOptionId === 'bFYNsi') {
+        budgetObj['flag'] = 'nsi';
+        budgetObj['explanation'] = obligation.bFY.textboxValue != '' ? obligation.bFY.textboxValue : null;
+      }
+      if (obligation.bFY.radioOptionId === 'bFYNa') {
+        budgetObj['flag'] = 'ena';
+        budgetObj['explanation'] = obligation.bFY.textboxValue != '' ? obligation.bFY.textboxValue : null;
+      }
+    }
+    return budgetObj;
   }
 }
