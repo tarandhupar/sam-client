@@ -9,6 +9,9 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FALFormulaMatchingComponent } from "./formula-matching/formula-matching.component";
 import { FALAuthInfoTableComponent } from "./authorization-table/authorization-table.component";
+import { FALFiscalYearTableComponent } from "./fiscal-year-table/fiscal-year-table.component";
+import { FALAssistSubFormComponent } from "./applying-assistance-subform/applying-assistance-subform.component";
+import { FALAssistInfoTableComponent } from './applying-assistance-table/applying-assistance-table.component';
 
 @NgModule({
   imports: [
@@ -23,7 +26,10 @@ import { FALAuthInfoTableComponent } from "./authorization-table/authorization-t
     SamTextRadioButtonComponent,
     FALFormulaMatchingComponent,
     FALAuthSubFormComponent,
-    FALAuthInfoTableComponent
+    FALAuthInfoTableComponent,
+    FALAssistSubFormComponent,
+    FALAssistInfoTableComponent,
+    FALFiscalYearTableComponent
   ],
   exports: [
     FALAccountIdentificationComponent,
@@ -32,7 +38,10 @@ import { FALAuthInfoTableComponent } from "./authorization-table/authorization-t
     SamTextRadioButtonComponent,
     FALFormulaMatchingComponent,
     FALAuthSubFormComponent,
-    FALAuthInfoTableComponent
+    FALAuthInfoTableComponent,
+    FALFiscalYearTableComponent,
+    FALAssistSubFormComponent,
+    FALAssistInfoTableComponent
   ]
 })
 export class FALComponentsModule {}

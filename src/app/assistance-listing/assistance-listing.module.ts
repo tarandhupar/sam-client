@@ -24,8 +24,14 @@ import { ComplianceRequirementsPage } from './assistance-listing-operations/sect
 import { FALComponentsModule } from './components/index';
 import { FALAccountIdentificationComponent } from "./components/account-identification.component";
 import { FALTafsComponent } from "./components/tafs.component";
-import {FALCriteriaInfoComponent} from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
+import { FALCriteriaInfoComponent } from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
 import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
+import { FALAssistanceComponent } from './assistance-listing-operations/sections/applying-for-assistance/applying-for-assistance.component';
+import {
+  FAlProgramServiceDirective,
+  FALProgramAutoCompleteWrapper
+} from "../../api-kit/autoCompleteWrapper/falAutoCompleteWrapper.service";
+
 
 @NgModule({
   imports: [
@@ -63,8 +69,10 @@ import { FALAuthorizationsComponent } from "./assistance-listing-operations/sect
     FALContactInfoTableComponent,
     FinancialObligationsComponent,
     FALAuthorizationsComponent,
-    FALCriteriaInfoComponent
+    FALCriteriaInfoComponent,
+    FALAssistanceComponent,
+    FAlProgramServiceDirective
   ],
-  providers: [],
+  providers: [FALProgramAutoCompleteWrapper],
 })
 export class ProgramModule { }

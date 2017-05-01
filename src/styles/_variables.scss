@@ -124,7 +124,6 @@ $transparentWhite : rgba(255, 255, 255, 0.08);
 $floatingShadow:
   0 15px 35px rgba(50,50,93,.1),
   0 5px 15px rgba(0,0,0,.07);
-;
 
 
 /*-------------------
@@ -174,7 +173,7 @@ $textColor           : rgba(0, 0, 0, 0.7);
 $h1 : 3.5rem;;
 $h2 : 3rem;
 $h3 : 2.3rem;
-$h4 : 1.7rem;
+$h4 : 2rem;
 $h5 : 1.5rem;
 
 $headerFontWeight       : 700;
@@ -225,7 +224,7 @@ $defaultBorderRadius: 0.3rem;
 /*-------------------
       Borders
 --------------------*/
-$borderColor           : rgba(151, 151, 151, 0.3);
+$borderColor           : rgba(151, 151, 151, 0.2);
 $internalBorderColor   : rgba(34, 36, 38, 0.1);
 $solidBorderColor      : #D4D4D5;
 $whiteBorderColor      : rgba(255, 255, 255, 0.1);

@@ -2,7 +2,7 @@
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
-    <div sam-sticky limit=1200 container="occupy-page">
+    <div sam-sticky limit=1200 container="assistance-listing-page">
       <!--Logo-->
       <ng-container *ngIf="program && (errorOrganization || logoUrl===null || errorLogo)">
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
@@ -11,21 +11,22 @@
         <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
       </ng-container>
       <!--Side Navigation-->
-      <nav>
-        <ul class="usa-sidenav-list">
-          <li *ngIf="program.status?.code!='published'"><a href="{{currentUrl}}#program-information">Header Information</a></li>
-          <li><a href="{{currentUrl}}#overview">Overview</a></li>
-          <li><a href="{{currentUrl}}#authorizations">Authorizations</a></li>
-          <li><a href="{{currentUrl}}#financial-information">Financial Information</a></li>
-          <li><a href="{{currentUrl}}#criteria-for-applying">Criteria for Applying</a></li>
-          <li><a href="{{currentUrl}}#applying-for-assistance">Applying for Assistance</a></li>
-          <li><a href="{{currentUrl}}#compliance-requirements">Compliance Requirements</a></li>
-          <li><a href="{{currentUrl}}#contact-information">Contact Information</a></li>
-          <li><a href="{{currentUrl}}#history">History</a></li>
-        </ul>
-      </nav>
+      <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
     </div>
   </aside>
+
+  <!--Edit Modal-->
+  <samModal #editModal
+            [showClose]="true"
+            [closeOnOutsideClick]="true"
+            [closeOnEscape]="true"
+            [type]="'info'"
+            [title]="'Revise -  Federal Assistance Listing'"
+            [description]="'A draft revision for this published program will be utilized for editing.  Please click ok to edit a draft of this FAL.'"
+            [submitButtonLabel]="'Ok'"
+            [cancelButtonLabel]="'Cancel'"
+            (onSubmit)="onEditModalSubmit()"
+  ></samModal>
 
   <!--Main Content-->
   <div *ngIf="program" class="usa-width-three-fourths">
@@ -35,29 +36,32 @@
     </ng-container>
 
     <section id="program-information">
-      
-      <div class="sam-ui hidden divider"></div>
+
+      <div class="view-section-margin"></div>
       
       <div class="usa-grid-full">
-        <div class="" [ngClass]="{ 'usa-width-two-thirds' : program.status?.code!='published' }">
+        <div class="usa-width-two-thirds">
           <h1>
             <span class="field" id="program-title">
               {{program?.data?.title}}
             </span>
           </h1>
         </div>
-        <div class="usa-width-one-third" *ngIf="program.status?.code!='published'">
-          <a [routerLink]="['/programs',program.id, 'edit']">
+        <div class="usa-width-one-third">
+          <a *ngIf="canEdit()" (click)="onEditClick(['header-information'])">
             Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
           </a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" [routerLink]="['/programs',program.id, 'edit']"></i>
+          <a *ngIf="canDelete()" (click)="onDeleteClick()">
+            Delete
+            <i class="fa fa-trash fal-delete" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
-    
       <div class="sam-ui hidden divider"></div>
       
-
+<!-- <<<<<<< HEAD
       <div class="sam-ui padded raised segment">
         
         <ng-container *ngIf="errorOrganization">
@@ -131,6 +135,29 @@
           </div>
         </div>
         
+======= -->
+      <p class="field" id="program-alternative-names" *ngIf="program.data?.alternativeNames && program.data?.alternativeNames[0] != null">
+        <strong>Popular Name:</strong> {{program.data.alternativeNames[0]}}
+      </p>
+
+      <div class="content-block">
+        <ng-container *ngIf="errorOrganization">Organization ID: {{program.data.organizationId}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
+        <p class="field" id="program-fh-information" *ngIf="federalHierarchy">
+          <strong class="capitalize">{{federalHierarchy.type}}: </strong>{{ federalHierarchy.name || federalHierarchy.agencyName }}
+        </p>
+        <span class="field" id="program-number"><strong>CFDA Number: </strong>{{program.data?.programNumber}}</span>
+
+        <span>
+          <strong>Related Federal Assistance: </strong>
+          <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.length > 0 && relatedProgram.length > 0">
+            <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
+              <a class="field" [attr.id]="'program-related-' + i"  [routerLink]="['/programs', item.id,'view']" (click)="toTheTop()" >{{item.programNumber}}</a>{{isLast ? '' : ', '}}
+            </ng-container>
+          </ng-container>
+          <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.length == 0 || relatedProgram.length == 0">Not Applicable.</span>
+        </span>
+        <a target="_blank" class="field" id="'grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">View available opportunities on Grants.gov related to this program</a>
+
       </div>
       
     </section>
@@ -143,8 +170,10 @@
           <h2 id="overview">Overview</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'overview']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'overview']"></i>
+          <a *ngIf="canEdit()" (click)="onEditClick(['overview'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
       
@@ -187,8 +216,10 @@
           <h2 id="authorizations">Authorizations</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'authorization']"></i>
+          <a *ngIf="canEdit()" (click)="onEditClick(['authorization'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -211,8 +242,10 @@
           <h2 id="financial-information">Financial Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'financial-information', 'obligations']"></i>
+          <a *ngIf="canEdit()" (click)="onEditClick(['financial-information', 'obligations'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -265,8 +298,10 @@
           <h2 id="criteria-for-applying">Criteria for Applying</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'criteria-information']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'criteria-information']"></i>
+          <a *ngIf="canEdit()" (click)="onEditClick('criteria-information')">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
       
@@ -370,7 +405,18 @@
     <!--How do I apply?-->
     <section id="program-application-information">
       <a name="#/programs/{{programID}}/view#applying-for-assistance"></a>
-      <h2 id="applying-for-assistance">Applying for Assistance</h2>
+      <div class="view-section-margin"></div>
+      <div class="usa-grid-full">
+        <div class="usa-width-two-thirds">
+          <h2 id="applying-for-assistance">Applying for Assistance</h2>
+        </div>
+        <div class="usa-width-one-third">
+          <a *ngIf="canEdit()" (click)="onEditClick(['applying-for-assistance'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
 
       <h3 class="sam-ui dividing header">Deadlines</h3>
 
@@ -401,7 +447,7 @@
       <h3 class="sam-ui dividing header">Preapplication Coordination</h3>
 
       <div>
-        <ng-container [ngSwitch]="program.data?.assistance?.preApplicationCoordination?.isApplicable">
+        <ng-container [ngSwitch]="([true] | filterMultiArrayObject:program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports:'isSelected':false:null).length > 0">
           <p *ngSwitchCase="true">
             Preapplication coordination is required.
 
@@ -575,8 +621,10 @@
           <h2 id="compliance-requirements">Compliance Requirements</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'compliance-requirements']"></i>
+          <a *ngIf="canEdit()" (click)="onEditClick(['compliance-requirements'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
 
@@ -587,7 +635,7 @@
         <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == true && dictionaries">
+              <ng-container *ngIf="item.isSelected == true && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                 {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>
@@ -598,7 +646,7 @@
         <span class="field">The following 2CFR policy requirements are excluded from coverage under this assistance listing:</span>
         <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
             <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == false && dictionaries">
+              <ng-container *ngIf="item.isSelected == false && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
                 {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
               </ng-container>
             </p>
@@ -695,7 +743,7 @@
       <!-- matching requirements -->
       <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.matching">
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="true">
-            Matching Requirements: <ng-container *ngIf="program.data?.compliance?.formulaAndMatching?.matching?.percent > 0">Percent: {{program.data?.compliance?.formulaAndMatching?.matching?.percent}}</ng-container>
+            Matching Requirements: <ng-container *ngIf="dictionaries">Percent: {{ ([program.data?.compliance?.formulaAndMatching?.matching?.percent] | filterMultiArrayObject:dictionaries.match_percent:'element_id':false:'')[0].value }}</ng-container>
             {{program.data?.compliance?.formulaAndMatching?.matching?.description}}
 
           <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.matching?.requirementFlag">
@@ -739,8 +787,10 @@
           <h2 id="contact-information">Contact Information</h2>
         </div>
         <div class="usa-width-one-third">
-          <a *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'contact-information']">Edit</a>
-          <i class="fa fa-pencil fal-edit" aria-hidden="true" *ngIf="program.status?.code!='published'" [routerLink]="['/programs',program.id, 'edit', 'contact-information']"></i>
+          <a *ngIf="canEdit()" (click)="onEditClick(['contact-information'])">
+            Edit
+            <i class="fa fa-pencil fal-edit" aria-hidden="true"></i>
+          </a>
         </div>
       </div>
       

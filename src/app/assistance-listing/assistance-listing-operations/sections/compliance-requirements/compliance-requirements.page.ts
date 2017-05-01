@@ -187,7 +187,6 @@ export class ComplianceRequirementsPage implements OnInit {
   }
 
   private populateForm() {
-    console.log(this.program.data);
     if(this.program.data && this.program.data.compliance) {
       let CFR200 = this.loadCFR200();
       this.complianceRequirementsGroup.get('policyRequirementsCheckbox').setValue(CFR200.checkbox);
@@ -203,7 +202,6 @@ export class ComplianceRequirementsPage implements OnInit {
   private saveProgramData(): Observable<any> {
     let data: any = (this.program && this.program.data) || {};
 
-    console.log(data);
     data.compliance = data.compliance || {};
     data.compliance.CFR200Requirements = this.saveCFR200();
     data.compliance.reports = this.saveReports();
@@ -534,9 +532,9 @@ export class ComplianceRequirementsPage implements OnInit {
 
   public onPreviousClick(event){
     if(this.programId) {
-      this.router.navigate(['programs', this.programId, 'edit', 'criteria-information']);
+      this.router.navigate(['programs', this.programId, 'edit', 'applying-for-assistance']);
     } else {
-      this.router.navigate(['programs', 'add', 'criteria-information']);
+      this.router.navigate(['programs', 'add', 'applying-for-assistance']);
     }
   }
 

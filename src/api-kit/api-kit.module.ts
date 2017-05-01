@@ -17,6 +17,9 @@ import { UserDirService } from './user-directory/user-directory.service';
 import { UserAccessService } from "./access/access.service";
 import { LocationService } from "./location/location.service";
 import { FeedbackService } from "./feedback/feedback.service";
+import { DictionaryService } from "./dictionary/dictionary.service";
+import {SearchDictionariesService} from "./search/search-dictionaries.service";
+import {EntitySuggestionsServiceDirective} from "./autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -24,10 +27,12 @@ import { FeedbackService } from "./feedback/feedback.service";
  */
 @NgModule({
   declarations: [
-    SuggestionsServiceDirective
+    SuggestionsServiceDirective,
+    EntitySuggestionsServiceDirective
   ],
   exports: [
-    SuggestionsServiceDirective
+    SuggestionsServiceDirective,
+    EntitySuggestionsServiceDirective
   ],
   imports: [
     HttpModule,
@@ -47,7 +52,9 @@ import { FeedbackService } from "./feedback/feedback.service";
     UserAccessService,
     WageDeterminationService,
     LocationService,
-    FeedbackService
+    FeedbackService,
+    DictionaryService,
+    SearchDictionariesService
   ]
 })
 export class SamAPIKitModule { }

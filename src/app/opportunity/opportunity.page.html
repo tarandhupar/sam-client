@@ -4,7 +4,7 @@
   <aside class="usa-width-one-fourth">
     <br />
     <br />
-    <div sam-sticky limit=1200 container="occupy-page">
+    <div sam-sticky limit=1200 container="opportunity-page">
       <!--Logo-->
       <ng-container *ngIf="opportunity && (errorOrganization || logoUrl===null || errorLogo)">
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
@@ -21,9 +21,9 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths" *ngIf="opportunity">
-    
-    <ng-container *ngIf="alert.length > 0">
-      <samAlert *ngFor="let alert of alert" [type]="alert.config.type" [title]="alert.config.title"><div [innerHTML]="alert.config.description"></div></samAlert>
+
+    <ng-container *ngIf="showRevisonMessage == true">
+      <samAlert [type]="'info'" [title]="''">Note: There have been updates to this opportunity. To view the most recent update/amendment, click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a>.</samAlert>
     </ng-container>
 
     <section [attr.id]="generateID(opportunityFields.Header)" *ngIf="shouldBeDisplayed(opportunityFields.Header)">
@@ -331,7 +331,9 @@
         <div class="sam-ui hidden section divider"></div>
       </section>
 
-      <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0]?.content">
+
+      <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="(shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0]?.content) || (shouldBeDisplayed(opportunityFields.Synopsis) && differences?.description)">
+
         <h2>Synopsis
           <samButton *ngIf="differences?.changesExistSynopsis " [buttonId]="'defaultBtnSynopsis'" [buttonText]="!showChangesSynopsis ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
           <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
@@ -356,8 +358,8 @@
           [packages]="packages"
           [downloadAllUrl]="getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)"></sam-download>
 
-        <ng-container *ngIf="packagesWarning">
-          <samAlert [type]="packagesWarning.config?.type"><div [innerHTML]="packagesWarning.config?.description"></div></samAlert>
+        <ng-container *ngIf="packagesWarning == true">
+          <samAlert [type]="'warning'" [title]="''">An update has been made to this opportunity with new packages added. Please click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a> to view the latest update and packages.</samAlert>
         </ng-container>
         <div class="sam-ui hidden section divider"></div>
       </section>

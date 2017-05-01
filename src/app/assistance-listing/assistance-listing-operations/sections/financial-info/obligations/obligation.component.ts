@@ -47,6 +47,7 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
   totalvalue = {};
   assistanceTypeArray = [];
   assistanceTypeLabel = 'Assistance Type';
+  persistPreYearsData = [];
   @ViewChild('assistanceTypeWrapper') assistanceTypeWrapper;
 
 
@@ -212,6 +213,7 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
   }
 
   initobligations(obligation: {}) {
+    let pyValues = [];
     let past = 'pFYActual';
     let pastText = '';
     let current = 'cFYEstimate';
@@ -228,6 +230,7 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
 
     if (obligation['values']) {
       for (let value of obligation['values']) {
+
         if (value['year'] === this.currentYear) {
           if (value['estimate']) {
             current = 'cFYEstimate';
@@ -261,11 +264,17 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
             past = 'pFYNa';
             pastText = value['explanation'];
           }
-        } else if (value['year'] !== this.pastYear || value['year'] === this.currentYear || value['year'] === this.pastYear) {
-
+        } else if (value['year'] !== this.pastYear || value['year'] !== this.currentYear || value['year'] !== this.budgetYear) {
+          pyValues.push(value);
         }
       }
     }
+    this.persistPreYearsData.push(
+      {
+        obligationId: obligation['obligationId'],
+        values: pyValues
+      }
+    );
 
     return this.fb.group({
       isRecoveryAct: [[isRecoveryAct]],
@@ -285,8 +294,10 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
         radioOptionId: budget,
         textboxValue: budgetText ? budgetText : ''
       },
-      description: obligation['description']
+      description: obligation['description'],
+      obligationId: obligation['obligationId']
     });
+
   }
 
   getData() {
@@ -299,17 +310,18 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
             if (api.data.financial.isFundedCurrentFY) {
               isFundedCurrentFY = (api.data.financial.isFundedCurrentFY ? api.data.financial.isFundedCurrentFY : '');
             }
-            if (api.data.financial.obligations) {
-              let index = 0;
-              const control = <FormArray> this.finObligationsForm.controls['obligations'];
-              for (let obligation of api.data.financial.obligations) {
-                control.push(this.initobligations(obligation));
-                let initObligations = this.initobligations(obligation);
-                control.at(index).patchValue(initObligations);
-                index = index + 1;
-              }
 
-            }
+              if (api.data.financial.obligations) {
+                let index = 0;
+                const control = <FormArray> this.finObligationsForm.controls['obligations'];
+                for (let obligation of api.data.financial.obligations) {
+                  control.push(this.initobligations(obligation));
+                  let initObligations = this.initobligations(obligation);
+                /*  let initObligations = control.value;*/
+                  control.at(index).patchValue(initObligations);
+                  index = index + 1;
+                }
+              }
           }
         }
         if (isFundedCurrentFY) {
@@ -417,7 +429,7 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
   }
 
   saveData() {
-    let uuid = UUID.UUID().replace(/-/g, "");
+    let uuid;
     let data = {};
     let isFundedCurrentFY: boolean;
     if (this.finObligationsForm.value.isFundedCurrentFY) {
@@ -425,9 +437,16 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
     }
     let obligationsData = [];
     for (let i = 0; i < this.obligationsInfo.length; i++) {
+      let uuid;
       let isRecoveryAct: boolean;
       let valuesData = [];
       let obligation = this.obligationsInfo[i];
+      if(obligation.obligationId == '' || obligation.obligationId == null){
+        uuid = UUID.UUID().replace(/-/g, "");
+      }
+      else {
+        uuid = obligation.obligationId;
+      }
       isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !== -1;
 
       let description = obligation.description;
@@ -435,34 +454,39 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
       let value: any;
       if (obligation.pFY) {
         if (obligation.pFY.radioOptionId === 'pFYActual') {
-          value = this.buildJson(this.pastYear, obligation.pFY.textboxValue, '', '', '')
+          value = this.buildJson(this.pastYear, obligation.pFY.textboxValue, null, null, null)
         } else if (obligation.pFY.radioOptionId === 'pFYNsi') {
-          value = this.buildJson(this.pastYear, '', '', 'nsi', obligation.pFY.textboxValue);
+          value = this.buildJson(this.pastYear, null, null, 'nsi', obligation.pFY.textboxValue);
         } else if (obligation.pFY.radioOptionId === 'pFYNa') {
-          value = this.buildJson(this.pastYear, '', '', 'ena', obligation.pFY.textboxValue);
+          value = this.buildJson(this.pastYear, null, null, 'ena', obligation.pFY.textboxValue);
         }
       }
       valuesData.push(value);
       if (obligation.cFY) {
         if (obligation.cFY.radioOptionId === 'cFYEstimate') {
-          value = this.buildJson(this.currentYear, '', obligation.cFY.textboxValue, '', '')
+          value = this.buildJson(this.currentYear, null, obligation.cFY.textboxValue, null, null)
         } else if (obligation.cFY.radioOptionId === 'cFYNsi') {
-          value = this.buildJson(this.currentYear, '', '', 'nsi', obligation.cFY.textboxValue)
+          value = this.buildJson(this.currentYear, null, null, 'nsi', obligation.cFY.textboxValue)
         } else if (obligation.cFY.radioOptionId === 'cFYNa') {
-          value = this.buildJson(this.currentYear, '', '', 'ena', obligation.cFY.textboxValue);
+          value = this.buildJson(this.currentYear, null, null, 'ena', obligation.cFY.textboxValue);
         }
       }
       valuesData.push(value);
       if (obligation.bFY) {
         if (obligation.bFY.radioOptionId === 'bFYEstimate') {
-          value = this.buildJson(this.budgetYear, '', obligation.bFY.textboxValue, '', '')
+          value = this.buildJson(this.budgetYear, null, obligation.bFY.textboxValue, null, null)
         } else if (obligation.bFY.radioOptionId === 'bFYNsi') {
-          value = this.buildJson(this.budgetYear, '', '', 'nsi', obligation.bFY.textboxValue);
+          value = this.buildJson(this.budgetYear, null, null, 'nsi', obligation.bFY.textboxValue);
         } else if (obligation.bFY.radioOptionId === 'bFYNa') {
-          value = this.buildJson(this.budgetYear, '', '', 'ena', obligation.bFY.textboxValue);
+          value = this.buildJson(this.budgetYear, null, null, 'ena', obligation.bFY.textboxValue);
         }
       }
       valuesData.push(value);
+      for(let pyData of this.persistPreYearsData) {
+        if(uuid == pyData.obligationId) {
+          valuesData.push.apply(valuesData, pyData.values)
+        }
+      }
       obligationsData.push(
         {
           "isRecoveryAct": isRecoveryAct,
@@ -506,8 +530,8 @@ export class FinancialObligationsComponent implements OnInit, OnDestroy {
       "year": year,
       "actual": parseFloat(actual),
       "estimate": parseFloat(estimate),
-      "flag": flag,
-      "explanation": explanation
+      "flag": flag !== '' ? flag : null,
+      "explanation": explanation != '' ? explanation : null
     };
 
     return data;

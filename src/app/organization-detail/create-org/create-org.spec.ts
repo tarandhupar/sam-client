@@ -6,11 +6,49 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Load the implementations that should be tested
 import { OrgCreatePage } from "./create-org.component";
-import { OrgAddrFormComponent } from "./address-form/address-form.component";
+import { AppComponentsModule } from "../../app-components/app-components.module";
 import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
+import { FHService } from "../../../api-kit/fh/fh.service";
 
+class FHServiceStub {
+  getOrganizationById(orgId:string, childHierarchy:boolean, parentHierarchy:boolean):any{
+    return  Observable.of(
+      {_embedded:
+        [{org:
+        {
+          categoryDesc: "SUB COMMAND",
+          categoryId: "CAT-6",
+          code: "RMAC",
+          createdBy: "DODMIGRATOR",
+          createdDate: 1053388800000,
+          description: "RMAC",
+          fpdsOrgId: "RMAC",
+          fullParentPath: "100000000.100000012.100000117.100000120",
+          fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
+          isSourceFpds: true,
+          l1Name: "DEPT OF DEFENSE",
+          l1OrgKey: 100000000,
+          l2Name: "DEPT OF THE ARMY",
+          l3Name: "AMC",
+          l4Name: "RMAC",
+          lastModifiedBy: "FPDSADMIN",
+          lastModifiedDate: 1161993600000,
+          level: 4,
+          name: "RMAC",
+          orgCode: "ORG-2899",
+          orgKey: 100000120,
+          parentOrg: "AMC",
+          parentOrgKey: 100000117,
+          type: "SUB COMMAND",
+          orgAddresses:[]
+        }
+        }]
+      }
+    );
+  }
+};
 
 describe('Create Organization Form Page', () => {
   // provide our implementations or mocks to the dependency injector
@@ -19,12 +57,13 @@ describe('Create Organization Form Page', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrgCreatePage, OrgAddrFormComponent ],
-      imports:[ SamUIKitModule, SamAPIKitModule,  ReactiveFormsModule, FormsModule, RouterTestingModule ],
+      declarations: [ OrgCreatePage ],
+      imports:[ SamUIKitModule, SamAPIKitModule,  ReactiveFormsModule, FormsModule, RouterTestingModule, AppComponentsModule ],
       providers: [
         FlashMsgService,
         { provide: Router,  useValue:{events:Observable.of({url:"/create-organization"})} },
         { provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{ 'orgType': 'Office',  'parentID': '100000000',}])}},
+        { provide: FHService ,useClass:FHServiceStub}
       ]
     });
     fixture = TestBed.createComponent(OrgCreatePage);
@@ -95,5 +134,5 @@ describe('Create Organization Form Page', () => {
     component.getOrgTypeSpecialInfo(component.orgType);
     expect(component.orgInfo).toEqual([{ des: 'FPDS Code', value: 'FPDS' },{ des: 'TAS2 Code', value: 'TAS2Code' },{ des: 'TAS3 Code', value: 'TAS3Code' },
       { des: 'A11 Code', value: '' }, { des: 'CFDA Code', value: '' }, { des: 'OMB Agency Code', value: '' }]);
-  })
+  });
 });

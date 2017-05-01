@@ -11,7 +11,7 @@
 /*-------------------
      Variables
 --------------------*/
-// Internal variable should be declared before uswds 
+// Internal variable should be declared before uswds
 // variable to take higher precendence
 @import 'variables';
 
@@ -44,7 +44,24 @@
 @import '~uswds/src/stylesheets/core/variables';
 //@import '~uswds/src/stylesheets/core/fonts';
 @import '~uswds/src/stylesheets/core/base';
+/*
+  Variables moved here to avoid
+  overriding USWDS grid variables
+*/
+// Store current variable values
+$current-small: $small;
+$current-medium: $medium;
+$current-large: $large;
+// Override current variables values for grid only
+$small: new-breakpoint(min-width $small-screen $grid-columns-small);
+$medium: new-breakpoint(min-width $medium-screen $grid-columns-medium);
+$large: new-breakpoint(min-width $large-screen $grid-columns-large);
 @import '~uswds/src/stylesheets/core/grid';
+// Restore variables to values defined in variables.scss
+$small: $current-small;
+$medium: $current-medium;
+$large: $current-large;
+
 @import '~uswds/src/stylesheets/core/utilities';
 
 
@@ -120,6 +137,10 @@ home samsearchbar{
     padding-bottom: 2px;
 }
 
+samsearchheader .search-header > .usa-width-one-whole{
+  height: 40px;
+}
+
 .usa-font-lead {
   font-family: $font-serif;
   font-size: $lead-font-size;
@@ -128,7 +149,7 @@ home samsearchbar{
 }
 
 /*******************************
-        Legacy 
+        Legacy
 *******************************/
 
 @import 'utilities';
@@ -201,6 +222,7 @@ home samsearchbar{
 @import 'pages/assistance-listing-operations';
 @import 'pages/organization-detail';
 @import 'pages/organization-create';
+@import 'pages/aac-request';
 
 // h1,
 // h2{

@@ -3,25 +3,13 @@ const getExpiration = ((minutes: number) => {
 });
 
 export default {
-  localResource: {
-    comp:     'https://csp-api.sam.gov/comp/iam',
-    minc:     'https://csp-api.sam.gov/minc/iam',
-    prodlike: 'https://csp-api.sam.gov/prodlike/iam'
-  },
-
-  remoteResource: {
-    comp:     'https://csp-api.sam.gov/comp/iam',
-    minc:     'https://csp-api.sam.gov/minc/iam',
-    prodlike: 'https://csp-api.sam.gov/prodlike/iam'
-  },
-
   cookies: {
     path: '/',
     expires: getExpiration(15)
   },
 
-  session:   'https://csp-api.sam.gov/{environment}/IdentityandAccess/v3/auth/session',
-  timeout:   'https://csp-api.sam.gov/{environment}/IdentityandAccess/v4/auth/session/getTimeLeft',
+  session:   '/auth/v3/session',
+  timeout:   '/auth/v4/session/getTimeLeft',
 
   mergeWith: '/users/v3/mergeWith/{email}',
 
@@ -47,8 +35,8 @@ export default {
   },
 
   kba: {
-    questions: 'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/getAnswerIds',
-    update:    'https://csp-api.sam.gov/{environment}/IdentityandAccess/v1/kba/updateAnswers'
+    questions: '/kba/getAnswerIds',
+    update:    '/kba/updateAnswers'
   },
 
   import: {

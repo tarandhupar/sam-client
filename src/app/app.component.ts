@@ -3,7 +3,7 @@
  * Angular 2 decorators and services
  */
 import { Component } from '@angular/core';
-import { Router, NavigationExtras,ActivatedRoute } from '@angular/router';
+import { Router, NavigationExtras,NavigationEnd,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
 
@@ -20,7 +20,7 @@ export class App{
 
   keyword: string = "";
   index: string = "";
-  isActive: boolean = false;
+  isActive: boolean = true;
   qs: any = {};
   searchSelectConfig = {
     options: globals.searchFilterConfig,
@@ -47,6 +47,17 @@ export class App{
     this._router.events.subscribe(
       val => {
         this.showOverlay = false;
+        if (val instanceof NavigationEnd) {
+          const tree = this._router.parseUrl(this._router.url);
+          if (tree.fragment) {
+            const element = document.getElementById(tree.fragment);
+            if (element) {
+              element.scrollIntoView();
+            }
+          } else {
+            window.scrollTo(0,0);
+          }
+        }
       });
   }
 
@@ -68,6 +79,9 @@ export class App{
     }
 
     qsobj['page'] = 1;
+
+    //set regionalOffice filter keyword to null on header search event
+    qsobj['ro_keyword'] = null;
 
     if(searchObject.searchField === 'fh') {
       qsobj['isActive'] = true;
@@ -92,7 +106,11 @@ export class App{
       qsobj['awardOrIdv'] = null;
       qsobj['awardType'] = null;
       qsobj['contractType'] = null;
+    }
+    if(searchObject.searchField !== 'fpds' && searchObject.searchField !== 'opp' && searchObject.searchField !== 'ent') {
       qsobj['naics'] = null;
+      qsobj['psc'] = null;
+      qsobj['duns'] = null;
     }
 
     let navigationExtras: NavigationExtras = {

@@ -44,6 +44,14 @@ h5 {
   padding: 0em;
 }
 
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a{
+  font-weight: $headerFontWeight;
+}
+
 h1 {
   min-height: 1rem;
   font-size: $h1;

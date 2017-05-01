@@ -5,6 +5,7 @@ import { UserViewComponent } from "./public/public.component";
 import { UserMigrationsPage } from './public/migrations/migrations.page';
 import { UserProfilePage } from './public/profile/profile.page';
 import { GrantAccessPage } from "./public/grant-access/grant-access.page";
+import { RequestAccessResolve } from "./request-access.resolve";
 
 export const routes: Routes = [];
 
@@ -21,7 +22,7 @@ routes.unshift({
     { path: 'migrations',  component: UserMigrationsPage },
     { path: 'access',  component: UserAccessPage, },
     { path: 'edit-access',  component: GrantAccessPage },
-    { path: 'grant-access',  component: GrantAccessPage },
+    { path: 'grant-access',  component: GrantAccessPage, resolve: { 'request': RequestAccessResolve }},
     { path: 'request-access',  component: GrantAccessPage },
   ]
 });

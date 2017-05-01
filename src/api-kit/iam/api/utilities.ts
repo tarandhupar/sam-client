@@ -85,8 +85,6 @@ class Utilities {
   debug;
   environment;
   baseUri;
-  localResource;
-  remoteResource;
   log;
   queryparams;
 
@@ -99,14 +97,7 @@ class Utilities {
     this.baseUri = '';
 
     if(isObject(options)) {
-      options.localResource = options.localResource || {};
-      options.remoteResource = options.remoteResource || {};
-
-      this.localResource = isObject(options.localResource) ? options.localResource : {};
-      this.remoteResource = isObject(options.remoteResource) ? options.remoteResource : false;
-    } else {
-      this.localResource = {};
-      this.remoteResource = {};
+      this.baseUri = options.baseUri || false;
     }
 
     this.log = this.isLocal() || (!this.isLocal && this.debug) || (params.debug !== undefined && params.debug);
@@ -195,25 +186,15 @@ class Utilities {
     }
 
     // Apply API Key
-    if(url.search(/^https?:\/\/csp-api\.sam\.gov/) > -1) {
-      url += '?api_key=rkkGBk7AU8UQs9LHT6rM0rFkg3A3rGaiBntKSGEC';
+    if(url.search(/^https?:\/\/api-umbrella\.prod-iae\.bsp\.gsa\.gov/) > -1) {
+      url += '?api_key=8NNLSvVq9ozqkA1BA7KCey9ocE0iovWXs5dmjTu5';
     }
 
     return url;
   }
 
   getBaseUri() {
-    let baseUri = '';
-
-    if(this.isLocal()) {
-      baseUri = this.localResource[this.getLocalEnvironment()] || this.localResource.comp || '';
-    } else {
-      if(this.remoteResource) {
-        baseUri = this.remoteResource[this.getEnvironment()] || this.remoteResource.comp || '';
-      }
-    }
-
-    return baseUri;
+    return this.baseUri;
   }
 }
 

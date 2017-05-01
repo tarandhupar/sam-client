@@ -8,6 +8,17 @@ export class FHService {
 
   constructor(private oAPIService: WrapperService) { }
 
+  getOrganizations(queryParams = {}) {
+    let oApiParam = {
+      name: 'federalHierarchy',
+      suffix: '',
+      oParam: queryParams,
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
   //gets organization with heirarchy data
   getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false) {
     var oApiParam = {
@@ -25,7 +36,8 @@ export class FHService {
       oApiParam.name = 'federalHierarchy';
       oApiParam.suffix = ((includeChildrenLevels) ? '/hierarchy/' : '/') + id;
       oApiParam.oParam = {
-        'sort': 'name'
+        'sort': 'name',
+        'mode': 'slim'
       };
     }
 

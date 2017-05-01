@@ -57,7 +57,7 @@ $nextParagraphDistance: 0em;
 /* Sizing */
 $hugeFontSize   : strip-units($h1) * 1em;
 $largeFontSize  : strip-units($h2) * 1em;
-$mediumFontSize : 1.2em;
+$mediumFontSize : 1em;
 $smallFontSize  : strip-units($h4) * 1em;
 $tinyFontSize   : strip-units($h5) * 1em;
 
@@ -121,7 +121,7 @@ $floatedMargin: 0.5em;
   font-weight: $fontWeight;
   line-height: $lineHeight;
   text-transform: $textTransform;
-  color: $textColor;
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .#{$prefix}.header:first-child {
@@ -231,6 +231,7 @@ h5.#{$prefix}.header .sub.header {
 }
 .#{$prefix}.medium.header {
   font-size: $mediumFontSize;
+  font-weight: 600;
 }
 .#{$prefix}.small.header {
   font-size: $smallFontSize;
@@ -520,4 +521,3 @@ a.#{$prefix}.inverted.grey.header:hover {
 .#{$prefix}.header:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
   font-size: $mediumFontSize;
 }
-

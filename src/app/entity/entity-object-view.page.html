@@ -1,10 +1,11 @@
 <div class="usa-grid-full entity-object-view">
+	
+	<!--Sidebar-->
 	<div class="usa-width-one-fourth">
 		<h1>&nbsp;</h1>
-		<!--Sidebar-->
 		<aside>
 			<!--Side Navigation-->
-			<div class="side-nav-position" sam-sticky limit=1200 container="occupy-page">
+			<div class="side-nav-position" sam-sticky limit=1200 container="entity-object-view">
 				<img src="">
 				<nav>
 					<ul class="usa-sidenav-list">
@@ -18,14 +19,19 @@
 		</aside>
 	</div>
 	
+	<!-- Main Content -->
 	<div class="usa-width-three-fourths">
-		<div *ngIf="coreData">
+		
+		<div class="sam-ui hidden divider"></div>
+		
+		<!-- Core Data -->
+		<ng-container *ngIf="coreData">
+			<!-- Page Title -->
+			<h1 class="sam-ui header">{{coreData.legalBusinessName}}</h1>
 			
-			<div class="sam-ui hidden divider"></div>
-			
-			<h1>{{coreData.legalBusinessName}}</h1>
-			
+			<!-- Intro Content -->
 			<div class="sam-ui padded raised segment">
+				
 				<div class="sam-ui top right attached mini label">
 					Entity
 				</div>
@@ -54,7 +60,6 @@
 								</div>
 							</div>
 							<div class="item">
-								<br>
 								<entityObjectAddress [address]="coreData.mailAddress">
 								</entityObjectAddress>
 							</div>
@@ -119,344 +124,464 @@
 			
 			<div class="sam-ui hidden divider"></div>
 			
-			<h2 id="core-data">Core Data</h2>
+			<!-- Core Data -->
+			<h2 class="sam-ui header" id="core-data">Core Data</h2>
 			
 			<!-- General Information -->
-			
-			<h3 class="sam-ui dividing header">
-				General Information
-			</h3>
-			
-			<div class="sam-ui two column grid">
-				<p class="column">
-					<strong>Country of Incorporation: </strong>{{coreData.countryOfIncorporation}}
-				</p>
-				<p class="column">
-					<strong>State of Incorporation: </strong>{{coreData.stateOfIncorporation}}
-				</p>
-			</div>
-			
-			<p>
-				<strong>Business Types</strong>
-				<br />
-				<i>
-					Check the registrant's Reps &amp; Certs, if present, under FAR 52.212-3 or FAR 52.219-1 to determine if the entity is on SAB-certified HUBZone small business concern
-					Additional small business information may be found in the  <a>SBA's Dynamic Small Business Search</a> if the entity completed the SBA supplemental pages during
-					registration.
-				</i>
-			</p>
-			
-			<div class="sam-ui two column grid">
-				<p class="column">
-					<strong>Entity Structure</strong>
-					<br />
-					{{coreData.entityStructure}}
-				</p>
-				<p class="column">
-					<strong>Purpose of Registration</strong>
-					<br />
-					{{coreData.purposeOfRegistration}}
-				</p>
-				<p class="column">
-					<strong>Profit Structure</strong>
-					<br />
-					{{coreData.profitStructure}}
-				</p>
-				<p class="column">
-					<strong>Organization Factors</strong>
-					<br />
-					{{coreData.organizationStructure}}
-				</p>
-				<p class="column" *ngIf="coreData.entityType">
-					<strong>Entity Type</strong>
-					<br />
-					{{coreData.entityType}}
-				</p>
-			</div>
-			
-			<div class="sam-ui hidden divider"></div>
-			
-			<h3 class="sam-ui dividing header">
-				Business Information
-			</h3>
+			<h3 class="sam-ui dividing header">General Information</h3>
 			
 			<div class="sam-ui two column grid">
 				<div class="column">
-					<p>
-						<strong>Business Start Date: </strong>{{coreData.businessStartDate}}
-						<br />
-						<strong>Fiscal Year End Close Date: </strong>{{coreData.fiscalYearEndCloseDate}}
-						<br />
-						<strong>Company Division Name: </strong>{{coreData.companyDivision}}
-						<br />
-						<strong>Company Division Number: </strong>{{coreData.divisionNumber}}
-						<br />
-						<strong>Corporate URL: </strong><a href="{{coreData.corporateURL}}">{{coreData.corporateURL}}</a>
-						<br />
-						<strong>Congressional District: </strong>{{coreData.congressionalDistrict}}
-					</p>
+					<div class="sam-ui medium header">
+						Country of Incorporation
+						<div class="sub header">{{coreData.countryOfIncorporation}}</div>
+					</div> 
 				</div>
 				<div class="column">
+					<div class="sam-ui medium header">
+						State of Incorporation
+						<div class="sub header">{{coreData.stateOfIncorporation}}</div>
+					</div> 
+				</div>
+			</div>
+			
+			<div class="sam-ui medium header">
+				Business Types
+				<div class="sub header">
 					<p>
-						<strong>Initial Registration Date: </strong>{{coreData.registrationDate}}
-						<br />
-						<strong>Submission Date: </strong>{{coreData.submissionDate}}
-						<br />
-						<strong>Activation Date: </strong>{{coreData.activeDate}}
-						<br />
-						<strong>Expiration Date: </strong>{{coreData.generalInfo.expirationDate}}
+						<i>
+							Check the registrant's Reps &amp; Certs, if present, under FAR 52.212-3 
+							or FAR 52.219-1 to determine if the entity is on SAB-certified HUBZone 
+							small business concern Additional small business information may be found 
+							in the <a>SBA's Dynamic Small Business Search</a> if the entity completed 
+							the SBA supplemental pages during registration.
+						</i>
 					</p>
+				</div>
+			</div>
+			
+			<div class="sam-ui two column grid">
+				<div class="column">
+					<div class="sam-ui medium header">
+						Entity Structure
+						<div class="sub header">{{coreData.entityStructure}}</div>
+					</div>
 				</div>
 				<div class="column">
-					<p>
-						<strong>Physical Address</strong>
-						<br />
-						<entityObjectAddress [address]="coreData.generalInfo.samAddress"></entityObjectAddress>
-					</p>
+					<div class="sam-ui medium header">
+						Purpose of Registration
+						<div class="sub header">{{coreData.purposeOfRegistration}}</div>
+					</div>
 				</div>
 				<div class="column">
-					<p>
-						<strong>Mailing Address</strong>
-						<br />
-						<entityObjectAddress [address]="coreData.mailAddress"></entityObjectAddress>
-					</p>
+					<div class="sam-ui medium header">
+						Profit Structure
+						<div class="sub header">{{coreData.profitStructure}}</div>
+					</div>
+				</div>
+				<div class="column">
+					<div class="sam-ui medium header">
+						Organization Factors
+						<div class="sub header">{{coreData.organizationStructure}}</div>
+					</div>
+				</div>
+				<div class="column" *ngIf="coreData.entityType">
+					<div class="sam-ui medium header">
+						Entity Type
+						<div class="sub header">{{coreData.entityType}}</div>
+					</div>
 				</div>
 			</div>
 			
 			<div class="sam-ui hidden divider"></div>
 			
-			<h3 class="sam-ui dividing header">
-				CAGE/NCAGE Code
-			</h3>
+			<!-- Business Information -->
+			<h3 class="sam-ui dividing header">Business Information</h3>
 			
-			<strong>CAGE: </strong>{{coreData.cageCode}}
-			<br />
-			<br />
-			<div class="usa-grid-full">
-				<div class="usa-width-one-half">
-					<strong>Most Recent Predecessor</strong>
-					<br />
-					<strong>CAGE/NCAGE Code: </strong>{{coreData.recentPredecessorCageCode}}
-					<br />
-					<strong>Legal Business Name: </strong>{{coreData.recentPredecessorBusName}}
-					<br />
-				</div>
-				<div class="usa-width-one-half">
-					<strong>Immediate Owner</strong>
-					<br />
-					<strong>CAGE/NCAGE Code: </strong>{{coreData.immedOwnerPredecessorCageCode}}
-					<br />
-					<strong>Legal Business Name: </strong>{{coreData.immedOwnerRecentPredecessorBusName}}
-				</div>
-			</div>
-			<br />
-			<div class="usa-grid-full">
-				<div class="usa-width-one-half">
-					<strong>Second Most Recent Predecessor</strong>
-					<br />
-					<strong>CAGE/NCAGE Code: </strong>{{coreData.secondRecentPredecessorCageCode}}
-					<br />
-					<strong>Legal Business Name: </strong>{{coreData.secondRecentPredecessorBusName}}
-					<br />
-				</div>
-				<div class="usa-width-one-half">
-					<strong>Highest Level Owner</strong>
-					<br />
-					<strong>CAGE/NCAGE Code: </strong>{{coreData.highestOwnerPredecessorCageCode}}
-					<br />
-					<strong>Legal Business Name: </strong>{{coreData.highestOwnerRecentPredecessorBusName}}
-					<br />
-				</div>
-			</div>
-			<br />
-			<strong>Third Most Recent Predecessor</strong>
-			<br />
-			<strong>CAGE/NCAGE Code: </strong>{{coreData.thirdRecentPredecessorCageCode}}
-			<br />
-			<strong>Legal Business Name: </strong>{{coreData.thirdRecentPredecessorBusName}}
-			<br />
-			<br />
-			
-			<div class="sam-ui hidden divider"></div>
-			
-			<h3 class="sam-ui dividing header">
-				Financial Information
-			</h3>
-			
-			<strong>Do you accept credit cards as a method of payment? </strong>{{coreData.creditCardUsage}}
-			
-			<div class="sam-ui hidden divider"></div>
-			
-			<h3 class="sam-ui dividing header">
-				Executive Compensation Questions
-			</h3>
-			<div class="sam-ui lightest blue segment">
-				<i>
-					<strong>This information is not displayed in SAM.</strong> Registrants in the System for Award Management (SAM) respond to the Executive Compensation
-					questions in accordance with Section 6202 of P.L. 110&#45;252, amending the Federal Funding Accountability and Transparency Act (P.L. 109&#45;282).
-					This information is sent to USASpending.gov for display in association with an eligible award. Maintaining an active registration in SAM demonstrates the
-					registrant responded to the questions.
-				</i>
-			</div>
+			<div class="sam-ui two column grid">
 				
-			<div class="sam-ui hidden divider"></div>
-				
-			<h3 class="sam-ui dividing header">
-				Proceedings Questions
-			</h3>
-			<div class="sam-ui lightest blue segment">
-				<i><strong>Entity responses are not displayed in SAM.</strong> Registrants in the System for Award Management (SAM) respond to Proceedings
-					questions in accordance with FAR 52.209&#45;7&#44; FAR 52.209&#45;8&#44; or 2.C.R.F 200 Appendix XII. Responses are sent to FAPIIS.gov for display as
-					applicable. Maintaining an active registration in SAM demonstrates the registrant responded to the proceedings questions.</i>
-				</div>
-			</div>
-			
-			<div class="sam-ui hidden section divider"></div>
-				
-				<div *ngIf="assertions">
-					<div class="usa-grid-full">
-						<h2 id="assertions">Assertions</h2>
-					</div>
+				<div class="column">
 					
-					<h3 class="sam-ui dividing header">
-						Goods &amp; Services
-					</h3>
-					<div *ngIf="assertions.naicsList">
-						<strong>NAICS Codes Selected: </strong>
-						<table class="sam-ui lightest blue celled table">
-							<thead>
-								<tr>
-									<th scope="col"><b>Primary</b></th>
-									<th scope="col"><b>NAICS Code</b></th>
-									<th scope="col"><b>Description</b></th>
-								</tr>
-							</thead>
-							<tr *ngFor="let naics of assertions.naicsList">
-								<td class="center aligned">
-									<span *ngIf="naics==assertions.primaryNaics">
-										<i class="fa fa-check fa-lg" ></i>
-									</span>
-								</td>
-								<td>{{naics}}</td>
-								<td>Currently not available</td>
-							</tr>
-						</table>
-					</div>
-					
-					<div *ngIf="assertions.pscList">
-						<strong>PSC Codes Selected: </strong>
-						<table class="sam-ui lightest blue celled table">
-							<thead>
-								<tr>
-									<th scope="col"><b>PSC Code</b></th>
-									<th scope="col"><b>Description</b></th>
-								</tr>
-							</thead>
-							<tr *ngFor="let pscCode of assertions.pscList">
-								<td>{{pscCode}}</td>
-								<td>Currently not available</td>
-							</tr>
-						</table>
-					</div>
-					
-					<div class="sam-ui hidden divider"></div>
-					
-					<h3 class="sam-ui dividing header">
-						EDI Information
-					</h3>
-					{{assertions.ediInformationFlag}}
-					
-					<div class="sam-ui hidden divider"></div>
-				
-					<h3 class="sam-ui dividing header">
-						Disaster Response Information
-					</h3>
-					<strong>Included in Registry?</strong> {{assertions.registryFlag}}
-					<br />
-					<strong>Require bonding to bid on Contracts?</strong> {{assertions.bondingFlag}}
-					<br />
-					<div *ngIf="assertions.geographicalAreaServed">
-						<strong>Geographic Area Served:</strong>
-						<br />
-						<table class="sam-ui lightest blue celled table">
-							<thead>
-								<tr>
-									<th scope="col"><b>State</b></th>
-									<th scope="col"><b>County</b></th>
-									<th scope="col"><b>MSA</b></th>
-								</tr>
-							</thead>
-							<tr *ngFor="let area of assertions.geographicalAreaServed">
-								<td>{{area.state || 'No provided data'}}</td>
-								<td>{{area.county || 'No provided data'}}</td>
-								<td>{{area.msa || 'No provided data'}}</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-				
-				<div class="sam-ui hidden section divider"></div>
-				
-				<div *ngIf="repsAndCerts">
-					<div class="usa-grid-full">
-						<h2 id="reps-certs">Representations and Certifications</h2>
-					</div>
-					<h3 class="sam-ui dividing header">FAR Report</h3>
-					<p>
-						Select Download FAR Report to review the Representations and Certifications for <b>{{coreData.legalBusinessName}}</b> 
-					</p>
-					<a class="sam-ui dark blue button" target="_blank" href="{{repsAndCerts.linkForFARReport}}">
-						<i class="fa fa-download" aria-hidden="true"></i> 
-						Download FAR Report
-					</a>
-					
-					<div class="sam-ui hidden divider"></div>
-					
-					<div *ngIf="repsAndCerts.linkForDFARSReport">
-						<h3 class="sam-ui dividing header">FAR &amp; DFARS Report</h3>
-						<p>
-							Select Download FAR &amp; DFARS Report to review the Representations and Certifications for <b>{{coreData.legalBusinessName}}</b>
-						</p>
-						<a class="sam-ui dark blue button" target="_blank" href="{{repsAndCerts.linkForDFARSReport}}">
-							<i class="fa fa-download" aria-hidden="true"></i> 
-							Download FAR &amp; DFARS Report
-						</a>
-					</div>
-					
-				</div>
-				
-				<div class="sam-ui hidden section divider"></div>
-				
-				<div class="usa-grid-full">
-					<div *ngIf="mandatoryPOCs || optionalPOCs">
-						<h2 id="pocs">Points of Contact</h2>
-						<div class="usa-width-one-half">
-							<div *ngIf="mandatoryPOCs.length" >
-								<h3 class="sam-ui dividing header">Mandatory Points of Contacts</h3>
-								<div *ngFor="let poc of mandatoryPOCs">
-									<entityObjectPOC [poc]="poc"></entityObjectPOC>
-									<div *ngIf="poc.pocAddress">
-										<entityObjectAddress [address]="poc.pocAddress"></entityObjectAddress>
-									</div>
-									<br />
-								</div>
-							</div>
+					<div class="sam-ui medium header">
+						Business Start Date
+						<div class="sub header">
+							{{coreData.businessStartDate}}
 						</div>
-						<div class="usa-width-one-half">
-							<div *ngIf="optionalPOCs.length" >
-								<h3 class="sam-ui dividing header">Optional Points of Contacts</h3>
-								<div *ngFor="let poc of optionalPOCs">
-									<entityObjectPOC [poc]="poc"></entityObjectPOC>
-									<div *ngIf="poc.pocAddress">
-										<entityObjectAddress [address]="poc.pocAddress"></entityObjectAddress>
-									</div>
-									<br />
-								</div>
-							</div>
+					</div>
+					
+					<div class="sam-ui medium header">
+						Fiscal Year End Close Date
+						<div class="sub header">{{coreData.fiscalYearEndCloseDate}}</div>
+					</div>
+					
+					<div class="sam-ui medium header">
+						Company Division Name
+						<div class="sub header">{{coreData.companyDivision}}</div>
+					</div>
+					
+					<div class="sam-ui medium header">
+						Company Division Number
+						<div class="sub header">{{coreData.divisionNumber}}</div>
+					</div>
+					
+					<div class="sam-ui medium header">
+						Corporate URL
+						<div class="sub header">
+							<a href="{{coreData.corporateURL}}">{{coreData.corporateURL}}</a>
+						</div>
+					</div>
+					
+					<div class="sam-ui medium header">
+						Congressional District
+						<div class="sub header">{{coreData.congressionalDistrict}}</div>
+					</div>
+					
+				</div>
+				
+				<div class="column">
+					<div class="sam-ui medium header">
+						Initial Registration Date
+						<div class="sub header">{{coreData.registrationDate}}</div>
+					</div>
+					
+					<div class="sam-ui medium header">
+						Submission Date
+						<div class="sub header">{{coreData.submissionDate}}</div>
+					</div>
+					
+					<div class="sam-ui medium header">
+						Activation Date
+						<div class="sub header">{{coreData.activeDate}}</div>
+					</div>
+					
+					<div class="sam-ui medium header">
+						Expiration Date
+						<div class="sub header">{{coreData.generalInfo.expirationDate}}</div>
+					</div>		
+				</div>
+					
+				<div class="column">
+					<div class="sam-ui medium header">
+						Physical Address
+						<div class="sub header">
+							<entityObjectAddress [address]="coreData.generalInfo.samAddress">
+							</entityObjectAddress>
+						</div>
+					</div>
+				</div>
+						
+				<div class="column">
+					<div class="sam-ui medium header">
+						Mailing Address
+						<div class="sub header">
+							<entityObjectAddress [address]="coreData.mailAddress">
+							</entityObjectAddress>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- CAGE/NCAGE Code -->
+			<h3 class="sam-ui dividing header">CAGE/NCAGE Code</h3>
+			
+			<div class="sam-ui medium header">
+				CAGE
+				<div class="sub header">
+					{{coreData.cageCode}}
+				</div>
+			</div>
+			
+			<div class="sam-ui two column vertically padded grid">
+				<div class="column">
+					<h4 class="sam-ui dividing header">Most Recent Predecessor</h4>
+					<div class="sam-ui medium header">
+						CAGE/NCAGE Code
+						<div class="sub header">
+							{{coreData.recentPredecessorCageCode}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Legal Business Name
+						<div class="sub header">
+							{{coreData.recentPredecessorBusName}}
+						</div>
+					</div>
+				</div>
+				<div class="column">
+					<h4 class="sam-ui dividing header">Immediate Owner</h4>
+					<div class="sam-ui medium header">
+						CAGE/NCAGE Code
+						<div class="sub header">
+							{{coreData.immedOwnerPredecessorCageCode}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Legal Business Name
+						<div class="sub header">
+							{{coreData.immedOwnerRecentPredecessorBusName}}
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sam-ui two column vertically padded grid">
+				<div class="column">
+					<h4 class="sam-ui dividing header">Second Most Recent Predecessor</h4>
+					
+					<div class="sam-ui medium header">
+						CAGE/NCAGE Code
+						<div class="sub header">
+							{{coreData.secondRecentPredecessorCageCode}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Legal Business Name
+						<div class="sub header">
+							{{coreData.secondRecentPredecessorBusName}}
 						</div>
 					</div>	
 				</div>
+				<div class="column">
+					<h4 class="sam-ui dividing header">Highest Level Owner</h4>
+					
+					<div class="sam-ui medium header">
+						CAGE/NCAGE Code
+						<div class="sub header">
+							{{coreData.highestOwnerPredecessorCageCode}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Legal Business Name
+						<div class="sub header">
+							{{coreData.highestOwnerRecentPredecessorBusName}}
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
+			
+			<div class="sam-ui two column vertically padded grid">
+				<div class="column">
+					<h4 class="sam-ui dividing header">Third Most Recent Predecessor</h4>
+					<div class="sam-ui medium header">
+						CAGE/NCAGE Code
+						<div class="sub header">
+							{{coreData.thirdRecentPredecessorCageCode}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Legal Business Name
+						<div class="sub header">
+							{{coreData.thirdRecentPredecessorBusName}}
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Financial Information -->
+			<h3 class="sam-ui dividing header">Financial Information</h3>
+	
+			<div class="sam-ui medium header">
+				Do you accept credit cards as a method of payment?
+				<div class="sub header">
+					{{coreData.creditCardUsage}}
+				</div>
+			</div>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- Executive Compensation Questions -->
+			<h3 class="sam-ui dividing header">Executive Compensation Questions</h3>
+			
+			<div class="sam-ui lightest blue segment">
+				<i>
+					<strong>This information is not displayed in SAM.</strong> Registrants 
+					in the System for Award Management (SAM) respond to the Executive 
+					Compensation questions in accordance with Section 6202 of P.L. 110&#45;252, 
+					amending the Federal Funding Accountability and Transparency Act 
+					(P.L. 109&#45;282). This information is sent to USASpending.gov for 
+					display in association with an eligible award. Maintaining an active 
+					registration in SAM demonstrates the registrant responded to the questions.
+				</i>
+			</div>
+				
+			<div class="sam-ui hidden divider"></div>
+				
+			<!-- Proceedings Questions	 -->
+			<h3 class="sam-ui dividing header">Proceedings Questions</h3>
+			
+			<div class="sam-ui lightest blue segment">
+				<i><strong>Entity responses are not displayed in SAM.</strong> Registrants 
+					in the System for Award Management (SAM) respond to Proceedings
+					questions in accordance with FAR 52.209&#45;7&#44; FAR 52.209&#45;8&#44; 
+					or 2.C.R.F 200 Appendix XII. Responses are sent to FAPIIS.gov for display 
+					as applicable. Maintaining an active registration in SAM demonstrates 
+					the registrant responded to the proceedings questions.
+				</i>
+			</div>
+		</ng-container>
+				
+		<div class="sam-ui hidden section divider"></div>
+				
+		<!-- Assertions	 -->
+		<ng-container *ngIf="assertions">		
+			<h2 class="sam-ui header" id="assertions">Assertions</h2>
+			
+			<h3 class="sam-ui dividing header">Goods &amp; Services</h3>
+			
+			<!-- Table NAICS Codes Selected -->
+			<ng-container *ngIf="assertions.naicsList">
+				<div class="sam-ui medium header">NAICS Codes Selected</div>
+				<table class="sam-ui lightest blue celled table">
+					<thead>
+						<tr>
+							<th scope="col">Primary</th>
+							<th scope="col">NAICS Code</th>
+							<th scope="col">Description</th>
+						</tr>
+					</thead>
+					<tr *ngFor="let naics of assertions.naicsList">
+						<td class="center aligned">
+							<i *ngIf="naics==assertions.primaryNaics" class="fa fa-check fa-lg"></i>
+						</td>
+						<td>{{naics}}</td>
+						<td>Currently not available</td>
+					</tr>
+				</table>
+			</ng-container>
+			
+			<!-- Table PSC Codes Selected -->
+			<ng-container *ngIf="assertions.pscList">
+				<div class="sam-ui medium header">PSC Codes Selected</div>
+				<table class="sam-ui lightest blue celled table">
+					<thead>
+						<tr>
+							<th scope="col">PSC Code</th>
+							<th scope="col">Description</th>
+						</tr>
+					</thead>
+					<tr *ngFor="let pscCode of assertions.pscList">
+						<td>{{pscCode}}</td>
+						<td>Currently not available</td>
+					</tr>
+				</table>
+			</ng-container>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- EDI Information -->
+			<h3 class="sam-ui dividing header">EDI Information</h3>
+			{{assertions.ediInformationFlag}}
+			
+			<div class="sam-ui hidden divider"></div>
+				
+			<!-- Disaster Response Information -->
+			<h3 class="sam-ui dividing header">Disaster Response Information</h3>
+			
+			<div class="sam-ui medium header">
+				Included in Registry?
+				<div class="sub header">{{assertions.registryFlag}}</div>
+			</div> 
+			
+			<div class="sam-ui medium header">
+				Require bonding to bid on Contracts?
+				<div class="sub header">{{assertions.bondingFlag}}</div>
+			</div> 
+			
+			<!-- Table Geographic Area Served -->
+			<ng-container *ngIf="assertions.geographicalAreaServed">
+				<div class="sam-ui medium header">Geographic Area Served</div>
+				<table class="sam-ui lightest blue celled table">
+					<thead>
+						<tr>
+							<th scope="col">State</th>
+							<th scope="col">County</th>
+							<th scope="col">MSA</th>
+						</tr>
+					</thead>
+					<tr *ngFor="let area of assertions.geographicalAreaServed">
+						<td>{{area.state || 'No provided data'}}</td>
+						<td>{{area.county || 'No provided data'}}</td>
+						<td>{{area.msa || 'No provided data'}}</td>
+					</tr>
+				</table>
+			</ng-container>			
+		</ng-container>
+				
+		<div class="sam-ui hidden section divider"></div>
 		
-		<br><br>
+		<!-- Representations and Certifications -->		
+		<ng-container *ngIf="repsAndCerts">	
+			<h2 class="sam-ui header" id="reps-certs">Representations and Certifications</h2>
+			
+			<!-- FAR Report -->
+			<h3 class="sam-ui dividing header">FAR Report</h3>
+		
+			<p>
+				Select Download FAR Report to review the Representations and Certifications 
+				for <strong>{{coreData.legalBusinessName}}</strong>
+			</p>
+			
+			<a class="sam-ui dark blue button" target="_blank" href="{{repsAndCerts.linkForFARReport}}">
+				<i class="fa fa-download" aria-hidden="true"></i> 
+				Download FAR Report
+			</a>
+			
+			<div class="sam-ui hidden divider"></div>
+			
+			<!-- FAR & DFARS Report		 -->
+			<ng-container *ngIf="repsAndCerts.linkForDFARSReport">
+				<h3 class="sam-ui dividing header">FAR &amp; DFARS Report</h3>
+				<p>
+					Select Download FAR &amp; DFARS Report to review the Representations 
+					and Certifications for <strong>{{coreData.legalBusinessName}}</strong>
+				</p>
+				<a class="sam-ui dark blue button" target="_blank" href="{{repsAndCerts.linkForDFARSReport}}">
+					<i class="fa fa-download" aria-hidden="true"></i> 
+					Download FAR &amp; DFARS Report
+				</a>
+			</ng-container>			
+		</ng-container>
+		
+		<div class="sam-ui hidden section divider"></div>
+		
+		<!-- Points of Contact -->
+		<ng-container *ngIf="mandatoryPOCs || optionalPOCs">
+			
+			<h2 class="sam-ui header" id="pocs">Points of Contact</h2>
+			
+			<div class="sam-ui two column grid">
+				<!-- Mandatory Points of Contacts -->
+				<div class="column">		
+					<ng-container *ngIf="mandatoryPOCs.length" >
+						<h3 class="sam-ui dividing header">Mandatory Points of Contacts</h3>
+						<ng-container *ngFor="let poc of mandatoryPOCs">
+							<entityObjectPOC [poc]="poc"></entityObjectPOC>
+							<entityObjectAddress *ngIf="poc.pocAddress" [address]="poc.pocAddress"></entityObjectAddress>
+							<div class="sam-ui hidden divider"></div>
+						</ng-container>
+					</ng-container>
+				</div>
+				<div class="column">
+					<!-- Optional Points of Contacts -->
+					<ng-container *ngIf="optionalPOCs.length" >
+						<h3 class="sam-ui dividing header">Optional Points of Contacts</h3>
+						<ng-container *ngFor="let poc of optionalPOCs">
+							<entityObjectPOC [poc]="poc"></entityObjectPOC>
+							<entityObjectAddress *ngIf="poc.pocAddress" [address]="poc.pocAddress"></entityObjectAddress>
+							<div class="sam-ui hidden divider"></div>
+						</ng-container>
+					</ng-container>
+				</div>
+			</div>
+		</ng-container>
+		
+		<div class="sam-ui hidden section divider"></div>
+					
+	</div>
+
+</div>

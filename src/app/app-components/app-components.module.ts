@@ -28,6 +28,9 @@ import { FalTableComponent } from "./fal-table/fal-table.component";
 import { SamCountryServiceAutoDirective } from "./location-autocomplete/country-autocomplete/country-autocomplete.component";
 import { SamStateServiceAutoDirective, StateServiceImpl } from "./location-autocomplete/state-autocomplete/state-autocomplete.component";
 import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./location-autocomplete/county-autocomplete/county-autocomplete.component";
+import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
+import { OrgAddrFormComponent } from "./address-form/address-form.component";
+import {PipesModule} from "../app-pipes/app-pipes.module";
 
 /**
  * A module for reusable SAM Web Design components
@@ -57,6 +60,7 @@ import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./location-aut
     SamCountryServiceAutoDirective,
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,
+    OrgAddrFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -64,7 +68,8 @@ import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./location-aut
     FormsModule,
     RouterModule,
     SamAPIKitModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    PipesModule
   ],
   exports: [
     AgencyPickerComponent,
@@ -90,11 +95,13 @@ import { SamCountyServiceAutoDirective, CountyServiceImpl } from "./location-aut
     SamCountryServiceAutoDirective,
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,
+    OrgAddrFormComponent,
   ],
   providers: [
     SamFeedbackComponent,
     StateServiceImpl,
     CountyServiceImpl,
+    AlertFooterService,
   ]
 })
 export class AppComponentsModule { }

@@ -8,7 +8,6 @@ import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-obje
 import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
 import {DateFormatPipe} from "../app-pipes/date-format.pipe";
 
-
 @Component({
   moduleId: __filename,
   templateUrl: 'wage-determination.page.html',
@@ -32,13 +31,14 @@ export class WageDeterminationPage implements OnInit {
   longProcessedHistory: any;
   shortProcessedHistory: any;
   showingLongHistory = false;
+  showRevisonMessage: boolean = false;
 
   // On load select first item on sidenav component
   selectedPage: number = 0;
   pageRoute: string;
   pageFragment: string;
   sidenavModel = {
-    "label": "Wage Determination",
+    "label": "WD",
     "children": []
   };
 
@@ -49,16 +49,12 @@ export class WageDeterminationPage implements OnInit {
     private sidenavService: SidenavService,
     private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe,
     private router: Router,
-    private route:ActivatedRoute,
-    private wgService:WageDeterminationService) {
+    private route: ActivatedRoute,
+    private wgService: WageDeterminationService) {
     router.events.subscribe(s => {
       if (s instanceof NavigationEnd) {
         const tree = router.parseUrl(router.url);
         this.pageFragment = tree.fragment;
-        if (this.pageFragment) {
-          const element = document.getElementById(tree.fragment);
-          if (element) { element.scrollIntoView(); }
-        }
       }
     });
   }
@@ -69,68 +65,85 @@ export class WageDeterminationPage implements OnInit {
     this.currentUrl = document.location.href;
     let dictionariesAPI = this.loadDictionary();
     let wdAPI = this.loadWageDetermination();
-    let wgAndDictionariesAPI = wdAPI.zip(dictionariesAPI);
+    let wgAndDictionariesAPI = Observable.combineLatest(wdAPI, dictionariesAPI, this.route.params);
     this.isSCA ? this.getServices(wgAndDictionariesAPI) : this.getConstructionTypes(wdAPI);
     this.getLocations(wgAndDictionariesAPI);
-    this.loadHistory(wdAPI);
+    let wdHistoryAPI = this.loadHistory(wdAPI);
+    let DOMReady$ = Observable.zip(wgAndDictionariesAPI, wdHistoryAPI).delay(2000);
+    this.DOMComplete(DOMReady$);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
 
   private loadWageDetermination() {
-      let wgSubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
-    this.route.params.subscribe((params: Params) => { // construct a stream of wg data
+    let wgSubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
+    let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.referenceNumber = params['referencenumber'];
       this.isSCA = this.referenceNumber.indexOf('-') > -1;
       this.revisionNumber = params['revisionnumber'];
-      this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(this.referenceNumber,this.revisionNumber).subscribe(wgSubject);
-      // run whenever api data is updated
-      wgSubject.subscribe(api => { // do something with the wg api
-        this.wageDetermination = api;
 
-        let wageDeterminationSideNavContent = [
+      this.showRevisonMessage = false;
+      return this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(this.referenceNumber, this.revisionNumber);
+    });
+
+    this.apiStreamSub = apiStream.subscribe(wgSubject);
+
+    // run whenever api data is updated
+    this.apiSubjectSub = wgSubject.subscribe(api => { // do something with the wg api
+      this.wageDetermination = api;
+
+      this.pageRoute = "wage-determination/" + this.referenceNumber + "/" + this.revisionNumber;
+      let wageDeterminationSideNavContent = {
+        "label": "Wage Determination",
+        "route": this.pageRoute,
+        "children": [
           {
             "label": "Overview",
-            "route": "#wage-determination",
+            "field": "#wage-determination",
           },
           {
-            "label": "Wage Determination",
-            "route": "#wd-document",
+            "label": "Document",
+            "field": "#wd-document",
           },
           {
             "label": "History",
-            "route": "#wd-history",
+            "field": "#wd-history",
           }
-        ];
-        this.updateSideNav(wageDeterminationSideNavContent);
-      }, err => {
-        console.log('Error logging', err);
-      });
+        ]
+      };
+
+      this.updateSideNav(wageDeterminationSideNavContent);
+    }, err => {
+      console.log('Error logging', err);
     });
 
     return wgSubject;
   }
 
-  private updateSideNav(content?){
+  selectedItem(item) {
+    this.selectedPage = this.sidenavService.getData()[0];
+  }
+
+  private updateSideNav(content?) {
 
     let self = this;
+    //refresh side nav to fix the bug on clicking the parent tab `Wage Determination` will take you to the previous version
+    this.sidenavModel.children = [];
 
-    if(content){
+    if (content) {
       // Items in first level (pages) have to have a unique name
-      _.map(content, function(contentItem){
-        let repeatedItem = _.findIndex(self.sidenavModel.children, item => item.label == contentItem.label );
-        // If page has a unique name added to the sidenav
-        if(repeatedItem === -1){
-          self.sidenavModel.children.push(contentItem);
-        }
-      });
+      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label);
+      // If page has a unique name added to the sidenav
+      if (repeatedItem === -1) {
+        this.sidenavModel.children.push(content);
+      }
     }
 
     updateContent();
 
-    function updateContent(){
-      let children = _.map(self.sidenavModel.children, function(possiblePage){
-        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
-          possibleSection.route = "#" + possibleSection.field;
+    function updateContent() {
+      let children = _.map(self.sidenavModel.children, function(possiblePage) {
+        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection) {
+          possibleSection.route = possibleSection.field;
           return possibleSection;
         });
         _.remove(possiblePagechildren, _.isUndefined);
@@ -139,7 +152,6 @@ export class WageDeterminationPage implements OnInit {
       });
       self.sidenavModel.children = children;
     }
-
   }
 
   private loadDictionary() {
@@ -154,23 +166,38 @@ export class WageDeterminationPage implements OnInit {
     return dictionariesSubject;
   }
 
-  sidenavPathEvtHandler(data){
+  private DOMComplete(observable) {
+    observable.subscribe(
+      () => {
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
+        }
+      },
+      () => {
+        if (this.pageFragment && document.getElementById(this.pageFragment)) {
+          document.getElementById(this.pageFragment).scrollIntoView();
+        }
+      });
+  }
+
+  sidenavPathEvtHandler(data) {
     data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
 
     if (this.pageFragment == data.substring(1)) {
       document.getElementById(this.pageFragment).scrollIntoView();
     }
-		else if(data.charAt(0)=="#"){
-			this.router.navigate([], { fragment: data.substring(1) });
-		} else {
-			this.router.navigate([data]);
-		}
-	}
+    else if (data.charAt(0) == "#") {
+      this.router.navigate([], { fragment: data.substring(1) });
+    } else {
+      this.router.navigate([data]);
+    }
+  }
 
-  private getLocations(combinedAPI: Observable<any>){
+  private getLocations(combinedAPI: Observable<any>) {
     combinedAPI.subscribe(([wageDetermination, dictionaries]) => {
       /** Check that locations exist **/
-      if(!wageDetermination.location) {
+      if (!wageDetermination.location) {
+        this.locations = null;
         return;
       }
 
@@ -235,19 +262,23 @@ export class WageDeterminationPage implements OnInit {
         }
         servicesString = servicesString.substring(0, servicesString.length - 2);
         this.services = servicesString;
+      } else {
+        this.services = null;
       }
     })
   }
 
   private getConstructionTypes(wdAPI) {
     wdAPI.subscribe((wageDeterminaton) => {
-      if (wageDeterminaton.constructionType != null){
+      if (wageDeterminaton.constructionType != null) {
         let constructionTypeString = "";
         for (let element of wageDeterminaton.constructionType) {
           constructionTypeString = constructionTypeString.concat(element + ", ");
         }
         constructionTypeString = constructionTypeString.substring(0, constructionTypeString.length - 2);
         this.constructionTypes = constructionTypeString;
+      } else {
+        this.constructionTypes = null;
       }
     })
   }
@@ -257,10 +288,11 @@ export class WageDeterminationPage implements OnInit {
     let historySubject = new ReplaySubject(1);
     wageDetermination.subscribe(wageDeterminationAPI => {
       /** Check that wageDetermination reference and revision numbers exist **/
-      if(wageDeterminationAPI.fullReferenceNumber === '' || typeof wageDeterminationAPI.fullReferenceNumber === 'undefined' || wageDeterminationAPI.revisionNumber === '' || typeof wageDeterminationAPI.revisionNumber === 'undefined') {
+      if (wageDeterminationAPI.fullReferenceNumber === '' || typeof wageDeterminationAPI.fullReferenceNumber === 'undefined' || wageDeterminationAPI.revisionNumber === '' || typeof wageDeterminationAPI.revisionNumber === 'undefined') {
         console.log('Error loading history');
         return;
       }
+
       /** Load history API **/
       this.wgService.getWageDeterminationHistoryByReferenceNumber(wageDeterminationAPI.fullReferenceNumber).subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
@@ -269,27 +301,27 @@ export class WageDeterminationPage implements OnInit {
         /** Setup necessary variables and functions for processing history **/
         let dateFormat = new DateFormatPipe();
 
-
         /** Process history into a form usable by history component **/
         let processHistoryItem = function(historyItem) {
           let processedHistoryItem = {};
           processedHistoryItem['id'] = historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['title'] = historyItem.fullReferenceNumber + ' - Revision ' + historyItem.revisionNumber;
           processedHistoryItem['date'] = dateFormat.transform(historyItem.publishDate, 'MMMM DD, YYYY');
-          processedHistoryItem['url'] = 'wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
+          processedHistoryItem['url'] = '/wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
           processedHistoryItem['index'] = historyItem.revisionNumber;
           processedHistoryItem['authoritative'] = historyItem.active;
           return processedHistoryItem;
         };
         this.longProcessedHistory = this.history._embedded.wageDetermination.map(processHistoryItem);
         if (this.longProcessedHistory.length > 5) {
-          this.shortProcessedHistory = this.longProcessedHistory.slice(0,5);
+          this.shortProcessedHistory = this.longProcessedHistory.slice(0, 5);
           this.processedHistory = this.shortProcessedHistory;
         } else {
           this.processedHistory = this.longProcessedHistory;
         }
-        //sort by index to show history by version (oldest to newest)
-        //this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.revisionNumber; });
+
+        //use processedHistory to show Revision Message
+        this.showRevisionMessage();
       }, err => {
         console.log('Error loading history: ', err);
       });
@@ -298,8 +330,14 @@ export class WageDeterminationPage implements OnInit {
     return historySubject;
   }
 
-  private showHideLongHistory(){
-    if (this.showingLongHistory == false){
+  private showRevisionMessage() {
+    if (this.processedHistory.length > 0 && this.processedHistory[0].index != this.revisionNumber) {
+      this.showRevisonMessage = true;
+    }
+  }
+
+  private showHideLongHistory() {
+    if (this.showingLongHistory == false) {
       this.processedHistory = this.longProcessedHistory;
       this.showingLongHistory = true;
     } else {

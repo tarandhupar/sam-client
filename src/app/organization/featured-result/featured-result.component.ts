@@ -1,52 +1,67 @@
 import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
 import {FHService} from "../../../api-kit/fh/fh.service";
-import { ReplaySubject, Observable } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 
 @Component({
   moduleId: __filename,
   selector: 'fh-featured-result',
   template: `
-    <div class="featured-result">
+    <div class="sam-ui vertically very padded grid">
 
-      <div class="card">
-        <div class="card-header-secure">
-          <h3>
-            <a [routerLink]="['/organization', data._id]" [queryParams]="qParams">{{ data.name }}</a>
-          </h3>
-          <ng-container *ngIf="data.alternativeNames && data.alternativeNames !== null">
-              Also known as <strong><em>{{ data.alternativeNames }}</em></strong>
-          </ng-container>
-        </div>
-        <div class="card-secure-content clearfix">
-          <div *ngIf="errorOrganization || logoUrl===null" class="logo-small"  style="float: left; margin-right: 10px;">
-            <img src="src/assets/img/logo-not-available.png" alt="Logo Not Available">
-          </div>
-          <div *ngIf="logoUrl && !errorOrganization" class="logo-small"  style="float: left; margin-right: 10px;">
-            <img [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
+      <div class="column">
+        <div class="sam-ui raised segment">
+          
+          <div class="sam-ui top right attached mini label">
+            <i class="fa fa-star" aria-hidden="true"></i>
+            Featured Result
           </div>
 
-          <div>
-            <ul class="usa-unstyled-list">
-              <li>
-                {{ data.type=="Agency" ? 'Sub-Tier' : '' }}{{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}{{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
-              </li>
-              <li *ngIf="data">
-                <strong>CGAC: </strong> {{ data.cgac }}
-              </li>  
-              <br/>
-              <li *ngIf="data.parentOrganizationHierarchy && data.parentOrganizationHierarchy !== null">
-                Department/Ind. Agency: {{ data.parentOrganizationHierarchy.name }}
-              </li>
-            </ul>
+          <div class="sam-ui attached grid">
+            <div class="row">
+              <div class="two wide column">
+                <div *ngIf="errorOrganization || logoUrl===null">
+                  <img class="sam-ui image" src="src/assets/img/logo-not-available.png" alt="Logo Not Available">
+                </div>
+                <div *ngIf="logoUrl && !errorOrganization">
+                  <img class="sam-ui image" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo">
+                </div>
+              </div>
+              <div class="ten wide column">  
+                <h3 class="sam-ui sub header">
+                  <a [routerLink]="['/organization', data._id]" [queryParams]="qParams">
+                    {{ data.name }}
+                  </a>
+                </h3>
+                <ng-container *ngIf="data.alternativeNames && data.alternativeNames !== null">
+                    Also known as <strong><em>{{ data.alternativeNames }}</em></strong>
+                </ng-container><br>
+                <ul class="sam-ui horizontal divided small list">
+                  <li class="item">
+                    <strong>
+                      {{ data.type=="Agency" ? 'Sub-Tier' : '' }}
+                      {{ data.type=="Department" ? 'Department/Ind. Agency' : '' }}
+                      {{ data.type!=="Agency"&&data.type!=="Department" ? data.type : '' }}
+                    </strong>
+                  </li>
+                  <li class="item">
+                    <strong>CGAC: </strong> {{ data.cgac }}
+                  </li>  
+                </ul><br>
+                <div *ngIf="department">
+                  <strong>Department/Ind. Agency:</strong> {{ department.name }}
+                </div>
+                <p>
+                  <a href="/search?keyword={{qParams.keyword}}&index=fpds&page=1&isActive=true&organizationId={{data._id}}" target="_blank">
+                    View Awards contracted by this federal organization
+                  </a>
+                </p>
+              </div>
+            </div>
           </div>
-
-        </div>
-        <div class="card-extra-content">
-          <i class="fa fa-star" aria-hidden="true" style="color:#fdb81e;"></i> <strong>Featured Result</strong>
+          
         </div>
       </div>
-
     </div>
   `
 })
@@ -56,9 +71,20 @@ export class FHFeaturedResult implements OnInit {
   public logoUrl: string;
   public logoInfo: any;
   errorOrganization: any;
+  department: {};
+
   constructor(private fhService: FHService) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    if (this.data.organizationHierarchy && this.data.organizationHierarchy.length > 1) {
+      for (let o of this.data.organizationHierarchy) {
+        if (o.level == 1) {
+          this.department = o;
+          break;
+        }
+      }
+    }
+  }
 
   ngOnChanges(changes) {
     if(this.data['_id']) {
