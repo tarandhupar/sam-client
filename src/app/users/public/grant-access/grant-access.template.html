@@ -63,35 +63,23 @@
     <!-- Editable -->
     <ng-container *ngIf="objects.length && objectsEditable">
       <div class="m_B-1x"><label>Permissions</label></div>
-      <!--<div class="background-light">-->
-        <!--<div class="let object of objects">-->
-          <!--<p><strong>{{object.function.val}}</strong></p>-->
-          <!--<div class="let permission of object.permission">-->
-            <!--<div class="usa-grid-full">-->
-              <!--<div class="usa-width-one-half">-->
-                <!--<span *ngFor="let permission of object.permission" class="permission-control-group">-->
-                  <!--<input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">-->
-                  <!--<label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>-->
-                <!--</span>-->
-              <!--</div>-->
-              <!--<div class="usa-width-one-half">-->
-                <!--<span *ngFor="let permission of object.permission" class="permission-control-group">-->
-                  <!--<input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">-->
-                  <!--<label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>-->
-                <!--</span>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
-      <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
+      <ul class="usa-unstyled-list background-light p_All-4x">
         <li  *ngFor="let object of objects" class="object-item">
           <strong>{{object.function.val}}</strong>
-          <div class="p_L-4x permission-list">
-          <span *ngFor="let permission of object.permission" class="permission-control-group">
-            <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
-            <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
-          </span>
+          <div class="usa-grid" *ngFor="let p of object.permission; let e = even; let i = index">
+            <ng-container *ngIf="e">
+              <!-- ngFor hack to declare a local variable -->
+              <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i]]">
+                <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+                <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
+              </div>
+              <ng-container *ngIf="object.permission[i+1]">
+                <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i+1]]">
+                  <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+                  <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
+                </div>
+              </ng-container>
+            </ng-container>
           </div>
         </li>
       </ul>
