@@ -1,7 +1,8 @@
 import { inject, TestBed } from '@angular/core/testing';
 import { MockBackend, MockConnection } from '@angular/http/testing';
-import {Http, Response, BaseRequestOptions, ResponseOptions } from '@angular/http';
+import { Http, Response, BaseRequestOptions, ResponseOptions } from '@angular/http';
 import { FHService } from './fh.service';
+import { FHWrapperService } from './fhWrapper.service';
 import { WrapperService } from '../wrapper/wrapper.service'
 
 describe('Federal Hierarchy Service', () => {
@@ -11,6 +12,7 @@ describe('Federal Hierarchy Service', () => {
     TestBed.configureTestingModule({
       providers: [
         FHService,
+        FHWrapperService,
         WrapperService,
         BaseRequestOptions,
         MockBackend,
