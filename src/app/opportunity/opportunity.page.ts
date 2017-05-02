@@ -218,7 +218,7 @@ export class OpportunityPage implements OnInit {
       //setup side nav menu
       this.setupSideNavMenus();
     }, err => {
-      console.log('Error loading opportunity: ', err);
+      this.router.navigate(['/404']);
     });
 
     return opportunitySubject;
