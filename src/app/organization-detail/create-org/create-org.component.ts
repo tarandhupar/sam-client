@@ -87,7 +87,7 @@ export class OrgCreatePage {
       this.orgType = queryParams["orgType"];
       this.orgParentId = queryParams["parentID"];
       this.setupOrgForms(this.orgType);
-      this.getOrgDetail(this.orgParentId);
+      if(!!this.orgParentId) this.getOrgDetail(this.orgParentId);
     });
 
   }
@@ -233,22 +233,30 @@ export class OrgCreatePage {
 
   onCancelFormClick(){
     //Navigate back to the parent organization
-    this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+    if(!!this.orgParentId){
+      this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
+    } else{
+      this.router.navigateByUrl('/');
+    }
+
   }
 
   onAddAddressForm(){
     if(this.orgAddresses.length === 2){
-      let addressTypeIndex = 1;
-      this.orgAddresses.forEach( e => {
-        e.showAddIcon = false;
-        if(e.addrModel.addrType !== "Mailing Address") addressTypeIndex = 1 - this.extraAddressTypes.indexOf(e.addrModel.addrType);
-      });
-      this.orgAddresses.push({addrModel:{addrType:this.extraAddressTypes[addressTypeIndex],country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:false});
+      let lastAddrType = "";
+      if(this.orgAddresses[1].addrModel.addrType !== "") {
+        lastAddrType = this.orgAddresses[1].addrModel.addrType === "Shipping Address"? "Billing Address" : "Shipping Address";
+      }
+      this.orgAddresses.push({addrModel:{addrType:lastAddrType,country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:false});
 
-    }else{
-      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
+    }else if(this.orgAddresses.length < 2){
+      this.orgAddresses.push({addrModel:{addrType:"",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:false});
     }
+    this.orgAddresses.forEach( e => { e.showAddIcon = false;});
+  }
 
+  onEnableAddAddressIcon(val){
+    if(val){this.orgAddresses.forEach(e => {e.showAddIcon = true});}
   }
 
   onDeleteAddressForm(orgAddrModel){

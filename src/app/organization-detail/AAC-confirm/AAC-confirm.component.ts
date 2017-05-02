@@ -9,7 +9,6 @@ export class AACConfirmPage {
 
   aacObj:any = {};
   requestId:string;
-  successAlertMsg:boolean = true;
   officeInfo:any = [];
   dataLoaded:boolean = false;
 
@@ -22,7 +21,6 @@ export class AACConfirmPage {
         this.getAACRequestDetail(this.requestId);
 
       });
-    setTimeout(()=>{this.successAlertMsg = false;}, 3000);
   }
 
   getAACRequestDetail(requestId){
