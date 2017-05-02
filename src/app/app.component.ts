@@ -69,7 +69,6 @@ export class App{
       if (queryParams["admin"] === 'true') {
         Cookie.set('isAdmin', 'true', undefined /* expired */, '/' /* path */);
       } else if (queryParams["admin"] === 'false') {
-        console.log('set cookie to false');
         Cookie.set('isAdmin', 'false', undefined /* expired */, '/' /* path */);
       }
     });
