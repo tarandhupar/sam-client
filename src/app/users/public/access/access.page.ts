@@ -245,23 +245,24 @@ export class UserAccessPage implements OnInit {
 
   // call the endpoint for all organizations in parallel, wait for each to finish and assign to this.organizations
   getOrganizationData(orgIds: any[]) {
-    let sources = orgIds.map(orgId => this.fhService.getOrganizationById(orgId, false, true));
-    Observable.forkJoin(sources).subscribe(
-      orgs => {
-        this.organizations = orgs.map(org => Organization.FromResponse(org));
-        this.filters.organizations.options = this.organizations.map(o => {
-          return { label: o.orgName, value: o.id }
+    let sources = orgIds.map(orgId => {
+      return this.fhService.getOrganizationById(orgId, false, true)
+        .catch(err => {
+          return Observable.of(null);
         });
-      },
-      err => {
-        this.footerAlert.registerFooterAlert({
-          title:"Unable to get organization data",
-          description:"",
-          type:'error',
-          timer:3000
-        });
-      }
-    );
+    });
+    Observable
+      .forkJoin(sources)
+      .subscribe(
+        orgs => {
+          // filter out the null organizations. If the services returns a 4xx-5xx we set org to null
+          this.organizations = orgs.filter(o => o);
+          this.organizations = this.organizations.map(org => Organization.FromResponse(org));
+          this.filters.organizations.options = this.organizations.map(o => {
+            return { label: o.orgName, value: o.id }
+          });
+        },
+      );
   }
 
   collapseAll() {
