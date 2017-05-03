@@ -16,11 +16,7 @@ import { SamSearchbarComponent } from '../searchbar/searchbar.component';
             </div>
           </div>
         </div>
-        <div class="usa-width-one-third m_L-2x">
-          <div class="pull-right">
-            <img title="An official website of the United States Government"
-               src="src/assets/img/us_flag_small.png" alt="US Flag Logo"/>
-          </div>
+        <div class="usa-width-one-third">
           <ng-content select="[header-links]"></ng-content>
         </div>
       </div>

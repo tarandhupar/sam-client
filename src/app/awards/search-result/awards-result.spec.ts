@@ -18,7 +18,7 @@ describe('AwardsComponent', () => {
       fixture = TestBed.createComponent(AwardsResult);
       comp = fixture.componentInstance;
       titleEl  = fixture.debugElement.query(By.css('.award-title')); // find title element
-      labelEl = fixture.debugElement.query(By.css('.usa-label'));
+      labelEl = fixture.debugElement.query(By.css('.sam-ui.label'));
       comp.data = {
         isActive: true,
         identifiers: [{

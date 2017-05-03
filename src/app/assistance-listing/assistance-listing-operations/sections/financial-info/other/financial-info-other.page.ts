@@ -168,7 +168,7 @@ export class FinancialInfoPage2 implements OnInit {
         for(let accomplishment of this.program.data.financial.accomplishments.list) {
           model.entries.push({
             year: accomplishment.fiscalYear ? accomplishment.fiscalYear.toString() : '',
-            text: accomplishment.description
+            text: accomplishment.description || ''
           });
         }
       }

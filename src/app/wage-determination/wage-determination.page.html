@@ -34,6 +34,14 @@
 
         <div class="usa-width-two-thirds">
           <ul class="usa-unstyled-list">
+            <ng-container *ngIf = "locationDescription">
+            <div class="m_B-3x">
+              <li>
+                <strong>Location Description: </strong> {{locationDescription}}
+              </li>
+            </div>
+            </ng-container>
+            <ng-container *ngIf = "locations && locations.length > 0">
             <div class="m_B-3x" *ngFor="let location of locations; let i = index">
               <li [attr.id]="'wd-state-' + i">
                 <strong>State: </strong> {{location.stateString}}
@@ -42,6 +50,7 @@
                 <strong>Counties: </strong> {{location.countiesString}}
               </li>
             </div>
+            </ng-container>
           </ul>
         </div>
 

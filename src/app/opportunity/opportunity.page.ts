@@ -13,6 +13,7 @@ import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.s
 import {forEach} from "@angular/router/src/utils/collection";
 import { ViewChangesPipe } from "./pipes/view-changes.pipe";
 import { FilesizePipe } from "./pipes/filesize.pipe";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
   moduleId: __filename,
@@ -71,8 +72,7 @@ export class OpportunityPage implements OnInit {
   public opportunityFields = OpportunityFields; // expose the OpportunityFields enum for use in html template
   public displayField = {}; // object containing boolean flags for whether fields should be displayed
 
-  alert: any = [];
-  packagesWarning : any;
+  packagesWarning : any = false;
   originalOpportunity: any;
   opportunityLocation: any;
   opportunity: any;
@@ -96,6 +96,9 @@ export class OpportunityPage implements OnInit {
   showChangesClassification = false;
   showChangesContactInformation = false;
   showChangesAwardDetails = false;
+  private apiSubjectSub: Subscription;
+  private apiStreamSub: Subscription;
+  showRevisonMessage: boolean = false;
 
 
   errorOrganization: any;
@@ -137,7 +140,7 @@ export class OpportunityPage implements OnInit {
         this.pageFragment = tree.fragment;
       }
     });
-        
+
     route.queryParams.subscribe(data => {
       this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
     });
@@ -194,13 +197,35 @@ export class OpportunityPage implements OnInit {
   private loadOpportunity() {
     let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
 
-    this.route.params.subscribe((params: Params) => { // construct a stream of opportunity data
-      this.opportunityService.getOpportunityById(params['id']).subscribe(opportunitySubject); // attach subject to stream
+    let apiStream = this.route.params.switchMap((params) => { // construct a stream of opportunity data
+      //this.opportunityService.getOpportunityById(params['id']).subscribe(opportunitySubject); // attach subject to stream
+      this.differences = null;
+      this.packages = [];
+      this.packagesWarning = false;
+      this.showRevisonMessage = false;
+      this.showChangesGeneral = false;
+      this.showChangesSynopsis = false;
+      this.showChangesClassification = false;
+      this.showChangesContactInformation = false;
+      this.showChangesAwardDetails = false;
+      return this.opportunityService.getOpportunityById(params['id']);
     });
 
-    opportunitySubject.subscribe(api => { // do something with the opportunity api
+    this.apiStreamSub = apiStream.subscribe(opportunitySubject);
+
+    this.apiSubjectSub = opportunitySubject.subscribe(api => { // do something with the opportunity api
       this.opportunity = api;
-      this.pageRoute = "opportunities/" + this.opportunity.opportunityId;
+      //setup side nav menu
+      this.setupSideNavMenus();
+    }, err => {
+      this.router.navigate(['/404']);
+    });
+
+    return opportunitySubject;
+  }
+
+  private setupSideNavMenus(){
+    this.pageRoute = "opportunities/" + this.opportunity.opportunityId;
       let opportunitySideNavContent = {
         "label": "Opportunity",
         "route": this.pageRoute,
@@ -235,12 +260,9 @@ export class OpportunityPage implements OnInit {
           }
         ]
       };
-      this.updateSideNav(opportunitySideNavContent);
-    }, err => {
-      console.log('Error loading opportunity: ', err);
-    });
 
-    return opportunitySubject;
+      this.sidenavModel.children = [];
+      this.updateSideNav(opportunitySideNavContent);
   }
 
   private updateSideNav(content?){
@@ -277,30 +299,36 @@ export class OpportunityPage implements OnInit {
 
   private loadPreviousOpportunityVersion(historyAPI: Observable<any>) { 
     let opportunitySubject = new ReplaySubject(1);
-     historyAPI.subscribe(opportunity => {
-       if (!(this.opportunity.data.type === "m") || opportunity.content.history.length < 2){ 
-         return null; 
+
+
+    let opportunityStream = historyAPI.switchMap(opportunity => {
+       if (!(this.opportunity.data.type === "m") || opportunity.content.history.length < 2){
+         return Observable.of(null); 
        } else {
          let index = _.result(_.find(opportunity.content.history, { 'notice_id': this.opportunity.opportunityId }), 'index');
          index--;
          let id = _.result(_.find(opportunity.content.history, { 'index': index }), 'notice_id');
-         this.opportunityService.getOpportunityById(id).subscribe(opportunitySubject);
+         return this.opportunityService.getOpportunityById(id);
        } 
      });// attach subject to stream  
+    opportunityStream.subscribe(opportunitySubject);
+    opportunitySubject.subscribe(api => {
+    });
     return opportunitySubject; 
   }
 
   private loadParentOpportunity(opportunityAPI: Observable<any>){
     let parentOpportunitySubject = new ReplaySubject(1); // broadcasts the parent opportunity to multiple subscribers
 
-    opportunityAPI.subscribe(api => {
+    let parentOpportunityStream = opportunityAPI.switchMap(api => {
       if (api.parent != null) { // if this opportunity has a parent
         // then call the opportunity api again for parent and attach the subject to the result
-        this.opportunityService.getOpportunityById(api.parent.opportunityId).subscribe(parentOpportunitySubject);
+        return this.opportunityService.getOpportunityById(api.parent.opportunityId);
       } else {
-        return Observable.of(null).subscribe(parentOpportunitySubject); // if there is no parent, just return a single null
+        return Observable.of(null); // if there is no parent, just return a single null
       }
     });
+    parentOpportunityStream.subscribe(parentOpportunitySubject);
 
     parentOpportunitySubject.subscribe(parent => { // do something with the parent opportunity api
       this.originalOpportunity = parent;
@@ -313,11 +341,12 @@ export class OpportunityPage implements OnInit {
 
   private loadRelatedOpportunitiesByIdAndType(opportunityAPI: Observable<any>){
     let relatedOpportunitiesSubject = new ReplaySubject(1);
+    let relatedOpportunitiesStream = opportunityAPI.switchMap(opportunity => {
       this.min = (this.pageNum + 1) * this.showPerPage - this.showPerPage;
       this.max = (this.pageNum + 1) * this.showPerPage;
-    opportunityAPI.subscribe((opportunity => {
-      this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort).subscribe(relatedOpportunitiesSubject);
-    }));
+      return this.opportunityService.getRelatedOpportunitiesByIdAndType(opportunity.opportunityId, "a", this.pageNum, this.awardSort);
+    });
+    relatedOpportunitiesStream.subscribe(relatedOpportunitiesSubject);
     relatedOpportunitiesSubject.subscribe(data => { // do something with the related opportunity api
       if (!_.isEmpty(data)) {
         this.relatedOpportunities = data['relatedOpportunities'][0];
@@ -396,23 +425,20 @@ export class OpportunityPage implements OnInit {
 
   private getTotalAttachmentsCount(opportunity: Observable<any>, historyAPI: Observable<any>, packagesOpportunities: Observable<any>){
     let attachmentCountSubject = new ReplaySubject(1);
-    opportunity.subscribe(opportunityAPI => {
-      this.opportunityService.getPackagesCount(opportunityAPI.opportunityId).subscribe(attachmentCountSubject);
+    let attachmentCountStream = opportunity.switchMap(opportunityAPI => {
+      return this.opportunityService.getPackagesCount(opportunityAPI.opportunityId);
     });
+    attachmentCountStream.subscribe(attachmentCountSubject);
     attachmentCountSubject.subscribe(data => {
         historyAPI.subscribe(historyAPI => {
           //let packagesObservable:Observable<any> = Observable.forkJoin(Observable.onErrorResumeNext.apply(Observable, packagesOpportunities));
           packagesOpportunities.subscribe(res =>{
               if(data > this.packages.length) {
               historyAPI.content.history = _.sortBy(historyAPI.content.history, 'index');
-              let latestNotice = historyAPI.content.history[historyAPI.content.history.length - 1]['notice_id'];
-              this.packagesWarning = {
-                config: {
-                  type: 'warning',
-                  description: 'An update has been made to this opportunity with new packages added. Please click <a href="opportunities/' + latestNotice + '">here</a> to view the latest update and packages.'
-                }
-              };
-            }
+              this.packagesWarning = true;
+            } else {
+                this.packagesWarning = false;
+              }
           });
         });
     });
@@ -422,8 +448,9 @@ export class OpportunityPage implements OnInit {
 
   private loadPackages(historyAPI: Observable<any>){
     let packagesSubject = new ReplaySubject(1);
-    let historyNoticeIds: string = '';
-       historyAPI.subscribe(api =>{
+    let historyNoticeIds: string;
+    let packagesStream = historyAPI.switchMap(api =>{
+      historyNoticeIds = '';
            let current = _.filter(api.content.history, historyItem => {
              return historyItem.notice_id == this.opportunity.opportunityId;
            })[0];
@@ -433,11 +460,16 @@ export class OpportunityPage implements OnInit {
              }
            });
            historyNoticeIds = historyNoticeIds.substring(0, historyNoticeIds.length - 1);
-
-          this.opportunityService.getPackages(historyNoticeIds).subscribe(packagesSubject);
-
-         packagesSubject.subscribe((data: any) =>{
-             this.packages = [];
+          return this.opportunityService.getPackages(historyNoticeIds).retryWhen(
+            errors => {
+              this.attachmentError = true;
+              return this.route.params;
+            }
+          );
+    });
+    packagesStream.subscribe(packagesSubject);
+    packagesSubject.subscribe((data: any) =>{
+           this.packages = [];
              let filesizePipe = new FilesizePipe();
              let dateformatPipe = new DateFormatPipe();
              let archiveVal = this.opportunity.data.statuses.isArchived;
@@ -472,7 +504,6 @@ export class OpportunityPage implements OnInit {
             console.log('Error loading packages: ', err);
             this.attachmentError = true;
           });
-       });
        return packagesSubject;
   }
 
@@ -499,14 +530,18 @@ export class OpportunityPage implements OnInit {
 
   private loadHistory(opportunity: Observable<any>) {
     let historySubject = new ReplaySubject(1);
-    opportunity.subscribe(opportunityAPI => {
+    let tempOpportunityApi;
+    let historyStream = opportunity.switchMap(opportunityAPI => {
       /** Check that opportunity id exists **/
-      if(opportunityAPI.opportunityId == '' || typeof opportunityAPI.opportunityId === 'undefined') {
+      if (opportunityAPI.opportunityId == '' || typeof opportunityAPI.opportunityId === 'undefined') {
         console.log('Error loading history');
         return;
       }
       /** Load history API **/
-      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
+      tempOpportunityApi = opportunityAPI;
+      return this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId);
+    });
+    historyStream.subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
         this.history = historyAPI; // save original history information in case it is needed
 
@@ -582,7 +617,7 @@ export class OpportunityPage implements OnInit {
           processedHistoryItem['title'] = makeTitle(historyItem);
           processedHistoryItem['description'] = ''; // not implemented yet
           processedHistoryItem['date'] = dateFormat.transform(historyItem.posted_date, 'MMM DD, YYYY h:mm a z');
-          processedHistoryItem['url'] = 'opportunities/' + historyItem.notice_id;
+          processedHistoryItem['url'] = '/opportunities/' + historyItem.notice_id;
           processedHistoryItem['index'] = historyItem.index;
           processedHistoryItem['isTagged'] = false; // todo: decide on logic for which opportunities are tagged
           processedHistoryItem['authoritative'] = historyItem.authoritative;
@@ -593,26 +628,19 @@ export class OpportunityPage implements OnInit {
         this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.index; });
 
         /** Show alert if current version is not the authoritative version **/
-        let isCurrent = function(historyItem) { return historyItem.id === opportunityAPI.opportunityId; };
+        let isCurrent = function(historyItem) { return historyItem.id === tempOpportunityApi.opportunityId; };
         let isAuthoritative = function(historyItem) { return historyItem.authoritative === '1'; };
 
         let current = _.filter(this.processedHistory, isCurrent)[0];
         let authoritative = _.filter(this.processedHistory, isAuthoritative)[0];
 
         if(authoritative && current.id !== authoritative.id) {
-          this.alert.push({
-            config: {
-              type: 'info',
-              description: 'Note: There have been updates to this opportunity. To view the most recent update/amendment, click <a href="' + authoritative.url + '">here</a>'
-            }
-          });
+          this.showRevisonMessage = true;
         }
       }, err => {
         console.log('Error loading history: ', err);
       });
 
-      this.opportunityService.getOpportunityHistoryById(opportunityAPI.opportunityId).subscribe(historySubject);
-    });
     return historySubject;
   }
 
@@ -694,6 +722,7 @@ export class OpportunityPage implements OnInit {
 
       this.ready = true;
 
+      this.setupSideNavMenus();
       this.updateSideNav();
     });
   }
@@ -876,15 +905,17 @@ export class OpportunityPage implements OnInit {
   }
   private checkChanges(previousOpportunityAPI: Observable<any>){
     previousOpportunityAPI.subscribe(api => {
-      this.previousOpportunityVersion = api;
-      let viewChangesPipe = new ViewChangesPipe();
-      if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined'){
-        this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
-          this.previousOpportunityLocation = data;
-          this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
-        });
-      } else{
-        this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary,this.opportunityLocation, this.previousOpportunityLocation);
+      if(api != null) {
+        this.previousOpportunityVersion = api;
+        let viewChangesPipe = new ViewChangesPipe();
+        if (this.previousOpportunityVersion.data.organizationLocationId != '' && typeof this.previousOpportunityVersion.data.organizationLocationId !== 'undefined') {
+          this.opportunityService.getOpportunityLocationById(this.previousOpportunityVersion.data.organizationLocationId).subscribe(data => {
+            this.previousOpportunityLocation = data;
+            this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary, this.opportunityLocation, this.previousOpportunityLocation);
+          });
+        } else {
+          this.differences = viewChangesPipe.transform(this.previousOpportunityVersion, this.opportunity, this.dictionary, this.opportunityLocation, this.previousOpportunityLocation);
+        }
       }
     }, err => {
       console.log('Error loading opportunity: ', err);

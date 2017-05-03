@@ -5,7 +5,7 @@ import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
 import * as Cookies from 'js-cookie';
-
+import * as moment from "moment";
 import * as _ from 'lodash';
 
 // Todo: avoid importing all of observable
@@ -85,9 +85,7 @@ export class ProgramPage implements OnInit, OnDestroy {
         this.cookieValue = Cookies.get('iPlanetDirectoryPro');
       }
     }
-
     let programAPISource = this.loadProgram();
-
     this.loadDictionaries();
     this.loadFederalHierarchy(programAPISource);
     let historicalIndexAPISource = this.loadHistoricalIndex(programAPISource);
@@ -174,6 +172,8 @@ export class ProgramPage implements OnInit, OnDestroy {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = params['id'];
+      this.alert = [];
+      this.relatedProgram = [];
       return this.programService.getProgramById(params['id'], this.cookieValue);
     });
     this.apiStreamSub = apiStream.subscribe(apiSubject);
@@ -239,10 +239,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
       this.updateSideNav(falSideNavContent);
     }, err => {
-      console.log('Error loading program', err);
-      if (err.status === 403) {
         this.router.navigate(['/404']);
-      }
     });
 
     return apiSubject;
@@ -348,7 +345,11 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     // construct a stream that contains all related programs from related program ids
     let relatedProgramsStream = relatedProgramsIdStream.flatMap((relatedId: any) => {
-      return this.programService.getLatestProgramById(relatedId, this.cookieValue);
+      return this.programService.getLatestProgramById(relatedId, this.cookieValue).retryWhen(
+        errors => {
+          return this.route.params;
+        }
+      );
     });
 
     this.relatedProgramsSub = relatedProgramsStream.subscribe((relatedProgram: any) => {
@@ -359,6 +360,10 @@ export class ProgramPage implements OnInit, OnDestroy {
           'id': relatedProgram.id
         });
       }
+    }, error => {
+      console.log("loadRelatedPrograms() Error ", error)
+    }, () => {
+      console.log("loadRelatedPrograms() Completed")
     });
 
     return relatedProgramsStream;
@@ -385,13 +390,15 @@ Please contact the issuing agency listed under "Contact Information" for more in
     });
   }
 
+  private toTheTop() {
+    document.body.scrollTop = 0;
+  }
   public canEdit() {
     if(this.program.status && this.program.status.code != 'published' && this.program._links && this.program._links['program:update']) {
       return true;
     } else if(this.program._links && this.program._links['program:revise']) {
       return true;
     }
-
     return false;
   }
 
@@ -422,5 +429,9 @@ Please contact the issuing agency listed under "Contact Information" for more in
     this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
       this.router.navigate(['/programs', JSON.parse(res._body).id, 'edit'].concat(this.gotoPage));
     });
+  }
+
+  public getCurrentFY() {
+    return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
   }
 }

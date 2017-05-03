@@ -9,7 +9,7 @@ export class RoleMgmtWorkspace implements OnInit{
   autocompleteInput : string = '';
   statusKey : string = '';
   domainKey: string = '';
-  order : string = 'desc';
+  order : string = 'asc';
   page : number = 1;
   pages : number = 0;
 
