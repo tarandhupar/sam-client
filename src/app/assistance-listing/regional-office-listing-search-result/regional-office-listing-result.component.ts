@@ -36,7 +36,6 @@ import 'rxjs/add/operator/map';
                <li>
                  <span class="sam-ui mini label">Regional Agency Location</span>
                </li>
-               <br>
                <li class="subbranch-name">  
                  <strong>Sub-Branch</strong><br>
                  <span>{{data.subbranch}}</span>
