@@ -1,6 +1,11 @@
 .grant-access-page {
   .organization-container {
-    min-width: 380px;
+    label {
+      max-width: 58rem;
+    }
+
+    max-width: 58rem;
+    margin-top: 2.5rem;
   }
 
   .background-light {
@@ -32,7 +37,7 @@
   }
 
   samTextArea {
-    label, textarea {
+    textarea {
       max-width: initial;
     }
   }
