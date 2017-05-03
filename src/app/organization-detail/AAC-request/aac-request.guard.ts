@@ -34,14 +34,16 @@ export class AACRequestGuard implements CanActivate {
   }
 
   verifyRoute() {
-    this.api.checkSession((user) => {
-      this.zone.run(() => {
-        this.isSignedIn = true;
-      });
-    }, error => {
-      this.router.navigate(['/signin']);
-    });
-
+    this.api.checkSession(
+      (user) => {
+        this.zone.run(() => {
+          this.isSignedIn = true;
+        });
+      },
+      () => {
+        this.router.navigate(['/signin']);
+      }
+    );
     return true;
   }
 
