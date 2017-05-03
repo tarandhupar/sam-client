@@ -7,97 +7,169 @@
     <div sam-sticky limit=1200 container="wage-determination-page">
       <!--Logo-->
       <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
-
       <!--Side Navigation-->
       <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
-
     </div>
   </aside>
 
+  <!-- Main Content -->
   <div class="usa-width-three-fourths">
 
     <section id="wage-determination" *ngIf="wageDetermination">
-
+      
+      <div class="sam-ui hidden divider"></div>
+      
+      <!-- Alert -->
       <ng-container *ngIf="showRevisonMessage == true">
-        <samAlert [type]="'info'" [title]="''">Note: There have been revisions to this wage determination. To view the most recent version click <a [routerLink]="['/wage-determination', referenceNumber, processedHistory[0].index]">here</a>.</samAlert>
+        <samAlert [type]="'info'" [title]="''">
+          Note: There have been revisions to this wage determination. To view the 
+          most recent version click <a [routerLink]="['/wage-determination', referenceNumber, processedHistory[0].index]">here</a>.
+        </samAlert>
       </ng-container>
-
-
+      
+      <!-- Page Title: Service Contract Act -->
       <ng-container *ngIf = "isSCA">
-        <h1 class="m_B-0" id="wd-reference-number">SCA WD # {{wageDetermination.fullReferenceNumber}} </h1>
-        <p class="m_T-0 usa-font-lead" id="wd-type">Service Contract Act</p>
+        <h1 class="sam-ui header" id="wd-reference-number">
+          SCA WD # {{wageDetermination.fullReferenceNumber}}
+          <div class="sub header" id="wd-type">
+            Service Contract Act
+          </div>
+        </h1>
       </ng-container>
+      
+      <!-- Page Title:  Davis-Bacon Act-->
       <ng-container *ngIf = "!isSCA">
-        <h1 class="m_B-0" id="wd-reference-number">DBA WD # {{wageDetermination.fullReferenceNumber}} </h1>
-        <p class="m_T-0 usa-font-lead" id="wd-type">Davis-Bacon Act</p>
+        <h1 class="sam-ui header" id="wd-reference-number">
+          DBA WD # {{wageDetermination.fullReferenceNumber}}
+          <div class="sub header" id="wd-type">
+            Davis-Bacon Act
+          </div>
+        </h1>
       </ng-container>
-
-      <div class="usa-grid-full">
-
-        <div class="usa-width-two-thirds">
-          <ul class="usa-unstyled-list">
-            <div class="m_B-3x" *ngFor="let location of locations; let i = index">
-              <li [attr.id]="'wd-state-' + i">
-                <strong>State: </strong> {{location.stateString}}
-              </li>
-              <li [attr.id]="'wd-counties-' + i">
-                <strong>Counties: </strong> {{location.countiesString}}
-              </li>
+      
+      <!-- Intro Content -->
+			<div class="sam-ui padded raised segment">
+				
+				<div class="sam-ui top right attached mini label">
+					Wage Determination
+				</div>
+				
+				<div class="sam-ui attached grid">
+          <div class="column">
+            <div class="sam-ui divided list">
+              <div *ngIf="revisionNumber" class="item" id="wd-revision-number">
+                <div class="content">
+                  <div class="header">Revision #</div>
+                  <div class="description">{{revisionNumber}}</div>
+                </div>
+              </div>
+              <div *ngIf="services" class="item" id="wd-services">
+                <div class="content">
+                  <div class="header">Service/Services</div>
+                  <div class="description">{{services}}</div>
+                </div>
+              </div>
+              <div *ngIf="constructionTypes" class="item" id="wd-construction-types">
+                <div class="content">
+                  <div class="header">Construction</div>
+                  <div class="description">{{constructionTypes}}</div>
+                </div>
+              </div>
+              <div *ngIf="wageDetermination.publishDate" class="item" id="wd-date">
+                <div class="content">
+                  <ng-container *ngIf="isSCA">
+                    <div class="header" *ngIf="revisionNumber && revisionNumber === '1'">
+                      Published Date
+                    </div>
+                    <div class="header" *ngIf="revisionNumber && revisionNumber !== '1'">
+                      Last Revised Date
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="!isSCA">
+                    <div class="header" *ngIf="revisionNumber && revisionNumber === '0'">
+                      Published Date
+                    </div>
+                    <div class="header" *ngIf="revisionNumber && revisionNumber !== '0'">
+                      Last Revised Date
+                    </div>
+                  </ng-container>
+                  <div class="description">
+                    {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
+                  </div>
+                </div>
+              </div>
             </div>
-          </ul>
+          </div>
         </div>
-
-        <div class="usa-width-one-third">
-          <ul class="usa-unstyled-list">
-            <li id="wd-revision-number" *ngIf = "revisionNumber">
-              <strong>Revision #: </strong>
-              {{revisionNumber}}
-            </li>
-            <li id="wd-services" *ngIf = "services">
-              <strong>Service/Services: </strong>
-              {{services}}
-            </li>
-            <li id="wd-construction-types" *ngIf = "constructionTypes">
-              <strong>Construction: </strong>
-              {{constructionTypes}}
-            </li>
-            <li id="wd-date" *ngIf = "wageDetermination.publishDate">
-              <ng-container *ngIf="isSCA">
-                <strong *ngIf="revisionNumber && revisionNumber === '1'">Published Date: </strong>
-                <strong *ngIf="revisionNumber && revisionNumber !== '1'">Last Revised Date: </strong>
-              </ng-container>
-              <ng-container *ngIf="!isSCA">
-                <strong *ngIf="revisionNumber && revisionNumber === '0'">Published Date: </strong>
-                <strong *ngIf="revisionNumber && revisionNumber !== '0'">Last Revised Date: </strong>
-              </ng-container>
-              {{wageDetermination.publishDate | dateFormat: 'MMM DD, YYYY'}}
-            </li>
-          </ul>
-        </div>
-
+        
       </div>
 
+      <div class="sam-ui hidden divider"></div>
+      
+      <!-- Location -->
+      <div *ngIf = "locationDescription" class="sam-ui medium header">
+        Location Description
+        <div class="sub header">{{locationDescription}}</div>
+      </div>
+      
+      <!-- State and Counties -->
+      <ng-container *ngIf = "locations && locations.length > 0">
+        <div *ngFor="let location of locations; let i = index; let isLast=last">
+          
+          <div [attr.id]="'wd-state-' + i">
+            <div class="sam-ui medium header">
+              State
+              <div class="sub header">{{location.stateString}}</div>
+            </div> 
+          </div>
+          
+          <div class="sam-ui hidden divider"></div>
+          
+          <div [attr.id]="'wd-counties-' + i">
+            <div class="sam-ui medium header">
+              Counties
+              <div class="sub header">{{location.countiesString}}</div>
+            </div> 
+          </div>
+          
+          <div class="sam-ui divider" [ngClass]="{'hidden': isLast}"></div>
+          
+        </div>
+      </ng-container>
+      
+
       <!-- Print Link -->
-      <div id="wd-print-link" *ngIf="wageDetermination?.document" class="text-right m_B-5x m_T-5x">
-        <a target="blank" class="sam-ui small basic primary button" tabindex="0" [routerLink]="['/wage-determination', referenceNumber, revisionNumber, 'document']">
-          <i class="icon fa fa-print" aria-hidden="true"></i> 
-          Printer Friendly
-        </a>
+      <div class="sam-ui vertically padded grid" id="wd-print-link" *ngIf="wageDetermination?.document">
+        <div class="column">
+          <a target="blank" class="sam-ui right floated small dark blue button" tabindex="0" [routerLink]="['/wage-determination', referenceNumber, revisionNumber, 'document']">
+            <i class="icon fa fa-print" aria-hidden="true"></i> 
+            Printer Friendly
+          </a>
+        </div>
       </div>
 
       <!-- Document -->
       <pre id="wd-document" *ngIf="wageDetermination?.document">
         {{ wageDetermination.document }}
       </pre>
+      
     </section>
-
+    
+    <div class="sam-ui hidden section divider"></div>
+    
+    <!-- History -->
     <section id="wd-history" *ngIf="history">
-      <h2>History
+      
+      <h2 class="sam-ui header">History
         <samButton *ngIf="shortProcessedHistory" [buttonId]="'defaultBtnHistory'" [buttonText]="!showingLongHistory ? 'Show More' : 'Show Less'" [buttonType]="btnType" (click)="showHideLongHistory()"></samButton>
       </h2>
+      
       <sam-history [data]="processedHistory" [currentId]="wageDetermination.fullReferenceNumber + '/' + wageDetermination.revisionNumber"></sam-history>
+      
+      <div class="sam-ui hidden section divider"></div>
+      
     </section>
-
+    
   </div>
 
 </div>

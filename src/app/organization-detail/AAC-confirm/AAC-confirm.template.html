@@ -1,0 +1,42 @@
+<section class="usa-grid-full aac-confirm-page">
+  <div class="usa-width-one-fourth">&nbsp;</div>
+  <div class="usa-width-two-thirds">
+    <h2 class="p_T-3x">AAC Request Details</h2>
+    <div class="usa-width-one-whole aac-confirm-div-underline">
+      <p class="p_T-3x p_B-4x">Lorum ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
+        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+        ex ea commodo consequat.</p>
+    </div>
+    <div class="usa-width-one-whole aac-confirm-div-underline p_B-6x">
+      <h3 class="p_T-2x p_B-4x">Requesting Office Information</h3>
+      <div class="usa-width-one-whole m_L-3x m_B-1x" *ngFor="let pair of officeInfo">
+        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{pair.desc}}:</h4></span>
+        <p class="usa-width-two-thirds p_T-1x p_T-2x p_B-1x p_L-2x">{{pair.value}}</p>
+      </div>
+    </div>
+    <div class="usa-width-one-whole aac-confirm-div-underline p_B-6x">
+      <h3 class="p_T-2x p_B-4x">Reason for AAC Request</h3>
+      <div class="usa-width-one-whole m_L-3x m_B-1x">
+        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>Provide Purpose for AAC Request:</h4></span>
+        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x"><span *ngFor="let val of aacObj.requestReasonList">&nbsp;{{val.requestReasonName}}<br></span></p>
+      </div>
+      <div class="usa-width-one-whole m_L-3x m_B-1x" *ngIf="isReasonContainsFPDSReport()">
+        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>Sub-tier Agency Code:</h4></span>
+        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">&nbsp;{{aacObj.aac.subTierAgencyCode}}</p>
+      </div>
+      <div class="usa-width-one-whole m_L-3x m_B-1x" *ngIf="isReasonContainsFPDSReport()">
+        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>CGAC Code:</h4></span>
+        <p class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">&nbsp;{{aacObj.aac.cgacCode}}</p>
+      </div>
+    </div>
+    <div class="usa-width-one-whole aac-confirm-div-underline p_B-3x m_B-5x">
+      <h3 class="p_T-2x p_B-4x">Office Address Information</h3>
+      <p class="m_L-3x m_B-1x" *ngFor="let address of aacObj.addressList">
+        <span class="usa-width-one-third m_R-0 p_T-2x p_B-1x"><h4>{{address.addressTypeName}}:</h4></span>
+        <span class="usa-width-two-thirds p_T-1x p_B-1x p_L-2x">{{address.street1}}<br>
+          <span *ngIf="address.street2 != null && address.street2.length > 0">{{address.street2}}<br></span>
+          {{address.city}}, {{address.state}}&nbsp;{{address.code}}<br>{{address.country}}</span>
+      </p>
+    </div>
+  </div>
+</section>

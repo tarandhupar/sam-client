@@ -21,16 +21,18 @@
 
   <!--Main Content-->
   <div class="usa-width-three-fourths" *ngIf="opportunity">
-
+    
+    <!-- Alert -->
     <ng-container *ngIf="showRevisonMessage == true">
       <samAlert [type]="'info'" [title]="''">Note: There have been updates to this opportunity. To view the most recent update/amendment, click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a>.</samAlert>
     </ng-container>
-
+    
+    <!-- Intro Content -->
     <section [attr.id]="generateID(opportunityFields.Header)" *ngIf="shouldBeDisplayed(opportunityFields.Header)">
       
       <div class="sam-ui hidden divider"></div>
       
-      <h1 [attr.id]="generateID(opportunityFields.Title, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Title)">
+      <h1 class="sam-ui header" [attr.id]="generateID(opportunityFields.Title, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Title)">
         {{ opportunity.data?.title }}
       </h1>
       
@@ -90,9 +92,10 @@
 
     <div [class.hide]="selectedPage !== 0">
       
+      <!-- Award Details -->
       <section [attr.id]="generateID(opportunityFields.Award)" *ngIf="shouldBeDisplayed(opportunityFields.Award) && ready">
         
-        <h2>
+        <h2 class="sam-ui header">
           Award Details
           <samButton *ngIf="differences?.changesExistAwardDetails" [buttonId]="'defaultBtnAwardDetails'" [buttonText]="!showChangesAwardDetails ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideAwardDetails()"></samButton>
           <span *ngIf="showChangesAwardDetails" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
@@ -156,9 +159,10 @@
         </ul>
         <div class="sam-ui hidden section divider"></div>
       </section>
-
+      
+      <!-- General Information -->
       <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
-        <h2>
+        <h2 class="sam-ui header">
           General Information
           <samButton *ngIf="differences?.changesExistGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="!showChangesGeneral ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
 
@@ -246,9 +250,10 @@
         </ul>
         <div class="sam-ui hidden section divider"></div>
       </section>
-
+      
+      <!-- Classification -->
       <section [attr.id]="generateID(opportunityFields.Classification)" *ngIf="shouldBeDisplayed(opportunityFields.Classification)">
-        <h2>Classification
+        <h2 class="sam-ui header">Classification
           <samButton *ngIf="differences?.changesExistClassification" [buttonId]="'defaultBtnClassification'" [buttonText]="!showChangesClassification ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideClassification()"></samButton>
           <span *ngIf="showChangesClassification" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
@@ -331,10 +336,10 @@
         <div class="sam-ui hidden section divider"></div>
       </section>
 
-
+      <!-- Synopsis -->
       <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="(shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0]?.content) || (shouldBeDisplayed(opportunityFields.Synopsis) && differences?.description)">
 
-        <h2>Synopsis
+        <h2 class="sam-ui header">Synopsis
           <samButton *ngIf="differences?.changesExistSynopsis " [buttonId]="'defaultBtnSynopsis'" [buttonText]="!showChangesSynopsis ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
           <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
@@ -364,14 +369,14 @@
         <div class="sam-ui hidden section divider"></div>
       </section>
 
-
+      <!-- Contact Information -->
       <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
-        <h2>Contact Information
+        <h2 class="sam-ui header">Contact Information
           <samButton *ngIf="differences?.changesExistContactInformation" [buttonId]="'defaultBtnContactInformation'" [buttonText]="!showChangesContactInformation ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideContactInformation()"></samButton>
           <span *ngIf="showChangesContactInformation" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
         <div class="usa-grid-full">
-          <div class="usa-width-one-whole m_B-4x" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
+          <div class="usa-width-one-whole" [attr.id]="generateID(opportunityFields.Office, 'contact')" *ngIf="shouldBeDisplayed(opportunityFields.Office)">
             <h3 class="sam-ui dividing header">
               <i *ngIf="differences?.contractingOfficeAddress" class="fa fa-square" aria-hidden="true"></i>
               Contracting Office Address:
@@ -479,9 +484,9 @@
         <div class="sam-ui hidden section divider"></div>
       </section>
 
-
+      <!-- History -->
       <section [attr.id]="generateID(opportunityFields.History)" *ngIf="shouldBeDisplayed(opportunityFields.History) && history">
-        <h2>History</h2>
+        <h2 class="sam-ui header">History</h2>
         <sam-history [data]="processedHistory" [currentId]="opportunity.opportunityId"></sam-history>
       </section>
      </div>

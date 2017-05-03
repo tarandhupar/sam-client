@@ -305,10 +305,10 @@ export class FinancialObligationChart implements OnChanges {
      */
 
     function actualOrEstimate(year: number): string {
-      if (new Date(year, null).getFullYear() <= new Date().getFullYear()) {
-        return "Actual Not Available"
+      if (new Date(year, null).getFullYear() >= new Date().getFullYear() - 1) {
+        return "Estimate Not Available"
       } else {
-        return "Estimate Not Available";
+        return "Actual Not Available";
       }
     }
 

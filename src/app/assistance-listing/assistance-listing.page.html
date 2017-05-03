@@ -1,4 +1,5 @@
 <div class="usa-grid assistance-listing-page" *ngIf="program">
+  
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
@@ -25,26 +26,26 @@
             [description]="'A draft revision for this published program will be utilized for editing.  Please click ok to edit a draft of this FAL.'"
             [submitButtonLabel]="'Ok'"
             [cancelButtonLabel]="'Cancel'"
-            (onSubmit)="onEditModalSubmit()"
-  ></samModal>
+            (onSubmit)="onEditModalSubmit()">
+  </samModal>
 
   <!--Main Content-->
   <div *ngIf="program" class="usa-width-three-fourths">
     
+    <!-- Alert -->
     <ng-container *ngIf="alert.length > 0">
       <samAlert id="program-alert" *ngFor="let alert of alert" labelname="alert.labelname" [type]="alert.config.type" [title]="alert.config.title" [description]="alert.config.description"></samAlert>
     </ng-container>
-
+    
+    <!-- Intro Content -->
     <section id="program-information">
-
-      <div class="view-section-margin"></div>
+      
+      <div class="sam-ui hidden divider"></div>
       
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <h1>
-            <span class="field" id="program-title">
-              {{program?.data?.title}}
-            </span>
+          <h1 class="sam-ui header">
+            <span class="field" id="program-title">{{program?.data?.title}}</span>
           </h1>
         </div>
         <div class="usa-width-one-third">
@@ -58,116 +59,107 @@
           </a>
         </div>
       </div>
-
-      <div class="sam-ui hidden divider"></div>
       
-<!-- <<<<<<< HEAD
+      
       <div class="sam-ui padded raised segment">
-        
-        <ng-container *ngIf="errorOrganization">
-          Organization ID: {{program.data.organizationId}} NOTE: Complete Federal Hierarchy information is currently unavailable.
-        </ng-container>
-        
-        <div class="sam-ui top right attached mini label">
+				
+				<div class="sam-ui top right attached mini label">
 					Assistance Listing
-				</div>	
-        
-        <div class="sam-ui attached grid">
-          <div class="column">
+				</div>
+				
+				<div class="sam-ui attached grid">
+					<div class="column">
             <div class="sam-ui divided list">
-              <div class="item" id="program-alternative-names" *ngIf="program.data?.alternativeNames && program.data?.alternativeNames[0] != null">
-                <div class="content">
-                  <div class="header">
-                    Popular Name
-                  </div>
-                  <div class="description">
-                    {{program.data.alternativeNames[0]}}
-                  </div>
-                </div>
-              </div>
               
-              <div class="item" id="program-fh-information" *ngIf="federalHierarchy">
-                <div class="content">
-                  <div class="header">
-                    {{federalHierarchy.type}}
-                  </div>
-                  <div class="description">
+              <div *ngIf="errorOrganization" class="item">
+								<div class="content">
+									<div class="header">
+										Organization ID: {{program.data.organizationId}}
+									</div>
+									<div class="description">
+                    <strong>NOTE:</strong>
+                     Complete Federal Hierarchy information is currently unavailable.
+									</div>
+								</div>
+							</div>
+              
+							<div *ngIf="program.data?.alternativeNames && program.data?.alternativeNames[0] != null" id="program-alternative-names" class="item">
+								<div class="content">
+									<div class="header">
+										Popular Name
+									</div>
+									<div class="description">
+										{{program.data.alternativeNames[0]}}
+									</div>
+								</div>
+							</div>
+              
+              <div *ngIf="federalHierarchy" id="program-fh-information" class="item">
+								<div class="content">
+									<div class="header">
+										{{federalHierarchy.type}}
+									</div>
+									<div class="description">
                     {{ federalHierarchy.name || federalHierarchy.agencyName }}
-                  </div>
-                </div>
-              </div>
+									</div>
+								</div>
+							</div>
               
-              <div class="item" id="program-number">
-                <div class="content">
-                  <div class="header">
-                    CFDA Number
-                  </div>
-                  <div class="description">
+              <div id="program-number" class="item">
+								<div class="content">
+									<div class="header">
+										CFDA Number
+									</div>
+									<div class="description">
                     {{program.data?.programNumber}}
-                  </div>
-                </div>
-              </div>
+									</div>
+								</div>
+							</div>
               
-              <div class="item" id="program-number">
-                <div class="content">
-                  <div class="header">
-                    Related Federal Assistance
-                  </div>
-                  <div class="description">
+              <div id="program-number" class="item">
+								<div class="content">
+									<div class="header">
+										Related Federal Assistance
+									</div>
+									<div class="description">
                     <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.length > 0 && relatedProgram.length > 0">
                       <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
-                        <a class="field" [attr.id]="'program-related-' + i" href="/programs/{{item.id}}/view">{{item.programNumber}}</a>{{isLast ? '' : ', '}}
+                        <a [attr.id]="'program-related-' + i"  [routerLink]="['/programs', item.id,'view']" (click)="toTheTop()" >
+                          {{item.programNumber}}
+                        </a>{{isLast ? '' : ', '}}
                       </ng-container>
                     </ng-container>
-                    <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.length == 0 || relatedProgram.length == 0">Not Applicable.</span>
-                  </div>
-                </div>
-              </div>
+                    <span id="program-related-na" *ngIf="program.data?.relatedPrograms?.length == 0 || relatedProgram.length == 0">
+                      Not Applicable.
+                    </span>
+									</div>
+								</div>
+							</div>
               
               <div class="item">
                 <a target="_blank" class="field" id="'grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">
-                  View available opportunities on Grants.gov related to this program 
-                  <i class="icon fa fa-external-link" aria-hidden="true"></i> 
+                  View available opportunities on Grants.gov related to this Federal Assistance Listing
                 </a>
               </div>
               
-            </div>
+						</div>
           </div>
         </div>
         
-======= -->
-      <p class="field" id="program-alternative-names" *ngIf="program.data?.alternativeNames && program.data?.alternativeNames[0] != null">
-        <strong>Popular Name:</strong> {{program.data.alternativeNames[0]}}
-      </p>
-
-      <div class="content-block">
-        <ng-container *ngIf="errorOrganization">Organization ID: {{program.data.organizationId}} NOTE: Complete Federal Hierarchy information is currently unavailable.</ng-container>
-        <p class="field" id="program-fh-information" *ngIf="federalHierarchy">
-          <strong class="capitalize">{{federalHierarchy.type}}: </strong>{{ federalHierarchy.name || federalHierarchy.agencyName }}
-        </p>
-        <span class="field" id="program-number"><strong>CFDA Number: </strong>{{program.data?.programNumber}}</span>
-
-        <span>
-          <strong>Related Federal Assistance: </strong>
-          <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.length > 0 && relatedProgram.length > 0">
-            <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
-              <a class="field" [attr.id]="'program-related-' + i"  [routerLink]="['/programs', item.id,'view']" (click)="toTheTop()" >{{item.programNumber}}</a>{{isLast ? '' : ', '}}
-            </ng-container>
-          </ng-container>
-          <span class="field" id="program-related-na" *ngIf="program.data?.relatedPrograms?.length == 0 || relatedProgram.length == 0">Not Applicable.</span>
-        </span>
-        <a target="_blank" class="field" id="'grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">View available opportunities on Grants.gov related to this program</a>
-
       </div>
       
-    </section>
-
-    <section id="program-overview">
-      <a name="#/programs/{{programID}}/view#overview"></a>
       <div class="sam-ui hidden divider"></div>
+      
+    </section>
+    
+    <!-- Overview -->
+    <section id="program-overview">
+      
+      <a name="#/programs/{{programID}}/view#overview"></a>
+
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <h2 id="overview">Overview</h2>
+          <h2 class="sam-ui header" id="overview">Overview</h2>
         </div>
         <div class="usa-width-one-third">
           <a *ngIf="canEdit()" (click)="onEditClick(['overview'])">
@@ -177,6 +169,7 @@
         </div>
       </div>
       
+      <!-- Objectives -->
       <h3 class="sam-ui dividing header">Objectives</h3>
 
       <p class="field" id="program-objective">
@@ -184,36 +177,42 @@
       </p>
       
       <div class="sam-ui hidden divider"></div>
-
+      
+      <!-- Examples of Funded Projects -->
       <h3 class="sam-ui dividing header">Examples of Funded Projects</h3>
 
       <div class="content-block" [ngSwitch]="program.data?.projects?.isApplicable">
         <ng-container *ngSwitchCase="true">
-          <p *ngFor="let item of program.data?.projects?.list; let i = index">
-            <span class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description">
+          <ng-container *ngFor="let item of program.data?.projects?.list; let i = index">
+            <p class="field" [attr.id]="'program-project-example-' + i" *ngIf="item?.description && item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1">
               <strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}
-            </span>
-          </p>
+            </p>
+          </ng-container>
         </ng-container>
 
-        <p class="field" id="program-project-example-na" *ngSwitchDefault>Not Applicable</p>
+        <p class="field" id="program-project-example-na" *ngSwitchDefault>
+          Not Applicable
+        </p>
       </div>
 
       <ng-container *ngIf="program.data?.description && program.data?.description != ''">
-        <h3  class="sam-ui dividing header">Federal Assistance Listing Description:</h3>
+        <h3 class="sam-ui header">Federal Assistance Listing Description</h3>
         <div class="content-block">
           {{ program.data?.description }}
         </div>
       </ng-container>
+      
+      <div class="sam-ui hidden section divider"></div>
+      
     </section>
-
+    
+    <!-- Authorizations -->
     <section id="program-authorizations">
       <a name="#/programs/{{programID}}/view#authorizations"></a>
 
-      <div class="sam-ui hidden section divider"></div>
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <h2 id="authorizations">Authorizations</h2>
+          <h2 class="sam-ui header" id="authorizations">Authorizations</h2>
         </div>
         <div class="usa-width-one-third">
           <a *ngIf="canEdit()" (click)="onEditClick(['authorization'])">
@@ -230,16 +229,18 @@
       <p *ngIf="program.data?.authorizations?.description && program.data?.authorizations?.description != ''">
         {{ program.data?.authorizations?.description }}
       </p>
+      
+      <div class="sam-ui hidden section divider"></div>
+      
     </section>
 
     <!--Financials-->
     <section id="program-financials">
       <a name="#/programs/{{programID}}/view#financial-information"></a>
 
-      <div class="sam-ui hidden section divider"></div>
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <h2 id="financial-information">Financial Information</h2>
+          <h2 class="sam-ui header" id="financial-information">Financial Information</h2>
         </div>
         <div class="usa-width-one-third">
           <a *ngIf="canEdit()" (click)="onEditClick(['financial-information', 'obligations'])">
@@ -248,11 +249,14 @@
           </a>
         </div>
       </div>
-
+      <em>These funding amounts do not reflect the award amounts that are displayed on USASpending.gov</em>
+      
+      <!-- Chart & Table -->
       <financial-obligation-chart *ngIf='dictionaries && program.data?.financial?.obligations' [financialData]='program.data?.financial?.obligations' [dictionaries]='dictionaries'></financial-obligation-chart>
       
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Range and Average of Financial Assistance -->
       <h3 class="sam-ui dividing header">Range and Average of Financial Assistance</h3>
 
       <p class="field" id="program-financial-additional-info" *ngIf="(program.data?.financial?.description) && (program.data?.financial?.description != '')">
@@ -262,40 +266,52 @@
       <p class="field" id="program-financial-additional-info" *ngIf="!(program.data?.financial?.description) || (program.data?.financial?.description == '')">
         No Data Available.
       </p>
-      
-      <div class="sam-ui hidden divider"></div>
 
+      <div class="sam-ui hidden divider"></div>
+      
+      <!-- Accomplishments -->
       <h3 class="sam-ui dividing header">Accomplishments</h3>
 
       <div class="content-block" [ngSwitch]="program.data?.financial?.accomplishments?.isApplicable">
         <ng-container *ngSwitchCase="true">
           <ng-container *ngFor="let item of program.data?.financial?.accomplishments?.list; let i = index">
-            <span class="m_B-2x field" [attr.id]="'program-accomplishments-' + i" *ngIf="item.description && item.description != ''"><strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}</span>
-            <!--<span class="m_B-2x field" [attr.id]="'program-accomplighments-projected-' + i" *ngIf="item.content?.projection && item.content?.projection != ''"><strong>Fiscal Year {{item.year}}:</strong> {{item.content.projection}}</span>-->
+            <p class="field" [attr.id]="'program-accomplishments-' + i" *ngIf="item.description && item.description != '' && item.fiscalYear >= getCurrentFY() - 1 && item.fiscalYear <= getCurrentFY() + 1">
+              <strong>Fiscal Year {{item.fiscalYear}}:</strong> {{item.description}}
+            </p>
           </ng-container>
         </ng-container>
 
         <p *ngSwitchDefault>Not Applicable.</p>
+        
       </div>
       
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Account Identification -->
       <h3 class="sam-ui dividing header">Account Identification</h3>
 
       <p *ngFor="let account of program.data?.financial?.accounts; let i = index">
-        <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="account.description">{{account.code}}-{{account.description}}</span>
-        <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="!account.description">{{account.code}}</span>
+        <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="account.description">
+          {{account.code}}-{{account.description}}
+        </span>
+        <span class="field" [attr.id]="'program-account-identification-' + i" *ngIf="!account.description">
+          {{account.code}}
+        </span>
       </p>
+      
+      <div class="sam-ui hidden section divider"></div>
     </section>
-    
-    <div class="sam-ui hidden section divider"></div>
 
     <!--Should I apply?-->
     <section id="program-application-criteria">
+      
       <a name="#/programs/{{programID}}/view#criteria-for-applying"></a>
+      
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <h2 id="criteria-for-applying">Criteria for Applying</h2>
+          <h2 class="sam-ui header" id="criteria-for-applying">
+            Criteria for Applying
+          </h2>
         </div>
         <div class="usa-width-one-third">
           <a *ngIf="canEdit()" (click)="onEditClick('criteria-information')">
@@ -305,21 +321,29 @@
         </div>
       </div>
       
+      <div class="sam-ui hidden divider"></div>
+      
+      <!-- Types of Assistance -->
       <h3 class="sam-ui dividing header">Types of Assistance</h3>
 
       <p *ngIf="dictionaries && dictionaries.assistance_type && assistanceTypes">
         <ng-container *ngFor="let item of assistanceTypes | filterMultiArrayObject:dictionaries.assistance_type:'element_id':true:'elements'; let isLast = last; let i = index">
-          <span class="field" [attr.id]="'program-assistance-type-' + i">{{ item.displayValue }}{{isLast ? '' : ', '}}</span>
+          <span class="field" [attr.id]="'program-assistance-type-' + i">
+            {{ item.displayValue }}{{isLast ? '' : ', '}}
+          </span>
         </ng-container>
       </p>
 
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Credentials and Documentation -->
       <h3 class="sam-ui dividing header">Credentials and Documentation</h3>
 
       <p>
         <ng-container *ngIf="program.data?.eligibility?.documentation?.description">
-          <span class="field" id="program-elegibility-documentation">{{program.data.eligibility?.documentation?.description}}</span>
+          <span class="field" id="program-elegibility-documentation">
+            {{program.data.eligibility?.documentation?.description}}
+          </span>
 
           <ng-container *ngIf="program.data.compliance?.CFR200Requirements?.questions">
             <ng-container *ngFor="let item of program.data.compliance?.CFR200Requirements?.questions">
@@ -338,27 +362,34 @@
         </ng-container>
         <ng-container *ngIf="!program.data?.eligibility?.documentation?.description">None</ng-container>
       </p>
-      
-      <div class="sam-ui hidden divider"></div>
 
+      <div class="sam-ui hidden divider"></div>
+      
+      <!-- Applicant Eligibility -->
       <h3 class="sam-ui dividing header">Applicant Eligibility</h3>
 
-      <div class="sam-ui lightest blue segment" *ngIf="program.data && dictionaries && dictionaries.applicant_types">
-        <h4>Designations</h4>
+      <div class="sam-ui lightest blue segment designation" *ngIf="program.data && dictionaries && dictionaries.applicant_types">
+        <h4 class="sam-ui header">Designations</h4>
         <ng-container *ngFor="let item of program.data?.eligibility?.applicant?.types | filterMultiArrayObject:dictionaries.applicant_types:'element_id':false:''; let isLast = last; let i = index">
-          <span class="field" [attr.id]="'program-applicant-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
+          <span class="field" [attr.id]="'program-applicant-designation-' + i">
+            {{ item.value }}{{isLast ? '' : ', '}}
+          </span>
         </ng-container>
       </div>
 
       <p>
-        <span class="field" id="program-applicant-eligibility">{{program.data?.eligibility?.applicant?.description}}</span>
+        <span class="field" id="program-applicant-eligibility">
+          {{program.data?.eligibility?.applicant?.description}}
+        </span>
       </p>
       
+      
       <div class="sam-ui hidden divider"></div>
-
+      
+      <!-- Beneficiary Eligibility -->
       <h3 class="sam-ui dividing header">Beneficiary Eligibility</h3>
 
-      <div class="sam-ui lightest blue segment" *ngIf="program.data && dictionaries && dictionaries.beneficiary_types">
+      <div class="sam-ui lightest blue segment designation" *ngIf="program.data && dictionaries && dictionaries.beneficiary_types">
         <h4>Designations</h4>
         <ng-container *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-beneficiary-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
@@ -369,9 +400,10 @@
       <p>
         <span class="field" id="program-beneficiary-eligibility">{{program.data?.eligibility?.beneficiary?.description}}</span>
       </p>
-      
-      <div class="sam-ui hidden divider"></div>
 
+      <div class="sam-ui hidden divider"></div>
+      
+      <!-- Length and Time Phasing of Assistance -->
       <h3 class="sam-ui dividing header">Length and Time Phasing of Assistance</h3>
       <p>
         <span class="field" id="program-assistance-lengthtime">{{program.data?.eligibility?.limitation?.description}}</span>
@@ -379,12 +411,13 @@
           Method of awarding/releasing assistance: {{program.data.eligibility?.limitation?.awarded}}
         </span>
       </p>
-        
+      
       <div class="sam-ui hidden divider"></div>
-
+      
+      <!-- Use of Assistance -->
       <h3 class="sam-ui dividing header">Use of Assistance</h3>
 
-      <div class="sam-ui lightest blue segment" *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
+      <div class="sam-ui lightest blue segment designation" *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
         <h4>Designations</h4>
         <ng-container *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
           <span class="field" [attr.id]="'program-usage-designation-' + i">{{ item.value }}{{isLast ? '' : ', '}}</span>
@@ -398,17 +431,19 @@
         <span class="field" id="program-usage-discretionary-fund" *ngIf="program.data.eligibility?.usage?.discretionaryFund?.description">{{ program.data.eligibility?.usage?.discretionaryFund?.description }}</span>
         <span class="field" id="program-usage-loan-terms" *ngIf="program.data.eligibility?.usage?.loanTerms?.description">{{ program.data.eligibility?.usage?.loanTerms?.description }}</span>
       </p>
+      
+      <div class="sam-ui hidden section divider"></div>
+      
     </section>
-    
-    <div class="sam-ui hidden section divider"></div>
 
     <!--How do I apply?-->
     <section id="program-application-information">
+      
       <a name="#/programs/{{programID}}/view#applying-for-assistance"></a>
-      <div class="view-section-margin"></div>
+
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <h2 id="applying-for-assistance">Applying for Assistance</h2>
+          <h2 class="sam-ui header" id="applying-for-assistance">Applying for Assistance</h2>
         </div>
         <div class="usa-width-one-third">
           <a *ngIf="canEdit()" (click)="onEditClick(['applying-for-assistance'])">
@@ -417,7 +452,10 @@
           </a>
         </div>
       </div>
-
+      
+      <div class="sam-ui hidden divider"></div>
+      
+      <!-- Deadlines -->
       <h3 class="sam-ui dividing header">Deadlines</h3>
 
       <div class="content-block" [ngSwitch]="program.data?.assistance?.deadlines?.flag">
@@ -428,75 +466,81 @@
               <ng-container *ngIf="deadline.start">{{deadline.start | dateFormat: 'MMM DD, YYYY'}}</ng-container>
               <ng-container *ngIf="deadline.start && deadline.end"> to </ng-container>
               <ng-container *ngIf="deadline.end">{{deadline.end | dateFormat: 'MMM DD, YYYY'}}</ng-container>
+              {{deadline.description}}
             </span>
-            <span class="field" [attr.id]="'program-deadline-description-' + i">{{deadline.description}}</span>
+            <!--<span class="field" [attr.id]="'program-deadline-description-' + i">{{deadline.description}}</span>-->
           </span>
         </ng-container>
 
-        <span id="program-deadline-contact" *ngSwitchCase="'contact'">
+        <p id="program-deadline-contact" *ngSwitchCase="'contact'">
           Contact the headquarters or regional office, as appropriate for application deadlines
-        </span>
+        </p>
 
-        <span id="program-deadline-na" *ngSwitchDefault>
+        <p id="program-deadline-na" *ngSwitchDefault>
           Not Applicable.
-        </span>
+        </p>
+
+        <p>
+          {{program.data?.assistance?.deadlines?.description}}
+        </p>
       </div>
       
       <div class="sam-ui hidden divider"></div>
-
+      
+      <!-- Preapplication Coordination -->
       <h3 class="sam-ui dividing header">Preapplication Coordination</h3>
 
-      <div>
-        <ng-container [ngSwitch]="([true] | filterMultiArrayObject:program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports:'isSelected':false:null).length > 0">
-          <p *ngSwitchCase="true">
-            Preapplication coordination is required.
+      <ng-container [ngSwitch]="([true] | filterMultiArrayObject:program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports:'isSelected':false:null).length > 0">
+        <p *ngSwitchCase="true">
 
-            <!-- Environmental statements-->
-            <ng-container *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
-              <ng-container *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
-                <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.isSelected == true && entry.reportCode !== 'ExecutiveOrder12372'">
-                  An environmental impact {{entry.reportCode}} is required for this program.
+          Preapplication coordination is required.
+
+          <!-- Environmental statements-->
+          <ng-container *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
+            <ng-container *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
+              <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.isSelected == true && entry.reportCode !== 'ExecutiveOrder12372'">
+                An environmental impact {{entry.reportCode}} is required for this program.
+              </span>
+            </ng-container>
+
+            <span *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length==0" class="field" id="program-preapplication-coorindation-environmental-na">
+              Environmental impact information is not required for this program.
+            </span>
+
+
+          </ng-container>
+
+          <!-- Executive Order  -->
+          <ng-container *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
+            <ng-container *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
+              <ng-container *ngIf="entry.reportCode === 'ExecutiveOrder12372'">
+                <span *ngIf="entry.isSelected == true" class="field" id="program-preapplication-coordination-executive-order">
+                  This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
+                  An applicant should consult the office or official designated as the single point of contact in his or her State for more
+                  information on the process the State requires to be followed in applying for assistance, if the State has selected the program for review.
+                </span>
+
+                <span *ngIf="entry.isSelected == false" class="field" id="program-preapplication-coordination-executive-order">
+                  This program is excluded from coverage under E.O. 12372.
                 </span>
               </ng-container>
-
-              <span *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length==0" class="field" id="program-preapplication-coorindation-environmental-na">
-                Environmental impact information is not required for this program.
-              </span>
-
-
             </ng-container>
+          </ng-container>
 
-            <!-- Executive Order  -->
-            <ng-container *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
-              <ng-container *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
-                <ng-container *ngIf="entry.reportCode === 'ExecutiveOrder12372'">
-                  <span *ngIf="entry.isSelected == true" class="field" id="program-preapplication-coordination-executive-order">
-                    This program is eligible for coverage under E.O. 12372, "Intergovernmental Review of Federal Programs."
-                    An applicant should consult the office or official designated as the single point of contact in his or her State for more
-                    information on the process the State requires to be followed in applying for assistance, if the State has selected the program for review.
-                  </span>
+          <!-- additional content-->
+          <span class="field" id="program-preapplication-coordination">
+            {{program.data.assistance?.preApplicationCoordination?.description}}
+          </span>
+        </p>
 
-                  <span *ngIf="entry.isSelected == false" class="field" id="program-preapplication-coordination-executive-order">
-                    This program is excluded from coverage under E.O. 12372.
-                  </span>
-                </ng-container>
-              </ng-container>
-            </ng-container>
-
-            <!-- additional content-->
-            <span class="field" id="program-preapplication-coordination">
-              {{program.data.assistance?.preApplicationCoordination?.description}}
-            </span>
-          </p>
-
-          <p class="m-t-0 field" id="program-preapplication-coordination" *ngSwitchDefault>
-            Preapplication coordination is not applicable.
-          </p>
-        </ng-container>
-      </div>
-
+        <p class="m-t-0 field" id="program-preapplication-coordination" *ngSwitchDefault>
+          Preapplication coordination is not applicable.
+        </p>
+      </ng-container>
+      
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Application Procedures -->
       <h3 class="sam-ui dividing header">Application Procedures</h3>
 
       <p>
@@ -515,45 +559,41 @@
 
         <!-- additional content-->
         <span class="field" id="program-application-procedures">
-          {{program.data?.assistance?.applicationProcedure?.description}}
+      <p *ngIf="program.data?.assistance?.applicationProcedure?.isApplicable">Funding opportunities notices for this listing will be posted on <a href="https://www.grants.gov" target="_blank">Grants.gov</a>.</p>
+
+          <p>{{program.data?.assistance?.applicationProcedure?.description}}</p>
         </span>
       </p>
-
-
+      
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Criteria for Selecting Proposals -->
       <h3 class="sam-ui dividing header">Criteria for Selecting Proposals</h3>
 
       <p>
         <ng-container [ngSwitch]="program.data?.assistance?.selectionCriteria?.isApplicable">
-          <span class="field" id="program-selection-criteria" *ngSwitchCase="true">
+          <p class="field" id="program-selection-criteria" *ngSwitchCase="true">
             {{program.data?.assistance?.selectionCriteria?.description}}
-          </span>
-
-<!--          <span class="field" id="program-selection-criteria" *ngSwitchCase="'no'">
-            No
-          </span>-->
-
-          <span class="field" id="program-selection-criteria" *ngSwitchDefault>
+          </p>
+          <p class="field" id="program-selection-criteria" *ngSwitchDefault>
             Not Applicable
-          </span>
+          </p>
         </ng-container>
       </p>
-
-
+      
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Award Procedure -->
       <h3 class="sam-ui dividing header">Award Procedure</h3>
 
       <p class="field" id="program-award-procedure">
         {{program.data?.assistance?.awardProcedure?.description}}
       </p>
 
-
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Date Range for Approval/Disapproval -->
       <h3 class="sam-ui dividing header">Date Range for Approval/Disapproval</h3>
-
 
       <p class="field" id="program-application-approval-interval" [ngSwitch]="program.data?.assistance?.approval?.interval">
         <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
@@ -569,10 +609,10 @@
           {{program.data?.assistance?.approval?.description}}
         </span>
       </p>
-
-
+      
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Renewals -->
       <h3 class="sam-ui dividing header">Renewals</h3>
 
       <p class="field" id="program-application-renewal-interval" [ngSwitch]="program.data?.assistance?.renewal?.interval">
@@ -589,10 +629,10 @@
           {{program.data?.assistance?.renewal?.description}}
         </span>
       </p>
-
-
-      <div class="sam-ui hidden divider"></div>
       
+      <div class="sam-ui hidden divider"></div>
+
+      <!-- Appeals -->
       <h3 class="sam-ui dividing header">Appeals</h3>
 
       <p class="field" id="program-application-appeal-interval" [ngSwitch]="program.data?.assistance?.appeal?.interval">
@@ -609,16 +649,18 @@
           {{program.data?.assistance?.appeal?.description}}
         </span>
       </p>
+      
+      <div class="sam-ui hidden section divider"></div>
     </section>
 
     <!--Compliance requirements-->
     <section id="program-compliance-requirements">
       <a name="#/programs/{{programID}}/view#compliance-requirements"></a>
 
-      <div class="sam-ui hidden section divider"></div>
+      <div class="view-section-margin"></div>
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <h2 id="compliance-requirements">Compliance Requirements</h2>
+          <h2 class="sam-ui header" id="compliance-requirements">Compliance Requirements</h2>
         </div>
         <div class="usa-width-one-third">
           <a *ngIf="canEdit()" (click)="onEditClick(['compliance-requirements'])">
@@ -627,9 +669,10 @@
           </a>
         </div>
       </div>
-
+      
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Policy Requirements -->
       <h3 class="sam-ui dividing header">Policy Requirements</h3>
       <div>
         <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
@@ -652,9 +695,10 @@
             </p>
         </ng-container>
       </div>
-
+      
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Reports -->
       <h3 class="sam-ui dividing header">Reports</h3>
 
       <div>
@@ -668,9 +712,10 @@
           Not Applicable
         </p>
       </div>
-
+      
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Audits -->
       <h3 class="sam-ui dividing header">Audits</h3>
 
       <div>
@@ -679,7 +724,7 @@
             <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
               <ng-container *ngIf="item.code === 'subpartF'">
                 <span *ngIf="item.isSelected == true" class="field" id="program-postaward-audit-a133">
-                  In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
+                  In accordance with the provisions of 2 CFR 200, Subpart F - Audit Requirements,
                   nonfederal entities that expend financial assistance of $750,000 or more in Federal
                   awards will have a single or a program-specific audit conducted for that year. Non-Federal
                   entities that expend less than $750,000 a year in Federal awards are exempt from Federal
@@ -687,7 +732,7 @@
                 </span>
 
                 <span *ngIf="item.isSelected == false" class="field" id="program-postaward-audit-a133">
-                  This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
+                  This program is excluded from coverage under 2 CFR 200, Subpart F - Audit Requirements.
                 </span>
               </ng-container>
             </ng-container>
@@ -700,9 +745,10 @@
           </p>
         </ng-container>
       </div>
-
+      
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Records -->
       <h3 class="sam-ui dividing header">Records</h3>
 
       <p class="field" id="program-postaward-records" *ngIf="(program.data?.compliance?.records?.description) && (program.data?.compliance?.records.description != '')">
@@ -712,9 +758,10 @@
       <p class="field" id="program-postaward-records" *ngIf="!(program.data?.compliance?.records?.description) || (program.data?.compliance?.records?.description == '')">
         No Data Available.
       </p>
-
+      
       <div class="sam-ui hidden divider"></div>
       
+      <!-- Regulations, Guidelines, and Literature -->
       <h3 class="sam-ui dividing header">Regulations, Guidelines, and Literature</h3>
 
       <p>
@@ -723,9 +770,10 @@
           <span class="field" id="program-postaward-documents" *ngSwitchDefault> Not Applicable.</span>
         </ng-container>
       </p>
-
-      <div class="sam-ui hidden divider"></div>
       
+      <div class="sam-ui hidden divider"></div>
+
+      <!-- Formula and Matching Requirements -->
       <h3 class="sam-ui dividing header">Formula and Matching Requirements</h3>
       <!-- statutory formula-->
       <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.formua">
@@ -775,16 +823,17 @@
           MOE requirements are not applicable to this federal assistance listing.
         </div>
       </ng-container>
+      
+      <div class="sam-ui hidden section divider"></div>
     </section>
 
     <!--Contact information-->
     <section id="program-contact-information">
       <a name="#/programs/{{programID}}/view#contact-information"></a>
 
-      <div class="sam-ui hidden section divider"></div>
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
-          <h2 id="contact-information">Contact Information</h2>
+          <h2 class="sam-ui header" id="contact-information">Contact Information</h2>
         </div>
         <div class="usa-width-one-third">
           <a *ngIf="canEdit()" (click)="onEditClick(['contact-information'])">
@@ -793,61 +842,33 @@
           </a>
         </div>
       </div>
+
+      <h3 class="sam-ui dividing header">Regional or Local Office:</h3>
+      <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.description }}</span>
+      <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.description }}</span>
+
+      <h3 class="sam-ui dividing header">Headquarters Office:</h3>
+
+      <div *ngFor="let item of program.data.contacts?.headquarters; let i = index">
+        <samPOC [attr.id]="'program-contacts-poc-' + i" [data]="item"></samPOC>
+      </div>
+      <strong>Website: </strong>
+      <ng-container *ngIf="!program.data?.website || program.data?.website == null ">No Data Available</ng-container>
+      <ng-container *ngIf="program.data?.website">{{program.data.website}}</ng-container>
       
-      <div class="sam-ui hidden section header"></div>
+      <div class="sam-ui hidden section divider"></div>
       
-      <address>
-        
-        <h3 class="sam-ui dividing header">Regional or Local Office</h3>
-        
-        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.description }}</span>
-        <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.description }}</span>
-
-        <h3 class="sam-ui dividing header">Headquarters Office</h3>
-
-        <div *ngFor="let item of program.data.contacts?.headquarters; let i = index">
-          <samPOC [attr.id]="'program-contacts-poc-' + i" [data]="item"></samPOC>
-        </div>
-        <strong>Website: </strong>
-        <ng-container *ngIf="!program.data?.website || program.data?.website == null ">No Data Available</ng-container>
-        <ng-container *ngIf="program.data?.website">{{program.data.website}}</ng-container>
-
-      </address>
     </section>
-    
-    <div class="sam-ui hidden section divider"></div>
-    
+
     <!--History Section-->
     <section id="program-history" *ngIf="historicalIndex">
       <a name="#/programs/{{programID}}/view#history"></a>
-      <h2 id="history">History</h2>
+      <h2 class="sam-ui header" id="history">History</h2>
       <sam-history [data]="history"></sam-history>
     </section>
+    
+    <div class="sam-ui hidden section divider"></div>
 
-    <!--Internal Fields-->
-    <!--<section>
-      <h2 id="internal">Internal Fields <em>(Not displayed publically)</em></h2>
-
-      <h3>TAFs Codes:</h3>
-      <ul>
-        <li>12-12-2014-X-1500</li>
-      </ul>
-
-      <h3>Functional Codes:</h3>
-      <ul>
-        <li>AGRICULTURAL - AN Research and Development</li>
-        <li>INCOME SECURITY AND SOCIAL SERVICES - NH Nutrition</li>
-      </ul>
-
-      <h3>Subject Terms:</h3>
-      <ul>
-        <li>83 - crop improvement </li>
-        <li>88 - experiment stations</li>
-        <li>92 - food quality, nutrition</li>
-        <li>91 - food, agricultural sciences</li>
-      </ul>
-    </section>-->
   </div>
 
 </div>
-

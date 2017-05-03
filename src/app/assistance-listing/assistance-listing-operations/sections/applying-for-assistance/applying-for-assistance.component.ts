@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
 import { Router} from '@angular/router';
 import * as moment from 'moment';
 import { DictionaryService } from 'api-kit';
@@ -159,30 +159,30 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
             },
             preApplicationCoordination:{
               reports: reports,
-              description: api.data.assistance.preApplicationCoordination.description
+              description: api.data.assistance.preApplicationCoordination.description || ''
             },
             applicationProcedure:{
               isApplicable: [api.data.assistance.applicationProcedure.isApplicable],
-              description: api.data.assistance.applicationProcedure.description
+              description: api.data.assistance.applicationProcedure.description || ''
             },
             selectionCriteria: {
               isApplicable: [api.data.assistance.selectionCriteria.isApplicable],
-              description: api.data.assistance.selectionCriteria.description
+              description: api.data.assistance.selectionCriteria.description || ''
             },
             awardProcedure: {
-              description: api.data.assistance.awardProcedure.description
+              description: api.data.assistance.awardProcedure.description || ''
             },
             approval: {
               interval: (api.data.assistance.approval.interval || 'na'),
-              description: api.data.assistance.approval.description
+              description: api.data.assistance.approval.description || ''
             },
             appeal: {
               interval: (api.data.assistance.appeal.interval || 'na'),
-              description: api.data.assistance.appeal.description
+              description: api.data.assistance.appeal.description || ''
             },
             renewal: {
               interval: (api.data.assistance.renewal.interval || 'na'),
-              description: api.data.assistance.renewal.description
+              description: api.data.assistance.renewal.description || ''
             }
           });
 
@@ -293,25 +293,43 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
   formatAssistInfo(assistInfo){
     this.assistInfoDisp = [];
     for(let assist of assistInfo) {
-      let m = moment();
-      let startM = moment(assist.start);
-      let endM = moment(assist.end);
 
-      let sMonth = m.month(startM.month()).format('MMMM');
-      let sYear = startM.year();
-      let sDate = startM.date();
-      let startDate = sMonth + ' ' + sDate + ', ' + sYear;
+      let startDate = moment(assist.start).format('MMMM DD, YYYY');
+      let endDate = moment(assist.end).format('MMMM DD, YYYY');
 
-      let eMonth = m.month(endM.month()).format('MMMM');
-      let eYear = endM.year();
-      let eDate = endM.date();
-      let endDate = eMonth + ' ' + eDate + ', ' + eYear;
-
-      if(assist.end !== null)
-        this.assistInfoDisp.push(startDate + " - " + endDate + " " + assist.description);
+      /*if(assist.end !== null && assist.end !== '') {
+        this.assistInfoDisp.push(startDate + " - " + endDate + ". " + assist.description);
+      }
+      else if(assist.start !== null && assist.start !== '')
+        this.assistInfoDisp.push(startDate + ". " + assist.description);
       else
-        this.assistInfoDisp.push(startDate + " " + assist.description);
+        this.assistInfoDisp.push(assist.description);*/
+
+      let label = '';
+
+      if(assist.start !== null && assist.start !== '')
+        label += startDate;
+
+      if(assist.end !== null && assist.end !== '') {
+        if(label == '')
+          label = endDate + ". ";
+        else
+          label += " - " + endDate + ". ";
+      }
+      else {
+        label += ". ";
+      }
+
+      if((assist.start == null || assist.start == '' ) && (assist.end == null || assist.end == ''))
+        label = '';
+
+      if(assist.description !== null || assist.description !== '')
+        label += assist.description;
+
+      this.assistInfoDisp.push(label);
+
     }
+
   }
 
   onSaveContinueClick(){
