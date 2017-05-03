@@ -44,6 +44,7 @@
     "e2e": "npm run protractor",
     "e2e:live": "npm run e2e -- --elementExplorer",
     "test": "karma start",
+    "test:chrome": "karma start --no-lint --chrome",
     "test:no-lint": "karma start --no-lint",
     "test:sam-ui-elements": "karma start config/karma.sam-ui-elements.conf.js --no-lint",
     "ci": "npm run lint && npm test && npm run e2e",

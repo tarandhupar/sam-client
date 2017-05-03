@@ -2,6 +2,12 @@
  * @author: @AngularClass
  */
 
+//override phantomjs with chrome argument
+let browsersList =  ['PhantomJS'];
+if(process.argv.indexOf("--chrome")!=-1){
+  browsersList =  ['Chrome'];
+}
+
 module.exports = function(config) {
   var testWebpackConfig = require('./webpack.test.js');
 
@@ -90,9 +96,7 @@ module.exports = function(config) {
      * start these browsers
      * available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
      */
-    browsers: [
-      'PhantomJS'
-    ],
+    browsers: browsersList,
 
     customLaunchers: {
       ChromeTravisCi: {
