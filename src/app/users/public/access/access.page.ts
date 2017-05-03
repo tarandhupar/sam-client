@@ -8,8 +8,8 @@ import { Observable } from "rxjs";
 import { SamAccordionComponent } from "sam-ui-kit/components/accordion/accordion.component";
 import { CapitalizePipe } from "../../../app-pipes/capitalize.pipe";
 import { SamModalComponent } from "sam-ui-kit/components/modal";
-import { Cookie } from 'ng2-cookies'
 import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.service";
+import { Cookie } from 'ng2-cookies';
 
 @Component({
   templateUrl: 'access.template.html'
@@ -61,6 +61,7 @@ export class UserAccessPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.isAdmin = Cookie.get('isAdmin') === 'true';
     this.userName = this.route.parent.snapshot.params['id'];
 
     this.userService.getAccess(this.userName).subscribe(
@@ -101,8 +102,6 @@ export class UserAccessPage implements OnInit {
         });
       }
     );
-
-    this.fakeOutAdmin();
   }
 
   trimRequest(message) {
@@ -113,18 +112,7 @@ export class UserAccessPage implements OnInit {
     }
   }
 
-  fakeOutAdmin() {
-    // for debugging, fake out admin role by setting 'admin=true' or 'admin=false' as a query parameter
-    this.route.queryParams.subscribe(queryParams => {
-      if (queryParams["admin"] === 'true') {
-        Cookie.set('isAdmin', 'true');
-      } else if (queryParams["admin"] === 'false') {
-        Cookie.set('isAdmin', 'false');
-      }
 
-      this.isAdmin = Cookie.get('isAdmin') === 'true';
-    });
-  }
 
   onDeleteRoleClick(role, domain) {
     this.modalRole = role;

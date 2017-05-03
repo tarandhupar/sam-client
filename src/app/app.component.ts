@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { Router, NavigationExtras,NavigationEnd,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
+import { Cookie } from 'ng2-cookies';
 
 /*
  * App Component
@@ -31,7 +32,7 @@ export class App{
 
   showOverlay = false;
 
-  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
+  constructor(private _router: Router, private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
 
   ngOnInit() {
     this.searchService.paramsUpdated$.subscribe(
@@ -59,6 +60,18 @@ export class App{
           }
         }
       });
+    this.fakeOutAdmin();
+  }
+
+  fakeOutAdmin() {
+    // for debugging, fake out admin role by setting 'admin=true' or 'admin=false' as a query parameter
+    this.activatedRoute.queryParams.subscribe(queryParams => {
+      if (queryParams["admin"] === 'true') {
+        Cookie.set('isAdmin', 'true', undefined /* expired */, '/' /* path */);
+      } else if (queryParams["admin"] === 'false') {
+        Cookie.set('isAdmin', 'false', undefined /* expired */, '/' /* path */);
+      }
+    });
   }
 
   get isHeaderWithSearch() {

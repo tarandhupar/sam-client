@@ -1,92 +1,99 @@
-<div class="grant-access-page">
-  <h1 id="form-top" class="m_T-0">{{modeName()}} Access</h1>
+<div class="grant-access-page usa-grid">
+  <div class="usa-width-three-fourths">
+    <h1 id="form-top" class="m_T-4x">{{modeName()}} Access</h1>
 
-  <!-- Domain -->
-  <div *ngIf="mode !== 'edit' && !userCameFromRoleWorkspace">
-    <samSelect [disabled]="userCameFromRoleWorkspace" name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
-  </div>
-  <div *ngIf="mode === 'edit' && !userCameFromRoleWorkspace">
-    <div class="usa-grid-full">
-      <div>
-        <label>Domain</label>
-      </div>
-      <div class="m_T-2x">
-        <span *ngIf="domain">{{labelForDomain(domain)}}</span>
-        <span *ngIf="!domain"><i>Loading Domain...</i></span>
+    <!-- Domain -->
+    <div *ngIf="mode !== 'edit' && !userCameFromRoleWorkspace">
+      <samSelect [disabled]="userCameFromRoleWorkspace" name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
+    </div>
+    <div *ngIf="mode === 'edit' && !userCameFromRoleWorkspace">
+      <div class="usa-grid-full">
+        <div>
+          <label>Domain</label>
+        </div>
+        <div class="m_T-2x">
+          <span *ngIf="domain">{{labelForDomain(domain)}}</span>
+          <span *ngIf="!domain"><i>Loading Domain...</i></span>
+        </div>
       </div>
     </div>
-  </div>
-  <div *ngIf="userCameFromRoleWorkspace">
-    <request-details [requestObject]="request"></request-details>
-  </div>
+    <div *ngIf="userCameFromRoleWorkspace">
+      <request-details [requestObject]="request"></request-details>
+    </div>
 
-  <!-- Supervisor Name and email -->
-  <ng-container *ngIf="mode === 'request'">
-    <samText label="Supervisor Name" name="supervisor-name" [(ngModel)]="supervisorName" [errorMessage]="errors.supervisorName" [required]="true" (change)="onSupervisorNameChange($event)"></samText>
-    <samText label="Supervisor Email" name="supervisor-email" [(ngModel)]="supervisorEmail" [errorMessage]="errors.supervisorEmail" [required]="true" (change)="onSupervisorEmailChange($event)"></samText>
-  </ng-container>
+    <!-- Supervisor Name and email -->
+    <ng-container *ngIf="mode === 'request'">
+      <samText label="Supervisor Name" name="supervisor-name" [(ngModel)]="supervisorName" [errorMessage]="errors.supervisorName" [required]="true" (change)="onSupervisorNameChange($event)"></samText>
+      <samText label="Supervisor Email" name="supervisor-email" [(ngModel)]="supervisorEmail" [errorMessage]="errors.supervisorEmail" [required]="true" (change)="onSupervisorEmailChange($event)"></samText>
+    </ng-container>
 
-  <!-- Role -->
-  <div *ngIf="mode === 'grant'">
-    <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
-  </div>
-  <div *ngIf="mode === 'edit'">
-    <div class="usa-grid-full m_T-4x">
-      <div class="usa-width-one-sixth">
-        <label for="role-input"><strong>Role:</strong></label>
-      </div>
-      <div class="usa-width-one-half">
+    <!-- Role -->
+    <div *ngIf="mode === 'grant'">
+      <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
+    </div>
+    <div *ngIf="mode === 'edit'">
+      <div class="usa-grid-full m_T-4x">
+        <label for="role-input">Role</label>
         <select id="role-input" [ngModel]="role" (ngModelChange)="onRoleChange($event)">
           <option *ngFor="let r of roleOptions" [value]="r.value">{{r.label}}</option>
         </select>
       </div>
     </div>
-  </div>
 
-  <!-- Orgs -->
-  <agencyPicker
-    *ngIf="mode !== 'request'"
-    [label]="'Organizations'"
-    [multimode]="true"
-    (organization)="onOrganizationsChange($event)"
-    [required]="true"
-    [searchMessage]="errors.org"
-    [initial]="orgs"
-  ></agencyPicker>
+    <!-- Orgs -->
+    <agencyPicker
+      *ngIf="mode !== 'request'"
+      [label]="'Organizations'"
+      [multimode]="true"
+      (organization)="onOrganizationsChange($event)"
+      [required]="true"
+      [searchMessage]="errors.org"
+      [initial]="orgs"
+    ></agencyPicker>
 
-  <ng-container *ngIf="objects">
-    <!-- Read Only -->
-    <div class="m_T-4x" *ngIf="!objectsEditable">
-      <objects-and-permissions [objects]="objects"></objects-and-permissions>
-    </div>
+    <ng-container *ngIf="objects">
+      <!-- Read Only -->
+      <div class="m_T-4x" *ngIf="!objectsEditable">
+        <objects-and-permissions [objects]="objects"></objects-and-permissions>
+      </div>
 
-    <!-- Editable -->
-    <ng-container *ngIf="objects.length && objectsEditable">
-      <div class="m_B-1x"><label>Permissions</label></div>
-      <ul class="usa-grid-full usa-unstyled-list background-light p_All-4x">
-        <li  *ngFor="let object of objects" class="object-item">
-          <strong>{{object.function.val}}</strong>
-          <div class="p_L-4x permission-list">
-          <span *ngFor="let permission of object.permission" class="permission-control-group">
-            <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
-            <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
-          </span>
-          </div>
-        </li>
-      </ul>
+      <!-- Editable -->
+      <ng-container *ngIf="objects.length && objectsEditable">
+        <div class="m_B-1x"><label>Permissions</label></div>
+        <ul class="usa-unstyled-list background-light p_All-4x">
+          <li  *ngFor="let object of objects" class="object-item">
+            <strong>{{object.function.val}}</strong>
+            <div class="usa-grid" *ngFor="let p of object.permission; let e = even; let i = index">
+              <ng-container *ngIf="e">
+                <!-- ngFor hack to declare a local variable -->
+                <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i]]">
+                  <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+                  <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
+                </div>
+                <ng-container *ngIf="object.permission[i+1]">
+                  <div class="usa-width-one-half" *ngFor="let permission of [object.permission[i+1]]">
+                    <input [disabled]="permission.isDefault" [attr.id]="permissionId(permission, object)" type="checkbox" class="permission-input" [ngModel]="!permission.notChecked" (click)="onPermissionClick(permission)">
+                    <label [attr.for]="permissionId(permission, object)" class="permission-label" >{{permission.val}}</label>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </li>
+        </ul>
+      </ng-container>
     </ng-container>
-  </ng-container>
 
-  <!-- Optional Message -->
-  <samTextArea name="options-response" label="Messages:" [hint]="messagePlaceholder()" [(ngModel)]="messages" [required]="isMessageRequired()" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></samTextArea>
+    <!-- Optional Message -->
+    <samTextArea name="options-response" label="Messages:" [hint]="messagePlaceholder()" [(ngModel)]="messages" [required]="isMessageRequired()" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></samTextArea>
 
-  <!-- Cancel / Confirm -->
-  <div>
-    <p class="pull-right">
-      <button class="usa-button usa-button-outline" (click)="onCancelClick()">Cancel</button>
-      &nbsp;
-      <button id="grant-button" class="usa-button usa-button-primary" (click)="onGrantClick()">{{submitButtonText()}}</button>
-    </p>
+    <!-- Cancel / Confirm -->
+    <div>
+      <p class="pull-right">
+        <button class="usa-button usa-button-outline" (click)="onCancelClick()">Cancel</button>
+        &nbsp;
+        <button id="grant-button" class="usa-button usa-button-primary" (click)="onGrantClick()">{{submitButtonText()}}</button>
+      </p>
+    </div>
   </div>
 </div>
 
