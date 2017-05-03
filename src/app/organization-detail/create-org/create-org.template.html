@@ -54,7 +54,7 @@
 
     <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-address-section" *ngIf="isAddressNeeded()">
       <div class="usa-width-one-whole p_T-4x" *ngFor="let orgAddr of orgAddresses">
-        <samAddrForm [orgAddrModel]="orgAddr.addrModel" [showAddIcon]="orgAddr.showAddIcon" (onAdditionalAddrRequest)="onAddAddressForm()" (onCancelAdditionalAddrRequest)="onDeleteAddressForm($event)"></samAddrForm>
+        <samAddrForm [orgAddrModel]="orgAddr.addrModel" [showAddIcon]="orgAddr.showAddIcon" (onAdditionalAddrRequest)="onAddAddressForm()" (onCancelAdditionalAddrRequest)="onDeleteAddressForm($event)" (onEnableAddIcon)="onEnableAddAddressIcon($event)"></samAddrForm>
 
       </div>
     </div>
