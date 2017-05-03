@@ -133,11 +133,14 @@ export class FHService {
       suffix: '',
       method: 'POST',
       body: org,
-      oParam: {
+      oParam: {}
+    };
+    if(org.type !== "DEPARTMENT"){
+      apiOptions.oParam = {
         'fullparentpath': fullParentPath,
         'fullparentpathname': fullParentPathName
       }
-    };
+    }
     return this.fhAPIService.call(apiOptions);
 
   }

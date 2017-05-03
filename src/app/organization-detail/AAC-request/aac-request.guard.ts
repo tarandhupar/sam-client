@@ -6,48 +6,45 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
+import {error} from "../../alerts/alerts-test-data.spec";
 
 @Injectable()
 export class AACRequestGuard implements CanActivate {
   private api;
 
   private states = {
-    local: false,
     route: '/',
     params: {},
     query: {}
   };
-  isSignedIn:boolean = false;
 
-  constructor(private router: Router, private iamService: IAMService, private zone: NgZone) {
-    this.api = iamService.iam;
-    this.states.local = this.api.isLocal();
+  isSignedIn = false;
+  constructor(private router: Router, private zone: NgZone, private _api: IAMService) {
+    this.api = _api.iam;
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     let url = state.url;
 
-    this.states.route = this.router.url;
+    this.states.route = state.url;
     this.states.params = route.params;
     this.states.query = route.queryParams;
 
-
-    return this.checkSignInUser();
+    return this.verifyRoute();
   }
 
-  checkSignInUser() {
-    //Get the sign in info
-    this.isSignedIn = false;
-    this.zone.runOutsideAngular(() => {
-      this.iamService.iam.checkSession((user) => {
+  verifyRoute() {
+    this.api.checkSession(
+      (user) => {
         this.zone.run(() => {
           this.isSignedIn = true;
         });
-      });
-    });
-
-    if(!this.isSignedIn) this.router.navigateByUrl('/signin');
-    return this.isSignedIn;
+      },
+      () => {
+        this.router.navigate(['/signin']);
+      }
+    );
+    return true;
   }
 
 }

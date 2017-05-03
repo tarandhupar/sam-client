@@ -67,6 +67,10 @@
     .sam-autocomplete #sam-autocomplete-results{
       z-index: 20;
     }
+
+    ul>li>button {
+      text-align: inherit;
+    }
     }
 
   .usa-regional-filter {
@@ -74,7 +78,6 @@
     margin:0;
 
     #regional-office {
-      border-radius: 1rem;
       text-indent: 10px;
       padding-right: 28px;
       font-size: initial;
