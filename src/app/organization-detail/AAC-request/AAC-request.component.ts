@@ -1,9 +1,10 @@
-import { Component, ViewChild, ViewChildren, QueryList } from "@angular/core";
+import { Component, ViewChild, ViewChildren, QueryList, NgZone } from "@angular/core";
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { OrgAddrFormComponent } from '../../app-components/address-form/address-form.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
+import { IAMService } from "api-kit/iam/iam.service";
 
 function validDateTime(c: FormControl) {
   let invalidError = {message: 'Date is invalid'};
@@ -18,7 +19,7 @@ function isRequired(c: FormControl) {
 }
 
 @Component ({
-  templateUrl: 'AAC-request.template.html'
+  templateUrl: 'AAC-request.template.html',
 })
 export class AACRequestPage {
 
@@ -110,7 +111,13 @@ export class AACRequestPage {
   requestIsConfirm = false;
   successAlertMsg = false;
 
-  constructor(private builder:FormBuilder, private aacRequestService:AACRequestService){}
+  user = null;
+  isSignedIn = false;
+
+  constructor(private builder:FormBuilder,
+              private aacRequestService:AACRequestService,
+              private iamService: IAMService,
+              private zone: NgZone){}
 
   ngOnInit(){
     this.stateOfficeForm = this.builder.group({
@@ -145,6 +152,7 @@ export class AACRequestPage {
         });
         this.aacOfficeRadioModel = this.aacOfficeConfig.options[0].value;
     });
+    this.checkSignInUser();
   }
 
   setContractExpireDate(val){this.contractorForm.get('contractExpireDate').setValue(val);}
@@ -153,8 +161,8 @@ export class AACRequestPage {
     let aacPostObj:any = {};
     aacPostObj.aacExists = this.aacExistRadioModel === 'Yes';
     aacPostObj.orgTypeId = this.aacOfficeRadioModel.split('-')[0];
-    aacPostObj.requestorEmailId = "simiao.sun@gsa.gov";
-    aacPostObj.username = "Nathan Sun";
+    aacPostObj.requestorEmailId = this.user.email;
+    aacPostObj.username = this.user.fullName;
     aacPostObj.aacLink = "/aac-confirm";
 
     if (this.aacOfficeRadioModel.includes('Contractor')) {
@@ -224,7 +232,6 @@ export class AACRequestPage {
   onCancelAACRequestClick(){}
 
   onSubmitFormClick(){
-
     this.aacRequestService.postAACRequest(this.generateAACRequestPostObj()).subscribe(
       val => {
         this.requestIsReview = false;
@@ -356,5 +363,21 @@ export class AACRequestPage {
     let addr = update? Object.assign({},this.mailAddr):Object.assign({},this.emptyAddrObj);
     addr.addrType = addrType;
     return addr;
+  }
+
+  onEnterKeyClicked(){if(this.isSingleAACRequest()) this.onReviewAACRequestClick();}
+
+  checkSignInUser() {
+    //Get the sign in info
+    this.isSignedIn = false;
+    this.zone.runOutsideAngular(() => {
+      this.iamService.iam.checkSession((user) => {
+        this.zone.run(() => {
+          this.isSignedIn = true;
+          this.user = user;
+        });
+      });
+    });
+
   }
 }
