@@ -270,7 +270,7 @@
 						Purchase Card Used as Payment Method: {{awardData.contractData.purchaseCardPaymentMethod}}<br />
 					</div>
 					Undefinitized Action: {{awardData.contractData.undefinitizedActionDesc}}<br />
-					Performance Based Service Acquisition: {{awardData.contractData.performBasedServiceContract}}<br />
+					Performance Based Service Acquisition: {{awardData.contractData.performBasedServiceAcquisition}}<br />
 					Contingency Humanitarian Peacekeeping Operation: {{awardData.contractData.contingencyOpsDesc}}<br />
 					<div *ngIf="awardData.templateType == 'AWARD'">
 						Contract Financing: {{awardData.contractData.contractFinancing}}<br />
@@ -312,7 +312,7 @@
 				<h3 id="ProductOrServiceInformation">Product or Service Information</h3>
 				Product/Service Code: {{awardData.productServiceInformation.productOrServiceCode}}<br />
 				Description: {{awardData.productServiceInformation.productOrServiceDescription}}
-				<div id="award-type" *ngIf="awardData.templateType == 'OTI'">
+				<div id="award-type" *ngIf="awardData.templateType == 'OTI' || awardData.templateType == 'OTA'">
 					Description of Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}
 				</div>
 				<br />
@@ -367,7 +367,7 @@
 					Commercial Item Acquisition Procedures: {{awardData.competitionInformation.commercialItemAcquistnDesc}}<br />
 					Number of Offers Received: {{awardData.competitionInformation.numberOfOffersReceived}}<br />
 					Small Business Competitiveness Demonstration Program: {{awardData.competitionInformation.smallBusCompDemonstrationProgram}}<br />
-					Commercial Item Test Program {{awardData.competitionInformation.commercialItemTestProgram}}<br />
+					Commercial Item Test Program: {{awardData.competitionInformation.commercialItemTestProgram}}<br />
 					<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
 					Pre Award FBO Synopsis: {{awardData.competitionInformation.preAwardSynopsisDesc}}<br />
