@@ -162,7 +162,7 @@ export class AACRequestPage {
     aacPostObj.aacExists = this.aacExistRadioModel === 'Yes';
     aacPostObj.orgTypeId = this.aacOfficeRadioModel.split('-')[0];
     aacPostObj.requestorEmailId = this.user.email;
-    aacPostObj.username = this.user.username;
+    aacPostObj.username = this.user.fullName;
     aacPostObj.aacLink = "/aac-confirm";
 
     if (this.aacOfficeRadioModel.includes('Contractor')) {
