@@ -13,8 +13,5 @@ export class UserViewComponent implements OnInit {
 
   ngOnInit() {
     this.userName = this.route.snapshot.params['id'];
-    if (/grant-access/.test(this.router.url)) {
-      this.hideNav = true;
-    }
   }
 }

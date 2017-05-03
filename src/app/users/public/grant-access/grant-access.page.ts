@@ -67,7 +67,7 @@ export class GrantAccessPage implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('User Access');
-    this.userName = this.route.parent.snapshot.params['id'];
+    this.userName = this.route.snapshot.params['id'];
     this.userCameFromRoleWorkspace = !!this.route.snapshot.queryParams['ref'];
 
     if (this.userCameFromRoleWorkspace) {
