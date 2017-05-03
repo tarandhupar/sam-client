@@ -202,55 +202,55 @@
 					Number of Employees: {{awardData.businessCategory.numberOfEmployees | number}}<br />
 					State of Incorporation: {{awardData.businessCategory.stateOfIncorporation}}<br />
 					Country of Incorporation: {{awardData.businessCategory.countryOfIncorporation}}<br />
-					Annual Revenue: {{awardData.businessCategory.annualRevenue | currency:'USD':true:'.2-2'}}<br />
+					Annual Revenue: {{awardData.businessCategory.annualRevenue | currency:'USD':true:'.2-2'}}
 					<div class="padding-left-20px display-inline">
-					<br />
 						<div class="display-inline" *ngIf="awardData.businessCategory.businessTypes | busCategories">
+							<br />
+							<br />
 							Business Types:<br />
 							{{awardData.businessCategory.businessTypes | busCategories}}
-							<br />
-							<br />
 						</div>
 						<div class="display-inline" *ngIf="awardData.businessCategory.socioEconomicData | busCategories">
+							<br />
+							<br />
 							Socioeconomic Data:<br />
 							{{awardData.businessCategory.socioEconomicData | busCategories}}
-							<br />
-							<br />
 						</div>
 						<div class="display-inline" *ngIf="awardData.businessCategory.lineOfBusiness | busCategories">
+							<br />
+							<br />
 							Line of Business:<br />
 							{{awardData.businessCategory.lineOfBusiness | busCategories}}
-							<br />
-							<br />
 						</div>
 						<div class="display-inline" *ngIf="awardData.businessCategory.relationShipWithFedGovernment | busCategories">
+							<br />
+							<br />
 							Relationship with Federal Government:<br />
 							{{awardData.businessCategory.relationShipWithFedGovernment | busCategories}}
-							<br />
-							<br />
 						</div>
 						<div class="display-inline" *ngIf="awardData.businessCategory.otherGovernmentalEntities | busCategories">
+							<br />
+							<br />
 							Other Governmental Entities:<br />
 							{{awardData.businessCategory.otherGovernmentalEntities | busCategories}}
-							<br />
-							<br />
 						</div>
 						<div class="display-inline" *ngIf="awardData.businessCategory.organizationFactors | busCategories">
+							<br />
+							<br />
 							Organizational Factors:<br />
 							{{awardData.businessCategory.organizationFactors | busCategories}}
-							<br />
-							<br />
 						</div>
 						<div class="display-inline" *ngIf="awardData.businessCategory.educationalEntities | busCategories">
+							<br />
+							<br />
 							Educational Entities:<br />
 							{{awardData.businessCategory.educationalEntities | busCategories}}
-							<br />
-							<br />
 						</div>
 						<div class="display-inline" *ngIf="awardData.businessCategory.certifications | busCategories">
+							<br />
+							<br />
 							Certifications:<br />
 							{{awardData.businessCategory.certifications | busCategories}}
-							<br />
 						</div>
 					</div>
 					<h3 id="contractData">Contract Data</h3>
@@ -299,7 +299,7 @@
 					Fee Range: {{feeRange}}<br />
 					Ordering Procedure (1000 Characters) <i>Optional if Website URL is provided - otherwise, mandatory</i>: {{orderingProcedure}}
 				</div>
-				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'OTA'">
+				<div id="award-type" *ngIf="awardData.templateType != 'IDV'">
 					<h3 id="principalPlaceOfPerformance">Principal Place of Performance</h3>
 					Location: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceLocation}}<br />
 					City: {{awardData.principalPlaceOfPerformance.principalPlaceOfPerformanceCity}}<br />
@@ -315,8 +315,8 @@
 				<div id="award-type" *ngIf="awardData.templateType == 'OTI' || awardData.templateType == 'OTA'">
 					Description of Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}
 				</div>
-				<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
+					<br />
 					<br />
 					Principal NAICS Code: {{awardData.productServiceInformation.naicsCode}}<br />
 					Description: {{awardData.productServiceInformation.naicsDescription}}
@@ -392,8 +392,6 @@
 						Reason Not Awarded To Small Business: {{awardData.preferencePrograms.reasonNotAwardedToSmallBusiness}}<br />
 					</div>
 				</div>
-				<br />
-				<br />
 			</div>
 		</div>
 	</div>
