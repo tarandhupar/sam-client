@@ -24,7 +24,7 @@ function transformMigrationAccount(account) {
 
   account.system = account.sourceLegacySystem.toUpperCase() + '.gov';
   account.name = [account.firstname || '', account.lastname || ''].join(' ').trim();
-  account.migratedAt = (account.claimedTimestamp ? moment(account.claimedTimestamp) : moment()).format('MM/DD/YYYY');
+  account.migratedAt = (account.claimedTimestamp ? moment(account.claimedTimestamp) : moment()).format('YYYY-MM-DD, hh:mm A');
 
   return account;
 }

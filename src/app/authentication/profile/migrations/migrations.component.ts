@@ -1,6 +1,4 @@
-import * as moment from 'moment';
-
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild } from '@angular/core';
+import { Component, DoCheck, Input, KeyValueDiffers, OnInit, OnChanges, QueryList, SimpleChange, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -48,44 +46,37 @@ export class MigrationsComponent {
     private router: Router,
     private builder: FormBuilder,
     private differs: KeyValueDiffers,
-    private zone: NgZone,
     private api: IAMService) {
     this.differ = differs.find({}).create(null);
     this.store.legacy = data;
   }
 
   ngOnInit() {
-    this.zone.runOutsideAngular(() => {
-      this.api.iam.checkSession((user) => {
-        this.zone.run(() => {
-          let role,
-              intRole;
+    this.api.iam.checkSession((user) => {
+      let role,
+          intRole;
 
-          this.email = user.email;
+      this.email = user.email;
 
-          for(intRole = 0; intRole < user.gsaRAC.length; intRole++) {
-            role = user.gsaRAC[intRole];
+      for(intRole = 0; intRole < user.gsaRAC.length; intRole++) {
+        role = user.gsaRAC[intRole];
 
-            if(this.store.roles[role.system] == undefined)
-              this.store.roles[role.system] = {};
-            if(this.store.roles[role.system][role.username] == undefined)
-              this.store.roles[role.system][role.username] = [];
+        if(this.store.roles[role.system] == undefined)
+          this.store.roles[role.system] = {};
+        if(this.store.roles[role.system][role.username] == undefined)
+          this.store.roles[role.system][role.username] = [];
 
-            this.store.roles[role.system][role.username].push(role);
-          }
+        this.store.roles[role.system][role.username].push(role);
+      }
 
-          this.initForm();
-        });
-      }, () => {
-        this.zone.run(() => {
-          if(this.api.iam.isDebug()) {
-            this.initForm();
-            this.alert('Account Successfully Migrated', 'success');
-          } else {
-            this.router.navigate(['/signin']);
-          }
-        });
-      });
+      this.initForm();
+    }, () => {
+      if(this.api.iam.isDebug()) {
+        this.initForm();
+        this.alert('Account Successfully Migrated', 'success');
+      } else {
+        this.router.navigate(['/signin']);
+      }
     });
   }
 
@@ -123,28 +114,22 @@ export class MigrationsComponent {
 
     this.store.systems = this.api.iam.import.systems();
 
-    this.zone.runOutsideAngular(() => {
-      this.api.iam.import.history(this.email, (accounts) => {
-        this.zone.run(() => {
-          this.store.migrations = accounts;
+    this.api.iam.import.history(this.email, (accounts) => {
+      this.store.migrations = accounts;
 
-          if(this.store.migrations.length) {
-            this.alert('Account Successfully Migrated', 'success');
-          }
-        });
-      }, (response) => {
-        this.zone.run(() => {
-          if(this.api.iam.isDebug()) {
-            this.store.migrations = response;
+      if(this.store.migrations.length) {
+        this.alert('Account Successfully Migrated', 'success');
+      }
+    }, (response) => {
+      if(this.api.iam.isDebug()) {
+        this.store.migrations = response;
 
-            if(this.store.migrations.length) {
-              this.alert('Account Successfully Migrated', 'success');
-            }
-          } else {
-            console.warn('Endpoint Unavailable')
-          }
-        });
-      })
+        if(this.store.migrations.length) {
+          this.alert('Account Successfully Migrated', 'success');
+        }
+      } else {
+        console.warn('Endpoint Unavailable')
+      }
     });
 
     return data;
@@ -209,19 +194,13 @@ export class MigrationsComponent {
 
       this.states.loading = true;
 
-      this.zone.runOutsideAngular(() => {
-        this.api.iam.import.create(this.email, data.system, data.username, data.password, (account) => {
-          this.zone.run(() => {
-            this.store.migrations.push(account);
-            this.alert('Account Successfully Migrated', 'success');
-            this.states.loading = false;
-          })
-        }, (error) => {
-          this.zone.run(() => {
-            this.alert(error.message, 'error');
-            this.states.loading = false;
-          });
-        });
+      this.api.iam.import.create(this.email, data.system, data.username, data.password, (account) => {
+        this.store.migrations.push(account);
+        this.alert('Account Successfully Migrated', 'success');
+        this.states.loading = false;
+      }, (error) => {
+        this.alert(error.message, 'error');
+        this.states.loading = false;
       });
     }
   }
