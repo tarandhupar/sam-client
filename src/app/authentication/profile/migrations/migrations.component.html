@@ -43,28 +43,38 @@
     <table *ngIf="store.migrations.length" class="usa-table-borderless usa-migration-history">
       <thead>
         <tr>
-          <th scope="col" class="text-right">Role</th>
+          <th scope="col" class="text-center">Legacy System</th>
+          <th scope="col">Legacy UserID</th>
           <th scope="col">&nbsp;</th>
-          <th scope="col" class="text-left">Organization</th>
-          <th scope="col">&nbsp;</th>
+          <th scope="col">Date/Time of Migration</th>
         </tr>
       </thead>
-      <tbody *ngFor="let account of store.migrations; let $index = index;">
+      <tbody *ngFor="let system of store.migrations | groupBy: 'system'">
         <tr class="group">
-          <td class="text-right">
-            <h1 [innerText]="account.system">CFDA.gov</h1>
-            <div class="key">
+          <td>
+            <h1 [innerText]="system.key">CFDA.gov</h1>
+          </td>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+        <tr *ngFor="let account of system.items; let $first = first; let $last = last" class="group-item" [ngClass]="{ 'group-item-first': $first, 'group-item-last': $last }">
+          <td>&nbsp;</td>
+          <td>
+            <div class="key text-left">
               <span class="fa fa-user"></span>
-              <span [innerText]="account.name">Jane Smith</span>
+              <span [innerText]="account.email">-</span>
             </div>
           </td>
           <td>&nbsp;</td>
-          <td>&nbsp;</td>
           <td>
-            <div class="key">Migrated <span [innerText]="account.migratedAt">12/10/2016</span></div>
+            <div class="key">Migrated <span [innerText]="account.migratedAt">-</span></div>
           </td>
         </tr>
       </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">&nbsp;</td>
+        </tr>
+      </tfoot>
     </table>
 
     <h3 id="legacy-sites">Legacy Websites</h3>
@@ -88,9 +98,6 @@
           </td>
           <td [innerText]="system.statuses.migration"></td>
           <td [innerText]="system.statuses.system"></td>
-        </tr>
-        <tr>
-          <td colspan="3">&nbsp;</td>
         </tr>
       </tbody>
     </table>

@@ -66,6 +66,7 @@ h2 {
 }
 h3 {
   font-size: $h3;
+  letter-spacing: -.5px;
 }
 h4 {
   font-size: $h4;
@@ -106,13 +107,11 @@ p:last-child {
   margin-bottom: 0em;
 }
 
-/*******************************
-          Bold
-*******************************/
-
-b, strong {
-    font-weight: 600;
-    color: #333333;
+/*-------------------
+      Bold
+--------------------*/
+b, bold, strong{
+  font-weight: 600;
 }
 
 /*-------------------
