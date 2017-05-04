@@ -20,7 +20,7 @@ export class RequestAccessResolve implements Resolve<any> {
 
     return this.accessService.getPendingRequestById(rid)
       .catch(() => {
-        this.router.navigateByUrl('/access/role-workspace');
+        this.router.navigateByUrl('/access/requests');
         this.footerAlerts.registerFooterAlert({
           description: "The request ID was not found or there was an error with a required service.",
           type: 'error',

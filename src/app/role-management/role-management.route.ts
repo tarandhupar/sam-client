@@ -28,7 +28,7 @@ export const routes: Routes = [{
       },
       canActivate: [AdminOrDeptAdminGuard]
     },
-    { path: 'role-workspace', component: RoleMgmtWorkspace, canActivate: [AdminOrDeptAdminGuard] },
+    { path: 'requests', component: RoleMgmtWorkspace, canActivate: [AdminOrDeptAdminGuard] },
   ]
 }];
 
