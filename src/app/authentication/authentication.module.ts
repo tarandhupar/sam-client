@@ -3,10 +3,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
-import { SamAPIKitModule } from '../../api-kit/api-kit.module';
+import { SamAPIKitModule } from 'api-kit';
 import { SamUIKitModule } from 'sam-ui-kit';
-import { AppComponentsModule } from '../../app/app-components/app-components.module';
 import { Ng2PageScrollModule } from 'ng2-page-scroll';
+import { AppComponentsModule } from '..//app-components/app-components.module';
+import { PipesModule } from '../app-pipes/app-pipes.module';
 
 import { AuthenticationService } from './authentication.service.ts';
 import { AuthenticationRouter } from './authentication.route';
@@ -33,9 +34,10 @@ import { SystemComponent, SystemProfileComponent, SystemPasswordComponent } from
     ReactiveFormsModule,
     SamAPIKitModule,
     SamUIKitModule,
+    Ng2PageScrollModule.forRoot(),
     AppComponentsModule,
-    AuthenticationRouter,
-    Ng2PageScrollModule.forRoot()
+    PipesModule,
+    AuthenticationRouter
   ],
 
   declarations: [
