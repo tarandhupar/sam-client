@@ -42,6 +42,7 @@ export class OrgAddrFormComponent {
   @Output() onAdditionalAddrRequest:EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() onCancelAdditionalAddrRequest:EventEmitter<any> = new EventEmitter<any>();
   @Output() orgAddrModelChange:EventEmitter<any> = new EventEmitter<any>();
+  @Output() onEnableAddIcon:EventEmitter<boolean> = new EventEmitter<boolean>();
 
   orgAddrSelectConfig = {
     options:[
@@ -71,6 +72,7 @@ export class OrgAddrFormComponent {
 
   onAddrTypeSelect(val){
     this.orgAddrModel.addrType = val;
+    this.onEnableAddIcon.emit(true);
   }
 
   onAdditionalAddressFormClick(val){

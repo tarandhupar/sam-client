@@ -13,18 +13,20 @@ if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
   routes.unshift({path: 'users', component: UserDirectoryPage});
 }
 
-routes.unshift({
-  path: 'users/:id',
-  component: UserViewComponent,
-  children: [
-    { path: '', redirectTo: 'profile', pathMatch: 'full' },
-    { path: 'profile',  component: UserProfilePage },
-    { path: 'migrations',  component: UserMigrationsPage },
-    { path: 'access',  component: UserAccessPage, },
-    { path: 'edit-access',  component: GrantAccessPage },
-    { path: 'grant-access',  component: GrantAccessPage, resolve: { 'request': RequestAccessResolve }},
-    { path: 'request-access',  component: GrantAccessPage },
-  ]
-});
+routes.unshift(
+  {
+    path: 'users/:id',
+    component: UserViewComponent,
+    children: [
+      { path: '', redirectTo: 'profile', pathMatch: 'full' },
+      { path: 'profile',  component: UserProfilePage },
+      { path: 'migrations',  component: UserMigrationsPage },
+      { path: 'access',  component: UserAccessPage, },
+    ]
+  },
+  { path: 'users/:id/edit-access',  component: GrantAccessPage },
+  { path: 'users/:id/grant-access',  component: GrantAccessPage, resolve: { 'request': RequestAccessResolve }},
+  { path: 'users/:id/request-access',  component: GrantAccessPage },
+);
 
 export const routing = RouterModule.forChild(routes);

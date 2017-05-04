@@ -114,7 +114,7 @@ export class WageDeterminationPage implements OnInit {
 
       this.updateSideNav(wageDeterminationSideNavContent);
     }, err => {
-      console.log('Error logging', err);
+      this.router.navigate(['/404']);
     });
 
     return wgSubject;

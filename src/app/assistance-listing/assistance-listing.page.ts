@@ -239,10 +239,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
       this.updateSideNav(falSideNavContent);
     }, err => {
-      console.log('Error loading program', err);
-      if (err.status === 403) {
         this.router.navigate(['/404']);
-      }
     });
 
     return apiSubject;
