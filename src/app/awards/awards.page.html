@@ -260,7 +260,7 @@
 					National Interest Action: {{awardData.contractData.nationalInterestCode}}<br />
 					<div id="award-type" *ngIf="awardData.templateType == 'IDV'">
 						Type of IDC: {{awardData.contractData.typeOfIdcDesc}}<br />
-						Multiple or Single Award IDV: {{awardData.contractData.multipleOrSingleAwardIdc}}<br />
+						Multiple or Single Award: {{awardData.contractData.multipleOrSingleAwardIdc}}<br />
 						Program Acronym: {{awardData.contractData.programAcronym}}<br />
 					</div>
 					<div *ngIf="awardData.templateType == 'AWARD' || 'IDV'">
@@ -292,12 +292,11 @@
 					<h3 id="contractMarketingData">Contract Marketing Data</h3>
 					Website URL: {{websiteURL}}<br />
 					Who can use: {{whoCanUse}}<br />
-					FIPS 95 Codes/Other Text: {{fips95))<br />
+					FIPS 95 Codes/Other Text: {{fips95}}<br />
 					Email Contact: {{emailContact}}<br />
 					Maximum Order Limit: {{maxOrderLimit}}<br />
 					Fee for Use of Service: {{feeForUseOfService}}<br />
-					Fee Range: {{feeRange}}<br />
-					Ordering Procedure (1000 Characters) <i>Optional if Website URL is provided - otherwise, mandatory</i>: {{orderingProcedure}}
+					Ordering Procedure: {{orderingProcedure}}
 				</div>
 				<div id="award-type" *ngIf="awardData.templateType != 'IDV'">
 					<h3 id="principalPlaceOfPerformance">Principal Place of Performance</h3>
@@ -316,7 +315,6 @@
 					Description of Requirement: {{awardData.productServiceInformation.descriptionOfRequirement}}
 				</div>
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
-					<br />
 					<br />
 					Principal NAICS Code: {{awardData.productServiceInformation.naicsCode}}<br />
 					Description: {{awardData.productServiceInformation.naicsDescription}}
@@ -367,9 +365,9 @@
 					Commercial Item Acquisition Procedures: {{awardData.competitionInformation.commercialItemAcquistnDesc}}<br />
 					Number of Offers Received: {{awardData.competitionInformation.numberOfOffersReceived}}<br />
 					Small Business Competitiveness Demonstration Program: {{awardData.competitionInformation.smallBusCompDemonstrationProgram}}<br />
-					Commercial Item Test Program: {{awardData.competitionInformation.commercialItemTestProgram}}<br />
-					<br />
+					Commercial Item Test Program: {{awardData.competitionInformation.commercialItemTestProgram}}
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD'">
+					<br />
 					Pre Award FBO Synopsis: {{awardData.competitionInformation.preAwardSynopsisDesc}}<br />
 					SBA/OFPP Synopsis Waiver Pilot: {{awardData.competitionInformation.sbaOfppSynopsisWaiverPilot}}<br />
 					Alternative Advertising: {{awardData.competitionInformation.alternativeAdvertising}}
@@ -379,18 +377,19 @@
 					Nontraditional Government Contractor Participation: {{awardData.competitionInformation.nontraditionalGovContParticipation}}<br />
 					Type of Agreement: {{awardData.competitionInformation.typeOfAgreement}}
 				</div>
-				<br /><br />
+				<br />
 				<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 					<h3 id="preferenceProgramsOtherData">Preference Programs/Other Data</h3>
 					Contracting Officer's Business Size Selection: {{awardData.preferencePrograms.contractingOfficerBusSizeDetermination}}<br />
-					Subcontract Plan: {{awardData.preferencePrograms.subcontractPlanDesc}}<br />
+					Subcontract Plan: {{awardData.preferencePrograms.subcontractPlanDesc}}
 					<div *ngIf="awardData.templateType == 'AWARD'">
 						Price Evaluation Percent Difference: {{awardData.preferencePrograms.priceEvaluationPercentDifference}}
 						<br />
 						<br />
 						Reason Not Awarded To Small Disadvantaged Business: {{awardData.preferencePrograms.reasonNotAwardedToSmallDisadvantagedBusiness}}<br />
-						Reason Not Awarded To Small Business: {{awardData.preferencePrograms.reasonNotAwardedToSmallBusiness}}<br />
+						Reason Not Awarded To Small Business: {{awardData.preferencePrograms.reasonNotAwardedToSmallBusiness}}
 					</div>
+					<br /><br />
 				</div>
 			</div>
 		</div>
