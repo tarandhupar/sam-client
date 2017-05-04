@@ -309,7 +309,7 @@ export class GrantAccessPage implements OnInit {
   }
 
   goToRoleWorkspace() {
-    this.router.navigate(['/access/role-workspace']);
+    this.router.navigate(['/access/requests']);
   }
 
   isFormValid() {
