@@ -32,8 +32,8 @@ $textAlign: left;
 $rowBorder: 1px solid $internalBorderColor;
 
 /* Table Cell */
-$cellVerticalPadding: 1em;
-$cellHorizontalPadding: $relativeMini;
+$cellVerticalPadding: .5em;
+$cellHorizontalPadding: $cellVerticalPadding;
 $cellVerticalAlign: inherit;
 $cellTextAlign: inherit;
 $cellBorder: 1px solid $internalBorderColor;
@@ -45,7 +45,7 @@ $headerBackground: $offWhite;
 $headerAlign: inherit;
 $headerVerticalAlign: inherit;
 $headerColor: $textColor;
-$headerVerticalPadding: 1em;
+$headerVerticalPadding: .5em;
 $headerHorizontalPadding: $cellHorizontalPadding;
 $headerFontStyle: none;
 $headerFontWeight: bold;
@@ -323,7 +323,8 @@ $veryCompactHorizontalPadding: 0.6em;
 }
 
 /* Table Row */
-.#{$prefix}.table tr td {
+.#{$prefix}.table tr td,
+.#{$prefix}.table tbody th {
   border-top: $rowBorder;
 }
 .#{$prefix}.table tr:first-child td {
@@ -331,7 +332,8 @@ $veryCompactHorizontalPadding: 0.6em;
 }
 
 /* Table Cells */
-.#{$prefix}.table td {
+.#{$prefix}.table td,
+.#{$prefix}.table tbody th {
   padding: $cellVerticalPadding $cellHorizontalPadding;
   text-align: $cellTextAlign;
 }

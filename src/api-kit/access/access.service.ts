@@ -38,7 +38,7 @@ export class UserAccessService {
     return this.apiService.call(apiOptions);
   }
 
-  getRoles(queryParams, userName?): Observable< Array<IRole> > {
+  getRoles(queryParams, userName?, adminLevel?: number): Observable< Array<IRole> > {
     let apiOptions: any = {
       name: 'uiroles',
       method: 'GET',
@@ -50,6 +50,10 @@ export class UserAccessService {
 
     if (userName) {
       apiOptions.suffix = '/'+userName+'/';
+    }
+
+    if (typeof adminLevel === 'number') {
+      apiOptions.oParam.adminLevel = adminLevel;
     }
 
     apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
