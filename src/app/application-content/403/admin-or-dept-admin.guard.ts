@@ -15,6 +15,10 @@ export class AdminOrDeptAdminGuard implements CanActivate {
   constructor(private router: Router) { }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    if (route.queryParams['adminLevel']) {
+      Cookie.set('adminLevel', route.queryParams['adminLevel'], undefined /* expired */, '/' /* path */);
+    }
+
     if (Cookie.get('adminLevel') === '0' || Cookie.get('adminLevel') === '1') {
       return true;
     } else {
