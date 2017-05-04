@@ -12,12 +12,12 @@ import { Observable } from "rxjs";
 import { Organization } from "../../../organization/organization.model";
 import { IRole } from "../../../../api-kit/access/role.interface";
 import { Title } from "@angular/platform-browser";
+import { Cookie } from "ng2-cookies";
 
 @Component({
   templateUrl: 'grant-access.template.html'
 })
 export class GrantAccessPage implements OnInit {
-
   private errors = {
     role: '',
     domain: '',
@@ -52,6 +52,7 @@ export class GrantAccessPage implements OnInit {
   private objectsEditable: boolean = true;
   private requestId: any = null;
   private request: any;
+  private adminLevel: number;
 
   constructor(
     private userService: UserAccessService,
@@ -67,6 +68,8 @@ export class GrantAccessPage implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('User Access');
+    let adminLevel = parseInt(Cookie.get('adminLevel'));
+    this.adminLevel = isNaN(adminLevel) ? null : adminLevel;
     this.userName = this.route.snapshot.params['id'];
     this.userCameFromRoleWorkspace = !!this.route.snapshot.queryParams['ref'];
 
@@ -252,9 +255,9 @@ export class GrantAccessPage implements OnInit {
   getRoles() {
     let obs;
     if (this.mode === 'edit') {
-      obs = this.userService.getRoles({domainID: this.domain, keepRoles: this.role}, this.userName).share();
+      obs = this.userService.getRoles({domainID: this.domain, keepRoles: this.role}, this.userName, this.adminLevel).share();
     } else {
-      obs = this.userService.getRoles({domainID: this.domain}).share();
+      obs = this.userService.getRoles({domainID: this.domain}, undefined, this.adminLevel).share();
     }
 
     obs.subscribe(
@@ -317,7 +320,7 @@ export class GrantAccessPage implements OnInit {
     switch (this.mode) {
       case 'edit':
       case 'grant':
-        return this.orgs && this.orgs.length && this.domain && this.role;
+        return this.orgs && this.orgs.length  && this.domain && this.role;
       case 'request':
         return this.domain
           && this.messages

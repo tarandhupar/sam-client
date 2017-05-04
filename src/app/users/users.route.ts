@@ -6,6 +6,8 @@ import { UserMigrationsPage } from './public/migrations/migrations.page';
 import { UserProfilePage } from './public/profile/profile.page';
 import { GrantAccessPage } from "./public/grant-access/grant-access.page";
 import { RequestAccessResolve } from "./request-access.resolve";
+import { AdminOnlyGuard } from "../application-content/403/admin-only.guard";
+import {AdminOrDeptAdminGuard} from "../application-content/403/admin-or-dept-admin.guard";
 
 export const routes: Routes = [];
 
@@ -24,8 +26,8 @@ routes.unshift(
       { path: 'access',  component: UserAccessPage, },
     ]
   },
-  { path: 'users/:id/edit-access',  component: GrantAccessPage },
-  { path: 'users/:id/grant-access',  component: GrantAccessPage, resolve: { 'request': RequestAccessResolve }},
+  { path: 'users/:id/edit-access',  component: GrantAccessPage, canActivate: [AdminOrDeptAdminGuard] },
+  { path: 'users/:id/grant-access',  component: GrantAccessPage, canActivate: [AdminOrDeptAdminGuard], resolve: { 'request': RequestAccessResolve }},
   { path: 'users/:id/request-access',  component: GrantAccessPage },
 );
 

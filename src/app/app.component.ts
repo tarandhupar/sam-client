@@ -66,10 +66,8 @@ export class App{
   fakeOutAdmin() {
     // for debugging, fake out admin role by setting 'admin=true' or 'admin=false' as a query parameter
     this.activatedRoute.queryParams.subscribe(queryParams => {
-      if (queryParams["admin"] === 'true') {
-        Cookie.set('isAdmin', 'true', undefined /* expired */, '/' /* path */);
-      } else if (queryParams["admin"] === 'false') {
-        Cookie.set('isAdmin', 'false', undefined /* expired */, '/' /* path */);
+      if (queryParams['adminLevel']) {
+        Cookie.set('adminLevel', queryParams['adminLevel'], undefined /* expired */, '/' /* path */);
       }
     });
   }
