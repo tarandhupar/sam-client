@@ -61,6 +61,10 @@ export class UserAccessPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.route.snapshot.queryParams['adminLevel']) {
+      Cookie.set('adminLevel', this.route.snapshot.queryParams['adminLevel'], undefined /* expired */, '/' /* path */);
+    }
+
     this.isAdmin = Cookie.get('adminLevel') === '0' || Cookie.get('adminLevel') === '1';
     this.userName = this.route.parent.snapshot.params['id'];
 
