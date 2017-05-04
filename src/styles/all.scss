@@ -73,7 +73,7 @@ $large: $current-large;
 @import '~uswds/src/stylesheets/elements/inputs';
 @import '~uswds/src/stylesheets/elements/labels';
 //@import '~uswds/src/stylesheets/elements/list';
-@import '~uswds/src/stylesheets/elements/table';
+//@import '~uswds/src/stylesheets/elements/table';
 //@import '~uswds/src/stylesheets/elements/typography';
 
 
@@ -132,6 +132,10 @@ home samsearchbar{
 
 .usa-unstyled-list {
   @include unstyled-list;
+}
+
+.usa-unstyled-list > li {
+    padding-bottom: 2px;
 }
 
 samsearchheader .search-header > .usa-width-one-whole{
@@ -231,6 +235,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'pages/organization-create';
 @import 'pages/aac-request';
 @import 'pages/aac-confirm';
+
 // h1,
 // h2{
 //   letter-spacing: -0.5px;
