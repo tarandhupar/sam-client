@@ -226,7 +226,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     }
 
     if(this.model.textarea) {
-      this.fyTableGroup.get('textarea').setValue(this.model.textarea);
+      this.fyTableGroup.get('textarea').setValue(this.model.textarea || '');
     }
 
     if(this.model.year) {

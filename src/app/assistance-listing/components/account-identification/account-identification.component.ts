@@ -147,7 +147,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     //   return acc + length;
     // }, 0);
 
-    let description = this.model.accounts[index].description;
+    let description = this.model.accounts[index].description || '';
     this.textareaControl.setValue(description);
 
     this.currentIndex = index;

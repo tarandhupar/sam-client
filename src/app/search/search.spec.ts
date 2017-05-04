@@ -21,6 +21,7 @@ import {SamContractTypeFilter} from "../awards/search-result/contract-type-filte
 import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 import { RegionalOfficeListingResult } from "../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component";
 import {FormsModule} from "@angular/forms";
+import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 let fixture;
 
 let searchServiceStub = {
@@ -97,8 +98,10 @@ let awardType = {
 describe('SearchPage', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult, SamContractTypeFilter, SamNaicsPscFilter, RegionalOfficeListingResult ],
-      providers: [AlertFooterService ],
+      declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,
+        EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult,
+        SamContractTypeFilter, SamNaicsPscFilter, RegionalOfficeListingResult],
+      providers: [AlertFooterService, DunsEntityAutoCompleteWrapper ],
       imports: [
         SamUIKitModule,
         SamAPIKitModule,

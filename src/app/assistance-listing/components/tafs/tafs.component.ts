@@ -140,12 +140,12 @@ export class FALTafsComponent implements ControlValueAccessor {
   public editTafs(index: number) {
     let tafs = this.model.tafs[index];
 
-    this.tafsFormGroup.get('departmentCode').setValue(tafs.departmentCode);
-    this.tafsFormGroup.get('accountCode').setValue(tafs.accountCode);
-    this.tafsFormGroup.get('subAccountCode').setValue(tafs.subAccountCode);
-    this.tafsFormGroup.get('allocationTransferAgency').setValue(tafs.allocationTransferAgency);
-    this.tafsFormGroup.get('fy1').setValue(tafs.fy1);
-    this.tafsFormGroup.get('fy2').setValue(tafs.fy2);
+    this.tafsFormGroup.get('departmentCode').setValue(tafs.departmentCode || '');
+    this.tafsFormGroup.get('accountCode').setValue(tafs.accountCode || '');
+    this.tafsFormGroup.get('subAccountCode').setValue(tafs.subAccountCode || '');
+    this.tafsFormGroup.get('allocationTransferAgency').setValue(tafs.allocationTransferAgency || '');
+    this.tafsFormGroup.get('fy1').setValue(tafs.fy1 || '');
+    this.tafsFormGroup.get('fy2').setValue(tafs.fy2 || '');
 
     this.currentIndex = index;
     this.showForm = true;

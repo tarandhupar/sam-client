@@ -38,6 +38,7 @@ import { UserDirectoryModule } from './users';
 import { OrganizationDetailModule } from "./organization-detail/organization-detail.module";
 import { RoleManagementModule } from "./role-management/role-management.module";
 import {FALFormModule} from "./assistance-listing/assistance-listing-operations/fal-form.module";
+import {ForbiddenModule} from "./application-content/403/403.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -81,6 +82,7 @@ const APP_PROVIDERS = [
     WageDeterminationModule,
     OrganizationDetailModule,
     RoleManagementModule,
+    ForbiddenModule,
 
     //  Data Entry
     FALFormModule,

@@ -69,7 +69,7 @@ export class SamHeaderLinksComponent {
     {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/reports/overview", pageInProgress:true},
     {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/", pageInProgress:true},
     {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview", pageInProgress:false},
-    {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/", pageInProgress:true},
+    {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/create-organization?orgType=Department", pageInProgress:true},
     {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/", pageInProgress:true},
   ];
 
@@ -102,10 +102,10 @@ export class SamHeaderLinksComponent {
       });
     });
   }
-  
+
   searchLink = false;
   menuLink = false;
-  
+
   onSearchLinkClick(){
     if (this.showDropdown === true && this.menuLink === true) {
       this.menuLink = false;
@@ -116,7 +116,7 @@ export class SamHeaderLinksComponent {
       this.menuLink = false;
     }
   }
-  
+
   onMenuLinkClick() {
     if (this.showDropdown === true && this.searchLink === true) {
       this.searchLink = false;
@@ -164,9 +164,9 @@ export class SamHeaderLinksComponent {
     }
     return true;
   }
-  
+
   refreshPage(){
     window.location.reload();
   }
-  
+
 }

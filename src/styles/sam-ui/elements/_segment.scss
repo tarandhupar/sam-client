@@ -9,14 +9,12 @@
 
 $background: $white;
 $borderWidth: 1px;
-$border: $borderWidth solid $borderColor;
+$border: $borderWidth solid rgba(151, 151, 151, 0.2);
 
 $boxShadow: none; //$subtleShadow
-$verticalPadding: 2em;
-$horizontalPadding: 2em;
-// Temporary adding !important to solve grid overriding
-// segment when .grid.segment
-$padding: $verticalPadding $horizontalPadding !important;
+$verticalPadding: 1em;
+$horizontalPadding: 1em;
+$padding: $verticalPadding $horizontalPadding;
 
 $verticalMargin: 1rem;
 $horizontalMargin: 0em;
@@ -59,7 +57,7 @@ $circularPadding: 2em;
 $raisedBoxShadow: $floatingShadow;
 
 /* Padded */
-$paddedSegmentPadding: 1.5em;
+$paddedSegmentPadding: 2em;
 $veryPaddedSegmentPadding: 3em;
 
 /* Attached */
