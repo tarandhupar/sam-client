@@ -67,16 +67,6 @@ export class App{
           }
         }
       });
-    this.fakeOutAdmin();
-  }
-
-  fakeOutAdmin() {
-    // for debugging, fake out admin role by setting 'admin=true' or 'admin=false' as a query parameter
-    this.activatedRoute.queryParams.subscribe(queryParams => {
-      if (queryParams['adminLevel']) {
-        Cookie.set('adminLevel', queryParams['adminLevel'], undefined /* expired */, '/' /* path */);
-      }
-    });
   }
 
   get isHeaderWithSearch() {
