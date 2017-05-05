@@ -25,8 +25,6 @@ export class SamFeedbackComponent {
   answerData = [];
 
   showFeedback: boolean = false;
-  curQueIndex: number = 0;
-  curQuestion = this.questionData[this.curQueIndex];
 
   ratingThumbUpClass: string = "fa-thumbs-o-up";
   ratingThumbDownClass: string = "fa-thumbs-o-down";
@@ -45,9 +43,8 @@ export class SamFeedbackComponent {
   isSignedIn = false;
 
   timer:Subscription;
-  curSec = 5;
+  curSec = 3;
   showThanksNote = false;
-  showEmptyFeedbackWarning = false;
   showEmailError = false;
 
   @ViewChild('proceedModal') proceedModal;
@@ -85,7 +82,7 @@ export class SamFeedbackComponent {
           this.currentUrl = val.url;
         }else{
           this.nextUrl = val.url;
-          if(!this.isUrlInSamePage(this.currentUrl, this.nextUrl) && this.showUnsubmittedWarning()){
+          if(!this.isUrlInSamePage(this.currentUrl, this.nextUrl) && this.showunsubmittedWarning()){
             this.showProceedModal();
           }else{
             this.currentUrl = this.nextUrl;
@@ -102,7 +99,7 @@ export class SamFeedbackComponent {
     this.showFeedback = !this.showFeedback;
     if(this.showFeedback){
       navigateAwayObj.formStarted = true;
-      this.resultInit();
+      this.resultInit(0);
       if(document && document.body){
         document.body.appendChild(this.backdropElement);
         document.body.className += " feedback-open";
@@ -122,58 +119,50 @@ export class SamFeedbackComponent {
     }
   }
 
-  onRatingClick(val){
-    this.setRatingResult(val);
+  onRatingClick(val, index){
+    this.setRatingResult(val, index);
   }
 
-  onRadioBtnChange(val){
-    this.setSingleSelectionResult(val);
+  onRadioBtnChange(val, index){
+    this.setSingleSelectionResult(val, index);
   }
 
-  onEmailRadioBtnChange(val){
-    this.setRadioEmailResult(val);
+  onEmailRadioBtnChange(val, index){
+    this.setRadioEmailResult(val, index);
   }
 
-  onEmailTextChange(){
+  onEmailTextChange(index){
     if(!this.emailModelEdited) this.emailModelEdited = true;
-    this.setCurQAnswer({selectedValue:'Yes',userEmail:this.userEmailModel});
+    this.setQAnswer({selectedValue:'Yes',userEmail:this.userEmailModel},index);
   }
 
-  onTextAreaChange(){
+  onTextAreaChange(index){
     if(this.textAreaModel !== ""){
-      this.setCurQAnswer(this.textAreaModel);
+      this.setQAnswer(this.textAreaModel, index);
     }else{
-      this.resetCurQAnswer();
+      this.resetQAnswer(index);
     }
   }
 
-  onCbxChange(value, checked){
+  onCbxChange(value, checked, index){
+    console.log(this.multiSelectionModel);
     let cbxEmpty = true;
     Object.keys(this.multiSelectionModel).forEach(key => {
       if(this.multiSelectionModel[key]) cbxEmpty = false;
     });
-    cbxEmpty? this.resetCurQAnswer():this.setCurQAnswer(this.multiSelectionModel);
+    cbxEmpty? this.resetQAnswer(index):this.setQAnswer(this.multiSelectionModel, index);
   }
 
-  onPreviousClick(){
-    this.curQueIndex--;
-    this.curQuestion = this.questionData[this.curQueIndex];
-    this.showEmptyFeedbackWarning = false;
-    this.resultInit();
-  }
 
-  onNextClick(){
-    this.curQueIndex++;
-    this.curQuestion = this.questionData[this.curQueIndex];
-    this.showEmptyFeedbackWarning = false;
-    this.resultInit();
+  onExpandChange(subAccordion, index){
+    if(subAccordion.isExpanded){
+      this.resultInit(index);
+    }
   }
 
   onSubmitFeedbackClick(){
-    // Check whether the feedback result is empty
-    if(this.isFeedbackAnswerEmpty()){
-      this.showEmptyFeedbackWarning = true;
-    }else{
+
+    if(!this.isFeedbackAnswerEmpty()){
       this.emailModelEdited = true;
 
       if((this.isEmailBtnChecked('Yes') && this.email.errors)){
@@ -181,13 +170,13 @@ export class SamFeedbackComponent {
       }else if((this.isEmailBtnChecked('Yes') && !this.email.errors) || this.isEmailBtnChecked('No') || this.emailRadioBtnValue === ''){
         // Submit the feedback results
         let res = this.generateFeedbackRes();
-
-        this.feedbackService.createFeedback(res).subscribe(res => {});
-        navigateAwayObj.formSubmitted = true;
-        this.showThanksNote = true;
-        this.startCountDown();
+        this.feedbackService.createFeedback(res).subscribe(data => {});
       }
     }
+
+    navigateAwayObj.formSubmitted = true;
+    this.showThanksNote = true;
+    this.startCountDown();
 
   }
 
@@ -199,12 +188,18 @@ export class SamFeedbackComponent {
     };
     this.answerData.forEach((answerItem,index) => {
       if(answerItem.edited){
+        let val = answerItem.value;
+        if(this.questionData[index].type === 'multiSelection'){
+          let multiSelectionVal = [];
+          Object.keys(answerItem.value[0]).forEach(key => {if(answerItem.value[0][key]) multiSelectionVal.push(key);});
+          val = multiSelectionVal;
+        }
         let feedbackResItem:feedbackResItemType = {
           questionId: this.questionData[index].id,
           userId: this.isEmailBtnChecked('No')? "":this.userEmailModel,
           feedback_response: {
             type: this.questionData[index].type,
-            selected: this.questionData[index].type === "radio-text"? [answerItem.value[0].userEmail]: answerItem.value,
+            selected: this.questionData[index].type === "radio-text"? [val[0].userEmail]: val,
           },
         };
         res.feedbackList.push(feedbackResItem);
@@ -242,66 +237,21 @@ export class SamFeedbackComponent {
   checkSignInUser() {
     //Get the sign in info
     this.isSignedIn = false;
-    this.zone.runOutsideAngular(() => {
-      this.iamService.iam.checkSession((user) => {
-        this.zone.run(() => {
-          this.isSignedIn = true;
-          this.user = user;
-        });
+    this.iamService.iam.checkSession((user) => {
+      this.zone.run(() => {
+        this.isSignedIn = true;
+        this.user = user;
       });
     });
   }
 
-  getPaginationArray(){return Array.from(Array(this.questionData.length).keys());}
-  getPageClass(val){return this.isCurrentPage(val)? "feedback-current-page":"";}
-
-  isCurrentQType(type):boolean{return this.curQuestion.type === type;}
-  isPrevButtonOn():boolean{return this.curQueIndex !== 0;}
-  isNextButtonOn():boolean{return this.curQueIndex !== this.questionData.length-1;}
-  isPageEdited(page){return this.answerData[page].edited;}
-  isCurrentPage(page){return page === this.curQueIndex;}
-  isLastPage(page){return page === this.questionData.length - 1;}
   isEmailBtnChecked(val){return this.emailRadioBtnValue === val;}
-  isEmailError():boolean{return this.isEmailBtnChecked('Yes') && this.isPageEdited(this.curQueIndex) && this.email.errors && this.emailModelEdited;}
 
-  showUnsubmittedWarning(){
-
+  showunsubmittedWarning(){
     return navigateAwayObj.formStarted && !navigateAwayObj.formSubmitted && !this.showFeedback;
   }
 
-  resultInit(){
-    if(this.answerData[this.curQueIndex].edited){
-      switch(this.questionData[this.curQueIndex].type){
-        case 'rating':
-          this.setRatingResult(this.answerData[this.curQueIndex].value[0]);
-          break;
-        case 'multiSelection':
-          this.setMultiSelectionResult(this.answerData[this.curQueIndex].value);
-          break;
-        case 'singleSelection':
-          this.setSingleSelectionResult(this.answerData[this.curQueIndex].value[0]);
-          break;
-        case 'textarea':
-          this.setTextAreaResult(this.answerData[this.curQueIndex].value);
-          break;
-        case 'radio-text':
-          this.emailRadioBtnValue = this.answerData[this.curQueIndex].value[0].selectedValue;
-          this.userEmailModel = this.emailRadioBtnValue === "Yes"? this.answerData[this.curQueIndex].value[0].userEmail:"";
-          break;
-        default:
-          break;
-      }
-    } else{
-      this.resetQueOptions();
-      if(this.questionData[this.curQueIndex].type === 'multiSelection'){
-        this.setUpMultiSelectionModel(this.questionData[this.curQueIndex].selections);
-      }if(this.questionData[this.curQueIndex].type === 'radio-text'){
-        this.checkSignInUser();
-      }
-    }
-  }
-
-  setRatingResult(val){
+  setRatingResult(val, index){
     if(val){
       this.ratingThumbUpClass = "fa-thumbs-up";
       this.ratingThumbDownClass = "fa-thumbs-o-down";
@@ -309,48 +259,48 @@ export class SamFeedbackComponent {
       this.ratingThumbUpClass = "fa-thumbs-o-up";
       this.ratingThumbDownClass = "fa-thumbs-down";
     }
-    this.setCurQAnswer(val);
+    this.setQAnswer(val, index);
   }
 
-  setMultiSelectionResult(selectedOptions){
+  setMultiSelectionResult(selectedOptions, index){
     this.multiSelectionModel = selectedOptions;
-    this.setCurQAnswer(selectedOptions);
+    this.setQAnswer(selectedOptions, index);
   }
 
-  setSingleSelectionResult(val){
+  setSingleSelectionResult(val, index){
     this.radioBtnValue = val;
-    this.setCurQAnswer(val);
+    this.setQAnswer(val, index);
   }
 
   setTextAreaResult(val){
     this.textAreaModel = val;
   }
 
-  setRadioEmailResult(val) {
+  setRadioEmailResult(val, index) {
     this.emailRadioBtnValue = val;
     if (this.emailRadioBtnValue === "Yes") {
       if(this.isSignedIn){
         this.userEmailModel = this.user.email;
         this.email.setValue(this.user.email);
       }
-      this.setCurQAnswer({selectedValue:val,userEmail:this.email.value});
+      this.setQAnswer({selectedValue:val,userEmail:this.email.value}, index);
       if(!this.emailModelEdited && this.userEmailModel.length > 0) this.emailModelEdited = true;
     }
     if (this.emailRadioBtnValue === "No") {
       this.showEmailError = false;
       this.emailModelEdited = false;
-      this.setCurQAnswer({selectedValue:val,userEmail:""});
+      this.setQAnswer({selectedValue:val,userEmail:""}, index);
     }
   }
 
-  setCurQAnswer(val){
-    this.answerData[this.curQueIndex].edited = true;
-    this.answerData[this.curQueIndex].value = Array.isArray(val)? val:[val];
+  setQAnswer(val, index){
+    this.answerData[index].edited = true;
+    this.answerData[index].value = Array.isArray(val)? val:[val];
   }
 
-  resetCurQAnswer(){
-    this.answerData[this.curQueIndex].edited = false;
-    this.answerData[this.curQueIndex].value = [];
+  resetQAnswer(index){
+    this.answerData[index].edited = false;
+    this.answerData[index].value = [];
   }
 
   setUpAnswerArray(){
@@ -384,6 +334,7 @@ export class SamFeedbackComponent {
         this.showFooter();
       }
     );
+
   }
 
   showFooter() {
@@ -400,13 +351,9 @@ export class SamFeedbackComponent {
     this.resetQueOptions();
     this.resetNavigateObj();
     this.showThanksNote = false;
-    this.showEmptyFeedbackWarning = false;
     this.showEmailError = false;
-    this.curSec = 5;
+    this.curSec = 3;
     this.showFeedback = false;
-    this.curQueIndex = 0;
-    this.curQuestion = this.questionData[this.curQueIndex];
-
   }
 
   resetNavigateObj(){
@@ -465,4 +412,42 @@ export class SamFeedbackComponent {
     this.toggleFeedback();
     this.resetAll();
   }
+
+  checkQType(typeStr,q):boolean{return q.type === typeStr;}
+
+  resultInit(index){
+    if(this.answerData[index].edited){
+      switch(this.questionData[index].type){
+        case 'rating':
+          this.setRatingResult(this.answerData[index].value[0], index);
+          break;
+        case 'multiSelection':
+          this.setMultiSelectionResult(this.answerData[index].value[0], index);
+          break;
+        case 'singleSelection':
+          this.setSingleSelectionResult(this.answerData[index].value[0], index);
+          break;
+        case 'textarea':
+          this.setTextAreaResult(this.answerData[index].value[0]);
+          break;
+        case 'radio-text':
+          this.emailRadioBtnValue = this.answerData[index].value[0].selectedValue;
+          this.userEmailModel = this.emailRadioBtnValue === "Yes"? this.answerData[index].value[0].userEmail:"";
+          break;
+        default:
+          break;
+      }
+    } else{
+      this.resetQueOptions();
+      if(this.questionData[index].type === 'multiSelection'){
+        this.setUpMultiSelectionModel(this.questionData[index].selections);
+      }if(this.questionData[index].type === 'radio-text'){
+        this.checkSignInUser();
+      }
+    }
+  }
+
 }
+
+
+
