@@ -9,7 +9,7 @@ body.feedback-open {
   bottom: 0;
   left: 0;
   z-index: 1040;
-  background-color: #000000;
+  background-color: #ffffff;
   opacity: .5;
 }
 
@@ -24,24 +24,16 @@ body.feedback-open {
     overflow-x: hidden;
     overflow-y: auto;
     position: fixed;
-    top: 30vh;
+    top: 15vh;
     left: 30vw;
     z-index: 1050;
     width: 550px;
-    border: 2px solid black;
+    border: 1px solid $color-primary;
     background: $color-white;
   }
 
   .feedback-question-div{
-    margin-right: 10px;
-    margin-left: 20px;
-    padding: 10px;
-    width: auto;
 
-  }
-
-  .feedback-header-span{
-    border-bottom: 2px solid black;
   }
 
   .feedback-question-rating{
@@ -103,7 +95,7 @@ body.feedback-open {
   }
 
   .feedback-form-link{
-    color: #003264;
+    color: $color-focus;
     text-decoration: underline;
   }
 
@@ -150,4 +142,61 @@ body.feedback-open {
     margin-top: 0;
     border: none;
   }
+
+  .feedback-header{
+    background-color: $color-primary;
+    color: $color-white;
+    font-size: 110%;
+    padding: 5px 0 5px 10px;
+    margin: 0;
+  }
+
+  samAccordion ul{
+    margin-top: 0;
+  }
+
+  samAccordionSection{
+
+  }
+
+  samAccordionSection li{
+    margin-top: 5px;
+    position: relative;
+  }
+
+  samAccordionSection li button{
+    background-color: $color-cool-blue-lightest;
+    font-weight: 400;
+    font-size: 100%;
+    color: $color-primary;
+    padding-left: 50px;
+  }
+
+  samAccordionSection li button:hover{
+    background-color: $color-cool-blue-lightest;
+  }
+
+  .feedback-footer{
+    padding: 10px 0 20px 0;
+    background-color: $color-gray-lighter;
+  }
+
+  .usa-accordion-content {
+    padding: 5px 0 10px 0;
+  }
+
+  .feedback-check-icon{
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: $color-primary;
+    font-size: 170%;
+  }
+
+  .feedback-question-thanks h1{
+    color: $color-primary;
+    font-size: 200%;
+  }
+
 }
