@@ -71,17 +71,6 @@ export class OrgAddrFormComponent {
     this.addressForm.get('postalCode').disable();
   }
 
-  onCountryChange(country) {
-    console.log(country);
-    this.addressForm.get('city').enable();
-    this.isStateDisabled = false;
-    this.addressForm.get('postalCode').enable();
-
-    this.addressForm.valueChanges.subscribe( data => {
-      this.updateAddressFormField();
-    });
-  }
-
   onAddrTypeSelect(val){
     this.orgAddrModel.addrType = val;
     this.onEnableAddIcon.emit(true);
@@ -137,7 +126,15 @@ export class OrgAddrFormComponent {
     this.orgAddrModel.street2 = this.addressForm.get("streetAddr2").value;
   }
 
-  updateCountryField(val){this.orgAddrModel.country = val.key;}
+  updateCountryField(val){
+    this.addressForm.get('city').enable();
+    this.isStateDisabled = false;
+    this.addressForm.get('postalCode').enable();
+
+    this.orgAddrModel.country = val.key;
+  }
+
   updateStateField(val){this.orgAddrModel.state = val.value;}
+
 
 }
