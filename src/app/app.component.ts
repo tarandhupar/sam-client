@@ -7,6 +7,8 @@ import { Router, NavigationExtras,NavigationEnd,ActivatedRoute } from '@angular/
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
 import { Cookie } from 'ng2-cookies';
+import { FontChecker } from './app-utils/fontchecker';
+
 
 /*
  * App Component
@@ -35,6 +37,11 @@ export class App{
   constructor(private _router: Router, private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
 
   ngOnInit() {
+    //for browsers that are blocking font downloads, add fallback icons
+    new FontChecker("FontAwesome", {
+        error: function() { document.getElementsByTagName("body")[0].classList.add("fa-fallback-icons"); }
+    });
+
     this.searchService.paramsUpdated$.subscribe(
       obj => {
         this.setQS(obj);
@@ -60,16 +67,6 @@ export class App{
           }
         }
       });
-    this.fakeOutAdmin();
-  }
-
-  fakeOutAdmin() {
-    // for debugging, fake out admin role by setting 'admin=true' or 'admin=false' as a query parameter
-    this.activatedRoute.queryParams.subscribe(queryParams => {
-      if (queryParams['adminLevel']) {
-        Cookie.set('adminLevel', queryParams['adminLevel'], undefined /* expired */, '/' /* path */);
-      }
-    });
   }
 
   get isHeaderWithSearch() {
