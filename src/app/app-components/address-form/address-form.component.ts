@@ -56,6 +56,7 @@ export class OrgAddrFormComponent {
 
   basicType = "Mailing Address";
   isStateDisabled: boolean = true;
+  isCityDisabled: boolean = true;
 
   constructor(private builder: FormBuilder) {}
 
@@ -66,7 +67,8 @@ export class OrgAddrFormComponent {
       postalCode: ['', []],
       city: ['', []],
     });
-    this.addressForm.get('city').disable();
+    //this.addressForm.get('city').disable();
+    this.isCityDisabled = true;
     this.isStateDisabled = true;
     this.addressForm.get('postalCode').disable();
   }
@@ -127,14 +129,27 @@ export class OrgAddrFormComponent {
   }
 
   updateCountryField(val){
-    this.addressForm.get('city').enable();
+    this.isCityDisabled = false;
     this.isStateDisabled = false;
     this.addressForm.get('postalCode').enable();
 
     this.orgAddrModel.country = val.key;
   }
 
-  updateStateField(val){this.orgAddrModel.state = val.value;}
+  stateCode;
+  updateStateField(val){
+    console.log('update field', val);
+    this.orgAddrModel.state = val.value;
+    this.stateCode = val.key;
+  }
 
+  countryCode() {
+    return this.orgAddrModel.country;
+  }
+
+  stateId() {
+    //return this.orgAddrModel.state;
+    return this.stateCode;
+  }
 
 }
