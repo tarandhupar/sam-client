@@ -66,6 +66,9 @@ export class SamFeedbackComponent {
     this.createBackdrop();
   }
 
+  private routerSubscribe;
+  private internalId;
+
   canDeactivate(component: SamFeedbackComponent, route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
     if(!navigateAwayObj.formSubmitted && navigateAwayObj.formStarted){
       return navigateAwayObj.discardFeedbackRes;
@@ -76,7 +79,7 @@ export class SamFeedbackComponent {
 
   ngOnInit(){
     this.setUpFeedbackQuestions();
-    this.router.events.subscribe(
+    this.routerSubscribe = this.router.events.subscribe(
       val => {
         if(this.currentUrl === ""){
           this.currentUrl = val.url;
@@ -89,6 +92,10 @@ export class SamFeedbackComponent {
           }
         }
       });
+  }
+
+  ngOnDestroy(){
+    this.routerSubscribe.unsubscribe();
   }
 
   toggleFeedback(){
@@ -145,7 +152,6 @@ export class SamFeedbackComponent {
   }
 
   onCbxChange(value, checked, index){
-    console.log(this.multiSelectionModel);
     let cbxEmpty = true;
     Object.keys(this.multiSelectionModel).forEach(key => {
       if(this.multiSelectionModel[key]) cbxEmpty = false;
@@ -217,7 +223,7 @@ export class SamFeedbackComponent {
 
   showProceedModal(){
     this.proceedModal.openModal();
-  }
+}
 
   onProceedModalConfirm() {
     navigateAwayObj.discardFeedbackRes = true;
