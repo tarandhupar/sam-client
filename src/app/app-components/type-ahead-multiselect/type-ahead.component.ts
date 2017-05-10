@@ -20,8 +20,8 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
   @Output()
   modelChange: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(@Optional() public autocompleteService: AutocompleteService, public renderer: Renderer){
-    super(autocompleteService, renderer);
+  constructor(@Optional() public autocompleteService: AutocompleteService){
+    super(autocompleteService);
   }
 
   showDropdown() {

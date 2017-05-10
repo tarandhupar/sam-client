@@ -104,7 +104,7 @@ class FeedbackServiceStub {
   }
 }
 
-fdescribe('The Sam Feedback component', () => {
+describe('The Sam Feedback component', () => {
   let component:SamFeedbackComponent;
   let fixture:any;
 

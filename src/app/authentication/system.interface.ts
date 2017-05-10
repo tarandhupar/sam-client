@@ -1,8 +1,8 @@
 export interface POC {
-  email: '',
-  firstName: '',
-  lastName: '',
-  phone?: ''
+  email: string,
+  firstName: string,
+  lastName: string,
+  phone?: string
 }
 
 export interface System {

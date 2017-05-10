@@ -19,19 +19,34 @@ export class OrgAddrFormComponent {
     }
   };
 
+  locationServiceOptions = {
+    country: null,
+    state: null,
+  };
+
   stateLocationConfig = {
     keyValueConfig: {
       keyProperty: 'key',
       valueProperty: 'value'
     },
-    serviceOptions:null
+    serviceOptions:this.locationServiceOptions.country
   };
+
+  cityLocationConfig = {
+    keyValueConfig: {
+      keyProperty: 'key',
+      valueProperty: 'value'
+    },
+    serviceOptions:this.locationServiceOptions
+  };
+
 
   addressForm:FormGroup;
 
   @ViewChild('countryWrapper') addrCountry:LabelWrapper;
   @ViewChild('stateWrapper') addrState:LabelWrapper;
-  @ViewChild('MailAddrCity') addrCity:SamTextComponent;
+  @ViewChild('cityWrapper') addrCity:LabelWrapper;
+  //@ViewChild('MailAddrCity') addrCity:SamTextComponent;
   @ViewChild('MailAddrPostalCode') addrPostalCode:SamTextComponent;
   @ViewChild('MailAddrStreetAddr1') addrStreet1:SamTextComponent;
 
@@ -55,6 +70,8 @@ export class OrgAddrFormComponent {
   };
 
   basicType = "Mailing Address";
+  isStateDisabled: boolean = true;
+  isCityDisabled: boolean = true;
 
   constructor(private builder: FormBuilder) {}
 
@@ -65,9 +82,10 @@ export class OrgAddrFormComponent {
       postalCode: ['', []],
       city: ['', []],
     });
-    this.addressForm.valueChanges.subscribe( data => {
-      this.updateAddressFormField();
-    });
+    //this.addressForm.get('city').disable();
+    this.isCityDisabled = true;
+    this.isStateDisabled = true;
+    this.addressForm.get('postalCode').disable();
   }
 
   onAddrTypeSelect(val){
@@ -97,8 +115,7 @@ export class OrgAddrFormComponent {
     if(this.addressForm.invalid || this.stateOutput === null || this.stateLocationConfig.serviceOptions === null){
       return false;
     }else{
-      this.orgAddrModel.country = this.stateLocationConfig.serviceOptions.key;
-      this.orgAddrModel.state = this.stateOutput.value;
+
       this.updateAddressFormField();
       this.orgAddrModelChange.emit(this.orgAddrModel);
     }
@@ -112,20 +129,58 @@ export class OrgAddrFormComponent {
 
     this.addrStreet1.wrapper.formatErrors(this.addressForm.get("streetAddr1"));
     this.addrPostalCode.wrapper.formatErrors(this.addressForm.get("postalCode"));
-    this.addrCity.wrapper.formatErrors(this.addressForm.get("city"));
+    this.addrCity.formatErrors(this.addressForm.get("city"));
 
     this.addrState.errorMessage = !!this.stateOutput?"":"This field cannot be empty";
     this.addrCountry.errorMessage = !!this.stateLocationConfig.serviceOptions?"":"This field cannot be empty";
   }
 
   updateAddressFormField(){
-    this.orgAddrModel.city = this.addressForm.get("city").value;
+    this.orgAddrModel.country = this.stateLocationConfig.serviceOptions.key;
+    // state and city should be updated already
     this.orgAddrModel.postalCode = this.addressForm.get("postalCode").value;
     this.orgAddrModel.street1 = this.addressForm.get("streetAddr1").value;
     this.orgAddrModel.street2 = this.addressForm.get("streetAddr2").value;
   }
 
-  updateCountryField(val){this.orgAddrModel.country = val.key;}
-  updateStateField(val){this.orgAddrModel.state = val.value;}
+  updateCountryField(val){
+    this.isCityDisabled = false;
+    this.isStateDisabled = false;
+    this.addressForm.get('postalCode').enable();
 
+    this.orgAddrModel.country = val.key;
+  }
+
+  stateCode;
+  updateStateField(val){
+    let v;
+    if (val.value) {
+      v = val.value;
+    } else if (typeof val === 'string') {
+      v = val;
+    } else {
+      throw new TypeError('statefield: unrecognied type for val');
+    }
+    this.orgAddrModel.state = v;
+    this.stateCode = v;
+  }
+
+  stateId() {
+    return this.stateCode;
+  }
+
+  updateCityField(val) {
+    if (val.value) {
+      this.orgAddrModel.city = val.value;
+    } else if (typeof val === 'string') {
+      this.orgAddrModel.city = val;
+    } else {
+      throw new TypeError('unrecognized type for val');
+    }
+
+  }
+
+  countryCode() {
+    return this.orgAddrModel.country;
+  }
 }

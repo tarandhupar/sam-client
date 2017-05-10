@@ -12,19 +12,22 @@
   <div class="usa-width-one-whole" *ngIf="!hideAddrForm">
     <div class="usa-width-one-whole">
       <labelWrapper #countryWrapper class="p_T-3x org-create-label" [label]="'Country'" [name]="'Country'" [required]="true">
-        <sam-autocomplete country [ngModelOptions]="{standalone: true}" [allowAny]="true" [(ngModel)]="stateLocationConfig.serviceOptions" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig" (enterEvent)="updateCountryField($event)"></sam-autocomplete>
+        <sam-autocomplete country [ngModelOptions]="{standalone: true}" [allowAny]="true" [(ngModel)]="locationServiceOptions.country" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig" (enterEvent)="updateCountryField($event)"></sam-autocomplete>
       </labelWrapper>
     </div>
 
     <samText class="usa-width-one-whole" #MailAddrStreetAddr1 [control]="addressForm.get('streetAddr1')" formControlName="streetAddr1" [required]='true' [name]="'street-1-input'" [label]="'Street address 1'"></samText>
     <samText class="usa-width-one-whole" #MailAddrStreetAddr2 [control]="addressForm.get('streetAddr2')" formControlName="streetAddr2" [name]="'street-2-input'" [label]="'Street address 2'"></samText>
     <div class="usa-width-one-whole">
-      <samText class="usa-width-one-half m_R-0 p_R-2x" #MailAddrCity [control]="addressForm.get('city')" formControlName="city" [name]="'city-input'" [label]="'City'" [required]="true"></samText>
+      <!--<samText class="usa-width-one-half m_R-0 p_R-2x" #MailAddrCity [control]="addressForm.get('city')" formControlName="city" [name]="'city-input'" [label]="'City'" [required]="true"></samText>-->
 
       <!--<div class="usa-width-one-half m_R-0 p_R-2x">-->
-      <!--<labelWrapper class="p_T-1x org-create-label" [label]="'City'" [name]="'City'" [required]="true">-->
-      <!--<sam-autocomplete county [ngModelOptions]="{standalone: true}" [(ngModel)]="cityOutput" [id]="'create-org-form-city-auto'" [labelText]="''" [config]="locationConfig"></sam-autocomplete>-->
-      <!--</labelWrapper>-->
+      <div class="usa-width-one-half">
+        <labelWrapper #cityWrapper class="p_T-1x org-create-label" [label]="'City'" [name]="'City'" [required]="true">
+          <sam-autocomplete #MailAddrCity city  [countryCode]="countryCode()" [stateId]="stateId()"  [disabled]="isCityDisabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="cityOutput" [id]="'create-org-form-city-auto'" [labelText]="''" [config]="cityLocationConfig" [allowAny]="true" (ngModelChange)="updateCityField($event)"></sam-autocomplete>
+        </labelWrapper>
+      </div>
+
       <!--</div>-->
       <samText class="usa-width-one-half p_L-2x m_R-0" #MailAddrPostalCode [control]="addressForm.get('postalCode')" formControlName="postalCode" [name]="'zip-input'" [label]="'Postal Code'" [required]='true'></samText>
       <!--<samText class="usa-width-one-half m_R-0" #MailAddrPostalSate [name]="'state-input'" [label]="'State/Province/Region'"></samText>-->
@@ -34,7 +37,7 @@
 
       <div class="usa-width-one-half m_R-0 p_R-2x">
         <labelWrapper #stateWrapper class="p_T-1x org-create-label" [label]="'State'" [name]="'State'" [required]="true">
-          <sam-autocomplete state [ngModelOptions]="{standalone: true}" [(ngModel)]="stateOutput" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="stateLocationConfig"  [allowAny]="true" (enterEvent)="updateStateField($event)"></sam-autocomplete>
+          <sam-autocomplete [disabled]="isStateDisabled" state [ngModelOptions]="{standalone: true}" [(ngModel)]="locationServiceOptions.state" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="stateLocationConfig"  [allowAny]="true" (ngModelChange)="updateStateField($event)"></sam-autocomplete>
         </labelWrapper>
       </div>
     </div>

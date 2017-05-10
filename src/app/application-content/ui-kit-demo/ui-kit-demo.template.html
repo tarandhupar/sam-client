@@ -624,21 +624,6 @@
       </samModal>
     </div>
   </div>
-
-  <div class="usa-grid">
-    <h2 class="usa-width-one">Header Menu &lt;sam-header-menu&gt;</h2>
-    <div class="usa-width-one-third">
-      <div>
-        <input type="checkbox" id="toggle-menu" (change)="store.menu.open = !store.menu.open">
-        <label for="toggle-menu" [innerText]="store.menu.open ? 'Close Menu' : 'Open Menu'"></label>
-      </div>
-      <sam-header-menu [items]="store.menu.items" [(open)]="store.menu.open"></sam-header-menu>
-    </div>
-    <div class="usa-width-one-third">
-      <h3>Model</h3>
-      <pre><code>{{ store.menu | json }}</code></pre>
-    </div>
-  </div>
 </div>
 
 <div class="usa-grid">
@@ -668,17 +653,6 @@
   </div>
 </div>
 <div class="usa-grid">
-  <h2 class="usa-width-one">Sam List Input</h2>
-  <div class="usa-width-one-fourth">
-    <pre>{{listOptions | json}}</pre>
-  </div>
-  <div class="usa-width-one-fourth">
-      <sam-list-input [name]="wawaweewa" [control]="listControl" [options]="listOptions"></sam-list-input>
-  </div>
-  <div class="usa-width-one-fourth">
-      <sam-list-input [name]="gogogogogogo" [control]="listControl" [selections]="[1,4]" [options]="listOptions"></sam-list-input>
-  </div>
-
   <div class="usa-grid">
     <h2 class="usa-width-one">Sam Autocomplete Dropdown</h2>
     <div class="usa-width-one-half">

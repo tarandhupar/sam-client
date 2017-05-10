@@ -6,38 +6,26 @@
     <h2 class="m_T-2x">{{name}}</h2>
     <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
     <br>
-
-
-
+    <p class="bold p_L-6x">* DoD report data that are funded by DoD are delayed 90 days for non DoD users.</p>
     <samAccordion >
-
       <samAccordionSection  [name]="'Appendix'" [headerText]="'Appendix'" >
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
           <div *ngIf="id">
-            <ul type="none">
+            <ul  class="p_L-0x ul-css">
               <li *ngFor="let report of data.reports | repfil: id">
-                <b><a href="{{report.name}}"></a></b>
-                <br>
-
-                <br>
-                <ul type="none">
+                <b>
+                  <a href="{{report.name}}"></a>
+                </b>
+                <ul  class="p_L-0x ul-css">
                   <li *ngFor="let item of report.appendix">
-                    {{item}}
+                    <p class="p_L-0x">{{item}}</p>
                   </li>
                 </ul>
-
-                <br>
               </li>
             </ul>
           </div>
         </div>
       </samAccordionSection>
-
     </samAccordion>
-
-
-
-
-
   </section>
 </div>

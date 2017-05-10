@@ -14,9 +14,13 @@ export class StateServiceImpl implements AutocompleteService {
 
   getAllStatesJSON(q:string, country:string): ReplaySubject<any> {
     const results = new ReplaySubject();
-    this.locationService.getAutoCompleteStates(q,country).subscribe(
+    this.locationService.getAutoCompleteStates(q,country)
+      .catch(res => {
+        return Observable.of([]);
+      })
+      .subscribe(
       (res) => {
-        results.next(res._embedded.stateList.reduce( (prev, curr) => {
+        results.next(res['_embedded'].stateList.reduce( (prev, curr) => {
           const newObj = {
             key: curr.stateCode.toString(),
             value: curr.state.toString()

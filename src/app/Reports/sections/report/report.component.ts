@@ -49,24 +49,25 @@ export class ReportComponent implements OnInit {
   }
   checkSession(cb: () => void) {
     let vm = this;
-
     this.api.iam.user.get(function(user) {
       vm.states.isSignedIn = true;
       vm.user = user;
 
-      vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
+    /* vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
+    ('http://54.197.186.21:8080/MicroStrategy/servlet/mstrWeb?&evt=4001&hiddensections=path,dockLeft,footer'
+     +'&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0].role);*/
+    vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
       ('https://csp-microstrategy.sam.gov/MicroStrategy/servlet/mstrWeb?&evt=4001&hiddensections=path,dockLeft,footer'
         + '&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0].role);
-
-
-
       cb();
     });
   }
+
   ngOnInit() {
     this.id = this.route.snapshot.params['id'];
     this.name = this.route.snapshot.params['name'];
     this.desc = this.route.snapshot.params['desc'];
     this.showReport = true; // show iframe
   }
+
 }

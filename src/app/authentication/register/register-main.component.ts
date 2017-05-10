@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Component, DoCheck, ElementRef, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
+import { Component, DoCheck, ElementRef, Input, KeyValueDiffers, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -54,14 +54,12 @@ export class RegisterMainComponent {
     private route: ActivatedRoute,
     private builder: FormBuilder,
     private differs: KeyValueDiffers,
-    private zone: NgZone,
     private api: IAMService) {
     this.differ = differs.find({} ).create(null);
   }
 
   ngOnInit() {
-    let vm = this,
-        params = (this.route.queryParams['value'] || {});
+    let params = (this.route.queryParams['value'] || {});
 
     this.token = (params.token || '');
 
@@ -69,45 +67,40 @@ export class RegisterMainComponent {
       this.router.navigate(['signup'], <NavigationExtras>{ error: 'There was an issue with your confirmation link. Please try again to register.' });
     }
 
-    this.zone.runOutsideAngular(() => {
-      this.initSession(() => {
-        this.zone.run(() => {
-          this.userForm = this.builder.group({
-            title:           [this.user.title],
-            firstName:       [this.user.firstName, Validators.required],
-            middleName:      [this.user.initials],
-            lastName:        [this.user.lastName, Validators.required],
-            suffix:          [this.user.suffix],
+    this.initSession(() => {
+      this.userForm = this.builder.group({
+        title:           [this.user.title],
+        firstName:       [this.user.firstName, Validators.required],
+        middleName:      [this.user.initials],
+        lastName:        [this.user.lastName, Validators.required],
+        suffix:          [this.user.suffix],
 
-            workPhone:       [this.user.workPhone],
+        workPhone:       [this.user.workPhone],
 
-            department:      [this.user.department],
-            orgID:           [this.user.orgID],
+        department:      [this.user.department],
+        orgID:           [this.user.orgID],
 
-            kbaAnswerList:   this.builder.array([
-              this.initKBAGroup(),
-              this.initKBAGroup(),
-              this.initKBAGroup()
-            ]),
+        kbaAnswerList:   this.builder.array([
+          this.initKBAGroup(),
+          this.initKBAGroup(),
+          this.initKBAGroup()
+        ]),
 
-            userPassword:    ['', Validators.required],
-            accountClaimed:  [true]
-          });
-
-          // Set the model for components using the model system
-          this.user = this.userForm.value;
-        });
+        userPassword:    ['', Validators.required],
+        accountClaimed:  [true]
       });
+
+      // Set the model for components using the model system
+      this.user = this.userForm.value;
     });
   }
 
   ngDoCheck() {
-    let vm = this,
-        changes = this.differ.diff(this.user);
+    let changes = this.differ.diff(this.user);
 
     if(changes) {
-      changes.forEachChangedItem(function(diff) {
-        vm.userForm.controls[diff.key].setValue(diff.currentValue);
+      changes.forEachChangedItem((diff) => {
+        this.userForm.controls[diff.key].setValue(diff.currentValue);
       });
     }
   }
@@ -118,9 +111,10 @@ export class RegisterMainComponent {
   setDisabledState(isDisabled: boolean){}
 
   initSession(cb) {
-    let vm = this;
+    let onInitSuccess,
+        onInitError;
 
-    function onInitSuccess(data) {
+    onInitSuccess = ((data) => {
       let userData = _.merge({}, data.user || {}),
           phone;
 
@@ -129,7 +123,7 @@ export class RegisterMainComponent {
       userData.lastName = userData.lastname || userData.lastName || '';
       userData.workPhone = userData.phone || userData.workPhone || '';
 
-      vm.user = {
+      this.user = {
         _id: '',
         email: '',
 
@@ -157,7 +151,7 @@ export class RegisterMainComponent {
 
       // Set new token for registration route security
       if(data.tokenId !== undefined) {
-        vm.token = data.tokenId;
+        this.token = data.tokenId;
       }
 
       // Transform KBA questions data response
@@ -165,37 +159,38 @@ export class RegisterMainComponent {
         const kbaAnswer = <KBA>{ questionId: 0, answer: '' };
         let intTarget;
 
-        vm.lookups.questions = data.kbaQuestionList;
-        vm.user.kbaAnswerList = [kbaAnswer, kbaAnswer, kbaAnswer];
+        this.lookups.questions = data.kbaQuestionList;
+        this.user.kbaAnswerList = [kbaAnswer, kbaAnswer, kbaAnswer];
 
-        vm.processKBAQuestions();
+        this.processKBAQuestions();
       }
 
       // Merge existing user account data
-      _.merge(vm.user, userData, {
+      _.merge(this.user, userData, {
         orgID: data.orgID
       });
 
-      phone = (vm.user.workPhone || '').split('x');
+      phone = (this.user.workPhone || '').split('x');
 
-      vm.user.workPhone = phone[0];
+      this.user.workPhone = phone[0].replace(/[^0-9]/g, '');
+      this.user.workPhone = (this.user.workPhone.length < 11 ? '1' : '' ) + this.user.workPhone;
 
       if(phone.length > 1) {
-        vm.user.phoneExtension = phone[1];
+        this.user.phoneExtension = phone[1];
       }
 
       // Set rendering to gov vs non-gov
-      vm.states.isGov = data.gov || false;
+      this.states.isGov = data.gov || false;
 
       // Set default organization if available from response
-      vm.user.orgID = vm.user.department;
+      this.user.orgID = this.user.department;
 
       cb();
-    };
+    });
 
-    function onInitError() {
-      vm.router.navigate(['signup'], <NavigationExtras>{ error: 'There was an issue with your confirmation link. Please try again to register.' });
-    };
+    onInitError = (() => {
+      this.router.navigate(['signup'], <NavigationExtras>{ error: 'There was an issue with your confirmation link. Please try again to register.' });
+    });
 
     if(this.api.iam.isDebug()) {
       this.initMockSession();
@@ -253,13 +248,11 @@ export class RegisterMainComponent {
   }
 
   processKBAQuestions() {
-    let vm = this,
-        intQuestion;
+    let intQuestion;
 
-
-    this.lookups.questions = this.lookups.questions.map(function(question, intQuestion) {
+    this.lookups.questions = this.lookups.questions.map((question, intQuestion) => {
       // Crseate reverse lookup while remapping
-      vm.lookups.indexes[question.id] = intQuestion;
+      this.lookups.indexes[question.id] = intQuestion;
       // Update associative array
       question.disabled = false;
       return question;
@@ -286,27 +279,26 @@ export class RegisterMainComponent {
   }
 
   changeQuestion(questionID, $index) {
-    let vm = this,
-        items = _.cloneDeep(this.lookups.questions),
+    let items = _.cloneDeep(this.lookups.questions),
         intQuestion;
 
     this.states.selected[$index] = questionID;
 
-    this.states.selected.forEach(function(questionID, intItem) {
+    this.states.selected.forEach((questionID, intItem) => {
       if(questionID.toString().length) {
-        intQuestion = vm.lookups.indexes[questionID];
+        intQuestion = this.lookups.indexes[questionID];
         // Loop through new questions array lookup to apply disabled options
         items[intQuestion].disabled = true;
       }
     });
 
-    this.states.selected.forEach(function(questionID, intItem) {
+    this.states.selected.forEach((questionID, intItem) => {
       // Loop through each question list to set the list to the new questions list
-      vm.questions[intItem] = _.cloneDeep(items);
+      this.questions[intItem] = _.cloneDeep(items);
       // Re-enable the selected option
       if(questionID) {
-        intQuestion = vm.lookups.indexes[questionID];
-        vm.questions[intItem][intQuestion].disabled = false;
+        intQuestion = this.lookups.indexes[questionID];
+        this.questions[intItem][intQuestion].disabled = false;
       }
     });
   }
@@ -356,23 +348,21 @@ export class RegisterMainComponent {
   }
 
   process(data, fnSuccess, fnError) {
-    let vm = this;
-
     _.merge(this.user, data);
 
     fnSuccess = fnSuccess || (() => {});
     fnError = fnError || (() => {});
 
     this.api.iam.user.registration.register(this.token, data, (userData) => {
-       vm.user = _.extend({},  vm.user, userData);
+       this.user = _.extend({},  this.user, userData);
 
       let credentials = {
-        username: vm.user.email,
-        password: vm.user.userPassword
+        username: this.user.email,
+        password: this.user.userPassword
       };
 
       // Automatically authenticate the user and start a session
-      vm.api.iam.login(credentials, () => {
+      this.api.iam.login(credentials, () => {
         fnSuccess();
       }, (error) => {
         fnError(error);
@@ -403,19 +393,14 @@ export class RegisterMainComponent {
       this.states.submitted = true;
 
       userData = this.prepareData();
-      this.zone.runOutsideAngular(() => {
-        this.process(userData, () => {
-          // Success Promise
-          this.zone.run(() => {
-            this.router.navigate(['/profile/details']);
-          });
-        }, (error) => {
-          // Error Promise
-          this.zone.run(() => {
-            this.showAlert('error', error);
-            this.states.submitted = false;
-          });
-        });
+
+      this.process(userData, () => {
+        // Success Promise
+        this.router.navigate(['/profile/details']);
+      }, (error) => {
+        // Error Promise
+        this.showAlert('error', error);
+        this.states.submitted = false;
       });
     }
   }

@@ -13,14 +13,12 @@
                     #password></sam-password>
       <div class="usa-button-controls">
         <button type="submit" [disabled]="states.loading">Submit</button>
+        <samAlert [type]="states.alert.type"
+                  [title]="states.alert.message"
+                  [hidden]="!states.alert.show"
+                  placement="bottom center"
+                  showClose="true"></samAlert>
       </div>
     </div>
-    <samAlert [type]="states.alert.type"
-              [title]="states.alert.title"
-              [hidden]="!states.alert.show"
-              [target]="formControl"
-              [offset]="{ left: 40, top: -30 }"
-              placement="bottom center"
-              showClose="true"></samAlert>
   </form>
 </div>

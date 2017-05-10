@@ -250,9 +250,9 @@ $secondaryPointingItemHorizontalPadding: $relativeLarge;
 
 $secondaryPointingHoverTextColor: $textColor;
 
-$secondaryPointingActiveBorderColor: $black;
-$secondaryPointingActiveTextColor: $selectedTextColor;
-$secondaryPointingActiveFontWeight: bold;
+$secondaryPointingActiveBorderColor: $primaryColor;
+$secondaryPointingActiveTextColor: $primaryColor ;
+$secondaryPointingActiveFontWeight: 600;
 
 $secondaryPointingActiveDropdownBorderColor: transparent;
 
@@ -1341,7 +1341,7 @@ Floated Menu / Item
   border-radius: 0em;
   align-self: flex-end;
 
-  margin: 0em 0em -$secondaryPointingBorderWidth;
+  margin: 0em 0em -#{$secondaryPointingBorderWidth} 0em;
   padding: $secondaryPointingItemVerticalPadding $secondaryPointingItemHorizontalPadding;
   border-bottom-width: $secondaryPointingBorderWidth;
   transition: $secondaryItemTransition;

@@ -24,19 +24,19 @@ import * as moment from 'moment/moment';
             <li *ngIf="data.organizationHierarchy!=null">
               <strong>Department/Ind. Agency</strong><br>
               <a *ngIf="data.isActive==true && data.organizationHierarchy[0].organizationId.length < 12" [routerLink]="['/organization', data.organizationHierarchy[0].organizationId]" [queryParams]="qParams">
-                {{data.organizationHierarchy[0].name}}
+                {{data.organizationHierarchy[0]?.name}}
               </a>
               <span *ngIf="data.organizationHierarchy[0].organizationId.length >= 12">
-                {{data.organizationHierarchy[0].name}}
+                {{data.organizationHierarchy[0]?.name}}
               </span>
             </li>
             <li *ngIf="data.organizationHierarchy!=null">
               <strong>Sub-tier</strong><br>
-              {{ data.organizationHierarchy[1].name }}
+              {{ data.organizationHierarchy[1]?.name }}
             </li>
             <li *ngIf="data.organizationHierarchy!=null">
               <strong>Office</strong><br>
-              {{ data.organizationHierarchy[2].name }}
+              {{ data.organizationHierarchy[2]?.name }}
             </li>
           </ul>
         </div>

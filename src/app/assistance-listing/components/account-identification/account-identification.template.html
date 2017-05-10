@@ -6,7 +6,7 @@
 
   <form novalidate [formGroup]="accountFormGroup">
     <!-- todo: add styling -->
-    <table *ngIf="model.accounts && model.accounts.length > 0">
+    <table class="sam-ui table celled" *ngIf="model.accounts && model.accounts.length > 0">
       <thead>
         <tr>
           <th scope="col">

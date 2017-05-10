@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -22,35 +22,25 @@ export class RegisterInitialComponent {
 
   email: FormControl;
 
-  constructor(private router: Router, private zone: NgZone, private api: IAMService) {}
+  constructor(private router: Router, private api: IAMService) {}
 
   ngOnInit() {
     this.email = new FormControl('', [Validators.required, $Validators.email])
   }
 
-  dispatch(cb:() => void) {
-    let vm = this,
-        email = this.email.value;
-
-    this.api.iam.user.registration.init(email, () => {
-      Cookie.set('iam-signup-email', email);
-      vm.router.navigate(['/signup/confirm']);
-      cb();
-    }, (error) => {
-      vm.states.error = error;
-      cb();
-    });
-  }
-
   init() {
+    let email;
+
     this.states.submitted = true;
+
     if(this.email.valid) {
-      this.zone.runOutsideAngular(() => {
-        this.dispatch(() => {
-          this.zone.run(() => {
-            // cb()
-          });
-        });
+      email = this.email.value;
+
+      this.api.iam.user.registration.init(email, () => {
+        Cookie.set('iam-signup-email', email);
+        this.router.navigate(['/signup/confirm']);
+      }, (error) => {
+        this.states.error = error;
       });
     }
   }

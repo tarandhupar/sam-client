@@ -71,6 +71,8 @@ export class SamHeaderLinksComponent {
     {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview", pageInProgress:false},
     {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/create-organization?orgType=Department", pageInProgress:true},
     {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/", pageInProgress:true},
+    {linkTitle:"Profile", linkClass:"fa-user", linkUrl:"/profile",pageInProgress:false, loggedIn: true},
+    {linkTitle:"Sign Out", linkClass:"fa-sign-out", linkUrl:"/signout",pageInProgress:false, loggedIn: true},
   ];
 
   constructor(private _router:Router, private zone: NgZone, private api: IAMService) {
@@ -99,6 +101,9 @@ export class SamHeaderLinksComponent {
           this.states.isSignedIn = true;
           this.user = user;
         });
+      },()=>{
+        this.states.isSignedIn = false;
+        this.user = null;
       });
     });
   }
@@ -161,6 +166,9 @@ export class SamHeaderLinksComponent {
   itemToggle(item){
     if(!globals.showOptional){
       return !item.pageInProgress;
+    }
+    if(item.hasOwnProperty('loggedIn')){
+      return this.states.isSignedIn && item.loggedIn;
     }
     return true;
   }

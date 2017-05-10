@@ -12,10 +12,10 @@
   .sam-footer-logo {
     a {
       display: inline-block;
-      min-height: 10rem;
-      min-width: 10rem;
-      @include background-image(url($assets-path + '/img/logos/gsa-reverse.svg'), url($assets-path + '/img/logos/gsa-reverse.png'));
-      background-size: 10rem auto;
+      min-height: 15rem;
+      min-width: 15rem;
+      @include background-image(url($assets-path + '/img/logos/gsa-logo.png'));
+      background-size: 13rem auto;
       background-repeat: no-repeat;
     }
 

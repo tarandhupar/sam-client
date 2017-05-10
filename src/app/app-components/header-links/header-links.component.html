@@ -1,7 +1,7 @@
 <nav class="sam-ui attached lighter grey borderless menu" aria-label="Main navigation">
   <div class="sam-ui container">
     <a [routerLink]="['']" class="item" tabindex="0">
-      <img style="width:150px;" src="src/assets/img/transition-sam-logo.png"  alt="Transition.sam.gov Logo">
+      <img style="width:180px;" src="src/assets/img/sam-logo.png"  alt="beta.sam.gov Logo">
     </a>
     <div class="right menu">
       <!-- Menu -->
@@ -15,7 +15,7 @@
         <span class="usa-sr-only">Search</span>
       </a>
       <!-- Signed in -->
-      <a *ngIf="states.isSignedIn" class="item" (click)="states.menu = !states.menu">
+      <a *ngIf="states.isSignedIn" class="item" routerLink="/profile">
         {{ user.fullName }}
       </a>
       <!-- Signed out -->
@@ -29,9 +29,6 @@
     </div>
   </div>
 </nav>
-
-<!-- Sign in menu -->
-<sam-header-menu *ngIf="states.isSignedIn" [items]="store.menu" [(open)]="states.menu"></sam-header-menu>
 
 <!-- Content -->
 <div [@flyInOut]="'in'" *ngIf="showDropdown" samClickOutside (clickOutside)="onClickOutside()">

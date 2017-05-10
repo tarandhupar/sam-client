@@ -1,5 +1,5 @@
 const getExpiration = ((minutes: number) => {
-  return new Date(new Date().getTime() + minutes * 60 * 1000)
+  return new Date(new Date().getTime() + minutes * 60 * 1000);
 });
 
 export default {
@@ -46,7 +46,7 @@ export default {
 
   system: {
     account: {
-      get:    '/cws/api/system-accounts/{id}',
+      get:    '/cws/api/system-accounts',
       create: '/cws/api/system-accounts',
       update: '/cws/api/system-accounts/{id}'
     }

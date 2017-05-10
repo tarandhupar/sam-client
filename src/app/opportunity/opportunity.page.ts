@@ -14,13 +14,18 @@ import {forEach} from "@angular/router/src/utils/collection";
 import { ViewChangesPipe } from "./pipes/view-changes.pipe";
 import { FilesizePipe } from "./pipes/filesize.pipe";
 import { Subscription } from "rxjs/Subscription";
+import {ProcessOpportunityHistoryPipe} from "./pipes/process-opportunity-history.pipe.ts";
+import {SetDisplayFields} from "./pipes/set-display-fields.pipe";
+import {GetResourceTypeInfo} from "./pipes/get-resource-type-info.pipe";
+import {SidenavHelper} from "../app-utils/sidenav-helper";
 
 @Component({
   moduleId: __filename,
   templateUrl: 'opportunity.page.html',
   providers: [
     OpportunityService,
-    FilterMultiArrayObjectPipe
+    FilterMultiArrayObjectPipe,
+    SidenavHelper
   ],
   animations: [
     trigger('accordion', [
@@ -76,7 +81,6 @@ export class OpportunityPage implements OnInit {
   originalOpportunity: any;
   opportunityLocation: any;
   opportunity: any;
-  history: any;
   processedHistory: any;
   organization: any;
   currentUrl: string;
@@ -98,7 +102,7 @@ export class OpportunityPage implements OnInit {
   showChangesAwardDetails = false;
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
-  showRevisonMessage: boolean = false;
+  showRevisionMessage: boolean = false;
 
 
   errorOrganization: any;
@@ -128,6 +132,7 @@ export class OpportunityPage implements OnInit {
 
   constructor(
     private sidenavService: SidenavService,
+    private sidenavHelper: SidenavHelper,
     private router: Router,
     private route:ActivatedRoute,
     private opportunityService:OpportunityService,
@@ -174,35 +179,17 @@ export class OpportunityPage implements OnInit {
     // Observable triggers when each API has emitted at least one value or error
     // and waits for 2 seconds for package's animation to finish
     let DOMReady$ = Observable.zip(opportunityAPI, relatedOpportunities, packagesOpportunities, totalAttachmentsCount).delay(2000);
-    this.DOMComplete(DOMReady$);
-  }
-
-  private DOMComplete(observable){
-    observable.subscribe(
-      success => {
-        if (this.pageFragment && document.getElementById(this.pageFragment)) {
-          document.getElementById(this.pageFragment).scrollIntoView();
-      }
-      },
-      error => {
-        // Sometimes api calls return an error
-        // we still need to check if dom element exist on page
-        if (this.pageFragment && document.getElementById(this.pageFragment))  {
-          document.getElementById(this.pageFragment).scrollIntoView();
-        }
-      }
-    );
+    this.sidenavHelper.DOMComplete(this, DOMReady$);
   }
 
   private loadOpportunity() {
     let opportunitySubject = new ReplaySubject(1); // broadcasts the opportunity to multiple subscribers
 
     let apiStream = this.route.params.switchMap((params) => { // construct a stream of opportunity data
-      //this.opportunityService.getOpportunityById(params['id']).subscribe(opportunitySubject); // attach subject to stream
       this.differences = null;
       this.packages = [];
       this.packagesWarning = false;
-      this.showRevisonMessage = false;
+      this.showRevisionMessage = false;
       this.showChangesGeneral = false;
       this.showChangesSynopsis = false;
       this.showChangesClassification = false;
@@ -262,40 +249,10 @@ export class OpportunityPage implements OnInit {
       };
 
       this.sidenavModel.children = [];
-      this.updateSideNav(opportunitySideNavContent);
+     this.sidenavHelper.updateSideNav(this, true, opportunitySideNavContent);
   }
 
-  private updateSideNav(content?){
 
-    let self = this;
-
-    if(content){
-      // Items in first level (pages) have to have a unique name
-      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
-      // If page has a unique name added to the sidenav
-      if(repeatedItem === -1){
-        this.sidenavModel.children.push(content);
-      }
-    }
-
-    updateContent();
-
-    function updateContent(){
-      let children = _.map(self.sidenavModel.children, function(possiblePage){
-        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
-          if(self.shouldBeDisplayed(possibleSection.field)){
-            possibleSection.route = "#" + self.generateID(possibleSection.field);
-            return possibleSection;
-          }
-        });
-        _.remove(possiblePagechildren, _.isUndefined);
-        possiblePage.children = possiblePagechildren;
-        return possiblePage;
-      });
-      self.sidenavModel.children = children;
-    }
-
-  }
 
   private loadPreviousOpportunityVersion(historyAPI: Observable<any>) { 
     let opportunitySubject = new ReplaySubject(1);
@@ -368,7 +325,7 @@ export class OpportunityPage implements OnInit {
             },
           ]
         };
-        this.updateSideNav(awardSideNavContent);
+        this.sidenavHelper.updateSideNav(this, true, awardSideNavContent);
 
       }
     }, err => {
@@ -431,7 +388,6 @@ export class OpportunityPage implements OnInit {
     attachmentCountStream.subscribe(attachmentCountSubject);
     attachmentCountSubject.subscribe(data => {
         historyAPI.subscribe(historyAPI => {
-          //let packagesObservable:Observable<any> = Observable.forkJoin(Observable.onErrorResumeNext.apply(Observable, packagesOpportunities));
           packagesOpportunities.subscribe(res =>{
               if(data > this.packages.length) {
               historyAPI.content.history = _.sortBy(historyAPI.content.history, 'index');
@@ -491,7 +447,8 @@ export class OpportunityPage implements OnInit {
                            if(!isNaN(res.size)){
                              res.size = filesizePipe.transform(res.size);
                            }
-                           res.typeInfo = this.getResourceTypeInfo(res.type === 'file' ? this.getExtension(res.name) : res.type);
+                           let getResourceTypeInfo = new GetResourceTypeInfo();
+                           res.typeInfo = getResourceTypeInfo.transform(res.type === 'file' ? this.getExtension(res.name) : res.type);
                            attachmentsPackage.resources.push(res);
                          }
                        });
@@ -543,99 +500,11 @@ export class OpportunityPage implements OnInit {
     });
     historyStream.subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
-        this.history = historyAPI; // save original history information in case it is needed
-
-        /** Setup necessary variables and functions for processing history **/
-        let typeLabel = new OpportunityTypeLabelPipe();
-        let dateFormat = new DateFormatPipe();
-
-        // filter through history items to find original opportunity, and save its type label
-        // assumption: the original history item is the only one without a parent notice
-        let isOriginal = function(historyItem) {
-          return historyItem.parent_notice == null;
-        };
-        let originalOpportunity = _.filter(this.history.content.history, isOriginal)[0];
-        let originalTypeLabel;
-        if(originalOpportunity == null) {
-          originalTypeLabel = "No Type Label";
-        } else {
-          originalTypeLabel = typeLabel.transform(originalOpportunity.procurement_type);
-        }
-
-        // function that takes a history item and returns a title for it
-        let makeTitle = function(historyItem) {
-          let prefix = ''; // construct the correct prefix
-
-          if(historyItem.parent_notice != null) {
-            prefix = 'Updated';
-          }
-
-          // Canceled prefix takes precedence over updated
-          if(historyItem.cancel_notice === '1') {
-            prefix = 'Canceled';
-          }
-
-          // Original prefix takes precedence over all others
-          if(historyItem.parent_notice == null) {
-            prefix = 'Original';
-          }
-
-          let type = historyItem.procurement_type;
-          let currentTypeLabel = typeLabel.transform(type); // label for type of current history item
-
-          switch(type) {
-            // For these types, show title as prefix and opportunity type
-            case 'p': // Presolicitation
-            case 'r': // Sources Sought
-            case 's': // Special Notice
-            case 'g': // Sale of Surplus Property
-            case 'f': // Foreign Government Standard
-            case 'k': // Combined Synopsis/Solicitation
-              return prefix + ' ' + currentTypeLabel;
-
-            // For these types, show the opportunity type as the title with no prefix
-            case 'a': // Award Notice
-            case 'j': // Justification and Approval (J&A)
-            case 'i': // Intent to Bundle Requirements (DoD-Funded)
-            case 'l': // Fair Opportunity / Limited Sources Justification
-              return currentTypeLabel;
-
-            // For modifications or cancellations, show the appropriate prefix plus original opportunity type
-            case 'm': // Modification/Amendment/Cancel
-              return prefix + ' ' + originalTypeLabel;
-
-            // Unrecognized type, show generic message
-            default:
-              return prefix + ' Opportunity';
-          }
-        };
-
-        /** Process history into a form usable by history component **/
-        let processHistoryItem = function(historyItem) {
-          let processedHistoryItem = {};
-          processedHistoryItem['id'] = historyItem.notice_id;
-          processedHistoryItem['title'] = makeTitle(historyItem);
-          processedHistoryItem['description'] = ''; // not implemented yet
-          processedHistoryItem['date'] = dateFormat.transform(historyItem.posted_date, 'MMM DD, YYYY h:mm a z');
-          processedHistoryItem['url'] = '/opportunities/' + historyItem.notice_id;
-          processedHistoryItem['index'] = historyItem.index;
-          processedHistoryItem['isTagged'] = false; // todo: decide on logic for which opportunities are tagged
-          processedHistoryItem['authoritative'] = historyItem.authoritative;
-          return processedHistoryItem;
-        };
-        this.processedHistory = this.history.content.history.map(processHistoryItem);
-        //sort by index to show history by version (oldest to newest)
-        this.processedHistory = _.sortBy(this.processedHistory, function(item){ return item.index; });
-
-        /** Show alert if current version is not the authoritative version **/
-        let isCurrent = function(historyItem) { return historyItem.id === tempOpportunityApi.opportunityId; };
-        let isAuthoritative = function(historyItem) { return historyItem.authoritative === '1'; };
-
-        let current = _.filter(this.processedHistory, isCurrent)[0];
-        let authoritative = _.filter(this.processedHistory, isAuthoritative)[0];
-
-        if(authoritative && current.id !== authoritative.id) {
-          this.showRevisonMessage = true;
+        let processOpportunityHistoryPipe = new ProcessOpportunityHistoryPipe();
+        let pipedHistory = processOpportunityHistoryPipe.transform(historyAPI, tempOpportunityApi);
+        this.processedHistory = pipedHistory.processedHistory;
+        if (pipedHistory.showRevisionMessage){
+          this.showRevisionMessage = pipedHistory.showRevisionMessage;
         }
       }, err => {
         console.log('Error loading history: ', err);
@@ -652,78 +521,13 @@ export class OpportunityPage implements OnInit {
         console.log('Error: No opportunity type');
         return;
       }
-
-      this.displayField = {}; // for safety, clear any existing values
-
-      // if type is Update/Amendment then display like original type
       let type = opportunity.data.type === 'm' ? parent.data.type : opportunity.data.type;
-
-      switch (type) {
-        // These types are a superset of p/m/r/s, using case fallthrough
-        case 'g': // Sale of Surplus Property
-        case 'f': // Foreign Government Standard
-          this.displayField[OpportunityFields.SpecialLegislation] = false;
-        // These types are a superset of j, using case fallthrough
-        case 'p': // Presolicitation
-        case 'k': // Combined Synopsis/Solicitation
-        case 'r': // Sources Sought
-        case 's': // Special Notice
-          this.displayField[OpportunityFields.Award] = false;
-          this.displayField[OpportunityFields.StatutoryAuthority] = false;
-          this.displayField[OpportunityFields.ModificationNumber] = false;
-        case 'j': // Justification and Approval (J&A)
-          this.displayField[OpportunityFields.AwardAmount] = false;
-          this.displayField[OpportunityFields.LineItemNumber] = false;
-          this.displayField[OpportunityFields.AwardedName] = false;
-          this.displayField[OpportunityFields.AwardedDUNS] = false;
-          this.displayField[OpportunityFields.AwardedAddress] = false;
-          this.displayField[OpportunityFields.Contractor] = false;
-
-          this.displayField[OpportunityFields.JustificationAuthority] = false;
-          this.displayField[OpportunityFields.OrderNumber] = false;
-          break;
-
-        // Type i is a superset of l, using case fallthrough
-        case 'i': // Intent to Bundle Requirements (DoD-Funded)
-          this.displayField[OpportunityFields.AwardDate] = false;
-          this.displayField[OpportunityFields.JustificationAuthority] = false;
-          this.displayField[OpportunityFields.ModificationNumber] = false;
-          this.displayField[OpportunityFields.SpecialLegislation] = false;
-        case 'l': // Fair Opportunity / Limited Sources Justification
-          this.displayField[OpportunityFields.AwardAmount] = false;
-          this.displayField[OpportunityFields.LineItemNumber] = false;
-          this.displayField[OpportunityFields.AwardedName] = false;
-          this.displayField[OpportunityFields.AwardedDUNS] = false;
-          this.displayField[OpportunityFields.AwardedAddress] = false;
-          this.displayField[OpportunityFields.Contractor] = false;
-          this.displayField[OpportunityFields.StatutoryAuthority] = false;
-          break;
-
-        case 'a': // Award Notice
-          this.displayField[OpportunityFields.ResponseDate] = false;
-          this.displayField[OpportunityFields.StatutoryAuthority] = false;
-          this.displayField[OpportunityFields.JustificationAuthority] = false;
-          this.displayField[OpportunityFields.OrderNumber] = false;
-          this.displayField[OpportunityFields.ModificationNumber] = false;
-          this.displayField[OpportunityFields.POP] = false;
-          break;
-
-        default:
-          console.log('Error: Unknown opportunity type ' + opportunity.data.type);
-          break;
-      }
-
-      if(parent == null) {
-        this.displayField[OpportunityFields.PostedDate] = false;
-        this.displayField[OpportunityFields.ResponseDate] = false;
-        this.displayField[OpportunityFields.ArchiveDate] = false;
-        this.displayField[OpportunityFields.SetAside] = false;
-      }
-
+      let setDisplayFields = new SetDisplayFields();
+      this.displayField = setDisplayFields.transform(type, parent);
       this.ready = true;
-
       this.setupSideNavMenus();
-      this.updateSideNav();
+      this.sidenavHelper.updateSideNav(this, true);
+      //this.updateSideNav();
     });
   }
 
@@ -797,17 +601,7 @@ export class OpportunityPage implements OnInit {
   }
 
   sidenavPathEvtHandler(data){
-    data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
-
-    if (this.pageFragment == data.substring(1)) {
-      document.getElementById(this.pageFragment).scrollIntoView();
-    }
-    else if(data.charAt(0)=="#"){
-			this.router.navigate([], { fragment: data.substring(1) });
-		}
-    else {
-			this.router.navigate([data]);
-		}
+    this.sidenavHelper.sidenavPathEvtHandler(this, data);
 	}
 
   public getDownloadPackageURL(packageID: string, isArchived: boolean = false) {
@@ -851,58 +645,7 @@ export class OpportunityPage implements OnInit {
     return null;
   }
 
-  private static readonly TYPE_UNKNOWN = { name: 'Unknown file type', iconClass: 'fa fa-file' };
-  private static readonly TYPE_LINK = { name: 'External link', iconClass: 'fa fa-link' };
-  private static readonly TYPE_ZIP = { name: 'Zip archive', iconClass: 'fa fa-file-archive-o' };
-  private static readonly TYPE_XLS = { name: 'Excel spreadsheet', iconClass: 'fa fa-file-excel-o' };
-  private static readonly TYPE_PPT = { name: 'Powerpoint presentation', iconClass: 'fa fa-file-powerpoint-o' };
-  private static readonly TYPE_DOC = { name: 'Word document', iconClass: 'fa fa-file-word-o' };
-  private static readonly TYPE_TXT = { name: 'Text file', iconClass: 'fa fa-file-text-o' };
-  private static readonly TYPE_PDF = { name: 'PDF document', iconClass: 'fa fa-file-pdf-o' };
-  private static readonly TYPE_HTML = { name: 'Html document', iconClass: 'fa fa-html5' };
-  private static readonly TYPE_IMG = { name: 'Image', iconClass: 'fa fa-file-image-o' };
 
-  private getResourceTypeInfo(type: string) {
-    switch(type) {
-      case 'link':
-        return OpportunityPage.TYPE_LINK;
-
-      case '.zip':
-        return OpportunityPage.TYPE_ZIP;
-
-      case '.xls':
-      case '.xlsx':
-        return OpportunityPage.TYPE_XLS;
-
-      case '.ppt':
-      case '.pptx':
-        return OpportunityPage.TYPE_PPT;
-
-      case '.doc':
-      case '.docx':
-        return OpportunityPage.TYPE_DOC;
-
-      case '.txt':
-      case '.rtf':
-        return OpportunityPage.TYPE_TXT;
-
-      case '.pdf':
-        return OpportunityPage.TYPE_PDF;
-
-      case '.htm':
-      case '.html':
-        return OpportunityPage.TYPE_HTML;
-
-      case '.jpg':
-      case '.png':
-      case '.jpeg':
-      case '.tif':
-        return OpportunityPage.TYPE_IMG;
-
-      default:
-        return OpportunityPage.TYPE_UNKNOWN;
-    }
-  }
   private checkChanges(previousOpportunityAPI: Observable<any>){
     previousOpportunityAPI.subscribe(api => {
       if(api != null) {

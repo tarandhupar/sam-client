@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { IAMService } from 'api-kit';
 import { Cookie } from 'ng2-cookies';
@@ -22,7 +22,7 @@ export class RegisterConfirmComponent {
     error: ''
   };
 
-  constructor(private zone: NgZone, private api: IAMService) {}
+  constructor(private api: IAMService) {}
 
   ngOnInit() {
     this.email = (Cookie.get('iam-signup-email') || '')
@@ -55,30 +55,15 @@ export class RegisterConfirmComponent {
     this.states.alert.show = false;
   }
 
-  dispatch(cb:() => void) {
-    let vm = this;
-
-    this.api.iam.user.registration.init(this.email, () => {
-      vm.alert('success')
-      cb();
-    }, (error) => {
-      if(vm.api.iam.isDebug()) {
-        vm.alert('success');
-      } else {
-        vm.alert('error', error);
-      }
-
-      cb();
-    });
-  }
-
   resendEmail() {
-    this.zone.runOutsideAngular(() => {
-      this.dispatch(() => {
-        this.zone.run(() => {
-          // cb()
-        });
-      });
+    this.api.iam.user.registration.init(this.email, () => {
+      this.alert('success')
+    }, (error) => {
+      if(this.api.iam.isDebug()) {
+        this.alert('success');
+      } else {
+        this.alert('error', error);
+      }
     });
   }
 };

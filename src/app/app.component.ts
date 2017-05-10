@@ -2,10 +2,13 @@
 /*
  * Angular 2 decorators and services
  */
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { Router, NavigationExtras,NavigationEnd,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
+import { Cookie } from 'ng2-cookies';
+import { FontChecker } from './app-utils/fontchecker';
+
 
 /*
  * App Component
@@ -17,6 +20,8 @@ import { SearchService } from 'api-kit';
   providers : [SearchService]
 })
 export class App{
+
+  @ViewChild('autocomplete') autocomplete: any;
 
   keyword: string = "";
   index: string = "";
@@ -31,9 +36,14 @@ export class App{
 
   showOverlay = false;
 
-  constructor(private _router: Router,private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
+  constructor(private _router: Router, private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
 
   ngOnInit() {
+    //for browsers that are blocking font downloads, add fallback icons
+    new FontChecker("FontAwesome", {
+        error: function() { document.getElementsByTagName("body")[0].classList.add("fa-fallback-icons"); }
+    });
+
     this.searchService.paramsUpdated$.subscribe(
       obj => {
         this.setQS(obj);
@@ -49,6 +59,12 @@ export class App{
         this.showOverlay = false;
         if (val instanceof NavigationEnd) {
           const tree = this._router.parseUrl(this._router.url);
+          if(this._router.url == "/") {
+            this.autocomplete.inputValue = "";
+            this.keyword = "";
+            this.index = "";
+            this.qs = {};
+          }
           if (tree.fragment) {
             const element = document.getElementById(tree.fragment);
             if (element) {

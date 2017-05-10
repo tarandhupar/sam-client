@@ -1,10 +1,10 @@
 import { merge } from 'lodash';
 
 import { Component, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { IAMService } from 'api-kit';
+import { FHService, IAMService } from 'api-kit';
 
 import { Validators as $Validators } from '../../shared/validators';
 import { User } from '../../user.interface';
@@ -13,12 +13,18 @@ import { System, POC } from '../../system.interface';
 @Component({
   templateUrl: './system-profile.component.html',
   providers: [
+    FHService,
     IAMService
   ]
 })
 export class SystemProfileComponent {
+  private api = {
+    fh: null,
+    iam: null
+  };
+
   private store = {
-    title: 'Profile',
+    title: 'Profile (Summary)',
     messages: {
       required: 'This field is required',
       email: 'Enter a valid email address',
@@ -27,14 +33,26 @@ export class SystemProfileComponent {
     search: {
       duns: '',
       users: ''
+    },
+
+    organization: {
+      department: '',
+      agency: '',
+      office: ''
     }
   };
 
-  private states = {
+  public states = {
     gov: true,
     system: false,
     submitted: false,
+    edit: false,
     loading: false,
+    sections: {
+      system: false,
+      organization: false
+    },
+
     alert: {
       type: 'success',
       message: '',
@@ -80,7 +98,10 @@ export class SystemProfileComponent {
     pointOfContact: []
   };
 
-  constructor(private router: Router, private builder: FormBuilder, private api: IAMService) {}
+  constructor(private router: Router, private builder: FormBuilder, private _fh: FHService, private _iam: IAMService) {
+    this.api.iam = _iam.iam;
+    this.api.fh = _fh;
+  }
 
   ngOnInit() {
     this.api.iam.checkSession((user) => {
@@ -93,63 +114,109 @@ export class SystemProfileComponent {
       if(!this.api.iam.isDebug()) {
         this.router.navigate(['/signin']);
       } else {
-        merge(this.user, {
-          email: '_doe.john@gsa.gov',
-          firstName: 'John',
-          lastName: 'Doe',
-          department: 100006688,
-          orgID: 100183406
-        });
-
-        merge(this.system, {
-          _id: 'System101',
-          email: this.user.email,
-          systemName: 'System 101',
-          systemType: 'Gov',
-          comments: 'System comments...',
-          duns: 'Test Duns',
-          businessName: 'John Doe Inc.',
-          businessAddress: '1600 Pennsylvania Ave NW, Washington DC 20500',
-
-          primaryOwnerName: [this.user.firstName, this.user.lastName].join(' '),
-          primaryOwnerEmail: this.user.email,
-          pointOfContact: [
-            { firstName: 'Tester', lastName: '#1', email: 'test.user@yahoo.com',   phone: '12223334444' },
-            { firstName: 'Tester', lastName: '#2', email: 'test.user@gmail.com',   phone: '15556667777' },
-            { firstName: 'Tester', lastName: '#3', email: 'test.user@hotmail.com', phone: '16667778888' }
-          ]
-        });
-
         this.initForm();
+        this.states.edit = this.api.iam.getParam('edit');
       }
     });
   }
 
   initForm() {
-    merge(this.system, {
-      department: this.user.orgID,
-      systemType: this.user.department ? 'Gov' : 'Non-Gov'
+    let initFormGroup,
+        initSystemAccountData;
+
+    initFormGroup = (() => {
+      this.detailsForm = this.builder.group({
+        _id:               [this.system._id, [Validators.required]],
+        email:             [this.system.email, [Validators.required, $Validators.email]],
+        systemName:        [this.system.systemName, [Validators.required]],
+        systemType:        [this.system.systemType],
+        comments:          [this.system.comments],
+
+        department:        [this.system.department],
+        duns:              [this.system.duns],
+
+        businessName:      [this.system.businessName],
+        businessAddress:   [this.system.businessAddress],
+
+        ipAddress:         [this.system.ipAddress],
+        primaryOwnerName:  [this.system.primaryOwnerName, [Validators.required]],
+        primaryOwnerEmail: [this.system.primaryOwnerEmail, [Validators.required]],
+
+        pointOfContact:    this.builder.array(this.initPointOfContact(this.system.pointOfContact || []))
+      });
+
+      if(this.states.gov && this.system.department.toString().length) {
+        this.api.fh
+          .getOrganizationById(this.system.department)
+          .subscribe(data => {
+            const organization = data['_embedded'][0]['org'];
+
+            this.store.organization.department = (organization.l1Name || '');
+            this.store.organization.agency = (organization.l2Name || '');
+            this.store.organization.office = (organization.l3Name || '');
+          });
+      }
     });
 
-    this.detailsForm = this.builder.group({
-      _id:               [this.system._id, [Validators.required]],
-      email:             [this.system.email, [Validators.required, $Validators.email]],
-      systemName:        [this.system.systemName, [Validators.required]],
-      systemType:        [this.system.systemType],
-      comments:          [this.system.comments],
+    initSystemAccountData = ((account: any) => {
+      const isGov = (this.user.department || this.user.orgID || '').toString().length > 0,
+            type =  isGov ? 'Gov' : 'Non-Gov';
 
-      department:        [this.system.department],
-      duns:              [this.system.duns],
+      let override = {
+        systemType: type
+      };
 
-      businessName:      [this.system.businessName],
-      businessAddress:   [this.system.businessAddress],
+      this.states.gov = isGov;
 
-      ipAddress:         [this.system.ipAddress],
-      primaryOwnerName:  [this.system.primaryOwnerName, [Validators.required]],
-      primaryOwnerEmail: [this.system.primaryOwnerEmail, [Validators.required]],
+      if(isGov) {
+        // New System Accounts Only
+        if(!account) {
+          override['department'] = this.user.department;
+        } else {
+          // Fallback if Department is NULL and is government
+          if(!account.department) {
+            override['department'] = '';
+          }
+        }
+      }
 
-     pointOfContact:    this.builder.array(this.initPointOfContact(this.system.pointOfContact))
+      merge(this.system, account, override);
     });
+
+    if(!this.api.iam.isDebug()) {
+      this.api.iam.system.account.get((accounts) => {
+        const account = accounts.length ? accounts[0] : null;
+
+        this.states.edit = account ? true : false;
+        account ? initSystemAccountData(account) : initSystemAccountData({});
+
+        initFormGroup();
+      }, () => {
+        initSystemAccountData({});
+        initFormGroup();
+      });
+    } else {
+      merge(this.system, {
+        _id: 'System101',
+        email: this.user.email,
+        systemName: 'System 101',
+        systemType: 'Gov',
+        comments: 'System comments...',
+        duns: 'Test Duns',
+        businessName: 'John Doe Inc.',
+        businessAddress: '1600 Pennsylvania Ave NW, Washington DC 20500',
+
+        primaryOwnerName: [this.user.firstName, this.user.lastName].join(' '),
+        primaryOwnerEmail: this.user.email,
+        pointOfContact: [
+          { firstName: 'Tester', lastName: '#1', email: 'test.user@yahoo.com',   phone: '12223334444' },
+          { firstName: 'Tester', lastName: '#2', email: 'test.user@gmail.com',   phone: '15556667777' },
+          { firstName: 'Tester', lastName: '#3', email: 'test.user@hotmail.com', phone: '16667778888' }
+        ]
+      });
+
+      initFormGroup();
+    }
   }
 
   initPointOfContact(items: POC[]) {
@@ -179,8 +246,19 @@ export class SystemProfileComponent {
     return message;
   }
 
+  isEditable(key) {
+    return !this.states.edit || (this.states.sections[key] || false)
+  }
+
+  get organization(): string {
+    const organization = this.store.organization;
+    return this.states.gov ? `${organization.department}/${organization.office}` : '';
+  }
+
   setOrganization(organization) {
-    this.setControlValue('department', organization.value);
+    this.system.department = organization.value;
+    this.detailsForm.controls['department'].setValue(organization.value);
+    this.store.organization.office = organization.name;
   }
 
   alert(type: string, message: string) {
@@ -189,15 +267,56 @@ export class SystemProfileComponent {
     this.states.alert.show = true;
   }
 
-  save() {
+  /**
+   * Point of Contact
+   */
+  addPOC() {
+     //TODO
+  }
+
+  removePOC($index) {
+    this.system.pointOfContact.splice($index, 1);
+    (<FormArray>this.detailsForm.controls['pointOfContact']).removeAt($index);
+    this.save('poc');
+  }
+
+  /**
+   * Event Handlers
+   */
+  edit(key) {
+    this.states.sections[key] = true;
+  }
+
+  cancel(key) {
+    this.states.sections[key] = false;
+  }
+
+  save(key) {
+    this.states.sections[key] = true;
+    this.states.loading = true;
+
+    this.api.iam.system.account.update(this.detailsForm.value, () => {
+      this.states.sections[key] = false;
+      this.states.loading = false;
+    }, () => {
+      this.states.loading = false;
+    });
+  }
+
+  create() {
     this.states.submitted = true;
     this.states.alert.show = false;
 
     if(this.detailsForm.valid) {
+      this.states.loading = true;
+
       this.api.iam.system.account.create(this.detailsForm.value, (account) => {
         this.alert('success', 'The system account was successfully created!');
+        this.states.loading = false;
+        this.states.edit = true;
       }, (error) => {
         this.alert('error', error.message);
+        this.states.loading = false;
       });
     }
   }

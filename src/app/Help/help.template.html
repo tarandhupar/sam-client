@@ -1,21 +1,11 @@
-
-
-<div class="usa-grid-full help-title" id="help-page" *ngIf="currentSection!=='overview'">
-  <div class="usa-grid-full m_B-3x p_T-4x">
-    <div class="usa-width-one-sixth p_L-6x">
-      <a><img src="src/assets/img/blank_icon.png" alt="Help Center Logo"></a>
-    </div>
-    <div class="usa-width-five-sixths p_T-4x p_L-8x">
-      <h1>Help Center</h1>
-    </div>
-  </div>
-  <hr>
-</div>
-
-
 <div [class.usa-grid-full]="currentSection!=='overview'" class="p_B-6x help-content relative">
+
   <aside class="usa-width-one-fourth p_T-2x" *ngIf="currentSection!=='overview'">
+
     <div sam-sticky limit=1200 container="help-content">
+
+      <div class="sam-ui hidden divider"></div>
+
       <ul class="usa-sidenav-list">
         <li><a [ngClass]="getSectionClass('overview')" (click)="changeSection('overview')" [routerLink]="['/help/overview']">Help Center Home</a></li>
         <li><a [ngClass]="getSectionClass('transition')" (click)="changeSection('transition')" [routerLink]="['/help/transition']" *ngIf="linkToggle()">Modernization Roadmap</a></li>
@@ -84,10 +74,9 @@
         <li>
           <div class="usa-width-one-whole p_T-2x"><button class="usa-button-primary-alt relative p_L-2x" (click)="feedback.toggleFeedback()">Provide Feedback</button></div>
           <span class="usa-width-one-whole p_T-1x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
-          <div class="usa-width-one-whole text-align-center" *ngIf="feedback.showUnsubmittedWarning()">
-              <samAlert class="feedback-warning-font-size" [type]="'warning'" [title]="''" [description]="'You have feedback that has not been submitted!'"></samAlert>
-
-            </div>
+          <div class="usa-width-one-whole text-align-center" *ngIf="feedback.showunsubmittedWarning()">
+            <samAlert class="feedback-warning-font-size" [type]="'warning'" [title]="''" [description]="'You have feedback that has not been submitted!'"></samAlert>
+          </div>
         </li>
       </ul>
 

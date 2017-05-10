@@ -97,7 +97,7 @@ export class SamSearchbarComponent {
     this._renderer.setElementAttribute(this.filterSelect.wrapper.labelDiv.nativeElement, 'style', containerWidthString);
     this._renderer.setElementAttribute(this.filterSelect.select.nativeElement, 'style', selectWidthString);
   }
-
+  
   callSearch(searchTerm):void {
     if(!searchTerm) {
       this.keyword = "";
@@ -108,7 +108,7 @@ export class SamSearchbarComponent {
 
   onSearchClick():void{
     this.onSearch.emit({
-      keyword: this.keyword,
+      keyword: this.keyword == null ? "" : this.keyword,
       searchField: this.filterValue
     });
   }

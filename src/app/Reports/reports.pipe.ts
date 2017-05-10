@@ -11,6 +11,6 @@ export class ReportsPipe implements PipeTransform {
 
         return reports.filter(function (report) {
             return report.id.includes(id);
-        })
+        });
     }
 }

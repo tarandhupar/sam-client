@@ -7,13 +7,16 @@ import * as _ from 'lodash';
 import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-object.pipe";
 import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
 import {DateFormatPipe} from "../app-pipes/date-format.pipe";
+import {ProcessWageDeterminationHistory} from "./pipes/process-wd-history.pipe";
+import {SidenavHelper} from "../app-utils/sidenav-helper";
 
 @Component({
   moduleId: __filename,
   templateUrl: 'wage-determination.page.html',
   providers: [
     WageDeterminationService,
-    FilterMultiArrayObjectPipe
+    FilterMultiArrayObjectPipe,
+    SidenavHelper
   ]
 })
 export class WageDeterminationPage implements OnInit {
@@ -27,12 +30,11 @@ export class WageDeterminationPage implements OnInit {
   constructionTypes: string;
   locationDescription: String = null;
   public locations: any;
-  history: any;
   processedHistory: any;
   longProcessedHistory: any;
   shortProcessedHistory: any;
   showingLongHistory = false;
-  showRevisonMessage: boolean = false;
+  revisionMessage: boolean = false;
 
   // On load select first item on sidenav component
   selectedPage: number = 0;
@@ -48,6 +50,7 @@ export class WageDeterminationPage implements OnInit {
 
   constructor(
     private sidenavService: SidenavService,
+    private sidenavHelper: SidenavHelper,
     private FilterMultiArrayObjectPipe: FilterMultiArrayObjectPipe,
     private router: Router,
     private route: ActivatedRoute,
@@ -71,7 +74,7 @@ export class WageDeterminationPage implements OnInit {
     this.getLocations(wgAndDictionariesAPI);
     let wdHistoryAPI = this.loadHistory(wdAPI);
     let DOMReady$ = Observable.zip(wgAndDictionariesAPI, wdHistoryAPI).delay(2000);
-    this.DOMComplete(DOMReady$);
+    this.sidenavHelper.DOMComplete(this, DOMReady$);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
 
@@ -82,7 +85,7 @@ export class WageDeterminationPage implements OnInit {
       this.isSCA = this.referenceNumber.indexOf('-') > -1;
       this.revisionNumber = params['revisionnumber'];
 
-      this.showRevisonMessage = false;
+      this.revisionMessage = false;
       return this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(this.referenceNumber, this.revisionNumber);
     });
 
@@ -112,7 +115,7 @@ export class WageDeterminationPage implements OnInit {
         ]
       };
 
-      this.updateSideNav(wageDeterminationSideNavContent);
+      this.sidenavHelper.updateSideNav(this, false, wageDeterminationSideNavContent);
     }, err => {
       this.router.navigate(['/404']);
     });
@@ -124,36 +127,6 @@ export class WageDeterminationPage implements OnInit {
     this.selectedPage = this.sidenavService.getData()[0];
   }
 
-  private updateSideNav(content?) {
-
-    let self = this;
-    //refresh side nav to fix the bug on clicking the parent tab `Wage Determination` will take you to the previous version
-    this.sidenavModel.children = [];
-
-    if (content) {
-      // Items in first level (pages) have to have a unique name
-      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label);
-      // If page has a unique name added to the sidenav
-      if (repeatedItem === -1) {
-        this.sidenavModel.children.push(content);
-      }
-    }
-
-    updateContent();
-
-    function updateContent() {
-      let children = _.map(self.sidenavModel.children, function(possiblePage) {
-        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection) {
-          possibleSection.route = possibleSection.field;
-          return possibleSection;
-        });
-        _.remove(possiblePagechildren, _.isUndefined);
-        possiblePage.children = possiblePagechildren;
-        return possiblePage;
-      });
-      self.sidenavModel.children = children;
-    }
-  }
 
   private loadDictionary() {
     let dictionariesSubject = new ReplaySubject(1);
@@ -167,31 +140,9 @@ export class WageDeterminationPage implements OnInit {
     return dictionariesSubject;
   }
 
-  private DOMComplete(observable) {
-    observable.subscribe(
-      () => {
-        if (this.pageFragment && document.getElementById(this.pageFragment)) {
-          document.getElementById(this.pageFragment).scrollIntoView();
-        }
-      },
-      () => {
-        if (this.pageFragment && document.getElementById(this.pageFragment)) {
-          document.getElementById(this.pageFragment).scrollIntoView();
-        }
-      });
-  }
 
   sidenavPathEvtHandler(data) {
-    data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
-
-    if (this.pageFragment == data.substring(1)) {
-      document.getElementById(this.pageFragment).scrollIntoView();
-    }
-    else if (data.charAt(0) == "#") {
-      this.router.navigate([], { fragment: data.substring(1) });
-    } else {
-      this.router.navigate([data]);
-    }
+    this.sidenavHelper.sidenavPathEvtHandler(this, data);
   }
 
   private getLocations(combinedAPI: Observable<any>) {
@@ -304,30 +255,11 @@ export class WageDeterminationPage implements OnInit {
       /** Load history API **/
       this.wgService.getWageDeterminationHistoryByReferenceNumber(wageDeterminationAPI.fullReferenceNumber).subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
-        this.history = historyAPI; // save original history information in case it is needed
-
-        /** Setup necessary variables and functions for processing history **/
-        let dateFormat = new DateFormatPipe();
-
-        /** Process history into a form usable by history component **/
-        let processHistoryItem = function(historyItem) {
-          let processedHistoryItem = {};
-          processedHistoryItem['id'] = historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
-          processedHistoryItem['title'] = historyItem.fullReferenceNumber + ' - Revision ' + historyItem.revisionNumber;
-          processedHistoryItem['date'] = dateFormat.transform(historyItem.publishDate, 'MMMM DD, YYYY');
-          processedHistoryItem['url'] = '/wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
-          processedHistoryItem['index'] = historyItem.revisionNumber;
-          processedHistoryItem['authoritative'] = historyItem.active;
-          return processedHistoryItem;
-        };
-        this.longProcessedHistory = this.history._embedded.wageDetermination.map(processHistoryItem);
-        if (this.longProcessedHistory.length > 5) {
-          this.shortProcessedHistory = this.longProcessedHistory.slice(0, 5);
-          this.processedHistory = this.shortProcessedHistory;
-        } else {
-          this.processedHistory = this.longProcessedHistory;
-        }
-
+        let processWageDeterminationHistory = new ProcessWageDeterminationHistory();
+        let pipedHistory = processWageDeterminationHistory.transform(historyAPI);
+        this.processedHistory = pipedHistory.processedHistory;
+        this.shortProcessedHistory = pipedHistory.shortProcessedHistory;
+        this.longProcessedHistory = pipedHistory.longProcessedHistory;
         //use processedHistory to show Revision Message
         this.showRevisionMessage();
       }, err => {
@@ -340,7 +272,7 @@ export class WageDeterminationPage implements OnInit {
 
   private showRevisionMessage() {
     if (this.processedHistory.length > 0 && this.processedHistory[0].index != this.revisionNumber) {
-      this.showRevisonMessage = true;
+      this.revisionMessage = true;
     }
   }
 

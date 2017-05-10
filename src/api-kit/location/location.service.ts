@@ -68,7 +68,24 @@ export class LocationService {
     return this.oAPIService.call(oApiParam);
   }
 
-  //gets autocomplete states
+  //gets autocomplete cities, using stateId
+  getAutoCompleteCities(citySubstring:string, stateId, countryCode) {
+    var oApiParam = {
+      name: 'location',
+      suffix: '/cities',
+      oParam: {
+        searchby: "statecode",
+        searchvalue: stateId,
+        cc: countryCode,
+        q: citySubstring
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  //gets autocomplete cities
   getAutoCompleteStates(q:string, countryCode:string) {
     var oApiParam = {
       name: 'location',
@@ -115,4 +132,18 @@ export class LocationService {
 
     return this.oAPIService.call(oApiParam);
   }
+
+  getLocationByPostolCode(q:string, searchby:string){
+
+    var oApiParam = {
+      name: 'location',
+      suffix: '/locations',
+      oParam: {q:q, searchby:searchby},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+
+  }
+
 }

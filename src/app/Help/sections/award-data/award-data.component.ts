@@ -44,7 +44,16 @@ export class AwardDataComponent {
     splashContent:`Find minimal wage rates and benefits paid to Federal contractors.`,
     subContent:`SAM.gov provides a powerful search engine to locate applicable wage determinations required for your contracts. As updates are provided by the Department of Labor, the site is updated. You may sign up to follow wage determinations as they are updated.`
   };
-  wageFeatures = ['Search', 'View', 'Request form for wage determination'];
+  
+  wageFeatures = [
+    ['Search', 'View', 'Request form for wage determination'],
+    [
+      {feature:'Search', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'View', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Request form for wage determination', login: 'Yes', interested: 'Procurement'},
+    ]
+  ];
+  
   wageCommonTerms = [
     {termName:"Service Contract Act", termContent:"Term definition lipsum"},
     {termName:"Davis-Bacon Act", termContent:"Term definition lipsum"}
@@ -65,7 +74,24 @@ export class AwardDataComponent {
     splashContent:`Find data on Federal contract awards`,
     subContent:`The capturing of individual contract actions provides transparency and visibility into government contracting. Award data is used by business development to plan their business pipelines. Self-service reporting tools assist in demystifying government spending by rolling up data based on a multitude of factors. Single authoritative source of contracting data. Provides the information needed to manage federal contracting activities more effectively.`
   };
-  awardsFeatures = ['Search/Display', 'Data Entry', 'Reports', 'Interfaces with Contract Writing Systems', 'Atom Feed', 'API of contracting data'];
+  awardsFeatures = [
+    [
+      'Search/Display', 
+      'Data Entry', 
+      'Reports', 
+      'Interfaces with Contract Writing Systems', 
+      'Atom Feed', 
+      'API of contracting data'
+    ],
+    [
+      {feature:'Search/Display', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Data Entry', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Reports', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Interfaces with Contract Writing Systems', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Atom Feed', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'API of contracting data', login: 'Yes', interested: 'Procurement'}
+    ]
+  ];
   awardsCommonTerms = [
     {termName:"Action Obligation", termContent:"Term definition lipsum"},
     {termName:"Period of Performance", termContent:"Term definition lipsum"},
@@ -114,7 +140,28 @@ export class AwardDataComponent {
     splashContent:`Register to do business with the U.S. government, update or renew your entity registration, and check status of an entity registration.`,
     subContent:`This information is critical for the government contracting and financial assistance officers to improve decision making during the award process. SAM.gov provides a single data collection point for entities to submit the information reducing burden on organizations wishing to do business with the government.  `
   };
-  entityFeatures = ['Search', 'Display', 'Create', 'Edit', 'Delete', 'Manage roles', 'Create reports', 'Download data'];
+  entityFeatures = [
+    [
+      'Search', 
+      'Display', 
+      'Create', 
+      'Edit', 
+      'Delete', 
+      'Manage roles', 
+      'Create reports', 
+      'Download data'
+    ],
+    [
+      {feature:'Search', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Display', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Create', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Edit', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Delete', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Manage roles', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Create reports', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Download data', login: 'Yes', interested: 'Procurement'}
+    ]
+  ];
   entityCommonTerms = [
     {termName:"Entities", termContent:"Contractors, federal assistance recipients, and other potential award recipients"},
     {termName:"DUNS Number", termContent:"Unique number assignment and validation process for entities for which each entity must register independently before they register in SAM.gov"},
@@ -145,7 +192,26 @@ export class AwardDataComponent {
     splashContent:`Find information reported by individual contractors in accordance with the terms of an existing contract.`,
     subContent:`Individual contractors are required to report information against contracts awarded by federal agencies. SAM.gov is the central reporting portal for certain information such as Service Contract Report and Biopreferred Report. Government employees have access to the information and use it to determine contractor compliance with reporting requirements contained in their contracts.`
   };
-  entityReportFeatures = ['Search', 'Display', 'Create', 'Edit', 'Delete', 'Entity reporting of data on awarded contracts', 'Download data'];
+  entityReportFeatures = [
+    [
+      'Search', 
+      'Display', 
+      'Create', 
+      'Edit', 
+      'Delete', 
+      'Entity reporting of data on awarded contracts', 
+      'Download data'
+    ],
+    [
+      {feature:'Search', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Display', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Create', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Edit', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Delete', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Entity reporting of data on awarded contracts', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Download data', login: 'Yes', interested: 'Procurement'}
+    ]
+  ];
   entityReportCommonTerms = [
     {termName:"Service Contract Report", termContent:"Term definition lipsum"},
     {termName:"BIOPREFFERED Report", termContent:"Term definition lipsum"},
@@ -172,7 +238,20 @@ export class AwardDataComponent {
     splashContent:` Understand Available Financial Assistance.`,
     subContent:`The federal government makes financial assistance available to state and local governments (including the District of Columbia); federally-recognized Indian tribal governments; Territories (and possessions) of the United States; domestic public, quasi- public, and private profit and nonprofit organizations and institutions; specialized groups; and individuals. The financial assistance is used to support education, health care, research, infrastructure, economic development, etc. through grants, loans, loan guarantees, scholarships, mortgage loans, insurance, and other types of financial assistance, including cooperative agreements; property, technical assistance, counseling, statistical, and other expert information; and service activities of regulatory agencies.`
   };
-  assistListingFeatures = ['Search/Display', 'Data Entry', 'FTP Site', 'Downloadable version of the listings compiled on an annual basis'];
+  assistListingFeatures = [
+    [
+      'Search/Display', 
+      'Data Entry', 
+      'FTP Site', 
+      'Downloadable version of the listings compiled on an annual basis'
+    ],
+    [
+      {feature:'Search/Display', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Data Entry', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'FTP Site', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Downloadable version of the listings compiled on an annual basis', login: 'Yes', interested: 'Procurement'},
+    ]
+  ];
   assistListingCommonTerms = [
     {termName:"Financial assistance", termContent:"Term definition lipsum"}
   ];
@@ -290,8 +369,9 @@ export class AwardDataComponent {
   }
 
   onRemoveFeatureClick(featureName){
-    let featureIndex = this.curFeatures.indexOf(featureName);
-    this.curFeatures.splice(featureIndex,1);
+    let featureIndex = this.curFeatures[0].indexOf(featureName);
+    this.curFeatures[0].splice(featureIndex,1);
+    this.curFeatures[1].splice(featureIndex,1);
   }
 
   onRemoveTermClick(term){
@@ -305,9 +385,14 @@ export class AwardDataComponent {
 
   copyCurRecords(val):any{
     let copy;
+    
+    function isArray(val): boolean{
+      return Object.prototype.toString.call(val);
+    }
+    
     if(Array.isArray(val)){
       copy = val.map( e => {
-        if(typeof e === 'object'){
+        if(typeof e === 'object' && !isArray(e) ){
           return Object.assign({}, e);
         }
         return e;

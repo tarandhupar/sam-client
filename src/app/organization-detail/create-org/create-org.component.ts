@@ -278,4 +278,8 @@ export class OrgCreatePage {
 
   showFullDescription(){this.showFullDes = true;}
   hideFullDescription(){this.showFullDes = false;}
+
+  disableCityStatePostal() {
+
+  }
 }

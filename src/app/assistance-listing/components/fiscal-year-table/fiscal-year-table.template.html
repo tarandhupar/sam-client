@@ -11,7 +11,7 @@
     ></samCheckbox>
 
     <div [hidden]="model.checkbox.indexOf('na') !== -1">
-      <table *ngIf="model.entries && model.entries.length > 0">
+      <table class="sam-ui table celled" *ngIf="model.entries && model.entries.length > 0">
         <thead>
         <tr>
           <th scope="col">

@@ -16,6 +16,10 @@ export function getAuthHeaders() {
   return Cookies.get('iPlanetDirectoryPro') ? { 'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro') } : false;
 }
 
+export function getParam(key) {
+  return utils.queryparams[key] || false;
+};
+
 export function exceptionHandler(responseBody) {
   return merge({
     status: 'error',

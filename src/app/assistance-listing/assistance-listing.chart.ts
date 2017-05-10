@@ -47,8 +47,8 @@ export class FinancialObligationChart implements OnChanges {
 
     d3.select("#visualization")
       .insert("table")
+      .attr("class", "sam-ui lightest blue celled table")
       .attr("id", "chart-table");
-      
     /**
      * --------------------------------------------------
      * Data Grouping
@@ -303,12 +303,8 @@ export class FinancialObligationChart implements OnChanges {
      * --------------------------------------------------
      */
 
-    function actualOrEstimate(year: number): string {
-      if (new Date(year, null).getFullYear() >= new Date().getFullYear() - 1) {
-        return "Estimate Not Available"
-      } else {
-        return "Actual Not Available";
-      }
+    function actualOrEstimate(estimate: boolean) {
+      return estimate ? "Estimate Not Available" : "Actual Not Available";
     }
 
     (function buildTable() {
@@ -351,9 +347,7 @@ export class FinancialObligationChart implements OnChanges {
                 assistanceTotal.values.forEach(year => {
                   let yearTotal;
                   if (year.value.ena && !year.value.total) {
-                    yearTotal = year.value.items > 1
-                      ? !year.value.nsi ? actualOrEstimate(year.key) : "Not Available"
-                      : actualOrEstimate(year.key);
+                    yearTotal = (year.value.items > 1 && year.value.nsi) ? "Not Available" : actualOrEstimate(year.value.ena);
                   } else if (year.value.nsi && !year.value.total) {
                     yearTotal = "Not Separately Identifiable";
                   } else {
@@ -386,7 +380,7 @@ export class FinancialObligationChart implements OnChanges {
                   }
 
                   if (item.ena && !item.amount) {
-                    itemAmount = actualOrEstimate(item.year);
+                    itemAmount = actualOrEstimate(item.estimate);
                   } else if (item.nsi && !item.amount) {
                     itemAmount = "Not Separately Identifiable";
                   } else if(item.empty) {
@@ -494,7 +488,7 @@ export class FinancialObligationChart implements OnChanges {
             return "Not Available";
           }
           if (enaORnsi && totalAmountIsZero) {
-            return !d.value.ena ? "Not Separately Identifiable" : actualOrEstimate(d.key);
+            return !d.value.ena ? "Not Separately Identifiable" : actualOrEstimate(d.value.ena);
           }
           if (enaORnsi && !totalAmountIsZero) {
             // Add asterix to the bar chart

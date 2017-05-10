@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 
 // Todo: avoid importing all of observable
 import { ReplaySubject, Observable, Subscription } from 'rxjs';
+import {SidenavHelper} from "../app-utils/sidenav-helper";
 
 @Component({
   moduleId: __filename,
@@ -18,7 +19,8 @@ import { ReplaySubject, Observable, Subscription } from 'rxjs';
     FHService,
     ProgramService,
     DictionaryService,
-    HistoricalIndexService
+    HistoricalIndexService,
+    SidenavHelper
   ]
 })
 export class ProgramPage implements OnInit, OnDestroy {
@@ -61,6 +63,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
   constructor(
     private sidenavService: SidenavService,
+    private sidenavHelper: SidenavHelper,
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
@@ -92,35 +95,13 @@ export class ProgramPage implements OnInit, OnDestroy {
     this.loadRelatedPrograms(programAPISource);
     this.loadAssistanceTypes(programAPISource);
     let DOMReady$ = Observable.zip(programAPISource, historicalIndexAPISource).delay(2000);
-    this.DOMComplete(DOMReady$);
+    this.sidenavHelper.DOMComplete(this, DOMReady$);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
-
-  private DOMComplete(observable){
-    observable.subscribe(
-      () => {
-        if (this.pageFragment && document.getElementById(this.pageFragment)) {
-          document.getElementById(this.pageFragment).scrollIntoView();
-        }
-      },
-      () => {
-        if (this.pageFragment && document.getElementById(this.pageFragment)) {
-          document.getElementById(this.pageFragment).scrollIntoView();
-        }
-      });
-  }
+  
 
   sidenavPathEvtHandler(data){
-    data = data.indexOf('#') > 0 ? data.substring(data.indexOf('#')) : data;
-
-    if (this.pageFragment == data.substring(1)) {
-      document.getElementById(this.pageFragment).scrollIntoView();
-    }
-    else if(data.charAt(0)=="#"){
-            this.router.navigate([], { fragment: data.substring(1) });
-    } else {
-            this.router.navigate([data]);
-    }
+    this.sidenavHelper.sidenavPathEvtHandler(this, data);
   }
 
   private updateSideNav(content?){
@@ -237,7 +218,7 @@ export class ProgramPage implements OnInit, OnDestroy {
         "field": "#history",
       }]);
 
-      this.updateSideNav(falSideNavContent);
+      this.sidenavHelper.updateSideNav(this, false, falSideNavContent);
     }, err => {
         this.router.navigate(['/404']);
     });

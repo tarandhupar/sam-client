@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
+import { Component, DoCheck, Input, KeyValueDiffers, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -17,6 +17,7 @@ import { KBA } from '../../kba.interface';
   ]
 })
 export class DetailsComponent {
+  @ViewChild('agencyPicker') agencyPicker;
   @ViewChild('confirmModal') confirmModal;
   @ViewChild('reconfirmModal') reconfirmModal;
   @ViewChildren('kba') kbaEntries;
@@ -94,7 +95,6 @@ export class DetailsComponent {
     private router: Router,
     private builder: FormBuilder,
     private differs: KeyValueDiffers,
-    private zone: NgZone,
     private _fh: FHService,
     private _iam: IAMService) {
       this.differ = differs.find({}).create(null);
@@ -104,50 +104,40 @@ export class DetailsComponent {
     }
 
   ngOnInit() {
-    this.zone.runOutsideAngular(() => {
-      this.initUser(() => {
-        this.zone.run(() => {
-          let intAnswer;
+    this.initUser(() => {
+      let intAnswer;
 
-          this.detailsForm = this.builder.group({
-            title:           [this.user.title],
+      this.detailsForm = this.builder.group({
+        title:           [this.user.title],
 
-            firstName:       [this.user.firstName, Validators.required],
-            initials:        [this.user.initials],
-            middleName:      [this.user.initials],
-            lastName:        [this.user.lastName, Validators.required],
+        firstName:       [this.user.firstName, Validators.required],
+        initials:        [this.user.initials],
+        middleName:      [this.user.initials],
+        lastName:        [this.user.lastName, Validators.required],
 
-            suffix:          [this.user.suffix],
+        suffix:          [this.user.suffix],
 
-            workPhone:       [this.user.workPhone],
+        workPhone:       [this.user.workPhone],
 
-            department:      [this.user.department],
-            orgID:           [this.user.orgID],
+        department:      [this.user.department],
+        orgID:           [this.user.orgID],
 
-            kbaAnswerList:   this.builder.array(
-              this.user.kbaAnswerList.length ? [
-                this.initKBAGroup(0),
-                this.initKBAGroup(1),
-                this.initKBAGroup(2)
-              ] : []
-            ),
-          });
-
-          if(this.states.isGov) {
-            this.api.fh
-              .getOrganizationById(this.user.orgID)
-              .subscribe(data => {
-                let organization = data['_embedded'][0]['org'];
-
-                this.department = (organization.l1Name || '');
-                this.agency = (organization.l2Name || '');
-                this.office = (organization.l3Name || '');
-
-                this.aac = (organization.code || '');
-              });
-          }
-        });
+        kbaAnswerList:   this.builder.array(
+          this.user.kbaAnswerList.length ? [
+            this.initKBAGroup(0),
+            this.initKBAGroup(1),
+            this.initKBAGroup(2)
+          ] : []
+        ),
       });
+
+      if(this.states.isGov) {
+        this.api.fh
+          .getOrganizationById(this.user.orgID)
+          .subscribe(data => {
+            this.setOrganizationNames(data);
+          });
+      }
     });
   }
 
@@ -223,17 +213,15 @@ export class DetailsComponent {
   initUser(cb) {
     let fn,
         getSessionUser = ((promise) => {
-          this.zone.runOutsideAngular(() => {
-            this.loadUser(() => {
-              this.zone.run(() => {
-                this.states.isGov = (_.isUndefined(this.user.department) && String(this.user.department).length > 0);
-                this.loadKBA(() => {
-                  promise(this.user);
-                });
-              });
+          this.loadUser(() => {
+            this.states.isGov = (this.user.department || this.user.department || '').toString().length > 0 ||
+                                (this.user.orgID || this.user.orgID).toString().length > 0;
+
+            this.loadKBA(() => {
+              promise(this.user);
             });
           });
-        }).bind(this),
+        }),
 
         getMockUser = ((promise) => {
           let intQuestion;
@@ -274,7 +262,7 @@ export class DetailsComponent {
           this.initQuestions();
 
           promise(this.user);
-        }).bind(this);
+        });
 
     fn = this.api.iam.isDebug() ? getMockUser : getSessionUser;
 
@@ -349,12 +337,26 @@ export class DetailsComponent {
     this.user.workPhone = phoneNumber;
   }
 
+  setOrganizationNames(data) {
+    const organization = data['_embedded'][0]['org'];
+
+    this.department = (organization.l1Name || '');
+    this.agency = (organization.l2Name || '');
+    this.office = (organization.l3Name || '');
+
+    this.aac = (organization.code || '');
+  }
+
   setDepartment(department) {
+    this.department = department.name;
     this.user.department = department.value;
+    this.detailsForm.controls['department'].setValue(department.value);
   }
 
   setOrganization(organization) {
+    this.office = organization.name;
     this.user.orgID = organization.value;
+    this.detailsForm.controls['orgID'].setValue(organization.value);
   }
 
   get name():string {
@@ -428,21 +430,17 @@ export class DetailsComponent {
   }
 
   deactivate() {
-    this.zone.runOutsideAngular(() => {
-      this.deactivateAccount(() => {
-        this.zone.run(() => {
-          // Close reconfirm prompt
-          this.reconfirmModal.closeModal();
-          // Sign user out
-          this.api.iam.logout();
-          // Redirect to login
-          this.router
-            .navigate(['signin'])
-            .then(() => {
-              window.location.reload();
-            });
+    this.deactivateAccount(() => {
+      // Close reconfirm prompt
+      this.reconfirmModal.closeModal();
+      // Sign user out
+      this.api.iam.logout();
+      // Redirect to login
+      this.router
+        .navigate(['signin'])
+        .then(() => {
+          window.location.reload();
         });
-      });
     });
   }
 
@@ -550,15 +548,11 @@ export class DetailsComponent {
     if(valid) {
       this.states.loading = true;
 
-      this.zone.runOutsideAngular(() => {
-        this.saveGroup(keys, () => {
-          this.zone.run(() => {
-            this.states.editable[groupKey] = false;
-            this.states.loading = false;
-            // Trick Header to Update State
-            this.router.navigate(['profile']);
-          });
-        });
+      this.saveGroup(keys, () => {
+        this.states.editable[groupKey] = false;
+        this.states.loading = false;
+        // Trick Header to Update State
+        this.router.navigate(['profile']);
       });
     }
   }

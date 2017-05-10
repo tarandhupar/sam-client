@@ -6,6 +6,7 @@ const LDAP_MAPPINGS = {
   'sn':               'lastName',
   'givenName':        'firstName',
   'mobilePhone':      'mobilePhoneNumbers',
+  'phone':            'workPhone',
   'mail':             'email',
   'uid':              '_id'
 };

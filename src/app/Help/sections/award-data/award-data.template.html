@@ -1,4 +1,160 @@
-<section class="awards-data">
+
+<div class="sam-ui hidden divider"></div>
+
+<!-- Edit menu -->
+<div *ngIf="isEdit || isAdmin" class="sam-ui labeled icon menu">
+  <a *ngIf="!isEdit && isAdmin" (click)="onEditPageClick()" class="item">
+    <i class="icon fa fa-edit"></i>
+    Edit
+  </a>
+  <a *ngIf="isEdit" (click)="onSaveEditPageClick()" class="item">
+    <i class="icon fa fa-save"></i>
+    Save
+  </a>
+  <a *ngIf="isEdit" (click)="onCancelEditPageClick()" class="item">
+    <i class="icon fa fa-times"></i>
+    Cancel
+  </a>
+</div>
+
+<h1 class="sam-ui header">
+  <div class="sup header">Help Center</div>
+  Award Data
+</h1>
+
+<div class="sam-ui grid">
+  <div class="eight wide column">
+    
+    <!-- Title -->
+    <h2 class="sam-ui header">
+      {{curConfig.heading}}
+      <div class="sub header">
+        {{curConfig.legacyWebsiteContent}}
+      </div>
+    </h2>
+    
+    <div class="sam-ui hidden divider"></div>
+    
+    <!-- Splash Content -->
+    <h2 class="sam-ui lighter header" *ngIf="!isEdit">
+      {{curConfig.splashContent}}
+    </h2>
+    <h3 class="sam-ui dividing header" *ngIf="isEdit">
+      Splash Content
+    </h3>
+    <textarea *ngIf="isEdit" [(ngModel)]="curConfig.splashContent">
+      {{curConfig.splashContent}}
+    </textarea>
+    
+    <!-- Subcontent -->
+    <p *ngIf="!isEdit">{{curConfig.subContent}}</p>
+    <h3 class="sam-ui dividing header" *ngIf="isEdit">
+      Sub Content
+    </h3>
+    <textarea *ngIf="isEdit" [(ngModel)]="curConfig.subContent">
+      {{curConfig.subContent}}
+    </textarea>
+
+    <div class="sam-ui hidden divider"></div>
+        
+  </div>
+  <div class="four wide column">
+    <h4 class="sam-ui top attached header">Helpful Links</h4>
+    <div class="sam-ui attached segment">
+      <div class="sam-ui list">
+        <div class="item">
+          <i class="icon fa fa-question-circle" aria-hidden="true"></i>
+          <div class="content">
+            <div class="header"><a href="">FAQs</a></div>
+          </div>
+        </div>
+        <div class="item">
+          <i class="icon fa fa-book" aria-hidden="true"></i>
+          <div class="content">
+            <div class="header">User Guides</div>
+            <div class="list">
+              <div class="item">
+                <div class="content">
+                  <div class="header"><a href="">Public</a></div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="content">
+                  <div class="header"><a href="">Federal</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <i class="icon fa fa-list" aria-hidden="true"></i>
+          <div class="content">
+            <div class="header"><a href="">Common Terms</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features -->
+<ng-container *ngIf="this.curFeatures.length !== 0">
+  
+  <h3 class="sam-ui dividing header" *ngIf="isEdit">
+    Features
+  </h3>
+  <samMultiSelectDropdown *ngIf="isEdit"
+                          [(model)]="curFeatures[0]"
+                          [label]="curTypes.label"
+                          [options]="curTypes.options"
+                          [name]="'features'"
+                          (modelChange)="onParamChanged()">
+  </samMultiSelectDropdown>
+  
+  
+  <table class="sam-ui definition table">
+    <thead>
+      <tr>
+        <th scope="col">Features</th>
+        <th scope="col">Need Login?</th>
+        <th scope="col">Who may be interested?</th>
+        <th *ngIf="isEdit" scope="col">Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let featureItem of curFeatures[0]; let i = index">
+        <td>{{ featureItem }}</td>
+        <td>{{ curFeatures[1][i].login }}</td>
+        <td>{{ curFeatures[1][i].interested }}</td>
+        <td class="selectable center aligned" *ngIf="isEdit">
+          <a (click)="onRemoveFeatureClick(featureItem)">
+            <i class="fa fa-times fa-lg" *ngIf="isEdit" ></i> 
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+</ng-container>
+
+<div class="sam-ui hidden divider"></div>
+
+<h3 *ngIf="curFAQs.length !== 0" class="sam-ui header">FAQs</h3>
+<samAccordion>
+  <samAccordionSection *ngFor="let faq of curFAQs" [headerText]="faq.question" [name]="faq.question" [isExpanded]="false">
+    <p>{{faq.answer}}</p>
+  </samAccordionSection>
+</samAccordion>
+
+
+<div class="sam-ui hidden section divider"></div>
+
+
+
+
+
+<!-- <section class="awards-data">
+  
   <h2 class="m_T-2x">Award Data</h2>
   <div class="usa-grid-full">
     <h3 id="opportunities" class="p_L-3x">{{curConfig.heading}}</h3>
@@ -8,14 +164,17 @@
         <div class="usa-width-two-thirds m_R-0">
           <div class="usa-width-one-whole p_L-4x p_T-1x m_B-2x">
             <div class="usa-width-one-sixth relative">
+              
               <img class="awards-data-image" src="src/assets/img/blank_icon.png" alt="logo image">
               <span class="edit-image-icon" *ngIf="isEdit"><i class="fa fa-pencil"></i></span>
+            
             </div>
             <div class="usa-width-five-sixths">
               <h3 class="m_B-0 p_B-1x">Legacy Website:</h3>
               <span>{{curConfig.legacyWebsiteContent}}</span>
             </div>
           </div>
+          
           <div class="usa-width-one-whole p_L-4x m_B-2x m_T-2x relative" *ngIf="this.curFeatures.length !== 0">
             <h3>
               <span>
@@ -41,10 +200,12 @@
               </span>
             </div>
           </div>
+          
           <div class="usa-width-one-whole p_L-4x m_T-2x p_R-4x">
             <h3 *ngIf="!isEdit" class="p_R-4x">{{curConfig.splashContent}}</h3>
             <textarea class="awards-splash-input" rows="5" *ngIf="isEdit" [(ngModel)]="curConfig.splashContent">{{curConfig.splashContent}}</textarea>
           </div>
+          
         </div>
         <div class="usa-width-one-third awards-black-border p_All-3x awards-terms-div">
           <h3>Common Terms &nbsp;<i class="fa fa-plus-square-o" aria-hidden="true" *ngIf="isEdit" (click)="onAddTermClick()"></i></h3>
@@ -75,6 +236,7 @@
           </samAccordionSection>
         </samAccordion>
       </div>
+      
     </div>
   </div>
-</section>
+</section> -->

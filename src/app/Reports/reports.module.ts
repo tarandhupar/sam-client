@@ -6,9 +6,12 @@ import { OverviewComponent } from './sections/overview/overview.component';
 import { ScheduledComponent } from './sections/overview/scheduled/scheduled.component';
 import { ReportComponent } from './sections/report/report.component';
 import { AdhocComponent } from './sections/adhoc/adhoc.component';
+import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { IAMService } from 'api-kit';
+import { ReportsService } from 'api-kit';
+import { SamAPIKitModule } from 'api-kit';
 import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 import { ReportsPipe } from './reports.pipe';
@@ -17,6 +20,7 @@ import { ReportsPipe } from './reports.pipe';
     SamUIKitModule,
     BrowserModule,
     routing,
+    SamAPIKitModule
   ],
   exports: [ ],
   declarations: [
@@ -25,19 +29,20 @@ import { ReportsPipe } from './reports.pipe';
     ScheduledComponent,
     ReportComponent,
     AdhocComponent,
+    FavoritesComponent,
     StaticComponent,
     ReportsPipe
   ],
-  providers: [IAMService],
+  providers: [IAMService, ReportsService],
 })
-export class ReportsModule{
+export class ReportsModule {
 public states = {
     isSignedIn: false
   };
 
   public user = null;
 
-constructor(private _router:Router, private zone: NgZone, private api: IAMService) {
+constructor(private _router: Router, private zone: NgZone, private api: IAMService) {
     this.zone.runOutsideAngular(() => {
       this.checkSession(() => {
         this.zone.run(() => {

@@ -47,6 +47,8 @@ export class SamFeedbackComponent {
   showThanksNote = false;
   showEmailError = false;
 
+  private routerSubscription;
+
   @ViewChild('proceedModal') proceedModal;
   modalConfig = {
     type:'warning',
@@ -76,7 +78,7 @@ export class SamFeedbackComponent {
 
   ngOnInit(){
     this.setUpFeedbackQuestions();
-    this.router.events.subscribe(
+    this.routerSubscription = this.router.events.subscribe(
       val => {
         if(this.currentUrl === ""){
           this.currentUrl = val.url;
@@ -89,6 +91,10 @@ export class SamFeedbackComponent {
           }
         }
       });
+  }
+
+  ngOnDestroy(){
+    this.routerSubscription.unsubscribe();
   }
 
   toggleFeedback(){
@@ -145,7 +151,6 @@ export class SamFeedbackComponent {
   }
 
   onCbxChange(value, checked, index){
-    console.log(this.multiSelectionModel);
     let cbxEmpty = true;
     Object.keys(this.multiSelectionModel).forEach(key => {
       if(this.multiSelectionModel[key]) cbxEmpty = false;
@@ -171,12 +176,17 @@ export class SamFeedbackComponent {
         // Submit the feedback results
         let res = this.generateFeedbackRes();
         this.feedbackService.createFeedback(res).subscribe(data => {});
+        navigateAwayObj.formSubmitted = true;
+        this.showThanksNote = true;
+        this.startCountDown();
       }
+    }else{
+      navigateAwayObj.formSubmitted = true;
+      this.showThanksNote = true;
+      this.startCountDown();
     }
 
-    navigateAwayObj.formSubmitted = true;
-    this.showThanksNote = true;
-    this.startCountDown();
+
 
   }
 
@@ -380,7 +390,7 @@ export class SamFeedbackComponent {
   }
 
   /**
-    Compare the path before # in url to see if they are in the same page
+   Compare the path before # in url to see if they are in the same page
    */
   isUrlInSamePage(curPath, targetPath){
     return this.getURLPage(curPath) === this.getURLPage(targetPath);

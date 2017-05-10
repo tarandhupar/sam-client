@@ -35,7 +35,7 @@ $childItemLineHeight: inherit;
 
 /* Icon */
 $iconDistance: .4em;
-$iconOffset: $itemLineHeight; //(($itemLineHeight - 1rem) / 2);
+$iconOffset: 0.2em; //(($itemLineHeight - 1rem) / 2);
 $iconTransition: color $defaultDuration $defaultEasing;
 $iconVerticalAlign: top;
 $iconContentVerticalAlign: top;

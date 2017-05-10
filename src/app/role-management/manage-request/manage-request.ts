@@ -119,7 +119,7 @@ export class ManageRequestPage implements OnInit {
         let extras: NavigationExtras = {
           queryParams: {
             domain: this.request.domainId,
-            ref: '/role-workspace',
+            ref: '/requests',
             request: this.request.id,
           }
         };
@@ -156,7 +156,7 @@ export class ManageRequestPage implements OnInit {
         type: 'success',
         timer: 3200
       });
-      this.router.navigate(['/access/role-workspace']);
+      this.router.navigate(['/access/requests']);
     });
   }
 

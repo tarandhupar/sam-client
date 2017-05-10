@@ -7,69 +7,214 @@ import { globals } from '../../../globals';
 })
 export class NewToSamComponent {
 
-  detailLipsum:string = `Omnes inermis ius at, ad assum constituto referrentur eam. 
-    Regione deserunt no vis, in his sale aeque. Saepe virtute impedit no nec, elitr 
-    decore antiopam cu usu, sit Id labores vivendum vim.`;
-
-  //Lipsum data for each image, will work as image content data set
-  private imageGroupData:any = [
-    {
-      title:"Lipsum text title1",
-      detail:"Detail Lipsum text1: "+this.detailLipsum,
-      link:"Lipsum link",
-      url:"help",
-      img:"src/assets/img/placeholder.jpg"
-    },
-    {
-      title:"Lipsum text title2",
-      detail:"Detail Lipsum text2: "+this.detailLipsum,
-      link:"Lipsum link",
-      url:"help",
-      img:"src/assets/img/placeholder.jpg"
-    },
-    {
-      title:"Lipsum text title3",
-      detail:"Detail Lipsum text3: "+this.detailLipsum,
-      link:"Lipsum link",
-      url:"help",
-      img:"src/assets/img/placeholder.jpg"
-    }
-  ];
-
-  // Array of Indices that point to current the image content in imageGroupData(i -> imageGroupData[i]) to avoid entering duplicate image contents
-  // Each area will have multiple Image library components(3 Image library components for each area for now)
-  // Each Image Library component needs an array 3 objects of image content data as input
-  // Each object of image content data will be pointed using the index in imageGroupData
-  private imageGroupIndexData:any = {
-    area1:[0,2,1,0,1,2,1,2,0],
-    area2:[0,1,2,0,2,1,1,0,2],
-    area3:[1,2,0,2,1,0,0,2,1],
-    area4:[0,2,1,0,2,1,1,0,2],
-    area5:[2,1,0,0,1,2,2,0,1],
-  };
-
-  private curImageGroup:any;
-
-  showImageLibrary: boolean = false;
-
   constructor() { }
-
-  openImageLibrary(type){
-    if(this.linkToggle()){
-      this.showImageLibrary = true;
-      this.curImageGroup = [];
-      for(let index of this.imageGroupIndexData[type]){
-        this.curImageGroup.push(this.imageGroupData[index]);
-      }
-    }
-  }
-
-  closeImageLibrary(){
-    this.showImageLibrary = false;
-    this.curImageGroup = {};
-  }
 
   linkToggle():boolean{
     return globals.showOptional;
   }
+  
+  PWMAFA:any = {
+    header: [
+      "Actions",
+      "Legacy Systems",
+      "Availability on beta.SAM.gov"
+    ],
+    body: [
+      [
+        "Create and update assistance listings for each CFDA number.",
+        "CFDA",
+        "Future*"
+      ],
+      [
+        "Search entities to ensure that they’re registered and eligible to receive awards.",
+        "SAM",
+        "Current"
+      ],
+      [
+        "Oversee sub-award reporting if a prime awardee has sub-awardees.",
+        "FSRS",
+        "Future*"
+      ]
+    ]
+  }
+  
+  PWMAFP:any = {
+    header: [
+      "Actions",
+      "Legacy Systems",
+      "Availability on beta.SAM.gov"
+    ],
+    body: [
+      [
+        "Post notices of proposed contract actions.",
+        "FBO",
+        "Future*"
+      ],
+      [
+        "Post actual contract actions, typically using a contract writing system.",
+        "FPDS",
+        "Future*"
+      ],
+      [
+        "Search entities before making an award to ensure that they’re registered and eligible to receive awards (checking for exclusions).",
+        "SAM",
+        "Current"
+      ],
+      [
+        "Search wage rates and labor categories for covered contracts before posting notices, during the award process, and while issuing modifications.",
+        "WDOL",
+        "Current"
+      ],
+      [
+        "Oversee small business and FFATA (Federal Funding Accountability and Transparency Act) subcontract reporting for prime contractors who issue subcontracts.",
+        "ESRS FSRS",
+        "Future*"
+      ],
+      [
+        "Post actual contract actions, typically using a contract writing system.",
+        "FPDS",
+        "Future*"
+      ],
+      [
+        "Fill out past performance evaluations for managed contracts. Research past performance reports during source selection to make sure that a particular entity is the best choice for the government.",
+        "PPIRS CPARS",
+        "Future*"
+      ]
+    ]
+  }
+  
+  PWRAFA:any = {
+    header: [
+      "Actions",
+      "Legacy Systems",
+      "Availability on beta.SAM.gov"
+    ],
+    body: [
+      [
+        "Search assistance listings for funding options.",
+        "CFDA",
+        "Current"
+      ],
+      [
+        "Register as an entity before applying for awards as a prime recipient. ",
+        "SAM",
+        "Future*"
+      ],
+      [
+        "Report on sub-awards if you’re a prime awardee and have distributed sub-awards greater than or equal to $25,000.",
+        "FSRS",
+        "Future*"
+      ]
+    ]
+  }
+  
+  PWRAFP:any = {
+    header: [
+      "Actions",
+      "Legacy Systems",
+      "Availability on beta.SAM.gov"
+    ],
+    body: [
+      [
+        "Search for contract opportunities.",
+        "FBO",
+        "Current"
+      ],
+      [
+        "Register as an entity before applying for awards as a prime contractor.",
+        "SAM",
+        "Future*"
+      ],
+      [
+        "Search wage rates during the bidding process to develop bids and compare with competitor bids. Track changes during the post-award process to ensure that workers are receiving appropriate wages. Reference wage rates during auditing process to evaluate own compliance.",
+        "WDOL",
+        "Current"
+      ],
+      [
+        "Report on subawards if you’re a prime contractor and have distributed sub-awards greater than $30,000.",
+        "FSRS",
+        "Future*"
+      ]
+    ]
+  }
+  
+  PWAA:any = {
+    header: [
+      "Actions",
+      "Legacy Systems",
+      "Availability on beta.SAM.gov"
+    ],
+    body: [
+      [
+        "Agency administrators manage the Federal Hierarchy. Domain administrators assign privileges to users.",
+        "All",
+        "Future"
+      ]
+    ]
+  }
+  
+  PWTA:any = {
+    header: [
+      "Actions",
+      "Legacy Systems",
+      "Availability on beta.SAM.gov"
+    ],
+    body: [
+      [
+        "Run reports for all of the different data sets.",
+        "FPDS",
+        "Future*"
+      ]
+    ]
+  }
+  
+  data:any = [
+      {
+        title:"People who<br><span class='uppercase'>make awards</span>",
+      },
+      {
+        title:"I make grants or other assistance awards",
+        contentType: "table",
+        content: this.PWMAFA,
+      },
+      {
+        title:"I make contract awards",
+        contentType: "table",
+        content: this.PWMAFP,
+      },
+      {
+        title:"People who<br><span class='uppercase'>receive awards</span>"
+      },
+      {
+        title:"I want to receive grants or other assistance awards",
+        contentType: "table",
+        content: this.PWRAFA,
+      },
+      {
+        title:"I want to receive contract awards",
+        contentType: "table",
+        content: this.PWRAFP,
+      },
+      {
+        title:"People who<br><span class='uppercase'>track awards</span>",
+        columns: "four"
+      },
+      {
+        title:"I track federal assistance and procurement awards",
+        contentType: "table",
+        content: this.PWTA,
+        columns: "eight"
+      },
+      {
+        title:"People who<br><span class='uppercase'>administer awards</span>",
+        columns: "four"
+      },
+      {
+        title:"I administer federal assistance and procurement awards",
+        contentType: "table",
+        content: this.PWAA,
+        columns: "eight"
+      }
+  ];
+  
 }

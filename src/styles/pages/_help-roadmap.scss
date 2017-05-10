@@ -48,7 +48,8 @@
     width: auto;
     display: inline-block;
     padding: 4px;
-    border: 1px solid black;
+    font-weight: $linkFontWeight;
+    color: $linkColor;
   }
 
   .filter-div:hover{
@@ -56,8 +57,7 @@
   }
 
   .transition-filter-selected{
-    background-color: $color-primary-darker;
-    color: #fff;
+    text-decoration: underline;
   }
 
   .underline{

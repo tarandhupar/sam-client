@@ -17,6 +17,7 @@ import * as _ from 'lodash';
 export class AwardsPage implements OnInit, OnDestroy {
   currentUrl: string;
   awardData: any;
+  feeForUseOfService: any;
   private currentSubNav: string;
   subscription: Subscription;
 
@@ -41,10 +42,37 @@ export class AwardsPage implements OnInit, OnDestroy {
     this.subscription = apiSubject.subscribe(api => { // run whenever api data is updated
       let jsonData:any = api;
       this.awardData = jsonData.response;
+	  this.getFeeForUseOfService(jsonData.response.contractMarketingData);
     }, err => {
       console.log('Error logging', err);
     });
    }
+   
+ private getFeeForUseOfService(contractMarketingData){
+	 if(contractMarketingData != null)
+	 {
+		 let feeType = contractMarketingData.feeForUseOfService;
+		 let feeLower = contractMarketingData.feeRangeLowerValue;
+		 let feeUpper = contractMarketingData.feeRangeUpperValue;
+		 let feeFixedValue = contractMarketingData.fixedFeeValue;
+		 if(feeType === 'RANGE - VARIES BY AMOUNT')
+		 {
+			this.feeForUseOfService = feeType.substring(8) + ', ' + feeLower + '-' + feeUpper;
+		 }
+		 else if(feeType === 'RANGE - VARIES BY OTHER FACTOR')
+		 {
+			this.feeForUseOfService = feeType.substring(8) + ', ' + feeLower + '-' + feeUpper;
+		 }
+		 else if(feeType === 'FIXED')
+		 {
+			this.feeForUseOfService = feeType + ', ' + feeFixedValue + '%';
+		 }
+		 else if(feeType === 'NO FEE')
+		 {
+			this.feeForUseOfService = feeType;
+		 }
+	 }
+ }
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

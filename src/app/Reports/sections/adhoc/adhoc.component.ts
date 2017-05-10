@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 @Component({
   providers: [ ],
   templateUrl: './adhoc.template.html',
-  
 })
 export class AdhocComponent {
 

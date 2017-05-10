@@ -1,4 +1,4 @@
-import { Component, DoCheck, Input, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, DoCheck, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { SamPasswordComponent } from '../../shared';
@@ -27,8 +27,7 @@ export class ResetComponent {
     loading: false,
     alert: {
       type: 'success',
-      title: '',
-      message: '',
+      message: 'Password Successfully Reset',
       show: false
     }
   }
@@ -36,41 +35,29 @@ export class ResetComponent {
   private user: User;
   public passwordForm: FormGroup;
 
-  constructor(
-    private router: Router,
-    private builder: FormBuilder,
-    private zone: NgZone,
-    private api: IAMService) {}
+  constructor(private router: Router, private builder: FormBuilder, private api: IAMService) {}
 
   ngOnInit() {
-    this.states.alert.show = false;
+    this.api.iam.checkSession((user) => {
+      this.user = user;
+      this.initForm();
+    }, (response) => {
+      if(!this.api.iam.isDebug()) {
+        this.router.navigate(['/signin']);
+      } else {
+        this.user = <User>{
+          _id: 'john.doe@gsa.gov',
+          fullName: 'John J Doe',
+          firstName: 'John',
+          initials: 'J',
+          lastName: 'Doe',
+          email: 'doe.john@gsa.gov',
+          kbaAnswerList: [],
+          accountClaimed: true
+        };
 
-    this.zone.runOutsideAngular(() => {
-      this.api.iam.checkSession((user) => {
-        this.zone.run(() => {
-          this.user = user;
-          this.initForm();
-        });
-      }, (response) => {
-        this.zone.run(() => {
-          if(!this.api.iam.isDebug()) {
-            this.router.navigate(['/signin']);
-          } else {
-            this.user = <User>{
-              _id: 'john.doe@gsa.gov',
-              fullName: 'John J Doe',
-              firstName: 'John',
-              initials: 'J',
-              lastName: 'Doe',
-              email: 'doe.john@gsa.gov',
-              kbaAnswerList: [],
-              accountClaimed: true
-            };
-
-            this.initForm();
-          }
-        });
-      });
+        this.initForm();
+      }
     });
   }
 
@@ -107,24 +94,17 @@ export class ResetComponent {
     this.setSubmitted();
 
     if(this.passwordForm.valid) {
-      this.states.loading = true;
-
-      this.zone.runOutsideAngular(() => {
-        this.api.iam.user.password.change(params.email, params.currentPassword, params.newPassword, () => {
-          this.zone.run(() => {
-            this.states.loading = false;
-            this.states.alert.type = 'success';
-            this.states.alert.title = 'Password Successfully Reset';
-            this.states.alert.show = true;
-          });
-        }, (response) => {
-          this.zone.run(() => {
-            this.states.loading = false;
-            this.states.alert.type = 'error';
-            this.states.alert.title = response.message;
-            this.states.alert.show = true;
-          });
-        });
+      this.states.loading = true
+      this.api.iam.user.password.change(params.email, params.currentPassword, params.newPassword, () => {
+        this.states.loading = false;
+        this.states.alert.type = 'success';
+        this.states.alert.message = 'Password Successfully Reset';
+        this.states.alert.show = true;
+      }, (response) => {
+        this.states.loading = false;
+        this.states.alert.type = 'error';
+        this.states.alert.message = response.message;
+        this.states.alert.show = true;
       });
     }
   }

@@ -5,131 +5,376 @@ import { Component } from '@angular/core';
   templateUrl: './transition-to-sam.template.html',
 })
 export class TransitionToSamComponent {
+  
+  search = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Find contract opportunities and contract award data, assistance listings, 
+          entities, exclusions, Federal Department/Independent Agency, Federal sub-tiers, 
+          and wage determinations.
+        </div>
+        <div class="item">
+        View details for individual transactions.
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Use customized search filters for specific data sets.
+        </div>
+        <div class="item">
+          Save, download, and print search results and detailed record pages.
+        </div>
+        <div class="item">
+          Improvements to detailed records for contract awards, entities, and 
+          exclusions.
+        </div>
+        <div class="item">
+          Federal users who are logged in and have assigned  roles will be able 
+          to access detailed records for contract opportunities and assistance 
+          listings.
+        </div>
+      </div>
+    `
+  }
+  
+  reporting = {
+    column1: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          View Standard, Static, and Adhoc reports for contract award data.
+        </div> 
+        <div class="item">
+          Administrators for assistance listings will be able to view administrative reports to oversee agency compliance.
+        </div>
+      </div>
+    `
+  }
+  
+  dataentry = {
+    column1: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Federal users who are logged in can view, create, and update assistance 
+          listings and contract opportunities. 
+        </div> 
+        <div class="item">
+          Federal users will be able to access additional capabilities for managing 
+          assistance listings (including OMB Analyst or Agency Coordinator Review 
+          and approval/rejection capabilities).
+        </div>
+      </div>
+    `
+  }
 
-  releaseData:any = [
-    {releaseNum:3,releaseDate:"Sept 2015",releaseFeature:["CFDA"]},
-    {releaseNum:4,releaseDate:"Dec 2015",releaseFeature:["FBO"]},
-    {releaseNum:5,releaseDate:"Apr 2016",releaseFeature:["eSRS"]},
-    {releaseNum:6,releaseDate:"Jul 2016",releaseFeature:["FPDS","FAPIIS"]},
-    {releaseNum:7,releaseDate:"Oct 2016",releaseFeature:["WDOL"]},
-    {releaseNum:8,releaseDate:"Feb 2017",releaseFeature:["CPARS"]},
-  ];
-
-  featureReleaseDetail:any = {
-    preRelease:{releaseNum:6, releaseDate:"May 1st, 2016",
-      releaseDetail:[{featureName:"FPDS",description:"Lorem ipsum dolora"},
-                      {featureName:"CFDA",description:"Consesctur odipsing"}]},
-    curRelease:{releaseNum:7, releaseDate:"October 15th, 2016",
-      releaseDetail:[{featureName:"FPDS",description:"Lorem ipsum dolor"},
-                      {featureName:"CFDA",description:"Consesctur odipsing"},
-                      {featureName:"eSRS",description:"Lipsum lorem"}]},
-    nextRelease:{releaseNum:8, releaseDate:"February 1st, 2017",
-      releaseDetail:[{featureName:"FPDS",description:"Lorem ipsum dolor"},
-                      {featureName:"CFDA",description:"Consesctur odipsing"},
-                      {featureName:"eSRS",description:"Lipsum lorem"}]}
-  };
-
+  administration = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Create a user account with single sign-on for all of beta.SAM.gov
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Users who are logged in can migrate their existing roles from each 
+          legacy system for Assistance Listings or Opportunities, Awards. 
+        </div>
+        <div class="item">
+          View federal assistance, contract opportunity, and contract award role 
+          data.
+        </div>
+        <div class="item">
+          Federal assistance listings administrators will be able to create, 
+          delete or modify roles for their agency's users. 
+        </div>
+        <div class="item">
+          Access Reports features based on your assigned role.
+        </div>
+      </div>
+    `
+  }
+  
+  helpcenter = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Find information for all beta.SAM.gov services  in one Help section.
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          See more info in the Help section
+        </div>
+        <div class="item">
+          Access the Federal Service Desk (FSD) directly from beta.SAM.gov. 
+        </div>
+      </div>
+    `
+  }
+  
+  systeminterfaces = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Locations, PSC, and NAICS reference data API services
+        </div>
+        <div class="item">
+          Multi-factor authentication
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Additional reference data services 
+        </div>
+        <div class="item">
+          Awards extracts and basic API functionality  
+        </div>
+        <div class="item">
+          FAL extracts  
+        </div>
+        <div class="item">
+          FH interfaces  
+        </div>
+        <div class="item">
+          WS IAM conversion
+        </div>
+      </div>
+    `
+  }
+  
   featureData:any = [
       {
-        title:"Search/Display",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View Search/Display",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        title:"Search", 
+        contentType:"grid",
+        content: [[this.search.column1], [this.search.column2]],
+        img: "src/assets/img/sam-icons/search-b3.png",
+        imgActive: "src/assets/img/sam-icons/search-c9.png",
+        imgWidth: '70px'
       },
       {
         title:"Reporting",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View Reporting",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        contentType:"grid",
+        content: [[this.reporting.column1]],
+        img: "src/assets/img/sam-icons/resources-b3.png",
+        imgActive: "src/assets/img/sam-icons/resources-c9.png",
+        imgWidth: '70px'
       },
       {
         title:"Data Entry",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View Data Entry",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        contentType:"grid",
+        content: [[this.dataentry.column1]],
+        img: "src/assets/img/sam-icons/data-entry-b3.png",
+        imgActive: "src/assets/img/sam-icons/data-entry-c9.png",
+        imgWidth: '70px'
       },
       {
         title:"Administration",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View Administration",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        contentType:"grid",
+        content: [[this.administration.column1], [this.administration.column2]],
+        img: "src/assets/img/sam-icons/admin-b3.png",
+        imgActive: "src/assets/img/sam-icons/admin-c9.png",
+        imgWidth: '70px'
       },
       {
-        title:"Online Help",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View Online Help",
-        url:"/help",
-        img:"src/assets/img/placeholder.jpg"
+        title:"Help Center",
+        contentType:"grid",
+        content: [[this.helpcenter.column1], [this.helpcenter.column2]],
+        img: "src/assets/img/sam-icons/help-b3.png",
+        imgActive: "src/assets/img/sam-icons/help-c9.png",
+        imgWidth: '70px'
       },
       {
-        title:"APIs",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View APIs",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        title:"System Interfaces",
+        contentType:"grid",
+        content: [[this.systeminterfaces.column1], [this.systeminterfaces.column2]],
+        img: "src/assets/img/sam-icons/api-b3.png",
+        imgActive: "src/assets/img/sam-icons/api-c9.png",
+        imgWidth: '70px'
       }
   ];
 
+
+  cfda = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Search and view detailed records of assistance listings.
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Use advanced search filters.
+        </div>
+        <div class="item">
+          View listings based on your user role.
+        </div>
+        <div class="item">
+          Grants.gov and USASpending extracts
+        </div>
+        <div class="item">
+          Federal users who are logged in can view, create, update, and manage 
+          assistance listings. 
+        </div>
+      </div>
+    `
+  }
+  
+  fbo = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Search and view detailed records of contract opportunities.
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Use advanced search filters.
+        </div>
+        <div class="item">
+          View detailed records based on your user role.
+        </div>
+        <div class="item">
+          Federal users who are logged in can create and/or modify a notice.
+        </div>
+      </div>
+    `
+  }
+  
+  fpds = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Search publicly available procurement opportunities and contract actions.
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Use advanced search filters.
+        </div>
+        <div class="item">
+          Run standard, static and adhoc reports.
+        </div>
+        <div class="item">
+          Daily extracts and basic API functionality
+        </div>
+      </div>
+    `
+  }
+  
+  sam = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Search and view detailed records for entity registrations and exclusions.
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Role management
+        </div>
+        <div class="item">
+          Reference data services
+        </div>
+        <div class="item">
+          Infrastructure migration
+        </div>
+      </div>
+    `
+  }
+  
+  wdol = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Search for and view DBA and SCA wage determinations.
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Improvements to the look and feel of detailed records
+        </div>
+      </div>
+    `
+  }
+
   legacyData:any = [
       {
-        title:"Federal Assistance(CFDA)",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View CFDA",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        title:"CFDA",
+        contentType:"grid",
+        content: [[this.cfda.column1], [this.cfda.column2]],
+        img: "src/assets/img/logos/cfda.png",
+        imgActive: "src/assets/img/logos/cfda-c9.png",
+        imgWidth: "70%"
       },
       {
-        title:"Opportunities(FBO)",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View FBO",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        title:"FBO",
+        contentType:"grid",
+        content: [[this.fbo.column1], [this.fbo.column2]],
+        img: "src/assets/img/logos/fbo.png",
+        imgActive: "src/assets/img/logos/fbo-c9.png",
+        imgWidth: "70%"
       },
       {
-        title:"Awards(FPDS)",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View FPDS",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        title:"FPDS",
+        contentType:"grid",
+        content: [[this.fpds.column1], [this.fpds.column2]],
+        img: "src/assets/img/logos/fpds.png",
+        imgActive: "src/assets/img/logos/fpds-c9.png",
+        imgWidth: "70%"
       },
       {
-        title:"Sub-Awards(eSRS, FSRS)",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View Sub Awards",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        title:"SAM",
+        contentType:"grid",
+        content: [[this.sam.column1], [this.sam.column2]],
+        img: "src/assets/img/logos/sam.png",
+        imgActive: "src/assets/img/logos/sam-c9.png",
+        imgWidth: "70%"
       },
       {
-        title:"Past Performance(PPIRS, CPARS, FAPIIS)",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View Performance",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
-      },
-      {
-        title:"Wage Determination(WDOL)",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View WDOL",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
-      },
-      {
-        title:"Entities(SAM.gov)",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View Entities",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
-      },
-      {
-        title:"Exclusions(SAM.gov)",
-        releaseDetail: this.featureReleaseDetail,
-        link:"View Exclusions",
-        url:"fakeUrl",
-        img:"src/assets/img/placeholder.jpg"
+        title:"WDOL",
+        contentType:"grid",
+        content: [[this.wdol.column1], [this.wdol.column2]],
+        img: "src/assets/img/logos/wdol.png",
+        imgActive: "src/assets/img/logos/wdol-c9.png",
+        imgWidth: "70%"
       }
   ];
 
@@ -137,17 +382,9 @@ export class TransitionToSamComponent {
 
   constructor() { }
 
-  getVerticalLineLength():number{
-    return Math.max.apply(Math, this.releaseData.map(function(item){return item.releaseFeature.length;}));
-  }
-
-  getVerticalRangeArray():any{
-    return Array.from(Array(this.getVerticalLineLength()).keys());
-  }
-
   getColorClass(type):string{
     if(this.filter === type){
-      return "transition-filter-selected";
+      return "active";
     }
     return "";
   }

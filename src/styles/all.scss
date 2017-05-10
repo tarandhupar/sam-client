@@ -73,7 +73,7 @@ $large: $current-large;
 @import '~uswds/src/stylesheets/elements/inputs';
 @import '~uswds/src/stylesheets/elements/labels';
 //@import '~uswds/src/stylesheets/elements/list';
-@import '~uswds/src/stylesheets/elements/table';
+//@import '~uswds/src/stylesheets/elements/table';
 //@import '~uswds/src/stylesheets/elements/typography';
 
 
@@ -120,6 +120,9 @@ $large: $current-large;
 /* Vendor Extentions */
 @import 'sam-ui/vendor/font-awesome';
 
+/* Font Awesome Fallback when fonts are blocked */
+@import 'font-awesome-fallback';
+
 /*--------------
  Transition Fixes
 ---------------*/
@@ -132,6 +135,10 @@ home samsearchbar{
 
 .usa-unstyled-list {
   @include unstyled-list;
+}
+
+.usa-unstyled-list > li {
+    padding-bottom: 2px;
 }
 
 samsearchheader .search-header > .usa-width-one-whole{
@@ -153,6 +160,14 @@ samsearchheader .search-header > .usa-width-one-whole{
 }
 .div-right .usa-button-primary{
   background-color: #02bfe7;
+}
+
+.usa-sidenav-list a{
+  font-weight: 400;
+}
+
+.usa-sidenav-list a.usa-current{
+  font-weight: 600;
 }
 
 /*******************************
@@ -231,6 +246,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'pages/organization-create';
 @import 'pages/aac-request';
 @import 'pages/aac-confirm';
+
 // h1,
 // h2{
 //   letter-spacing: -0.5px;
@@ -311,3 +327,5 @@ select {
   background-position: right .65rem center;
   padding: 1rem 2.6rem 1rem 0.7em;
 }
+
+

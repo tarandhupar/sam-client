@@ -1,73 +1,70 @@
-<section class="new-to-sam">
-  <h2 class="m_T-2x">New to SAM.gov</h2>
-  <div class="usa-grid-full">
-    <h4 class="new-to-sam-question">Need help finding the right information about awards?</h4>
-    <p class="m_T-1x">
-      Get expert guidance right here on how to do business with the Federal Government for free.
-    </p>
-    <h4 class="new-to-sam-question">Choose the type of awards program. We coach you step by step.</h4>
-    <p class="m_T-1x">
-      Select a box from the grid below that tells us what type of business you are
-      (Entity or Federal Awards Organization) and the type of award you would like
-      to receive (Assistance or Procurement). We’ll provide the necessary information
-      on how to sign-up, register, apply, and maintain your awards account on SAM.gov.
+<div class="sam-ui hidden divider"></div>
 
-    <hr>
+<!-- Title -->
+<h1 class="sam-ui header">
+  <div class="sup header">Help Center</div>
+  New to SAM
+</h1>
+
+<!-- What Can I do? -->
+<h2 class="sam-ui header">What Can I do?</h2>
+<p>
+  SAM.gov is the official U.S. government website for people who make, receive, 
+  and track federal awards. It’s the central hub for the entire federal awards 
+  community. You can do different things in SAM depending on your role in the 
+  awards process.
+</p>
+
+<p>
+  Use the interactive table below to learn more about what you can do in SAM.
+</p>
+
+<div class="sam-ui three column grid">
+  <div class="column"></div>
+  <div class="column">
+    <h4 class="sam-ui header">Federal Assistance</h4>
   </div>
-
-  <div class="usa-grid-full" *ngIf="!showImageLibrary">
-    <table class="usa-width-one-whole m_T-0" cellspacing="5">
-      <tr>
-        <td class="table-cell-one-forth no-border p_T-0">&nbsp;</td>
-        <td class="table-cell-one-forth no-border p_T-0" valign="top">
-          <h5 class="centered m_T-0">Entity</h5>
-          <p class="m_0 p_T-1x small-text">A Corporation, limited liability company, public/private business, or sole proprietorship.</p>
-        </td>
-        <td class="table-cell-one-forth no-border p_T-0" valign="top">
-          <h5 class="centered m_T-0">Federal Hierarchy</h5>
-          <p class="m_0 p_T-1x small-text">Federal Award and Funding Organization.</p>
-        </td>
-        <td class="table-cell-one-forth no-border p_T-0" valign="top">
-          <h5 class="centered m_T-0">Researcher/Report</h5>
-          <p class="m_0 p_T-1x small-text">Search awards data for evaluation and reporting.</p>
-        </td>
-      </tr>
-      <tr>
-        <td  class="table-cell-one-forth no-border p_T-0">
-          <h5 class="centered m_T-1x">Federal Assistance</h5>
-          <p class="m_0 p_T-1x small-text">Government contracts providing funds, resources, grants or information for an entity.</p>
-        </td>
-        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area1')">learn more</td>
-        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area2')">learn more</td>
-        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area3')" rowspan="2">learn more</td>
-      </tr>
-      <tr class="relative">
-        <td  class="table-cell-one-forth no-border p_T-0" >
-          <h5 class="centered m_T-1x">Federal Procurements</h5>
-          <p class="m_0 p_T-1x small-text">Buying goods and services from the Federal Government, Intra-Governmental Transactions (IGT). </p>
-        </td>
-        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area4')">learn more</td>
-        <td  class="table-cell-one-forth no-border square-button" align="center"  (click)="openImageLibrary('area5')">learn more</td>
-
-      </tr>
-    </table>
-
+  <div class="column">
+    <h4 class="sam-ui header">Federal Procurement</h4>
   </div>
+</div>
 
-  <div *ngIf="showImageLibrary">
-    <div class="usa-grid-full ">
-      <h3 class="m_0"><a class="new-to-sam-back" (click)="closeImageLibrary()"><span><i class="fa fa-arrow-circle-o-left m_R-1x"></i>Back</span></a></h3>
-      <p>
-        Ad verterem scripserit pro, falli apeirian ad est, vis
-        ne corpora vivendum. Cu nihil exerci principes vis, et eos doctus malorum
-        deterruisset. Id labores vivendum vim. Vitae aliquip mnesarchum mel ut, sit etiam
-        fuisset convenire an.
-      </p>
-    </div>
-    <div class="usa-grid-full m_T-4x">
-      <sam-info-accordion [name]="'new-to-sam-'" [data]="curImageGroup" [showDetailTitle]="false" [isExternalLink]="false"></sam-info-accordion>
-    </div>
+<sam-info-accordion [name]="'new-to-sam'"
+                    [itemsPerRow]="[3,3,2,2]" 
+                    [data]="data">
+</sam-info-accordion>
 
-  </div>
+<!-- Who Uses SAM? -->
+<h2 class="sam-ui header">Who Uses SAM?</h2>
+<p>
+  Anyone looking to do business with or receive assistance from the federal 
+  government should use SAM. 
+</p>
 
-</section>
+<p>
+  SAM users can generally be divided into three groups: 
+</p>
+
+<ul class="sam-ui relaxed bulleted list">
+  <li class="item">
+    <strong>People who make awards</strong> - Government contracting and grants 
+    officials responsible for activities with contracts, grants, past performance 
+    reporting and suspension and debarment activities. These include federal 
+    assistance coordinators and agency program managers, contracting officers 
+    (COR, contract specialists, procurement analysts), and compliance administrators;
+  </li>
+  <li class="item">
+    <strong>People who receive awards</strong>  - Contractors, federal assistance 
+    recipients, and other potential award recipients who need to register to do 
+    business with the government, look for opportunities or assistance programs, 
+    or report subcontract information;
+  </li>
+  <li class="item">
+    <strong>People who track awards</strong> - Public users searching for government 
+    business information. These include congressional researchers, the Small Business 
+    Administration (SBA) and the media. 
+  </li>
+</ul>
+
+
+<div class="sam-ui hidden section divider"></div>
