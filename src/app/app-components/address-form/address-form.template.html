@@ -24,12 +24,12 @@
       <!--<div class="usa-width-one-half m_R-0 p_R-2x">-->
       <div class="usa-width-one-half">
         <labelWrapper #cityWrapper class="p_T-1x org-create-label" [label]="'City'" [name]="'City'" [required]="true">
-          <sam-autocomplete #MailAddrCity city  [countryCode]="countryCode()" [stateId]="stateId()"  [disabled]="isCityDisabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="cityOutput" [id]="'create-org-form-city-auto'" [labelText]="''" [config]="cityLocationConfig" [allowAny]="true" (ngModelChange)="updateCityField($event)"></sam-autocomplete>
+          <sam-autocomplete #MailAddrCity city [disabled]="isCityDisabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="cityOutput" [id]="'create-org-form-city-auto'" [labelText]="''" [config]="cityLocationConfig" [allowAny]="true" (ngModelChange)="updateCityField($event)"></sam-autocomplete>
         </labelWrapper>
       </div>
 
       <!--</div>-->
-      <samText class="usa-width-one-half p_L-2x m_R-0" #MailAddrPostalCode [control]="addressForm.get('postalCode')" formControlName="postalCode" [name]="'zip-input'" [label]="'Postal Code'" [required]='true'></samText>
+      <samText class="usa-width-one-half p_L-2x m_R-0" #MailAddrPostalCode [control]="addressForm.get('postalCode')" formControlName="postalCode" [name]="'zip-input'" [label]="'Postal Code'" [required]='true' (focusout)="onZipCodeBlur()"></samText>
       <!--<samText class="usa-width-one-half m_R-0" #MailAddrPostalSate [name]="'state-input'" [label]="'State/Province/Region'"></samText>-->
     </div>
 

@@ -2,6 +2,8 @@ import { Component, Input, ViewChild, Output, EventEmitter } from "@angular/core
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
+import { LocationService } from 'api-kit/location/location.service';
+import { Observable } from 'rxjs';
 
 @Component ({
   selector: 'samAddrForm',
@@ -73,7 +75,7 @@ export class OrgAddrFormComponent {
   isStateDisabled: boolean = true;
   isCityDisabled: boolean = true;
 
-  constructor(private builder: FormBuilder) {}
+  constructor(private builder: FormBuilder, private locationService:LocationService) {}
 
   ngOnInit() {
     this.addressForm = this.builder.group({
@@ -112,15 +114,26 @@ export class OrgAddrFormComponent {
   validateForm():boolean{
     if(this.hideAddrForm) return true;
     this.formatError();
-    if(this.addressForm.invalid || this.stateOutput === null || this.stateLocationConfig.serviceOptions === null){
+    if(this.addressForm.invalid || this.locationServiceOptions.state === null || this.locationServiceOptions.country === null){
       return false;
     }else{
 
       this.updateAddressFormField();
       this.orgAddrModelChange.emit(this.orgAddrModel);
     }
-    return true;
+    this.validateZip();
+    return this.isZipValid;
   }
+
+  isZipValid = true;
+  async validateZip(){
+    await this.locationService.validateZip(this.addressForm.get("postalCode").value).subscribe(
+      data => {
+        if(data.description !== "VALID") {this.isZipValid = false;}
+      }
+    );
+  }
+
 
   formatError(){
     this.addressForm.get("streetAddr1").markAsDirty();
@@ -129,14 +142,19 @@ export class OrgAddrFormComponent {
 
     this.addrStreet1.wrapper.formatErrors(this.addressForm.get("streetAddr1"));
     this.addrPostalCode.wrapper.formatErrors(this.addressForm.get("postalCode"));
+    if(this.addressForm.get("postalCode").value !== ""){
+      this.locationService.validateZip(this.addressForm.get("postalCode").value).subscribe(data => {
+        if(data.description !== "VALID"){this.addrPostalCode.wrapper.errorMessage = "Invalid Postal Code";}
+      });
+    }
     this.addrCity.formatErrors(this.addressForm.get("city"));
 
-    this.addrState.errorMessage = !!this.stateOutput?"":"This field cannot be empty";
-    this.addrCountry.errorMessage = !!this.stateLocationConfig.serviceOptions?"":"This field cannot be empty";
+    this.addrState.errorMessage = !!this.locationServiceOptions.state?"":"This field cannot be empty";
+    this.addrCountry.errorMessage = !!this.locationServiceOptions.country?"":"This field cannot be empty";
   }
 
   updateAddressFormField(){
-    this.orgAddrModel.country = this.stateLocationConfig.serviceOptions.key;
+    this.orgAddrModel.country = this.locationServiceOptions.country.key;
     // state and city should be updated already
     this.orgAddrModel.postalCode = this.addressForm.get("postalCode").value;
     this.orgAddrModel.street1 = this.addressForm.get("streetAddr1").value;
@@ -182,5 +200,20 @@ export class OrgAddrFormComponent {
 
   countryCode() {
     return this.orgAddrModel.country;
+  }
+
+  onZipCodeBlur(){
+    let zip = this.addressForm.get("postalCode").value;
+    if(zip.length !== 9) return;
+    if(this.locationServiceOptions.state === null && this.cityOutput === null){
+      this.locationService.getLocationByPostolCode(zip).subscribe(
+        data => {
+          let location = data._embedded.locationList[0];
+          this.locationServiceOptions.state = {key:location.state.stateCode,value:location.state.state};
+          this.cityOutput = {key:location.city.cityCode,value:location.city.city};
+        },
+        error => {}
+      );
+    }
   }
 }
