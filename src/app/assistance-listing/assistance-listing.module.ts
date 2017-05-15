@@ -18,7 +18,6 @@ import { FinancialInfoPage2 } from './assistance-listing-operations/sections/fin
 import { FALHeaderInfoComponent } from './assistance-listing-operations/sections/header-information/header-information.component';
 import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
 import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
-import { FALContactInfoTableComponent } from './assistance-listing-operations/sections/contact-information/contact-information-table.component';
 import { FinancialObligationsComponent } from './assistance-listing-operations/sections/financial-info/obligations/obligation.component';
 import { ComplianceRequirementsPage } from './assistance-listing-operations/sections/compliance-requirements/compliance-requirements.page';
 import { FALComponentsModule } from './components/index';
@@ -27,10 +26,8 @@ import { FALTafsComponent } from "./components/tafs.component";
 import { FALCriteriaInfoComponent } from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
 import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
 import { FALAssistanceComponent } from './assistance-listing-operations/sections/applying-for-assistance/applying-for-assistance.component';
-import {
-  FAlProgramServiceDirective,
-  FALProgramAutoCompleteWrapper
-} from "../../api-kit/autoCompleteWrapper/falAutoCompleteWrapper.service";
+
+import {FALFormModule} from "./assistance-listing-operations/fal-form.module";
 
 
 @NgModule({
@@ -41,7 +38,8 @@ import {
     AppComponentsModule,
     routing,
     ReactiveFormsModule,
-    FALComponentsModule
+    FALComponentsModule,
+    FALFormModule
   ],
   exports: [
     AuthorizationPipe,
@@ -66,13 +64,14 @@ import {
     FALHeaderInfoComponent,
     FALOverviewComponent,
     FALContactInfoComponent,
-    FALContactInfoTableComponent,
     FinancialObligationsComponent,
     FALAuthorizationsComponent,
     FALCriteriaInfoComponent,
     FALAssistanceComponent,
-    FAlProgramServiceDirective
+   // FAlProgramServiceDirective
   ],
-  providers: [FALProgramAutoCompleteWrapper],
+  providers: [
+    //FALProgramAutoCompleteWrapper
+  ],
 })
 export class ProgramModule { }

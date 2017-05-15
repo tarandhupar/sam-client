@@ -1,0 +1,68 @@
+<samButton buttonText="Add New Obligation" (onClick)="onAddNewObliClick()"
+           [class.hide]="hideAddButton"></samButton>
+<div [formGroup]="falObligationSubForm" [class.hide]="!hideAddButton">
+<div #subForm formArrayName="obligations" *ngIf="!hideObligationsForm">
+  <div class="fal-label-margin">
+    <div class="fal-obligations-label">{{mode}} Obligation</div>
+  </div>
+  <div *ngFor="let obligation of falObligationSubForm.controls.obligations.controls; let i=index">
+    <div [formGroupName]="i" *ngIf="obligationIndex == i">
+      <div class="fal-label-margin">Select if applicable</div>
+      <samCheckbox
+        [control]="falObligationSubForm.controls['isRecoveryAct']"
+        [name]="recReinveCheckboxConfig.name"
+        [options]="recReinveCheckboxConfig.options"
+        class="form-control" formControlName="isRecoveryAct">
+      </samCheckbox>
+      <labelWrapper #assistanceTypeWrapper [label]="assistanceTypeLabel" [required]="true"
+                    [hint]="'Search or browse to select an Assistance Type, or select Salaries and Expenses if applicable.'">
+        <sam-autocomplete [options]="options" [name]="autoAssistanceType" formControlName="assistanceType"
+                          (change)="assistanceTypeChange($event,i)"
+                          [config]="autocompleteConfig" [allowAny]="true" required class="search-bar sam-autocomplete-width"></sam-autocomplete>
+      </labelWrapper>
+      <div class="fal-obligations-label">Past Fiscal Year - {{prevFY}}</div>
+      <div class="text-radio-padding">
+        <samTextRadioButton
+          [options]="pastFiscalYearConfig.options"
+          [label]="pastFiscalYearConfig.label"
+          [hint]="pastFiscalYearConfig.hint"
+          [name]="pastFiscalYearConfig.name"
+          [errorMessage]="pastFiscalYearConfig.errorMessage"
+          [formControlName]="'pFY'">
+        </samTextRadioButton>
+      </div>
+      <div class="fal-obligations-label">Current Fiscal Year - {{currentFY}}</div>
+      <div class="text-radio-padding">
+        <samTextRadioButton
+          [options]="currentFiscalYearConfig.options"
+          [label]="currentFiscalYearConfig.label"
+          [hint]="currentFiscalYearConfig.hint"
+          [name]="currentFiscalYearConfig.name"
+          [errorMessage]="currentFiscalYearConfig.errorMessage" formControlName="cFY">
+        </samTextRadioButton>
+      </div>
+      <div class="fal-obligations-label">Budget Fiscal Year - {{nextFY}}</div>
+      <div class="text-radio-padding">
+        <samTextRadioButton
+          [options]="budgetFiscalYearConfig.options"
+          [label]="budgetFiscalYearConfig.label"
+          [hint]="budgetFiscalYearConfig.hint"
+          [name]="budgetFiscalYearConfig.name"
+          [errorMessage]="budgetFiscalYearConfig.errorMessage" formControlName="bFY">
+        </samTextRadioButton>
+      </div>
+      <samTextArea
+        [name]="textareaConfig.name"
+        [label]="textareaConfig.label"
+        formControlName="description">
+      </samTextArea>
+      <div class="pull-center">
+        <samButton buttonText="Cancel" (onClick)="onObligationCancelClick(i)"></samButton>
+        <samButton buttonText="Confirm"
+                   (onClick)="onObligationConfirmClick(i)"></samButton>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>

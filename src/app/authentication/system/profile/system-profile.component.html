@@ -150,6 +150,23 @@
       </div>
     </section>
 
+    <hr *ngIf="states.edit" />
+
+    <section *ngIf="states.edit" class="deactivate-account">
+      <h3 id="deactivate-account">Deactivate Account</h3>
+      <div>
+        Once you deactivate your account, you will not be able to recover any of your account information or permissions.
+        All your My Access information will permanantely be inaccessible.
+      </div>
+
+      <samButton id="button-deactivate" [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></samButton>
+
+      <samAlert type="error"
+                [title]="states.alert.message"
+                [hidden]="!states.alert.show"
+                showClose="true"></samAlert>
+    </section>
+
     <div *ngIf="!states.edit" class="usa-button-controls">
       <button type="button" class="usa-button-outline">Cancel</button>
       <button type="button" (click)="create()">Save</button>
@@ -157,3 +174,22 @@
     </div>
   </form>
 </div>
+
+<samModal #confirmModal
+          type="warning"
+          title="Are you sure you want to deactivate your system account?"
+          showClose="true"
+          submitButtonLabel="Yes, deactivate my account"
+          cancelButtonLabel="No, cancel account deactivation"
+          (onSubmit)="reconfirmDeactivation()"
+          *ngIf="states.edit"></samModal>
+
+<samModal #reconfirmModal
+          type="warning"
+          title="Warning"
+          description="If you deactivate your system account it cannot be reactivated for future use and you will be immediately redirected to the system account creation page. Are you sure you want to deactivate your account?"
+          showClose="true"
+          submitButtonLabel="Yes, continue with deactivation"
+          cancelButtonLabel="No, cancel deactivation"
+          (onSubmit)="deactivate()"
+          *ngIf="states.edit"></samModal>

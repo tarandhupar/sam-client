@@ -79,12 +79,13 @@ export class SamHeaderLinksComponent {
     this._router.events.subscribe((event: any) => {
       if (event.constructor.name === 'NavigationEnd') {
         this.checkSession();
-      }
-      if (event.constructor.name === 'RoutesRecognized') {
-        if (event.urlAfterRedirects === '/search' || event.urlAfterRedirects === '/') {
+        
+        if (event.urlAfterRedirects.indexOf('/search') != -1 || event.urlAfterRedirects === "/") {
           setTimeout(() => {
-            this.onSearchLinkClick();
+            this.onSearchLinkClick(true);
           });
+        } else {
+          this.onSearchLinkClick(false);
         }
       }
     });
@@ -111,12 +112,16 @@ export class SamHeaderLinksComponent {
   searchLink = false;
   menuLink = false;
 
-  onSearchLinkClick(){
+  onSearchLinkClick(state:boolean=null){
     if (this.showDropdown === true && this.menuLink === true) {
       this.menuLink = false;
       this.searchLink = true;
     } else {
-      this.showDropdown = !this.searchLink;
+      let finalState = !this.searchLink;
+      if(state!==null){
+        finalState = state;
+      }
+      this.showDropdown = finalState;
       this.searchLink = this.showDropdown;
       this.menuLink = false;
     }
@@ -164,13 +169,19 @@ export class SamHeaderLinksComponent {
   }
 
   itemToggle(item){
+    let returnVal = true;
     if(!globals.showOptional){
-      return !item.pageInProgress;
+      if(item.hasOwnProperty('loggedIn')){
+        returnVal = this.states.isSignedIn && item.loggedIn && !item.pageInProgress;
+      } else {
+        returnVal = !item.pageInProgress;
+      }
+    } else {
+      if(item.hasOwnProperty('loggedIn')){
+        returnVal = this.states.isSignedIn && item.loggedIn;
+      }
     }
-    if(item.hasOwnProperty('loggedIn')){
-      return this.states.isSignedIn && item.loggedIn;
-    }
-    return true;
+    return returnVal;
   }
 
   refreshPage(){

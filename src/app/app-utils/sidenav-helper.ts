@@ -26,7 +26,7 @@ export class SidenavHelper {
           if(isOpportunity && self.shouldBeDisplayed(possibleSection.field)){
             possibleSection.route = "#" + self.generateID(possibleSection.field);
             return possibleSection;
-          } else{
+          } else if(!isOpportunity){
             possibleSection.route = possibleSection.field;
             return possibleSection;
           }

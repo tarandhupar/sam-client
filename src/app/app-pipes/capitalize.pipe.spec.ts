@@ -1,8 +1,8 @@
 import { CapitalizePipe } from './capitalize.pipe';
 
-describe('AuthorizationPipe', () => {
+describe('src/app/app-pipes/capitalize.pipe.spec.ts', () => {
   let pipe = new CapitalizePipe();
-  it('transforms a string to a string with words capitalized', () => {
+  it('AuthorizationPipe: transforms a string to a string with words capitalized', () => {
     let string1 = "COMMERCE, DEPARTMENT OF";
     let result1 = 'Commerce, Department of';
     let string2 = "ECONOMIC AFFAIRS";

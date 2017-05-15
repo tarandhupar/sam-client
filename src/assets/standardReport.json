@@ -130,7 +130,7 @@
       "The Federal Procurement Data System - Next Generation (FPDS-NG) is a dynamic, real-time database. Updates to data, including new actions, modifications, and corrections are made on a regular basis. Such updates could result in changes to the FPDS-NG data used to compile reports on actions for current and/or prior fiscal years. Accordingly, all reports need to be viewed with this in mind. It should also be noted that availability of DoD data entered into FPDS-NG is subject to a 90-day delay."
     ]
   }, {
-    "id": "AA10685B4D7D5CE94B3EE5827690C161",
+    "id": "C8C3D0EA462394F3110A09ABF73E8B1A",
     "name": "Bundled and Consolidated Contracts Report",
     "desc": "This Report Displays the actions and dollars for Bundled and Consolidated Contracts that exceed the threshold that was in place on the date signed of the action.",
     "appendix": [
@@ -947,7 +947,7 @@
       "Limitation on Permissible Use of Dun & Bradstreet, Inc. (D&B) Data:",
       "This website contains data supplied by third party information suppliers, one of which is D&B.  Each entity DUNS Number and its associated business information are referred to herein as \"D&B Data.\"",
       "D&B hereby grants you, the user, a license for a limited, non-commercial use of D&B data within the limitations set forth herein.  By using this website, you agree that you shall not use D&B data without giving written attribution to the source of such data (i.e., D&B) and shall not access, use or disseminate D&B data in bulk, (i.e., in amounts sufficient for use as an original source or as a substitute for the product and/or service being licensed hereunder).",
-      "Under no circumstances are you authorized to use the D&B data for commercial, resale or marketing purposes (e.g., identifying, quantifying, segmenting and/or analyzing customers and prospective customers).  Systematic access (electronic harvesting) or extraction of content from the website, including the use of \"bots\" or \"spiders\", is prohibited. Federal government entities are authorized to use the D&B data for purposes of acquisition as defined in FAR 2.101 and for the purpose of managing Federal awards, including sub-awardees, or reporting Federal award information.",
+      "Except for data elements identified above as D&B Open Data, under no circumstances are you authorized to use the D&B data for commercial, resale or marketing purposes (e.g., identifying, quantifying, segmenting and/or analyzing customers and prospective customers).  Systematic access (electronic harvesting) or extraction of content from the website, including the use of \"bots\" or \"spiders\", is prohibited. Federal government entities are authorized to use the D&B data for purposes of acquisition as defined in FAR 2.101 and for the purpose of managing Federal awards, including sub-awardees, or reporting Federal award information.",
       "GSA assumes no liability for the use of the D&B data once it is downloaded or accessed.  The D&B data is provided \"as is\" without warranty of any kind.  The D&B data is the intellectual property of D&B.  In no event will D&B or any third party information supplier be liable in any way with regard to the use of the D&B DATA.  For more information about the scope of permissible use of D&B data licensed hereunder, please contact D&B at datause_govt@dnb.com.",
       "This report displays a detailed layout at the PIID level. Final Award (DO/TO, PO, DCA, BPA Call) and IDV (FSS, GWAC, BOA, BPA, IDC) Modifications that have \"Reason for Modification\" as either 'Terminate for Cause' or 'Terminate for Default (complete or partial)' are displayed in this report.",
       "The Federal Procurement Data System - Next Generation (FPDS-NG) is a dynamic, real-time database. Updates to data, including new actions, modifications, and corrections are made on a regular basis. Such updates could result in changes to the FPDS-NG data used to compile reports on actions for current and/or prior fiscal years. Accordingly, all reports need to be viewed with this in mind. It should also be noted that availability of DoD data entered into FPDS-NG is subject to a 90-day delay for non DoD users."
@@ -2110,7 +2110,7 @@
         "The Federal Procurement Data System - Next Generation (FPDS-NG) is a dynamic, real-time database. Updates to data, including new actions, modifications, and corrections are made on a regular basis. Such updates could result in changes to the FPDS-NG data used to compile reports on actions for current and/or prior fiscal years. Accordingly, all reports need to be viewed with this in mind. It should also be noted that availability of DoD data entered into FPDS-NG is subject to a 90-day delay for non DoD users."
       ]
     }, {
-      "id": "03DDC6C04986ECFD3B8273B18E40E2E9",
+      "id": "55B5BDB34B9D6A5990E615B1B3F7ECF9",
       "name": "Procurement History for Market Research Report",
       "desc": "This report provides total dollars awarded to all vendors for a Product and Service Code (PSC) given in the search criteria. The dollars are aggregated by the unique entry reported in the Description of Requirents field.",
       "appendix": [
@@ -2234,7 +2234,7 @@
     }, {
       "id": "F33EC2D94E1D79A8725D1D8979843E7F",
       "name": "Rerepresentation Eligible Actions Report",
-      "desc": " ",
+      "desc": "",
       "appendix": [
         "Limitation on Permissible Use of Dun & Bradstreet, Inc. (D&B) Data:",
         "This website contains data supplied by third party information suppliers, one of which is D&B. Each entity DUNS Number and its associated business information are referred to herein as \"D&B Data.\" ",
@@ -2263,7 +2263,7 @@
     }, {
       "id": "189104574CDD38D699ED0495CEA33B34",
       "name": "Rerepresentation Report",
-      "desc": "Hello from report",
+      "desc": " ",
       "appendix": [
         "Limitation on Permissible Use of Dun & Bradstreet, Inc. (D&B) Data:",
         "This website contains data supplied by third party information suppliers, one of which is D&B. Each entity DUNS Number and its associated business information are referred to herein as \"D&B Data.\" ",

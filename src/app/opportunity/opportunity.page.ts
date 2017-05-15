@@ -202,8 +202,6 @@ export class OpportunityPage implements OnInit {
 
     this.apiSubjectSub = opportunitySubject.subscribe(api => { // do something with the opportunity api
       this.opportunity = api;
-      //setup side nav menu
-      this.setupSideNavMenus();
     }, err => {
       this.router.navigate(['/404']);
     });
@@ -213,46 +211,44 @@ export class OpportunityPage implements OnInit {
 
   private setupSideNavMenus(){
     this.pageRoute = "opportunities/" + this.opportunity.opportunityId;
-      let opportunitySideNavContent = {
-        "label": "Opportunity",
-        "route": this.pageRoute,
-        "children": [
-          {
-            "label": "Award Details",
-            "field": this.opportunityFields.Award,
-          },
-          {
-            "label": "General Information",
-            "field": this.opportunityFields.General,
-          },
-          {
-            "label": "Classification",
-            "field": this.opportunityFields.Classification,
-          },
-          {
-            "label": "Synopsis/Description",
-            "field": this.opportunityFields.Synopsis,
-          },
-          {
-            "label": "Packages",
-            "field": this.opportunityFields.Packages,
-          },
-          {
-            "label": "Contact Information",
-            "field": this.opportunityFields.Contact,
-          },
-          {
-            "label": "History",
-            "field": this.opportunityFields.History,
-          }
-        ]
-      };
+    let opportunitySideNavContent = {
+      "label": "Opportunity",
+      "route": this.pageRoute,
+      "children": [
+        {
+          "label": "Award Details",
+          "field": this.opportunityFields.Award,
+        },
+        {
+          "label": "General Information",
+          "field": this.opportunityFields.General,
+        },
+        {
+          "label": "Classification",
+          "field": this.opportunityFields.Classification,
+        },
+        {
+          "label": "Synopsis/Description",
+          "field": this.opportunityFields.Synopsis,
+        },
+        {
+          "label": "Packages",
+          "field": this.opportunityFields.Packages,
+        },
+        {
+          "label": "Contact Information",
+          "field": this.opportunityFields.Contact,
+        },
+        {
+          "label": "History",
+          "field": this.opportunityFields.History,
+        }
+      ]
+    };
 
-      this.sidenavModel.children = [];
-     this.sidenavHelper.updateSideNav(this, true, opportunitySideNavContent);
+    this.sidenavModel.children = [];
+    this.sidenavHelper.updateSideNav(this, true, opportunitySideNavContent);
   }
-
-
 
   private loadPreviousOpportunityVersion(historyAPI: Observable<any>) { 
     let opportunitySubject = new ReplaySubject(1);
@@ -526,8 +522,6 @@ export class OpportunityPage implements OnInit {
       this.displayField = setDisplayFields.transform(type, parent);
       this.ready = true;
       this.setupSideNavMenus();
-      this.sidenavHelper.updateSideNav(this, true);
-      //this.updateSideNav();
     });
   }
 

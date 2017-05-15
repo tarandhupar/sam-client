@@ -138,10 +138,6 @@ export class MigrationsComponent {
   initForm() {
     const session = this.session;
 
-    if(Object.keys(this.store.roles).length) {
-      this.states.confirm.show = true;
-    }
-
     this.migrationForm = this.builder.group({
       system: [session.system, Validators.required],
       username: [session.username, Validators.required],

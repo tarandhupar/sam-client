@@ -16,7 +16,7 @@ export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
 
 // TODO - Refactor repeated tests
 // TODO - Expand tests (additional and optional information, tooltips, FY vs. FY (est.), obligation type colors)
-describe('FinancialObligationChart Create Visualization', () => {
+describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -66,7 +66,7 @@ describe('FinancialObligationChart Create Visualization', () => {
   /**
    * Basic check that some kind of chart is created
    */
-  it('Should display chart', () => {
+  it('FinancialObligationChart Create Visualization: Should display chart', () => {
     let chart = fixture.nativeElement.querySelector('#chart');
     expect(chart).not.toBeNull();
     expect(chart).toBeDefined();
@@ -82,7 +82,7 @@ describe('FinancialObligationChart Create Visualization', () => {
   /**
    * Basic check that some kind of table is created
    */
-  it('Should display table', () => {
+  it('FinancialObligationChart Create Visualization: Should display table', () => {
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
     expect(table).toBeDefined();
@@ -97,7 +97,7 @@ describe('FinancialObligationChart Create Visualization', () => {
   });
 });
 
-describe('FinancialObligationChart Prepare Visualization', () => {
+describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -133,7 +133,7 @@ describe('FinancialObligationChart Prepare Visualization', () => {
   /**
    * Basic check that data is not being lost
    */
-  it('Should prepare basic data', () => {
+  it('FinancialObligationChart Prepare Visualization: Should prepare basic data', () => {
     let mockFinancialData = [{
       'values': [
         { 'year': 2013, 'actual': 14853701 },
@@ -173,7 +173,7 @@ describe('FinancialObligationChart Prepare Visualization', () => {
    * Flag: estimate
    * Condition: False if data is from previous FY AND nsi and ena are False, otherwise True
    */
-  it('Should set flags correctly', () => {
+  it('FinancialObligationChart Prepare Visualization: Should set flags correctly', () => {
 
     let mockFinancialData = [{
       'values': [
@@ -218,7 +218,7 @@ describe('FinancialObligationChart Prepare Visualization', () => {
   });
 });
 
-describe('FinancialObligationChart Table Combine Previous Obligations', () => {
+describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -294,7 +294,7 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
    * The years of obligation 1 partially overlaps those of obligation 2, so add them together where possible
    * Display an empty cell where data is missing
    */
-  it('Should total new and previous data of same type', () => {
+  it('FinancialObligationChart Table Combine Previous Obligations: Should total new and previous data of same type', () => {
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
     expect(table).toBeDefined();
@@ -325,7 +325,7 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
   /**
    * Basic check that previous obligations do not break combines
    */
-  it('Should not total new and previous data of different type', () => {
+  it('FinancialObligationChart Table Combine Previous Obligations: Should not total new and previous data of different type', () => {
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
     expect(table).toBeDefined();
@@ -346,7 +346,7 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
   /**
    * The total for each FY should add together data from all obligations, if it exists
    */
-  it('Should total correct years from all obligations', () => {
+  it('FinancialObligationChart Table Combine Previous Obligations: Should total correct years from all obligations', () => {
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
     expect(table).toBeDefined();
@@ -365,7 +365,7 @@ describe('FinancialObligationChart Table Combine Previous Obligations', () => {
   });
 });
 
-describe('FinancialObligationChart Table Combine Special Cases', () => {
+describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [
@@ -402,7 +402,7 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
    * if all obligations to be combined have the same special type in a FY,
    * then the total for that FY should show the same special type.
    */
-  it('Should display special case if consistent', () => {
+  it('FinancialObligationChart Table Combine Special Cases: Should display special case if consistent', () => {
     let mockFinancialData = [{
       'values': [
         { 'year': 2016, 'flag': 'na' },
@@ -464,7 +464,7 @@ describe('FinancialObligationChart Table Combine Special Cases', () => {
    * if two obligations to be combined have different special types in a FY,
    * then the total for that FY should show 'Not Available'.
    */
-  it('Should display not available if inconsistent', () => {
+  it('FinancialObligationChart Table Combine Special Cases: Should display not available if inconsistent', () => {
 
     let mockFinancialData = [{
       'values': [

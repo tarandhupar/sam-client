@@ -43,7 +43,7 @@ let activatedRouteStub = {
     }
   }
 };
-describe('AgencyPickerTests', () => {
+describe('src/app/app-components/agency-picker/agency-picker.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AgencyPickerComponent ],
@@ -87,7 +87,7 @@ describe('AgencyPickerTests', () => {
 
   }));
 
-  it('hint test', ()  => {
+  it('AgencyPickerTests: hint test', ()  => {
     comp.hint = "dummy text";
     fixture.detectChanges();
     fixture.whenStable().then(() => {
@@ -96,7 +96,7 @@ describe('AgencyPickerTests', () => {
     });
 	});
 
-  it('label test', ()  => {
+  it('AgencyPickerTests: label test', ()  => {
     comp.label = "dummy label";
     fixture.detectChanges();
     fixture.whenStable().then(() => {

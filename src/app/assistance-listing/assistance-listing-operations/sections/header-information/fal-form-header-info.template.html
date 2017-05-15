@@ -1,3 +1,4 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Header Information - {{ viewModel.title }}</div>
 <form [formGroup]="falHeaderInfoForm">
   <samText [maxlength]="144"
            [hint]="'Spell out any acronyms and limit to 144 characters.'"
@@ -13,20 +14,43 @@
            [label]="'Popular Name'"
            formControlName="alternativeNames"></samText>
 
+  <agencyPicker [label]="'Federal Agency'"
+                [multimode]="false"
+                [advancedMode]="false"
+                [required]="true"
+                [orgId]="organizationId"
+                [initial]="organizationId ? [organizationId] : []"
+                (organization)="onOrganizationChange($event)"
+                [levelLimit]='2'>
+  </agencyPicker>
+
   <samNumber [maxlength]="3"
              [minlength]="3"
              [required]="true"
              [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
              [control]="falHeaderInfoForm.controls['programNumber']"
-             [name]="'program-number-input'"
+             [name]="'programNumber-input'"
              [label]="'FAL Number'"
-             [errorMessage]= "falHeaderInfoForm.controls['programNumber'].valid ? '': 'This number falls outside the range defined for this organization.'"
+             [errorMessage]="falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
              formControlName="programNumber"></samNumber>
 
-  <sam-list-input [hint]="'Are there any related federal assistance listings?'"
-                  [control]="falHeaderInfoForm.controls['relatedPrograms']"
-                  [name]="'related-programs-control'"
-                  [label]="'Related Federal Assistance Listing'"
-                  [options]="options"
-                  formControlName="relatedPrograms"></sam-list-input>
+  <sam-list-display  [newValue]="rpNGModel"
+                     formControlName="rpListDisplay"
+                     (ngModelChange)="relatedProgramTypeChange($event)"
+                     (modelChange)="relatedProglistChange()"
+                     [config]="relProAutocompleteConfig">
+
+    <labelWrapper [label]="'Related Federal Assistance Listing'"
+                  [hint]="'Are there any related federal assistance listings?'">
+
+      <sam-autocomplete autofill-falProgram
+                        [(ngModel)] = "rpNGModel"
+                        formControlName="relatedPrograms"
+                        name="relatedProgramSearch"
+                        [config]="relProAutocompleteConfig"
+                        class="search-bar sam-autocomplete-width">
+
+      </sam-autocomplete>
+    </labelWrapper>
+  </sam-list-display>
 </form>

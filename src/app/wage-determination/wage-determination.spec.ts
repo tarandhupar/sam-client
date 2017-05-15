@@ -192,7 +192,7 @@ export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
   }
 }
 
-describe('WageDeterminationPage', () => {
+describe('src/app/wage-determination/wage-determination.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ WageDeterminationPage,
@@ -236,7 +236,7 @@ describe('WageDeterminationPage', () => {
     fixture.detectChanges();
   });
 
-  it('Should init & load data', () => {
+  it('WageDeterminationPage: Should init & load data', () => {
     expect(comp.wageDetermination).toBeDefined();
     expect(comp.isSCA).toBeDefined();
     expect(comp.referenceNumber).toBeDefined();

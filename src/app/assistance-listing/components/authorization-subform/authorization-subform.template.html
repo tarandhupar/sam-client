@@ -9,9 +9,10 @@
 
         <samCheckbox
           [control]="authGrp.controls.authType"
-          [hint]="'Please select all that apply'"
+          [label]="'Please select all that apply'"
           [name]="'authType'"
           [options]="checkboxConfig.options"
+          [required]="true"
           formControlName="authType"></samCheckbox>
 
         <div formGroupName="act" [class.hide]="authGrp.value.authType.indexOf('act') == -1" >

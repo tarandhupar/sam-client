@@ -6,6 +6,7 @@ import { OrgAddrFormComponent } from '../../app-components/address-form/address-
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
+import { Observable } from 'rxjs';
 
 function validDateTime(c: FormControl) {
   let invalidError = {message: 'Date is invalid'};
@@ -190,7 +191,6 @@ export class OrgCreatePage {
 
 
   onReviewFormClick(){
-
     // Validate all the necessary fields in the organization creation form
     this.basicInfoForm.get('orgName').markAsDirty();
     this.basicInfoForm.get('orgStartDate').markAsDirty();
@@ -200,18 +200,25 @@ export class OrgCreatePage {
       this.indicateFundRadioConfig.errorMessage = this.indicateFundRadioModel === ''? "This field cannot be empty": '';
     }
 
-    if((!this.isAddressNeeded() || (this.isAddressNeeded() && this.isAddressFormValid() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid) {
-      this.createOrgPage = false;
-      this.reviewOrgPage = true;
-      this.orgInfo = [];
-      this.orgInfo.push({des: "Organization Name", value: this.basicInfoForm.get('orgName').value});
-      this.orgInfo.push({des: "Start Date", value: this.basicInfoForm.get('orgStartDate').value});
-      this.orgInfo.push({des: "Description", value: this.basicInfoForm.get('orgDescription').value});
-      this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
-      if (this.isAddressNeeded()) this.orgInfo.push({des: "Indicate Funding", value: this.indicateFundRadioModel});
-      this.getOrgTypeSpecialInfo(this.orgType);
-      this.generateBasicOrgObj();
-    }
+    let validateRes = [];
+    this.addrForms.forEach( e => {validateRes.push(e.validateForm())});
+    Observable.forkJoin(validateRes).subscribe( results => {
+      let isAddrValid = true;
+      results.forEach(e => {if(e['description'] !== "VALID") isAddrValid = false;});
+      if(isAddrValid && (!this.isAddressNeeded() || (this.isAddressNeeded() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid){
+        this.createOrgPage = false;
+        this.reviewOrgPage = true;
+        this.orgInfo = [];
+        this.orgInfo.push({des: "Organization Name", value: this.basicInfoForm.get('orgName').value});
+        this.orgInfo.push({des: "Start Date", value: this.basicInfoForm.get('orgStartDate').value});
+        this.orgInfo.push({des: "Description", value: this.basicInfoForm.get('orgDescription').value});
+        this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
+        if (this.isAddressNeeded()) this.orgInfo.push({des: "Indicate Funding", value: this.indicateFundRadioModel});
+        this.getOrgTypeSpecialInfo(this.orgType);
+        this.generateBasicOrgObj();
+      }
+    }, error => {});
+
   }
 
   onEditFormClick(){
@@ -264,12 +271,6 @@ export class OrgCreatePage {
       return orgAddrModel.addrType !== e.addrModel.addrType;
     });
     this.orgAddresses.forEach( e => {e.showAddIcon = true;});
-  }
-
-  isAddressFormValid():boolean{
-    let isValid = true;
-    this.addrForms.forEach( e => {if(!e.validateForm()) isValid = false;});
-    return isValid;
   }
 
   isAddressNeeded():boolean{

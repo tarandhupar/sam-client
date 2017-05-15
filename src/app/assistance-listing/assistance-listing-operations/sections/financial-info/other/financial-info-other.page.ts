@@ -185,9 +185,6 @@ export class FinancialInfoPage2 implements OnInit {
 
   private loadAccounts() {
     let model = {
-      codeBoxes: [],
-      descriptionText: [],
-
       accounts: []
     };
 

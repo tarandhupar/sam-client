@@ -20,6 +20,7 @@ export class PermissionSelectorComponent {
   @Input() titleText: string = '';
   @Input() hideDefaultColumn: false;
   @Input() hideColumnHeader: false;
+  @Input() readOnly = false;
 
   private isAllDefaultsChecked: boolean = false;
   private isAllChecked: boolean = false;

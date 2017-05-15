@@ -41,17 +41,25 @@ export class SystemPasswordComponent {
   ngOnInit() {
     // Verify Session
     this.api.iam.checkSession((user) => {
-      // Verify System Account
-      this.api.iam.system.account.get(account => {
-console.log(account)
-        this.states.initial = (account.userPassword == undefined);
-        this.system = account;
-        this.initForm();
-      }, (error) => {
-        if(!this.api.iam.isDebug()) {
-          this.router.navigate(['profile']);
-        }
-      });
+      if(user.systemAccount) {
+        // Get System Account details
+        this.api.iam.system.account.get(accounts => {
+          // Redirect the user to System Account Profile if no System Account is associated with user
+          if(!accounts.length) {
+            this.router.navigate(['profile']);
+          } else {
+            this.system = accounts[0];
+            this.initForm();
+          }
+        }, (error) => {
+          if(!this.api.iam.isDebug()) {
+            this.router.navigate(['profile']);
+          }
+        });
+      } else {
+        // Redirect to User Account Profile if not enough permission
+        this.router.navigateByUrl('/profile')
+      }
     }, (error) => {
       if(!this.api.iam.isDebug()) {
         this.router.navigateByUrl('/signin');
@@ -63,10 +71,6 @@ console.log(account)
     let group = {
       newPassword: ['', Validators.required],
     };
-
-    if(this.states.initial) {
-      group.newPassword = ['', Validators.required];
-    }
 
     this.passwordForm = this.builder.group(group);
   }
@@ -95,23 +99,30 @@ console.log(account)
   }
 
   reset() {
-    let params = this.passwordForm.value;
+    let id,
+        password;
 
     this.setSubmitted();
 
     if(this.passwordForm.valid) {
-      this.states.loading = true;
+      if(this.system._id) {
+        id = this.system._id;
+        password = this.passwordForm.controls['newPassword'].value;
 
-      this.system['userPassword'] = this.passwordForm.controls['newPassword'].value;
+        this.states.loading = true;
 
-      this.api.iam.system.account.update(this.system, () => {
-        this.states.loading = false;
-        this.$password.reset();
-        this.alert('success', `Password Successfully ${(this.states.initial ? 'Created' : 'Changed')}`);
-      }, (error) => {
-        this.states.loading = false;
-        this.alert('error', error.message)
-      });
+        this.api.iam.system.account.reset(id, password, () => {
+          this.states.loading = false;
+          this.$password.reset();
+          this.alert('success', `Password was successfully created/changed.`);
+        }, (error) => {
+          this.states.loading = false;
+          this.alert('error', error.message)
+        })
+      } else {
+        console.error('There was an issue with the system account response data!');
+        console.info(this.system);
+      }
     }
   }
 };

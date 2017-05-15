@@ -5,10 +5,62 @@ import {
 } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
+
+/** Interfaces **/
+
+// Represents a single account identification with an account code and description
+export interface AccountIdentification {
+  code: string,
+  description: string
+}
+
+// Represents all the data that has been entered into an account identification form
+export interface AccountIdentificationModel {
+  // the account that is currently being added or edited
+  codeParts: string[], // each part of account code is input in its own textbox
+  description: string,
+
+  // the accounts that have already been added
+  accounts: AccountIdentification[]
+}
+
+/* List of options accepted by account identification component
+ * name: A non-empty name must be provided. Used to generate element ids
+ * label: Heading to show above form
+ * hint: Instructions for form
+ * codeHint: Instructions for account code subform
+ * required: If true, will trigger validation errors if form is not filled out
+ * deleteModal: If defined and not null, shows a modal with specified title and description when deleting from table
+ */
+export interface AccountIdentificationConfig {
+  name: string,
+  label?: string,
+  hint?: string,
+  codeHint?: string,
+  required?: boolean,
+
+  deleteModal?: {
+    title?: string,
+    description?: string
+  }
+}
+
+
+/** Component **/
+
+/*
+ * This component consists of a table displaying a list of accounts,
+ * and functionality for adding, removing, or editing them.
+ *
+ * Adding and editing accounts is done through a form that consists of
+ * several account code parts and a description. Some basic validations are implemented.
+ */
 @Component({
   selector: 'falAccountIdentificationInput',
   templateUrl: 'account-identification.template.html',
   providers: [
+    // needed to use ControlValueAccessor implementation with form controls
+    // see https://blog.thoughtram.io/angular/2016/07/27/custom-form-controls-in-angular-2.html
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FALAccountIdentificationComponent),
@@ -17,118 +69,107 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
   ]
 })
 export class FALAccountIdentificationComponent implements ControlValueAccessor {
-  //todo: refactor model duplication
+  // all parameters are passed in a single config object for convenience
+  // see AccountIdentificationConfig interface for supported parameters
+  @Input() config: AccountIdentificationConfig;
+
+  // the model serves as the single source of truth for this component's data
+  // whenever data is input or actions are taken that modify the form, the model should also be updated
+  // the model is then used to render the table of accounts
+  public model: AccountIdentificationModel;
+
+  // keeps track of what mode the component is in
+  // when not in editing mode (default), shows the table of accounts and an add new account button
+  // when in editing mode, the add new account button is replaced with a new account form, and table's action buttons are disabled
+  public isEditing: boolean = false;
+
+  // keeps track of the index that the next account will be added to on click of confirm button
+  // when not in editing mode, index is set to the length of the accounts list (adds on confirm)
+  // when in editing mode, index is set to the index of the entry being edited (overwrites on confirm)
   private currentIndex: number = 0;
-  public model = {
-    codeBoxes: [],
-    descriptionText: '',
 
-    accounts: [] // { code: '', description: '' }
-  };
+  // the maximum characters that can be input for each part of an account code
+  public codePartLengths: number[] = [2, 4, 1, 1, 3];
 
-  // general
-  @Input() options; // optional - can pass all parameters in a single options object for convenience
-  @Input() name: string; // required
-  @Input() label: string;
-  @Input() hint: string;
-  @Input() required: boolean;
-  public accountFormGroup: FormGroup;
-  public showForm: boolean = false;
-
-  //code
-  public codeLabelName: string;
-  @Input() codeHint: string;
-  public codeBoxLengths: number[] = [2, 4, 1, 1, 3];
-  private codeFormGroup: FormGroup;
-
-  // textarea
-  public textareaName: string;
-  public textareaControl: FormControl;
+  // controls
+  public accountForm: FormGroup;
+  public codeForm: FormGroup;
+  public descriptionControl: FormControl;
 
   // label wrappers
   @ViewChild('accountIdentificationLabel') wrapper: LabelWrapper;
   @ViewChild('codeLabel') codeWrapper: LabelWrapper;
 
+  // modals
+  @ViewChild('deleteModal') deleteModal;
+
+
+  /** Initial setup **/
   constructor() { }
 
   ngOnInit() {
-    this.parseInputsAndSetDefaults();
+    this.model = FALAccountIdentificationComponent.constructModelFrom(null); // set up initial empty model
     this.validateInputs();
     this.createFormControls();
   }
 
-  private parseInputsAndSetDefaults() {
-    // inputs can either be passed directly, or through an options object
-    // if an input is passed both ways, the value passed directly will take precedence
-    if(this.options) {
-      this.name = this.name || this.options.name;
-
-      this.label = this.label || this.options.label;
-      this.hint = this.hint || this.options.hint;
-      this.codeHint = this.codeHint || this.options.codeHint;
-      if(this.required == null) { this.required = this.options.required }
-    }
-
-    // subcomponent names are generated based on this component's name
-    // names of code text boxes are generated in html template
-    this.codeLabelName = this.name + '-code-label';
-    this.textareaName = this.name + '-textarea';
-  }
-
   private validateInputs() {
-    let errorPrefix = "<falAccountIdentificationInput> requires ";
-
-    if(!this.name) {
-      throw new Error(errorPrefix + "a [name] parameter for 508 compliance");
+    if(!(this.config && this.config.name)) {
+      throw new Error("<falAccountIdentificationInput> requires a [name] parameter for 508 compliance");
     }
   }
 
   private createFormControls() {
-    this.accountFormGroup = new FormGroup({});
-    this.codeFormGroup = new FormGroup({});
-    this.accountFormGroup.addControl('codeBoxes', this.codeFormGroup);
+    this.accountForm = new FormGroup({});
+    this.codeForm = new FormGroup({});
+    this.accountForm.addControl('codeParts', this.codeForm);
 
-    for(let i = 0; i < this.codeBoxLengths.length; i++) {
-      let codeBoxControl = new FormControl(null, [Validators.required, Validators.pattern('[0-9]*')]);
-      codeBoxControl.valueChanges.subscribe(value => {
-        this.model.codeBoxes[i] = value;
+    for(let i = 0; i < this.codePartLengths.length; i++) {
+      // code parts are required and should only take numbers
+      let codePartControl = new FormControl(null, [Validators.required, Validators.pattern('[0-9]*')]);
+      codePartControl.valueChanges.subscribe(value => {
+        this.model.codeParts[i] = value;
         this.onChange();
       });
 
-      this.codeFormGroup.addControl('codeBox' + i, codeBoxControl);
+      this.codeForm.addControl('codePart' + i, codePartControl);
     }
 
-    this.textareaControl = new FormControl();
-    this.textareaControl.valueChanges.subscribe(value => {
-      this.model.descriptionText = value;
+    this.descriptionControl = new FormControl();
+    this.descriptionControl.valueChanges.subscribe(value => {
+      this.model.description = value;
       this.onChange();
     });
-    this.accountFormGroup.addControl('textarea', this.textareaControl);
+    this.accountForm.addControl('description', this.descriptionControl);
   }
 
-  public displayForm() {
-    this.showForm = true;
-  }
+
+  /** Account operations (add, remove, edit) **/
 
   public addAccount() {
-    let account = {};
-    let code = this.codeFormGroup.get('codeBox0').value;
-    for(let i = 1; i < this.codeBoxLengths.length; i++) {
-      code = code + '-' + this.codeFormGroup.get('codeBox'+i).value;
+    // When adding an account, combine each code part together by joining with dashes
+    let combinedCode = this.codeForm.get('codePart0').value;
+    for(let i = 1; i < this.codePartLengths.length; i++) {
+      combinedCode = combinedCode + '-' + this.codeForm.get('codePart' + i).value;
     }
 
-    account['code'] = code;
-    account['description'] = this.textareaControl.value;
+    let account: AccountIdentification = {
+      code: combinedCode,
+      description: this.descriptionControl.value
+    };
+
     this.model.accounts[this.currentIndex] = account;
-    this.resetForm();
+    this.resetForm(); // after adding, close the form
   };
 
   public removeAccount(index: number) {
-    this.model.accounts.splice(index, 1);
-    if(index === this.currentIndex) {
-      this.accountFormGroup.reset();
-      this.currentIndex = this.model.accounts.length;
-    } else if(index < this.currentIndex) {
+    this.model.accounts.splice(index, 1); // remove the account
+
+    if(index === this.currentIndex) { // if the account currently being edited was removed
+      // then we need to clear out the form and stop editing
+      this.resetForm();
+    } else if(index < this.currentIndex) { // else if an earlier account was removed
+      // then the index of the currently edited account has shifted down by 1
       this.currentIndex--;
     }
 
@@ -136,72 +177,75 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   public editAccount(index: number) {
+    // When editing an account, split its code up into parts
     let code = this.model.accounts[index].code;
     let splits = code.split('-');
-    for(let i = 0; i < this.codeBoxLengths.length; i++) {
-      this.codeFormGroup.get('codeBox' + i).setValue(splits[i]);
+
+    for(let i = 0; i < this.codePartLengths.length; i++) {
+      this.codeForm.get('codePart' + i).setValue(splits[i]);
     }
 
-    // this.codeBoxLengths.reduce((acc, length, i) => {
-    //   this.codeFormGroup.get('codeBox' + i).setValue(code.slice(acc, acc+length));
-    //   return acc + length;
-    // }, 0);
-
-    let description = this.model.accounts[index].description || '';
-    this.textareaControl.setValue(description);
+    let description = this.model.accounts[index].description;
+    this.descriptionControl.setValue(description);
 
     this.currentIndex = index;
-    this.showForm = true;
+    this.isEditing = true;
   }
 
-  public resetForm() {
-    this.currentIndex = this.model.accounts.length;
-    this.accountFormGroup.reset();
-    this.showForm = false;
 
-    this.onChange();
-  }
+  /** Event handlers **/
 
   // Modified version of code originally by Joseph Lennox
   // http://stackoverflow.com/a/15595732
-  private onKeyup(event) {
+  // todo: fix edge cases
+  public onKeyup(event) {
     let target = event.srcElement || event.target;
     let maxLength = parseInt(target.attributes["maxlength"].value, 10);
     let currentLength = target.value.length;
-    if (currentLength >= maxLength) {
-      var next = target.parentNode.parentNode.parentNode;
-      while (next = next.nextElementSibling) {
-        if (next == null)
-          break;
-        if (next.tagName.toLowerCase() === "samtext") {
-          next.getElementsByTagName('input')[0].focus();
-          break;
-        }
+
+    // When typing into code part inputs, if the max length is reached, focus on the next input
+    let node = target.parentNode.parentNode.parentNode;
+
+    while(node != null) {
+      if(currentLength >= maxLength) {
+        node = node.nextElementSibling;
+      } else if(currentLength === 0) {
+        node = node.previousElementSibling;
       }
-    }
-    // Move to previous field if empty (user pressed backspace)
-    else if (currentLength === 0) {
-      var previous = target.parentNode.parentNode.parentNode;
-      while (previous = previous.previousElementSibling) {
-        if (previous == null)
-          break;
-        if (previous.tagName.toLowerCase() === "samtext") {
-          previous.getElementsByTagName('input')[0].focus();
-          break;
-        }
+
+      if (node && node.tagName.toLowerCase() === "samtext") {
+        node.getElementsByTagName('input')[0].focus();
+        break;
       }
     }
   }
 
+  // On click of delete button in table
+  public onDeleteClick(index: number) {
+    if(this.deleteModal) { // if delete modal exists, show it
+      this.deleteModal.openModal(index);
+    } else { // else just remove directly
+      this.removeAccount(index);
+    }
+  }
+
+  // On confirm of delete modal
+  public onDeleteModalSubmit(index: any[]) {
+    this.deleteModal.closeModal();
+    this.removeAccount(index[0]);
+  }
+
+  // Handles component level functionality that should be run on every change, such as validations
   private onChange() {
     this.onChangeCallback(this.model);
 
+    // todo: clean up code, fix validations
     let errored: AbstractControl = new FormControl();
 
     // todo: add check for whether user is editing
-    for (let key in this.codeFormGroup.controls) {
-      if (this.codeFormGroup.controls.hasOwnProperty(key)) {
-        let control = this.codeFormGroup.controls[key];
+    for (let key in this.codeForm.controls) {
+      if (this.codeForm.controls.hasOwnProperty(key)) {
+        let control = this.codeForm.controls[key];
         if (control.invalid && control.errors) {
           errored = control;
           break;
@@ -210,7 +254,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     }
 
     // Magic happens here
-    if(errored.pristine && !this.codeFormGroup.pristine) {
+    if(errored.pristine && !this.codeForm.pristine) {
       errored.markAsDirty({onlySelf: true});
       this.codeWrapper.formatErrors(errored);
       errored.markAsPristine({onlySelf: true});
@@ -221,6 +265,45 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     // todo: implement this in separate function
     // this.wrapper.formatErrors(this.accountFormGroup);
   }
+
+
+  /** Utility functions **/
+
+  // Creates a standardized AccountIdentificationModel from an <any> object
+  // Any missing properties will be assigned a default value
+  public static constructModelFrom(obj: any): AccountIdentificationModel {
+    let model: any = obj || {};
+
+    model.codeParts = model.codeParts || [];
+    model.description = model.description || null;
+    model.accounts = model.accounts || [];
+
+    for(let part of model.codeParts) {
+      part = part || null;
+    }
+
+    for(let account of model.accounts) {
+      account.code = account.code || null;
+      account.description = account.description || null;
+    }
+
+    return model;
+  }
+
+  public displayForm() {
+    this.isEditing = true;
+  }
+
+  public resetForm() {
+    this.accountForm.reset();
+    this.currentIndex = this.model.accounts.length;
+    this.isEditing = false;
+
+    this.onChange();
+  }
+
+
+  /** Implement ControlValueAccessor interface **/
 
   private onChangeCallback: any = (_: any) => {};
   private onTouchedCallback: any = () => {};
@@ -234,11 +317,11 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   public writeValue(obj: any) : void {
-    if(obj) {
-      this.model = obj;
-      this.currentIndex = this.model.accounts.length;
+    this.model = FALAccountIdentificationComponent.constructModelFrom(obj);
+    this.currentIndex = this.model.accounts.length;
+  }
 
-      this.onChange();
-    }
+  public setDisabledState(isDisabled: boolean): void {
+    // todo...
   }
 }

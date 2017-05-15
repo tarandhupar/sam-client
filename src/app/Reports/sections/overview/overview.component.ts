@@ -6,16 +6,17 @@ import { json } from 'json-loader!src/assets/dynamicReports.json';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import { IAMService } from 'api-kit';
+import { IAMService, ReportsService } from 'api-kit';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { globals } from '../../app/globals';
 import { FavoritePipe } from './favorite.pipe';
 import * as _ from 'lodash';
+import * as Cookies from 'js-cookie';
 
 export const REPORTS_PER_PAGE: number = 10;
 
 @Component({
-  providers: [IAMService],
+  providers: [ IAMService, ReportsService ],
   templateUrl: './overview.template.html',
 })
 export class OverviewComponent implements OnInit, AfterViewInit {
@@ -56,7 +57,8 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   API_UMBRELLA_URL: string;
   mode = 'Observable';
 
-  constructor ( private router: Router, private zone: NgZone, private api: IAMService, private http: Http ) {
+  constructor ( private router: Router, private zone: NgZone, private reportsService: ReportsService,
+  private api: IAMService, private http: Http ) {
     /*this.http.get('src/assets/dynamicMincReports.json')
       .map(res => res.json())
       .subscribe(data => {
@@ -80,6 +82,25 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   selectItem(index): void {
     this.selectedIdx = index;
     this.liked = !this.liked;
+  }
+
+  addUser( id ) {
+   
+    this.reportsService.savePreference(id, this.data, Cookies.get('iPlanetDirectoryPro'))
+      .subscribe(
+        data => this.data = data,
+        error => console.log(error),
+        () => console.log('Completed')
+      );
+  }
+
+  deleteUser(id) {
+    this.reportsService.savePreference(id, this.data, Cookies.get('iPlanetDirectoryPro'))
+      .subscribe(
+        data => this.data = data,
+        error => console.log(error),
+        () => console.log('Completed')
+      );
   }
   totalPages(): number {
     return Math.floor((this.totalReportCount) / REPORTS_PER_PAGE) + 1;

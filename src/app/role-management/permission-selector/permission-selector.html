@@ -1,87 +1,29 @@
-<div class="permission-selector">
-  <div class="permission-selector-title">
-    <strong>{{titleText}}</strong>
-  </div>
-  <div class="permissions-body">
-
-    <!-- Column Headers -->
-    <ng-container *ngIf="!hideColumnHeader">
-      <div class="usa-grid-fullpermission-row">
-        <div class="usa-width-one-twelfth">
-          <div class="empty-space">&nbsp;</div>
-        </div>
-        <div class="usa-width-one-third">
-          <strong>Permissions</strong>
-        </div>
-        <div class="usa-width-one-fourth">
-          <strong>Associate</strong>
-        </div>
-        <ng-container *ngIf="!hideDefaultColumn">
-          <div class="usa-width-one-fourth">
-            <strong>Default</strong>
-          </div>
-          <div class="usa-width-one-twelfth">
-            &nbsp;
-          </div>
-        </ng-container>
-        <ng-container *ngIf="hideDefaultColumn">
-          <div class="usa-width-one-third">
-            &nbsp;
-          </div>
-        </ng-container>
-      </div>
-    </ng-container>
-
-    <!-- All Column -->
-    <div class="usa-grid-full permission-row">
-      <div class="usa-width-one-twelfth">
-        &nbsp;
-      </div>
-      <div class="usa-width-one-third">
-        <span>All</span>
-      </div>
-      <div class="usa-width-one-fourth">
-        <input class='check-all' type="checkbox" (click)="onCheckAllClick($event.target.checked)" [(ngModel)]="isAllChecked">&nbsp;
-      </div>
-      <ng-container *ngIf="!hideDefaultColumn">
-        <div class="usa-width-one-fourth">
-          <input class='check-all-defaults' type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked">&nbsp;
-        </div>
-        <div class="usa-width-one-twelfth">
-          &nbsp;
-        </div>
-      </ng-container>
-      <ng-container *ngIf="hideDefaultColumn">
-        <div class="usa-width-one-third">
-          &nbsp;
-        </div>
-      </ng-container>
-    </div>
-
-    <!-- Table Data -->
-    <div class="usa-grid-full permission-row" *ngFor="let option of options; let i = index">
-      <div class="usa-width-one-twelfth">
-        <em *ngIf="option.isNew">New</em>&nbsp;
-      </div>
-      <div class="usa-width-one-third">
-        <span>{{option.label}}&nbsp;</span>
-      </div>
-      <div class="usa-width-one-fourth">
-        <input type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [(ngModel)]="option.isSelected">&nbsp;
-      </div>
-      <ng-container *ngIf="!hideDefaultColumn">
-        <div class="usa-width-one-fourth">
-          <input type="checkbox" (click)="onDefaultClick($event.target.checked, option)" [(ngModel)]="option.isDefault">&nbsp;
-        </div>
-        <div class="usa-width-one-twelfth">
-          &nbsp;
-        </div>
-      </ng-container>
-      <ng-container *ngIf="hideDefaultColumn">
-        <div class="usa-width-one-third">
-          &nbsp;
-        </div>
-      </ng-container>
-    </div>
-  </div>
-</div>
+<table class="permission-selector">
+  <thead>
+    <tr>
+      <th scope="col" class="left-align-text background-grey-lighter title-column" colspan="4">{{titleText}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="bold" *ngIf="!hideColumnHeader">
+      <td scope="col" class="new-column">&nbsp;<!-- New! Column Spacer --></td>
+      <td scope="col" class="left-align-text">Permissions</td>
+      <td scope="col" class="center-text" *ngIf="!hideDefaultColumn">Default</td>
+      <td scope="col" class="center-text">Associate</td>
+    </tr>
+    <!-- check all row -->
+    <tr>
+      <td class="new-column">&nbsp;<!-- New! Column Spacer --></td>
+      <td class="left-align-text">All</td>
+      <td *ngIf="!hideDefaultColumn" class="checkbox-cell"><input type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked"></td>
+      <td class="checkbox-cell"><input type="checkbox" (click)="onCheckAllClick($event.target.checked)" [(ngModel)]="isAllChecked"></td>
+    </tr>
+    <!-- data items -->
+    <tr *ngFor="let option of options; let i = index">
+      <td class="left-align-text new-column"><em *ngIf="option.isNew">New</em>&nbsp;</td>
+      <td class="left-align-text">{{option.label}}</td>
+      <td *ngIf="!hideDefaultColumn" class="checkbox-cell"><input type="checkbox" (click)="onDefaultClick($event.target.checked, option)" [(ngModel)]="option.isDefault"></td>
+      <td class="checkbox-cell"><input type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [(ngModel)]="option.isSelected"></td>
+    </tr>
+  </tbody>
+</table>

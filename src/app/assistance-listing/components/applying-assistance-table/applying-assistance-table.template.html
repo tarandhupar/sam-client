@@ -1,7 +1,22 @@
-<table class="sam-ui table celled" [class.hide]="assistInfo.length == 0">
+<!--Delete Modal-->
+<samModal #deleteModal
+          [showClose]="true"
+          [closeOnOutsideClick]="true"
+          [closeOnEscape]="true"
+          [type]="'warning'"
+          [title]="modalConfig.title"
+          [description]="modalConfig.description"
+          [submitButtonLabel]="'Ok'"
+          [cancelButtonLabel]="'Cancel'"
+          (onSubmit)="onDeleteModalSubmit()">
+</samModal>
+
+<table [class.hide]="assistInfo.length == 0" class="sam-ui table celled">
   <thead>
-  <th>Deadline(s)</th>
-  <th>Actions</th>
+  <tr>
+    <th>Deadline(s)</th>
+    <th>Actions</th>
+  </tr>
   </thead>
   <tbody>
   <tr *ngFor="let assist of assistInfo; let i=index">

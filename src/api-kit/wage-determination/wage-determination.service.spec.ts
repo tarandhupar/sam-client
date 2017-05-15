@@ -4,7 +4,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { WrapperService } from '../wrapper/wrapper.service'
 import { WageDeterminationService } from './wage-determination.service';
 
-describe('Wage Determination Service', () => {
+describe('src/api-kit/wage-determination/wage-determination.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -85,7 +85,7 @@ describe('Wage Determination Service', () => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(baseResponse));
   }));
 
-  it('should return response when subscribed to getWageDeterminationByReferenceNumberAndRevisionNumber', inject([WageDeterminationService], (testService: WageDeterminationService) => {
+  it('Wage Determination Service: should return response when subscribed to getWageDeterminationByReferenceNumberAndRevisionNumber', inject([WageDeterminationService], (testService: WageDeterminationService) => {
     testService.getWageDeterminationByReferenceNumberAndRevisionNumber("2002-0261", 8).subscribe((res: Response) => {
       expect(res['fullReferenceNumber']).toBeDefined();
       expect(res['revisionNumber']).toBeDefined();

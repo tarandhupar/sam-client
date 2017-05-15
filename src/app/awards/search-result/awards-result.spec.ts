@@ -8,7 +8,7 @@ var fixture;
 var comp;
 var titleEl;
 var labelEl;
-describe('AwardsComponent', () => {
+describe('src/app/awards/search-result/awards-result.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AwardsResult ],
@@ -92,12 +92,12 @@ describe('AwardsComponent', () => {
     });
   }));
 
-  it('should display Award label', () => {
+  it('Awards search results: should display Award label', () => {
     fixture.detectChanges();
     expect(labelEl.nativeElement.textContent).toContain("Award");
   });
 
-  it('should display an award piid', () => {
+  it('Awards search results: should display an award piid', () => {
     fixture.detectChanges();// trigger data binding
     expect(titleEl.nativeElement.textContent).toContain("SAMPLE PIID");
   });

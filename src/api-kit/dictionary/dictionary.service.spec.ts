@@ -4,7 +4,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { DictionaryService } from './dictionary.service';
 import { WrapperService } from '../wrapper/wrapper.service';
 
-describe('DictionaryService unit tests using TestBed', () => {
+describe('src/api-kit/dictionary/dictionary.service.spec.ts', () => {
 
   let mockedData = JSON.parse('{"_embedded":{"jSONObjectList":[{"content":{"elements":[{"code":"yes","elements":null,"description":"Yes","element_id":"yes","value":"Yes"},{"code":"no","elements":null,"description":"No","element_id":"no","value":"No"}],"id":"yes_no"},"_links":{"self":{"href":"https://gsaiae-dev02.reisys.com/v1/dictionary?ids=yes_no"}}}]},"_links":{"search":{"href":"https://gsaiae-dev02.reisys.com/v1/dictionary{ids}","templated":true},"self":{"href":"https://gsaiae-dev02.reisys.com/v1/dictionary?ids=yes_no"}}}');
 
@@ -31,7 +31,7 @@ describe('DictionaryService unit tests using TestBed', () => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(baseResponse));
   }));
 
-  it('should return response when a dictionary is requested', inject([DictionaryService], (testService: DictionaryService) => {
+  it('DictionaryService unit tests using TestBed: should return response when a dictionary is requested', inject([DictionaryService], (testService: DictionaryService) => {
     testService.getDictionaryById("yes_no").subscribe((res: Response) => {
       expect(res['yes_no']).toBeDefined();
       expect(res['yes_no'][0]['elements']).toBeDefined();

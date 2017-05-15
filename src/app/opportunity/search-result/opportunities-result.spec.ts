@@ -7,7 +7,7 @@ import { OpportunitiesResult } from './opportunities-result.component';
 var fixture;
 var comp;
 var titleEl;
-describe('OpportunitiesResultComponent', () => {
+describe('src/app/opportunity/search-result/opportunities-result.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ OpportunitiesResult ],
@@ -29,7 +29,7 @@ describe('OpportunitiesResultComponent', () => {
     });
   }));
 
-  it('should display a title', () => {
+  it('OpportunitiesResultComponent: should display a title', () => {
     expect(titleEl.nativeElement.textContent).toContain("SAMPLE TITLE");
   });
 });

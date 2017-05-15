@@ -26,20 +26,15 @@ export class OrgAddrFormComponent {
     state: null,
   };
 
-  stateLocationConfig = {
-    keyValueConfig: {
-      keyProperty: 'key',
-      valueProperty: 'value'
-    },
-    serviceOptions:this.locationServiceOptions.country
-  };
-
   cityLocationConfig = {
     keyValueConfig: {
       keyProperty: 'key',
       valueProperty: 'value'
     },
-    serviceOptions:this.locationServiceOptions
+    serviceOptions:{
+      country: null,
+      state: null,
+    }
   };
 
 
@@ -111,27 +106,19 @@ export class OrgAddrFormComponent {
     return this.orgAddrModel.addrType === this.basicType;
   }
 
-  validateForm():boolean{
-    if(this.hideAddrForm) return true;
+  validateForm():Observable<any>{
+    let zipCode = this.addressForm.get("postalCode").value;
+    if(this.hideAddrForm) return Observable.of({description:"VALID"});
     this.formatError();
-    if(this.addressForm.invalid || this.locationServiceOptions.state === null || this.locationServiceOptions.country === null){
-      return false;
+    if(this.addressForm.invalid || this.cityLocationConfig.serviceOptions.state === null || this.cityLocationConfig.serviceOptions.country === null || this.cityOutput === null ||
+      (zipCode.length !== 5 && zipCode.length !== 9)){
+      Observable.of({description:"INVALID"});
     }else{
 
       this.updateAddressFormField();
       this.orgAddrModelChange.emit(this.orgAddrModel);
     }
-    this.validateZip();
-    return this.isZipValid;
-  }
-
-  isZipValid = true;
-  async validateZip(){
-    await this.locationService.validateZip(this.addressForm.get("postalCode").value).subscribe(
-      data => {
-        if(data.description !== "VALID") {this.isZipValid = false;}
-      }
-    );
+    return this.locationService.validateZipWIthLocation(zipCode, this.cityLocationConfig.serviceOptions.state, this.cityOutput);
   }
 
 
@@ -141,20 +128,31 @@ export class OrgAddrFormComponent {
     this.addressForm.get("city").markAsDirty();
 
     this.addrStreet1.wrapper.formatErrors(this.addressForm.get("streetAddr1"));
-    this.addrPostalCode.wrapper.formatErrors(this.addressForm.get("postalCode"));
-    if(this.addressForm.get("postalCode").value !== ""){
-      this.locationService.validateZip(this.addressForm.get("postalCode").value).subscribe(data => {
-        if(data.description !== "VALID"){this.addrPostalCode.wrapper.errorMessage = "Invalid Postal Code";}
-      });
-    }
-    this.addrCity.formatErrors(this.addressForm.get("city"));
+    this.formateZipError();
+    this.addrCity.errorMessage = !!this.cityOutput?"":"This field cannot be empty";
+    this.addrState.errorMessage = !!this.cityLocationConfig.serviceOptions.state?"":"This field cannot be empty";
+    this.addrCountry.errorMessage = !!this.cityLocationConfig.serviceOptions.country?"":"This field cannot be empty";
+  }
 
-    this.addrState.errorMessage = !!this.locationServiceOptions.state?"":"This field cannot be empty";
-    this.addrCountry.errorMessage = !!this.locationServiceOptions.country?"":"This field cannot be empty";
+  formateZipError(){
+    this.addrPostalCode.wrapper.formatErrors(this.addressForm.get("postalCode"));
+    let zipCode = this.addressForm.get("postalCode").value;
+
+    if(zipCode != ''){
+      this.addrPostalCode.wrapper.errorMessage = "";
+      if(zipCode.length !== 5 && zipCode.length !== 9){
+        this.addrPostalCode.wrapper.errorMessage = "Invalid Postal Code";
+      }else{
+        this.locationService.validateZipWIthLocation(zipCode, this.cityLocationConfig.serviceOptions.state, this.cityOutput).subscribe(data => {
+          if(data.description !== "VALID"){this.addrPostalCode.wrapper.errorMessage = "Invalid Postal Code";}
+        }, error => {this.addrPostalCode.wrapper.errorMessage = "Invalid Postal Code";});
+
+      }
+    }else {this.addrPostalCode.wrapper.errorMessage = "This field cannot be empty";}
   }
 
   updateAddressFormField(){
-    this.orgAddrModel.country = this.locationServiceOptions.country.key;
+    this.orgAddrModel.country = this.cityLocationConfig.serviceOptions.country.key;
     // state and city should be updated already
     this.orgAddrModel.postalCode = this.addressForm.get("postalCode").value;
     this.orgAddrModel.street1 = this.addressForm.get("streetAddr1").value;
@@ -202,14 +200,14 @@ export class OrgAddrFormComponent {
     return this.orgAddrModel.country;
   }
 
-  onZipCodeBlur(){
+  onZipCodeBlur(e){
     let zip = this.addressForm.get("postalCode").value;
     if(zip.length !== 9) return;
-    if(this.locationServiceOptions.state === null && this.cityOutput === null){
+    if(this.cityLocationConfig.serviceOptions.state === null && this.cityOutput === null){
       this.locationService.getLocationByPostolCode(zip).subscribe(
         data => {
           let location = data._embedded.locationList[0];
-          this.locationServiceOptions.state = {key:location.state.stateCode,value:location.state.state};
+          this.cityLocationConfig.serviceOptions.state = {key:location.state.stateCode,value:location.state.state};
           this.cityOutput = {key:location.city.cityCode,value:location.city.city};
         },
         error => {}

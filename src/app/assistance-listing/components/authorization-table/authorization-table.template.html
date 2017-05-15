@@ -1,4 +1,16 @@
-<table class="sam-ui table celled" [class.hide]="displayAuthInfo.length == 0">
+<samModal #deleteModal
+          [showClose]="true"
+          [closeOnOutsideClick]="true"
+          [closeOnEscape]="true"
+          [type]="'warning'"
+          [title]="modalConfig.title"
+          [description]="modalConfig.description"
+          [submitButtonLabel]="'Ok'"
+          [cancelButtonLabel]="'Cancel'"
+          (onSubmit)="onDeleteModalSubmit()">
+</samModal>
+
+<table [class.hide]="displayAuthInfo.length == 0" class="sam-ui table celled">
   <thead>
   <th>Authorization(s)/Amendments</th>
   <th colspan="2">Actions</th>

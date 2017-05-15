@@ -681,4 +681,10 @@
       <sam-download [packages]="packages" [downloadAllUrl]="'fakedownloadlink'"></sam-download>
     </div>
   </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Autocomplete Categories</h2>
+    <sam-autocomplete class="usa-width-one-half" [options]="autocompleteCategoryOptions" [config]="autocompleteConfig" [categories]="categories" [(ngModel)]="autocompleteCategoryDemo"></sam-autocomplete>
+    <p class="usa-width-one-half">Selected Value: {{autocompleteCategoryDemo?.value}}</p>
+  </div>
 </div>

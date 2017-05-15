@@ -43,31 +43,31 @@ export class FALAuthSubFormComponent {
     return this.fb.group({
       authType:[''],
       act: this.fb.group({
-        title: [''],
-        part:[''],
-        section:[''],
-        description:['']
+        title: [null],
+        part:[null],
+        section:[null],
+        description:[null]
       }),
       executiveOrder: this.fb.group({
-        title: [''],
-        part:[''],
-        section:[''],
-        description:['']
+        title: [null],
+        part:[null],
+        section:[null],
+        description:[null]
       }),
       publicLaw: this.fb.group({
-        congressCode:[''],
-        number:['']
+        congressCode:[null],
+        number:[null]
       }),
       statute: this.fb.group({
-        volume:[''],
-        page:['']
+        volume:[null],
+        page:[null]
       }),
       USC: this.fb.group({
-        title:[''],
-        section:['']
+        title:[null],
+        section:[null]
       }),
-      authorizationId:[],
-      parentAuthorizationId:[]
+      authorizationId:[null],
+      parentAuthorizationId:[null]
     });
   }
 
@@ -98,6 +98,7 @@ export class FALAuthSubFormComponent {
   onConfirmClick(index){
 
     let uuid;
+    const control = <FormArray> this.falAuthSubForm.controls['authorizations'];
     let authId = this.falAuthSubForm.value.authorizations[index].authorizationId;
 
     if(authId == '' || authId == null){
@@ -107,7 +108,7 @@ export class FALAuthSubFormComponent {
       uuid = authId;
     }
 
-    this.falAuthSubForm.value.authorizations[index].authorizationId = uuid;
+    control.at(index).patchValue({authorizationId:uuid});
 
     this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
@@ -127,7 +128,7 @@ export class FALAuthSubFormComponent {
 
     if(this.mode == 'Edit'){
       const control = <FormArray> this.falAuthSubForm.controls['authorizations'];
-      control.at(i).setValue(this.authInfo[i]);
+      control.at(i).patchValue(this.getObjWithoutNullValues(this.authInfo[i]));
     }
 
     this.hideAddButton = false;
@@ -160,5 +161,13 @@ export class FALAuthSubFormComponent {
     this.mode = "Edit";
     this.authIndex = i;
     this.hideAddButton = true;
+  }
+
+  getObjWithoutNullValues(obj){
+    for(let item in obj){
+      if(obj[item] == null)
+        delete obj[item];
+    }
+    return obj;
   }
 }

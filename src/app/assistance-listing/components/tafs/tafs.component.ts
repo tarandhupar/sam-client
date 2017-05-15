@@ -2,10 +2,59 @@ import { Component, Input, forwardRef, ViewChild } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, Validators } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 
+
+/** Interfaces **/
+
+// Represents a single treasury appropriation fund symbol (TAFS)
+export interface TAFS {
+  departmentCode: string,
+  accountCode: string,
+  subAccountCode: string,
+  allocationTransferAgency: string,
+  fy1: string,
+  fy2: string
+}
+
+// Represents all the data that has been entered into a tafs form
+export interface TAFSModel extends TAFS {
+  current: TAFS, // the tafs that is currently being added or edited
+  tafs: TAFS[] // the tafs that have already been entered
+}
+
+/* List of options accepted by tafs component
+ * name: A non-empty name must be provided. Used to generate element ids
+ * label: Heading to show above form
+ * hint: Instructions for form
+ * required: If true, will trigger validation errors if form is not filled out
+ * deleteModal: If defined and not null, shows a modal with specified title and description when deleting from table
+ */
+export interface TAFSConfig {
+  name: string,
+  label?: string,
+  hint?: string,
+  required?: boolean,
+
+  deleteModal?: {
+    title?: string,
+    description?: string
+  }
+}
+
+
+/** Component **/
+
+/*
+ * This component consists of a table displaying a list of tafs,
+ * and functionality for adding, removing, or editing them.
+ *
+ * Adding and editing tafs is done through a form that consists of text inputs.
+ */
 @Component({
   selector: 'falTAFSInput',
   templateUrl: 'tafs.template.html',
   providers: [
+    // needed to use ControlValueAccessor implementation with form controls
+    // see https://blog.thoughtram.io/angular/2016/07/27/custom-form-controls-in-angular-2.html
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FALTafsComponent),
@@ -14,64 +63,54 @@ import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
   ]
 })
 export class FALTafsComponent implements ControlValueAccessor {
-  //todo: refactor model duplication
+  // all parameters are passed in a single config object for convenience
+  // see TAFSConfig interface for supported parameters
+  @Input() config: TAFSConfig;
+
+  // the model serves as the single source of truth for this component's data
+  // whenever data is input or actions are taken that modify the form, the model should also be updated
+  // the model is then used to render the table of tafs
+  public model: TAFSModel;
+
+  // keeps track of what mode the component is in
+  // when not in editing mode (default), shows the table of tafs and an add new tafs button
+  // when in editing mode, the add new tafs button is replaced with a new tafs form, and table's action buttons are disabled
+  public isEditing: boolean = false;
+
+  // keeps track of the index that the next account will be added to on click of confirm button
+  // when not in editing mode, index is set to the length of the tafs list (adds on confirm)
+  // when in editing mode, index is set to the index of the entry being edited (overwrites on confirm)
   private currentIndex: number = 0;
 
-  public model = {
-    departmentCode: '',
-    accountCode: '',
-    subAccountCode: '',
-    allocationTransferAgency: '',
-    fy1: '',
-    fy2: '',
-    tafs: []
-  };
+  // controls
+  public tafsForm: FormGroup;
 
-  // general
-  @Input() options; // optional - can pass all parameters in a single options object for convenience
-  @Input() name: string; // required
-  @Input() label: string;
-  @Input() hint: string;
-  @Input() required: boolean;
-  public showForm: boolean = false;
-
-  // tafs
-  private tafsFormGroup;
-
+  // label wrappers
   @ViewChild('tafsLabel') tafsWrapper: LabelWrapper;
+
+  // modals
+  @ViewChild('deleteModal') deleteModal;
+
+
+  /** Initial setup **/
 
   constructor() { }
 
   ngOnInit() {
-    this.parseInputsAndSetDefaults();
+    this.model = FALTafsComponent.constructModelFrom(null); // set up initial empty model
     this.validateInputs();
     this.createFormControls();
   }
 
-  private parseInputsAndSetDefaults() {
-    // inputs can either be passed directly, or through an options object
-    // if an input is passed both ways, the value passed directly will take precedence
-    if(this.options) {
-      this.name = this.name || this.options.name;
-
-      this.label = this.label || this.options.label;
-      this.hint = this.hint || this.options.hint;
-      if(this.required == null) { this.required = this.options.required }
-    }
-
-    // subcomponent names are generated based on this component's name within html template
-  }
-
   private validateInputs() {
-    let errorPrefix = "<falTAFSInput> requires ";
-
-    if(!this.name) {
-      throw new Error(errorPrefix + "a [name] parameter for 508 compliance");
+    if(!(this.config && this.config.name)) {
+      throw new Error("<falTAFSInput> requires a [name] parameter for 508 compliance");
     }
   }
 
   private createFormControls() {
-    this.tafsFormGroup = new FormGroup({
+    // all tafs fields take only numbers
+    this.tafsForm = new FormGroup({
       departmentCode: new FormControl(null, Validators.pattern('[0-9]*')),
       accountCode: new FormControl(null, Validators.pattern('[0-9]*')),
       subAccountCode: new FormControl(null, Validators.pattern('[0-9]*')),
@@ -80,92 +119,149 @@ export class FALTafsComponent implements ControlValueAccessor {
       fy2: new FormControl(null, Validators.pattern('[0-9]*'))
     });
 
-    this.tafsFormGroup.get('departmentCode').valueChanges.subscribe(value => {
-      this.model.departmentCode = value;
+    this.tafsForm.get('departmentCode').valueChanges.subscribe(value => {
+      this.model.current.departmentCode = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('accountCode').valueChanges.subscribe(value => {
-      this.model.accountCode = value;
+    this.tafsForm.get('accountCode').valueChanges.subscribe(value => {
+      this.model.current.accountCode = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('subAccountCode').valueChanges.subscribe(value => {
-      this.model.subAccountCode = value;
+    this.tafsForm.get('subAccountCode').valueChanges.subscribe(value => {
+      this.model.current.subAccountCode = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('allocationTransferAgency').valueChanges.subscribe(value => {
-      this.model.allocationTransferAgency = value;
+    this.tafsForm.get('allocationTransferAgency').valueChanges.subscribe(value => {
+      this.model.current.allocationTransferAgency = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('fy1').valueChanges.subscribe(value => {
-      this.model.fy1 = value;
+    this.tafsForm.get('fy1').valueChanges.subscribe(value => {
+      this.model.current.fy1 = value;
       this.onChange();
     });
 
-    this.tafsFormGroup.get('fy2').valueChanges.subscribe(value => {
-      this.model.fy2 = value;
+    this.tafsForm.get('fy2').valueChanges.subscribe(value => {
+      this.model.current.fy2 = value;
       this.onChange();
     });
   }
 
-  public displayForm() {
-    this.showForm = true;
-  }
 
-  public resetForm() {
-    this.currentIndex = this.model.tafs.length;
-    this.tafsFormGroup.reset();
-    this.showForm = false;
-
-    this.onChange();
-  }
+  /** TAFS operations (add, remove, edit) **/
 
   public addTafs() {
-    let tafs = {};
+    this.model.tafs[this.currentIndex] = {
+      departmentCode: this.model.current.departmentCode,
+      accountCode: this.model.current.accountCode,
+      subAccountCode: this.model.current.subAccountCode,
+      allocationTransferAgency: this.model.current.allocationTransferAgency,
+      fy1: this.model.current.fy1,
+      fy2:this.model.current.fy2
+    };
 
-    tafs['departmentCode'] = this.model.departmentCode;
-    tafs['accountCode'] = this.model.accountCode;
-    tafs['subAccountCode'] = this.model.subAccountCode;
-    tafs['allocationTransferAgency'] = this.model.allocationTransferAgency;
-    tafs['fy1'] = this.model.fy1;
-    tafs['fy2'] = this.model.fy2;
-
-    this.model.tafs[this.currentIndex] = tafs;
-    this.resetForm();
-  }
-
-  public editTafs(index: number) {
-    let tafs = this.model.tafs[index];
-
-    this.tafsFormGroup.get('departmentCode').setValue(tafs.departmentCode || '');
-    this.tafsFormGroup.get('accountCode').setValue(tafs.accountCode || '');
-    this.tafsFormGroup.get('subAccountCode').setValue(tafs.subAccountCode || '');
-    this.tafsFormGroup.get('allocationTransferAgency').setValue(tafs.allocationTransferAgency || '');
-    this.tafsFormGroup.get('fy1').setValue(tafs.fy1 || '');
-    this.tafsFormGroup.get('fy2').setValue(tafs.fy2 || '');
-
-    this.currentIndex = index;
-    this.showForm = true;
+    this.resetForm(); // after adding, close the form
   }
 
   public removeTafs(index: number) {
-    this.model.tafs.splice(index, 1);
-    if(index === this.currentIndex) {
-      this.tafsFormGroup.reset();
-      this.currentIndex = this.model.tafs.length;
-    } else if(index < this.currentIndex) {
+    this.model.tafs.splice(index, 1); // remove the tafs
+
+    if(index === this.currentIndex) { // if the tafs currently being edited was removed
+      // then we need to clear out the form and stop editing
+      this.tafsForm.reset();
+    } else if(index < this.currentIndex) { // else if an earlier tafs was removed
+      // then the index of the currently edited tafs has shifted down by one
       this.currentIndex--;
     }
 
     this.onChange();
   }
 
+  public editTafs(index: number) {
+    let tafs = this.model.tafs[index];
+
+    this.tafsForm.get('departmentCode').setValue(tafs.departmentCode);
+    this.tafsForm.get('accountCode').setValue(tafs.accountCode);
+    this.tafsForm.get('subAccountCode').setValue(tafs.subAccountCode);
+    this.tafsForm.get('allocationTransferAgency').setValue(tafs.allocationTransferAgency);
+    this.tafsForm.get('fy1').setValue(tafs.fy1);
+    this.tafsForm.get('fy2').setValue(tafs.fy2);
+
+    this.currentIndex = index;
+    this.isEditing = true;
+  }
+
+
+  /** Event handlers **/
+
+  // Handles component level functionality that should be run on every change, such as validations
   private onChange() {
+    // todo: validations
     this.onChangeCallback(this.model);
   }
+
+  // On click of delete button in table
+  public onDeleteClick(index: number) {
+    if(this.deleteModal) { // if delete modal exists, show it
+      this.deleteModal.openModal(index);
+    } else { // else just remove directly
+      this.removeTafs(index);
+    }
+  }
+
+  // On confirm of delete modal
+  public onDeleteModalSubmit(index: any[]) {
+    this.deleteModal.closeModal();
+    this.removeTafs(index[0]);
+  }
+
+
+  /** Utility functions **/
+
+  // Creates a standardized TAFSModel from an <any> object
+  // Any missing properties will be assigned a default value
+  private static constructModelFrom(obj: any): TAFSModel {
+    let model: any = obj || {};
+
+    model.tafs = model.tafs || [];
+
+    for(let tafs of model.tafs) {
+      tafs.departmentCode = tafs.departmentCode || null;
+      tafs.accountCode = tafs.accountCode || null;
+      tafs.subAccountCode = tafs.subAccountCode || null;
+      tafs.allocationTransferAgency = tafs.allocationTransferAgency || null;
+      tafs.fy1 = tafs.fy1 || null;
+      tafs.fy2 = tafs.fy2 || null;
+    }
+
+    model.current = model.current || {};
+    model.current.departmentCode = model.current.departmentCode || null;
+    model.current.accountCode = model.current.accountCode || null;
+    model.current.subAccountCode = model.current.subAccountCode || null;
+    model.current.allocationTransferAgency = model.current.allocationTransferAgency || null;
+    model.current.fy1 = model.current.fy1 || null;
+    model.current.fy2 = model.current.fy2 || null;
+
+    return model;
+  }
+
+  public displayForm() {
+    this.isEditing = true;
+  }
+
+  public resetForm() {
+    this.tafsForm.reset();
+    this.currentIndex = this.model.tafs.length;
+    this.isEditing = false;
+
+    this.onChange();
+  }
+
+
+  /** Implement ControlValueAccessor interface **/
 
   private onChangeCallback: any = (_: any) => {};
   private onTouchedCallback: any = () => {};
@@ -179,11 +275,11 @@ export class FALTafsComponent implements ControlValueAccessor {
   }
 
   public writeValue(obj: any) : void {
-    if(obj) {
-      this.model = obj;
-      this.currentIndex = this.model.tafs.length;
+    this.model = FALTafsComponent.constructModelFrom(obj);
+    this.currentIndex = this.model.tafs.length;
+  }
 
-      this.onChange();
-    }
+  public setDisabledState(isDisabled: boolean): void {
+    // todo...
   }
 }

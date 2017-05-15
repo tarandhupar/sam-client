@@ -4,8 +4,10 @@ import {
   ActivatedRouteSnapshot,
   CanActivate,
   Router,
-  RouterStateSnapshot
+  RouterStateSnapshot,
+  NavigationExtras
 } from '@angular/router';
+import { Cookie } from 'ng2-cookies';
 import {error} from "../../alerts/alerts-test-data.spec";
 
 @Injectable()
@@ -41,7 +43,10 @@ export class AACRequestGuard implements CanActivate {
         });
       },
       () => {
-        this.router.navigate(['/signin']);
+        let navigationExtras: NavigationExtras = {
+          queryParams: { redirect:this.states.route },
+        };
+        this.router.navigate(['/signin'],navigationExtras);
       }
     );
     return true;

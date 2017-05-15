@@ -297,14 +297,6 @@ export class FALAssistanceComponent implements OnInit, OnDestroy {
       let startDate = moment(assist.start).format('MMMM DD, YYYY');
       let endDate = moment(assist.end).format('MMMM DD, YYYY');
 
-      /*if(assist.end !== null && assist.end !== '') {
-        this.assistInfoDisp.push(startDate + " - " + endDate + ". " + assist.description);
-      }
-      else if(assist.start !== null && assist.start !== '')
-        this.assistInfoDisp.push(startDate + ". " + assist.description);
-      else
-        this.assistInfoDisp.push(assist.description);*/
-
       let label = '';
 
       if(assist.start !== null && assist.start !== '')

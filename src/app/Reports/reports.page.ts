@@ -1,10 +1,10 @@
 import { Component, Output, EventEmitter, NgZone, NgModule } from '@angular/core';
-import { IAMService } from 'api-kit';
+import { IAMService, ReportsService  } from 'api-kit';
 import { globals } from '../../app/globals.ts';
 import { Router } from '@angular/router';
 
 @Component({
-  providers: [IAMService],
+  providers: [IAMService, ReportsService],
   templateUrl: 'reports.template.html',
 })
 export class ReportsPage {

@@ -1,0 +1,24 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Financial Information - {{ viewModel.title }}</div>
+<form [formGroup]="finObligationsForm">
+  <div class="usa-grid">
+    <div class="fal-label-margin"> Select if applicable</div>
+    <samCheckbox
+      [control]="finObligationsForm.controls['isFundedCurrentFY']"
+      [name]="currentFiscalYearCheckboxConfig.name"
+      [options]="currentFiscalYearCheckboxConfig.options"
+       formControlName="isFundedCurrentFY">
+    </samCheckbox>
+    <div class="fal-obligations-label">Obligations</div>
+    <falObligationFYTable
+      [fyYearOptions] = "fyYearOptions"
+      [hideAddButton]="hideAddButton"
+      [obligationsInfo]="obligationsInfo"
+      [total] = "totalvalue"
+      (obligationTableActionHandler)="obligationActionHandler($event)"></falObligationFYTable>
+
+    <obligation-subform  [fyYearOptions] = "fyYearOptions" [hideAddButton]="hideAddButton" (subFormObligActionHandler)="obligationActionHandler($event)"
+                         [options] = "options"
+                        #obligationSubForm></obligation-subform>
+
+  </div>
+</form>

@@ -4,7 +4,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { HistoricalIndexService } from './historical-index.service';
 import { WrapperService } from '../wrapper/wrapper.service'
 
-describe('HistoricalIndexService unit tests TestBed', () => {
+describe('src/api-kit/historical-index/historical-index.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -76,7 +76,7 @@ describe('HistoricalIndexService unit tests TestBed', () => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(baseResponse));
   }));
 
-  it('should return response when subscribed to getHistoricalIndexByProgramNumber', inject([HistoricalIndexService], (testService: HistoricalIndexService) => {
+  it('HistoricalIndexService unit tests TestBed: should return response when subscribed to getHistoricalIndexByProgramNumber', inject([HistoricalIndexService], (testService: HistoricalIndexService) => {
     testService.getHistoricalIndexByProgramNumber("5eb2b1a06998d59eb179a8e7fd76c173", "10.001").subscribe((res: Response) => {
       expect(res).toBeDefined();
       expect(res['_embedded']).toBeDefined();

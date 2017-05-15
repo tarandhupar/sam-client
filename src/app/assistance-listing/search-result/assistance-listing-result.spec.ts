@@ -9,7 +9,7 @@ var fixture;
 var comp;
 var titleEl;
 var programNumberEl;
-describe('AssistanceListingResultComponent', () => {
+describe('src/app/assistance-listing/search-result/assistance-listing-result.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule,SamUIKitModule],
@@ -35,11 +35,11 @@ describe('AssistanceListingResultComponent', () => {
 
   }));
 
-  it('should display a title', () => {
+  it('AssistanceListingResultComponent: should display a title', () => {
     expect(titleEl.nativeElement.textContent).toContain("ABCDEFG");
 	});
 
-  it('should display a programNumber', () => {
+  it('AssistanceListingResultComponent: should display a programNumber', () => {
     expect(programNumberEl.nativeElement.textContent).toContain("12345");
   });
 

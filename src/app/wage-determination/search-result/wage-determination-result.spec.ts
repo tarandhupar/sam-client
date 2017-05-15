@@ -7,7 +7,7 @@ import { WageDeterminationResult } from './wage-determination-result.component';
 var fixture;
 var comp;
 var titleEl;
-describe('WageDeterminationResultComponent', () => {
+describe('src/app/wage-determination/search-result/wage-determination-result.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ WageDeterminationResult ],
@@ -54,7 +54,7 @@ describe('WageDeterminationResultComponent', () => {
     });
   }));
 
-  it('should display a wage determination number', () => {
+  it('WageDeterminationResultComponent: should display a wage determination number', () => {
     expect(titleEl.nativeElement.textContent).toContain("12345678");
   });
 });

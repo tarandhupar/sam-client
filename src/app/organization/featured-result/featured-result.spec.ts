@@ -30,7 +30,7 @@ var searchServiceStub = {
 
 var fhServiceStub = {};
 
-describe('FHFeaturedResultComponent', () => {
+describe('src/app/organization/featured-result/featured-result.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FHFeaturedResult ],
@@ -66,7 +66,7 @@ describe('FHFeaturedResultComponent', () => {
   });
   }));
 
-  it('should display a title', () => {
+  it('FHFeaturedResultComponent: should display a title', () => {
     expect(fixture.componentInstance.data.name).toContain("SAMPLE TITLE");
   });
 });

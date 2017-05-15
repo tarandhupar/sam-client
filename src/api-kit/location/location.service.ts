@@ -133,12 +133,12 @@ export class LocationService {
     return this.oAPIService.call(oApiParam);
   }
 
-  getLocationByPostolCode(q:string, searchby:string){
+  getLocationByPostolCode(q:string){
 
     var oApiParam = {
       name: 'location',
       suffix: '/locations',
-      oParam: {q:q, searchby:searchby},
+      oParam: {q:q, searchby:'zip'},
       method: 'GET'
     };
 
@@ -146,4 +146,15 @@ export class LocationService {
 
   }
 
+  validateZipWIthLocation(zip:string, state?:any, city?:any){
+    var oApiParam = {
+      name: 'location',
+      suffix: '/validatezip',
+      oParam: {zip:zip},
+      method: 'GET'
+    };
+    if(state) oApiParam.oParam['statecode'] = state.key;
+    if(city) oApiParam.oParam['citycode'] = city.key;
+    return this.oAPIService.call(oApiParam);
+  }
 }

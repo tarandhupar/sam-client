@@ -41,15 +41,14 @@ import Moment = moment.Moment;
               <strong>Global DUNS</strong><br>
               <span>{{ data.vendor?.globalDunsNumber }}</span>
             </li>
-            
-            <li class="department-agency-name">
-              <strong>Department/Ind. Agency</strong><br>
-              <span>{{ data.purchaser?.contractingOrganizationHierarchy[0]?.name }}</span>
-            </li>
-            <li class="office-name">
-              <strong>Office</strong><br>
-              <span>{{ data.purchaser?.contractingOrganizationHierarchy[1]?.name }}</span>
-            </li>
+            <li *ngFor="let obj of data.purchaser?.contractingOrganizationHierarchy" class=“department-agency-name”>
+             <strong *ngIf="obj.level==1">Department/Ind. Agency</strong>
+             <span *ngIf="obj.level==1"><br>{{ obj?.name }}</span>
+           </li>
+           <li *ngFor="let obj of data.purchaser?.contractingOrganizationHierarchy" class=“office-name”>
+             <strong *ngIf="obj.level==3">Office</strong>
+             <span *ngIf="obj.level==3"><br>{{ obj?.name }}</span>
+           </li>
           </ul>
         </div>
         <div class="four wide column">

@@ -1,6 +1,6 @@
 import { ViewChangesPipe } from "./view-changes.pipe";
 
-describe('ViewChangesPipe', () => {
+describe('src/app/opportunity/pipes/view-changes.pipe.spec.ts', () => {
   let pipe = new ViewChangesPipe();
   let dictionaries = {"_embedded": {
     "dictionaries":[{
@@ -299,7 +299,7 @@ describe('ViewChangesPipe', () => {
   };
 
 
-  it('transforms "multiple objects from API calls to one with that contains changes to be displayed (Update)', () => {
+  it('ViewChangesPipe: transforms "multiple objects from API calls to one with that contains changes to be displayed (Update)', () => {
     let results = pipe.transform(previousOpportunity, currentOpportunity, dictionaries, currentAddress, previousAddress1);
     expect(results.changesExistGeneral).toBe(differences2.changesExistGeneral);
     expect(results.changesExistClassification).toBe(differences2.changesExistClassification);

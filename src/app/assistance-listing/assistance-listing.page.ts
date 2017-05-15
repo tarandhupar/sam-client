@@ -98,39 +98,10 @@ export class ProgramPage implements OnInit, OnDestroy {
     this.sidenavHelper.DOMComplete(this, DOMReady$);
     this.sidenavService.updateData(this.selectedPage, 0);
   }
-  
+
 
   sidenavPathEvtHandler(data){
     this.sidenavHelper.sidenavPathEvtHandler(this, data);
-  }
-
-  private updateSideNav(content?){
-
-    let self = this;
-
-    if(content){
-      // Items in first level (pages) have to have a unique name
-      let repeatedItem = _.findIndex(this.sidenavModel.children, item => item.label == content.label );
-      // If page has a unique name added to the sidenav
-      if(repeatedItem === -1){
-        this.sidenavModel.children.push(content);
-      }
-    }
-
-    updateContent();
-
-    function updateContent(){
-      let children = _.map(self.sidenavModel.children, function(possiblePage){
-        let possiblePagechildren = _.map(possiblePage.children, function(possibleSection){
-          possibleSection.route = possibleSection.field;
-          return possibleSection;
-        });
-        _.remove(possiblePagechildren, _.isUndefined);
-        possiblePage.children = possiblePagechildren;
-        return possiblePage;
-      });
-      self.sidenavModel.children = children;
-    }
   }
 
   selectedItem(item){
@@ -163,12 +134,12 @@ export class ProgramPage implements OnInit, OnDestroy {
       // run whenever api data is updated
       this.program = api;
 
-      if(!this.program._links.self) {
+      if (!this.program._links.self) {
         this.router.navigate['accessrestricted'];
       }
 
       this.checkCurrentFY();
-      if(this.program.data && this.program.data.authorizations) {
+      if (this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
       }
 
@@ -178,7 +149,7 @@ export class ProgramPage implements OnInit, OnDestroy {
         "route": this.pageRoute,
         "children": []
       };
-      if(this.program.status.code != 'published') {
+      if (this.program.status.code != 'published') {
         falSideNavContent.children.push({
           "label": "Header Information",
           "field": "#program-information",
@@ -189,34 +160,34 @@ export class ProgramPage implements OnInit, OnDestroy {
         "label": "Overview",
         "field": "#overview",
       },
-      {
-        "label": "Authorizations",
-        "field": "#authorizations",
-      },
-      {
-        "label": "Financial Information",
-        "field": "#financial-information",
-      },
-      {
-        "label": "Criteria for Applying",
-        "field": "#criteria-for-applying",
-      },
-      {
-        "label": "Applying for Assistance",
-        "field": "#applying-for-assistance",
-      },
-      {
-        "label": "Compliance Requirements",
-        "field": "#compliance-requirements",
-      },
-      {
-        "label": "Contact Information",
-        "field": "#contact-information",
-      },
-      {
-        "label": "History",
-        "field": "#history",
-      }]);
+        {
+          "label": "Authorizations",
+          "field": "#authorizations",
+        },
+        {
+          "label": "Financial Information",
+          "field": "#financial-information",
+        },
+        {
+          "label": "Criteria for Applying",
+          "field": "#criteria-for-applying",
+        },
+        {
+          "label": "Applying for Assistance",
+          "field": "#applying-for-assistance",
+        },
+        {
+          "label": "Compliance Requirements",
+          "field": "#compliance-requirements",
+        },
+        {
+          "label": "Contact Information",
+          "field": "#contact-information",
+        },
+        {
+          "label": "History",
+          "field": "#history",
+        }]);
 
       this.sidenavHelper.updateSideNav(this, false, falSideNavContent);
     }, err => {
@@ -265,7 +236,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     // construct a stream of federal hierarchy data
     let apiStream = apiSource.switchMap(api => {
       return this.fhService.getOrganizationById(api.data.organizationId, false);
-    })  ;
+    });
 
     apiStream.subscribe(apiSubject);
 
@@ -281,7 +252,7 @@ export class ProgramPage implements OnInit, OnDestroy {
           }
         }, (err) => {
           this.errorLogo = true;
-      });
+        });
     }, err => {
       console.log('Error loading organization: ', err);
       this.errorOrganization = true;
@@ -300,7 +271,7 @@ export class ProgramPage implements OnInit, OnDestroy {
       // run whenever historical index data is updated
       this.historicalIndex = res._embedded ? res._embedded.historicalIndex : []; // store the historical index
       let pipe = new HistoricalIndexLabelPipe();
-      this.history = _.map(this.historicalIndex, function(value){
+      this.history = _.map(this.historicalIndex, function (value) {
         return {
           "id": value.id,
           "index": value.index,
@@ -353,19 +324,23 @@ export class ProgramPage implements OnInit, OnDestroy {
   private checkCurrentFY() {
     // check if this program has changed in this FY, if not, display an alert
     if ((new Date(this.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
-      this.alert.push({'labelname':'not-updated-since', 'config':{ 'type': 'warning', 'title': '', 'description': 'Note: \n\
-This Federal Assistance Listing was not updated by the issuing agency in ' +(new Date()).getFullYear()+ '. \n\
-Please contact the issuing agency listed under "Contact Information" for more information.' }});
+      this.alert.push({
+        'labelname': 'not-updated-since', 'config': {
+          'type': 'warning', 'title': '', 'description': 'Note: \n\
+This Federal Assistance Listing was not updated by the issuing agency in ' + (new Date()).getFullYear() + '. \n\
+Please contact the issuing agency listed under "Contact Information" for more information.'
+        }
+      });
     }
   }
 
   private loadAssistanceTypes(apiSource: Observable<any>) {
     apiSource.subscribe(api => {
-      if(api.data.financial && api.data.financial.obligations && api.data.financial.obligations.length > 0) {
+      if (api.data.financial && api.data.financial.obligations && api.data.financial.obligations.length > 0) {
         this.assistanceTypes = _.map(api.data.financial.obligations, 'assistanceType');
       }
 
-      if(api.data.assistanceTypes && api.data.assistanceTypes.length > 0) {
+      if (api.data.assistanceTypes && api.data.assistanceTypes.length > 0) {
         this.assistanceTypes = _.union(this.assistanceTypes, api.data.assistanceTypes);
       }
     });
@@ -374,10 +349,11 @@ Please contact the issuing agency listed under "Contact Information" for more in
   private toTheTop() {
     document.body.scrollTop = 0;
   }
+
   public canEdit() {
-    if(this.program.status && this.program.status.code != 'published' && this.program._links && this.program._links['program:update']) {
+    if (this.program.status && this.program.status.code != 'published' && this.program._links && this.program._links['program:update']) {
       return true;
-    } else if(this.program._links && this.program._links['program:revise']) {
+    } else if (this.program._links && this.program._links['program:revise']) {
       return true;
     }
     return false;
@@ -388,27 +364,29 @@ Please contact the issuing agency listed under "Contact Information" for more in
   }
 
   public onEditClick(page: string[]) {
-    if(this.program.status && this.program.status.code !== 'published') {
-      this.router.navigate(['/programs', this.programID, 'edit'].concat(page));
+    let currentUrl = location.pathname;
+    currentUrl = currentUrl.replace("programs", "programsForm").replace("view", "edit").concat(page.toString());
+    if (this.program.status && this.program.status.code !== 'published') {
+      this.router.navigateByUrl(currentUrl);
     } else {
       this.editModal.openModal();
-      this.gotoPage = page;
+      this.gotoPage = page.toString();
     }
   }
 
   public onDeleteClick() {
     this.programService.deleteProgram(this.programID, this.cookieValue).subscribe(res => {
-      this.router.navigate(['/falworkspace']);
+      this.router.navigate(['/fal/workspace']);
     }, err => {
       // todo: show error message when failing to delete
       console.log('Error deleting program ', err);
     });
   }
-
   public onEditModalSubmit() {
     this.editModal.closeModal();
     this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
-      this.router.navigate(['/programs', JSON.parse(res._body).id, 'edit'].concat(this.gotoPage));
+      let url = '/programsForm/' + JSON.parse(res._body).id + '/edit'.concat(this.gotoPage);
+      this.router.navigateByUrl(url);
     });
   }
 

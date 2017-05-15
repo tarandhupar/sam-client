@@ -17,8 +17,11 @@ export class SystemComponent {
         { text: 'System Information',       routerLink: '#system-information',       anchor: true },
         { text: 'Organization Information', routerLink: '#organization-information', anchor: true },
         { text: 'Point of Contact',         routerLink: '#point-of-contact',         anchor: true },
+        { text: 'Deactivate Account',       routerLink: '#deactivate-account',       anchor: true },
       ] },
-      { text: 'Reset Password', routerLink: 'password',   routerLinkActive: 'usa-current' }
+      { text: 'Reset Password', routerLink: 'password',   routerLinkActive: 'usa-current' },
+      { text: 'My Access',      routerLink: false,        routerLinkActive: 'usa-current' },
+      { text: 'Migrations',     routerLink: false,        routerLinkActive: 'usa-current' }
     ]
   };
 
@@ -37,16 +40,6 @@ export class SystemComponent {
   }
 
   ngOnInit() {
-    /*
-    this.api.iam.checkSession((user) => {
-      this.zone.run(() => {
-      });
-    });
-    */
-    this.store.nav.push(
-
-    );
-
     this.checkRoute();
   }
 

@@ -1,6 +1,6 @@
 import { FilterMultiArrayObjectPipe } from './filter-multi-array-object.pipe';
 
-describe('FilterMultiArrayObjectPipe Test', () => {
+describe('src/app/app-pipes/filter-multi-array-object.pipe.spec.ts', () => {
   let pipe = new FilterMultiArrayObjectPipe();
   let aData: any[] = [{
       'id': '1',
@@ -36,15 +36,15 @@ describe('FilterMultiArrayObjectPipe Test', () => {
   }
   ];
 
-  it('Not found', () => {
+  it('FilterMultiArrayObjectPipe Test: Not found', () => {
     expect(pipe.transform(['4'], aData, 'id', false, '')).toEqual([]);
   });
 
-  it('Not nested: Single array', () => {
+  it('FilterMultiArrayObjectPipe Test: Not nested: Single array', () => {
     expect(pipe.transform(['2'], aData, 'id', false, '')).toEqual([{'id': '2', 'value': 'Bar'}]);
   });
 
-  it('Nested array', () => {
+  it('FilterMultiArrayObjectPipe Test: Nested array', () => {
     expect(pipe.transform(['11'], aData, 'id', true, 'elements')).toEqual([{'id': '11', 'value': 'Foo 1.1'}]); //second level
     expect(pipe.transform(['333'], aData, 'id', true, 'elements')).toEqual([{'id': '333', 'value': 'Foo 33.1'}]); ///third level
   });

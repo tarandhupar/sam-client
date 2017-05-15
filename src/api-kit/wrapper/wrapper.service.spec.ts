@@ -10,7 +10,7 @@ import {
 
 import { WrapperService } from '../wrapper/wrapper.service'
 
-describe('Service: ApiService', () => {
+describe('src/api-kit/wrapper/wrapper.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -28,7 +28,7 @@ describe('Service: ApiService', () => {
     });
   });
 
-it('should have APIs property set', inject([WrapperService], (resource) => {
+it('Service: ApiService: should have APIs property set', inject([WrapperService], (resource) => {
     expect(resource.APIs).toBeDefined();
     expect(resource.APIs.search).toBeDefined();
     expect(resource.APIs.program).toBeDefined();
@@ -39,7 +39,7 @@ it('should have APIs property set', inject([WrapperService], (resource) => {
     expect(resource.APIs.wageDetermination).toBeDefined();
   }));
 
-  it('should have APIs property data set', inject([WrapperService], (resource) => {
+  it('Service: ApiService: should have APIs property data set', inject([WrapperService], (resource) => {
     expect(resource.APIs.search).toBe('/sgs/v1/search');
     expect(resource.APIs.program).toBe('/fac/v1/programs');
     expect(resource.APIs.federalHierarchy).toBe('/federalorganizations/v1/organizations');

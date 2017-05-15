@@ -3,6 +3,14 @@ import { FormControl, Validators } from '@angular/forms';
 
 import { Validators as $Validators } from '../validators';
 
+/**
+ * PasswordComponent - Password Form with Dynamic Validation
+ *
+ * @Input() currentPassword: string - current password
+ * @Input() password: string - new password
+ * @Input() passwordLabel: string - new password input label
+ * @Input() phrases: string[] - List of strings to validate against not matching more than 2 consecutive characters
+ */
 @Component({
 	selector: 'sam-password',
   templateUrl: 'password.component.html'
@@ -10,6 +18,8 @@ import { Validators as $Validators } from '../validators';
 export class SamPasswordComponent {
   @Input() currentPassword: FormControl;
   @Input() password:FormControl;
+
+  @Input() passwordLabel:string = 'Create Password';
 
   @Input() phrases:string[] = [];
 

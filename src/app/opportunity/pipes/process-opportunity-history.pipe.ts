@@ -95,7 +95,7 @@ export class ProcessOpportunityHistoryPipe implements PipeTransform {
 
     let current = _.filter(processedHistory, isCurrent)[0];
     let authoritative = _.filter(processedHistory, isAuthoritative)[0];
-    let showRevisionMessage;
+    let showRevisionMessage:any = false;
     if(authoritative && current.id !== authoritative.id) {
       showRevisionMessage = true;
     }

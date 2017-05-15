@@ -18,6 +18,9 @@ import { System, POC } from '../../system.interface';
   ]
 })
 export class SystemProfileComponent {
+  @ViewChild('confirmModal') confirmModal;
+  @ViewChild('reconfirmModal') reconfirmModal;
+
   private api = {
     fh: null,
     iam: null
@@ -267,6 +270,10 @@ export class SystemProfileComponent {
     this.states.alert.show = true;
   }
 
+  updateSystemState(data: System) {
+    merge(this.system, data);
+  }
+
   /**
    * Point of Contact
    */
@@ -278,6 +285,48 @@ export class SystemProfileComponent {
     this.system.pointOfContact.splice($index, 1);
     (<FormArray>this.detailsForm.controls['pointOfContact']).removeAt($index);
     this.save('poc');
+  }
+
+  /**
+   * Account Deactivation
+   */
+  confirmDeactivation() {
+    this.confirmModal.openModal();
+  }
+
+  reconfirmDeactivation() {
+    this.confirmModal.closeModal();
+    this.reconfirmModal.openModal();
+  }
+
+  deactivate() {
+    const submitButton = document.querySelector('button.usa-modal-content-submit-btn');
+
+    this.states.loading = true;
+
+    if(submitButton) {
+      submitButton.setAttribute('disabled', 'disabled');
+      submitButton.className += ' usa-button-disabled';
+    }
+
+    this.api.iam.system.account.deactivate(this.system._id, () => {
+      this.states.loading = false;
+
+      if(submitButton) {
+        submitButton.removeAttribute('disabled');
+        submitButton.className = submitButton.className.replace(/ usa-button-disabled/g, '');
+      }
+
+      this.reconfirmModal.closeModal();
+
+      // Refresh System Account Profile
+      window.location.reload();
+    }, (error) => {
+      this.alert('error', error.message);
+
+      this.reconfirmModal.closeModal();
+      this.states.loading = false;
+    });
   }
 
   /**
@@ -295,7 +344,9 @@ export class SystemProfileComponent {
     this.states.sections[key] = true;
     this.states.loading = true;
 
-    this.api.iam.system.account.update(this.detailsForm.value, () => {
+    this.updateSystemState(this.detailsForm.value);
+
+    this.api.iam.system.account.update(this.system, () => {
       this.states.sections[key] = false;
       this.states.loading = false;
     }, () => {
@@ -310,7 +361,9 @@ export class SystemProfileComponent {
     if(this.detailsForm.valid) {
       this.states.loading = true;
 
-      this.api.iam.system.account.create(this.detailsForm.value, (account) => {
+      this.updateSystemState(this.detailsForm.value);
+
+      this.api.iam.system.account.create(this.system, (account) => {
         this.alert('success', 'The system account was successfully created!');
         this.states.loading = false;
         this.states.edit = true;

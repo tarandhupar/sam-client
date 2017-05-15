@@ -1,9 +1,9 @@
 import { OrganizationTypeCodePipe } from './organization-type-code.pipe';
 
-describe('OrganizationTypeCodePipe', () => {
+describe('src/app/app-pipes/organization-type-code.pipe.spec.ts', () => {
   let pipe = new OrganizationTypeCodePipe();
 
-  it('transforms a json response object to an object with label and value', () => {
+  it('OrganizationTypeCodePipe: transforms a json response object to an object with label and value', () => {
     let object1 = {
       aacCode: null,
       alternativeNames: null,

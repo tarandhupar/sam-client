@@ -1,9 +1,9 @@
 import {SortArrayOfObjects} from "./sort-array-object.pipe";
 
-describe('SortArrayOfObjects', () => {
+describe('src/app/app-pipes/sort-array-object.pipe.spec.ts', () => {
   let pipe = new SortArrayOfObjects();
 
-  it('sorts the array based on the key you want to sort', () => {
+  it('SortArrayOfObjects: sorts the array based on the key you want to sort', () => {
     let array1 = [
       {label: "Kellog", value: "1"},
       {label: "Anurag", value: "2"},

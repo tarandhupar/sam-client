@@ -4,7 +4,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { ProgramService } from './program.service';
 import { WrapperService } from '../wrapper/wrapper.service'
 
-describe('Program Service', () => {
+describe('src/api-kit/program/program.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -23,7 +23,7 @@ describe('Program Service', () => {
     });
   });
 
-  it('should return response when subscribed to getProgramById', inject([ProgramService, MockBackend], (testService: ProgramService, backend: MockBackend) => {
+  it('Program Service: should return response when subscribed to getProgramById', inject([ProgramService, MockBackend], (testService: ProgramService, backend: MockBackend) => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: '{"response":"sot response!!"}' }))));
 
     testService.getProgramById("fee2e0e30ce63b7bc136aeff32096c1d", '').subscribe((res: Response) => {
@@ -32,7 +32,7 @@ describe('Program Service', () => {
     });
   }));
 
-  it('should return ID (String) when subscribed to saveProgram: Create', inject([ProgramService, MockBackend], (testService: ProgramService, backend: MockBackend) => {
+  it('Program Service: should return ID (String) when subscribed to saveProgram: Create', inject([ProgramService, MockBackend], (testService: ProgramService, backend: MockBackend) => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: '213kj21l3j23jlk21j3kl1j2' }))));
 
     testService.saveProgram(null, {},'').subscribe((res: Response) => {

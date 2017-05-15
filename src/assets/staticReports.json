@@ -1,334 +1,443 @@
 {
-"reports": [ 
+"reports": [
 		{
-           "name": "Federal Procurement Report",
-           "desc": "The Federal Procurement Report data can be used for geographical analysis, market analysis, and analysis of the impact of the congressional and presidential initiatives in soio - economic areas such as small business. The data is also a reliable basis for measuring and assessing the impact of Federal acquisition policy and management improvement.",
-	  		"loc":  "Federal_Procurement_Report-2007.zip",
-			"date": "2007",
-			"previousDates" :[
+      "id": "ABC1234567890",
+      "name": "Federal Procurement Report",
+      "desc": "The Federal Procurement Report data can be used for geographical analysis, market analysis, and analysis of the impact of the congressional and presidential initiatives in soio - economic areas such as small business. The data is also a reliable basis for measuring and assessing the impact of Federal acquisition policy and management improvement.",
+      "loc":  "Federal_Procurement_Report-2007.zip",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Available Report is 2007",
+      "previousDates" :[
 								{
-        					   "name": "Federal Procurement Report",
-	  						   "loc":  "Federal_Procurement_Report-2006.zip",
-							   "year": "2006"
+                  "name": "Federal Procurement Report",
+                  "loc":  "Federal_Procurement_Report-2006.zip",
+                  "reportType": "Static Report",
+                  "year": "2006"
 						       },
 								{
-        					   "name": "Federal Procurement Report",
-	  						   "loc":  "Federal_Procurement_Report-2005.zip",
-							   "year": "2005"
+                  "name": "Federal Procurement Report",
+                  "loc":  "Federal_Procurement_Report-2005.zip",
+                  "reportType": "Static Report",
+                  "year": "2005"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "Federal_Procurement_Report-2004.zip",
-							   "year": "2004"
+                   "reportType": "Static Report",
+							     "year": "2004"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "Federal_Procurement_Report-2003.zip",
-							   "year": "2003"
+                   "reportType": "Static Report",
+							     "year": "2003"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "Federal_Procurement_Report-2002.zip",
-							   "year": "2002"
+                   "reportType": "Static Report",
+							     "year": "2002"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "Federal_Procurement_Report-2001.zip",
-							   "year": "2001"
+                   "reportType": "Static Report",
+							     "year": "2001"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "Federal_Procurement_Report-2000.zip",
-							   "year": "2000"
+                   "reportType": "Static Report",
+							     "year": "2000"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1999.pdf",
-							   "year": "1999"
+                   "reportType": "Static Report",
+							     "year": "1999"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1998.pdf",
-							   "year": "1998"
+                   "reportType": "Static Report",
+							     "year": "1998"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1997.pdf",
-							   "year": "1997"
+                   "reportType": "Static Report",
+							     "year": "1997"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1996.pdf",
-							   "year": "1996"
+                   "reportType": "Static Report",
+							     "year": "1996"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1995.pdf",
-							   "year": "1995"
+                   "reportType": "Static Report",
+							     "year": "1995"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1994.pdf",
-							   "year": "1994"
-						       },{
-        					   "name": "Federal Procurement Report",
+                   "reportType": "Static Report",
+							     "year": "1994"
+						       },
+                 {
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1993.pdf",
-							   "year": "1993"
-						       },{
-        					   "name": "Federal Procurement Report",
+                   "reportType": "Static Report",
+							     "year": "1993"
+						       },
+                {
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1992.pdf",
-							   "year": "1992"
+                   "reportType": "Static Report",
+							     "year": "1992"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1991.pdf",
-							   "year": "1991"
-						       },{
-        					   "name": "Federal Procurement Report",
+                   "reportType": "Static Report",
+							     "year": "1991"
+						       },
+                {
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1990.pdf",
-							   "year": "1990"
-						       },{
-        					   "name": "Federal Procurement Report",
+                   "reportType": "Static Report",
+							     "year": "1990"
+						       },
+                {
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1989.pdf",
-							   "year": "1989"
-						       },{
-        					   "name": "Federal Procurement Report",
+                   "reportType": "Static Report",
+							     "year": "1989"
+						       },
+                {
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1988.zip",
-							   "year": "1988"
+                   "reportType": "Static Report",
+							     "year": "1988"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1987.pdf",
-							   "year": "1987"
+                   "reportType": "Static Report",
+							     "year": "1987"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1986.pdf",
-							   "year": "1986"
+                   "reportType": "Static Report",
+							     "year": "1986"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1985.pdf",
-							   "year": "1985"
+                   "reportType": "Static Report",
+							     "year": "1985"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1984.pdf",
-							   "year": "1984"
+                   "reportType": "Static Report",
+							     "year": "1984"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1983.pdf",
-							   "year": "1983"
+                   "reportType": "Static Report",
+							     "year": "1983"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1982.pdf",
-							   "year": "1982"
+                   "reportType": "Static Report",
+							     "year": "1982"
 						       },
 							   {
-        					   "name": "Federal Procurement Report",
+                   "name": "Federal Procurement Report",
 	  						   "loc":  "FEDPROCREPORT_FY1981.pdf",
-							   "year": "1981"
+                   "reportType": "Static Report",
+							     "year": "1981"
 						       }
 							 ]
-        },
+       },
 		{
-           "name": "Gulf Oil Spill Report",
-           "desc": "This National Interest Action report displays awards for support and recovery for the Gulf Oil Spill",
-	  		"loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+      "id": "97D1597B4A94C04B84C93DBA97A05CB7",
+      "name": "Gulf Oil Spill Report",
+      "desc": "This National Interest Action report displays awards for support and recovery for the Gulf Oil Spill",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": true,
+			"date": "Last Run on 02-10-2016"
        },
-	   {
-           "name": "Haiti Earthquake Report",
-           "desc": "This National Interest Action report displays awards  for the Haiti Earthquake support and recovery",
-	  		"loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+    {
+      "id": "2903E4D845C9A2BCB42A49AF553503F6",
+      "name": "Haiti Earthquake Report",
+      "desc": "This National Interest Action report displays awards  for the Haiti Earthquake support and recovery",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": true,
+			"date": "Last Run on 02-10-2016"
        },
-	   {
-           "name": "Hurricane Earl Report",
-           "desc": "This National Interest Action report displays awards for Hurricane Earl support and recovery",
-	  		"loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+    {
+      "id": "CE1F4AB54F09D319965327B37EF5FC27",
+      "name": "Hurricane Earl Report",
+      "desc": "This National Interest Action report displays awards for Hurricane Earl support and recovery",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": true,
+			"date": "Last Run on 02-10-2016"
        },
-	   {
-           "name": "Hurricane Irene Report",
-           "desc": "This National Interest Action report displays awards for Hurricane Irene support and recovery",
-	  		"loc":  "HurricaneIreneReport.xlsx",
-			"date": "02-10-2016"
+    {
+      "id": "BA39FB914A9A0BD989F0019D8577C7F1",
+      "name": "Hurricane Irene Report",
+      "desc": "This National Interest Action report displays awards for Hurricane Irene support and recovery",
+      "loc":  "HurricaneIreneReport.xlsx",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Run on 02-10-2016"
        },
-       {
-           "name": "Hurricane Katrina Report",
-           "desc": "This National Interest Action report displays awards  for Hurricane Katrina support and recovery",
-		   "loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+    {
+      "id": "31FB28C44B7172EBB6CF5BB377C163F3",
+      "name": "Hurricane Katrina Report",
+      "desc": "This National Interest Action report displays awards  for Hurricane Katrina support and recovery",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Run on 02-10-2016"
        },
-       {
-           "name": "Hurricane Rita Report",
-           "desc": "This National Interest Action report displays awards for Hurricane Rita support and recovery",
-		   "loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+    {
+      "id": "0F7A40584685110449D19FAED7E1050F",
+      "name": "Hurricane Rita Report",
+      "desc": "This National Interest Action report displays awards for Hurricane Rita support and recovery",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Run on 02-10-2016"
        },
-       {
-           "name": "Hurricane Sandy Report",
-           "desc": "This National Interest Action report displays awards for Hurricane Sandy support and recovery government wide and contract",
-		   "loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+    {
+      "id": "D4A45F64450023719DD47DBA2BA6AC05",
+      "name": "Hurricane Sandy Report",
+      "desc": "This National Interest Action report displays awards for Hurricane Sandy support and recovery government wide and contract",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Run on 02-10-2016"
        },
-       {
-           "name": "Oklahoma Tornado 2013 Report",
-           "desc": "This National Interest Action report displays awards  for the Oklahoma Tornado 2013 support and recovery",
-		   "loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+    {
+      "id": "9F861C9B4A0EF2611DCC4EA85DA943C4",
+      "name": "List of Contracting Offices",
+      "desc": "This listing contains active contracting offices in SAM.gov that are valid, meaning that they do not have a past end date. Updates are posted at the beginning of each month.",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+      "date": "Last Run on 02-10-2016"
        },
-       {
-           "name": "Other Hurricane/Disaster Relief",
-           "desc": "This National Interest Action report displays awards for Other Hurricane/Disaster support and recovery.  The following events are available in this download: Hurricane Ike, Hurricane Hanna, Hurricane Gustav, Hurricane Wilma, Hurricane Ophelia, Ops in Iraq and Syria, Op United Assistance, and Op Freedom’s Sentinel",
-	   		"loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+    {
+      "id": "90A67A534DA615C063C6C3B14B57A2EE",
+      "name": "Oklahoma Tornado 2013 Report",
+      "desc": "This National Interest Action report displays awards  for the Oklahoma Tornado 2013 support and recovery",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Run on 02-10-2016"
        },
-       {
-           "name": "Pacific Earthquake/Tsunami Report",
-           "desc": "This National Interest Action report displays awards for support and recovery for the Pacific Earthquake Tsunami",
-		   "loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+    {
+      "id": "F60F9ABB46633FA6619535A38F298CF6",
+      "name": "Other Hurricane/Disaster Relief",
+      "desc": "This National Interest Action report displays awards for Other Hurricane/Disaster support and recovery.  The following events are available in this download: Hurricane Ike, Hurricane Hanna, Hurricane Gustav, Hurricane Wilma, Hurricane Ophelia, Ops in Iraq and Syria, Op United Assistance, and Op Freedom’s Sentinel",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Run on 02-10-2016"
        },
-       {
-           "name": "Recovery Data (Recipient Reported, Cumlative Summary)",
-           "desc": "A cumulative national summary file, containing data from FY2009 thru 2013. The file size is close to 77 MB, only recommended for high-speed internet connections. For more information on the American Recovery and Reinvestment Act and recipient-based data please visit recovery.gov.",
-		   "loc":  "CumulativeNationalSummary_Feb17_2009_Dec31_2013_withDUNS.csv",
-			"date": "02-10-2016"
+    {
+      "id": "8116901048D9895550449CBA8184B112",
+      "name": "Pacific Earthquake/Tsunami Report",
+      "desc": "This National Interest Action report displays awards for support and recovery for the Pacific Earthquake Tsunami",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Run on 02-10-2016"
        },
-       {
-           "name": "Recovery Data (Recipient Reported, FY2013Q4)",
-           "desc": "A cumulative national summary file, containing data for just the last reported quarter (4th quarter of FY2013). For more information on the American Recovery and Reinvestment Act and recipient-based data please visit recovery.gov.",
-		   "loc":  "All_ContractsY13Q4.xlsx",
-			"date": "02-10-2016"
+    {
+      "id": "ABC2345678901",
+      "name": "Recovery Data (Recipient Reported, Cumlative Summary)",
+      "desc": "A cumulative national summary file, containing data from FY2009 thru 2013. The file size is close to 77 MB, only recommended for high-speed internet connections. For more information on the American Recovery and Reinvestment Act and recipient-based data please visit recovery.gov.",
+      "loc":  "CumulativeNationalSummary_Feb17_2009_Dec31_2013_withDUNS.csv",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": ""
        },
-       {
-           "name": "Recovery Report (Treasury Account Symbol Report 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016)",
-           "desc": "This report display awards for the American Recovery and Investment Act for the years 2009 to current year of 2016. Each year is on it's own spreadsheet in the workbook.",
-		   "loc":  "DUMMY.pdf",
-			"date": "02-10-2016"
+    {
+      "id": "ABC3456789012",
+      "name": "Recovery Data (Recipient Reported, FY2013Q4)",
+      "desc": "A cumulative national summary file, containing data for just the last reported quarter (4th quarter of FY2013). For more information on the American Recovery and Reinvestment Act and recipient-based data please visit recovery.gov.",
+      "loc":  "All_ContractsY13Q4.xlsx",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": ""
        },
-       {
-           "name": "Small Business Goaling Report",
-           "desc": "A Department level report that displays Small Business data for a specified date range by Funding/Contracting Agency for a Fiscal Year",
-	  		"loc":  "DUMMY.pdf",
-			"date": "02-10-2016",
-			"previousDates" :[
+    {
+      "id": "ABC4567890123",
+      "name": "Recovery Report (Treasury Account Symbol Report 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016)",
+      "desc": "This report display awards for the American Recovery and Investment Act for the years 2009 to current year of 2016. Each year is on it's own spreadsheet in the workbook.",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": ""
+       },
+    {
+      "id": "ABC5678901234",
+      "name": "Small Business Goaling Report",
+      "desc": "A Department level report that displays Small Business data for a specified date range by Funding/Contracting Agency for a Fiscal Year",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Available Report is 2015",
+			"previousDates" : [
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2015.pdf",
-							   "year": "2015"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2015.pdf",
+                  "reportType": "Static Report",
+							    "year": "2015"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2014.pdf",
-							   "year": "2014"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2014.pdf",
+                  "reportType": "Static Report",
+							    "year": "2014"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2013.pdf",
-							   "year": "2013"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2013.pdf",
+                  "reportType": "Static Report",
+                  "year": "2013"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2012.pdf",
-							   "year": "2012"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2012.pdf",
+                  "reportType": "Static Report",
+							    "year": "2012"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2011.pdf",
-							   "year": "2011"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2011.pdf",
+                  "reportType": "Static Report",
+							    "year": "2011"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2010.pdf",
-							   "year": "2010"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2010.pdf",
+                  "reportType": "Static Report",
+							    "year": "2010"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2009.pdf",
-							   "year": "2009"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2009.pdf",
+                  "reportType": "Static Report",
+							    "year": "2009"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2008.pdf",
-							   "year": "2008"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2008.pdf",
+                  "reportType": "Static Report",
+							    "year": "2008"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2007.pdf",
-							   "year": "2007"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2007.pdf",
+                  "reportType": "Static Report",
+							    "year": "2007"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2006.pdf",
-							   "year": "2006"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2006.pdf",
+                  "reportType": "Static Report",
+							    "year": "2006"
 						       },
 								{
-        					   "name": "Small Business Goaling Report",
-	  						   "loc":  "FPDSNG_SB_Goaling_FY_2005.pdf",
-							   "year": "2005"
+                  "name": "Small Business Goaling Report",
+                  "loc":  "FPDSNG_SB_Goaling_FY_2005.pdf",
+                  "reportType": "Static Report",
+							    "year": "2005"
 						       }
 							 ]
        },
-       {
-           "name": "Top 100 Contractors Report",
-           "desc": "The top 100 contractors Report contains an individual report across federal government wide data and reports by Department for a Fiscal Year.",
-	  		"loc":  "DUMMY.pdf",
-			"date": "02-10-2016",
+    {
+      "id": "ABC6789012345",
+      "name": "Top 100 Contractors Report",
+      "desc": "The top 100 contractors Report contains an individual report across federal government wide data and reports by Department for a Fiscal Year.",
+      "loc":  "DUMMY.pdf",
+      "reportType": "Static Report",
+      "favorite": false,
+			"date": "Last Available Report is 2015",
 			"previousDates" :[
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2015.xls",
-							   "year": "2015"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2015.xls",
+                  "reportType": "Static Report",
+							    "year": "2015"
 						       },
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2014.xls",
-							   "year": "2014"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2014.xls",
+                  "reportType": "Static Report",
+							    "year": "2014"
 						       },
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2013.xls",
-							   "year": "2013"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2013.xls",
+                  "reportType": "Static Report",
+							    "year": "2013"
 						       },
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2012.xls",
-							   "year": "2012"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2012.xls",
+                  "reportType": "Static Report",
+							    "year": "2012"
 						       },
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2011.xls",
-							   "year": "2011"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2011.xls",
+                  "reportType": "Static Report",
+							    "year": "2011"
 						       },
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2010.xls",
-							   "year": "2010"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2010.xls",
+                  "reportType": "Static Report",
+							    "year": "2010"
 						       },
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2009.xls",
-							   "year": "2009"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2009.xls",
+                  "reportType": "Static Report",
+							    "year": "2009"
 						       },
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2008.xls",
-							   "year": "2008"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2008.xls",
+                  "reportType": "Static Report",
+							    "year": "2008"
 						       },
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2007.xls",
-							   "year": "2007"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2007.xls",
+                  "reportType": "Static Report",
+                  "year": "2007"
 						       },
 								{
-        					   "name": "Top 100 Contractors Report",
-	  						   "loc":  "Top_100_Contractors_Report_Fiscal_Year_2006.xls",
-							   "year": "2006"
+                  "name": "Top 100 Contractors Report",
+                  "loc":  "Top_100_Contractors_Report_Fiscal_Year_2006.xls",
+                  "reportType": "Static Report",
+							    "year": "2006"
 						       }
 							 ]
        }

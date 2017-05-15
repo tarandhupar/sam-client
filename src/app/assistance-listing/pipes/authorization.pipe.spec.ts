@@ -1,11 +1,8 @@
 import { AuthorizationPipe } from './authorization.pipe';
 
-
-
-
-describe('AuthorizationPipe', () => {
+describe('src/app/assistance-listing/pipes/authorization.pipe.spec.ts', () => {
   let pipe = new AuthorizationPipe();
-  it('transforms an authorization id to an authorization', () => {
+  it('AuthorizationPipe: transforms an authorization id to an authorization', () => {
     let oAuthorization1 = [{
       USC: {
         title: "7",

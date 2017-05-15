@@ -20,8 +20,11 @@
   }
 
   hr {
+    height: 1px;
     margin-top: 1.5em;
     margin-bottom: 1.5em;
+    background-color: $grey;
+    border: 0px none;
   }
 
   .usa-title {
@@ -38,5 +41,11 @@
 
   .organization-container {
     max-width: 46rem;
+  }
+
+  .modal-dialog {
+    .modal-content {
+      min-width: 700px;
+    }
   }
 }

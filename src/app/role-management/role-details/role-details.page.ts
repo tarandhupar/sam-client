@@ -9,7 +9,7 @@ import { Title } from "@angular/platform-browser";
   templateUrl: 'role-details.page.html'
 })
 export class RoleDetailsPage {
-  mode: 'edit'|'new' = 'new';
+  mode: 'edit'|'new'|'old' = 'new';
 
   roles = [{ vals: [], name: 'Assistance Listing'}, {vals: [], name: 'IDV'}, {vals: [], name: 'Regional Offices'}];
   role = '';
@@ -28,6 +28,7 @@ export class RoleDetailsPage {
     role: '',
     domain: '',
   };
+  canAdministerRoles = false;
 
   constructor(
     private router: Router
@@ -44,6 +45,10 @@ export class RoleDetailsPage {
     if (this.mode === 'edit') {
       this.getDomainAndDefaultRole();
     }
+  }
+
+  onCanAdministerRolesChange(canAdmin) {
+    this.canAdministerRoles = canAdmin;
   }
 
   setTitle() {
@@ -116,6 +121,16 @@ export class RoleDetailsPage {
         }
       }
     });
+  }
+
+  isRoleNameDisabled() {
+    // all roles are editable
+    return false;
+    // let d = this.domains.find(dom => +dom.id === +this.domain);
+    // if (!d) {
+    //   return false;
+    // }
+    // return d.legacyDomains;
   }
 
   onDomainChange() {
@@ -196,6 +211,8 @@ export class RoleDetailsPage {
             this.domainDefinitions = null;
             return;
           }
+          let thisRole = this.domainDefinitions.roleDefinitionMapContent[0].role;
+          this.canAdministerRoles = thisRole.isAdmin;
           this.setObjectPermissions();
         }
       },
@@ -352,7 +369,9 @@ export class RoleDetailsPage {
       };
     });
 
-    let role = { };
+    let role = {
+      isAdmin: this.canAdministerRoles,
+    };
 
     if (this.mode === 'edit') {
       role['id'] = this.roleId;

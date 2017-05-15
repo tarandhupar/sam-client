@@ -12,6 +12,9 @@ import { FALAuthInfoTableComponent } from "./authorization-table/authorization-t
 import { FALFiscalYearTableComponent } from "./fiscal-year-table/fiscal-year-table.component";
 import { FALAssistSubFormComponent } from "./applying-assistance-subform/applying-assistance-subform.component";
 import { FALAssistInfoTableComponent } from './applying-assistance-table/applying-assistance-table.component';
+import {FALObligationFYTableComponent} from "./obligation-table/obligation-table.component";
+import {FALObligationSubFormComponent} from "./obligation-subform/obligation-subform.component";
+
 
 @NgModule({
   imports: [
@@ -29,7 +32,9 @@ import { FALAssistInfoTableComponent } from './applying-assistance-table/applyin
     FALAuthInfoTableComponent,
     FALAssistSubFormComponent,
     FALAssistInfoTableComponent,
-    FALFiscalYearTableComponent
+    FALFiscalYearTableComponent,
+    FALObligationFYTableComponent,
+    FALObligationSubFormComponent
   ],
   exports: [
     FALAccountIdentificationComponent,
@@ -41,7 +46,9 @@ import { FALAssistInfoTableComponent } from './applying-assistance-table/applyin
     FALAuthInfoTableComponent,
     FALFiscalYearTableComponent,
     FALAssistSubFormComponent,
-    FALAssistInfoTableComponent
+    FALAssistInfoTableComponent,
+    FALObligationFYTableComponent,
+    FALObligationSubFormComponent
   ]
 })
 export class FALComponentsModule {}

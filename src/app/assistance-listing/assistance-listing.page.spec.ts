@@ -484,7 +484,7 @@ let MockHistoricalIndexService = {
 };
 
 
-describe('ProgramPage', () => {
+describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
   // TODO: Fix spies
 //  var spyMockProgramService:any, spyMockApiService:any, spyMockHistoricalIndexService:any, spyMockFHService:any, spyMockDictionaryService:any;
 
@@ -550,7 +550,7 @@ describe('ProgramPage', () => {
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
   });
 
-  it('Should init & load data', () => {
+  it('ProgramPage: Should init & load data', () => {
     /**
      * TODO: FIX Spies
      */
@@ -587,23 +587,23 @@ describe('ProgramPage', () => {
     expect(fixture.debugElement.query(By.css('#program-title')).nativeElement.innerHTML).toContain('Wood Utilization Assistance')
   });
 
-  it('Should show the alert for updated since YYYY', () => {
+  it('ProgramPage: Should show the alert for updated since YYYY', () => {
     //mocked program should show the alert -> Verifying it
     expect(comp.alert.length).toBeGreaterThan(0);
     expect(fixture.debugElement.queryAll(By.css('samalert')).length).toBeGreaterThan(0);
   });
 
-  it('Should have related FAL', () => {
+  it('ProgramPage: Should have related FAL', () => {
     //mocked program should show the related fal -> Verifying it
     expect(comp.relatedProgram.length).toBe(2);
   });
 
-  it('Should have assistance types', () => {
+  it('ProgramPage: Should have assistance types', () => {
     //mocked program should show all the assistance types -> Verifying it
     expect(comp.assistanceTypes.length).toBe(2);
   });
 
-  it('Should show labels for designation types', () => {
+  it('ProgramPage: Should show labels for designation types', () => {
     expect(comp.dictionaries['applicant_types']).toBeDefined();
     let labelElement = fixture.debugElement.query(By.css('.designation'));
     expect(labelElement.nativeElement.innerHTML).toContain('U.S. Territories and possessions');

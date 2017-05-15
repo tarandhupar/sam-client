@@ -9,7 +9,7 @@ let fixture;
 let comp;
 let fakepath;
 
-describe('DisplayPageTests', () => {
+describe('src/app/app-components/display-page/display-page.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ DisplayPageComponent ],
@@ -54,13 +54,13 @@ describe('DisplayPageTests', () => {
 
   }));
 
-  it('logo test', ()  => {
+  it('DisplayPageTests: logo test', ()  => {
     fixture.whenStable().then(() => {
       expect( fixture.debugElement.query( By.css('.sidenav-logo') ).nativeElement.getAttribute("src") ).toEqual(fakepath);
     });
 	});
 
-  it('sidenav test', ()  => {
+  it('DisplayPageTests: sidenav test', ()  => {
     fixture.whenStable().then(() => {
       expect(fixture.debugElement.query( By.css('.usa-sidenav-list li:nth-child(1) a') ).nativeElement.innerHTML).toEqual("Award Details");
       expect(fixture.debugElement.query( By.css('.usa-sidenav-list li:nth-child(2) a') ).nativeElement.innerHTML).toEqual("General Information");

@@ -13,18 +13,25 @@
   <ng-container *ngIf="domainDefinitions">
 
     <!-- Role text -->
-    <labelWrapper name="role" label="Role" [errorMessage]="errors.role">
-      <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()" (focus)="onRoleFocus()">
+    <labelWrapper name="role" label="Role Name" [errorMessage]="errors.role">
+      <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()" (focus)="onRoleFocus()" *ngIf="!(mode === 'edit' && isRoleNameDisabled())">
+      <span *ngIf="mode === 'edit' && isRoleNameDisabled()">{{role}}</span>
     </labelWrapper>
 
+    <div>
+      <label>Can this role administer to other roles?</label>
+      <sam-toggle-switch [isSwitchOn]="canAdministerRoles" (switchStatusChange)="onCanAdministerRolesChange($event)"></sam-toggle-switch>
+    </div>
+
     <!-- Domain Roles -->
-    <div class="domain-roles m_T-3em">
+    <div class="domain-roles m_T-3em" *ngIf="canAdministerRoles">
       <permission-selector
         [options]="domainRoleOptions"
         selectAllText='Associate Roles'
-        titleText='Domain Roles'
-        [hideDefaultColumn]="true">
+        titleText='Role Administration'
+        [hideDefaultColumn]="true"
         [hideColumnHeader]="true"
+        >
       </permission-selector>
     </div>
 
@@ -33,15 +40,17 @@
     </div>
 
     <!-- Objects and permission -->
-    <div class="m_T-4x object-block" *ngFor="let function of permissionOptions">
-      <permission-selector
-        [options]="function.permissions"
-        selectAllText="Permissions"
-        [titleText]="function.name"
-      ></permission-selector>
-    </div>
-    <div *ngIf="!permissionOptions.length">
-      <em>No permissions found for selected domain</em>
+    <div>
+      <div class="object-block" *ngFor="let function of permissionOptions">
+        <permission-selector
+          [options]="function.permissions"
+          selectAllText="Permissions"
+          [titleText]="function.name"
+        ></permission-selector>
+      </div>
+      <div *ngIf="!permissionOptions.length">
+        <em>No permissions found for selected domain</em>
+      </div>
     </div>
   </ng-container>
 

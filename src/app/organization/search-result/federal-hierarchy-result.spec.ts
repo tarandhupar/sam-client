@@ -8,7 +8,7 @@ import { PipesModule } from '../../app-pipes/app-pipes.module';
 var fixture;
 var comp;
 var titleEl;
-describe('FederalHierarchyResultComponent', () => {
+describe('src/app/organization/search-result/federal-hierarchy-result.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ FederalHierarchyResult ],
@@ -35,7 +35,7 @@ describe('FederalHierarchyResultComponent', () => {
     });
   }));
 
-  it('should display a title', () => {
+  it('FederalHierarchyResultComponent: should display a title', () => {
     expect(titleEl.nativeElement.textContent).toContain("SAMPLE TITLE");
   });
 });

@@ -95,7 +95,7 @@ let awardType = {
   }
 };
 
-describe('SearchPage', () => {
+describe('src/app/search/search.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,
@@ -124,14 +124,14 @@ describe('SearchPage', () => {
     fixture = TestBed.createComponent(SearchPage);
   });
 
-  it('should "run" a search', () => {
+  it('SearchPage: should "run" a search', () => {
     fixture.componentInstance.runSearch();
     fixture.whenStable().then(() => {
       expect(fixture.componentInstance.data.results[0].title).toBe("Dummy Result 1");
     });
 	});
 
-  it('should "run" a featured search', () => {
+  it('SearchPage: should "run" a featured search', () => {
     fixture.componentInstance.keyword = "test";
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.runSearch();
@@ -140,7 +140,7 @@ describe('SearchPage', () => {
     });
   });
 
-  it('should "check" if clear filters is clearing models', () => {
+  it('SearchPage: should "check" if clear filters is clearing models', () => {
     fixture.componentInstance.isActive = false;
     fixture.componentInstance.wdStateModel = "AK";
     fixture.componentInstance.wdCountyModel = "17606";
@@ -156,7 +156,7 @@ describe('SearchPage', () => {
     });
   });
 
-  it('should "check" if the agency picker variable is receiving a value', () => {
+  it('SearchPage: should "check" if the agency picker variable is receiving a value', () => {
     fixture.componentInstance.keyword = "test";
     fixture.componentInstance.pageNum = 0;
     fixture.componentInstance.runSearch();
@@ -167,7 +167,7 @@ describe('SearchPage', () => {
     });
   });
 
-  it('should "check" if award type filters are defined', () => {
+  it('SearchPage: should "check" if award type filters are defined', () => {
     fixture.componentInstance.index = "fpds";
     fixture.componentInstance.keyword = "";
     fixture.componentInstance.pageNum = 0;
@@ -182,7 +182,7 @@ describe('SearchPage', () => {
     });
   });
 
-  it('should check for displayed results', () => {
+  it('SearchPage: should check for displayed results', () => {
     fixture.componentInstance.runSearch();
 
     fixture.whenStable().then(() => {

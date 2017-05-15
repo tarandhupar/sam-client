@@ -48,7 +48,9 @@ export default {
     account: {
       get:    '/cws/api/system-accounts',
       create: '/cws/api/system-accounts',
-      update: '/cws/api/system-accounts/{id}'
+      update: '/cws/api/system-accounts/{id}',
+      reset:  '/cws/api/system-account-passwords/{id}',
+      deactivate: '/cws/api/system-accounts/{id}/deactivate'
     }
   }
 };

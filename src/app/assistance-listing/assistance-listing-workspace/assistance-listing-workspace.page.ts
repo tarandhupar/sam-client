@@ -109,11 +109,11 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };
-    this.router.navigate(['falworkspace/'], navigationExtras);
+    this.router.navigate(['fal/workspace/'], navigationExtras);
   }
 
   addBtnClick() {
-    this.router.navigate(['programs/add']);
+    this.router.navigate(['programsForm/add']);
   }
 }
 

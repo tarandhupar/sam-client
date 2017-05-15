@@ -12,9 +12,8 @@ import * as Cookies from 'js-cookie';
 })
 
 export class FALFormComponent implements OnInit {
-  programId: any;
   falFormViewModel: FALFormViewModel;
-  sections: string[] = ["header-information", "overview", "financial-information-obligations", "financial-information-other", "contact-information", "review"];
+  sections: string[] = ["header-information", "overview","authorization", "financial-information-obligations", "financial-information-other","criteria-information","applying-for-assistance","compliance-requirements", "contact-information"];
   currentSection: number;
 
   constructor(private service: FALFormService, private route: ActivatedRoute, private router: Router) {
@@ -22,9 +21,9 @@ export class FALFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.route.snapshot.params['id']) {
-      this.programId = this.route.snapshot.params['id'];
       this.route.data.subscribe((resolver: { fal: { data } }) => {
         this.falFormViewModel = new FALFormViewModel(resolver.fal.data);
+        this.falFormViewModel.programId = this.route.snapshot.params['id'];
       });
     } else {
       this.falFormViewModel = new FALFormViewModel(null);
@@ -81,24 +80,37 @@ export class FALFormComponent implements OnInit {
     this.currentSection = this.sections.indexOf(sectionName);
   }
 
-  onCancel() {
+  onCancelClick() {
     //  TODO: Add unsaved prompt
     this.cancel();
   }
 
   cancel() {
-    this.router.navigate(['/falworkspace']);
+      let url = this.falFormViewModel.programId ? '/programs/' + this.falFormViewModel.programId + '/view' : '/fal/workspace';
+      this.router.navigateByUrl(url);
   }
 
   navigateSection() {
-    let url = this.programId ? '/programsForm/' + this.programId + '/edit' : '/programsForm/add';
+    let url = this.falFormViewModel.programId ? '/programsForm/' + this.falFormViewModel.programId + '/edit' : '/programsForm/add';
     this.router.navigate([url], {fragment: this.sections[this.currentSection]});
   }
 
-  onSaveBack() {
-    this.service.saveFAL(this.programId, this.falFormViewModel.data)
+  onSaveExitClick() {
+    this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.data)
       .subscribe(api => {
-          this.programId = api._body;
+          this.falFormViewModel.programId = api._body;
+          this.router.navigate(['/fal/workspace']);
+        },
+        error => {
+          console.error('error saving assistance listing to api', error);
+        });
+  }
+
+  onSaveBackClick() {
+    //  TODO: Support partial update?
+    this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.data)
+      .subscribe(api => {
+          this.falFormViewModel.programId = api._body;
           this.gotoPreviousSection();
           this.navigateSection();
         },
@@ -107,22 +119,11 @@ export class FALFormComponent implements OnInit {
         });
   }
 
-  onSaveExit() {
-    this.service.saveFAL(this.programId, this.falFormViewModel.data)
-      .subscribe(api => {
-          this.programId = api._body;
-          this.cancel();
-        },
-        error => {
-          console.error('error saving assistance listing to api', error);
-        });
-  }
-
-  onSaveContinue() {
+  onSaveContinueClick() {
     //  TODO: Support partial update?
-    this.service.saveFAL(this.programId, this.falFormViewModel.data)
+    this.service.saveFAL(this.falFormViewModel.programId, this.falFormViewModel.data)
       .subscribe(api => {
-          this.programId = api._body;
+          this.falFormViewModel.programId = api._body;
           this.gotoNextSection();
           this.navigateSection();
         },

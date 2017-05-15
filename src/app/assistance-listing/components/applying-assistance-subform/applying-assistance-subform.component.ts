@@ -13,7 +13,6 @@ export class FALAssistSubFormComponent {
 
   @Input() hideAddButton: boolean;
   @Output() public assistActionHandler = new EventEmitter();
- // @ViewChild('startDate') startDate: SamDateComponent;
 
   falAssistSubForm: FormGroup;
   assistIndex: number = 0;

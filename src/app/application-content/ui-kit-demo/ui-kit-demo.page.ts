@@ -8,6 +8,7 @@ import { AutocompleteDropdownButton } from 'sam-ui-kit/types';
 
 import { LocationService } from 'api-kit/location/location.service';
 
+import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: 'ui-kit-demo.template.html',
@@ -16,6 +17,38 @@ import { LocationService } from 'api-kit/location/location.service';
   ]
 })
 export class UIKitDemoPage {
+  /**
+   * Autocomplete Category demo
+   */
+  autocompleteCategoryOptions = [
+    {key:'uncategorized1', value: 'Uncategorized Data'},
+    {key: 'uncategorized2', value: 'More Uncategorized Data'},
+    {key: 'Carlos', value: 'Carlos', category: 'people'},
+    {key: 'Christy', value: 'Christy', category: 'people'},
+    {key: 'Colin', value: 'Colin', category: 'people'},
+    {key: 'Diego', value: 'Diego', category: 'people'},
+    {key: 'Maryland', value: 'Maryland', category: 'states'},
+    {key: 'Virginia', value: 'Virginia', category: 'states'},
+    {key: 'Washington DC', value: 'Washington DC', category: 'states'}
+  ];
+
+  autocompleteConfig = {
+    categoryProperty: 'category',
+    // isCategorySelectable: true,
+    keyValueConfig: {
+      keyProperty: 'key',
+      valueProperty: 'value'
+    }
+  };
+
+  categories = [
+    {key: 'people', value: 'People'},
+    {key: 'states', value: 'States'}
+  ];
+
+  /**
+   * Packages demo
+   */
   packages = [{
     "packageId": "5510527885db16f1d7ae72ecfa8e6567",
     "name": "Industry Day IV Change of Location",

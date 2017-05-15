@@ -1,11 +1,11 @@
-import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {Router} from '@angular/router';
-import {ProgramService} from 'api-kit';
-import {FALOpSharedService} from '../../assistance-listing-operations.service';
-import {AutocompleteConfig} from "sam-ui-kit/types";
-import {DictionaryService} from "../../../../../api-kit/dictionary/dictionary.service";
-import {FilterMultiArrayObjectPipe} from "../../../../app-pipes/filter-multi-array-object.pipe";
+import { Component, OnInit, OnDestroy } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { Router } from "@angular/router";
+import { ProgramService } from "api-kit";
+import { FALOpSharedService } from "../../assistance-listing-operations.service";
+import { AutocompleteConfig } from "sam-ui-kit/types";
+import { DictionaryService } from "../../../../../api-kit/dictionary/dictionary.service";
+import { FiscalYearTableConfig } from "../../../components/fiscal-year-table/fiscal-year-table.component";
 
 @Component({
   providers: [ProgramService, DictionaryService],
@@ -13,22 +13,15 @@ import {FilterMultiArrayObjectPipe} from "../../../../app-pipes/filter-multi-arr
 })
 export class FALOverviewComponent implements OnInit, OnDestroy {
 
-  public fundedProjectsConfig: any = {
+  public fundedProjectsConfig: FiscalYearTableConfig = {
     name: 'funded-projects',
     label: 'Examples of Funded Projects',
     hint: 'Provide examples that demonstrate how funding might be used. Describe the subject area without using program names or locations.',
     required: false,
     itemName: 'Examples',
 
-    checkbox: {
-      options: [
-        {value: 'na', label: 'Not Applicable', name: 'funded-projects-checkbox-na'}
-      ]
-    },
-
-    textarea: {
-      hint: 'Please describe funded projects:',
-      showWhenCheckbox: 'unchecked'
+    entry: {
+      hint: 'Please describe funded projects:'
     }
   };
 
@@ -230,18 +223,13 @@ export class FALOverviewComponent implements OnInit, OnDestroy {
     let projects: any = {};
     let projectsForm = this.falOverviewForm.value.fundedProjects;
 
-    if(projectsForm && projectsForm.checkbox) {
-      projects.isApplicable = projectsForm.checkbox.indexOf('na') === -1;
-    } else {
-      projects.isApplicable = true;
-    }
-
     projects.list = [];
     if(projectsForm) {
+      projects.isApplicable = projectsForm.isApplicable;
       for (let entry of projectsForm.entries) {
         projects.list.push({
           fiscalYear: entry.year ? Number(entry.year) : null,
-          description: entry.text
+          description: entry.description
         });
       }
     }
@@ -251,21 +239,16 @@ export class FALOverviewComponent implements OnInit, OnDestroy {
 
 
   private loadProjects(projects: any) {
-    let projectsForm = {
-      checkbox: [],
-      entries: []
-    };
+    let projectsForm:any = {};
 
     if (projects) {
-      if (!projects.isApplicable) {
-        projectsForm.checkbox.push('na');
-      }
+      projectsForm.isApplicable = projects.isApplicable;
 
       if(projects.list) {
         for (let project of projects.list) {
           projectsForm.entries.push({
-            year: project.fiscalYear ? project.fiscalYear.toString() : '',
-            text: project.description
+            year: project.fiscalYear,
+            description: project.description
           });
         }
       }

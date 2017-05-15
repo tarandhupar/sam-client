@@ -257,6 +257,8 @@ export class FALFormulaMatchingComponent implements ControlValueAccessor {
       clone.splice(i, 0, value);
       this.model.checkbox = clone;
     }
+
+    this.onChange();
   }
 
   isChecked(value) {

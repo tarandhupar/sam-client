@@ -111,6 +111,53 @@ export const system = {
       } else {
         $error(exceptionHandler({}));
       }
+    },
+
+    reset(id, password, $success, $error) {
+      let endpoint = utilities.getUrl(config.system.account.reset, { id: id }),
+          auth = getAuthHeaders(),
+          data = {
+            userPassword: password
+          };
+
+      $success = $success || (() => {});
+      $error = $error || (() => {});
+
+      request
+        .put(endpoint)
+        .set(auth)
+        .send(data)
+        .end(function(error, response) {
+          const message = response ? exceptionHandler(response.body) : error.rawResponse;
+          if(error) {
+            $error(message);
+          } else {
+            $success(message);
+          }
+        });
+    },
+
+    deactivate(id, $success, $error) {
+      let endpoint = utilities.getUrl(config.system.account.deactivate, { id: id }),
+          headers = getAuthHeaders();
+
+      $success = $success || (() => {});
+      $error = $error || (() => {});
+
+      if(id) {
+        request
+          .delete(endpoint)
+          .set(headers)
+          .end(function(error, response) {
+            if(error) {
+              $error(exceptionHandler(response.body));
+            } else {
+              $success(response);
+            }
+          });
+      } else if(isDebug()) {
+        $error({ message: `Please pass the id of the system account you are deactivating!`});
+      }
     }
   }
 };

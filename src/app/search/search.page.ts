@@ -322,15 +322,14 @@ export class SearchPage implements OnInit{
         this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
         this.dunsListString = data['duns'] && data['duns'] !== null ? data['duns'] : '';
 
+        // persist duns filter data
+        this.grabPersistData(this.dunsListString);
+
         this.runSearch();
         this.loadParams();
       });
-
-    // grabs data to persist duns filters
-    if(this.dunsListString !== ''){
-      this.grabPersistData(this.dunsListString);
-    }
   }
+
 
   loadParams(){
     var qsobj = this.setupQS(false);
@@ -1080,21 +1079,43 @@ export class SearchPage implements OnInit{
     return finalString
   }
 
-  grabPersistData(dunsString: string){
+  grabPersistData(dunsString: string) {
+    let builtString = '';
 
-    //TODO: update this function to hit new endpoint developed in ip sprint for persisting
+    // check if persist data needs to make an api call or not
+    if(this.dunsModelList.length > 0){
 
-    // if duns string from url is not empty make api call to get results for duns numbers
-    this.dunsEntityAutoCompleteWrapper.getEntityDuns(dunsString)
-      .subscribe(
-        data => {
+      // build comma separated list of strings from dunsModelList
+      builtString = this.dunsModelList.reduce((acc, curr) => {
+        return acc === '' ? curr.value : acc + ',' + curr.value;
+      }, '');
 
-          this.dunsModelList = data;
-        },
-        error => {
-          console.error("Error!!", error);
-        }
-      );
+      // compare built list against list from url if they aren't the same, make an api call
+      if(this.dunsListString !== builtString){
+        // api call to grab entities for filter list
+        this.searchDictionariesService.dunsPersistGrabber(dunsString)
+          .subscribe(
+            data => {
+              this.dunsModelList = data;
+            },
+            error => {
+              console.error("Error!!", error);
+            }
+          );
+      }
+
+    }
+    else {
+      this.searchDictionariesService.dunsPersistGrabber(dunsString)
+        .subscribe(
+          data => {
+            this.dunsModelList = data;
+          },
+          error => {
+            console.error("Error!!", error);
+          }
+        );
+    }
   }
 
 

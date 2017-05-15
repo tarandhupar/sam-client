@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
+import {AutocompleteConfig} from "sam-ui-kit/types";
 
 @Component({
   providers: [FALFormService],
@@ -15,24 +16,29 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
   @Input() viewModel: FALFormViewModel;
   falHeaderInfoForm: FormGroup;
-  options: { value: string, label: string, name: string }[];
+
+  public organizationId: string;
+
+  // Related Program multi-select
+  rpNGModel: any;
+  rpListDisplay = [];
+  relProAutocompleteConfig: AutocompleteConfig = {
+    keyValueConfig: {keyProperty: 'code', valueProperty: 'name'},
+    placeholder: 'None Selected',
+    serviceOptions: {index:'RP'},
+    clearOnSelection: true, showOnEmptyInput: false  };
 
   constructor(private fb: FormBuilder, private service: FALFormService) {
   }
 
   ngOnInit() {
-    this.options = [];
-
-    this.service.getProgramList().subscribe(data => this.parseProgramList(data),
-      error => {
-        console.error('error retrieving program list', error);
-      });
 
     this.falHeaderInfoForm = this.fb.group({
       'title': '',
-      'alternativeNames': '',
-      'programNumber': '',
-      'relatedPrograms': []
+      'alternativeNames': [''],
+      'programNumber': null,
+      'relatedPrograms': '',
+      'rpListDisplay': ['']
     });
 
     this.falHeaderInfoForm.valueChanges.subscribe(data => this.updateViewModel(data));
@@ -43,43 +49,45 @@ export class FALFormHeaderInfoComponent implements OnInit {
   }
 
   updateViewModel(data) {
-    this.viewModel.title = data['title'];
-    this.viewModel.alternativeNames = data['alternativeNames'];
-    this.viewModel.programNumber = this.falNoPrefix + data['programNumber'];
-    this.viewModel.relatedPrograms = data['relatedPrograms'];
+    let alternativeNames = [];
+    alternativeNames.push(data.alternativeNames);
+
+    if(data['programNumber'] === 'undefined')
+      data['programNumber'] = null;
+
+    this.viewModel.title = data['title'] || null;
+    this.viewModel.alternativeNames = (alternativeNames.length > 0 ? alternativeNames : null);
+    this.viewModel.programNumber = (this.falNoPrefix + data['programNumber']) || null;
+    this.viewModel.relatedPrograms =  this.updateViewModelRelatedPrograms(data['rpListDisplay']);
+
   }
 
-  parseProgramList(data) {
-    let optionData = [];
-    if (data._embedded && data._embedded.program) {
-      for (let item of data._embedded.program) {
-        optionData.push( {
-          'label': item.data.programNumber + " " + item.data.title,
-          'value': item.id,
-          'name': 'relatedProgramsList'
-        });
-      }
-      this.options = optionData;
-
-      //  TODO Replace list component with auto complete which pings API for list of programs
-      if (this.viewModel.relatedPrograms) {
-        let selections = [];
-        let relatedPrograms = this.viewModel.relatedPrograms;
-        for (let relatedProgram of relatedPrograms) {
-          selections.push(relatedProgram);
-        }
-        this.falHeaderInfoForm.patchValue({
-          relatedPrograms: selections
-        }, {
-          emitEvent: false
-        });
+  updateViewModelRelatedPrograms(rpListDisplay){
+    let relatedPrograms = [];
+    if(rpListDisplay.length > 0) {
+      for(let rp of rpListDisplay) {
+        relatedPrograms.push(rp.code);
       }
     }
+    else
+      return null;
+
+    return relatedPrograms;
+  }
+
+  private populateRelatedProgramMultiList(relatedPrograms: any) {
+    for (let dataItem of relatedPrograms) {
+      this.rpListDisplay.push({code: dataItem.id, name: dataItem.value});
+    }
+    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(relatedPrograms);
   }
 
   updateForm() {
+
     let title = this.viewModel.title;
-    let popularName = (this.viewModel.alternativeNames ? this.viewModel.alternativeNames[0] : '');
+
+    let popularName = (this.viewModel.alternativeNames.length > 0 ? this.viewModel.alternativeNames[0] : '');
+
     let falNo = (this.viewModel.programNumber ? this.viewModel.programNumber : '');
 
     if (falNo.trim().length == 6) {
@@ -87,13 +95,62 @@ export class FALFormHeaderInfoComponent implements OnInit {
       this.falNoPrefix = falNo.slice(0, 3);
       falNo = falNo.slice(3, 6);
     }
+    else {
+      this.falNoPrefix = '';
+    }
+
+    //set organization
+    this.organizationId = this.viewModel.organizationId;
+
+    //set related programs listing
+    if(this.viewModel.relatedPrograms.length > 0) {
+      this.service.getRelatedProgramList(this.viewModel.relatedPrograms)
+        .subscribe(data => this.populateRelatedProgramMultiList(data),
+          error => {
+            console.error('error retrieving program list', error);
+          });
+    }
 
     this.falHeaderInfoForm.patchValue({
       title: title,
       alternativeNames: popularName,
-      programNumber: falNo
+      programNumber: falNo,
+      rpListDisplay: this.rpListDisplay
     }, {
       emitEvent: false
     });
+  }
+
+  public onOrganizationChange(org: any) {
+
+    let orgVal;
+    if(org){
+      orgVal = org.value;
+    }
+    else
+      orgVal = null;
+
+    this.organizationId = orgVal;
+    this.viewModel.organizationId = orgVal;
+  }
+
+  relatedProgramTypeChange(event) {
+    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(event);
+  }
+
+  relatedProglistChange() {
+    this.relProAutocompleteConfig.placeholder = this.placeholderMsg(this.falHeaderInfoForm.value.rpListDisplay);
+  }
+
+  placeholderMsg(multiArray: any) {
+    let PlaceholderMsg = '';
+    if (multiArray.length === 1) {
+      PlaceholderMsg = 'One Type Selected';
+    } else if (multiArray.length > 1) {
+      PlaceholderMsg = 'Multiple Types Selected';
+    } else {
+      PlaceholderMsg = 'None Selected';
+    }
+    return PlaceholderMsg;
   }
 }

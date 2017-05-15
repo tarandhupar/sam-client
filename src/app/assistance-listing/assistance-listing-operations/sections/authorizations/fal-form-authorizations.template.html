@@ -1,0 +1,18 @@
+<div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Authorizations - {{ viewModel.title }}</div>
+
+<form [formGroup]="falAuthForm">
+
+  <authInfoTable
+    [hideAddButton]="hideAddButton"
+    [displayAuthInfo]="displayAuthInfo"
+    (authTableActionHandler)="authActionHandler($event)"></authInfoTable>
+
+  <authSubform [hideAddButton]="hideAddButton" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
+
+  <samTextArea
+    [control]="falAuthForm.controls['description']"
+    [name]="'description-input'"
+    [label]="'Description'"
+    formControlName="description"></samTextArea>
+
+</form>

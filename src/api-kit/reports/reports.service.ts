@@ -7,45 +7,13 @@ export class ReportsService {
 
   constructor(private oAPIService: WrapperService) {}
 
-  getReportsById(id: string) {
+  getPreferenceByType(type: string, cookie: string) {
     let apiParam = {
-      name: 'reports',
-      suffix: '/opportunities/' + id,
+      name: 'preferences',
+      suffix: '/' + type,
       oParam: {},
-      method: 'GET'
-    };
-
-    return this.oAPIService.call(apiParam);
-  }
-
-  getReportsHistoryById(id: string) {
-    let apiParam = {
-      name: 'reports',
-      suffix: '/opportunities/' + id + '/history',
-      oParam: {},
-      method: 'GET'
-    };
-
-    return this.oAPIService.call(apiParam);
-  }
-
-  getReportsLocationById(id: string) {
-    let apiParam = {
-      name: 'reports',
-      suffix: '/opportunities/' + id + '/location',
-      oParam: {},
-      method: 'GET'
-    };
-
-    return this.oAPIService.call(apiParam);
-  }
-
-  getReportsDictionary(ids: string) {
-    let apiParam = {
-      name: 'reports',
-      suffix: '/dictionaries',
-      oParam: {
-        ids: ids
+      headers: {
+        'iPlanetDirectoryPro': cookie
       },
       method: 'GET'
     };
@@ -53,40 +21,33 @@ export class ReportsService {
     return this.oAPIService.call(apiParam);
   }
 
-  getAttachmentById(id: string) {
-    let apiParam = {
-      name: 'reports',
-      suffix: '/opportunities/' + id + '/attachments',
+  savePreference(type: String = null, data: any, cookie: string) {
+    let oApiParam = {
+      name: 'preferences',
+      suffix: (type === null) ? '/new' : '/' + type + '/edit',
       oParam: {},
-      method: 'GET'
-    };
-
-    return this.oAPIService.call(apiParam);
-  }
-
-  getPackagesCount(id: string) {
-    let apiParam = {
-      name: 'reports',
-      suffix: '/opportunities/' + id + '/packages/count',
-      oParam: {},
-      method: 'GET'
-    };
-
-    return this.oAPIService.call(apiParam);
-  }
-
-
-  getRelatedOpportunitiesByIdAndType(id: string, type: string, page: number, sort: string) {
-    let apiParam = {
-      name: 'reports',
-      suffix: '/opportunities/' + id + '/relatedopportunities',
-      oParam: {
-        'type': type,
-        'page': page,
-        'sort': sort,
+      headers: {
+        'iPlanetDirectoryPro': cookie
       },
-      method: 'GET'
+      body: data,
+      method: (type === null) ? 'POST' : 'PUT'
     };
-    return this.oAPIService.call(apiParam);
+
+    return this.oAPIService.call(oApiParam, false);
+  }
+
+  deletePreference(type: String, cookie: string) {
+    let oApiParam = {
+      name: 'preferences',
+      suffix: '/' + type + '/delete',
+      oParam: {},
+      headers: {
+        'iPlanetDirectoryPro': cookie
+      },
+      body: {},
+      method: 'DELETE'
+    };
+
+    return this.oAPIService.call(oApiParam, false);
   }
 }

@@ -11,7 +11,7 @@ var fixture;
 var comp;
 var titleEl;
 var regionEl;
-describe('RegionalOfficeListingResultComponent', () => {
+describe('src/app/assistance-listing/regional-office-listing-search-result/regional-office-listing-result.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule,SamUIKitModule],
@@ -41,11 +41,11 @@ describe('RegionalOfficeListingResultComponent', () => {
 
   }));
 
-  it('should display a title', () => {
+  it('RegionalOfficeListingResultComponent: should display a title', () => {
     expect(titleEl.nativeElement.textContent).toContain("Education, Department Of");
   });
 
-  it('should display a region', () => {
+  it('RegionalOfficeListingResultComponent: should display a region', () => {
     expect(regionEl.nativeElement.textContent).toContain("Georgia");
   });
 

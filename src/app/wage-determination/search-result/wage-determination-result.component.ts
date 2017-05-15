@@ -20,17 +20,17 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
           
           <ng-container *ngIf="data.location?.additionalInfo?.content==null && data.location?.states!=null">
             <ul *ngFor="let state of data.location?.states; let i=index" class="sam-ui small list">
-              <li [attr.id]="'wd-state-' + i">
+              <li class="wd-state-0">
                 <strong>State </strong><br>
                 <span>{{ state?.name }}</span>
               </li>
-              <li [attr.id]="'wd-counties-' + i" *ngIf="state.isStateWide==false">
+              <li class="wd-counties-0" *ngIf="state.isStateWide==false">
                 <strong>County/ies </strong><br>
                 <ng-container *ngFor="let county of state.counties?.include; let isLast=last">
                   {{county?.value}}{{ isLast ? '' : ', '}}
                 </ng-container>
               </li>
-              <li [attr.id]="'wd-counties-' + i" *ngIf="state.isStateWide==true">
+              <li class="wd-counties-0" *ngIf="state.isStateWide==true">
                 <strong>County/ies </strong><br>
                 Statewide {{state.counties?.exclude?.length>0 ? 'Except' : ''}}
                 <ng-container *ngFor="let county of state.counties?.exclude; let isLast=last">
@@ -41,7 +41,7 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
           </ng-container>
           
           <ul *ngIf="data.location?.additionalInfo?.content!=null" class="sam-ui small list">
-            <li [attr.id]="'wd-description-' + i">
+            <li class="wd-description">
               <strong>Location Description </strong><br>
               <span>{{ data.location?.additionalInfo?.content }}</span>
             </li>

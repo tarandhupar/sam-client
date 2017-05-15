@@ -56,6 +56,12 @@ class IAM {
       $success(this.states.user);
     }, (error) => {
       this.states.auth = false;
+
+      // Remove any remaining cookies (This is a fallback in situations where cookie is still cached)
+      Cookies.remove('iPlanetDirectoryPro', config.cookies);
+      Cookies.remove('IAMSession', config.cookies);
+      Cookies.remove('IAMSystemAccount', config.cookies);
+
       $error(error);
     });
   }

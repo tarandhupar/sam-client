@@ -5,6 +5,7 @@ import { OrgAddrFormComponent } from '../../app-components/address-form/address-
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 import { IAMService } from "api-kit/iam/iam.service";
+import { Observable } from "rxjs";
 
 function validDateTime(c: FormControl) {
   let invalidError = {message: 'Date is invalid'};
@@ -203,22 +204,31 @@ export class AACRequestPage {
   onReviewAACRequestClick(){
     this.formatOfficeInfoError();
     this.formatReasonInfoError();
-    if(this.isAddressFormValid() && this.isOfficeInfoValid() && this.isReasonInfoValid()){
-      this.aacOfficeInfo = this.generateRequestOfficeInfo();
-      this.orgAddresses = [this.mailAddr];
-      if(this.isAddrTypeRequired("Billing Address")){
-        if(this.hideBillingForm)this.billAddr = Object.assign({},this.mailAddr);
-        this.billAddr.addrType = "Billing Address";
-        this.orgAddresses.push(this.billAddr);
+
+    let validateRes = [];
+    this.addrForms.forEach( e => {validateRes.push(e.validateForm())});
+    Observable.forkJoin(validateRes).subscribe( results => {
+      let isAddrValid = true;
+      results.forEach(e => {if(e['description'] !== "VALID") isAddrValid = false;});
+      if(isAddrValid && this.isOfficeInfoValid() && this.isReasonInfoValid()){
+        this.aacOfficeInfo = this.generateRequestOfficeInfo();
+        this.orgAddresses = [this.mailAddr];
+        if(this.isAddrTypeRequired("Billing Address")){
+          if(this.hideBillingForm)this.billAddr = Object.assign({},this.mailAddr);
+          this.billAddr.addrType = "Billing Address";
+          this.orgAddresses.push(this.billAddr);
+        }
+        if(this.isAddrTypeRequired("Shipping Address")){
+          if(this.hideShippingForm)this.shipAddr = Object.assign({},this.mailAddr);
+          this.shipAddr.addrType = "Shipping Address";
+          this.orgAddresses.push(this.shipAddr);
+        }
+        this.requestIsEdit = false;
+        this.requestIsReview = true;
       }
-      if(this.isAddrTypeRequired("Shipping Address")){
-        if(this.hideShippingForm)this.shipAddr = Object.assign({},this.mailAddr);
-        this.shipAddr.addrType = "Shipping Address";
-        this.orgAddresses.push(this.shipAddr);
-      }
-      this.requestIsEdit = false;
-      this.requestIsReview = true;
-    }
+    });
+
+
   }
 
   onEditFormClick(){

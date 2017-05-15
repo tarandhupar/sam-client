@@ -174,7 +174,7 @@ let MockFHService = {
 };
 
 
-describe('OrganizationPage', () => {
+describe('src/app/organization/organization.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ OrganizationPage ], // declare the test component
@@ -215,7 +215,7 @@ describe('OrganizationPage', () => {
     fixture.detectChanges();
   });
 
-  it('Should init & load data', () => {
+  it('OrganizationPage: Should init & load data', () => {
     expect(comp.organization).toBeDefined();
     expect(comp.organizationPerPage).toBeDefined();
     expect(comp.subscription).toBeDefined();

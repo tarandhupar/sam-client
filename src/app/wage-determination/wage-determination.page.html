@@ -20,7 +20,7 @@
       <div class="sam-ui hidden divider"></div>
 
       <!-- Alert -->
-      <ng-container *ngIf="showRevisonMessage == true">
+      <ng-container *ngIf="revisionMessage == true">
         <samAlert [type]="'info'" [title]="''">
           Note: There have been revisions to this wage determination. To view the
           most recent version click <a [routerLink]="['/wage-determination', referenceNumber, processedHistory[0].index]">here</a>.

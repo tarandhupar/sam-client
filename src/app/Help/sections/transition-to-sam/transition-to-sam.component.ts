@@ -61,8 +61,8 @@ export class TransitionToSamComponent {
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Federal users who are logged in can view, create, and update assistance 
-          listings and contract opportunities. 
+          Federal users who are logged in will be able to view, create, and update 
+          assistance listings and contract opportunities.
         </div> 
         <div class="item">
           Federal users will be able to access additional capabilities for managing 
@@ -78,7 +78,7 @@ export class TransitionToSamComponent {
       <h3>What can I do now?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Create a user account with single sign-on for all of beta.SAM.gov
+          Create a user account with single sign-on for all of beta.SAM.gov.
         </div>
       </div>
     `,
@@ -202,7 +202,7 @@ export class TransitionToSamComponent {
         imgWidth: '70px'
       },
       {
-        title:"System Interfaces",
+        title:"APIs",
         contentType:"grid",
         content: [[this.systeminterfaces.column1], [this.systeminterfaces.column2]],
         img: "src/assets/img/sam-icons/api-b3.png",
@@ -296,7 +296,32 @@ export class TransitionToSamComponent {
       <h3>What can I do now?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Search and view detailed records for entity registrations and exclusions.
+          Search and view detailed records of entity registrations.
+        </div>
+      </div>
+    `,
+    column2: `
+      <h3>What's next?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Role management
+        </div>
+        <div class="item">
+          Reference data services
+        </div>
+        <div class="item">
+          Infrastructure migration
+        </div>
+      </div>
+    `
+  }
+  
+  sam2 = {
+    column1: `
+      <h3>What can I do now?</h3>
+      <div class="sam-ui bulleted list">
+        <div class="item">
+          Search and view detailed records of entity exclusions.
         </div>
       </div>
     `,
@@ -337,7 +362,7 @@ export class TransitionToSamComponent {
 
   legacyData:any = [
       {
-        title:"CFDA",
+        title:"Assistance Listings",
         contentType:"grid",
         content: [[this.cfda.column1], [this.cfda.column2]],
         img: "src/assets/img/logos/cfda.png",
@@ -345,7 +370,7 @@ export class TransitionToSamComponent {
         imgWidth: "70%"
       },
       {
-        title:"FBO",
+        title:"Contract Opportunities",
         contentType:"grid",
         content: [[this.fbo.column1], [this.fbo.column2]],
         img: "src/assets/img/logos/fbo.png",
@@ -353,7 +378,7 @@ export class TransitionToSamComponent {
         imgWidth: "70%"
       },
       {
-        title:"FPDS",
+        title:"Contract Awards",
         contentType:"grid",
         content: [[this.fpds.column1], [this.fpds.column2]],
         img: "src/assets/img/logos/fpds.png",
@@ -361,7 +386,7 @@ export class TransitionToSamComponent {
         imgWidth: "70%"
       },
       {
-        title:"SAM",
+        title:"Entity Registrations",
         contentType:"grid",
         content: [[this.sam.column1], [this.sam.column2]],
         img: "src/assets/img/logos/sam.png",
@@ -369,7 +394,15 @@ export class TransitionToSamComponent {
         imgWidth: "70%"
       },
       {
-        title:"WDOL",
+        title:"Entity Exclusions",
+        contentType:"grid",
+        content: [[this.sam2.column1], [this.sam2.column2]],
+        img: "src/assets/img/logos/sam.png",
+        imgActive: "src/assets/img/logos/sam-c9.png",
+        imgWidth: "70%"
+      },
+      {
+        title:"Wage Determinations",
         contentType:"grid",
         content: [[this.wdol.column1], [this.wdol.column2]],
         img: "src/assets/img/logos/wdol.png",

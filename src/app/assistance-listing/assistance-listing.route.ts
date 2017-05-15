@@ -26,7 +26,7 @@ if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
 
 if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
   routes.unshift(
-    {path: 'falworkspace', component: FalWorkspacePage},
+    {path: 'fal/workspace', component: FalWorkspacePage},
     {
       path: 'programs/add', component: ProgramPageOperations,
       children: [

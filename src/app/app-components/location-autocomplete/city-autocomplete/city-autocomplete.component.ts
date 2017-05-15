@@ -35,7 +35,6 @@ export class CityServiceImpl implements AutocompleteService {
   setFetchMethod(_?: any): any {}
 
   fetch(val: string, pageEnd: boolean, searchOptions?: any): Observable<any> {
-    console.log(searchOptions);
     return this.getCitiesByStateId(val, searchOptions.state.key, searchOptions.country.key);
   }
 }

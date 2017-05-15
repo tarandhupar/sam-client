@@ -349,7 +349,7 @@ let MockFHService = {
   }
 };
 
-describe('OpportunityPage', () => {
+describe('src/app/opportunity/opportunity.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe], // declare the test component
@@ -397,7 +397,7 @@ describe('OpportunityPage', () => {
     }, null]);
   };
 
-  it('Should init & load data', () => {
+  it('OpportunityPage: Should init & load data', () => {
     expect(comp.opportunity).toBeDefined();
     expect(comp.opportunityLocation).toBeDefined();
     expect(comp.organization).toBeDefined();
@@ -421,13 +421,13 @@ describe('OpportunityPage', () => {
     expect(comp.showChangesAwardDetails).toBeDefined();
   });
 
-  it('Should generate ids', () => {
+  it('OpportunityPage: Should generate ids', () => {
     let generateIDSpy = spyOn(comp, 'generateID').and.callThrough();
     expect(generateIDSpy('testID')).toBe('opportunity-testID'); // generate an id
     expect(generateIDSpy('testID', 'test-prefix')).toBe('opportunity-test-prefix-testID'); // generate an id with a prefix
   });
 
-  it('Should set display flag for fields for base types', () => {
+  it('OpportunityPage: Should set display flag for fields for base types', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
     // These base types should all display the same fields
@@ -449,7 +449,7 @@ describe('OpportunityPage', () => {
     }
   });
 
-  it('Should set display flag for fields for J&A type', () => {
+  it('OpportunityPage: Should set display flag for fields for J&A type', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
     // Check J&A
@@ -470,7 +470,7 @@ describe('OpportunityPage', () => {
     }
   });
 
-  it('Should set display flag for fields for intent to bundle type', () => {
+  it('OpportunityPage: Should set display flag for fields for intent to bundle type', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
     // Check intent to bundle
@@ -493,7 +493,7 @@ describe('OpportunityPage', () => {
     }
   });
 
-  it('Should set display flag for fields for Fair Opportunity / Limited Sources Justification type', () => {
+  it('OpportunityPage: Should set display flag for fields for Fair Opportunity / Limited Sources Justification type', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
     // Check fair opportunity / limited sources
@@ -512,7 +512,7 @@ describe('OpportunityPage', () => {
     }
   });
 
-  it('Should print error if invalid type', () => {
+  it('OpportunityPage: Should print error if invalid type', () => {
     let setDisplaySpy = spyOn(comp, 'setDisplayFields').and.callThrough().bind(comp);
 
     spyOn(console, 'log');
@@ -524,7 +524,7 @@ describe('OpportunityPage', () => {
     expect(console.log).toHaveBeenCalledWith('Error: Unknown opportunity type non-existant type');
   });
 
-  it('Should check display flag for fields', () => {
+  it('OpportunityPage: Should check display flag for fields', () => {
     let shouldDisplaySpy = spyOn(comp, 'shouldBeDisplayed').and.callThrough().bind(comp);
 
     comp.displayField = { 'award': false, 'title': true };
@@ -532,7 +532,7 @@ describe('OpportunityPage', () => {
     expect(shouldDisplaySpy('title')).toBe(true); // display if flag is set to true
   });
 
-  it('Should display fields by default', () => {
+  it('OpportunityPage: Should display fields by default', () => {
     let shouldDisplaySpy = spyOn(comp, 'shouldBeDisplayed').and.callThrough().bind(comp);
 
     // Any field that is not explicitly and exactly set to false should be displayed

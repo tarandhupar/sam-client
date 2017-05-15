@@ -4,7 +4,7 @@ import { MockBackend, MockConnection } from '@angular/http/testing';
 import { WrapperService } from '../wrapper/wrapper.service'
 import { OpportunityService } from './opportunity.service';
 
-describe('Opportunity Service', () => {
+describe('src/api-kit/opportunity/opportunity.service.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -23,7 +23,7 @@ describe('Opportunity Service', () => {
     });
   });
 
-  it('should return response when subscribed to getOpportunityById', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
+  it('Opportunity Service: should return response when subscribed to getOpportunityById', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
     let mockData = {
       "opportunityId": "213ji321hu3jk123",
       "data": {
@@ -139,7 +139,7 @@ describe('Opportunity Service', () => {
     });
   }));
 
-  it('should return response when subscribed to getPackagesCount', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
+  it('Opportunity Service: should return response when subscribed to getPackagesCount', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: '6' }))));
 
     testService.getPackagesCount("fee2e0e30ce63b7bc136aeff32096c1d").subscribe((res: Response) => {
@@ -148,7 +148,7 @@ describe('Opportunity Service', () => {
     });
   }));
 
-  it('should return response when subscribed to getPackages', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
+  it('Opportunity Service: should return response when subscribed to getPackages', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
 
     let mockData = {
       "packages": [

@@ -1,18 +1,19 @@
 import {Injectable} from '@angular/core';
 import {ProgramService} from "../../../api-kit/program/program.service";
 import * as Cookies from 'js-cookie';
+import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service";
 
 @Injectable()
 
 export class FALFormService {
-  constructor(private programService: ProgramService) {
+
+  constructor(private programService: ProgramService, private dictionaryService: DictionaryService) {
 
   }
 
   //  TODO: Moved to generic authentication service
   static getAuthenticationCookie() {
     return Cookies.get('iPlanetDirectoryPro');
-    // return 'GSA_CFDA_R_cfdasuperuser';
   }
 
   getFAL(programId: string) {
@@ -27,13 +28,32 @@ export class FALFormService {
     return this.programService.saveProgram(programId, data, FALFormService.getAuthenticationCookie());
   }
 
-  getProgramList() {
-    return this.programService.runProgram({
-      status: 'published',
-      includeCount : 'false',
-      Cookie: FALFormService.getAuthenticationCookie(),
-      size:'100',
-      sortBy: 'programNumber'
-    });
+  getRelatedProgramList(programs) {
+    return this.programService.falautosearch('', programs.join(','));
+  }
+
+  getFunctionalCodesDict(){
+    return this.dictionaryService.getDictionaryById('functional_codes');
+  }
+
+  getSubjectTermsDict(multiTypeData){
+    return this.dictionaryService.getDictionaryById('program_subject_terms', '100', multiTypeData.join(','));
+  }
+
+  getAssistanceDict(){
+    let dictionaries = ['deadline_flag', 'date_range'];
+    return this.dictionaryService.getDictionaryById(dictionaries.join(','));
+  }
+
+  getCriteria_Info_Dictionaries(){
+    let dictionaries = ['applicant_types', 'beneficiary_types', 'phasing_assistance', 'assistance_usage_types'];
+    return this.dictionaryService.getDictionaryById(dictionaries.join(','));
+  }
+  getObligation_Info_Dictionaries(){
+    return this.dictionaryService.getDictionaryById('assistance_type');
+  }
+  getContactDict(){
+    let dictionaries = ['states', 'countries'];
+    return this.dictionaryService.getDictionaryById(dictionaries.join(','));
   }
 }

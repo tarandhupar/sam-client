@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 
 @Component({
   selector : 'authInfoTable',
@@ -10,6 +10,19 @@ export class FALAuthInfoTableComponent{
   @Input() displayAuthInfo: any = [];
   @Input() hideAddButton: boolean;
   @Output() public authTableActionHandler = new EventEmitter();
+  @ViewChild('deleteModal') deleteModal;
+  removeIndex: number;
+  remParentIndex: number;
+  modalConfig = {title:'Remove Authorization', description: ''};
+
+  public onDeleteModalSubmit() {
+    this.deleteModal.closeModal();
+    this.authTableActionHandler.emit({
+      type:'remove',
+      index: this.removeIndex,
+      parentIndex: this.remParentIndex
+    });
+  }
 
   editAuth(index: number, parentIndex:number = null){
 
@@ -21,11 +34,16 @@ export class FALAuthInfoTableComponent{
   }
 
   removeAuth(index, parentIndex:number = null){
-    this.authTableActionHandler.emit({
-      type:'remove',
-      index: index,
-      parentIndex: parentIndex
-    });
+    this.deleteModal.openModal();
+    let desc = '';
+    if(parentIndex  == null)
+      desc = 'Please confirm that you want to remove "' + this.displayAuthInfo[index].label + '" authorization. Any amendments associated to this authorization will also be removed.';
+    else
+      desc = 'Please confirm that you want to remove "' + this.displayAuthInfo[parentIndex].children[index].label + '" authorization. Any amendments associated to this authorization will also be removed.';
+
+    this.modalConfig.description = desc;
+    this.removeIndex = index;
+    this.remParentIndex = parentIndex;
   }
 
   addAmend(index){
