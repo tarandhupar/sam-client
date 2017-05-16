@@ -131,7 +131,7 @@ export class AwardDataComponent {
   };
 
   awardsConfig: any = {
-    heading:'Contract Data',
+    heading:'Contract Awards',
     legacyLogo: 'src/assets/img/logos/fpds-black.png',
     legacyWebsiteContent:' Federal Procurement Data System (FPDS)',
     splashContent:`Find data on Federal contract awards`,
@@ -218,9 +218,9 @@ export class AwardDataComponent {
   };
 
   entityConfig: any = {
-    heading:'Entities',
+    heading:'Entity Registrations',
     legacyLogo: 'src/assets/img/logos/sam-black.png',
-    legacyWebsiteContent:' System for Award Management - Entity Registration',
+    legacyWebsiteContent:' System for Award Management (SAM)',
     splashContent:`Register to do business with the U.S. government, update or renew your entity registration, and check status of an entity registration.`,
     subContent:`
       <p>
@@ -411,9 +411,9 @@ export class AwardDataComponent {
   };
 
   exclusionsConfig: any = {
-    heading:'Exclusions',
+    heading:'Entity Exclusions',
     legacyLogo: 'src/assets/img/logos/sam-black.png',
-    legacyWebsiteContent:'System for Award Management (SAM.gov)',
+    legacyWebsiteContent:'System for Award Management (SAM)',
     splashContent:`Find Parties excluded from Federal contracts`,
     subContent:`
       <p>

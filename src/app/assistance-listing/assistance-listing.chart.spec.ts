@@ -61,6 +61,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     comp.financialData = mockFinancialData;
     comp.dictionaries = mockDictionaries;
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
+    comp.ngOnChanges();
   });
 
   /**
@@ -288,6 +289,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     comp.financialData = mockFinancialData;
     comp.dictionaries = mockDictionaries;
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
+    comp.ngOnChanges();
   });
 
   /**
@@ -426,6 +428,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     comp.financialData = mockFinancialData;
 
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
+    comp.ngOnChanges();
 
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
@@ -439,22 +442,21 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     expect(td.length).toBe(12);
 
 
-    let ana = 'Actual Not Available';
     let nsi = 'Not Separately Identifiable';
     let ena = 'Estimate Not Available';
 
     // Obligation 1
-    expect(td[3].innerHTML).toBe(ana);
+    expect(td[3].innerHTML).toBe(ena);
     expect(td[4].innerHTML).toBe(nsi);
     expect(td[5].innerHTML).toBe(ena);
 
     // Obligation 2
-    expect(td[6].innerHTML).toBe(ana);
+    expect(td[6].innerHTML).toBe(ena);
     expect(td[7].innerHTML).toBe(nsi);
     expect(td[8].innerHTML).toBe(ena);
 
     // Totals
-    expect(td[9].innerHTML).toBe(ana); // ana + ana = ana
+    expect(td[9].innerHTML).toBe(ena); // ana + ana = ana
     expect(td[10].innerHTML).toBe(nsi); // nsi + nsi = nsi
     expect(td[11].innerHTML).toBe(ena); // ena + ena = ena
   });
@@ -489,6 +491,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     comp.financialData = mockFinancialData;
 
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
+    comp.ngOnChanges();
 
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
@@ -503,12 +506,11 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
 
 
     let na = 'Not Available';
-    let ana = 'Actual Not Available';
     let nsi = 'Not Separately Identifiable';
     let ena = 'Estimate Not Available';
 
     // Obligation 1
-    expect(td[3].innerHTML).toBe(ana);
+    expect(td[3].innerHTML).toBe(ena);
     expect(td[4].innerHTML).toBe(nsi);
     expect(td[5].innerHTML).toBe(ena);
 

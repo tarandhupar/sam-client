@@ -14,12 +14,18 @@ export class CityServiceImpl implements AutocompleteService {
 
   getCitiesByStateId(city, stateId, countryCode): ReplaySubject<any> {
     const results = new ReplaySubject();
-    this.locationService.getAutoCompleteCities(city, stateId, countryCode).subscribe(
+    this.locationService.getAutoCompleteCities(city, stateId, countryCode)
+      .catch(res => {
+        if (res.status === 404) {
+          return Observable.of({_embedded: {cityList: []}});
+        }
+      })
+      .subscribe(
       (res) => {
         results.next(res._embedded.cityList.reduce( (prev, curr) => {
           const newObj = {
             key: curr.cityCode.toString(),
-            value: curr.city
+            value: curr.city + ", " + curr.state.stateCode
           };
           prev.push(newObj);
           return prev;
@@ -35,7 +41,8 @@ export class CityServiceImpl implements AutocompleteService {
   setFetchMethod(_?: any): any {}
 
   fetch(val: string, pageEnd: boolean, searchOptions?: any): Observable<any> {
-    return this.getCitiesByStateId(val, searchOptions.state.key, searchOptions.country.key);
+    let state = searchOptions && searchOptions.state && searchOptions.state.key;
+    return this.getCitiesByStateId(val, state, searchOptions.country.key);
   }
 }
 

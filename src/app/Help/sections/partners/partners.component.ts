@@ -15,7 +15,8 @@ export class PartnersComponent {
         title:"USASpending.gov",
         content:"The official government searchable website to give the American public access on how tax dollars are spent within their communities and all over the US.  SAM.gov provides the wide range of programs and funding opportunities financed by tax dollars.",
         link:"View USASpending.gov",
-        url:"https://www.usaspending.gov/Pages/Default.aspx"
+        url:"https://www.usaspending.gov/Pages/Default.aspx",
+        img:"src/assets/img/logos/usaspending.png"
       },
       {
         title:"Acquisition.gov",
@@ -35,10 +36,11 @@ export class PartnersComponent {
         title:"Disaster Assistance",
         content:"A user-friendly website provides assistance on how to prepare for, respond to, and recover from disasters. SAM.gov contains information on other forms of federal assistance pertaining to government services.",
         link:"View Disaster Assistance",
-        url:"https://www.disasterassistance.gov/"
+        url:"https://www.disasterassistance.gov/",
+        img:"src/assets/img/logos/disaster-assistance.png"
       },
       {
-        title:"Usa.gov",
+        title:"USA.gov",
         content:"The official government website to publicly access the U.S government information and services. SAM.gov provides the funding opportunities for U.S. government services.",
         link:"View USA.gov",
         url:"https://www.usa.gov/",

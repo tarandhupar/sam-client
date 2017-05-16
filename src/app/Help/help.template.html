@@ -68,8 +68,8 @@
             <li><a #assistanceListings [ngClass]="getSubSectionClass('assistanceListings')" (click)="changeSubSection('assistanceListings',assistanceListings)" href="{{currentUrl}}#assistanceListings">Assistance Listings</a></li>
             <li><a #opportunities [ngClass]="getSubSectionClass('opportunities')" (click)="changeSubSection('opportunities',opportunities)" href="{{currentUrl}}#opportunities">Contract Opportunities</a></li>
             <li><a #awards [ngClass]="getSubSectionClass('awards')" (click)="changeSubSection('awards',awards)" href="{{currentUrl}}#awards">Contract Awards</a></li>
-            <li><a #entities [ngClass]="getSubSectionClass('entities')" (click)="changeSubSection('entities',entities)" href="{{currentUrl}}#entities">Entities Registration</a></li>
-            <li><a #exclusions [ngClass]="getSubSectionClass('exclusions')" (click)="changeSubSection('exclusions',exclusions)" href="{{currentUrl}}#exclusions">Entities Exclusions</a></li>
+            <li><a #entities [ngClass]="getSubSectionClass('entities')" (click)="changeSubSection('entities',entities)" href="{{currentUrl}}#entities">Entity Registrations</a></li>
+            <li><a #exclusions [ngClass]="getSubSectionClass('exclusions')" (click)="changeSubSection('exclusions',exclusions)" href="{{currentUrl}}#exclusions">Entity Exclusions</a></li>
             <li><a #federalHierarchy [ngClass]="getSubSectionClass('federalHierarchy')" (click)="changeSubSection('federalHierarchy',federalHierarchy)" href="{{currentUrl}}#federalHierarchy">Federal Hierarchy</a></li>
             <li><a #wageDeterminations [ngClass]="getSubSectionClass('wageDeterminations')" (click)="changeSubSection('wageDeterminations',wageDeterminations)" href="{{currentUrl}}#wageDeterminations">Wage Determinations</a></li>
           </ul>
@@ -101,10 +101,10 @@
         </li>
         <li>
           <a [ngClass]="getSectionClass('reference')" (click)="changeSection('reference')" [routerLink]="['/help/reference']">External Resources</a>
-          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('reference')">
+          <!-- <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('reference')">
             <li><a #featuredReference [ngClass]="getSubSectionClass('featuredReference')" (click)="changeSubSection('featuredReference',featuredReference)" href="{{currentUrl}}#featuredReference">Featured References</a></li>
             <li><a #additionalReference [ngClass]="getSubSectionClass('additionalReference')" (click)="changeSubSection('additionalReference',additionalReference)" href="{{currentUrl}}#additionalReference">Additional References</a></li>
-          </ul>
+          </ul> -->
         </li>
         
         <li>

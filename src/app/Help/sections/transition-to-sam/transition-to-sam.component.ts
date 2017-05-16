@@ -27,14 +27,14 @@ export class TransitionToSamComponent {
           Use customized search filters for specific data sets.
         </div>
         <div class="item">
-          Save, download, and print search results and detailed record pages.
+          Download and print search results and detailed record pages.
         </div>
         <div class="item">
           Improvements to detailed records for contract awards, entities, and 
           exclusions.
         </div>
         <div class="item">
-          Federal users who are logged in and have assigned  roles will be able 
+          Federal users who are signed in and have assigned  roles will be able 
           to access detailed records for contract opportunities and assistance 
           listings.
         </div>
@@ -61,7 +61,7 @@ export class TransitionToSamComponent {
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Federal users who are logged in will be able to view, create, and update 
+          Federal users who are signed in will be able to view, create, and update 
           assistance listings and contract opportunities.
         </div> 
         <div class="item">
@@ -86,7 +86,7 @@ export class TransitionToSamComponent {
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Users who are logged in can migrate their existing roles from each 
+          Users who are signed in can migrate their existing roles from each 
           legacy system for Assistance Listings or Opportunities, Awards. 
         </div>
         <div class="item">
@@ -234,7 +234,7 @@ export class TransitionToSamComponent {
           Grants.gov and USASpending extracts
         </div>
         <div class="item">
-          Federal users who are logged in can view, create, update, and manage 
+          Federal users who are signed in can view, create, update, and manage 
           assistance listings. 
         </div>
       </div>
@@ -260,7 +260,7 @@ export class TransitionToSamComponent {
           View detailed records based on your user role.
         </div>
         <div class="item">
-          Federal users who are logged in can create and/or modify a notice.
+          Federal users who are signed in can create and/or modify a notice.
         </div>
       </div>
     `

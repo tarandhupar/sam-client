@@ -36,13 +36,16 @@ export class ReferenceLibraryComponent {
           title:"Federal Acquisition Regulation",
           content:"The FAR is your primary resource documenting the policies and procedures that govern acquisitions by all executive agencies of the U.S. federal government.  It provides for coordination, simplicity, and uniformity in the Federal acquisition process.  You can quickly access any section of the Federal Acquisition Regulation electronically by using the online table of contents on this page. ",
           link:"View FAR",
-          url:"https://www.acquisition.gov/?q=browsefar"
+          url:"https://www.acquisition.gov/?q=browsefar",
+          img:"src/assets/img/logos/acq_logo.png"
         },
         {
           title:"Compliance Assistance",
           content:"Obtain assistance on government contracts, include wage laws, workers rights, and more. ",
           link:"View Compliance Assistance",
-          url:"https://www.dol.gov/whd/govcontracts/"
+          url:"https://www.dol.gov/whd/govcontracts/",
+          img:"src/assets/img/logos/Seal_of_the_United_States_Department_of_Labor.svg.png",
+          imgWidth: '50%'
         },
         {
           title:"Request DUNS Number",

@@ -12,6 +12,7 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { WageDeterminationPage } from './wage-determination.page';
 import { Observable } from 'rxjs';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
+import {SidenavHelper} from "../app-utils/sidenav-helper";
 
 let comp:    WageDeterminationPage;
 let fixture: ComponentFixture<WageDeterminationPage>;
@@ -208,6 +209,7 @@ describe('src/app/wage-determination/wage-determination.spec.ts', () => {
         BaseRequestOptions,
         MockBackend,
         DateFormatPipe,
+        SidenavHelper,
         {
           provide: Http,
           useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
@@ -243,13 +245,12 @@ describe('src/app/wage-determination/wage-determination.spec.ts', () => {
     expect(comp.revisionNumber).toBeDefined();
     expect(comp.currentUrl).toBeDefined();
     expect(comp.dictionaries).toBeDefined();
-    expect(comp.locations).toBeDefined();
     expect(comp.services).toBeDefined();
-    expect(comp.history).toBeDefined();
+    expect(comp.processedHistory).toBeDefined();
     expect(comp.processedHistory).toBeDefined();
     expect(comp.longProcessedHistory).toBeDefined();
     expect(comp.shortProcessedHistory).toBeDefined();
-    expect(comp.showRevisonMessage).toBeDefined();
-    expect(comp.showRevisonMessage).toBe(true);
+    expect(comp.revisionMessage).toBeDefined();
+    expect(comp.revisionMessage).toBe(true);
   });
 });

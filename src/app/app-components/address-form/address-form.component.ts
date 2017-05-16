@@ -4,6 +4,7 @@ import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
 import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 import { LocationService } from 'api-kit/location/location.service';
 import { Observable } from 'rxjs';
+import {SamAutocompleteComponent} from "sam-ui-kit/form-controls/autocomplete";
 
 @Component ({
   selector: 'samAddrForm',
@@ -43,7 +44,8 @@ export class OrgAddrFormComponent {
   @ViewChild('countryWrapper') addrCountry:LabelWrapper;
   @ViewChild('stateWrapper') addrState:LabelWrapper;
   @ViewChild('cityWrapper') addrCity:LabelWrapper;
-  //@ViewChild('MailAddrCity') addrCity:SamTextComponent;
+  @ViewChild('MailAddrCity') citySelect:SamAutocompleteComponent;
+  @ViewChild('MailAddrState') stateSelect:SamAutocompleteComponent;
   @ViewChild('MailAddrPostalCode') addrPostalCode:SamTextComponent;
   @ViewChild('MailAddrStreetAddr1') addrStreet1:SamTextComponent;
 
@@ -170,7 +172,10 @@ export class OrgAddrFormComponent {
   stateCode;
   updateStateField(val){
     let v;
-    if (val.value) {
+    if (!val || !this.stateSelect.inputValue) {
+      v = null;
+
+    } else if (val.value) {
       v = val.value;
     } else if (typeof val === 'string') {
       v = val;
@@ -179,6 +184,9 @@ export class OrgAddrFormComponent {
     }
     this.orgAddrModel.state = v;
     this.stateCode = v;
+    if (!val || !this.stateSelect.inputValue) {
+      this.cityLocationConfig.serviceOptions.state = null;
+    }
   }
 
   stateId() {
@@ -186,13 +194,18 @@ export class OrgAddrFormComponent {
   }
 
   updateCityField(val) {
-    if (val.value) {
-      this.orgAddrModel.city = val.value;
+    let v = null;
+    if (!val) {
+      v = null;
+    } else if (val.value) {
+      v = val.value;
     } else if (typeof val === 'string') {
-      this.orgAddrModel.city = val;
+      v = val;
     } else {
       throw new TypeError('unrecognized type for val');
     }
+
+    this.orgAddrModel.city = v;
 
   }
 

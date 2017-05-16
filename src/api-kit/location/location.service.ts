@@ -74,13 +74,16 @@ export class LocationService {
       name: 'location',
       suffix: '/cities',
       oParam: {
-        searchby: "statecode",
-        searchvalue: stateId,
         cc: countryCode,
         q: citySubstring
       },
       method: 'GET'
     };
+
+    if (typeof stateId === 'string') {
+      oApiParam.oParam['searchby'] = "statecode";
+      oApiParam.oParam['searchvalue'] = stateId;
+    }
 
     return this.oAPIService.call(oApiParam);
   }
