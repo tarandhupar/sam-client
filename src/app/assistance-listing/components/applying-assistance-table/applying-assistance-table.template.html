@@ -1,5 +1,5 @@
 <!--Delete Modal-->
-<samModal #deleteModal
+<sam-modal #deleteModal
           [showClose]="true"
           [closeOnOutsideClick]="true"
           [closeOnEscape]="true"
@@ -9,7 +9,7 @@
           [submitButtonLabel]="'Ok'"
           [cancelButtonLabel]="'Cancel'"
           (onSubmit)="onDeleteModalSubmit()">
-</samModal>
+</sam-modal>
 
 <table [class.hide]="assistInfo.length == 0" class="sam-ui table celled">
   <thead>

@@ -3,8 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { routing } from './reports.route';
 import { ReportsPage } from './reports.page';
 import { OverviewComponent } from './sections/overview/overview.component';
+import { OverviewProtoComponent } from './sections/overviewProto/overviewProto.component';
 import { ScheduledComponent } from './sections/overview/scheduled/scheduled.component';
 import { ReportComponent } from './sections/report/report.component';
+import { ReportProtoComponent } from './sections/reportProto/reportProto.component';
 import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
@@ -26,12 +28,14 @@ import { ReportsPipe } from './reports.pipe';
   declarations: [
     ReportsPage,
     OverviewComponent,
+    OverviewProtoComponent,
     ScheduledComponent,
     ReportComponent,
     AdhocComponent,
     FavoritesComponent,
     StaticComponent,
-    ReportsPipe
+    ReportsPipe,
+    ReportProtoComponent
   ],
   providers: [IAMService, ReportsService],
 })

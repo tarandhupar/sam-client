@@ -1,4 +1,4 @@
-<labelWrapper class="sam-list-input">
+<sam-label-wrapper class="sam-list-input">
   <sam-type-ahead [placeholder]="options.placeholder"
                   [name]="options.name"
                   [options]="options.options"
@@ -7,4 +7,4 @@
                   [selectedList]="listDisplay.selectedItems">
   </sam-type-ahead>
   <sam-list-display #listDisplay (modelChange)="emitSelectedList()" [config]="options.config"><div [innerHTML]="options.selectedLabel"></div></sam-list-display>
-</labelWrapper>
+</sam-label-wrapper>

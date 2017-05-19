@@ -7,7 +7,7 @@ export class ProgramFormModel{
       fields:[
         {
           name: 'title',
-          type: 'samText',
+          type: 'sam-text',
           label: 'Title',
           maxlength: 144,
           hint: 'Spell out any acronyms and limit to 144 characters.',
@@ -15,7 +15,7 @@ export class ProgramFormModel{
         },
         {
           name: 'alternativeNames',
-          type: 'samText',
+          type: 'sam-text',
           label: 'Popular Name',
           hint: 'The Popular Name should be different than the Program Title.',
           required: false,
@@ -23,7 +23,7 @@ export class ProgramFormModel{
         },
         {
           name: 'programNumber',
-          type: 'samNumber',
+          type: 'sam-number',
           label: 'FAL Number',
           maxlength:  3,
           minlength: 3,
@@ -48,14 +48,14 @@ export class ProgramFormModel{
         fields:[
           {
             name: 'objective',
-            type: 'samTextArea',
+            type: 'sam-text-area',
             label: 'Objectives',
             hint: 'Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.',
             required: true
           },
           {
             name: 'falDesc',
-            type: 'samTextArea',
+            type: 'sam-text-area',
             label: 'Federal Assistance Listing Description',
             hint: 'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.',
             required: false
@@ -68,7 +68,7 @@ export class ProgramFormModel{
         fields:[
           {
             name: 'content',
-            type: 'samTextArea',
+            type: 'sam-text-area',
             label: 'Additional Information',
             required: false
           }

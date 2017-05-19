@@ -6,7 +6,7 @@ import {SYSTEM_ALERTS_PAGE_PATH} from "../alerts.route";
 import {Alert} from "../alert.model";
 
 @Component({
-  selector: 'alertHeader',
+  selector: 'alert-header',
   templateUrl: 'alert-header.template.html'
 })
 export class AlertHeaderComponent {

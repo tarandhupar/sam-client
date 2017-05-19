@@ -2,12 +2,13 @@
 /*
  * Angular 2 decorators and services
  */
-import {Component, ViewChild} from '@angular/core';
+import { Component, ViewChild, Input, NgZone } from '@angular/core';
 import { Router, NavigationExtras,NavigationEnd,ActivatedRoute } from '@angular/router';
 import { globals } from './globals.ts';
 import { SearchService } from 'api-kit';
 import { Cookie } from 'ng2-cookies';
 import { FontChecker } from './app-utils/fontchecker';
+import { UserSessionService } from 'api-kit/user-session/user-session.service';
 
 
 /*
@@ -22,6 +23,12 @@ import { FontChecker } from './app-utils/fontchecker';
 export class App{
 
   @ViewChild('autocomplete') autocomplete: any;
+  @ViewChild('userSessionModal') sessionModal;
+  sessionModalConfig = {
+    type:'warning',
+    title:'User Session Timeout',
+    description:'Your log in session will be expired shortly. Do you want to proceed ahead?'
+  };
 
   keyword: string = "";
   index: string = "";
@@ -36,12 +43,12 @@ export class App{
 
   showOverlay = false;
 
-  constructor(private _router: Router, private activatedRoute: ActivatedRoute, private searchService: SearchService) {}
+  constructor(private _router: Router, private activatedRoute: ActivatedRoute, private searchService: SearchService, private userSessionService: UserSessionService, private zone: NgZone) {}
 
   ngOnInit() {
     //for browsers that are blocking font downloads, add fallback icons
     new FontChecker("FontAwesome", {
-        error: function() { document.getElementsByTagName("body")[0].classList.add("fa-fallback-icons"); }
+      error: function() { document.getElementsByTagName("body")[0].classList.add("fa-fallback-icons"); }
     });
 
     this.searchService.paramsUpdated$.subscribe(
@@ -58,6 +65,10 @@ export class App{
       val => {
         this.showOverlay = false;
         if (val instanceof NavigationEnd) {
+          if(this.userSessionService.idleState === "Not started" && Cookie.check("iPlanetDirectoryPro")){
+            this.zone.run(()=>{this.userSessionService.idleDetectionStart(this.sessionModalCB)});
+          }
+
           const tree = this._router.parseUrl(this._router.url);
           if(this._router.url == "/") {
             this.autocomplete.inputValue = "";
@@ -99,7 +110,7 @@ export class App{
     //set regionalOffice filter keyword to null on header search event
     qsobj['ro_keyword'] = null;
 
-    if(searchObject.searchField === 'fh') {
+    if(searchObject.searchField === 'fh' || searchObject.searchField === 'ex') {
       qsobj['isActive'] = true;
     } else {
       qsobj['isActive'] = this.isActive;
@@ -128,6 +139,10 @@ export class App{
       qsobj['psc'] = null;
       qsobj['duns'] = null;
     }
+    if(searchObject.searchField !== 'cfda'){
+      qsobj['applicant'] = null;
+      qsobj['beneficiary'] = null;
+    }
 
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
@@ -145,6 +160,40 @@ export class App{
   toggleOverlay(value){
     this.showOverlay = value;
 
+  }
+
+  continueSession:boolean = false;
+  sessionModalCB:any = () => {
+    if(this.userSessionService.isIdle && !this.userSessionService.timedOut && this.userSessionService.pingState !== "Log out"){
+      if(!this.sessionModal.show) {
+        this.sessionModal.openModal();
+      }
+    }
+    if(this.userSessionService.timedOut || this.userSessionService.pingState == "Log out") {
+      if(this.sessionModal.show) this.sessionModal.closeModal();
+    }
+  };
+
+  onSessionModalContinue(){
+    //User session service extend user session call
+    this.userSessionService.extendUserSession();
+    this.continueSession = true;
+    this.sessionModal.closeModal();
+  }
+
+  onSessionModalClose(){
+    this.userSessionService.idleDetectionStop();
+    if(!this.continueSession){
+      //User session service log out call and redirect to home page
+      this.userSessionService.logoutUserSession();
+      this._router.navigateByUrl('/');
+
+      if(this.sessionModal.show) this.sessionModal.closeModal();
+    }else{
+      this.zone.run(()=>{this.userSessionService.idleDetectionStart(this.sessionModalCB)});
+
+    }
+    this.continueSession = false;
   }
 
 }

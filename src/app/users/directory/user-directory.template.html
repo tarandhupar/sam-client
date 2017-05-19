@@ -17,7 +17,7 @@
     </div>
 
     <div class="usa-width-one-whole">
-      <samPagination [currentPage]="alphabetSelectorPageConfig.currentPage" [totalPages]="alphabetSelectorPageConfig.totalPages" (pageChange)="onAlphabetSelectorPageChange($event)"></samPagination>
+      <sam-pagination [currentPage]="alphabetSelectorPageConfig.currentPage" [totalPages]="alphabetSelectorPageConfig.totalPages" (pageChange)="onAlphabetSelectorPageChange($event)"></sam-pagination>
     </div>
 
   </div>
@@ -41,10 +41,10 @@
     <div *ngSwitchCase='"loading"'><sam-spinner></sam-spinner></div>
     <div *ngSwitchCase="'success'">
       <parent-orgs [orgLevels]="orgLevels" *ngIf="orgLevels.length"></parent-orgs>
-      <samAlert *ngIf="!orgLevels.length" [type]="'error'" [title]="'Organization details unavailable'"></samAlert>
+      <sam-alert *ngIf="!orgLevels.length" [type]="'error'" [title]="'Organization details unavailable'"></sam-alert>
     </div>
     <p *ngSwitchCase='"error"' >
-      <samAlert [type]="'error'" [title]="'Organization details unavailable'"></samAlert>
+      <sam-alert [type]="'error'" [title]="'Organization details unavailable'"></sam-alert>
     </p>
   </div>
 </div>

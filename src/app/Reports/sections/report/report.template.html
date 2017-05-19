@@ -1,5 +1,6 @@
-<div  class="report-padding-top-50" [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
+<div [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
   <section class="usa-grid-full">
+    <div class="sam-ui hidden divider"></div>
     Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
     <br>
     <h2 class="m_T-2x">{{name}}</h2>
@@ -7,7 +8,7 @@
     <br>
     <p class="bold p_L-6x">* DoD report data that are funded by DoD are delayed 90 days for non DoD users.</p>
     <samAccordion >
-      <samAccordionSection  [name]="'Appendix'" [headerText]="'Appendix'" >
+      <sam-accordion-section  [name]="'Appendix'" [headerText]="'Appendix'" >
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
           <div *ngIf="id">
             <ul  class="p_L-0x ul-css">
@@ -24,7 +25,7 @@
             </ul>
           </div>
         </div>
-      </samAccordionSection>
+      </sam-accordion-section>
     </samAccordion>
   </section>
 </div>

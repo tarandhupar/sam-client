@@ -68,13 +68,13 @@
   <h3 class="sam-ui dividing header" *ngIf="isEdit">
     Features
   </h3>
-  <samMultiSelectDropdown *ngIf="isEdit"
+  <sam-multiselect-dropdown *ngIf="isEdit"
                           [(model)]="curFeatures[0]"
                           [label]="curTypes.label"
                           [options]="curTypes.options"
                           [name]="'features'"
                           (modelChange)="onParamChanged()">
-  </samMultiSelectDropdown>
+  </sam-multiselect-dropdown>
   
   
   <table class="sam-ui definition table">

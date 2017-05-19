@@ -8,33 +8,33 @@
     </div>
     <div class = "def-filter">
       <samAccordion [expandIndex]="0">
-        <samAccordionSection [headerText]="accordionHeading1" [name]="accordionName1">
-          <samRadioButton (modelChange) = "ChangeRoute($event)"
+        <sam-accordion-section [headerText]="accordionHeading1" [name]="accordionName1">
+          <sam-radio-button (modelChange) = "ChangeRoute($event)"
             [(model)]="path"
             [options]="radioConfig.options"
             [label]="radioConfig.label"
             [name]="radioConfig.name"
             >
-          </samRadioButton>
-        </samAccordionSection>
+          </sam-radio-button>
+        </sam-accordion-section>
       </samAccordion>
 
       <samAccordion [expandIndex]="0">
-        <samAccordionSection [headerText]="accordionHeading2" [name]="accordionName2">
-          <samCheckbox (modelChange)="activeFilter($event)"
+        <sam-accordion-section [headerText]="accordionHeading2" [name]="accordionName2">
+          <sam-checkbox (modelChange)="activeFilter($event)"
             [(model)]="checkboxModel"
             [name]="'Domains-Checkbox-Filter'"
             [options]="filters.domains.options"
             [label]="filters.domains.label"
             [hasSelectAll]="'Yes'"
             >
-          </samCheckbox>
-        </samAccordionSection>
+          </sam-checkbox>
+        </sam-accordion-section>
       </samAccordion>
       <div class = "tx-pad">
-        <labelWrapper [name]="'Domain-Text-Wrapper'" [errorMessage]="textErrorMessage">
+        <sam-label-wrapper [name]="'Domain-Text-Wrapper'" [errorMessage]="textErrorMessage">
           <input type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">
-        </labelWrapper>
+        </sam-label-wrapper>
         <span class="fa fa-plus-circle"  [ngClass] = "textErrorMessage.length > 0 ? 'btn-plus-error' : 'btn-plus' " aria-hidden="true" (click) = SubmitDomain()></span>
       </div>
 

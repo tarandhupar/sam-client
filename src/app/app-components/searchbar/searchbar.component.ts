@@ -2,7 +2,7 @@ import {Component, Input, Output, EventEmitter, ViewChild, Renderer, OnChanges} 
 import {SearchOption} from '../interfaces';
 
 /**
- * The <samSearchbar> component(filter,input bar and search button) can automatically change it size according to the div the wrap it.
+ * The <sam-searchbar> component(filter,input bar and search button) can automatically change it size according to the div the wrap it.
  * It is designed with sam.gov standards
  * https://gsa.github.io/sam-web-design-standards/
  * @Input size: string - 'small': show only the search icon on the search btn
@@ -10,7 +10,7 @@ import {SearchOption} from '../interfaces';
  * @Output onSearch: output the search object that contains keyword and searchField(filter value)
  */
 @Component({
-  selector: 'samSearchbar',
+  selector: 'sam-searchbar',
   templateUrl: 'searchbar.template.html',
 
 })

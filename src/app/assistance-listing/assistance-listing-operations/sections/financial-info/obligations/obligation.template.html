@@ -2,12 +2,12 @@
 <form [formGroup]="finObligationsForm" novalidate (ngSubmit)="save(finObligationsForm)">
   <div class="usa-grid">
     <div class="fal-label-margin"> Select if applicable</div>
-    <samCheckbox
+    <sam-checkbox
       [control]="finObligationsForm.controls['isFundedCurrentFY']"
       [name]="currentFiscalYearCheckboxConfig.name"
       [options]="currentFiscalYearCheckboxConfig.options"
       class="form-control" formControlName="isFundedCurrentFY">
-    </samCheckbox>
+    </sam-checkbox>
     <div class="fal-obligations-label">Obligations</div>
     <div [class.hide]="obligationsInfo.length == 0">
       <table class="sam-ui table celled">
@@ -74,25 +74,25 @@
         </tbody>
       </table>
     </div>
-    <samButton buttonText="Add New Obligation" (onClick)="onAddNewObliClick()"
-               [class.hide]="hideAddButton"></samButton>
+    <sam-button buttonText="Add New Obligation" (onClick)="onAddNewObliClick()"
+               [class.hide]="hideAddButton"></sam-button>
     <div #subForm formArrayName="obligations" *ngIf="!hideObligationsForm">
       <h2>{{mode}} Obligation</h2>
       <div *ngFor="let obligation of finObligationsForm.controls.obligations.controls; let i=index">
         <div [formGroupName]="i" *ngIf="obligationIndex == i">
           <div class="fal-label-margin">Select if applicable</div>
-          <samCheckbox
+          <sam-checkbox
             [control]="finObligationsForm.controls['isRecoveryAct']"
             [name]="recReinveCheckboxConfig.name"
             [options]="recReinveCheckboxConfig.options"
             class="form-control" formControlName="isRecoveryAct">
-          </samCheckbox>
-          <labelWrapper #assistanceTypeWrapper [label]="assistanceTypeLabel" [required]="true"
+          </sam-checkbox>
+          <sam-label-wrapper #assistanceTypeWrapper [label]="assistanceTypeLabel" [required]="true"
                         [hint]="'Search or browse to select an Assistance Type, or select Salaries and Expenses if applicable.'">
             <sam-autocomplete [options]="options" [name]="autoAssistanceType" formControlName="assistanceType"
                               (change)="assistanceTypeChange($event,i)"
                               [config]="autocompleteConfig" [allowAny]="true" required class="search-bar sam-autocomplete-width"></sam-autocomplete>
-          </labelWrapper>
+          </sam-label-wrapper>
           <div class="fal-obligations-label">Past Fiscal Year - {{pastYear}}</div>
           <div class="text-radio-padding">
             <samTextRadioButton
@@ -124,15 +124,15 @@
               [errorMessage]="budgetFiscalYearConfig.errorMessage" formControlName="bFY">
             </samTextRadioButton>
           </div>
-          <samTextArea
+          <sam-text-area
             [name]="textareaConfig.name"
             [label]="textareaConfig.label"
             formControlName="description">
-          </samTextArea>
+          </sam-text-area>
           <div class="pull-center">
-            <samButton buttonText="Cancel" (click)="onObligationCancelClick(i)"></samButton>
-            <samButton buttonText="Confirm Obligation"
-                       (onClick)="onObligationConfirmClick()"></samButton>
+            <sam-button buttonText="Cancel" (click)="onObligationCancelClick(i)"></sam-button>
+            <sam-button buttonText="Confirm Obligation"
+                       (onClick)="onObligationConfirmClick()"></sam-button>
           </div>
         </div>
       </div>
@@ -141,13 +141,13 @@
 
   </div>
   <div class="pull-left">
-    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Cancel"
-               (onClick)="onCancelClick($event)"></samButton>
-    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Previous"
-               (onClick)="onPreviousClick($event)"></samButton>
-    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Exit"
-               (onClick)="onSaveExitClick($event)"></samButton>
-    <samButton [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Continue"
-               (onClick)="onSaveContinueClick($event)"></samButton>
+    <sam-button [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Cancel"
+               (onClick)="onCancelClick($event)"></sam-button>
+    <sam-button [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Previous"
+               (onClick)="onPreviousClick($event)"></sam-button>
+    <sam-button [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Exit"
+               (onClick)="onSaveExitClick($event)"></sam-button>
+    <sam-button [buttonType]="(hideAddButton ? 'disabled' : 'default')" buttonText="Save and Continue"
+               (onClick)="onSaveContinueClick($event)"></sam-button>
   </div>
 </form>

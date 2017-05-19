@@ -22,7 +22,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   initLoad = true;
   qParams: any = {};
   size: any = {};
-  addFALButtonText: string = 'Add Federal Assistance Listing';
+  addFALButtonText: string = 'Add Assistance Listing';
   cookieValue: string;
   runProgSub: any;
   public permissions: any;

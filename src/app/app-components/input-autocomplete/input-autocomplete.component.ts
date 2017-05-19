@@ -2,7 +2,7 @@ import { Component,Directive, Input,ElementRef,Renderer,Output,OnInit,EventEmitt
 import { AutoCompleteWrapper } from 'api-kit';
 
 @Component({
-	selector: 'samInputAutocomplete',
+	selector: 'sam-input-autocomplete',
 	templateUrl:'input-autocomplete.template.html'
 })
 

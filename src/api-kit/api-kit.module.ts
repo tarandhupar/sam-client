@@ -1,6 +1,7 @@
 // Angular Dependencies
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 
 import { FHService } from './fh/fh.service';
 import { IAMService } from './iam/iam.service';
@@ -20,8 +21,9 @@ import { FeedbackService } from "./feedback/feedback.service";
 import { DictionaryService } from "./dictionary/dictionary.service";
 import { AACRequestService } from "./aac-request/aac-request.service";
 import { FHWrapperService } from "./fh/fhWrapper.service";
-import {SearchDictionariesService} from "./search/search-dictionaries.service";
-import {EntitySuggestionsServiceDirective} from "./autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
+import { SearchDictionariesService } from "./search/search-dictionaries.service";
+import { EntitySuggestionsServiceDirective } from "./autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
+import { UserSessionService } from "./user-session/user-session.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -38,6 +40,7 @@ import {EntitySuggestionsServiceDirective} from "./autoCompleteWrapper/entityDun
   ],
   imports: [
     HttpModule,
+    NgIdleKeepaliveModule.forRoot(),
   ],
   providers: [
     SearchService,
@@ -59,6 +62,7 @@ import {EntitySuggestionsServiceDirective} from "./autoCompleteWrapper/entityDun
     AACRequestService,
     FHWrapperService,
     SearchDictionariesService,
+    UserSessionService,
   ]
 })
 export class SamAPIKitModule { }

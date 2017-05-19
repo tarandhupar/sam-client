@@ -4,7 +4,7 @@ import { FHService } from "api-kit";
 import { ControlValueAccessor,NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'agencyPicker',
+  selector: 'sam-agency-picker',
   templateUrl:'agency-picker.template.html',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
@@ -134,6 +134,11 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   cancelBlur = false;
   dropdownLimit = 300;
   resetIconClass:string = "usa-agency-picker-search-reset";
+  touched = false;
+
+  setTouched(){
+    this.touched = true;
+  }
 
   constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService) {}
   private onChange: (_: any) => void = (_: any) => {};
@@ -782,6 +787,12 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
     }
   }
 
+  checkForFocus(evt){
+    if(this.touched && this.required == true && (!this.selectedOrganizations || this.selectedOrganizations.length == 0)){
+      this.searchMessage = "This field is required";
+    }
+  }
+
   setOrganization(data) {
     let level = 1,
         obj = {};
@@ -799,6 +810,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   }
 
   removeOrg(value) {
+    this.setTouched();
     this.selectedOrganizations = this.selectedOrganizations.filter(obj => (obj.value != value));
     this.emitSelectedOrganizations();
   }

@@ -1,13 +1,13 @@
 <!-- includes HTML for app component-->
-<samBanner #banner *ngIf="!isHeaderWithSearch"></samBanner>
+<sam-banner #banner *ngIf="!isHeaderWithSearch"></sam-banner>
 <div [style.height]="!isHeaderWithSearch ? '22px' : '0'">&nbsp;</div>
-<alertHeader></alertHeader>
+<alert-header></alert-header>
 
-<samHeader (headerDropdownControl)="toggleOverlay($event)">
+<sam-header (headerDropdownControl)="toggleOverlay($event)">
   <div header-links>
-    <SamHeaderLinks>
+    <sam-header-links>
       <div class="search-bar" search-bar>
-        <samSearchbar #searchbar
+        <sam-searchbar #searchbar
           [size]="'large'"
           [keyword]="keyword"
           (onSearch)="onHeaderSearchEvent($event)"
@@ -15,23 +15,26 @@
           [selectConfig]="searchSelectConfig">
           <div custom-input>
             <sam-autocomplete #autocomplete autofill-suggestions
-              [(ngModel)]="keyword"
-              (ngModelChange)="searchbar.callSearch($event)"
-              (enterEvent)="searchbar.onSearchClick();"
-              [index]="index"
-              [showClearButton]="true"
-              [allowAny]="true"
-              name="appsearch" ></sam-autocomplete>
+                              [(ngModel)]="keyword"
+                              (ngModelChange)="searchbar.callSearch($event)"
+                              (enterEvent)="searchbar.onSearchClick();"
+                              [index]="index"
+                              [showClearButton]="true"
+                              [allowAny]="true"
+                              name="appsearch" ></sam-autocomplete>
           </div>
-        </samSearchbar>
+        </sam-searchbar>
       </div>
-    </SamHeaderLinks>
+    </sam-header-links>
   </div>
-</samHeader>
+</sam-header>
+
+<sam-modal [showClose]="false" #userSessionModal [title]="sessionModalConfig.title" [type]="sessionModalConfig.type" [description]="sessionModalConfig.description" [submitButtonLabel]="'Continue'" [cancelButtonLabel]="'Log Out'" (onSubmit)="onSessionModalContinue()" (onClose)="onSessionModalClose()"  [closeOnOutsideClick]="false">
+</sam-modal>
 
 <main id="main-container" class="occupy-page relative">
   <router-outlet></router-outlet>
   <div [ngClass]="{'overlay':showOverlay}"></div>
 </main>
-<alertFooter></alertFooter>
-<samFooter labelname = "footer" ></samFooter>
+<alert-footer></alert-footer>
+<sam-footer labelname = "footer" ></sam-footer>

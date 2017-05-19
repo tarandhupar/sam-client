@@ -23,12 +23,12 @@
               <a routerLink="/">Return to SAM.gov Home</a>
             </li>
           </ul>
-          <samAlert class="usa-alert-static"
+          <sam-alert class="usa-alert-static"
                     [type]="states.alert.type"
                     [title]="states.alert.title"
                     [showClose]="true"
                     [hidden]="!states.alert.show"
-                    (dismiss)="dismissAlert()"></samAlert>
+                    (dismiss)="dismissAlert()"></sam-alert>
         </div>
       </section>
     </span>

@@ -29,7 +29,7 @@ export class FALAssistanceComponent implements OnInit {
     { label: 'Executive Order 12372, "Intergovernmental Review of Federal Programs," applies to this listing.', value: 'ExecutiveOrder12372'}
   ];
 
-  public appProcOptions = [{ label: 'Funding opportunities notices for this listing will be posted on Grants.gov', value: true }];
+  public appProcOptions = [{ label: 'Funding contract opportunities notices for this listing will be posted on Grants.gov', value: true }];
 
   public selectionCriteriaOptions = [{ label: 'There are criteria for selection proposals.', value: true }];
 

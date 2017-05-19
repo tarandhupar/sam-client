@@ -18,17 +18,17 @@
 					</p>
 				</div>
 				<div class="usa-width-one-fourth">
-					<samSelect [(model)]="sortModel" 
+					<sam-select [(model)]="sortModel" 
 										[name]="sortConfig.name"
 										[options]="sortConfig.options"
 										[label]="sortConfig.label"
 										reset-label-margin>
-					</samSelect>
+					</sam-select>
 				</div>
 			</div>
 			<ng-content select="[search-content]"></ng-content>
 			<div>
-				<samPagination (pageChange)="pageChangeHandler($event)" [currentPage]="currentPage" [totalPages]="totalPages"></samPagination>
+				<sam-pagination (pageChange)="pageChangeHandler($event)" [currentPage]="currentPage" [totalPages]="totalPages"></sam-pagination>
 			</div>
 		</div>
 	</main>

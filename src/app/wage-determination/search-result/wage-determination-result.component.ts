@@ -17,6 +17,11 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
               {{ data.fullReferenceNumber }}
             </a>
           </h3>
+          <p *ngIf="data._type=='wdSCA' && data.isActive==false"><strong>Archived WDs are for Information Purposes Only</strong> See the Latest Revision for Current Wages</p>
+          <strong *ngIf="data.services!=null">Non-Standard Service Description(s)</strong>
+          <p *ngFor="let service of data.services">
+            <strong>{{ service?.value }}</strong> - <span [innerHTML]="service?.description"></span>
+          </p>
           
           <ng-container *ngIf="data.location?.additionalInfo?.content==null && data.location?.states!=null">
             <ul *ngFor="let state of data.location?.states; let i=index" class="sam-ui small list">
@@ -69,7 +74,7 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
             </li>
             <li>
               <span class="sam-ui mini label">
-                {{ data._type=='wdSCA' ? 'SCA Wage Determination' : 'DBA Wage Determination' }}
+                {{data._type=='wdSCA' ? 'SCA Wage Determination': 'DBA Wage Determination'}}
               </span>
             </li>
             <li class="wd-revision-number">

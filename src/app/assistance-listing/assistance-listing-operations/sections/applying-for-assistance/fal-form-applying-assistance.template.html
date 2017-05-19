@@ -4,12 +4,12 @@
 
   <div formGroupName="deadlines">
 
-    <samRadioButton [label]="'Deadlines'"
+    <sam-radio-button [label]="'Deadlines'"
                     [name]="'deadlineFlag-radio-buttons'"
                     [options]="deadlinesFlagOptions"
                     [required]="true"
                     formControlName="flag"
-    ></samRadioButton>
+    ></sam-radio-button>
 
     <div [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
 
@@ -23,115 +23,115 @@
                      (assistActionHandler)="assistActionHandler($event)"
       ></assistSubform>
 
-      <samTextArea [label]="'Other Deadline Information'"
+      <sam-text-area [label]="'Other Deadline Information'"
                    [name]="'deadlines-description'"
                    formControlName="description"
-      ></samTextArea>
+      ></sam-text-area>
     </div>
   </div>
 
   <div formGroupName="preApplicationCoordination">
-    <samCheckbox [label]="'Pre-Application Coordination'"
+    <sam-checkbox [label]="'Pre-Application Coordination'"
                  [name]="'preAppCord-checkbox'"
                  [hint]="'Select all that apply'"
                  [options]="preAppCordOptions"
                  formControlName="reports"
-    ></samCheckbox>
+    ></sam-checkbox>
 
-    <samTextArea [label]="'Additional Information'"
+    <sam-text-area [label]="'Additional Information'"
                  [name]="'preAppCord-description'"
                  formControlName="description"
                  [class.hide]="falAssistanceForm.value.preApplicationCoordination.reports.length == 0"
-    ></samTextArea>
+    ></sam-text-area>
   </div>
 
   <div formGroupName="applicationProcedure">
 
-    <samCheckbox [label]="'Application Procedures'"
+    <sam-checkbox [label]="'Application Procedures'"
                  [name]="'appProc-checkbox'"
                  [hint]="'Select if applicable.'"
                  [options]="appProcOptions"
                  formControlName="isApplicable"
-    ></samCheckbox>
+    ></sam-checkbox>
 
-    <samTextArea [label]="'Please list the steps for applying for assistance. Only include instructions not already covered by 2 CFR 200.'"
+    <sam-text-area [label]="'Please list the steps for applying for assistance. Only include instructions not already covered by 2 CFR 200.'"
                  [name]="'appProc-description'"
                  formControlName="description"
-    ></samTextArea>
+    ></sam-text-area>
 
   </div>
 
   <div formGroupName="selectionCriteria">
 
-    <samCheckbox [label]="'Criteria for Selecting Proposals'"
+    <sam-checkbox [label]="'Criteria for Selecting Proposals'"
                  [name]="'selectionCriteria-checkbox'"
                  [hint]="'Select if applicable.'"
                  [options]="selectionCriteriaOptions"
                  formControlName="isApplicable"
-    ></samCheckbox>
+    ></sam-checkbox>
 
-    <samTextArea [label]="'Please describe.'"
+    <sam-text-area [label]="'Please describe.'"
                  [name]="'selectionCriteria-description'"
                  [required]="true"
                  formControlName="description"
                  [class.hide]="falAssistanceForm.value.selectionCriteria.isApplicable[0] != true"
-    ></samTextArea>
+    ></sam-text-area>
   </div>
 
   <div formGroupName="awardProcedure">
-    <samTextArea [label]="'Award Procedure'"
+    <sam-text-area [label]="'Award Procedure'"
                  [hint]="'Describe how assistance is awarded. Include who approves the award and how assistance is distributed.'"
                  [name]="'awardProcedure-description'"
                  [required]="true"
                  formControlName="description"
-    ></samTextArea>
+    ></sam-text-area>
   </div>
 
   <div formGroupName="approval">
-    <samSelect [label]="'Date Range for Approval/Disapproval'"
+    <sam-select [label]="'Date Range for Approval/Disapproval'"
                [hint]="'Select the range that best represents how much time the approval process takes.'"
                [name]="'approval-input'"
                [options]="dateRangeOptions"
                [required]="true"
                formControlName="interval"
-    ></samSelect>
+    ></sam-select>
 
-    <samTextArea [label]="'Other Approval Information'"
+    <sam-text-area [label]="'Other Approval Information'"
                  [hint]="'Provide an additional information if appropriate.'"
                  [name]="'approval-description'"
                  formControlName="description"
-    ></samTextArea>
+    ></sam-text-area>
   </div>
 
   <div formGroupName="renewal">
-    <samSelect [label]="'Renewals'"
+    <sam-select [label]="'Renewals'"
                [hint]="'Select the range that best represents when an awardee may apply for a renewal or extension.'"
                [name]="'approval-input'"
                [options]="dateRangeOptions"
                [required]="true"
                formControlName="interval"
-    ></samSelect>
+    ></sam-select>
 
-    <samTextArea [label]="'Other Renewal Information'"
+    <sam-text-area [label]="'Other Renewal Information'"
                  [hint]="'Describe renewal or extension procedures.'"
                  [name]="'renewal-description'"
                  formControlName="description"
-    ></samTextArea>
+    ></sam-text-area>
   </div>
 
   <div formGroupName="appeal">
-    <samSelect [label]="'Appeals'"
+    <sam-select [label]="'Appeals'"
                [hint]="'Select the range that best represents how long an applicant has to appeal a decision.'"
                [name]="'appeals-input'"
                [options]="dateRangeOptions"
                [required]="true"
                formControlName="interval"
-    ></samSelect>
-    <samTextArea [label]="'Other Appeals Information'"
+    ></sam-select>
+    <sam-text-area [label]="'Other Appeals Information'"
                  [hint]="'Describe appeal, rework, or other options for applications that are not approved.'"
                  [name]="'appeals-description'"
                  formControlName="description"
-    ></samTextArea>
+    ></sam-text-area>
   </div>
 
 </form>

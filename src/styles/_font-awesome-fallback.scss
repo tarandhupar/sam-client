@@ -13,10 +13,24 @@ $fa_fallback_md: 15px;
         &:before{
             content: none;
         }
-        background: url('/src/assets/fonts/font-awesome/fallback/fa-bars.png') no-repeat;
+        background: url('/src/assets/fonts/font-awesome/fallback/fa-bars-dark.png') no-repeat;
         background-size: $fa_fallback_md $fa_fallback_md;
         width: $fa_fallback_md;
         height: $fa_fallback_md;
+    }
+    header{
+        .item{
+            &.active{
+                .fa-bars{
+                    background: url('/src/assets/fonts/font-awesome/fallback/fa-bars.png') no-repeat;
+                    background-size: $fa_fallback_md $fa_fallback_md;
+                }
+                .fa-search{
+                    background: url('/src/assets/fonts/font-awesome/fallback/fa-search.png') no-repeat;
+                    background-size: $fa_fallback_md $fa_fallback_md;
+                }
+            }
+        }
     }
     .fa-comments{ 
         &:before{
@@ -427,7 +441,7 @@ $fa_fallback_md: 15px;
         &:before{
             content: none;
         }
-        background: url('/src/assets/fonts/font-awesome/fallback/fa-search.png') no-repeat;
+        background: url('/src/assets/fonts/font-awesome/fallback/fa-search-dark.png') no-repeat;
         background-size: $fa_fallback_md $fa_fallback_md;
         width: $fa_fallback_md;
         height: $fa_fallback_md;

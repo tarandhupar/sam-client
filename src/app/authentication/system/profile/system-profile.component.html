@@ -6,18 +6,18 @@
       <h3 id="system-information">System Information<a class="usa-edit" href="javascript:void(0);" (click)="edit('system')" *ngIf="states.edit">Edit</a></h3>
 
       <div class="content content-editable">
-        <labelWrapper name="system-email" label="System Email Address" required="true" [errorMessage]="$errors('email')">
+        <sam-label-wrapper name="system-email" label="System Email Address" required="true" [errorMessage]="$errors('email')">
           <input type="text" id="system-email" formControlName="email" />
-        </labelWrapper>
-        <labelWrapper name="system-id" label="Unique ID" required="true" [errorMessage]="$errors('_id')">
+        </sam-label-wrapper>
+        <sam-label-wrapper name="system-id" label="Unique ID" required="true" [errorMessage]="$errors('_id')">
           <input type="text" id="system-id" formControlName="_id" />
-        </labelWrapper>
-        <labelWrapper name="system-name" label="System Name" required="true" [errorMessage]="$errors('systemName')">
+        </sam-label-wrapper>
+        <sam-label-wrapper name="system-name" label="System Name" required="true" [errorMessage]="$errors('systemName')">
           <input type="text" id="system-name" formControlName="systemName" />
-        </labelWrapper>
-        <labelWrapper name="system-comments" label="Comments" [errorMessage]="$errors('comments')">
+        </sam-label-wrapper>
+        <sam-label-wrapper name="system-comments" label="Comments" [errorMessage]="$errors('comments')">
           <textarea id="system-comments" formControlName="comments"></textarea>
-        </labelWrapper>
+        </sam-label-wrapper>
       </div>
 
       <div class="content content-readonly" *ngIf="states.edit">
@@ -40,8 +40,8 @@
       </div>
 
       <div class="usa-button-controls content content-editable" *ngIf="states.edit">
-        <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-button-outline" buttonText="Cancel" (onClick)="cancel('system')"></samButton>
-        <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('system')"></samButton>
+        <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-button-outline" buttonText="Cancel" (onClick)="cancel('system')"></sam-button>
+        <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('system')"></sam-button>
       </div>
     </section>
 
@@ -52,36 +52,36 @@
       </h3>
 
       <div class="content content-editable">
-        <agencyPicker *ngIf="states.gov"
+        <sam-agency-picker *ngIf="states.gov"
                       [advancedMode]="false"
                       [multimode]="false"
                       [label]="'Select the office you work for:'"
                       [orgRoot]="user.department"
                       [(orgId)]="system.department"
                       [initial]="system.department ? [system.department] : []"
-                      (organization)="setOrganization($event)"></agencyPicker>
+                      (organization)="setOrganization($event)"></sam-agency-picker>
 
-        <labelWrapper name="system-duns-search" label="Duns Search" *ngIf="!states.gov">
+        <sam-label-wrapper name="system-duns-search" label="Duns Search" *ngIf="!states.gov">
           <input type="text" id="system-duns-search" formControlName="duns" />
-        </labelWrapper>
+        </sam-label-wrapper>
 
-        <labelWrapper name="system-ip" label="System IP Address">
+        <sam-label-wrapper name="system-ip" label="System IP Address">
           <input type="text" id="system-ip" formControlName="ipAddress" />
-        </labelWrapper>
+        </sam-label-wrapper>
 
-        <labelWrapper name="system-business-name" label="Business Name" [errorMessage]="$errors('businessName')" *ngIf="!states.gov">
+        <sam-label-wrapper name="system-business-name" label="Business Name" [errorMessage]="$errors('businessName')" *ngIf="!states.gov">
           <input type="text" id="system-business-name" formControlName="businessName" />
-        </labelWrapper>
-        <labelWrapper name="system-primary-owner" label="Business Address" [errorMessage]="$errors('businessAddress')" *ngIf="!states.gov">
+        </sam-label-wrapper>
+        <sam-label-wrapper name="system-primary-owner" label="Business Address" [errorMessage]="$errors('businessAddress')" *ngIf="!states.gov">
           <input type="text" id="system-business-name" formControlName="businessAddress" />
-        </labelWrapper>
+        </sam-label-wrapper>
 
-        <labelWrapper name="system-primary-owner" label="Primary Owner Name" required="true" [errorMessage]="$errors('primaryOwnerName')">
+        <sam-label-wrapper name="system-primary-owner" label="Primary Owner Name" required="true" [errorMessage]="$errors('primaryOwnerName')">
           <input type="text" id="system-primary-owner" formControlName="primaryOwnerName" />
-        </labelWrapper>
-        <labelWrapper name="system-primary-email" label="Primary Owner Email" required="true" [errorMessage]="$errors('primaryOwnerEmail')">
+        </sam-label-wrapper>
+        <sam-label-wrapper name="system-primary-email" label="Primary Owner Email" required="true" [errorMessage]="$errors('primaryOwnerEmail')">
           <input type="text" id="system-primary-email" formControlName="primaryOwnerEmail" />
-        </labelWrapper>
+        </sam-label-wrapper>
       </div>
 
       <div class="content content-readonly" *ngIf="states.edit">
@@ -116,8 +116,8 @@
       </div>
 
       <div class="usa-button-controls content content-editable" *ngIf="states.edit">
-        <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-button-outline" buttonText="Cancel" (onClick)="cancel('organization')"></samButton>
-        <samButton [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('organization')"></samButton>
+        <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-button-outline" buttonText="Cancel" (onClick)="cancel('organization')"></sam-button>
+        <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('organization')"></sam-button>
       </div>
     </section>
 
@@ -125,9 +125,9 @@
       <h3 id="point-of-contact">Point of Contact</h3>
 
       <div class="content">
-        <labelWrapper name="system-user-search" label="User Search Capability">
+        <sam-label-wrapper name="system-user-search" label="User Search Capability">
           <input type="text" id="system-user-search" [(ngModel)]="store.search.users" [ngModelOptions]="{ standalone: true }" />
-        </labelWrapper>
+        </sam-label-wrapper>
 
         <div class="usa-system-pocs">
           <div *ngFor="let poc of detailsForm.controls.pointOfContact.value; let $index = index;" class="usa-system-poc">
@@ -159,32 +159,32 @@
         All your My Access information will permanantely be inaccessible.
       </div>
 
-      <samButton id="button-deactivate" [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></samButton>
+      <sam-button id="button-deactivate" [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></sam-button>
 
-      <samAlert type="error"
+      <sam-alert type="error"
                 [title]="states.alert.message"
                 [hidden]="!states.alert.show"
-                showClose="true"></samAlert>
+                showClose="true"></sam-alert>
     </section>
 
     <div *ngIf="!states.edit" class="usa-button-controls">
       <button type="button" class="usa-button-outline">Cancel</button>
       <button type="button" (click)="create()">Save</button>
-      <samAlert class="usa-alert-static" [type]="states.alert.type" [title]="states.alert.message" [hidden]="!states.alert.show"></samAlert>
+      <sam-alert class="usa-alert-static" [type]="states.alert.type" [title]="states.alert.message" [hidden]="!states.alert.show"></sam-alert>
     </div>
   </form>
 </div>
 
-<samModal #confirmModal
+<sam-modal #confirmModal
           type="warning"
           title="Are you sure you want to deactivate your system account?"
           showClose="true"
           submitButtonLabel="Yes, deactivate my account"
           cancelButtonLabel="No, cancel account deactivation"
           (onSubmit)="reconfirmDeactivation()"
-          *ngIf="states.edit"></samModal>
+          *ngIf="states.edit"></sam-modal>
 
-<samModal #reconfirmModal
+<sam-modal #reconfirmModal
           type="warning"
           title="Warning"
           description="If you deactivate your system account it cannot be reactivated for future use and you will be immediately redirected to the system account creation page. Are you sure you want to deactivate your account?"
@@ -192,4 +192,4 @@
           submitButtonLabel="Yes, continue with deactivation"
           cancelButtonLabel="No, cancel deactivation"
           (onSubmit)="deactivate()"
-          *ngIf="states.edit"></samModal>
+          *ngIf="states.edit"></sam-modal>

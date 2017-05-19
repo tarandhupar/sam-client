@@ -7,15 +7,15 @@
     <h1>Access Request</h1>
     <request-details [requestObject]="request"></request-details>
     <div class="m_T-4x">
-      <samRadioButton
+      <sam-radio-button
         [options]="options"
         label="How do you want to respond?"
         name='request-action'
         [(model)]="selectedOption"
-      ></samRadioButton>
+      ></sam-radio-button>
     </div>
     <div class="m_T-4x" *ngIf="shouldShowTextarea()">
-      <samTextArea
+      <sam-text-area
         name='message'
         [(value)]="message"
         (valueChange)="onMessageChanged()"
@@ -24,7 +24,7 @@
         [errorMessage]="messageError"
         [placeholder]="messagePlaceholder()"
         (focusEvent)="onFocusMessage($event)"
-      ></samTextArea>
+      ></sam-text-area>
     </div>
     <div class="clearfix">
       <button class="pull-right usa-button usa-button-primary"

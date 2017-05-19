@@ -70,7 +70,7 @@
           <ng-container *ngSwitchCase="'AGENCY'"><em>No Offices Agencies Found.</em></ng-container>
         </p>
       </section>
-      <samPagination *ngIf = "organization.type != 'OFFICE'" (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></samPagination>
+      <sam-pagination *ngIf = "organization.type != 'OFFICE'" (pageChange)="pageChange($event)" [currentPage]="pageNum" [totalPages]="totalPages"></sam-pagination>
     </ng-container>
   </div>
 </display-page>

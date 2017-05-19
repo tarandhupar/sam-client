@@ -10,7 +10,7 @@
     display: inline-block;
   }
 
-  samAccordionSection li:first-child{
+  sam-accordion-section li:first-child{
     margin: 0 ;
     border-top: 2px solid black;
   }
@@ -19,14 +19,14 @@
     margin-top: 0;
   }
 
-  samMultiSelectDropdown{
+  sam-multiselect-dropdown{
     position: absolute;
     top: -25px;
     left: 10px;
     z-index: 100;
   }
 
-  samMultiSelectDropdown .dropdown-title{
+  sam-multiselect-dropdown .dropdown-title{
     opacity: 0;
     width: 200px;
   }

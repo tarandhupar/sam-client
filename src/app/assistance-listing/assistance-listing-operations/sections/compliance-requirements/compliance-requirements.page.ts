@@ -27,7 +27,7 @@ export class ComplianceRequirementsPage implements OnInit {
     checkbox: {
       name: 'compliance-policy-requirements',
       label: 'Policy Requirements',
-      hint: 'Does 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards apply to this federal assistance listing?',
+      hint: 'Does 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards apply to this assistance listing?',
 
       options: []
     },

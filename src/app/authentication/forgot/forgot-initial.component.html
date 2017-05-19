@@ -6,7 +6,7 @@
           <legend>Forgot Password?</legend>
           <span>Enter your email address below and we will send you instructions to reset your password.</span>
 
-          <labelWrapper name="email-forget" [errorMessage]="email.touched ? states.error : ''" label="Email">
+          <sam-label-wrapper name="email-forget" [errorMessage]="email.touched ? states.error : ''" label="Email">
             <input type="text"
                    id="email-forget"
                    name="email"
@@ -15,15 +15,15 @@
                    onfocus="this.removeAttribute('readonly');"
                    (keyup)="validate()"
                    [formControl]="email" />
-          </labelWrapper>
+          </sam-label-wrapper>
 
           <div class="usa-button-controls relative">
             <button type="submit" [disabled]="states.disabled">Submit</button>
-            <samAlert class="usa-alert-static"
+            <sam-alert class="usa-alert-static"
                       [type]="states.notification.type"
                       [title]="states.notification.title"
                       [hidden]="!states.notification.show"
-                      showClose="true"></samAlert>
+                      showClose="true"></sam-alert>
           </div>
 
           <hr />

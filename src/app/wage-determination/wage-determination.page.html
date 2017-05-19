@@ -8,7 +8,7 @@
       <!--Logo-->
       <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
       <!--Side Navigation-->
-      <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+      <sam-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-sidenav>
     </div>
   </aside>
 
@@ -21,10 +21,10 @@
 
       <!-- Alert -->
       <ng-container *ngIf="revisionMessage == true">
-        <samAlert [type]="'info'" [title]="''">
+        <sam-alert [type]="'info'" [title]="''">
           Note: There have been revisions to this wage determination. To view the
           most recent version click <a [routerLink]="['/wage-determination', referenceNumber, processedHistory[0].index]">here</a>.
-        </samAlert>
+        </sam-alert>
       </ng-container>
 
       <!-- Page Title: Service Contract Act -->
@@ -50,9 +50,12 @@
       <!-- Intro Content -->
 			<div class="sam-ui padded raised segment">
 
-				<div class="sam-ui top right attached mini label">
-					Wage Determination
-				</div>
+        <div *ngIf = "isSCA" class="sam-ui top right attached mini label">
+          SCA Wage Determination
+        </div>
+        <div *ngIf = "!isSCA" class="sam-ui top right attached mini label">
+          DBA Wage Determination
+        </div>
 
 				<div class="sam-ui attached grid">
           <div class="column">
@@ -162,7 +165,7 @@
     <section id="wd-history" *ngIf="processedHistory">
 
       <h2 class="sam-ui header">History
-        <samButton *ngIf="shortProcessedHistory" [buttonId]="'defaultBtnHistory'" [buttonText]="!showingLongHistory ? 'Show More' : 'Show Less'" [buttonType]="btnType" (click)="showHideLongHistory()"></samButton>
+        <sam-button *ngIf="shortProcessedHistory" [buttonId]="'defaultBtnHistory'" [buttonText]="!showingLongHistory ? 'Show More' : 'Show Less'" [buttonType]="btnType" (click)="showHideLongHistory()"></sam-button>
       </h2>
 
       <sam-history [data]="processedHistory" [currentId]="wageDetermination.fullReferenceNumber + '/' + wageDetermination.revisionNumber"></sam-history>

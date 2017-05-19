@@ -4,7 +4,7 @@ import { SYSTEM_ALERTS_PAGE_PATH } from "../../alerts/alerts.route";
 
 
 @Component({
-  selector: 'samFooter',
+  selector: 'sam-footer',
   templateUrl:'footer.template.html',
 })
 export class SamFooterComponent {

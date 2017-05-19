@@ -1,5 +1,5 @@
 <!--Delete Modal-->
-<samModal *ngIf="config.deleteModal" #deleteModal
+<sam-modal *ngIf="config.deleteModal" #deleteModal
           [showClose]="true"
           [closeOnOutsideClick]="true"
           [closeOnEscape]="true"
@@ -9,9 +9,9 @@
           [submitButtonLabel]="'Ok'"
           [cancelButtonLabel]="'Cancel'"
           (onSubmit)="onDeleteModalSubmit($event)">
-</samModal>
+</sam-modal>
 
-<labelWrapper #accountIdentificationLabel
+<sam-label-wrapper #accountIdentificationLabel
               [name]="config.name"
               [label]="config.label"
               [hint]="config.hint"
@@ -65,7 +65,7 @@
     <!-- Add new account form -->
     <div [hidden]="!isEditing">
       <!-- New account code -->
-      <labelWrapper #codeLabel
+      <sam-label-wrapper #codeLabel
                     [name]="config.name + '-accountcode'"
                     [label]="'Code'"
                     [hint]="config.codeHint"
@@ -76,31 +76,31 @@
             <ng-container *ngFor="let length of codePartLengths; let i = index; let isLast = last">
               <!-- todo: don't hardcode maxwidth -->
               <!-- todo: add minLength -->
-              <samText class="code-box"
+              <sam-text class="code-box"
                        [name]="config.name + '-code-box' + i"
                        [maxlength]="length"
                        [style.maxWidth]="0.9*length + 2.8 + 'rem'"
                        [formControlName]="'codePart' + i"
                        (keyup)="onKeyup($event)"
-              ></samText>
+              ></sam-text>
               <span class="code-separator" *ngIf="!isLast">-</span>
             </ng-container>
           </div>
         </div>
 
-      </labelWrapper>
+      </sam-label-wrapper>
 
       <!-- New account description -->
-      <samTextArea [name]="config.name + '-description'"
+      <sam-text-area [name]="config.name + '-description'"
                    [formControl]="descriptionControl"
-      ></samTextArea>
+      ></sam-text-area>
     </div>
 
     <!-- Add new account form action buttons -->
-    <samButton *ngIf="!isEditing" buttonText="Add New Account" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
+    <sam-button *ngIf="!isEditing" buttonText="Add New Account" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
 
-    <samButton *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
-    <samButton *ngIf="isEditing" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="(codeForm.valid ? 'default' : 'disabled')"></samButton>
+    <sam-button *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></sam-button>
+    <sam-button *ngIf="isEditing" buttonText="Confirm" (onClick)="addAccount()" [buttonType]="(codeForm.valid ? 'default' : 'disabled')"></sam-button>
   </div>
 
-</labelWrapper>
+</sam-label-wrapper>

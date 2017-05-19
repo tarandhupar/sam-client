@@ -4,7 +4,7 @@
 
     <!-- Domain -->
     <div *ngIf="mode !== 'edit' && !userCameFromRoleWorkspace">
-      <samSelect [disabled]="userCameFromRoleWorkspace" name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></samSelect>
+      <sam-select [disabled]="userCameFromRoleWorkspace" name="domain" label="Domain" [model]="domain" (modelChange)="onDomainChange($event)" [options]="domainOptions" required="true" [errorMessage]="errors.domain"></sam-select>
     </div>
     <div *ngIf="mode === 'edit' && !userCameFromRoleWorkspace">
       <div class="usa-grid-full">
@@ -23,13 +23,13 @@
 
     <!-- Supervisor Name and email -->
     <ng-container *ngIf="mode === 'request'">
-      <samText label="Supervisor Name" name="supervisor-name" [(ngModel)]="supervisorName" [errorMessage]="errors.supervisorName" [required]="true" (change)="onSupervisorNameChange($event)"></samText>
-      <samText label="Supervisor Email" name="supervisor-email" [(ngModel)]="supervisorEmail" [errorMessage]="errors.supervisorEmail" [required]="true" (change)="onSupervisorEmailChange($event)"></samText>
+      <sam-text label="Supervisor Name" name="supervisor-name" [(ngModel)]="supervisorName" [errorMessage]="errors.supervisorName" [required]="true" (change)="onSupervisorNameChange($event)"></sam-text>
+      <sam-text label="Supervisor Email" name="supervisor-email" [(ngModel)]="supervisorEmail" [errorMessage]="errors.supervisorEmail" [required]="true" (change)="onSupervisorEmailChange($event)"></sam-text>
     </ng-container>
 
     <!-- Role -->
     <div *ngIf="mode === 'grant'">
-      <samSelect name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></samSelect>
+      <sam-select name="role" label="Role" [model]="role" (modelChange)="onRoleChange($event)" [options]="roleOptions" required="true" [errorMessage]="errors.role"></sam-select>
     </div>
     <div *ngIf="mode === 'edit'">
       <div class="usa-grid-full m_T-4x">
@@ -41,7 +41,7 @@
     </div>
 
     <!-- Orgs -->
-    <agencyPicker
+    <sam-agency-picker
       *ngIf="mode !== 'request'"
       [label]="'Organizations'"
       [multimode]="true"
@@ -49,7 +49,7 @@
       [required]="true"
       [searchMessage]="errors.org"
       [initial]="orgs"
-    ></agencyPicker>
+    ></sam-agency-picker>
 
     <ng-container *ngIf="objects">
       <!-- Read Only -->
@@ -84,7 +84,7 @@
     </ng-container>
 
     <!-- Optional Message -->
-    <samTextArea name="options-response" label="Messages:" [hint]="messagePlaceholder()" [(ngModel)]="messages" [required]="isMessageRequired()" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></samTextArea>
+    <sam-text-area name="options-response" label="Messages:" [hint]="messagePlaceholder()" [(ngModel)]="messages" [required]="isMessageRequired()" [errorMessage]="errors.messages" (valueChange)="onMessageChange($event)"></sam-text-area>
 
     <!-- Cancel / Confirm -->
     <div>

@@ -1,4 +1,5 @@
-<section class="report-padding-top-50" [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
+<section class="usa-grid-full" [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
+  <div class="sam-ui hidden divider"></div>
   <h2 class="m_T-2x">Reports</h2>
   <p class="p_L-8x">
     Sam.gov reports can be used to support analysis of federal spending including geographical analysis,
@@ -41,9 +42,9 @@
       <div class="grid-date1">
         <div class="p_R-0x">
           <span *ngIf="states.isSignedIn" >
-            <samPagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()"
+            <sam-pagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()"
                (pageChange)="onParamChanged($event)">
-            </samPagination>
+            </sam-pagination>
           </span>
         </div>
       </div>
@@ -81,11 +82,11 @@
             </div>
             <div class="usa-grid-full">
               <samAccordion >
-                <samAccordionSection [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">
+                <sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">
                   <div  class="grid-name"></div>
                   <div class="grid-date"><i class="fa fa-trash"></i></div>
-                  <!--<samAccordionSection [name]="'Saved Criteria'" [headerText]="'Saved ' + item.name">{{item.name}}-->
-                </samAccordionSection>
+                  <!--<sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved ' + item.name">{{item.name}}-->
+                </sam-accordion-section>
               </samAccordion>
             </div>
           </div>
@@ -93,9 +94,9 @@
       </ul>
     </section>
     <span *ngIf="states.isSignedIn">
-      <samPagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()"
+      <sam-pagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()"
                (pageChange)="onParamChanged($event)">
-      </samPagination>
+      </sam-pagination>
     </span>
   </div>
 </section>

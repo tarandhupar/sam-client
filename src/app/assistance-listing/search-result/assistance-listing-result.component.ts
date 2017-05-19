@@ -59,7 +59,7 @@ import * as moment from 'moment/moment';
             </li>
             <li class="item">
               <span class="sam-ui mini label">
-                Federal Assistance Listing
+                Assistance Listing
               </span>
             </li>
             <li class="item">

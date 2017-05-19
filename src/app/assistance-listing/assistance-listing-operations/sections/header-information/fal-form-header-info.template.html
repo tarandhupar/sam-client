@@ -1,30 +1,30 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Header Information - {{ viewModel.title }}</div>
 <form [formGroup]="falHeaderInfoForm">
-  <samText [maxlength]="144"
+  <sam-text [maxlength]="144"
            [hint]="'Spell out any acronyms and limit to 144 characters.'"
            [control]="falHeaderInfoForm.controls['title']"
            [name]="'title-input'"
            [label]="'Title'"
            [required]="true"
-           formControlName="title"></samText>
+           [errorMessage]="falHeaderInfoForm.controls['title'].valid || falHeaderInfoForm.controls['title'].pristine ? '': errorMessage"
+           formControlName="title"></sam-text>
 
-  <samText [hint]="'The Popular Name should be different than the Program Title.'"
+  <sam-text [hint]="'The Popular Name should be different than the Program Title.'"
            [control]="falHeaderInfoForm.controls['alternativeNames']"
            [name]="'alternative-names-input'"
            [label]="'Popular Name'"
-           formControlName="alternativeNames"></samText>
+           formControlName="alternativeNames"></sam-text>
 
-  <agencyPicker [label]="'Federal Agency'"
+  <sam-agency-picker [label]="'Federal Agency'"
                 [multimode]="false"
                 [advancedMode]="false"
                 [required]="true"
                 [orgId]="organizationId"
                 [initial]="organizationId ? [organizationId] : []"
                 (organization)="onOrganizationChange($event)"
-                [levelLimit]='2'>
-  </agencyPicker>
+                [levelLimit]='2' #agencyPicker></sam-agency-picker>
 
-  <samNumber [maxlength]="3"
+  <sam-number [maxlength]="3"
              [minlength]="3"
              [required]="true"
              [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
@@ -32,7 +32,7 @@
              [name]="'programNumber-input'"
              [label]="'FAL Number'"
              [errorMessage]="falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
-             formControlName="programNumber"></samNumber>
+             formControlName="programNumber"></sam-number>
 
   <sam-list-display  [newValue]="rpNGModel"
                      formControlName="rpListDisplay"
@@ -40,7 +40,7 @@
                      (modelChange)="relatedProglistChange()"
                      [config]="relProAutocompleteConfig">
 
-    <labelWrapper [label]="'Related Federal Assistance Listing'"
+    <sam-label-wrapper [label]="'Related Federal Assistance Listing'"
                   [hint]="'Are there any related federal assistance listings?'">
 
       <sam-autocomplete autofill-falProgram
@@ -51,6 +51,6 @@
                         class="search-bar sam-autocomplete-width">
 
       </sam-autocomplete>
-    </labelWrapper>
+    </sam-label-wrapper>
   </sam-list-display>
 </form>

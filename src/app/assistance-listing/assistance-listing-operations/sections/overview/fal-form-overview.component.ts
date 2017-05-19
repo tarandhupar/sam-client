@@ -220,4 +220,11 @@ export class FALFormOverviewComponent implements OnInit {
     return projectsForm;
   }
 
+  validateSection(){
+
+    for(let key of Object.keys(this.falOverviewForm.controls)) {
+      this.falOverviewForm.controls[key].markAsDirty();
+      this.falOverviewForm.controls[key].updateValueAndValidity();
+    }
+  }
 }

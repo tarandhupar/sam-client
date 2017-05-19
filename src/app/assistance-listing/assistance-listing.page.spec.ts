@@ -17,6 +17,7 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { Observable } from 'rxjs';
 import { FinancialObligationChart } from './assistance-listing.chart';
 import {RouterTestingModule} from "@angular/router/testing";
+import {SidenavHelper} from "../app-utils/sidenav-helper";
 
 let comp: ProgramPage;
 let fixture: ComponentFixture<ProgramPage>;
@@ -516,6 +517,7 @@ describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
        //start - Mocks HTTP provider
         BaseRequestOptions,
         MockBackend,
+        SidenavHelper,
         {
           provide: Http,
           useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
@@ -524,7 +526,7 @@ describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
           deps: [MockBackend, BaseRequestOptions],
         },
         { provide: Location, useClass: Location },
-        { provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '3077ea1df409265fb4378e0e844b8811' }]) } },
+        //{ provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '3077ea1df409265fb4378e0e844b8811' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectPipe },
         KeysPipe,

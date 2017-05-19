@@ -5,7 +5,7 @@
         <!--
         <div class="usa-width-five-twelfths">
           <h3>Select an Organization</h3>
-          <agencyPicker [multimode]="false"></agencyPicker>
+          <sam-agency-picker [multimode]="false"></sam-agency-picker>
         </div>
         -->
         <div class="usa-width-one-fourth">
@@ -43,13 +43,13 @@
         <h2>Access Management
           <div class="pull-right">
             <strong class="sort-label">Sort (Requested Date)</strong>
-            <samSelect
+            <sam-select
               class="sort-options"
               [(model)]="selectModel"
               [name]="'created-date-sort'"
               [options]="selectConfig.options"
               (modelChange)="onSelectChanged($event)">
-            </samSelect>
+            </sam-select>
           </div>
         </h2>
         <h3 class="showing-count">{{showingCountText()}}</h3>
@@ -151,7 +151,7 @@
           </div>
 
           <samAccordion>
-            <samAccordionSection [name]="'comments'" [headerText]="'Comments'">
+            <sam-accordion-section [name]="'comments'" [headerText]="'Comments'">
               <section class="comment-section" *ngIf="content.requestorMessage">
                 <div class="comment-user-icon">
                   <i class="fa fa-user"></i>
@@ -174,10 +174,10 @@
                   {{content.adminMessage}}
                 </div>
               </section>
-            </samAccordionSection>
+            </sam-accordion-section>
           </samAccordion>
           <samAccordion *ngIf='content.status.toLowerCase() === "approved"' class="details-accordion">
-            <samAccordionSection [name]="'details'" [headerText]="'Details'">
+            <sam-accordion-section [name]="'details'" [headerText]="'Details'">
               <div class="usa-grid-full">
                 <div class="usa-width-one-third">
                   <div><strong>Role Granted</strong></div>
@@ -188,7 +188,7 @@
                   <div>{{getOrganizations(content)}}</div>
                 </div>
               </div>
-            </samAccordionSection>
+            </sam-accordion-section>
           </samAccordion>
         </div>
       </section>
@@ -196,7 +196,7 @@
   </div>
   <div class = "pag-com">
     <div *ngIf ="totalPages > 1">
-      <samPagination [currentPage]="currPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></samPagination>
+      <sam-pagination [currentPage]="currPage" [totalPages]="totalPages" (pageChange)="onPageChange($event)"></sam-pagination>
     </div>
   </div>
 </div>

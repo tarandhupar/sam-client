@@ -112,6 +112,14 @@ export class SearchService {
       oApiParam.oParam['duns'] = obj.duns;
     }
 
+    if(typeof obj.applicant !== 'undefined' && obj.applicant !== null && obj.applicant !== ''){
+      oApiParam.oParam['applicant'] = obj.applicant;
+    }
+
+    if(typeof obj.beneficiary !== 'undefined' && obj.beneficiary !== null && obj.beneficiary !== ''){
+      oApiParam.oParam['beneficiary'] = obj.beneficiary;
+    }
+
     return this.oAPIService.call(oApiParam);
   }
 

@@ -1,5 +1,5 @@
 <!--Delete Modal-->
-<samModal *ngIf="config.deleteModal" #deleteModal
+<sam-modal *ngIf="config.deleteModal" #deleteModal
           [showClose]="true"
           [closeOnOutsideClick]="true"
           [closeOnEscape]="true"
@@ -9,19 +9,19 @@
           [submitButtonLabel]="'Ok'"
           [cancelButtonLabel]="'Cancel'"
           (onSubmit)="onDeleteModalSubmit($event)">
-</samModal>
+</sam-modal>
 
-<labelWrapper #fyTableWrapper
+<sam-label-wrapper #fyTableWrapper
               [name]="config.name"
               [label]="config.label"
               [hint]="config.hint"
               [required]="config.required">
 
   <div *ngIf="fyTableGroup" [formGroup]="fyTableGroup">
-    <samCheckbox [name]="config.name + '-checkbox'"
+    <sam-checkbox [name]="config.name + '-checkbox'"
                  [options]="checkboxOptions"
                  [formControlName]="'naCheckbox'"
-    ></samCheckbox>
+    ></sam-checkbox>
 
     <div [hidden]="!model.isApplicable">
       <table class="sam-ui table celled" *ngIf="model.entries && model.entries.length > 0">
@@ -62,25 +62,25 @@
         </tbody>
       </table>
 
-      <samSelect *ngIf="isEditing"
+      <sam-select *ngIf="isEditing"
                  [hint]="'Select a Year'"
                  [name]="config.name + '-year-select'"
                  [required]="false"
                  [options]="yearOptions"
                  [formControlName]="'year'"
-      ></samSelect>
+      ></sam-select>
 
-      <samTextArea *ngIf="isEditing"
+      <sam-text-area *ngIf="isEditing"
                    [hint]="config.entry?.hint"
                    [name]="config.name + '-textarea'"
                    [required]="false"
                    [formControlName]="'textarea'"
-      ></samTextArea>
+      ></sam-text-area>
 
-      <samButton *ngIf="!isEditing && yearOptions && yearOptions.length > 0" [buttonText]="'Add ' + config.itemName" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
-      <samButton *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
-      <samButton *ngIf="isEditing" buttonText="Confirm" (onClick)="addEntry()" [buttonType]="(!fyTableGroup.valid ? 'disabled' : 'default')"></samButton>
+      <sam-button *ngIf="!isEditing && yearOptions && yearOptions.length > 0" [buttonText]="'Add ' + config.itemName" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
+      <sam-button *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></sam-button>
+      <sam-button *ngIf="isEditing" buttonText="Confirm" (onClick)="addEntry()" [buttonType]="(!fyTableGroup.valid ? 'disabled' : 'default')"></sam-button>
     </div>
   </div>
 
-</labelWrapper>
+</sam-label-wrapper>

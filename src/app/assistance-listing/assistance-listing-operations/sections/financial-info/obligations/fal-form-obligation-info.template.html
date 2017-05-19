@@ -2,12 +2,12 @@
 <form [formGroup]="finObligationsForm">
   <div class="usa-grid">
     <div class="fal-label-margin"> Select if applicable</div>
-    <samCheckbox
+    <sam-checkbox
       [control]="finObligationsForm.controls['isFundedCurrentFY']"
       [name]="currentFiscalYearCheckboxConfig.name"
       [options]="currentFiscalYearCheckboxConfig.options"
        formControlName="isFundedCurrentFY">
-    </samCheckbox>
+    </sam-checkbox>
     <div class="fal-obligations-label">Obligations</div>
     <falObligationFYTable
       [fyYearOptions] = "fyYearOptions"

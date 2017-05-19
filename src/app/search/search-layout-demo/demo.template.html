@@ -1,10 +1,10 @@
 <search-layout [attr.class]="'search-page'" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages" [totalElements]="totalCount">
 	<div search-sidebar>
 		<sam-collapsible [label]="'Filter By Agency'">
-			<agencyPicker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></agencyPicker>
+			<sam-agency-picker #fhInput [multimode]="false" [label]="'Filter by Organization:'" (organization)="onOrganizationChange($event)"></sam-agency-picker>
 		</sam-collapsible>
 		<sam-collapsible [label]="'Filter By Date'">
-			<samDate [name]="'dateFilter'"></samDate>
+			<sam-date [name]="'dateFilter'"></sam-date>
 		</sam-collapsible>
 	</div>
 	<div search-title>

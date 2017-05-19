@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter,ViewChild } from '@angular/core'
 import { SamSearchbarComponent } from '../searchbar/searchbar.component';
 
 @Component({
-  selector: 'samSearchHeader',
+  selector: 'sam-search-header',
   template: `
     <header id="sam-search-header" class='search-header'>
       <div class="usa-width-one-whole">

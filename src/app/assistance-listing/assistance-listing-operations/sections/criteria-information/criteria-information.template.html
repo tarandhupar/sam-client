@@ -9,7 +9,7 @@
   <div class="fal-label-margin fal-label">Eligibility Requirements</div>
     <sam-list-display  [newValue]="appNGModel" formControlName="appListDisplay"
                        (ngModelChange)="applicantTypeChange($event)" (modelChange)="applicantlistChange()" [config]="appAutocompleteConfig">
-      <labelWrapper #applicantTypeWrapper [label]="'Applicant Eligibility'" [required]="true"
+      <sam-label-wrapper #applicantTypeWrapper [label]="'Applicant Eligibility'" [required]="true"
                     [hint]="'Please select all that apply to help public users search for this listing.'">
         <sam-autocomplete #appAutoComplete
           [options]="applicantTypeOptions"
@@ -18,25 +18,25 @@
           [(ngModel)]="appNGModel"
           [config]="appAutocompleteConfig"
           required  class="search-bar sam-autocomplete-width"></sam-autocomplete>
-      </labelWrapper>
+      </sam-label-wrapper>
     </sam-list-display>
-  <samTextArea
+  <sam-text-area
     [control]="falCriteriaForm.controls['applicantDesc']"
     [name]="'applicant-description-input'"
     [label]="'Describe who may apply for the assistance. Use specific terms that will help public users find this listing.'"
-    formControlName="applicantDesc"></samTextArea>
+    formControlName="applicantDesc"></sam-text-area>
 
   <div class="fal-label-margin fal-label">Beneficiary Eligibility</div>
-  <samCheckbox
+  <sam-checkbox
     [control]="falCriteriaForm.controls['isSameAsApplicant']"
     [name]="'beneficiary-SameAsApplicant-input-checkbox'"
     [options]="benSameAsApplicantConfig.options"
     formControlName="isSameAsApplicant"
-    (modelChange)="chkSameAsApp($event)"></samCheckbox>
+    (modelChange)="chkSameAsApp($event)"></sam-checkbox>
   <div *ngIf="toggleBeneficiarySection">
     <sam-list-display  [newValue]="benNGModel" formControlName="benListDisplay"
                       (ngModelChange)="benTypeChange($event)" (modelChange)="benlistChange()" [config]="benAutocompleteConfig">
-      <labelWrapper #benTypeWrapper [label]="'Beneficiary Eligibility'" [required]="true"
+      <sam-label-wrapper #benTypeWrapper [label]="'Beneficiary Eligibility'" [required]="true"
                     [hint]="'Please select all that apply to help public users search for this listing.'">
         <sam-autocomplete
           [options]="benTypeOptions"
@@ -45,23 +45,23 @@
           [(ngModel)]="benNGModel"
           [config]="benAutocompleteConfig"
           required  class="search-bar sam-autocomplete-width"></sam-autocomplete>
-      </labelWrapper>
+      </sam-label-wrapper>
     </sam-list-display>
-    <samTextArea
+    <sam-text-area
       [control]="falCriteriaForm.controls['benDesc']"
       [name]="'beneficiary-description-input'"
       [label]="'Describe who may benefit from the assistance.'"
-      formControlName="benDesc"></samTextArea>
+      formControlName="benDesc"></sam-text-area>
   </div>
-  <samTextArea
+  <sam-text-area
     [hint]="'Describe the period of time when assistance is available. Also, the period of time when funding must be spent.'"
     [control]="falCriteriaForm.controls['lengthTimeDesc']"
     [name]="'lengthandtime-description-input'"
     [label]="'Length and Time Phasing of Assistance'"
     [required]="true"
-    formControlName="lengthTimeDesc"></samTextArea>
+    formControlName="lengthTimeDesc"></sam-text-area>
 
-  <samSelect
+  <sam-select
     [control]="falCriteriaForm.controls.awardedTypes"
     [label]="'How is this assistance awarded and/or released?'"
     [name]="'awardedtypes-control'"
@@ -69,19 +69,19 @@
     [options]="awardedTypeOptions"
     formControlName="awardedTypes"
     [hint]="'Select the value that best represent how funding is released.'"
-    (modelChange)="onawardedTypeChange($event)"></samSelect>
+    (modelChange)="onawardedTypeChange($event)"></sam-select>
 
   <div *ngIf="awardedTextarea">
-    <samTextArea
+    <sam-text-area
       [control]="falCriteriaForm.controls['awardedDesc']"
       [name]="'awarded-description-input'"
       [label]="'Additional Information'"
-      formControlName="awardedDesc"></samTextArea>
+      formControlName="awardedDesc"></sam-text-area>
   </div>
   <div class="fal-label-margin fal-label">Use and Use Restrictions</div>
   <sam-list-display  [newValue]="assUsageNGModel" formControlName="assListDisplay"
                     (ngModelChange)="assUsageTypeChange($event)" (modelChange)="assUsagelistChange()" [config]="assUsageAutocompleteConfig">
-    <labelWrapper #assUsageTypeWrapper [label]="'Use of Assistance'" [required]="true"
+    <sam-label-wrapper #assUsageTypeWrapper [label]="'Use of Assistance'" [required]="true"
                   [hint]="'Please select all that apply from the dropdown list.'">
       <sam-autocomplete
         [options]="assUsageTypeOptions"
@@ -90,14 +90,14 @@
         [(ngModel)]="assUsageNGModel"
         [config]="assUsageAutocompleteConfig"
         required class="search-bar sam-autocomplete-width"></sam-autocomplete>
-    </labelWrapper>
+    </sam-label-wrapper>
   </sam-list-display>
-  <samTextArea
+  <sam-text-area
     [control]="falCriteriaForm.controls['assUsageDesc']"
     [name]="'assistanceusage-description-input'"
     [label]="'Describe how assistance may be used. Use specific terms that will help public users find this listing.'"
     [required]="true"
-    formControlName="assUsageDesc"></samTextArea>
+    formControlName="assUsageDesc"></sam-text-area>
   <samCheckboxToggledTextarea class = "toggle-text-checkbox" [options]="useResConfig"
                               [formControlName]="'usageRes'" [textareaLabel] = "['Please describe']"
   ></samCheckboxToggledTextarea>
@@ -108,9 +108,9 @@
                               [formControlName]="'useLoanTerms'" [textareaLabel] = "['Please describe']"
   ></samCheckboxToggledTextarea>
   <div class="pull-left">
-    <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-    <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
-    <samButton buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
-    <samButton buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+    <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+    <sam-button buttonText="Previous" (onClick)="onPreviousClick($event)"></sam-button>
+    <sam-button buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></sam-button>
+    <sam-button buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></sam-button>
   </div>
 </form>

@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
 import {AutocompleteConfig} from "sam-ui-kit/types";
@@ -15,8 +15,10 @@ export class FALFormHeaderInfoComponent implements OnInit {
   falNoPrefix: string;
 
   @Input() viewModel: FALFormViewModel;
+  @ViewChild('agencyPicker') agencyPicker;
   falHeaderInfoForm: FormGroup;
 
+  errorMessage: string = '';
   public organizationId: string;
 
   // Related Program multi-select
@@ -34,7 +36,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
   ngOnInit() {
 
     this.falHeaderInfoForm = this.fb.group({
-      'title': '',
+      'title': [''],
       'alternativeNames': [''],
       'programNumber': null,
       'relatedPrograms': '',
@@ -153,4 +155,16 @@ export class FALFormHeaderInfoComponent implements OnInit {
     }
     return PlaceholderMsg;
   }
+
+  validateSection(){
+
+  this.agencyPicker.touched = true;
+  this.agencyPicker.checkForFocus(null);
+
+  for(let key of Object.keys(this.falHeaderInfoForm.controls)) {
+    this.falHeaderInfoForm.controls[key].markAsDirty();
+    this.falHeaderInfoForm.controls[key].updateValueAndValidity();
+  }
+}
+
 }

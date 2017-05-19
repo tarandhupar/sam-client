@@ -1,5 +1,5 @@
-<labelWrapper class="sam-list-input">
-  <div class="sam-autocomplete" samClickOutside (clickOutside)="checkForFocus($event)" samTabOutside (tabOutside)="checkForFocus($event)">
+<sam-label-wrapper class="sam-list-input">
+  <div class="sam-autocomplete" sam-click-outside (clickOutside)="checkForFocus($event)" sam-tab-outside (tabOutside)="checkForFocus($event)">
     <!-- Text input -->
     <label *ngIf="labelText || labelText" [attr.for]="id">{{labelText}}<span class="usa-sr-only">&nbsp;autocomplete</span></label>
     <div class="input-container">
@@ -23,7 +23,7 @@
     <ul #srOnly class="usa-sr-only" role="status" aria-live="assertive" aria-relevant="additions">
     </ul>
   </div>s
-</labelWrapper>
+</sam-label-wrapper>
 
 <!--<sam-fal-autocomplete [options] = "applicantTypeOptions"
                       [name]="applicantTypes-control"

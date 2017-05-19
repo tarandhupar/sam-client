@@ -17,6 +17,7 @@ import { TimezoneLabelPipe } from './pipes/timezone-label.pipe';
 import { FixHTMLPipe } from './pipes/fix-html.pipe';
 import { FilesizePipe } from './pipes/filesize.pipe';
 import { SamUIKitModule } from 'sam-ui-kit';
+import {SidenavHelper} from "../app-utils/sidenav-helper";
 
 let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
@@ -364,6 +365,7 @@ describe('src/app/opportunity/opportunity.spec.ts', () => {
       providers: [
         BaseRequestOptions,
         MockBackend,
+        SidenavHelper,
         {
           provide: Http,
           useFactory: (backend: MockBackend, defaultOptions: BaseRequestOptions) => {
@@ -408,7 +410,6 @@ describe('src/app/opportunity/opportunity.spec.ts', () => {
     expect(comp.opportunity.opportunityId).toBe('213ji321hu3jk123');
     expect(fixture.debugElement.query(By.css('h1')).nativeElement.innerHTML).toContain('Title Goes here');
     expect(comp.originalOpportunity).toBeDefined();
-    expect(comp.history).toBeDefined();
     expect(comp.processedHistory).toBeDefined();
     expect(comp.dictionary).toBeDefined();
     expect(comp.packages).toBeDefined();
@@ -521,7 +522,7 @@ describe('src/app/opportunity/opportunity.spec.ts', () => {
     expect(console.log).toHaveBeenCalledWith('Error: No opportunity type');
 
     setDisplaySpy(mockAPIDataType('non-existant type'));
-    expect(console.log).toHaveBeenCalledWith('Error: Unknown opportunity type non-existant type');
+    expect(console.log).toHaveBeenCalledWith('Error: Unknown opportunity type ');
   });
 
   it('OpportunityPage: Should check display flag for fields', () => {

@@ -26,10 +26,10 @@
 
 
         <div class="pull-left">
-          <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-          <samButton *ngIf="i > 0" buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
-          <samButton [buttonId]="item.section + '_se'" [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
-          <samButton *ngIf="i != objectFormData.length - 1" [buttonId]="item.section + '_sc'" [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+          <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+          <sam-button *ngIf="i > 0" buttonText="Previous" (onClick)="onPreviousClick($event)"></sam-button>
+          <sam-button [buttonId]="item.section + '_se'" [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></sam-button>
+          <sam-button *ngIf="i != objectFormData.length - 1" [buttonId]="item.section + '_sc'" [buttonType]="(!mainForm.controls[item.section].valid ? 'disabled' : 'default')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></sam-button>
         </div>
 
       </div>

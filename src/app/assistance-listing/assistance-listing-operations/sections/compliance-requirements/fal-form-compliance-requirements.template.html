@@ -1,17 +1,17 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Compliance Requirements - {{ viewModel.title }}</div>
 <div *ngIf="complianceRequirementsGroup" [formGroup]="complianceRequirementsGroup">
-  <samCheckbox [name]="policyRequirementsConfig.checkbox.name"
+  <sam-checkbox [name]="policyRequirementsConfig.checkbox.name"
                [label]="policyRequirementsConfig.checkbox.label"
                [hint]="policyRequirementsConfig.checkbox.hint"
                [options]="policyRequirementsConfig.checkbox.options"
                [formControlName]="'policyRequirementsCheckbox'"
-  ></samCheckbox>
+  ></sam-checkbox>
 
-  <samTextArea [name]="policyRequirementsConfig.textarea.name"
+  <sam-text-area [name]="policyRequirementsConfig.textarea.name"
                [label]="policyRequirementsConfig.textarea.label"
                [control]="complianceRequirementsGroup.get('policyRequirementsTextarea')"
                [formControlName]="'policyRequirementsTextarea'"
-  ></samTextArea>
+  ></sam-text-area>
 
   <samCheckboxToggledTextarea [options]="reportsConfig"
                               [formControlName]="'reports'"
@@ -22,12 +22,12 @@
                               [formControlName]="'audits'"
   ></samCheckboxToggledTextarea>
 
-  <samTextArea [label]="'Records'"
+  <sam-text-area [label]="'Records'"
                [hint]="'Describe required records. Include the time period when the records must be kept.'"
                [name]="'compliance-records'"
                [control]="records"
                [formControlName]="'records'"
-  ></samTextArea>
+  ></sam-text-area>
 
   <samCheckboxToggledTextarea [options]="additionalDocumentationConfig"
                               [formControlName]="'additionalDocumentation'"

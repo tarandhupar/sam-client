@@ -49,7 +49,7 @@ import * as moment from 'moment/moment';
             </li>
             <li class="item">
               <span class="sam-ui mini label">
-                Opportunity
+                Contract Opportunities
               </span>
             </li>
             <li class="item">

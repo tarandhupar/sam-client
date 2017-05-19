@@ -2,22 +2,22 @@
   <h1>{{mode === 'edit' ? 'Edit' : 'New' }} Object</h1>
 
   <!-- Domain select -->
-  <!--<labelWrapper name="domain" label="Domain">-->
-    <!--<samMultiSelectDropdown name='domain' label="Domain" [options]="domainOptions" [(model)]="selectedDomains" (modelChange)="onDomainsChange()"></samMultiSelectDropdown>-->
-  <!--</labelWrapper>-->
+  <!--<sam-label-wrapper name="domain" label="Domain">-->
+    <!--<sam-multiselect-dropdown name='domain' label="Domain" [options]="domainOptions" [(model)]="selectedDomains" (modelChange)="onDomainsChange()"></sam-multiselect-dropdown>-->
+  <!--</sam-label-wrapper>-->
   <ng-container *ngIf="mode === 'edit'">
     <label for="domain">Domain</label>
     <span id="domain">{{domainName}}</span>
   </ng-container>
   <ng-container *ngIf="mode === 'new'">
-    <samSelect name="domain" label="Domain" [options]="domainOptions" [(model)]="selectedDomain" (modelChange)="onDomainChange()"></samSelect>
+    <sam-select name="domain" label="Domain" [options]="domainOptions" [(model)]="selectedDomain" (modelChange)="onDomainChange()"></sam-select>
   </ng-container>
 
 
   <!-- Object name -->
-  <labelWrapper name="object" label="Object Name">
+  <sam-label-wrapper name="object" label="Object Name">
     <input id="object" type="text" [(ngModel)]="objectName">
-  </labelWrapper>
+  </sam-label-wrapper>
 
   <!-- Permissions -->
   <div class="usa-grid-full">

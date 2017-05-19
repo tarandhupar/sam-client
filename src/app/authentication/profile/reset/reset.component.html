@@ -1,7 +1,7 @@
-<samAlert class="usa-alert-static" type="info" title="Migrate Your Roles">
+<sam-alert class="usa-alert-static" type="info" title="Migrate Your Roles">
   If you have a user account at any of the <a routerLink="/profile/migrations" fragment="legacy-sites">websites</a> that are moving to the new SAM.gov,
   you may migrate your roles and keep your same permissions. <a routerLink="/profile/migrations" fragment="top">Begin Now</a>.
-</samAlert>
+</sam-alert>
 
 <h2 [innerText]="store.title"></h2>
 <div>
@@ -13,16 +13,16 @@
                     #password></sam-password>
       <div class="usa-button-controls">
         <button type="submit" [disabled]="states.loading">Submit</button>
-        <samAlert [type]="states.alert.type"
+        <sam-alert [type]="states.alert.type"
                   [title]="states.alert.message"
                   [hidden]="!states.alert.show"
-                  showClose="true"></samAlert>
+                  showClose="true"></sam-alert>
       </div>
     </div>
-    <samAlert [type]="states.alert.type"
+    <sam-alert [type]="states.alert.type"
               [title]="states.alert.title"
               [hidden]="!states.alert.show"
               placement="bottom center"
-              showClose="true"></samAlert>
+              showClose="true"></sam-alert>
   </form>
 </div>

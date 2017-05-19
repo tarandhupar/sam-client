@@ -155,16 +155,16 @@ body.feedback-open {
     margin-top: 0;
   }
 
-  samAccordionSection{
+  sam-accordion-section{
 
   }
 
-  samAccordionSection li{
+  sam-accordion-section li{
     margin-top: 5px;
     position: relative;
   }
 
-  samAccordionSection li button{
+  sam-accordion-section li button{
     background-color: $color-cool-blue-lightest;
     font-weight: 400;
     font-size: 100%;
@@ -172,7 +172,7 @@ body.feedback-open {
     padding-left: 50px;
   }
 
-  samAccordionSection li button:hover{
+  sam-accordion-section li button:hover{
     background-color: $color-cool-blue-lightest;
   }
 

@@ -1,5 +1,5 @@
 <div [formGroup]="fieldFormGroup">
-  <samText *ngIf="field.type == 'samText'"
+  <sam-text *ngIf="field.type == 'sam-text'"
            [label] = "field.label"
            [name] = "field.name + '-input'"
            [maxlength] = "field.maxlength"
@@ -8,9 +8,9 @@
            [control] = "control"
            [value] = "value"
            [formControlName] = "field.name"
-  ></samText>
+  ></sam-text>
 
-  <samNumber *ngIf="field.type == 'samNumber'"
+  <sam-number *ngIf="field.type == 'sam-number'"
              [label] = "field.label"
              [name] = "field.name + '-input'"
              [maxlength] = "field.maxlength"
@@ -21,9 +21,9 @@
              [value] = "value"
              [formControlName] = "field.name"
              [errorMessage] = "((control.valid == false) && (control.dirty || control.touched)) ? field.errorMessage : ''"
-  ></samNumber>
+  ></sam-number>
 
-  <samTextArea *ngIf="field.type == 'samTextArea'"
+  <sam-text-area *ngIf="field.type == 'sam-text-area'"
                [label] = "field.label"
                [name] = "field.name + '-input'"
                [maxlength] = "field.maxlength"
@@ -32,7 +32,7 @@
                [control] = "control"
                [value] = "value"
                [formControlName] = "field.name"
-  ></samTextArea>
+  ></sam-text-area>
 
   <sam-list-input *ngIf="field.type == 'sam-list-input'"
                   [label] = "field.label"

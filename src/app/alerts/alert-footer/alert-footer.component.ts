@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {AlertFooterService} from "./alert-footer.service";
 
 @Component({
-  selector: 'alertFooter',
+  selector: 'alert-footer',
   templateUrl: 'alert-footer.template.html'
 })
 export class AlertFooterComponent {

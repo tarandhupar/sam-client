@@ -1,4 +1,5 @@
-<section class="usa-grid-full report-padding-top-50">
+<section class="usa-grid-full">
+  <div class="sam-ui hidden divider"></div>
   <h2 class="m_T-2x">Reports</h2>
   <p class="p_L-8x">
     Sam.gov reports can be used to support analysis of federal spending including geographical analysis,
@@ -53,14 +54,14 @@
             <div class="usa-grid-full">
             <div *ngIf="item.previousDates">
               <samAccordion>
-                <samAccordionSection [name]="'Previous Years'" [headerText]="'Previous Years'">
+                <sam-accordion-section [name]="'Previous Years'" [headerText]="'Previous Years'">
                   <ul class="ul-css">
                     <li *ngFor="let previousReport of item.previousDates;let j=index">
                       <a href="{{previousReport.loc}}" target="_blank">{{previousReport.name}}</a>
                       <i>{{previousReport.year}}</i>
                     </li>
                   </ul>
-                </samAccordionSection>
+                </sam-accordion-section>
               </samAccordion>
             </div>
             </div>

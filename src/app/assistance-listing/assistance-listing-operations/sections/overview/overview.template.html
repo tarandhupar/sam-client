@@ -1,31 +1,31 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="programId">Edit Overview - {{title}}</div>
 <form [formGroup]="falOverviewForm">
 
-  <samTextArea
+  <sam-text-area
     [hint]="'Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.'"
     [control]="falOverviewForm.controls['objective']"
     [name]="'objectives-input'"
     [label]="'Objectives'"
     [required]="true"
     formControlName="objective"
-  ></samTextArea>
+  ></sam-text-area>
 
   <falFYTable [config]="fundedProjectsConfig"
               [formControlName]="'fundedProjects'"
   ></falFYTable>
 
-  <samTextArea
+  <sam-text-area
     [hint]="'Provide an introduction to the listing that tells the public in plain, clear language its purpose, who it serves, and what makes it unique.'"
     [control]="falOverviewForm.controls['falDesc']"
     [name]="'falDesc-input'"
-    [label]="'Federal Assistance Listing Description'"
+    [label]="'Assistance Listing Description'"
     formControlName="falDesc"
-  ></samTextArea>
+  ></sam-text-area>
 
   <sam-list-display [newValue]="fcNGModel" formControlName="fcListDisplay"
                     (ngModelChange)="fcTypeChange($event)" (modelChange)="fclistChange()"
                     [config]="fcAutocompleteConfig">
-    <labelWrapper #fcTypeWrapper [label]="'Functional Codes'" [required]="true"
+    <sam-label-wrapper #fcTypeWrapper [label]="'Functional Codes'" [required]="true"
                   [hint]="'Select one or more Functional Codes to help public users search for this listing.'">
       <sam-autocomplete
         [options]="fcTypeOptions"
@@ -34,14 +34,14 @@
         [(ngModel)]="fcNGModel"
         [config]="fcAutocompleteConfig"
         [required]="true" class="search-bar sam-autocomplete-width"></sam-autocomplete>
-    </labelWrapper>
+    </sam-label-wrapper>
   </sam-list-display>
   <sam-list-display [newValue]="stNGModel"
                     formControlName="stListDisplay"
                     (ngModelChange)="stTypeChange($event)"
                     (modelChange)="stlistChange()"
                     [config]="stAutocompleteConfig">
-    <labelWrapper [label]="'Subject Terms'"
+    <sam-label-wrapper [label]="'Subject Terms'"
                   [hint]="'Select one or more Subject Terms to help public users search for this listing.'"
                   [required]="true">
       <sam-autocomplete autofill-falProgram
@@ -50,15 +50,15 @@
                         name="subjectTermsSearch" [config]="stAutocompleteConfig"
                         [required]="true"
                         class="search-bar sam-autocomplete-width"></sam-autocomplete>
-    </labelWrapper>
+    </sam-label-wrapper>
   </sam-list-display>
 
   <div>
     <div class="pull-left">
-      <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-      <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
-      <samButton buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
-      <samButton buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+      <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+      <sam-button buttonText="Previous" (onClick)="onPreviousClick($event)"></sam-button>
+      <sam-button buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></sam-button>
+      <sam-button buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></sam-button>
     </div>
   </div>
 </form>

@@ -94,7 +94,7 @@ describe('src/app/awards/search-result/awards-result.spec.ts', () => {
 
   it('Awards search results: should display Award label', () => {
     fixture.detectChanges();
-    expect(labelEl.nativeElement.textContent).toContain("Award");
+    expect(labelEl.nativeElement.textContent).toContain("Contract Data");
   });
 
   it('Awards search results: should display an award piid', () => {

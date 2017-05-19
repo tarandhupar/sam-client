@@ -1,5 +1,5 @@
-<samButton buttonText="Add New Obligation" (onClick)="onAddNewObliClick()"
-           [class.hide]="hideAddButton"></samButton>
+<sam-button buttonText="Add New Obligation" (onClick)="onAddNewObliClick()"
+           [class.hide]="hideAddButton"></sam-button>
 <div [formGroup]="falObligationSubForm" [class.hide]="!hideAddButton">
 <div #subForm formArrayName="obligations" *ngIf="!hideObligationsForm">
   <div class="fal-label-margin">
@@ -8,18 +8,18 @@
   <div *ngFor="let obligation of falObligationSubForm.controls.obligations.controls; let i=index">
     <div [formGroupName]="i" *ngIf="obligationIndex == i">
       <div class="fal-label-margin">Select if applicable</div>
-      <samCheckbox
+      <sam-checkbox
         [control]="falObligationSubForm.controls['isRecoveryAct']"
         [name]="recReinveCheckboxConfig.name"
         [options]="recReinveCheckboxConfig.options"
         class="form-control" formControlName="isRecoveryAct">
-      </samCheckbox>
-      <labelWrapper #assistanceTypeWrapper [label]="assistanceTypeLabel" [required]="true"
+      </sam-checkbox>
+      <sam-label-wrapper #assistanceTypeWrapper [label]="assistanceTypeLabel" [required]="true"
                     [hint]="'Search or browse to select an Assistance Type, or select Salaries and Expenses if applicable.'">
         <sam-autocomplete [options]="options" [name]="autoAssistanceType" formControlName="assistanceType"
                           (change)="assistanceTypeChange($event,i)"
                           [config]="autocompleteConfig" [allowAny]="true" required class="search-bar sam-autocomplete-width"></sam-autocomplete>
-      </labelWrapper>
+      </sam-label-wrapper>
       <div class="fal-obligations-label">Past Fiscal Year - {{prevFY}}</div>
       <div class="text-radio-padding">
         <samTextRadioButton
@@ -51,15 +51,15 @@
           [errorMessage]="budgetFiscalYearConfig.errorMessage" formControlName="bFY">
         </samTextRadioButton>
       </div>
-      <samTextArea
+      <sam-text-area
         [name]="textareaConfig.name"
         [label]="textareaConfig.label"
         formControlName="description">
-      </samTextArea>
+      </sam-text-area>
       <div class="pull-center">
-        <samButton buttonText="Cancel" (onClick)="onObligationCancelClick(i)"></samButton>
-        <samButton buttonText="Confirm"
-                   (onClick)="onObligationConfirmClick(i)"></samButton>
+        <sam-button buttonText="Cancel" (onClick)="onObligationCancelClick(i)"></sam-button>
+        <sam-button buttonText="Confirm"
+                   (onClick)="onObligationConfirmClick(i)"></sam-button>
       </div>
     </div>
   </div>

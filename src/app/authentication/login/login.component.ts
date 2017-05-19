@@ -70,7 +70,7 @@ export class LoginComponent {
 
   ngOnInit() {
     let params = this.route.snapshot.queryParams,
-        key;
+      key;
 
     if(params['redirect'] !== undefined && params['redirect'].length) {
       this.store.redirect.route = params['redirect'];
@@ -146,9 +146,9 @@ export class LoginComponent {
 
   validate() {
     let field,
-        message,
-        control,
-        key;
+      message,
+      control,
+      key;
 
     if(!this.form.controls['stage1']) {
       return;
@@ -170,7 +170,7 @@ export class LoginComponent {
 
   login(cb: () => void) {
     let form = this.form.controls[this.isStage(1) ? 'stage1' : 'stage2'],
-        credentials;
+      credentials;
 
     if(form.valid) {
       if(this.states.stage == 1) {

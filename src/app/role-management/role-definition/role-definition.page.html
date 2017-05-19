@@ -1,5 +1,5 @@
 <div class="role-workspace usa-grid-full">
-  <samModal style= "top:20em" #removeModal [type]="modalConfig.type" [description]="modalConfig.description" [title]="modalConfig.title" [cancelButtonLabel]="'Cancel'" [submitButtonLabel]="'Remove'" (onSubmit)="onRemoveConfirm()"  [closeOnOutsideClick]="false" [closeOnEscape]="false"></samModal>
+  <sam-modal style= "top:20em" #removeModal [type]="modalConfig.type" [description]="modalConfig.description" [title]="modalConfig.title" [cancelButtonLabel]="'Cancel'" [submitButtonLabel]="'Remove'" (onSubmit)="onRemoveConfirm()"  [closeOnOutsideClick]="false" [closeOnEscape]="false"></sam-modal>
   <div class = "usa-width-one-fourth m_W-3em">
     <role-sidenav (pathChange) = "onPathChange($event)"  (checkSelected) = "onSelectedChange($event)" ></role-sidenav>
   </div>

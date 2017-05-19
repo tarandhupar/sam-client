@@ -1,12 +1,12 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="program?.data?.title">Edit Financial Information - {{program.data.title}}</div>
 <div *ngIf="otherFinancialInfoGroup" [formGroup]="otherFinancialInfoGroup">
-  <samTextArea [label]="'Range and Average of Financial Assistance'"
+  <sam-text-area [label]="'Range and Average of Financial Assistance'"
                [name]="'assitance-range-input'"
                [hint]="'Provide a range that best represents the smallest and largest awards available. Provide an approximate average award size.'"
                [required]="false"
                [control]="otherFinancialInfoGroup.get('assistanceRange')"
                [formControlName]="'assistanceRange'"
-  ></samTextArea>
+  ></sam-text-area>
 
   <falFYTable [config]="accomplishmentsConfig"
               [formControlName]="'accomplishments'"
@@ -22,10 +22,10 @@
 
   <div>
     <div class="pull-left">
-      <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-      <samButton buttonText="Previous" (onClick)="onPreviousClick($event)"></samButton>
-      <samButton [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
-      <samButton [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+      <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+      <sam-button buttonText="Previous" (onClick)="onPreviousClick($event)"></sam-button>
+      <sam-button [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></sam-button>
+      <sam-button [buttonType]="(otherFinancialInfoGroup.valid ? 'default' : 'disabled')" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></sam-button>
     </div>
   </div>
 </div>

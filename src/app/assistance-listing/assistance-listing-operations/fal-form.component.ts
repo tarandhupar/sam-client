@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChildren, AfterViewInit} from '@angular/core';
 import {FALFormService} from "./fal-form.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {ProgramService} from "../../../api-kit/program/program.service";
@@ -11,10 +11,11 @@ import * as Cookies from 'js-cookie';
   providers: [ FALFormService, ProgramService ]
 })
 
-export class FALFormComponent implements OnInit {
+export class FALFormComponent implements OnInit, AfterViewInit {
   falFormViewModel: FALFormViewModel;
-  sections: string[] = ["header-information", "overview","authorization", "financial-information-obligations", "financial-information-other","criteria-information","applying-for-assistance","compliance-requirements", "contact-information"];
+  sections: string[] = ["header-information", "overview", "authorization", "financial-information-obligations", "financial-information-other","criteria-information","applying-for-assistance","compliance-requirements", "contact-information", "review"];
   currentSection: number;
+  @ViewChildren('form') form;
 
   constructor(private service: FALFormService, private route: ActivatedRoute, private router: Router) {
   }
@@ -31,6 +32,16 @@ export class FALFormComponent implements OnInit {
 
     this.determineLogin();
     this.determineSection();
+
+  }
+
+  ngAfterViewInit() {
+
+    this.triggerValidationonReview();
+
+    this.form.changes.subscribe(() => {
+       this.triggerValidationonReview();
+    });
   }
 
   //  TODO: Migrate to external service?
@@ -130,5 +141,17 @@ export class FALFormComponent implements OnInit {
         error => {
           console.error('error saving assistance listing to api', error);
         });
+  }
+
+  triggerValidationonReview(){
+
+    if(this.currentSection == this.sections.indexOf("review")){
+      setTimeout(() => {
+        for (let formSection of this.form._results) {
+          formSection.validateSection();
+        }
+      }, 0);
+    }
+
   }
 }

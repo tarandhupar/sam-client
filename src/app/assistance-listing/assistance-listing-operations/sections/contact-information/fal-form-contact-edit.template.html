@@ -6,7 +6,7 @@
 
     <div [formGroupName]="i" [class.hide]="contactIndex !== i">
 
-      <samSelect
+      <sam-select
         [control]="falContactInfoForm.controls.contacts.controls[i].controls.contactId"
         [label]="'Contact'"
         [name]="'contact-control'"
@@ -14,88 +14,88 @@
         [options]="contactDrpDwnOptions"
         [disabled]="(mode == 'Edit' ? true : false)"
         formControlName="contactId"
-        (modelChange)="onParamChanged($event)"></samSelect>
+        (modelChange)="onParamChanged($event)"></sam-select>
 
       <div id="newContact" *ngIf="contactGrp.controls.contactId.value == 'new' || mode == 'Edit'">
 
-        <samText
+        <sam-text
           [control]="falContactInfoForm.controls.contacts.controls[i].controls.title"
           [name]="'title-input'"
           [label]="'Title'"
-          formControlName="title"></samText>
+          formControlName="title"></sam-text>
 
-        <samText
+        <sam-text
           [control]="contactGrp.controls.fullName"
           [name]="'fullName-input'"
           [label]="'Full Name'"
           [required]="true"
-          formControlName="fullName"></samText>
+          formControlName="fullName"></sam-text>
 
-        <samText
+        <sam-text
           [control]="contactGrp.controls.email"
           [name]="'email-input'"
           [label]="'Email'"
           [required]="true"
-          formControlName="email"></samText>
+          formControlName="email"></sam-text>
 
-        <samNumber
+        <sam-number
           [control]="contactGrp.controls.phone"
           [minlength]="10"
           [maxlength]="10"
           [name]="'phone-input'"
           [label]="'Phone'"
           [required]="true"
-          formControlName="phone"></samNumber>
+          formControlName="phone"></sam-number>
 
-        <samNumber
+        <sam-number
           [control]="contactGrp.controls.fax"
           [minlength]="10"
           [maxlength]="10"
           [name]="'fax-input'"
           [label]="'Fax'"
-          formControlName="fax"></samNumber>
+          formControlName="fax"></sam-number>
 
-        <samTextArea
+        <sam-text-area
           [control]="contactGrp.controls.streetAddress"
           [name]="'street-input'"
           [label]="'Street'"
           [required]="true"
-          formControlName="streetAddress"></samTextArea>
+          formControlName="streetAddress"></sam-text-area>
 
-        <samText
+        <sam-text
           [control]="contactGrp.controls.city"
           [name]="'city-input'"
           [label]="'City'"
           [required]="true"
-          formControlName="city"></samText>
+          formControlName="city"></sam-text>
 
-        <samSelect
+        <sam-select
           [control]="contactGrp.controls.state"
           [label]="'State'"
           [name]="'state-control'"
           [required]="true"
           [options]="stateDrpDwnOptions"
-          formControlName="state"></samSelect>
+          formControlName="state"></sam-select>
 
-        <samText
+        <sam-text
           [control]="contactGrp.controls.zip"
           [name]="'zip-input'"
           [label]="'Zip'"
           [required]="true"
-          formControlName="zip"></samText>
+          formControlName="zip"></sam-text>
 
-        <samSelect
+        <sam-select
           [label]="'Country'"
           [name]="'country-control'"
           [options]="countryDrpDwnOptions"
-          formControlName="country"></samSelect>
+          formControlName="country"></sam-select>
 
       </div> <!-- End of newcontact -->
-      <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></samButton>
-      <samButton
+      <sam-button buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
+      <sam-button
         buttonText="Confirm"
         (onClick)="onConfirmClick()"
-        *ngIf="contactGrp.controls.contactId.value != 'na'"></samButton>
+        *ngIf="contactGrp.controls.contactId.value != 'na'"></sam-button>
 
     </div> <!-- End of formgroup div -->
   </ng-container>

@@ -9,6 +9,7 @@ import {OpportunityService} from "../../api-kit/opportunity/opportunity.service"
 import {SortArrayOfObjects} from "../app-pipes/sort-array-object.pipe";
 import {SearchDictionariesService} from "../../api-kit/search/search-dictionaries.service";
 import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
+import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
 
 @Component({
   moduleId: __filename,
@@ -36,6 +37,7 @@ export class SearchPage implements OnInit{
   isStandard: string = '';
   showRegionalOffices: boolean = false;
   ro_keyword: string = "";
+  isSearchComplete : boolean = false;
 
   // duns entity objects
   dunsModel: any = '';
@@ -157,8 +159,9 @@ export class SearchPage implements OnInit{
     name: 'constructionType',
   };
 
-  scaSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result. <br><br><b>If you would like to request a SCA contract action, click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form.</b>"
-  wdSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result."
+  // scaSearchDescription: string = "The Wage Determination filter asks a series of questions to determine if a WDOL is available based on your selected criteria. <br/><br/>Please note that using the keyword search with these WD type-specific filters may limit your search results.<br/><br/> If you cannot locate a Wage Determination, try searching with no keywords and use the Wage Determination filters to find your result. <br><br><b>If you would like to request a SCA contract action, click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form.</b>"
+  wdSearchDescription: string = "The Wage Determination filters to the left ask a series of questions to determine if the best WD is available on the site. If any criteria such as a specific location is not present or the non-standard service does not strictly apply, please click <a href='https://www.dol.gov/whd/govcontracts/sca/sf98/index.asp'>here</a> to submit an e98 form. Users should note that the only WDs applicable to a particular solicitation or contract are those that have been incorporated by the contracting officer in that contract action.";
+  dismissWdAlert: boolean = false;
 
   //Select Award Types
   awardIDVModel: string = '';
@@ -266,6 +269,36 @@ export class SearchPage implements OnInit{
     }
   };
 
+  // Beneficiary Eligibility Object
+  benElModel: any = '';
+  benElType = {
+    "name": "Beneficiary Eligibility",
+    "placeholder": "Search Beneficiary Eligibility",
+    "selectedLabel": "Codes Selected",
+    "options": [],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
+
+  // Applicant Eligibility Object
+  appElModel: any = '';
+  appElType = {
+    "name": "Applicant Eligibility",
+    "placeholder": "Search Applicant Eligibility",
+    "options": [],
+    "config": {
+      keyValueConfig: {
+        keyProperty: 'value',
+        valueProperty: 'label'
+      }
+    }
+  };
+
+
   regionalType = {
     "placeholder": "Regional Agency Location",
     "addOnIconClass": "fa fa-search"
@@ -289,7 +322,8 @@ export class SearchPage implements OnInit{
               private opportunityService: OpportunityService,
               private alertFooterService: AlertFooterService,
               private searchDictionariesService: SearchDictionariesService,
-              private dunsEntityAutoCompleteWrapper:  DunsEntityAutoCompleteWrapper) { }
+              private dunsEntityAutoCompleteWrapper:  DunsEntityAutoCompleteWrapper,
+              private programDictionariesService: DictionaryService) { }
   ngOnInit() {
     if(window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0){
       this.showRegionalOffices = true;
@@ -321,15 +355,21 @@ export class SearchPage implements OnInit{
         this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
         this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
         this.dunsListString = data['duns'] && data['duns'] !== null ? data['duns'] : '';
+        this.appElModel = data['applicant'] && data['applicant'] !== null ? data['applicant'] : '';
+        this.benElModel = data['beneficiary'] && data['beneficiary'] !== null ? data['beneficiary'] : '';
 
         // persist duns filter data
         this.grabPersistData(this.dunsListString);
-
+        this.isSearchComplete = false;
         this.runSearch();
         this.loadParams();
       });
   }
 
+  findInactiveResults(){
+    this.isActive = false;
+    this.searchResultsRefresh();
+  }
 
   loadParams(){
     var qsobj = this.setupQS(false);
@@ -463,6 +503,14 @@ export class SearchPage implements OnInit{
       qsobj['duns'] = this.dunsListString;
     }
 
+    if(this.benElModel.length>0){
+      qsobj['beneficiary'] = this.benElModel;
+    }
+
+    if(this.appElModel.length>0){
+      qsobj['applicant'] = this.appElModel;
+    }
+
     return qsobj;
   }
 
@@ -482,6 +530,14 @@ export class SearchPage implements OnInit{
       case 'fpds':
             this.getAwardsDictionaryData('naics_code');
             this.getAwardsDictionaryData('classification_code');
+        this.getAwardsDictionaryData('naics_code');
+        this.getAwardsDictionaryData('classification_code');
+        break;
+      case 'cfda':
+        this.getProgramsDictionaryData('applicant_types');
+        this.getProgramsDictionaryData('beneficiary_types');
+        break;
+      default: this.dismissWdAlert = false;
     }
 
     //make featuredSearch api call only for first page
@@ -534,7 +590,9 @@ export class SearchPage implements OnInit{
       psc: this.pscTypeModel,
       showRO: this.showRegionalOffices,
       ro_keyword: this.ro_keyword,
-      duns: this.dunsListString
+      duns: this.dunsListString,
+      applicant: this.appElModel,
+      beneficiary: this.benElModel
     }).subscribe(
       data => {
         if(data._embedded && data._embedded.results){
@@ -567,6 +625,7 @@ export class SearchPage implements OnInit{
 
         this.oldKeyword = this.keyword;
         this.initLoad = false;
+        this.isSearchComplete = true;
       },
       error => {
         console.error("Error!!", error);
@@ -703,6 +762,42 @@ export class SearchPage implements OnInit{
     );
   }
 
+  getProgramsDictionaryData(id){
+    this.programDictionariesService.getDictionaryById(id).subscribe(
+      data => {
+        // formatting the array data according to api type to match what UI elements expect
+        if(id === 'applicant_types'){
+          var reformattedArray = data['applicant_types'].map(function(item){
+            let newObj = {label:'', value:'', type:'applicant'};
+
+            newObj.label = item.element_id + ' - ' + item.value;
+            newObj.value = item.element_id;
+            return newObj;
+          });
+
+          this.appElType.options = reformattedArray;
+          //this.appElType = Object.assign({}, this.appElType);
+        }
+
+        if(id === 'beneficiary_types'){
+          var reformattedArray = data['beneficiary_types'].map(function(item){
+            let newObj = {label:'', value:'', type:'beneficiary'};
+
+            newObj.label = item.code + ' - ' + item.value;
+            newObj.value = item.code;
+            return newObj;
+          });
+
+          this.benElType.options = reformattedArray;
+          this.benElType = Object.assign({}, this.benElType);
+        }
+      },
+      error => {
+        console.error("Error!!", error);
+      }
+    )
+  }
+
   pageChange(pagenumber){
     this.pageNum = pagenumber;
     var qsobj = this.setupQS(false);
@@ -758,7 +853,6 @@ export class SearchPage implements OnInit{
         timer: 5000
       });
     }
-
 
     this.searchResultsRefresh()
   }
@@ -924,6 +1018,18 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  benElSelected(evt) {
+    this.benElModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
+  appElSelected(evt) {
+    this.appElModel = evt.toString();
+    this.pageNum = 0;
+    this.searchResultsRefresh();
+  }
+
   // this calls function to set up ES query params again and re-call the search endpoint with updated params
   searchResultsRefresh(){
     var qsobj = this.setupQS(false);
@@ -1002,6 +1108,12 @@ export class SearchPage implements OnInit{
     this.searchResultsRefresh();
   }
 
+  eligibilityFilterClear(){
+    this.appElModel = '';
+    this.benElModel = '';
+    this.searchResultsRefresh();
+  }
+
   clearAllFilters(){
 
     // clear/reset all top level filters
@@ -1039,6 +1151,10 @@ export class SearchPage implements OnInit{
     this.dunsModelList = [];
     this.dunsModel = '';
     this.dunsListString = '';
+
+    // clear eligibility filter
+    this.appElModel = '';
+    this.benElModel = '';
 
     this.searchResultsRefresh();
 

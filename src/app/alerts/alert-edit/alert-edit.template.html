@@ -6,20 +6,20 @@
   </h2>
   <div class="usa-grid-full">
     <div class="usa-width-one-half">
-      <samSelect #severity [required]='true' [control]="form.get('severity')" formControlName="severity" class='severity-select' [options]="typeOptions" [name]="'alert-types'" [label]="'Type'"></samSelect>
-      <samText #title [maxlength]="70" [control]="form.get('title')" formControlName="title" [required]='true' [name]="'title-input'" [label]="'Title'"></samText>
-      <samTextArea #description [maxlength]="350" [control]="form.get('description')" formControlName="description" [required]='true' [name]="'description'" [label]="'Description'"></samTextArea>
+      <sam-select #severity [required]='true' [control]="form.get('severity')" formControlName="severity" class='severity-select' [options]="typeOptions" [name]="'alert-types'" [label]="'Type'"></sam-select>
+      <sam-text #title [maxlength]="70" [control]="form.get('title')" formControlName="title" [required]='true' [name]="'title-input'" [label]="'Title'"></sam-text>
+      <sam-text-area #description [maxlength]="350" [control]="form.get('description')" formControlName="description" [required]='true' [name]="'description'" [label]="'Description'"></sam-text-area>
     </div>
     <div class="usa-width-one-half">
       <div class="usa-width-one-whole relative">
-        <samDateTime #publishedDate [control]="form.get('publishedDate')" formControlName="publishedDate" [label]="'Publish Date'" name='publish-date'></samDateTime>
+        <sam-date-time #publishedDate [control]="form.get('publishedDate')" formControlName="publishedDate" [label]="'Publish Date'" name='publish-date'></sam-date-time>
         <div class="input-group abs-top-right">
           <input id="publish-immediately" type="checkbox" formControlName="publishImmediately" (click)="onPublishImmediatelyClick($event.target.checked)">
           <label for="publish-immediately">Publish Now</label>
         </div>
       </div>
       <div class="usa-width-one-whole relative">
-        <samDateTime #endDate [control]="form.get('endDate')" formControlName="endDate" [label]="'End Date'" name='end-date'></samDateTime>
+        <sam-date-time #endDate [control]="form.get('endDate')" formControlName="endDate" [label]="'End Date'" name='end-date'></sam-date-time>
         <div class="input-group abs-top-right">
           <input id="end-indefinitely" type="checkbox" formControlName="isExpiresIndefinite" (click)="onEndIndefinitelyClick($event.target.checked)">
           <label for="end-indefinitely">No End Date</label>

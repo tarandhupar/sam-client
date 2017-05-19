@@ -1,4 +1,4 @@
-<fieldset-wrapper [label]="label" [hint]="hint" [errorMessage]="errorMessage">
+<sam-fieldset-wrapper [label]="label" [hint]="hint" [errorMessage]="errorMessage">
   <ul class="usa-unstyled-list">
     <li *ngFor="let option of options; let i = index">
       <div class="usa-grid-full">
@@ -9,11 +9,11 @@
         </div>
         <div class="usa-width-two-thirds" *ngIf="model.radioOptionId === option.value">
           <span *ngIf="option.flag == 'number'">
-          <samNumber [name]="'numtest'" [formControl]="textBoxControl"></samNumber></span>
+          <sam-number [name]="'numtest'" [formControl]="textBoxControl"></sam-number></span>
           <span *ngIf="option.flag == 'text'">
-          <samText [name]="'test'" [formControl]="textBoxControl"></samText></span>
+          <sam-text [name]="'test'" [formControl]="textBoxControl"></sam-text></span>
         </div>
       </div>
     </li>
   </ul>
-</fieldset-wrapper>
+</sam-fieldset-wrapper>

@@ -4,8 +4,8 @@
 
     <div class="usa-width-three-fourths">
       <div class="usa-width-one-whole m_L-4x">
-        <fal-form-header-information *ngIf="isSection('header-information')" [viewModel]="falFormViewModel"></fal-form-header-information>
-        <fal-form-overview *ngIf="isSection('overview')" [viewModel]="falFormViewModel"></fal-form-overview>
+        <fal-form-header-information *ngIf="isSection('header-information')" [viewModel]="falFormViewModel" #form></fal-form-header-information>
+        <fal-form-overview *ngIf="isSection('overview')" [viewModel]="falFormViewModel" #form></fal-form-overview>
         <fal-form-authorization *ngIf="isSection('authorization')" [viewModel]="falFormViewModel"></fal-form-authorization>
         <fal-form-obligation-info *ngIf="isSection('financial-information-obligations')" [viewModel]="falFormViewModel"></fal-form-obligation-info>
         <fal-form-financial-info-other *ngIf="isSection('financial-information-other')" [viewModel]="falFormViewModel"></fal-form-financial-info-other>
@@ -16,10 +16,10 @@
 
         <div>
           <div class="pull-left">
-            <samButton buttonText="Cancel" (onClick)="onCancelClick($event)"></samButton>
-            <samButton buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></samButton>
-            <samButton *ngIf="currentSection - 1 >= 0" buttonText="Previous" (onClick)="onSaveBackClick($event)"></samButton>
-            <samButton *ngIf="currentSection + 1 < sections.length" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></samButton>
+            <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+            <sam-button buttonText="Save and Exit" (onClick)="onSaveExitClick($event)"></sam-button>
+            <sam-button *ngIf="currentSection - 1 >= 0" buttonText="Previous" (onClick)="onSaveBackClick($event)"></sam-button>
+            <sam-button *ngIf="currentSection + 1 < sections.length" buttonText="Save and Continue" (onClick)="onSaveContinueClick($event)"></sam-button>
           </div>
         </div>
 

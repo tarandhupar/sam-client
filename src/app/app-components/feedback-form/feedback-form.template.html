@@ -1,7 +1,7 @@
 <div #feedbackRoot class="sam-feedback">
 
-  <samModal [showClose]="false" #proceedModal [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [submitButtonLabel]="'Confirm'" [cancelButtonLabel]="'Cancel'" (onSubmit)="onProceedModalConfirm()" (onClose)="onProceedModalClose()"  [closeOnOutsideClick]="false">
-  </samModal>
+  <sam-modal [showClose]="false" #proceedModal [title]="modalConfig.title" [type]="modalConfig.type" [description]="modalConfig.description" [submitButtonLabel]="'Confirm'" [cancelButtonLabel]="'Cancel'" (onSubmit)="onProceedModalConfirm()" (onClose)="onProceedModalClose()"  [closeOnOutsideClick]="false">
+  </sam-modal>
 
   <div class="feedback-form-div feedback-question-thanks usa-grid text-align-center" *ngIf="showThanksNote">
     <h1 class="m_T-6x"><i class="fa fa-comments"></i></h1>
@@ -27,7 +27,7 @@
       <div class="usa-width-one-whole">
         <samAccordion>
           <div *ngFor="let qItem of questionData; let i = index" class="relative">
-            <samAccordionSection [headerText]="qItem.description" [name]="qItem.description" [isExpanded]="i === 0" (isExpandedChange)="onExpandChange($event, i)">
+            <sam-accordion-section [headerText]="qItem.description" [name]="qItem.description" [isExpanded]="i === 0" (isExpandedChange)="onExpandChange($event, i)">
               <!--Rating Question-->
               <div class="feedback-question-rating m_T-2x" *ngIf="checkQType('rating',qItem)">
                 <span class="usa-width-one-half m_R-0 feedback-icon-font"><i class="fa {{ratingThumbUpClass}} thumb" aria-hidden="true" (click)="onRatingClick(true, i)"></i></span>
@@ -76,7 +76,7 @@
               </div>
 
 
-            </samAccordionSection>
+            </sam-accordion-section>
             <span class="feedback-check-icon">
               <i class="fa fa-check-circle" *ngIf="answerData[i].edited"></i>
               <i class="fa fa-circle-thin" *ngIf="!answerData[i].edited"></i>

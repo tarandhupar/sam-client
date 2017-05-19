@@ -103,6 +103,7 @@ export class OpportunityPage implements OnInit {
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
   showRevisionMessage: boolean = false;
+  qParams: any;
 
 
   errorOrganization: any;
@@ -126,7 +127,7 @@ export class OpportunityPage implements OnInit {
   pageRoute: string;
   pageFragment: string;
   sidenavModel = {
-    "label": "Opportunities",
+    "label": "Contract Opportunities",
     "children": []
   };
 
@@ -147,6 +148,7 @@ export class OpportunityPage implements OnInit {
     });
 
     route.queryParams.subscribe(data => {
+      this.qParams = data;
       this.pageNum = typeof data['page'] === "string" && parseInt(data['page'])-1 >= 0 ? parseInt(data['page'])-1 : this.pageNum;
     });
   }
@@ -212,7 +214,7 @@ export class OpportunityPage implements OnInit {
   private setupSideNavMenus(){
     this.pageRoute = "opportunities/" + this.opportunity.opportunityId;
     let opportunitySideNavContent = {
-      "label": "Opportunity",
+      "label": "Contract Opportunity",
       "route": this.pageRoute,
       "children": [
         {
@@ -497,7 +499,7 @@ export class OpportunityPage implements OnInit {
     historyStream.subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
         let processOpportunityHistoryPipe = new ProcessOpportunityHistoryPipe();
-        let pipedHistory = processOpportunityHistoryPipe.transform(historyAPI, tempOpportunityApi);
+        let pipedHistory = processOpportunityHistoryPipe.transform(historyAPI, tempOpportunityApi, this.qParams);
         this.processedHistory = pipedHistory.processedHistory;
         if (pipedHistory.showRevisionMessage){
           this.showRevisionMessage = pipedHistory.showRevisionMessage;

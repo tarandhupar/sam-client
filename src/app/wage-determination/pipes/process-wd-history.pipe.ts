@@ -4,7 +4,7 @@ import {DateFormatPipe} from "../../app-pipes/date-format.pipe";
 
 @Pipe({name: 'processWageDeterminationHistory'})
 export class ProcessWageDeterminationHistory implements PipeTransform {
-  transform(historyAPI: any): any {
+  transform(historyAPI: any, qParams:any): any {
 
 
     /** Setup necessary variables and functions for processing history **/
@@ -19,6 +19,8 @@ export class ProcessWageDeterminationHistory implements PipeTransform {
       processedHistoryItem['url'] = '/wage-determination/' + historyItem.fullReferenceNumber + '/' + historyItem.revisionNumber;
       processedHistoryItem['index'] = historyItem.revisionNumber;
       processedHistoryItem['authoritative'] = historyItem.active;
+      processedHistoryItem['qParams'] = qParams;
+      processedHistoryItem['ariaLabel'] = "Current WDOL";
       return processedHistoryItem;
     };
     let longProcessedHistory = historyAPI._embedded.wageDetermination.map(processHistoryItem);

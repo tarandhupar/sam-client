@@ -7,7 +7,7 @@ import { IAMService } from 'api-kit';
 import { trigger, state, style, animate, transition } from '@angular/core';
 
 @Component({
-  selector: 'SamHeaderLinks',
+  selector: 'sam-header-links',
   templateUrl: 'header-links.component.html',
   providers: [IAMService],
   animations: [

@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 
 @Pipe({name: 'processOpportunityHistory'})
 export class ProcessOpportunityHistoryPipe implements PipeTransform {
-  transform(historyAPI: any, tempOpportunityApi: any): any {
+  transform(historyAPI: any, tempOpportunityApi: any, qParams:any): any {
     /** Setup necessary variables and functions for processing history **/
     let typeLabel = new OpportunityTypeLabelPipe();
     let dateFormat = new DateFormatPipe();
@@ -68,7 +68,7 @@ export class ProcessOpportunityHistoryPipe implements PipeTransform {
 
         // Unrecognized type, show generic message
         default:
-          return prefix + ' Opportunity';
+          return prefix + ' Contract Opportunity';
       }
     };
 
@@ -83,6 +83,8 @@ export class ProcessOpportunityHistoryPipe implements PipeTransform {
       processedHistoryItem['index'] = historyItem.index;
       processedHistoryItem['isTagged'] = false; // todo: decide on logic for which opportunities are tagged
       processedHistoryItem['authoritative'] = historyItem.authoritative;
+      processedHistoryItem['qParams'] = qParams;
+      processedHistoryItem['ariaLabel'] = "Current Contract Opportunity";
       return processedHistoryItem;
     };
     let processedHistory = historyAPI.content.history.map(processHistoryItem);

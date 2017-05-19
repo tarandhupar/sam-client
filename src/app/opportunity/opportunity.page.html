@@ -14,7 +14,7 @@
       </ng-container>
 
       <!--Side Navigation-->
-      <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+      <sam-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-sidenav>
 
     </div>
   </aside>
@@ -23,7 +23,7 @@
   <div class="usa-width-three-fourths" *ngIf="opportunity">
     <!-- Alert -->
     <ng-container *ngIf="showRevisionMessage == true">
-      <samAlert [type]="'info'" [title]="''">Note: There have been updates to this opportunity. To view the most recent update/amendment, click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a>.</samAlert>
+      <sam-alert [type]="'info'" [title]="''">Note: There have been new actions to this contract opportunity. To view the most recent action, please click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a>.</sam-alert>
     </ng-container>
 
     <!-- Intro Content -->
@@ -37,7 +37,7 @@
 
       <div class="sam-ui padded raised segment">
 				<div class="sam-ui top right attached mini label">
-					Opportunity
+					Contract Opportunity
 				</div>
 				<div class="sam-ui attached grid">
 					<div class="column">
@@ -96,7 +96,7 @@
 
         <h2 class="sam-ui header">
           Award Details
-          <samButton *ngIf="differences?.changesExistAwardDetails" [buttonId]="'defaultBtnAwardDetails'" [buttonText]="!showChangesAwardDetails ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideAwardDetails()"></samButton>
+          <sam-button *ngIf="differences?.changesExistAwardDetails" [buttonId]="'defaultBtnAwardDetails'" [buttonText]="!showChangesAwardDetails ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideAwardDetails()"></sam-button>
           <span *ngIf="showChangesAwardDetails" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
 
@@ -163,14 +163,14 @@
       <section [attr.id]="generateID(opportunityFields.General)" *ngIf="shouldBeDisplayed(opportunityFields.General)">
         <h2 class="sam-ui header">
           General Information
-          <samButton *ngIf="differences?.changesExistGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="!showChangesGeneral ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></samButton>
+          <sam-button *ngIf="differences?.changesExistGeneral" [buttonId]="'defaultBtnGeneral'" [buttonText]="!showChangesGeneral ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideGeneral()"></sam-button>
 
           <span *ngIf="showChangesGeneral" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
 
         <ul class="usa-unstyled-list">
           <li [attr.id]="generateID(opportunityFields.Type, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.Type)">
-            <strong>Opportunity Type: </strong>
+            <strong>Contract Opportunity Type: </strong>
             <ng-container *ngIf="opportunity.data?.type !== 'm'">Original {{ opportunity.data?.type | opportunityTypeLabel }}</ng-container>
             <ng-container *ngIf="opportunity.data?.type === 'm'">
               <ng-container *ngIf="opportunity.data?.statuses?.isCanceled">Canceled </ng-container>
@@ -188,8 +188,8 @@
             <ng-container *ngIf="opportunity.parent == null">{{ opportunity?.postedDate | dateFormat: 'MMM DD, YYYY' }}</ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ResponseDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ResponseDate)">
-            <!-- <samLabel *ngIf="differences?.updateResponseDate" [labelType]="'small'" [labelText]="' '">
-            </samLabel> -->
+            <!-- <sam-label *ngIf="differences?.updateResponseDate" [labelType]="'small'" [labelText]="' '">
+            </sam-label> -->
             <i *ngIf="differences?.updateResponseDate" class="fa fa-square" aria-hidden="true"></i>
             <strong>Update/Amendment Response Date: </strong>
             {{ opportunity.data?.solicitation?.deadlines?.response | dateFormat: 'MMM DD, YYYY' }}
@@ -202,7 +202,7 @@
           </li>
           <li [attr.id]="generateID(opportunityFields.ArchivePolicy, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchivePolicy)"
               [ngSwitch]="opportunity.data?.archive?.type">
-            <!-- <samLabel *ngIf="differences?.archivingPolicy" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <!-- <sam-label *ngIf="differences?.archivingPolicy" [labelType]="'small'" [labelText]="' '"></sam-label> -->
             <i *ngIf="differences?.archivingPolicy" class="fa fa-square" aria-hidden="true"></i>
             <strong>Archiving Policy: </strong>
             <ng-container *ngSwitchCase="'manual'">Manual Archive</ng-container>
@@ -211,7 +211,7 @@
             <span *ngIf="showChangesGeneral && differences?.archivingPolicy" [attr.aria-label]= "differences?.archivingPolicyAria" [innerHTML]="differences?.archivingPolicy"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.ArchiveDate, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.ArchiveDate)">
-            <!-- <samLabel *ngIf="differences?.updateArchiveDate" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <!-- <sam-label *ngIf="differences?.updateArchiveDate" [labelType]="'small'" [labelText]="' '"></sam-label> -->
             <i *ngIf="differences?.updateArchiveDate" class="fa fa-square" aria-hidden="true"></i>
             <strong>Update/Amendment Archive Date: </strong>
             {{ opportunity.data?.archive?.date | dateFormat: 'MMM DD, YYYY' }}
@@ -238,7 +238,7 @@
             {{ opportunity?.data?.award?.justificationAuthority?.modificationNumber }}
           </li>
           <li [attr.id]="generateID(opportunityFields.SpecialLegislation, 'general')" *ngIf="shouldBeDisplayed(opportunityFields.SpecialLegislation)">
-            <!-- <samLabel *ngIf="differences?.specialLegislation" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <!-- <sam-label *ngIf="differences?.specialLegislation" [labelType]="'small'" [labelText]="' '"></sam-label> -->
             <i *ngIf="differences?.specialLegislation" class="fa fa-square" aria-hidden="true"></i>
             <strong>Special Legislation: </strong>
             <ng-container *ngIf="opportunity?.data?.isRecoveryRelated == true">
@@ -253,7 +253,7 @@
       <!-- Classification -->
       <section [attr.id]="generateID(opportunityFields.Classification)" *ngIf="shouldBeDisplayed(opportunityFields.Classification)">
         <h2 class="sam-ui header">Classification
-          <samButton *ngIf="differences?.changesExistClassification" [buttonId]="'defaultBtnClassification'" [buttonText]="!showChangesClassification ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideClassification()"></samButton>
+          <sam-button *ngIf="differences?.changesExistClassification" [buttonId]="'defaultBtnClassification'" [buttonText]="!showChangesClassification ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideClassification()"></sam-button>
           <span *ngIf="showChangesClassification" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
         <ul class="usa-unstyled-list">
@@ -272,7 +272,7 @@
           </li>
           <li [attr.id]="generateID(opportunityFields.SetAside, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.SetAside)">
             <ng-container *ngIf="(opportunity.data?.solicitation?.setAside != originalOpportunity?.data?.solicitation?.setAside) && dictionary">
-              <!-- <samLabel *ngIf="differences?.specialLegislation" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+              <!-- <sam-label *ngIf="differences?.specialLegislation" [labelType]="'small'" [labelText]="' '"></sam-label> -->
               <i *ngIf="differences?.updateSetAside" class="fa fa-square" aria-hidden="true"></i>
               <strong>Update/Amendment Set Aside: </strong>
               <ng-container *ngFor = "let element of [opportunity.data?.solicitation?.setAside] | filterMultiArrayObject:findDictionary('set_aside_type'):'elementId':false:''">
@@ -282,7 +282,7 @@
             </ng-container>
           </li>
           <li [attr.id]="generateID(opportunityFields.ClassificationCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.ClassificationCode)">
-            <!-- <samLabel *ngIf="differences?.classificationCode" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <!-- <sam-label *ngIf="differences?.classificationCode" [labelType]="'small'" [labelText]="' '"></sam-label> -->
             <i *ngIf="differences?.classificationCode" class="fa fa-square" aria-hidden="true"></i>
             <strong>Classification Code: </strong>
             <ng-container *ngIf="opportunity.data?.classificationCode && dictionary">
@@ -293,7 +293,7 @@
             <span *ngIf="showChangesClassification && differences?.classificationCode" [attr.aria-label]= "differences?.classificationCodeAria" [innerHTML]="differences?.classificationCode"></span>
           </li>
           <li [attr.id]="generateID(opportunityFields.NAICSCode, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.NAICSCode)">
-            <!-- <samLabel *ngIf="differences?.naicsCode" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <!-- <sam-label *ngIf="differences?.naicsCode" [labelType]="'small'" [labelText]="' '"></sam-label> -->
             <i *ngIf="differences?.naicsCode" class="fa fa-square" aria-hidden="true"></i>
             <strong>NAICS Code(s): </strong>
             <ng-container *ngIf="opportunity.data?.naicsCode && opportunity.data?.naicsCode[0] != null && dictionary">
@@ -306,7 +306,7 @@
             <pre *ngIf="showChangesClassification && differences?.naicsCode" [attr.aria-label]= "differences?.naicsCodeAria" [innerHTML]="differences?.naicsCode"></pre>
           </li>
           <li [attr.id]="generateID(opportunityFields.POP, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POP)">
-            <!-- <samLabel *ngIf="differences?.placeOfPerformance" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+            <!-- <sam-label *ngIf="differences?.placeOfPerformance" [labelType]="'small'" [labelText]="' '"></sam-label> -->
             <i *ngIf="differences?.placeOfPerformance" class="fa fa-square" aria-hidden="true"></i>
             <strong >Place of Performance: </strong>
             <div [attr.id]="generateID(opportunityFields.POPLocation, 'classification')" *ngIf="shouldBeDisplayed(opportunityFields.POPLocation)">
@@ -339,10 +339,10 @@
       <section [attr.id]="generateID(opportunityFields.Synopsis)" *ngIf="(shouldBeDisplayed(opportunityFields.Synopsis) && opportunity.data?.descriptions[0]?.content) || (shouldBeDisplayed(opportunityFields.Synopsis) && differences?.description)">
 
         <h2 class="sam-ui header">Synopsis
-          <samButton *ngIf="differences?.changesExistSynopsis " [buttonId]="'defaultBtnSynopsis'" [buttonText]="!showChangesSynopsis ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></samButton>
+          <sam-button *ngIf="differences?.changesExistSynopsis " [buttonId]="'defaultBtnSynopsis'" [buttonText]="!showChangesSynopsis ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideSynopsis()"></sam-button>
           <span *ngIf="showChangesSynopsis" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
-        <!-- <samLabel *ngIf="differences?.description" [labelType]="'small'" [labelText]="' '"></samLabel> -->
+        <!-- <sam-label *ngIf="differences?.description" [labelType]="'small'" [labelText]="' '"></sam-label> -->
         <h3 class="sam-ui dividing header">
           <i *ngIf="differences?.description" class="fa fa-square" aria-hidden="true"></i>
           <ng-container *ngIf="opportunity.data?.type === 'i'">Description of Benefits</ng-container>
@@ -363,7 +363,7 @@
           [downloadAllUrl]="getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)"></sam-download>
 
         <ng-container *ngIf="packagesWarning == true">
-          <samAlert [type]="'warning'" [title]="''">An update has been made to this opportunity with new packages added. Please click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a> to view the latest update and packages.</samAlert>
+          <sam-alert [type]="'warning'" [title]="''">An update has been made to this opportunity with new packages added. Please click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a> to view the latest update and packages.</sam-alert>
         </ng-container>
         <div class="sam-ui hidden section divider"></div>
       </section>
@@ -371,7 +371,7 @@
       <!-- Contact Information -->
       <section [attr.id]="generateID(opportunityFields.Contact)" *ngIf="shouldBeDisplayed(opportunityFields.Contact)">
         <h2 class="sam-ui header">Contact Information
-          <samButton *ngIf="differences?.changesExistContactInformation" [buttonId]="'defaultBtnContactInformation'" [buttonText]="!showChangesContactInformation ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideContactInformation()"></samButton>
+          <sam-button *ngIf="differences?.changesExistContactInformation" [buttonId]="'defaultBtnContactInformation'" [buttonText]="!showChangesContactInformation ? 'View Changes' : 'Hide Changes'" [buttonType]="btnType" (click)="showHideContactInformation()"></sam-button>
           <span *ngIf="showChangesContactInformation" class="usa-font-lead m_B-2x usa-color-blue" [innerHTML]="differences?.postedDate"></span>
         </h2>
         <div class="usa-grid-full">
@@ -539,7 +539,7 @@
 
           <div class="usa-width-one-fourth">
             <strong>Sort by</strong>
-            <samSelect class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></samSelect>
+            <sam-select class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></sam-select>
           </div>
 
         </div>
@@ -603,7 +603,7 @@
 
       </section>
 
-      <samPagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></samPagination>
+      <sam-pagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></sam-pagination>
 
     </div>
 

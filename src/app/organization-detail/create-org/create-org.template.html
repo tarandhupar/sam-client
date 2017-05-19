@@ -4,57 +4,57 @@
     <h2 class="p_T-3x">Create New {{orgType}}</h2>
     <p class="p_T-3x">Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur. Maecenas non viverra tortor. Mauris nisi ante, finibus dignissim nisl et, rutrum dictum mauris.</p>
     <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
-      <samText #orgName [required]='true' [control]="basicInfoForm.get('orgName')" formControlName="orgName" [name]="'orgName-input'" [label]="'Organization Name'"></samText>
-      <labelWrapper #orgStartDateWrapper class="usa-width-one-half" [label]="'Start Date'" [name]="'start-date'" [required]="true">
-        <samDate (valueChange)="setOrgStartDate($event)" [label]="''" name='start-date'></samDate>
-      </labelWrapper>
-      <samTextArea #orgDescription class="usa-width-one-whole" [control]="basicInfoForm.get('orgDescription')" formControlName="orgDescription" [label]="'Description'" name='description' [placeholder]="'Provide a description for your organization and its function.'"></samTextArea>
-      <samText #orgShortName class="usa-width-one-whole" [control]="basicInfoForm.get('orgShortName')" formControlName="orgShortName" [name]="'orgShortName-input'" [label]="'Short Name'"></samText>
+      <sam-text #orgName [required]='true' [control]="basicInfoForm.get('orgName')" formControlName="orgName" [name]="'orgName-input'" [label]="'Organization Name'"></sam-text>
+      <sam-label-wrapper #orgStartDateWrapper class="usa-width-one-half" [label]="'Start Date'" [name]="'start-date'" [required]="true">
+        <sam-date (valueChange)="setOrgStartDate($event)" [label]="''" name='start-date'></sam-date>
+      </sam-label-wrapper>
+      <sam-text-area #orgDescription class="usa-width-one-whole" [control]="basicInfoForm.get('orgDescription')" formControlName="orgDescription" [label]="'Description'" name='description' [placeholder]="'Provide a description for your organization and its function.'"></sam-text-area>
+      <sam-text #orgShortName class="usa-width-one-whole" [control]="basicInfoForm.get('orgShortName')" formControlName="orgShortName" [name]="'orgShortName-input'" [label]="'Short Name'"></sam-text>
       <div class="usa-width-one-half" *ngIf="isAddressNeeded()">
-        <labelWrapper class="p_T-3x" [label]="indicateFundRadioConfig.label" [name]="indicateFundRadioConfig.name" [required]="true">
-          <samRadioButton
+        <sam-label-wrapper class="p_T-3x" [label]="indicateFundRadioConfig.label" [name]="indicateFundRadioConfig.name" [required]="true">
+          <sam-radio-button
             [(model)]="indicateFundRadioModel"
             [options]="indicateFundRadioConfig.options"
             [label]="''"
             [hint]="indicateFundRadioConfig.hint"
             [name]="indicateFundRadioConfig.name"
             [errorMessage]="indicateFundRadioConfig.errorMessage">
-          </samRadioButton>
-        </labelWrapper>
+          </sam-radio-button>
+        </sam-label-wrapper>
       </div>
     </form>
 
     <!--Office Codes Form-->
     <form [formGroup]="officeCodesForm" *ngIf="isAddressNeeded()">
       <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-code-section p_T-4x p_B-4x">
-        <samText #orgFPDSCode [control]="basicInfoForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></samText>
-        <samText #orgAACCode [control]="basicInfoForm.get('ACCCode')" formControlName="ACCCode" [name]="'aac-input'" [label]="'AAC Code'"></samText>
+        <sam-text #orgFPDSCode [control]="basicInfoForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></sam-text>
+        <sam-text #orgAACCode [control]="basicInfoForm.get('ACCCode')" formControlName="ACCCode" [name]="'aac-input'" [label]="'AAC Code'"></sam-text>
       </div>
     </form>
 
     <!--Agency, subcommand, majorcommand Codes Form-->
     <form [formGroup]="agencyCodesForm" *ngIf="orgType==='Agency' || orgType==='SubCommand' || orgType==='MajorCommand'">
       <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-code-section p_T-4x p_B-4x">
-        <samText #orgFPDSCode [control]="agencyCodesForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></samText>
-        <samText #orgOMBBureauCode [control]="agencyCodesForm.get('OMBBureauCode')" formControlName="OMBBureauCode" [name]="'omb-input'" [label]="'OMB Code'"></samText>
+        <sam-text #orgFPDSCode [control]="agencyCodesForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></sam-text>
+        <sam-text #orgOMBBureauCode [control]="agencyCodesForm.get('OMBBureauCode')" formControlName="OMBBureauCode" [name]="'omb-input'" [label]="'OMB Code'"></sam-text>
       </div>
     </form>
 
     <!--Department Codes Form-->
     <form [formGroup]="deptCodesForm" *ngIf="orgType==='Department'">
       <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-code-section p_T-4x p_B-4x">
-        <samText #orgFPDSCode [control]="deptCodesForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></samText>
-        <samText #orgTAS2Code [control]="deptCodesForm.get('TAS2Code')" formControlName="TAS2Code" [name]="'tas2-input'" [label]="'TAS2 Code'"></samText>
-        <samText #orgTAS3Code [control]="deptCodesForm.get('TAS3Code')" formControlName="TAS3Code" [name]="'tas3-input'" [label]="'TAS3 Code'"></samText>
-        <samText #orgA11Code [control]="deptCodesForm.get('A11Code')" formControlName="A11Code" [name]="'a11-input'" [label]="'A11 Code'"></samText>
-        <samText #orgCFDACode [control]="deptCodesForm.get('CFDACode')" formControlName="CFDACode" [name]="'cfda-input'" [label]="'CFDA Code'"></samText>
-        <samText #orgOMBAgencyCode [control]="deptCodesForm.get('OMBAgencyCode')" formControlName="OMBAgencyCode" [name]="'omb-agency-input'" [label]="'OMB Agency Code'"></samText>
+        <sam-text #orgFPDSCode [control]="deptCodesForm.get('FPDSCode')" formControlName="FPDSCode" [name]="'fpds-input'" [label]="'FPDS Code'"></sam-text>
+        <sam-text #orgTAS2Code [control]="deptCodesForm.get('TAS2Code')" formControlName="TAS2Code" [name]="'tas2-input'" [label]="'TAS2 Code'"></sam-text>
+        <sam-text #orgTAS3Code [control]="deptCodesForm.get('TAS3Code')" formControlName="TAS3Code" [name]="'tas3-input'" [label]="'TAS3 Code'"></sam-text>
+        <sam-text #orgA11Code [control]="deptCodesForm.get('A11Code')" formControlName="A11Code" [name]="'a11-input'" [label]="'A11 Code'"></sam-text>
+        <sam-text #orgCFDACode [control]="deptCodesForm.get('CFDACode')" formControlName="CFDACode" [name]="'cfda-input'" [label]="'CFDA Code'"></sam-text>
+        <sam-text #orgOMBAgencyCode [control]="deptCodesForm.get('OMBAgencyCode')" formControlName="OMBAgencyCode" [name]="'omb-agency-input'" [label]="'OMB Agency Code'"></sam-text>
       </div>
     </form>
 
     <div class="usa-width-one-whole create-org-form-section m_T-4x create-org-address-section" *ngIf="isAddressNeeded()">
       <div class="usa-width-one-whole p_T-4x" *ngFor="let orgAddr of orgAddresses">
-        <samAddrForm [orgAddrModel]="orgAddr.addrModel" [showAddIcon]="orgAddr.showAddIcon" (onAdditionalAddrRequest)="onAddAddressForm()" (onCancelAdditionalAddrRequest)="onDeleteAddressForm($event)" (onEnableAddIcon)="onEnableAddAddressIcon($event)"></samAddrForm>
+        <sam-address-form [orgAddrModel]="orgAddr.addrModel" [showAddIcon]="orgAddr.showAddIcon" (onAdditionalAddrRequest)="onAddAddressForm()" (onCancelAdditionalAddrRequest)="onDeleteAddressForm($event)" (onEnableAddIcon)="onEnableAddAddressIcon($event)"></sam-address-form>
 
       </div>
     </div>

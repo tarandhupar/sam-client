@@ -82,15 +82,15 @@ $alert-primary-color: #0071bc;
     white-space: nowrap;
   }
 
-  samSelect label {
+  sam-select label {
     display: inline;
   }
 
-  samSelect select {
+  sam-select select {
     display: inline;
   }
 
-  samSelect.publish-select select {
+  sam-select.publish-select select {
     &:disabled {
       background-color: transparent;
       color: #666;
@@ -98,7 +98,7 @@ $alert-primary-color: #0071bc;
     border: none;
   }
 
-  samSelect.sort-select select {
+  sam-select.sort-select select {
     width: initial;
     margin-left: 8px;
     padding-right: 24px;

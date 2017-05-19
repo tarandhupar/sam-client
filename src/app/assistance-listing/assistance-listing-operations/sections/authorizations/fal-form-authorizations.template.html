@@ -9,10 +9,10 @@
 
   <authSubform [hideAddButton]="hideAddButton" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
 
-  <samTextArea
+  <sam-text-area
     [control]="falAuthForm.controls['description']"
     [name]="'description-input'"
     [label]="'Description'"
-    formControlName="description"></samTextArea>
+    formControlName="description"></sam-text-area>
 
 </form>

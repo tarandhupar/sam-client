@@ -5,10 +5,10 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormControl, Validators, Valid
 
 
 /**
- * The <samRadioButton> component is a set of checkboxes compliant with sam.gov standards
+ * The <sam-radio-button> component is a set of checkboxes compliant with sam.gov standards
  */
 @Component({
-  selector: 'samRadioButton',
+  selector: 'sam-radio-button',
   templateUrl: 'radiobutton.template.html',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
@@ -56,12 +56,13 @@ export class SamRadioButtonComponent  {
 
   @ViewChild(FieldsetWrapper)
   public wrapper: FieldsetWrapper;
+  private disabled = null;
 
   constructor() { }
 
   ngOnInit() {
     if (!this.name) {
-      throw new Error("<samRadioButton> requires a [name] parameter for 508 compliance");
+      throw new Error("<sam-radio-button> requires a [name] parameter for 508 compliance");
     }
 
     if(!this.control){
@@ -93,7 +94,7 @@ export class SamRadioButtonComponent  {
   }
 
   setDisabledState(disabled) {
-    //this.disabled = disabled;
+    this.disabled = disabled;
   }
 
   writeValue(value) {

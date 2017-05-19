@@ -4,10 +4,10 @@ import { FieldsetWrapper } from '../../wrappers/fieldset-wrapper';
 import { OptionsType } from '../../types';
 
 /**
- * The <samCheckbox> component is a set of checkboxes 
+ * The <sam-checkbox> component is a set of checkboxes 
  */
 @Component({
-  selector: 'samCheckbox',
+  selector: 'sam-checkbox',
   templateUrl: 'checkbox.template.html',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
@@ -59,7 +59,7 @@ export class SamCheckboxComponent implements ControlValueAccessor {
 
   @ViewChild(FieldsetWrapper)
   public wrapper: FieldsetWrapper;
-
+  private disabled = null;
   /*
    * We want our model to list the checked items in the order that they appear in the options list
    * This object allows us to efficiently determine if a value is before another value
@@ -84,7 +84,7 @@ export class SamCheckboxComponent implements ControlValueAccessor {
 
   ngOnInit() {
     if (!this.name) {
-      throw new Error("<samCheckbox> requires a [name] parameter for 508 compliance");
+      throw new Error("<sam-checkbox> requires a [name] parameter for 508 compliance");
     }
 
     // initialize the order lookup map
@@ -169,7 +169,7 @@ export class SamCheckboxComponent implements ControlValueAccessor {
   }
 
   setDisabledState(disabled) {
-    //todo
+    this.disabled = disabled;
   }
 
   writeValue(value) {

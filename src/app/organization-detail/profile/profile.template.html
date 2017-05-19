@@ -5,13 +5,13 @@
 
       <button *ngIf="isNextLayerCreatable() && selectConfig.options.length > 1" class="usa-button-big pull-right relative">
         Create &nbsp; <i class="fa fa-angle-down"></i>
-        <samSelect class="org-type-select"
+        <sam-select class="org-type-select"
                    [name]="selectConfig.name"
                    [options]="selectConfig.options"
                    [label]="selectConfig.label"
                    [disabled]="selectConfig.disabled"
                    (modelChange)='onSelect($event)'>
-        </samSelect>
+        </sam-select>
       </button>
       <button class="usa-button-big pull-right relative" *ngIf="isNextLayerCreatable() && selectConfig.options.length === 1" (click)="onSelect(selectConfig.options[0].value)">
         Create {{selectConfig.options[0].label}}</button>
@@ -58,7 +58,7 @@
     </div>
   </div>
 
-  <samAlert class="org-detail-alert-message" (dismiss)="dismissCreateOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+ orgObj.name" *ngIf="flashMsgService.isCreateOrgSuccess && flashMsgService.isFlashMsgShow" ></samAlert>
-  <samAlert class="org-detail-alert-message" (dismiss)="dismissEditOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your edits have been saved'" *ngIf="showEditOrgFlashAlert" ></samAlert>
+  <sam-alert class="org-detail-alert-message" (dismiss)="dismissCreateOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+ orgObj.name" *ngIf="flashMsgService.isCreateOrgSuccess && flashMsgService.isFlashMsgShow" ></sam-alert>
+  <sam-alert class="org-detail-alert-message" (dismiss)="dismissEditOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your edits have been saved'" *ngIf="showEditOrgFlashAlert" ></sam-alert>
 
 </div>

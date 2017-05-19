@@ -23,7 +23,8 @@ describe('src/app/wage-determination/search-result/wage-determination-result.spe
         services: [
           {
             "code": 8,
-            "value": "SAMPLE SERVICE"
+            "value": "SAMPLE SERVICE",
+            "description": "SAMPLE DESCRIPTION"
           }
         ],
         constructionTypes: "CONSTRUCTION TYPES",

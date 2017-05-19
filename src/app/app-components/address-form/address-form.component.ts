@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 import {SamAutocompleteComponent} from "sam-ui-kit/form-controls/autocomplete";
 
 @Component ({
-  selector: 'samAddrForm',
+  selector: 'sam-address-form',
   templateUrl: 'address-form.template.html'
 })
 export class OrgAddrFormComponent {

@@ -25,8 +25,8 @@
       ></sam-autocomplete>
 
       <samAccordion [expandIndex]="0">
-        <samAccordionSection [headerText]="accordionHeading1" [name]="accordionName1">
-          <samCheckbox
+        <sam-accordion-section [headerText]="accordionHeading1" [name]="accordionName1">
+          <sam-checkbox
             #statusCheckboxes
             (modelChange)="activeFilter($event)"
             [(model)]="StatusCheckboxModel"
@@ -35,13 +35,13 @@
             [label]="filters.status.label"
             [hasSelectAll]="'Yes'"
             >
-          </samCheckbox>
-        </samAccordionSection>
+          </sam-checkbox>
+        </sam-accordion-section>
       </samAccordion>
 
       <samAccordion [expandIndex]="0">
-        <samAccordionSection [headerText]="accordionHeading2" [name]="accordionName2">
-          <samCheckbox
+        <sam-accordion-section [headerText]="accordionHeading2" [name]="accordionName2">
+          <sam-checkbox
             (modelChange)="domainFilter($event)"
             [(model)]="DomiansCheckboxModel"
             [name]="'Domains-Checkbox-Filter'"
@@ -49,8 +49,8 @@
             [label]="filters.domains.label"
             [hasSelectAll]="'Yes'"
             >
-          </samCheckbox>
-        </samAccordionSection>
+          </sam-checkbox>
+        </sam-accordion-section>
       </samAccordion>
     </div>
   </div>

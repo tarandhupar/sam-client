@@ -1,4 +1,4 @@
-<samButton buttonText="Add Authorization" (onClick)="addAuth()" [class.hide]="hideAddButton"></samButton>
+<sam-button buttonText="Add Authorization" (onClick)="addAuth()" [class.hide]="hideAddButton"></sam-button>
 
 <div [formGroup]="falAuthSubForm" [class.hide]="!hideAddButton">
   <div formArrayName="authorizations">
@@ -7,134 +7,134 @@
     <ng-container *ngFor="let authGrp of falAuthSubForm.controls.authorizations.controls; let i=index">
       <div [formGroupName]="i" [class.hide]="authIndex !== i">
 
-        <samCheckbox
+        <sam-checkbox
           [control]="authGrp.controls.authType"
           [label]="'Please select all that apply'"
           [name]="'authType'"
           [options]="checkboxConfig.options"
           [required]="true"
-          formControlName="authType"></samCheckbox>
+          formControlName="authType"></sam-checkbox>
 
         <div formGroupName="act" [class.hide]="authGrp.value.authType.indexOf('act') == -1" >
           <h4>Act</h4>
-          <samText
+          <sam-text
             [control]="authGrp.controls.act.controls.title"
             [name]="'title'"
             [label]="'Title'"
             formControlName="title"
-          ></samText>
+          ></sam-text>
 
-          <samText
+          <sam-text
             [control]="authGrp.controls.act.controls.part"
             [name]="'part'"
             [label]="'Part'"
             formControlName="part"
-          ></samText>
+          ></sam-text>
 
-          <samText
+          <sam-text
             [control]="authGrp.controls.act.controls.section"
             [name]="'section'"
             [label]="'Section'"
             formControlName="section"
-          ></samText>
+          ></sam-text>
 
-          <samTextArea
+          <sam-text-area
             [control]="authGrp.controls.act.controls.description"
             [name]="'description'"
             [label]="'Description'"
             formControlName="description"
-          ></samTextArea>
+          ></sam-text-area>
 
         </div>
 
         <div formGroupName="executiveOrder" [class.hide]="authGrp.value.authType.indexOf('executiveOrder') == -1" >
           <h4>Executive Order</h4>
-          <samText
+          <sam-text
             [control]="authGrp.controls.executiveOrder.controls.title"
             [name]="'title'"
             [label]="'Title'"
             formControlName="title"
-          ></samText>
+          ></sam-text>
 
-          <samText
+          <sam-text
             [control]="authGrp.controls.executiveOrder.controls.part"
             [name]="'part'"
             [label]="'Part'"
             formControlName="part"
-          ></samText>
+          ></sam-text>
 
-          <samText
+          <sam-text
             [control]="authGrp.controls.executiveOrder.controls.section"
             [name]="'section'"
             [label]="'Section'"
             formControlName="section"
-          ></samText>
+          ></sam-text>
 
-          <samTextArea
+          <sam-text-area
             [control]="authGrp.controls.executiveOrder.controls.description"
             [name]="'description'"
             [label]="'Description'"
             formControlName="description"
-          ></samTextArea>
+          ></sam-text-area>
 
         </div>
 
         <div formGroupName="publicLaw" [class.hide]="authGrp.value.authType.indexOf('publicLaw') == -1" >
           <h4>Public Law</h4>
-          <samText
+          <sam-text
             [control]="authGrp.controls.publicLaw.controls.congressCode"
             [name]="'congressCode'"
             [label]="'Congress'"
             formControlName="congressCode"
-          ></samText>
+          ></sam-text>
 
-          <samText
+          <sam-text
             [control]="authGrp.controls.publicLaw.controls.number"
             [name]="'number'"
             [label]="'Law Number'"
             formControlName="number"
-          ></samText>
+          ></sam-text>
 
         </div>
 
         <div formGroupName="statute" [class.hide]="authGrp.value.authType.indexOf('statute') == -1" >
           <h4>Statute</h4>
-          <samText
+          <sam-text
             [control]="authGrp.controls.statute.controls.volume"
             [name]="'volume'"
             [label]="'Volume'"
             formControlName="volume"
-          ></samText>
+          ></sam-text>
 
-          <samText
+          <sam-text
             [control]="authGrp.controls.statute.controls.page"
             [name]="'page'"
             [label]="'Page'"
             formControlName="page"
-          ></samText>
+          ></sam-text>
 
         </div>
 
         <div formGroupName="USC" [class.hide]="authGrp.value.authType.indexOf('USC') == -1" >
           <h4>USC</h4>
-          <samText
+          <sam-text
             [control]="authGrp.controls.USC.controls.title"
             [name]="'title'"
             [label]="'Title'"
             formControlName="title"
-          ></samText>
+          ></sam-text>
 
-          <samText
+          <sam-text
             [control]="authGrp.controls.USC.controls.section"
             [name]="'section'"
             [label]="'Section'"
             formControlName="section"
-          ></samText>
+          ></sam-text>
 
         </div>
 
-        <samButton buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></samButton>
-        <samButton buttonText="Confirm" (onClick)="onConfirmClick(i)"></samButton>
+        <sam-button buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
+        <sam-button buttonText="Confirm" (onClick)="onConfirmClick(i)"></sam-button>
       </div>
     </ng-container>
   </div>

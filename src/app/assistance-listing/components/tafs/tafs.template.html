@@ -1,5 +1,5 @@
 <!--Delete Modal-->
-<samModal *ngIf="config.deleteModal" #deleteModal
+<sam-modal *ngIf="config.deleteModal" #deleteModal
           [showClose]="true"
           [closeOnOutsideClick]="true"
           [closeOnEscape]="true"
@@ -9,9 +9,9 @@
           [submitButtonLabel]="'Ok'"
           [cancelButtonLabel]="'Cancel'"
           (onSubmit)="onDeleteModalSubmit($event)">
-</samModal>
+</sam-modal>
 
-<labelWrapper #tafsLabel
+<sam-label-wrapper #tafsLabel
               [name]="config.name"
               [label]="config.label"
               [hint]="config.hint"
@@ -77,60 +77,60 @@
 
     <!-- Add new tafs form -->
     <div [hidden]="!isEditing">
-      <samText [label]="'Treasury Dept. Code'"
+      <sam-text [label]="'Treasury Dept. Code'"
                [name]="config.name + '-treasury-dept-code'"
                [maxlength]="2"
                [required]="true"
                [control]="tafsForm.get('departmentCode')"
                [formControlName]="'departmentCode'"
-      ></samText>
+      ></sam-text>
 
-      <samText [label]="'Treasury Account Main Code'"
+      <sam-text [label]="'Treasury Account Main Code'"
                [name]="config.name + '-treasury-account-main-code'"
                [maxlength]="4"
                [required]="true"
                [control]="tafsForm.get('accountCode')"
                [formControlName]="'accountCode'"
-      ></samText>
+      ></sam-text>
 
-      <samText [label]="'TAFS Sub Account'"
+      <sam-text [label]="'TAFS Sub Account'"
                [name]="config.name + '-sub-account-code'"
                [maxlength]="3"
                [required]="false"
                [control]="tafsForm.get('subAccountCode')"
                [formControlName]="'subAccountCode'"
-      ></samText>
+      ></sam-text>
 
-      <samText [label]="'Allocation Transfer Agency'"
+      <sam-text [label]="'Allocation Transfer Agency'"
                [name]="config.name + '-allocation-transfer-agency-code'"
                [maxlength]="2"
                [required]="false"
                [control]="tafsForm.get('allocationTransferAgency')"
                [formControlName]="'allocationTransferAgency'"
-      ></samText>
+      ></sam-text>
 
-      <samText [label]="'FY 1'"
+      <sam-text [label]="'FY 1'"
                [name]="config.name + '-fy1-code'"
                [maxlength]="4"
                [required]="false"
                [control]="tafsForm.get('fy1')"
                [formControlName]="'fy1'"
-      ></samText>
+      ></sam-text>
 
-      <samText [label]="'FY 2'"
+      <sam-text [label]="'FY 2'"
                [name]="config.name + '-fy2-code'"
                [maxlength]="4"
                [required]="false"
                [control]="tafsForm.get('fy2')"
                [formControlName]="'fy2'"
-      ></samText>
+      ></sam-text>
     </div>
 
     <!-- Add new account form action buttons -->
-    <samButton *ngIf="!isEditing" buttonText="Add New TAF" (onClick)="displayForm()" [buttonType]="'default'"></samButton>
+    <sam-button *ngIf="!isEditing" buttonText="Add New TAF" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
 
-    <samButton *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></samButton>
-    <samButton *ngIf="isEditing" buttonText="Confirm TAF" (onClick)="addTafs()" [buttonType]="(!tafsForm.valid ? 'disabled' : 'default')"></samButton>
+    <sam-button *ngIf="isEditing" buttonText="Cancel" (onClick)="resetForm()" [buttonType]="'default'"></sam-button>
+    <sam-button *ngIf="isEditing" buttonText="Confirm TAF" (onClick)="addTafs()" [buttonType]="(!tafsForm.valid ? 'disabled' : 'default')"></sam-button>
   </div>
 
-</labelWrapper>
+</sam-label-wrapper>

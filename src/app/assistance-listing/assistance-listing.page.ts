@@ -47,9 +47,10 @@ export class ProgramPage implements OnInit, OnDestroy {
   pageRoute: string;
   pageFragment: string;
   sidenavModel = {
-    "label": "FAL",
+    "label": "AL",
     "children": []
   };
+  qParams:any;
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -76,6 +77,9 @@ export class ProgramPage implements OnInit, OnDestroy {
           const tree = router.parseUrl(router.url);
           this.pageFragment = tree.fragment;
         }
+      });
+      route.queryParams.subscribe(data => {
+        this.qParams = data;
       });
     }
 
@@ -145,7 +149,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
       this.pageRoute = "programs/" + this.program.id + "/view";
       let falSideNavContent = {
-        "label": "Federal Assistance Listing",
+        "label": "Assistance Listing",
         "route": this.pageRoute,
         "children": []
       };
@@ -327,7 +331,7 @@ export class ProgramPage implements OnInit, OnDestroy {
       this.alert.push({
         'labelname': 'not-updated-since', 'config': {
           'type': 'warning', 'title': '', 'description': 'Note: \n\
-This Federal Assistance Listing was not updated by the issuing agency in ' + (new Date()).getFullYear() + '. \n\
+This Assistance Listing was not updated by the issuing agency in ' + (new Date()).getFullYear() + '. \n\
 Please contact the issuing agency listed under "Contact Information" for more information.'
         }
       });

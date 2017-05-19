@@ -12,29 +12,29 @@
         <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
       </ng-container>
       <!--Side Navigation-->
-      <samSidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></samSidenav>
+      <sam-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-sidenav>
     </div>
   </aside>
 
   <!--Edit Modal-->
-  <samModal #editModal
+  <sam-modal #editModal
             [showClose]="true"
             [closeOnOutsideClick]="true"
             [closeOnEscape]="true"
             [type]="'info'"
-            [title]="'Revise -  Federal Assistance Listing'"
-            [description]="'A draft revision for this published program will be utilized for editing.  Please click ok to edit a draft of this FAL.'"
+            [title]="'Revise -  Assistance Listing'"
+            [description]="'A draft revision for this published program will be utilized for editing.  Please click ok to edit a draft of this AL.'"
             [submitButtonLabel]="'Ok'"
             [cancelButtonLabel]="'Cancel'"
             (onSubmit)="onEditModalSubmit()">
-  </samModal>
+  </sam-modal>
 
   <!--Main Content-->
   <div *ngIf="program" class="usa-width-three-fourths">
 
     <!-- Alert -->
     <ng-container *ngIf="alert.length > 0">
-      <samAlert id="program-alert" *ngFor="let alert of alert" labelname="alert.labelname" [type]="alert.config.type" [title]="alert.config.title" [description]="alert.config.description"></samAlert>
+      <sam-alert id="program-alert" *ngFor="let alert of alert" labelname="alert.labelname" [type]="alert.config.type" [title]="alert.config.title" [description]="alert.config.description"></sam-alert>
     </ng-container>
 
     <!-- Intro Content -->
@@ -124,7 +124,7 @@
 									<div class="description">
                     <ng-container *ngIf="relatedProgram && program.data?.relatedPrograms?.length > 0 && relatedProgram.length > 0">
                       <ng-container *ngFor="let item of relatedProgram; let isLast = last; let i = index">
-                        <a [attr.id]="'program-related-' + i"  [routerLink]="['/programs', item.id,'view']" (click)="toTheTop()" >
+                        <a [attr.id]="'program-related-' + i"  [routerLink]="['/programs', item.id,'view']" [queryParams]="qParams" (click)="toTheTop()" >
                           {{item.programNumber}}
                         </a>{{isLast ? '' : ', '}}
                       </ng-container>
@@ -138,7 +138,7 @@
 
               <div class="item">
                 <a target="_blank" class="field" id="'grants-dot-gov-link" *ngIf="program.data?.programNumber" href="https://www.grants.gov/search-grants.html?cfda={{program.data?.programNumber}}">
-                  View available opportunities on Grants.gov related to this Federal Assistance Listing
+                  View available opportunities on Grants.gov related to this Assistance Listing
                 </a>
               </div>
 
@@ -196,7 +196,7 @@
       </div>
 
       <ng-container *ngIf="program.data?.description && program.data?.description != ''">
-        <h3 class="sam-ui header">Federal Assistance Listing Description</h3>
+        <h3 class="sam-ui header">Assistance Listing Description</h3>
         <div class="content-block">
           {{ program.data?.description }}
         </div>
@@ -784,7 +784,7 @@
         </div>
 
         <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="false">
-          Statuary formula is not applicable to this federal assistance listing.
+          Statuary formula is not applicable to this assistance listing.
         </div>
       </ng-container>
 
@@ -808,7 +808,7 @@
         </div>
 
         <div class="m-a-0 field" id="program-assistance-matching" *ngSwitchCase="false">
-          Matching requirements are not applicable to this federal assistance listing.
+          Matching requirements are not applicable to this assistance listing.
         </div>
       </ng-container>
 
@@ -820,7 +820,7 @@
         </div>
 
         <div class="m-a-0 field" id="program-assistance-moe" *ngSwitchCase="false">
-          MOE requirements are not applicable to this federal assistance listing.
+          MOE requirements are not applicable to this assistance listing.
         </div>
       </ng-container>
 
@@ -850,7 +850,7 @@
       <h3 class="sam-ui dividing header">Headquarters Office:</h3>
 
       <div *ngFor="let item of program.data.contacts?.headquarters; let i = index">
-        <samPOC [attr.id]="'program-contacts-poc-' + i" [data]="item"></samPOC>
+        <sam-poc [attr.id]="'program-contacts-poc-' + i" [data]="item"></sam-poc>
       </div>
       <strong>Website: </strong>
       <ng-container *ngIf="!program.data?.website || program.data?.website == null ">No Data Available</ng-container>

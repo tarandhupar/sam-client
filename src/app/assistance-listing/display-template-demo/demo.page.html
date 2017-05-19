@@ -484,7 +484,7 @@
         
         <sam-subsection title="Headquarters Office">
           <div *ngFor="let item of program.data.contacts?.headquarters; let i = index">
-            <samPOC [attr.id]="'program-contacts-poc-' + i" [data]="item"></samPOC>
+            <sam-poc [attr.id]="'program-contacts-poc-' + i" [data]="item"></sam-poc>
           </div>
           <strong>Website: </strong>
           <ng-container *ngIf="!program.data?.website || program.data?.website == null ">No Data Available</ng-container>

@@ -4,22 +4,22 @@
     <span>Thank you for joining the new SAM.gov. To complete the sign-up process and gain account access, please complete the following information.</span>
     <form *ngIf="userForm" [formGroup]="userForm" class="usa-form usa-form-register" autocomplete="off" novalidate>
       <fieldset class="name">
-        <samNameEntry [model]="user" legend="Your Name" #nameEntry></samNameEntry>
+        <sam-name-entry [model]="user" legend="Your Name" #nameEntry></sam-name-entry>
       </fieldset>
       <fieldset class="phone">
         <legend>Business Phone</legend>
-        <samPhoneEntry [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" [label]="' '" [numbersOnly]="true" [required]="true" #phoneEntry></samPhoneEntry>
+        <sam-phone-entry [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" [label]="' '" [numbersOnly]="true" [required]="true" #phoneEntry></sam-phone-entry>
       </fieldset>
       <fieldset class="office" *ngIf="states.isGov">
         <legend>Office</legend>
-        <agencyPicker [advancedMode]="true"
+        <sam-agency-picker [advancedMode]="true"
                       [multimode]="false"
                       [orgRoot]="user.department"
                       [(orgId)]="user.orgID"
                       [label]="'Select the office you work for:'"
                       (department)="setDepartment($event)"
                       (organization)="setOrganization($event)">
-        </agencyPicker>
+        </sam-agency-picker>
       </fieldset>
       <fieldset class="password">
         <sam-password [password]="userForm.controls.userPassword"
@@ -39,10 +39,10 @@
         </div>
       </fieldset>
       <div class="usa-button-controls">
-        <samAlert [type]="states.alert.type"
+        <sam-alert [type]="states.alert.type"
                   [title]="states.alert.message"
                   [(hidden)]="!states.alert.show"
-                  showClose="true"></samAlert>
+                  showClose="true"></sam-alert>
         <div class="usa-button-controls">
           <button type="button" class="usa-button-outline" (click)="cancel()">Cancel</button>
           <button type="button" [disabled]="states.submitted" (click)="register()" #controls>Submit</button>

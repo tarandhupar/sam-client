@@ -7,16 +7,16 @@
     <p>{{getLabelForDomain(domain)}}</p>
   </ng-container>
   <ng-container *ngIf="mode === 'new'">
-    <samSelect (focus)="onDomainFocus()" name='domain' label="Domain" [options]="domainOptions" [(ngModel)]="selectedDomain" (modelChange)="onDomainChange()" [errorMessage]="errors.domain"></samSelect>
+    <sam-select (focus)="onDomainFocus()" name='domain' label="Domain" [options]="domainOptions" [(ngModel)]="selectedDomain" (modelChange)="onDomainChange()" [errorMessage]="errors.domain"></sam-select>
   </ng-container>
 
   <ng-container *ngIf="domainDefinitions">
 
     <!-- Role text -->
-    <labelWrapper name="role" label="Role Name" [errorMessage]="errors.role">
+    <sam-label-wrapper name="role" label="Role Name" [errorMessage]="errors.role">
       <input id="role" type="text" [(ngModel)]="role" (blur)="onRoleBlur()" (focus)="onRoleFocus()" *ngIf="!(mode === 'edit' && isRoleNameDisabled())">
       <span *ngIf="mode === 'edit' && isRoleNameDisabled()">{{role}}</span>
-    </labelWrapper>
+    </sam-label-wrapper>
 
     <div>
       <label>Can this role administer to other roles?</label>
@@ -54,7 +54,7 @@
     </div>
   </ng-container>
 
-  <samAlert type='warning' *ngIf='showNameModifiedAlert()' description="Are you sure you want to edit this role name. This will impact all users with this role in the system"></samAlert>
+  <sam-alert type='warning' *ngIf='showNameModifiedAlert()' description="Are you sure you want to edit this role name. This will impact all users with this role in the system"></sam-alert>
   <div class="clearfix">
     <div class="pull-right">
       <button class="usa-button-outline" routerLink="/access/workspace">Cancel</button>

@@ -35,6 +35,7 @@ export class WageDeterminationPage implements OnInit {
   shortProcessedHistory: any;
   showingLongHistory = false;
   revisionMessage: boolean = false;
+  qParams: any;
 
   // On load select first item on sidenav component
   selectedPage: number = 0;
@@ -61,7 +62,13 @@ export class WageDeterminationPage implements OnInit {
         this.pageFragment = tree.fragment;
       }
     });
+
+    route.queryParams.subscribe(data => {
+      this.qParams = data;
+    });
   }
+
+
 
   ngOnInit() {
     // Using document.location.href instead of
@@ -204,6 +211,7 @@ export class WageDeterminationPage implements OnInit {
     if (resultCounties.length !== counties.length) {
       warning += '(' + (counties.length - resultCounties.length).toString() + ' unknown counties)';
     }
+    resultCounties = _.sortBy(resultCounties, 'value');
 
     // otherwise take the names of all the found counties and join them into a comma separated string
     return resultCounties.map(county => { return county.value }).join(', ') + warning;
@@ -256,7 +264,7 @@ export class WageDeterminationPage implements OnInit {
       this.wgService.getWageDeterminationHistoryByReferenceNumber(wageDeterminationAPI.fullReferenceNumber).subscribe(historySubject);
       historySubject.subscribe(historyAPI => {
         let processWageDeterminationHistory = new ProcessWageDeterminationHistory();
-        let pipedHistory = processWageDeterminationHistory.transform(historyAPI);
+        let pipedHistory = processWageDeterminationHistory.transform(historyAPI, this.qParams);
         this.processedHistory = pipedHistory.processedHistory;
         this.shortProcessedHistory = pipedHistory.shortProcessedHistory;
         this.longProcessedHistory = pipedHistory.longProcessedHistory;
