@@ -13,6 +13,7 @@ import { AppComponentsModule } from "../app-components/app-components.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { WorkspacePage } from "./workspace.page";
 import { WorkspaceWidgetComponent } from "./workspace-widget/workspace-widget.component";
+// import { DraggableDirective } from "./workspace-widget/widget-drag.directive";
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { WorkspaceWidgetComponent } from "./workspace-widget/workspace-widget.co
   exports: [],
   declarations: [
     WorkspacePage,
-    WorkspaceWidgetComponent
+    WorkspaceWidgetComponent,
+    // DraggableDirective,
   ],
   providers: [
     AlertFooterService,

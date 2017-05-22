@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, Output, EventEmitter } from '@angular/core';
+import { Component, Input, HostListener, Output, EventEmitter, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'workspace-widget',
@@ -6,4 +6,6 @@ import { Component, Input, HostListener, Output, EventEmitter } from '@angular/c
 })
 export class WorkspaceWidgetComponent {
   @Input() title:string = "";
+
+  
 }

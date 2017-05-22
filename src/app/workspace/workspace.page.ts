@@ -9,7 +9,7 @@ import { ActivatedRoute } from "@angular/router";
 export class WorkspacePage {
 
   currentSection: string = "";
-
+  showWelcome:boolean = true;
 
   constructor(private fhService: FHService, private route: ActivatedRoute){}
 
@@ -23,6 +23,10 @@ export class WorkspacePage {
 
   selectCurrentSection(sectionValue){
     this.currentSection = sectionValue;
+  }
+
+  closeWelcomeSection(){
+    this.showWelcome = false;
   }
 
 }

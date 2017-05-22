@@ -20,7 +20,7 @@
     <h1 class="m_T-3x m_L-3x workspace-title-text">My Workspace</h1>
 
     <!--Welcome section for workspace-->
-    <div class="usa-width-one-whole m_L-3x workspace-welcome-section relative">
+    <div class="usa-width-one-whole m_L-3x workspace-welcome-section relative" *ngIf="showWelcome">
       <p class="p_T-1x p_L-1x">
         Welcome to workspace!<br>
         Here are things you can do to completely set up your workspce:<br>
@@ -29,7 +29,7 @@
         3. Set up a Saved Search or Report<br>
         4. Acc3ss our Federal Hierarchy Feature<br>
       </p>
-      <span class="workspace-welcome-close-icon"><i class="fa fa-times-circle"></i></span>
+      <span class="workspace-welcome-close-icon" (click)="closeWelcomeSection()"><i class="fa fa-times-circle"></i></span>
     </div>
 
     <!--Notification Section for workspace-->

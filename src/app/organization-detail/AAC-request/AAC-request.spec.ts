@@ -198,7 +198,7 @@ describe('Create AAC Request Form Page', () => {
     expect(component.isOfficeInfoValid()).toBe(true);
     component.aacReasonCbxModel = ['Used for Personal Property Reporting or Transfer'];
     component.addrForms.forEach(e => {
-      e.stateLocationConfig.serviceOptions = {value:"United States", key:"USA"};
+      e.locationServiceOptions.state = {value:"United States", key:"USA"};
       e.stateOutput = {value:"Virginia"};
       e.addressForm.get("streetAddr1").setValue("street 123");
       e.addressForm.get("postalCode").setValue("123456");
