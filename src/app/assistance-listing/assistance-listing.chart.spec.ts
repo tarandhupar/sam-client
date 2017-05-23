@@ -61,7 +61,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     comp.financialData = mockFinancialData;
     comp.dictionaries = mockDictionaries;
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
-    comp.ngOnChanges();
+    // comp.ngOnChanges();
   });
 
   /**

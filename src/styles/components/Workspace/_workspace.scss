@@ -1,0 +1,44 @@
+@import "workspace-widget";
+
+.workspace{
+  .usa-sidenav-list li{
+    border: none;
+  }
+
+  .usa-sidenav-list li a:hover{
+    cursor: pointer;
+  }
+
+  aside{
+    margin-top: 60px;
+  }
+
+  .workspace-welcome-section{
+    border: 1px solid $color-gray-light;
+    .workspace-welcome-close-icon{
+      position: absolute;
+      right: 5px;
+      top: 0;
+    }
+  }
+
+  .workspace-notification-section{
+    border: 1px solid $color-gray-light;
+  }
+
+  .workspace-search-report-section{ }
+
+  .workspace-title-text{
+    color: $color-primary-alt-darkest;
+  }
+
+  .workspace-center-text{
+    text-align: center;
+  }
+}
+
+.workspace-image{
+  background: url(../assets/img/help-main.png);
+  background-size: cover;
+  min-height: 200px;
+}

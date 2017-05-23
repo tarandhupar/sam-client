@@ -11,6 +11,13 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { FHService } from "../../../api-kit/fh/fh.service";
+import { LocationService } from "../../../api-kit/location/location.service";
+
+class LocationServiceStub {
+  validateZipWIthLocation(zip:string, state?:any, city?:any):any{
+    return Observable.of({description:'VALID'});
+  }
+};
 
 class FHServiceStub {
   getOrganizationById(orgId:string, childHierarchy:boolean, parentHierarchy:boolean):any{
@@ -63,7 +70,8 @@ describe('Create Organization Form Page', () => {
         FlashMsgService,
         { provide: Router,  useValue:{events:Observable.of({url:"/create-organization"})} },
         { provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{ 'orgType': 'Office',  'parentID': '100000000',}])}},
-        { provide: FHService ,useClass:FHServiceStub}
+        { provide: FHService ,useClass:FHServiceStub},
+        { provide: LocationService ,useClass:LocationServiceStub},
       ]
     });
     fixture = TestBed.createComponent(OrgCreatePage);
@@ -89,7 +97,6 @@ describe('Create Organization Form Page', () => {
     expect(component.orgAddresses.length).toBe(2);
     component.onDeleteAddressForm(component.orgAddresses[1].addrModel);
     expect(component.orgAddresses.length).toBe(1);
-    expect(component.isAddressFormValid()).toBeFalsy();
   });
 
   it('should be able to validate an empty create organization form', () => {
@@ -108,11 +115,11 @@ describe('Create Organization Form Page', () => {
     component.officeCodesForm.get('FPDSCode').setValue("FPDS");
     component.indicateFundRadioModel = "other";
     component.addrForms.forEach(e=>{
-      e.stateLocationConfig.serviceOptions = {value:"United States", key:"USA"};
-      e.stateOutput = {value:"Virginia"};
+      e.cityLocationConfig.serviceOptions.country = {value:"United States", key:"USA"};
+      e.cityLocationConfig.serviceOptions.state = {value:"Virginia", key:"VA"};
+      e.cityOutput = {value:"fairfax"};
       e.addressForm.get("streetAddr1").setValue("street 123");
-      e.addressForm.get("postalCode").setValue("123456");
-      e.addressForm.get("city").setValue("fairfax");
+      e.addressForm.get("postalCode").setValue("22030");
     });
     component.onReviewFormClick();
     expect(component.reviewOrgPage).toBeTruthy();

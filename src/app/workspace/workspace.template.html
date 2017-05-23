@@ -1,0 +1,101 @@
+<div class="usa-grid-full workspace-image"></div>
+<div class="usa-grid-full p_B-6x workspace relative">
+
+  <aside class="usa-width-one-fourth m_R-0">
+
+    <div sam-sticky limit=1200 container="workspace">
+      <ul class="usa-sidenav-list">
+        <li><h4 class="m_B-2x">My Workspace</h4>
+          <ul class="usa-sidenav-list">
+            <li><a [ngClass]="getSectionClass('Notification')" (click)="selectCurrentSection('Notification')">Notification</a></li>
+            <li><a [ngClass]="getSectionClass('Search and Reports')" (click)="selectCurrentSection('Search and Reports')">Search and Reports</a></li>
+            <li><a [ngClass]="getSectionClass('Data Entry')" (click)="selectCurrentSection('Data Entry')">Data Entry</a></li>
+            <li><a [ngClass]="getSectionClass('Administration')" (click)="selectCurrentSection('Administration')">Administration</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </aside>
+  <div class="usa-width-three-fourths">
+    <h1 class="m_T-3x m_L-3x workspace-title-text">My Workspace</h1>
+
+    <!--Welcome section for workspace-->
+    <div class="usa-width-one-whole m_L-3x workspace-welcome-section relative" *ngIf="showWelcome">
+      <p class="p_T-1x p_L-1x">
+        Welcome to workspace!<br>
+        Here are things you can do to completely set up your workspce:<br>
+        1. Completely setting up your Profile.<br>
+        2. Request additional roles and permissions<br>
+        3. Set up a Saved Search or Report<br>
+        4. Acc3ss our Federal Hierarchy Feature<br>
+      </p>
+      <span class="workspace-welcome-close-icon" (click)="closeWelcomeSection()"><i class="fa fa-times-circle"></i></span>
+    </div>
+
+    <!--Notification Section for workspace-->
+    <h2 class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Notifications</h2>
+    <div class="usa-width-one-whole m_L-3x m_T-3x workspace-notification-section relative">
+      <div class="usa-width-one-whole workspace-center-text">
+        <span><a>See All Notifications</a></span>
+      </div>
+    </div>
+
+    <!--Search and Report section for workspace-->
+    <h2 class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Search and Report</h2>
+    <div class="usa-width-one-whole m_L-3x m_T-3x workspace-search-report-section relative">
+      <div class="usa-width-one-half">
+        <workspace-widget [title]="'Saved Searches'"></workspace-widget>
+      </div>
+      <div class="usa-width-one-half">
+        <workspace-widget [title]="'Saved Reports'"></workspace-widget>
+      </div>
+    </div>
+
+    <h2 class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Data Entry</h2>
+    <div class="usa-width-one-whole m_L-3x m_T-3x workspace-data-entry-section relative">
+      <div class="usa-width-one-whole">
+        <div class="usa-width-one-half">
+          <workspace-widget [title]="'Assistance Listings'"></workspace-widget>
+        </div>
+        <div class="usa-width-one-half">
+          <workspace-widget [title]="'Opportunities'"></workspace-widget>
+        </div>
+      </div>
+      <div class="usa-width-one-whole m_T-3x">
+        <div class="usa-width-one-half">
+          <workspace-widget [title]="'Wage Determinations'"></workspace-widget>
+        </div>
+        <div class="usa-width-one-half">
+          <workspace-widget [title]="'Exclusions'"></workspace-widget>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Administration</h2>
+    <div class="usa-width-one-whole m_L-3x m_T-3x workspace-administration-section relative">
+      <div class="usa-width-one-whole">
+        <div class="usa-width-one-half">
+          <workspace-widget [title]="'My Profile'"></workspace-widget>
+        </div>
+        <div class="usa-width-one-half">
+          <workspace-widget [title]="'AAC Request'"></workspace-widget>
+        </div>
+      </div>
+      <div class="m_T-3x usa-width-one-whole">
+        <div class="usa-width-one-half">
+          <workspace-widget [title]="'Federal Hierarchy'"></workspace-widget>
+        </div>
+        <div class="usa-width-one-half">
+          <workspace-widget [title]="'Role Management'"></workspace-widget>
+        </div>
+      </div>
+      <div class="m_T-3x usa-width-one-whole">
+        <div class="usa-width-one-half">
+          <workspace-widget [title]="'System Alerts'"></workspace-widget>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
