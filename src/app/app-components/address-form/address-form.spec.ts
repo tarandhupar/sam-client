@@ -20,7 +20,7 @@ class LocationServiceStub {
   }
 };
 
-fdescribe('Organization Address Form component', () => {
+describe('Organization Address Form component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgAddrFormComponent;
   let fixture:any;
@@ -63,7 +63,8 @@ fdescribe('Organization Address Form component', () => {
     component.addressForm.get("streetAddr1").setValue("street 123");
     component.addressForm.get("postalCode").setValue("22030");
     component.validateForm();
-    expect(component.orgAddrModel).toEqual({addrType:"Mailing Address",country:"USA",state:"",city:"",street1:"street 123",street2:"",postalCode:"22030"});
+    component.updateCityField({value:"fairfax"});
+    expect(component.orgAddrModel).toEqual({addrType:"Mailing Address",country:"USA",state:"",city:"fairfax",street1:"street 123",street2:"",postalCode:"22030"});
 
   });
 

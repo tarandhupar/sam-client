@@ -11,6 +11,13 @@ import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { FHService } from "../../../api-kit/fh/fh.service";
+import { LocationService } from "../../../api-kit/location/location.service";
+
+class LocationServiceStub {
+  validateZipWIthLocation(zip:string, state?:any, city?:any):any{
+    return Observable.of({description:'VALID'});
+  }
+};
 
 class FHServiceStub {
   getOrganizationById(orgId:string, childHierarchy:boolean, parentHierarchy:boolean):any{
@@ -50,7 +57,7 @@ class FHServiceStub {
   }
 };
 
-fdescribe('Create Organization Form Page', () => {
+describe('Create Organization Form Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:OrgCreatePage;
   let fixture:any;
@@ -63,7 +70,8 @@ fdescribe('Create Organization Form Page', () => {
         FlashMsgService,
         { provide: Router,  useValue:{events:Observable.of({url:"/create-organization"})} },
         { provide: ActivatedRoute, useValue: {'queryParams': Observable.from([{ 'orgType': 'Office',  'parentID': '100000000',}])}},
-        { provide: FHService ,useClass:FHServiceStub}
+        { provide: FHService ,useClass:FHServiceStub},
+        { provide: LocationService ,useClass:LocationServiceStub},
       ]
     });
     fixture = TestBed.createComponent(OrgCreatePage);
@@ -107,8 +115,8 @@ fdescribe('Create Organization Form Page', () => {
     component.officeCodesForm.get('FPDSCode').setValue("FPDS");
     component.indicateFundRadioModel = "other";
     component.addrForms.forEach(e=>{
-      e.locationServiceOptions.country = {value:"United States", key:"USA"};
-      e.locationServiceOptions.state = {value:"Virginia", key:"VA"};
+      e.cityLocationConfig.serviceOptions.country = {value:"United States", key:"USA"};
+      e.cityLocationConfig.serviceOptions.state = {value:"Virginia", key:"VA"};
       e.cityOutput = {value:"fairfax"};
       e.addressForm.get("streetAddr1").setValue("street 123");
       e.addressForm.get("postalCode").setValue("22030");
