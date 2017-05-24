@@ -1,0 +1,54 @@
+<div class="usa-width-one-whole m_L-3x m_T-3x workspace-data-entry-section relative">
+  <div class="usa-width-one-whole">
+    <div class="usa-width-one-half">
+      <workspace-widget [isExpand]="configObj[0]['assistanceListings'].isExpand" [title]="'Assistance Listings'" (onToggleChange)="toggleHelpDetail('assistanceListings',$event, 0)"></workspace-widget>
+    </div>
+    <div class="usa-width-one-half">
+      <workspace-widget [isExpand]="configObj[0]['opportunities'].isExpand" [title]="'Opportunities'" (onToggleChange)="toggleHelpDetail('opportunities',$event, 0)"></workspace-widget>
+    </div>
+  </div>
+  <div class="usa-width-one-whole workspace-help-detail" *ngIf="isDetailExpanded(0)">
+    <div class="usa-width-one-whole" *ngIf="helpDetailType[0] === 'assistanceListings'">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
+    </div>
+    <div class="usa-width-one-whole" *ngIf="helpDetailType[0] === 'opportunities'">
+      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
+    </div>
+  </div>
+  <div class="usa-width-one-whole m_T-3x">
+  <div class="usa-width-one-half">
+    <workspace-widget [isExpand]="configObj[1]['entity'].isExpand" [title]="'Entity'" (onToggleChange)="toggleHelpDetail('entity',$event, 1)"></workspace-widget>
+
+  </div>
+  <div class="usa-width-one-half">
+    <workspace-widget [isExpand]="configObj[1]['exclusions'].isExpand" [title]="'Exclusions'" (onToggleChange)="toggleHelpDetail('exclusions',$event, 1)"></workspace-widget>
+
+  </div>
+</div>
+  <div class="usa-width-one-whole workspace-help-detail" *ngIf="isDetailExpanded(1)">
+    <div class="usa-width-one-whole" *ngIf="helpDetailType[1] === 'entity'">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
+    </div>
+    <div class="usa-width-one-whole" *ngIf="helpDetailType[1] === 'exclusions'">
+      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
+    </div>
+  </div>
+  <div class="usa-width-one-whole m_T-3x">
+    <div class="usa-width-one-half">
+      <workspace-widget [isExpand]="configObj[2]['award'].isExpand" [title]="'Award'" (onToggleChange)="toggleHelpDetail('award',$event, 2)"></workspace-widget>
+
+    </div>
+    <div class="usa-width-one-half">
+      <workspace-widget [isExpand]="configObj[2]['subAward'].isExpand" [title]="'Sub-Award'" (onToggleChange)="toggleHelpDetail('subAward',$event, 2)"></workspace-widget>
+
+    </div>
+  </div>
+  <div class="usa-width-one-whole workspace-help-detail" *ngIf="isDetailExpanded(2)">
+    <div class="usa-width-one-whole" *ngIf="helpDetailType[2] === 'award'">
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
+    </div>
+    <div class="usa-width-one-whole" *ngIf="helpDetailType[2] === 'subAward'">
+      Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.
+    </div>
+  </div>
+</div>

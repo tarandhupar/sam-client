@@ -26,7 +26,10 @@
     border: 1px solid $color-gray-light;
   }
 
-  .workspace-search-report-section{ }
+  .workspace-help-detail{
+    border: 1px solid $color-gray-light;
+    padding: 5px;
+  }
 
   .workspace-title-text{
     color: $color-primary-alt-darkest;

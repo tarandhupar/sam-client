@@ -1,7 +1,3 @@
-[draggable=true] {
-  cursor: move;
-}
-
 .workspace-widget{
 
 
@@ -29,10 +25,10 @@
     color: $color-gray;
   }
 
-}
+  i:hover{
+    cursor: pointer;
+  }
 
-.workspace-widget:hover{
-  cursor: pointer;
 }
 
 

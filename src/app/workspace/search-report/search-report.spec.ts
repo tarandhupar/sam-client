@@ -8,21 +8,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponentsModule } from "../../app-components/app-components.module";
 import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
-import { WorkspaceWidgetComponent } from "./workspace-widget.component";
+import { SearchReportComponent } from "./search-report.component";
+import { WorkspaceModule } from "../workspace.module";
 
 
-fdescribe('Workspace widget component', () => {
+fdescribe('Workspace search and report component', () => {
   // provide our implementations or mocks to the dependency injector
-  let component:WorkspaceWidgetComponent;
+  let component:SearchReportComponent;
   let fixture:any;
 
   beforeEach( () => {
     TestBed.configureTestingModule({
-      declarations: [ WorkspaceWidgetComponent],
-      imports:[ SamUIKitModule, SamAPIKitModule,  ReactiveFormsModule, FormsModule, RouterTestingModule, AppComponentsModule ],
+      declarations: [ ],
+      imports:[ SamUIKitModule, SamAPIKitModule,  ReactiveFormsModule, FormsModule, RouterTestingModule, AppComponentsModule, WorkspaceModule ],
       providers: []
     });
-    fixture = TestBed.createComponent(WorkspaceWidgetComponent);
+    fixture = TestBed.createComponent(SearchReportComponent);
     component = fixture.componentInstance;
   });
 
@@ -31,9 +32,4 @@ fdescribe('Workspace widget component', () => {
     expect(true).toBe(true);
   });
 
-  it('should be able to emit toggle detail event', () => {
-    fixture.detectChanges();
-    component.onToggleBtnClick();
-    expect(component.isExpand).toBeTruthy();
-  })
 });

@@ -7,10 +7,10 @@
       <ul class="usa-sidenav-list">
         <li><h4 class="m_B-2x">My Workspace</h4>
           <ul class="usa-sidenav-list">
-            <li><a [ngClass]="getSectionClass('Notification')" (click)="selectCurrentSection('Notification')">Notification</a></li>
-            <li><a [ngClass]="getSectionClass('Search and Reports')" (click)="selectCurrentSection('Search and Reports')">Search and Reports</a></li>
-            <li><a [ngClass]="getSectionClass('Data Entry')" (click)="selectCurrentSection('Data Entry')">Data Entry</a></li>
-            <li><a [ngClass]="getSectionClass('Administration')" (click)="selectCurrentSection('Administration')">Administration</a></li>
+            <li><a #notification [ngClass]="getSectionClass('notification')" (click)="selectCurrentSection('notification')" href="{{currentUrl}}#notification">Notification</a></li>
+            <li><a #searchReport [ngClass]="getSectionClass('searchReport')" (click)="selectCurrentSection('searchReport')" href="{{currentUrl}}#searchReport">Search and Reports</a></li>
+            <li><a #dataEntry [ngClass]="getSectionClass('dataEntry')" (click)="selectCurrentSection('dataEntry')" href="{{currentUrl}}#dataEntry">Data Entry</a></li>
+            <li><a #administration [ngClass]="getSectionClass('administration')" (click)="selectCurrentSection('administration')" href="{{currentUrl}}#administration">Administration</a></li>
           </ul>
         </li>
       </ul>
@@ -33,7 +33,7 @@
     </div>
 
     <!--Notification Section for workspace-->
-    <h2 class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Notifications</h2>
+    <h2 id="notification" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Notifications</h2>
     <div class="usa-width-one-whole m_L-3x m_T-3x workspace-notification-section relative">
       <div class="usa-width-one-whole workspace-center-text">
         <span><a>See All Notifications</a></span>
@@ -41,61 +41,16 @@
     </div>
 
     <!--Search and Report section for workspace-->
-    <h2 class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Search and Report</h2>
-    <div class="usa-width-one-whole m_L-3x m_T-3x workspace-search-report-section relative">
-      <div class="usa-width-one-half">
-        <workspace-widget [title]="'Saved Searches'"></workspace-widget>
-      </div>
-      <div class="usa-width-one-half">
-        <workspace-widget [title]="'Saved Reports'"></workspace-widget>
-      </div>
-    </div>
+    <h2 id="searchReport" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Search and Report</h2>
+    <workspace-search-report class="usa-width-one-whole"></workspace-search-report>
 
-    <h2 class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Data Entry</h2>
-    <div class="usa-width-one-whole m_L-3x m_T-3x workspace-data-entry-section relative">
-      <div class="usa-width-one-whole">
-        <div class="usa-width-one-half">
-          <workspace-widget [title]="'Assistance Listings'"></workspace-widget>
-        </div>
-        <div class="usa-width-one-half">
-          <workspace-widget [title]="'Opportunities'"></workspace-widget>
-        </div>
-      </div>
-      <div class="usa-width-one-whole m_T-3x">
-        <div class="usa-width-one-half">
-          <workspace-widget [title]="'Wage Determinations'"></workspace-widget>
-        </div>
-        <div class="usa-width-one-half">
-          <workspace-widget [title]="'Exclusions'"></workspace-widget>
-        </div>
-      </div>
-    </div>
+    <!--Data Entry section for workspace-->
+    <h2 id="dataEntry" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Data Entry</h2>
+    <workspace-data-entry class="usa-width-one-whole"></workspace-data-entry>
 
-    <h2 class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Administration</h2>
-    <div class="usa-width-one-whole m_L-3x m_T-3x workspace-administration-section relative">
-      <div class="usa-width-one-whole">
-        <div class="usa-width-one-half">
-          <workspace-widget [title]="'My Profile'"></workspace-widget>
-        </div>
-        <div class="usa-width-one-half">
-          <workspace-widget [title]="'AAC Request'"></workspace-widget>
-        </div>
-      </div>
-      <div class="m_T-3x usa-width-one-whole">
-        <div class="usa-width-one-half">
-          <workspace-widget [title]="'Federal Hierarchy'"></workspace-widget>
-        </div>
-        <div class="usa-width-one-half">
-          <workspace-widget [title]="'Role Management'"></workspace-widget>
-        </div>
-      </div>
-      <div class="m_T-3x usa-width-one-whole">
-        <div class="usa-width-one-half">
-          <workspace-widget [title]="'System Alerts'"></workspace-widget>
-        </div>
-      </div>
-    </div>
-  </div>
+
+    <h2 id="administration"  class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Administration</h2>
+    <workspace-administration class="usa-width-one-whole"></workspace-administration>
 
 
 </div>

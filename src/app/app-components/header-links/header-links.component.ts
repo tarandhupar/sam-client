@@ -67,7 +67,7 @@ export class SamHeaderLinksComponent {
   dropdownData:any = [
     {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/", pageInProgress:false},
     {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/reports/overview", pageInProgress:true},
-    {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/", pageInProgress:true},
+    {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/workspace", pageInProgress:true},
     {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview", pageInProgress:false},
     {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/create-organization?orgType=Department", pageInProgress:true},
     {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/", pageInProgress:true},
@@ -79,7 +79,7 @@ export class SamHeaderLinksComponent {
     this._router.events.subscribe((event: any) => {
       if (event.constructor.name === 'NavigationEnd') {
         this.checkSession();
-        
+
         if (event.urlAfterRedirects.indexOf('/search') != -1 || event.urlAfterRedirects === "/") {
           setTimeout(() => {
             this.onSearchLinkClick(true);
