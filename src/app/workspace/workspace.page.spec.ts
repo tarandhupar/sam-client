@@ -18,7 +18,7 @@ class RouterStub {
 }
 
 
-describe('Workspace Page', () => {
+fdescribe('Workspace Page', () => {
   // provide our implementations or mocks to the dependency injector
   beforeEach(() => {
     TestBed.configureTestingModule({

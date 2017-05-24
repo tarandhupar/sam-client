@@ -18,7 +18,11 @@ export class DataEntryComponent {
   toggleHelpDetail(type, isExpand, index){
     this.helpDetailType[index] = type;
     this.configObj[index][type].isExpand = isExpand;
-    if(isExpand) Object.keys(this.configObj[index]).forEach(e => {if(e !== type) this.configObj[index][e].isExpand = false;});
+    if(isExpand) {
+      this.configObj.forEach(e => {
+        Object.keys(e).forEach(item => {if(item !== type) e[item].isExpand = false;});
+      })
+    }
   }
 
   isDetailExpanded(index){
