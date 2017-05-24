@@ -1,6 +1,4 @@
 import { Component } from "@angular/core";
-import { FHService } from "api-kit/fh/fh.service";
-import { ActivatedRoute } from "@angular/router";
 
 
 @Component ({
@@ -8,14 +6,13 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class WorkspacePage {
 
+  currentUrl:string = "workspace";
   currentSection: string = "";
   showWelcome:boolean = true;
 
-  constructor(private fhService: FHService, private route: ActivatedRoute){}
+  constructor(){}
 
-  ngOnInit(){
-
-  }
+  ngOnInit(){}
 
   getSectionClass(sectionValue){
     return this.currentSection === sectionValue? "usa-current":"";

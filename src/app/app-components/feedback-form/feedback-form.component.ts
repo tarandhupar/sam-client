@@ -170,9 +170,9 @@ export class SamFeedbackComponent {
     if(!this.isFeedbackAnswerEmpty()){
       this.emailModelEdited = true;
 
-      if((this.isEmailBtnChecked('Yes') && this.email.errors)){
+      if((this.isEmailNeeded() && this.email.errors)){
         this.showEmailError = true;
-      }else if((this.isEmailBtnChecked('Yes') && !this.email.errors) || this.isEmailBtnChecked('No') || this.emailRadioBtnValue === ''){
+      }else if((this.isEmailNeeded() && !this.email.errors) || !this.isEmailNeeded()){
         // Submit the feedback results
         let res = this.generateFeedbackRes();
         this.feedbackService.createFeedback(res).subscribe(data => {});
@@ -185,14 +185,24 @@ export class SamFeedbackComponent {
       this.showThanksNote = true;
       this.startCountDown();
     }
+  }
 
-
-
+  isEmailNeeded(){
+    if(this.emailRadioBtnValue !== ''){return this.isEmailBtnChecked('Yes');}
+    let emailQuestionIndex = -1;
+    this.questionData.forEach( (e,i) => {
+      if(e.type === "radio-text") emailQuestionIndex = i;
+    });
+    if(emailQuestionIndex !== -1 && this.answerData[emailQuestionIndex].value !== undefined && this.answerData[emailQuestionIndex].value !== null){
+      this.userEmailModel = this.answerData[emailQuestionIndex].value[0].userEmail;
+      return this.answerData[emailQuestionIndex].value[0].selectedValue === 'Yes';
+    }
+    return false;
   }
 
   generateFeedbackRes():any{
     let res = {
-      userId : this.isEmailBtnChecked('No')? "":this.userEmailModel,
+      userId : this.isEmailNeeded()? this.userEmailModel:"",
       feedbackPath: this.currentUrl,
       feedbackList: []
     };
@@ -206,7 +216,7 @@ export class SamFeedbackComponent {
         }
         let feedbackResItem:feedbackResItemType = {
           questionId: this.questionData[index].id,
-          userId: this.isEmailBtnChecked('No')? "":this.userEmailModel,
+          userId: this.isEmailNeeded()? this.userEmailModel:"",
           feedback_response: {
             type: this.questionData[index].type,
             selected: this.questionData[index].type === "radio-text"? [val[0].userEmail]: val,
@@ -344,6 +354,7 @@ export class SamFeedbackComponent {
         this.showFooter();
       }
     );
+    
 
   }
 
