@@ -11,8 +11,8 @@ export class AdministrationComponent {
     {profile:{isExpand:false}, aacRequest:{isExpand:false}},
     {fh:{isExpand:false}, rm:{isExpand:false}},
     {alerts:{isExpand:false}, analytics:{isExpand:false}},
-
   ];
+  @Input() toggleControl:any;
 
 
   toggleHelpDetail(type, isExpand, index){

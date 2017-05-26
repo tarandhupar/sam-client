@@ -8,7 +8,7 @@ import {Keepalive} from '@ng-idle/keepalive';
 
 @Injectable()
 export class UserSessionService {
-  idleTime = 12*60;
+  idleTime = 3;
   pingInterval = 14*60;
   timeoutDuration = 2*60;
 
@@ -17,9 +17,15 @@ export class UserSessionService {
   timedOut = false;
   isIdle = false;
 
+  onTimeout: Subscription;
+  onInterrupt: Subscription;
+  onIdleStart: Subscription;
+
   pingIndex = 0;
 
   pinger;
+  timer;
+  counter = 0;
   constructor(private _router: Router,
               private activatedRoute: ActivatedRoute,
               private idle: Idle,
@@ -28,7 +34,7 @@ export class UserSessionService {
               private zone: NgZone) {
   }
 
-  idleDetectionStart(sessionModalCB:()=>any){
+  idleDetectionStart(sessionModalCB?:()=>any){
 
     this.clearIntervals();
     // sets an idle timeout of 12 min
@@ -39,7 +45,7 @@ export class UserSessionService {
     this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
 
-    this.idle.onTimeout.subscribe(() => {
+    this.onTimeout = this.idle.onTimeout.subscribe(() => {
       this.idleState = 'Timed out!';
       this.timedOut = true;
       // Make API call to log out the user and redirect them back to home page
@@ -48,12 +54,13 @@ export class UserSessionService {
       this.idleDetectionStop();
 
     });
-    this.idle.onIdleStart.subscribe(() => {
+    this.onIdleStart = this.idle.onIdleStart.subscribe(() => {
+      console.log("gone idle");
       this.idleState = 'Gone idle!';
       this.isIdle = true;
       sessionModalCB();
     });
-    this.idle.onInterrupt.subscribe(() => {
+    this.onInterrupt = this.idle.onInterrupt.subscribe(() => {
       // Reset idle time
       this.idle.setIdle(this.idleTime);
       this.idleState = 'Count down from start again!';
@@ -81,8 +88,8 @@ export class UserSessionService {
     }, this.pingInterval*1000);
 
     this.reset();
-
-
+    console.log("start");
+    // this.timer = setInterval(()=>{console.log(this.counter++);},1000);
   }
 
   reset() {
@@ -100,10 +107,14 @@ export class UserSessionService {
     this.isIdle = false;
     this.clearIntervals();
     this.pingIndex = 0;
+    this.onTimeout.unsubscribe();
+    this.onIdleStart.unsubscribe();
+    this.onInterrupt.unsubscribe();
   }
 
   clearIntervals(){
     clearInterval(this.pinger);
+    clearInterval(this.timer);
   }
 
   extendUserSession(){

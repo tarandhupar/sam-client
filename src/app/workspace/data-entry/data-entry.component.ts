@@ -8,12 +8,12 @@ export class DataEntryComponent {
 
   helpDetailType:any = ["",""];
   configObj:any = [
-    {assistanceListings:{isExpand:false}, opportunities:{isExpand:false}},
+    {subAward:{isExpand:false}, opportunities:{isExpand:false}},
     {entity:{isExpand:false}, exclusions:{isExpand:false}},
-    {award:{isExpand:false}, subAward:{isExpand:false}},
+    {assistanceListings:{isExpand:false}, award:{isExpand:false}},
 
   ];
-
+  @Input() toggleControl:any;
 
   toggleHelpDetail(type, isExpand, index){
     this.helpDetailType[index] = type;

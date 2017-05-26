@@ -32,4 +32,9 @@ fdescribe('Workspace search and report component', () => {
     expect(true).toBe(true);
   });
 
+  it('should toggle correct help detail', () => {
+    fixture.detectChanges();
+    component.toggleHelpDetail('searches',true);
+    expect(component.helpDetailType).toBe('searches');
+  });
 });

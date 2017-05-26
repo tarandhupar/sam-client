@@ -8,7 +8,7 @@
         <li><h4 class="m_B-2x">My Workspace</h4>
           <ul class="usa-sidenav-list">
             <li><a #notification [ngClass]="getSectionClass('notification')" (click)="selectCurrentSection('notification')" href="{{currentUrl}}#notification">Notification</a></li>
-            <li><a #searchReport [ngClass]="getSectionClass('searchReport')" (click)="selectCurrentSection('searchReport')" href="{{currentUrl}}#searchReport">Search and Reports</a></li>
+            <li><a #preference [ngClass]="getSectionClass('preference')" (click)="selectCurrentSection('preference')" href="{{currentUrl}}#preference">User Preferences</a></li>
             <li><a #dataEntry [ngClass]="getSectionClass('dataEntry')" (click)="selectCurrentSection('dataEntry')" href="{{currentUrl}}#dataEntry">Data Entry</a></li>
             <li><a #administration [ngClass]="getSectionClass('administration')" (click)="selectCurrentSection('administration')" href="{{currentUrl}}#administration">Administration</a></li>
           </ul>
@@ -27,7 +27,7 @@
         1. Completely setting up your Profile.<br>
         2. Request additional roles and permissions<br>
         3. Set up a Saved Search or Report<br>
-        4. Acc3ss our Federal Hierarchy Feature<br>
+        4. Access our Federal Hierarchy Feature<br>
       </p>
       <span class="workspace-welcome-close-icon" (click)="closeWelcomeSection()"><i class="fa fa-times-circle"></i></span>
     </div>
@@ -41,16 +41,16 @@
     </div>
 
     <!--Search and Report section for workspace-->
-    <h2 id="searchReport" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Search and Report</h2>
+    <h2 id="preference" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">User Preferences</h2>
     <workspace-search-report class="usa-width-one-whole"></workspace-search-report>
 
     <!--Data Entry section for workspace-->
-    <h2 id="dataEntry" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Data Entry</h2>
-    <workspace-data-entry class="usa-width-one-whole"></workspace-data-entry>
+    <h2 id="dataEntry" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text" *ngIf="isDisplayDataEntry()">Data Entry</h2>
+    <workspace-data-entry class="usa-width-one-whole" [toggleControl]="dataEntryWidgetControl" *ngIf="isDisplayDataEntry()"></workspace-data-entry>
 
 
     <h2 id="administration"  class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Administration</h2>
-    <workspace-administration class="usa-width-one-whole"></workspace-administration>
+    <workspace-administration class="usa-width-one-whole" [toggleControl]="administrationWidgetControl"></workspace-administration>
 
 
 </div>
