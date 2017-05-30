@@ -82,6 +82,8 @@ export class OpportunityPage implements OnInit {
   opportunityLocation: any;
   opportunity: any;
   processedHistory: any;
+  procurementType: any;
+  historyByProcurementType: any;
   organization: any;
   currentUrl: string;
   dictionary: any;
@@ -380,22 +382,50 @@ export class OpportunityPage implements OnInit {
 
   private getTotalAttachmentsCount(opportunity: Observable<any>, historyAPI: Observable<any>, packagesOpportunities: Observable<any>){
     let attachmentCountSubject = new ReplaySubject(1);
-    let attachmentCountStream = opportunity.switchMap(opportunityAPI => {
-      return this.opportunityService.getPackagesCount(opportunityAPI.opportunityId);
+    let historyNoticeIds: string;
+    let attachmentCountStream = historyAPI.switchMap(api =>{
+      historyNoticeIds = '';
+      let current = _.filter(api.content.history, historyItem => {
+        return historyItem.notice_id == this.opportunity.opportunityId;
+      })[0];
+      this.historyByProcurementType = [];
+      this.procurementType = current.procurement_type
+      if(current.procurement_type == 'a') {
+        historyNoticeIds = current.notice_id + ',';
+        this.historyByProcurementType.push(current);
+      }else {
+        api.content.history.forEach((res: any) => {
+          if (res.parent_notice == null && current.procurement_type == 'm') {
+            historyNoticeIds += res.notice_id + ',';
+            this.historyByProcurementType.push(res);
+          } else if (res.procurement_type == current.procurement_type) {
+            historyNoticeIds += res.notice_id + ',';
+            this.historyByProcurementType.push(res);
+          } else if (current.parent_notice == null && res.procurement_type == 'm') {
+            historyNoticeIds += res.notice_id + ',';
+            this.historyByProcurementType.push(res);
+          }
+        });
+      }
+      this.historyByProcurementType = _.sortBy(this.historyByProcurementType, 'index');
+
+      historyNoticeIds = historyNoticeIds.substring(0, historyNoticeIds.length - 1);
+      return this.opportunityService.getPackagesCount(historyNoticeIds);
+    });
+
+    attachmentCountSubject.subscribe(data => {
+      historyAPI.subscribe(historyAPI => {
+        packagesOpportunities.subscribe(res =>{
+          if(data > this.packages.length && this.procurementType != 'a') {
+            this.packagesWarning = true;
+          }
+          else {
+            this.packagesWarning = false;
+          }
+        });
+      });
     });
     attachmentCountStream.subscribe(attachmentCountSubject);
-    attachmentCountSubject.subscribe(data => {
-        historyAPI.subscribe(historyAPI => {
-          packagesOpportunities.subscribe(res =>{
-              if(data > this.packages.length) {
-              historyAPI.content.history = _.sortBy(historyAPI.content.history, 'index');
-              this.packagesWarning = true;
-            } else {
-                this.packagesWarning = false;
-              }
-          });
-        });
-    });
     return attachmentCountSubject;
   }
 
@@ -405,61 +435,73 @@ export class OpportunityPage implements OnInit {
     let historyNoticeIds: string;
     let packagesStream = historyAPI.switchMap(api =>{
       historyNoticeIds = '';
-           let current = _.filter(api.content.history, historyItem => {
-             return historyItem.notice_id == this.opportunity.opportunityId;
-           })[0];
-           api.content.history.forEach((res: any) => {
-             if(res.index <= current.index) {
-               historyNoticeIds += res.notice_id + ',';
-             }
-           });
-           historyNoticeIds = historyNoticeIds.substring(0, historyNoticeIds.length - 1);
-          return this.opportunityService.getPackages(historyNoticeIds).retryWhen(
-            errors => {
-              this.attachmentError = true;
-              return this.route.params;
-            }
-          );
+      let parentOpportunity = '';
+      let current = _.filter(api.content.history, historyItem => {
+        return historyItem.notice_id == this.opportunity.opportunityId;
+      })[0];
+
+      if(current.procurement_type == 'a')
+        historyNoticeIds = current.notice_id + ',';
+      else {
+        api.content.history.forEach((res: any) => {
+          if (res.index <= current.index) {
+            if (res.parent_notice == null && current.procurement_type == 'm')
+              historyNoticeIds += res.notice_id + ',';
+            else if (res.procurement_type == current.procurement_type)
+              historyNoticeIds += res.notice_id + ',';
+            else if (current.parent_notice == null && res.procurement_type == 'm')
+              historyNoticeIds += res.notice_id + ',';
+          }
+        });
+      }
+
+      historyNoticeIds = historyNoticeIds.substring(0, historyNoticeIds.length - 1);
+      return this.opportunityService.getPackages(historyNoticeIds).retryWhen(
+        errors => {
+          this.attachmentError = true;
+          return this.route.params;
+        }
+      );
     });
     packagesStream.subscribe(packagesSubject);
     packagesSubject.subscribe((data: any) =>{
-           this.packages = [];
-             let filesizePipe = new FilesizePipe();
-             let dateformatPipe = new DateFormatPipe();
-             let archiveVal = this.opportunity.data.statuses.isArchived;
-             data.packages.forEach(attachmentsPackage => {
-                  attachmentsPackage.resources = [];
-                  attachmentsPackage.accordionState = "collapsed";
-                  attachmentsPackage.downloadUrl = this.getDownloadPackageURL(attachmentsPackage.packageId, archiveVal);
-                  attachmentsPackage.postedDate = dateformatPipe.transform(attachmentsPackage.postedDate,'MMM DD, YYYY');
-                  if(attachmentsPackage.access == "Public"){
-                     attachmentsPackage.attachments.forEach((resource: any) => {
-                       data.resources.forEach((res: any) => {
-                         if(resource.resourceId == res.resourceId){
-                           if(res.type=="link"){
-                             res.downloadUrl = res.uri;
-                           } else {
-                             //file
-                             res.downloadUrl = this.getDownloadFileURL(resource.resourceId, archiveVal);
-                           }
-                           if(!isNaN(res.size)){
-                             res.size = filesizePipe.transform(res.size);
-                           }
-                           let getResourceTypeInfo = new GetResourceTypeInfo();
-                           res.typeInfo = getResourceTypeInfo.transform(res.type === 'file' ? this.getExtension(res.name) : res.type);
-                           attachmentsPackage.resources.push(res);
-                         }
-                       });
-                     });
-                  }
-                 this.packages.push(attachmentsPackage);
-                 this.packages = _.sortBy(this.packages, 'postedDate');
-             });
-          },err => {
-            console.log('Error loading packages: ', err);
-            this.attachmentError = true;
+      this.packages = [];
+      let filesizePipe = new FilesizePipe();
+      let dateformatPipe = new DateFormatPipe();
+      let archiveVal = this.opportunity.data.statuses.isArchived;
+      data.packages.forEach(attachmentsPackage => {
+        attachmentsPackage.resources = [];
+        attachmentsPackage.accordionState = "collapsed";
+        attachmentsPackage.downloadUrl = this.getDownloadPackageURL(attachmentsPackage.packageId, archiveVal);
+        attachmentsPackage.postedDate = dateformatPipe.transform(attachmentsPackage.postedDate,'MMM DD, YYYY');
+        if(attachmentsPackage.access == "Public"){
+          attachmentsPackage.attachments.forEach((resource: any) => {
+            data.resources.forEach((res: any) => {
+              if(resource.resourceId == res.resourceId){
+                if(res.type=="link"){
+                  res.downloadUrl = res.uri;
+                } else {
+                  //file
+                  res.downloadUrl = this.getDownloadFileURL(resource.resourceId, archiveVal);
+                }
+                if(!isNaN(res.size)){
+                  res.size = filesizePipe.transform(res.size);
+                }
+                let getResourceTypeInfo = new GetResourceTypeInfo();
+                res.typeInfo = getResourceTypeInfo.transform(res.type === 'file' ? this.getExtension(res.name) : res.type);
+                attachmentsPackage.resources.push(res);
+              }
+            });
           });
-       return packagesSubject;
+        }
+        this.packages.push(attachmentsPackage);
+      });
+      this.packages = _.sortBy(this.packages, function(item) {return new Date(item.postedDate)});
+    },err => {
+      console.log('Error loading packages: ', err);
+      this.attachmentError = true;
+    });
+    return packagesSubject;
   }
 
 

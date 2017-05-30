@@ -1,33 +1,42 @@
-<p>
-  <span class="usa-label">Assistance Listing</span>
-  <span class="usa-label toggleStatusCode" [ngStyle]="{display:showHideStatusText}"  [style.background-color]="randomColor">{{data.status.value}}</span>
-</p>
+<div class="sam-ui grid">
+  <div class="row">
+    <div class="eight wide column">
+      <h3 class="assistance-program-title">
+        <a [routerLink]="['/programs', data.id, 'view']">{{data.data.title}}</a>
+      </h3>
 
-<h3 class="assistance-program-title">
-  <a [routerLink]="['/programs', data.id, 'view']">{{data.data.title}}</a>
-</h3>
-<div class="usa-grid-full">
-  <div class="usa-width-two-thirds">
-    <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
-      <li>
-        <strong>Date Modified: </strong><span>{{data.modifiedDate}}</span>
-      </li>
-      <li>
-        <strong>Office: </strong><span>{{data.data.organizationId}}</span>
-      </li>
-    </ul>
-  </div>
-  <div class="usa-width-one-third">
-    <ul class="usa-unstyled-list usa-text-small m_T-3x m_B-2x">
+      <ul class="sam-ui small list">
+        <li>
+          <strong>Date Modified</strong><br>
+          <span>{{data.modifiedDate}}</span>
+        </li>
+        <li>
+          <strong>Office</strong><br>
+          <span>{{data.data.organizationId}}</span>
+        </li>
+      </ul>
+    </div>
 
-      <li>
-        <strong>CFDA #: </strong>
-        <span class="fal-program-number">{{data.data.programNumber}}</span>
-      </li>
-      <li>
-        <strong>Date Published: </strong>
-        <span>{{data.publishedDate}}</span>
-      </li>
-    </ul>
+    <div class="four wide column">
+      <ul class="sam-ui small list">
+        <li>
+        <span class="sam-ui mini label">{{data.status.value}}</span>
+        </li>
+        <li>
+          <span class="sam-ui mini label">Assistance Listing</span>
+        </li>
+        <li>
+          <strong>CFDA #</strong><br>
+          <span class="fal-program-number">{{data.data.programNumber}}</span>
+        </li>
+        <li>
+          <strong>Date Published</strong><br>
+          <span>{{data.publishedDate}}</span>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
+
+
+

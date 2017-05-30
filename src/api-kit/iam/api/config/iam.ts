@@ -46,11 +46,15 @@ export default {
 
   system: {
     account: {
-      get:    '/cws/api/system-accounts',
+      get:    '/cws/api/system-accounts/{id}',
       create: '/cws/api/system-accounts',
       update: '/cws/api/system-accounts/{id}',
       reset:  '/cws/api/system-account-passwords/{id}',
-      deactivate: '/cws/api/system-accounts/{id}/deactivate'
+      deactivate: '/cws/api/system-accounts/{id}/deactivate',
+      import: {
+        history: '/import/system-accounts/roles',
+        create: '/import/system-accounts/roles'
+      }
     }
   }
 };

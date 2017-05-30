@@ -27,6 +27,7 @@ export class FALFormObligationsInfoComponent {
   persistPreYearsData = [];
   assistanceTypeArray = [];
   options = [];
+  @ViewChild('obligationTable') obligationTable;
 
   // Current Fiscal year Checkbox config
   currentFiscalYearCheckboxModel: any = [''];
@@ -65,7 +66,7 @@ export class FALFormObligationsInfoComponent {
         for(let obligation of this.viewModel.obligations){
           let code = obligation['assistanceType'];
           delete obligation['assistanceType'];
-          obligation['assistanceType'] = {code: code, name : this.assistanceTypeArray[code]};
+          obligation['assistanceType'] = code !== null ? {code: code, name : this.assistanceTypeArray[code]} : '';
           const control = <FormArray> this.obligationSubForm.falObligationSubForm.controls['obligations'];
           control.push(this.obligationSubForm.initobligations(obligation,false));
           let initObligations = control.value;
@@ -74,7 +75,6 @@ export class FALFormObligationsInfoComponent {
 
         }
       }
-
       this.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
       this.obligationSubForm.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
       this.caluclateTotal(this.obligationsInfo);
@@ -114,6 +114,13 @@ export class FALFormObligationsInfoComponent {
 
   updateObligationsViewModel(data) {
     this.viewModel.obligations = this.saveObligations(data);
+    const control = <FormArray> this.obligationSubForm.falObligationSubForm.controls['obligations'];
+    if(control.errors){
+      this.obligationSubForm.errorExists = true;
+    }
+    else {
+      this.obligationSubForm.errorExists = false;
+    }
   }
 
   updateForm() {
@@ -123,6 +130,7 @@ export class FALFormObligationsInfoComponent {
     }, {
       emitEvent: false
     });
+    this.errorLookup(this.obligationsInfo);
   }
   private loadIsFunded(flag: boolean) {
     let isFunded = [];
@@ -164,11 +172,14 @@ export class FALFormObligationsInfoComponent {
   obligationActionHandler(event) {
     if(event.type == 'add'){
       this.hideAddButton = event.hideAddButton;
+      if(this.obligationSubForm.review)
+      this.validateSection();
     }
     if(event.type == 'confirm'){
       this.hideAddButton = event.hideAddButton;
       this.obligationsInfo = event.obligationsInfo;
-      this.caluclateTotal(this.obligationsInfo)
+      this.caluclateTotal(this.obligationsInfo);
+      this.errorLookup(this.obligationsInfo);
     }
     if(event.type == 'cancel'){
       this.hideAddButton = event.hideAddButton;
@@ -178,6 +189,7 @@ export class FALFormObligationsInfoComponent {
     }
     if(event.type == 'remove'){
       this.removeObligaiton(event.index);
+      this.errorLookup(this.obligationsInfo);
     }
   }
   editObligation(i: number){
@@ -212,7 +224,7 @@ export class FALFormObligationsInfoComponent {
     let values = [];
     let isRecoveryAct: boolean;
     let description = obligation.description;
-    let assistanceType = obligation.assistanceType.code ? obligation.assistanceType.code : null;
+    let assistanceType = obligation.assistanceType && obligation.assistanceType.code ? obligation.assistanceType.code : null;
     if (obligation.isRecoveryAct !== undefined) {
       isRecoveryAct = obligation.isRecoveryAct.indexOf('isRecoveryAct') !== -1;
     }
@@ -313,5 +325,35 @@ export class FALFormObligationsInfoComponent {
       }
     }
     return budgetObj;
+  }
+  validateSection() {
+    this.obligationTable.review = true;
+    this.obligationSubForm.review = true;
+    this.errorLookup(this.obligationsInfo);
+    const control = <FormArray> this.obligationSubForm.falObligationSubForm.controls['obligations'];
+    if(control.errors){
+      this.obligationSubForm.errorExists = true;
+    }
+    else {
+      this.obligationSubForm.errorExists = false;
+    }
+    for(let obligation of control.controls){
+      for(let key of Object.keys(obligation['controls'])){
+        obligation['controls'][key].markAsDirty();
+        obligation['controls'][key].updateValueAndValidity();
+      }
+    }
+  }
+  errorLookup(obligationInfo: any) {
+      let counter = 0;
+      const control = <FormArray> this.obligationSubForm.falObligationSubForm.controls['obligations'];
+      for (let obligation of obligationInfo) {
+        let errorExists = false;
+        if (control.controls[counter]['controls'].assistanceType.errors !== null) {
+          errorExists = true;
+        }
+        obligation['errorExists'] = errorExists;
+        counter = counter + 1;
+      }
   }
 }

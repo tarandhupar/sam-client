@@ -7,14 +7,16 @@
     </aside>
     <div [ngClass]="setMainWidth()">
       <header class="usa-width-one-whole" tabindex="-1" *ngIf="loadFlag">
-        <h1>{{titleText}}</h1>
+        <h1 class="m_T-0 p_T-6x">{{titleText}}</h1>
       </header>
       <div class="usa-grid-full">
         <div class="usa-width-one" *ngIf="loadFlag">
           <button *ngIf="false" type="button" class="usa-button-link" (click)="toggleFilters($event)"><i [ngClass]="toggleFilterLabel()"></i>&nbsp;Filters</button>
-          <p class="showing-results-meta usa-color-text usa-color-text-gray text-right">
-            <list-results-message [showing]="10" [currentPage]="currentPage" [total]="totalElements" [suffix]="listMessageSuffix"></list-results-message>
-          </p>
+          <strong>
+            <list-results-message *ngIf="totalElements > 0" [showing]="10" [currentPage]="currentPage" [total]="totalElements" [suffix]="listMessageSuffix"></list-results-message>
+            <span *ngIf="totalElements==0">&nbsp;</span>
+          </strong>
+          <div class="sam-ui hidden divider"></div>
         </div>
         <div class="usa-width-one-fourth" *ngIf="false">
           <sam-select [(model)]="sortModel"
@@ -26,7 +28,7 @@
         </div>
       </div>
       <ng-content select="[workspace-content]" class="worspace-content"></ng-content>
-      <div *ngIf="loadFlag" class="usa-grid-full">
+      <div *ngIf="loadFlag && totalElements > 0" class="usa-grid-full">
         <sam-pagination (pageChange)="pageChangeHandler($event)" [currentPage]="currentPage" [totalPages]="totalPages"></sam-pagination>
         <div class="usa-grid-full" *ngIf="addBtnText">
           <div class="usa-width-one-whole">

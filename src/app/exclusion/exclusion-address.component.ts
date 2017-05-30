@@ -3,9 +3,10 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 @Component({
   selector: 'exclusionAddress',
   template: `
-  {{address.address1}}
-  <br />
-  {{address.addressCity}}<div *ngIf="address.addressCity" class="display-inline">&#44; </div>{{address.addressState}} {{address.addressZip}}<div *ngIf="address.addressZipPlus4" class="display-inline">&#45;</div>{{address.addressZipPlus4}}
+  {{address.address1}}<br *ngIf="address.address1" />
+  {{address.addressCity}}<span *ngIf="address.addressCity">&#44; </span>
+  {{address.addressState}} {{address.addressZip}}
+  <span *ngIf="address.addressZipPlus4">&#45;</span>{{address.addressZipPlus4}}
   <br />
   {{address.country}}
   `

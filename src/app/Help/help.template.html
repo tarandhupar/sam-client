@@ -8,32 +8,32 @@
 
       <ul class="usa-sidenav-list">
         <li>
-          <a  [ngClass]="getSectionClass('overview')" 
-              (click)="changeSection('overview')" 
+          <a  [ngClass]="getSectionClass('overview')"
+              (click)="changeSection('overview')"
               [routerLink]="['/help/overview']">
               Help Center Home
           </a>
         </li>
         <li>
-          <a  [ngClass]="getSectionClass('new') || getSubSectionClass('about') || getSubSectionClass('transition') || getSectionClass('transition')" 
-              (click)="changeSection('new')" 
+          <a  [ngClass]="getSectionClass('new') || getSubSectionClass('about') || getSubSectionClass('transition') || getSectionClass('transition')"
+              (click)="changeSection('new')"
               [routerLink]="['/help/new']">
               New to beta.SAM.gov
           </a>
-          <ul class="usa-sidenav-sub_list"  
+          <ul class="usa-sidenav-sub_list"
               *ngIf="isCurrentSection('new') || isCurrentSection('transition') || isCurrentSection('about') || isCurrentSection('transition') ">
             <li>
               <a  #about
-                  [ngClass]="getSubSectionClass('about')" 
-                  (click)="changeSubSection('about', about)" 
+                  [ngClass]="getSubSectionClass('about')"
+                  (click)="changeSubSection('about', about)"
                   [routerLink]="['/help/about']">
                   About Us
               </a>
             </li>
             <li>
               <a  #transition
-                  [ngClass]="getSubSectionClass('transition')" 
-                  (click)="changeSubSection('transition', transition)" 
+                  [ngClass]="getSubSectionClass('transition')"
+                  (click)="changeSubSection('transition', transition)"
                   [routerLink]="['/help/transition']">
                   What's Next
               </a>
@@ -41,16 +41,16 @@
           </ul>
         </li>
         <li>
-          <a  [ngClass]="getSectionClass('features')" 
-              (click)="changeSection('features')" 
+          <a  [ngClass]="getSectionClass('features')"
+              (click)="changeSection('features')"
               [routerLink]="['/help/features']">
               Features
           </a>
-          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('features')">    
+          <ul class="usa-sidenav-sub_list" *ngIf="isCurrentSection('features')">
             <li>
-              <a  #search 
-                  [ngClass]="getSubSectionClass('search')" 
-                  (click)="changeSubSection('search',search)" 
+              <a  #search
+                  [ngClass]="getSubSectionClass('search')"
+                  (click)="changeSubSection('search',search)"
                   href="{{currentUrl}}#search">
                   Search
               </a>
@@ -58,12 +58,12 @@
           </ul>
         </li>
         <li>
-          <a  [ngClass]="getSectionClass('award')" 
-              (click)="changeSection('award')" 
+          <a  [ngClass]="getSectionClass('award')"
+              (click)="changeSection('award')"
               [routerLink]="['/help/award']">
               Award Data
           </a>
-          <ul class="usa-sidenav-sub_list" 
+          <ul class="usa-sidenav-sub_list"
               *ngIf="isCurrentSection('award')">
             <li><a #assistanceListings [ngClass]="getSubSectionClass('assistanceListings')" (click)="changeSubSection('assistanceListings',assistanceListings)" href="{{currentUrl}}#assistanceListings">Assistance Listings</a></li>
             <li><a #opportunities [ngClass]="getSubSectionClass('opportunities')" (click)="changeSubSection('opportunities',opportunities)" href="{{currentUrl}}#opportunities">Contract Opportunities</a></li>
@@ -75,17 +75,17 @@
           </ul>
         </li>
         <li>
-          <a  [ngClass]="getSectionClass('policies')" 
-              (click)="changeSection('policies')" 
+          <a  [ngClass]="getSectionClass('policies')"
+              (click)="changeSection('policies')"
               [routerLink]="['/help/policies']">
               Policies
           </a>
-          <ul class="usa-sidenav-sub_list" 
+          <ul class="usa-sidenav-sub_list"
               *ngIf="isCurrentSection('policies')">
             <li>
-              <a #OMB 
-                [ngClass]="getSubSectionClass('OMB')" 
-                (click)="changeSubSection('OMB',OMB)" 
+              <a #OMB
+                [ngClass]="getSubSectionClass('OMB')"
+                (click)="changeSubSection('OMB',OMB)"
                 href="{{currentUrl}}#OMB">
                 Paperwork Reduction Act Statement
               </a>
@@ -106,7 +106,7 @@
             <li><a #additionalReference [ngClass]="getSubSectionClass('additionalReference')" (click)="changeSubSection('additionalReference',additionalReference)" href="{{currentUrl}}#additionalReference">Additional References</a></li>
           </ul> -->
         </li>
-        
+
         <li>
           <div class="usa-width-one-whole p_T-2x"><button class="usa-button-primary-alt relative p_L-2x" (click)="feedback.toggleFeedback()">Provide Feedback</button></div>
           <span class="usa-width-one-whole p_T-1x p_B-2x feedback-background"><i class="fa fa-comments" aria-hidden="true"></i> &nbsp;What you think matters!</span>
@@ -119,8 +119,6 @@
     </div>
 
   </aside>
-
-  <sam-feedback #feedback></sam-feedback>
 
   <div [class.usa-width-three-fourths]="currentSection!=='overview'">
     <div [class.usa-width-one-whole]="currentSection!=='overview'">

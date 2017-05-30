@@ -1,3 +1,15 @@
+<!--Delete Modal-->
+<sam-modal #deleteModal
+           [showClose]="true"
+           [closeOnOutsideClick]="true"
+           [closeOnEscape]="true"
+           [type]="'warning'"
+           [title]="modalConfig.title"
+           [description]="modalConfig.description"
+           [submitButtonLabel]="'Ok'"
+           [cancelButtonLabel]="'Cancel'"
+           (onSubmit)="onDeleteModalSubmit()">
+</sam-modal>
 <div class="usa-grid assistance-listing-page" *ngIf="program">
 
   <!--Sidebar-->
@@ -12,7 +24,7 @@
         <img class="sidenav-logo" id="program-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
       </ng-container>
       <!--Side Navigation-->
-      <sam-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-sidenav>
+      <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
     </div>
   </aside>
 
@@ -23,18 +35,26 @@
             [closeOnEscape]="true"
             [type]="'info'"
             [title]="'Revise -  Assistance Listing'"
-            [description]="'A draft revision for this published program will be utilized for editing.  Please click ok to edit a draft of this AL.'"
+            [description]="'A draft revision for this published program will be utilized for editing. Please click ok to edit a draft of this AL.'"
             [submitButtonLabel]="'Ok'"
             [cancelButtonLabel]="'Cancel'"
-            (onSubmit)="onEditModalSubmit()">
+            (onSubmit)="onEditModalSubmit($event)">
   </sam-modal>
 
   <!--Main Content-->
   <div *ngIf="program" class="usa-width-three-fourths">
 
-    <!-- Alert -->
-    <ng-container *ngIf="alert.length > 0">
-      <sam-alert id="program-alert" *ngFor="let alert of alert" labelname="alert.labelname" [type]="alert.config.type" [title]="alert.config.title" [description]="alert.config.description"></sam-alert>
+    <!-- Alerts -->
+    <ng-container *ngIf="alerts && alerts.length > 0">
+      <div *ngFor="let alert of alerts; let i = index">
+        <sam-alert [attr.id]="'program-alert-' + i" labelname="alerts[i].labelname" [type]="alerts[i].config.type" [title]="alerts[i].config.title" [description]="alerts[i].config.description">
+          <ng-container *ngIf="alert.labelname === 'published-fal-alert'">
+            <ng-container *ngIf="program._links && (program._links['program:revise'] || program._links['program:update'])">
+              Click <a class="fal-table-edit" (click)="onEditClick(['#header-information'])">here</a> to edit a draft of the Assistance Listing.
+            </ng-container>
+          </ng-container>
+        </sam-alert>
+      </div>
     </ng-container>
 
     <!-- Intro Content -->
@@ -776,7 +796,7 @@
       <!-- Formula and Matching Requirements -->
       <h3 class="sam-ui dividing header">Formula and Matching Requirements</h3>
       <!-- statutory formula-->
-      <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.formua">
+      <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.formula">
         <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="true">
           Statutory Formula: Title {{program.data?.compliance?.formulaAndMatching?.formula?.title}} Chapter {{program.data?.compliance?.formulaAndMatching?.formula?.chapter}}
           Part {{program.data?.compliance?.formulaAndMatching?.formula?.part}} Subpart {{program.data?.compliance?.formulaAndMatching?.formula?.subPart}} Public Law {{program.data?.compliance?.formulaAndMatching?.formula?.publicLaw}}

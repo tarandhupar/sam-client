@@ -6,9 +6,12 @@
     <br />
     <div sam-sticky limit=1200 container="wage-determination-page">
       <!--Logo-->
-      <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
+      <img src="src/assets/img/logo-not-found.png" class="sidenav-logo" alt="Logo Not Available" width="140px">
+      
+      <div class="sam-ui hidden divider"></div>
+      
       <!--Side Navigation-->
-      <sam-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-sidenav>
+      <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
     </div>
   </aside>
 
@@ -46,6 +49,8 @@
           </div>
         </h1>
       </ng-container>
+      
+      <div class="sam-ui hidden divider"></div>
 
       <!-- Intro Content -->
 			<div class="sam-ui padded raised segment">
@@ -59,7 +64,7 @@
 
 				<div class="sam-ui attached grid">
           <div class="column">
-            <div class="sam-ui divided list">
+            <div class="sam-ui relaxed divided list">
               <div *ngIf="revisionNumber" class="item" id="wd-revision-number">
                 <div class="content">
                   <div class="header">Revision #</div>
@@ -117,6 +122,7 @@
 
       <!-- State and Counties -->
       <ng-container *ngIf = "locations && locations.length > 0">
+        <h2 class="sam-ui header">States and Counties</h2>
         <div *ngFor="let location of locations; let i = index; let isLast=last">
 
           <div [attr.id]="'wd-state-' + i">
@@ -139,12 +145,17 @@
 
         </div>
       </ng-container>
+      
+      <div class="sam-ui hidden section divider"></div>
 
-
+      
       <!-- Print Link -->
-      <div class="sam-ui vertically padded grid" id="wd-print-link" *ngIf="wageDetermination?.document">
+      <div class="sam-ui two column vertically padded grid" id="wd-print-link" *ngIf="wageDetermination?.document">
         <div class="column">
-          <a target="blank" class="sam-ui right floated small dark blue button" tabindex="0" [routerLink]="['/wage-determination', referenceNumber, revisionNumber, 'document']">
+          <h2 class="sam-ui header">Document</h2>
+        </div>
+        <div class="column">
+          <a target="blank" class="sam-ui right floated mini dark blue button" tabindex="0" [routerLink]="['/wage-determination', referenceNumber, revisionNumber, 'document']">
             <i class="icon fa fa-print" aria-hidden="true"></i>
             Printer Friendly
           </a>
@@ -164,11 +175,18 @@
     <!-- History -->
     <section id="wd-history" *ngIf="processedHistory">
 
-      <h2 class="sam-ui header">History
-        <sam-button *ngIf="shortProcessedHistory" [buttonId]="'defaultBtnHistory'" [buttonText]="!showingLongHistory ? 'Show More' : 'Show Less'" [buttonType]="btnType" (click)="showHideLongHistory()"></sam-button>
-      </h2>
+      <h2 class="sam-ui header">History</h2>
 
-      <sam-history [data]="processedHistory" [currentId]="wageDetermination.fullReferenceNumber + '/' + wageDetermination.revisionNumber"></sam-history>
+      <sam-history  [data]="processedHistory" 
+                    [currentId]="wageDetermination.fullReferenceNumber + '/' + wageDetermination.revisionNumber">
+      </sam-history>
+      <br>
+      <sam-button *ngIf="shortProcessedHistory" 
+                  [buttonId]="'defaultBtnHistory'" 
+                  [buttonText]="!showingLongHistory ? 'Show More' : 'Show Less'" 
+                  [buttonType]="btnType" 
+                  (click)="showHideLongHistory()">
+      </sam-button>
 
       <div class="sam-ui hidden section divider"></div>
 

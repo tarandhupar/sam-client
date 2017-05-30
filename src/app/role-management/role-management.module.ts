@@ -22,6 +22,8 @@ import { RoleMgmtSidenav } from "./rolemgmt-sidenav/rolemgmt-sidenav.component.t
 import { RoleMgmtContent } from "./rolemgmt-content/rolemgmt-content.component.ts";
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { RequestDetailsComponent } from "./request-details/request-details";
+import { UserRolesDirectoryPage } from "./user-roles-directory/user-roles-directory.page";
+import {DomainDefinitionResolve} from "./domaindefinition.resolve";
 
 @NgModule({
   imports: [
@@ -50,9 +52,11 @@ import { RequestDetailsComponent } from "./request-details/request-details";
     RoleMgmtWorkspace,
     RoleMgmtSidenav,
     RoleMgmtContent,
+    UserRolesDirectoryPage,
   ],
   providers: [
     DomainsResolve,
+    DomainDefinitionResolve,
     RequestAccessResolve,
     RequestStatusNamesResolve,
     AlertFooterService

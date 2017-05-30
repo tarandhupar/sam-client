@@ -1,18 +1,18 @@
 <div class="assistance-listing-operations">
   <div class="usa-grid" >
-    <fal-form-side-nav></fal-form-side-nav>
+    <fal-form-side-nav class="usa-width-one-fourth"></fal-form-side-nav>
 
     <div class="usa-width-three-fourths">
       <div class="usa-width-one-whole m_L-4x">
         <fal-form-header-information *ngIf="isSection('header-information')" [viewModel]="falFormViewModel" #form></fal-form-header-information>
         <fal-form-overview *ngIf="isSection('overview')" [viewModel]="falFormViewModel" #form></fal-form-overview>
-        <fal-form-authorization *ngIf="isSection('authorization')" [viewModel]="falFormViewModel"></fal-form-authorization>
-        <fal-form-obligation-info *ngIf="isSection('financial-information-obligations')" [viewModel]="falFormViewModel"></fal-form-obligation-info>
-        <fal-form-financial-info-other *ngIf="isSection('financial-information-other')" [viewModel]="falFormViewModel"></fal-form-financial-info-other>
-        <fal-form-criteria-info *ngIf="isSection('criteria-information')" [viewModel]="falFormViewModel"></fal-form-criteria-info>
-        <fal-form-assistance *ngIf="isSection('applying-for-assistance')" [viewModel]="falFormViewModel"></fal-form-assistance>
-        <fal-form-compliance-requirements *ngIf="isSection('compliance-requirements')" [viewModel]="falFormViewModel"></fal-form-compliance-requirements>
-        <fal-form-contact-info *ngIf="isSection('contact-information')" [viewModel]="falFormViewModel"></fal-form-contact-info>
+        <fal-form-authorization *ngIf="isSection('authorization')" [viewModel]="falFormViewModel" #form></fal-form-authorization>
+        <fal-form-obligation-info *ngIf="isSection('financial-information-obligations')" [viewModel]="falFormViewModel" #form></fal-form-obligation-info>
+        <fal-form-financial-info-other *ngIf="isSection('financial-information-other')" [viewModel]="falFormViewModel" #form></fal-form-financial-info-other>
+        <fal-form-criteria-info *ngIf="isSection('criteria-information')" [viewModel]="falFormViewModel" #form></fal-form-criteria-info>
+        <fal-form-assistance *ngIf="isSection('applying-for-assistance')" [viewModel]="falFormViewModel" #form></fal-form-assistance>
+        <fal-form-compliance-requirements *ngIf="isSection('compliance-requirements')" [viewModel]="falFormViewModel" #form></fal-form-compliance-requirements>
+        <fal-form-contact-info *ngIf="isSection('contact-information')" [viewModel]="falFormViewModel" #form></fal-form-contact-info>
 
         <div>
           <div class="pull-left">

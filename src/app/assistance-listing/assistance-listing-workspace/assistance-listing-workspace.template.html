@@ -1,11 +1,43 @@
 <workspace-layout *ngIf="permissions" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"
-                  [totalElements]="totalCount" [loadFlag]="data.length > 0"
+                  [totalElements]="totalCount" [loadFlag]="data.length >= 0"
                   titleText="Sam.gov Assistance Listings Workspace" [addBtnText]="permissions['CREATE_FALS'] ? addFALButtonText : null" (addBtnClick)="addBtnClick($event)">
+  <br>
   <div workspace-sidebar></div>
   <div workspace-content class="workspace-content">
+
+    <div class="sam-ui grid">
+      <div class="row">
+    <div *ngIf="!initLoad" custom-input class="search-bar eight wide column">
+
+      <sam-autocomplete class="div-fill"#autocomplete
+                        [(ngModel)]="keyword"
+                        (ngModelChange)="workspaceSearchModel($event)"
+                        (enterEvent)="workspaceSearchClick()"
+                        [config]="workspaceSearchConfig"
+                        [options]="[]"
+                        [showClearButton]="true"
+                        [allowAny]="true"
+                        name="appsearch">
+      </sam-autocomplete>
+      <sam-button class="div-right"
+                  [buttonType]="'default'"
+                  [buttonText]="'Search' "
+                  [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
+                  (onClick)="workspaceSearchClick()">
+      </sam-button>
+    </div>
+    </div>
+    </div>
+    <br>
     <div *ngFor="let row of data" tabindex="-1">
       <assistance-program-result [data]="row" [qParams]="qParams"></assistance-program-result>
       <hr class="m_T-5x"/>
     </div>
+
+    <div class="search-inactive-results" *ngIf="data.length==0 && !initLoad">
+      <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
+      <div style="height:300px;"></div>
+    </div>
+
   </div>
 </workspace-layout>

@@ -5,6 +5,17 @@
     <form *ngIf="userForm" [formGroup]="userForm" class="usa-form usa-form-register" autocomplete="off" novalidate>
       <fieldset class="name">
         <sam-name-entry [model]="user" legend="Your Name" #nameEntry></sam-name-entry>
+        <ul class="usa-unstyled-list">
+          <li>
+            <input type="checkbox"
+                   id="email-notification"
+                   type="checkbox"
+                   name="email-notification"
+                   [checked]="user.emailNotification"
+                   (change)="user.emailNotification = !user.emailNotification">
+            <label for="email-notification">I would like to be contacted when changes are made to the new SAM.gov</label>
+          </li>
+        </ul>
       </fieldset>
       <fieldset class="phone">
         <legend>Business Phone</legend>

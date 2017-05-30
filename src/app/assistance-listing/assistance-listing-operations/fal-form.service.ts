@@ -2,12 +2,13 @@ import {Injectable} from '@angular/core';
 import {ProgramService} from "../../../api-kit/program/program.service";
 import * as Cookies from 'js-cookie';
 import {DictionaryService} from "../../../api-kit/dictionary/dictionary.service";
+import { FHService } from "../../../api-kit/fh/fh.service";
 
 @Injectable()
 
 export class FALFormService {
 
-  constructor(private programService: ProgramService, private dictionaryService: DictionaryService) {
+  constructor(private programService: ProgramService, private dictionaryService: DictionaryService, private fhService: FHService) {
 
   }
 
@@ -55,5 +56,9 @@ export class FALFormService {
   getContactDict(){
     let dictionaries = ['states', 'countries'];
     return this.dictionaryService.getDictionaryById(dictionaries.join(','));
+  }
+
+  getOrganization(id) {
+    return this.fhService.getOrganizationById(id, false);
   }
 }

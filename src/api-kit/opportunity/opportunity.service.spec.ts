@@ -142,7 +142,7 @@ describe('src/api-kit/opportunity/opportunity.service.spec.ts', () => {
   it('Opportunity Service: should return response when subscribed to getPackagesCount', inject([OpportunityService, MockBackend], (testService: OpportunityService, backend: MockBackend) => {
     backend.connections.subscribe((c: MockConnection) => c.mockRespond(new Response(new ResponseOptions({ body: '6' }))));
 
-    testService.getPackagesCount("fee2e0e30ce63b7bc136aeff32096c1d").subscribe((res: Response) => {
+    testService.getPackagesCount("9e14590f674ab3ffbf8da6b85ddc8581, a2c630c37084d373200cc1bc6121bdf6").subscribe((res: Response) => {
       expect(res).toBeDefined();
       expect(res).toBe(6);
     });

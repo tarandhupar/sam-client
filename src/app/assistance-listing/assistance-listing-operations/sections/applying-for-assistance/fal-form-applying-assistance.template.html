@@ -4,11 +4,13 @@
 
   <div formGroupName="deadlines">
 
-    <sam-radio-button [label]="'Deadlines'"
-                    [name]="'deadlineFlag-radio-buttons'"
-                    [options]="deadlinesFlagOptions"
-                    [required]="true"
-                    formControlName="flag"
+    <sam-radio-button *ngIf="falAssistanceForm.get('deadlines').get('flag')"
+                      [label]="'Deadlines'"
+                      [name]="'deadlineFlag-radio-buttons'"
+                      [options]="deadlinesFlagOptions"
+                      [required]="true"
+                      formControlName="flag"
+                      [control]="falAssistanceForm.get('deadlines').get('flag')"
     ></sam-radio-button>
 
     <div [class.hide]="falAssistanceForm.value.deadlines.flag != 'yes'">
@@ -40,7 +42,9 @@
 
     <sam-text-area [label]="'Additional Information'"
                  [name]="'preAppCord-description'"
+                 [control]="falAssistanceForm.get('preApplicationCoordination').get('description')"
                  formControlName="description"
+                 [required]="falAssistanceForm.get('preApplicationCoordination').get('reports').value.indexOf('otherRequired') !== -1"
                  [class.hide]="falAssistanceForm.value.preApplicationCoordination.reports.length == 0"
     ></sam-text-area>
   </div>
@@ -70,30 +74,36 @@
                  formControlName="isApplicable"
     ></sam-checkbox>
 
-    <sam-text-area [label]="'Please describe.'"
-                 [name]="'selectionCriteria-description'"
-                 [required]="true"
-                 formControlName="description"
-                 [class.hide]="falAssistanceForm.value.selectionCriteria.isApplicable[0] != true"
+    <sam-text-area *ngIf="falAssistanceForm.get('selectionCriteria').get('description')"
+                   [label]="'Please describe.'"
+                   [name]="'selectionCriteria-description'"
+                   [required]="true"
+                   formControlName="description"
+                   [class.hide]="falAssistanceForm.value.selectionCriteria.isApplicable[0] != true"
+                   [control]="falAssistanceForm.get('selectionCriteria').get('description')"
     ></sam-text-area>
   </div>
 
   <div formGroupName="awardProcedure">
-    <sam-text-area [label]="'Award Procedure'"
-                 [hint]="'Describe how assistance is awarded. Include who approves the award and how assistance is distributed.'"
-                 [name]="'awardProcedure-description'"
-                 [required]="true"
-                 formControlName="description"
+    <sam-text-area *ngIf="falAssistanceForm.get('awardProcedure').get('description')"
+                   [label]="'Award Procedure'"
+                   [hint]="'Describe how assistance is awarded. Include who approves the award and how assistance is distributed.'"
+                   [name]="'awardProcedure-description'"
+                   [required]="true"
+                   formControlName="description"
+                   [control]="falAssistanceForm.get('awardProcedure').get('description')"
     ></sam-text-area>
   </div>
 
   <div formGroupName="approval">
-    <sam-select [label]="'Date Range for Approval/Disapproval'"
-               [hint]="'Select the range that best represents how much time the approval process takes.'"
-               [name]="'approval-input'"
-               [options]="dateRangeOptions"
-               [required]="true"
-               formControlName="interval"
+    <sam-select *ngIf="falAssistanceForm.get('approval').get('interval')"
+                [label]="'Date Range for Approval/Disapproval'"
+                [hint]="'Select the range that best represents how much time the approval process takes.'"
+                [name]="'approval-input'"
+                [options]="dateRangeOptions"
+                [required]="true"
+                formControlName="interval"
+                [control]="falAssistanceForm.get('approval').get('interval')"
     ></sam-select>
 
     <sam-text-area [label]="'Other Approval Information'"
@@ -104,12 +114,14 @@
   </div>
 
   <div formGroupName="renewal">
-    <sam-select [label]="'Renewals'"
-               [hint]="'Select the range that best represents when an awardee may apply for a renewal or extension.'"
-               [name]="'approval-input'"
-               [options]="dateRangeOptions"
-               [required]="true"
-               formControlName="interval"
+    <sam-select *ngIf="falAssistanceForm.get('renewal').get('interval')"
+                [label]="'Renewals'"
+                [hint]="'Select the range that best represents when an awardee may apply for a renewal or extension.'"
+                [name]="'approval-input'"
+                [options]="dateRangeOptions"
+                [required]="true"
+                formControlName="interval"
+                [control]="falAssistanceForm.get('renewal').get('interval')"
     ></sam-select>
 
     <sam-text-area [label]="'Other Renewal Information'"
@@ -120,12 +132,14 @@
   </div>
 
   <div formGroupName="appeal">
-    <sam-select [label]="'Appeals'"
-               [hint]="'Select the range that best represents how long an applicant has to appeal a decision.'"
-               [name]="'appeals-input'"
-               [options]="dateRangeOptions"
-               [required]="true"
-               formControlName="interval"
+    <sam-select *ngIf="falAssistanceForm.get('appeal').get('interval')"
+                [label]="'Appeals'"
+                [hint]="'Select the range that best represents how long an applicant has to appeal a decision.'"
+                [name]="'appeals-input'"
+                [options]="dateRangeOptions"
+                [required]="true"
+                formControlName="interval"
+                [control]="falAssistanceForm.get('appeal').get('interval')"
     ></sam-select>
     <sam-text-area [label]="'Other Appeals Information'"
                  [hint]="'Describe appeal, rework, or other options for applications that are not approved.'"

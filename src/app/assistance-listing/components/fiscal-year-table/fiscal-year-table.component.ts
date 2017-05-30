@@ -1,8 +1,12 @@
 import { Component, Input, forwardRef, ViewChild } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl } from "@angular/forms";
+import {
+  ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, AbstractControl,
+  NG_VALIDATORS, Validator
+} from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
 import { OptionsType } from "sam-ui-kit/types";
 import * as moment from "moment";
+import { ValidationErrors } from "../../../app-utils/types";
 
 
 /** Interfaces **/
@@ -29,6 +33,7 @@ export interface FiscalYearTableModel {
  * label: Heading to show above form
  * hint: Instructions for form
  * required: If true, will trigger validation errors if form is not filled out
+ * errorMessage: If provided, will be used as validation error message
  * itemName: Column header to show in fy table above text entries
  * entry.hint: Instructions for adding an entry
  * deleteModal: If defined and not null, shows a modal with specified title and description when deleting from table
@@ -38,6 +43,7 @@ export interface FiscalYearTableConfig {
   label?: string,
   hint?: string,
   required?: boolean
+  errorMessage?: string
 
   itemName: string,
 
@@ -47,7 +53,8 @@ export interface FiscalYearTableConfig {
 
   deleteModal?: {
     title?: string,
-    description?: string
+    description?: string,
+    flag?: string
   }
 }
 
@@ -64,13 +71,19 @@ export interface FiscalYearTableConfig {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FALFiscalYearTableComponent),
       multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => FALFiscalYearTableComponent),
+      multi: true
     }
   ]
 })
-export class FALFiscalYearTableComponent implements ControlValueAccessor {
+export class FALFiscalYearTableComponent implements ControlValueAccessor, Validator {
   // all parameters are passed in a single config object for convenience
   // see FiscalYearTableConfig interface for supported parameters
   @Input() config: FiscalYearTableConfig;
+  @Input() control: FormControl;
 
   // the model serves as the single source of truth for this component's data
   // whenever data is input or actions are taken that modify the form, the model should also be updated
@@ -143,6 +156,12 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
       year: new FormControl(null)
     });
 
+    if(this.control) {
+      this.control.statusChanges.subscribe(status => {
+        this.fyTableWrapper.formatErrors(this.control);
+      });
+    }
+
     this.fyTableGroup.get('naCheckbox').valueChanges.subscribe(value => {
       this.model.isApplicable = value.indexOf('na') === -1;
       this.onChange();
@@ -154,7 +173,7 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
     });
 
     this.fyTableGroup.get('year').valueChanges.subscribe((value: string) => {
-      this.model.current.year = +value;
+      this.model.current.year = value == null ? null : +value;
       this.onChange();
     });
   }
@@ -210,15 +229,23 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
 
   /** Event handlers **/
 
-  // Handles component level functionality that should be run on every change, such as validations
+  // Handles component level functionality that should be run on every change
   private onChange() {
-    // todo: validations
     this.onChangeCallback(this.model);
   }
 
   // On click of delete button in table
   public onDeleteClick(index: number) {
-    if(this.deleteModal) { // if delete modal exists, show it
+    let msg = '';
+    if(this.deleteModal) {// if delete modal exists, show it
+      msg = this.config.deleteModal.flag === 'ov' ? ' examples of funded projects.' : ' program accomplishments.';
+        if(this.model.entries[index].year !== null) {
+          this.config.deleteModal.description = 'Please confirm that you want to delete FY ' +this.model.entries[index].year.toString(10) + msg;
+        }
+        else
+          this.config.deleteModal.description = 'Please confirm that you want to delete ' + msg;
+
+
       this.deleteModal.openModal(index);
     } else { // else just remove directly
       this.removeEntry(index);
@@ -279,16 +306,18 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
   }
 
   private addYearOption(year: number) {
-    this.yearOptions.push({ value: year, label: year.toString(), name: this.config.name + '-year' + year });
+    if(year !== null) {
+      this.yearOptions.push({value: year, label: year.toString(), name: this.config.name + '-year' + year});
 
-    // after adding a year option the selections may be out of order so sort them
-    this.yearOptions.sort((a, b) => {
-      // value has type number | string, so if it is a string then parse it to a number
-      let aValue: number = typeof a.value === 'number' ? a.value as number : parseInt(a.value as string, 10);
-      let bValue: number = typeof b.value === 'number' ? b.value as number : parseInt(b.value as string, 10);
+      // after adding a year option the selections may be out of order so sort them
+      this.yearOptions.sort((a, b) => {
+        // value has type number | string, so if it is a string then parse it to a number
+        let aValue: number = typeof a.value === 'number' ? a.value as number : parseInt(a.value as string, 10);
+        let bValue: number = typeof b.value === 'number' ? b.value as number : parseInt(b.value as string, 10);
 
-      return aValue - bValue;
-    });
+        return aValue - bValue;
+      });
+    }
   }
 
   private removeYearOption(year: number) {
@@ -297,6 +326,35 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor {
         this.yearOptions.splice(i, 1);
       }
     }
+  }
+
+  // returns whether model contains at least one entry that should be displayed
+  // entries that are displayed are those with no year or a year within the current 3 year range
+  public containsDisplayedEntries() {
+    return this.model.entries.filter(entry => {
+      return entry.year === null || (entry.year >= this.getCurrentFY() - 1 && entry.year <= this.getCurrentFY() + 1);
+    }).length > 0;
+  }
+
+
+  /** Validation **/
+
+  public validate(c: AbstractControl): ValidationErrors {
+    let error: ValidationErrors = {
+      atLeastOneEntry: {
+        message: this.config.errorMessage ? this.config.errorMessage : 'At least one ' + this.config.itemName + ' is required.'
+      }
+    };
+
+    if (this.config.required && this.config.required === true) {
+      if (this.model.isApplicable === true) {
+        if (this.model.entries.length === 0) {
+          return error;
+        }
+      }
+    }
+
+    return null;
   }
 
 

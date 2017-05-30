@@ -1,3 +1,4 @@
+<span class="usa-input-error-message" *ngIf="errorExists && review"><sup>*</sup>You must add at least one authorization.</span>
 <sam-button buttonText="Add Authorization" (onClick)="addAuth()" [class.hide]="hideAddButton"></sam-button>
 
 <div [formGroup]="falAuthSubForm" [class.hide]="!hideAddButton">
@@ -7,7 +8,7 @@
     <ng-container *ngFor="let authGrp of falAuthSubForm.controls.authorizations.controls; let i=index">
       <div [formGroupName]="i" [class.hide]="authIndex !== i">
 
-        <sam-checkbox
+          <sam-checkbox
           [control]="authGrp.controls.authType"
           [label]="'Please select all that apply'"
           [name]="'authType'"

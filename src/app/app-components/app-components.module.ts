@@ -32,6 +32,8 @@ import { CityServiceImpl, SamCityServiceAutoDirective } from "./location-autocom
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { OrgAddrFormComponent } from "./address-form/address-form.component";
 import { PipesModule } from "../app-pipes/app-pipes.module";
+import { SamFeedbackSidenavComponent } from "./feedback-sidenav/feedback-sidenav.component";
+import { FeedbackFormService } from "./feedback-form/feedback-form.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -56,6 +58,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
     ObjectSidebarComponent,
     SamSearchbarComponent,
     SamFeedbackComponent,
+    SamFeedbackSidenavComponent,
     SamTypeAheadComponent,
     FalTableComponent,
     SamCountryServiceAutoDirective,
@@ -89,6 +92,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
     ListResultsMessageComponent,
     SamSearchbarComponent,
     SamFeedbackComponent,
+    SamFeedbackSidenavComponent,
     FormFieldComponent,
     ObjectFormModel,
     ObjectSidebarComponent,
@@ -105,6 +109,7 @@ import { PipesModule } from "../app-pipes/app-pipes.module";
     CountyServiceImpl,
     CityServiceImpl,
     AlertFooterService,
+    FeedbackFormService,
   ]
 })
 export class AppComponentsModule { }

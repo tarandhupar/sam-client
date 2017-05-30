@@ -143,7 +143,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   constructor(private activatedRoute:ActivatedRoute, private oFHService:FHService) {}
   private onChange: (_: any) => void = (_: any) => {};
   private onTouched: () => void = () => {};
-  
+
   /**
    * Autocomplete
    */
@@ -986,6 +986,9 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   writeValue(value) {
     if(value && Array.isArray(value)){
       this.selectedOrganizations = value;
+      if(value.length==0){
+        this.searchTerm = "";
+      }
     }
   }
 

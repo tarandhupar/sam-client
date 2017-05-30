@@ -1,8 +1,9 @@
-import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {FALFormService} from "../../fal-form.service";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
 import {AutocompleteConfig} from "sam-ui-kit/types";
+import {falCustomValidatorsComponent} from "../../../validators/assistance-listing-validators";
 
 @Component({
   providers: [FALFormService],
@@ -13,6 +14,11 @@ import {AutocompleteConfig} from "sam-ui-kit/types";
 export class FALFormCriteriaInfoComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
   @ViewChild('appauto') appauto;
+  @ViewChild('documentationComp') documentationComp;
+  @ViewChild('usageResComp') usageResComp;
+  @ViewChild('useDisFundsComp') useDisFundsComp;
+  @ViewChild('useLoanTermsComp') useLoanTermsComp;
+
   falCriteriaForm: FormGroup;
   programTitle: string;
 
@@ -40,7 +46,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
   benKeyValue = [];
   benListDisplay = [];
   benNGModel: any;
-  toggleBenSection: boolean = true;
+  toggleBenSection: boolean = false;
 
 
   // Checkboxes Component
@@ -139,6 +145,9 @@ export class FALFormCriteriaInfoComponent implements OnInit {
         console.error('error retrieving dictionary data', error);
       });
     this.createForm();
+    if (!this.viewModel.isNew) {
+      this.updateForm();
+    }
   }
 
   parseDictionariesList(data) {
@@ -166,58 +175,72 @@ export class FALFormCriteriaInfoComponent implements OnInit {
         this.benKeyValue[btData.element_id] = btData.value;
       }
     }
-    if (((this.viewModel.appListDisplay && this.viewModel.appListDisplay.length > 0) || (this.viewModel.appListDisplay !== null) || (this.viewModel.appListDisplay !== undefined)) || (this.viewModel.benListDisplay && this.viewModel.benListDisplay.length > 0) || (this.viewModel.assListDisplay && this.viewModel.assListDisplay.length > 0)) {
-      this.populateMultiSelect(this.viewModel.appListDisplay, this.appAutocompleteConfig, this.appListDisplay, this.applicantKeyValue);
-      this.populateMultiSelect(this.viewModel.benListDisplay, this.benAutocompleteConfig, this.benListDisplay, this.benKeyValue);
-      this.populateMultiSelect(this.viewModel.assListDisplay, this.assUsageAutocompleteConfig, this.assListDisplay, this.assUsageKeyValue)
-      this.falCriteriaForm.patchValue({
-        appListDisplay: this.appListDisplay === null ? [] : this.appListDisplay,
-        benListDisplay: this.benListDisplay === null ? [] : this.benListDisplay,
-        assListDisplay: this.assListDisplay === null ? [] : this.assListDisplay
-      }, {
-        emitEvent: false
-      });
+    this.populateMultiSelect(this.viewModel.appListDisplay, this.appAutocompleteConfig, this.appListDisplay, this.applicantKeyValue);
+    this.populateMultiSelect(this.viewModel.benListDisplay, this.benAutocompleteConfig, this.benListDisplay, this.benKeyValue);
+    this.populateMultiSelect(this.viewModel.assListDisplay, this.assUsageAutocompleteConfig, this.assListDisplay, this.assUsageKeyValue)
+    this.falCriteriaForm.patchValue({
+      appListDisplay: this.appListDisplay.length > 0 ? this.appListDisplay : [],
+      benListDisplay: this.benListDisplay.length > 0 ? this.benListDisplay : [],
+      assListDisplay: this.assListDisplay.length > 0 ? this.assListDisplay : [],
+    }, {
+      emitEvent: false
+    });
+    this.falCriteriaForm.valueChanges.subscribe(data => this.updateViewModel(data));
+  }
+
+    populateMultiSelect(multiTypeData: any, autoCompleteConfig: any, listDisplay: any, keyValueArray: any) {
+    if (multiTypeData && multiTypeData.length > 0) {
+      for (let id of multiTypeData) {
+        listDisplay.push({code: id, name: keyValueArray[id]});
+      }
+      autoCompleteConfig.placeholder = this.placeholderMsg(multiTypeData);
     }
   }
 
   createForm() {
     this.falCriteriaForm = this.fb.group({
       documentation: [''],
+      appListDisplay: ['', falCustomValidatorsComponent.autoCompleteRequired],
       applicantType: [''],
-      appListDisplay: [''],
       applicantDesc: [''],
       isSameAsApplicant: [''],
       benType: [''],
-      benListDisplay: [''],
+      benListDisplay: ['', falCustomValidatorsComponent.autoCompleteRequired],
       benDesc: [''],
       lengthTimeDesc: [''],
-      awardedType: ['na'],
+      awardedType: ['na', falCustomValidatorsComponent.selectRequired],
       awardedDesc: [''],
       assUsageType: [''],
-      assListDisplay: [''],
+      assListDisplay: ['', falCustomValidatorsComponent.autoCompleteRequired],
       assUsageDesc: [''],
       usageRes: [''],
       useDisFunds: [''],
       useLoanTerms: ['']
     });
-    this.falCriteriaForm.valueChanges.subscribe(data => this.updateViewModel(data));
-
-    if (!this.viewModel.isNew) {
-      this.updateForm();
-    }
   }
-
   updateViewModel(data) {
+    let appListDisplay = [];
+    let benListDisplay = [];
+    let assListDisplay = [];
+    for(let appList of data['appListDisplay']){
+      appListDisplay.push(appList.code);
+    }
+    for(let benList of data['benListDisplay']){
+      benListDisplay.push(benList.code);
+    }
+    for(let assList of data['assListDisplay']){
+      assListDisplay.push(assList.code);
+    }
     this.viewModel.documentation = this.saveChkToggleTextarea(data['documentation']);
-    this.viewModel.appListDisplay = data['appListDisplay'];
+    this.viewModel.appListDisplay = appListDisplay;
     this.viewModel.applicantDesc = data['applicantDesc'] || null;
     this.viewModel.isSameAsApplicant = this.saveIsSameasApplicant(data['isSameAsApplicant']);
-    this.viewModel.benListDisplay = data['benListDisplay'];
+    this.viewModel.benListDisplay = benListDisplay;
     this.viewModel.benDesc = data['benDesc'] || null;
     this.viewModel.lengthTimeDesc = data['lengthTimeDesc'] || null;
     this.viewModel.awardedType = data['awardedType'];
     this.viewModel.awardedDesc = data['awardedDesc'] || null;
-    this.viewModel.assListDisplay = data['assListDisplay'];
+    this.viewModel.assListDisplay = assListDisplay;
     this.viewModel.assUsageDesc = data['assUsageDesc'] || null;
     this.viewModel.usageRes = this.saveChkToggleTextarea(data['usageRes']);
     this.viewModel.useDisFunds = this.saveChkToggleTextarea(data['useDisFunds']);
@@ -225,7 +248,6 @@ export class FALFormCriteriaInfoComponent implements OnInit {
   }
 
   updateForm() {
-    this.programTitle = this.viewModel.title;
     this.toggleAwardDesc(this.viewModel.awardedType);
     this.falCriteriaForm.patchValue({
       documentation: this.loadChkToggleTextarea(this.viewModel.documentation),
@@ -238,7 +260,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
       assUsageDesc: this.viewModel.assUsageDesc,
       usageRes: this.loadChkToggleTextarea(this.viewModel.usageRes),
       useDisFunds: this.loadChkToggleTextarea(this.viewModel.useDisFunds),
-      useLoanTerms: this.loadChkToggleTextarea(this.viewModel.useLoanTerms),
+      useLoanTerms: this.loadChkToggleTextarea(this.viewModel.useLoanTerms)
     }, {
       emitEvent: false
     });
@@ -246,9 +268,9 @@ export class FALFormCriteriaInfoComponent implements OnInit {
 
   private loadIsSameasApplicant(flag: boolean) {
     let isSamasApp = [];
-    this.toggleBenSection = true;
+    this.toggleBenSection = false;
     if (flag) {
-      this.toggleBenSection = false;
+      this.toggleBenSection = true;
       isSamasApp.push('isSameAsApplicant')
     }
     return isSamasApp;
@@ -262,17 +284,18 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     }
     return isflag;
   }
+
   onawardedTypeChange(event) {
     this.toggleAwardDesc(event);
   }
 
   chkSameAsApp(event) {
-    this.toggleBenSection = true;
-    let data = event.indexOf('isSameAsApplicant') !== -1
-   if(data) {
-     this.toggleBenSection = false;
-   }
-
+    this.toggleBenSection = false;
+    let data = event.indexOf('isSameAsApplicant') !== -1;
+    if (data) {
+      this.toggleBenSection = true;
+    }
+    this.falCriteriaForm['controls']['benListDisplay'].updateValueAndValidity();
   }
 
   applicantTypeChange(event) {
@@ -288,6 +311,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
   }
 
   benlistChange() {
+
     this.benAutocompleteConfig.placeholder = this.placeholderMsg(this.falCriteriaForm.value.benListDisplay);
   }
 
@@ -319,14 +343,6 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     }
   }
 
-  populateMultiSelect(multiTypeData: any, autoCompleteConfig: any, listDisplay: any, keyValueArray: any) {
-    if (multiTypeData && multiTypeData.length > 0) {
-      for (let id of multiTypeData) {
-        listDisplay.push({code: id, name: keyValueArray[id]});
-      }
-      autoCompleteConfig.placeholder = this.placeholderMsg(multiTypeData);
-    }
-  }
 
   private loadChkToggleTextarea(type: any) {
     let model = {
@@ -357,5 +373,16 @@ export class FALFormCriteriaInfoComponent implements OnInit {
       data.description = model['textarea'][0];
     }
     return data;
+  }
+  validateSection(){
+    this.documentationComp.markChildrenAsDirty();
+    this.usageResComp.markChildrenAsDirty();
+    this.useDisFundsComp.markChildrenAsDirty();
+    this.useLoanTermsComp.markChildrenAsDirty();
+
+    for(let key of Object.keys(this.falCriteriaForm.controls)) {
+      this.falCriteriaForm.controls[key].markAsDirty();
+      this.falCriteriaForm.controls[key].updateValueAndValidity();
+    }
   }
 }

@@ -33,7 +33,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   authorizationIdsGrouped: any[];
   history: any[];
   historicalIndex: any;
-  alert: any = [];
+  alerts: any = [];
   errorOrganization: any;
   public logoUrl: any;
   public logoInfo: any;
@@ -51,6 +51,8 @@ export class ProgramPage implements OnInit, OnDestroy {
     "children": []
   };
   qParams:any;
+  @ViewChild('deleteModal') deleteModal;
+  modalConfig = {title:'Delete Draft AL', description:''};
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -128,7 +130,7 @@ export class ProgramPage implements OnInit, OnDestroy {
     let apiSubject = new ReplaySubject(1); // broadcasts the api data to multiple subscribers
     let apiStream = this.route.params.switchMap(params => { // construct a stream of api data
       this.programID = params['id'];
-      this.alert = [];
+      this.alerts = [];
       this.relatedProgram = [];
       return this.programService.getProgramById(params['id'], this.cookieValue);
     });
@@ -143,6 +145,35 @@ export class ProgramPage implements OnInit, OnDestroy {
       }
 
       this.checkCurrentFY();
+
+      // show alert if viewing a draft FAL
+      if (this.program.status && this.program.status.code && this.program.status.code === 'draft') {
+        this.alerts.push({
+          'labelname': 'draft-fal-alert',
+          'config': {
+            'type': 'info',
+            'title': '',
+            'description': 'This is a draft Assistance Listing. Any updates will need to be published before the public is able to view the changes.'
+          }
+        });
+      }
+
+      // show alert if viewing latest published version
+      if (this.cookieValue) {
+        if (this.program.status && this.program.status.code && this.program.status.code === 'published' && this.program.latest === true) {
+          let publishedAlert = {
+            'labelname': 'published-fal-alert',
+            'config': {
+              'type': 'info',
+              'title': '',
+              'description': 'This is the currently published version of this program.'
+            }
+          };
+
+          this.alerts.push(publishedAlert);
+        }
+      }
+
       if (this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
       }
@@ -301,7 +332,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
     // construct a stream that contains all related programs from related program ids
     let relatedProgramsStream = relatedProgramsIdStream.flatMap((relatedId: any) => {
-      return this.programService.getLatestProgramById(relatedId, this.cookieValue).retryWhen(
+      return this.programService.getProgramById(relatedId, this.cookieValue).retryWhen(
         errors => {
           return this.route.params;
         }
@@ -327,8 +358,14 @@ export class ProgramPage implements OnInit, OnDestroy {
 
   private checkCurrentFY() {
     // check if this program has changed in this FY, if not, display an alert
+    // does not apply to draft FALs
+    if(this.program.status && this.program.status.code && this.program.status.code === 'draft') {
+      return;
+    }
+
+
     if ((new Date(this.program.publishedDate)).getFullYear() < new Date().getFullYear()) {
-      this.alert.push({
+      this.alerts.push({
         'labelname': 'not-updated-since', 'config': {
           'type': 'warning', 'title': '', 'description': 'Note: \n\
 This Assistance Listing was not updated by the issuing agency in ' + (new Date()).getFullYear() + '. \n\
@@ -355,11 +392,13 @@ Please contact the issuing agency listed under "Contact Information" for more in
   }
 
   public canEdit() {
-    if (this.program.status && this.program.status.code != 'published' && this.program._links && this.program._links['program:update']) {
+    // show edit button if user has update permission, except on published FALs, or if user has revise permission
+    if (this.program._links && this.program._links['program:update'] && this.program.status && this.program.status.code !== 'published') {
       return true;
     } else if (this.program._links && this.program._links['program:revise']) {
       return true;
     }
+
     return false;
   }
 
@@ -368,29 +407,40 @@ Please contact the issuing agency listed under "Contact Information" for more in
   }
 
   public onEditClick(page: string[]) {
-    let currentUrl = location.pathname;
-    currentUrl = currentUrl.replace("programs", "programsForm").replace("view", "edit").concat(page.toString());
-    if (this.program.status && this.program.status.code !== 'published') {
-      this.router.navigateByUrl(currentUrl);
-    } else {
-      this.editModal.openModal();
-      this.gotoPage = page.toString();
+    if (this.program._links && this.program._links['program:update'] && this.program._links['program:update'].href) {
+      let id = this.program._links['program:update'].href.match(/\/programs\/(.*)\/edit/)[1]; // extract id from hateoas edit link
+      let url = '/programsForm/' + id + '/edit'.concat(page.toString());
+      this.router.navigateByUrl(url);
+    } else if (this.program._links && this.program._links['program:revise']) {
+      this.editModal.openModal(page.toString());
     }
   }
 
+  public onEditModalSubmit(page: any[]) {
+    this.editModal.closeModal();
+    this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
+      let url = '/programsForm/' + JSON.parse(res._body).id + '/edit'.concat(page[0]);
+      this.router.navigateByUrl(url);
+    });
+  }
+
   public onDeleteClick() {
+    this.deleteModal.openModal();
+    let title = this.program.data.title;
+    if(title !== undefined) {
+      this.modalConfig.description = 'Please confirm that you want to delete "'+ title +'".';
+    } else {
+      this.modalConfig.description = 'Please confirm that you want to delete draft AL.';
+    }
+  }
+
+  public onDeleteModalSubmit() {
+    this.deleteModal.closeModal();
     this.programService.deleteProgram(this.programID, this.cookieValue).subscribe(res => {
       this.router.navigate(['/fal/workspace']);
     }, err => {
       // todo: show error message when failing to delete
       console.log('Error deleting program ', err);
-    });
-  }
-  public onEditModalSubmit() {
-    this.editModal.closeModal();
-    this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
-      let url = '/programsForm/' + JSON.parse(res._body).id + '/edit'.concat(this.gotoPage);
-      this.router.navigateByUrl(url);
     });
   }
 

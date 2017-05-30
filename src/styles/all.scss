@@ -117,6 +117,10 @@ $large: $current-large;
 @import 'sam-ui/collections/table';
 @import 'sam-ui/collections/menu';
 
+/* Views */
+@import 'sam-ui/views/statistic';
+@import 'sam-ui/views/item';
+
 /* Vendor Extentions */
 @import 'sam-ui/vendor/font-awesome';
 
@@ -218,7 +222,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/role-management/role-managment';
 @import 'components/fal-table';
 @import 'components/address-form';
-@import 'components/workspace/workspace';
+@import 'components/workspace/_workspace';
 
 @import 'sam-ui/pages/awards';
 @import 'sam-ui/pages/entity-object-view';

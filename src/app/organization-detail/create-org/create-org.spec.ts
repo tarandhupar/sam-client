@@ -24,33 +24,33 @@ class FHServiceStub {
     return  Observable.of(
       {_embedded:
         [{org:
-        {
-          categoryDesc: "SUB COMMAND",
-          categoryId: "CAT-6",
-          code: "RMAC",
-          createdBy: "DODMIGRATOR",
-          createdDate: 1053388800000,
-          description: "RMAC",
-          fpdsOrgId: "RMAC",
-          fullParentPath: "100000000.100000012.100000117.100000120",
-          fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
-          isSourceFpds: true,
-          l1Name: "DEPT OF DEFENSE",
-          l1OrgKey: 100000000,
-          l2Name: "DEPT OF THE ARMY",
-          l3Name: "AMC",
-          l4Name: "RMAC",
-          lastModifiedBy: "FPDSADMIN",
-          lastModifiedDate: 1161993600000,
-          level: 4,
-          name: "RMAC",
-          orgCode: "ORG-2899",
-          orgKey: 100000120,
-          parentOrg: "AMC",
-          parentOrgKey: 100000117,
-          type: "SUB COMMAND",
-          orgAddresses:[]
-        }
+          {
+            categoryDesc: "SUB COMMAND",
+            categoryId: "CAT-6",
+            code: "RMAC",
+            createdBy: "DODMIGRATOR",
+            createdDate: 1053388800000,
+            description: "RMAC",
+            fpdsOrgId: "RMAC",
+            fullParentPath: "100000000.100000012.100000117.100000120",
+            fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
+            isSourceFpds: true,
+            l1Name: "DEPT OF DEFENSE",
+            l1OrgKey: 100000000,
+            l2Name: "DEPT OF THE ARMY",
+            l3Name: "AMC",
+            l4Name: "RMAC",
+            lastModifiedBy: "FPDSADMIN",
+            lastModifiedDate: 1161993600000,
+            level: 4,
+            name: "RMAC",
+            orgCode: "ORG-2899",
+            orgKey: 100000120,
+            parentOrg: "AMC",
+            parentOrgKey: 100000117,
+            type: "SUB COMMAND",
+            orgAddresses:[]
+          }
         }]
       }
     );

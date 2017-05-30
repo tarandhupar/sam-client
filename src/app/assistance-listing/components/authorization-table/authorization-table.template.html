@@ -19,20 +19,21 @@
   <ng-container *ngFor="let auth of displayAuthInfo; let i=index">
     <tr>
       <td>
+        <span class='usa-input-error-message' *ngIf="review && auth.errorExists"><sup>*</sup>This field cannot be empty</span>
         {{auth.label}}
       </td>
       <td>
         <ng-container *ngIf="!hideAddButton">
           <a class="fal-table-edit" (click)="editAuth(i)" >Edit</a>
           <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editAuth(i)"></i>
-          <a class="fal-table-delete" (click)="removeAuth(i)">Remove</a>
+          <a class="fal-table-delete" (click)="removeAuth(i)">Delete</a>
           <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeAuth(i)"></i>
         </ng-container>
 
         <ng-container *ngIf="hideAddButton">
           <span class="fal-table-edit disabled">Edit</span>
           <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
-          <span class="fal-table-delete disabled">Remove</span>
+          <span class="fal-table-delete disabled">Delete</span>
           <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
         </ng-container>
       </td>
@@ -51,20 +52,21 @@
     <ng-container *ngFor="let amend of auth.children; let j=index">
       <tr>
         <td class="amend-table-col">
+          <span class='usa-input-error-message' *ngIf="review && amend.errorExists"><sup>*</sup>This field cannot be empty</span>
           {{amend.label}}
         </td>
         <td>
           <ng-container *ngIf="!hideAddButton">
             <a class="fal-table-edit" (click)="editAuth(j, i)" >Edit</a>
             <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editAuth(j, i)"></i>
-            <a class="fal-table-delete" (click)="removeAuth(j, i)">Remove</a>
+            <a class="fal-table-delete" (click)="removeAuth(j, i)">Delete</a>
             <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeAuth(j, i)"></i>
           </ng-container>
 
           <ng-container *ngIf="hideAddButton">
             <span class="fal-table-edit disabled">Edit</span>
             <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
-            <span class="fal-table-delete disabled">Remove</span>
+            <span class="fal-table-delete disabled">Delete</span>
             <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
           </ng-container>
 

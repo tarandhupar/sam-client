@@ -1,3 +1,354 @@
+<div *ngIf="exclusion" class="sam-ui container">
+	
+	<!-- Info Alert -->
+	<div class="usa-alert usa-alert-info">
+	  <div class="usa-alert-body">
+	    <p class="usa-alert-text">
+				There may be instances when an individual or firm has the same or similar 
+				name as your search criteria, but is actually a different party. 
+				Therefore, it is important that you verify a potential match with the 
+				excluding agency identified in the exclusion's details. To confirm or 
+				obtain additional information, contact the federal agency that took the 
+				action against the listed party. Agency points of contact, including name 
+				and telephone number, may be found by navigating to the Agency Exclusion 
+				POCs page within SAM Help.
+			</p>
+	  </div>
+	</div>
+	
+	<!-- Page title -->
+	<h1 class="sam-ui header">Entity Exclusions</h1>
+	
+	<!-- Individual Name -->
+	<h2 *ngIf="exclusion.classificationType=='Individual'"
+			class="sam-ui lighter header">
+		{{exclusion.identityInfo.prefix}} 
+		{{exclusion.identityInfo.firstName}} 
+		{{exclusion.identityInfo.middleName}} 
+		{{exclusion.identityInfo.lastName}}
+	</h2>
+	
+	<!-- Company Name -->
+	<h2 *ngIf="exclusion.classificationType!='Individual'"
+			class="sam-ui lighter header">
+		{{exclusion.identityInfo.companyName}}
+	</h2>
+	
+	<!-- Intro Content -->
+	<div class="sam-ui padded raised segment">
+		<div class="sam-ui top right attached mini label">
+			Entity Exclusion
+		</div>
+		<div class="sam-ui two column attached grid">
+			<div class="column">
+				<div class="sam-ui relaxed divided list">
+					
+					<ng-container *ngIf="exclusion.classificationType!='Individual'
+											 && exclusion.classificationType!='Vessel'">
+						<div class="item">
+							<div class="content">
+								<div class="header">
+									DUNS
+								</div>
+								<div class="description">
+									{{exclusion.identityInfo.duns}}
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="content">
+								<div class="header">
+									+4
+								</div>
+								<div class="description">
+									{{exclusion.identityInfo.duns4}}
+								</div>
+							</div>
+						</div>
+						<div class="item">
+							<div class="content">
+								<div class="header">
+									CAGE Code
+								</div>
+								<div class="description">
+									{{exclusion.identityInfo.cageCode}}
+								</div>
+							</div>
+						</div>
+					</ng-container>
+					
+					<div class="item">
+						<div class="content">
+							<div class="header">
+								Classification Type
+							</div>
+							<div class="description">
+								<exclusionIcon [classificationType]="exclusion.classificationType">
+								</exclusionIcon>
+							</div>
+						</div>
+					</div>
+					
+					<div class="item">
+						<div class="content">
+							<div class="header">
+								Excluding Agency
+							</div>
+							<div class="description">
+								{{exclusion.excludingAgency}}
+							</div>
+						</div>
+					</div>
+					
+					<div class="item">
+						<exclusionAddress [address]="exclusion.identityInfo.address">
+						</exclusionAddress>
+					</div>
+					
+				</div>
+			</div>
+			<div class="column">
+				<div class="sam-ui relaxed divided list">
+					<div class="item">
+						<div class="content">
+							<div class="header">
+								Exclusion Status
+							</div>
+							<div class="description">
+								{{exclusion.exclusionStatus}}
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="content">
+							<div class="header">
+								Activation Date
+							</div>
+							<div class="description">
+								{{exclusion.activateDate}}
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="content">
+							<div class="header">
+								Termination Date
+							</div>
+							<div class="description">
+								{{exclusion.terminationDate}}
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<div class="content">
+							<div class="header">
+								Exclusion Type
+							</div>
+							<div class="description">
+								{{exclusion.exclusionType}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		
+	<div class="sam-ui hidden section divider"></div>	
+	
+	<!-- Current Record Details -->
+	<ng-container *ngIf="exclusion.classificationType=='Individual'">
+		<h2 class="sam-ui header">Current Record Details</h2>
+		<h3 class="sam-ui header">Primary Address</h3>
+		
+		<div class="sam-ui dark white segment">
+
+			<div class="sam-ui medium header">
+				<exclusionAddress [address]="exclusion.identityInfo.address">
+				</exclusionAddress>
+			</div>
+
+		</div>
+	</ng-container>
+	
+	<!-- Vessel Details -->
+	<ng-container *ngIf="exclusion.classificationType=='Vessel'">
+		<div class="sam-ui hidden divider"></div>
+		<h3 class="sam-ui dividing header">
+			Vessel Details
+		</h3>
+		<div class="sam-ui two column grid">
+			<div class="column">
+				<div class="sam-ui medium header">
+					Call Sign
+					<div class="sub header">
+						{{exclusion.vesselDetails.callSign}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Type
+					<div class="sub header">
+						{{exclusion.vesselDetails.type}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Tonnage
+					<div class="sub header">
+						{{exclusion.vesselDetails.tonnage}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					GRT
+					<div class="sub header">
+						{{exclusion.vesselDetails.grt}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Flag
+					<div class="sub header">
+						{{exclusion.vesselDetails.flag}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Owner
+					<div class="sub header">
+						{{exclusion.vesselDetails.owner}}
+					</div>
+				</div>
+			</div>
+			<div class="column">
+				<div class="sam-ui medium header">
+					Secondary Address
+					<div class="sub header">
+						<ng-container [ngSwitch]="exclusion.vesselDetails.secondaryAddress">
+							<div id="exclusion-secondary-address" *ngIf="exclusion.vesselDetails.secondaryAddress">
+								<div id="exclusion-secondary-address" *ngSwitchCase="exclusion.vesselDetails.secondaryAddress">
+									<div *ngFor="let address of exclusion.vesselDetails.secondaryAddress">
+									<exclusionAddress [address]="address"></exclusionAddress>
+									</div>
+								</div>
+							</div>
+							<div id="exclusion-secondary-address" *ngSwitchDefault>
+								none provided
+							</div>
+						</ng-container>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</ng-container>
+	
+	<div class="sam-ui hidden divider"></div>
+	
+	<!-- Exclusion Details -->
+	<h3 class="sam-ui dividing header">
+		Exclusion Details
+	</h3>
+	<div *ngIf="exclusion.classificationType=='Special Entity Designation'" 
+				class="sam-ui medium header">
+		D&amp;B Investigation Status
+		<div class="sub header">
+			{{exclusion.dnbInvestigationStatus}}
+		</div>
+	</div>
+	<div *ngIf="exclusion.classificationType=='Firm'" 
+				class="sam-ui medium header">
+		NPI
+		<div class="sub header">
+			{{exclusion.identityInfo.npi}}
+		</div>
+	</div>
+	<div class="sam-ui medium header">
+		Exclusion Program
+		<div class="sub header">
+			{{exclusion.exclusionProgram}}
+		</div>
+	</div>
+	
+	<!-- Nature and Effect -->
+	<exclusionNatureEffect [classificationType]="exclusion.classificationType">
+	</exclusionNatureEffect>
+	
+	<!-- Additional Comments -->
+	<div class="sam-ui medium header">
+		Additional Comments
+		<div class="sub header" [ngSwitch]="exclusion.additionalComments">
+			<ng-container *ngIf="exclusion.additionalComments">
+				<p id="exclusion-comments" *ngSwitchCase="exclusion.additionalComments">
+					{{exclusion.additionalComments}}
+				</p>
+			</ng-container>
+			<p id="exclusion-comments" *ngSwitchDefault>
+				None provided
+			</p>
+		</div>
+	</div>
+	
+	<div class="sam-ui equal width grid">
+		<div class="column">
+			<!-- CT Code -->
+			<div class="sam-ui medium header">
+				CT Code {{exclusion.ctCode}}
+				<div class="sub header">
+					Reference CT Codes (from legacy system) at the <a href="">CT Code Help Page.</a>
+				</div>
+			</div>
+		</div>
+		<div class="column">
+			<!-- Record -->
+			<div class="sam-ui medium header">
+				Record
+				<div class="sub header">
+					<strong>Create Date: </strong>{{exclusion.recordCreateDate}}<br />
+					<strong>Update Date: </strong>{{exclusion.recordUpdateDate}}
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="sam-ui hidden divider"></div>
+	
+	<!-- Cross References -->
+	<h3 class="sam-ui dividing header">Cross References</h3>
+	<ng-container [ngSwitch]="exclusion.crossReferences">
+		<div id="exclusion-cross-reference" *ngIf="exclusion.crossReferences.length">
+			<div id="exclusion-cross-reference" *ngSwitchCase="exclusion.crossReferences">
+				<div *ngFor="let crossReference of exclusion.crossReferences">
+					<exclusionCrossReference [crossReference]="crossReference"></exclusionCrossReference>
+				</div>
+			</div>
+		</div>
+		<div id="exclusion-cross-reference" *ngSwitchDefault>
+			No Cross References
+		</div>
+	</ng-container>
+	
+	<!-- More Locations -->
+	<div class="sam-ui medium header">
+		More Locations
+		<div class="sub header">
+			<ng-container [ngSwitch]="exclusion.moreLocations">
+				<div id="exclusion-more-locations" *ngIf="exclusion.moreLocations.length">
+					<div id="exclusion-more-locations" *ngSwitchCase="exclusion.moreLocations">
+						<div *ngFor="let location of exclusion.moreLocations">
+							<exclusionCrossReference [crossReference]="location">
+							</exclusionCrossReference>
+						</div>
+					</div>
+				</div>
+				<div id="exclusion-more-locations" *ngSwitchDefault>
+					No Locations
+				</div>
+			</ng-container>
+		</div>
+	</div>	
+		
+</div>
+
+<div class="sam-ui hidden section divider"></div>
+
+
+<!-- 
 <div class="exclusion">
 <br />
 <div class="usa-grid message-background-color">
@@ -15,6 +366,7 @@
 	<h1>Exclusion</h1>
 </div>
 <div *ngIf="exclusion">
+	
 <div class="usa-grid-full">
 	<div class="padding-left-180px" *ngIf="exclusion.classificationType=='Individual'">
 		<h2>{{exclusion.identityInfo.prefix}} {{exclusion.identityInfo.firstName}} {{exclusion.identityInfo.middleName}} {{exclusion.identityInfo.lastName}}</h2>
@@ -23,6 +375,7 @@
 		<h2>{{exclusion.identityInfo.companyName}}</h2>
 	</div>
 </div>
+
 <div class="usa-grid-full bottom-border">
 	<table class="usa-table-borderless">
 	<tr>
@@ -195,4 +548,4 @@
 	</div>
 </div>
 </div>
-</div>
+</div> -->

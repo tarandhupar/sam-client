@@ -40,7 +40,7 @@ export class SamTypeAheadComponent extends SamAutocompleteComponent {
 
   checkSelectedList(obj) {
     let filterArr = this.selectedList.filter((newobj)=>{
-      if(newobj[this.config.keyValueConfig.keyProperty]==obj[this.config.keyValueConfig.keyProperty]){
+      if(newobj[this.config.keyValueConfig.keyProperty]==obj[this.config.keyValueConfig.keyProperty] && newobj['type']==obj['type']){
         return true;
       }
         return false;

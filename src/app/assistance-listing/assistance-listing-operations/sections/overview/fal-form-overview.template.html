@@ -1,5 +1,5 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Overview - {{ viewModel.title }}</div>
-<form [formGroup]="falOverviewForm">
+<form *ngIf="falOverviewForm" [formGroup]="falOverviewForm">
 
   <sam-text-area
     [hint]="'Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.'"
@@ -12,6 +12,7 @@
 
   <falFYTable [config]="fundedProjectsConfig"
               [formControlName]="'fundedProjects'"
+              [control]="falOverviewForm.get('fundedProjects')"
   ></falFYTable>
 
   <sam-text-area
@@ -25,16 +26,19 @@
   <sam-list-display [newValue]="fcNGModel" formControlName="fcListDisplay"
                     (ngModelChange)="fcTypeChange($event)" (modelChange)="fclistChange()"
                     [config]="fcAutocompleteConfig">
-    <sam-label-wrapper #fcTypeWrapper [label]="'Functional Codes'" [required]="true"
-                  [hint]="'Select one or more Functional Codes to help public users search for this listing.'">
+
       <sam-autocomplete
         [options]="fcTypeOptions"
-        [name]="functional-codes-control"
-        formControlName="functionalCodes"
+        [name]="'functional-codes-control'"
+        formControlName="functionalTypes"
         [(ngModel)]="fcNGModel"
         [config]="fcAutocompleteConfig"
-        [required]="true" class="search-bar sam-autocomplete-width"></sam-autocomplete>
-    </sam-label-wrapper>
+        [required]="true"
+        [labelText]="'Functional Codes'"
+        [hint]="'Select one or more Functional Codes to help public users search for this listing.'"
+        [control]="falOverviewForm.controls['fcListDisplay']"
+        ></sam-autocomplete>
+
   </sam-list-display>
 
   <sam-list-display [newValue]="stNGModel"
@@ -42,16 +46,18 @@
                     (ngModelChange)="stTypeChange($event)"
                     (modelChange)="stlistChange()"
                     [config]="stAutocompleteConfig">
-    <sam-label-wrapper [label]="'Subject Terms'"
-                  [hint]="'Select one or more Subject Terms to help public users search for this listing.'"
-                  [required]="true">
+
       <sam-autocomplete autofill-falProgram
-                        formControlName="subjectTerms"
+                        formControlName="subjectTermsTypes"
                         [(ngModel)]="stNGModel"
-                        name="subjectTermsSearch" [config]="stAutocompleteConfig"
+                        name="subjectTermsSearch"
+                        [config]="stAutocompleteConfig"
                         [required]="true"
-                        class="search-bar sam-autocomplete-width"></sam-autocomplete>
-    </sam-label-wrapper>
+                        [labelText]="'Subject Terms'"
+                        [hint]="'Select one or more Subject Terms to help public users search for this listing.'"
+                        [control]="falOverviewForm.controls['stListDisplay']"
+                        ></sam-autocomplete>
+
   </sam-list-display>
 
 </form>

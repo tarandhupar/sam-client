@@ -27,7 +27,7 @@ export class App{
   sessionModalConfig = {
     type:'warning',
     title:'User Session Timeout',
-    description:'Your log in session will be expired shortly. Do you want to proceed ahead?'
+    description:'Your login session will expire in 2 mins due to inactivity. Do you want to stay signed in?'
   };
 
   keyword: string = "";
@@ -55,12 +55,14 @@ export class App{
       obj => {
         this.setQS(obj);
       });
-    this.activatedRoute.queryParams.subscribe(
-      data => {
-        this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
-        this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
-        this.isActive = typeof data['isActive'] === "string" ? data['isActive'] : this.isActive;
-      });
+    if(window.location.pathname.localeCompare("/fal/workspace") !== 0){
+      this.activatedRoute.queryParams.subscribe(
+        data => {
+          this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
+          this.index = typeof data['index'] === "string" ? decodeURI(data['index']) : this.index;
+          this.isActive = typeof data['isActive'] === "string" ? data['isActive'] : this.isActive;
+        });
+    }
     this._router.events.subscribe(
       val => {
         this.showOverlay = false;
@@ -185,10 +187,11 @@ export class App{
     this.userSessionService.idleDetectionStop();
     if(!this.continueSession){
       //User session service log out call and redirect to home page
-      this.userSessionService.logoutUserSession();
-      this._router.navigateByUrl('/');
+      // this.userSessionService.logoutUserSession();
+      this._router.navigateByUrl('/signout');
 
       if(this.sessionModal.show) this.sessionModal.closeModal();
+
     }else{
       this.zone.run(()=>{this.userSessionService.idleDetectionStart(this.sessionModalCB)});
 

@@ -217,7 +217,7 @@ export class ProgramDisplayPageDemoPage implements OnInit, OnDestroy {
 
     // construct a stream that contains all related programs from related program ids
     let relatedProgramsStream = relatedProgramsIdStream.flatMap((relatedId: any) => {
-      return this.programService.getLatestProgramById(relatedId, this.cookieValue);
+      return this.programService.getProgramById(relatedId, this.cookieValue);
     });
 
     this.relatedProgramsSub = relatedProgramsStream.subscribe((relatedProgram: any) => {

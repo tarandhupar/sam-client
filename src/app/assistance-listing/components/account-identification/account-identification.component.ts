@@ -1,9 +1,10 @@
 import { Component, Input, ViewChild, forwardRef } from "@angular/core";
 import {
   ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, FormGroup, Validators,
-  AbstractControl
+  AbstractControl, NG_VALIDATORS, Validator
 } from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
+import { ValidationErrors } from "../../../app-utils/types";
 
 
 /** Interfaces **/
@@ -65,13 +66,19 @@ export interface AccountIdentificationConfig {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FALAccountIdentificationComponent),
       multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => FALAccountIdentificationComponent),
+      multi: true
     }
   ]
 })
-export class FALAccountIdentificationComponent implements ControlValueAccessor {
+export class FALAccountIdentificationComponent implements ControlValueAccessor, Validator {
   // all parameters are passed in a single config object for convenience
   // see AccountIdentificationConfig interface for supported parameters
   @Input() config: AccountIdentificationConfig;
+  @Input() control: FormControl;
 
   // the model serves as the single source of truth for this component's data
   // whenever data is input or actions are taken that modify the form, the model should also be updated
@@ -105,7 +112,8 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
 
 
   /** Initial setup **/
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
     this.model = FALAccountIdentificationComponent.constructModelFrom(null); // set up initial empty model
@@ -114,7 +122,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
   }
 
   private validateInputs() {
-    if(!(this.config && this.config.name)) {
+    if (!(this.config && this.config.name)) {
       throw new Error("<falAccountIdentificationInput> requires a [name] parameter for 508 compliance");
     }
   }
@@ -124,7 +132,13 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     this.codeForm = new FormGroup({});
     this.accountForm.addControl('codeParts', this.codeForm);
 
-    for(let i = 0; i < this.codePartLengths.length; i++) {
+    if (this.control) {
+      this.control.statusChanges.subscribe(status => {
+        this.wrapper.formatErrors(this.control);
+      });
+    }
+
+    for (let i = 0; i < this.codePartLengths.length; i++) {
       // code parts are required and should only take numbers
       let codePartControl = new FormControl(null, [Validators.required, Validators.pattern('[0-9]*')]);
       codePartControl.valueChanges.subscribe(value => {
@@ -148,27 +162,29 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
 
   public addAccount() {
     // When adding an account, combine each code part together by joining with dashes
-    let combinedCode = this.codeForm.get('codePart0').value;
-    for(let i = 1; i < this.codePartLengths.length; i++) {
-      combinedCode = combinedCode + '-' + this.codeForm.get('codePart' + i).value;
+    let combinedCode = '';
+    for (let i = 0; i < this.codePartLengths.length; i++) {
+      if (this.codeForm.get('codePart' + i).value) {
+        combinedCode = combinedCode + '-' + this.codeForm.get('codePart' + i).value;
+      }
     }
 
     let account: AccountIdentification = {
-      code: combinedCode,
+      code: combinedCode.replace(/^-/, '') || null,
       description: this.descriptionControl.value
     };
 
     this.model.accounts[this.currentIndex] = account;
     this.resetForm(); // after adding, close the form
-  };
+  }
 
   public removeAccount(index: number) {
     this.model.accounts.splice(index, 1); // remove the account
 
-    if(index === this.currentIndex) { // if the account currently being edited was removed
+    if (index === this.currentIndex) { // if the account currently being edited was removed
       // then we need to clear out the form and stop editing
       this.resetForm();
-    } else if(index < this.currentIndex) { // else if an earlier account was removed
+    } else if (index < this.currentIndex) { // else if an earlier account was removed
       // then the index of the currently edited account has shifted down by 1
       this.currentIndex--;
     }
@@ -179,10 +195,12 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
   public editAccount(index: number) {
     // When editing an account, split its code up into parts
     let code = this.model.accounts[index].code;
-    let splits = code.split('-');
 
-    for(let i = 0; i < this.codePartLengths.length; i++) {
-      this.codeForm.get('codePart' + i).setValue(splits[i]);
+    if (code) {
+      let splits = code.split('-');
+      for (let i = 0; i < this.codePartLengths.length; i++) {
+        this.codeForm.get('codePart' + i).setValue(splits[i]);
+      }
     }
 
     let description = this.model.accounts[index].description;
@@ -206,14 +224,14 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     // When typing into code part inputs, if the max length is reached, focus on the next input
     let node = target.parentNode.parentNode.parentNode;
 
-    while(node != null) {
-      if(currentLength >= maxLength) {
+    while (node != null) {
+      if (currentLength >= maxLength) {
         node = node.nextElementSibling;
-      } else if(currentLength === 0) {
+      } else if (currentLength === 0) {
         node = node.previousElementSibling;
       }
 
-      if (node && node.tagName.toLowerCase() === "samtext") {
+      if (node && node.tagName.toLowerCase() === "sam-text") {
         node.getElementsByTagName('input')[0].focus();
         break;
       }
@@ -222,7 +240,21 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
 
   // On click of delete button in table
   public onDeleteClick(index: number) {
-    if(this.deleteModal) { // if delete modal exists, show it
+    if (this.deleteModal) { // if delete modal exists, show it
+      let code = '';
+      let description = '';
+      let msg ='Please confirm that you want to delete "';
+      code = this.model.accounts[index].code;
+      description = this.model.accounts[index].description ===null || this.model.accounts[index].description === "" ? null : this.model.accounts[index].description;
+      if (code !== null && description !== null) {
+        this.config.deleteModal.description = msg + code +'. ' +  description + '".';
+      } else if(description !== null && code === null) {
+        this.config.deleteModal.description = msg + description +'".';
+      }  else if(description === null && code !== null) {
+        this.config.deleteModal.description = msg + code + '".';
+      } else {
+        this.config.deleteModal.description = 'Please confirm that you want to delete account identification';
+      }
       this.deleteModal.openModal(index);
     } else { // else just remove directly
       this.removeAccount(index);
@@ -254,7 +286,7 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     }
 
     // Magic happens here
-    if(errored.pristine && !this.codeForm.pristine) {
+    if (errored.pristine && !this.codeForm.pristine) {
       errored.markAsDirty({onlySelf: true});
       this.codeWrapper.formatErrors(errored);
       errored.markAsPristine({onlySelf: true});
@@ -278,11 +310,11 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
     model.description = model.description || null;
     model.accounts = model.accounts || [];
 
-    for(let part of model.codeParts) {
+    for (let part of model.codeParts) {
       part = part || null;
     }
 
-    for(let account of model.accounts) {
+    for (let account of model.accounts) {
       account.code = account.code || null;
       account.description = account.description || null;
     }
@@ -303,20 +335,41 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor {
   }
 
 
+  /** Validation **/
+
+  public validate(c: AbstractControl): ValidationErrors {
+    let error: ValidationErrors = {
+      atLeastOneAccount: {
+        message: 'At least one account identification code is required.'
+      }
+    };
+
+    if (this.config.required && this.config.required === true) {
+      if (this.model.accounts.length === 0) {
+        return error;
+      }
+    }
+
+    return null;
+  }
+
+
   /** Implement ControlValueAccessor interface **/
 
-  private onChangeCallback: any = (_: any) => {};
-  private onTouchedCallback: any = () => {};
+  private onChangeCallback: any = (_: any) => {
+  };
+  private onTouchedCallback: any = () => {
+  };
 
-  public registerOnChange(fn: any) : void {
+  public registerOnChange(fn: any): void {
     this.onChangeCallback = fn;
   }
 
-  public registerOnTouched(fn: any) : void {
+  public registerOnTouched(fn: any): void {
     this.onTouchedCallback = fn;
   }
 
-  public writeValue(obj: any) : void {
+  public writeValue(obj: any): void {
     this.model = FALAccountIdentificationComponent.constructModelFrom(obj);
     this.currentIndex = this.model.accounts.length;
   }

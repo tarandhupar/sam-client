@@ -10,7 +10,7 @@ export class SamNaicsPscFilter {
   @ViewChild('listDisplay') listDisplay;
 
   @Input()
-  selectModel1: any = '';
+  selectModel1: string = '';
 
   @Input()
   selectModel2: string = '';
@@ -33,23 +33,28 @@ export class SamNaicsPscFilter {
     if(this.selectModel1 !== '') {
       let selectArray = this.selectModel1.split(",");
       this.populateSelectedList(selectArray, this.options1);
-    } else if(this.selectModel2 !== '') {
+    }
+    if(this.selectModel2 !== '') {
       let selectArray = this.selectModel2.split(",");
       this.populateSelectedList(selectArray, this.options2);
-    } else {
+    }
+    if(this.selectModel1 === '' && this.selectModel2  === '') {
       this.listDisplay.selectedItems = [];
     }
   }
 
-  emitSelected(obj) {
-    if(obj.type === 'naics') {
-      obj.label += " (NAICS)";
-    } else if(obj.type === 'psc') {
-      obj.label += " (PSC)";
+  setSelected(obj, shouldEmit: boolean) {
+    let o = Object.assign({}, obj);
+    if(o.type === 'naics') {
+      o.label += " (NAICS)";
+    } else if(o.type === 'psc') {
+      o.label += " (PSC)";
     }
-    this.listDisplay.selectedItems.push(obj);
+    this.listDisplay.selectedItems.push(o);
     this.listDisplay.selectedItems = new SortArrayOfObjects().transform(this.listDisplay.selectedItems, 'label');
-    this.emitSelectedList();
+    if(shouldEmit) {
+      this.emitSelectedList();
+    }
   }
 
   emitSelectedList() {
@@ -81,7 +86,7 @@ export class SamNaicsPscFilter {
             return false;
           });
           if(filterArr.length==0){
-            this.emitSelected(optionsObj.options[i]);
+            this.setSelected(optionsObj.options[i], false);
           }
         }
       }

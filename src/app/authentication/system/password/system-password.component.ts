@@ -1,6 +1,7 @@
 import { Component, DoCheck, Input, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+
 import { SamPasswordComponent } from '../../shared';
 
 import { IAMService } from 'api-kit';
@@ -16,7 +17,7 @@ import { System } from '../../system.interface';
 })
 export class SystemPasswordComponent {
   @ViewChild('formControl') formControl;
-  @ViewChild('password') $password: SamPasswordComponent;
+  @ViewChild('password') $password;
 
   private store = {
     title: 'Reset Password'
@@ -36,19 +37,23 @@ export class SystemPasswordComponent {
   private system: System;
   public passwordForm: FormGroup;
 
-  constructor(private router: Router, private builder: FormBuilder, private api: IAMService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private builder: FormBuilder, private api: IAMService) {}
 
   ngOnInit() {
+    this.store['observer'] = this.route.params.subscribe(params => {
+       this.system._id = params['id'];
+    });
+
     // Verify Session
     this.api.iam.checkSession((user) => {
       if(user.systemAccount) {
         // Get System Account details
-        this.api.iam.system.account.get(accounts => {
+        this.getSystemAccount(account => {
           // Redirect the user to System Account Profile if no System Account is associated with user
-          if(!accounts.length) {
+          if(!account) {
             this.router.navigate(['profile']);
           } else {
-            this.system = accounts[0];
+            this.system = account;
             this.initForm();
           }
         }, (error) => {
@@ -65,6 +70,24 @@ export class SystemPasswordComponent {
         this.router.navigateByUrl('/signin');
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.store['observer'].unsubscribe();
+  }
+
+  getSystemAccount($success, $error) {
+    if(this.system._id) {
+      this.api.iam.system.account.get(this.system._id, $success, $error);
+    } else {
+      this.api.iam.system.account.get((accounts) => {
+        if(accounts.length) {
+          $success(accounts[0]);
+        } else {
+          $error();
+        }
+      }, $error);
+    }
   }
 
   initForm() {

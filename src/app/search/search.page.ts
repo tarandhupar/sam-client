@@ -273,7 +273,7 @@ export class SearchPage implements OnInit{
   benElModel: any = '';
   benElType = {
     "name": "Beneficiary Eligibility",
-    "placeholder": "Search Beneficiary Eligibility",
+    "placeholder": "Search Beneficiary",
     "selectedLabel": "Codes Selected",
     "options": [],
     "config": {
@@ -288,7 +288,7 @@ export class SearchPage implements OnInit{
   appElModel: any = '';
   appElType = {
     "name": "Applicant Eligibility",
-    "placeholder": "Search Applicant Eligibility",
+    "placeholder": "Search Applicant",
     "options": [],
     "config": {
       keyValueConfig: {
@@ -770,20 +770,20 @@ export class SearchPage implements OnInit{
           var reformattedArray = data['applicant_types'].map(function(item){
             let newObj = {label:'', value:'', type:'applicant'};
 
-            newObj.label = item.element_id + ' - ' + item.value;
-            newObj.value = item.element_id;
+            newObj.label = item.displayValue;
+            newObj.value = item.code;
             return newObj;
           });
 
           this.appElType.options = reformattedArray;
-          //this.appElType = Object.assign({}, this.appElType);
+          this.appElType = Object.assign({}, this.appElType);
         }
 
         if(id === 'beneficiary_types'){
           var reformattedArray = data['beneficiary_types'].map(function(item){
             let newObj = {label:'', value:'', type:'beneficiary'};
 
-            newObj.label = item.code + ' - ' + item.value;
+            newObj.label = item.displayValue;
             newObj.value = item.code;
             return newObj;
           });

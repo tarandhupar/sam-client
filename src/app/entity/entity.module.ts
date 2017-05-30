@@ -6,13 +6,15 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { CommonModule } from '@angular/common';
 import { EntityObjectPOC } from './entity-object-poc.component.ts';
 import { EntityObjectAddress } from './entity-object-address.component.ts';
+import { AppComponentsModule } from "../app-components/app-components.module";
 
 @NgModule({
   imports: [
     BrowserModule,
     routing,
     SamUIKitModule,
-    CommonModule
+    CommonModule,
+	AppComponentsModule
   ],
   exports: [
     EntityPage,

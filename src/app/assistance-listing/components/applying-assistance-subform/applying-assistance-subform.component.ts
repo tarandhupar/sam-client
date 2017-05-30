@@ -71,10 +71,6 @@ export class FALAssistSubFormComponent {
   onConfirmClick(i){
     this.assistInfo = this.falAssistSubForm.value.deadlineList;
     this.hideAddButton = false;
-
-    /*let m = moment(this.assistInfo[i].start);
-    console.log("valid", m.isValid());*/
-
     this.assistActionHandler.emit({
       type:'confirm',
       hideAddButton: this.hideAddButton,

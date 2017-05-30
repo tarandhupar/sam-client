@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { Router, NavigationEnd, NavigationCancel } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 import { Location } from '@angular/common';
+import { SamFeedbackComponent } from "../app-components/feedback-form/feedback-form.component";
+import { FeedbackFormService } from "../app-components/feedback-form/feedback-form.service";
 
 @Component({
   providers: [ ],
@@ -15,11 +17,11 @@ export class HelpPage {
   private currentSubSection: string = "";
   private widthLimit: number = 1200;
 
+  private feedback: SamFeedbackComponent;
 
-  @ViewChild("feedback") feedback;
-
-
-  constructor(private router: Router, private location:Location) {}
+  constructor(private router: Router, private location:Location, feedbackFormService: FeedbackFormService) {
+    this.feedback = feedbackFormService.componentInstance;
+  }
 
   ngOnInit(){
 

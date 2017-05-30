@@ -12,7 +12,7 @@ import { DataEntryComponent } from "./data-entry.component";
 import { WorkspaceModule } from "../workspace.module";
 
 
-fdescribe('Workspace data entry component', () => {
+describe('Workspace data entry component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:DataEntryComponent;
   let fixture:any;
@@ -28,8 +28,16 @@ fdescribe('Workspace data entry component', () => {
   });
 
   it('should compile without error', () => {
+    component.toggleControl = {entity:true,exclusions:true,award:true,opportunities:true,assistanceListings:true,subAward:true};
     fixture.detectChanges();
     expect(true).toBe(true);
+  });
+
+  it('should toggle correct help detail', () => {
+    component.toggleControl = {entity:true,exclusions:true,award:true,opportunities:true,assistanceListings:true,subAward:true};
+    fixture.detectChanges();
+    component.toggleHelpDetail('entity',true,1);
+    expect(component.isDetailExpanded(1)).toBeTruthy();
   });
 
 });

@@ -1,23 +1,22 @@
 <div class="usa-grid-full entity-object-view">
 	
 	<!--Sidebar-->
-	<div class="usa-width-one-fourth">
-		<h1>&nbsp;</h1>
-		<aside>
-			<!--Side Navigation-->
-			<div class="side-nav-position" sam-sticky limit=1200 container="entity-object-view">
-				<img src="">
-				<nav>
-					<ul class="usa-sidenav-list">
-						<li><a href="{{ currentUrl }}#core-data">Core Data</a></li>
-						<li><a href="{{ currentUrl }}#assertions">Assertions</a></li>
-						<li><a href="{{ currentUrl }}#reps-certs">Reps &amp; Certs</a></li>
-						<li><a href="{{ currentUrl }}#pocs">POCs</a></li>
-					</ul>
-				</nav>
-			</div>
-		</aside>
-	</div>
+  <aside class="usa-width-one-fourth">
+    <br />
+    <br />
+    <div sam-sticky limit=1200 container="entity-object-view">
+      <!--Logo-->
+      <ng-container *ngIf="coreData && (errorEntity || logoUrl===null || errorLogo)">
+        <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">
+      </ng-container>
+      <ng-container *ngIf="coreData && logoUrl && !errorEntity">
+        <img class="sidenav-logo" [src]="logoUrl" [alt]="logoInfo" [title]="logoInfo" width="160px" height="160px">
+      </ng-container>
+
+      <!--Side Navigation-->
+      <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
+    </div>
+  </aside>
 	
 	<!-- Main Content -->
 	<div class="usa-width-three-fourths">
@@ -100,16 +99,6 @@
 							<div class="item">
 								<div class="content">
 									<div class="header">
-										Has Active Exclusion?
-									</div>
-									<div class="description">
-										{{coreData.generalInfo.exclusionStatusFlag ? 'Yes' : 'No'}}
-									</div>
-								</div>
-							</div>
-							<div class="item">
-								<div class="content">
-									<div class="header">
 										Delinquent Federal Debt?
 									</div>
 									<div class="description">
@@ -151,7 +140,7 @@
 					<p>
 						<i>
 							Check the registrant's Reps &amp; Certs, if present, under FAR 52.212-3 
-							or FAR 52.219-1 to determine if the entity is on SBA-certified HUBZone 
+							or FAR 52.219-1 to determine if the entity is an SBA-certified HUBZone 
 							small business concern. Additional small business information may be found 
 							in the <a>SBA's Dynamic Small Business Search</a> if the entity completed 
 							the SBA supplemental pages during registration.
@@ -580,6 +569,8 @@
 			</div>
 		</ng-container>
 		
+		<div class="sam-ui hidden section divider"></div>
+		<h2 class="sam-ui header" id="exclusions">Exclusions</h2>
 		<div class="sam-ui hidden section divider"></div>
 					
 	</div>

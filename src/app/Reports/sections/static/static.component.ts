@@ -22,10 +22,10 @@ export class StaticComponent {
   selectedIdx = null;
   updateDownloadLinks(reportsArray) {
     for (let _i = 0; _i < reportsArray.reports.length; _i++) {
-      reportsArray.reports[_i].loc =  'http://gsa-reporting.s3.amazonaws.com/' + reportsArray.reports[_i].loc;
+      reportsArray.reports[_i].loc =  'http://iae-fpds-reporting.s3.amazonaws.com/' + reportsArray.reports[_i].loc;
       if (reportsArray.reports[_i].previousDates != null) {
         for (let _j = 0; _j < reportsArray.reports[_i].previousDates.length; _j++) {
-          reportsArray.reports[_i].previousDates[_j].loc =  'http://gsa-reporting.s3.amazonaws.com/' +
+          reportsArray.reports[_i].previousDates[_j].loc =  'http://iae-fpds-reporting.s3.amazonaws.com/' +
             reportsArray.reports[_i].previousDates[_j].loc;
         }
       }

@@ -42,5 +42,6 @@ export interface User {
 
   userPassword?: string,
   accountClaimed?: boolean,
-  systemAccount?: boolean
+  systemAccount?: boolean,
+  emailNotification?: boolean | string
 }

@@ -6,6 +6,7 @@ import {SamUIKitModule} from 'sam-ui-kit';
 import {AppComponentsModule} from '../../app-components/app-components.module';
 import { AssistanceProgramResult } from './program-result/assistance-program-result.component';
 import { FalWorkspacePage } from './assistance-listing-workspace.page';
+import {SamAutocompleteComponent} from "../../../sam-ui-elements/src/ui-kit/form-controls/autocomplete/autocomplete.component";
 
 
 

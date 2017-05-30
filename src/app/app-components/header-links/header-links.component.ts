@@ -67,7 +67,7 @@ export class SamHeaderLinksComponent {
   dropdownData:any = [
     {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/", pageInProgress:false},
     {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/reports/overview", pageInProgress:true},
-    {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/workspace", pageInProgress:true},
+    {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/workspace", pageInProgress:false},
     {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview", pageInProgress:false},
     {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/create-organization?orgType=Department", pageInProgress:true},
     {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/", pageInProgress:true},

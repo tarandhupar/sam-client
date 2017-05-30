@@ -10,7 +10,6 @@ import { ProgramService } from "../../../api-kit/program/program.service";
 import { FALFormHeaderInfoComponent } from "./sections/header-information/fal-form-header-info.component";
 import { FALFormOverviewComponent } from "./sections/overview/fal-form-overview.component";
 import { FALFormContactInfoComponent } from "./sections/contact-information/fal-form-contact.component";
-import { FALFormContactEditComponent } from "./sections/contact-information/fal-form-contact-edit.component";
 import { FALFormFinancialInfoOtherComponent } from "./sections/financial-info/other/fal-form-financial-info-other.component";
 import { FALFormCriteriaInfoComponent } from "./sections/criteria-information/fal-form-criteria-info.component";
 import { FALFormObligationsInfoComponent } from "./sections/financial-info/obligations/fal-form-obligation-info.component";
@@ -25,7 +24,7 @@ import {
   FAlProgramServiceDirective,
   FALProgramAutoCompleteWrapper
 } from "../../../api-kit/autoCompleteWrapper/falAutoCompleteWrapper.service";
-import {FALContactInfoTableComponent} from "./sections/contact-information/contact-information-table.component";
+//import {FALContactInfoTableComponent} from "../components/contact-information-table/contact-information-table.component";
 
 @NgModule({
   imports: [
@@ -44,8 +43,7 @@ import {FALContactInfoTableComponent} from "./sections/contact-information/conta
     FALFormOverviewComponent,
     FALFormObligationsInfoComponent,
     FALFormContactInfoComponent,
-    FALFormContactEditComponent,
-    FALContactInfoTableComponent,
+    //FALContactInfoTableComponent,
     FALAssistanceComponent,
     FALFormFinancialInfoOtherComponent,
     FALFormCriteriaInfoComponent,
@@ -60,7 +58,7 @@ import {FALContactInfoTableComponent} from "./sections/contact-information/conta
     FALProgramAutoCompleteWrapper
   ],
   exports: [
-    FALContactInfoTableComponent
+    //FALContactInfoTableComponent
   ]
 })
 export class FALFormModule { }

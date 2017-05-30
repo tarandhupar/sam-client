@@ -53,7 +53,9 @@ import * as moment from 'moment/moment';
               </span>
             </li>
             <li class="item">
-              <strong>Solicitation Number</strong><br>
+              <strong *ngIf="data.originalType?.code === 'k' || data.type?.code === 'k'">Solicitation Number</strong>
+              <strong *ngIf="data.originalType?.code !== 'k' && data.type?.code !== 'k'">Notice Number</strong>
+              <br>
               {{ data.solicitationNumber }}
             </li>
             <li class="item">

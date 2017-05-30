@@ -18,12 +18,12 @@
   <h4>Headquaters Office</h4>
   <label>Add up to two points of Contacts for your headquarters office.</label>
 
-  <contactInfoTable [contactsInfo]="contactsInfo" [hideContactsForm]="hideContactsForm" (actionHandler)="actionHandler($event)"></contactInfoTable>
+  <contactInfoTable [contactsInfo]="contactsInfo" [hideContactsForm]="hideContactsForm" (actionHandler)="actionHandler($event)" #contactInfoTable></contactInfoTable>
 
-
+  <span class='usa-input-error-message' *ngIf="contactInfoTable.review && errorExists"><sup>*</sup>At least one Point of Contact is required.</span>
   <sam-button buttonText="Add Contact" (onClick)="addContact()" *ngIf="falContactInfoForm.controls.contacts.length < 2" [class.hide]="hideAddButton"></sam-button>
 
-  <div formArrayName="contacts" *ngIf="!hideContactsForm">
+  <div formArrayName="contacts" [class.hide]="hideContactsForm">
 
     <h4>{{mode}} Contact</h4>
 
@@ -32,7 +32,7 @@
       <div [formGroupName]="i" [class.hide]="contactIndex !== i">
 
         <sam-select
-          [control]="falContactInfoForm.controls.contacts.controls[i].controls.contactId"
+          [control]="contactGrp.controls.contactId"
           [label]="'Contact'"
           [name]="'contact-control'"
           [required]="true"
@@ -41,10 +41,10 @@
           formControlName="contactId"
           (modelChange)="onParamChanged($event)"></sam-select>
 
-        <div id="newContact" *ngIf="contactGrp.controls.contactId.value == 'new' || mode == 'Edit'">
+        <div id="newContact" [class.hide]="(contactGrp.controls.contactId.value != 'new' && mode != 'Edit')">
 
           <sam-text
-            [control]="falContactInfoForm.controls.contacts.controls[i].controls.title"
+            [control]="contactGrp.controls.title"
             [name]="'title-input'"
             [label]="'Title'"
             formControlName="title"></sam-text>
@@ -61,6 +61,7 @@
             [name]="'email-input'"
             [label]="'Email'"
             [required]="true"
+            [errorMessage]="contactGrp.controls.email.valid || contactGrp.controls.email.pristine || contactGrp.controls.email.errors.length == 0 ? '' : 'Please enter a valid Internet email address. Format: username@host.domain.' "
             formControlName="email"></sam-text>
 
           <sam-number
@@ -131,6 +132,7 @@
     [hint]="'Provide the primary web page URL for this listing. When possible, the web page should be specific to this listing.'"
     [name]="'website-input'"
     [label]="'Website'"
+    [errorMessage]="falContactInfoForm.controls['website'].valid || falContactInfoForm.controls['website'].pristine ? '' : 'Please enter a valid url. [protocol]://hostname.domain. Protocal can be ftp, http, or https. Spaces are not allowed.'"
     formControlName="website">
   </sam-text>
 </form>

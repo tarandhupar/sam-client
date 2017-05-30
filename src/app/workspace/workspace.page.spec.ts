@@ -18,8 +18,11 @@ class RouterStub {
 }
 
 
-fdescribe('Workspace Page', () => {
+describe('Workspace Page', () => {
   // provide our implementations or mocks to the dependency injector
+  let component:WorkspacePage;
+  let fixture:any;
+
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations:[],
@@ -31,13 +34,32 @@ fdescribe('Workspace Page', () => {
       ],
       providers: [
         WorkspacePage,
-        { provide: Router, useClass: RouterStub },
+        { provide: ActivatedRoute, useValue: {'queryParams': Observable.of({ 'user': '6'})}},
       ]
     });
+    fixture = TestBed.createComponent(WorkspacePage);
+    component = fixture.componentInstance;
   });
-  
+
   it("should compile without error", inject([ WorkspacePage ], () => {
+    fixture.detectChanges();
     expect(true).toBe(true);
   }));
 
+  it("should have correct toggle feature object for data entry", inject([ WorkspacePage ], () => {
+    fixture.detectChanges();
+    component.userProfile = 'f-ng-na';
+    component.userAccessTokens = component.userProfile.split('-');
+    component.setDataEntryWidgetControl();
+    expect(component.dataEntryWidgetControl).toEqual({entity:false,exclusions:false,award:false,opportunities:false,assistanceListings:false,subAward:false});
+  }));
+
+  it("should have correct toggle feature object for administration", inject([ WorkspacePage ], () => {
+    fixture.detectChanges();
+    component.userProfile = 'f-ng-na';
+    component.userAccessTokens = component.userProfile.split('-');
+    component.setAdministrationWidgetControl();
+    expect(component.administrationWidgetControl).toEqual({profile:true,fh:false,rm:false,aacRequest:false,alerts:false,analytics:false});
+
+  }));
 });

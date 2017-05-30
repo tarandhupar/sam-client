@@ -7,6 +7,8 @@ import { IDomain } from "./domain.interface";
 import { IRole } from "./role.interface";
 import { IPermissions } from "./permissions.interface";
 import { IFunction } from "./function.interface";
+import { Cookie } from "ng2-cookies";
+import { Router } from "@angular/router";
 
 export interface UserAccessFilterOptions {
   domainIds?: (string|number)[],
@@ -19,8 +21,20 @@ export interface UserAccessFilterOptions {
 @Injectable()
 export class UserAccessService {
 
-  constructor(private apiService: WrapperService) {
+  constructor(private apiService: WrapperService, private router: Router) {
 
+  }
+
+  callApi(oApiParam: any, convertToJSON: boolean = true) {
+    this.addAuthHeader(oApiParam);
+    return this.apiService
+      .call(oApiParam, convertToJSON)
+      .catch(res => {
+        if (res.status === 401 || res.status === 403) {
+          this.router.navigate(['/signin']);
+        }
+        return Observable.throw(res);
+      });
   }
 
   getAccess(userId: string, filterOptions?: any): Observable<UserAccessInterface> {
@@ -35,7 +49,7 @@ export class UserAccessService {
       apiOptions.oParam = _.merge(apiOptions.oParam, filterOptions);
     }
 
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   getRoles(queryParams, userName?, adminLevel?: number): Observable< Array<IRole> > {
@@ -57,7 +71,7 @@ export class UserAccessService {
     }
 
     apiOptions.oParam = _.merge(apiOptions.oParam, queryParams);
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   getDomains(): Observable< IDomain > {
@@ -67,7 +81,8 @@ export class UserAccessService {
       suffix: '',
     };
 
-    return this.apiService.call(apiOptions);
+    this.addAuthHeader(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   getPermissions() : Observable<IPermissions> {
@@ -77,7 +92,7 @@ export class UserAccessService {
       suffix: '',
     };
 
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   getFunctionById(id: number) : Observable<IFunction> {
@@ -86,7 +101,7 @@ export class UserAccessService {
       method: 'GET',
       suffix: '/'+id+'/',
     };
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   postAccess(access: UserAccessWrapper, userName, queryParams = {}) {
@@ -98,7 +113,7 @@ export class UserAccessService {
       oParam: queryParams
     };
 
-    return this.apiService.call(apiOptions, false);
+    return this.callApi(apiOptions, false);
   }
 
   postDomain(domain){
@@ -109,7 +124,7 @@ export class UserAccessService {
       body: domain
     };
 
-    return this.apiService.call(apiOptions,false);
+    return this.callApi(apiOptions,false);
   }
 
   getRoleObjDefinitions(mode : string, domainKey : string, roleKey?) {
@@ -132,7 +147,10 @@ export class UserAccessService {
       apiOptions.oParam.roleKey = ''+roleKey;
     }
 
-    return this.apiService.call(apiOptions);
+    // API umbrella ain't ready for this
+    //this.addAuthHeader(apiOptions);
+
+    return this.callApi(apiOptions);
   }
 
   createObject(domainId: number, objectName: number|string, permissions: {id?: any, val?: string}[], objectId: any) {
@@ -166,7 +184,7 @@ export class UserAccessService {
 
     };
 
-    return this.apiService.call(apiOptions, false);
+    return this.callApi(apiOptions, false);
   }
 
   requestAccess(req: any, userName) {
@@ -177,7 +195,7 @@ export class UserAccessService {
       body: req
     };
 
-    return this.apiService.call(apiOptions, false);
+    return this.callApi(apiOptions, false);
   }
 
   putRole(obj) {
@@ -189,7 +207,7 @@ export class UserAccessService {
       body: obj,
     };
 
-    return this.apiService.call(apiOptions, false);
+    return this.callApi(apiOptions, false);
   }
 
   deleteFunction(domainKey : string , functionId: string){
@@ -201,7 +219,7 @@ export class UserAccessService {
     };
     apiOptions.oParam.domainKey = domainKey;
 
-    return this.apiService.call(apiOptions, false);
+    return this.callApi(apiOptions, false);
   }
 
   getPendingRequests(userId: string, queryParams = {}) {
@@ -214,7 +232,7 @@ export class UserAccessService {
 
     apiOptions.oParam.user = userId;
 
-    return this.apiService.call(apiOptions, false).map(res => {
+    return this.callApi(apiOptions, false).map(res => {
       if (res.status === 204) {
         return [];
       } else {
@@ -231,7 +249,7 @@ export class UserAccessService {
       oParam: { }
     };
 
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   getAccessStatus(view : string){
@@ -243,7 +261,7 @@ export class UserAccessService {
     };
     apiOptions.oParam.view = view;
 
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   getRequestStatuses() {
@@ -254,7 +272,7 @@ export class UserAccessService {
       oParam: {},
     };
 
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   updateRequest(requestId: string, updatedRequest: any) {
@@ -266,7 +284,7 @@ export class UserAccessService {
       body: updatedRequest,
     };
 
-    return this.apiService.call(apiOptions, false);
+    return this.callApi(apiOptions, false);
   }
 
   getAllRoles() {
@@ -277,7 +295,7 @@ export class UserAccessService {
       oParam : {},
     };
 
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   getRequestorIds(){
@@ -286,9 +304,9 @@ export class UserAccessService {
       suffix : '/autocomplete/requestorids/',
       method : 'GET',
       oParam : {},
-    }
+    };
 
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
   }
 
   getRequestAccess(username : string, statusKey : string, domainKey : string, order : string, page : number ){
@@ -314,7 +332,33 @@ export class UserAccessService {
     apiOptions.oParam.order = order;
     apiOptions.oParam.page = page;
 
-    return this.apiService.call(apiOptions);
+    return this.callApi(apiOptions);
+  }
 
+  // Get an array of users and show the access and show the Org, domains for that org, and roles for that domains
+  getAccessODR(filterOptions = {}) {
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/userprofile/',
+      method: 'GET',
+      oParam: { }
+    };
+
+    if (filterOptions) {
+      apiOptions.oParam = _.merge(apiOptions.oParam, filterOptions);
+    }
+
+    return this.callApi(apiOptions);
+  }
+
+  addAuthHeader(options) {
+    let iPlanetCookie = Cookie.getAll().iPlanetDirectoryPro;
+
+    if (!iPlanetCookie) {
+      return;
+    }
+
+    options.headers = options.headers || {};
+    options.headers['X-Auth-Token'] = iPlanetCookie;
   }
 }

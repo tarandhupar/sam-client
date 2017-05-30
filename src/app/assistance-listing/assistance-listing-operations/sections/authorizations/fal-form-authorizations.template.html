@@ -5,7 +5,7 @@
   <authInfoTable
     [hideAddButton]="hideAddButton"
     [displayAuthInfo]="displayAuthInfo"
-    (authTableActionHandler)="authActionHandler($event)"></authInfoTable>
+    (authTableActionHandler)="authActionHandler($event)" #authTable></authInfoTable>
 
   <authSubform [hideAddButton]="hideAddButton" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
 

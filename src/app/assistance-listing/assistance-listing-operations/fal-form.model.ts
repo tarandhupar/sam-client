@@ -3,10 +3,12 @@ import * as _ from 'lodash';
 //  TODO:  If view model exceeds 250 LOC, abstract out different sections to preserve readability
 export class FALFormViewModel {
   private _programId: string;
+  private _fal: any;
   private _data: any;
 
-  constructor(data) {
-    this._data = data ? data : {};
+  constructor(fal) {
+    this._fal = fal ? fal : {};
+    this._data = (fal && fal.data) ? fal.data : {};
   }
 
   set programId(programId: string) {
@@ -19,6 +21,10 @@ export class FALFormViewModel {
 
   get isNew() {
     return this._programId == null || typeof this._programId === 'undefined';
+  }
+
+  get isRevision() {
+    return this._fal.revision === true;
   }
 
   get organizationId(){
@@ -83,15 +89,23 @@ export class FALFormViewModel {
   }
 
   get functionalCodes(){
-    return this._data.functionalCodes ? this._data.functionalCodes : [];
-  }
+    let functionalCodes = [];
+    if(this._data.functionalCodes !== undefined && this._data.functionalCodes && this._data.functionalCodes.length > 0){
+      functionalCodes = this._data.functionalCodes;
+    }
+    return functionalCodes;
+}
 
   set functionalCodes(codes){
     this._data.functionalCodes = codes;
   }
 
   get subjectTerms(){
-    return this._data.subjectTerms ? this._data.subjectTerms : [];
+    let subjectTerms = [];
+    if(this._data.subjectTerms !== undefined && this._data.subjectTerms && this._data.subjectTerms.length > 0){
+      subjectTerms = this._data.subjectTerms;
+    }
+    return subjectTerms;
   }
 
   set subjectTerms(terms){
@@ -510,30 +524,17 @@ export class FALFormViewModel {
   }
 
   get appListDisplay() {
-    let appListDisplay = null;
-    if (this._data.eligibility.applicant) {
-      if (this._data.eligibility.applicant.types)
+    let appListDisplay = [];
+    if((this._data.eligibility !== undefined && this._data.eligibility.applicant !== undefined) && appListDisplay.length === 0){
+      if (this._data.eligibility.applicant && this._data.eligibility.applicant.types && this._data.eligibility.applicant.types.length > 0) {
         appListDisplay = this._data.eligibility.applicant.types;
+      }
     }
     return appListDisplay;
   }
 
-  set appListDisplay(appListDisplay) {
-    if (!this._data.eligibility) {
-      this._data.eligibility = {};
-    }
-    if (!this._data.eligibility.applicant) {
-      this._data.eligibility.applicant = {};
-    }
-    let types = [];
-    if (appListDisplay === '' && this._data.eligibility.applicant.types === undefined) {
-      this._data.eligibility.applicant.types = null;
-    } else {
-      for (let appList of appListDisplay) {
-        types.push(appList['code']);
-        this._data.eligibility.applicant.types = types
-      }
-    }
+  set appListDisplay(appListDisplay){
+     _.set(this._data, 'eligibility.applicant.types', appListDisplay);
   }
 
   get isSameAsApplicant() {
@@ -551,31 +552,17 @@ export class FALFormViewModel {
   }
 
   get benListDisplay() {
-    let types = null;
-    if (this._data.eligibility.beneficiary) {
-      if (this._data.eligibility.beneficiary.types && this._data.eligibility.beneficiary.types.length > 0)
-        types = this._data.eligibility.beneficiary.types;
+    let benListDisplay = [];
+    if(this._data.eligibility !== undefined && this._data.eligibility.beneficiary !== undefined) {
+      if (this._data.eligibility.beneficiary && this._data.eligibility.beneficiary.types && this._data.eligibility.beneficiary.types.length > 0) {
+        benListDisplay = this._data.eligibility.beneficiary.types;
+      }
     }
-    return types;
+    return benListDisplay;
   }
 
   set benListDisplay(benListDisplay) {
-    if (!this._data.eligibility) {
-      this._data.eligibility = {};
-    }
-
-    if (!this._data.eligibility.beneficiary) {
-      this._data.eligibility.beneficiary = {};
-    }
-    let types = [];
-    if (benListDisplay === '' && this._data.eligibility.beneficiary.types === undefined) {
-      this._data.eligibility.beneficiary.types = null;
-    } else {
-      for (let benList of benListDisplay) {
-        types.push(benList['code']);
-        this._data.eligibility.beneficiary.types = types
-      }
-    }
+    _.set(this._data, 'eligibility.beneficiary.types', benListDisplay);
   }
 
 
@@ -646,31 +633,17 @@ export class FALFormViewModel {
   }
 
   get assListDisplay() {
-    let assListDisplay = null;
-    if (this._data.eligibility.assistanceUsage) {
-      if (this._data.eligibility.assistanceUsage.types && this._data.eligibility.assistanceUsage.types.length > 0)
+    let assListDisplay = [];
+    if(this._data.eligibility !== undefined && this._data.eligibility.assistanceUsage !== undefined) {
+      if (this._data.eligibility.assistanceUsage && this._data.eligibility.assistanceUsage.types && this._data.eligibility.assistanceUsage.types.length > 0) {
         assListDisplay = this._data.eligibility.assistanceUsage.types;
+      }
     }
     return assListDisplay;
   }
 
   set assListDisplay(assListDisplay) {
-    if (!this._data.eligibility) {
-      this._data.eligibility = {};
-    }
-
-    if (!this._data.eligibility.assistanceUsage) {
-      this._data.eligibility.assistanceUsage = {};
-    }
-    let types = [];
-    if (assListDisplay === '' && this._data.eligibility.assistanceUsage.types === undefined) {
-      this._data.eligibility.assistanceUsage.types = null;
-    } else {
-      for (let assList of assListDisplay) {
-        types.push(assList['code']);
-        this._data.eligibility.assistanceUsage.types = types
-      }
-    }
+    _.set(this._data, 'eligibility.assistanceUsage.types', assListDisplay);
   }
 
   get usageRes() {

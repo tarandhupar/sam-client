@@ -12,7 +12,7 @@ import { SearchReportComponent } from "./search-report.component";
 import { WorkspaceModule } from "../workspace.module";
 
 
-fdescribe('Workspace search and report component', () => {
+describe('Workspace search and report component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:SearchReportComponent;
   let fixture:any;
@@ -32,4 +32,9 @@ fdescribe('Workspace search and report component', () => {
     expect(true).toBe(true);
   });
 
+  it('should toggle correct help detail', () => {
+    fixture.detectChanges();
+    component.toggleHelpDetail('searches',true);
+    expect(component.helpDetailType).toBe('searches');
+  });
 });

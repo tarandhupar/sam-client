@@ -23,7 +23,7 @@ export class FALFormComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     if (this.route.snapshot.params['id']) {
       this.route.data.subscribe((resolver: { fal: { data } }) => {
-        this.falFormViewModel = new FALFormViewModel(resolver.fal.data);
+        this.falFormViewModel = new FALFormViewModel(resolver.fal);
         this.falFormViewModel.programId = this.route.snapshot.params['id'];
       });
     } else {
@@ -150,7 +150,7 @@ export class FALFormComponent implements OnInit, AfterViewInit {
         for (let formSection of this.form._results) {
           formSection.validateSection();
         }
-      }, 0);
+      }, 20);
     }
 
   }

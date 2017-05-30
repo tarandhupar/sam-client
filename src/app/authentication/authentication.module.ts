@@ -25,7 +25,7 @@ import { LoginComponent } from './login';
 import { RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
 import { ForgotComponent, ForgotInitialComponent, ForgotConfirmComponent, ForgotMainComponent } from './forgot';
 import { ProfileComponent,DetailsComponent, ResetComponent, MigrationsComponent } from './profile';
-import { SystemComponent, SystemProfileComponent, SystemPasswordComponent } from './system';
+import { SystemComponent, SystemProfileComponent, SystemPasswordComponent, SystemMigrationsComponent } from './system';
 
 @NgModule({
   imports: [
@@ -81,7 +81,8 @@ import { SystemComponent, SystemProfileComponent, SystemPasswordComponent } from
      */
     SystemComponent,
     SystemProfileComponent,
-    SystemPasswordComponent
+    SystemPasswordComponent,
+    SystemMigrationsComponent
   ],
 
   providers: [

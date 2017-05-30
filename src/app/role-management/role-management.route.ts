@@ -8,8 +8,10 @@ import { ManageRequestPage } from "./manage-request/manage-request";
 import { RequestAccessResolve } from "./request-access.resolve";
 import { RequestStatusNamesResolve } from "./request-statuses.resolve";
 import { RoleMgmtWorkspace } from "./rolemgmt-workspace.page.ts";
-import {AdminOnlyGuard} from "../application-content/403/admin-only.guard";
-import {AdminOrDeptAdminGuard} from "../application-content/403/admin-or-dept-admin.guard";
+import { AdminOnlyGuard } from "../application-content/403/admin-only.guard";
+import { AdminOrDeptAdminGuard } from "../application-content/403/admin-or-dept-admin.guard";
+import { UserRolesDirectoryPage } from "./user-roles-directory/user-roles-directory.page";
+import {DomainDefinitionResolve} from "./domaindefinition.resolve";
 
 export const routes: Routes = [{
   path: 'access',
@@ -29,6 +31,11 @@ export const routes: Routes = [{
       canActivate: [AdminOrDeptAdminGuard]
     },
     { path: 'requests', component: RoleMgmtWorkspace, canActivate: [AdminOrDeptAdminGuard] },
+    { path: 'user-roles-directory', component: UserRolesDirectoryPage,
+      resolve: {
+        domainDefinition: DomainDefinitionResolve
+      }
+    }
   ]
 }];
 

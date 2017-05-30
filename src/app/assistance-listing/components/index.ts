@@ -12,9 +12,9 @@ import { FALAuthInfoTableComponent } from "./authorization-table/authorization-t
 import { FALFiscalYearTableComponent } from "./fiscal-year-table/fiscal-year-table.component";
 import { FALAssistSubFormComponent } from "./applying-assistance-subform/applying-assistance-subform.component";
 import { FALAssistInfoTableComponent } from './applying-assistance-table/applying-assistance-table.component';
-import {FALObligationFYTableComponent} from "./obligation-table/obligation-table.component";
-import {FALObligationSubFormComponent} from "./obligation-subform/obligation-subform.component";
-
+import { FALObligationFYTableComponent } from "./obligation-table/obligation-table.component";
+import { FALObligationSubFormComponent } from "./obligation-subform/obligation-subform.component";
+import { FALContactInfoTableComponent } from "./contact-information-table/contact-information-table.component";
 
 @NgModule({
   imports: [
@@ -34,7 +34,8 @@ import {FALObligationSubFormComponent} from "./obligation-subform/obligation-sub
     FALAssistInfoTableComponent,
     FALFiscalYearTableComponent,
     FALObligationFYTableComponent,
-    FALObligationSubFormComponent
+    FALObligationSubFormComponent,
+    FALContactInfoTableComponent
   ],
   exports: [
     FALAccountIdentificationComponent,
@@ -48,7 +49,8 @@ import {FALObligationSubFormComponent} from "./obligation-subform/obligation-sub
     FALAssistSubFormComponent,
     FALAssistInfoTableComponent,
     FALObligationFYTableComponent,
-    FALObligationSubFormComponent
+    FALObligationSubFormComponent,
+    FALContactInfoTableComponent
   ]
 })
 export class FALComponentsModule {}

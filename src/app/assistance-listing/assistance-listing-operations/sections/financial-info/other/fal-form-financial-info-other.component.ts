@@ -27,6 +27,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
     hint: 'Showcase for public users the achievements associated with this listing. Use clear, plain language and provide compelling examples.',
     required: true,
     itemName: 'Accomplishments',
+    errorMessage: 'You must select Not Applicable or add at least one Program Accomplishment.',
 
     entry: {
       hint: 'Please describe accomplishment:'
@@ -34,7 +35,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
 
     deleteModal: {
       title: 'Delete Program Accomplishments',
-      description: 'Please confirm that you want to delete program accomplishments' // todo: complete description w/ reference to element
+      description: '' // todo: complete description w/ reference to element
     }
   };
 
@@ -47,7 +48,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
 
     deleteModal: {
       title: 'Delete Account Identification',
-      description: 'Please confirm that you want to delete.' // todo: complete description w/ reference to element
+      description: '' // todo: complete description w/ reference to element
     }
   };
 
@@ -59,11 +60,12 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
 
     deleteModal: {
       title: 'Delete TAFs',
-      description: 'Please confirm that you want to delete TAF.' // todo: complete description w/ reference to element
+      description: '' // todo: complete description w/ reference to element
     }
   };
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder) {
+  }
 
   ngOnInit() {
     this.createForm();
@@ -107,12 +109,12 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
       entries: []
     };
 
-    if(this.viewModel.accomplishments) {
+    if (this.viewModel.accomplishments) {
       model.isApplicable = this.viewModel.accomplishments.isApplicable;
     }
 
-    if(this.viewModel.accomplishments.list && this.viewModel.accomplishments.list.length > 0) {
-      for(let accomplishment of this.viewModel.accomplishments.list) {
+    if (this.viewModel.accomplishments.list && this.viewModel.accomplishments.list.length > 0) {
+      for (let accomplishment of this.viewModel.accomplishments.list) {
         model.entries.push({
           year: accomplishment.fiscalYear,
           description: accomplishment.description
@@ -126,14 +128,14 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
   private saveAccomplishments(accomplishmentsModel: FiscalYearTableModel) {
     let accomplishments: any = {};
 
-    if(accomplishmentsModel) {
+    if (accomplishmentsModel) {
       accomplishments.isApplicable = accomplishmentsModel.isApplicable;
     }
 
-    if(accomplishmentsModel && accomplishmentsModel.entries) {
+    if (accomplishmentsModel && accomplishmentsModel.entries) {
       accomplishments.list = [];
 
-      for(let entry of accomplishmentsModel.entries) {
+      for (let entry of accomplishmentsModel.entries) {
         accomplishments.list.push({
           fiscalYear: entry.year,
           description: entry.description
@@ -147,7 +149,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
   private loadAccounts() {
     let model: any = {};
 
-    if(this.viewModel.accounts) {
+    if (this.viewModel.accounts) {
       model.accounts = this.viewModel.accounts
     }
 
@@ -157,7 +159,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
   private saveAccounts(accountsModel: AccountIdentificationModel) {
     let accounts = null;
 
-    if(accountsModel) {
+    if (accountsModel) {
       accounts = accountsModel.accounts;
     }
 
@@ -167,7 +169,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
   private loadTafs() {
     let model: any = {};
 
-    if(this.viewModel.tafs) {
+    if (this.viewModel.tafs) {
       model.tafs = this.viewModel.tafs;
     }
 
@@ -177,10 +179,18 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
   private saveTafs(tafsModel: TAFSModel) {
     let tafs = null;
 
-    if(tafsModel) {
+    if (tafsModel) {
       tafs = tafsModel.tafs;
     }
 
     return tafs;
+  }
+
+  public validateSection() {
+    //mark all controls as dirty
+    for (let control in this.otherFinancialInfoForm.controls) {
+      this.otherFinancialInfoForm.controls[control].markAsDirty();
+      this.otherFinancialInfoForm.controls[control].updateValueAndValidity();
+    }
   }
 }

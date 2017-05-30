@@ -1,30 +1,13 @@
 import { isObject, isUndefined, merge } from 'lodash';
 import * as Cookies from 'js-cookie';
 import * as request from 'superagent';
-import * as moment from 'moment';
 
 import {
   config, utilities,
   getAuthHeaders, exceptionHandler, sanitizeRequest,
+  transformMigrationAccount,
   isDebug
 } from './helpers';
-
-function transformMigrationAccount(account) {
-  account = isObject(account) ? account : {};
-  account = merge({
-    sourceLegacySystem: '',
-    username: '',
-    firstname: '',
-    lastname: '',
-    roles: []
-  }, account);
-
-  account.system = account.sourceLegacySystem.toUpperCase() + '.gov';
-  account.name = [account.firstname || '', account.lastname || ''].join(' ').trim();
-  account.migratedAt = (account.claimedTimestamp ? moment(account.claimedTimestamp) : moment()).format('YYYY-MM-DD, hh:mm A');
-
-  return account;
-}
 
 export const $import = {
   systems() {
@@ -46,14 +29,11 @@ export const $import = {
 
   history(email, $success, $error) {
     let endpoint = utilities.getUrl(config.import.history),
-        headers = {
-          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
-        },
-
+        headers = getAuthHeaders(),
         mock = [];
 
-    $success = ($success || function(response) {});
-    $error = ($error || function(error) {});
+    $success = $success || (() => {});
+    $error = $error || (() => {});
 
     mock = [
       {
@@ -115,10 +95,7 @@ export const $import = {
 
   create(email, system, username, password, $success, $error) {
     let endpoint = utilities.getUrl(config.import.roles),
-        headers = {
-          'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro')
-        },
-
+        headers = getAuthHeaders(),
         params = {
           'legacySystem': system,
           'legacyUsername': username,
@@ -126,8 +103,8 @@ export const $import = {
           'currentUser': email
         };
 
-    $success = ($success || function(response) {});
-    $error = ($error || function(error) {});
+    $success = $success || (() => {});
+    $error = $error || (() => {});
 
     request
       .post(endpoint)

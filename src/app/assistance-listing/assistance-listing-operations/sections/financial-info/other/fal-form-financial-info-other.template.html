@@ -10,13 +10,16 @@
 
   <falFYTable [config]="accomplishmentsConfig"
               [formControlName]="'accomplishments'"
+              [control]="otherFinancialInfoForm.get('accomplishments')"
   ></falFYTable>
 
   <falAccountIdentificationInput [config]="accountIdentificationConfig"
                                  [formControlName]="'accountIdentification'"
+                                 [control]="otherFinancialInfoForm.get('accountIdentification')"
   ></falAccountIdentificationInput>
 
   <falTAFSInput [config]="tafsConfig"
                 [formControlName]="'tafs'"
+                [control]="otherFinancialInfoForm.get('tafs')"
   ></falTAFSInput>
 </div>

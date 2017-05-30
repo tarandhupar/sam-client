@@ -129,6 +129,8 @@ export class DetailsComponent {
             this.initKBAGroup(2)
           ] : []
         ),
+
+        emailNotification: [this.user.emailNotification]
       });
 
       if(this.states.isGov) {
@@ -235,7 +237,6 @@ export class DetailsComponent {
             firstName: 'John',
             initials: 'J',
             lastName: 'Doe',
-
             department: 100006688,
             orgID: 100173623,
 
@@ -245,7 +246,9 @@ export class DetailsComponent {
               { questionId: 1, answer: this.repeater(' ', 8) },
               { questionId: 3, answer: this.repeater(' ', 8) },
               { questionId: 5, answer: this.repeater(' ', 8) }
-            ]
+            ],
+
+            emailNotification: false
           });
 
           for(intQuestion in this.user.kbaAnswerList) {
@@ -535,7 +538,7 @@ export class DetailsComponent {
   save(groupKey) {
     let controls = this.detailsForm.controls,
         mappings = {
-          'identity': 'title|firstName|initials|lastName|suffix',
+          'identity': 'title|firstName|initials|lastName|suffix|emailNotification',
           'business': 'department|orgID|workPhone',
           'kba': 'kbaAnswerList'
         },

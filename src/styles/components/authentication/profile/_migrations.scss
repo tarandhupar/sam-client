@@ -37,11 +37,20 @@
     text-align: right;
   }
 
+  table {
+    width: 100%;
+    margin-top: 1.5em;
+
+    thead {
+      th {
+        padding: 0.5em;
+        text-align: left;
+      }
+    }
+  }
+
   .usa-migration-history {
     margin-bottom: 1.5em;
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-    border-bottom-color: #000000;
 
     h1 {
       font-size: 2rem;
@@ -86,16 +95,6 @@
             border-bottom-width: 1px;
             border-bottom-style: dotted;
           }
-        }
-      }
-    }
-
-    tfoot {
-      tr {
-        td {
-          padding-top: 0rem;
-          padding-bottom: 0rem;
-          border-top-width: 0px;
         }
       }
     }

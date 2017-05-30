@@ -25,31 +25,5 @@ describe("New to Sam.gov page in help page", ()=>{
     expect(true).toBe(true);
   });
 
-  it("should open image library when click on big button", ()=>{
-    fixture.detectChanges();
-    fixture.whenStable().then(()=>{
-      expect(component.showImageLibrary).toBe(false);
-      fixture.nativeElement.querySelector('.square-button').click();
-
-      fixture.detectChanges();
-      if(component.linkToggle()){
-        expect(component.showImageLibrary).toBe(true);
-      }
-    });
-  });
-
-  it("should close image library when click on go back link", ()=>{
-    component.openImageLibrary('area1');
-    fixture.detectChanges();
-    fixture.whenStable().then(()=>{
-      if(component.linkToggle()){
-
-        fixture.nativeElement.querySelector('.fa-arrow-circle-o-left').click();
-
-        fixture.detectChanges();
-        expect(component.showImageLibrary).toBe(true);
-      }
-    });
-  });
 
 });

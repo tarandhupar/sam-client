@@ -14,8 +14,7 @@
       </ng-container>
 
       <!--Side Navigation-->
-      <sam-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-sidenav>
-
+      <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
     </div>
   </aside>
 
@@ -35,13 +34,15 @@
         {{ opportunity.data?.title }}
       </h1>
 
+      <div class="sam-ui hidden divider"></div>
+
       <div class="sam-ui padded raised segment">
 				<div class="sam-ui top right attached mini label">
 					Contract Opportunity
 				</div>
 				<div class="sam-ui attached grid">
 					<div class="column">
-						<div class="sam-ui divided list">
+						<div class="sam-ui relaxed divided list">
 							<div class="item" [attr.id]="generateID(opportunityFields.Solicitation, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Solicitation)">
 								<div class="content">
 									<div class="header">
@@ -363,7 +364,7 @@
           [downloadAllUrl]="getDownloadAllPackagesURL(opportunity.opportunityId, opportunity.data?.statuses?.isArchived)"></sam-download>
 
         <ng-container *ngIf="packagesWarning == true">
-          <sam-alert [type]="'warning'" [title]="''">An update has been made to this opportunity with new packages added. Please click <a [routerLink]="['/opportunities', processedHistory[processedHistory.length-1].id]">here</a> to view the latest update and packages.</sam-alert>
+          <sam-alert [type]="'warning'" [title]="''">An update has been made to this contract opportunity with new packages added. Please click <a [routerLink]="['/opportunities', historyByProcurementType[historyByProcurementType.length-1].notice_id]">here</a> to view the latest update and packages.</sam-alert>
         </ng-container>
         <div class="sam-ui hidden section divider"></div>
       </section>
@@ -493,117 +494,165 @@
 
     <div [class.hide]="selectedPage !== 1">
 
-      <section [attr.id]="generateID(opportunityFields.AwardSummary)" *ngIf="shouldBeDisplayed(opportunityFields.AwardSummary)">
+      <section  [attr.id]="generateID(opportunityFields.AwardSummary)"
+                *ngIf="shouldBeDisplayed(opportunityFields.AwardSummary)">
 
-        <h2 id="opportunity-award-summary">Awards Summary</h2>
+        <div class="sam-ui hidden divider"></div>
+
+        <h2 class="sam-ui header" id="opportunity-award-summary">
+          Awards Summary
+        </h2>
 
         <!-- Awards Metadata -->
 
-        <div *ngIf="relatedOpportunitiesMetadata"  class="usa-grid-full">
+        <ng-container *ngIf="relatedOpportunitiesMetadata">
 
-          <div class="usa-width-three-fourths">
-
-            <div class="sam-ui three column grid center aligned">
-              <div class="stretched row">
-                <div class="column">
-                  <div class="sam-ui grey inverted segment">
-                    <div class="sam-ui medium header">Total Number of Awards</div>
-                    <div class="sam-ui medium header">
-                      {{relatedOpportunitiesMetadata.count}}
-                    </div>
+          <div class="sam-ui three column divided center aligned vertically padded grid">
+            <div class="row">
+              <div class="column">
+                <div class="sam-ui statistic">
+                  <div class="value">
+                    {{ relatedOpportunitiesMetadata.count }}
+                  </div>
+                  <div class="label">
+                    Total Number of Awards
                   </div>
                 </div>
-                <div class="column">
-                  <div class="sam-ui grey inverted segment">
-                    <div class="sam-ui medium header">Total Amount Awarded</div>
-                    <div class="sam-ui medium header">
-                      {{relatedOpportunitiesMetadata.totalAwardAmt | currency:'USD':true:'1.2-2'}}
-                    </div>
+              </div>
+              <div class="column">
+                <div class="sam-ui statistic">
+                  <div class="value">
+                    {{ relatedOpportunitiesMetadata.totalAwardAmt
+                       | currency:'USD':true:'1.2-2'}}
+                  </div>
+                  <div class="label">
+                    Total Amount Awarded<br>
                     <em *ngIf="relatedOpportunitiesMetadata.unparsableCount > 0">
-                      (Plus {{relatedOpportunitiesMetadata.unparsableCount}} other variable amounts)
+                      (Plus {{relatedOpportunitiesMetadata.unparsableCount}} other
+                      variable amounts)
                     </em>
                   </div>
                 </div>
-                <div class="column">
-                  <div class="sam-ui grey inverted segment">
-                    <div class="sam-ui medium header">Total Number of Recipients</div>
-                    <div class="sam-ui medium header">
-                      {{relatedOpportunitiesMetadata.recipientCount}}
+              </div>
+              <div class="column">
+                <div class="sam-ui statistic">
+                  <div class="value">
+                    {{ relatedOpportunitiesMetadata.recipientCount }}
+                  </div>
+                  <div class="label">
+                    Total Number of Recipients
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sam-ui section divider"></div>
+
+          <h2 class="sam-ui header">
+            Award Notices
+          </h2>
+
+          <div class="sam-ui three column vertically padded grid">
+            <div class="column">
+              <strong>Sort by</strong>
+              <sam-select class="sort-select"
+                          [(model)]="awardSort"
+                          [options]="awardSortOptions"
+                          [name]='awardSort'
+                          (modelChange)="reloadRelatedOpportunities()">
+              </sam-select>
+            </div>
+          </div>
+
+          <p>
+            Showing results
+            <strong>
+              {{min +1}}
+              <span class="usa-sr-only">through</span> -
+              {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
+            </strong>
+            of
+            <strong>{{relatedOpportunitiesMetadata.count}}</strong>
+          </p>
+
+        </ng-container>
+
+        <div class="sam-ui grid" id="awards-list" tabindex="-1">
+          <ng-container *ngFor="let element of relatedOpportunities">
+
+            <div class="twelve wide column">
+              <div class="sam-ui hidden divider"></div>
+              <div tabindex="0">
+                <h3 class="sam-ui header">
+                  {{element.data?.award?.awardee?.name}}
+                </h3>
+                <div class="sam-ui equal width divided segment grid">
+                  <div class="row">
+                    <div class="column">
+                      <h4 class="sam-ui dividing header">
+                        Contractor Awarded
+                      </h4>
+                      <div class="">
+                        <div class="sam-ui medium header">
+                          DUNS
+                          <div class="sub header">
+                            {{element.data?.award?.awardee?.duns}}
+                          </div>
+                        </div>
+                        <div class="sam-ui medium header">
+                          Address
+                          <div class="sub header">
+                            {{element.data?.award?.awardee?.location?.streetAddress}}
+                            {{element.data?.award?.awardee?.location?.city}}
+                            {{element.data?.award?.awardee?.location?.state}}
+                            {{element.data?.award?.awardee?.location?.zip}}
+                            {{element.data?.award?.awardee?.location?.country}}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="column">
+                      <h4 class="sam-ui dividing header">
+                        Contract Award
+                      </h4>
+                      <div class="">
+                        <div class="sam-ui medium header">
+                          Dollar Amount
+                          <div class="sub header">
+                            {{element.data?.award?.amount}}
+                          </div>
+                        </div>
+                        <div class="sam-ui medium header">
+                          Number
+                          <div class="sub header">
+                            {{element.data?.award?.number}}
+                          </div>
+                        </div>
+                        <div class="sam-ui medium header">
+                          Date
+                          <div class="sub header">
+                            {{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-          </div>
 
-          <div class="usa-width-one-fourth">
-            <strong>Sort by</strong>
-            <sam-select class="sort-select" [(model)]="awardSort" [options]="awardSortOptions" [name]='awardSort' (modelChange)="reloadRelatedOpportunities()"></sam-select>
-          </div>
-
-        </div>
-
-        <p class="m_T-2x" style="text-align: right;" *ngIf="relatedOpportunitiesMetadata">
-          <span class="usa-sr-only">Showing results</span>
-          <strong>
-            {{min +1}}
-            <span class="usa-sr-only">through</span> -
-            {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
-          </strong>
-          of
-          <strong>{{relatedOpportunitiesMetadata.count}}</strong>
-        </p>
-
-
-        <div id="awards-list" tabindex="-1">
-          <div class="sam-ui vertical padded segment" *ngFor="let element of relatedOpportunities" tabindex="0">
-
-            <h3 class="sam-ui header">
-              {{element.data?.award?.awardee?.name}}
-            </h3>
-
-            <div class="usa-grid-full">
-              <div class="usa-width-one-half">
-                <ul class="sam-ui list">
-                  <li class="item">
-                    <strong>Contractor Awarded DUNS</strong><br>
-                    {{element.data?.award?.awardee?.duns}}
-                  </li>
-                  <li class="item">
-                    <strong>Contractor Awarded Address</strong><br>
-                    {{element.data?.award?.awardee?.location?.streetAddress}}
-                    {{element.data?.award?.awardee?.location?.city}}
-                    {{element.data?.award?.awardee?.location?.state}}
-                    {{element.data?.award?.awardee?.location?.zip}}
-                    {{element.data?.award?.awardee?.location?.country}}
-                  </li>
-                </ul>
-              </div>
-              <div class="usa-width-one-half">
-                <ul class="sam-ui list">
-                  <li class="item">
-                    <strong>Contract Award Dollar Amount</strong> <br>
-                    {{element.data?.award?.amount}}
-                  </li>
-                  <li class="item">
-                    <strong>Contract Award Number</strong> <br>
-                    {{element.data?.award?.number}}
-                  </li>
-                  <li class="item">
-                    <strong>Contract Award Date</strong> <br>
-                    {{element.data?.award?.date | dateFormat: 'MMM DD, YYYY'}}
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-          </div>
+          </ng-container>
         </div>
 
       </section>
 
-      <sam-pagination *ngIf="totalPages" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"></sam-pagination>
+      <sam-pagination *ngIf="totalPages"
+                      (pageChange)="pageChange($event-1)"
+                      [currentPage]="pageNum+1"
+                      [totalPages]="totalPages">
+      </sam-pagination>
 
     </div>
 

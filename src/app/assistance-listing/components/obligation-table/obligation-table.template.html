@@ -3,7 +3,7 @@
           [closeOnOutsideClick]="true"
           [closeOnEscape]="true"
           [type]="'warning'"
-          [title]="'Remove Obligation'"
+          [title]="'Delete Obligation'"
           [description]="description"
           [submitButtonLabel]="'Ok'"
           [cancelButtonLabel]="'Cancel'"
@@ -24,7 +24,8 @@
 
   <ng-container *ngFor="let obligation of obligationsInfo; let i = index">
     <tr>
-      <td>{{obligation.assistanceType.name}}</td>
+
+      <td><span class='usa-input-error-message' *ngIf="review && obligation.errorExists"><sup>*</sup>This field cannot be empty</span>{{obligation.assistanceType && obligation.assistanceType.name ? obligation.assistanceType.name : ''}}</td>
       <td *ngIf="obligation['pFY']['radioOptionId']==='pFYActual'">
         {{obligation['pFY']['radioOptionId']==='pFYActual' && obligation['pFY']['textboxValue']!==''?'$' +
         obligation['pFY']['textboxValue']:''}}
@@ -49,14 +50,14 @@
         <ng-container *ngIf="!hideAddButton">
           <a class="fal-table-edit" (click)="editObligation(i)">Edit</a>
           <i class="fa fa-pencil fal-table-edit" aria-hidden="true" (click)="editObligation(i)"></i>
-          <a class="fal-table-delete" (click)="removeObligation(i)">Remove</a>
+          <a class="fal-table-delete" (click)="removeObligation(i)">Delete</a>
           <i class="fa fa-trash fal-table-delete" aria-hidden="true" (click)="removeObligation(i)"></i>
         </ng-container>
 
         <ng-container *ngIf="hideAddButton">
           <span class="fal-table-edit disabled">Edit</span>
           <i class="fa fa-pencil fal-table-edit disabled" aria-hidden="true"></i>
-          <span class="fal-table-delete disabled">Remove</span>
+          <span class="fal-table-delete disabled">Delete</span>
           <i class="fa fa-trash fal-table-delete disabled" aria-hidden="true"></i>
         </ng-container>
       </td>

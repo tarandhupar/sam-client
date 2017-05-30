@@ -13,13 +13,17 @@
                [formControlName]="'policyRequirementsTextarea'"
   ></sam-text-area>
 
-  <samCheckboxToggledTextarea [options]="reportsConfig"
+  <samCheckboxToggledTextarea #reportsComp
+                              [options]="reportsConfig"
                               [formControlName]="'reports'"
+                              [control]="complianceRequirementsGroup.get('reports')"
   ></samCheckboxToggledTextarea>
 
   <h2>Audits</h2>
-  <samCheckboxToggledTextarea [options]="auditsConfig"
+  <samCheckboxToggledTextarea #auditsComp
+                              [options]="auditsConfig"
                               [formControlName]="'audits'"
+                              [control]="complianceRequirementsGroup.get('audits')"
   ></samCheckboxToggledTextarea>
 
   <sam-text-area [label]="'Records'"
@@ -29,8 +33,10 @@
                [formControlName]="'records'"
   ></sam-text-area>
 
-  <samCheckboxToggledTextarea [options]="additionalDocumentationConfig"
+  <samCheckboxToggledTextarea #additionalDocumentationComp
+                              [options]="additionalDocumentationConfig"
                               [formControlName]="'additionalDocumentation'"
+                              [control]="complianceRequirementsGroup.get('additionalDocumentation')"
   ></samCheckboxToggledTextarea>
 
   <falFormulaMatchingInput [options]="formulaMatchingConfig"

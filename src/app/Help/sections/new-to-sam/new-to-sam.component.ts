@@ -196,11 +196,11 @@ export class NewToSamComponent {
         content: this.PWRAFP,
       },
       {
-        title:"People who<br><span class='uppercase'>track awards</span>",
+        title:"People who<br><span class='uppercase'>manage awards</span>",
         columns: "four"
       },
       {
-        title:"I track federal assistance and procurement awards",
+        title:"I manage federal assistance and procurement awards",
         contentType: "table",
         content: this.PWTA,
         columns: "eight"

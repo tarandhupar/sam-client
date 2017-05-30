@@ -19,6 +19,7 @@ export class FALObligationFYTableComponent {
   currentFY: string;
   prevFY: string;
   nextFY: string;
+  review: boolean = false;
 
 
   ngOnInit() {
@@ -38,27 +39,24 @@ export class FALObligationFYTableComponent {
   removeObligation(index) {
     this.deleteModal.openModal();
     this.removeIndex = index;
-    let deleteModelMsg;
-    let assistanceType;
-    let description;
-    if (this.obligationsInfo[index].assistanceType.name == null || this.obligationsInfo[index].assistanceType.name == undefined) {
-      assistanceType = '';
-    } else {
-      assistanceType = this.obligationsInfo[index].assistanceType.name;
-    }
-    if (this.obligationsInfo[index].description == null || this.obligationsInfo[index].description == undefined) {
-      description = '';
-    } else {
-      description = this.obligationsInfo[index].description;
-    }
-
-    if ((assistanceType || description)) {
-      deleteModelMsg = 'Please confirm that you want to remove "' + assistanceType + ' ' + description + '" obligation.';
-    } else {
-      deleteModelMsg = 'Please confirm that you want to remove obligation.'
+    let deleteModelMsg = '';
+    let assistanceType = {};
+    let description = '';
+    let msg = 'Please confirm that you want to delete "';
+    description = this.obligationsInfo[index].description;
+    assistanceType = this.obligationsInfo[index] && this.obligationsInfo[index].assistanceType ? this.obligationsInfo[index].assistanceType : null;
+    if((description !== null && description !== '') && (assistanceType !== null)) {
+      deleteModelMsg = msg + assistanceType['name'] + '. ' + description + '" obligation.';
+    } else if((description !== null && description !== '') && (assistanceType === null)) {
+      deleteModelMsg = msg + description + '" obligation.';
+    } else if((assistanceType !== null) && (description === null || description === '')) {
+      deleteModelMsg = msg + assistanceType['name'] + '" obligation.';
+    } else if((description === null || description === '') && (assistanceType === null)) {
+      deleteModelMsg = 'Please confirm that you want to delete obligation.';
     }
     this.description = deleteModelMsg;
   }
+
   public onDeleteModalSubmit() {
     this.deleteModal.closeModal();
     this.obligationTableActionHandler.emit({

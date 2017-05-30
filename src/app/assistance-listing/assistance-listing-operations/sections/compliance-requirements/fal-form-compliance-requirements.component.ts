@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ProgramService } from "api-kit";
 import { DictionaryService } from "api-kit";
@@ -12,6 +12,10 @@ import { FALFormViewModel } from "../../fal-form.model";
 })
 export class FALFormComplianceRequirementsComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
+
+  @ViewChild('reportsComp') reportsComp;
+  @ViewChild('auditsComp') auditsComp;
+  @ViewChild('additionalDocumentationComp') additionalDocumentationComp;
 
   public program: any;
   public complianceRequirementsGroup: FormGroup;
@@ -341,13 +345,11 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
 
     if(formulaMatchingModel) {
       if(formulaMatchingModel.checkbox) {
-        // todo: correct typo formua -> formula after schema is udpated
-        formulaAndMatching.types.formua = formulaMatchingModel.checkbox.indexOf('cfr') !== -1;
+        formulaAndMatching.types.formula = formulaMatchingModel.checkbox.indexOf('cfr') !== -1;
         formulaAndMatching.types.matching = formulaMatchingModel.checkbox.indexOf('matching') !== -1;
         formulaAndMatching.types.moe = formulaMatchingModel.checkbox.indexOf('moe') !== -1;
       } else {
-        // todo: correct typo formua -> formula after schema is udpated
-        formulaAndMatching.types.formua = false;
+        formulaAndMatching.types.formula = false;
         formulaAndMatching.types.matching = false;
         formulaAndMatching.types.moe = false;
       }
@@ -418,8 +420,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
 
     if(this.viewModel.formulaAndMatching) {
       if(this.viewModel.formulaAndMatching.types) {
-        // todo: correct typo formua -> formula after schema is udpated
-        if(this.viewModel.formulaAndMatching.types.formua) {
+        if(this.viewModel.formulaAndMatching.types.formula) {
           model.checkbox.push('cfr');
         }
         if(this.viewModel.formulaAndMatching.types.matching) {
@@ -471,5 +472,18 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
     }
 
     return model;
+  }
+
+
+  public validateSection() {
+    this.reportsComp.markChildrenAsDirty();
+    this.auditsComp.markChildrenAsDirty();
+    this.additionalDocumentationComp.markChildrenAsDirty();
+
+    //mark all controls as dirty
+    for (let control in this.complianceRequirementsGroup.controls) {
+      this.complianceRequirementsGroup.controls[control].markAsDirty();
+      this.complianceRequirementsGroup.controls[control].updateValueAndValidity();
+    }
   }
 }

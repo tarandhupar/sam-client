@@ -1,5 +1,6 @@
-import { Component, Output, EventEmitter, NgZone, NgModule } from '@angular/core';
+import { Component, Output, EventEmitter, NgZone, NgModule, ViewChild } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule }   from '@angular/forms';
 import { routing } from './reports.route';
 import { ReportsPage } from './reports.page';
 import { OverviewComponent } from './sections/overview/overview.component';
@@ -10,6 +11,8 @@ import { ReportProtoComponent } from './sections/reportProto/reportProto.compone
 import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
+import { AppComponentsModule } from '../app-components/app-components.module';
+import { AlertsModule } from '../alerts/alerts.module';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { IAMService } from 'api-kit';
 import { ReportsService } from 'api-kit';
@@ -21,7 +24,10 @@ import { ReportsPipe } from './reports.pipe';
   imports: [
     SamUIKitModule,
     BrowserModule,
+    FormsModule,
     routing,
+    AppComponentsModule,
+    AlertsModule,
     SamAPIKitModule
   ],
   exports: [ ],

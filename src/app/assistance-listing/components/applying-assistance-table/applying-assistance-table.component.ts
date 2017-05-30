@@ -12,7 +12,7 @@ export class FALAssistInfoTableComponent{
   @Output() public assistTableActionHandler = new EventEmitter();
   @ViewChild('deleteModal') deleteModal;
   removeIndex: number;
-  modalConfig = {title:'Remove Deadline', description:''};
+  modalConfig = {title:'Delete Deadline', description:''};
 
   editAssist(index){
     this.assistTableActionHandler.emit({
@@ -24,7 +24,11 @@ export class FALAssistInfoTableComponent{
   removeAssist(index){
     this.deleteModal.openModal();
     this.removeIndex = index;
-    this.modalConfig.description = 'Please confirm that you want to remove "' + this.assistInfo[index] + '" deadline.';
+    if(this.assistInfo[index] !== '') {
+      this.modalConfig.description = 'Please confirm that you want to delete "' + this.assistInfo[index] + '" deadline.';
+    } else {
+      this.modalConfig.description = 'Please confirm that you want to delete deadline.';
+    }
   }
 
   public onDeleteModalSubmit() {

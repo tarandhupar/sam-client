@@ -11,6 +11,17 @@
       <li>
         <a [routerLink]="['migrations']" [routerLinkActive]="['usa-current']">Migrations</a>
       </li>
+      <li *ngIf="isAdmin">
+        <span>Admin</span>
+        <ul class="usa-sidenav-sub_list">
+          <li>
+            <a [routerLink]="['/access', 'requests']">Requests</a>
+          </li>
+          <li *ngIf="isLevel0">
+            <a [routerLink]="['/access', 'workspace']">Workspace</a>
+          </li>
+        </ul>
+      </li>
     </ul>
   </aside>
   <section class="usa-width-three-fourths">

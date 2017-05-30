@@ -23,8 +23,24 @@
         <label>Email:</label>
         <div class="usa-form-control" [innerText]="user.email"></div>
       </div>
+      <div class="usa-form-group">
+        <label>Notifications:</label>
+        <div class="usa-form-control" [innerText]="(user.emailNotification ? 'On' : 'Off')"></div>
+      </div>
 
       <sam-name-entry class="usa-form-editable" [model]="user" legend=""></sam-name-entry>
+
+      <ul class="usa-unstyled-list usa-form-editable">
+        <li>
+          <input type="checkbox"
+                 id="email-notification"
+                 type="checkbox"
+                 name="email-notification"
+                 [checked]="user.emailNotification"
+                 (change)="user.emailNotification = !user.emailNotification">
+          <label for="email-notification">I would like to be contacted when changes are made to the new SAM.gov</label>
+        </li>
+      </ul>
 
       <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('identity')"></sam-button>
     </section>

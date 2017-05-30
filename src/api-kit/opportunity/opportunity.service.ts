@@ -66,11 +66,13 @@ export class OpportunityService{
     return this.oAPIService.call(apiParam);
   }
 
-  getPackagesCount(id: string){
+  getPackagesCount(noticeIds: string){
     let apiParam = {
       name: 'opportunity',
-      suffix: '/opportunities/' + id + '/packages/count',
-      oParam: {},
+      suffix: '/opportunities/packages/count',
+      oParam: {
+        'noticeIds':noticeIds
+      },
       method: 'GET'
     };
 

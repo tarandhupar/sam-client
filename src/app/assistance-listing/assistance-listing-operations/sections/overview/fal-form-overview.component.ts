@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { FALFormViewModel } from "../../fal-form.model";
 import { AutocompleteConfig } from "sam-ui-kit/types";
 import { FiscalYearTableConfig } from "../../../components/fiscal-year-table/fiscal-year-table.component";
-
+import { falCustomValidatorsComponent } from '../../../validators/assistance-listing-validators';
 
 @Component({
   providers: [FALFormService],
@@ -27,6 +27,11 @@ export class FALFormOverviewComponent implements OnInit {
 
     entry: {
       hint: 'Please describe funded projects:'
+    },
+    deleteModal: {
+      title: 'Delete Examples of Funded Projects',
+      description: '',
+      flag: 'ov'
     }
   };
 
@@ -55,14 +60,49 @@ export class FALFormOverviewComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    this.populateFunctionalCodes();
+    this.service.getFunctionalCodesDict().subscribe(
+      data => this.parseFunctionalCodes(data),
+      error => {
+        console.error('error retrieving dictionary data', error);
+      });
     this.createForm();
+    if (!this.viewModel.isNew) {
+      this.updateForm();
+    }
+
+  }
+
+  parseFunctionalCodes(data: any) {
+    for (let fcData of data['functional_codes']) {
+      for (let data of fcData.elements) {
+        let value = data.code + ' - ' + data.value;
+        this.fcTypeOptions.push({code: data.element_id, name: value});
+        this.fcKeyValue[data.element_id] = value;
+      }
+    }
+    this.populateMultiSelect(this.viewModel.functionalCodes, this.fcAutocompleteConfig, this.fcListDisplay, this.fcKeyValue);
+    this.falOverviewForm.patchValue({
+      fcListDisplay: this.fcListDisplay.length > 0 ? this.fcListDisplay : []
+    }, {
+      emitEvent: false
+    });
+
+    this.falOverviewForm.controls['fcListDisplay'].updateValueAndValidity();
 
     this.falOverviewForm.valueChanges.subscribe(data => this.updateViewModel(data));
 
-    if (!this.viewModel.isNew) {
-      this.updateForm();
+    if(this.viewModel.subjectTerms && this.viewModel.subjectTerms.length > 0){
+      this.parseSubjectTerms(this.viewModel.subjectTerms);
+    }
+
+  }
+
+  populateMultiSelect(multiTypeData: any, autoCompleteConfig: any, listDisplay: any, keyValueArray: any) {
+    if (multiTypeData && multiTypeData.length > 0) {
+      for (let id of multiTypeData) {
+        listDisplay.push({code: id, name: keyValueArray[id]});
+      }
+      autoCompleteConfig.placeholder = this.placeholderMsg(multiTypeData);
     }
   }
 
@@ -70,25 +110,23 @@ export class FALFormOverviewComponent implements OnInit {
     this.falOverviewForm = this.fb.group({
       'objective': '',
       'description': '',
-      'functionalCodes': '',
-      'fcListDisplay': '',
-      'subjectTerms': [''],
-      'stListDisplay': [''],
+      'functionalTypes': '',
+      'fcListDisplay': ['', falCustomValidatorsComponent.autoCompleteRequired],
+      'subjectTermsTypes': [''],
+      'stListDisplay': ['', falCustomValidatorsComponent.autoCompleteRequired],
       'fundedProjects': null
     });
   }
 
   updateViewModel(data) {
-
     let functionaCodes = [];
     let subjectTerms = [];
-    for(let fc of data.fcListDisplay){
+    for (let fc of data.fcListDisplay) {
       functionaCodes.push(fc.code);
     }
-    for(let st of data.stListDisplay){
+    for (let st of data.stListDisplay) {
       subjectTerms.push(st.code);
     }
-
     this.viewModel.objective = data['objective'];
     this.viewModel.description = data['description'];
     this.viewModel.functionalCodes = functionaCodes.length > 0 ? functionaCodes : null;
@@ -97,29 +135,18 @@ export class FALFormOverviewComponent implements OnInit {
   }
 
   updateForm() {
-
     let objective = this.viewModel.objective;
     let description = this.viewModel.description;
-
-    if ((this.viewModel.subjectTerms) && (this.viewModel.subjectTerms.length > 0)) {
-      this.populateSubjectTerms(this.viewModel.subjectTerms);
-    }
-    if ((this.viewModel.functionalCodes) && (this.viewModel.functionalCodes.length > 0)) {
-      this.populateFunctionalCodes(this.viewModel.functionalCodes);
-    }
-
     this.falOverviewForm.patchValue({
       objective: objective,
       description: description,
-      stListDisplay: this.stListDisplay === null ? [] : this.stListDisplay,
-      fcListDisplay: this.fcListDisplay === null ? [] : this.fcListDisplay,
       fundedProjects: this.loadProjects(this.viewModel.projects)
     }, {
       emitEvent: false
     });
   }
 
-  populateSubjectTerms(subjectTerms){
+  parseSubjectTerms(subjectTerms: any) {
     this.service.getSubjectTermsDict(subjectTerms).subscribe(data => {
 
       for (let dataItem of data['program_subject_terms']) {
@@ -128,31 +155,20 @@ export class FALFormOverviewComponent implements OnInit {
       }
 
       this.stAutocompleteConfig.placeholder = this.placeholderMsg(this.stListDisplay);
+      this.falOverviewForm.patchValue({
+        stListDisplay: this.stListDisplay.length > 0 ? this.stListDisplay : []
+      }, {
+        emitEvent: false
+      });
+
+      this.falOverviewForm.controls['stListDisplay'].updateValueAndValidity();
+
+      this.falOverviewForm.valueChanges.subscribe(data => this.updateViewModel(data));
     }, error => {
       console.error('Error Retrieving Subject Terms!!', error);
     });
   }
 
-  populateFunctionalCodes(functionalCodes = []){
-    this.service.getFunctionalCodesDict().subscribe(data => {
-
-        for (let fcData of data['functional_codes']) {
-          for(let data of fcData.elements){
-            let value = data.code + ' - ' + data.value;
-            this.fcTypeOptions.push({code: data.element_id, name:value});
-            this.fcKeyValue[data.element_id] = value;
-          }
-        }
-        for (let id of functionalCodes) {
-          this.fcListDisplay.push({code: id, name: this.fcKeyValue[id]});
-        }
-
-        this.fcAutocompleteConfig.placeholder = this.placeholderMsg(this.fcListDisplay);
-      },
-      error => {
-        console.error('error retrieving functional code options', error);
-      });
-  }
 
   stTypeChange(event) {
     this.stAutocompleteConfig.placeholder = this.placeholderMsg(event);
@@ -187,7 +203,7 @@ export class FALFormOverviewComponent implements OnInit {
     let projectsForm = fundedProjects;
 
     projects.list = [];
-    if(projectsForm) {
+    if (projectsForm) {
       projects.isApplicable = projectsForm.isApplicable;
       for (let entry of projectsForm.entries) {
         projects.list.push({
@@ -201,13 +217,13 @@ export class FALFormOverviewComponent implements OnInit {
   }
 
   private loadProjects(projects: any) {
-    let projectsForm:any = {
-      entries:[]
+    let projectsForm: any = {
+      entries: []
     };
 
     if (projects) {
       projectsForm.isApplicable = projects.isApplicable;
-      if(projects.list) {
+      if (projects.list) {
         for (let project of projects.list) {
           projectsForm.entries.push({
             year: project.fiscalYear,

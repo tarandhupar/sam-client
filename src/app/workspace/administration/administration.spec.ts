@@ -12,7 +12,7 @@ import { AdministrationComponent } from "./administration.component";
 import { WorkspaceModule } from "../workspace.module";
 
 
-fdescribe('Workspace administration component', () => {
+describe('Workspace administration component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:AdministrationComponent;
   let fixture:any;
@@ -28,8 +28,16 @@ fdescribe('Workspace administration component', () => {
   });
 
   it('should compile without error', () => {
+    component.toggleControl = {profile:true,fh:true,rm:true,aacRequest:true,alerts:true,analytics:true};
     fixture.detectChanges();
     expect(true).toBe(true);
+  });
+
+  it('should toggle correct help detail', () => {
+    component.toggleControl = {profile:true,fh:true,rm:true,aacRequest:true,alerts:true,analytics:true};
+    fixture.detectChanges();
+    component.toggleHelpDetail('profile',true,0);
+    expect(component.isDetailExpanded(0)).toBeTruthy();
   });
 
 });

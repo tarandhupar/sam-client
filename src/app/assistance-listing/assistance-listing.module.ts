@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from '@angular/forms';
+import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { ProgramPage }   from './assistance-listing.page';
 import { FinancialObligationChart } from './assistance-listing.chart';
 import { routing } from './assistance-listing.route';
@@ -38,6 +38,7 @@ import {FALFormModule} from "./assistance-listing-operations/fal-form.module";
     AppComponentsModule,
     routing,
     ReactiveFormsModule,
+    FormsModule,
     FALComponentsModule,
     FALFormModule
   ],

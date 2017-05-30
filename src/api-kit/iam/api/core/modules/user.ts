@@ -10,6 +10,10 @@ import {
 
 import User from '../user';
 
+function yesOrNo(value) {
+  return (value || false) ? 'yes' : 'no';
+}
+
 /**
  * [Component][IAM][User] CAC Submodule
  */
@@ -248,6 +252,8 @@ export const user = {
       delete userData.kbaAnswerList;
     }
 
+    data.user.emailNotification = yesOrNo(data.user.emailNotification);
+
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
@@ -266,11 +272,12 @@ export const user = {
   update(userData, $success, $error) {
     let endpoint = utilities.getUrl(config.details.update),
         headers = getAuthHeaders(),
-
         data = userData || {};
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
+
+    data.emailNotification = yesOrNo(data.emailNotification);
 
     request
       .patch(endpoint)

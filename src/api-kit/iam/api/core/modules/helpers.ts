@@ -1,5 +1,6 @@
 import { isObject, merge } from 'lodash';
 import * as Cookies from 'js-cookie';
+import * as moment from 'moment';
 
 import $config from '../../config';
 import utilities from '../../utilities';
@@ -43,3 +44,20 @@ export function sanitizeRequest(data) {
 
   return data;
 };
+
+export function transformMigrationAccount(account) {
+  account = isObject(account) ? account : {};
+  account = merge({
+    sourceLegacySystem: '',
+    username: '',
+    firstname: '',
+    lastname: '',
+    roles: []
+  }, account);
+
+  account.system = account.sourceLegacySystem.toUpperCase() + '.gov';
+  account.name = [account.firstname || '', account.lastname || ''].join(' ').trim();
+  account.migratedAt = (account.claimedTimestamp ? moment(account.claimedTimestamp) : moment()).format('YYYY-MM-DD, hh:mm A');
+
+  return account;
+}

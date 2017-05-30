@@ -69,25 +69,26 @@ export class RegisterMainComponent {
 
     this.initSession(() => {
       this.userForm = this.builder.group({
-        title:           [this.user.title],
-        firstName:       [this.user.firstName, Validators.required],
-        middleName:      [this.user.initials],
-        lastName:        [this.user.lastName, Validators.required],
-        suffix:          [this.user.suffix],
+        title:             [this.user.title],
+        firstName:         [this.user.firstName, Validators.required],
+        middleName:        [this.user.initials],
+        lastName:          [this.user.lastName, Validators.required],
+        suffix:            [this.user.suffix],
 
-        workPhone:       [this.user.workPhone],
+        workPhone:         [this.user.workPhone],
 
-        department:      [this.user.department],
-        orgID:           [this.user.orgID],
+        department:        [this.user.department],
+        orgID:             [this.user.orgID],
 
-        kbaAnswerList:   this.builder.array([
+        kbaAnswerList:     this.builder.array([
           this.initKBAGroup(),
           this.initKBAGroup(),
           this.initKBAGroup()
         ]),
 
-        userPassword:    ['', Validators.required],
-        accountClaimed:  [true]
+        userPassword:      ['', Validators.required],
+        accountClaimed:    [true],
+        emailNotification: [this.user.emailNotification]
       });
 
       // Set the model for components using the model system
@@ -202,28 +203,29 @@ export class RegisterMainComponent {
 
   initMockSession() {
     this.userForm = this.builder.group({
-      email:           ['doe.john@gsa.com', Validators.required],
+      email:             ['doe.john@gsa.com', Validators.required],
 
-      title:         [''],
-      firstName:     ['', Validators.required],
-      middleName:    [''],
-      lastName:      ['', Validators.required],
-      suffix:        [''],
+      title:             [''],
+      firstName:         ['', Validators.required],
+      middleName:        [''],
+      lastName:          ['', Validators.required],
+      suffix:            [''],
 
-      workPhone:       [''],
+      workPhone:         [''],
 
-      department:      [''],
-      orgID:           [''],
+      department:        [''],
+      orgID:             [''],
 
-      kbaAnswerList:   this.builder.array([
+      kbaAnswerList:     this.builder.array([
         this.initKBAGroup(),
         this.initKBAGroup(),
         this.initKBAGroup()
       ]),
 
-      userPassword:    ['', Validators.required],
+      userPassword:      ['', Validators.required],
 
-      accountClaimed: [true]
+      accountClaimed:    [true],
+      emailNotification: [true]
     });
 
     this.user = this.userForm.value;

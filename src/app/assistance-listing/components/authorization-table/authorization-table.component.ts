@@ -13,7 +13,8 @@ export class FALAuthInfoTableComponent{
   @ViewChild('deleteModal') deleteModal;
   removeIndex: number;
   remParentIndex: number;
-  modalConfig = {title:'Remove Authorization', description: ''};
+  modalConfig = {title:'', description: ''};
+  review: boolean = false;
 
   public onDeleteModalSubmit() {
     this.deleteModal.closeModal();
@@ -36,12 +37,27 @@ export class FALAuthInfoTableComponent{
   removeAuth(index, parentIndex:number = null){
     this.deleteModal.openModal();
     let desc = '';
-    if(parentIndex  == null)
-      desc = 'Please confirm that you want to remove "' + this.displayAuthInfo[index].label + '" authorization. Any amendments associated to this authorization will also be removed.';
-    else
-      desc = 'Please confirm that you want to remove "' + this.displayAuthInfo[parentIndex].children[index].label + '" authorization. Any amendments associated to this authorization will also be removed.';
+    let title = '';
+
+    if(parentIndex  == null) {
+      if(this.displayAuthInfo[index].label !== '') {
+        desc = 'Please confirm that you want to delete "' + this.displayAuthInfo[index].label + '" authorization. Any amendments associated to this authorization will also be deleted.';
+      } else {
+        desc = 'Please confirm that you want to delete authorization. Any amendments associated to this authorization will also be deleted.';
+      }
+      title = 'Delete Authorization';
+    }
+    else if(parentIndex !== null){
+      if(this.displayAuthInfo[parentIndex].children[index].label !== '') {
+        desc = 'Please confirm that you want to delete "' + this.displayAuthInfo[parentIndex].children[index].label + '" authorization.';
+      } else {
+        desc = 'Please confirm that you want to delete authorization.';
+      }
+      title = 'Delete Amendments';
+    }
 
     this.modalConfig.description = desc;
+    this.modalConfig.title = title;
     this.removeIndex = index;
     this.remParentIndex = parentIndex;
   }

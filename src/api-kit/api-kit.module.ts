@@ -23,6 +23,7 @@ import { AACRequestService } from "./aac-request/aac-request.service";
 import { FHWrapperService } from "./fh/fhWrapper.service";
 import { SearchDictionariesService } from "./search/search-dictionaries.service";
 import { EntitySuggestionsServiceDirective } from "./autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
+import { UserAccessMock } from "./access/access.service.mock";
 import { UserSessionService } from "./user-session/user-session.service";
 
 /**
@@ -55,6 +56,7 @@ import { UserSessionService } from "./user-session/user-session.service";
     AutoCompleteWrapper,
     UserDirService,
     UserAccessService,
+    //{ provide: UserAccessService, useValue: UserAccessMock },
     WageDeterminationService,
     LocationService,
     FeedbackService,

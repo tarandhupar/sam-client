@@ -4,6 +4,7 @@ import {AutocompleteConfig} from "sam-ui-kit/types";
 import moment = require("moment");
 import * as _ from 'lodash';
 import {UUID} from "angular2-uuid";
+import {falCustomValidatorsComponent} from "../../validators/assistance-listing-validators";
 
 @Component({
   selector: 'obligation-subform',
@@ -21,7 +22,8 @@ export class FALObligationSubFormComponent {
   currentFY: number;
   prevFY: number;
   nextFY: number;
-
+  review:boolean = false;
+  errorExists:boolean = false;
 
   obligationsInfo = [];
   obligationIndex: number = 0;
@@ -33,7 +35,6 @@ export class FALObligationSubFormComponent {
   preservePFYDataOnCancel: any;
   preserveCFYDataOnCancel: any;
   preserveBFYDataOnCancel: any;
-  @ViewChild('assistanceTypeWrapper') assistanceTypeWrapper;
 
 
   // Current Fiscal year Checkbox config
@@ -112,7 +113,7 @@ export class FALObligationSubFormComponent {
     keyValueConfig: {
       keyProperty: 'code',
       valueProperty: 'name'
-    }
+    }, showOnEmptyInput: true
   };
   subFormLabel: string;
 
@@ -122,9 +123,8 @@ export class FALObligationSubFormComponent {
 
   createForm() {
     this.falObligationSubForm = this.fb.group({
-      'obligations': this.fb.array([])
+      'obligations': this.fb.array([], falCustomValidatorsComponent.atLeastOneEntryCheck)
     });
-
   }
 
 
@@ -202,9 +202,16 @@ export class FALObligationSubFormComponent {
         values: pyValues
       }
     );
+   let assistanceType;
+    if(populateAddFalg) {
+      assistanceType = '';
+    } else {
+      assistanceType = obligation['assistanceType'];
+    }
+
     return this.fb.group({
       isRecoveryAct: [[isRecoveryAct]],
-      assistanceType: populateAddFalg ? {code: '', name: ''} : obligation['assistanceType'],
+      assistanceType: [assistanceType, falCustomValidatorsComponent.autoCompleteRequired],
       pFY: {
         radioOptionId: past,
         textboxValue: pastText ? pastText : ''
@@ -220,15 +227,7 @@ export class FALObligationSubFormComponent {
       description: obligation['description'],
       obligationId: obligation['obligationId']
     });
-
   }
-
-  assistanceTypeChange(event, i) {
-    const control = <FormArray> this.falObligationSubForm.controls['obligations'];
-    const controlGrp = <FormGroup> control.at(i);
-    this.assistanceTypeWrapper.formatErrors(controlGrp.controls['assistanceType'])
-  }
-
   onAddNewObliClick() {
     this.subFormLabel = "Add Obligation";
     const control = <FormArray> this.falObligationSubForm.controls['obligations'];
@@ -276,7 +275,6 @@ export class FALObligationSubFormComponent {
       uuid = obligationId;
     }
     control.at(i).patchValue({obligationId: uuid});
-    //this.obligationsInfo = this.falObligationSubForm.value.obligations;
     this.obligationsInfo = _.cloneDeep(this.falObligationSubForm.value.obligations);
     this.hideAddButton = false;
     this.hideObligationsForm = true;

@@ -10,14 +10,6 @@ export class DomainsResolve implements Resolve<IDomain> {
   constructor(private accessService: UserAccessService, private router: Router, private footerAlerts: AlertFooterService) {}
 
   resolve(route: ActivatedRouteSnapshot) {
-    return this.accessService.getDomains().catch(() => {
-      this.router.navigateByUrl('/');
-      this.footerAlerts.registerFooterAlert({
-        description: "There was an error with a required service",
-        type: 'error',
-        timer: 3200,
-      });
-      return Observable.throw('Domain endpoint down.');
-    });
+    return this.accessService.getDomains();
   }
 }

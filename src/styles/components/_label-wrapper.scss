@@ -23,3 +23,21 @@
     display: inline-block;
   }
 }
+
+sam-label-wrapper{
+  .hint-toggle{
+    .usa-form-hint{
+      height:3em;
+      overflow:hidden;
+      display:block;
+    }
+  }
+  .usa-form-hint-showmore-toggler{
+    text-align:right;
+    a{
+      &:hover{
+        cursor:pointer;
+      }
+    }
+  }
+}

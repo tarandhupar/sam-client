@@ -493,6 +493,15 @@ $tertiaryInvertedColor: $invertedMutedTextColor;
   color: $white !important;
 }
 
+/* Dark White */
+.#{$prefix}.dark.white.segment:not(.inverted) {
+  background-color: $darkWhite;
+}
+.#{$prefix}.inverted.dark.white.segment {
+  background-color: $darkWhite !important;
+  color: $white !important;
+}
+
 /* Black */
 .#{$prefix}.black.segment:not(.inverted) {
   border-top: $coloredBorderSize solid $black;

@@ -7,7 +7,8 @@
       <ng-container *ngIf="logoData">
         <img class="sidenav-logo" [src]="logoData.logo" [alt]="logoData.info" [title]="logoData.info">
       </ng-container>
-      <sam-sidenav [model]="sidenavConfig" (path)="sidenavPathEvtHandler($event)"></sam-sidenav>
+      <!--<sam-sidenav [model]="sidenavConfig" (path)="sidenavPathEvtHandler($event)"></sam-sidenav>-->
+      <sam-feedback-sidenav [model]="sidenavConfig" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
     </div>
     &nbsp;
   </aside>

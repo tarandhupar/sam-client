@@ -4,7 +4,7 @@
         <!-- Text input -->
         <div>
           <label *ngIf="labelText || labelText" [attr.for]="id">{{labelText}}<span class="usa-sr-only">&nbsp;autocomplete</span></label>
-          <span *ngIf="showSpecialIndicator" class="usa-type-ahead-search"><i *ngIf="!hasFocus" class="fa fa-search"></i></span>
+          <span *ngIf="showSpecialIndicator" class="usa-type-ahead-search"><i class="fa fa-search"></i></span>
           <input id="type-search" #input autocomplete="off" [attr.placeholder]="placeholder" [attr.name]="name" type="text" (focus)="showDropdown()" (change)="onChange()" (keydown)="onKeydown($event)" (keyup)="onKeyup($event)" [(ngModel)]="inputValue">
           <span *ngIf="showSpecialIndicator" class="usa-type-ahead-dropdown"><i tabindex="0" (click)="showDropdown()" class="fa fa-chevron-down"></i></span>
         </div>

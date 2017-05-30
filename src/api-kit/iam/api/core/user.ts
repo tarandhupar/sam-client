@@ -23,8 +23,22 @@ class User {
     user = this.reverseMappings(user || {});
 
     merge(this, user, {
-      systemAccount: (indexOf(roles, 'GSA_IAM_CWS_SFA_R_SrvAcct') > -1)
+      systemAccount: (indexOf(roles, 'GSA_IAM_CWS_SFA_R_SrvAcct') > -1),
+      emailNotification: this.toBoolean(user.emailNotification || 'no')
     });
+
+  }
+
+  toBoolean(value) {
+    let result = false;
+
+    switch(value) {
+      case 'yes':
+        result = true;
+        break;
+    }
+
+    return result;
   }
 
   reverseMappings(params) {

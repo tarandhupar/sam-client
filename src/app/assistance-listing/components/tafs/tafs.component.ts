@@ -1,6 +1,10 @@
 import { Component, Input, forwardRef, ViewChild } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, Validators } from "@angular/forms";
+import {
+  ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl, Validators,
+  NG_VALIDATORS, Validator, AbstractControl
+} from "@angular/forms";
 import { LabelWrapper } from "sam-ui-kit/wrappers/label-wrapper";
+import { ValidationErrors } from "../../../app-utils/types";
 
 
 /** Interfaces **/
@@ -59,13 +63,19 @@ export interface TAFSConfig {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FALTafsComponent),
       multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => FALTafsComponent),
+      multi: true
     }
   ]
 })
-export class FALTafsComponent implements ControlValueAccessor {
+export class FALTafsComponent implements ControlValueAccessor, Validator {
   // all parameters are passed in a single config object for convenience
   // see TAFSConfig interface for supported parameters
   @Input() config: TAFSConfig;
+  @Input() control: FormControl;
 
   // the model serves as the single source of truth for this component's data
   // whenever data is input or actions are taken that modify the form, the model should also be updated
@@ -94,7 +104,8 @@ export class FALTafsComponent implements ControlValueAccessor {
 
   /** Initial setup **/
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
     this.model = FALTafsComponent.constructModelFrom(null); // set up initial empty model
@@ -103,7 +114,7 @@ export class FALTafsComponent implements ControlValueAccessor {
   }
 
   private validateInputs() {
-    if(!(this.config && this.config.name)) {
+    if (!(this.config && this.config.name)) {
       throw new Error("<falTAFSInput> requires a [name] parameter for 508 compliance");
     }
   }
@@ -118,6 +129,12 @@ export class FALTafsComponent implements ControlValueAccessor {
       fy1: new FormControl(null, Validators.pattern('[0-9]*')),
       fy2: new FormControl(null, Validators.pattern('[0-9]*'))
     });
+
+    if(this.control) {
+      this.control.statusChanges.subscribe(status => {
+        this.tafsWrapper.formatErrors(this.control);
+      });
+    }
 
     this.tafsForm.get('departmentCode').valueChanges.subscribe(value => {
       this.model.current.departmentCode = value;
@@ -160,7 +177,7 @@ export class FALTafsComponent implements ControlValueAccessor {
       subAccountCode: this.model.current.subAccountCode,
       allocationTransferAgency: this.model.current.allocationTransferAgency,
       fy1: this.model.current.fy1,
-      fy2:this.model.current.fy2
+      fy2: this.model.current.fy2
     };
 
     this.resetForm(); // after adding, close the form
@@ -169,10 +186,10 @@ export class FALTafsComponent implements ControlValueAccessor {
   public removeTafs(index: number) {
     this.model.tafs.splice(index, 1); // remove the tafs
 
-    if(index === this.currentIndex) { // if the tafs currently being edited was removed
+    if (index === this.currentIndex) { // if the tafs currently being edited was removed
       // then we need to clear out the form and stop editing
       this.tafsForm.reset();
-    } else if(index < this.currentIndex) { // else if an earlier tafs was removed
+    } else if (index < this.currentIndex) { // else if an earlier tafs was removed
       // then the index of the currently edited tafs has shifted down by one
       this.currentIndex--;
     }
@@ -205,7 +222,21 @@ export class FALTafsComponent implements ControlValueAccessor {
 
   // On click of delete button in table
   public onDeleteClick(index: number) {
-    if(this.deleteModal) { // if delete modal exists, show it
+    let departmentCode = '';
+    let accountCode = '';
+    let msg = 'Please confirm that you want to delete this TAFS ';
+    if (this.deleteModal) { // if delete modal exists, show it
+      departmentCode = this.model.tafs[index].departmentCode;
+      accountCode = this.model.tafs[index].accountCode;
+      if (departmentCode !== null && accountCode !== null) {
+        this.config.deleteModal.description = msg + ' (Treasury Dept. Code ' + departmentCode + '. Treasury Account Main Code ' + accountCode + ').';
+      } else if(departmentCode !== null && accountCode === null) {
+        this.config.deleteModal.description = msg + ' (Treasury Dept. Code ' + departmentCode + ').';
+      } else if(departmentCode === null && accountCode !== null) {
+        this.config.deleteModal.description = msg + ' (Treasury Account Main Code ' + accountCode + ').';
+      }
+      else
+        this.config.deleteModal.description = 'Please confirm that you want to delete TAFS.';
       this.deleteModal.openModal(index);
     } else { // else just remove directly
       this.removeTafs(index);
@@ -228,7 +259,7 @@ export class FALTafsComponent implements ControlValueAccessor {
 
     model.tafs = model.tafs || [];
 
-    for(let tafs of model.tafs) {
+    for (let tafs of model.tafs) {
       tafs.departmentCode = tafs.departmentCode || null;
       tafs.accountCode = tafs.accountCode || null;
       tafs.subAccountCode = tafs.subAccountCode || null;
@@ -261,20 +292,41 @@ export class FALTafsComponent implements ControlValueAccessor {
   }
 
 
+  /** Validation **/
+
+  public validate(c: AbstractControl): ValidationErrors {
+    let error: ValidationErrors = {
+      atLeastOneEntry: {
+        message: 'At least one TAFs code is required.'
+      }
+    };
+
+    if (this.config.required && this.config.required === true) {
+      if (this.model.tafs.length === 0) {
+        return error;
+      }
+    }
+
+    return null;
+  }
+
+
   /** Implement ControlValueAccessor interface **/
 
-  private onChangeCallback: any = (_: any) => {};
-  private onTouchedCallback: any = () => {};
+  private onChangeCallback: any = (_: any) => {
+  };
+  private onTouchedCallback: any = () => {
+  };
 
-  public registerOnChange(fn: any) : void {
+  public registerOnChange(fn: any): void {
     this.onChangeCallback = fn;
   }
 
-  public registerOnTouched(fn: any) : void {
+  public registerOnTouched(fn: any): void {
     this.onTouchedCallback = fn;
   }
 
-  public writeValue(obj: any) : void {
+  public writeValue(obj: any): void {
     this.model = FALTafsComponent.constructModelFrom(obj);
     this.currentIndex = this.model.tafs.length;
   }

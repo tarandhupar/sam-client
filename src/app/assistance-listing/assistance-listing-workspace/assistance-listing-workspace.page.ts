@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
 import * as Cookies from 'js-cookie';
@@ -12,6 +12,8 @@ import * as Cookies from 'js-cookie';
 })
 
 export class FalWorkspacePage implements OnInit, OnDestroy {
+  @ViewChild('autocomplete') autocomplete: any;
+
   keyword: string = '';
   index: string = '';
   organizationId: string = '';
@@ -20,12 +22,16 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   totalPages: any = 0;
   data = [];
   initLoad = true;
+  oldKeyword: string = "";
   qParams: any = {};
   size: any = {};
   addFALButtonText: string = 'Add Assistance Listing';
   cookieValue: string;
   runProgSub: any;
   public permissions: any;
+  workspaceSearchConfig: any = {
+    placeholder: "Search Workspace"
+  };
 
 
   constructor(private activatedRoute: ActivatedRoute, private router: Router, private programService: ProgramService) {
@@ -47,9 +53,10 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       if (!this.permissions['FAL_LISTING']) {
         this.router.navigate['accessrestricted'];
       } else {
-        this.setupQS();
+        //this.setupQS();
         this.activatedRoute.queryParams.subscribe(
           data => {
+            this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
             this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
             this.runProgram();
           });
@@ -67,6 +74,11 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   setupQS() {
     let qsobj = {};
+    if(this.keyword.length>0){
+      qsobj['keyword'] = this.keyword;
+    } else {
+      qsobj['keyword'] = '';
+    }
     if (this.pageNum >= 0) {
       qsobj['page'] = this.pageNum + 1;
     } else {
@@ -78,19 +90,24 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   runProgram() {
     // make api call
     this.runProgSub = this.programService.runProgram({
+      keyword: this.keyword,
       pageNum: this.pageNum,
       Cookie: this.cookieValue
 
     }).subscribe(
       data => {
+
         if (data._embedded && data._embedded.program) {
           this.data = data._embedded.program;
           this.totalCount = data.page['totalElements'];
           this.size = data.page['size'];
           this.totalPages = data.page['totalPages'];
+
         } else {
-          this.data['program'] = null;
+          this.totalCount = 0;
+          this.data = [];
         }
+        this.oldKeyword = this.keyword;
         this.initLoad = false;
       },
       error => {
@@ -114,6 +131,23 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
 
   addBtnClick() {
     this.router.navigate(['programsForm/add']);
+  }
+
+  workspaceSearchModel(event) {
+    if(event == null) {
+      this.autocomplete.inputValue = "";
+      this.keyword = "";
+    } else {
+      this.keyword = event;
+    }
+  }
+
+  workspaceSearchClick() {
+    let qsobj = this.setupQS();
+    let navigationExtras: NavigationExtras = {
+      queryParams: qsobj
+    };
+    this.router.navigate(['/fal/workspace/'], navigationExtras);
   }
 }
 

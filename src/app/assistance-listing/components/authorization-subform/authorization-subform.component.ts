@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
 import { UUID } from 'angular2-uuid';
+import { falCustomValidatorsComponent } from '../../validators/assistance-listing-validators';
 
 @Component({
   selector : 'authSubform',
@@ -18,6 +19,8 @@ export class FALAuthSubFormComponent {
   authInfo=[];
   mode:string;
   subFormLabel:string;
+  review:boolean = false;
+  errorExists:boolean = false;
 
   checkboxConfig = {
     options: [
@@ -35,13 +38,13 @@ export class FALAuthSubFormComponent {
 
   createForm(){
     this.falAuthSubForm = this.fb.group({
-      'authorizations': this.fb.array([ ])
+      'authorizations': this.fb.array([ ], falCustomValidatorsComponent.atLeastOneEntryCheck)
     });
   }
 
   initAuth(){
     return this.fb.group({
-      authType:[''],
+      authType:['', falCustomValidatorsComponent.checkboxRequired],
       act: this.fb.group({
         title: [null],
         part:[null],
@@ -110,6 +113,11 @@ export class FALAuthSubFormComponent {
 
     control.at(index).patchValue({authorizationId:uuid});
 
+    if(this.review) {
+      control.at(index)['controls'].authType.markAsDirty();
+      control.at(index)['controls'].authType.updateValueAndValidity();
+    }
+
     this.authInfo = this.falAuthSubForm.value.authorizations;
     this.hideAddButton = false;
 
@@ -118,6 +126,7 @@ export class FALAuthSubFormComponent {
       hideAddButton: this.hideAddButton,
       authInfo: this.authInfo
     });
+
   }
 
   onSubFormCancelClick(i: number){

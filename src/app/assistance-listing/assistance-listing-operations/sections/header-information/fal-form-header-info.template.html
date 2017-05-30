@@ -1,6 +1,8 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Header Information - {{ viewModel.title }}</div>
+
 <form [formGroup]="falHeaderInfoForm">
-  <sam-text [maxlength]="144"
+  <sam-text *ngIf="!viewModel.isRevision"
+           [maxlength]="144"
            [hint]="'Spell out any acronyms and limit to 144 characters.'"
            [control]="falHeaderInfoForm.controls['title']"
            [name]="'title-input'"
@@ -9,13 +11,18 @@
            [errorMessage]="falHeaderInfoForm.controls['title'].valid || falHeaderInfoForm.controls['title'].pristine ? '': errorMessage"
            formControlName="title"></sam-text>
 
+  <div *ngIf="viewModel.isRevision">
+    Title: {{ viewModel.title }}
+  </div>
+
   <sam-text [hint]="'The Popular Name should be different than the Program Title.'"
            [control]="falHeaderInfoForm.controls['alternativeNames']"
            [name]="'alternative-names-input'"
            [label]="'Popular Name'"
            formControlName="alternativeNames"></sam-text>
 
-  <sam-agency-picker [label]="'Federal Agency'"
+  <sam-agency-picker *ngIf="!viewModel.isRevision"
+                [label]="'Federal Agency'"
                 [multimode]="false"
                 [advancedMode]="false"
                 [required]="true"
@@ -24,7 +31,12 @@
                 (organization)="onOrganizationChange($event)"
                 [levelLimit]='2' #agencyPicker></sam-agency-picker>
 
-  <sam-number [maxlength]="3"
+  <div *ngIf="viewModel.isRevision && organizationData">
+      {{ organizationData.type }}: {{ organizationData.name || organizationData.agencyName }}
+  </div>
+
+  <sam-number *ngIf="!viewModel.isRevision"
+             [maxlength]="3"
              [minlength]="3"
              [required]="true"
              [hint]="'Provide a unique three digit program number (for example, enter 244 for CFDA number 10.244)'"
@@ -33,6 +45,10 @@
              [label]="'FAL Number'"
              [errorMessage]="falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
              formControlName="programNumber"></sam-number>
+
+  <div *ngIf="viewModel.isRevision">
+    CFDA Number: {{ falNo }}
+  </div>
 
   <sam-list-display  [newValue]="rpNGModel"
                      formControlName="rpListDisplay"

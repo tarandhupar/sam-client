@@ -1,23 +1,24 @@
 <div id="stickyLabel" class="sticky-label" *ngIf="!viewModel.isNew">Edit Criteria for Applying - {{ viewModel.title }}</div>
-<form [formGroup]="falCriteriaForm" novalidate (ngSubmit)="save(falCriteriaForm)">
+<form *ngIf="falCriteriaForm" [formGroup]="falCriteriaForm" novalidate (ngSubmit)="save(falCriteriaForm)">
   <div class="fal-label-margin">
-    <samCheckboxToggledTextarea [options]="documentationConfig"
+    <samCheckboxToggledTextarea #documentationComp [options]="documentationConfig"
                                 [formControlName]="'documentation'"
+                                [control]="falCriteriaForm.get('documentation')"
     ></samCheckboxToggledTextarea>
   </div>
   <div class="fal-label-margin fal-label">Eligibility Requirements</div>
   <sam-list-display [newValue]="appNGModel" formControlName="appListDisplay"
                     (ngModelChange)="applicantTypeChange($event)" (modelChange)="applicantlistChange()"
                     [config]="appAutocompleteConfig">
-    <sam-label-wrapper [label]="'Applicant Eligibility'" [required]="true"
-                  [hint]="'Please select all that apply to help public users search for this listing.'">
       <sam-autocomplete #appauto [options]="applicantTypeOptions"
                         [name]="applicantTypes-control"
                         formControlName="applicantType"
                         [(ngModel)]="appNGModel"
                         [config]="appAutocompleteConfig"
-                        required class="search-bar sam-autocomplete-width"></sam-autocomplete>
-    </sam-label-wrapper>
+                        [required]="true"
+                        [labelText]="'Applicant Eligibility'"
+                        [hint]="'Please select all that apply to help public users search for this listing.'"
+                        [control]="falCriteriaForm.controls['appListDisplay']"></sam-autocomplete>
   </sam-list-display>
   <sam-text-area
     [control]="falCriteriaForm.controls['applicantDesc']"
@@ -32,20 +33,20 @@
     [options]="benSameAsApplicantConfig.options"
     formControlName="isSameAsApplicant"
     (modelChange)="chkSameAsApp($event)"></sam-checkbox>
-  <div *ngIf="toggleBenSection">
+  <div [hidden]="toggleBenSection">
     <sam-list-display [newValue]="benNGModel" formControlName="benListDisplay"
                       (ngModelChange)="benTypeChange($event)" (modelChange)="benlistChange()"
                       [config]="benAutocompleteConfig">
-      <sam-label-wrapper #benTypeWrapper [label]="'Beneficiary Eligibility'" [required]="true"
-                    [hint]="'Please select all that apply to help public users search for this listing.'">
         <sam-autocomplete
           [options]="benTypeOptions"
           [name]="benificiaryTypes-control"
           formControlName="benType"
           [(ngModel)]="benNGModel"
           [config]="benAutocompleteConfig"
-          required class="search-bar sam-autocomplete-width"></sam-autocomplete>
-      </sam-label-wrapper>
+          [required]="true"
+          [labelText]="'Beneficiary Eligibility'"
+          [hint]="'Please select all that apply to help public users search for this listing.'"
+          [control]="falCriteriaForm.controls['benListDisplay']"></sam-autocomplete>
     </sam-list-display>
     <sam-text-area
       [control]="falCriteriaForm.controls['benDesc']"
@@ -81,16 +82,16 @@
   <div class="fal-label-margin fal-label">Use and Use Restrictions</div>
   <sam-list-display  [newValue]="assUsageNGModel" formControlName="assListDisplay"
                      (ngModelChange)="assUsageTypeChange($event)" (modelChange)="assUsagelistChange()" [config]="assUsageAutocompleteConfig">
-    <sam-label-wrapper #assUsageTypeWrapper [label]="'Use of Assistance'" [required]="true"
-                  [hint]="'Please select all that apply from the dropdown list.'">
       <sam-autocomplete
         [options]="assUsageTypeOptions"
         [name]="assUsageTypes-control"
         formControlName="assUsageType"
         [(ngModel)]="assUsageNGModel"
         [config]="assUsageAutocompleteConfig"
-        required class="search-bar sam-autocomplete-width"></sam-autocomplete>
-    </sam-label-wrapper>
+        [required]="true"
+        [labelText]="'Use of Assistance'"
+        [hint]="'Please select all that apply from the dropdown list.'"
+        [control]="falCriteriaForm.controls['assListDisplay']"></sam-autocomplete>
   </sam-list-display>
   <sam-text-area
     [control]="falCriteriaForm.controls['assUsageDesc']"
@@ -98,13 +99,16 @@
     [label]="'Describe how assistance may be used. Use specific terms that will help public users find this listing.'"
     [required]="true"
     formControlName="assUsageDesc"></sam-text-area>
-  <samCheckboxToggledTextarea class = "toggle-text-checkbox" [options]="useResConfig"
+  <samCheckboxToggledTextarea #usageResComp class = "toggle-text-checkbox" [options]="useResConfig"
                               [formControlName]="'usageRes'" [textareaLabel] = "['Please describe']"
+                              [control]="falCriteriaForm.get('usageRes')"
   ></samCheckboxToggledTextarea>
-  <samCheckboxToggledTextarea class = "toggle-text-checkbox" [options]="useDisFundsConfig"
+  <samCheckboxToggledTextarea #useDisFundsComp class = "toggle-text-checkbox" [options]="useDisFundsConfig"
                               [formControlName]="'useDisFunds'" [textareaLabel] = "['Please describe']"
+                              [control]="falCriteriaForm.get('useDisFunds')"
   ></samCheckboxToggledTextarea>
-  <samCheckboxToggledTextarea class = "toggle-text-checkbox" [options]="useLoanTermsConfig"
+  <samCheckboxToggledTextarea #useLoanTermsComp class = "toggle-text-checkbox" [options]="useLoanTermsConfig"
                               [formControlName]="'useLoanTerms'" [textareaLabel] = "['Please describe']"
+                              [control]="falCriteriaForm.get('useLoanTerms')"
   ></samCheckboxToggledTextarea>
 </form>

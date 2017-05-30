@@ -29,7 +29,7 @@
   </div>
 </sam-header>
 
-<sam-modal [showClose]="false" #userSessionModal [title]="sessionModalConfig.title" [type]="sessionModalConfig.type" [description]="sessionModalConfig.description" [submitButtonLabel]="'Continue'" [cancelButtonLabel]="'Log Out'" (onSubmit)="onSessionModalContinue()" (onClose)="onSessionModalClose()"  [closeOnOutsideClick]="false">
+<sam-modal [showClose]="false" #userSessionModal [title]="sessionModalConfig.title" [type]="sessionModalConfig.type" [description]="sessionModalConfig.description" [submitButtonLabel]="'Continue'" [cancelButtonLabel]="'Logout'" (onSubmit)="onSessionModalContinue()" (onClose)="onSessionModalClose()"  [closeOnOutsideClick]="false">
 </sam-modal>
 
 <main id="main-container" class="occupy-page relative">
@@ -38,3 +38,4 @@
 </main>
 <alert-footer></alert-footer>
 <sam-footer labelname = "footer" ></sam-footer>
+<sam-feedback></sam-feedback>

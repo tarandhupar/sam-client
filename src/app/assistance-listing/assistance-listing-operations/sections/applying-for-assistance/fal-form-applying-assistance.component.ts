@@ -1,9 +1,10 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {FALFormService} from "../../fal-form.service";
-import {FormBuilder, FormGroup, FormArray} from "@angular/forms";
+import { FormBuilder, FormGroup, FormArray, Validators } from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
 import * as moment from 'moment';
 import { FALAssistSubFormComponent } from '../../../components/applying-assistance-subform/applying-assistance-subform.component';
+import { falCustomValidatorsComponent } from "../../../validators/assistance-listing-validators";
 
 @Component({
   providers: [FALFormService],
@@ -26,7 +27,8 @@ export class FALAssistanceComponent implements OnInit {
   public preAppCordOptions = [
     { label: 'An environmental impact statement is required for this program.', value: 'statement' },
     { label: 'An environmental impact assessment is required for this program.', value: 'assessment'},
-    { label: 'Executive Order 12372, "Intergovernmental Review of Federal Programs," applies to this listing.', value: 'ExecutiveOrder12372'}
+    { label: 'Executive Order 12372, "Intergovernmental Review of Federal Programs," applies to this listing.', value: 'ExecutiveOrder12372'},
+    { label: 'Other pre-application coordination is required.', value: 'otherRequired' }
   ];
 
   public appProcOptions = [{ label: 'Funding contract opportunities notices for this listing will be posted on Grants.gov', value: true }];
@@ -41,6 +43,13 @@ export class FALAssistanceComponent implements OnInit {
     this.createForm();
 
     this.falAssistanceForm.valueChanges.subscribe(data => this.updateViewModel(data));
+    this.falAssistanceForm.get('preApplicationCoordination').get('reports').valueChanges.subscribe(data => {
+      if(data.indexOf('otherRequired') !== -1) {
+        this.falAssistanceForm.get('preApplicationCoordination').get('description').setValidators(Validators.required);
+      } else {
+        this.falAssistanceForm.get('preApplicationCoordination').get('description').setValidators(null);
+      }
+    });
     this.assistSubForm.falAssistSubForm.valueChanges.subscribe(data => this.updateDeadlineViewModel(data));
 
     if (!this.viewModel.isNew) {
@@ -67,7 +76,7 @@ export class FALAssistanceComponent implements OnInit {
   createForm(){
     this.falAssistanceForm = this.fb.group({
       deadlines: this.fb.group({
-        flag: '',
+        flag: ['', falCustomValidatorsComponent.radioButtonRequired],
         description: ''
       }),
       preApplicationCoordination: this.fb.group({
@@ -86,15 +95,15 @@ export class FALAssistanceComponent implements OnInit {
         description: ''
       }),
       approval: this.fb.group({
-        interval: 'na',
+        interval: ['na', falCustomValidatorsComponent.selectRequired],
         description: ''
       }),
       appeal: this.fb.group({
-        interval: 'na',
+        interval: ['na', falCustomValidatorsComponent.selectRequired],
         description: ''
       }),
       renewal: this.fb.group({
-        interval: 'na',
+        interval: ['na', falCustomValidatorsComponent.selectRequired],
         description: ''
       })
     });
@@ -258,6 +267,19 @@ export class FALAssistanceComponent implements OnInit {
       }
 
       this.assistInfoDisp.push(label);
+    }
+  }
+
+  public validateSection() {
+    //mark all controls as dirty
+    for (let control in this.falAssistanceForm.controls) {
+      this.falAssistanceForm.controls[control].markAsDirty();
+      this.falAssistanceForm.controls[control].updateValueAndValidity();
+
+      for (let subControl in this.falAssistanceForm.controls[control]['controls']) {
+        this.falAssistanceForm.controls[control]['controls'][subControl].markAsDirty();
+        this.falAssistanceForm.controls[control]['controls'][subControl].updateValueAndValidity();
+      }
     }
   }
 }

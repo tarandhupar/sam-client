@@ -1,0 +1,119 @@
+.user-roles-directory {
+  padding: 1em;
+
+  .input-and-addon {
+    float: right;
+    input[type='text'] {
+      display: inline-block;
+      max-width: initial;
+      width: 21em;
+    }
+  }
+
+  label[for="users-toggles"] {
+    margin-top: 0;
+  }
+
+  .right-column {
+    margin-top: 1.5em;
+  }
+
+  .edit-multiple-button {
+    margin-right: 0;
+  }
+
+  .org-column {
+    margin-right: 0;
+  }
+
+  .usa-accordion-content {
+    padding: 1.5rem;
+  }
+
+  .org-picker-section {
+    .usa-accordion-content {
+      padding: 0;
+    }
+
+    .usa-agency-picker-dropdown-area {
+      padding: 1.5rem;
+      border: none;
+      background: none;
+    }
+
+    .usa-agency-picker-readonly-area {
+      border: none;
+    }
+  }
+
+  .organization-container > label {
+    display: none;
+  }
+
+  .usa-agency-picker-search-input-wrapper{
+    width: calc(100% - 40px);
+  }
+
+  .user-row:not(:first-child) {
+    margin-top: 6rem;
+  }
+
+  .org-column {
+    border: 1px solid black;
+  }
+
+  .org-column, .domain-column {
+    overflow-y: auto;
+    max-height: 16em;
+  }
+
+  .org-row {
+    padding: 1em;
+
+    &.org-row-selected {
+      background-color: $color-gray-lighter;
+      pointer-events: none;
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid black;
+    }
+
+    &:not(.org-row-selected):hover {
+      background-color: $color-gray-lightest;
+      cursor: pointer;
+    }
+  }
+
+  .domain-column {
+    background-color: $color-gray-lighter;
+    border: 1px solid black;
+    padding: 1em;
+  }
+
+  .domain-row:not(:first-child) {
+    margin-top: 1em;
+  }
+
+  .role-text {
+    margin-left: 2em;
+  }
+
+  .fa.fa-user {
+    border: 2px solid black;
+    width: 1em;
+    border-radius: .1em;
+  }
+
+  .pagination-row {
+    margin-top: 3rem;
+  }
+
+  .text-lighter {
+    color: $color-gray;
+  }
+
+  .page-title {
+    margin-bottom: .2em;
+  }
+}

@@ -15,22 +15,6 @@
         need most.
         <br><br>
       </p>
-      <span *ngIf="states.showSignIn">
-        <div class="centered">
-          <p class="p_L-8x">Sign in to access dynamic reports</p><br>
-          <a routerLink="/signin"><button type="button" class="usa-button">Sign In</button></a>
-        </div>
-        <br><br>
-        <div class="centered">
-          <p>Dont have a user account?</p>
-          <br>
-          <a routerLink="/help/accounts" routerLinkActive="Active">Find out more</a>
-          <br>
-          <a routerLink="/signup" routerLinkActive="Active">
-            <button type="button" class="usa-button-outline">Sign Up</button>
-          </a>
-        </div>
-      </span>
     </div>
     <section class="usa-grid-full">
       <div class="grid-name1">
@@ -54,7 +38,7 @@
           <div class="usa-grid-full">
             <div class="usa-grid-full">
               <div class="grid-name">
-                <a [routerLink]="['../report',item.id,item.name, item.desc]">
+                <a [routerLink]="['../reportProto',item.id,item.name, item.desc]">
                   <b >{{item.name  }}</b>
                 </a>
                 <b class="grid-overview1">&nbsp;&nbsp;&nbsp;&nbsp;

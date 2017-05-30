@@ -1,3 +1,4 @@
+<span class="usa-input-error-message" *ngIf="errorExists && review"><sup>*</sup>You must add at least one obligation.</span>
 <sam-button buttonText="Add New Obligation" (onClick)="onAddNewObliClick()"
            [class.hide]="hideAddButton"></sam-button>
 <div [formGroup]="falObligationSubForm" [class.hide]="!hideAddButton">
@@ -14,12 +15,15 @@
         [options]="recReinveCheckboxConfig.options"
         class="form-control" formControlName="isRecoveryAct">
       </sam-checkbox>
-      <sam-label-wrapper #assistanceTypeWrapper [label]="assistanceTypeLabel" [required]="true"
-                    [hint]="'Search or browse to select an Assistance Type, or select Salaries and Expenses if applicable.'">
-        <sam-autocomplete [options]="options" [name]="autoAssistanceType" formControlName="assistanceType"
-                          (change)="assistanceTypeChange($event,i)"
-                          [config]="autocompleteConfig" [allowAny]="true" required class="search-bar sam-autocomplete-width"></sam-autocomplete>
-      </sam-label-wrapper>
+        <sam-autocomplete [options]="options"
+                          [name]="autoAssistanceType"
+                          formControlName="assistanceType"
+                          [config]="autocompleteConfig"
+                          [required]="true"
+                          [labelText]="'Assistance Type'"
+                          [hint]="'Search or browse to select an Assistance Type, or select Salaries and Expenses if applicable.'"
+                          [control]="falObligationSubForm.controls['obligations']['controls'][i]['controls']['assistanceType']"
+                          ></sam-autocomplete>
       <div class="fal-obligations-label">Past Fiscal Year - {{prevFY}}</div>
       <div class="text-radio-padding">
         <samTextRadioButton

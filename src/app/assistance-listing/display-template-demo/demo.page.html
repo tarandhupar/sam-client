@@ -71,7 +71,7 @@
           No Data Available.
         </p>
       </sam-subsection>
-      
+
       <sam-subsection title="Accomplishments">
         <div class="content-block" [ngSwitch]="program.data?.financial?.accomplishments?.isApplicable">
           <ng-container *ngSwitchCase="true">
@@ -104,7 +104,7 @@
           </ng-container>
         </p>
       </sam-subsection>
-      
+
       <sam-subsection title="Credentials and Documentation">
         <p>
         <ng-container *ngIf="program.data?.eligibility?.documentation?.description">
@@ -139,7 +139,7 @@
           <span class="field" id="program-applicant-eligibility">{{program.data?.eligibility?.applicant?.description}}</span>
         </p>
       </sam-subsection>
-      
+
       <sam-subsection title="Beneficiary Eligibility">
         <sam-well title="Designations" *ngIf="program.data && dictionaries && dictionaries.beneficiary_types">
           <ng-container *ngFor="let item of program.data?.eligibility?.beneficiary?.types | filterMultiArrayObject:dictionaries.beneficiary_types:'element_id':false:''; let isLast = last; let i = index">
@@ -151,7 +151,7 @@
           <span class="field" id="program-beneficiary-eligibility">{{program.data?.eligibility?.beneficiary?.description}}</span>
         </p>
       </sam-subsection>
-      
+
       <sam-subsection title="Length and Time Phasing of Assistance">
         <p>
           <span class="field" id="program-assistance-lengthtime">{{program.data?.eligibility?.limitation?.description}}</span>
@@ -160,7 +160,7 @@
           </span>
         </p>
       </sam-subsection>
-      
+
       <sam-subsection title="Use of Assistance">
         <sam-well title="Designations" *ngIf="program.data && dictionaries && dictionaries.assistance_usage_types">
           <ng-container *ngFor="let item of program.data?.eligibility?.assistanceUsage?.types | filterMultiArrayObject:dictionaries.assistance_usage_types:'element_id':false:''; let isLast = last; let i = index">
@@ -202,7 +202,7 @@
           </span>
         </div>
       </sam-subsection>
-      
+
       <sam-subsection title="Preapplication Coordination">
         <div>
           <ng-container [ngSwitch]="program.data?.assistance?.preApplicationCoordination?.isApplicable">
@@ -350,7 +350,7 @@
           </span>
         </p>
       </sam-subsection>
-      
+
       <sam-subsection title="Appeals">
         <p class="field" id="program-application-appeal-interval" [ngSwitch]="program.data?.assistance?.appeal?.interval">
           <ng-container *ngSwitchCase="'1'"><em>From 1 to 15 days</em></ng-container>
@@ -424,7 +424,7 @@
           No Data Available.
         </p>
       </sam-subsection>
-      
+
       <sam-subsection title="Regulations, Guidelines, and Literature">
         <p>
           <ng-container [ngSwitch]="program.data?.compliance?.documents?.isApplicable">
@@ -436,7 +436,7 @@
 
       <sam-subsection title="Formula and Matching Requirements">
         <!-- statutory formula-->
-        <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.formua">
+        <ng-container [ngSwitch]="program.data?.compliance?.formulaAndMatching?.types?.formula">
           <div class="m-a-0 field" id="program-assistance-formula" *ngSwitchCase="true">
             Statutory Formula: Title {{program.data?.compliance?.formulaAndMatching?.formula?.title}} Chapter {{program.data?.compliance?.formulaAndMatching?.formula?.chapter}}
             Part {{program.data?.compliance?.formulaAndMatching?.formula?.part}} Subpart {{program.data?.compliance?.formulaAndMatching?.formula?.subPart}} Public Law {{program.data?.compliance?.formulaAndMatching?.formula?.publicLaw}}
@@ -481,7 +481,7 @@
           <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'appendix'"> See Regional Agency Offices. {{program.data.contacts['local']?.description }}</span>
           <span class="field" id="program-contacts-local" *ngIf="program.data?.contacts?.local?.flag == 'none'"> None. {{program.data.contacts['local']?.description }}</span>
         </sam-subsection>
-        
+
         <sam-subsection title="Headquarters Office">
           <div *ngFor="let item of program.data.contacts?.headquarters; let i = index">
             <sam-poc [attr.id]="'program-contacts-poc-' + i" [data]="item"></sam-poc>

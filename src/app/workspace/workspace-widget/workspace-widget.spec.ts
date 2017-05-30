@@ -11,7 +11,7 @@ import { SamAPIKitModule } from "api-kit";
 import { WorkspaceWidgetComponent } from "./workspace-widget.component";
 
 
-fdescribe('Workspace widget component', () => {
+describe('Workspace widget component', () => {
   // provide our implementations or mocks to the dependency injector
   let component:WorkspaceWidgetComponent;
   let fixture:any;

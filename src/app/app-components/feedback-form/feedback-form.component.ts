@@ -6,6 +6,7 @@ import { Observable, Subscription } from 'rxjs/Rx';
 import { Validators as $Validators } from '../../authentication/shared/validators';
 import { FormControl, Validators } from '@angular/forms';
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { FeedbackFormService } from "./feedback-form.service";
 
 
 export let navigateAwayObj = {
@@ -64,7 +65,9 @@ export class SamFeedbackComponent {
               private feedbackService: FeedbackService,
               private iamService: IAMService,
               private zone: NgZone,
-              private alertFooterService: AlertFooterService){
+              private alertFooterService: AlertFooterService,
+              formService: FeedbackFormService){
+    formService.componentInstance = this;
     this.createBackdrop();
   }
 
@@ -171,7 +174,7 @@ export class SamFeedbackComponent {
       this.emailModelEdited = true;
 
       if((this.isEmailNeeded() && this.email.errors)){
-        this.showEmailError = true;
+       this.showEmailError = true;
       }else if((this.isEmailNeeded() && !this.email.errors) || !this.isEmailNeeded()){
         // Submit the feedback results
         let res = this.generateFeedbackRes();
@@ -185,6 +188,9 @@ export class SamFeedbackComponent {
       this.showThanksNote = true;
       this.startCountDown();
     }
+
+
+
   }
 
   isEmailNeeded(){
@@ -195,6 +201,7 @@ export class SamFeedbackComponent {
     });
     if(emailQuestionIndex !== -1 && this.answerData[emailQuestionIndex].value !== undefined && this.answerData[emailQuestionIndex].value !== null){
       this.userEmailModel = this.answerData[emailQuestionIndex].value[0].userEmail;
+      this.email.setValue(this.userEmailModel);
       return this.answerData[emailQuestionIndex].value[0].selectedValue === 'Yes';
     }
     return false;
@@ -216,7 +223,7 @@ export class SamFeedbackComponent {
         }
         let feedbackResItem:feedbackResItemType = {
           questionId: this.questionData[index].id,
-          userId: this.isEmailNeeded()? this.userEmailModel:"",
+          userId : this.isEmailNeeded()? this.userEmailModel:"",
           feedback_response: {
             type: this.questionData[index].type,
             selected: this.questionData[index].type === "radio-text"? [val[0].userEmail]: val,
@@ -354,7 +361,6 @@ export class SamFeedbackComponent {
         this.showFooter();
       }
     );
-    
 
   }
 

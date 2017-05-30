@@ -2,7 +2,7 @@ import { merge } from 'lodash';
 
 import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { FHService, IAMService } from 'api-kit';
 
@@ -101,12 +101,16 @@ export class SystemProfileComponent {
     pointOfContact: []
   };
 
-  constructor(private router: Router, private builder: FormBuilder, private _fh: FHService, private _iam: IAMService) {
+  constructor(private router: Router, private route: ActivatedRoute, private builder: FormBuilder, private _fh: FHService, private _iam: IAMService) {
     this.api.iam = _iam.iam;
     this.api.fh = _fh;
   }
 
   ngOnInit() {
+    this.store['observer'] = this.route.params.subscribe(params => {
+       this.system._id = params['id'];
+    });
+
     this.api.iam.checkSession((user) => {
       this.user = user;
 
@@ -121,6 +125,24 @@ export class SystemProfileComponent {
         this.states.edit = this.api.iam.getParam('edit');
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.store['observer'].unsubscribe();
+  }
+
+  getSystemAccount($success, $error) {
+    if(this.system._id) {
+      this.api.iam.system.account.get(this.system._id, $success, $error);
+    } else {
+      this.api.iam.system.account.get((accounts) => {
+        if(accounts.length) {
+          $success(accounts[0]);
+        } else {
+          $error();
+        }
+      }, $error);
+    }
   }
 
   initForm() {
@@ -187,9 +209,7 @@ export class SystemProfileComponent {
     });
 
     if(!this.api.iam.isDebug()) {
-      this.api.iam.system.account.get((accounts) => {
-        const account = accounts.length ? accounts[0] : null;
-
+      this.getSystemAccount((account) => {
         this.states.edit = account ? true : false;
         account ? initSystemAccountData(account) : initSystemAccountData({});
 

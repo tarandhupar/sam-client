@@ -21,7 +21,7 @@ export class SystemComponent {
       ] },
       { text: 'Reset Password', routerLink: 'password',   routerLinkActive: 'usa-current' },
       { text: 'My Access',      routerLink: false,        routerLinkActive: 'usa-current' },
-      { text: 'Migrations',     routerLink: false,        routerLinkActive: 'usa-current' }
+      { text: 'Migrations',     routerLink: 'migrations',        routerLinkActive: 'usa-current' }
     ]
   };
 

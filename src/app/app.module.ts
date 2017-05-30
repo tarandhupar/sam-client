@@ -82,9 +82,9 @@ const APP_PROVIDERS = [
     UIKitDemoModule,
     WageDeterminationModule,
     OrganizationDetailModule,
-    WorkspaceModule,
     RoleManagementModule,
     ForbiddenModule,
+    WorkspaceModule,
 
     //  Data Entry
     FALFormModule,

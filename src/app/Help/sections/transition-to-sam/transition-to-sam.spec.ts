@@ -30,12 +30,6 @@ describe("Transition Roadmap page in online help",()=>{
     expect(true).toBe(true);
   });
 
-  it("should have release note table vertical unit should be 3",()=>{
-    component.releaseData = releaseData;
-    fixture.detectChanges();
-    expect(component.getVerticalLineLength()).toBe(3);
-  });
-
   it("should change filter by clicking By Legacy Website Button",()=>{
     fixture.detectChanges();
     expect(component.isCurrentFilter('feature')).toBe(true);

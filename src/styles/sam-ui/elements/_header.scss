@@ -207,9 +207,11 @@ h3.#{$prefix}.header {
 }
 h4.#{$prefix}.header {
   font-size: $h4;
+  font-weight: 600;
 }
 h5.#{$prefix}.header {
   font-size: $h5;
+  font-weight: 600;
 }
 
 
@@ -511,6 +513,7 @@ a.#{$prefix}.inverted.grey.header:hover {
 .#{$prefix}.top.attached.header {
   margin-bottom: 0em;
   border-radius: $attachedBorderRadius $attachedBorderRadius 0em 0em;
+  flex-grow: 0 !important;
 }
 .#{$prefix}.bottom.attached.header {
   margin-top: 0em;

@@ -40,6 +40,10 @@ let MockFHService = {
             "logo": {
               "href": "URL"
             }
+          },
+          "status": {
+            "code": "published",
+            "value": "Published"
           }
         }
       ]
@@ -257,7 +261,7 @@ let MockProgramService = {
         "formulaAndMatching": {
           "types": {
             "moe": false,
-            "formua": false,
+            "formula": false,
             "matching": true
           },
           "matching": {
@@ -388,13 +392,22 @@ let MockProgramService = {
     "id": "3077ea1df409265fb4378e0e844b8811"
   });
   },
-  getLatestProgramById: (id: string) => {
+  getProgramById: (id: string) => {
     //return object that has attribute 'program' -> considered as published program
     return Observable.of({
         'id':'',
         'data': {
           'programNumber': '',
         },
+      '_links': {
+        'self': {
+          'href': 'URL'
+        }
+      },
+      "status": {
+        "code": "published",
+        "value": "Published"
+      }
     });
   }
 };
