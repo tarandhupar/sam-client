@@ -2,19 +2,13 @@
  * @author: @AngularClass
  */
 
-//override phantomjs with chrome argument
-let browsersList =  ['PhantomJS'];
-if(process.argv.indexOf("--chrome")!=-1){
-  browsersList =  ['Chrome'];
-}
-
 module.exports = function(config) {
   var testWebpackConfig = require('./webpack.test.js');
 
   var configuration = {
 
     // base path that will be used to resolve all patterns (e.g. files, exclude)
-    basePath: '',
+    basePath: '../src/sam-ui-elements',
 
     /*
      * Frameworks to use
@@ -32,14 +26,8 @@ module.exports = function(config) {
      * we are building the test environment in ./spec-bundle.js
      */
     files: [
-      { pattern: './config/spec-bundle.js', watched: false },
-      { pattern: './src/assets/**/*.jpg', watched: false, included: false, served: true },
-      { pattern: './src/assets/**/*.png', watched: false, included: false, served: true },
+      { pattern: './config/spec-bundle.js', watched: false }
     ],
-
-    proxies: {
-      '/src/assets': '/base/src/assets'
-    },
 
     /*
      * preprocess matching files before serving them to the browser
@@ -53,7 +41,6 @@ module.exports = function(config) {
     coverageReporter: {
       dir : 'coverage/',
       reporters: [
-        { type: 'lcov' },
         { type: 'text-summary' },
         { type: 'json' },
         { type: 'html' }
@@ -74,15 +61,13 @@ module.exports = function(config) {
      * possible values: 'dots', 'progress'
      * available reporters: https://npmjs.org/browse/keyword/karma-reporter
      */
-    reporters: [ 'mocha', 'sonarqubeUnit', 'coverage' ],
+    reporters: [ 'mocha', 'coverage' ],
 
     // web server port
     port: 9876,
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
-
-    browserNoActivityTimeout: 200000,
 
     /*
      * level of logging
@@ -97,13 +82,9 @@ module.exports = function(config) {
      * start these browsers
      * available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
      */
-    browsers: browsersList,
-
-    sonarQubeUnitReporter: {
-      sonarQubeVersion: 'LATEST',
-      outputFile: 'coverage/ut_report.xml',
-      useBrowserName: false
-    },
+    browsers: [
+      'PhantomJS'
+    ],
 
     customLaunchers: {
       ChromeTravisCi: {
@@ -112,9 +93,6 @@ module.exports = function(config) {
       }
     },
 
-    client: {
-        captureConsole: true
-    },
     /*
      * Continuous Integration mode
      * if true, Karma captures browsers, runs the tests and exits
