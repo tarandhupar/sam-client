@@ -18,6 +18,9 @@ const API_UMBRELLA_KEY = process.env.API_UMBRELLA_KEY || apiConfig.API_UMBRELLA_
 const API_UMBRELLA_URL = process.env.API_UMBRELLA_URL || apiConfig.API_UMBRELLA_URL;
 const SHOW_OPTIONAL = process.env.SHOW_OPTIONAL || apiConfig.SHOW_OPTIONAL;
 const SHOW_HIDE_RESTRICTED_PAGES = process.env.SHOW_HIDE_RESTRICTED_PAGES || apiConfig.SHOW_HIDE_RESTRICTED_PAGES;
+const IDLE_TIME = process.env.IDLE_TIME || '12';
+const PINGER_TIME = process.env.PINGER_TIME || '14';
+const TIMEOUT_DURATION = process.env.TIMEOUT_DURATION || '2';
 
 if (!API_UMBRELLA_URL || !API_UMBRELLA_KEY) {
   console.error("API_UMBRELLA_URL/API_UMBRELLA_KEY not set. Exiting...");
@@ -129,7 +132,10 @@ module.exports = webpackMerge(commonConfig, {
       'API_UMBRELLA_URL': JSON.stringify(API_UMBRELLA_URL),
       'API_UMBRELLA_KEY': JSON.stringify(API_UMBRELLA_KEY),
       'SHOW_OPTIONAL': JSON.stringify(SHOW_OPTIONAL),
-      'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(SHOW_HIDE_RESTRICTED_PAGES)
+      'SHOW_HIDE_RESTRICTED_PAGES': JSON.stringify(SHOW_HIDE_RESTRICTED_PAGES),
+      'IDLE_TIME': JSON.stringify(IDLE_TIME),
+      'PINGER_TIME': JSON.stringify(PINGER_TIME),
+      'TIMEOUT_DURATION': JSON.stringify(TIMEOUT_DURATION)
     }),
 
     /**
