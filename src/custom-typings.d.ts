@@ -55,6 +55,9 @@ declare var API_UMBRELLA_URL: string;
 declare var API_UMBRELLA_KEY: string;
 declare var SHOW_OPTIONAL: string;
 declare var SHOW_HIDE_RESTRICTED_PAGES: string;
+declare var IDLE_TIME:string;
+declare var PINGER_TIME:string;
+declare var TIMEOUT_DURATION:string;
 
 interface SystemJS {
   import: (path?: string) => Promise<any>;
@@ -67,6 +70,10 @@ interface GlobalEnvironment {
   API_UMBRELLA_KEY;
   SHOW_OPTIONAL;
   SHOW_HIDE_RESTRICTED_PAGES;
+  IDLE_TIME;
+  PINGER_TIME;
+  TIMEOUT_DURATION;
+
   SystemJS: SystemJS;
   System: SystemJS;
 }
