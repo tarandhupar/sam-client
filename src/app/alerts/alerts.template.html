@@ -5,6 +5,7 @@
   <sam-modal #expireModal [type]="modalWindowConfig.type" [description]="modalWindowConfig.description" [title]="modalWindowConfig.title" [cancelButtonLabel]="'Cancel'" [submitButtonLabel]="'Expire'" (onSubmit)="onExpireConfirm()" (onClose)="onExpireCancel()" [closeOnOutsideClick]="false" [closeOnEscape]="false"></sam-modal>
 
 
+  <div class="usa-width-one-whole"><a class="pull-left m_T-2x m_B-3x" (click)="_location.back()"><i class="fa fa-angle-left"></i>&nbsp;Back</a></div>
   <h1 class="alert-page-title">System Alerts</h1>
   <div class="alerts-toolbar">
     <div class="toolbar-item">
