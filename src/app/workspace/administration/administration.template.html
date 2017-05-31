@@ -37,16 +37,16 @@
   <div class="usa-width-one-whole m_T-3x" *ngIf="toggleControl.alerts || toggleControl.analytics">
     <div class="usa-width-one-half relative" *ngIf="toggleControl.alerts">
       <workspace-widget [isExpand]="configObj[2]['alerts'].isExpand" [title]="'System Alerts'" (onToggleChange)="toggleHelpDetail('alerts',$event, 2)">
-        <button class="alert-add-btn">Add New Alert</button>
-        <div class="usa-width-one-half m_T-3x m_R-0">
+        <button class="alert-add-btn" *ngIf="states.isSignedIn" (click)="onAddNewAlert()">Add New Alert</button>
+        <div class="usa-width-one-half m_T-6x m_R-0">
           <div class="usa-offset-one-fourth usa-width-three-fourths alert-text-center"><span class="alert-number-text">3</span></div>
           <div class="usa-offset-one-fourth usa-width-three-fourths alert-text-center"><span class="alert-type-text">Active</span></div>
         </div>
-        <div class="usa-width-one-half m_T-3x">
+        <div class="usa-width-one-half m_T-6x">
           <div class="usa-width-three-fourths alert-text-center"><span class="alert-number-text">2</span></div>
           <div class="usa-width-three-fourths alert-text-center"><span class="alert-type-text">Draft</span></div>
         </div>
-        <span class="workspace-widget-link">Go to System Alerts &nbsp;<i class="fa fa-chevron-circle-right go-right-icon"></i></span>
+        <a class="workspace-widget-link" routerLink="/alerts">Go to System Alerts &nbsp;<i class="fa fa-chevron-circle-right go-right-icon"></i></a>
       </workspace-widget>
     </div>
     <div class="usa-width-one-half" *ngIf="toggleControl.analytics">
@@ -55,9 +55,13 @@
       </workspace-widget>
     </div>
   </div>
-  <div class="usa-width-one-whole workspace-help-detail" *ngIf="isDetailExpanded(2)">
-    <div class="usa-width-one-whole" *ngIf="helpDetailType[2] === 'alerts'">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis. Donec maximus tristique ex ut convallis. Aliquam vestibulum ullamcorper elit, in vehicula nisi fringilla non. Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut. Cras fermentum ante eu lorem bibendum, et pulvinar lectus placerat. Duis in lorem neque.
+  <div class="usa-width-one-whole workspace-help-detail relative" *ngIf="isDetailExpanded(2)">
+    <div class="usa-width-five-sixths" *ngIf="helpDetailType[2] === 'alerts'">
+      Question 1
+      <p class="p_L-3x">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ac nisi in tellus vehicula pretium. Duis id cursus nulla. Fusce porttitor diam quis tellus tempus, id dictum sem lobortis.  Donec maximus tristique ex ut convallis.</p>
+      Question 2
+      <p class="p_L-3x">Donec suscipit felis a feugiat porta. Suspendisse congue velit nisi, at accumsan diam hendrerit eu. Curabitur gravida gravida erat, quis dignissim velit aliquam eget. Fusce sodales ipsum eros, sed fermentum sapien lacinia ut.</p>
+      <a class="workspace-widget-help-link">More Info &nbsp;<i class="fa fa-chevron-circle-right go-right-icon"></i></a>
     </div>
     <div class="usa-width-one-whole" *ngIf="helpDetailType[2] === 'analytics'">
       Pellentesque suscipit efficitur urna at aliquam. Mauris quam mauris, dictum et nibh sit amet, mattis convallis ante. In vulputate nunc tempus mattis laoreet. Proin rutrum, mi id mollis pellentesque, nulla metus varius libero, ut sodales nisl metus in tellus. Cras sagittis molestie tellus ut luctus. Aliquam at ornare mi, ut porta orci. Ut porta malesuada dolor, eget molestie felis fermentum et. Nullam rutrum, tellus nec maximus molestie, purus tellus maximus ante, a ultricies velit ante in ipsum. Donec nec lacus porta, efficitur felis ac, sagittis sem. Mauris ut nunc vitae dui tincidunt lobortis pretium at nisi.

@@ -5,9 +5,9 @@
   </div>
 
 
-  <div class="usa-width-one-whole workspace-widget-bot-section relative">
+  <div class="usa-width-one-whole workspace-widget-bot-section relative" (click)="onToggleBtnClick()">
     <h4 class="m_L-1x m_T-1x m_B-1x workspace-widget-title workspace-widget-text">Help</h4>
-    <span class="workspace-widget-bot-icon workspace-widget-text"><i class="fa" [ngClass]="{'fa-plus':!isExpand,'fa-minus':isExpand}" (click)="onToggleBtnClick()"></i></span>
+    <span class="workspace-widget-bot-icon workspace-widget-text"><i class="fa" [ngClass]="{'fa-plus':!isExpand,'fa-minus':isExpand}"></i></span>
   </div>
 
 </div>

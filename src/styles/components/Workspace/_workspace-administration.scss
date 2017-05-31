@@ -36,4 +36,14 @@
     right: 5px;
     bottom: 34px;
   }
+
+  .workspace-widget-help-link{
+    position: absolute;
+    right: 5px;
+    bottom: 8px;
+  }
+
+  .workspace-help-detail a:hover{
+    cursor: pointer;
+  }
 }

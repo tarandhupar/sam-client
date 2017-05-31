@@ -1,5 +1,5 @@
 import { Component, NgZone, ViewChild, ViewChildren, QueryList} from '@angular/core';
-import { Router } from "@angular/router";
+import { Router, ActivatedRoute } from "@angular/router";
 import { Alert } from "./alert.model";
 import { SystemAlertsService } from "../../api-kit/system-alerts/system-alerts.service";
 import { Observable } from "rxjs";
@@ -94,6 +94,7 @@ export class AlertsPage {
 
 
   constructor(private router: Router,
+              private route: ActivatedRoute,
               private alertsService: SystemAlertsService,
               private alertFooterService: AlertFooterService,
               private zone: NgZone,
@@ -114,6 +115,11 @@ export class AlertsPage {
                 this.userAccessModel = UserAccessModel.FromResponse(res);
                 this.states.isCreate = this.userAccessModel.canCreateAlerts();
                 this.states.isEdit = this.userAccessModel.canEditAlerts();
+                this.route.queryParams.subscribe(param => {
+                  if(param['mode'] === 'create' && this.isCreate() && this.isEdit()) {
+                    this.alertBeingEdited = new Alert();
+                  }
+                });
               }
             )
           }
@@ -143,6 +149,7 @@ export class AlertsPage {
   ngOnInit() {
     this.checkSession();
     this.doSearch();
+
   }
 
   onNewAlertsReceived(alerts) {
