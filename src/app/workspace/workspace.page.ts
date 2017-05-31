@@ -12,7 +12,7 @@ export class WorkspacePage {
   dataEntryWidgetControl:any = {entity:true,exclusions:true,award:true,opportunities:true,assistanceListings:true,subAward:true};
   administrationWidgetControl:any = {profile:true,fh:true,rm:true,aacRequest:true,alerts:true,analytics:true};
 
-  userProfile = 'f-ng-na';
+  userProfile = 'r-IAE-ad';
   userMapping:any = {1:'f-ng-na',2:'f-g-na',3:'r-ng-na',4:'r-g-na',5:'r-g-ad',6:'r-IAE-ad'};
   userAccessTokens:any = [];
   constructor(private route: ActivatedRoute){}
