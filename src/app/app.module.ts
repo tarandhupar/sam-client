@@ -40,6 +40,7 @@ import { RoleManagementModule } from "./role-management/role-management.module";
 import { FALFormModule } from "./assistance-listing/assistance-listing-operations/fal-form.module";
 import { ForbiddenModule } from "./application-content/403/403.module";
 import { WorkspaceModule } from "./workspace/workspace.module";
+import { DataServiceModule } from "./data-service/data-service.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -85,6 +86,7 @@ const APP_PROVIDERS = [
     RoleManagementModule,
     ForbiddenModule,
     WorkspaceModule,
+    DataServiceModule,
 
     //  Data Entry
     FALFormModule,

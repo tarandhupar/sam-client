@@ -71,6 +71,7 @@ export class SamHeaderLinksComponent {
     {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview", pageInProgress:false},
     // {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/create-organization?orgType=Department", pageInProgress:true},
     {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/", pageInProgress:true},
+    {linkTitle:"Data Service", linkClass:"fa-file-text-o", linkUrl:"/data-service", pageInPorgress:false},
     {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/", pageInProgress:true},
     {linkTitle:"Profile", linkClass:"fa-user", linkUrl:"/profile",pageInProgress:false, loggedIn: true},
     {linkTitle:"Sign Out", linkClass:"fa-sign-out", linkUrl:"/signout",pageInProgress:false, loggedIn: true},
