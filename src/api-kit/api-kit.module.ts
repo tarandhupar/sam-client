@@ -25,6 +25,7 @@ import { SearchDictionariesService } from "./search/search-dictionaries.service"
 import { EntitySuggestionsServiceDirective } from "./autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 import { UserAccessMock } from "./access/access.service.mock";
 import { UserSessionService } from "./user-session/user-session.service";
+import { FileExtractsService } from "./file-extracts/file-extracts.service";
 
 /**
  * A module for reusable SAM Web Design components
@@ -65,6 +66,7 @@ import { UserSessionService } from "./user-session/user-session.service";
     FHWrapperService,
     SearchDictionariesService,
     UserSessionService,
+    FileExtractsService,
   ]
 })
 export class SamAPIKitModule { }

@@ -33,7 +33,8 @@ export class WrapperService {
         "relatedPrograms": "/fac/v1/programs/relatedprograms",
         "aac": "/aac/v1",
         "searchDictionaries": "/sgs/v1/dictionaries",
-        'preferences': '/preferences'
+        'preferences': '/preferences',
+        'fileExtracts':'/fileextractservices/v1/api/listfiles',
     };
 
     constructor(private _http: Http){}

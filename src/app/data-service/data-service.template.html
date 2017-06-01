@@ -1,0 +1,33 @@
+<section class="data-service-section usa-grid p_All-4x">
+  <h5 class="data-service-gray-header p_T-4x">DATA SERVICES</h5>
+  <h2 class="m_T-0 m_B-3x">File Extracts</h2>
+  <div class="usa-width-one-whole" *ngIf="currentDomain.length !== 0">
+    <a class="data-service-file-hierarchy-link" (click)="updateFileList('')">Home&nbsp;</a>
+    <span *ngFor="let domainItem of currentDomain.split('/'); let i = index">
+      <i class="fa fa-angle-right"></i>
+      <a class="data-service-file-hierarchy-link" *ngIf="!isCurrentFolder(i)" (click)="updateDomain(i)">&nbsp;{{domainItem}}&nbsp;</a>
+      <span *ngIf="isCurrentFolder(i)">&nbsp;{{domainItem}}&nbsp;</span>
+    </span>
+  </div>
+  <div class="usa-width-one-whole data-service-content-div">
+    <div class="usa-width-one-whole m_T-2x">
+      <div class="usa-width-five-sixths">
+        <span class="usa-width-one-whole data-service-tag-text">File</span>
+      </div>
+      <div class="usa-width-one-sixth">
+        <span class="usa-width-one-whole data-service-tag-text">Last Modified</span>
+      </div>
+    </div>
+
+    <div class="usa-width-one-whole m_T-2x m_B-2x" *ngFor="let file of currentFileList">
+      <div class="usa-width-five-sixths">
+        <a class="data-service-file-link" (click)="updateFileList(file.key)">
+          <i class="fa data-service-file-icon" [ngClass]="getFileTypeClass(file.key)"></i>&nbsp; {{file.displayKey}}</a>
+      </div>
+      <div class="usa-width-one-sixth">
+        <span class="data-service-file-date">{{file.dateModified}}</span>
+      </div>
+    </div>
+
+  </div>
+</section>
