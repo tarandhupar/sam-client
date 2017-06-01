@@ -25,6 +25,7 @@ export class EntityPage implements OnInit, OnDestroy {
   repsAndCerts: any;
   mandatoryPOCs: any;
   optionalPOCs: any;
+  exclusionsList: any;
   subscription: Subscription;
   errorEntity: any;
   errorLogo: any;
@@ -67,6 +68,7 @@ export class EntityPage implements OnInit, OnDestroy {
       this.repsAndCerts = jsonData.entityInfo.repsAndCerts;
       this.mandatoryPOCs = jsonData.entityInfo.mandatoryPOCs;
   	  this.optionalPOCs = jsonData.entityInfo.optionalPOCs;
+	  this.exclusionsList = jsonData.entityInfo.exclusionsList;
 	  this.fhService.getOrganizationLogo(apiSubject,
         (logoData) => {
           if (logoData != null) {

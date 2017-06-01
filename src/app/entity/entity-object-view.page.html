@@ -570,7 +570,52 @@
 		</ng-container>
 		
 		<div class="sam-ui hidden section divider"></div>
-		<h2 class="sam-ui header" id="exclusions">Exclusions</h2>
+		
+		<!--Exclusions-->
+		<ng-container *ngIf="exclusionsList">
+		
+			<h2 class="sam-ui header" id="exclusions">Exclusions</h2>
+			
+			<h3 class="sam-ui dividing header">Active Exclusions</h3>
+			
+			<ng-container [ngSwitch]="exclusionsList">
+				<div id="exclusions-list" *ngIf="exclusionsList.length">
+					<div id="exclusions-list" *ngSwitchCase="exclusionsList">
+						<p>
+							This section lists all active exclusion records associated to this entity by its unique entity identifier. You cannot make a decision based only on the existence of this record. You must select View to review the exclusion details. Read the entire record to understand why the entity was excluded and what effect this exclusion has on your decision.
+						</p>
+						<table class="sam-ui lightest blue celled table">
+							<thead>
+								<tr>
+									<th scope="col">Excluded By</th>
+									<th scope="col">Classification</th>
+									<th scope="col">Active Date</th>
+									<th scope="col">Termination Date</th>
+									<th scope="col">View Exclusion</th>
+								</tr>
+							</thead>
+							<tr *ngFor="let exclusion of exclusionsList">
+								<td>{{exclusion.excludedBy}}</td>
+								<td>{{exclusion.classification}}</td>
+								<td>{{exclusion.activeDate}}</td>
+								<td>{{exclusion.terminationDate}}</td>
+								<td>
+									<a [routerLink]="['/exclusions', exclusion.exclusionDetailLink]" [queryParams]="qParams">
+										View
+										<i class="fa fa-eye"></i> 
+									</a>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div id="exclusions-list" *ngSwitchDefault>
+					<p>
+						There are no active exclusion records associated to this entity by its unique entity identifier. You may conduct additional searches for exclusions records using different search criteria.
+					</p>
+				</div>
+			</ng-container>
+		</ng-container>
 		<div class="sam-ui hidden section divider"></div>
 					
 	</div>

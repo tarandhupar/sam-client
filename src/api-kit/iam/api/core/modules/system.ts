@@ -34,7 +34,7 @@ const $import = {
   },
 
   history(email, $success, $error) {
-    let endpoint = utilities.getUrl(config.import.history),
+    let endpoint = utilities.getUrl(config.system.account.import.history),
         headers = getAuthHeaders(),
         mock = [];
 
@@ -97,7 +97,7 @@ const $import = {
   },
 
   create(email, system, username, password, $success, $error) {
-    let endpoint = utilities.getUrl(config.import.roles),
+    let endpoint = utilities.getUrl(config.system.account.import.create),
         headers = getAuthHeaders(),
         params = {
           'legacySystem': system,

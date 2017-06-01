@@ -29,12 +29,13 @@
     <br>
     <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
     <br>
-    <div class="usa-width-one-whole">
-    <sam-alert class="full-width" [type]="'info'"
+    <div class="usa-grid-full">
+      <div class="usa-width-one-whole">
+        <sam-alert class="full-width" [type]="'info'"
                [description]="'DoD report data that are funded by DoD are delayed 90 days for non DoD users.'">
-    </sam-alert>
+        </sam-alert>
+      </div>
     </div>
-    <br><br>
     <samAccordion >
       <sam-accordion-section  [name]="'Appendix'" [headerText]="'Appendix'" >
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->

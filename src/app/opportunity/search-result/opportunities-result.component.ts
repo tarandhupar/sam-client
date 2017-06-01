@@ -21,6 +21,10 @@ import * as moment from 'moment/moment';
             <span [innerHTML]="data.description"></span>
           </p>
           <ul class="sam-ui small list">
+            <li *ngIf="data.type.value == 'Award Notice'">
+            <strong>Awardee</strong><br>
+            <span>{{data.award?.awardee?.name}} <span *ngIf="data.award?.awardee?.duns!=null && data.award?.awardee?.duns.length > 0">({{data.award?.awardee?.duns}})</span></span>
+            </li>
             <li *ngIf="data.organizationHierarchy!=null">
               <strong>Department/Ind. Agency</strong><br>
               <a *ngIf="data.isActive==true && data.organizationHierarchy[0].organizationId.length < 12" [routerLink]="['/organization', data.organizationHierarchy[0].organizationId]" [queryParams]="qParams">
@@ -70,6 +74,11 @@ import * as moment from 'moment/moment';
                 <ng-container *ngIf="!data.isCanceled">Updated </ng-container>
                 {{data.originalType?.value}}
               </ng-container>
+            </li>
+            <li class= "service-classification">
+            <strong>Service Classifications</strong><br>
+            <span *ngIf="data.psc != null">{{data?.psc[0].value}}</span><br>
+            <span *ngIf="data.naics != null">{{data?.naics[0].value}}</span>
             </li>
           </ul>
         </div>

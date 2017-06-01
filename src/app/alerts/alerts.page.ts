@@ -10,6 +10,7 @@ import { AlertItemComponent } from "./alert-item/alert-item.component"
 import { IAMService } from "api-kit";
 import { UserAccessService } from "../../api-kit/access/access.service";
 import { UserAccessModel } from "../../app/users/access.model";
+import { Location } from "@angular/common";
 
 export const ALERTS_PER_PAGE: number = 5;
 
@@ -99,7 +100,8 @@ export class AlertsPage {
               private alertFooterService: AlertFooterService,
               private zone: NgZone,
               private api: IAMService,
-              private role: UserAccessService) {
+              private role: UserAccessService,
+              private _location: Location) {
   }
 
   checkSession() {
@@ -107,6 +109,12 @@ export class AlertsPage {
     this.zone.runOutsideAngular(() => {
       this.api.iam.checkSession((user) => {
         this.zone.run(() => {
+          this.route.queryParams.subscribe(param => {
+            if(param['mode'] === 'create') {
+              this.alertBeingEdited = new Alert();
+            }
+          });
+
           this.states.isSignedIn = true;
           this.user = user;
           if(this.user !== null){
@@ -115,11 +123,6 @@ export class AlertsPage {
                 this.userAccessModel = UserAccessModel.FromResponse(res);
                 this.states.isCreate = this.userAccessModel.canCreateAlerts();
                 this.states.isEdit = this.userAccessModel.canEditAlerts();
-                this.route.queryParams.subscribe(param => {
-                  if(param['mode'] === 'create' && this.isCreate() && this.isEdit()) {
-                    this.alertBeingEdited = new Alert();
-                  }
-                });
               }
             )
           }

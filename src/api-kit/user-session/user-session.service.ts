@@ -8,7 +8,7 @@ import {Keepalive} from '@ng-idle/keepalive';
 
 @Injectable()
 export class UserSessionService {
-  idleTime = Number.parseInt(IDLE_TIME);
+  idleTime = Number.parseInt(IDLE_TIME)*60;
   pingInterval = Number.parseInt(PINGER_TIME)*60;
   timeoutDuration = Number.parseInt(TIMEOUT_DURATION)*60;
 
@@ -48,7 +48,6 @@ export class UserSessionService {
       this.timedOut = true;
       // Make API call to log out the user and redirect them back to home page
       this.logoutUserSession();
-      this._router.navigateByUrl('/');
       this.idleDetectionStop();
 
     });
@@ -70,8 +69,7 @@ export class UserSessionService {
 
       if(this.isIdle){
         // Make API call to log out the user and redirect them back to home page
-        // this.logoutUserSession();
-        this._router.navigateByUrl('/signout');
+        this.logoutUserSession();
         this.pingState = "Log out";
         this.idleDetectionStop();
 
@@ -120,7 +118,7 @@ export class UserSessionService {
   }
 
   logoutUserSession(){
-    this.iamService.iam.logout(false);
+    this._router.navigateByUrl('/signout');
   }
 
 }

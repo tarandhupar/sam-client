@@ -187,8 +187,7 @@ export class App{
     this.userSessionService.idleDetectionStop();
     if(!this.continueSession){
       //User session service log out call and redirect to home page
-      // this.userSessionService.logoutUserSession();
-      this._router.navigateByUrl('/signout');
+      this.userSessionService.logoutUserSession();
 
       if(this.sessionModal.show) this.sessionModal.closeModal();
 
