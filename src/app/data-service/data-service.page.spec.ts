@@ -111,7 +111,7 @@ class FileExtractsServiceStub {
   }
 }
 
-fdescribe('Workspace Page', () => {
+describe('Data Service Page', () => {
   // provide our implementations or mocks to the dependency injector
   let component:DataServicePage;
   let fixture:any;
@@ -138,7 +138,7 @@ fdescribe('Workspace Page', () => {
     fixture.detectChanges();
     expect(true).toBe(true);
   }));
-  
+
   it("should be able to detect file or folder", inject([ DataServicePage ], () => {
     fixture.detectChanges();
     expect(component.isFolder("Entity Information/")).toBe(true);
@@ -146,5 +146,5 @@ fdescribe('Workspace Page', () => {
     expect(component.getFileTypeClass("Entity Information/")).toBe("fa-folder");
     expect(component.getFileTypeClass("a.csv")).toBe("fa-file-text-o");
   }));
-  
+
 });
