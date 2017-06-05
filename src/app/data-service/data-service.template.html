@@ -21,8 +21,12 @@
 
     <div class="usa-width-one-whole m_T-2x m_B-2x" *ngFor="let file of currentFileList">
       <div class="usa-width-five-sixths">
-        <a class="data-service-file-link" (click)="updateFileList(file.key)">
-          <i class="fa data-service-file-icon" [ngClass]="getFileTypeClass(file.key)"></i>&nbsp; {{file.displayKey}}</a>
+        <a class="data-service-file-link" (click)="updateFileList(file.key)" *ngIf="isFolder(file.key)">
+          <i class="fa fa-folder data-service-file-icon"></i>&nbsp; {{file.displayKey}}
+        </a>
+        <a class="data-service-file-link" [attr.href] ="file._links.self.href" download="true" *ngIf="!isFolder(file.key)">
+          <i class="fa fa-file-text-o data-service-file-icon"></i>&nbsp; {{file.displayKey}}
+        </a>
       </div>
       <div class="usa-width-one-sixth">
         <span class="data-service-file-date">{{file.dateModified}}</span>

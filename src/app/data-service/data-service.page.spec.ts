@@ -143,8 +143,6 @@ describe('Data Service Page', () => {
     fixture.detectChanges();
     expect(component.isFolder("Entity Information/")).toBe(true);
     expect(component.isFolder("a.csv")).toBe(false);
-    expect(component.getFileTypeClass("Entity Information/")).toBe("fa-folder");
-    expect(component.getFileTypeClass("a.csv")).toBe("fa-file-text-o");
   }));
 
 });
