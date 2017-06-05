@@ -20,10 +20,6 @@ export class DataServicePage {
     return fileNameKey.charAt(fileNameKey.length - 1) === '/';
   }
 
-  getFileTypeClass(fileNameKey){
-    return this.isFolder(fileNameKey)? "fa-folder": "fa-file-text-o";
-  }
-
   updateFileList(fileNameKey){
     // update the file list only if a folder is selected
     if(this.isFolder(fileNameKey) || fileNameKey === ''){
