@@ -1,0 +1,18 @@
+.federal-hierarchy{
+  .fa-search{
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    font-size: 150%;
+  }
+
+  .federal-hierarchy-org-item{
+    border-bottom: 2px solid $color-gray-medium;
+    padding: 10px 0 10px 0;
+
+    .org-description{
+      color: $color-black;
+      font-weight: 600;
+    }
+  }
+}
