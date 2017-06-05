@@ -41,6 +41,7 @@ import { FALFormModule } from "./assistance-listing/assistance-listing-operation
 import { ForbiddenModule } from "./application-content/403/403.module";
 import { WorkspaceModule } from "./workspace/workspace.module";
 import { DataServiceModule } from "./data-service/data-service.module";
+import { FederalHierarchyModule } from "./fh/federal-hierarchy.module";
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -87,6 +88,7 @@ const APP_PROVIDERS = [
     ForbiddenModule,
     WorkspaceModule,
     DataServiceModule,
+    FederalHierarchyModule,
 
     //  Data Entry
     FALFormModule,

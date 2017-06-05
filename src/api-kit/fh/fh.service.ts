@@ -93,6 +93,16 @@ export class FHService {
     return this.oAPIService.call(oApiParam);
   }
 
+  getActiveDepartments(){
+    // let oApiParam = {
+    //   name: 'federalHierarchy',
+    //   suffix: '/activedepartment/',
+    //   method: 'GET'
+    // };
+    // return this.oAPIService.call(oApiParam);
+    return this._http.get("../../landing_superadmin.json").map((res:any) => res.json());
+  }
+
   search(oData) {
     let oApiParam = {
       name: 'search',
