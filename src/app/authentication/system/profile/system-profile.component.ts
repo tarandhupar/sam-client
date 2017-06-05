@@ -385,6 +385,7 @@ export class SystemProfileComponent {
 
       this.api.iam.system.account.create(this.system, (account) => {
         this.alert('success', 'The system account was successfully created!');
+        this.router.navigate(['/system/profile'], { queryParams: { refresh: 1 } });
         this.states.loading = false;
         this.states.edit = true;
       }, (error) => {

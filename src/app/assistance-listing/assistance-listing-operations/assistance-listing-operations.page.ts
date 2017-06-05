@@ -25,15 +25,16 @@ export class ProgramPageOperations implements OnInit {
 
   ngOnInit(){
     //this.sharedService.setSideNavFocus();
+    let cookie = this.sharedService.cookieValue;
 
-    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+    if (cookie != null) {
       if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
         this.sharedService.setSideNavFocus();
       }else {
         this.router.navigate(['accessrestricted']);
       }
     }
-    else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
+    else if (cookie == null) {
       this.router.navigate(['signin']);
     }
 

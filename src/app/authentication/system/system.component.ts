@@ -21,11 +21,12 @@ export class SystemComponent {
       ] },
       { text: 'Reset Password', routerLink: 'password',   routerLinkActive: 'usa-current' },
       { text: 'My Access',      routerLink: false,        routerLinkActive: 'usa-current' },
-      { text: 'Migrations',     routerLink: 'migrations',        routerLinkActive: 'usa-current' }
+      { text: 'Migrations',     routerLink: 'migrations', routerLinkActive: 'usa-current' }
     ]
   };
 
   private states = {
+    isSystemAccount: false,
     route: ''
   };
 
@@ -35,12 +36,14 @@ export class SystemComponent {
     this.router.events.subscribe((event) => {
       if(event.constructor.name === 'NavigationEnd') {
         this.checkRoute();
+        this.checkAccess();
       }
     });
   }
 
   ngOnInit() {
     this.checkRoute();
+    this.checkAccess();
   }
 
   checkRoute() {
@@ -48,6 +51,21 @@ export class SystemComponent {
       .replace(/#.+/, '')
       .replace(/\?.+/, '');
     this.setActiveRoute();
+  }
+
+  checkAccess() {
+    this.api.iam.system.account.get((accounts) => {
+      this.states.isSystemAccount = (accounts.length > 0);
+      this.setAccess();
+    }, () => {
+      this.setAccess();
+    });
+  }
+
+  setAccess() {
+    if(!this.states.isSystemAccount) {
+      this.store.nav[this.store.nav.length - 1]['hidden'] = true;
+    }
   }
 
   setActiveRoute() {

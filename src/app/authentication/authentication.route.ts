@@ -33,4 +33,4 @@ export const routes: Routes = [
   { path: 'system',  component: SystemComponent,   canActivateChild: [SystemGuard],   children: SystemRoutes }
 ];
 
-export const AuthenticationRouter = RouterModule.forChild(routes)
+export const AuthenticationRouter = RouterModule.forChild(routes);

@@ -33,9 +33,14 @@ export class DataServicePage {
   }
 
   getFileList(){
-    this.fileExtractsService.getFilesList(this.currentDomain).subscribe( data => {
-      this.currentFileList = data._embedded.customS3ObjectSummaryList;
-    });
+    this.fileExtractsService.getFilesList(this.currentDomain).subscribe(
+      data => {
+        this.currentFileList = data._embedded.customS3ObjectSummaryList;
+      },
+      error => {
+        if(error.status === 404) this.currentFileList = [];
+      }
+    );
   }
 
   isCurrentFolder(index){

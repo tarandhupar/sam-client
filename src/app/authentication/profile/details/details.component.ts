@@ -48,7 +48,7 @@ export class DetailsComponent {
     indexes: {}
   };
 
-  private states = {
+  public states = {
     isGov: false,
     selected: ['','',''],
     loading: false,
@@ -60,7 +60,7 @@ export class DetailsComponent {
     }
   };
 
-  private user:User = {
+  public user:User = {
     _id: '',
     email: '',
 
@@ -107,33 +107,9 @@ export class DetailsComponent {
     this.initUser(() => {
       let intAnswer;
 
-      this.detailsForm = this.builder.group({
-        title:           [this.user.title],
+      this.initForm();
 
-        firstName:       [this.user.firstName, Validators.required],
-        initials:        [this.user.initials],
-        middleName:      [this.user.initials],
-        lastName:        [this.user.lastName, Validators.required],
-
-        suffix:          [this.user.suffix],
-
-        workPhone:       [this.user.workPhone],
-
-        department:      [this.user.department],
-        orgID:           [this.user.orgID],
-
-        kbaAnswerList:   this.builder.array(
-          this.user.kbaAnswerList.length ? [
-            this.initKBAGroup(0),
-            this.initKBAGroup(1),
-            this.initKBAGroup(2)
-          ] : []
-        ),
-
-        emailNotification: [this.user.emailNotification]
-      });
-
-      if(this.states.isGov) {
+      if(this.states.isGov && !this.api.iam.isDebug()) {
         this.api.fh
           .getOrganizationById(this.user.orgID)
           .subscribe(data => {
@@ -156,6 +132,34 @@ export class DetailsComponent {
         }
       });
     }
+  }
+
+  initForm() {
+    this.detailsForm = this.builder.group({
+      title:           [this.user.title],
+
+      firstName:       [this.user.firstName, Validators.required],
+      initials:        [this.user.initials],
+      middleName:      [this.user.initials],
+      lastName:        [this.user.lastName, Validators.required],
+
+      suffix:          [this.user.suffix],
+
+      workPhone:       [this.user.workPhone],
+
+      department:      [this.user.department],
+      orgID:           [this.user.orgID],
+
+      kbaAnswerList:   this.builder.array(
+        this.user.kbaAnswerList.length ? [
+          this.initKBAGroup(0),
+          this.initKBAGroup(1),
+          this.initKBAGroup(2)
+        ] : []
+      ),
+
+      emailNotification: [this.user.emailNotification]
+    });
   }
 
   loadUser(cb) {
@@ -237,9 +241,9 @@ export class DetailsComponent {
             firstName: 'John',
             initials: 'J',
             lastName: 'Doe',
+
             department: 100006688,
             orgID: 100173623,
-
             workPhone: '12401234568',
 
             kbaAnswerList: [
@@ -250,6 +254,11 @@ export class DetailsComponent {
 
             emailNotification: false
           });
+
+          if(ENV && ENV == 'test') {
+            delete this.user['department'];
+            delete this.user['orgID'];
+          }
 
           for(intQuestion in this.user.kbaAnswerList) {
             this.questions.push(this.store.questions);

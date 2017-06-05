@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 import { SamAPIKitModule } from 'api-kit';
 import { SamUIKitModule } from 'sam-ui-kit';
@@ -92,6 +91,4 @@ import { SystemComponent, SystemProfileComponent, SystemPasswordComponent, Syste
     SystemGuard
   ]
 })
-export class AuthenticationModule {
-  //TODO
-}
+export class AuthenticationModule { }

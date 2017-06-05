@@ -1,6 +1,5 @@
 <div class="access-page">
   <h1 class="m_T-0">User Access</h1>
-
   <!-- Pending Requests -->
   <ng-container *ngIf="requests.length">
     <h2>Pending Requests</h2>
@@ -67,7 +66,7 @@
     </div>
   </sam-modal>
 
-  <ng-container *ngIf="userAccessModel">
+  <ng-container *ngIf="userAccessModel && userAccessModel.raw()">
     <div *ngFor="let domain of userAccessModel.raw().domainMapContent">
       <h2>
         {{domain.domain.val || 'Domain not found'}}

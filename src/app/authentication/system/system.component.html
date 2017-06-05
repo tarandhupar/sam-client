@@ -3,14 +3,16 @@
     <h1 [innerText]="store.title"></h1>
     <ul class="usa-sidenav-list">
       <li *ngFor="let nav of store.nav; let $index = index;">
-        <a *ngIf="nav.routerLink" [routerLink]="[nav.routerLink]" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
-        <a *ngIf="!nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
-        <ul class="usa-sidenav-sub_list" [hidden]="!router.isActive('/system/' + nav.routerLink)" *ngIf="nav.children">
-          <li *ngFor="let subnav of nav.children; let $subIndex = index;">
-            <a *ngIf="!subnav.anchor" [routerLink]="[subnav.routerLink]" [routerLinkActive]="[subnav.routerLinkActive]" [innerText]="nav.text"></a>
-            <a *ngIf="subnav.anchor" [href]="subnav.routerLink" [innerText]="subnav.text" pageScroll></a>
-          </li>
-        </ul>
+        <ng-container *ngIf="!(nav['hidden'] || false)">
+          <a *ngIf="nav.routerLink" [routerLink]="[nav.routerLink]" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
+          <a *ngIf="!nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
+          <ul class="usa-sidenav-sub_list" [hidden]="!router.isActive('/system/' + nav.routerLink)" *ngIf="nav.children">
+            <li *ngFor="let subnav of nav.children; let $subIndex = index;">
+              <a *ngIf="!subnav.anchor" [routerLink]="[subnav.routerLink]" [routerLinkActive]="[subnav.routerLinkActive]" [innerText]="nav.text"></a>
+              <a *ngIf="subnav.anchor" [href]="subnav.routerLink" [innerText]="subnav.text" pageScroll></a>
+            </li>
+          </ul>
+        </ng-container>
       </li>
     </ul>
   </aside>

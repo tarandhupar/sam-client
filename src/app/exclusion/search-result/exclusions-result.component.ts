@@ -17,7 +17,7 @@ import * as moment from 'moment/moment';
           </h3>
           <ul class="sam-ui small list">
             <li *ngIf="data.dunsNumber!==null && data.dunsNumber!==''">
-              <strong>DUNS</strong><br>
+              <strong>UEI (Unique Entity Identifier)</strong><br>
               {{ data.dunsNumber }}
             </li>
             <li *ngIf="data.cageCode!==null && data.cageCode!==''">

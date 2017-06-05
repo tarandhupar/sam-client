@@ -34,7 +34,7 @@ import { OrgAddrFormComponent } from "./address-form/address-form.component";
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { SamFeedbackSidenavComponent } from "./feedback-sidenav/feedback-sidenav.component";
 import { FeedbackFormService } from "./feedback-form/feedback-form.service";
-
+import { SamStatusBannerComponent } from "./sam-status-banner/sam-status-banner.component";
 /**
  * A module for reusable SAM Web Design components
  */
@@ -66,6 +66,7 @@ import { FeedbackFormService } from "./feedback-form/feedback-form.service";
     SamCountyServiceAutoDirective,
     SamCityServiceAutoDirective,
     OrgAddrFormComponent,
+    SamStatusBannerComponent,
   ],
   imports: [
     BrowserModule,
@@ -102,6 +103,7 @@ import { FeedbackFormService } from "./feedback-form/feedback-form.service";
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,
     OrgAddrFormComponent,
+    SamStatusBannerComponent,
   ],
   providers: [
     SamFeedbackComponent,

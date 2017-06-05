@@ -35,16 +35,16 @@
     </div>
   </div>
   <div class="usa-width-one-whole m_T-3x" *ngIf="toggleControl.alerts || toggleControl.analytics">
-    <div class="usa-width-one-half relative" *ngIf="toggleControl.alerts">
+    <div class="usa-width-one-half relative" *ngIf="toggleControl.alerts && states.isSignedIn">
       <workspace-widget [isExpand]="configObj[2]['alerts'].isExpand" [title]="'System Alerts'" (onToggleChange)="toggleHelpDetail('alerts',$event, 2)">
-        <button class="alert-add-btn" *ngIf="states.isSignedIn" (click)="onAddNewAlert()">Add New Alert</button>
+        <button class="alert-add-btn" (click)="onAddNewAlert()">Add New Alert</button>
         <div class="usa-width-one-half m_T-6x m_R-0">
-          <div class="usa-offset-one-fourth usa-width-three-fourths alert-text-center"><span class="alert-number-text">3</span></div>
-          <div class="usa-offset-one-fourth usa-width-three-fourths alert-text-center"><span class="alert-type-text">Active</span></div>
+          <div class="usa-offset-one-fourth usa-width-three-fourths alert-text-center"><a class="alert-number-text" (click)="onDirectToAlerts('Active')">{{activeAlerts}}</a></div>
+          <div class="usa-offset-one-fourth usa-width-three-fourths alert-text-center"><a class="alert-type-text" (click)="onDirectToAlerts('Active')">Active</a></div>
         </div>
         <div class="usa-width-one-half m_T-6x">
-          <div class="usa-width-three-fourths alert-text-center"><span class="alert-number-text">2</span></div>
-          <div class="usa-width-three-fourths alert-text-center"><span class="alert-type-text">Draft</span></div>
+          <div class="usa-width-three-fourths alert-text-center"><a class="alert-number-text" (click)="onDirectToAlerts('Draft')">{{draftAlerts}}</a></div>
+          <div class="usa-width-three-fourths alert-text-center"><a class="alert-type-text" (click)="onDirectToAlerts('Draft')">Draft</a></div>
         </div>
         <a class="workspace-widget-link" routerLink="/alerts">Go to System Alerts &nbsp;<i class="fa fa-chevron-circle-right go-right-icon"></i></a>
       </workspace-widget>

@@ -7,7 +7,7 @@
     <!-- <div sam-sticky limit=1200 container="occupy-page"> -->
     <div>
       <sam-filters-container>
-        <sam-collapsible *ngIf="index !== 'fh' && index !== 'ex' && showRegionalOffices==false" [label]="'Status'" [startOpened]="true">
+        <sam-collapsible *ngIf="index !== 'fh' && showRegionalOffices==false" [label]="'Status'" [startOpened]="true">
           <!--active checkbox-->
           <sam-checkbox
             [(model)]="checkboxModel"
@@ -34,7 +34,7 @@
         </sam-autocomplete>
         </sam-collapsible>
 
-        <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !== 'ent' && index !=='wd'">
+        <sam-collapsible [label]="'Federal Organizations'" [startOpened]="true" *ngIf="index !=='wd'">
           <sam-agency-picker #agencyPicker
             [label]="'Search Federal Organizations'"
             (organization)="onOrganizationChange($event)"
@@ -137,14 +137,24 @@
                          *ngIf="index === 'wd' && wdTypeModel === 'sca' && (wdPreviouslyPerformedModel === 'prevPerfYesDifferentLocality' || wdPreviouslyPerformedModel === 'prevPerfNo') || wdSubjectToCBAModel === 'noCBA'  && showRegionalOffices==false">
 
           <!--Non-Standard Services radio buttons-->
-          <sam-radio-button
+          <sam-radio-button *ngIf="wdPreviouslyPerformedModel !== 'prevPerfNo'"
             [(model)]="wdNonStandardRadModel"
-            [options]="wdNonStandardRadConfig.options"
+            [options]="wdNonStandardRadConfig.optionsWithEven"
             [label]="wdNonStandardRadConfig.label"
             [hint]="wdNonStandardRadConfig.hint"
             [name]="wdNonStandardRadConfig.name"
             [errorMessage]="wdNonStandardRadConfig.errorMessage"
             (modelChange)="wdNonStandardRadChanged($event)">
+          </sam-radio-button>
+
+          <sam-radio-button *ngIf="wdPreviouslyPerformedModel === 'prevPerfNo'"
+                            [(model)]="wdNonStandardRadModel"
+                            [options]="wdNonStandardRadConfig.optionsWithoutEven"
+                            [label]="wdNonStandardRadConfig.label"
+                            [hint]="wdNonStandardRadConfig.hint"
+                            [name]="wdNonStandardRadConfig.name"
+                            [errorMessage]="wdNonStandardRadConfig.errorMessage"
+                            (modelChange)="wdNonStandardRadChanged($event)">
           </sam-radio-button>
 
           <!--Non-Standard Services drop down select-->
@@ -188,7 +198,7 @@
         </sam-collapsible>
 
         <!--NAICS - PSC Filters-->
-        <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="(index==='fpds' || index === 'opp' || index === 'ent') && showRegionalOffices==false">
+        <sam-collapsible [label]="'Service Classifications'" [startOpened]="true" *ngIf="(index==='fpds' || index === 'opp' || index === 'ei') && showRegionalOffices==false">
           <sam-naics-psc-filter class="usa-award-filter naics-psc-dropdown-list"
                                 [selectModel1]="naicsTypeModel"
                                 [selectModel2]="pscTypeModel"
@@ -201,7 +211,7 @@
         </sam-collapsible>
 
         <!--Entity Name - DUNS Filter-->
-        <sam-collapsible [label]="'Entity Name/UEI'" [startOpened]="true" *ngIf="index==='fpds' || index === 'opp' || index === 'ent'">
+        <sam-collapsible [label]="'Entity Name/UEI'" [startOpened]="true" *ngIf="index==='fpds' || index === 'opp' || index === 'ei'">
           <sam-label-wrapper class="sam-list-input usa-award-filter">
             <sam-autocomplete class="search-bar sam-autocomplete-width" autofill-entityduns
               [name]="'Test'"
@@ -282,11 +292,11 @@
           <div class="sam-ui section divider"></div>
         </div>
       </div>
-      <div class="search-inactive-results" *ngIf="!initLoad && isSearchComplete && !data.results && index !== 'wd' && (index == 'fh' || index == 'ex' || !isActive)">
+      <div class="search-inactive-results" *ngIf="!initLoad && isSearchComplete && !data.results && index !== 'wd' && (index == 'fh' || !isActive)">
         <p>No results found for '<span class = 'no-results-found' [innerText]="oldKeyword"></span>'</p>
         <div style="height:300px;"></div>
       </div>
-      <div class="search-inactive-results" *ngIf="!initLoad && isSearchComplete && !data.results && index !== 'wd' && index !== 'fh' && index !== 'ex' && isActive">
+      <div class="search-inactive-results" *ngIf="!initLoad && isSearchComplete && !data.results && index !== 'wd' && index !== 'fh' && isActive">
         <p>Your search did not return any results for active records. Would you like to include inactive records in your search results? <a href= "javascript:void(0)" (click)="findInactiveResults()" >[Yes]</a></p>
       </div>
       <div *ngIf="!initLoad && !data.results && index === 'wd'">

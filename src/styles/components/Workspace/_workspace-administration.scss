@@ -43,7 +43,7 @@
     bottom: 8px;
   }
 
-  .workspace-help-detail a:hover{
+  .workspace-help-detail a:hover, .alert-number-text:hover, .alert-type-text:hover{
     cursor: pointer;
   }
 }

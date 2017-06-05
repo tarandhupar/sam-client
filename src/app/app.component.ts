@@ -112,7 +112,7 @@ export class App{
     //set regionalOffice filter keyword to null on header search event
     qsobj['ro_keyword'] = null;
 
-    if(searchObject.searchField === 'fh' || searchObject.searchField === 'ex') {
+    if(searchObject.searchField === 'fh') {
       qsobj['isActive'] = true;
     } else {
       qsobj['isActive'] = this.isActive;
@@ -128,7 +128,7 @@ export class App{
       qsobj['prevP'] = null;
       qsobj['isStandard'] = null;
     }
-    if(searchObject.searchField === 'wd' || searchObject.searchField === 'ent'){
+    if(searchObject.searchField === 'wd' || searchObject.searchField === 'ei'){
       qsobj['organizationId'] = null;
     }
     if(searchObject.searchField !== 'fpds') {
@@ -136,7 +136,7 @@ export class App{
       qsobj['awardType'] = null;
       qsobj['contractType'] = null;
     }
-    if(searchObject.searchField !== 'fpds' && searchObject.searchField !== 'opp' && searchObject.searchField !== 'ent') {
+    if(searchObject.searchField !== 'fpds' && searchObject.searchField !== 'opp' && searchObject.searchField !== 'ei') {
       qsobj['naics'] = null;
       qsobj['psc'] = null;
       qsobj['duns'] = null;

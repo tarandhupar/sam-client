@@ -5,8 +5,9 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SamNameEntryComponent } from 'sam-ui-kit/form-templates/name-entry';
-import { SamPhoneEntryComponent } from 'sam-ui-kit/form-templates/phone-entry';
+import { SamPhoneEntryComponent } from 'sam-ui-kit/form-templates/phone-entry'
 import { SamKBAComponent, SamPasswordComponent } from '../shared';
+import { AgencyPickerComponent } from '../../app-components/agency-picker/agency-picker.component'
 
 import { IAMService } from 'api-kit';
 
@@ -24,6 +25,7 @@ export class RegisterMainComponent {
 
   @ViewChild('nameEntry') nameEntry: SamNameEntryComponent;
   @ViewChild('phoneEntry') phoneEntry: SamPhoneEntryComponent;
+  @ViewChild('agencyPicker') agencyPicker: AgencyPickerComponent;
   @ViewChild('passwordComponent') passwordComponent: SamPasswordComponent;
   @ViewChild('controls') controls: ElementRef;
 
@@ -91,6 +93,11 @@ export class RegisterMainComponent {
         emailNotification: [this.user.emailNotification]
       });
 
+      if(this.states.isGov) {
+        this.userForm.controls['department'].setValidators([Validators.required]);
+        this.userForm.controls['orgID'].setValidators([Validators.required]);
+      }
+
       // Set the model for components using the model system
       this.user = this.userForm.value;
     });
@@ -101,7 +108,9 @@ export class RegisterMainComponent {
 
     if(changes) {
       changes.forEachChangedItem((diff) => {
-        this.userForm.controls[diff.key].setValue(diff.currentValue);
+        if(this.userForm.controls[diff.key]) {
+          this.userForm.controls[diff.key].setValue(diff.currentValue);
+        }
       });
     }
   }
@@ -225,7 +234,7 @@ export class RegisterMainComponent {
       userPassword:      ['', Validators.required],
 
       accountClaimed:    [true],
-      emailNotification: [true]
+      emailNotification: [false]
     });
 
     this.user = this.userForm.value;
@@ -274,6 +283,7 @@ export class RegisterMainComponent {
 
   setDepartment(department) {
     this.user.department = department.value;
+    this.user.orgID = department.value;
   }
 
   setOrganization(organization) {
@@ -378,18 +388,26 @@ export class RegisterMainComponent {
     this.router.navigate(['/signup']);
   }
 
+  validate() {
+    this.nameEntry.setSubmitted();
+    this.phoneEntry.check();
+    this.passwordComponent.setSubmitted();
+
+    if(this.states.isGov) {
+      this.agencyPicker.setOrganizationFromBrowse();
+    }
+
+    this.kbaComponents.forEach(function(kbaComponent, index) {
+      kbaComponent.updateState(true);
+    });
+  }
+
   register() {
     let userData,
         kbaAnswerList = this.userForm.value['kbaAnswerList'];
 
     this.hideAlert();
-    this.nameEntry.setSubmitted();
-    this.phoneEntry.check();
-    this.passwordComponent.setSubmitted();
-
-    this.kbaComponents.forEach(function(kbaComponent, index) {
-      kbaComponent.updateState(true);
-    });
+    this.validate();
 
     if(this.userForm.valid) {
       this.states.submitted = true;

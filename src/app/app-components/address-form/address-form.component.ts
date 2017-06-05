@@ -27,6 +27,9 @@ export class OrgAddrFormComponent {
     state: null,
   };
 
+  state; // this is bound to the component model, but is unused. Component throws an exception without it
+  country; // bound but unused
+
   cityLocationConfig = {
     keyValueConfig: {
       keyProperty: 'key',
@@ -167,46 +170,22 @@ export class OrgAddrFormComponent {
     this.addressForm.get('postalCode').enable();
 
     this.orgAddrModel.country = val.key;
+    this.cityLocationConfig.serviceOptions.country = val.key;
   }
 
-  stateCode;
   updateStateField(val){
-    let v;
-    if (!val || !this.stateSelect.inputValue) {
-      v = null;
-
-    } else if (val.value) {
-      v = val.value;
-    } else if (typeof val === 'string') {
-      v = val;
-    } else {
-      throw new TypeError('statefield: unrecognied type for val');
+    if (!val || !val.key || !val.value) {
+      return;
     }
-    this.orgAddrModel.state = v;
-    this.stateCode = v;
-    if (!val || !this.stateSelect.inputValue) {
-      this.cityLocationConfig.serviceOptions.state = null;
-    }
-  }
-
-  stateId() {
-    return this.stateCode;
+    this.orgAddrModel.state = val.value;
+    this.cityLocationConfig.serviceOptions.state = val.key;
   }
 
   updateCityField(val) {
-    let v = null;
-    if (!val) {
-      v = null;
-    } else if (val.value) {
-      v = val.value;
-    } else if (typeof val === 'string') {
-      v = val;
-    } else {
-      throw new TypeError('unrecognized type for val');
+    if (!val || !val.value) {
+      return;
     }
-
-    this.orgAddrModel.city = v;
-
+    this.orgAddrModel.city = val.value.substr(0, val.value.length - 4);
   }
 
   countryCode() {

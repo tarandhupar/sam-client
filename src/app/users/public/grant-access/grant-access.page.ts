@@ -118,7 +118,8 @@ export class GrantAccessPage implements OnInit {
   }
 
   initializePageFromQueryParameters() {
-    this.route.queryParams.subscribe(queryParams => {
+    let queryParams = this.route.snapshot.queryParams;
+    //this.route.queryParams.subscribe(queryParams => {
       this.role = parseInt(queryParams["role"]);
       this.domain = parseInt(queryParams["domain"]);
       this.orgs = queryParams["orgs"].split(',');
@@ -144,7 +145,7 @@ export class GrantAccessPage implements OnInit {
           this.prePopulateOrgs(orgIds);
         }
       }
-    });
+    //});
   }
 
   determinePageModeFromURL() {

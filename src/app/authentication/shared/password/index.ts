@@ -1,1 +1,1 @@
-export { SamPasswordComponent } from './password.component.ts';
+export { SamPasswordComponent } from './password.component';

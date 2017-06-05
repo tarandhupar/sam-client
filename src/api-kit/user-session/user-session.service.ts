@@ -54,6 +54,7 @@ export class UserSessionService {
     this.onIdleStart = this.idle.onIdleStart.subscribe(() => {
       this.idleState = 'Gone idle!';
       this.isIdle = true;
+      this.idle.clearInterrupts();
       sessionModalCB();
     });
     this.onInterrupt = this.idle.onInterrupt.subscribe(() => {

@@ -7,6 +7,7 @@ import { ReplaySubject } from 'rxjs';
 import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
 import { SidenavHelper } from "../app-utils/sidenav-helper";
+import { BackToSearch } from "../app-utils/back-to-search-helper";
 import * as _ from 'lodash';
 
 @Component({
@@ -15,7 +16,8 @@ import * as _ from 'lodash';
   providers: [
     EntityService,
 	FHService,
-	SidenavHelper
+	SidenavHelper,
+	BackToSearch
   ]
 })
 export class EntityPage implements OnInit, OnDestroy {
@@ -37,6 +39,7 @@ export class EntityPage implements OnInit, OnDestroy {
     "label": "Entity",
     "children": []
   };
+  qParams:any = {};
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -45,13 +48,14 @@ export class EntityPage implements OnInit, OnDestroy {
     private EntityService: EntityService,
 	private fhService: FHService,
 	private sidenavHelper: SidenavHelper,
-	private sidenavService: SidenavService) {}
+	private sidenavService: SidenavService,
+	private backToSearch: BackToSearch) {}
 
   ngOnInit() {
     this.currentUrl = this.location.path();
     this.loadEntityData();
 	this.sidenavService.updateData(this.selectedPage, 0);
-
+	this.qParams = this.backToSearch.setupQS(false);
   }
 
    private loadEntityData() {

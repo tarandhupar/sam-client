@@ -165,6 +165,9 @@ export class AlertsPage {
   }
 
   doSearch() {
+    this.route.queryParams.subscribe(param => {
+      if(param['status']) {this.filters.statuses = [param['status']];}
+    });
     this.getAlerts().subscribe((alerts) => this.onNewAlertsReceived(alerts));
   }
 

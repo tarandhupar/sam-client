@@ -143,6 +143,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   }
 
   workspaceSearchClick() {
+    this.pageNum = 0;
     let qsobj = this.setupQS();
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj

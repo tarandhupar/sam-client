@@ -13,8 +13,11 @@
 
   .usa-alert-static {
     width: 100%;
-    margin-top: 0px;
     top: -34px;
+
+    .usa-alert {
+      margin-top: 0px;
+    }
   }
 
   h2 {

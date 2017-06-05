@@ -8,7 +8,6 @@ import { AlertFooterService } from '../alerts/alert-footer';
 import {OpportunityService} from "../../api-kit/opportunity/opportunity.service";
 import {SortArrayOfObjects} from "../app-pipes/sort-array-object.pipe";
 import {SearchDictionariesService} from "../../api-kit/search/search-dictionaries.service";
-import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
 
 @Component({
@@ -137,11 +136,17 @@ export class SearchPage implements OnInit{
   // Select NonStandard Services - Radio Buttons
   wdNonStandardRadModel: any = [''];
   wdNonStandardRadConfig = {
-    options:  [
+    optionsWithEven:  [
       {value: 'yesNSS', label: 'Yes', name: '6'},
       {value: 'true', label: 'No, and the SCA WD ends in an even number', name: 'noEven'},
       {value: 'false', label: 'No, and the SCA WD ends in an odd number', name: 'noOdd'}
     ],
+
+    optionsWithoutEven:  [
+      {value: 'yesNSS', label: 'Yes', name: '6'},
+      {value: 'false', label: 'No, and the SCA WD ends in an odd number', name: 'noOdd'}
+    ],
+
     name: 'radio-component4',
     label: 'Are the contract services to be performed listed in the drop-down below as a Non-Standard Service?',
     errorMessage: '',
@@ -322,7 +327,6 @@ export class SearchPage implements OnInit{
               private opportunityService: OpportunityService,
               private alertFooterService: AlertFooterService,
               private searchDictionariesService: SearchDictionariesService,
-              private dunsEntityAutoCompleteWrapper:  DunsEntityAutoCompleteWrapper,
               private programDictionariesService: DictionaryService) { }
   ngOnInit() {
     if(window.location.pathname.localeCompare("/search/fal/regionalOffices") === 0){
@@ -526,17 +530,15 @@ export class SearchPage implements OnInit{
         this.getDictionaryData('scaServices');
             break;
       case 'opp':
-      case 'ent':
+      case 'ei':
       case 'fpds':
-            this.getAwardsDictionaryData('naics_code');
-            this.getAwardsDictionaryData('classification_code');
         this.getAwardsDictionaryData('naics_code');
         this.getAwardsDictionaryData('classification_code');
-        break;
+            break;
       case 'cfda':
         this.getProgramsDictionaryData('applicant_types');
         this.getProgramsDictionaryData('beneficiary_types');
-        break;
+            break;
       default: this.dismissWdAlert = false;
     }
 
@@ -619,6 +621,11 @@ export class SearchPage implements OnInit{
           var maxAllowedPages = data.page['maxAllowedRecords']/this.showPerPage;
           this.totalPages = data.page['totalPages']>maxAllowedPages?maxAllowedPages:data.page['totalPages'];
         } else{
+          this.data['results'] = null;
+          this.totalCount = 0;
+        }
+
+        if(this.wdNonStandardRadModel === 'true' && this.wdPreviouslyPerformedModel === 'prevPerfNo'){
           this.data['results'] = null;
           this.totalCount = 0;
         }

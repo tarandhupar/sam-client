@@ -3,6 +3,7 @@ import { Router, ActivatedRoute, NavigationExtras } from "@angular/router";
 import { IAMService } from "api-kit";
 import { UserAccessService } from "api-kit/access/access.service";
 import { UserAccessModel } from "../../../app/users/access.model";
+import { SystemAlertsService } from "api-kit/system-alerts/system-alerts.service";
 
 @Component({
   selector: 'workspace-administration',
@@ -16,6 +17,9 @@ export class AdministrationComponent {
     {fh: {isExpand: false}, rm: {isExpand: false}},
     {alerts: {isExpand: false}, analytics: {isExpand: false}},
   ];
+
+  activeAlerts:number = 0;
+  draftAlerts:number = 0;
 
   user = null;
 
@@ -33,11 +37,14 @@ export class AdministrationComponent {
               private route:ActivatedRoute,
               private zone:NgZone,
               private api:IAMService,
+              private alertService: SystemAlertsService,
               private role:UserAccessService) {
   }
 
   ngOnInit(){
     this.checkSession();
+    this.getAlertStatistic('Active',this.setActiveAlertsNum);
+    this.getAlertStatistic('Draft',this.setDraftAlertsNum);
   }
 
   toggleHelpDetail(type, isExpand, index) {
@@ -61,9 +68,12 @@ export class AdministrationComponent {
   }
 
   onAddNewAlert() {
-    let navigationExtras:NavigationExtras = {
-      queryParams: {mode: 'create'},
-    };
+    let navigationExtras:NavigationExtras = {queryParams: {mode: 'create'}};
+    this._router.navigate(["/alerts"], navigationExtras);
+  }
+
+  onDirectToAlerts(status) {
+    let navigationExtras:NavigationExtras = {queryParams: {status: status}};
     this._router.navigate(["/alerts"], navigationExtras);
   }
 
@@ -76,4 +86,14 @@ export class AdministrationComponent {
       });
     });
   }
+
+  getAlertStatistic(type, cb:(num)=>any){
+    this.alertService.getAll(5, 0, [type], ['Error', 'Informational', 'Warning'], '', 'published_date', 'asc').subscribe( alerts => {
+      cb(alerts.total);
+    });
+  }
+
+  setActiveAlertsNum:any = (num) => {this.activeAlerts = num;};
+  setDraftAlertsNum:any = (num) => {this.draftAlerts = num;};
+
 }

@@ -13,9 +13,9 @@ export class FALOpSharedService {
   cookieValue: string;
 
   constructor(private sidenavService: SidenavService, private route: ActivatedRoute) {
-
-    if (!this.cookieValue)
-      this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+    if (!this.cookieValue) {
+     this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+    }
   }
 
   getSideNavModel() {

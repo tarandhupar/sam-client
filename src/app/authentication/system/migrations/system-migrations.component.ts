@@ -38,7 +38,7 @@ export class SystemMigrationsComponent {
     }
   }
 
-  private email = '';
+  private systemAccountID = '';
 
   public migrationForm: FormGroup;
 
@@ -46,7 +46,7 @@ export class SystemMigrationsComponent {
     private router: Router,
     private builder: FormBuilder,
     private differs: KeyValueDiffers,
-    private api: IAMService) {
+    public api: IAMService) {
     this.differ = differs.find({}).create(null);
     this.store.legacy = data;
   }
@@ -56,7 +56,15 @@ export class SystemMigrationsComponent {
       let role,
           intRole;
 
-      this.email = user.email;
+      this.api.iam.system.account.get((accounts) => {
+        if(accounts.length) {
+          this.systemAccountID = accounts[0]._id;
+        } else {
+          this.router.navigate(['profile']);
+        }
+      }, () => {
+        this.router.navigate(['profile']);
+      });
 
       for(intRole = 0; intRole < user.gsaRAC.length; intRole++) {
         role = user.gsaRAC[intRole];
@@ -106,15 +114,9 @@ export class SystemMigrationsComponent {
       password: ''
     };
 
-    if(this.api.iam.isDebug()) {
-      data.system = 'FBO';
-      data.username = 'ina@iaculis.us';
-      data.password = 'password'
-    }
-
     this.store.systems = this.api.iam.system.account.import.systems();
 
-    this.api.iam.system.account.import.history(this.email, (accounts) => {
+    this.api.iam.system.account.import.history(this.systemAccountID, (accounts) => {
       this.store.migrations = accounts;
 
       if(this.store.migrations.length) {
@@ -190,7 +192,7 @@ export class SystemMigrationsComponent {
 
       this.states.loading = true;
 
-      this.api.iam.system.account.import.create(this.email, data.system, data.username, data.password, (account) => {
+      this.api.iam.system.account.import.create(this.systemAccountID, data.system, data.username, data.password, (account) => {
         this.store.migrations.push(account);
         this.alert('System Account Successfully Migrated', 'success');
         this.states.loading = false;

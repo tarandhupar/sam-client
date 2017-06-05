@@ -46,11 +46,12 @@ export class FALFormComponent implements OnInit, AfterViewInit {
 
   //  TODO: Migrate to external service?
   determineLogin() {
-    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+    let cookie = FALFormService.getAuthenticationCookie();
+    if (cookie != null) {
       if (SHOW_HIDE_RESTRICTED_PAGES !== 'true') {
         this.router.navigate(['accessrestricted']);
       }
-    } else if (Cookies.get('iPlanetDirectoryPro') === null || Cookies.get('iPlanetDirectoryPro') === undefined) {
+    } else if (cookie == null) {
       this.router.navigate(['signin']);
     }
   }

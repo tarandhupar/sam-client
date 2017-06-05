@@ -52,7 +52,7 @@ export default {
       reset:  '/cws/api/system-account-passwords/{id}',
       deactivate: '/cws/api/system-accounts/{id}/deactivate',
       import: {
-        history: '/import/system-accounts/roles',
+        history: '/import/system-accounts/roles/{id}',
         create: '/import/system-accounts/roles'
       }
     }

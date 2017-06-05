@@ -5,6 +5,12 @@
     <br />
     <br />
     <div sam-sticky limit=1200 container="entity-object-view">
+	  <a class="sam-ui dark blue button" [routerLink]="['/search']" [queryParams]="qParams">
+		<i class="fa fa-chevron-left" aria-hidden="true"></i>
+		Back To Search
+	  </a>
+	  <br />
+	  <br />
       <!--Logo-->
       <ng-container *ngIf="coreData && (errorEntity || logoUrl===null || errorLogo)">
         <img src="src/assets/img/logo-not-available.png" class="sidenav-logo" alt="Logo Not Available" width="160px" height="160px">

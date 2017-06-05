@@ -89,11 +89,15 @@ export class ProgramPage implements OnInit, OnDestroy {
     // Using document.location.href instead of
     // location.path because of ie9 bug
     this.currentUrl = document.location.href;
-    if (Cookies.get('iPlanetDirectoryPro') !== undefined) {
+
+    let cookie = Cookies.get('iPlanetDirectoryPro');
+
+    if (cookie != null) {
       if (SHOW_HIDE_RESTRICTED_PAGES === 'true') {
-        this.cookieValue = Cookies.get('iPlanetDirectoryPro');
+        this.cookieValue = cookie;
       }
     }
+
     let programAPISource = this.loadProgram();
     this.loadDictionaries();
     this.loadFederalHierarchy(programAPISource);

@@ -86,6 +86,9 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
               <span *ngFor="let service of data.services; let isLast=last">
                 {{ service.value }}{{ isLast ? '' : ', ' }}
               </span>
+              <span *ngIf="data.services == null">
+              Standard (Area-Wide) Wage Determination
+              </span>
             </li>
             <li class="wd-construction-types" *ngIf="data._type=='wdDBRA'">
               <strong>Construction Type</strong><br>

@@ -12,7 +12,7 @@
   <div class="usa-width-one-whole" *ngIf="!hideAddrForm">
     <div class="usa-width-one-whole">
       <sam-label-wrapper #countryWrapper class="p_T-3x org-create-label" [label]="'Country'" [name]="'Country'" [required]="true">
-        <sam-autocomplete country [ngModelOptions]="{standalone: true}" [allowAny]="true" [(ngModel)]="cityLocationConfig.serviceOptions.country" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig" (enterEvent)="updateCountryField($event)"></sam-autocomplete>
+        <sam-autocomplete country [ngModelOptions]="{standalone: true}" [allowAny]="false" [(ngModel)]="country" [id]="'create-org-form-country-auto'" [labelText]="''" [config]="locationConfig" (enterEvent)="updateCountryField($event)"></sam-autocomplete>
       </sam-label-wrapper>
     </div>
 
@@ -24,7 +24,7 @@
       <!--<div class="usa-width-one-half m_R-0 p_R-2x">-->
       <div class="usa-width-one-half">
         <sam-label-wrapper #cityWrapper class="p_T-1x org-create-label" [label]="'City'" [name]="'City'" [required]="true">
-          <sam-autocomplete #MailAddrCity city [disabled]="isCityDisabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="cityOutput" [id]="'create-org-form-city-auto'" [labelText]="''" [config]="cityLocationConfig" [allowAny]="true" (ngModelChange)="updateCityField($event)"></sam-autocomplete>
+          <sam-autocomplete #MailAddrCity city [disabled]="isCityDisabled" [ngModelOptions]="{standalone: true}" [(ngModel)]="cityOutput" [id]="'create-org-form-city-auto'" [labelText]="''" [config]="cityLocationConfig" [allowAny]="false" (ngModelChange)="updateCityField($event)"></sam-autocomplete>
         </sam-label-wrapper>
       </div>
 
@@ -38,7 +38,7 @@
 
       <div class="usa-width-one-half m_R-0 p_R-2x">
         <sam-label-wrapper #stateWrapper class="p_T-1x org-create-label" [label]="'State'" [name]="'State'" [required]="true">
-          <sam-autocomplete [disabled]="isStateDisabled" state [ngModelOptions]="{standalone: true}" [(ngModel)]="cityLocationConfig.serviceOptions.state" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="cityLocationConfig"  [allowAny]="true" (ngModelChange)="updateStateField($event)"></sam-autocomplete>
+          <sam-autocomplete #MailAddrState [disabled]="isStateDisabled" state [ngModelOptions]="{standalone: true}" [(ngModel)]="state" [id]="'create-org-form-state-auto'" [labelText]="''" [config]="cityLocationConfig"  [allowAny]="false" (ngModelChange)="updateStateField($event)"></sam-autocomplete>
         </sam-label-wrapper>
       </div>
     </div>

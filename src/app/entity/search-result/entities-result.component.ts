@@ -1,7 +1,6 @@
 import { Component,Input,OnInit } from '@angular/core';
 import 'rxjs/add/operator/map';
 import * as moment from 'moment/moment';
-import Moment = moment.Moment;
 
 @Component({
   moduleId: __filename,
@@ -20,7 +19,7 @@ import Moment = moment.Moment;
           </h3>
           <ul class="sam-ui small list">
             <li>
-              <strong>DUNS</strong><br>
+              <strong>UEI (Unique Entity Identifier)</strong><br>
               {{ data.dunsNumber }}
             </li>
             <li>
@@ -44,7 +43,7 @@ import Moment = moment.Moment;
               <span  class="sam-ui mini label">Inactive</span>
             </li>
             <li>
-              <span class="sam-ui mini label">Entity</span>
+              <span class="sam-ui mini label">Registration</span>
             </li>
             <li>
               <strong>Expiration Date</strong><br>
@@ -55,7 +54,7 @@ import Moment = moment.Moment;
               {{ data.registrationPurpose }}
             </li>      
             <li>
-              <strong>Delinquent Federal Debt: </strong><br>
+              <strong>Debt Subject to Offset: </strong><br>
               {{ data.hasDelinquentDebt==true ? 'Yes' : 'No' }}
             </li>    
           </ul>

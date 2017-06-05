@@ -29,8 +29,8 @@ export function exceptionHandler(responseBody) {
 };
 
 export function isDebug() {
-  let isDebug = (utils.queryparams.debug !== undefined || false);
-  return (utils.isLocal() && isDebug);
+  return (utils.isLocal() && (utils.queryparams.debug !== undefined || false)) ||
+         (ENV && ENV == 'test');
 };
 
 export function sanitizeRequest(data) {

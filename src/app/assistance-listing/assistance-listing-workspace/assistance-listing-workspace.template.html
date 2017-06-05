@@ -31,7 +31,7 @@
     <br>
     <div *ngFor="let row of data" tabindex="-1">
       <assistance-program-result [data]="row" [qParams]="qParams"></assistance-program-result>
-      <hr class="m_T-5x"/>
+      <div class="sam-ui section divider"></div>
     </div>
 
     <div class="search-inactive-results" *ngIf="data.length==0 && !initLoad">

@@ -39,8 +39,7 @@ export class StateServiceImpl implements AutocompleteService {
   setFetchMethod(_?: any): any {}
 
   fetch(val: string, pageEnd: boolean, searchOptions?: any): Observable<any> {
-    if(searchOptions.country === null) searchOptions.country = {key:"USA"};
-    return this.getAllStatesJSON(val, searchOptions.country.key).map(o => o);
+    return this.getAllStatesJSON(val, searchOptions.country).map(o => o);
   }
 }
 
