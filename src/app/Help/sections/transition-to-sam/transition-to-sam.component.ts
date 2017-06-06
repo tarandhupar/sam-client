@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './transition-to-sam.template.html',
 })
 export class TransitionToSamComponent {
-  
+
   search = {
     column1: `
       <h3>What can I do now?</h3>
@@ -41,13 +41,13 @@ export class TransitionToSamComponent {
       </div>
     `
   }
-  
+
   reporting = {
     column1: `
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          View Standard, Static, and Adhoc reports for contract award data.
+          View standard, static, and adhoc reports for contract award data.
         </div> 
         <div class="item">
           Administrators for assistance listings will be able to view administrative reports to oversee agency compliance.
@@ -55,7 +55,7 @@ export class TransitionToSamComponent {
       </div>
     `
   }
-  
+
   dataentry = {
     column1: `
       <h3>What's next?</h3>
@@ -66,7 +66,7 @@ export class TransitionToSamComponent {
         </div> 
         <div class="item">
           Federal users will be able to access additional capabilities for managing 
-          assistance listings (including OMB Analyst or Agency Coordinator Review 
+          assistance listings (including OMB Analyst or Agency Coordinator review 
           and approval/rejection capabilities).
         </div>
       </div>
@@ -87,7 +87,7 @@ export class TransitionToSamComponent {
       <div class="sam-ui bulleted list">
         <div class="item">
           Users who are signed in can migrate their existing roles from each 
-          legacy system for Assistance Listings or Opportunities, Awards. 
+          legacy system for assistance listings, contract opportunities, and contract awards. 
         </div>
         <div class="item">
           View federal assistance, contract opportunity, and contract award role 
@@ -103,7 +103,7 @@ export class TransitionToSamComponent {
       </div>
     `
   }
-  
+
   helpcenter = {
     column1: `
       <h3>What can I do now?</h3>
@@ -117,7 +117,7 @@ export class TransitionToSamComponent {
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          See more info in the Help section
+          See additional Help as each "legacy" system is consolidated into SAM.
         </div>
         <div class="item">
           Access the Federal Service Desk (FSD) directly from beta.SAM.gov. 
@@ -125,16 +125,16 @@ export class TransitionToSamComponent {
       </div>
     `
   }
-  
+
   systeminterfaces = {
     column1: `
       <h3>What can I do now?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Locations, PSC, and NAICS reference data API services
+          <p>Locations, PSC, and NAICS reference data API services.</p>
         </div>
         <div class="item">
-          Multi-factor authentication
+          <p>Multi-factor authentication.</p>
         </div>
       </div>
     `,
@@ -142,27 +142,27 @@ export class TransitionToSamComponent {
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Additional reference data services 
+          <p>Additional reference data services.</p> 
         </div>
         <div class="item">
-          Awards extracts and basic API functionality  
+          <p>Awards extracts and basic API functionality.</p>  
         </div>
         <div class="item">
-          FAL extracts  
+          <p>FAL extracts.</p>  
         </div>
         <div class="item">
-          FH interfaces  
+          <p>FH interfaces.</p>  
         </div>
         <div class="item">
-          WS IAM conversion
+          <p>WS IAM conversion.</p>
         </div>
       </div>
     `
   }
-  
+
   featureData:any = [
       {
-        title:"Search", 
+        title:"Search",
         contentType:"grid",
         content: [[this.search.column1], [this.search.column2]],
         img: "src/assets/img/sam-icons/search-b3.png",
@@ -231,7 +231,7 @@ export class TransitionToSamComponent {
           View listings based on your user role.
         </div>
         <div class="item">
-          Grants.gov and USASpending extracts
+          Grants.gov and USASpending extracts.
         </div>
         <div class="item">
           Federal users who are signed in can view, create, update, and manage 
@@ -240,7 +240,7 @@ export class TransitionToSamComponent {
       </div>
     `
   }
-  
+
   fbo = {
     column1: `
       <h3>What can I do now?</h3>
@@ -265,7 +265,7 @@ export class TransitionToSamComponent {
       </div>
     `
   }
-  
+
   fpds = {
     column1: `
       <h3>What can I do now?</h3>
@@ -285,12 +285,12 @@ export class TransitionToSamComponent {
           Run standard, static and adhoc reports.
         </div>
         <div class="item">
-          Daily extracts and basic API functionality
+          Daily extracts and basic API functionality.
         </div>
       </div>
     `
   }
-  
+
   sam = {
     column1: `
       <h3>What can I do now?</h3>
@@ -304,18 +304,18 @@ export class TransitionToSamComponent {
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Role management
+          Role management.
         </div>
         <div class="item">
-          Reference data services
+          Reference data services.
         </div>
         <div class="item">
-          Infrastructure migration
+          Infrastructure migration.
         </div>
       </div>
     `
   }
-  
+
   sam2 = {
     column1: `
       <h3>What can I do now?</h3>
@@ -329,18 +329,18 @@ export class TransitionToSamComponent {
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Role management
+          Role management.
         </div>
         <div class="item">
-          Reference data services
+          Reference data services.
         </div>
         <div class="item">
-          Infrastructure migration
+          Infrastructure migration.
         </div>
       </div>
     `
   }
-  
+
   wdol = {
     column1: `
       <h3>What can I do now?</h3>
@@ -354,7 +354,7 @@ export class TransitionToSamComponent {
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          Improvements to the look and feel of detailed records
+          Improvements to the look and feel of detailed records.
         </div>
       </div>
     `
@@ -429,5 +429,5 @@ export class TransitionToSamComponent {
   isCurrentFilter(type){
     return this.filter === type;
   }
-   
+
 }

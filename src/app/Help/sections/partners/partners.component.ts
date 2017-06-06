@@ -27,7 +27,7 @@ export class PartnersComponent {
       },
       {
         title:"Grants.gov",
-        content:"The official government website to create, search, and apply for Federal grants and funding opportunities. SAM.gov grants are more specific to those looking to work directly with the government.",
+        content:"The official government website to create, search, and apply for federal grants and funding opportunities. SAM.gov grants are more specific to those looking to work directly with the government.",
         link:"View Grants.gov",
         url:"http://www.grants.gov/",
         img:"src/assets/img/logos/Grants-Gov-Logo.png"
