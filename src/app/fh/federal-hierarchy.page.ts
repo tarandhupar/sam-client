@@ -24,17 +24,41 @@ export class FederalHierarchyPage {
     { label: 'Inactive', value: 'Inactive', name: 'Inactive' },
   ];
 
-  constructor(private fhService: FHService){}
+  userRole = "superAdmin";
+  adminOrg:any;
+
+  dataLoaded:boolean = false;
+  constructor(private fhService: FHService, private route: ActivatedRoute){}
 
   ngOnInit(){
-    this.fhService.getActiveDepartments().subscribe( data => {
-      this.orgList = data._embedded;
-      this.setupPagination();
-      console.log(this.curPageOrgs);
-    });
+    this.route.queryParams.subscribe(
+      queryParams => {
+        if(queryParams['userRole'] !== undefined && queryParams['userRole'] !== null){
+          this.userRole = queryParams['userRole'];
+        }
+        switch (this.userRole){
+          case "superAdmin":
+            this.fhService.getActiveDepartments().subscribe( data => {
+              this.initiatePage(data._embedded);
+              this.dataLoaded = true;
+            });
+            break;
+          case "deptAdmin":
+            this.fhService.getDepartmentAdminLanding().subscribe( data => {
+              this.adminOrg = data._embedded[0].org;
+              this.initiatePage(data._embedded[0].org.hierarchy);
+              console.log(this.adminOrg.name);
+              this.dataLoaded = true;
+            });
+            break;
+        }
+      });
+
+
   }
 
-  setupPagination(){
+  initiatePage(orgList){
+    this.orgList = orgList;
     this.totalPages = Math.ceil(this.orgList.length/this.recordsPerPage);
     this.updateRecordsText();
     this.updateRecordsPage();
@@ -63,7 +87,7 @@ export class FederalHierarchyPage {
   isOrgActive(org):boolean{
     if(!!org.endDate){
       let endDate = moment(org.endDate);
-      if (endDate.isBefore(moment().format('MM/DD/YYYY'))) {
+      if (endDate.diff(moment()) > 0) {
         return false;
       }
     }
