@@ -107,15 +107,15 @@ export class AwardDataComponent {
         follow wage determinations as they are updated.  
       </p>
     `
-  };  
+  };
   wageFeatures = [
     ['Search', 'View', 'Request form for wage determination'],
     [
-      {feature:'Search', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'View', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Search', login: 'Yes', interested: 'Procurement'},
+      {feature:'View', login: 'Yes', interested: 'Procurement'},
       {feature:'Request form for wage determination', login: 'Yes', interested: 'Procurement'},
     ]
-  ];  
+  ];
   wageCommonTerms = [
     {termName:"Service Contract Act", termContent:"Term definition lipsum"},
     {termName:"Davis-Bacon Act", termContent:"Term definition lipsum"}
@@ -159,19 +159,19 @@ export class AwardDataComponent {
   };
   awardsFeatures = [
     [
-      'Search/Display', 
-      'Data Entry', 
-      'Reports', 
-      'Interfaces with Contract Writing Systems', 
-      'Atom Feed', 
+      'Search/Display',
+      'Data Entry',
+      'Reports',
+      'Interfaces with Contract Writing Systems',
+      'Atom Feed',
       'API of contracting data'
     ],
     [
-      {feature:'Search/Display', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Data Entry', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Reports', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Interfaces with Contract Writing Systems', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Atom Feed', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Search/Display', login: 'Yes', interested: 'Procurement'},
+      {feature:'Data Entry', login: 'Yes', interested: 'Procurement'},
+      {feature:'Reports', login: 'Yes', interested: 'Procurement'},
+      {feature:'Interfaces with Contract Writing Systems', login: 'Yes', interested: 'Procurement'},
+      {feature:'Atom Feed', login: 'Yes', interested: 'Procurement'},
       {feature:'API of contracting data', login: 'Yes', interested: 'Procurement'}
     ]
   ];
@@ -257,23 +257,23 @@ export class AwardDataComponent {
   };
   entityFeatures = [
     [
-      'Search', 
-      'Display', 
-      'Create', 
-      'Edit', 
-      'Delete', 
-      'Manage roles', 
-      'Create reports', 
+      'Search',
+      'Display',
+      'Create',
+      'Edit',
+      'Delete',
+      'Manage roles',
+      'Create reports',
       'Download data'
     ],
     [
-      {feature:'Search', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Display', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Create', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Edit', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Delete', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Manage roles', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Create reports', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Search', login: 'Yes', interested: 'Procurement'},
+      {feature:'Display', login: 'Yes', interested: 'Procurement'},
+      {feature:'Create', login: 'Yes', interested: 'Procurement'},
+      {feature:'Edit', login: 'Yes', interested: 'Procurement'},
+      {feature:'Delete', login: 'Yes', interested: 'Procurement'},
+      {feature:'Manage roles', login: 'Yes', interested: 'Procurement'},
+      {feature:'Create reports', login: 'Yes', interested: 'Procurement'},
       {feature:'Download data', login: 'Yes', interested: 'Procurement'}
     ]
   ];
@@ -309,21 +309,21 @@ export class AwardDataComponent {
   };
   entityReportFeatures = [
     [
-      'Search', 
-      'Display', 
-      'Create', 
-      'Edit', 
-      'Delete', 
-      'Entity reporting of data on awarded contracts', 
+      'Search',
+      'Display',
+      'Create',
+      'Edit',
+      'Delete',
+      'Entity reporting of data on awarded contracts',
       'Download data'
     ],
     [
-      {feature:'Search', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Display', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Create', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Edit', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Delete', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Entity reporting of data on awarded contracts', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Search', login: 'Yes', interested: 'Procurement'},
+      {feature:'Display', login: 'Yes', interested: 'Procurement'},
+      {feature:'Create', login: 'Yes', interested: 'Procurement'},
+      {feature:'Edit', login: 'Yes', interested: 'Procurement'},
+      {feature:'Delete', login: 'Yes', interested: 'Procurement'},
+      {feature:'Entity reporting of data on awarded contracts', login: 'Yes', interested: 'Procurement'},
       {feature:'Download data', login: 'Yes', interested: 'Procurement'}
     ]
   ];
@@ -363,7 +363,7 @@ export class AwardDataComponent {
       <p>
         SAM provides detailed, public descriptions of federal assistance 
         listings available to State and local governments 
-        (including the District of Columbia), federally-recognized Indian tribal 
+        (including the District of Columbia); federally recognized Indian tribal 
         governments, Territories (and possessions) of the United States, 
         domestic public, quasi- public, and private profit and nonprofit 
         organizations and institutions, specialized groups, and individuals.
@@ -384,15 +384,15 @@ export class AwardDataComponent {
   };
   assistListingFeatures = [
     [
-      'Search/Display', 
-      'Data Entry', 
-      'FTP Site', 
+      'Search/Display',
+      'Data Entry',
+      'FTP Site',
       'Downloadable version of the listings compiled on an annual basis'
     ],
     [
-      {feature:'Search/Display', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Data Entry', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'FTP Site', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Search/Display', login: 'Yes', interested: 'Procurement'},
+      {feature:'Data Entry', login: 'Yes', interested: 'Procurement'},
+      {feature:'FTP Site', login: 'Yes', interested: 'Procurement'},
       {feature:'Downloadable version of the listings compiled on an annual basis', login: 'Yes', interested: 'Procurement'},
     ]
   ];
@@ -425,7 +425,7 @@ export class AwardDataComponent {
       </p>
       <p>
         To see if an entity is subject to any active exclusions, search for the 
-        entity’s name, DUNS number, or CAGE code. To search for an individual 
+        entity’s name, DUNS number, or CAGE code. To search for a 
         person, type in his or her name. Be sure to confirm that you’ve found 
         the correct person—it’s easy to misidentify someone if he or she has a 
         common name. If no exclusion record is found for the entity, the entity 
@@ -491,15 +491,15 @@ export class AwardDataComponent {
   };
   federalHierarchyFeatures = [
     [
-      'Search/Display', 
-      'Data Entry', 
-      'FTP Site', 
+      'Search/Display',
+      'Data Entry',
+      'FTP Site',
       'Downloadable version of the listings compiled on an annual basis'
     ],
     [
-      {feature:'Search/Display', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'Data Entry', login: 'Yes', interested: 'Procurement'}, 
-      {feature:'FTP Site', login: 'Yes', interested: 'Procurement'}, 
+      {feature:'Search/Display', login: 'Yes', interested: 'Procurement'},
+      {feature:'Data Entry', login: 'Yes', interested: 'Procurement'},
+      {feature:'FTP Site', login: 'Yes', interested: 'Procurement'},
       {feature:'Downloadable version of the listings compiled on an annual basis', login: 'Yes', interested: 'Procurement'},
     ]
   ];
@@ -516,7 +516,7 @@ export class AwardDataComponent {
       { label: 'Downloadable version of the listings compiled on an annual basis', value: 'Downloadable version of the listings compiled on an annual basis', name: 'Downloadable version of the listings compiled on an annual basis' }
     ]
   };
-  
+
   curConfig;
   curFeatures;
   curCommonTerms;
@@ -610,11 +610,11 @@ export class AwardDataComponent {
 
   copyCurRecords(val):any{
     let copy;
-    
+
     function isArray(val): boolean{
       return Object.prototype.toString.call(val);
     }
-    
+
     if(Array.isArray(val)){
       copy = val.map( e => {
         if(typeof e === 'object' && !isArray(e) ){
