@@ -103,6 +103,10 @@ export class FHService {
     return this._http.get("../../landing_superadmin.json").map((res:any) => res.json());
   }
 
+  getDepartmentAdminLanding(){
+    return this._http.get("../../landing_deptadmin.json").map((res:any) => res.json());
+  }
+
   search(oData) {
     let oApiParam = {
       name: 'search',
