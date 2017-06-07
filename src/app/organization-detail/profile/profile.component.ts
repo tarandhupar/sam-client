@@ -250,7 +250,7 @@ export class OrgDetailProfilePage {
     }else{
       switch (this.currentHierarchyType) {
         case "Department":
-          subLayers.push({value: 'Agency', label: 'Sub-tier Agency', name: 'Sub-tier Agency'});
+          subLayers.push({value: 'Agency', label: 'Sub-Tier', name: 'Sub-Tier'});
           break;
         case "Agency":
           if(this.isDoD()) subLayers.push({value: 'MajorCommand', label: 'Major Command', name: 'Major Command'});
@@ -293,4 +293,5 @@ export class OrgDetailProfilePage {
   dismissEditOrgFlashAlert(){
     this.showEditOrgFlashAlert = false;
   }
+  
 }
