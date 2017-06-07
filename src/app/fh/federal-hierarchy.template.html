@@ -1,6 +1,16 @@
 <div class="usa-grid federal-hierarchy relative">
   <div class="usa-width-one-whole">
-    <button class="pull-right">Create Dep/Ind Agency</button>
+    <button *ngIf="selectConfig.options.length > 1" class="pull-right relative">
+      Create &nbsp; <i class="fa fa-angle-down"></i>
+      <sam-select class="org-type-select"
+                  [name]="selectConfig.name"
+                  [options]="selectConfig.options"
+                  [label]="selectConfig.label"
+                  [disabled]="selectConfig.disabled"
+                  (modelChange)='onSelect($event)'>
+      </sam-select>
+    </button>
+    <button *ngIf="selectConfig.options.length === 1" class="pull-right">Create {{selectConfig.options[0].label}}</button>
   </div>
   <h2 align="center">Search Federal Hierarchy Administrative Pages</h2>
   <div class="usa-width-one-whole">
@@ -12,15 +22,22 @@
 
   <div class="usa-width-one-whole federal-hierarchy-org-admin-section" *ngIf="userRole !== 'superAdmin' && dataLoaded">
     <div class="usa-width-one-whole title-section">
-      <a class="federal-hierarchy-org-admin-title">{{adminOrg.name}}&nbsp;</a> <i class="fa fa-user"></i>
+      <a class="federal-hierarchy-org-admin-title" [routerLink]="['/organization-detail',deptOrg.orgKey]">{{deptOrg.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="userRole === 'deptAdmin'"></i>
     </div>
     <div class="usa-width-one-whole">
-      <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{adminOrg.type}}</span>
-      <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{adminOrg.orgCode}}</span>
-      <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
-        <span *ngIf="isOrgActive(adminOrg)">Active</span>
-        <span *ngIf="!isOrgActive(adminOrg)">Inactive</span>
-      </span>      <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(adminOrg)}}</span>
+      <div class="usa-width-one-sixth org-logo-container">
+        <img class="org-logo-image" src="src/assets/img/blank_icon.png" alt="organization detail logo">
+      </div>
+      <div class="usa-width-five-sixths p_T-3x">
+        <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{deptOrg.type}}</span>
+        <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{deptOrg.code}}</span>
+        <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
+          <span *ngIf="isOrgActive(deptOrg)">Active</span>
+          <span *ngIf="!isOrgActive(deptOrg)">Inactive</span>
+        </span>
+        <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(deptOrg)}}</span>
+      </div>
+
     </div>
   </div>
 
@@ -28,29 +45,61 @@
     <div class="pull-left p_T-3x">
       Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{orgList.length}}&nbsp; results
     </div>
+
     <div class="pull-right">
       <sam-multiselect-dropdown [(model)]="orgStatusModel" [label]="''" [options]="orgStatusOptions" [name]="'types'" (modelChange)="onOrgStatusChange()"></sam-multiselect-dropdown>
     </div>
+
+    <div class="usa-width-one-fourth pull-right m_R-2x" *ngIf="userRole === 'agencyAdmin' || userRole === 'officeAdmin'">
+      <div class="usa-width-five-sixths p_T-4x">
+        <span class="pull-right">My Organization</span>
+      </div>
+      <div class="usa-width-one-sixth">
+        <input type="checkbox" (change)="onSelectAdminOrg($event.target.checked)" class="federal-hierarchy-org-cbx">
+        <label class="p_T-4x m_0">&nbsp;</label>
+      </div>
+
+    </div>
   </div>
 
-  <div class="usa-width-one-whole federal-hierarchy-org-item" *ngFor="let orgItem of curPageOrgs">
+  <div class="usa-width-one-whole federal-hierarchy-org-item" *ngIf="showAdminOrg">
     <div class="usa-width-one-whole">
-      <a class="federal-hierarchy-org-item-title">{{orgItem.org.name}}&nbsp;</a> <i class="fa fa-user"></i>
+      <a class="federal-hierarchy-org-item-title" [routerLink]="['/organization-detail',adminOrg.org.orgKey]">{{adminOrg.org.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="isAdminOrg(adminOrg.org.orgKey)"></i>
     </div>
     <div class="usa-width-three-fourths">
-      <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.org.orgCode}}</span>
-      <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{orgItem.org.type}}</span>
+      <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{adminOrg.org.code}}</span>
+      <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{adminOrg.org.type}}</span>
     </div>
     <div class="usa-width-one-fourth">
+      <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
+        <span *ngIf="isOrgActive(adminOrg.org)">Active</span>
+        <span *ngIf="!isOrgActive(adminOrg.org)">Inactive</span>
+      </span>
+      <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(adminOrg.org)}}</span>
+    </div>
+  </div>
+
+  <div *ngIf="!showAdminOrg">
+    <div class="usa-width-one-whole federal-hierarchy-org-item" *ngFor="let orgItem of curPageOrgs">
+      <div class="usa-width-one-whole">
+        <a class="federal-hierarchy-org-item-title" [routerLink]="['/organization-detail',orgItem.org.orgKey]">{{orgItem.org.name}}&nbsp;</a> <i class="fa fa-user" *ngIf="isAdminOrg(orgItem.org.orgKey)"></i>
+      </div>
+      <div class="usa-width-three-fourths">
+        <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.org.code}}</span>
+        <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{orgItem.org.type}}</span>
+      </div>
+      <div class="usa-width-one-fourth">
       <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
         <span *ngIf="isOrgActive(orgItem.org)">Active</span>
         <span *ngIf="!isOrgActive(orgItem.org)">Inactive</span>
       </span>
-      <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(orgItem.org)}}</span>
+        <span class="usa-width-one-whole"><span class="org-description">Start Date:&nbsp;</span>{{getStartDate(orgItem.org)}}</span>
+      </div>
     </div>
   </div>
 
-  <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="orgList.length > 0">
+
+  <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="orgList.length > 0 && !showAdminOrg">
       <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
   </div>
 </div>
