@@ -1,8 +1,8 @@
-import * as _ from 'lodash';
-
-import { Component, DoCheck, ElementRef, Input, KeyValueDiffers, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
+import { Component, DoCheck, ElementRef, Input, KeyValueDiffers, KeyValueDiffer, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { cloneDeep, isArray, isNumber, merge } from 'lodash';
 
 import { SamNameEntryComponent } from 'sam-ui-kit/form-templates/name-entry';
 import { SamPhoneEntryComponent } from 'sam-ui-kit/form-templates/phone-entry'
@@ -21,8 +21,6 @@ import { KBA } from '../kba.interface';
   ]
 })
 export class RegisterMainComponent {
-  @Input() user: User;
-
   @ViewChild('nameEntry') nameEntry: SamNameEntryComponent;
   @ViewChild('phoneEntry') phoneEntry: SamPhoneEntryComponent;
   @ViewChild('agencyPicker') agencyPicker: AgencyPickerComponent;
@@ -32,9 +30,17 @@ export class RegisterMainComponent {
   @ViewChildren(SamKBAComponent) kbaComponents:QueryList<any>;
 
   public userForm: FormGroup;
+
+  public store = {
+    questions: [],
+    indexes: {},
+    levels: ['department', 'agency', 'office']
+  };
+
   public states = {
     isGov: true,
     submitted: false,
+    loading: false,
     selected: ['','',''],
     alert: {
       show: false,
@@ -45,10 +51,32 @@ export class RegisterMainComponent {
 
   private token = '';
   private questions = [];
-  private differ;
-  private lookups = {
-    questions: [],
-    indexes: {}
+  private differ: KeyValueDiffer;
+  private user: User = {
+    _id: '',
+    email: '',
+
+    fullName: '',
+    firstName: '',
+    initials: '',
+    lastName: '',
+
+    departmentID: '',
+    agencyID: '',
+    officeID: '',
+
+    workPhone: '',
+
+    suffix: '',
+
+    kbaAnswerList: [
+      <any>{ questionId: '', answer: '' },
+      <any>{ questionId: '', answer: '' },
+      <any>{ questionId: '', answer: '' }
+    ],
+
+    userPassword: '',
+    accountClaimed: true
   };
 
   constructor(
@@ -70,6 +98,8 @@ export class RegisterMainComponent {
     }
 
     this.initSession(() => {
+      const orgID = (this.user.officeID || this.user.agencyID || this.user.departmentID || '').toString();
+
       this.userForm = this.builder.group({
         title:             [this.user.title],
         firstName:         [this.user.firstName, Validators.required],
@@ -79,13 +109,12 @@ export class RegisterMainComponent {
 
         workPhone:         [this.user.workPhone],
 
-        department:        [this.user.department],
-        orgID:             [this.user.orgID],
+        officeID:          [orgID], // Set default organization
 
         kbaAnswerList:     this.builder.array([
-          this.initKBAGroup(),
-          this.initKBAGroup(),
-          this.initKBAGroup()
+          this.initKBAGroup(0),
+          this.initKBAGroup(1),
+          this.initKBAGroup(2)
         ]),
 
         userPassword:      ['', Validators.required],
@@ -94,12 +123,11 @@ export class RegisterMainComponent {
       });
 
       if(this.states.isGov) {
-        this.userForm.controls['department'].setValidators([Validators.required]);
-        this.userForm.controls['orgID'].setValidators([Validators.required]);
+        this.userForm.controls['officeID'].setValidators([Validators.required]);
       }
 
       // Set the model for components using the model system
-      this.user = this.userForm.value;
+      this.user = merge({}, this.user, this.userForm.value);
     });
   }
 
@@ -109,6 +137,10 @@ export class RegisterMainComponent {
     if(changes) {
       changes.forEachChangedItem((diff) => {
         if(this.userForm.controls[diff.key]) {
+          if(diff.key.match(/(department|agency|office)/) && isNumber(diff.currentValue) && !diff.currentValue) {
+            diff.currentValue = '';
+          }
+console.log(diff);
           this.userForm.controls[diff.key].setValue(diff.currentValue);
         }
       });
@@ -118,14 +150,14 @@ export class RegisterMainComponent {
   writeValue(obj: any) {}
   registerOnChange(fn: any) {}
   registerOnTouched(fn: any) {}
-  setDisabledState(isDisabled: boolean){}
+  setDisabledState(isDisabled: boolean) {}
 
   initSession(cb) {
     let onInitSuccess,
         onInitError;
 
     onInitSuccess = ((data) => {
-      let userData = _.merge({}, data.user || {}),
+      let userData = merge({}, data.user || {}),
           phone;
 
       userData._id = userData.id || userData._id || '';
@@ -133,52 +165,24 @@ export class RegisterMainComponent {
       userData.lastName = userData.lastname || userData.lastName || '';
       userData.workPhone = userData.phone || userData.workPhone || '';
 
-      this.user = {
-        _id: '',
-        email: '',
-
-        fullName: '',
-        firstName: '',
-        initials: '',
-        lastName: '',
-
-        department: '',
-        orgID: '',
-
-        workPhone: '',
-
-        suffix: '',
-
-        kbaAnswerList: [
-          <any>{ questionId: '', answer: '' },
-          <any>{ questionId: '', answer: '' },
-          <any>{ questionId: '', answer: '' }
-        ],
-
-        userPassword: '',
-        accountClaimed: true
-      };
-
       // Set new token for registration route security
       if(data.tokenId !== undefined) {
         this.token = data.tokenId;
       }
 
       // Transform KBA questions data response
-      if(_.isArray(data.kbaQuestionList)) {
+      if(isArray(data.kbaQuestionList)) {
         const kbaAnswer = <KBA>{ questionId: 0, answer: '' };
         let intTarget;
 
-        this.lookups.questions = data.kbaQuestionList;
+        this.store.questions = data.kbaQuestionList;
         this.user.kbaAnswerList = [kbaAnswer, kbaAnswer, kbaAnswer];
 
         this.processKBAQuestions();
       }
 
       // Merge existing user account data
-      _.merge(this.user, userData, {
-        orgID: data.orgID
-      });
+      this.user = merge({}, this.user, userData);
 
       phone = (this.user.workPhone || '').split('x');
 
@@ -192,9 +196,6 @@ export class RegisterMainComponent {
       // Set rendering to gov vs non-gov
       this.states.isGov = data.gov || false;
 
-      // Set default organization if available from response
-      this.user.orgID = this.user.department;
-
       cb();
     });
 
@@ -203,44 +204,32 @@ export class RegisterMainComponent {
     });
 
     if(this.api.iam.isDebug()) {
-      this.initMockSession();
+      this.initMockSession(cb);
       return;
     } else {
       this.api.iam.user.registration.confirm(this.token, onInitSuccess, onInitError);
     }
   }
 
-  initMockSession() {
-    this.userForm = this.builder.group({
-      email:             ['doe.john@gsa.com', Validators.required],
+  initMockSession(cb) {
+    this.states.isGov = true;
 
-      title:             [''],
-      firstName:         ['', Validators.required],
-      middleName:        [''],
-      lastName:          ['', Validators.required],
-      suffix:            [''],
-
-      workPhone:         [''],
-
-      department:        [''],
-      orgID:             [''],
-
-      kbaAnswerList:     this.builder.array([
-        this.initKBAGroup(),
-        this.initKBAGroup(),
-        this.initKBAGroup()
-      ]),
-
-      userPassword:      ['', Validators.required],
-
-      accountClaimed:    [true],
-      emailNotification: [false]
+    this.user = merge({}, this.user, {
+      _id:           'john.doe@gsa.com',
+      email:         'john.doe@gsa.com',
+      firstName:     'John',
+      lastName:      'Doe',
+      initials:      'J',
+      fullName:      'John J Doe',
+      workPhone:     '12345678901',
+      kbaAnswerList: [
+        { questionId: 1, answer: 'Answer1' },
+        { questionId: 2, answer: 'Answer2' },
+        { questionId: 3, answer: 'Answer3' }
+      ]
     });
 
-    this.user = this.userForm.value;
-    this.user.fullName = 'John J Doe';
-
-    this.lookups.questions = [
+    this.store.questions = [
       { 'id': 1,  'question': 'What was the make and model of your first car?' },
       { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
       { 'id': 3,  'question': 'What was your high school mascot?' },
@@ -255,50 +244,60 @@ export class RegisterMainComponent {
       { 'id': 12, 'question': 'What is the title of your favorite book?' }
    ];
 
-   this.processKBAQuestions();
+    this.processKBAQuestions();
+
+    cb();
   }
 
   processKBAQuestions() {
     let intQuestion;
 
-    this.lookups.questions = this.lookups.questions.map((question, intQuestion) => {
+    this.store.questions = this.store.questions.map((question, intQuestion) => {
       // Crseate reverse lookup while remapping
-      this.lookups.indexes[question.id] = intQuestion;
+      this.store.indexes[question.id] = intQuestion;
       // Update associative array
       question.disabled = false;
       return question;
     });
 
     for(intQuestion in this.user.kbaAnswerList) {
-      this.questions.push(this.lookups.questions);
+      this.questions.push(this.store.questions);
     }
   }
 
-  initKBAGroup() {
+  initKBAGroup(index: number) {
     return this.builder.group({
-      questionId: ['', Validators.required],
-      answer:     ['']
+      questionId: [this.user.kbaAnswerList[index].questionId, Validators.required],
+      answer:     [this.user.kbaAnswerList[index].answer]
     })
   }
 
-  setDepartment(department) {
-    this.user.department = department.value;
-    this.user.orgID = department.value;
-  }
+  setHierarchy(hierarchy: { label: string, value: number }[]) {
+    let organization;
 
-  setOrganization(organization) {
-    this.user.orgID = organization.value;
+    this.user.departmentID = 0;
+    this.user.agencyID = 0;
+    this.user.officeID = 0;
+
+    this.store.levels.forEach((level, intLevel) => {
+      organization = hierarchy[intLevel];
+
+      if(organization) {
+        this.user[`${level}ID`] = organization.value;
+        hierarchy[intLevel].value;
+      }
+    });
   }
 
   changeQuestion(questionID, $index) {
-    let items = _.cloneDeep(this.lookups.questions),
+    let items = cloneDeep(this.store.questions),
         intQuestion;
 
     this.states.selected[$index] = questionID;
 
     this.states.selected.forEach((questionID, intItem) => {
       if(questionID.toString().length) {
-        intQuestion = this.lookups.indexes[questionID];
+        intQuestion = this.store.indexes[questionID];
         // Loop through new questions array lookup to apply disabled options
         items[intQuestion].disabled = true;
       }
@@ -306,10 +305,10 @@ export class RegisterMainComponent {
 
     this.states.selected.forEach((questionID, intItem) => {
       // Loop through each question list to set the list to the new questions list
-      this.questions[intItem] = _.cloneDeep(items);
+      this.questions[intItem] = cloneDeep(items);
       // Re-enable the selected option
       if(questionID) {
-        intQuestion = this.lookups.indexes[questionID];
+        intQuestion = this.store.indexes[questionID];
         this.questions[intItem][intQuestion].disabled = false;
       }
     });
@@ -330,7 +329,7 @@ export class RegisterMainComponent {
   }
 
   prepareData() {
-    let userData = this.userForm.value,
+    let userData = merge({}, this.user, this.userForm.value),
         propKey,
         isRemove;
 
@@ -343,45 +342,31 @@ export class RegisterMainComponent {
 
     // Clean up empty properties
     for(propKey in userData) {
-      if(propKey !== 'kbaAnswerList') {
-        isRemove = (
-          _.isArray(userData[propKey]) && (
-            !(userData[propKey] || '').length || !userData[propKey]
-          )
-        );
+      switch(propKey) {
+        case 'departmentID':
+        case 'agencyID':
+        case 'officeID':
+          userData[propKey] = parseInt(userData[propKey]);
+          break;
 
-        if(isRemove || (userData[propKey] || '').length == 0) {
-          delete userData[propKey];
-        }
+        case 'kbaAnswerList':
+          userData[propKey] = this.userForm.value.kbaAnswerList;
+          break;
+      }
+
+      isRemove = (
+        isArray(userData[propKey]) &&
+        !propKey.match(/(department|agency|office)ID/) && (
+          !(userData[propKey] || '').length || !userData[propKey]
+        )
+      );
+
+      if(isRemove || (userData[propKey] || '').length == 0) {
+        delete userData[propKey];
       }
     }
 
     return userData;
-  }
-
-  process(data, fnSuccess, fnError) {
-    _.merge(this.user, data);
-
-    fnSuccess = fnSuccess || (() => {});
-    fnError = fnError || (() => {});
-
-    this.api.iam.user.registration.register(this.token, data, (userData) => {
-       this.user = _.extend({},  this.user, userData);
-
-      let credentials = {
-        username: this.user.email,
-        password: this.user.userPassword
-      };
-
-      // Automatically authenticate the user and start a session
-      this.api.iam.login(credentials, () => {
-        fnSuccess();
-      }, (error) => {
-        fnError(error);
-      });
-    }, (error) => {
-      fnError(error);
-    });
   }
 
   cancel() {
@@ -404,24 +389,43 @@ export class RegisterMainComponent {
 
   register() {
     let userData,
-        kbaAnswerList = this.userForm.value['kbaAnswerList'];
+        onError = ((error) => {
+          // Error Promise
+          this.showAlert('error', error);
+          this.states.submitted = false;
+          this.states.loading = false;
+        });
 
     this.hideAlert();
     this.validate();
 
     if(this.userForm.valid) {
       this.states.submitted = true;
+      this.states.loading = true;
 
       userData = this.prepareData();
 
-      this.process(userData, () => {
-        // Success Promise
-        this.router.navigate(['/profile/details']);
-      }, (error) => {
-        // Error Promise
-        this.showAlert('error', error);
-        this.states.submitted = false;
-      });
+      this.api.iam.user.registration.register(this.token, userData, (data) => {
+        let credentials = {
+          username: userData.email,
+          password: userData.userPassword
+        };
+
+        this.user = merge({}, this.user, data);
+        this.states.loading = false;
+
+        // Automatically authenticate the user and start a session
+        this.api.iam.login(credentials, () => {
+          // Success Promise
+          this.router.navigate(['/profile/details']);
+        }, onError);
+      }, onError);
+    } else {
+      if(this.api.iam.isDebug()) {
+        console.log(this.prepareData());
+      }
+
+      this.showAlert('error', 'There were some errors in your response, please review them and try again');
     }
   }
 };

@@ -1,0 +1,13 @@
+<div>
+  <sam-alert [attr.id]="submissionAlertConfig.id" [type]="submissionAlertConfig.type"
+             [title]="submissionAlertConfig.title" [description]="submissionAlertConfig.description">
+  </sam-alert>
+
+  <h3>{{ viewModel.title }}</h3>
+  <sam-text-area [label]="'Submission Comment'"
+                 [name]="'submission-comment'"
+                 [required]="true"
+                 [formControl]="reason"
+                 [control]="reason">
+  </sam-text-area>
+</div>

@@ -38,9 +38,11 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
   @Input() searchMessage = "";
   @Input() initial: any[] = [];
   @Input() levelLimit: number = null;
+  @Input() borderless: boolean = false;
 
   @Output('department') onDepartmentChange = new EventEmitter<any>();
   @Output() organization = new EventEmitter<any[]>();
+  @Output() orgFullPath = new EventEmitter<any[]>();
 
   @ViewChild("autocompletelist") autocompletelist;
 
@@ -113,7 +115,7 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
     selectedOrg: ""
   };
 
-  orgLevels = [
+  orgLevels: any[] = [
     this.dpmtSelectConfig,
     this.agencySelectConfig,
     this.officeSelectConfig,
@@ -802,6 +804,8 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
 
    obj['name'] = data['name'] + this.levelFormatter(level);
    obj['value'] = data['elementId'] ? data['elementId'] : data['orgKey'];
+   obj['dataName'] = data['name'];
+   obj['code'] = data['code'];
 
    this.searchMessage = "";
    this.addToSelectedOrganizations(obj);
@@ -831,6 +835,16 @@ export class AgencyPickerComponent implements OnInit, ControlValueAccessor {
     this.onTouched();
     this.onChange(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);
     this.organization.emit(this.multimode ? this.selectedOrganizations : this.selectedOrganizations[0]);
+    let fullPathArr = [];
+    this.orgLevels.forEach((val,idx)=>{
+      if(val.selectedOrg){
+        let org = val.options.find(function(org){
+          return val.selectedOrg == org.value;
+        });
+        fullPathArr.push(org);
+      }
+    });
+    this.orgFullPath.emit(fullPathArr);
   }
 
   toggleSelectorArea() {

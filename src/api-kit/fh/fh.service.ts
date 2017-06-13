@@ -93,18 +93,26 @@ export class FHService {
     return this.oAPIService.call(oApiParam);
   }
 
-  getActiveDepartments(){
-    // let oApiParam = {
-    //   name: 'federalHierarchy',
-    //   suffix: '/activedepartment/',
-    //   method: 'GET'
-    // };
-    // return this.oAPIService.call(oApiParam);
-    return this._http.get("../../landing_superadmin.json").map((res:any) => res.json());
+  getDepartmentsByStatus(status:string){
+    let oApiParam = {
+      name: 'federalHierarchy',
+      suffix: '/activedepartment/',
+      method: 'GET',
+      oParam: {}
+    };
+    if(status !== 'active') oApiParam.oParam['status'] = status;
+    return this.oAPIService.call(oApiParam);
   }
 
-  getDepartmentAdminLanding(){
-    return this._http.get("../../landing_deptadmin.json").map((res:any) => res.json());
+  getDepartmentAdminLanding(status:string, orgId:string){
+    let oApiParam = {
+      name: 'federalHierarchyActive',
+      suffix: '/hierarchy/'+orgId,
+      method: 'GET',
+      oParam: {type:'agency'}
+    };
+    if(status !== 'active') oApiParam.oParam['status'] = status;
+    return this.oAPIService.call(oApiParam);
   }
 
   search(oData) {
@@ -159,4 +167,30 @@ export class FHService {
 
   }
 
+  fhSearch(q:string, pageNum, pageSize){
+    let apiOptions: any = {
+      name: 'fh',
+      suffix: '/search',
+      method: 'GET',
+      oParam: {
+        'q':q,
+        'pageNum':pageNum,
+        'pageSize':pageSize
+      }
+    };
+    return this.oAPIService.call(apiOptions);
+  }
+
+  fhSearchCount(q:string, searchType){
+    let apiOptions: any = {
+      name: 'fh',
+      suffix: '/search/count',
+      method: 'GET',
+      oParam: {
+        'q':q,
+        'searchType':searchType,
+      }
+    };
+    return this.oAPIService.call(apiOptions);
+  }
 }

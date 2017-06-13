@@ -391,24 +391,6 @@ let MockProgramService = {
     },
     "id": "3077ea1df409265fb4378e0e844b8811"
   });
-  },
-  getProgramById: (id: string) => {
-    //return object that has attribute 'program' -> considered as published program
-    return Observable.of({
-        'id':'',
-        'data': {
-          'programNumber': '',
-        },
-      '_links': {
-        'self': {
-          'href': 'URL'
-        }
-      },
-      "status": {
-        "code": "published",
-        "value": "Published"
-      }
-    });
   }
 };
 
@@ -595,7 +577,7 @@ describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
     expect(comp.federalHierarchy).toBeDefined();
     expect(comp.relatedProgram).toBeDefined();
     expect(comp.historicalIndex).toBeDefined();
-    expect(comp.alert).toBeDefined();
+    expect(comp.alerts).toBeDefined();
     expect(comp.dictionaries).toBeDefined();
     expect(comp.assistanceTypes).toBeDefined();
 
@@ -604,7 +586,7 @@ describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
 
   it('ProgramPage: Should show the alert for updated since YYYY', () => {
     //mocked program should show the alert -> Verifying it
-    expect(comp.alert.length).toBeGreaterThan(0);
+    expect(comp.alerts.length).toBeGreaterThan(0);
     expect(fixture.debugElement.queryAll(By.css('samalert')).length).toBeGreaterThan(0);
   });
 

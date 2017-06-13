@@ -11,20 +11,16 @@ import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AuthenticationService } from './authentication.service.ts';
 import { AuthenticationRouter } from './authentication.route';
 
-// Route Guards
-import { RegisterGuard } from './register/register.guard';
-import { ProfileGuard } from './profile/profile.guard';
-import { SystemGuard } from './system/system.guard';
-
 // Shared Components
 import { SamKBAComponent, SamPasswordComponent } from './shared';
 
 // Page Components
 import { LoginComponent } from './login';
-import { RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
+import { RegisterGuard, RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
 import { ForgotComponent, ForgotInitialComponent, ForgotConfirmComponent, ForgotMainComponent } from './forgot';
-import { ProfileComponent,DetailsComponent, ResetComponent, MigrationsComponent } from './profile';
-import { SystemComponent, SystemProfileComponent, SystemPasswordComponent, SystemMigrationsComponent } from './system';
+import { FSDGuard, FSDComponent, UserComponent, UsersComponent } from './fsd';
+import { ProfileGuard, ProfileResolve, ProfileComponent,DetailsComponent, ResetComponent, MigrationsComponent } from './profile';
+import { SystemGuard, SystemComponent, SystemProfileComponent, SystemPasswordComponent, SystemMigrationsComponent } from './system';
 
 @NgModule({
   imports: [
@@ -36,7 +32,7 @@ import { SystemComponent, SystemProfileComponent, SystemPasswordComponent, Syste
     Ng2PageScrollModule.forRoot(),
     AppComponentsModule,
     PipesModule,
-    AuthenticationRouter
+    AuthenticationRouter,
   ],
 
   declarations: [
@@ -68,6 +64,13 @@ import { SystemComponent, SystemProfileComponent, SystemPasswordComponent, Syste
     ForgotMainComponent,
 
     /**
+     * FSD
+     */
+    FSDComponent,
+    UserComponent,
+    UsersComponent,
+
+    /**
      * Profile
      */
     ProfileComponent,
@@ -86,9 +89,19 @@ import { SystemComponent, SystemProfileComponent, SystemPasswordComponent, Syste
 
   providers: [
     AuthenticationService,
-    RegisterGuard,
+
+    /**
+     * Router Guards
+     */
+    FSDGuard,
     ProfileGuard,
-    SystemGuard
+    RegisterGuard,
+    SystemGuard,
+
+    /**
+     * Route Resolvers
+     */
+    ProfileResolve
   ]
 })
 export class AuthenticationModule { }

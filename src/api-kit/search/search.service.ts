@@ -23,7 +23,7 @@ export class SearchService {
     };
 
     if(obj.index=="") {
-      oApiParam.oParam['index'] = "cfda,opp,fh,ent,ex,wd,fpds";
+      oApiParam.oParam['index'] = "cfda,opp,fh,ei,wd,fpds";
     }
 
     //Active Only filter
@@ -118,6 +118,14 @@ export class SearchService {
 
     if(typeof obj.beneficiary !== 'undefined' && obj.beneficiary !== null && obj.beneficiary !== ''){
       oApiParam.oParam['beneficiary'] = obj.beneficiary;
+    }
+
+    if(typeof obj.functionalCodes !== 'undefined' && obj.functionalCodes !== null && obj.functionalCodes !== ''){
+      oApiParam.oParam['functional_code'] = obj.functionalCodes;
+    }
+
+    if(typeof obj.assistanceType !== 'undefined' && obj.assistanceType !== null && obj.assistanceType !== ''){
+      oApiParam.oParam['assistance_type'] = obj.assistanceType;
     }
 
     return this.oAPIService.call(oApiParam);

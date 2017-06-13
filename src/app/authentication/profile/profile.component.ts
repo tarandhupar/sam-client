@@ -26,7 +26,8 @@ export class ProfileComponent {
 
   private states = {
     route: '',
-    system: false
+    system: false,
+    fsd: false
   };
 
   activeRouteClass = '';
@@ -43,9 +44,8 @@ export class ProfileComponent {
     this.api.iam.checkSession((user) => {
       this.store.nav[2].routerLink = ['/users', user._id, 'access'];
 
-      if(user.systemAccount) {
-        this.states.system = true;
-      }
+      this.states.system = user.systemAccount;
+      this.states.fsd = user.fsd;
     }, () => {
       this.store.nav[2].routerLink = [];
     });
@@ -61,10 +61,23 @@ export class ProfileComponent {
   }
 
   setActiveRoute() {
-    let className = this.states.route
-      .replace(/\//g, '-')
-      .replace(/\?.+/g, '');
+    let classes = [],
+        route = this.states.route
+          .replace(/\//g, '-')
+          .replace(/\?.+/g, '')
+          .replace(/^-/, '')
+          .split('-');
 
-    this.activeRouteClass = (className.length ? 'usa' : '') + className;
+    if(route.length) {
+      route.unshift('usa');
+
+      classes.push(route.join('-'));
+
+      if(route.length > 3) {
+        classes.push(route.slice(0, 4).join('-'));
+      }
+    }
+
+    this.activeRouteClass = classes.join(' ');
   }
 };

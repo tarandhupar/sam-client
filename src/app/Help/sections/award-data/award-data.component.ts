@@ -364,9 +364,9 @@ export class AwardDataComponent {
         SAM provides detailed, public descriptions of federal assistance 
         listings available to State and local governments 
         (including the District of Columbia); federally recognized Indian tribal 
-        governments, Territories (and possessions) of the United States, 
+        governments, Territories (and possessions) of the United States; 
         domestic public, quasi- public, and private profit and nonprofit 
-        organizations and institutions, specialized groups, and individuals.
+        organizations and institutions; specialized groups, and individuals.
       </p>
       <p>
         As an entity looking for federal assistance, you can conduct your 
@@ -375,13 +375,14 @@ export class AwardDataComponent {
       </p>
       <p>
         Each assistance listing is associated with a unique five digit CFDA 
-        (Catalogue of Federal Domestic Assistance) number. Once you identify a 
+        (Catalog of Federal Domestic Assistance) number. Once you identify a 
         federal assistance listing that you’re interested in, you can link 
         directly to grant opportunities on Grants.gov or follow up with that 
         specific agency using the contact information provided. 
       </p>
       `
   };
+
   assistListingFeatures = [
     [
       'Search/Display',

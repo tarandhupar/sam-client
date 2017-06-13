@@ -37,7 +37,7 @@
   <div class="usa-width-one-whole m_T-3x" *ngIf="toggleControl.alerts || toggleControl.analytics">
     <div class="usa-width-one-half relative" *ngIf="toggleControl.alerts && states.isSignedIn">
       <workspace-widget [isExpand]="configObj[2]['alerts'].isExpand" [title]="'System Alerts'" (onToggleChange)="toggleHelpDetail('alerts',$event, 2)">
-        <button class="alert-add-btn" (click)="onAddNewAlert()">Add New Alert</button>
+        <button class="alert-add-btn" (click)="onAddNewAlert()" *ngIf="false">Add New Alert</button>
         <div class="usa-width-one-half m_T-6x m_R-0">
           <div class="usa-offset-one-fourth usa-width-three-fourths alert-text-center"><a class="alert-number-text" (click)="onDirectToAlerts('Active')">{{activeAlerts}}</a></div>
           <div class="usa-offset-one-fourth usa-width-three-fourths alert-text-center"><a class="alert-type-text" (click)="onDirectToAlerts('Active')">Active</a></div>

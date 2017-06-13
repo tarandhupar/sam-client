@@ -23,7 +23,8 @@ import { RoleMgmtContent } from "./rolemgmt-content/rolemgmt-content.component.t
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { RequestDetailsComponent } from "./request-details/request-details";
 import { UserRolesDirectoryPage } from "./user-roles-directory/user-roles-directory.page";
-import {DomainDefinitionResolve} from "./domaindefinition.resolve";
+import { DomainDefinitionResolve } from "./domaindefinition.resolve";
+import { AppTemplatesModule } from "../app-templates/index";
 
 @NgModule({
   imports: [
@@ -35,7 +36,7 @@ import {DomainDefinitionResolve} from "./domaindefinition.resolve";
     SamUIKitModule,
     SamAPIKitModule,
     AppComponentsModule,
-
+    AppTemplatesModule,
   ],
   exports: [
     RequestDetailsComponent

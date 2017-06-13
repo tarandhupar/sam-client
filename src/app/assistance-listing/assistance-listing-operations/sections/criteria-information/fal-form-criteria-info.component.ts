@@ -1,6 +1,6 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import { Component, Input, OnInit, ViewChild, Output, EventEmitter } from "@angular/core";
 import {FALFormService} from "../../fal-form.service";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
 import {AutocompleteConfig} from "sam-ui-kit/types";
 import {falCustomValidatorsComponent} from "../../../validators/assistance-listing-validators";
@@ -13,6 +13,10 @@ import {falCustomValidatorsComponent} from "../../../validators/assistance-listi
 
 export class FALFormCriteriaInfoComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
+  @Output() public onError = new EventEmitter();
+
+  private formErrors = new Set();
+
   @ViewChild('appauto') appauto;
   @ViewChild('documentationComp') documentationComp;
   @ViewChild('usageResComp') usageResComp;
@@ -185,7 +189,12 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     }, {
       emitEvent: false
     });
-    this.falCriteriaForm.valueChanges.subscribe(data => this.updateViewModel(data));
+
+    this.falCriteriaForm.valueChanges.subscribe(data => {
+      this.updateViewModel(data);
+      this.collectErrors();
+
+    });
   }
 
     populateMultiSelect(multiTypeData: any, autoCompleteConfig: any, listDisplay: any, keyValueArray: any) {
@@ -374,6 +383,7 @@ export class FALFormCriteriaInfoComponent implements OnInit {
     }
     return data;
   }
+
   validateSection(){
     this.documentationComp.markChildrenAsDirty();
     this.usageResComp.markChildrenAsDirty();
@@ -384,5 +394,35 @@ export class FALFormCriteriaInfoComponent implements OnInit {
       this.falCriteriaForm.controls[key].markAsDirty();
       this.falCriteriaForm.controls[key].updateValueAndValidity();
     }
+
+    //this.collectErrors();
+    if(this.formErrors.size > 0)
+      this.emitEvent();
   }
+
+  private collectErrors() {
+    let size = this.formErrors.size;
+
+    for(let key in this.falCriteriaForm.controls) {
+      if(['applicantType', 'benType', 'assUsageType'].indexOf(key) == -1){
+        if(this.falCriteriaForm.controls[key].errors && this.falCriteriaForm.controls[key].dirty) {
+          this.formErrors.add(key);
+        } else {
+          this.formErrors.delete(key);
+        }
+      }
+    }
+
+    if(this.formErrors.size !== size) {
+      this.emitEvent();
+    }
+  }
+
+  private emitEvent() {
+    this.onError.emit({
+      formErrorArr: Array.from(this.formErrors.values()),
+      section: 'criteria-information'
+    });
+  }
+
 }

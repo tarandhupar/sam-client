@@ -1,4 +1,4 @@
-import { Component, DoCheck, Input, KeyValueDiffers, NgZone, OnInit, OnChanges, SimpleChange, ViewChild } from '@angular/core';
+import { Component, DoCheck, Input, KeyValueDiffers, OnInit, OnChanges, SimpleChange, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -29,7 +29,6 @@ export class ForgotMainComponent {
       type: 'warning',
       title: 'You have one attempt left',
       message: '',
-      placement: 'bottom right',
       show: false
     }
   };
@@ -45,41 +44,36 @@ export class ForgotMainComponent {
     indexes: {}
   };
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private zone: NgZone,
-    private api: IAMService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private api: IAMService) {}
 
   ngOnInit() {
-    this.verifyToken();
+    this.getToken();
+
+    if(this.router.url.match(/^\/fsdforgot\//)) {
+      this.verifyFSD();
+    } else {
+      this.verifyToken();
+    }
+  }
+
+  getToken() {
+    this.token = this.route.snapshot.queryParams['token'] || '';
   }
 
   verifyToken() {
-    let vm = this,
-        token = this.route.snapshot.queryParams['token'] || '';
+    if(this.token.length) {
+      this.api.iam.user.password.verify(this.token, (newToken, question) => {
+        console.info('Confirmation and token verified!');
 
-    if(token.length) {
-      this.token = token;
+        this.question = question;
+        this.token = newToken || '';
 
-      this.zone.runOutsideAngular(() => {
-        this.api.iam.user.password.verify(this.token, (newToken, question) => {
-          vm.zone.run(() => {
-            console.info('Confirmation and token verified!');
-
-            this.question = question;
-            this.token = newToken || '';
-
-            if(!this.token.length) {
-              // API Issue
-              console.error('No token response from API');
-            }
-          });
-        }, (error) => {
-          vm.zone.run(() => {
-            this.expire(error.message);
-          });
-        });
+        if(!this.token.length) {
+          // API Issue
+          console.error('No token response from API');
+        }
+      }, (error) => {
+        this.expire(error.message);
       });
     } else {
       if(!this.api.iam.isDebug()) {
@@ -101,6 +95,10 @@ export class ForgotMainComponent {
     } else {
       console.log(params);
     }
+  }
+
+  hideAlert() {
+    this.states.alert.show = false;
   }
 
   next(status, token, question, message) {
@@ -129,7 +127,7 @@ export class ForgotMainComponent {
       //--> Reset
       case 'success':
         this.states.reset = true;
-        this.states.alert.show = false;
+        this.hideAlert();
         break;
 
       //--> Lockout
@@ -144,26 +142,19 @@ export class ForgotMainComponent {
   }
 
   verify() {
-    let vm = this,
-        stage = this.states.reset ? 2 : 1;
+    let stage = this.states.reset ? 2 : 1;
 
     switch(stage) {
       case 1:
         if(this.answer.valid) {
           this.states.submitted = true;
 
-          this.zone.runOutsideAngular(() => {
-            this.api.iam.user.password.kba(this.token, this.answer.value, (status, token, question, message) => {
-              vm.zone.run(() => {
-                this.answer.reset('');
-                this.next(status, token, question, message);
-                this.states.submitted = false;
-              });
-            }, (error) => {
-              vm.zone.run(() => {
-                this.expire(error.message);
-              });
-            });
+          this.api.iam.user.password.kba(this.token, this.answer.value, (status, token, question, message) => {
+            this.answer.reset('');
+            this.next(status, token, question, message);
+            this.states.submitted = false;
+          }, (error) => {
+            this.expire(error.message);
           });
         }
 
@@ -175,9 +166,17 @@ export class ForgotMainComponent {
     }
   }
 
+  verifyFSD() {
+    this.api.iam.fsd.reset.verify(this.token, (status, token, message) => {
+      this.next(status, token, '', message);
+      this.states.submitted = false;
+    }, (error) => {
+      this.expire(error.message);
+    });
+  }
+
   reset() {
-    let vm = this,
-        control = this.password;
+    let control = this.password;
 
     this.states.submittedCount++;
     this.$password.setSubmitted();
@@ -185,33 +184,27 @@ export class ForgotMainComponent {
     if(control.valid) {
       this.states.submitted = true;
 
-      this.zone.runOutsideAngular(() => {
-        this.api.iam.user.password.reset(control.value, this.token, () => {
-          vm.zone.run(() => {
-            this.router.navigate(['/forgot'], {
-              queryParams: {
-                type: 'success',
-                title: 'Your password reset was successful.'
-              }
-            });
-          });
-        }, (error) => {
-          vm.zone.run(() => {
-            switch(error.httpCode) {
-              case 412:
-                this.$password.setConsecutiveValidationError();
-                break;
-              case 406:
-                this.$password.setCustomError('password', error.message);
-                break;
-              default:
-                this.expire(error.message);
-            }
-
-            this.states.submitted = false;
-          });
+      this.api.iam.user.password.reset(control.value, this.token, () => {
+        this.router.navigate(['/forgot'], {
+          queryParams: {
+            type: 'success',
+            title: 'Your password reset was successful.'
+          }
         });
-      })
+      }, (error) => {
+        switch(error.httpCode) {
+          case 412:
+            this.$password.setConsecutiveValidationError();
+            break;
+          case 406:
+            this.$password.setCustomError('password', error.message);
+            break;
+          default:
+            this.expire(error.message);
+        }
+
+        this.states.submitted = false;
+      });
     };
   }
 };

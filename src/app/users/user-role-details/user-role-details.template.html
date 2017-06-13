@@ -1,0 +1,45 @@
+<div class="usa-grid user-role-details">
+  <sam-breadcrumbs [crumbs]="crumbs"></sam-breadcrumbs>
+  <div class="usa-width-one-fourth">
+    &nbsp;
+  </div>
+  <div class="usa-width-three-fourths">
+    <span class="light-title">Profile</span>
+    <div class="clearfix">
+      <h2 class="pull-left">Role Details</h2>
+      <button class="pull-right usa-button usa-button-transparent m_0">
+        <i class="fa fa-pencil"></i>
+        Edit
+      </button>
+    </div>
+    <div class="role-details-block">
+      <div>
+        <label class="bold user-label">User</label>
+        <span>{{details.name}}</span>
+      </div>
+      <div>
+        <label class="bold">Domain</label>
+        <span>{{details.domain}}</span>
+      </div>
+      <div>
+        <label class="bold">Role</label>
+        <span>{{details.role}}</span>
+      </div>
+      <div>
+        <label class="bold">Organization</label>
+        <span>{{details.organization}}</span>
+      </div>
+      <h4 class="text-lighter">OBJECTS AND PERMISSIONS</h4>
+      <ng-container *ngFor="let o of details.objects; let i = index">
+        <div class="usa-grid-full" *ngIf="i % 3 === 0">
+          <div class="usa-width-one-third" *ngFor="let object of details.objects.slice(i, i+3)">
+            <label class="bold">{{object.name}}</label>
+            <div *ngFor="let permission of object.permissions">{{permission}}</div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+

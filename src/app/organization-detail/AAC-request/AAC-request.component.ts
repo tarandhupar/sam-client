@@ -242,7 +242,6 @@ export class AACRequestPage {
   onCancelAACRequestClick(){}
 
   onSubmitFormClick(){
-    console.log(JSON.stringify(this.generateAACRequestPostObj()));
     this.aacRequestService.postAACRequest(this.generateAACRequestPostObj()).subscribe(
       val => {
         this.requestIsReview = false;

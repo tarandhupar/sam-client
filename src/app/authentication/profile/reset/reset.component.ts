@@ -57,6 +57,8 @@ export class ResetComponent {
         };
 
         this.initForm();
+
+        this.states.alert.show = true;
       }
     });
   }
@@ -86,6 +88,10 @@ export class ResetComponent {
       this.passwordForm.controls[key].markAsTouched();
       this.passwordForm.controls[key].markAsDirty();
     }
+  }
+
+  dismiss() {
+    this.states.alert.show = false;
   }
 
   reset() {

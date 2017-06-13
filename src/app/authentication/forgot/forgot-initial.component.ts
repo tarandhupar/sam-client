@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
@@ -22,9 +22,9 @@ export class ForgotInitialComponent {
     loading: false,
     error: '',
     notification: {
-      type: '',
+      type: 'error',
       title: '',
-      show: false
+      show: true
     }
   };
 
@@ -33,13 +33,9 @@ export class ForgotInitialComponent {
     'email': 'Enter a valid email address'
   };
 
-  email: FormControl;
+  public email: FormControl;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private zone: NgZone,
-    private api: IAMService) {}
+  constructor(private router: Router, private route: ActivatedRoute, private api: IAMService) {}
 
   ngOnInit() {
     this.resetNotifications();
@@ -50,7 +46,7 @@ export class ForgotInitialComponent {
 
   dispatchNotiications() {
     this.states.notification = merge(this.states.notification, {
-      title: this.route.snapshot.queryParams['message'] || '',
+      title: this.route.snapshot.queryParams['message'] || this.states.notification.title || ''
     }, this.route.snapshot.queryParams);
 
     if(this.states.notification.title.length) {
@@ -90,8 +86,7 @@ export class ForgotInitialComponent {
   }
 
   init() {
-    let vm = this,
-        control = this.email;
+    let control = this.email;
 
     control.markAsTouched();
     this.validate();
@@ -99,19 +94,13 @@ export class ForgotInitialComponent {
     if(control.valid) {
       this.states.loading = true;
 
-      this.zone.runOutsideAngular(() => {
-        this.api.iam.user.password.init(control.value, () => {
-          vm.zone.run(() => {
-            this.states.loading = false;
-            Cookie.set('iam-forgot-email', control.value);
-            this.router.navigate(['/forgot/confirm']);
-          });
-        }, (error) => {
-          vm.zone.run(() => {
-            this.states.loading = false;
-            this.states.error = error.message;
-          });
-        });
+      this.api.iam.user.password.init(control.value, () => {
+        this.states.loading = false;
+        Cookie.set('iam-forgot-email', control.value);
+        this.router.navigate(['/forgot/confirm']);
+      }, (error) => {
+        this.states.loading = false;
+        this.states.error = error.message;
       });
     }
   }

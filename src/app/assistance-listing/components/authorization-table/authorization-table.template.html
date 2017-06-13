@@ -19,7 +19,7 @@
   <ng-container *ngFor="let auth of displayAuthInfo; let i=index">
     <tr>
       <td>
-        <span class='usa-input-error-message' *ngIf="review && auth.errorExists"><sup>*</sup>This field cannot be empty</span>
+        <span class='usa-input-error-message' *ngIf="review && formErrorArr[auth.authorizationId]"><sup>*</sup>This field cannot be empty</span>
         {{auth.label}}
       </td>
       <td>

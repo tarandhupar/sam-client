@@ -37,7 +37,9 @@ export class UserAccessService {
       });
   }
 
-  getAccess(userId: string, filterOptions?: any): Observable<UserAccessInterface> {
+  getAccess(userId: string, filterOptions?: any, toJson?: boolean) {
+    toJson = toJson || false;
+
     let apiOptions: any = {
       name: 'access',
       suffix: '/' + userId + '/',
@@ -49,7 +51,7 @@ export class UserAccessService {
       apiOptions.oParam = _.merge(apiOptions.oParam, filterOptions);
     }
 
-    return this.callApi(apiOptions);
+    return this.callApi(apiOptions, toJson);
   }
 
   getRoles(queryParams, userName?, adminLevel?: number): Observable< Array<IRole> > {
@@ -336,10 +338,10 @@ export class UserAccessService {
   }
 
   // Get an array of users and show the access and show the Org, domains for that org, and roles for that domains
-  getAccessODR(filterOptions = {}) {
+  getUserDirectory(filterOptions = {}) {
     let apiOptions: any = {
       name: 'rms',
-      suffix: '/userprofile/',
+      suffix: '/userdirectory/',
       method: 'GET',
       oParam: { }
     };
@@ -347,6 +349,28 @@ export class UserAccessService {
     if (filterOptions) {
       apiOptions.oParam = _.merge(apiOptions.oParam, filterOptions);
     }
+
+    return this.callApi(apiOptions);
+  }
+
+  getAllUserRoles(uid, queryParams = {}) {
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/userprofile/'+uid+'/',
+      method: 'GET',
+      oParam: queryParams,
+    };
+
+    return this.callApi(apiOptions);
+  }
+
+  getUserRoleDetails(userId: string, queryParams: any) {
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/userprofile/'+userId+'/',
+      method: 'GET',
+      oParam: queryParams
+    };
 
     return this.callApi(apiOptions);
   }
@@ -361,4 +385,5 @@ export class UserAccessService {
     options.headers = options.headers || {};
     options.headers['X-Auth-Token'] = iPlanetCookie;
   }
+
 }

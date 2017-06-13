@@ -34,7 +34,13 @@ import { OrgAddrFormComponent } from "./address-form/address-form.component";
 import { PipesModule } from "../app-pipes/app-pipes.module";
 import { SamFeedbackSidenavComponent } from "./feedback-sidenav/feedback-sidenav.component";
 import { FeedbackFormService } from "./feedback-form/feedback-form.service";
+import { SamSoloAccordian } from "./solo-accordion/solo-accordian.component";
 import { SamStatusBannerComponent } from "./sam-status-banner/sam-status-banner.component";
+import { SamEditorComponent } from "./editor/editor.component";
+import { SamTitleSubtitleComponent } from "./title-subtitle/title-subtitle.component";
+import { SamCreatePageTemplateComponent } from "./create-page-template/create-page-template.component";
+import {PlaceholderProfilePic} from "./placeholder-profile-pic/placeholder-profile-pic.component";
+
 /**
  * A module for reusable SAM Web Design components
  */
@@ -66,7 +72,12 @@ import { SamStatusBannerComponent } from "./sam-status-banner/sam-status-banner.
     SamCountyServiceAutoDirective,
     SamCityServiceAutoDirective,
     OrgAddrFormComponent,
+    SamSoloAccordian,
     SamStatusBannerComponent,
+    SamEditorComponent,
+    SamTitleSubtitleComponent,
+    SamCreatePageTemplateComponent,
+    PlaceholderProfilePic,
   ],
   imports: [
     BrowserModule,
@@ -103,7 +114,12 @@ import { SamStatusBannerComponent } from "./sam-status-banner/sam-status-banner.
     SamStateServiceAutoDirective,
     SamCountyServiceAutoDirective,
     OrgAddrFormComponent,
+    SamSoloAccordian,
     SamStatusBannerComponent,
+    SamEditorComponent,
+    SamTitleSubtitleComponent,
+    SamCreatePageTemplateComponent,
+    PlaceholderProfilePic,
   ],
   providers: [
     SamFeedbackComponent,

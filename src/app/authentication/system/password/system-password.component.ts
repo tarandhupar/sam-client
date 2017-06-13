@@ -2,6 +2,8 @@ import { Component, DoCheck, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { merge } from 'lodash';
+
 import { SamPasswordComponent } from '../../shared';
 
 import { IAMService } from 'api-kit';
@@ -20,7 +22,8 @@ export class SystemPasswordComponent {
   @ViewChild('password') $password;
 
   private store = {
-    title: 'Reset Password'
+    title: 'Reset Password',
+    phrases: []
   };
 
   private states = {
@@ -40,8 +43,16 @@ export class SystemPasswordComponent {
   constructor(private router: Router, private route: ActivatedRoute, private builder: FormBuilder, private api: IAMService) {}
 
   ngOnInit() {
-    this.store['observer'] = this.route.params.subscribe(params => {
-       this.system._id = params['id'];
+    const debugFn = (() => {
+      this.system = merge({
+        _id: 'john.doe@gmail.com',
+        email: 'John.Doe@gmail.com'
+      }, this.system);
+
+      this.initForm();
+
+      this.states.alert.message = "Alert Test!"
+      this.states.alert.show = true;
     });
 
     // Verify Session
@@ -51,14 +62,16 @@ export class SystemPasswordComponent {
         this.getSystemAccount(account => {
           // Redirect the user to System Account Profile if no System Account is associated with user
           if(!account) {
-            this.router.navigate(['profile']);
+            this.router.navigate(['/system/profile']);
           } else {
             this.system = account;
             this.initForm();
           }
         }, (error) => {
           if(!this.api.iam.isDebug()) {
-            this.router.navigate(['profile']);
+            this.router.navigate(['/system/profile']);
+          } else {
+            debugFn();
           }
         });
       } else {
@@ -68,6 +81,8 @@ export class SystemPasswordComponent {
     }, (error) => {
       if(!this.api.iam.isDebug()) {
         this.router.navigateByUrl('/signin');
+      } else {
+        debugFn();
       }
     });
   }
@@ -95,6 +110,11 @@ export class SystemPasswordComponent {
       newPassword: ['', Validators.required],
     };
 
+    if(this.system._id)
+      this.store.phrases.push(this.system._id);
+    if(this.system.email)
+      this.store.phrases.push(this.system.email);
+
     this.passwordForm = this.builder.group(group);
   }
 
@@ -118,7 +138,8 @@ export class SystemPasswordComponent {
   alert(type: string, message: string) {
     this.states.alert.message = (message || '');
     this.states.alert.type = (type || 'success');
-    this.states.alert.show = true;
+
+    this.states.alert.show = (message && message.length) ? true : false;
   }
 
   reset() {

@@ -13,6 +13,9 @@ import { ComplianceRequirementsPage } from "./assistance-listing-operations/sect
 import { FALCriteriaInfoComponent } from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
 import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
 import { FALAssistanceComponent } from "./assistance-listing-operations/sections/applying-for-assistance/applying-for-assistance.component";
+import {RejectFALComponent} from "./assistance-listing-operations/workflow/reject/reject-fal.component";
+import { FALFormArchiveRequestComponent } from "./assistance-listing-change-request/fal-form-archive-request.component";
+
 
 export const routes: Routes = [
   {path: 'programs/:id/view', component: ProgramPage},
@@ -27,6 +30,7 @@ if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
 if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
   routes.unshift(
     {path: 'fal/workspace', component: FalWorkspacePage},
+    {path: 'programs/:id/reject', component: RejectFALComponent},
     {
       path: 'programs/add', component: ProgramPageOperations,
       children: [
@@ -59,6 +63,7 @@ if (SHOW_HIDE_RESTRICTED_PAGES === 'true' || ENV === 'development') {
         {path: 'applying-for-assistance', component: FALAssistanceComponent }
       ]
     },
+    {path: 'programs/:id/archive-request', component: FALFormArchiveRequestComponent},
   );
 }
 export const routing = RouterModule.forChild(routes);

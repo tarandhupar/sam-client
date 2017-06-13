@@ -9,6 +9,7 @@ import {Component, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 export class FALContactInfoTableComponent{
   @Input() contactsInfo: any;
   @Input() hideContactsForm:  boolean;
+  @Input() formErrorArr: any = {};
   @Output() public actionHandler = new EventEmitter();
   @ViewChild('deleteModal') deleteModal;
   removeIndex: number;

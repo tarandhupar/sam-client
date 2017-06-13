@@ -1,11 +1,57 @@
 <div class="sam-ui-kit">
   <div class="usa-grid">
     <div class="usa-width-one-whole">
+      <h2>SAM people-picker &lt;sam-autocomplete[peoplepicker-autofill]&gt;</h2>
+      <sam-autocomplete 
+        labelText="People Picker example (single)" hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text" 
+        [required]="true"
+        peoplepicker-autofill
+        [config]="autocompletePeoplePickerConfig"></sam-autocomplete>
+      <!--sam-autocomplete-multiselect 
+        hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
+        label="People Picker example (multiple)" required="true"
+        peoplepicker-autofill
+        [keyValueConfig]="autocompletePeoplePickerConfig.keyValueConfig">
+      </sam-autocomplete-multiselect-->
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <div class="usa-width-one-whole">
       <h2>SAM status banner &lt;sam-status-banner&gt;</h2>
       <sam-status-banner type="error">
         <div leading-content>This is the leading text...</div>
         <div main-content>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of <a [routerLink]="['/help']">Lorem Ipsum.</a></div>
       </sam-status-banner>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <div class="usa-width-half">
+      <h2>SAM Editor &lt;sam-editor&gt;</h2>
+      <sam-editor 
+        (action)="editorActionHandler($event)"
+        label="SAM Editor Example Label" 
+        hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.">
+        <div editor-display-view>
+          <p>
+            Editor text value 1: {{ editorExampleText1 }}<br/>
+            Editor text value 2: {{ editorExampleText2 }}<br/>
+            Editor text value 3: {{ editorExampleText3 }}
+          </p>
+        </div>
+        <div editor-input-view>
+          <form>
+            <sam-text [ngModel]="editorExampleDraftText1" (ngModelChange)="editorExampleDraftText1 = $event" name="text1" label="Label for text 1" hint="Hint for text input #1"></sam-text>
+            <sam-text [ngModel]="editorExampleDraftText2" (ngModelChange)="editorExampleDraftText2 = $event" name="text2" label="Label for text 2" hint="Hint for text input #2"></sam-text>
+            <sam-text [ngModel]="editorExampleDraftText3" (ngModelChange)="editorExampleDraftText3 = $event" name="text3" label="Label for text 3" hint="Hint for text input #3"></sam-text>
+          </form>
+        </div>
+      </sam-editor>
+    </div>
+
+    <div class="usa-width-half">
+
     </div>
   </div>
 
@@ -527,13 +573,14 @@
     </div>
   </div>
   <div class="usa-grid">
-    <div class="usa-width-one-third"><sam-agency-picker [hint]="'Please select one or more organization filters'" [label]="'Filter by Organization(s):'" [multimode]="true"></sam-agency-picker></div>
+    <div class="usa-width-one-third"><sam-agency-picker (orgFullPath)="checkFullParentOrgs($event)" [hint]="'Please select one or more organization filters'" [label]="'Filter by Organization(s):'" [multimode]="true"></sam-agency-picker></div>
     <div class="usa-width-one-third"><sam-agency-picker [hint]="'Please select one organization'" [label]="'Filter by Organization:'" [multimode]="false"></sam-agency-picker></div>
     <div class="usa-width-one-third"><sam-agency-picker [orgRoot]="100006688" [hint]="'Please select one or more organization filters under GSA'" [label]="'Filter by Organization(s):'" [multimode]="true"></sam-agency-picker></div>
   </div>
   <div class="usa-grid">
     <div class="usa-width-one-third">
       <sam-agency-picker
+        (orgFullPath)="checkFullParentOrgs($event)"
         [initial]="[100184736,100182416]"
         [orgRoot]="100011753"
         [orgId]="100184736"
@@ -579,18 +626,29 @@
 
   <div class="usa-grid">
     <h2>Time &lt;sam-time&gt;</h2>
-    <sam-time name="example-time" [(value)]="time"></sam-time>
+    <sam-time name="example-time" [(ngModel)]="time"></sam-time>
     <p>{{time | json}}</p>
   </div>
 
   <div class="usa-grid">
     <h2 class="usa-width-one">Date Entry &lt;sam-date&gt;</h2>
     <div class="usa-width-one-half">
-      <sam-date name="example-date" [(value)]='dateModel'></sam-date>
+      <sam-date name="example-date" [(ngModel)]='dateModel'></sam-date>
     </div>
     <div class="usa-width-one-half">
       <h3>Model</h3>
       <pre><code>{{dateModel | json}}</code></pre>
+    </div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Date Range Entry &lt;sam-date-range&gt;</h2>
+    <div class="usa-width-one-half">
+      <sam-date-range name="example-date" #dateRangeVar="ngModel" [control]="dateRangeVar.control" [(ngModel)]='dateRangeModel'></sam-date-range>
+    </div>
+    <div class="usa-width-one-half">
+      <h3>Model</h3>
+      <pre><code>{{dateRangeModel | json}}</code></pre>
     </div>
   </div>
 
@@ -696,4 +754,15 @@
     <sam-autocomplete class="usa-width-one-half" [options]="autocompleteCategoryOptions" [config]="autocompleteConfig" [categories]="categories" [(ngModel)]="autocompleteCategoryDemo"></sam-autocomplete>
     <p class="usa-width-one-half">Selected Value: {{autocompleteCategoryDemo?.value}}</p>
   </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Autocomplete Multiselect</h2>
+    <sam-autocomplete-multiselect class="usa-width-one-half" 
+                                  label="Team Members" required="true"
+                                  [keyValueConfig]="multiselectConfig" 
+                                  [options]="multiselectOptions">
+      </sam-autocomplete-multiselect>
+    <div class="usa-width-one-half"></div>
+  </div>
+<br>
 </div>

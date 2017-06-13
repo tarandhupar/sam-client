@@ -20,6 +20,9 @@ import { SamAPIKitModule } from 'api-kit';
 import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 import { ReportsPipe } from './reports.pipe';
+// to be deleted -isaac
+import { MstrProtoComponent } from './sections/mstrProto/mstrProto.component';
+
 @NgModule({
   imports: [
     SamUIKitModule,
@@ -41,7 +44,9 @@ import { ReportsPipe } from './reports.pipe';
     FavoritesComponent,
     StaticComponent,
     ReportsPipe,
-    ReportProtoComponent
+    ReportProtoComponent,
+    // to be deleted -isaac
+    MstrProtoComponent
   ],
   providers: [IAMService, ReportsService],
 })

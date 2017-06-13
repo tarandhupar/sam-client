@@ -93,4 +93,23 @@
     width: 65%;
     float: right;
   }
+  .assistance-listing-change-request {
+    display: block;
+    margin: auto;
+    width: 50%;
+    .program-details{
+      background-color: #E8E8E8;
+    }
+    .program-details .content{
+      padding: 2px 15px 2px 15px;
+    }
+    .program-details .content > span {
+      font-weight: bold;
+    }
+    .cb-request .usa-fieldset-inputs{
+      display: inline;
+    }
+
+  }
+
 }

@@ -1,0 +1,23 @@
+<div class="usa-grid-full">
+  <sam-alert [attr.id]="rejectAlertConfig.id" [type]="rejectAlertConfig.type"
+             [title]="rejectAlertConfig.title" [description]="rejectAlertConfig.description">
+  </sam-alert>
+  <form [formGroup]="rejectALForm">
+    <br>
+    <h2>{{title}}</h2>
+    <div>Agency User Comment: {{submitReason}}</div>
+    <sam-text-area
+      [control]="rejectALForm.controls['ombComment']"
+      [name]="'ombrmo-input'"
+      [label]="'OMB/RMO Comment'"
+      [required]="true"
+      formControlName="ombComment"
+    ></sam-text-area>
+    <div class="usa-width-one-half">
+        <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+        <sam-button buttonText="Reject" (onClick)="onRejectClick($event)"
+                    [buttonType]="(!rejectALForm.valid ? 'disabled' : 'default')"></sam-button>
+      </div>
+  </form>
+</div>
+

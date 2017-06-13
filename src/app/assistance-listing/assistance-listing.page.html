@@ -47,7 +47,8 @@
     <!-- Alerts -->
     <ng-container *ngIf="alerts && alerts.length > 0">
       <div *ngFor="let alert of alerts; let i = index">
-        <sam-alert [attr.id]="'program-alert-' + i" labelname="alerts[i].labelname" [type]="alerts[i].config.type" [title]="alerts[i].config.title" [description]="alerts[i].config.description">
+        <sam-alert [attr.id]="'program-alert-' + i" labelname="alerts[i].labelname" [type]="alerts[i].config.type" [title]="alerts[i].config.title">
+          <div [innerHTML]="alerts[i].config.description"></div>
           <ng-container *ngIf="alert.labelname === 'published-fal-alert'">
             <ng-container *ngIf="program._links && (program._links['program:revise'] || program._links['program:update'])">
               Click <a class="fal-table-edit" (click)="onEditClick(['#header-information'])">here</a> to edit a draft of the Assistance Listing.
@@ -64,6 +65,7 @@
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
+          <sam-button *ngIf="program._links && program._links['program:request:reject']" buttonText="Reject" (onClick)="onRejectClick($event)"></sam-button>
           <h1 class="sam-ui header">
             <span class="field" id="program-title">{{program?.data?.title}}</span>
           </h1>
@@ -77,6 +79,15 @@
             Delete
             <i class="fa fa-trash fal-delete" aria-hidden="true"></i>
           </a>
+            <wrapper-fal-change-request-dropdown
+              [name]="changeRequestDropdown.config.name"
+              [hint]="changeRequestDropdown.config.hint"
+              [disabled]="changeRequestDropdown.config.disabled"
+              [permissions]="changeRequestDropdown.permissions"
+              [defaultOption]="changeRequestDropdown.defaultOption"
+              (clickActionHandler)="onChangeRequestSelect($event)"
+              [program]="program"
+              ></wrapper-fal-change-request-dropdown>
         </div>
       </div>
 
@@ -222,7 +233,29 @@
         </div>
       </ng-container>
 
-      <div class="sam-ui hidden section divider"></div>
+      <div class="sam-ui hidden divider" [class.section]="!(program.data?.subjectTerms && program.data?.subjectTerms.length > 0)"></div>
+
+      <!-- Functional Codes -->
+      <ng-container *ngIf="dictionaries && program.data?.functionalCodes && program.data?.functionalCodes.length > 0">
+        <h3 class="sam-ui dividing header ">Functional Codes  <i class="fa fa-lock" aria-hidden="true"></i></h3>
+        <ng-container *ngFor="let item of program.data?.functionalCodes | filterMultiArrayObject:dictionaries.functional_codes:'element_id':true:'elements'; let isLast = last; let i = index">
+            <span class="field" [attr.id]="'program-functional-code-' + i">
+              {{ item.displayValue }}<br>
+            </span>
+        </ng-container>
+        <div class="sam-ui hidden divider"></div>
+      </ng-container>
+
+      <!-- Subject Terms -->
+      <ng-container *ngIf="dictionaries && program.data?.subjectTerms && program.data?.subjectTerms.length > 0">
+        <h3 class="sam-ui dividing header">Subject Terms  <i class="fa fa-lock" aria-hidden="true"></i></h3>
+        <ng-container *ngFor="let item of program.data?.subjectTerms | filterMultiArrayObject:dictionaries.program_subject_terms:'element_id':true:'elements'; let isLast = last; let i = index">
+            <span class="field" [attr.id]="'program-subject-terms-' + i">
+              {{ item.value }}<br>
+            </span>
+        </ng-container>
+        <div class="sam-ui hidden section divider"></div>
+      </ng-container>
 
     </section>
 
@@ -319,8 +352,56 @@
         </span>
       </p>
 
-      <div class="sam-ui hidden section divider"></div>
+      <div class="sam-ui hidden divider" [class.section]="!(program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0)"></div>
     </section>
+
+
+    <!-- TAFS Codes -->
+    <ng-container *ngIf="dictionaries && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
+    <h3 class="sam-ui dividing header">TAFS Codes  <i class="fa fa-lock" aria-hidden="true"></i></h3>
+
+    <table class="sam-ui table celled" *ngIf="dictionaries && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
+      <thead>
+      <tr>
+        <th scope="col">
+          Treasury Dept. Code
+        </th>
+        <th scope="col">
+          Treasury Account Main Code
+        </th>
+        <th scope="col">
+          TAFS Sub Account
+        </th>
+        <th scope="col">
+          Allocation Transfer Agency
+        </th>
+        <th scope="col">
+          FY 1
+        </th>
+        <th scope="col">
+          FY 2
+        </th>
+        <th scope="col">
+          Actions
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <ng-container *ngFor="let tafs of program.data.financial.treasury.tafs; let i=index">
+        <tr>
+          <!-- Table tafs data -->
+          <td>{{ tafs.departmentCode }}</td>
+          <td>{{ tafs.accountCode }}</td>
+          <td>{{ tafs.subAccountCode }}</td>
+          <td>{{ tafs.allocationTransferAgency }}</td>
+          <td>{{ tafs.fy1 }}</td>
+          <td>{{ tafs.fy2 }}</td>
+        </tr>
+      </ng-container>
+      </tbody>
+    </table>
+      <div class="sam-ui hidden section divider"></div>
+    </ng-container>
 
     <!--Should I apply?-->
     <section id="program-application-criteria">
@@ -360,7 +441,7 @@
       <h3 class="sam-ui dividing header">Credentials and Documentation</h3>
 
       <p>
-        <ng-container *ngIf="program.data?.eligibility?.documentation?.description">
+        <ng-container *ngIf="program.data?.eligibility?.documentation?.description && program.data?.eligibility?.documentation?.isApplicable == true">
           <span class="field" id="program-elegibility-documentation">
             {{program.data.eligibility?.documentation?.description}}
           </span>
@@ -447,9 +528,9 @@
       <p>
         <span class="field" id="program-usage-assistance-usage" *ngIf="program.data?.eligibility?.assistanceUsage?.description">{{ program.data?.eligibility?.assistanceUsage?.description }}</span>
         <span class="field" id="program-usage-rules" *ngIf="program.data?.eligibility?.usage?.rules?.description">{{ program.data?.eligibility?.usage?.rules?.description }}</span>
-        <span class="field" id="program-usage-restrictions" *ngIf="program.data.eligibility?.usage?.restrictions?.description">{{ program.data.eligibility?.usage?.restrictions?.description }}</span>
-        <span class="field" id="program-usage-discretionary-fund" *ngIf="program.data.eligibility?.usage?.discretionaryFund?.description">{{ program.data.eligibility?.usage?.discretionaryFund?.description }}</span>
-        <span class="field" id="program-usage-loan-terms" *ngIf="program.data.eligibility?.usage?.loanTerms?.description">{{ program.data.eligibility?.usage?.loanTerms?.description }}</span>
+        <span class="field" id="program-usage-restrictions" *ngIf="program.data.eligibility?.usage?.restrictions?.description && program.data.eligibility?.usage?.restrictions?.isApplicable == true">{{ program.data.eligibility?.usage?.restrictions?.description }}</span>
+        <span class="field" id="program-usage-discretionary-fund" *ngIf="program.data.eligibility?.usage?.discretionaryFund?.description && program.data.eligibility?.usage?.discretionaryFund?.isApplicable == true">{{ program.data.eligibility?.usage?.discretionaryFund?.description }}</span>
+        <span class="field" id="program-usage-loan-terms" *ngIf="program.data.eligibility?.usage?.loanTerms?.description && program.data.eligibility?.usage?.loanTerms?.isApplicable == true">{{ program.data.eligibility?.usage?.loanTerms?.description }}</span>
       </p>
 
       <div class="sam-ui hidden section divider"></div>
@@ -504,7 +585,6 @@
           {{program.data?.assistance?.deadlines?.description}}
         </p>
       </div>
-
       <div class="sam-ui hidden divider"></div>
 
       <!-- Preapplication Coordination -->
@@ -518,8 +598,8 @@
           <!-- Environmental statements-->
           <ng-container *ngIf="program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports?.length > 0">
             <ng-container *ngFor="let entry of program.data.assistance?.preApplicationCoordination?.environmentalImpact?.reports; let i = index">
-              <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.isSelected == true && entry.reportCode !== 'ExecutiveOrder12372'">
-                An environmental impact {{entry.reportCode}} is required for this program.
+              <span class="field" [attr.id]="'program-preapplication-coordination-environmental-report-' + i" *ngIf="entry.isSelected == true && entry.reportCode !== 'ExecutiveOrder12372' && entry.otherRequired == false">
+                An environmental impact is required for this program.
               </span>
             </ng-container>
 
@@ -544,6 +624,11 @@
                   This program is excluded from coverage under E.O. 12372.
                 </span>
               </ng-container>
+            </ng-container>
+            <ng-container *ngIf="!containsExecutiveOrder()">
+              <span class="field" id="program-preapplication-coordination-executive-order">
+                  This program is excluded from coverage under E.O. 12372.
+                </span>
             </ng-container>
           </ng-container>
 
@@ -694,27 +779,43 @@
 
       <!-- Policy Requirements -->
       <h3 class="sam-ui dividing header">Policy Requirements</h3>
-      <div>
-        <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
-        <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
-            <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == true && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
-                {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
-              </ng-container>
-            </p>
-        </ng-container>
-      </div>
+      <ng-container *ngIf="(program.data?.compliance?.CFR200Requirements?.questions).length > 0">
+        <div>
+          <span class="field">The following 2CFR policy requirements apply to this assistance listing:</span>
+          <ng-container *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length > 0">
+            <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+                <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
+                  <ng-container *ngIf="item.isSelected == true && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
+                    {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+                  </ng-container>
+                </p>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngIf="([true] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length == 0">
+            <p class="field"> <em>Not Applicable</em> </p>
+          </ng-container>
+        </div>
+        <div class="sam-ui hidden divider"></div>
 
-      <div>
-        <span class="field">The following 2CFR policy requirements are excluded from coverage under this assistance listing:</span>
-        <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
-            <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
-              <ng-container *ngIf="item.isSelected == false && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
-                {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
-              </ng-container>
-            </p>
-        </ng-container>
-      </div>
+        <div>
+          <span class="field">The following 2CFR policy requirements are excluded from coverage under this assistance listing:</span>
+          <ng-container *ngIf="([false] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length > 0">
+            <ng-container *ngFor="let item of program.data?.compliance?.CFR200Requirements?.questions">
+                <p class="field" [attr.id]="'program-policy-requirement-' + item.code">
+                  <ng-container *ngIf="item.isSelected == false && dictionaries && ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null).length > 0">
+                    {{ ([item.code] | filterMultiArrayObject:dictionaries.cfr200_requirements:'element_id':false:null)[0].value }}
+                  </ng-container>
+                </p>
+            </ng-container>
+          </ng-container>
+          <p class="field" *ngIf="([false] | filterMultiArrayObject:program.data?.compliance?.CFR200Requirements?.questions:'isSelected':false:null).length == 0">
+            <em>Not Applicable</em>
+          </p>
+        </div>
+      </ng-container>
+      <p class="field" *ngIf="(program.data?.compliance?.CFR200Requirements?.questions).length == 0">
+        <em>Not Applicable</em>
+      </p>
 
       <div class="sam-ui hidden divider"></div>
 

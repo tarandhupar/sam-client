@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FALFormService } from "../../fal-form.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FALFormViewModel } from "../../fal-form.model";
@@ -14,9 +14,11 @@ import { falCustomValidatorsComponent } from '../../../validators/assistance-lis
 
 export class FALFormOverviewComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
+  @Output() public onError = new EventEmitter();
 
   falOverviewForm: FormGroup;
-  title: string;
+  formErrorArr = [];
+  review:boolean = false;
 
   public fundedProjectsConfig: FiscalYearTableConfig = {
     name: 'funded-projects',
@@ -68,6 +70,7 @@ export class FALFormOverviewComponent implements OnInit {
     this.createForm();
     if (!this.viewModel.isNew) {
       this.updateForm();
+      this.collectErrors();
     }
 
   }
@@ -132,6 +135,8 @@ export class FALFormOverviewComponent implements OnInit {
     this.viewModel.functionalCodes = functionaCodes.length > 0 ? functionaCodes : null;
     this.viewModel.subjectTerms = subjectTerms.length > 0 ? subjectTerms : null;
     this.viewModel.projects = this.saveProjects(data.fundedProjects);
+
+    this.collectErrors();
   }
 
   updateForm() {
@@ -237,10 +242,50 @@ export class FALFormOverviewComponent implements OnInit {
   }
 
   validateSection(){
+    this.review = true;
 
     for(let key of Object.keys(this.falOverviewForm.controls)) {
       this.falOverviewForm.controls[key].markAsDirty();
       this.falOverviewForm.controls[key].updateValueAndValidity();
     }
+
+    if(this.formErrorArr.length > 0)
+      this.emitEvent();
+  }
+
+  collectErrors(){
+    for(let key of Object.keys(this.falOverviewForm.controls)) {
+      if(['functionalTypes', 'subjectTermsTypes'].indexOf(key) == -1){
+        this.checkControlforErrors(key);
+      }
+    }
+  }
+
+  checkControlforErrors(key){
+    let len = this.formErrorArr.length;
+    let index = this.formErrorArr.indexOf(key);
+
+    if(this.falOverviewForm.controls[key].errors){
+      if(index == -1) {
+        this.formErrorArr.push(key);
+      }
+    }
+    else {
+      if(index > -1) {
+        this.formErrorArr.splice(index, 1);
+      }
+    }
+
+    if(len !== this.formErrorArr.length && this.review){
+      this.emitEvent();
+    }
+  }
+
+  emitEvent(){
+
+    this.onError.emit({
+      formErrorArr: this.formErrorArr,
+      section: 'overview'
+    });
   }
 }

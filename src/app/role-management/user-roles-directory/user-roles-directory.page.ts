@@ -1,15 +1,19 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import { OptionsType } from "sam-ui-kit/types";
+import { OptionsType, IBreadcrumb } from "sam-ui-kit/types";
 import { UserAccessService } from "api-kit/access/access.service";
 import * as _ from "lodash";
-import { Observable } from "rxjs";
-
+import { AgencyPickerComponent } from "../../app-components/agency-picker/agency-picker.component";
 
 @Component({
   templateUrl: './user-roles-directory.template.html'
 })
 export class UserRolesDirectoryPage {
+  crumbs: Array<IBreadcrumb> = [
+    { breadcrumb: 'Back to my workspace', url: '/workspace' },
+    { breadcrumb: '...'}
+  ];
+
   allDomains: Array<any> = [];
   rolesForDomainId: any = {};
   users: any = null;
@@ -17,23 +21,32 @@ export class UserRolesDirectoryPage {
   //filters
   domainOptions: Array<OptionsType> = [];
   roleOptions: Array<OptionsType> = [];
-  isShowMyPeopleChecked: boolean = false;
   selectedDomainId: string|number = null;
   selectedRoleId: string|number = null;
   selectedOrganization: string|number|undefined;
   userSearchValue: string = '';
 
+  sortOptions = [
+    { value: 'asc', label: 'Last name (A-Z)' },
+    { value: 'desc', label: 'Last name (Z-A)' }
+  ];
+  sort: 'asc'|'desc' = 'asc';
+
   // pagination
-  pageOffset: number = 0;
-  itemsPerPage: number = 10;
-  resultsOnThisPage: number = 8;
-  totalResults: number = 300000;
+  page: number = 1;
+  pageOffset: number;
+  itemsPerPage: number;
+  resultsOnThisPage: number;
+  totalResults: number;
+  totalPages: number;
+
+  @ViewChild('picker') agencyPicker: AgencyPickerComponent;
 
   constructor(private route: ActivatedRoute, private userAccessService: UserAccessService) {
     this.allDomains = this.route.parent.snapshot.data['domains']._embedded.domainList;
     this.domainOptions = this.allDomains.map(dom => {
       return {
-        label: dom.domainName + `(${dom.id})`,
+        label: dom.domainName,
         value: dom.id,
         name: dom.domainName
       };
@@ -50,6 +63,14 @@ export class UserRolesDirectoryPage {
     this.doSearch();
   }
 
+  onClearAllClick() {
+    this.selectedOrganization = null;
+    this.agencyPicker.onResetClick();
+    this.selectedDomainId = null;
+    this.selectedRoleId = null;
+    this.doSearch();
+  }
+
   getOptionsForDomain(domainId): Array<OptionsType> {
     if (!this.rolesForDomainId[domainId] || !this.rolesForDomainId[domainId].length) {
       return [];
@@ -57,72 +78,84 @@ export class UserRolesDirectoryPage {
     return this.rolesForDomainId[domainId].map(role => {
       return {
         value: role.role.id,
-        label: role.role.val + `(${role.role.id})`,
+        label: role.role.val,
         name: role.role.val
       };
     });
   }
 
+  onSortChange(sort) {
+    this.doSearch();
+  }
+
   doSearch() {
-    // let filterOptions: any = {
-    //   offset: this.pageOffset,
-    //   limit: this.itemsPerPage,
-    // };
-    let filterOptions: any = {};
-    if (this.selectedDomainId !== null) {
+    let filterOptions: any = {
+      order: this.sort,
+      page: this.page,
+    };
+
+    if (this.selectedDomainId) {
       filterOptions.domainKey = this.selectedDomainId;
     }
-    if (this.selectedRoleId !== null) {
+    if (this.selectedRoleId) {
       filterOptions.roleKey = this.selectedRoleId;
     }
     if (this.selectedOrganization) {
       filterOptions.orgKey = this.selectedOrganization;
     }
     if (this.userSearchValue) {
-      filterOptions.userKey = this.userSearchValue;
+      filterOptions.user = this.userSearchValue;
     }
-    // if (this.isShowMyPeopleChecked) {
-    //   filterOptions.myPeople = "true";
-    // }
-    this.userAccessService.getAccessODR(filterOptions)
-      .catch(err => {
-        console.error(err);
-        return Observable.of([]);
-      })
+
+    this.userAccessService.getUserDirectory(filterOptions)
       .subscribe(res => {
-        this.users = res;
-        this.initializeSelectedOrgs();
+        this.users = res.users;
+
+        this.resultsOnThisPage = this.users.length;
+        this.totalResults = res.total;
+        this.itemsPerPage = res.limit;
+        this.pageOffset = res.offset;
+        this.totalPages = Math.floor((res.total-1) / res.limit)+1;
+
+        // group user organizations by tier
+        this.users.forEach(u => {
+          let orgsByTier = _.groupBy(u.access, acc => {
+            return acc.organization.type || 'Uncategorized';
+          });
+
+          let tiers = [];
+          _.forOwn(orgsByTier, (value, key) => {
+            let orgs = value.map(o => {
+              let v = {
+                name: o.organization.val,
+                isSelected: o.organization.isSelected
+              };
+              return v;
+            });
+            // do not display orgs with no name
+            orgs = orgs.filter(o => {
+              return o && o.name;
+            });
+            tiers.push({ name: key, organizations: orgs});
+          });
+
+          // do not display tier if there no organizations with a name for this tier
+          tiers = tiers.filter(t => {
+            return t.organizations.length;
+          });
+          u.tiers = tiers;
+        });
       }
     );
   }
 
-  initializeSelectedOrgs() {
-    this.users.forEach(user => {
-      user.selectedOrganization = user.organizations[0];
-    });
-  }
-
-  onOrganizationChange($event) {
-    this.selectedOrganization = $event.value;
+  onOrganizationChange(org) {
+    if (org && org.value) {
+      this.selectedOrganization = org.value;
+    } else {
+      this.selectedOrganization = undefined;
+    }
     this.doSearch();
-  }
-
-  classForOrganization(user, org) {
-    if (user.selectedOrganization === org) {
-      return 'org-row-selected';
-    }
-    return '';
-  }
-
-  onOrgRowClick(user, org) {
-    if (user.selectedOrganization === org) {
-      return;
-    }
-    user.selectedOrganization = org;
-  }
-
-  userHasOrganizations(user) {
-    return user.organizations && user.organizations.length;
   }
 
   onSelectDomain($event) {
@@ -136,12 +169,12 @@ export class UserRolesDirectoryPage {
   }
 
   onPageChange($event) {
-    this.pageOffset = $event - 1;
+    this.page = $event;
     this.doSearch();
   }
 
   resultCount() {
-    let pageStart = this.pageOffset * this.itemsPerPage + 1;
+    let pageStart = this.pageOffset + 1;
     let pageEnd = pageStart + this.resultsOnThisPage - 1;
     let total = this.totalResults;
     return `${pageStart}-${pageEnd} of ${total}`;

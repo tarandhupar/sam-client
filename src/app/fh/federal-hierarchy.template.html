@@ -7,16 +7,16 @@
                   [options]="selectConfig.options"
                   [label]="selectConfig.label"
                   [disabled]="selectConfig.disabled"
-                  (modelChange)='onSelect($event)'>
+                  (modelChange)='onSelectCreateOrg($event)'>
       </sam-select>
     </button>
-    <button *ngIf="selectConfig.options.length === 1" class="pull-right">Create {{selectConfig.options[0].label}}</button>
+    <button *ngIf="selectConfig.options.length === 1" class="pull-right" (click)="createOrg()">Create {{selectConfig.options[0].label}}</button>
   </div>
   <h2 align="center">Search Federal Hierarchy Administrative Pages</h2>
   <div class="usa-width-one-whole">
     <div class="usa-offset-one-third usa-width-one-third relative">
-      <input class="usa-offset-one-whole">
-      <i class="fa fa-search"></i>
+      <input class="usa-offset-one-whole" (keyup.enter)="searchFH()" [(ngModel)]="searchText">
+      <i class="fa fa-search" (click)="searchFH()"></i>
     </div>
   </div>
 
@@ -26,10 +26,10 @@
     </div>
     <div class="usa-width-one-whole">
       <div class="usa-width-one-sixth org-logo-container">
-        <img class="org-logo-image" src="src/assets/img/blank_icon.png" alt="organization detail logo">
+        <img class="org-logo-image" [src]="deptLogo.href" (error)="updateNoLogoUrl()">
       </div>
       <div class="usa-width-five-sixths p_T-3x">
-        <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{deptOrg.type}}</span>
+        <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{typeMap[deptOrg.type]}}</span>
         <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{deptOrg.code}}</span>
         <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
           <span *ngIf="isOrgActive(deptOrg)">Active</span>
@@ -43,11 +43,11 @@
 
   <div class="usa-width-one-whole">
     <div class="pull-left p_T-3x">
-      Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{orgList.length}}&nbsp; results
+      Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
     </div>
 
     <div class="pull-right">
-      <sam-multiselect-dropdown [(model)]="orgStatusModel" [label]="''" [options]="orgStatusOptions" [name]="'types'" (modelChange)="onOrgStatusChange()"></sam-multiselect-dropdown>
+      <sam-multiselect-dropdown [(model)]="orgStatusModel" [label]="''" [options]="orgStatusOptions" [name]="'status'" (modelChange)="onOrgStatusChange()"></sam-multiselect-dropdown>
     </div>
 
     <div class="usa-width-one-fourth pull-right m_R-2x" *ngIf="userRole === 'agencyAdmin' || userRole === 'officeAdmin'">
@@ -68,7 +68,7 @@
     </div>
     <div class="usa-width-three-fourths">
       <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{adminOrg.org.code}}</span>
-      <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{adminOrg.org.type}}</span>
+      <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{typeMap[adminOrg.org.type]}}</span>
     </div>
     <div class="usa-width-one-fourth">
       <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
@@ -86,7 +86,7 @@
       </div>
       <div class="usa-width-three-fourths">
         <span class="usa-width-one-whole"><span class="org-description">Code:&nbsp;</span> {{orgItem.org.code}}</span>
-        <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{orgItem.org.type}}</span>
+        <span class="usa-width-one-whole"><span class="org-description">Organization Type:&nbsp;</span> {{typeMap[orgItem.org.type]}}</span>
       </div>
       <div class="usa-width-one-fourth">
       <span class="usa-width-one-whole"><span class="org-description">Status:&nbsp;</span>
@@ -99,7 +99,7 @@
   </div>
 
 
-  <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="orgList.length > 0 && !showAdminOrg">
+  <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="orgList.length > 0 && !showAdminOrg && totalPages > 1">
       <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
   </div>
 </div>

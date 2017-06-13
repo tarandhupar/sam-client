@@ -3,14 +3,14 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Location } from '@angular/common';
 import { HistoricalIndexLabelPipe } from './pipes/historical-index-label.pipe';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
-import { SidenavService } from "sam-ui-kit/components/sidenav/services/sidenav.service";
+import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
 import * as Cookies from 'js-cookie';
-import * as moment from "moment";
+import * as moment from 'moment';
 import * as _ from 'lodash';
 
 // Todo: avoid importing all of observable
 import { ReplaySubject, Observable, Subscription } from 'rxjs';
-import {SidenavHelper} from "../app-utils/sidenav-helper";
+import {SidenavHelper} from '../app-utils/sidenav-helper';
 
 @Component({
   moduleId: __filename,
@@ -50,9 +50,20 @@ export class ProgramPage implements OnInit, OnDestroy {
     "label": "AL",
     "children": []
   };
-  qParams:any;
+  roles = [];
+  roleFalg: boolean = false;
+  qParams: any;
   @ViewChild('deleteModal') deleteModal;
   modalConfig = {title:'Delete Draft AL', description:''};
+  changeRequestDropdown: any = {
+    config: {
+      "hint": "Actions",
+      "name": "fal-change-request",
+      "disabled": false,
+    },
+    permissions:null,
+    defaultOption: "Make a Request"
+  };
 
   private apiSubjectSub: Subscription;
   private apiStreamSub: Subscription;
@@ -60,30 +71,31 @@ export class ProgramPage implements OnInit, OnDestroy {
   private federalHierarchySub: Subscription;
   private historicalIndexSub: Subscription;
   private relatedProgramsSub: Subscription;
+  private rolesSub: Subscription;
+  private reasonSub: Subscription;
 
   @ViewChild('editModal') editModal;
 
 
-  constructor(
-    private sidenavService: SidenavService,
-    private sidenavHelper: SidenavHelper,
-    private route: ActivatedRoute,
-    private router: Router,
-    private location: Location,
-    private historicalIndexService: HistoricalIndexService,
-    private programService: ProgramService,
-    private fhService: FHService,
-    private dictionaryService: DictionaryService) {
-      router.events.subscribe(s => {
-        if (s instanceof NavigationEnd) {
-          const tree = router.parseUrl(router.url);
-          this.pageFragment = tree.fragment;
-        }
-      });
-      route.queryParams.subscribe(data => {
-        this.qParams = data;
-      });
-    }
+  constructor(private sidenavService: SidenavService,
+              private sidenavHelper: SidenavHelper,
+              private route: ActivatedRoute,
+              private router: Router,
+              private location: Location,
+              private historicalIndexService: HistoricalIndexService,
+              private programService: ProgramService,
+              private fhService: FHService,
+              private dictionaryService: DictionaryService) {
+    router.events.subscribe(s => {
+      if (s instanceof NavigationEnd) {
+        const tree = router.parseUrl(router.url);
+        this.pageFragment = tree.fragment;
+      }
+    });
+    route.queryParams.subscribe(data => {
+      this.qParams = data;
+    });
+  }
 
   ngOnInit() {
     // Using document.location.href instead of
@@ -107,24 +119,46 @@ export class ProgramPage implements OnInit, OnDestroy {
     let DOMReady$ = Observable.zip(programAPISource, historicalIndexAPISource).delay(2000);
     this.sidenavHelper.DOMComplete(this, DOMReady$);
     this.sidenavService.updateData(this.selectedPage, 0);
+
+    if(this.cookieValue) {
+      this.loadUserPermissions();
+      //TODO check if this FAL has pending request, if so switch dropdown flag and add alert to link it to CR listing page
+    }
   }
 
-
-  sidenavPathEvtHandler(data){
+  sidenavPathEvtHandler(data) {
     this.sidenavHelper.sidenavPathEvtHandler(this, data);
   }
 
-  selectedItem(item){
+  selectedItem(item) {
     this.selectedPage = this.sidenavService.getData()[0];
   }
 
   ngOnDestroy() {
-    if(this.apiSubjectSub) { this.apiSubjectSub.unsubscribe(); }
-    if(this.apiStreamSub) { this.apiStreamSub.unsubscribe(); }
-    if(this.dictionarySub) { this.dictionarySub.unsubscribe(); }
-    if(this.federalHierarchySub) { this.federalHierarchySub.unsubscribe(); }
-    if(this.historicalIndexSub) { this.historicalIndexSub.unsubscribe(); }
-    if(this.relatedProgramsSub) { this.relatedProgramsSub.unsubscribe(); }
+    if (this.apiSubjectSub) {
+      this.apiSubjectSub.unsubscribe();
+    }
+    if (this.apiStreamSub) {
+      this.apiStreamSub.unsubscribe();
+    }
+    if (this.dictionarySub) {
+      this.dictionarySub.unsubscribe();
+    }
+    if (this.federalHierarchySub) {
+      this.federalHierarchySub.unsubscribe();
+    }
+    if (this.historicalIndexSub) {
+      this.historicalIndexSub.unsubscribe();
+    }
+    if (this.relatedProgramsSub) {
+      this.relatedProgramsSub.unsubscribe();
+    }
+    if (this.reasonSub) {
+      this.reasonSub.unsubscribe();
+    }
+    if (this.rolesSub) {
+      this.rolesSub.unsubscribe();
+    }
   }
 
   /**
@@ -149,34 +183,8 @@ export class ProgramPage implements OnInit, OnDestroy {
       }
 
       this.checkCurrentFY();
-
-      // show alert if viewing a draft FAL
-      if (this.program.status && this.program.status.code && this.program.status.code === 'draft') {
-        this.alerts.push({
-          'labelname': 'draft-fal-alert',
-          'config': {
-            'type': 'info',
-            'title': '',
-            'description': 'This is a draft Assistance Listing. Any updates will need to be published before the public is able to view the changes.'
-          }
-        });
-      }
-
-      // show alert if viewing latest published version
-      if (this.cookieValue) {
-        if (this.program.status && this.program.status.code && this.program.status.code === 'published' && this.program.latest === true) {
-          let publishedAlert = {
-            'labelname': 'published-fal-alert',
-            'config': {
-              'type': 'info',
-              'title': '',
-              'description': 'This is the currently published version of this program.'
-            }
-          };
-
-          this.alerts.push(publishedAlert);
-        }
-      }
+      this.setAlerts();
+      this.getRoles();
 
       if (this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
@@ -230,7 +238,7 @@ export class ProgramPage implements OnInit, OnDestroy {
 
       this.sidenavHelper.updateSideNav(this, false, falSideNavContent);
     }, err => {
-        this.router.navigate(['/404']);
+      this.router.navigate(['/404']);
     });
 
     return apiSubject;
@@ -363,7 +371,7 @@ export class ProgramPage implements OnInit, OnDestroy {
   private checkCurrentFY() {
     // check if this program has changed in this FY, if not, display an alert
     // does not apply to draft FALs
-    if(this.program.status && this.program.status.code && this.program.status.code === 'draft') {
+    if (this.program.status && this.program.status.code && this.program.status.code === 'draft') {
       return;
     }
 
@@ -393,6 +401,24 @@ Please contact the issuing agency listed under "Contact Information" for more in
 
   private toTheTop() {
     document.body.scrollTop = 0;
+  }
+
+  private loadUserPermissions(){
+    let apiSubject = new ReplaySubject();
+
+    this.programService.getPermissions(this.cookieValue, 'FAL_REQUESTS').subscribe(apiSubject);
+
+    apiSubject.subscribe(res => {
+      this.changeRequestDropdown.permissions = res;
+    });
+
+    return apiSubject;
+  }
+
+  public onChangeRequestSelect(event) {
+    if(event.value === 'archive_request') {
+      this.router.navigateByUrl('programs/' + event.program.id + '/archive-request');
+    }
   }
 
   public canEdit() {
@@ -431,8 +457,8 @@ Please contact the issuing agency listed under "Contact Information" for more in
   public onDeleteClick() {
     this.deleteModal.openModal();
     let title = this.program.data.title;
-    if(title !== undefined) {
-      this.modalConfig.description = 'Please confirm that you want to delete "'+ title +'".';
+    if (title !== undefined) {
+      this.modalConfig.description = 'Please confirm that you want to delete "' + title + '".';
     } else {
       this.modalConfig.description = 'Please confirm that you want to delete draft AL.';
     }
@@ -448,7 +474,138 @@ Please contact the issuing agency listed under "Contact Information" for more in
     });
   }
 
-  public getCurrentFY() {
+  public getCurrentFY(event) {
     return moment().quarter() === 4 ? moment().add('year', 1).year() : moment().year()
+  }
+
+  // different alerts are shown depending on the FAL's status
+  private setAlerts() {
+    let draftAlert = {
+      'labelname': 'draft-fal-alert',
+      'config': {
+        'type': 'info',
+        'title': '',
+        'description': 'This is a draft Assistance Listing. Any updates will need to be published before the public is able to view the changes.'
+      }
+    };
+
+    let publishedAlert = {
+      'labelname': 'published-fal-alert',
+      'config': {
+        'type': 'info',
+        'title': '',
+        'description': 'This is the currently published version of this program.'
+      }
+    };
+
+    let rejectedAlert = {
+      'labelname': 'rejected-fal-alert',
+      'config': {
+        'type': 'error',
+        'title': 'Rejected',
+        'description': ''
+      }
+    };
+
+    // show correct alert based on current status
+    let status = this.program.status;
+    let code = status.code ? status.code : null;
+    switch (code) {
+      case 'draft':
+        // alert for draft version
+        this.alerts.push(draftAlert);
+        break;
+
+      case 'published':
+        // alert for latest published version, which is only shown to logged in users
+        if (this.cookieValue && this.program.latest === true) {
+          this.alerts.push(publishedAlert);
+        }
+        break;
+
+      case 'rejected':
+        // alert for rejected message, which is only shown to users with permission
+        if (this.program._links && this.program._links['program:request:action:reject']) {
+          let link = this.program._links['program:request:action:reject'];
+          if (link.href) {
+            let id = link.href.match(/\/programRequests\/(.*)/)[1];
+            this.programService.getReasons(id, this.cookieValue).subscribe(reject => {
+              rejectedAlert.config.description = reject.reason;
+              this.alerts.push(rejectedAlert);
+            });
+          }
+        }
+        break;
+
+      default:
+        // noop
+        break;
+    }
+  }
+
+  onRejectClick() {
+    let url = '/programs/' + this.program.id + '/reject';
+    this.router.navigateByUrl(url);
+  }
+
+  getRoles() {
+    this.rolesSub = this.programService.getPermissions(this.cookieValue, 'ROLES').subscribe(res => {
+      if (res && res.ROLES && res.ROLES.length > 0) {
+        this.roles = res.ROLES;
+        if(this.program._links && this.program._links['program:request:action:submit']) {
+          let href = this.program._links['program:request:action:submit'].href;
+          this.getReasons(href.substring(href.lastIndexOf("/") + 1), this.roles);
+        }
+      }
+    });
+  }
+  getReasons(programId: any, roles: any) {
+    this.reasonSub = this.programService.getReasons(programId, this.cookieValue).subscribe(res => {
+      let reason = res.reason;
+      if (this.cookieValue) {
+
+        // show alert if viewing pending version with having Agency Submitters, Agency Coordinators, superuser and limiteduser
+        if (this.program.status && this.program.status.code && this.program.status.code === 'pending' && ((roles && roles.length > 0) && (roles[0] === 'CFDA_AGENCY_COORD' || roles[0] === 'AGENCY_SUBMITTER'
+          || roles[0] === 'CFDASUPERUSER' || roles[0] === 'CFDALIMITEDSUPERUSER'))) {
+          let pendingAgencyAlertDesc = `This assistance listing is pending review/approval. Changes cannot be made at this time. Assistance Listing will publish on ` + moment(this.program.autoPublishDate).format("MM/DD/YYYY") + `.`+
+            `<br><br><b>Submission Comment</b> <br>` + reason;
+          let pendingAgencyAlert = {
+            'labelname': 'pending-fal-alert',
+            'config': {
+              'type': 'info',
+              'title': '',
+              'description': pendingAgencyAlertDesc
+            }
+          };
+          this.alerts.push(pendingAgencyAlert);
+        }
+        // show alert if viewing pending version with having OMB Reviewers, superuser and limiteduser
+        if (this.program.status && this.program.status.code && this.program.status.code === 'pending' && (this.roles[0] === 'OMB_ANALYST' || this.roles[0] === 'RMO_SUPERUSER'
+          || roles[0] === 'CFDASUPERUSER' || roles[0] === 'CFDALIMITEDSUPERUSER')) {
+          let pendingOMBAlertDesc = `This Assistance Listing revision is pending publication. The Assistance Listing will publish on ` + moment(this.program.autoPublishDate).format("MM/DD/YYYY") + ` unless you extend the review period, reject the Assistance Listing, or manually publish the Assistance Listing.
+            You can use the buttons below to perform any one of the aforementioned actions.<br><br><b>Submission Comment</b><br>` + reason;
+          let pendingOMBAlert = {
+            'labelname': 'pending-fal-alert',
+            'config': {
+              'type': 'warning',
+              'title': '',
+              'description': pendingOMBAlertDesc
+            }
+          };
+          this.alerts.push(pendingOMBAlert);
+        }
+      }
+    });
+  }
+
+  public containsExecutiveOrder() {
+    let a = _.find(this.program.data.assistance.preApplicationCoordination.environmentalImpact.reports, {reportCode: "ExecutiveOrder12372"});
+    if (a === undefined) {
+      return false;
+    } else if (a.isSelected === true) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

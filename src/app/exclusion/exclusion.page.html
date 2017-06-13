@@ -1,4 +1,18 @@
 <div *ngIf="exclusion" class="sam-ui container">
+	<br />
+	<br />
+	<div *ngIf="linkedObjectView != 'er'">
+	  <a class="sam-ui dark blue button" [routerLink]="['/search']" [queryParams]="qParams">
+		<i class="fa fa-chevron-left" aria-hidden="true"></i>
+		Back To Search
+	  </a>
+	</div>
+	<div *ngIf="linkedObjectView=='er'">
+	  <a class="sam-ui dark blue button" [routerLink]="['/entity', exclusion.identityInfo.duns]" [queryParams]="qParams">
+		<i class="fa fa-chevron-left" aria-hidden="true"></i>
+		Back To Entity Registration
+	  </a>
+	</div>
 	
 	<!-- Info Alert -->
 	<div class="usa-alert usa-alert-info">

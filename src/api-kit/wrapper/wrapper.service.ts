@@ -10,8 +10,10 @@ export class WrapperService {
         "search": "/sgs/v1/search",
         "featuredSearch": "/sgs/v1/search/featured",
         "program": "/fac/v1/programs",
+        "fh" : "/federalorganizations/v1",
         "federalHierarchy": "/federalorganizations/v1/organizations",
         "federalCreateOrg": "/federalorganizations/v1/organization",
+        "federalHierarchyActive": "/federalorganizations/v1/activeorganizations",
         "entities": "/entities",
         "exclusions": "/exclusions",
         "awards": "/awards",
@@ -35,6 +37,7 @@ export class WrapperService {
         "searchDictionaries": "/sgs/v1/dictionaries",
         'preferences': '/preferences',
         'fileExtracts':'/fileextractservices/v1/api/listfiles',
+        'userPicker':'/picker/users',
     };
 
     constructor(private _http: Http){}

@@ -17,6 +17,60 @@ import { Observable } from 'rxjs';
   ]
 })
 export class UIKitDemoPage {
+
+  peoplePickerOptions = [{key:'uncategorized1', value: 'Uncategorized Data'},
+    {key: 'uncategorized2', value: 'More Uncategorized Data'},
+    {key: 'Carlos', value: 'Carlos', category: 'people'},
+    {key: 'Christy', value: 'Christy', category: 'people'},
+    {key: 'Colin', value: 'Colin', category: 'people'},
+    {key: 'Diego', value: 'Diego', category: 'people'},
+    {key: 'Maryland', value: 'Maryland', category: 'states'},
+    {key: 'Virginia', value: 'Virginia', category: 'states'},
+    {key: 'Washington DC', value: 'Washington DC', category: 'states'}];
+  autocompletePeoplePickerConfig = {
+    keyValueConfig: {
+      keyProperty: 'email',
+      valueProperty: 'givenName',
+      subheadProperty: 'email'
+    }
+  };
+
+  editorExampleText1 = "test value 1";
+  editorExampleText2 = "test value 2";
+  editorExampleText3 = "test value 3";
+  editorExampleDraftText1 = this.editorExampleText1;
+  editorExampleDraftText2 = this.editorExampleText2;
+  editorExampleDraftText3 = this.editorExampleText3;
+
+  editorActionHandler(evt){
+    if(evt.event == "formActionCancel"){
+      console.log("cancel action trigged");
+      this.editorExampleDraftText1 = this.editorExampleText1;
+      this.editorExampleDraftText2 = this.editorExampleText2;
+      this.editorExampleDraftText3 = this.editorExampleText3;
+    } 
+    if(evt.event == "formActionSave"){
+      console.log("save action triggered");
+      this.editorExampleText1 = this.editorExampleDraftText1;
+      this.editorExampleText2 = this.editorExampleDraftText2;
+      this.editorExampleText3 = this.editorExampleDraftText3;
+    }
+  }
+
+  /**
+   * Multiselect Demo
+   */
+   multiselectOptions = [
+     { key: 'Christy', value: 'Christy' },
+     { key: 'Carlos', value: 'Carlos' },
+     { key: 'Colin', value: 'Colin' },
+     { key: 'Diego', value: 'Diego' }
+   ]
+
+   multiselectConfig = {
+     keyProperty: 'key',
+     valueProperty: 'value'
+   }
   /**
    * Autocomplete Category demo
    */
@@ -32,6 +86,9 @@ export class UIKitDemoPage {
     {key: 'Washington DC', value: 'Washington DC', category: 'states'}
   ];
 
+  checkFullParentOrgs(evt){
+    console.log(".....",evt);
+  }
   autocompleteConfig = {
     categoryProperty: 'category',
     // isCategorySelectable: true,
@@ -80,7 +137,7 @@ export class UIKitDemoPage {
     "accordionState": "collapsed",
     "downloadUrl": "https://csp-api.sam.gov/comp/opps/v1/opportunities/resources/packages/5510527885db16f1d7ae72ecfa8e6567/download/zip?api_key=Z5vc0lK9ubZdK6fLKDCdeYODaSVFtGElOUVSzIl0"
   }];
-  
+
   // Autocomplete Dropdown No Button
   searchValue: any;
   searchName: string = "MyComponent65491455"
@@ -256,6 +313,10 @@ export class UIKitDemoPage {
   }
 
   dateModel: string = "2016-02-03";
+  dateRangeModel = {
+    startDate: "2016-02-03",
+    endDate: "2017-04-23"
+  };
 
   //Image Library
   imageLibraryData:any =  [

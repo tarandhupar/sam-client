@@ -12,6 +12,7 @@ import { falCustomValidatorsComponent } from '../../validators/assistance-listin
 export class FALAuthSubFormComponent {
 
   @Input() hideAddButton: boolean;
+  @Input() formErrorArr: any = {};
   @Output() public authActionHandler = new EventEmitter();
 
   falAuthSubForm: FormGroup;
@@ -20,7 +21,7 @@ export class FALAuthSubFormComponent {
   mode:string;
   subFormLabel:string;
   review:boolean = false;
-  errorExists:boolean = false;
+  //errorExists:boolean = false;
 
   checkboxConfig = {
     options: [
@@ -124,7 +125,8 @@ export class FALAuthSubFormComponent {
     this.authActionHandler.emit({
       type:'confirm',
       hideAddButton: this.hideAddButton,
-      authInfo: this.authInfo
+      authInfo: this.authInfo,
+      controlIndex: index
     });
 
   }

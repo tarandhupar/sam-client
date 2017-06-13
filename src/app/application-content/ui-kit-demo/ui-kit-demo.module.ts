@@ -7,6 +7,7 @@ import { routing } from './ui-kit-demo.route';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { UIKitDemoPage } from './ui-kit-demo.page';
+import { SimpleFormDemoPage } from './simple-form-demo.page';
 import { AppComponentsModule } from '../../app-components/app-components.module';
 import { AlertsModule } from '../../alerts/alerts.module';
 import { HelpModule } from '../../Help/help.module';
@@ -34,6 +35,7 @@ import { CountyServiceDirective } from './county-demo';
   ],
   declarations: [
     UIKitDemoPage,
+    SimpleFormDemoPage,
     CountryServiceDirective,
     StateServiceDirective,
     CountyServiceDirective

@@ -57,11 +57,22 @@ export class RoleMgmtContent implements OnInit{
 
   private getOrganizationNames() {
     let pc: PropertyCollector = new PropertyCollector(this.requestDetails);
-    let allOrgIds = pc.collect([[], 'userAccessContent', 'domainContent', [], 'roleContent', [], 'organizationContent', [], 'organizations', []]);
+
+    // ids = ['1,2,3', '3,4,5']
+    let allOrgIds: any = pc.collect([[], 'organizationID']);
+    // ids = [[1,2,3],[3,4,5]]
+    allOrgIds = allOrgIds.map(commaSeperated => commaSeperated.split(','));
+    // ids = [1, 2, 3, 3, 4, 5]
+    allOrgIds = allOrgIds.reduce((accum, curr) => {
+      return accum.concat(curr);
+    }, []);
+    // ids = "1,2,3,4,5"
     allOrgIds = _.uniq(allOrgIds);
 
+    allOrgIds = allOrgIds.join(',');
+
     if (allOrgIds.length) {
-      this.fhService.getOrganizations({orgKey: allOrgIds.join(',')}).subscribe(res => {
+      this.fhService.getOrganizations({orgKey: allOrgIds}).subscribe(res => {
         let orgs = res._embedded.orgs.map(o => o.org);
         this.organizationMap = _.keyBy(orgs, 'orgKey');
       });
@@ -135,12 +146,11 @@ export class RoleMgmtContent implements OnInit{
   }
 
   getRolesGranted(request) {
-    const roleId = request.userAccessContent.domainContent[0].roleContent[0].role;
-    return this.roleNameForId(roleId) || '---';
+    return this.roleNameForId(request.roleId) || '---';
   }
 
   getOrganizations(request) {
-    const orgIds = request.userAccessContent.domainContent[0].roleContent[0].organizationContent[0].organizations;
+    const orgIds = request.organizationID.split(',');
     const names = orgIds.map(oid => {
       return this.organizationNameForId(oid);
     }).filter(oname => oname);

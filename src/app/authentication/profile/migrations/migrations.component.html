@@ -9,11 +9,11 @@
     <div class="usa-grid relative" #form>
       <div class="usa-width-one-half">
         <sam-select label="Web Site"
-                   name="system"
-                   [(model)]="store.system"
-                   [options]="store.systems"
-                   [required]="true"
-                   [errorMessage]="errors('system')"></sam-select>
+                    name="system"
+                    [(model)]="store.system"
+                    [options]="store.systems"
+                    [required]="true"
+                    [errorMessage]="errors('system')"></sam-select>
       </div>
       <div class="usa-width-one-half">
         <sam-label-wrapper name="legacy-username" label="Email / User ID" required="true" [errorMessage]="errors('username')">
@@ -27,9 +27,10 @@
         </div>
 
         <sam-alert [type]="states.confirm.type"
-                  [title]="states.confirm.message"
-                  [(hidden)]="!states.confirm.show"
-                  showClose="true"></sam-alert>
+                   [title]="states.confirm.message"
+                   [hidden]="!states.confirm.show"
+                   [showClose]="true"
+                   (dismiss)="alert()"></sam-alert>
       </div>
     </div>
   </form>
@@ -61,7 +62,7 @@
           <td>
             <div class="key text-left">
               <span class="fa fa-user"></span>
-              <span [innerText]="account.email">-</span>
+              <span [innerText]="account.username">-</span>
             </div>
           </td>
           <td>&nbsp;</td>

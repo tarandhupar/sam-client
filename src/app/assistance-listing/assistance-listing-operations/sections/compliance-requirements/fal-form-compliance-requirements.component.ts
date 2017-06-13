@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { ProgramService } from "api-kit";
 import { DictionaryService } from "api-kit";
@@ -12,6 +12,7 @@ import { FALFormViewModel } from "../../fal-form.model";
 })
 export class FALFormComplianceRequirementsComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
+  @Output() public onError = new EventEmitter();
 
   @ViewChild('reportsComp') reportsComp;
   @ViewChild('auditsComp') auditsComp;
@@ -19,6 +20,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
 
   public program: any;
   public complianceRequirementsGroup: FormGroup;
+  private formErrors = new Set();
 
   public policyRequirementsConfig: any = {
     checkbox: {
@@ -135,7 +137,10 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
       'formulaMatching': null
     });
 
-    this.complianceRequirementsGroup.valueChanges.subscribe(data => this.updateViewModel(data));
+    this.complianceRequirementsGroup.valueChanges.subscribe(data => {
+      this.updateViewModel(data);
+      this.collectErrors();
+    });
   }
 
   private loadForm() {
@@ -485,5 +490,30 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
       this.complianceRequirementsGroup.controls[control].markAsDirty();
       this.complianceRequirementsGroup.controls[control].updateValueAndValidity();
     }
+
+    this.collectErrors();
+  }
+
+  private collectErrors() {
+    let size = this.formErrors.size;
+
+    for(let key in this.complianceRequirementsGroup.controls) {
+      if(this.complianceRequirementsGroup.controls[key].errors && this.complianceRequirementsGroup.controls[key].dirty) {
+        this.formErrors.add(key);
+      } else {
+        this.formErrors.delete(key);
+      }
+    }
+
+    if(this.formErrors.size !== size) {
+      this.emitEvent();
+    }
+  }
+
+  private emitEvent() {
+    this.onError.emit({
+      formErrorArr: Array.from(this.formErrors.values()),
+      section: 'compliance-requirements'
+    });
   }
 }

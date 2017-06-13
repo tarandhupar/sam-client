@@ -1,0 +1,53 @@
+<workspace-template class="access-page">
+  <div workspace-header>
+    <sam-breadcrumbs [crumbs]="crumbs"></sam-breadcrumbs>
+  </div>
+  <div workspace-left>
+    <user-pic [user]="user"></user-pic>
+    <div class="clearfix">
+      <a class="pull-right" (click)="onClearAllClick()">Clear all</a>
+    </div>
+    <sam-solo-accordian class="org-accordion" titleText="Organization">
+      <sam-agency-picker
+        #picker
+        [multimode]="false"
+        (organization)="onOrganizationsChange($event)"
+      ></sam-agency-picker>
+    </sam-solo-accordian>
+    <sam-solo-accordian *ngIf="domainOptions && domainOptions.length" titleText="Domain">
+      <sam-radio-button name='domains' [(ngModel)]="selectedDomain" [options]="domainOptions" (ngModelChange)="onDomainChange()"></sam-radio-button>
+    </sam-solo-accordian>
+    <sam-solo-accordian titleText="Role" *ngIf="roleOptions && roleOptions.length">
+      <sam-radio-button name='role' [(ngModel)]="selectedRole" [options]="roleOptions" (ngModelChange)="onRoleChange()"></sam-radio-button>
+    </sam-solo-accordian>
+  </div>
+  <div workspace-right>
+    <div class="pending-access-wrapper m_B-4x" *ngIf="requests && requests.length">
+      <pending-requests [requests]="requests"></pending-requests>
+    </div>
+    <div class="clearfix">
+      <sam-title-subtitle class='pull-left' titleText="Profile" subtitle="User Access"></sam-title-subtitle>
+      <a [routerLink]="[isAdmin ? '../grant-access' : '../request-access']" class="usa-button usa-button-success pull-right m_R-0">{{isAdmin ? 'Grant' : 'Request'}} Access</a>
+    </div>
+    <ng-container *ngIf="roles && roles.length">
+      <div class="clearfix m_T-2x">
+        <div class="pull-left results-text">
+          <span>{{resultCountText()}}</span>
+        </div>
+        <div class="pull-right sort-container">
+          <sam-select name='sort direction' [options]="sortOptions" [(ngModel)]="sort" (ngModelChange)="onSearchParamChange()"></sam-select>
+        </div>
+      </div>
+      <hr>
+      <role-table [roles]="roles" [userName]="userName" (deleteRow)="onDeleteRow($event)"></role-table>
+      <div class="text-center" *ngIf="totalPages && currentPage">
+        <sam-pagination [totalPages]="totalPages" [currentPage]="currentPage" (pageChange)="onPageChange($event)"></sam-pagination>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!roles || !roles.length">
+      <div class="p_T-6x text-center">
+        <em>No roles are assigned to user.</em>
+      </div>
+    </ng-container>
+  </div>
+</workspace-template>

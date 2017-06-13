@@ -11,19 +11,21 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { SamAPIKitModule } from 'api-kit';
 import { UserDirectoryPage } from "./directory/user-directory.page";
 import { ParentOrgsComponent } from "./directory/parent-orgs/parent-orgs.component";
-import { UserAccessPage } from "./public/access/access.page";
-import { UserViewComponent } from "./public/public.component";
-import { UserMigrationsPage } from "./public/migrations/migrations.page";
-import { UserProfilePage } from "./public/profile/profile.page";
-import { GroupByDomainPipe } from "./public/access/group-by-domain.pipe";
+import { UserAccessPage } from "./access/access.page";
+import { GroupByDomainPipe } from "./access/group-by-domain.pipe";
 import { PipesModule } from "../app-pipes/app-pipes.module";
-import { GrantAccessPage } from "./public/grant-access/grant-access.page";
+import { GrantAccessPage } from "./grant-access/grant-access.page";
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { ObjectsAndPermissionsComponent } from "./objects-and-permissions/objects-and-permissions.component";
 import { RoleManagementModule } from "../role-management/role-management.module";
-import {RequestAccessResolve} from "./request-access.resolve";
-
+import { RequestAccessResolve } from "./request-access.resolve";
+import { UserPic } from "./user-pic/user-pic.component";
+import { PendingRequestsComponent } from "./pending-requests/pending-requests.component";
+import { RoleTable } from "./role-table/role-table.component";
+import { UserRoleDetailsPage } from "./user-role-details/user-role-details.page";
+import { UserRoleDetailsResolve } from "./user-role-details.resolve";
+import { AppTemplatesModule } from "../app-templates/index";
 
 @NgModule({
   imports: [
@@ -37,25 +39,28 @@ import {RequestAccessResolve} from "./request-access.resolve";
     PipesModule,
     AppComponentsModule,
     RoleManagementModule,
+    AppTemplatesModule,
     Ng2PageScrollModule.forRoot()
   ],
   exports: [
-
+    UserPic
   ],
   declarations: [
-    UserViewComponent,
-    UserMigrationsPage,
     UserAccessPage,
     GrantAccessPage,
-    UserProfilePage,
     UserDirectoryPage,
     ParentOrgsComponent,
     GroupByDomainPipe,
     ObjectsAndPermissionsComponent,
+    UserPic,
+    PendingRequestsComponent,
+    RoleTable,
+    UserRoleDetailsPage
   ],
   providers: [
     AlertFooterService,
-    RequestAccessResolve
+    RequestAccessResolve,
+    UserRoleDetailsResolve,
   ],
 })
 export class UserDirectoryModule { }

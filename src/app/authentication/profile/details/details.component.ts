@@ -1,9 +1,8 @@
-import * as _ from 'lodash';
-
 import { Component, DoCheck, Input, KeyValueDiffers, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+import { cloneDeep, indexOf, isNumber, merge } from 'lodash';
 import { FHService, IAMService } from 'api-kit';
 
 import { User } from '../../user.interface';
@@ -30,6 +29,7 @@ export class DetailsComponent {
 
   private store = {
     title: 'Personal Details',
+    levels: ['department', 'agency', 'office'],
     questions: [
       { 'id': 1,  'question': 'What was the make and model of your first car?' },
       { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
@@ -49,6 +49,7 @@ export class DetailsComponent {
   };
 
   public states = {
+    kba: false,
     isGov: false,
     selected: ['','',''],
     loading: false,
@@ -64,16 +65,15 @@ export class DetailsComponent {
     _id: '',
     email: '',
 
-    title: '',
-    suffix: '',
-
     fullName: '',
     firstName: '',
     initials: '',
     lastName: '',
+    suffix: '',
 
-    department: '',
-    orgID: '',
+    departmentID: '',
+    agencyID: '',
+    officeID: '',
 
     workPhone: '',
 
@@ -82,16 +82,32 @@ export class DetailsComponent {
     accountClaimed: true
   };
 
-  private questions = [];
+  private alerts = {
+    identity: {
+      type: 'error',
+      message: '',
+      show: false
+    },
 
-  private department = '';
-  private agency = '';
-  private office = '';
-  private aac = '';
+    business: {
+      type: 'error',
+      message: '',
+      show: false
+    }
+  };
+
+  private questions = [];
+  private hierarchy = {
+    department: '',
+    agency:     '',
+    office:     '',
+    aac: ''
+  };
 
   public detailsForm: FormGroup;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private builder: FormBuilder,
     private differs: KeyValueDiffers,
@@ -105,17 +121,7 @@ export class DetailsComponent {
 
   ngOnInit() {
     this.initUser(() => {
-      let intAnswer;
-
       this.initForm();
-
-      if(this.states.isGov && !this.api.iam.isDebug()) {
-        this.api.fh
-          .getOrganizationById(this.user.orgID)
-          .subscribe(data => {
-            this.setOrganizationNames(data);
-          });
-      }
     });
   }
 
@@ -126,7 +132,12 @@ export class DetailsComponent {
     if(changes) {
       changes.forEachChangedItem((diff) => {
         if(this.detailsForm && this.detailsForm.controls[diff.key]) {
-          key = diff.key.toString().search(/(middleName|initials)/) > -1 ? 'initials' : diff.key;
+          key = diff.key.toString().match(/(middleName|initials)/) ? 'initials' : diff.key;
+
+          if(key.match(/(department|agency|office)/) && isNumber(diff.currentValue) && !diff.currentValue) {
+            diff.currentValue = '';
+          }
+
           this.detailsForm.controls[key].setValue(diff.currentValue);
           this.user[key] = diff.currentValue;
         }
@@ -135,22 +146,19 @@ export class DetailsComponent {
   }
 
   initForm() {
+    const orgID = (this.user.officeID || this.user.agencyID || this.user.departmentID || '').toString();
+
     this.detailsForm = this.builder.group({
-      title:           [this.user.title],
+      firstName:     [this.user.firstName, Validators.required],
+      initials:      [this.user.initials],
+      middleName:    [this.user.initials],
+      lastName:      [this.user.lastName, Validators.required],
+      suffix:        [this.user.suffix],
 
-      firstName:       [this.user.firstName, Validators.required],
-      initials:        [this.user.initials],
-      middleName:      [this.user.initials],
-      lastName:        [this.user.lastName, Validators.required],
+      workPhone:     [this.user.workPhone],
+      officeID:      [orgID],
 
-      suffix:          [this.user.suffix],
-
-      workPhone:       [this.user.workPhone],
-
-      department:      [this.user.department],
-      orgID:           [this.user.orgID],
-
-      kbaAnswerList:   this.builder.array(
+      kbaAnswerList: this.builder.array(
         this.user.kbaAnswerList.length ? [
           this.initKBAGroup(0),
           this.initKBAGroup(1),
@@ -160,12 +168,23 @@ export class DetailsComponent {
 
       emailNotification: [this.user.emailNotification]
     });
+
+    this.states.isGov = orgID.length ? true : false;
+
+    if(this.states.isGov) {
+       this.api.fh
+        .getOrganizationById(orgID)
+        .subscribe(data => {
+          this.setOrganizationNames(data);
+        });
+    }
   }
 
   loadUser(cb) {
     this.api.iam.checkSession((user) => {
-      this.user = _.merge({}, this.user, user);
+      this.user = merge({}, this.user, user);
       this.user['middleName'] = user.initials;
+
       cb();
     }, () => {
       this.router.navigate(['/signin']);
@@ -220,9 +239,6 @@ export class DetailsComponent {
     let fn,
         getSessionUser = ((promise) => {
           this.loadUser(() => {
-            this.states.isGov = (this.user.department || this.user.department || '').toString().length > 0 ||
-                                (this.user.orgID || this.user.orgID).toString().length > 0;
-
             this.loadKBA(() => {
               promise(this.user);
             });
@@ -232,19 +248,20 @@ export class DetailsComponent {
         getMockUser = ((promise) => {
           let intQuestion;
 
-          this.states.isGov = true;
-          _.merge(this.user, {
+          merge(this.user, {
             _id: 'doe.john@gsa.gov',
             email: 'doe.john@gsa.gov',
-            suffix: '',
+
             middleName: 'J',
             firstName: 'John',
             initials: 'J',
             lastName: 'Doe',
 
-            department: 100006688,
-            orgID: 100173623,
             workPhone: '12401234568',
+
+            departmentID: 100006688,
+            agencyID: 0,
+            officeID: 100173623,
 
             kbaAnswerList: [
               { questionId: 1, answer: this.repeater(' ', 8) },
@@ -256,8 +273,9 @@ export class DetailsComponent {
           });
 
           if(ENV && ENV == 'test') {
-            delete this.user['department'];
-            delete this.user['orgID'];
+            delete this.user['departmentID'];
+            delete this.user['agencyID'];
+            delete this.user['officeID'];
           }
 
           for(intQuestion in this.user.kbaAnswerList) {
@@ -279,7 +297,7 @@ export class DetailsComponent {
     fn = this.api.iam.isDebug() ? getMockUser : getSessionUser;
 
     fn((userData) => {
-      this.user = _.merge({}, this.user, userData);
+      this.user = merge({}, this.user, userData);
       this.user.workPhone = this.user.workPhone.replace(/[^0-9]/g, '');
       this.user.workPhone = (this.user.workPhone.length < 11 ? '1' : '' ) + this.user.workPhone;
       cb();
@@ -298,8 +316,8 @@ export class DetailsComponent {
     for(intQuestion in this.user.kbaAnswerList) {
       intQuestion = parseInt(intQuestion);
 
-      questions = _.cloneDeep(this.store.questions).map((question, index) => {
-        intAnswer = _.indexOf(data.selected, question.id);
+      questions = cloneDeep(this.store.questions).map((question, index) => {
+        intAnswer = indexOf(data.selected, question.id);
         // Update disabled state
         question.disabled = (intAnswer > -1) && (intAnswer !== intQuestion);
 
@@ -352,23 +370,39 @@ export class DetailsComponent {
   setOrganizationNames(data) {
     const organization = data['_embedded'][0]['org'];
 
-    this.department = (organization.l1Name || '');
-    this.agency = (organization.l2Name || '');
-    this.office = (organization.l3Name || '');
+    this.hierarchy.department = (organization.l1Name || '');
+    this.hierarchy.agency = (organization.l2Name || '');
+    this.hierarchy.office = (organization.l3Name || '');
 
-    this.aac = (organization.code || '');
+    this.hierarchy.aac = (organization.code || '');
   }
 
-  setDepartment(department) {
-    this.department = department.name;
-    this.user.department = department.value;
-    this.detailsForm.controls['department'].setValue(department.value);
+  resetHierarchy() {
+    this.store.levels.forEach(level => {
+      this.user[`${level}ID`] = 0;
+      this.hierarchy[level] = '';
+    });
+
+    this.hierarchy.aac = '';
   }
 
-  setOrganization(organization) {
-    this.office = organization.name;
-    this.user.orgID = organization.value;
-    this.detailsForm.controls['orgID'].setValue(organization.value);
+  setHierarchy(hierarchy: { label: string, value: number }[]) {
+    let organization;
+
+    this.resetHierarchy();
+
+    this.store.levels.forEach((level, intLevel) => {
+      organization = hierarchy[intLevel];
+
+      if(organization) {
+        this.user[`${level}ID`] = organization.value;
+        this.hierarchy[level]= hierarchy[intLevel].label;
+      }
+    });
+  }
+
+  setAAC(organization) {
+    this.hierarchy.aac = organization.code;
   }
 
   get name():string {
@@ -397,7 +431,7 @@ export class DetailsComponent {
   }
 
   changeQuestion(questionID, $index) {
-    let  items = _.cloneDeep(this.store.questions),
+    let  items = cloneDeep(this.store.questions),
         intQuestion;
 
     this.states.selected[$index] = questionID;
@@ -412,7 +446,7 @@ export class DetailsComponent {
 
     this.states.selected.forEach((questionID, intItem) => {
       // Loop through each question list to set the list to the new questions list
-      this.questions[intItem] = _.cloneDeep(items);
+      this.questions[intItem] = cloneDeep(items);
       // Re-enable the selected option
       if(questionID) {
         intQuestion = this.store.indexes[questionID];
@@ -449,11 +483,25 @@ export class DetailsComponent {
       this.api.iam.logout();
       // Redirect to login
       this.router
-        .navigate(['signin'])
+        .navigate(['/signin'])
         .then(() => {
           window.location.reload();
         });
     });
+  }
+
+  /**
+   * Alerts
+   */
+  dismiss(key: string) {
+    this.alerts[key].show = false;
+    this.alerts[key].message = '';
+  }
+
+  alert(key: string, type?: string, message?: string) {
+    this.alerts[key].type = type || 'success';
+    this.alerts[key].message = message || '';
+    this.alerts[key].alert.show = true;
   }
 
   /**
@@ -470,6 +518,10 @@ export class DetailsComponent {
         key,
         intKey,
         intArrayKey;
+
+    if(!controls[key]) {
+      return valid;
+    }
 
     for(intKey = 0; intKey < entries.length; intKey++) {
       entries[intKey].updateState(true);
@@ -491,7 +543,7 @@ export class DetailsComponent {
     return valid;
   }
 
-  saveGroup(keys: Array<String>, cb) {
+  saveGroup(keys: Array<String>, $success, $error) {
     let controls = this.detailsForm.controls,
         userData = {
           fullName: this.name
@@ -501,9 +553,12 @@ export class DetailsComponent {
         controlValue,
         intKey;
 
+    $success = $success || (() => {});
+    $error = $error || (() => {});
+
     for(intKey = 0; intKey < keys.length; intKey++) {
       key = keys[intKey];
-      controlValue = controls[key].value;
+      controlValue = controls[key] ? controls[key].value : this.user[key];
 
       if(controlValue.toString().length) {
         userData[key] = controlValue;
@@ -512,6 +567,11 @@ export class DetailsComponent {
       switch(key) {
         case 'workPhone':
           userData[key] = this.user.workPhone;
+          break;
+
+        case 'departmentID':
+        case 'agencyID':
+          userData[key] = this.user[key];
           break;
 
         case 'kbaAnswerList':
@@ -523,32 +583,31 @@ export class DetailsComponent {
               return item;
             });
 
-            this.api.iam.kba.update(userData[key], () => {
-              console.log('KBA Q&A successfully saved');
-              cb();
-            }, () => {
-              cb();
+            this.api.iam.kba.update(userData[key], (user) => {
+              $success(user);
+            }, (error) => {
+              $error(error);
             });
           } else {
-            cb();
+            $success();
           }
 
           return;
       }
     }
 
-    this.api.iam.user.update(userData, (data) => {
-      cb();
-    }, () => {
-      cb();
+    this.api.iam.user.update(userData, (user) => {
+      $success(user);
+    }, (error) => {
+      $error(error);
     });
   }
 
   save(groupKey) {
     let controls = this.detailsForm.controls,
         mappings = {
-          'identity': 'title|firstName|initials|lastName|suffix|emailNotification',
-          'business': 'department|orgID|workPhone',
+          'identity': 'firstName|initials|lastName|suffix|emailNotification',
+          'business': 'departmentID|agencyID|officeID|workPhone',
           'kba': 'kbaAnswerList'
         },
 
@@ -556,6 +615,7 @@ export class DetailsComponent {
         valid = this.isValid(keys);
 
     this.states.submitted = true;
+    this.agencyPicker.setOrganizationFromBrowse();
 
     if(valid) {
       this.states.loading = true;
@@ -564,7 +624,10 @@ export class DetailsComponent {
         this.states.editable[groupKey] = false;
         this.states.loading = false;
         // Trick Header to Update State
-        this.router.navigate(['profile']);
+        this.router.navigate(['/profile']);
+      }, (error) => {
+        this.states.loading = false;
+        this.alert('error', error.message);
       });
     }
   }

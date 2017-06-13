@@ -160,4 +160,29 @@ export class LocationService {
     if(city) oApiParam.oParam['citycode'] = city.key;
     return this.oAPIService.call(oApiParam);
   }
+  
+  //gets naics details
+  getNaicsDetails(sourceyear, code) {
+    var oApiParam = {
+      name: 'location',
+      suffix: '/naics',
+      oParam: {sourceyear:sourceyear, code:code},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+  
+  //gets psc details
+  getPSCDetails(q) {
+    var oApiParam = {
+      name: 'location',
+      suffix: '/psc',
+      oParam: {q:q},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+  
 }

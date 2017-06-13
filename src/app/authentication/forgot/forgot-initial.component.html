@@ -1,6 +1,6 @@
 <div class="usa-grid">
   <div class="usa-width-one-whole">
-    <div class="usa-forgot-init">
+    <div class="usa-forgot-initial">
       <form class="usa-form-large" autocomplete="off" (ngSubmit)="init($event)" #form>
         <fieldset>
           <legend>Forgot Password?</legend>
@@ -17,13 +17,13 @@
                    [formControl]="email" />
           </sam-label-wrapper>
 
-          <div class="usa-button-controls relative">
+          <div class="usa-button-controls">
             <button type="submit" [disabled]="states.disabled">Submit</button>
-            <sam-alert class="usa-alert-static"
-                      [type]="states.notification.type"
-                      [title]="states.notification.title"
-                      [hidden]="!states.notification.show"
-                      showClose="true"></sam-alert>
+            <sam-alert [type]="states.notification.type"
+                       [title]="states.notification.title"
+                       [showClose]="true"
+                       (dismiss)="resetNotifications()"
+                       [hidden]="!states.notification.show"></sam-alert>
           </div>
 
           <hr />

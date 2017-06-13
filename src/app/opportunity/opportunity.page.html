@@ -46,7 +46,8 @@
 							<div class="item" [attr.id]="generateID(opportunityFields.Solicitation, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Solicitation)">
 								<div class="content">
 									<div class="header">
-										Solicitation Number
+                    <ng-container *ngIf="opportunity.data?.type === 'k'">Solicitation Number</ng-container>
+                    <ng-container *ngIf="opportunity.data?.type !== 'k'">Notice Number</ng-container>
 									</div>
 									<div class="description">
 										{{ opportunity.data?.solicitationNumber }}
@@ -553,9 +554,24 @@
             Award Notices
           </h2>
 
-          <div class="sam-ui three column vertically padded grid">
-            <div class="column">
+          <div class="sam-ui vertically middle aligned padded grid">
+            <div class="five wide column">
+              <p>
+                Showing results
+                <strong>
+                  {{min +1}}
+                  <span class="usa-sr-only">through</span> -
+                  {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
+                </strong>
+                of
+                <strong>{{relatedOpportunitiesMetadata.count}}</strong>
+              </p>
+            </div>
+            <div class="four wide column middle right aligned">
               <strong>Sort by</strong>
+            </div>
+            <div class="three wide column">
+              
               <sam-select class="sort-select"
                           [(model)]="awardSort"
                           [options]="awardSortOptions"
@@ -564,17 +580,6 @@
               </sam-select>
             </div>
           </div>
-
-          <p>
-            Showing results
-            <strong>
-              {{min +1}}
-              <span class="usa-sr-only">through</span> -
-              {{(relatedOpportunitiesMetadata.count < max) ? relatedOpportunitiesMetadata.count : max}}
-            </strong>
-            of
-            <strong>{{relatedOpportunitiesMetadata.count}}</strong>
-          </p>
 
         </ng-container>
 

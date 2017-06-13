@@ -15,6 +15,8 @@ import { FALAssistInfoTableComponent } from './applying-assistance-table/applyin
 import { FALObligationFYTableComponent } from "./obligation-table/obligation-table.component";
 import { FALObligationSubFormComponent } from "./obligation-subform/obligation-subform.component";
 import { FALContactInfoTableComponent } from "./contact-information-table/contact-information-table.component";
+import { FALChangeRequestDropdownComponent } from "./change-request-dropdown/change-request-dropdown.component";
+import { FALWrapperChangeRequestDropdownComponent } from "./change-request-dropdown/wrapper-change-request-dropdown.component";
 
 @NgModule({
   imports: [
@@ -35,6 +37,8 @@ import { FALContactInfoTableComponent } from "./contact-information-table/contac
     FALFiscalYearTableComponent,
     FALObligationFYTableComponent,
     FALObligationSubFormComponent,
+    FALChangeRequestDropdownComponent,
+    FALWrapperChangeRequestDropdownComponent,
     FALContactInfoTableComponent
   ],
   exports: [
@@ -50,6 +54,8 @@ import { FALContactInfoTableComponent } from "./contact-information-table/contac
     FALAssistInfoTableComponent,
     FALObligationFYTableComponent,
     FALObligationSubFormComponent,
+    FALChangeRequestDropdownComponent,
+    FALWrapperChangeRequestDropdownComponent,
     FALContactInfoTableComponent
   ]
 })

@@ -7,9 +7,9 @@
     <div sam-sticky limit=1200 container="wage-determination-page">
       <!--Logo-->
       <img src="src/assets/img/logo-not-found.png" class="sidenav-logo" alt="Logo Not Available" width="140px">
-      
+
       <div class="sam-ui hidden divider"></div>
-      
+
       <!--Side Navigation-->
       <sam-feedback-sidenav class="m_T-3x" *ngIf="sidenavModel" (data)="selectedItem($event)" [model]="sidenavModel" (path)="sidenavPathEvtHandler($event)"></sam-feedback-sidenav>
     </div>
@@ -37,6 +37,9 @@
           <div class="sub header" id="wd-type">
             Service Contract Act
           </div>
+          <div class="sub header" id="wd-archived" *ngIf="!wageDetermination.active">
+            Archived WDOLs are for informational purposes only
+          </div>
         </h1>
       </ng-container>
 
@@ -49,7 +52,7 @@
           </div>
         </h1>
       </ng-container>
-      
+
       <div class="sam-ui hidden divider"></div>
 
       <!-- Intro Content -->
@@ -71,10 +74,11 @@
                   <div class="description">{{revisionNumber}}</div>
                 </div>
               </div>
-              <div *ngIf="services" class="item" id="wd-services">
+              <div class="item" id="wd-services">
                 <div class="content">
-                  <div class="header">Service/Services</div>
+                  <div class="header">Service(s)</div>
                   <div class="description">{{services}}</div>
+                  <div class="description" *ngIf="!services">Standard (Area-Wide) Wage Determination</div>
                 </div>
               </div>
               <div *ngIf="constructionTypes" class="item" id="wd-construction-types">
@@ -114,6 +118,22 @@
 
       <div class="sam-ui hidden divider"></div>
 
+      <!-- Services -->
+      <ng-container *ngIf = "services">
+        <section id="wd-services">
+          <h2 class="sam-ui header">Non-Standard Service Description(s)</h2>
+          <ng-container *ngFor="let service of servicesArray; let i = index;">
+            <div [attr.id]="'wd-service-' + i">
+              <div class="sam-ui medium header">
+                {{service[0]}}
+                <div class="sub header">{{service[1]}}</div>
+              </div>
+            </div>
+            <div class="sam-ui hidden divider"></div>
+          </ng-container>
+        </section>
+      </ng-container>
+
       <!-- Location -->
       <div *ngIf = "locationDescription" class="sam-ui medium header">
         Location Description
@@ -121,9 +141,10 @@
       </div>
 
       <!-- State and Counties -->
-      <ng-container *ngIf = "locations && locations.length > 0">
+      <ng-container *ngIf = "locations && locations != null && locations.length > 0">
+        <section id="wd-location">
         <h2 class="sam-ui header">States and Counties</h2>
-        <div *ngFor="let location of locations; let i = index; let isLast=last">
+        <ng-container *ngFor="let location of locations; let i = index; let isLast=last">
 
           <div [attr.id]="'wd-state-' + i">
             <div class="sam-ui medium header">
@@ -143,12 +164,13 @@
 
           <div class="sam-ui divider" [ngClass]="{'hidden': isLast}"></div>
 
-        </div>
+        </ng-container>
+        </section>
       </ng-container>
-      
+
       <div class="sam-ui hidden section divider"></div>
 
-      
+
       <!-- Print Link -->
       <div class="sam-ui two column vertically padded grid" id="wd-print-link" *ngIf="wageDetermination?.document">
         <div class="column">
@@ -177,14 +199,14 @@
 
       <h2 class="sam-ui header">History</h2>
 
-      <sam-history  [data]="processedHistory" 
+      <sam-history  [data]="processedHistory"
                     [currentId]="wageDetermination.fullReferenceNumber + '/' + wageDetermination.revisionNumber">
       </sam-history>
       <br>
-      <sam-button *ngIf="shortProcessedHistory" 
-                  [buttonId]="'defaultBtnHistory'" 
-                  [buttonText]="!showingLongHistory ? 'Show More' : 'Show Less'" 
-                  [buttonType]="btnType" 
+      <sam-button *ngIf="shortProcessedHistory"
+                  [buttonId]="'defaultBtnHistory'"
+                  [buttonText]="!showingLongHistory ? 'Show More' : 'Show Less'"
+                  [buttonType]="btnType"
                   (click)="showHideLongHistory()">
       </sam-button>
 

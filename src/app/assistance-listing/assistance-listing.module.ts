@@ -28,6 +28,9 @@ import { FALAuthorizationsComponent } from "./assistance-listing-operations/sect
 import { FALAssistanceComponent } from './assistance-listing-operations/sections/applying-for-assistance/applying-for-assistance.component';
 
 import {FALFormModule} from "./assistance-listing-operations/fal-form.module";
+import {RejectFALComponent} from "./assistance-listing-operations/workflow/reject/reject-fal.component";
+import { FALFormArchiveRequestComponent } from "./assistance-listing-change-request/fal-form-archive-request.component";
+
 
 
 @NgModule({
@@ -69,6 +72,8 @@ import {FALFormModule} from "./assistance-listing-operations/fal-form.module";
     FALAuthorizationsComponent,
     FALCriteriaInfoComponent,
     FALAssistanceComponent,
+    RejectFALComponent,
+    FALFormArchiveRequestComponent
    // FAlProgramServiceDirective
   ],
   providers: [

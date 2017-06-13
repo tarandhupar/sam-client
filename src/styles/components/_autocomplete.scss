@@ -47,7 +47,12 @@
         color: $color-white;
       }
 
-
+      &.multiple-values{
+        font-weight: bold;
+        .secondary-value{
+          font-weight: normal;
+        }
+      }
     }
 
     .category {

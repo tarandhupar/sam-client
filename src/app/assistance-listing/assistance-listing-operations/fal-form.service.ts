@@ -61,4 +61,21 @@ export class FALFormService {
   getOrganization(id) {
     return this.fhService.getOrganizationById(id, false);
   }
+
+  submitFAL(programId: string, data: {}) {
+    return this.programService.submitProgram(programId, data, FALFormService.getAuthenticationCookie());
+  }
+  getSubmitPermission() {
+    return this.programService.getPermissions(FALFormService.getAuthenticationCookie(),'SUBMIT_FALS');
+  }
+  rejectFAL(programId: string, data: {}) {
+    return this.programService.rejectProgram(programId, data, FALFormService.getAuthenticationCookie());
+  }
+  getSubmitReason(programId: string) {
+    return this.programService.getReasons(programId,FALFormService.getAuthenticationCookie());
+  }
+
+  sendNotification(programId: string) {
+    return this.programService.sendNotification(programId, FALFormService.getAuthenticationCookie());
+  }
 }

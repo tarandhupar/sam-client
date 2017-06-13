@@ -40,7 +40,7 @@ export class BackToSearch {
       });
   }
   
-   setupQS(newsearch){
+   setqParams(){
 	this.getSearchParams();
     var qsobj = {};
     if(this.keyword.length>0){
@@ -55,7 +55,7 @@ export class BackToSearch {
       qsobj['index'] = '';
     }
 
-    if(!newsearch && this.pageNum>=0){
+    if(this.pageNum>=0){
       qsobj['page'] = this.pageNum+1;
     }
     else {

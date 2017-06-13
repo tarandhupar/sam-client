@@ -19,11 +19,11 @@ import * as moment from 'moment/moment';
           </h3>
           <ul class="sam-ui small list">
             <li>
-              <strong>UEI (Unique Entity Identifier)</strong><br>
+              <strong>Unique Entity Identifier (UEI)</strong><br>
               {{ data.dunsNumber }}
             </li>
             <li>
-              <strong>NCAGE Code</strong><br>
+              <strong>CAGE Code</strong><br>
               {{ data.cageCode }}
             </li>
             <li *ngIf="data.aac && data.aac!==null">
@@ -54,7 +54,7 @@ import * as moment from 'moment/moment';
               {{ data.registrationPurpose }}
             </li>      
             <li>
-              <strong>Debt Subject to Offset: </strong><br>
+              <strong>Debt Subject to Offset</strong><br>
               {{ data.hasDelinquentDebt==true ? 'Yes' : 'No' }}
             </li>    
           </ul>

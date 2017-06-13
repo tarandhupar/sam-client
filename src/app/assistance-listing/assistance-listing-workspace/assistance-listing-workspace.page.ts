@@ -48,8 +48,8 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       this.router.navigate(['accessrestricted']);
     }
 
-    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS').subscribe(res => {
-      this.permissions = JSON.parse(res['_body']);
+    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS').subscribe(res => {
+      this.permissions = res;
       if (!this.permissions['FAL_LISTING']) {
         this.router.navigate['accessrestricted'];
       } else {

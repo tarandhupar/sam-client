@@ -79,16 +79,12 @@ const $import = {
         let accounts = [];
 
         if(!err) {
-          accounts = response.body || [];
-
-          $success(
-            accounts.map((account) => transformMigrationAccount(account))
-          );
+          accounts = (response.body || []).map((account) => transformMigrationAccount(account));
+          $success(accounts);
         } else {
           if(isDebug()) {
-            $error(
-              mock.map((account) => transformMigrationAccount(account))
-            );
+            accounts = mock.map((account) => transformMigrationAccount(account));
+            $success(accounts);
           } else {
             $error(exceptionHandler(response));
           }

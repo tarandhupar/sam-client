@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import * as moment from 'moment/moment';
+import { Router } from '@angular/router';
 
 @Component({
   moduleId: __filename,
@@ -9,6 +10,7 @@ import * as moment from 'moment/moment';
 export class AssistanceProgramResult implements OnInit {
   @Input() data: any = {};
   @Input() qParams: any = {};
+  @Input() permissions: any = null;
   showhideStatus: boolean;
   showHideStatusText: string;
   randomColor: string;
@@ -17,10 +19,16 @@ export class AssistanceProgramResult implements OnInit {
     '#cd2026',
     '#aeb0b5'
   ];
+  changeRequestDropdown: any = {
+    config: {
+      "hint": "Actions",
+      "name": "fal-change-request",
+      "disabled": false,
+    },
+    defaultOption: "Make a Request"
+  };
 
-  constructor() {
-
-  }
+  constructor(private router: Router) { }
 
   ngOnInit() {
     if (this.data.publishedDate !== null) {
@@ -45,6 +53,12 @@ export class AssistanceProgramResult implements OnInit {
       } else if (this.data.status.code === 'pending') {
         this.randomColor = this.statusCodeBgColor[2];
       }
+    }
+  }
+
+  public onChangeRequestSelect(event) {
+    if(event.value === 'archive_request') {
+      this.router.navigateByUrl('programs/' + event.program.id + '/archive-request');
     }
   }
 }

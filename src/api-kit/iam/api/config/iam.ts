@@ -31,7 +31,7 @@ export default {
 
   details: {
     update:     '/my-details/api/update',
-    deactivate: '/my-details/api/deactivate'
+    deactivate: '/my-details/api/deactivate',
   },
 
   kba: {
@@ -42,6 +42,17 @@ export default {
   import: {
     history: '/import/roles',
     roles:   '/import/roles'
+  },
+
+  fsd: {
+    user:       '/auth/v4/fsd/users/{id}',
+    users:      '/auth/v4/fsd/users',
+    kba:        '/kba/fsd/qa/{id}',
+    deactivate: '/my-details/api/fsd/{id}/deactivate',
+    reset: {
+      init:   '/password/api/fsd/{id}/passwordReset',
+      verify: '/password/api/fsd/passwordResetVerifyEmail',
+    },
   },
 
   system: {

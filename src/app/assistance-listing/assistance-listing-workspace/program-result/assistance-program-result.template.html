@@ -20,6 +20,17 @@
     <div class="four wide column">
       <ul class="sam-ui small list">
         <li>
+          <wrapper-fal-change-request-dropdown
+              [name]="changeRequestDropdown.config.name"
+              [hint]="changeRequestDropdown.config.hint"
+              [disabled]="changeRequestDropdown.config.disabled"
+              [permissions]="permissions"
+              [defaultOption]="changeRequestDropdown.defaultOption"
+              (clickActionHandler)="onChangeRequestSelect($event)"
+              [program]="data"
+            ></wrapper-fal-change-request-dropdown>
+        </li>
+        <li>
         <span class="sam-ui mini label">{{data.status.value}}</span>
         </li>
         <li>

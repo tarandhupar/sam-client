@@ -1,0 +1,54 @@
+<div [ngClass]="{'usa-width-one-whole': true, 'usa-width-three-fourths': false}">
+  <section class="usa-grid-full">
+    <div class="sam-ui hidden divider"></div>
+    Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Proto Reports</a>
+    <br>
+    <h2 class="m_T-2x">{{name}}</h2>
+    <samAccordion [expandIndex]="0" [bordered]="true" #samAccordionValue>
+      <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
+        <form (ngSubmit)="onSubmit()" #reportForm="ngForm">
+          <p class="p_L-0x">Pick a date:</p>
+          <div class="display-block">
+            <sam-date name="chosen-date" [(ngModel)]="startDate" #startDateDom></sam-date>
+          </div>
+          <p class="p_L-0x">Temporary field:</p>
+          <input type="text" name="testForm" #testForm>
+          <div class="usa-width-one-fourth">
+            <!--<sam-button [buttonId]="'defaultBtn'" [buttonText]="'Check Date'" [buttonType]="btnType" (click)="resetParameter();"></sam-button>-->
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute w/ with date Common Component'" [buttonType]="btnType" (click)="reportExecute()"></sam-button>
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute w/ text input'" [buttonType]="btnType" (click)="reportExecuteTest()"></sam-button>
+          </div>
+        </form>
+      </sam-accordion-section>
+    </samAccordion>
+    <br>
+    <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
+    <br>
+    <div class="usa-width-one-whole">
+      <sam-alert class="full-width" [type]="'info'" [description]="'DoD report data that are funded by DoD are delayed 90 days for non DoD users.'">
+      </sam-alert>
+    </div>
+    <br><br>
+    <samAccordion>
+      <sam-accordion-section [name]="'Appendix'" [headerText]="'Appendix'">
+        <div *ngIf="data" [id]="id">
+          <!-- note the added *ngIf -->
+          <div *ngIf="id">
+            <ul class="p_L-0x ul-css">
+              <li *ngFor="let report of data.reports | repfil: id">
+                <b>
+                  <a href="{{report.name}}"></a>
+                </b>
+                <ul class="p_L-0x ul-css">
+                  <li *ngFor="let item of report.appendix">
+                    <p class="p_L-0x">{{item}}</p>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </sam-accordion-section>
+    </samAccordion>
+  </section>
+</div>

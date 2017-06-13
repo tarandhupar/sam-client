@@ -24,8 +24,7 @@ export class MigrationsComponent {
     legacy: [],
     migrations: [],
     systems: [],
-    roles: {},
-    system: ''
+    system: 'SAM'
   };
 
   private states = {
@@ -58,21 +57,15 @@ export class MigrationsComponent {
 
       this.email = user.email;
 
-      for(intRole = 0; intRole < user.gsaRAC.length; intRole++) {
-        role = user.gsaRAC[intRole];
-
-        if(this.store.roles[role.system] == undefined)
-          this.store.roles[role.system] = {};
-        if(this.store.roles[role.system][role.username] == undefined)
-          this.store.roles[role.system][role.username] = [];
-
-        this.store.roles[role.system][role.username].push(role);
-      }
-
       this.initForm();
+      this.fetchHistory();
     }, () => {
       if(this.api.iam.isDebug()) {
+        this.email = 'John.Doe@gmail.com';
+
         this.initForm();
+        this.fetchHistory();
+
         this.alert('Account Successfully Migrated', 'success');
       } else {
         this.router.navigate(['/signin']);
@@ -90,9 +83,10 @@ export class MigrationsComponent {
 
   ngDoCheck() {
     let changes = this.differ.diff(this.store);
+
     if(changes) {
       changes.forEachChangedItem((diff) => {
-        if(diff.key == 'system') {
+        if(this.migrationForm.controls[diff.key]) {
           this.migrationForm.controls[diff.key].setValue(diff.currentValue);
         }
       });
@@ -107,30 +101,12 @@ export class MigrationsComponent {
     };
 
     if(this.api.iam.isDebug()) {
-      data.system = 'FBO';
+      data.system = 'SAM';
       data.username = 'ina@iaculis.us';
       data.password = 'password'
     }
 
     this.store.systems = this.api.iam.import.systems();
-
-    this.api.iam.import.history(this.email, (accounts) => {
-      this.store.migrations = accounts;
-
-      if(this.store.migrations.length) {
-        this.alert('Account Successfully Migrated', 'success');
-      }
-    }, (response) => {
-      if(this.api.iam.isDebug()) {
-        this.store.migrations = response;
-
-        if(this.store.migrations.length) {
-          this.alert('Account Successfully Migrated', 'success');
-        }
-      } else {
-        console.warn('Endpoint Unavailable')
-      }
-    });
 
     return data;
   }
@@ -145,6 +121,18 @@ export class MigrationsComponent {
     });
 
     this.store.system = session.system;
+  }
+
+  fetchHistory() {
+    this.api.iam.import.history(this.email, (accounts) => {
+      this.store.migrations = accounts;
+
+      if(this.store.migrations.length) {
+        this.alert('Account Successfully Migrated', 'success');
+      }
+    }, (response) => {
+      console.warn('Endpoint Unavailable')
+    });
   }
 
   errors(controlName) {

@@ -1,5 +1,13 @@
 .user-roles-directory {
-  padding: 1em;
+  sam-agency-picker label {
+    display: none;
+  }
+
+  .org-picker-section {
+    .usa-accordion-content {
+      padding: 0;
+    }
+  }
 
   .input-and-addon {
     float: right;
@@ -8,6 +16,10 @@
       max-width: initial;
       width: 21em;
     }
+  }
+
+  .selected-org {
+    background-color: yellow;
   }
 
   label[for="users-toggles"] {
@@ -22,81 +34,14 @@
     margin-right: 0;
   }
 
-  .org-column {
-    margin-right: 0;
-  }
-
   .usa-accordion-content {
     padding: 1.5rem;
   }
 
-  .org-picker-section {
-    .usa-accordion-content {
-      padding: 0;
-    }
-
-    .usa-agency-picker-dropdown-area {
-      padding: 1.5rem;
-      border: none;
-      background: none;
-    }
-
-    .usa-agency-picker-readonly-area {
-      border: none;
-    }
-  }
-
-  .organization-container > label {
-    display: none;
-  }
-
-  .usa-agency-picker-search-input-wrapper{
-    width: calc(100% - 40px);
-  }
-
-  .user-row:not(:first-child) {
-    margin-top: 6rem;
-  }
-
-  .org-column {
-    border: 1px solid black;
-  }
-
-  .org-column, .domain-column {
-    overflow-y: auto;
-    max-height: 16em;
-  }
-
-  .org-row {
-    padding: 1em;
-
-    &.org-row-selected {
-      background-color: $color-gray-lighter;
-      pointer-events: none;
-    }
-
-    &:not(:last-child) {
-      border-bottom: 1px solid black;
-    }
-
-    &:not(.org-row-selected):hover {
-      background-color: $color-gray-lightest;
-      cursor: pointer;
-    }
-  }
-
-  .domain-column {
-    background-color: $color-gray-lighter;
-    border: 1px solid black;
-    padding: 1em;
-  }
-
-  .domain-row:not(:first-child) {
-    margin-top: 1em;
-  }
-
-  .role-text {
-    margin-left: 2em;
+  .user-row {
+    border-top: 1px solid black;
+    padding-top: 1.0em;
+    margin-top: 1.5rem;
   }
 
   .fa.fa-user {

@@ -25,6 +25,8 @@ export class DataServicePage {
     if(this.isFolder(fileNameKey) || fileNameKey === ''){
       this.currentDomain = fileNameKey.substr(0, fileNameKey.length-1);
       this.getFileList();
+    }else {
+      // download the file from file list if a file is clicked
     }
   }
 

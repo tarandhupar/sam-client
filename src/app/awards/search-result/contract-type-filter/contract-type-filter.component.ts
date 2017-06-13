@@ -21,45 +21,60 @@ export class SamContractTypeFilter {
   constructor(){}
 
   ngOnChanges() {
+    this.listDisplay.selectedItems=[];
+
     if(this.selectModel !== '') {
       let selectArray = this.selectModel.split(",");
+      this.populateSelectedList(selectArray, this.options);
+    }
 
-      for(var j=0; j<selectArray.length; j++) {
-        for(var i=0; i<this.options.options.length; i++) {
-          if(this.options.options[i].value == selectArray[j]) {
-
-            let option = this.options.options[i];
-            let filterArr = this.listDisplay.selectedItems.filter((obj)=>{
-              if(obj.value==option.value){
-                return true;
-              }
-                return false;
-            });
-
-            if(filterArr.length==0){
-              this.emitSelected(this.options.options[i]);
-            }
-
-          }
-        }
-      }
-    } else {
+    if(this.selectModel === '') {
       this.listDisplay.selectedItems = [];
     }
   }
 
-  emitSelected(obj) {
-    this.listDisplay.selectedItems.push(obj);
+  setSelected(obj, shouldEmit:boolean) {
+    let o = Object.assign({}, obj);
+    // if(obj.type === 'applicant') {
+    //   o.label += " (A)";
+    // } else if(obj.type === 'beneficiary') {
+    //   o.label += " (B)";
+    // }
+    this.listDisplay.selectedItems.push(o);
     this.listDisplay.selectedItems = new SortArrayOfObjects().transform(this.listDisplay.selectedItems, 'label');
-    this.emitSelectedList();
+    if(shouldEmit){
+      this.emitSelectedList();
+    }
+
   }
 
   emitSelectedList() {
-    let emitArray = [];
+    let emitArray1 = [];
     for(var i=0; i<this.listDisplay.selectedItems.length; i++) {
-      emitArray.push(this.listDisplay.selectedItems[i].value);
+      emitArray1.push(this.listDisplay.selectedItems[i].value);
     }
-    this.modelChange.emit(emitArray);
+    this.modelChange.emit(emitArray1);
+  }
+
+  populateSelectedList(selectArray: any, optionsObj: any) {
+
+    for(var j=0; j<selectArray.length; j++) {
+      for(var i=0; i<optionsObj.options.length; i++) {
+
+        if(optionsObj.options[i].value == selectArray[j]) {
+          let option = optionsObj.options[i];
+          let filterArr = this.listDisplay.selectedItems.filter((obj)=>{
+            if(obj.value==option.value && obj.type == option.type){
+              return true;
+            }
+            return false;
+          });
+          if(filterArr.length==0){
+            this.setSelected(optionsObj.options[i], false);
+          }
+        }
+      }
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, ViewChild} from "@angular/core";
+import {Component, OnInit, Input, ViewChild, Output, EventEmitter} from "@angular/core";
 import {FormBuilder, FormArray, FormGroup, Validators} from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
 import {FALFormService} from "../../fal-form.service";
@@ -12,6 +12,7 @@ import { falCustomValidatorsComponent } from '../../../validators/assistance-lis
 })
 export class FALFormContactInfoComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
+  @Output() public onError = new EventEmitter();
   @ViewChild('contactInfoTable') contactInfoTable;
 
   falContactInfoForm: FormGroup;
@@ -28,7 +29,9 @@ export class FALFormContactInfoComponent implements OnInit {
 
   stateDrpDwnOptions = [{label: "None Selected", value: 'na'}];
   countryDrpDwnOptions = [];
-  errorExists: boolean = false;
+  //errorExists: boolean = false;
+  formErrorArr: any = {};
+  review: boolean = false;
 
   constructor(private fb: FormBuilder,
               private service: FALFormService) {
@@ -63,19 +66,12 @@ export class FALFormContactInfoComponent implements OnInit {
     this.createForm();
 
     this.falContactInfoForm.valueChanges.subscribe(data => {
-
-      const control = <FormArray> this.falContactInfoForm.controls['contacts'];
-
-      if(control.errors)
-        this.errorExists = true;
-      else
-        this.errorExists = false;
-
       this.saveData();
     });
 
     if (!this.viewModel.isNew) {
       this.getData();
+      this.collectErrors();
     }
   }
 
@@ -94,28 +90,6 @@ export class FALFormContactInfoComponent implements OnInit {
       'additionalInfo': '',
       'contacts': this.fb.array([], falCustomValidatorsComponent.atLeastOneEntryCheck)
     });
-  }
-
-  setSubformErrorFlag(){
-    const control = <FormArray> this.falContactInfoForm.controls['contacts'];
-    let counter = 0;
-
-    if(this.contactsInfo.length == control.controls.length){
-      for (let contact of control.controls) {
-        if(contact.status === "INVALID"){
-          this.contactsInfo[counter].errorExists = true;
-        }
-        else
-          this.contactsInfo[counter].errorExists = false;
-
-        for(let key of Object.keys(contact['controls'])){
-          contact['controls'][key].markAsDirty();
-          contact['controls'][key].updateValueAndValidity();
-        }//end of key
-
-        counter++;
-      }//end of contact for
-    }
   }
 
   initContacts() {
@@ -154,14 +128,14 @@ export class FALFormContactInfoComponent implements OnInit {
 
   }
 
-  onConfirmClick() {
+  onConfirmClick(i) {
 
     this.contactsInfo = this.falContactInfoForm.value.contacts;
     this.hideAddButton = false;
     this.hideContactsForm = true;
 
     if(this.contactInfoTable.review)
-      this.setSubformErrorFlag();
+      this.markAllSubControls(this.falContactInfoForm.controls['contacts']['controls'][i]);
   }
 
   onSubFormCancelClick(i) {
@@ -172,10 +146,10 @@ export class FALFormContactInfoComponent implements OnInit {
 
     if (this.mode == 'Edit') {
       const control = <FormArray> this.falContactInfoForm.controls['contacts'];
-      let errorExists = this.contactsInfo[i]['errorExists'];
+      //let errorExists = this.contactsInfo[i]['errorExists'];
       delete this.contactsInfo[i]['errorExists'];
       control.at(i).setValue(this.contactsInfo[i]);
-      this.contactsInfo[i].errorExists = errorExists;
+      //this.contactsInfo[i].errorExists = errorExists;
     }
 
     this.hideAddButton = false;
@@ -232,19 +206,17 @@ export class FALFormContactInfoComponent implements OnInit {
 
   saveData() {
 
+    this.formErrorArr = {};
     let contacts = [];
     let regLocalOffice = '';
+    let counter = 0;
 
     for (let contact of this.falContactInfoForm.value.contacts) {
       let generateUUID = false;
 
       if (contact.contactId == 'na' || contact.contactId == 'new') {
+        let contactId = contact.contactId;
         generateUUID = true;
-      }
-      else {
-        if (JSON.stringify(contact) !== JSON.stringify(this.contactDrpDwnInfo[contact.contactId])) {
-          generateUUID = true;
-        }
       }
 
       if (generateUUID) {
@@ -253,6 +225,7 @@ export class FALFormContactInfoComponent implements OnInit {
       }
 
       contacts.push(contact);
+      counter++;
     }
 
     if (this.falContactInfoForm.value.useRegionalOffice.length == 2) {
@@ -277,38 +250,128 @@ export class FALFormContactInfoComponent implements OnInit {
 
     this.viewModel.website = data.website;
     this.viewModel.contacts = data.contacts;
+
+    setTimeout(() => {
+      this.collectErrors();
+    }, 0);
+
   }
 
   validateSection(){
 
-    let counter = 0;
     this.contactInfoTable.review = true;
+    this.review = true;
 
     for (let key of Object.keys(this.falContactInfoForm.controls)) {
-      this.falContactInfoForm.controls[key].markAsDirty();
-      this.falContactInfoForm.controls[key].updateValueAndValidity();
+
       if(this.falContactInfoForm.controls[key] instanceof FormArray){
         const control = <FormArray> this.falContactInfoForm.controls[key];
 
-        if(control.errors)
-          this.errorExists = true;
-        else
-          this.errorExists = false;
-
         for (let contact of control.controls) {
-          if(contact.status === "INVALID"){
-            this.contactsInfo[counter].errorExists = true;
-          }
-          else
-            this.contactsInfo[counter].errorExists = false;
-
-          for(let key of Object.keys(contact['controls'])){
-            contact['controls'][key].markAsDirty();
-            contact['controls'][key].updateValueAndValidity();
-          }//end of key
-          counter++;
+            this.markAllSubControls(contact);
         }//end of contact for
       }
+      else {
+        this.markAllSubControls(this.falContactInfoForm.controls[key]);
+      }
     }
+
+    setTimeout(() => {
+      if(Object.keys(this.formErrorArr).length > 0){
+        this.emitEvent();
+      }
+    }, 0);
+  }
+
+  markAllSubControls(control){
+    if(control.controls){
+      for(let key of Object.keys(control['controls'])){
+        control['controls'][key].markAsDirty();
+        control['controls'][key].updateValueAndValidity();
+      }//end of key
+    }
+    else {
+      control.markAsDirty();
+      control.updateValueAndValidity();
+    }
+  }
+
+  collectErrors(){
+    for(let key of Object.keys(this.falContactInfoForm.controls)) {
+      if(this.falContactInfoForm.controls[key] instanceof FormArray) {
+        const control = <FormArray> this.falContactInfoForm.controls[key];
+        this.noContactError(control.controls);
+        for (let row of control.controls) {
+          this.collectErrorsForContact(row);
+        }
+      }
+      else {
+        this.checkControlforErrors(this.falContactInfoForm.controls[key], key, key);
+      }
+    }
+  }
+
+  collectErrorsForContact(contact){
+    for(let key of Object.keys(contact['controls'])){
+        this.checkControlforErrors(contact['controls'][key], key, contact.value.contactId);
+    }
+  }
+
+  checkControlforErrors(control, key, contactId){
+
+    let formErrorLen = Object.keys(this.formErrorArr).length;
+
+    if(control.errors){
+      if(!(contactId in this.formErrorArr)) {
+        this.formErrorArr[contactId] = {  errors: [key] };
+      }
+      else {
+        let index = this.formErrorArr[contactId].errors.indexOf(key);
+        if(index == -1) {
+          this.formErrorArr[contactId].errors.push(key);
+        }
+      }
+    }
+    else {
+
+      if(contactId in this.formErrorArr) {
+
+        let index = this.formErrorArr[contactId].errors.indexOf(key);
+        if(index > -1) {
+          this.formErrorArr[contactId].errors.splice(index, 1);
+        }
+
+        if(this.formErrorArr[contactId].errors.length == 0) {
+          delete this.formErrorArr[contactId];
+        }
+      }
+    }
+
+    if((formErrorLen !== Object.keys(this.formErrorArr).length || Object.keys(this.formErrorArr).length == 0) && this.review) {
+      this.emitEvent();
+    }
+
+  }
+
+  noContactError(contactInfo){
+
+    let formErrorLen = Object.keys(this.formErrorArr).length;
+
+    if(contactInfo.length == 0){
+      this.formErrorArr['contact'] = { errors: ['one contact information required']};
+    }
+    else {
+      delete this.formErrorArr['contact'];
+    }
+
+    if(this.review && formErrorLen !== Object.keys(this.formErrorArr).length)
+      this.emitEvent();
+  }
+
+  emitEvent(){
+    this.onError.emit({
+      formErrorArr: this.formErrorArr,
+      section: 'contact-information'
+    });
   }
 }

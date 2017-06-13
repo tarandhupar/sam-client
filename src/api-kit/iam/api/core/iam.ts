@@ -9,6 +9,14 @@ import {
   isDebug
 } from './modules/helpers';
 
+Cookies.defaults = config.cookies;
+
+function clearSession() {
+  Cookies.remove('iPlanetDirectoryPro');
+  Cookies.remove('IAMSession');
+  Cookies.remove('IAMSystemAccount');
+}
+
 /**
  * IAM API Class
  */
@@ -56,12 +64,8 @@ class IAM {
       $success(this.states.user);
     }, (error) => {
       this.states.auth = false;
-
       // Remove any remaining cookies (This is a fallback in situations where cookie is still cached)
-      Cookies.remove('iPlanetDirectoryPro', config.cookies);
-      Cookies.remove('IAMSession', config.cookies);
-      Cookies.remove('IAMSystemAccount', config.cookies);
-
+      clearSession();
       $error(error);
     });
   }
@@ -182,10 +186,7 @@ class IAM {
       .delete(endpoint)
       .set(auth)
       .end((error, response) => {
-        Cookies.remove('iPlanetDirectoryPro', config.cookies);
-        Cookies.remove('IAMSession', config.cookies);
-        Cookies.remove('IAMSystemAccount', config.cookies);
-
+        clearSession();
         error ? $error() : $success();
       });
   }

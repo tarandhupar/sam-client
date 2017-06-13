@@ -1,0 +1,10 @@
+<ng-container *ngIf="displayDropdown">
+<sam-select 
+  [hint]="hint"
+  [name]="name"
+  [disabled]="disabled"
+  [options]="renderOptions"
+  [(model)]="defaultOption"
+  (modelChange)="onSelect($event)"
+  ></sam-select>
+</ng-container>

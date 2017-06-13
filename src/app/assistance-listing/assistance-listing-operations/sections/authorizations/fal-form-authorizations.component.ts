@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray} from '@angular/forms';
 import { FALAuthSubFormComponent } from '../../../components/authorization-subform/authorization-subform.component';
 import {FALFormViewModel} from "../../fal-form.model";
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   providers: [ ],
@@ -12,6 +13,7 @@ import {FALFormViewModel} from "../../fal-form.model";
 export class FALAuthorizationsComponent implements OnInit {
 
   @Input() viewModel: FALFormViewModel;
+  @Output() public onError = new EventEmitter();
   @ViewChild('authSubForm') authSubForm:FALAuthSubFormComponent;
   @ViewChild('authTable') authTable;
 
@@ -19,6 +21,8 @@ export class FALAuthorizationsComponent implements OnInit {
   hideAddButton: boolean = false;
   falAuthForm: FormGroup;
   displayAuthInfo: any = [];
+  formErrorArr: any = {};
+
 
   constructor(private fb: FormBuilder){}
 
@@ -43,12 +47,12 @@ export class FALAuthorizationsComponent implements OnInit {
     this.viewModel.authList = this.getUpdatedAuthList(data.authorizations);
     const control = <FormArray> this.authSubForm.falAuthSubForm.controls['authorizations'];
 
-    if(control.errors){
+    /*if(control.errors){
       this.authSubForm.errorExists = true;
     }
     else {
       this.authSubForm.errorExists = false;
-    }
+    }*/
   }
 
   updateViewModel(data){
@@ -90,6 +94,9 @@ export class FALAuthorizationsComponent implements OnInit {
       }//end of main for
 
       this.authInfoFormat(this.authSubForm.authInfo);
+    }
+    else {
+      this.noAuthError([]);
     }
   }
 
@@ -140,11 +147,19 @@ export class FALAuthorizationsComponent implements OnInit {
   authActionHandler(event){
 
     if(event.type == 'add'){
+
       this.hideAddButton = event.hideAddButton;
     }
     if(event.type == 'confirm'){
       this.hideAddButton = event.hideAddButton;
       this.authInfoFormat(event.authInfo);
+      if(this.authSubForm.review) {
+       /*if(this.formErrorArr['authorizations']){
+         delete this.formErrorArr['authorizations'];
+         this.emitEvent();
+       }*/
+       this.markAllSubControls(this.authSubForm.falAuthSubForm.controls['authorizations']['controls'][event.controlIndex]);
+      }
     }
     if(event.type == 'cancel'){
       this.hideAddButton = event.hideAddButton;
@@ -181,16 +196,18 @@ export class FALAuthorizationsComponent implements OnInit {
 
     if(parentIndex !== null){
       controlIndex = this.displayAuthInfo[parentIndex].children[index].index;
-      this.authSubForm.removeAuth(controlIndex);
+       this.authSubForm.removeAuth(controlIndex);
     }
     else {
       let children = [];
       for(let child of this.displayAuthInfo[index].children){
         children.push(child.index);
       }
+
       this.authSubForm.removeBulkAuth(children);
       this.authSubForm.removeAuth(this.displayAuthInfo[index].index);
     }
+
     this.hideAddButton = this.authSubForm.hideAddButton;
     this.authInfoFormat(this.authSubForm.authInfo);
   }
@@ -198,12 +215,14 @@ export class FALAuthorizationsComponent implements OnInit {
   authInfoFormat(authInfo){
 
     this.displayAuthInfo = [];
+    this.formErrorArr = {};
     let tempArr = [];
     let counter = 0;
     const control = <FormArray> this.authSubForm.falAuthSubForm.controls['authorizations'];
 
-    for(let auth of authInfo){
+    this.noAuthError(authInfo);
 
+    for(let auth of authInfo){
       let label = ',';
       for(let authType of auth.authType){
         switch(authType){
@@ -236,10 +255,7 @@ export class FALAuthorizationsComponent implements OnInit {
         label = label.replace(",", "");
       }
 
-      let errorExists = false;
-      if(control.controls[counter]['controls'].authType.errors !== null) {
-        errorExists = true;
-      }
+      this.collectErrors(control.controls[counter]);
 
       if(auth.parentAuthorizationId == null){
 
@@ -247,20 +263,24 @@ export class FALAuthorizationsComponent implements OnInit {
           label: label,
           children: [],
           index: counter,
-          authorizationId: auth.authorizationId,
-          errorExists: errorExists
+          authorizationId: auth.authorizationId
         });
 
         tempArr[auth.authorizationId] = this.displayAuthInfo.length - 1;
       }
       else {
         let parentIndex = tempArr[auth.parentAuthorizationId];
-        this.displayAuthInfo[parentIndex].children.push({label: label, index:counter, errorExists: errorExists});
+        this.displayAuthInfo[parentIndex].children.push({
+          label: label,
+          index:counter,
+          authorizationId:auth.authorizationId
+        });
       }
 
       counter = counter + 1;
 
     }//end of for
+
   }
 
   validateSection() {
@@ -269,6 +289,8 @@ export class FALAuthorizationsComponent implements OnInit {
     this.authSubForm.review = true;
     this.updateControlStatus();
 
+    if(Object.keys(this.formErrorArr).length > 0)
+      this.emitEvent();
   }
 
   updateControlStatus(){
@@ -276,26 +298,111 @@ export class FALAuthorizationsComponent implements OnInit {
     //Iterate over subform
     const control = <FormArray> this.authSubForm.falAuthSubForm.controls['authorizations'];
 
-    if(control.errors){
+    /*if(control.errors){
       this.authSubForm.errorExists = true;
     }
     else {
       this.authSubForm.errorExists = false;
-    }
+    }*/
 
     for(let auth of control.controls){
+      this.markAllSubControls(auth);
+    }
+  }
 
-      for(let key of Object.keys(auth['controls'])){
-        auth['controls'][key].markAsDirty();
-        auth['controls'][key].updateValueAndValidity();
+  markAllSubControls(auth){
 
-        if(auth['controls'][key]['controls']){
-          for(let subkey of Object.keys(auth['controls'][key]['controls'])){
-            auth['controls'][key]['controls'][subkey].markAsDirty();
-            auth['controls'][key]['controls'][subkey].updateValueAndValidity();
-          }
-        }//end of if
-      }//end of 2nd for
-    }//end of outermost for
+    for(let key of Object.keys(auth['controls'])){
+      auth['controls'][key].markAsDirty();
+      auth['controls'][key].updateValueAndValidity();
+
+      if(auth['controls'][key]['controls']){
+        for(let subkey of Object.keys(auth['controls'][key]['controls'])){
+          auth['controls'][key]['controls'][subkey].markAsDirty();
+          auth['controls'][key]['controls'][subkey].updateValueAndValidity();
+
+          /*this.checkControlforErrors(auth['controls'][key]['controls'][subkey], key + '-' + subkey, auth.value.authorizationId);
+          auth['controls'][key]['controls'][subkey].valueChanges.distinctUntilChanged().subscribe(() => {
+            this.checkControlforErrors(auth['controls'][key]['controls'][subkey], key + '-' + subkey, auth.value.authorizationId);
+          });*/
+        }
+      }//end of if
+      /*else {
+        this.checkControlforErrors(auth['controls'][key], key, auth.value.authorizationId);
+        auth['controls'][key].valueChanges.distinctUntilChanged().subscribe(() => {
+          this.checkControlforErrors(auth['controls'][key], key, auth.value.authorizationId);
+        });
+      }*/
+    }
+  }
+
+  collectErrors(auth){
+    for(let key of Object.keys(auth['controls'])){
+
+      if(auth['controls'][key]['controls']){
+        for(let subkey of Object.keys(auth['controls'][key]['controls'])){
+          this.checkControlforErrors(auth['controls'][key]['controls'][subkey], key + '-' + subkey, auth.value.authorizationId);
+        }
+      }//end of if
+      else {
+       this.checkControlforErrors(auth['controls'][key], key, auth.value.authorizationId);
+      }
+    }
+  }
+
+  checkControlforErrors(control, key, authId){
+
+    let formErrorLen = Object.keys(this.formErrorArr).length;
+
+    if(control.errors){
+      if(!(authId in this.formErrorArr)) {
+        this.formErrorArr[authId] = {  errors: [key] };
+      }
+      else {
+        let index = this.formErrorArr[authId].errors.indexOf(key);
+        if(index == -1) {
+          this.formErrorArr[authId].errors.push(key);
+        }
+      }
+    }
+    else {
+
+      if(authId in this.formErrorArr) {
+
+        let index = this.formErrorArr[authId].errors.indexOf(key);
+        if(index > -1) {
+          this.formErrorArr[authId].errors.splice(index, 1);
+        }
+
+        if(this.formErrorArr[authId].errors.length == 0) {
+          delete this.formErrorArr[authId];
+        }
+      }
+    }
+
+    if((formErrorLen !== Object.keys(this.formErrorArr).length || Object.keys(this.formErrorArr).length == 0) && this.authSubForm.review) {
+      this.emitEvent();
+    }
+
+  }
+
+  noAuthError(authInfo){
+    let formErrorLen = Object.keys(this.formErrorArr).length;
+    if(authInfo.length == 0){
+      this.formErrorArr['authorizations'] = { errors: ['one authorization required']};
+    }
+    else {
+      delete this.formErrorArr['authorizations'];
+    }
+
+    if(this.authSubForm.review && (formErrorLen !== Object.keys(this.formErrorArr).length) || Object.keys(this.formErrorArr).length == 0)
+      this.emitEvent();
+  }
+
+  emitEvent(){
+    this.onError.emit({
+      formErrorArr: this.formErrorArr,
+      section: 'authorization'
+    });
   }
 }

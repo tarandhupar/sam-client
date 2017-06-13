@@ -1,111 +1,103 @@
-<div class="user-roles-directory clearfix">
-  <div class="breadcrumbs-and-search clearfix">
-    <div class="usa-width-one-fourth">
-      <a href="#">My Workspace</a>&nbsp;&gt;&nbsp;<span>Role Management</span>
-    </div>
-    <div class="usa-width-three-fourths">
-      <div class="title-and-result-count pull-left">
-        <h1 class="page-title">
-          User Roles Directory
-        </h1>
-        <div class="result-count text-lighter">Showing {{resultCount()}} results</div>
-      </div>
-      <div class="pull-right clearfix">
-        <div class="input-and-addon">
-          <input type="text" [(ngModel)]="userSearchValue" (ngModelChange)="doSearch()">
-          <i class="fa fa-search"></i>
-        </div>
-        <div>
-          <button class="usa-button usa-button-transparent">
-            <i class="fa fa-download"></i>
-            <span>Download these results</span>
-          </button>
-          <button class="usa-button usa-button-primary edit-multiple-button">Edit Multiple</button>
-        </div>
+<workspace-template class="user-roles-directory clearfix">
+  <div workspace-header class="clearfix">
+    <sam-breadcrumbs class='pull-left' [crumbs]="crumbs"></sam-breadcrumbs>
+    <div class="pull-right clearfix">
+      <div class="input-and-addon">
+        <input type="text" placeholder="Find User" [(ngModel)]="userSearchValue" (ngModelChange)="doSearch()">
+        <i class="fa fa-search"></i>
       </div>
     </div>
   </div>
-  <div class="filters-and-content clearfix">
-    <!--{{ users | json}}-->
-    <div class="usa-width-one-fourth">
-      <samAccordion [expandIndex]="0">
-        <sam-accordion-section [name]="'users'" [headerText]="'Users'">
-          <input type="checkbox" id="users-toggles" [checked]="isShowMyPeopleChecked" (change)="isShowMyPeopleChecked = !isShowMyPeopleChecked; doSearch()">
-          <label for="users-toggles">Show My People</label>
-        </sam-accordion-section>
-      </samAccordion>
-      <samAccordion [expandIndex]="0">
-        <sam-accordion-section class="org-picker-section" [name]="'organization'" [headerText]="'Organization'">
-          <div class="org-picker-wrapper">
-            <sam-agency-picker
-              [multimode]="false"
-              (organization)="onOrganizationChange($event)"
-            ></sam-agency-picker>
-          </div>
-        </sam-accordion-section>
-      </samAccordion>
-      <samAccordion [expandIndex]="0">
-        <sam-accordion-section [name]="'domains'" [headerText]="'Domain'">
-          <sam-radio-button
-            [name]="'domain-select'"
-            [options]="domainOptions"
-            [(model)]="selectedDomainId"
-            (modelChange)="onSelectDomain($event)"
-          ></sam-radio-button>
-        </sam-accordion-section>
-      </samAccordion>
-      <samAccordion [expandIndex]="0" *ngIf="roleOptions.length">
-        <sam-accordion-section [name]="'roles'" [headerText]="'Roles'">
-          <sam-radio-button
-            [name]="'role-select'"
-            [options]="roleOptions"
-            [(model)]="selectedRoleId"
-            (modelChange)="onSelectRole($event)"
-          ></sam-radio-button>
-        </sam-accordion-section>
-      </samAccordion>
+  <div workspace-left>
+    <div class="clearfix">
+      <a class="pull-right" (click)="onClearAllClick()">Clear all</a>
     </div>
-    <div class="usa-width-three-fourths right-column">
-      <div class="usa-grid-full user-row" *ngFor="let user of users">
-        <div class="usa-width-one-third text-center">
-          <div><i class="fa fa-user fa-4x"></i></div>
-          <h2><a>{{user.user}}</a></h2>
-          <h3>user@email.com</h3>
-        </div>
-        <div class="usa-width-two-thirds" *ngIf="userHasOrganizations(user)">
-          <div class="usa-grid-full">
-            <div class="usa-width-one-half org-column">
-              <div class="org-row"
-                   *ngFor="let org of user.organizations"
-                   [ngClass]="classForOrganization(user, org)"
-                   (click)="onOrgRowClick(user, org)">
-                Org {{org.organization.id}}
-              </div>
-            </div>
-
-            <div class="usa-width-one-half domain-column" *ngIf="user.selectedOrganization">
-              <div class="domain-row" *ngFor="let domain of user.selectedOrganization.domains">
-                <div class="domain-title"><strong>Domain {{domain.domain.id}}</strong></div>
-                <div class="role-text" *ngFor="let role of domain.roles">Role {{role.id}}</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="usa-width-two-thirds" *ngIf="!userHasOrganizations(user)">
-          <div>
-            <strong>No roles assigned for this user</strong>
-          </div>
-          <div>
-            <a href="#"><i class="fa fa-plus-circle"></i>&nbsp;Assign Role</a>
-          </div>
-        </div>
+    <sam-solo-accordian titleText="Organization">
+      <div class="org-picker-wrapper">
+        <sam-agency-picker
+          #picker
+          [multimode]="false"
+          (organization)="onOrganizationChange($event)"
+        ></sam-agency-picker>
       </div>
+    </sam-solo-accordian>
+    <sam-solo-accordian titleText="Domain">
+      <sam-radio-button
+        [name]="'domain-select'"
+        [options]="domainOptions"
+        [(model)]="selectedDomainId"
+        (modelChange)="onSelectDomain($event)"
+      ></sam-radio-button>
+    </sam-solo-accordian>
+    <sam-solo-accordian titleText="Roles" *ngIf="roleOptions && roleOptions.length">
+      <sam-radio-button
+        [name]="'role-select'"
+        [options]="roleOptions"
+        [(model)]="selectedRoleId"
+        (modelChange)="onSelectRole($event)"
+      ></sam-radio-button>
+    </sam-solo-accordian>
+  </div>
+  <div workspace-right>
+    <div class="clearfix">
+      <sam-title-subtitle class='pull-left' titleText="Workspace" subtitle="Role Management"></sam-title-subtitle>
+      <button class="usa-button usa-button-primary edit-multiple-button pull-right">Bulk Update</button>
+    </div>
+    <div *ngIf="resultsOnThisPage" class="title-and-result-count clearfix m_T-4x">
+      <div class="result-count text-lighter pull-left" style="line-height: 44px">Showing {{resultCount()}} results</div>
+      <div class="pull-right">
+        <label for="sort-by" style="display: inline-block" class="m_T-0">Sort by</label>
+        <select (change)="doSearch()" id="sort-by" [(ngModel)]="sort" style="display: inline-block; width: initial">
+          <option
+            *ngFor="let option of sortOptions"
+            [value]="option.value"
+          >{{option.label}}</option>
+        </select>
+      </div>
+    </div>
+    <ng-container *ngIf="users && users.length">
+      <div class="user-row" *ngFor="let user of users">
+
+        <!-- User Icon and name -->
+        <div class="clearfix">
+          <div class="pull-left">
+            <placeholder-profile-pic></placeholder-profile-pic>
+          </div>
+          <div class="pull-left m_L-4x">
+            <h2><a>{{user.user.fullName}}</a></h2>
+            <h3 class="m_T-0">{{user.user.email}}</h3>
+          </div>
+        </div>
+
+        <div class="m_T-2x">
+          <!-- Organization list (if exists) -->
+          <div *ngIf="user.tiers">
+            <div *ngFor="let tier of user.tiers">
+              <strong>{{tier.name}}</strong>
+              <br>
+              <span *ngFor="let org of tier.organizations; let i = index">
+                <span *ngIf="i !== 0">,&nbsp;</span>
+                <span *ngIf="!org.isSelected">{{org.name}}</span>
+                <span class='selected-org' *ngIf="org.isSelected">{{org.name}}</span>
+              </span>
+            </div>
+          </div>
+
+
+          <!-- If no organization list -->
+          <div *ngIf="!user.tiers || !user.tiers.length">
+            <i>No roles assigned for this user</i>
+          </div>
+        </div>
+
+      </div>
+      <!-- Pagination -->
+      <div class="pagination-row text-center">
+        <sam-pagination [totalPages]="totalPages" [currentPage]="1" (pageChange)="onPageChange($event)"></sam-pagination>
+      </div>
+    </ng-container>
+    <div class="text-center">
       <i *ngIf="!(users && users.length)">No results found for selected criteria</i>
     </div>
   </div>
-  <div class="pagination-row text-center">
-    <sam-pagination [totalPages]="4" [currentPage]="1" (pageChange)="onPageChange($event)"></sam-pagination>
-  </div>
-</div>
+</workspace-template>

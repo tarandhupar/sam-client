@@ -100,7 +100,6 @@
   }
 
   .usa-button-controls {
-    position: relative;
     max-width: 32rem;
     margin-top: 1.5em;
 
@@ -111,7 +110,7 @@
       }
     }
 
-    .usa-alert-static {
+    sam-alert {
       top: 0px;
       right: 0px;
       margin-top: 0.5rem;

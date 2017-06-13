@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild} from '@angular/core';
+import { Component, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import {FormBuilder, FormGroup, FormArray} from "@angular/forms";
 import {FALFormViewModel} from "../../../fal-form.model";
 import moment = require("moment");
@@ -17,6 +17,9 @@ import {FALFormService} from "../../../fal-form.service";
 export class FALFormObligationsInfoComponent {
   finObligationsForm: FormGroup;
   @Input() viewModel: FALFormViewModel;
+  @Output() public onError = new EventEmitter();
+
+  private formErrors = new Set();
   @ViewChild('obligationSubForm') obligationSubForm: FALObligationSubFormComponent;
 
   obligationsInfo: any = [];
@@ -103,9 +106,15 @@ export class FALFormObligationsInfoComponent {
     this.finObligationsForm = this.fb.group({
       isFundedCurrentFY: ['']
     });
-    this.finObligationsForm.valueChanges.subscribe(data => this.updateViewModel(data));
-    this.obligationSubForm.falObligationSubForm.valueChanges.subscribe(data => this.updateObligationsViewModel(data));
-     this.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
+    this.finObligationsForm.valueChanges.subscribe(data => {
+      this.updateViewModel(data);
+      this.collectErrors();
+    });
+    this.obligationSubForm.falObligationSubForm.valueChanges.subscribe(data => {
+      this.updateObligationsViewModel(data);
+      this.collectErrors();
+    });
+    this.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
     this.obligationSubForm.obligationsInfo = _.cloneDeep(this.obligationSubForm.falObligationSubForm.value.obligations);
   }
   updateViewModel(data) {
@@ -343,6 +352,8 @@ export class FALFormObligationsInfoComponent {
         obligation['controls'][key].updateValueAndValidity();
       }
     }
+
+    this.collectErrors();
   }
   errorLookup(obligationInfo: any) {
       let counter = 0;
@@ -355,5 +366,37 @@ export class FALFormObligationsInfoComponent {
         obligation['errorExists'] = errorExists;
         counter = counter + 1;
       }
+  }
+
+  private collectErrors() {
+    this.formErrors.clear();
+
+    for(let key in this.finObligationsForm.controls) {
+      if(this.finObligationsForm.controls[key].errors && this.finObligationsForm.controls[key].dirty) {
+        this.formErrors.add(key);
+      }
+    }
+
+    let obligations: FormArray = this.obligationSubForm.falObligationSubForm.get('obligations') as FormArray;
+
+    if (obligations.errors && obligations.dirty) {
+      this.formErrors.add('obligations');
+    }
+
+    for (let obligation of obligations.controls) {
+      let assistanceType = obligation.get('assistanceType');
+      if (assistanceType && assistanceType.errors && assistanceType.dirty) {
+        this.formErrors.add('assistanceType');
+      }
+    }
+
+    this.emitEvent();
+  }
+
+  private emitEvent() {
+    this.onError.emit({
+      formErrorArr: Array.from(this.formErrors.values()),
+      section: 'financial-information-obligations'
+    });
   }
 }

@@ -21,7 +21,7 @@ class FHServiceStub {
 
 };
 
-fdescribe('Federal Hierarchy Page', () => {
+describe('Federal Hierarchy Page', () => {
   // provide our implementations or mocks to the dependency injector
 
   beforeEach(() => {

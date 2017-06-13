@@ -7,6 +7,7 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
 })
 export class SamEligibilityFilter {
 
+
   @ViewChild('listDisplay') listDisplay;
 
   @Input()
@@ -30,6 +31,7 @@ export class SamEligibilityFilter {
   constructor(){}
 
   ngOnChanges() {
+    this.listDisplay.selectedItems=[];
     if(this.selectModel1 !== '') {
       let selectArray = this.selectModel1.split(",");
       this.populateSelectedList(selectArray, this.options1);

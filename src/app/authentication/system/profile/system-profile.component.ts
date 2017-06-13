@@ -64,23 +64,26 @@ export class SystemProfileComponent {
   };
 
   private detailsForm: FormGroup;
-  private user: User = {
+  public user: User = {
     _id: '',
     email: '',
-
-    title: '',
-    suffix: '',
 
     fullName: '',
     firstName: '',
     initials: '',
     lastName: '',
+    suffix: '',
 
-    department: '',
-    orgID: '',
+    departmentID: '',
+    agencyID: '',
+    officeID: '',
 
-    workPhone: ''
+    workPhone: '',
+    kbaAnswerList: [],
+
+    accountClaimed: true
   };
+
 
   private system: System = {
     _id: '',
@@ -184,7 +187,7 @@ export class SystemProfileComponent {
     });
 
     initSystemAccountData = ((account: any) => {
-      const isGov = (this.user.department || this.user.orgID || '').toString().length > 0,
+      const isGov = (this.user.officeID || this.user.agencyID || this.user.departmentID || 0) ? true : false,
             type =  isGov ? 'Gov' : 'Non-Gov';
 
       let override = {
@@ -196,7 +199,7 @@ export class SystemProfileComponent {
       if(isGov) {
         // New System Accounts Only
         if(!account) {
-          override['department'] = this.user.department;
+          override['department'] = this.user.departmentID;
         } else {
           // Fallback if Department is NULL and is government
           if(!account.department) {
@@ -211,8 +214,7 @@ export class SystemProfileComponent {
     if(!this.api.iam.isDebug()) {
       this.getSystemAccount((account) => {
         this.states.edit = account ? true : false;
-        account ? initSystemAccountData(account) : initSystemAccountData({});
-
+        initSystemAccountData(account || {});
         initFormGroup();
       }, () => {
         initSystemAccountData({});
@@ -287,7 +289,8 @@ export class SystemProfileComponent {
   alert(type: string, message: string) {
     this.states.alert.message = (message || '');
     this.states.alert.type = (type || 'success');
-    this.states.alert.show = true;
+
+    this.states.alert.show = message && message.length ? true : false;
   }
 
   updateSystemState(data: System) {

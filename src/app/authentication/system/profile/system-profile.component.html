@@ -56,7 +56,7 @@
                       [advancedMode]="false"
                       [multimode]="false"
                       [label]="'Select the office you work for:'"
-                      [orgRoot]="user.department"
+                      [orgRoot]="user.departmentID"
                       [(orgId)]="system.department"
                       [initial]="system.department ? [system.department] : []"
                       (organization)="setOrganization($event)"></sam-agency-picker>
@@ -161,35 +161,32 @@
 
       <sam-button id="button-deactivate" [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></sam-button>
 
-      <sam-alert type="error"
-                [title]="states.alert.message"
-                [hidden]="!states.alert.show"
-                showClose="true"></sam-alert>
+      <sam-alert type="error" [title]="states.alert.message" [hidden]="!states.alert.show" [showClose]="true" (dismiss)="alert()"></sam-alert>
     </section>
 
     <div *ngIf="!states.edit" class="usa-button-controls">
       <button type="button" class="usa-button-outline">Cancel</button>
       <button type="button" (click)="create()">Save</button>
-      <sam-alert class="usa-alert-static" [type]="states.alert.type" [title]="states.alert.message" [hidden]="!states.alert.show"></sam-alert>
+      <sam-alert [type]="states.alert.type" [title]="states.alert.message" [hidden]="!states.alert.show" [showClose]="true" (dismiss)="alert()"></sam-alert>
     </div>
   </form>
 </div>
 
 <sam-modal #confirmModal
-          type="warning"
-          title="Are you sure you want to deactivate your system account?"
-          showClose="true"
-          submitButtonLabel="Yes, deactivate my account"
-          cancelButtonLabel="No, cancel account deactivation"
-          (onSubmit)="reconfirmDeactivation()"
-          *ngIf="states.edit"></sam-modal>
+           type="warning"
+           title="Are you sure you want to deactivate your system account?"
+           showClose="true"
+           submitButtonLabel="Yes, deactivate my account"
+           cancelButtonLabel="No, cancel account deactivation"
+           (onSubmit)="reconfirmDeactivation()"
+           *ngIf="states.edit"></sam-modal>
 
 <sam-modal #reconfirmModal
-          type="warning"
-          title="Warning"
-          description="If you deactivate your system account it cannot be reactivated for future use and you will be immediately redirected to the system account creation page. Are you sure you want to deactivate your account?"
-          showClose="true"
-          submitButtonLabel="Yes, continue with deactivation"
-          cancelButtonLabel="No, cancel deactivation"
-          (onSubmit)="deactivate()"
-          *ngIf="states.edit"></sam-modal>
+           type="warning"
+           title="Warning"
+           description="If you deactivate your system account it cannot be reactivated for future use and you will be immediately redirected to the system account creation page. Are you sure you want to deactivate your account?"
+           showClose="true"
+           submitButtonLabel="Yes, continue with deactivation"
+           cancelButtonLabel="No, cancel deactivation"
+           (onSubmit)="deactivate()"
+           *ngIf="states.edit"></sam-modal>

@@ -18,9 +18,9 @@
   <h4>Headquaters Office</h4>
   <label>Add up to two points of Contacts for your headquarters office.</label>
 
-  <contactInfoTable [contactsInfo]="contactsInfo" [hideContactsForm]="hideContactsForm" (actionHandler)="actionHandler($event)" #contactInfoTable></contactInfoTable>
+  <contactInfoTable [contactsInfo]="contactsInfo" [hideContactsForm]="hideContactsForm" [formErrorArr]="formErrorArr" (actionHandler)="actionHandler($event)" #contactInfoTable></contactInfoTable>
 
-  <span class='usa-input-error-message' *ngIf="contactInfoTable.review && errorExists"><sup>*</sup>At least one Point of Contact is required.</span>
+  <span class='usa-input-error-message' *ngIf="contactInfoTable.review && formErrorArr['contact']"><sup>*</sup>At least one Point of Contact is required.</span>
   <sam-button buttonText="Add Contact" (onClick)="addContact()" *ngIf="falContactInfoForm.controls.contacts.length < 2" [class.hide]="hideAddButton"></sam-button>
 
   <div formArrayName="contacts" [class.hide]="hideContactsForm">
@@ -120,7 +120,7 @@
         <sam-button buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
         <sam-button
           buttonText="Confirm"
-          (onClick)="onConfirmClick()"
+          (onClick)="onConfirmClick(i)"
           *ngIf="contactGrp.controls.contactId.value != 'na'"></sam-button>
 
       </div> <!-- End of formgroup div -->

@@ -1,7 +1,8 @@
-import { Component,Input,OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import 'rxjs/add/operator/map';
 import {FHService} from "../../../api-kit/fh/fh.service";
-import { ReplaySubject } from 'rxjs';
+import {ReplaySubject} from 'rxjs';
+import {SearchService} from "../../../api-kit/search/search.service";
 
 @Component({
   moduleId: __filename,
@@ -52,8 +53,9 @@ import { ReplaySubject } from 'rxjs';
                   <strong>Department/Ind. Agency:</strong> {{ department.name }}
                 </div>
                 <p>
-                  <a href="/search?keyword=&index=fpds&page=1&isActive=true&organizationId={{data._id}}" target="_blank">
-                    View Awards contracted by this federal organization
+                  <strong *ngIf="looking && !hasRecords">No contract data is associated to this federal organization.</strong>
+                  <a *ngIf="looking && hasRecords" href="/search?keyword=&index=fpds&page=1&isActive=true&organizationId={{data._id}}" target="_blank">
+                    View Contracts associated with this federal organization
                   </a>
                 </p>
               </div>
@@ -66,14 +68,17 @@ import { ReplaySubject } from 'rxjs';
   `
 })
 export class FHFeaturedResult implements OnInit {
-  @Input() data: any={};
-  @Input() qParams:any = {};
+  @Input() data: any = {};
+  @Input() qParams: any = {};
   public logoUrl: string;
   public logoInfo: any;
   errorOrganization: any;
+  looking: boolean;
+  hasRecords: boolean;
   department: {};
 
-  constructor(private fhService: FHService) { }
+  constructor(private fhService: FHService, private searchService: SearchService) {
+  }
 
   ngOnInit() {
     if (this.data.organizationHierarchy && this.data.organizationHierarchy.length > 1) {
@@ -86,26 +91,38 @@ export class FHFeaturedResult implements OnInit {
     }
   }
 
-  ngOnChanges(changes) {
-    if(this.data['_id']) {
-    this.callOrganizationById(this.data['_id']);
+  ngOnChanges() {
+    if (this.data['_id']) {
+      this.retrieveResults(this.data['_id']);
+      this.callOrganizationById(this.data['_id']);
     }
+  }
+
+  private retrieveResults(orgId: string) {
+    this.searchService.runSearch({
+      index: 'fpds',
+      organizationId: orgId,
+      size: 1
+    }).subscribe(data => {
+      this.looking = true;
+      this.hasRecords = data['page'] && data['page']['totalElements'];
+    });
   }
 
   private callOrganizationById(orgId: string) {
     let organizationSubject = new ReplaySubject(1);
     this.fhService.getOrganizationById(orgId, true).subscribe(organizationSubject);
     this.fhService.getOrganizationLogo(organizationSubject,
-    (logoData) => {
-      if (logoData != null) {
-        this.logoUrl = logoData.logo;
-        this.logoInfo = logoData.info;
-      } else {
+      (logoData) => {
+        if (logoData != null) {
+          this.logoUrl = logoData.logo;
+          this.logoInfo = logoData.info;
+        } else {
+          this.errorOrganization = true;
+        }
+      }, (err) => {
         this.errorOrganization = true;
-      }
-    }, (err) => {
-      this.errorOrganization = true;
-    });
+      });
   }
 
   isEmptyObject(obj) {

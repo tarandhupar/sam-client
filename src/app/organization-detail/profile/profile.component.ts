@@ -165,9 +165,9 @@ export class OrgDetailProfilePage {
         this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
         break;
       case "AGENCY": case "MAJOR COMMAND": case "SUB COMMAND":
-        this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
-        this.orgCodes.push({code:"OMB Bureau Code", value:this.getOrgFieldData(org,"ombAgencyCode")});
-        break;
+      this.orgCodes.push({code:"FPDS Code", value:this.getOrgFieldData(org,"fpdsCode")});
+      this.orgCodes.push({code:"OMB Bureau Code", value:this.getOrgFieldData(org,"ombAgencyCode")});
+      break;
       case "DEPARTMENT":
         this.orgCodes.push({code:"TAS-2 Code", value:this.getOrgFieldData(org,"tas2Code")});
         this.orgCodes.push({code:"TAS-3 Code", value:this.getOrgFieldData(org,"tas3Code")});
@@ -211,7 +211,7 @@ export class OrgDetailProfilePage {
   /**
    * Returns next layer text for button of creating next layer organization
    * @returns {string}
-     */
+   */
   getNextLayer():string{
     let res = "";
     switch (this.currentHierarchyType) {
@@ -293,5 +293,5 @@ export class OrgDetailProfilePage {
   dismissEditOrgFlashAlert(){
     this.showEditOrgFlashAlert = false;
   }
-  
+
 }

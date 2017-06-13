@@ -5,9 +5,10 @@
   <authInfoTable
     [hideAddButton]="hideAddButton"
     [displayAuthInfo]="displayAuthInfo"
+    [formErrorArr]="formErrorArr"
     (authTableActionHandler)="authActionHandler($event)" #authTable></authInfoTable>
 
-  <authSubform [hideAddButton]="hideAddButton" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
+  <authSubform [hideAddButton]="hideAddButton"  [formErrorArr]="formErrorArr" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
 
   <sam-text-area
     [control]="falAuthForm.controls['description']"

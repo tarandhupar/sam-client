@@ -157,7 +157,6 @@ export class OrgAddrFormComponent {
   }
 
   updateAddressFormField(){
-    this.orgAddrModel.country = this.cityLocationConfig.serviceOptions.country.key;
     // state and city should be updated already
     this.orgAddrModel.postalCode = this.addressForm.get("postalCode").value;
     this.orgAddrModel.street1 = this.addressForm.get("streetAddr1").value;

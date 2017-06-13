@@ -5,10 +5,10 @@
     <br />
     <br />
     <div sam-sticky limit=1200 container="entity-object-view">
-	  <a class="sam-ui dark blue button" [routerLink]="['/search']" [queryParams]="qParams">
+	  <!--<a class="sam-ui dark blue button" [routerLink]="['/search']" [queryParams]="qParams">
 		<i class="fa fa-chevron-left" aria-hidden="true"></i>
 		Back To Search
-	  </a>
+	  </a>-->
 	  <br />
 	  <br />
       <!--Logo-->
@@ -38,7 +38,7 @@
 			<div class="sam-ui padded raised segment">
 				
 				<div class="sam-ui top right attached mini label">
-					Entity
+					Registration
 				</div>
 				
 				<div class="sam-ui two column attached grid">
@@ -47,7 +47,7 @@
 							<div class="item">
 								<div class="content">
 									<div class="header">
-										DUNS
+										Unique Entity Identifier
 									</div>
 									<div class="description">
 										{{coreData.generalInfo.duns}}
@@ -65,6 +65,9 @@
 								</div>
 							</div>
 							<div class="item">
+								<div class="header">
+									Address
+								</div>
 								<entityObjectAddress [address]="coreData.mailAddress">
 								</entityObjectAddress>
 							</div>
@@ -78,7 +81,7 @@
 										Activation Date
 									</div>
 									<div class="description">
-										{{coreData.activeDate}}
+										{{coreData.activeDate | date: 'MMM dd, y' }}
 									</div>
 								</div>
 							</div>
@@ -88,7 +91,7 @@
 										Expiration Date
 									</div>
 									<div class="description">
-										{{coreData.generalInfo.expirationDate}}
+										{{coreData.generalInfo.expirationDate | date: 'MMM dd, y' }}
 									</div>
 								</div>
 							</div>
@@ -105,7 +108,7 @@
 							<div class="item">
 								<div class="content">
 									<div class="header">
-										Delinquent Federal Debt?
+										Debt Subject to Offset
 									</div>
 									<div class="description">
 										{{coreData.delinquentFedDebtFlag}}
@@ -200,13 +203,13 @@
 					<div class="sam-ui medium header">
 						Business Start Date
 						<div class="sub header">
-							{{coreData.businessStartDate}}
+							{{coreData.businessStartDate | date: 'MMM dd, y' }}
 						</div>
 					</div>
 					
 					<div class="sam-ui medium header">
 						Fiscal Year End Close Date
-						<div class="sub header">{{coreData.fiscalYearEndCloseDate}}</div>
+						<div class="sub header">{{coreData.fiscalYearEndCloseDate | date: 'MMM dd' }}</div>
 					</div>
 					
 					<div class="sam-ui medium header">
@@ -222,7 +225,7 @@
 					<div class="sam-ui medium header">
 						Corporate URL
 						<div class="sub header">
-							<a href="{{coreData.corporateURL}}">{{coreData.corporateURL}}</a>
+							<a target="_blank" href="{{coreData.corporateURL}}">{{coreData.corporateURL}}</a>
 						</div>
 					</div>
 					
@@ -236,7 +239,7 @@
 				<div class="column">
 					<div class="sam-ui medium header">
 						Initial Registration Date
-						<div class="sub header">{{coreData.registrationDate}}</div>
+						<div class="sub header">{{coreData.registrationDate | date: 'MMM dd, y' }}</div>
 					</div>
 					
 					<div class="sam-ui medium header">
@@ -246,12 +249,12 @@
 					
 					<div class="sam-ui medium header">
 						Activation Date
-						<div class="sub header">{{coreData.activeDate}}</div>
+						<div class="sub header">{{coreData.activeDate | date: 'MMM dd, y' }}</div>
 					</div>
 					
 					<div class="sam-ui medium header">
 						Expiration Date
-						<div class="sub header">{{coreData.generalInfo.expirationDate}}</div>
+						<div class="sub header">{{coreData.generalInfo.expirationDate | date: 'MMM dd, y' }}</div>
 					</div>		
 				</div>
 					
@@ -288,90 +291,18 @@
 					{{coreData.cageCode}}
 				</div>
 			</div>
-			<div class="sam-ui hidden divider"></div>
-			<div class="sam-ui two column grid">
-				<div class="column">
-					<h4 class="sam-ui dividing header">Most Recent Predecessor</h4>
-					<div class="sam-ui medium header">
-						CAGE/NCAGE Code
-						<div class="sub header">
-							{{coreData.recentPredecessorCageCode}}
-						</div>
-					</div>
-					<div class="sam-ui medium header">
-						Legal Business Name
-						<div class="sub header">
-							{{coreData.recentPredecessorBusName}}
-						</div>
-					</div>
-				</div>
-				<div class="column">
-					<h4 class="sam-ui dividing header">Immediate Owner</h4>
-					<div class="sam-ui medium header">
-						CAGE/NCAGE Code
-						<div class="sub header">
-							{{coreData.immedOwnerPredecessorCageCode}}
-						</div>
-					</div>
-					<div class="sam-ui medium header">
-						Legal Business Name
-						<div class="sub header">
-							{{coreData.immedOwnerRecentPredecessorBusName}}
-						</div>
-					</div>
+			
+			<div class="sam-ui medium header">
+				Ownership Details
+				<div class="sub header">
+					You can find data (Legal Business Name and CAGE Code) for the Immediate and Highest-Level Owners in Reps & Certs. Refer to FAR 52.204-17 or FAR 52.212-3(p) to review ownership details reported by the entity.
 				</div>
 			</div>
-			<div class="sam-ui hidden divider"></div>
-			<div class="sam-ui two column grid">
-				<div class="column">
-					<h4 class="sam-ui dividing header">Second Most Recent Predecessor</h4>
-					
-					<div class="sam-ui medium header">
-						CAGE/NCAGE Code
-						<div class="sub header">
-							{{coreData.secondRecentPredecessorCageCode}}
-						</div>
-					</div>
-					<div class="sam-ui medium header">
-						Legal Business Name
-						<div class="sub header">
-							{{coreData.secondRecentPredecessorBusName}}
-						</div>
-					</div>	
-				</div>
-				<div class="column">
-					<h4 class="sam-ui dividing header">Highest Level Owner</h4>
-					
-					<div class="sam-ui medium header">
-						CAGE/NCAGE Code
-						<div class="sub header">
-							{{coreData.highestOwnerPredecessorCageCode}}
-						</div>
-					</div>
-					<div class="sam-ui medium header">
-						Legal Business Name
-						<div class="sub header">
-							{{coreData.highestOwnerRecentPredecessorBusName}}
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="sam-ui hidden divider"></div>
-			<div class="sam-ui two column grid">
-				<div class="column">
-					<h4 class="sam-ui dividing header">Third Most Recent Predecessor</h4>
-					<div class="sam-ui medium header">
-						CAGE/NCAGE Code
-						<div class="sub header">
-							{{coreData.thirdRecentPredecessorCageCode}}
-						</div>
-					</div>
-					<div class="sam-ui medium header">
-						Legal Business Name
-						<div class="sub header">
-							{{coreData.thirdRecentPredecessorBusName}}
-						</div>
-					</div>
+			
+			<div class="sam-ui medium header">
+				Predecessor Details
+				<div class="sub header">
+					You can find data (Legal Business Name and CAGE Code) for an entity’s predecessors in Reps & Certs. Refer to FAR 52.204-20 or FAR 52.212-3(r) to review predecessor details reported by the entity.
 				</div>
 			</div>
 			
@@ -439,29 +370,29 @@
 							<th scope="col">Description</th>
 						</tr>
 					</thead>
-					<tr *ngFor="let naics of assertions.naicsList">
+					<tr *ngFor="let naics of naicsDetails.details">
 						<td class="center aligned">
-							<i *ngIf="naics==assertions.primaryNaics" class="fa fa-check fa-lg"></i>
+							<i *ngIf="naics.naicsCode==assertions.primaryNaics" class="fa fa-check fa-lg"></i>
 						</td>
-						<td>{{naics}}</td>
-						<td>Currently not available</td>
+						<td>{{naics.naicsCode}}</td>
+						<td>{{naics.description}}</td>
 					</tr>
 				</table>
 			</ng-container>
 			
 			<!-- Table PSC Codes Selected -->
 			<ng-container *ngIf="assertions.pscList">
-				<div class="sam-ui medium header">PSC Codes Selected</div>
+				<div class="sam-ui medium header">Product Service Codes Selected</div>
 				<table class="sam-ui lightest blue celled table">
 					<thead>
 						<tr>
-							<th scope="col">PSC Code</th>
+							<th scope="col">Product Service Code</th>
 							<th scope="col">Description</th>
 						</tr>
 					</thead>
-					<tr *ngFor="let pscCode of assertions.pscList">
-						<td>{{pscCode}}</td>
-						<td>Currently not available</td>
+					<tr *ngFor="let pscCode of pscDetails.details">
+						<td>{{pscCode.pscCode}}</td>
+						<td>{{pscCode.description}}</td>
 					</tr>
 				</table>
 			</ng-container>
@@ -478,7 +409,7 @@
 			<h3 class="sam-ui dividing header">Disaster Response Information</h3>
 			
 			<div class="sam-ui medium header">
-				Included in Registry?
+				Included in Disaster Response Registry?
 				<div class="sub header">{{assertions.registryFlag}}</div>
 			</div> 
 			
@@ -556,6 +487,9 @@
 						<h3 class="sam-ui dividing header">Mandatory Points of Contacts</h3>
 						<ng-container *ngFor="let poc of mandatoryPOCs">
 							<entityObjectPOC [poc]="poc"></entityObjectPOC>
+							<div>
+								<strong>Address:</strong>
+							</div>
 							<entityObjectAddress *ngIf="poc.pocAddress" [address]="poc.pocAddress"></entityObjectAddress>
 							<div class="sam-ui hidden divider"></div>
 						</ng-container>
@@ -567,6 +501,9 @@
 						<h3 class="sam-ui dividing header">Optional Points of Contacts</h3>
 						<ng-container *ngFor="let poc of optionalPOCs">
 							<entityObjectPOC [poc]="poc"></entityObjectPOC>
+								<div>
+									<strong>Address:</strong>
+								</div>
 							<entityObjectAddress *ngIf="poc.pocAddress" [address]="poc.pocAddress"></entityObjectAddress>
 							<div class="sam-ui hidden divider"></div>
 						</ng-container>
@@ -603,10 +540,10 @@
 							<tr *ngFor="let exclusion of exclusionsList">
 								<td>{{exclusion.excludedBy}}</td>
 								<td>{{exclusion.classification}}</td>
-								<td>{{exclusion.activeDate}}</td>
-								<td>{{exclusion.terminationDate}}</td>
+								<td>{{exclusion.activeDate | date: 'MMM dd, y' }}</td>
+								<td>{{exclusion.terminationDate != 'Indefinite' ? (exclusion.terminationDate | date: 'MMM dd, y') : exclusion.terminationDate}}</td>
 								<td>
-									<a [routerLink]="['/exclusions', exclusion.exclusionDetailLink]" [queryParams]="qParams">
+									<a [routerLink]="['/exclusions', exclusion.exclusionDetailLink, {link: 'er'}]" [queryParams]="qParams">
 										View
 										<i class="fa fa-eye"></i> 
 									</a>

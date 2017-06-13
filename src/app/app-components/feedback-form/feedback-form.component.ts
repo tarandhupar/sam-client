@@ -358,7 +358,8 @@ export class SamFeedbackComponent {
         this.resetAll();
       },
       error => {
-        this.showFooter();
+        //this.showFooter();
+        console.error('Unable to initialize feedback form');
       }
     );
 

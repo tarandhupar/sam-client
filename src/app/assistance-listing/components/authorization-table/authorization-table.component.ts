@@ -9,6 +9,7 @@ import { Component, Input, Output, EventEmitter, ViewChild } from '@angular/core
 export class FALAuthInfoTableComponent{
   @Input() displayAuthInfo: any = [];
   @Input() hideAddButton: boolean;
+  @Input() formErrorArr: any = {};
   @Output() public authTableActionHandler = new EventEmitter();
   @ViewChild('deleteModal') deleteModal;
   removeIndex: number;

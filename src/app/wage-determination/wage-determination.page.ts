@@ -27,9 +27,10 @@ export class WageDeterminationPage implements OnInit {
   currentUrl: string;
   dictionaries: any;
   services: string;
+  servicesArray:any = [];
   constructionTypes: string;
   locationDescription: String = null;
-  public locations: any;
+  locations: any[];
   processedHistory: any;
   longProcessedHistory: any;
   shortProcessedHistory: any;
@@ -68,8 +69,6 @@ export class WageDeterminationPage implements OnInit {
     });
   }
 
-
-
   ngOnInit() {
     // Using document.location.href instead of
     // location.path because of ie9 bug
@@ -93,6 +92,10 @@ export class WageDeterminationPage implements OnInit {
       this.revisionNumber = params['revisionnumber'];
 
       this.revisionMessage = false;
+      this.locations = null;
+      this.locationDescription = null;
+      this.services = null;
+      this.servicesArray = [];
       return this.wgService.getWageDeterminationByReferenceNumberAndRevisionNumber(this.referenceNumber, this.revisionNumber);
     });
 
@@ -153,46 +156,49 @@ export class WageDeterminationPage implements OnInit {
   }
 
   private getLocations(combinedAPI: Observable<any>) {
-    combinedAPI.subscribe(([wageDetermination, dictionaries]) => {
-      /** Check that locations exist **/
-      if (!wageDetermination.location || typeof wageDetermination.location === 'undefined') {
-        this.locations = null;
-        return;
-      }
-
-      if(wageDetermination.location.description != 'na'){
-        this.locationDescription = wageDetermination.location.description;
-        return;
-      }
-
-      if(typeof wageDetermination.location !== 'undefined' && typeof wageDetermination.location.mapping !== 'undefined'){
-        /** Process each location data into a usable state **/
-        for (let eachLocation of wageDetermination.location.mapping) {
-          /** Process States **/
-          // given a state code, look up the dictionary entry for that state (returns array of matches)
-          let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
-          let stateDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdStates' }).elements;
-          let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
-
-          // if a matching state was found, display its name otherwise display a warning message
-          eachLocation.stateString = (resultStates.length > 0) ? resultStates[0].value : 'Unknown state';
-
-          /** Process Counties **/
-          // if statewide flag is set AND counties are listed, those counties are exceptions within that state
-          if (eachLocation.statewideFlag && eachLocation.counties == null) {
-            // no exceptions so just display 'Statewide'
-            eachLocation.countiesString = 'Statewide';
-          } else if (eachLocation.counties != null) {
-            // if there are any exceptions, display 'All counties except' before the list of counties
-            let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
-            let countiesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdCounties' }).elements;
-            eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
-          }
+    combinedAPI.subscribe(([wageDetermination, dictionaries, routeParam]) => {
+      //combileLatest has a weird behavior, fix for it
+      if (routeParam.revisionnumber == wageDetermination.revisionNumber) {
+        /** Check that locations exist **/
+        if (!wageDetermination.location || typeof wageDetermination.location === 'undefined') {
+          this.locations = null;
+          return;
         }
 
-        this.locations = wageDetermination.location.mapping;
+        if(wageDetermination.location.description != 'na'){
+          this.locationDescription = wageDetermination.location.description;
+          return;
+        }
+
+        if(typeof wageDetermination.location !== 'undefined' && typeof wageDetermination.location.mapping !== 'undefined'){
+          /** Process each location data into a usable state **/
+          for (let eachLocation of wageDetermination.location.mapping) {
+            /** Process States **/
+            // given a state code, look up the dictionary entry for that state (returns array of matches)
+            let filterMultiArrayObjectPipe = new FilterMultiArrayObjectPipe();
+            let stateDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdStates' }).elements;
+            let resultStates = filterMultiArrayObjectPipe.transform([eachLocation.state], stateDictionary, 'elementId', false, '');
+
+            // if a matching state was found, display its name otherwise display a warning message
+            eachLocation.stateString = (resultStates.length > 0) ? resultStates[0].value : 'Unknown state';
+
+            /** Process Counties **/
+            // if statewide flag is set AND counties are listed, those counties are exceptions within that state
+            if (eachLocation.statewideFlag && eachLocation.counties == null) {
+              // no exceptions so just display 'Statewide'
+              eachLocation.countiesString = 'Statewide';
+            } else if (eachLocation.counties != null) {
+              // if there are any exceptions, display 'All counties except' before the list of counties
+              let countiesPrefix = eachLocation.statewideFlag ? 'All Counties except: ' : '';
+              let countiesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'wdCounties' }).elements;
+              eachLocation.countiesString = countiesPrefix + this.getCounties(eachLocation.counties, countiesDictionary);
+            }
+          }
+
+          this.locations = wageDetermination.location.mapping;
+        }
       }
-    })
+    });
   }
 
   /** Takes a list of county ids and processes them into a comma separated list of county names **/
@@ -218,21 +224,29 @@ export class WageDeterminationPage implements OnInit {
   }
 
   private getServices(combinedAPI: Observable<any>) {
-    combinedAPI.subscribe(([wageDeterminaton, dictionaries]) => {
-      if (wageDeterminaton.services != null) {
-        let servicesString = "";
-        for (let element of wageDeterminaton.services) {
-          let servicesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'scaServices' }).elements;
-          let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], servicesDictionary, 'elementId', false, "");
-          let services = (result instanceof Array && result.length > 0) ? result[0].value : [];
-          servicesString = servicesString.concat(services + ", ");
+    combinedAPI.subscribe(([wageDetermination, dictionaries, routeParam]) => {
+      //combileLatest has a weird behavior, fix for it
+      if (routeParam.revisionnumber == wageDetermination.revisionNumber) {
+        if (wageDetermination.services != null) {
+          let servicesString = "";
+
+          for (let element of wageDetermination.services) {
+            let serviceArray = [];
+            let servicesDictionary = _.find(dictionaries._embedded['dictionaries'], { id: 'scaServices' }).elements;
+            let result = this.FilterMultiArrayObjectPipe.transform([element.toString()], servicesDictionary, 'elementId', false, "");
+            let serviceValue = (result instanceof Array && result.length > 0) ? result[0].value : [];
+            let serviceDesc = (result instanceof Array && result.length > 0) ? result[0].description : [];
+            serviceArray.push(serviceValue, serviceDesc);
+            servicesString = servicesString.concat(serviceValue + ", ");
+            this.servicesArray.push(serviceArray);
+          }
+          servicesString = servicesString.substring(0, servicesString.length - 2);
+          this.services = servicesString;
+        } else {
+          this.services = null;
         }
-        servicesString = servicesString.substring(0, servicesString.length - 2);
-        this.services = servicesString;
-      } else {
-        this.services = null;
       }
-    })
+    });
   }
 
   private getConstructionTypes(wdAPI) {

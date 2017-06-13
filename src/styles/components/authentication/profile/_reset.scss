@@ -1,8 +1,4 @@
 .usa-profile-password {
-  .usa-alert-static {
-    top: 16px;
-  }
-
   .usa-button-controls {
     position: relative;
 
@@ -10,11 +6,11 @@
       margin-top: 0px;
     }
 
-    .usa-alert {
+    sam-alert {
       position: absolute;
-      margin-top: 0px;
       top: 0px;
-      left: 160px;
+      left: 50%;
+      margin-left: (160px / 2);
     }
   }
 }

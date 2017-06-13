@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormBuilder } from "@angular/forms";
 import { FALFormService } from "../../../fal-form.service";
 import { FALFormViewModel } from "../../../fal-form.model";
@@ -10,7 +10,8 @@ import {
   AccountIdentificationConfig,
   AccountIdentificationModel
 } from "../../../../components/account-identification/account-identification.component";
-import {TAFSConfig, TAFSModel} from "../../../../components/tafs/tafs.component";
+import { TAFSConfig, TAFSModel } from "../../../../components/tafs/tafs.component";
+import { FieldErrorList, FieldError } from "../../../fal-form.component";
 
 @Component({
   providers: [FALFormService],
@@ -19,7 +20,10 @@ import {TAFSConfig, TAFSModel} from "../../../../components/tafs/tafs.component"
 })
 export class FALFormFinancialInfoOtherComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
+  @Output() public onError = new EventEmitter();
+
   public otherFinancialInfoForm: FormGroup;
+  private formErrors = new Set();
 
   public accomplishmentsConfig: FiscalYearTableConfig = {
     name: 'program-accomplishments',
@@ -83,7 +87,10 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
       'tafs': null
     });
 
-    this.otherFinancialInfoForm.valueChanges.subscribe(data => this.updateViewModel(data));
+    this.otherFinancialInfoForm.valueChanges.subscribe(data => {
+      this.updateViewModel(data);
+      this.collectErrors();
+    });
   }
 
   private loadForm() {
@@ -192,5 +199,91 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
       this.otherFinancialInfoForm.controls[control].markAsDirty();
       this.otherFinancialInfoForm.controls[control].updateValueAndValidity();
     }
+
+    this.collectErrors();
+  }
+
+  private collectErrors() {
+    let size = this.formErrors.size;
+
+    for(let key in this.otherFinancialInfoForm.controls) {
+      if(this.otherFinancialInfoForm.controls[key].errors && this.otherFinancialInfoForm.controls[key].dirty) {
+        this.formErrors.add(key);
+      } else {
+        this.formErrors.delete(key);
+      }
+    }
+
+    if(this.formErrors.size !== size) {
+      this.emitEvent();
+    }
+  }
+
+  // private collectErrors() {
+  //   let pageErrors: FieldErrorList = {
+  //     id: '',
+  //     label: 'Other Financial Info',
+  //     errors: []
+  //   };
+  //
+  //   let tableErrors: FieldErrorList = {
+  //     id: '',
+  //     label: 'TAFS Code',
+  //     errors: []
+  //   };
+  //
+  //   let tafsControl = this.otherFinancialInfoForm.get('tafs').value;
+  //
+  //   for(let i = 0; i < tafsControl.tafs.length; i++) {
+  //     let tafs = tafsControl.tafs[i];
+  //     if(tafs.departmentCode == null || tafs.accountCode == null) {
+  //       let rowErrors: FieldErrorList = {
+  //         id: '',
+  //         label: 'Row ' + i,
+  //         errors: []
+  //       };
+  //
+  //       if(tafs.departmentCode == null) {
+  //         let departmentCodeError: FieldError = {
+  //           id: '',
+  //           label: 'Department Code',
+  //           errors: ['A department code is required']
+  //         };
+  //
+  //         rowErrors.errors.push(departmentCodeError);
+  //       }
+  //
+  //       if(tafs.accountCode == null) {
+  //         let accountCodeError: FieldError = {
+  //           id: '',
+  //           label: 'Account Code',
+  //           errors: ['An account code is required']
+  //         };
+  //
+  //         rowErrors.errors.push(accountCodeError);
+  //       }
+  //
+  //       if(rowErrors.errors.length > 0) {
+  //         tableErrors.errors.push(rowErrors);
+  //       }
+  //     }
+  //   }
+  //
+  //   if(tableErrors.errors.length > 0) {
+  //     pageErrors.errors.push(tableErrors);
+  //   }
+  //
+  //   // add errors for other components on page
+  //
+  //   if(pageErrors.errors.length > 0) {
+  //     // emit pageErrors to fal-form-component
+  //   }
+  // }
+
+  private emitEvent() {
+    this.onError.emit({
+      formErrorArr: Array.from(this.formErrors.values()),
+      section: 'financial-information-other'
+    });
   }
 }

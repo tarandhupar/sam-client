@@ -17,7 +17,7 @@
   <tbody>
   <tr *ngFor="let contact of contactsInfo; let i=index">
     <td>
-      <span class='usa-input-error-message' *ngIf="review && contact.errorExists"><sup>*</sup>This contact information has some errors.</span>
+      <span class='usa-input-error-message' *ngIf="review && formErrorArr[contact.contactId]"><sup>*</sup>This contact information has some errors.</span>
       {{contact.title}} {{contact.fullName}} <br/>
       {{contact.streetAddress}} <br/>
       {{contact.city}} {{contact.state}} {{contact.zip}} <br/>

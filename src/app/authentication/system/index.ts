@@ -1,3 +1,5 @@
+export { SystemGuard } from './system.guard';
+
 export { SystemComponent } from './system.component';
 
 export { SystemProfileComponent } from './profile/system-profile.component';

@@ -87,7 +87,7 @@ export class TransitionToSamComponent {
       <div class="sam-ui bulleted list">
         <div class="item">
           Users who are signed in can migrate their existing roles from each 
-          legacy system for assistance listings, contract opportunities, and contract awards. 
+          legacy system for assistance listings, contract opportunities, and contract awards.
         </div>
         <div class="item">
           View federal assistance, contract opportunity, and contract award role 
@@ -131,10 +131,10 @@ export class TransitionToSamComponent {
       <h3>What can I do now?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          <p>Locations, PSC, and NAICS reference data API services.</p>
+          Locations, PSC, and NAICS reference data API services.
         </div>
         <div class="item">
-          <p>Multi-factor authentication.</p>
+          Multi-factor authentication.
         </div>
       </div>
     `,
@@ -142,19 +142,19 @@ export class TransitionToSamComponent {
       <h3>What's next?</h3>
       <div class="sam-ui bulleted list">
         <div class="item">
-          <p>Additional reference data services.</p> 
+          Additional reference data services. 
         </div>
         <div class="item">
-          <p>Awards extracts and basic API functionality.</p>  
+          Awards extracts and basic API functionality.  
         </div>
         <div class="item">
-          <p>FAL extracts.</p>  
+          FAL extracts.  
         </div>
         <div class="item">
-          <p>FH interfaces.</p>  
+          FH interfaces. 
         </div>
         <div class="item">
-          <p>WS IAM conversion.</p>
+          WS IAM conversion.
         </div>
       </div>
     `

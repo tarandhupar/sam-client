@@ -60,10 +60,14 @@ export class SystemMigrationsComponent {
         if(accounts.length) {
           this.systemAccountID = accounts[0]._id;
         } else {
-          this.router.navigate(['profile']);
+          this.router.navigate(['/system/profile']);
         }
       }, () => {
-        this.router.navigate(['profile']);
+        if(this.api.iam.isDebug()) {
+          this.systemAccountID = 'John.Doe@gmail.com';
+        } else {
+          this.router.navigate(['/system/profile']);
+        }
       });
 
       for(intRole = 0; intRole < user.gsaRAC.length; intRole++) {

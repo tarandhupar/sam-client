@@ -24,6 +24,8 @@ import {
   FAlProgramServiceDirective,
   FALProgramAutoCompleteWrapper
 } from "../../../api-kit/autoCompleteWrapper/falAutoCompleteWrapper.service";
+
+import { FALSubmitComponent } from "./workflow/submit/fal-form-submit.component";
 //import {FALContactInfoTableComponent} from "../components/contact-information-table/contact-information-table.component";
 
 @NgModule({
@@ -49,7 +51,8 @@ import {
     FALFormCriteriaInfoComponent,
     FALFormComplianceRequirementsComponent,
     FAlProgramServiceDirective,
-    FALAuthorizationsComponent
+    FALAuthorizationsComponent,
+    FALSubmitComponent
   ],
   providers: [
     FALFormResolver,

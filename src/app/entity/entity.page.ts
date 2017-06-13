@@ -8,6 +8,7 @@ import { CapitalizePipe } from "../app-pipes/capitalize.pipe";
 import { SidenavService } from 'sam-ui-kit/components/sidenav/services/sidenav.service';
 import { SidenavHelper } from "../app-utils/sidenav-helper";
 import { BackToSearch } from "../app-utils/back-to-search-helper";
+import { LocationService } from 'api-kit/location/location.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -39,7 +40,14 @@ export class EntityPage implements OnInit, OnDestroy {
     "label": "Entity",
     "children": []
   };
+  naicsDetails = {
+    details: [],
+  };
+  pscDetails = {
+    details: [],
+  };
   qParams:any = {};
+  error;
 
   constructor(
     private activatedRoute:ActivatedRoute,
@@ -49,13 +57,14 @@ export class EntityPage implements OnInit, OnDestroy {
 	private fhService: FHService,
 	private sidenavHelper: SidenavHelper,
 	private sidenavService: SidenavService,
-	private backToSearch: BackToSearch) {}
+	private backToSearch: BackToSearch,
+	private locationService: LocationService) {}
 
   ngOnInit() {
     this.currentUrl = this.location.path();
     this.loadEntityData();
 	this.sidenavService.updateData(this.selectedPage, 0);
-	this.qParams = this.backToSearch.setupQS(false);
+	this.qParams = this.backToSearch.setqParams();
   }
 
    private loadEntityData() {
@@ -73,6 +82,12 @@ export class EntityPage implements OnInit, OnDestroy {
       this.mandatoryPOCs = jsonData.entityInfo.mandatoryPOCs;
   	  this.optionalPOCs = jsonData.entityInfo.optionalPOCs;
 	  this.exclusionsList = jsonData.entityInfo.exclusionsList;
+	  if(jsonData.entityInfo.assertions.naicsList != null){
+		this.getNaicsDescription(jsonData.entityInfo.assertions.naicsList);
+	  }
+	  if(jsonData.entityInfo.assertions.pscList != null){
+		this.getPscDescription(jsonData.entityInfo.assertions.pscList);
+	  }
 	  this.fhService.getOrganizationLogo(apiSubject,
         (logoData) => {
           if (logoData != null) {
@@ -125,6 +140,30 @@ export class EntityPage implements OnInit, OnDestroy {
   selectedItem(item){
     this.selectedPage = this.sidenavService.getData()[0];
   }
+  
+  getNaicsDescription(naicsList){
+	naicsList.forEach(code => {
+		this.locationService.getNaicsDetails('2017', code).subscribe(
+		  res => {
+			  this.naicsDetails.details.push({naicsCode: res._embedded.nAICSList[0].naicsCode, description: res._embedded.nAICSList[0].naicsTitle});
+		  },
+		  error => {
+			this.error = error;
+		  });
+	  });
+	}
+	
+	getPscDescription(pscList){
+	pscList.forEach(code => {
+		this.locationService.getPSCDetails(code).subscribe(
+		  res => {
+			  this.pscDetails.details.push({pscCode: res._embedded.productServiceCodeList[0].pscCode, description: res._embedded.productServiceCodeList[0].pscName});
+		  },
+		  error => {
+			this.error = error;
+		  });
+	  });
+	}
 
   ngOnDestroy() {
     this.subscription.unsubscribe();

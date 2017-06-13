@@ -1,9 +1,9 @@
-<sam-alert type="info" class="usa-alert-static" title="Migrate Your Roles">
+<sam-alert type="info" class="usa-alert-main" title="Migrate Your Roles">
   If you have a user account at any of the <a routerLink="/profile/migrations" fragment="legacy-sites">websites</a> that are moving to the new SAM.gov,
   you may migrate your roles and keep your same permissions. <a routerLink="/profile/migrations" fragment="top">Begin Now</a>.
 </sam-alert>
 
-<h2 [innerText]="store.title"></h2>
+<h2 [innerHTML]="store.title"></h2>
 <div>
   <form *ngIf="detailsForm" [formGroup]="detailsForm">
     <!--============================-->
@@ -42,7 +42,14 @@
         </li>
       </ul>
 
-      <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('identity')"></sam-button>
+      <div class="usa-button-controls">
+        <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('identity')"></sam-button>
+        <sam-alert [type]="alerts.identity.type"
+                   [title]="alerts.identity.message"
+                   [showClose]="true"
+                   [hidden]="!alerts.identity.show"
+                   (dismiss)="dismiss('identity')"></sam-alert>
+      </div>
     </section>
     <!--============================-->
     <!--=== Business Information ===-->
@@ -55,19 +62,19 @@
 
       <div class="usa-form-group" *ngIf="states.isGov">
         <label>Department:</label>
-        <div class="usa-form-control" [innerText]="department"></div>
+        <div class="usa-form-control" [innerText]="hierarchy.department"></div>
       </div>
       <div class="usa-form-group" *ngIf="states.isGov">
         <label>Agency:</label>
-        <div class="usa-form-control" [innerText]="agency"></div>
+        <div class="usa-form-control" [innerText]="hierarchy.agency"></div>
       </div>
       <div class="usa-form-group" *ngIf="states.isGov">
         <label>Office:</label>
-        <div class="usa-form-control" [innerText]="office"></div>
+        <div class="usa-form-control" [innerText]="hierarchy.office"></div>
       </div>
       <div class="usa-form-group" *ngIf="states.isGov">
         <label>Activity Access Code:</label>
-        <div class="usa-form-control" [innerText]="aac"></div>
+        <div class="usa-form-control" [innerText]="hierarchy.aac"></div>
       </div>
 
       <div class="usa-form-group">
@@ -76,21 +83,28 @@
       </div>
 
       <sam-agency-picker *ngIf="states.isGov"
-                    class="usa-form-editable"
-                    [advancedMode]="true"
-                    [multimode]="false"
-                    [orgRoot]="user.department"
-                    [(orgId)]="user.orgID"
-                    [initial]="[user.orgID]"
-                    [label]="'Select the office you work for:'"
-                    (department)="setDepartment($event)"
-                    (organization)="setOrganization($event)"
-                    #agencyPicker>
+                         class="usa-form-editable"
+                         [advancedMode]="true"
+                         [multimode]="false"
+                         [orgRoot]="user.departmentID"
+                         [orgId]="detailsForm.controls.officeID.value"
+                         [initial]="[detailsForm.controls.officeID.value]"
+                         [label]="'Select the office you work for:'"
+                         (orgFullPath)="setHierarchy($event)"
+                         (organization)="setAAC($event)"
+                         #agencyPicker>
       </sam-agency-picker>
 
       <sam-phone-entry class="usa-form-editable" [model]="user.workPhone" [numbersOnly]="true" (emitter)="updatePhoneNumber($event)" label="Business Phone"></sam-phone-entry>
 
-      <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('business')"></sam-button>
+      <div class="usa-button-controls">
+        <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('business')"></sam-button>
+        <sam-alert [type]="alerts.business.type"
+                   [title]="alerts.business.message"
+                   [showClose]="true"
+                   [hidden]="!alerts.business.show"
+                   (dismiss)="dismiss('business')"></sam-alert>
+      </div>
     </section>
     <!--==========================-->
     <!--=== Security Questions ===-->
@@ -113,7 +127,9 @@
                        label="Question {{ $index + 1 }}"></sam-kba-entry>
       </div>
 
-      <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('kba')"></sam-button>
+      <div class="usa-button-controls">
+        <sam-button [buttonType]="(states.loading ? 'disabled' : 'default')" buttonClass="usa-save" buttonText="Save" (onClick)="save('kba')"></sam-button>
+      </div>
     </section>
     <section>
       <h3>Deactivate Account</h3>
@@ -121,7 +137,9 @@
         Once you deactivate your account, you will not be able to recover any of your account information or permissions. Your account will
         be permanently inaccessible and you will need to re-register to access SAM.gov.
       </div>
-      <sam-button [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></sam-button>
+      <div class="usa-button-controls">
+        <sam-button [buttonType]="(states.loading ? 'disabled' : 'secondary')" buttonText="Deactivate Account" (onClick)="confirmDeactivation()"></sam-button>
+      </div>
     </section>
   </form>
 </div>
@@ -133,7 +151,6 @@
           submitButtonLabel="Yes, deactivate my account"
           cancelButtonLabel="No, cancel account deactivation"
           (onSubmit)="reconfirmDeactivation()"></sam-modal>
-
 <sam-modal #reconfirmModal
           type="warning"
           title="Warning"

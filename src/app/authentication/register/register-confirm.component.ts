@@ -15,11 +15,9 @@ export class RegisterConfirmComponent {
     alert: {
       show: false,
       type: 'success',
-      title: '',
-      description: ''
-    },
-
-    error: ''
+      title: 'Email Resent!',
+      description: 'Please check your inbox. The confirmation link will remain valid for 48 hours.'
+    }
   };
 
   constructor(private api: IAMService) {}

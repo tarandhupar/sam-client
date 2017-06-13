@@ -24,10 +24,16 @@
   }
 }
 
-sam-label-wrapper,sam-fieldset-wrapper{
+sam-label-wrapper{
+  .usa-form-hint{
+    max-width: 46rem;
+    display: block;
+  }
+
   legend{
     font-size: $medium;
   }
+
   .hint-toggle{
     .usa-form-hint{
       height:3em;
@@ -36,7 +42,9 @@ sam-label-wrapper,sam-fieldset-wrapper{
     }
   }
   .usa-form-hint-showmore-toggler{
+    display:block;
     text-align:right;
+    max-width: 46rem;
     a{
       &:hover{
         cursor:pointer;

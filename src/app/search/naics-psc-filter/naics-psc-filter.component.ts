@@ -30,6 +30,8 @@ export class SamNaicsPscFilter {
   constructor(){}
 
   ngOnChanges() {
+    this.listDisplay.selectedItems=[];
+
     if(this.selectModel1 !== '') {
       let selectArray = this.selectModel1.split(",");
       this.populateSelectedList(selectArray, this.options1);

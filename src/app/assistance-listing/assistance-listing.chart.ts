@@ -540,17 +540,22 @@ export class FinancialObligationChart implements OnChanges {
 
     // Find all available years
     this.financialData.map(function(item){
-      for(let value of item.values){
-        allYears.add(value.year);
+      if(item.values) {
+        for (let value of item.values) {
+          allYears.add(value.year);
+        }
       }
     });
 
     // If a year its missing
     this.financialData.map(function(item){
       existingYears = [];
-      for(let value of item.values){
-        existingYears.push(value.year);
+      if(item.values) {
+        for (let value of item.values) {
+          existingYears.push(value.year);
+        }
       }
+
       if(existingYears.length < numberOfYears){
         let allYearsFound = allYears.values().map(item => +item);
         missingYears = _.difference(allYearsFound, existingYears);
@@ -561,37 +566,39 @@ export class FinancialObligationChart implements OnChanges {
     });
 
     this.financialData.map(function (item) {
-      for (let value of item.values) {
-        let year = value.year;
-        let obligation = "No Obligation";
-        if (item.assistanceType && item.assistanceType.length > 0) {
-          obligation = getAssistanceType(item.assistanceType);
-        } else if(item.isRecoveryAct != true) {
+      if(item.values){
+        for (let value of item.values) {
+          let year = value.year;
+          let obligation = "No Obligation";
+          if (item.assistanceType && item.assistanceType.length > 0) {
+            obligation = getAssistanceType(item.assistanceType);
+          } else if (item.isRecoveryAct != true) {
             obligation = "Salary or Expense";
+          }
+  //        } else if(item.questions) {
+  //          for (let question of item.questions) {
+  //            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
+  //              obligation = "Salary or Expense";
+  //              break;
+  //            }
+  //          }
+  //        }
+
+          obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
+
+          let financialItem = {
+            "obligation": obligation,
+            "info": item.description ? item.description || "" : "",
+            "year": +year,
+            "amount": value["actual"] || value["estimate"] || 0,
+            "estimate": !value["actual"],
+            "ena": value.flag == "ena" || value.flag == "na" ? true : false,
+            "nsi": value.flag == "nsi" || value.flag == "no" ? true : false,
+            "empty": value.flag == "empty" ? true : false,
+            "explanation": value.explanation || ""
+          };
+          formattedFinancialData.push(financialItem);
         }
-//        } else if(item.questions) {
-//          for (let question of item.questions) {
-//            if (question.questionCode === "salary_or_expense" && question.flag === "yes") {
-//              obligation = "Salary or Expense";
-//              break;
-//            }
-//          }
-//        }
-
-        obligations.set(obligation, obligations.get(obligation) ? obligations.get(obligation) + 1 : 1);
-
-        let financialItem = {
-          "obligation": obligation,
-          "info": item.description ? item.description || "" : "",
-          "year": +year,
-          "amount": value["actual"] || value["estimate"] || 0,
-          "estimate": !value["actual"],
-          "ena": value.flag == "ena" || value.flag == "na" ? true : false,
-          "nsi": value.flag == "nsi" || value.flag == "no" ? true : false,
-          "empty": value.flag == "empty" ? true : false,
-          "explanation": value.explanation || ""
-        };
-        formattedFinancialData.push(financialItem);
       }
     });
 

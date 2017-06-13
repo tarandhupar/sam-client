@@ -187,11 +187,13 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/parent-orgs.scss';
 @import 'components/card';
 @import 'components/date-entry';
+@import 'components/date-range';
 @import 'components/download';
 @import 'components/label-wrapper';
 @import 'components/accordion';
 @import 'components/alert';
 @import 'components/authentication';
+@import 'components/users/index';
 @import 'components/collapsible';
 @import 'components/list-input';
 @import 'components/footer';
@@ -218,14 +220,19 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/well';
 @import 'components/autocomplete';
 @import 'components/autocomplete-dropdown';
+@import 'components/autocomplete-multiselect';
 @import 'components/organization-profile';
 @import 'components/role-management/role-managment';
 @import 'components/fal-table';
 @import 'components/address-form';
 @import 'components/workspace/_workspace';
+@import 'components/bread-crumbs';
 @import 'components/data-service/data-service';
 @import 'components/_status_banner';
 @import 'components/fh/fh';
+@import 'components/title-subtitle';
+
+@import 'templates/workspace';
 
 @import 'sam-ui/pages/awards';
 @import 'sam-ui/pages/entity-object-view';
@@ -245,9 +252,6 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'sam-ui/pages/help-awards';
 @import 'sam-ui/pages/users-directory';
 @import 'sam-ui/pages/ui-kit-demo';
-@import 'sam-ui/pages/access';
-@import 'sam-ui/pages/grant-access';
-@import 'sam-ui/pages/public-profile';
 @import 'sam-ui/pages/wage-determination';
 @import 'sam-ui/pages/assistance-listing-operations';
 @import 'sam-ui/pages/organization-detail';

@@ -128,7 +128,7 @@ export class App{
       qsobj['prevP'] = null;
       qsobj['isStandard'] = null;
     }
-    if(searchObject.searchField === 'wd' || searchObject.searchField === 'ei'){
+    if(searchObject.searchField === 'wd' || window.location.pathname.localeCompare("/search/fal/regionalOffices") == 0){
       qsobj['organizationId'] = null;
     }
     if(searchObject.searchField !== 'fpds') {
@@ -144,6 +144,8 @@ export class App{
     if(searchObject.searchField !== 'cfda'){
       qsobj['applicant'] = null;
       qsobj['beneficiary'] = null;
+      qsobj['functionalCodes'] = null;
+      qsobj['assistanceType'] = null;
     }
 
     let navigationExtras: NavigationExtras = {

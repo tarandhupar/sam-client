@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild, Output, EventEmitter} from '@angular/core';
 import {FALFormService} from "../../fal-form.service";
 import { FormBuilder, FormGroup, FormArray, Validators } from "@angular/forms";
 import {FALFormViewModel} from "../../fal-form.model";
@@ -16,10 +16,14 @@ export class FALAssistanceComponent implements OnInit {
 
   @ViewChild('assistSubForm') assistSubForm:FALAssistSubFormComponent;
   @Input() viewModel: FALFormViewModel;
+  @Output() public onError = new EventEmitter();
+
   progTitle: string;
   hideAddButton: boolean = false;
   assistInfoDisp: any = [];
   falAssistanceForm: FormGroup;
+  formErrorArr = [];
+  review:boolean = false;
 
   public deadlinesFlagOptions = [];
   public dateRangeOptions = [{ label: 'None Selected', value: 'na'}];
@@ -46,14 +50,30 @@ export class FALAssistanceComponent implements OnInit {
     this.falAssistanceForm.get('preApplicationCoordination').get('reports').valueChanges.subscribe(data => {
       if(data.indexOf('otherRequired') !== -1) {
         this.falAssistanceForm.get('preApplicationCoordination').get('description').setValidators(Validators.required);
+        this.checkControlforErrors(this.falAssistanceForm.controls['preApplicationCoordination']['controls']['description'], 'preApplicationCoordination-description');
       } else {
         this.falAssistanceForm.get('preApplicationCoordination').get('description').setValidators(null);
       }
     });
+
+    this.falAssistanceForm.get('selectionCriteria').get('isApplicable').valueChanges.subscribe(data => {
+      if(data.length > 0){
+        this.falAssistanceForm.get('selectionCriteria').get('description').setValidators(Validators.required);
+        this.checkControlforErrors(this.falAssistanceForm.controls['selectionCriteria']['controls']['description'], 'selectionCriteria-description');
+      }
+      else {
+        this.falAssistanceForm.get('selectionCriteria').get('description').setValidators(null);
+      }
+    });
+
     this.assistSubForm.falAssistSubForm.valueChanges.subscribe(data => this.updateDeadlineViewModel(data));
 
     if (!this.viewModel.isNew) {
       this.updateForm();
+
+      setTimeout(() => {
+        this.collectErrors();
+      }, 30);
     }
   }
 
@@ -140,6 +160,7 @@ export class FALAssistanceComponent implements OnInit {
     this.viewModel.renewalInterval = (data.renewal.interval == 'na' ? null : data.renewal.interval);
     this.viewModel.renewalDesc = data.renewal.description || null;
 
+    this.collectErrors();
   }
 
   updateForm() {
@@ -271,6 +292,9 @@ export class FALAssistanceComponent implements OnInit {
   }
 
   public validateSection() {
+
+    this.review = true;
+
     //mark all controls as dirty
     for (let control in this.falAssistanceForm.controls) {
       this.falAssistanceForm.controls[control].markAsDirty();
@@ -281,5 +305,48 @@ export class FALAssistanceComponent implements OnInit {
         this.falAssistanceForm.controls[control]['controls'][subControl].updateValueAndValidity();
       }
     }
+
+    if(this.formErrorArr.length > 0)
+      this.emitEvent();
+  }
+
+  collectErrors(){
+
+    for (let key of Object.keys(this.falAssistanceForm.controls)) {
+      this.checkControlforErrors(this.falAssistanceForm.controls[key], key);
+
+      for (let subKey of Object.keys(this.falAssistanceForm.controls[key]['controls'])) {
+        this.checkControlforErrors(this.falAssistanceForm.controls[key]['controls'][subKey], key + '-' + subKey);
+      }
+    }
+  }
+
+  checkControlforErrors(control, key){
+
+    let len = this.formErrorArr.length;
+    let index = this.formErrorArr.indexOf(key);
+
+    if(control.errors){
+      if(index == -1) {
+        this.formErrorArr.push(key);
+      }
+    }
+    else {
+      if(index > -1) {
+        this.formErrorArr.splice(index, 1);
+      }
+    }
+
+    if(len !== this.formErrorArr.length && this.review){
+      this.emitEvent();
+    }
+  }
+
+  emitEvent(){
+
+    this.onError.emit({
+      formErrorArr: this.formErrorArr,
+      section: 'applying-for-assistance'
+    });
   }
 }

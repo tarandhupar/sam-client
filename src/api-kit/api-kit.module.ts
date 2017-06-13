@@ -26,6 +26,8 @@ import { EntitySuggestionsServiceDirective } from "./autoCompleteWrapper/entityD
 import { UserAccessMock } from "./access/access.service.mock";
 import { UserSessionService } from "./user-session/user-session.service";
 import { FileExtractsService } from "./file-extracts/file-extracts.service";
+import { PeoplePickerService } from "./people-picker/people-picker.service";
+import { PeoplePickerAutoCompleteDirective } from './autoCompleteWrapper/peoplePickerAutoCompleteWrapper.service'; 
 
 /**
  * A module for reusable SAM Web Design components
@@ -34,10 +36,12 @@ import { FileExtractsService } from "./file-extracts/file-extracts.service";
 @NgModule({
   declarations: [
     SuggestionsServiceDirective,
+    PeoplePickerAutoCompleteDirective,
     EntitySuggestionsServiceDirective
   ],
   exports: [
     SuggestionsServiceDirective,
+    PeoplePickerAutoCompleteDirective,
     EntitySuggestionsServiceDirective
   ],
   imports: [
@@ -67,6 +71,7 @@ import { FileExtractsService } from "./file-extracts/file-extracts.service";
     SearchDictionariesService,
     UserSessionService,
     FileExtractsService,
+    PeoplePickerService,
   ]
 })
 export class SamAPIKitModule { }

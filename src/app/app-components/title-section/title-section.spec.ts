@@ -17,13 +17,8 @@ describe('Sam Title Section Component Tests', () => {
     });
   }));
 
-  it('title test', ()  => {
-
-    comp.title = "test title";
-    fixture.detectChanges();
-    fixture.whenStable().then(() => {
-      expect( fixture.debugElement.query( By.css('h1') ).nativeElement.innerHTML ).toEqual(comp.title);
-    });
-	});
+  it('should compile', ()  => {
+    expect(comp).toBeTruthy();
+  });
 
 });

@@ -7,6 +7,7 @@ import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.co
 import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { Observable } from 'rxjs';
+import { Location } from "@angular/common";
 
 function validDateTime(c: FormControl) {
   let invalidError = {message: 'Date is invalid'};
@@ -72,7 +73,7 @@ export class OrgCreatePage {
   orgTypeWithAddress = "Office";
   showFullDes:boolean = false;
 
-  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute, private fhService: FHService, public flashMsgService:FlashMsgService) {}
+  constructor(private builder: FormBuilder, private router: Router, private route: ActivatedRoute, private fhService: FHService, public flashMsgService:FlashMsgService, private location: Location) {}
 
   ngOnInit(){
     this.basicInfoForm = this.builder.group({
@@ -236,16 +237,6 @@ export class OrgCreatePage {
         setTimeout(()=>{this.flashMsgService.hideFlashMsg()}, 3000);
       }
     );
-  }
-
-  onCancelFormClick(){
-    //Navigate back to the parent organization
-    if(!!this.orgParentId){
-      this.router.navigate(['/organization-detail',this.orgParentId,'profile']);
-    } else{
-      this.router.navigateByUrl('/');
-    }
-
   }
 
   onAddAddressForm(){

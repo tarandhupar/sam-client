@@ -10,11 +10,13 @@ const config = merge({}, $config.endpoints.iam),
         baseUri: `${API_UMBRELLA_URL}/iam`
       });
 
+Cookies.defaults = config.cookies;
+
 export { config };
 export { utils as utilities };
 
 export function getAuthHeaders() {
-  return Cookies.get('iPlanetDirectoryPro') ? { 'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro') } : false;
+  return Cookies.get('iPlanetDirectoryPro') ? { 'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro') } : {};
 }
 
 export function getParam(key) {
@@ -22,10 +24,14 @@ export function getParam(key) {
 };
 
 export function exceptionHandler(responseBody) {
-  return merge({
+  let defaults = {
     status: 'error',
     message: 'Sorry, an unknown server error occured. Please contact the Help Desk for support.'
-  }, responseBody);
+  };
+
+  responseBody = responseBody || {};
+
+  return merge({}, defaults, responseBody);
 };
 
 export function isDebug() {
@@ -44,6 +50,15 @@ export function sanitizeRequest(data) {
 
   return data;
 };
+
+export function logger(dump) {
+  if(isDebug()) {
+    console.log(dump);
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export function transformMigrationAccount(account) {
   account = isObject(account) ? account : {};

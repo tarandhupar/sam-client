@@ -24,6 +24,7 @@ import {SamContractTypeFilter} from "../awards/search-result/contract-type-filte
 import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
 import {SamEligibilityFilter} from "./elegibility-filter/eligibility-filter.component";
+import {SamFunctionalCodesFilter} from "./functional-codes-filter/functional-codes-filter.component";
 
 @NgModule({
   imports: [
@@ -63,7 +64,8 @@ import {SamEligibilityFilter} from "./elegibility-filter/eligibility-filter.comp
     SamContractTypeFilter,
     SamNaicsPscFilter,
     SamEligibilityFilter,
-    RegionalOfficeListingResult
+    RegionalOfficeListingResult,
+    SamFunctionalCodesFilter
   ],
   providers: [DunsEntityAutoCompleteWrapper],
 })

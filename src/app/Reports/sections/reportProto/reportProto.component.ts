@@ -76,6 +76,7 @@ export class ReportProtoComponent implements OnInit {
     console.log(vm.dateFromModel);
     console.log(vm.dateToModel);
     console.log(vm.agencyPicker);
+    console.log(vm.url);
 
   }
   resetParameter(){

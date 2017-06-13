@@ -221,19 +221,21 @@ export class FALAccountIdentificationComponent implements ControlValueAccessor, 
     let maxLength = parseInt(target.attributes["maxlength"].value, 10);
     let currentLength = target.value.length;
 
-    // When typing into code part inputs, if the max length is reached, focus on the next input
-    let node = target.parentNode.parentNode.parentNode;
+    let node = target.parentNode.parentNode.parentNode.parentNode;
 
-    while (node != null) {
-      if (currentLength >= maxLength) {
-        node = node.nextElementSibling;
-      } else if (currentLength === 0) {
-        node = node.previousElementSibling;
-      }
+    // When typing into code part inputs, focus on the next or previous input automatically
+    if (currentLength >= maxLength || currentLength === 0) {
+      while (node != null) {
+        if (currentLength >= maxLength) {
+          node = node.nextElementSibling;
+        } else if (currentLength === 0) {
+          node = node.previousElementSibling;
+        }
 
-      if (node && node.tagName.toLowerCase() === "sam-text") {
-        node.getElementsByTagName('input')[0].focus();
-        break;
+        if (node && node.tagName.toLowerCase() === "sam-text") {
+          node.getElementsByTagName('input')[0].focus();
+          break;
+        }
       }
     }
   }

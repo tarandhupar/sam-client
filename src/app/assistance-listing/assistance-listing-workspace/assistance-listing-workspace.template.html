@@ -30,7 +30,7 @@
     </div>
     <br>
     <div *ngFor="let row of data" tabindex="-1">
-      <assistance-program-result [data]="row" [qParams]="qParams"></assistance-program-result>
+      <assistance-program-result [data]="row" [qParams]="qParams" [permissions]="permissions"></assistance-program-result>
       <div class="sam-ui section divider"></div>
     </div>
 

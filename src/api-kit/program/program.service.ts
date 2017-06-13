@@ -106,7 +106,7 @@ export class ProgramService{
       method: 'GET'
     };
 
-    return this.oAPIService.call(oApiParam, false);
+    return this.oAPIService.call(oApiParam);
   }
 
   getContacts(cookie: string) {
@@ -136,6 +136,63 @@ export class ProgramService{
       },
       method: 'GET'
     };
+    return this.oAPIService.call(oApiParam);
+  }
+
+  submitProgram(id, data: any, cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/' + id + '/submit',
+      oParam: {},
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      body: data,
+      method: 'POST'
+    };
+
+    return this.oAPIService.call(oApiParam, false);
+  }
+
+  getReasons(id: string,cookie: string,) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/programRequestActions/' + id,
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  rejectProgram(id, data: any, cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/programRequests/' + id + '/reject',
+      oParam: {},
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      body: data,
+      method: 'POST'
+    };
+
+    return this.oAPIService.call(oApiParam, false);
+  }
+
+  sendNotification(id: string, cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/' + id + '/submissionNotification',
+      oParam: {},
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'GET'
+    };
+
     return this.oAPIService.call(oApiParam);
   }
 }

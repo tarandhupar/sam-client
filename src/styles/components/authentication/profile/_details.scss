@@ -28,6 +28,10 @@
       margin-left: 1em;
       display: none;
     }
+
+    > button {
+      width: 184px;
+    }
   }
 
   // Read State
@@ -102,7 +106,11 @@
     }
   }
 
-  .usa-alert-static {
-    top: -64px !important;
+  .usa-button-controls {
+    sam-alert {
+      top: 50%;
+      left: 100px;
+      transform: translateY(-50%);
+    }
   }
 }

@@ -69,7 +69,7 @@ export const $import = {
     request
       .get(endpoint)
       .set(headers)
-      .end(function(err, response) {
+      .end((err, response) => {
         let accounts = [];
 
         if(!err) {
@@ -81,11 +81,11 @@ export const $import = {
           $success(accounts);
         } else {
           if(isDebug()) {
-            $error(
-              mock.map((account) => {
-                return transformMigrationAccount(account);
-              })
-            );
+            let accounts = mock.map((account) => {
+              return transformMigrationAccount(account);
+            });
+
+            $success(accounts);
           } else {
             $error(exceptionHandler(response));
           }

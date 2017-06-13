@@ -4,7 +4,8 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
   selector: 'exclusionCrossReference',
   template: `
 		<div>
-			<a>{{crossReference.identityInfo.companyName}}</a>
+			<a [routerLink]="['/exclusions', uniqueIdentifier]" [queryParams]="qParams">
+			{{crossReference.identityInfo.companyName}}</a>
 			<br />
 			<strong>Cross Reference Type: </strong>{{crossReference.crossReferenceType}}
 			<br />
@@ -23,10 +24,49 @@ import { HostListener, Component, ElementRef, Input, Renderer, OnInit } from '@a
 export class ExclusionCrossReference implements OnInit {
   
   @Input() crossReference: any;
-
+  uniqueIdentifier: string;
+  samNumberConcat:string;
+  orgIdConcat:string;
+  typeConcat:string;
+  cageCodeConcat:string;
   constructor( ) {}
 
   ngOnInit(){
+
+     if(this.crossReference.excludingAgency!=null && this.crossReference.excludingAgency.length > 0){
+      this.orgIdConcat=this.crossReference.excludingAgency;
+    }
+    else {
+      this.orgIdConcat='NA';
+    }
+
+    if(this.crossReference.samNumber!=null && this.crossReference.samNumber.length > 0){
+      this.samNumberConcat=this.crossReference.samNumber
+    }
+    else {
+      this.samNumberConcat='NA';
+    }
+
+    //Refactor this later with appropriate solution
+    if(this.crossReference.exclusionType!=null && this.crossReference.exclusionType.length > 0){
+      if(this.crossReference.exclusionType.indexOf("/")>-1) {
+        this.typeConcat = this.crossReference.exclusionType.replace(/[/]/g, "SLASH");
+      } else {
+        this.typeConcat = this.crossReference.exclusionType;
+      }
+    }
+    else {
+      this.typeConcat='NA';
+    }
+
+    if(this.crossReference.ctCode!=null && this.crossReference.ctCode.length > 0){
+      this.cageCodeConcat=this.crossReference.ctCode;
+    }
+    else {
+      this.cageCodeConcat='NA';
+    }
+
+    this.uniqueIdentifier=this.samNumberConcat + '+' + this.orgIdConcat + '+' + this.typeConcat + '+' + this.cageCodeConcat;
   }
 
 }

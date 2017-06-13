@@ -5,10 +5,12 @@ export class FALFormViewModel {
   private _programId: string;
   private _fal: any;
   private _data: any;
+  private _reason: any;
 
   constructor(fal) {
     this._fal = fal ? fal : {};
     this._data = (fal && fal.data) ? fal.data : {};
+    this._programId = (fal && fal.id) ? fal.id : null;
   }
 
   set programId(programId: string) {
@@ -27,11 +29,11 @@ export class FALFormViewModel {
     return this._fal.revision === true;
   }
 
-  get organizationId(){
+  get organizationId() {
     return this._data.organizationId || '';
   }
 
-  set organizationId(org){
+  set organizationId(org) {
     this._data.organizationId = org;
   }
 
@@ -88,35 +90,35 @@ export class FALFormViewModel {
     this._data.description = description;
   }
 
-  get functionalCodes(){
+  get functionalCodes() {
     let functionalCodes = [];
-    if(this._data.functionalCodes !== undefined && this._data.functionalCodes && this._data.functionalCodes.length > 0){
+    if (this._data.functionalCodes !== undefined && this._data.functionalCodes && this._data.functionalCodes.length > 0) {
       functionalCodes = this._data.functionalCodes;
     }
     return functionalCodes;
-}
+  }
 
-  set functionalCodes(codes){
+  set functionalCodes(codes) {
     this._data.functionalCodes = codes;
   }
 
-  get subjectTerms(){
+  get subjectTerms() {
     let subjectTerms = [];
-    if(this._data.subjectTerms !== undefined && this._data.subjectTerms && this._data.subjectTerms.length > 0){
+    if (this._data.subjectTerms !== undefined && this._data.subjectTerms && this._data.subjectTerms.length > 0) {
       subjectTerms = this._data.subjectTerms;
     }
     return subjectTerms;
   }
 
-  set subjectTerms(terms){
+  set subjectTerms(terms) {
     this._data.subjectTerms = terms;
   }
 
-  get projects(){
+  get projects() {
     return (this._data.projects || null);
   }
 
-  set projects(projects){
+  set projects(projects) {
     this._data.projects = projects;
   }
 
@@ -187,39 +189,39 @@ export class FALFormViewModel {
   }
 
   //Applying for Assistance section fields
-  get deadlineFlag(){
+  get deadlineFlag() {
     let flag = false;
 
-    if(this._data.assistance && this._data.assistance.deadlines && this._data.assistance.deadlines.flag){
+    if (this._data.assistance && this._data.assistance.deadlines && this._data.assistance.deadlines.flag) {
       flag = this._data.assistance.deadlines.flag;
     }
 
     return flag;
   }
 
-  set deadlineFlag(flag){
+  set deadlineFlag(flag) {
     _.set(this._data, 'assistance.deadlines.flag', flag);
   }
 
-  get deadlineDesc(){
+  get deadlineDesc() {
     let desc = '';
-    if(this._data.assistance && this._data.assistance.deadlines && this._data.assistance.deadlines.description){
+    if (this._data.assistance && this._data.assistance.deadlines && this._data.assistance.deadlines.description) {
       desc = this._data.assistance.deadlines.description;
     }
     return desc;
   }
 
-  set deadlineDesc(desc){
+  set deadlineDesc(desc) {
     _.set(this._data, 'assistance.deadlines.description', desc);
   }
 
-  get deadlineList(){
+  get deadlineList() {
     let list = [];
-    if(this._data.assistance && this._data.assistance.deadlines && this._data.assistance.deadlines.list) {
-        list = this._data.assistance.deadlines.list;
+    if (this._data.assistance && this._data.assistance.deadlines && this._data.assistance.deadlines.list) {
+      list = this._data.assistance.deadlines.list;
     }
 
-    for(let deadline of list) {
+    for (let deadline of list) {
       deadline.start = deadline.start || null;
       deadline.end = deadline.end || null;
       deadline.description = deadline.description || null;
@@ -228,174 +230,174 @@ export class FALFormViewModel {
     return list;
   }
 
-  set deadlineList(list){
+  set deadlineList(list) {
     _.set(this._data, 'assistance.deadlines.list', list);
   }
 
-  get preAppCoordReports(){
+  get preAppCoordReports() {
 
     let reports = [];
-    if(this._data.assistance && this._data.assistance.preApplicationCoordination && this._data.assistance.preApplicationCoordination.environmentalImpact) {
-      if(this._data.assistance.preApplicationCoordination.environmentalImpact.reports)
+    if (this._data.assistance && this._data.assistance.preApplicationCoordination && this._data.assistance.preApplicationCoordination.environmentalImpact) {
+      if (this._data.assistance.preApplicationCoordination.environmentalImpact.reports)
         reports = this._data.assistance.preApplicationCoordination.environmentalImpact.reports;
     }
     return reports;
   }
 
-  set preAppCoordReports(reports){
+  set preAppCoordReports(reports) {
     _.set(this._data, 'assistance.preApplicationCoordination.environmentalImpact.reports', reports);
   }
 
-  get preAppCoordDesc(){
+  get preAppCoordDesc() {
     let desc = '';
-    if(this._data.assistance && this._data.assistance.preApplicationCoordination && this._data.assistance.preApplicationCoordination.description) {
+    if (this._data.assistance && this._data.assistance.preApplicationCoordination && this._data.assistance.preApplicationCoordination.description) {
       desc = this._data.assistance.preApplicationCoordination.description;
     }
     return desc;
   }
 
-  set preAppCoordDesc(desc){
+  set preAppCoordDesc(desc) {
     _.set(this._data, 'assistance.preApplicationCoordination.description', desc);
   }
 
-  get appProcIsApp(){
+  get appProcIsApp() {
     let flag = false;
-    if(this._data.assistance && this._data.assistance.applicationProcedure && this._data.assistance.applicationProcedure.isApplicable) {
+    if (this._data.assistance && this._data.assistance.applicationProcedure && this._data.assistance.applicationProcedure.isApplicable) {
       flag = this._data.assistance.applicationProcedure.isApplicable;
     }
     return flag;
   }
 
-  set appProcIsApp(flag){
+  set appProcIsApp(flag) {
 
     _.set(this._data, 'assistance.applicationProcedure.isApplicable', flag);
   }
 
-  get appProcDesc(){
+  get appProcDesc() {
     let desc = '';
 
-    if(this._data.assistance && this._data.assistance.applicationProcedure && this._data.assistance.applicationProcedure.description) {
+    if (this._data.assistance && this._data.assistance.applicationProcedure && this._data.assistance.applicationProcedure.description) {
       desc = this._data.assistance.applicationProcedure.description;
     }
 
     return desc;
   }
 
-  set appProcDesc(desc){
+  set appProcDesc(desc) {
 
     _.set(this._data, 'assistance.applicationProcedure.description', desc);
   }
 
-  get selCriteriaIsApp(){
+  get selCriteriaIsApp() {
     let flag = false;
-    if(this._data.assistance && this._data.assistance.selectionCriteria && this._data.assistance.selectionCriteria.isApplicable) {
+    if (this._data.assistance && this._data.assistance.selectionCriteria && this._data.assistance.selectionCriteria.isApplicable) {
       flag = this._data.assistance.selectionCriteria.isApplicable;
     }
     return flag;
   }
 
-  set selCriteriaIsApp(flag){
+  set selCriteriaIsApp(flag) {
     _.set(this._data, 'assistance.selectionCriteria.isApplicable', flag);
   }
 
-  get selCriteriaDesc(){
+  get selCriteriaDesc() {
     let desc = '';
-    if(this._data.assistance && this._data.assistance.selectionCriteria && this._data.assistance.selectionCriteria.description) {
+    if (this._data.assistance && this._data.assistance.selectionCriteria && this._data.assistance.selectionCriteria.description) {
       desc = this._data.assistance.selectionCriteria.description;
     }
 
     return desc;
   }
 
-  set selCriteriaDesc(desc){
+  set selCriteriaDesc(desc) {
     _.set(this._data, 'assistance.selectionCriteria.description', desc);
   }
 
-  get awardProcDesc(){
+  get awardProcDesc() {
     let desc = '';
-    if(this._data.assistance && this._data.assistance.awardProcedure && this._data.assistance.awardProcedure.description) {
+    if (this._data.assistance && this._data.assistance.awardProcedure && this._data.assistance.awardProcedure.description) {
       desc = this._data.assistance.awardProcedure.description;
     }
 
     return desc;
   }
 
-  set awardProcDesc(desc){
+  set awardProcDesc(desc) {
     _.set(this._data, 'assistance.awardProcedure.description', desc);
   }
 
-  get approvalInterval(){
+  get approvalInterval() {
     let interval = 'na';
-    if(this._data.assistance && this._data.assistance.approval && this._data.assistance.approval.interval)
+    if (this._data.assistance && this._data.assistance.approval && this._data.assistance.approval.interval)
       interval = this._data.assistance.approval.interval;
 
     return interval;
   }
 
-  set approvalInterval(interval){
-    _.set(this._data, 'assistance.approval.interval',  interval);
+  set approvalInterval(interval) {
+    _.set(this._data, 'assistance.approval.interval', interval);
   }
 
-  get approvalDesc(){
+  get approvalDesc() {
     let desc = '';
-    if(this._data.assistance && this._data.assistance.approval && this._data.assistance.approval.description) {
+    if (this._data.assistance && this._data.assistance.approval && this._data.assistance.approval.description) {
       desc = this._data.assistance.approval.description;
     }
 
     return desc;
   }
 
-  set approvalDesc(desc){
+  set approvalDesc(desc) {
     _.set(this._data, 'assistance.approval.description', desc);
   }
 
-  get appealInterval(){
-  let interval = 'na';
-  if(this._data.assistance && this._data.assistance.appeal && this._data.assistance.appeal.interval)
-    interval = this._data.assistance.appeal.interval;
+  get appealInterval() {
+    let interval = 'na';
+    if (this._data.assistance && this._data.assistance.appeal && this._data.assistance.appeal.interval)
+      interval = this._data.assistance.appeal.interval;
 
-  return interval;
-}
+    return interval;
+  }
 
-  set appealInterval(interval){
+  set appealInterval(interval) {
     _.set(this._data, 'assistance.appeal.interval', interval);
   }
 
-  get appealDesc(){
+  get appealDesc() {
     let desc = '';
-    if(this._data.assistance && this._data.assistance.appeal && this._data.assistance.appeal.description) {
+    if (this._data.assistance && this._data.assistance.appeal && this._data.assistance.appeal.description) {
       desc = this._data.assistance.appeal.description;
     }
 
     return desc;
   }
 
-  set appealDesc(desc){
+  set appealDesc(desc) {
     _.set(this._data, 'assistance.appeal.description', desc);
   }
 
-  get renewalInterval(){
+  get renewalInterval() {
     let interval = 'na';
-    if(this._data.assistance && this._data.assistance.renewal && this._data.assistance.renewal.interval)
+    if (this._data.assistance && this._data.assistance.renewal && this._data.assistance.renewal.interval)
       interval = this._data.assistance.renewal.interval;
 
     return interval;
   }
 
-  set renewalInterval(interval){
+  set renewalInterval(interval) {
     _.set(this._data, 'assistance.renewal.interval', interval);
   }
 
-  get renewalDesc(){
+  get renewalDesc() {
     let desc = '';
-    if(this._data.assistance && this._data.assistance.renewal && this._data.assistance.renewal.description) {
+    if (this._data.assistance && this._data.assistance.renewal && this._data.assistance.renewal.description) {
       desc = this._data.assistance.renewal.description;
     }
 
     return desc;
   }
 
-  set renewalDesc(desc){
+  set renewalDesc(desc) {
     _.set(this._data, 'assistance.renewal.description', desc);
   }
 
@@ -461,28 +463,28 @@ export class FALFormViewModel {
   }
 
   //Authorization fields
-  get authList(){
+  get authList() {
     let list = [];
-    if(this._data.authorizations && this._data.authorizations.list) {
+    if (this._data.authorizations && this._data.authorizations.list) {
       list = this._data.authorizations.list;
     }
     return list;
   }
 
-  set authList(list){
+  set authList(list) {
     _.set(this._data, 'authorizations.list', list);
   }
 
-  get authDesc(){
+  get authDesc() {
     let desc = '';
-    if(this._data.authorizations && this._data.authorizations.description) {
+    if (this._data.authorizations && this._data.authorizations.description) {
       desc = this._data.authorizations.description;
     }
 
     return desc;
   }
 
-  set authDesc(desc){
+  set authDesc(desc) {
     _.set(this._data, 'authorizations.description', desc);
   }
 
@@ -525,7 +527,7 @@ export class FALFormViewModel {
 
   get appListDisplay() {
     let appListDisplay = [];
-    if((this._data.eligibility !== undefined && this._data.eligibility.applicant !== undefined) && appListDisplay.length === 0){
+    if ((this._data.eligibility !== undefined && this._data.eligibility.applicant !== undefined) && appListDisplay.length === 0) {
       if (this._data.eligibility.applicant && this._data.eligibility.applicant.types && this._data.eligibility.applicant.types.length > 0) {
         appListDisplay = this._data.eligibility.applicant.types;
       }
@@ -533,8 +535,8 @@ export class FALFormViewModel {
     return appListDisplay;
   }
 
-  set appListDisplay(appListDisplay){
-     _.set(this._data, 'eligibility.applicant.types', appListDisplay);
+  set appListDisplay(appListDisplay) {
+    _.set(this._data, 'eligibility.applicant.types', appListDisplay);
   }
 
   get isSameAsApplicant() {
@@ -547,13 +549,14 @@ export class FALFormViewModel {
     }
     return flag;
   }
+
   set isSameAsApplicant(flag) {
     _.set(this._data, 'eligibility.beneficiary.isSameAsApplicant', flag);
   }
 
   get benListDisplay() {
     let benListDisplay = [];
-    if(this._data.eligibility !== undefined && this._data.eligibility.beneficiary !== undefined) {
+    if (this._data.eligibility !== undefined && this._data.eligibility.beneficiary !== undefined) {
       if (this._data.eligibility.beneficiary && this._data.eligibility.beneficiary.types && this._data.eligibility.beneficiary.types.length > 0) {
         benListDisplay = this._data.eligibility.beneficiary.types;
       }
@@ -634,7 +637,7 @@ export class FALFormViewModel {
 
   get assListDisplay() {
     let assListDisplay = [];
-    if(this._data.eligibility !== undefined && this._data.eligibility.assistanceUsage !== undefined) {
+    if (this._data.eligibility !== undefined && this._data.eligibility.assistanceUsage !== undefined) {
       if (this._data.eligibility.assistanceUsage && this._data.eligibility.assistanceUsage.types && this._data.eligibility.assistanceUsage.types.length > 0) {
         assListDisplay = this._data.eligibility.assistanceUsage.types;
       }
@@ -703,9 +706,11 @@ export class FALFormViewModel {
     }
     return flag;
   }
+
   set isFundedCurrentFY(flag) {
     _.set(this._data, 'financial.isFundedCurrentFY', flag);
   }
+
   get obligations() {
     let obligations = null;
     if (this._data.financial && this._data.financial.obligations) {
@@ -801,5 +806,13 @@ export class FALFormViewModel {
 
   set formulaAndMatching(formulaAndMatching) {
     _.set(this.data, 'compliance.formulaAndMatching', formulaAndMatching);
+  }
+
+  /*  workflow submitting to OMB model*/
+  get reason() {
+    return this._reason;
+  }
+  set reason(reason) {
+    this._reason = reason;
   }
 }

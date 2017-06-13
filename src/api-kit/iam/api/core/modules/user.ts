@@ -5,10 +5,12 @@ import * as request from 'superagent';
 import {
   config, utilities,
   getAuthHeaders, exceptionHandler, sanitizeRequest,
-  isDebug
+  isDebug, logger
 } from './helpers';
 
 import User from '../user';
+
+Cookies.defaults = config.cookies;
 
 function yesOrNo(value) {
   return (value || false) ? 'yes' : 'no';
@@ -257,12 +259,16 @@ export const user = {
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
+    if(logger(data)) {
+      return;
+    };
+
     request
       .post(endpoint)
       .send(data)
       .end(function(err, response) {
         if(err) {
-          $error(response.body.message);
+          $error(exceptionHandler(response.body || {}));
         } else {
           $success(response.body.user || {});
         }
@@ -279,6 +285,10 @@ export const user = {
 
     data.emailNotification = yesOrNo(data.emailNotification);
 
+    if(logger(data)) {
+      return;
+    }
+
     request
       .patch(endpoint)
       .set(headers)
@@ -286,7 +296,7 @@ export const user = {
       .then((response) => {
         let $user: User = merge(Cookies.getJSON('IAMSession') || {}, userData);
 
-        Cookies.set('IAMSession', $user);
+        Cookies.set('IAMSession', $user, config.cookies);
 
         $success(response.body);
       }, $error);
@@ -311,5 +321,14 @@ export const user = {
 
   cac: cac,
   registration: registration,
-  password: password
+  password: password,
+
+  isSignedIn() {
+    return (Cookies.get('iPlanetDirectoryPro') || isDebug()) ? true : false;
+  },
+
+  isFSD() {
+    const user = new User(Cookies.getJSON('IAMSession') || {});
+    return this.isSignedIn() && user['fsd'] ? true : false;
+  }
 };

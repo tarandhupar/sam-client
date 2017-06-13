@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from "@angular/core";
+import {Component, Input, Output, OnInit, ViewChild, EventEmitter} from "@angular/core";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
@@ -11,17 +11,18 @@ import {AutocompleteConfig} from "sam-ui-kit/types";
 })
 
 export class FALFormHeaderInfoComponent implements OnInit {
-  //  TODO Remove and replace with call to FH to get cfdaCode using organization id
-  falNoPrefix: string = '';
-
   @Input() viewModel: FALFormViewModel;
+  @Output() public onError = new EventEmitter();
   @ViewChild('agencyPicker') agencyPicker;
   falHeaderInfoForm: FormGroup;
 
+  //  TODO Remove and replace with call to FH to get cfdaCode using organization id
+  falNoPrefix: string = '';
   public falNo = '';
-  errorMessage: string = '';
   public organizationId: string;
   public organizationData: any;
+  formErrorArr = [];
+  review: boolean = false;
 
   // Related Program multi-select
   rpNGModel: any;
@@ -41,6 +42,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
     this.populateMultiList();
     if (!this.viewModel.isNew) {
       this.updateForm();
+      this.collectErrors();
     }
   }
 
@@ -52,6 +54,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
       'relatedPrograms': '',
       'rpListDisplay': ['']
     });
+
   }
 
   populateMultiList() {
@@ -82,16 +85,6 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
   updateViewModel(data) {
 
-    if(this.falHeaderInfoForm.controls['title'].errors){
-       if('titleTheError' in this.falHeaderInfoForm.controls['title'].errors){
-        this.errorMessage = 'The word "The" should not be included in the Program title.';
-      }
-
-      if('titleProgError' in this.falHeaderInfoForm.controls['title'].errors){
-        this.errorMessage = 'The word "Program" should not be included in the Program title.';
-      }
-    }
-
     let alternativeNames = [];
     let relatedPrograms = [];
 
@@ -103,9 +96,10 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
     this.viewModel.title = data['title'] || null;
     this.viewModel.alternativeNames = (alternativeNames.length > 0 ? alternativeNames : null);
-    this.viewModel.programNumber = (this.falNoPrefix + data['programNumber']) || null;
+    this.viewModel.programNumber = data['programNumber'] ? (this.falNoPrefix + data['programNumber']) : null;
     this.viewModel.relatedPrograms = relatedPrograms.length > 0 ? relatedPrograms : [];
 
+    this.collectErrors();
   }
 
   updateViewModelRelatedPrograms(rpListDisplay) {
@@ -165,6 +159,7 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
     this.organizationId = orgVal;
     this.viewModel.organizationId = orgVal;
+    this.checkAgencyPickerforErrors();
 
   }
 
@@ -190,10 +185,12 @@ export class FALFormHeaderInfoComponent implements OnInit {
 
   validateSection() {
 
+    this.review = true;
     setTimeout(() => {
       if(this.agencyPicker){
         this.agencyPicker.touched = true;
         this.agencyPicker.checkForFocus(null);
+        this.checkAgencyPickerforErrors();
       }
     }, 10);
 
@@ -201,6 +198,60 @@ export class FALFormHeaderInfoComponent implements OnInit {
       this.falHeaderInfoForm.controls[key].markAsDirty();
       this.falHeaderInfoForm.controls[key].updateValueAndValidity();
     }
+
+    if(this.formErrorArr.length > 0)
+      this.emitEvent();
+  }
+
+  collectErrors(){
+    for(let key of Object.keys(this.falHeaderInfoForm.controls)) {
+      this.checkControlforErrors(key);
+    }
+  }
+
+  checkControlforErrors(key){
+
+    let len = this.formErrorArr.length;
+    let index = this.formErrorArr.indexOf(key);
+
+    if(this.falHeaderInfoForm.controls[key].errors){
+      if(index == -1) {
+        this.formErrorArr.push(key);
+      }
+    }
+    else {
+      if(index > -1) {
+        this.formErrorArr.splice(index, 1);
+      }
+    }
+
+    if(len !== this.formErrorArr.length && this.review){
+      this.emitEvent();
+    }
+  }
+
+  checkAgencyPickerforErrors(){
+    let len = this.formErrorArr.length;
+    if(this.agencyPicker.searchMessage !== ''){
+      this.formErrorArr.push('agencyPicker');
+    }
+    else {
+      let index = this.formErrorArr.indexOf('agencyPicker');
+      if(index > -1)
+        this.formErrorArr.splice(index, 1);
+    }
+
+    if(len !== this.formErrorArr.length && this.review){
+      this.emitEvent();
+    }
+
+  }
+
+  emitEvent(){
+    this.onError.emit({
+      formErrorArr: this.formErrorArr,
+      section: 'header-information'
+    });
   }
 
 }

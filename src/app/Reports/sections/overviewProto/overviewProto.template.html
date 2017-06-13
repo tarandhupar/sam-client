@@ -2,17 +2,16 @@
   <div class="sam-ui hidden divider"></div>
   <h2 class="m_T-2x">Reports Prototype</h2>
   <p class="p_L-8x">
-    Sam.gov reports can be used to support analysis of federal spending including geographical analysis,
-    market analysis, and analysis on the impact of the congressional and presidential initiatives in socio-economic
-    areas such as small business spending. The data is also a reliable basis for measuring and assessing the impact
-    of Federal acquisition policy and management improvement.
+    Sam.gov reports can be used to support analysis of federal spending including geographical analysis, market analysis, and
+    analysis on the impact of the congressional and presidential initiatives in socio-economic areas such as small business
+    spending. The data is also a reliable basis for measuring and assessing the impact of Federal acquisition policy and
+    management improvement.
   </p>
   <div class="usa-grid-full">
     <h3 class="p_L-3x">Dynamic Prototype Reports</h3>
     <div class="usa-grid-full">
       <p class="p_L-8x">
-        We have pre-built many of the reports people run regularly, providing quick access to information people
-        need most.
+        We have pre-built many of the reports people run regularly, providing quick access to information people need most.
         <br><br>
       </p>
     </div>
@@ -26,7 +25,7 @@
       </div>
       <div class="grid-date1">
         <div class="p_R-0x">
-          <span *ngIf="states.isSignedIn" >
+          <span *ngIf="states.isSignedIn">
             <sam-pagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()"
                            (pageChange)="onParamChanged($event)">
             </sam-pagination>
@@ -34,12 +33,13 @@
         </div>
       </div>
       <ul class="ul-css">
-        <li class="report-li" #myVar *ngFor="let item of currentReports; let i = index; let last = last">
+        <!--test report to test MSTR connection; to be deleted -isaac -->
+        <li class="report-li" #myVar>
           <div class="usa-grid-full">
             <div class="usa-grid-full">
               <div class="grid-name">
-                <a [routerLink]="['../reportProto',item.id,item.name, item.desc]">
-                  <b >{{item.name  }}</b>
+                <a [routerLink]="['../mstrProto']">
+                  <b>Prototype Report for Common Components</b>
                 </a>
                 <b class="grid-overview1">&nbsp;&nbsp;&nbsp;&nbsp;
                   <span>{{item.app}}</span>
@@ -54,7 +54,7 @@
                     </i>
                     <i *ngIf="selectedIdx !== item.id" [ngClass]="item.favorite ? 'fa fa-star' : 'fa fa-star-o'"></i>
                     <span class="usa-sr-only">click to add {{item.name}} to your favorites</span>
-                  </a>
+                </a>
                 </span>
               </div>
             </div>
@@ -68,7 +68,50 @@
             <div class="usa-grid-full">
               <samAccordion>
                 <sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">
-                  <div  class="grid-name"></div>
+                  <div class="grid-name"></div>
+                  <div class="grid-date"><i class="fa fa-trash"></i></div>
+                  <!--<sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved ' + item.name">{{item.name}}-->
+                </sam-accordion-section>
+              </samAccordion>
+            </div>
+          </div>
+        </li>
+        <!--end test report-->
+        <li class="report-li" #myVar *ngFor="let item of currentReports; let i = index; let last = last">
+          <div class="usa-grid-full">
+            <div class="usa-grid-full">
+              <div class="grid-name">
+                <a [routerLink]="['../reportProto',item.id,item.name, item.desc]">
+                  <b>{{item.name  }}</b>
+                </a>
+                <b class="grid-overview1">&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span>{{item.app}}</span>
+                </b>
+              </div>
+              <div class="grid-date">
+                <span class="grid-overview2">
+                  <a (click)="selectItem(item.id)" >
+                    <i *ngIf="liked" (click)="addUser(item.id)" [ngClass]="{'fa fa-star-o': selectedIdx === item.id }">
+                    </i>
+                    <i *ngIf="!liked" (click)="deleteUser(item.id)" [ngClass]="{'fa fa-star': selectedIdx === item.id }">
+                    </i>
+                    <i *ngIf="selectedIdx !== item.id" [ngClass]="item.favorite ? 'fa fa-star' : 'fa fa-star-o'"></i>
+                    <span class="usa-sr-only">click to add {{item.name}} to your favorites</span>
+                </a>
+                </span>
+              </div>
+            </div>
+            <div class="usa-grid-full">
+              {{item.desc}}
+            </div>
+            <br>
+            <div class="usa-grid-full">
+              {{item.verb}}
+            </div>
+            <div class="usa-grid-full">
+              <samAccordion>
+                <sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">
+                  <div class="grid-name"></div>
                   <div class="grid-date"><i class="fa fa-trash"></i></div>
                   <!--<sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved ' + item.name">{{item.name}}-->
                 </sam-accordion-section>

@@ -1,4 +1,5 @@
-import { clone, indexOf, merge } from 'lodash';
+import { clone, indexOf, merge, values } from 'lodash';
+import { isDebug } from './modules/helpers';
 
 const LDAP_MAPPINGS = {
   'dn':               'dn',
@@ -11,22 +12,37 @@ const LDAP_MAPPINGS = {
   'uid':              '_id'
 };
 
+const ROLE_MAPPINGS = {
+  systemAccount: 'GSA_IAM_CWS_SFA_R_SrvAcct',
+  fsd:           'FSD_Agent'
+};
+
 class User {
+  public firstName = '';
+  public initials = '';
+  public lastName = '';
+
   constructor(params) {
     params = params || {};
     this.set(this.reverseMappings(params));
   }
 
   set(user) {
-    let roles = (user.gsaRAC || []).map(role => role.system);
+    let roles = user.gsaRAC,
+        role,
+        mapping;
 
     user = this.reverseMappings(user || {});
 
     merge(this, user, {
-      systemAccount: (indexOf(roles, 'GSA_IAM_CWS_SFA_R_SrvAcct') > -1),
       emailNotification: this.toBoolean(user.emailNotification || 'no')
     });
 
+    // Map Roles Array
+    for(role in ROLE_MAPPINGS) {
+      mapping = ROLE_MAPPINGS[role];
+      this[role] = indexOf(roles, mapping) > -1 ? true : false;
+    }
   }
 
   toBoolean(value) {
@@ -63,24 +79,21 @@ class User {
 
     data.gsaRAC = data.gsaRAC || [];
 
-    for(intItem = 0; intItem < data.gsaRAC.length; intItem++) {
-      item = data.gsaRAC[intItem];
-
-      if(typeof item === 'string') {
-        item = item.split(' ');
-        item = {
-          system: item[0] || '',
-          agency: item[1] || '',
-          username: item[2] || '',
-          importTimetamp: item[3] || '',
-          role: item[4] || ''
-        };
-      }
-
-      data.gsaRAC[intItem] = item;
+    if(isDebug()) {
+      data.gsaRAC = values(ROLE_MAPPINGS);
     }
 
     return data;
+  }
+
+  get fullName(): string {
+    let fullName = [
+      this.firstName || '',
+      this.initials || '',
+      this.lastName || ''
+    ];
+
+    return fullName.join(' ').trim();
   }
 }
 
