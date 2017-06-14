@@ -129,12 +129,12 @@ export class FederalHierarchyPage {
     this.adminOrg = this.orgList.find(e => { if(e.org.orgKey == this.adminOrgKey) return e;});
   }
 
-  onOrgStatusChange(){
-    if(this.orgStatusModel.length === 2){
+  onOrgStatusChange(orgStatusModel){
+    if(orgStatusModel.length === 2){
       if(this.userRole === 'superAdmin') this.fhService.getDepartmentsByStatus('all').subscribe( data => this.initiatePage(data._embedded,data._embedded.length));
       if(this.userRole === 'deptAdmin' || this.userRole === 'agencyAdmin') this.fhService.getDepartmentAdminLanding('all', this.deptOrgKey).subscribe( data => this.initiatePage(data._embedded[0].org.hierarchy,data._embedded[0].org.hierarchy.length));
-    }else if(this.orgStatusModel.length === 1){
-      let status = this.orgStatusModel[0].toLocaleLowerCase();
+    }else if(orgStatusModel.length === 1){
+      let status = orgStatusModel[0].toLocaleLowerCase();
       if(this.userRole === 'superAdmin') this.fhService.getDepartmentsByStatus(status).subscribe( data => this.initiatePage(data._embedded,data._embedded.length));
       if(this.userRole === 'deptAdmin' || this.userRole === 'agencyAdmin') this.fhService.getDepartmentAdminLanding(status, this.deptOrgKey).subscribe( data => this.initiatePage(data._embedded[0].org.hierarchy,data._embedded[0].org.hierarchy.length));
 
@@ -183,16 +183,20 @@ export class FederalHierarchyPage {
     this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
   }
 
+  updateOrgType(val){}
+
   searchFH(){
     this.resultType = "search";
-    Observable.forkJoin(
-      this.fhService.fhSearchCount(this.searchText, this.searchType),
-      this.fhService.fhSearch(this.searchText, this.curPage+1, this.recordsPerPage)
-    ).subscribe( data => {
-      this.curPageOrgs = data[1]._embedded;
-      this.totalRecords = data[0];
-      this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
-      this.updateRecordsText();
-    })
+    // Observable.forkJoin(
+    //   this.fhService.fhSearchCount(this.searchText, this.searchType),
+    //   this.fhService.fhSearch(this.searchText, this.curPage+1, this.recordsPerPage)
+    // ).subscribe( data => {
+    //   this.curPageOrgs = data[1]._embedded;
+    //   this.totalRecords = data[0];
+    //   this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
+    //   this.updateRecordsText();
+    // });
   }
+
+  isDefaultResult():boolean{ return this.resultType === "default";}
 }

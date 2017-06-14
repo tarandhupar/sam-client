@@ -94,14 +94,15 @@ export class FHService {
   }
 
   getDepartmentsByStatus(status:string){
-    let oApiParam = {
-      name: 'federalHierarchy',
-      suffix: '/activedepartment/',
-      method: 'GET',
-      oParam: {}
-    };
-    if(status !== 'active') oApiParam.oParam['status'] = status;
-    return this.oAPIService.call(oApiParam);
+    // let oApiParam = {
+    //   name: 'federalHierarchy',
+    //   suffix: '/activedepartment/',
+    //   method: 'GET',
+    //   oParam: {}
+    // };
+    // if(status !== 'active') oApiParam.oParam['status'] = status;
+    // return this.oAPIService.call(oApiParam);
+    return this._http.get("../../landing_superadmin.json").map((res:any) => res.json());
   }
 
   getDepartmentAdminLanding(status:string, orgId:string){
