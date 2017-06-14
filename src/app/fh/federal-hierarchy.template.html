@@ -1,4 +1,10 @@
-<div class="usa-grid federal-hierarchy relative">
+<div class="usa-grid">
+<!--fh search filter -->
+<div *ngIf="!isDefaultResult()" class="usa-width-one-fourth">
+  <fh-sidenav [userRole]="userRole" (orgTypeChange)="updateOrgType($event)" (orgStatusChange)="onOrgStatusChange($event)" (myOrgCbxChange)="onSelectAdminOrg($event)"></fh-sidenav>
+</div>
+<!--fh search result/landing default result-->
+<div class="federal-hierarchy relative" [ngClass]="{'usa-width-one-whole':isDefaultResult(),'usa-width-three-fourths':!isDefaultResult()}">
   <div class="usa-width-one-whole">
     <button *ngIf="selectConfig.options.length > 1" class="pull-right relative">
       Create &nbsp; <i class="fa fa-angle-down"></i>
@@ -46,11 +52,11 @@
       Showing &nbsp;{{curStart}}-{{curEnd}}&nbsp; of&nbsp; {{totalRecords}}&nbsp; results
     </div>
 
-    <div class="pull-right">
-      <sam-multiselect-dropdown [(model)]="orgStatusModel" [label]="''" [options]="orgStatusOptions" [name]="'status'" (modelChange)="onOrgStatusChange()"></sam-multiselect-dropdown>
+    <div class="pull-right" *ngIf="isDefaultResult()">
+      <sam-multiselect-dropdown [(model)]="orgStatusModel" [label]="''" [options]="orgStatusOptions" [name]="'status'" (modelChange)="onOrgStatusChange(orgStatusModel)"></sam-multiselect-dropdown>
     </div>
 
-    <div class="usa-width-one-fourth pull-right m_R-2x" *ngIf="userRole === 'agencyAdmin' || userRole === 'officeAdmin'">
+    <div class="usa-width-one-fourth pull-right m_R-2x" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin') && isDefaultResult()">
       <div class="usa-width-five-sixths p_T-4x">
         <span class="pull-right">My Organization</span>
       </div>
@@ -102,4 +108,5 @@
   <div class="usa-width-three-fourths usa-offset-one-fourth" *ngIf="orgList.length > 0 && !showAdminOrg && totalPages > 1">
       <sam-pagination (pageChange)="pageChange($event-1)" [currentPage]="curPage+1" [totalPages]="totalPages"></sam-pagination>
   </div>
+</div>
 </div>

@@ -12,6 +12,7 @@ import { SamAPIKitModule } from 'api-kit';
 import { AppComponentsModule } from "../app-components/app-components.module";
 import { AlertFooterService } from "../alerts/alert-footer/alert-footer.service";
 import { FederalHierarchyPage } from "./federal-hierarchy.page";
+import { FHSideNav } from "./fh-sidenav/fh-sidenav.component";
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { FederalHierarchyPage } from "./federal-hierarchy.page";
   exports: [],
   declarations: [
     FederalHierarchyPage,
+    FHSideNav,
   ],
   providers: [
     AlertFooterService,
