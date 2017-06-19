@@ -5,6 +5,7 @@ import { OrgCreatePage } from './create-org/create-org.component';
 import { AACRequestPage } from "./AAC-request/AAC-request.component";
 import { AACConfirmPage } from "./AAC-confirm/AAC-confirm.component";
 import { AACRequestGuard } from "./AAC-request/AAC-request.guard.ts";
+import { OrgMovePage } from "./move-org/move-org.component";
 
 export const routes: Routes = [
   {
@@ -13,6 +14,7 @@ export const routes: Routes = [
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
       { path: 'profile',  component: OrgDetailProfilePage },
+      { path: 'move',  component: OrgMovePage }
     ]
   },
   {
@@ -23,7 +25,7 @@ export const routes: Routes = [
     path: 'aac-request',
     component: AACRequestPage,
     canActivate: [AACRequestGuard]
-},
+  },
   {
     path: 'aac-confirm/:requestId',
     component: AACConfirmPage,

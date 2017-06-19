@@ -207,18 +207,18 @@ export class OrgCreatePage {
       let isAddrValid = true;
       results.forEach(e => {if(e['description'] !== "VALID") isAddrValid = false;});
       if(isAddrValid && (!this.isAddressNeeded() || (this.isAddressNeeded() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid){
-        this.createOrgPage = false;
-        this.reviewOrgPage = true;
-        this.orgInfo = [];
-        this.orgInfo.push({des: "Organization Name", value: this.basicInfoForm.get('orgName').value});
-        this.orgInfo.push({des: "Start Date", value: this.basicInfoForm.get('orgStartDate').value});
-        this.orgInfo.push({des: "Description", value: this.basicInfoForm.get('orgDescription').value});
-        this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
+        this.updateOrgInfoForReview();
         if (this.isAddressNeeded()) this.orgInfo.push({des: "Indicate Funding", value: this.indicateFundRadioModel});
         this.getOrgTypeSpecialInfo(this.orgType);
         this.generateBasicOrgObj();
       }
     }, error => {});
+
+    if(!this.isAddressNeeded() && !this.basicInfoForm.invalid){
+      this.updateOrgInfoForReview();
+      this.getOrgTypeSpecialInfo(this.orgType);
+      this.generateBasicOrgObj();
+    }
 
   }
 
@@ -273,5 +273,15 @@ export class OrgCreatePage {
 
   disableCityStatePostal() {
 
+  }
+
+  updateOrgInfoForReview(){
+    this.createOrgPage = false;
+    this.reviewOrgPage = true;
+    this.orgInfo = [];
+    this.orgInfo.push({des: "Organization Name", value: this.basicInfoForm.get('orgName').value});
+    this.orgInfo.push({des: "Start Date", value: this.basicInfoForm.get('orgStartDate').value});
+    this.orgInfo.push({des: "Description", value: this.basicInfoForm.get('orgDescription').value});
+    this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
   }
 }
