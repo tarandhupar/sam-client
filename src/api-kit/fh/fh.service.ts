@@ -23,31 +23,65 @@ export class FHService {
 
   //gets organization with heirarchy data
   getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false) {
-    var oApiParam = {
-        name: '',
-        suffix: '',
-        oParam: {},
-        method: 'GET'
-      };
+    // var oApiParam = {
+    //     name: '',
+    //     suffix: '',
+    //     oParam: {},
+    //     method: 'GET'
+    //   };
+    //
+    // //organizationId length >= 30 -> call opportunity org End Point
+    // if (id.length >= 30) {
+    //   oApiParam.name = 'opportunity';
+    //   oApiParam.suffix = '/opportunities/' + id + '/organization';
+    // } else { //organizationId less than 30 character then call Octo's FH End point
+    //   oApiParam.name = 'federalHierarchy';
+    //   oApiParam.suffix = ((includeChildrenLevels) ? '/hierarchy/' : '/') + id;
+    //   oApiParam.oParam = {
+    //     'sort': 'name',
+    //     'mode': 'slim'
+    //   };
+    // }
+    //
+    // if (includeOrgTypes) {
+    //   oApiParam.oParam['types'] = 'true';
+    // }
+    //
+    // return this.oAPIService.call(oApiParam);
 
-    //organizationId length >= 30 -> call opportunity org End Point
-    if (id.length >= 30) {
-      oApiParam.name = 'opportunity';
-      oApiParam.suffix = '/opportunities/' + id + '/organization';
-    } else { //organizationId less than 30 character then call Octo's FH End point
-      oApiParam.name = 'federalHierarchy';
-      oApiParam.suffix = ((includeChildrenLevels) ? '/hierarchy/' : '/') + id;
-      oApiParam.oParam = {
-        'sort': 'name',
-        'mode': 'slim'
-      };
-    }
-
-    if (includeOrgTypes) {
-      oApiParam.oParam['types'] = 'true';
-    }
-
-    return this.oAPIService.call(oApiParam);
+    return  Observable.of(
+      {_embedded:
+        [{org:
+        {
+          categoryDesc: "SUB COMMAND",
+          categoryId: "CAT-6",
+          code: "RMAC",
+          createdBy: "DODMIGRATOR",
+          createdDate: 1053388800000,
+          description: "RMAC",
+          fpdsOrgId: "RMAC",
+          fullParentPath: "100000000.100000012.100000117.100000120",
+          fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
+          isSourceFpds: true,
+          l1Name: "DEPT OF DEFENSE",
+          l1OrgKey: 100000000,
+          l2Name: "DEPT OF THE ARMY",
+          l3Name: "AMC",
+          l4Name: "RMAC",
+          lastModifiedBy: "FPDSADMIN",
+          lastModifiedDate: 1161993600000,
+          level: 4,
+          name: "RMAC",
+          orgCode: "ORG-2899",
+          orgKey: 100000120,
+          parentOrg: "AMC",
+          parentOrgKey: 100000117,
+          type: "SUB COMMAND",
+          orgAddresses:[]
+        }
+        }]
+      }
+    );
   }
 
   getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {

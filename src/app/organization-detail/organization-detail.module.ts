@@ -18,6 +18,7 @@ import { FlashMsgService } from "./flash-msg-service/flash-message.service";
 import { AACRequestPage } from "./AAC-request/AAC-request.component";
 import { AACConfirmPage } from "./AAC-confirm/AAC-confirm.component";
 import { AACRequestGuard } from "./AAC-request/AAC-request.guard";
+import { OrgMovePage } from "./move-org/move-org.component";
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { AACRequestGuard } from "./AAC-request/AAC-request.guard";
     OrgDetailPage,
     OrgDetailProfilePage,
     OrgCreatePage,
+    OrgMovePage,
     AACRequestPage,
     AACConfirmPage,
   ],
