@@ -88,6 +88,27 @@ export class OrgAddrFormComponent {
     this.isCityDisabled = true;
     this.isStateDisabled = true;
     this.addressForm.get('postalCode').disable();
+
+    if(this.isAddrModelPopulated()){
+      this.populateAddressFormField();
+      this.isCityDisabled = false;
+      this.isStateDisabled = false;
+    }
+  }
+
+  isAddrModelPopulated(){
+    return this.orgAddrModel.country !== "" && this.orgAddrModel.state !== "" && this.orgAddrModel.city !== "" ;
+  }
+
+  populateAddressFormField(){
+    this.addressForm.get("postalCode").setValue(this.orgAddrModel.postalCode );
+    this.addressForm.get("streetAddr1").setValue(this.orgAddrModel.street1 );
+    this.addressForm.get("streetAddr2").setValue(this.orgAddrModel.street2 );
+
+    this.country = {key:this.orgAddrModel.country,value:this.orgAddrModel.country};
+    this.state = {key:this.orgAddrModel.state,value:this.orgAddrModel.state};
+    this.cityOutput = {key:this.orgAddrModel.city,value:this.orgAddrModel.city};
+
   }
 
   onAddrTypeSelect(val){
