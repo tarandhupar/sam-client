@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ViewChildren, QueryList } from "@angular/core";
+import { Component, Input, Output, ViewChild, ViewChildren, QueryList, EventEmitter } from "@angular/core";
 import { ActivatedRoute, Router} from "@angular/router";
 import { FormGroup, FormBuilder, AbstractControl, FormControl } from '@angular/forms';
 import { SamTextComponent } from 'sam-ui-kit/form-controls/text/text.component';
@@ -8,6 +8,7 @@ import { FHService } from "../../../api-kit/fh/fh.service";
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
 import { Observable } from 'rxjs';
 import { Location } from "@angular/common";
+import * as moment from 'moment/moment';
 
 function validDateTime(c: FormControl) {
   let invalidError = {message: 'Date is invalid'};
@@ -32,9 +33,8 @@ export class OrgCreateForm {
   @ViewChild('orgName') orgName: SamTextComponent;
   @ViewChild('orgStartDateWrapper') orgStartDateWrapper: LabelWrapper;
 
-
   @Input() orgFormConfig:any;
-
+  @Output() onCancelClick: EventEmitter<any> = new EventEmitter<any>();
   // Indicate Funding radio group
   indicateFundRadioModel:any = '';
   indicateFundRadioConfig = {
@@ -60,6 +60,7 @@ export class OrgCreateForm {
   orgParentId:string = "";
   fullParentPath:string = "";
   fullParentPathName:string = "";
+  startDateInitVal:string = "";
 
   reviewOrgPage:boolean = false;
   createOrgPage:boolean = true;
@@ -85,9 +86,10 @@ export class OrgCreateForm {
       orgShortName: ['', []],
     });
 
-    this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
 
     if(this.orgFormConfig.mode === 'create'){
+      this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
+
       this.orgType = this.orgFormConfig.orgType.toLowerCase();
       this.orgParentId = this.orgFormConfig.parentId;
       this.setupOrgForms(this.orgType);
@@ -99,6 +101,10 @@ export class OrgCreateForm {
       this.populateOrgBasicForm(this.orgFormConfig.org);
       this.populateOrgForms(this.orgFormConfig.org);
       if(!!this.orgParentId) this.getOrgDetail(this.orgParentId);
+
+      this.orgFormConfig.org.orgAddresses.forEach( e => {
+        this.orgAddresses.push({addrModel:e,showAddIcon:false});
+      });
     }
 
   }
@@ -146,9 +152,19 @@ export class OrgCreateForm {
 
   populateOrgBasicForm(org){
     this.basicInfoForm.get("orgName").setValue(org.name);
-    this.basicInfoForm.get("orgStartDate").setValue(org.startDate);
     this.basicInfoForm.get("orgDescription").setValue(org.summary?org.summary:'');
     this.basicInfoForm.get("orgShortName").setValue(org.shortName?org.shortName:'');
+
+    this.startDateInitVal = moment(org.startDate).format('Y-M-D');
+    this.basicInfoForm.get("orgStartDate").setValue(this.startDateInitVal);
+
+    if(this.orgType.toLowerCase() === 'office'){
+      if(org.newIsFunding){
+        this.indicateFundRadioModel = org.newIsAward?"Funding/Awarding":"Funding";
+      }else{
+        this.indicateFundRadioModel = "Other";
+      }
+    }
   }
 
   populateOrgForms(org){
@@ -324,5 +340,9 @@ export class OrgCreateForm {
     this.orgInfo.push({des: "Start Date", value: this.basicInfoForm.get('orgStartDate').value});
     this.orgInfo.push({des: "Description", value: this.basicInfoForm.get('orgDescription').value});
     this.orgInfo.push({des: "Shortname", value: this.basicInfoForm.get('orgShortName').value});
+  }
+
+  onCancelBtnClick(){
+    this.onCancelClick.emit(true);
   }
 }

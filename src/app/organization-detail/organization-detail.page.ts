@@ -10,8 +10,10 @@ export class OrgDetailPage {
 
   orgName: string = "";
   orgId: string = "";
+  deptLogo: any;
 
   currentSection: string = "Profile";
+  dataLoaded:boolean = false;
 
   constructor(private fhService: FHService, private route: ActivatedRoute){}
 
@@ -29,6 +31,9 @@ export class OrgDetailPage {
     this.fhService.getOrganizationById(this.orgId,false,true).subscribe(
       res => {
         this.orgName = res._embedded[0].org.name;
+        this.deptLogo = res._embedded[0]._link.logo;
+        if(!this.deptLogo) this.updateNoLogoUrl();
+        this.dataLoaded = true;
       });
   }
 
@@ -38,5 +43,9 @@ export class OrgDetailPage {
 
   selectCurrentSection(sectionValue){
     this.currentSection = sectionValue;
+  }
+
+  updateNoLogoUrl(){
+    this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
   }
 }

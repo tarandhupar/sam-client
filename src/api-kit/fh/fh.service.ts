@@ -59,11 +59,13 @@ export class FHService {
           createdBy: "DODMIGRATOR",
           createdDate: 1053388800000,
           startDate: 1053388800000,
+          endDate: 1053388800000,
           summary: "test summary",
           shortName: "test short name",
           description: "RMAC",
           fpdsOrgId: "RMAC",
           fpdsCode: "1021",
+          newIsFunding: true,
           fullParentPath: "100000000.100000012.100000117.100000120",
           fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
           isSourceFpds: true,
@@ -80,9 +82,10 @@ export class FHService {
           orgKey: 100000120,
           parentOrg: "AMC",
           parentOrgKey: 100000117,
-          type: "SUB COMMAND",
-          orgAddresses:[]
-        }
+          type: "OFFICE",
+          orgAddresses:[{addrType:"Mailing Address",country:"USA",state:"VA",city:"fairfax",street1:"street 123",street2:"",postalCode:"22030"}]
+        },
+          _link:{}
         }]
       }
     );

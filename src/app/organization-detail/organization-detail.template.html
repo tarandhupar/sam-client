@@ -4,8 +4,8 @@
     <div sam-sticky limit=1200 container="organization-detail">
       <div class="usa-width-one-whole m_B-2x">
         <div class="org-logo-container relative">
-          <img class="org-logo-image" src="src/assets/img/blank_icon.png" alt="organization detail logo">
-          <span class="org-logo-insert-icon"><i class="fa fa-plus"></i></span>
+          <img *ngIf="dataLoaded" class="org-logo-image" [src]="deptLogo.href" (error)="updateNoLogoUrl()">
+          <!--<span class="org-logo-insert-icon"><i class="fa fa-plus"></i></span>-->
         </div>
       </div>
       <ul class="usa-sidenav-list">

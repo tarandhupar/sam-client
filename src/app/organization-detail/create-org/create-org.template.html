@@ -1,7 +1,7 @@
 <section class="org-create-page usa-grid relative">
   <div class="usa-width-one-fourth">&nbsp;</div>
   <div class="usa-width-two-thirds p_B-6x">
-    <create-org-form [orgFormConfig]="orgFormConfig"></create-org-form>
+    <create-org-form [orgFormConfig]="orgFormConfig" (onCancelClick)="location.back()"></create-org-form>
   </div>
 
 </section>

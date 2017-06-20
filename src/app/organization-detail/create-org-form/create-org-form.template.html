@@ -5,7 +5,7 @@
     <form class="usa-width-one-whole create-org-form-section create-org-basic-section" [formGroup]="basicInfoForm">
       <sam-text #orgName [required]='true' [control]="basicInfoForm.get('orgName')" formControlName="orgName" [name]="'orgName-input'" [label]="'Organization Name'"></sam-text>
       <sam-label-wrapper #orgStartDateWrapper class="usa-width-one-half" [label]="'Start Date'" [name]="'start-date'" [required]="true">
-        <sam-date (valueChange)="setOrgStartDate($event)" [label]="''" name='start-date'></sam-date>
+        <sam-date (valueChange)="setOrgStartDate($event)" [label]="''" name='start-date' [value]="startDateInitVal"></sam-date>
       </sam-label-wrapper>
       <sam-text-area #orgDescription class="usa-width-one-whole" [control]="basicInfoForm.get('orgDescription')" formControlName="orgDescription" [label]="'Description'" name='description' [placeholder]="'Provide a description for your organization and its function.'"></sam-text-area>
       <sam-text #orgShortName class="usa-width-one-whole" [control]="basicInfoForm.get('orgShortName')" formControlName="orgShortName" [name]="'orgShortName-input'" [label]="'Short Name'"></sam-text>
@@ -59,7 +59,7 @@
     </div>
 
     <button class="usa-button-primary p_R-4x p_L-6x pull-right" (click)="onReviewFormClick()">Review <i class="fa fa-arrow-right"></i></button>
-    <button class="usa-button-outline p_R-6x p_L-6x pull-right" (click)="location.back()">Cancel</button>
+    <button class="usa-button-outline p_R-6x p_L-6x pull-right" (click)="onCancelBtnClick()">Cancel</button>
   </div>
   <div class="usa-width-one-whole p_B-6x" *ngIf="reviewOrgPage">
     <div class="usa-width-one-whole org-confirm-header p_B-6x" *ngIf="isCreateMode()">
