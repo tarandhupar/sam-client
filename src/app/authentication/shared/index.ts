@@ -1,2 +1,1 @@
-export { SamKBAComponent } from './kba'
-export { SamPasswordComponent } from './password';
+export { Validators } from './validators';

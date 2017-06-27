@@ -1,10 +1,12 @@
 import { Injectable, NgZone } from '@angular/core';
 import { WrapperService } from '../wrapper/wrapper.service';
 import { IAMService } from '../iam/iam.service';
+import { config } from '../iam/api/core/modules/helpers';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
-import {Keepalive} from '@ng-idle/keepalive';
+import { Keepalive } from '@ng-idle/keepalive';
+import * as Cookies from 'js-cookie';
 
 @Injectable()
 export class UserSessionService {
@@ -113,8 +115,11 @@ export class UserSessionService {
   }
 
   extendUserSession(){
+    Cookies.remove("IAMSession");
+
     this.iamService.iam.checkSession((user) => {
-      this.zone.run(() => {});
+      let token = Cookies.get('iPlanetDirectoryPro');
+      Cookies.set('iPlanetDirectoryPro', token, config.cookies);
     });
   }
 

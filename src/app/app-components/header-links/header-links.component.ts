@@ -64,16 +64,17 @@ export class SamHeaderLinksComponent {
   };
 
   showDropdown:boolean = true;
+
   dropdownData:any = [
-    {linkTitle:"Home", linkClass:"fa-home", linkUrl:"/", pageInProgress:false},
-    {linkTitle:"Reports", linkClass:"fa-area-chart", linkUrl:"/reports/overview", pageInProgress:true},
-    {linkTitle:"Workspace", linkClass:"fa-table", linkUrl:"/workspace", pageInProgress:false},
-    {linkTitle:"Help", linkClass:"fa-info-circle", linkUrl:"/help/overview", pageInProgress:false},
-    {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkUrl:"/federal-hierarchy", pageInProgress:false},
-    {linkTitle:"Data Service", linkClass:"fa-file-text-o", linkUrl:"/data-service", pageInPorgress:false},
-    {linkTitle:"Users", linkClass:"fa-user-plus", linkUrl:"/", pageInProgress:true},
-    {linkTitle:"Profile", linkClass:"fa-user", linkUrl:"/profile",pageInProgress:false, loggedIn: true},
-    {linkTitle:"Sign Out", linkClass:"fa-sign-out", linkUrl:"/signout",pageInProgress:false, loggedIn: true},
+    {linkTitle:"Home", linkClass:"fa-home", linkId:"header-link-home", linkUrl:"/", pageInProgress:false},
+    {linkTitle:"Reports", linkClass:"fa-area-chart", linkId:"header-link-reports", linkUrl:"/reports/overview", pageInProgress:true},
+    {linkTitle:"Workspace", linkClass:"fa-table", linkId:"header-link-workspace", linkUrl:"/workspace", pageInProgress:false},
+    {linkTitle:"Help", linkClass:"fa-info-circle", linkId:"header-link-help", linkUrl:"/help/overview", pageInProgress:false},
+    {linkTitle:"Hierarchy", linkClass:"fa-sitemap", linkId:"header-link-hierarchy", linkUrl:"/federal-hierarchy", pageInProgress:false},
+    {linkTitle:"Data Services", linkClass:"fa-file-text-o", linkId:"header-link-data-service", linkUrl:"/data-services", pageInPorgress:false},
+    {linkTitle:"Users", linkClass:"fa-user-plus", linkId:"header-link-users", linkUrl:"/", pageInProgress:true},
+    {linkTitle:"Profile", linkClass:"fa-user", linkId:"header-link-profile", linkUrl:"/profile",pageInProgress:false, loggedIn: true},
+    {linkTitle:"Sign Out", linkClass:"fa-sign-out", linkId:"header-link-signout", linkUrl:"/signout",pageInProgress:false, loggedIn: true},
   ];
 
   constructor(private _router:Router, private zone: NgZone, private api: IAMService) {

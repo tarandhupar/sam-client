@@ -1,6 +1,5 @@
 import { DetailsComponent, MigrationsComponent, ResetComponent } from './';
 
-import { ProfileGuard } from './profile.guard';
 import { ProfileResolve } from './profile.resolve';
 
 export default [

@@ -1,0 +1,87 @@
+<div class="usa-grid-full usa-user-directory">
+  <aside class="usa-width-one-fourth usa-filter-container" *ngIf="filterable">
+    <sam-agency-picker [label]="'Filters'"
+                       [advancedMode]="true"
+                       [multimode]="false"
+                       [orgRoot]="states.filter.department"
+                       [initial]="states.filter.value.length ? [states.filter.value] : []"
+                       [orgId]="states.filter.value"
+                       (organization)="onFilter($event)">
+    </sam-agency-picker>
+  </aside>
+  <div [ngClass]="{ 'usa-width-three-fourths': filterable, 'usa-width-one-whole': !filterable }">
+    <div class="usa-search-container" *ngIf="searchable">
+      <form class="usa-search usa-search-big" (ngSubmit)="search()">
+        <div role="search">
+          <label for="user-directory-search"></label>
+          <input type="search"
+                 id="user-directory-search"
+                 name="user-directory-search"
+                 placeholder="Find User"
+                 [(ngModel)]="states.search">
+          <button type="submit" class="usa-button-primary usa-button-search">
+            <span class="usa-search-submit-text">
+              <span class="fa fa-search"></span>
+            </span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <sam-title-subtitle [titleText]="title" [subtitle]="subtitle"></sam-title-subtitle>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="text-left">
+            Showing
+            <span [innerText]="intStart"></span>-<span [innerText]="intEnd"></span> of <span [innerText]="intTotal"></span>
+          </th>
+          <th class="text-right">
+            <div class="usa-sort-container" *ngIf="sortable">
+              Sort By
+              <sam-select name="user-directory-sort"
+                          [options]="store.sortOptions"
+                          [disabled]="states.loading"
+                          [(model)]="store.sort"
+                          (modelChange)="onSort($event)"></sam-select>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of store.cache; let $index = index;">
+          <td>
+            <div class="user">
+              <div class="avatar">
+                <span class="fa fa-user"></span>
+              </div>
+              <span>
+                <div class="title">
+                  <a [routerLink]="routerLink(user)" [innerText]="user.fullName"></a>
+                </div>
+                <div [innerText]="user.email"></div>
+              </span>
+            </div>
+            <div class="organization details">
+              <div class="title">Department</div>
+              <div [innerText]="user.department"></div>
+            </div>
+          </td>
+          <td class="details">
+            <div>
+              <div class="title">Last Sign In</div>
+              <div [innerText]="formatDate(user.lastLogin)"></div>
+            </div>
+            <div>
+              <div class="title">Status</div>
+              <div>Active</div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <sam-pagination [currentPage]="states.page.current" [totalPages]="states.page.total" [disabled]="states.loading" (pageChange)="onPage($event)"></sam-pagination>
+  </div>
+</div>

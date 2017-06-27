@@ -40,12 +40,8 @@ export class EntityPage implements OnInit, OnDestroy {
     "label": "Entity",
     "children": []
   };
-  naicsDetails = {
-    details: [],
-  };
-  pscDetails = {
-    details: [],
-  };
+  naicsDetails: any;
+  pscDetails: any;
   qParams:any = {};
   error;
 
@@ -142,27 +138,41 @@ export class EntityPage implements OnInit, OnDestroy {
   }
   
   getNaicsDescription(naicsList){
+	var codeList;
 	naicsList.forEach(code => {
-		this.locationService.getNaicsDetails('2017', code).subscribe(
-		  res => {
-			  this.naicsDetails.details.push({naicsCode: res._embedded.nAICSList[0].naicsCode, description: res._embedded.nAICSList[0].naicsTitle});
-		  },
+		if(codeList != null){
+			codeList += ',' + code;
+		}
+		else {
+			codeList = code;
+		}
+	});
+	this.locationService.getNaicsDetails('2017', codeList).subscribe(
+		res => {
+			this.naicsDetails = res._embedded.nAICSList;
+		},
 		  error => {
 			this.error = error;
-		  });
-	  });
-	}
+	});
+  }
 	
 	getPscDescription(pscList){
+	var codeList;
 	pscList.forEach(code => {
-		this.locationService.getPSCDetails(code).subscribe(
-		  res => {
-			  this.pscDetails.details.push({pscCode: res._embedded.productServiceCodeList[0].pscCode, description: res._embedded.productServiceCodeList[0].pscName});
-		  },
+		if(codeList != null){
+			codeList += ',' + code;
+		}
+		else {
+			codeList = code;
+		}
+	});
+	this.locationService.getPSCDetails(codeList).subscribe(
+		res => {
+			this.pscDetails = res._embedded.productServiceCodeList;
+		},
 		  error => {
 			this.error = error;
-		  });
-	  });
+	});
 	}
 
   ngOnDestroy() {

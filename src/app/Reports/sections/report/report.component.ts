@@ -61,7 +61,7 @@ export class ReportComponent implements OnInit {
         vm.user = user;
         vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
         ('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?&evt=4001&hiddensections=path,dockLeft,footer'
-          + '&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0].role);
+          + '&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0]);
 
         cb();
       });
@@ -70,8 +70,6 @@ export class ReportComponent implements OnInit {
     let vm = this;
     vm.showReport = true;
     vm.samAccordionValue.collapseAll();
-
-
     // vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
     // ('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?&evt=4001&hiddensections=path,dockLeft,footer'
     //   + '&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0].role);

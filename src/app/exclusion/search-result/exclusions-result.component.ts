@@ -25,7 +25,7 @@ import * as moment from 'moment/moment';
               {{ data.cageCode }}
             </li>
             <li>
-              <strong>Address: </strong><br>
+              <strong>Address</strong><br>
               {{ data.address.streetAddress }}
               <ng-container *ngIf="data.address?.city && data.address?.streetAddress">,</ng-container> 
               {{ data.address.city }}

@@ -24,8 +24,7 @@
         (modelChange)="orgSearchStatusChange($event)">
       </sam-checkbox>
     </sam-collapsible>
-    <!--<div class="usa-width-one-whole" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin')">-->
-    <div class="usa-width-one-whole fh-sidenav-my-org-div">
+    <div class="usa-width-one-whole fh-sidenav-my-org-div" *ngIf="(userRole === 'agencyAdmin' || userRole === 'officeAdmin')">
       <div class="usa-width-five-sixths">
         <span class="pull-left p_T-4x">My Organization</span>
       </div>

@@ -33,7 +33,8 @@
     </div>
     <section class="usa-grid-full">
       <div class="grid-name1">
-        <span *ngIf="states.isSignedIn">
+        <!--<span *ngIf="states.isSignedIn">-->
+        <span>
           <p class="p_L-8x">
             Showing {{currentReportStartIndex}}-{{currentReportEndIndex}} out of {{totalReportCount}} reports
           </p>
@@ -41,7 +42,8 @@
       </div>
       <div class="grid-date1">
         <div class="p_R-0x">
-          <span *ngIf="states.isSignedIn" >
+          <span>
+          <!--<span *ngIf="states.isSignedIn" >-->
             <sam-pagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()"
                (pageChange)="onParamChanged($event)">
             </sam-pagination>
@@ -81,19 +83,20 @@
               {{item.verb}}
             </div>
             <div class="usa-grid-full">
-              <samAccordion >
+              <sam-accordion >
                 <sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">
                   <div  class="grid-name"></div>
                   <div class="grid-date"><i class="fa fa-trash"></i></div>
                   <!--<sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved ' + item.name">{{item.name}}-->
                 </sam-accordion-section>
-              </samAccordion>
+              </sam-accordion>
             </div>
           </div>
         </li>
       </ul>
     </section>
-    <span *ngIf="states.isSignedIn">
+    <span>
+    <!--<span *ngIf="states.isSignedIn">-->
       <sam-pagination *ngIf='totalPages() > 1' [(currentPage)]="currentPage" [totalPages]="totalPages()"
                (pageChange)="onParamChanged($event)">
       </sam-pagination>

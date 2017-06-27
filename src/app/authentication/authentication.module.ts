@@ -11,16 +11,12 @@ import { PipesModule } from '../app-pipes/app-pipes.module';
 import { AuthenticationService } from './authentication.service.ts';
 import { AuthenticationRouter } from './authentication.route';
 
-// Shared Components
-import { SamKBAComponent, SamPasswordComponent } from './shared';
-
 // Page Components
 import { LoginComponent } from './login';
 import { RegisterGuard, RegisterComponent, RegisterInitialComponent, RegisterConfirmComponent, RegisterMainComponent } from './register';
 import { ForgotComponent, ForgotInitialComponent, ForgotConfirmComponent, ForgotMainComponent } from './forgot';
 import { FSDGuard, FSDComponent, UserComponent, UsersComponent } from './fsd';
 import { ProfileGuard, ProfileResolve, ProfileComponent,DetailsComponent, ResetComponent, MigrationsComponent } from './profile';
-import { SystemGuard, SystemComponent, SystemProfileComponent, SystemPasswordComponent, SystemMigrationsComponent } from './system';
 
 @NgModule({
   imports: [
@@ -36,12 +32,6 @@ import { SystemGuard, SystemComponent, SystemProfileComponent, SystemPasswordCom
   ],
 
   declarations: [
-    /**
-     * Shared
-     */
-    SamKBAComponent,
-    SamPasswordComponent,
-
     /**
      * Login
      */
@@ -77,14 +67,6 @@ import { SystemGuard, SystemComponent, SystemProfileComponent, SystemPasswordCom
     DetailsComponent,
     MigrationsComponent,
     ResetComponent,
-
-    /**
-     * System
-     */
-    SystemComponent,
-    SystemProfileComponent,
-    SystemPasswordComponent,
-    SystemMigrationsComponent
   ],
 
   providers: [
@@ -96,7 +78,6 @@ import { SystemGuard, SystemComponent, SystemProfileComponent, SystemPasswordCom
     FSDGuard,
     ProfileGuard,
     RegisterGuard,
-    SystemGuard,
 
     /**
      * Route Resolvers

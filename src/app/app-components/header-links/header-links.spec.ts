@@ -7,6 +7,15 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { SamHeaderLinksComponent } from './header-links.component';
 import { IAMService } from 'api-kit';
 
+class iamStub{
+  checkSession($success,$error){
+    return $error;
+  }
+}
+
+class iamServiceStub {
+  iam = new iamStub();
+}
 describe('The Sam Header Links component', () => {
   let component: SamHeaderLinksComponent;
   let fixture: any;
@@ -17,6 +26,13 @@ describe('The Sam Header Links component', () => {
       declarations: [SamHeaderLinksComponent],
       imports: [SamUIKitModule, RouterTestingModule],
       providers: [IAMService],
+    });
+    TestBed.overrideComponent(SamHeaderLinksComponent, {
+      set: {
+        providers: [
+          { provide: IAMService, useClass: iamServiceStub }
+        ]
+      }
     });
     fixture = TestBed.createComponent(SamHeaderLinksComponent);
     component = fixture.componentInstance;
@@ -29,16 +45,15 @@ describe('The Sam Header Links component', () => {
 
   it('should have sign in and sign up links', function () {
     fixture.detectChanges();
-    let signinLink = fixture.debugElement.query(By.css(".signin-link"));
-    expect(signinLink.nativeElement.innerHTML).toBe("Sign In");
-    let signupLink = fixture.debugElement.query(By.css(".signup-link"));
-    expect(signupLink.nativeElement.innerHTML).toBe("Sign Up");
+    let signinLink = fixture.debugElement.query(By.css(".right.menu > .item:nth-child(3)"));
+    expect(signinLink.nativeElement.innerHTML.trim()).toBe("Sign in");
+    let signupLink = fixture.debugElement.query(By.css(".right.menu > .item:nth-child(4)"));
+    expect(signupLink.nativeElement.innerHTML.trim()).toBe("Sign up");
   });
 
-  it('should open drop down menu when clicking on menu link', async(()=>{
+  it('should open drop down menu when clicking on menu link', ()=>{
     fixture.detectChanges();
-    expect(component.showDropdown).toBe(false);
-    let menuLink = fixture.debugElement.query(By.css(".menu-link"));
+    let menuLink = fixture.debugElement.query(By.css(".right.menu > .item:nth-child(1)"));
     menuLink.triggerEventHandler('click',null);
     fixture.whenStable().then(()=>{
       fixture.detectChanges();
@@ -46,10 +61,10 @@ describe('The Sam Header Links component', () => {
       let dropdownData = component.dropdownData.filter((item)=>{
         return !item.pageInProgress;
       });
-      let titles = fixture.debugElement.queryAll(By.css(".dropdown-button-title"));
+      let titles = fixture.debugElement.queryAll(By.css(".sam-ui.labeled.icon.right.inverted.menu > .item"));
       for(var index in dropdownData){
-        expect(titles[index].nativeElement.innerHTML).toBe(dropdownData[index].linkTitle);
+        expect(titles[index].nativeElement.innerHTML).toContain(dropdownData[index].linkTitle);
       }
     });
-  }));
+  });
 });

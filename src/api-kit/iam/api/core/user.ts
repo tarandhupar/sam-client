@@ -1,6 +1,8 @@
 import { clone, indexOf, merge, values } from 'lodash';
 import { isDebug } from './modules/helpers';
 
+import * as moment from 'moment';
+
 const LDAP_MAPPINGS = {
   'dn':               'dn',
   'cn':               'fullName',
@@ -17,10 +19,15 @@ const ROLE_MAPPINGS = {
   fsd:           'FSD_Agent'
 };
 
-class User {
+export class User {
+  public _id = '';
+  public email = '';
   public firstName = '';
   public initials = '';
   public lastName = '';
+
+  public status: 'Active';
+  public lastLogin = moment();
 
   constructor(params) {
     params = params || {};
@@ -37,6 +44,10 @@ class User {
     merge(this, user, {
       emailNotification: this.toBoolean(user.emailNotification || 'no')
     });
+
+    if(!this._id && this.email) {
+      this._id = this.email;
+    }
 
     // Map Roles Array
     for(role in ROLE_MAPPINGS) {
@@ -71,7 +82,11 @@ class User {
     for(key in params) {
       if(mappings[key]) {
         $key = mappings[key];
-        data[$key] = params[key];
+
+        // Reverse Mapping is only needed if the target mapping is not available in the source
+        if(!params[mappings[key]]) {
+          data[$key] = params[key];
+        }
       } else {
         data[key] = params[key];
       }
@@ -96,5 +111,3 @@ class User {
     return fullName.join(' ').trim();
   }
 }
-
-export default User;

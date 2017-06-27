@@ -11,7 +11,6 @@ import {
   AccountIdentificationModel
 } from "../../../../components/account-identification/account-identification.component";
 import { TAFSConfig, TAFSModel } from "../../../../components/tafs/tafs.component";
-import { FieldErrorList, FieldError } from "../../../fal-form.component";
 
 @Component({
   providers: [FALFormService],
@@ -25,16 +24,32 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
   public otherFinancialInfoForm: FormGroup;
   private formErrors = new Set();
 
+  rangeAndAverageHint:string = `<p>Provide a range that best represents the smallest and largest awards available. Provide an approximate average award size.</p>
+                                <p>First, list a representative range (smallest to largest) of the amounts of financial assistance available. 
+                                The figures for the smallest and the largest awards should be based on what have been awarded in the past fiscal year and the current fiscal year to date. 
+                                Second, indicate an approximate average amount of the financial assistance awards (dollars) that were made in the past and current fiscal years.</p>`;
+  accomplishmentConfigHint:string = `<p>Showcase for public users the achievements associated with this listing. Use clear, plain language and provide compelling examples.</p><p>Describe the program's accomplishments, outputs, results achieved and services rendered. This information must be provided for the actual fiscal year. Estimates must be provided for the current fiscal year and the budget fiscal year. Quantitative data should be used as much as possible. Data on the number and ratio of applications should be provided. Indicate how many applications were received and how many awards were made for all three relevant fiscal years. When a new program is involved, anticipated accomplishments should be stated. For example, "It is anticipated that 109 applications will be received and 25 awards will be granted in fiscal year 20__.</p>`;
+  accountIdentificationConfigHint:string =`<p>List the 11-digit budget account identification code(s) that funds the program. This code must match the President's budget.</p>
+                                          <p>List the 11 digit budget account identification code(s) that funds the program. The meaning of the 11-digit code is specified in OMB Circular No. 
+                                          A-11, and in Appendix III of the Catalog. All program coding used will be consistent with that submitted for inclusion in the President's Budget.</p>`;
   public accomplishmentsConfig: FiscalYearTableConfig = {
     name: 'program-accomplishments',
     label: 'Program Accomplishments',
-    hint: 'Showcase for public users the achievements associated with this listing. Use clear, plain language and provide compelling examples.',
+    hint: this.accomplishmentConfigHint,
     required: true,
     itemName: 'Accomplishments',
     errorMessage: 'You must select Not Applicable or add at least one Program Accomplishment.',
 
     entry: {
       hint: 'Please describe accomplishment:'
+    },
+
+    textarea: {
+      required: false
+    },
+
+    select: {
+      required: false
     },
 
     deleteModal: {
@@ -46,7 +61,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
   public accountIdentificationConfig: AccountIdentificationConfig = {
     name: 'account-identification',
     label: 'Account Identification',
-    hint: 'List the 11-digit budget account identification code(s) that funds the program. This code must match the President\'s budget.',
+    hint: this.accountIdentificationConfigHint,
     codeHint: 'Agency supplied 11-digit budget account code',
     required: true,
 
@@ -59,7 +74,7 @@ export class FALFormFinancialInfoOtherComponent implements OnInit {
   public tafsConfig: TAFSConfig = {
     name: 'tafs',
     label: 'TAFS Codes - Unique Treasury Appropriation Fund Symbols',
-    hint: 'Enter as many components as possible. Treasury Dept Code, Allocation Transfer Agency, and Treasury Account main code are required.',
+    hint: '',
     required: true,
 
     deleteModal: {

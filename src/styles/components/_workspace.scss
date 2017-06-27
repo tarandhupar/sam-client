@@ -1,0 +1,55 @@
+@import "workspace/administration";
+@import "workspace/system";
+@import "workspace/workspace-widget";
+
+.workspace {
+  .usa-sidenav-list li {
+    border: none;
+  }
+
+  .usa-sidenav-list li a:hover {
+    cursor: pointer;
+  }
+
+  aside {
+    margin-top: 60px;
+  }
+
+  .workspace-welcome-section {
+    border: 1px solid $color-gray-light;
+    .workspace-welcome-close-icon {
+      position: absolute;
+      right: 5px;
+      top: 0;
+    }
+  }
+
+  .workspace-notification-section {
+    border: 1px solid $color-gray-light;
+  }
+
+  .workspace-help-detail {
+    border: 1px solid $color-gray-light;
+    padding: 8px;
+  }
+
+  .workspace-title-text {
+    color: $color-primary-alt-darkest;
+  }
+
+  .workspace-center-text {
+    text-align: center;
+  }
+}
+
+.workspace-image {
+  width: 100%;
+  max-width: none;
+  min-height: 250px;
+  background: url('../assets/img/help-main.png');
+  background-size: cover;
+}
+
+.pending-button {
+  background-color: orange;
+}

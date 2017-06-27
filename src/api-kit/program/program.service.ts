@@ -7,6 +7,69 @@ export class ProgramService{
 
   constructor(private oAPIService: WrapperService){}
 
+  getRegionalOffices(obj){
+    let oApiParam = {
+      name: 'program',
+      suffix: '/regionalOffices',
+      oParam: {
+        keyword: (obj.keyword == undefined) ? '' : obj.keyword,
+        all: (obj.all == undefined) ? '' : obj.all,
+        includeCount : (obj.includeCount == undefined) ? '' : obj.includeCount,
+        limit: (obj.limit == undefined) ? '' : obj.limit,
+        page: (obj.page == undefined) ? '' : obj.page,
+        oFilterParam: (obj.oFilterParam == undefined) ? '' : obj.oFilterParam,
+        sortBy: (obj.sortBy == undefined) ? '' : obj.sortBy,
+        "_options.hal.link": (obj.optionsHal == undefined) ? '' : obj.optionsHal
+      },
+      headers: {
+        "X-Auth-Token": obj.Cookie
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  getRAOById(id){
+    let oApiParam = {
+      name: 'program',
+      suffix: '/regionalOffices/' + id,
+      oParam: {},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  submitRAO(id: String = null, data: any, cookie: string){
+    let oApiParam = {
+      name: 'program',
+      suffix: (id == null) ? '/regionalOffices' : '/regionalOffices' + id,
+      oParam: {},
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      body: data,
+      method: (id == null) ? 'POST' : 'PATCH'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  deleteRAO(id: String, cookie: string){
+    let oApiParam = {
+      name: 'program',
+      suffix: '/regionalOffices/' + id,
+      oParam: {},
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'DELETE'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
   getProgramById(id: string, cookie: string) {
     let oApiParam = {
       name: 'program',
@@ -23,6 +86,29 @@ export class ProgramService{
     }
 
     return this.oAPIService.call(oApiParam);
+  }
+
+  getRequests(obj){
+    let oApiParam = {
+      name: 'program',
+      suffix: '/programRequests',
+      oParam: {
+        program: (obj.programId == undefined) ? '':obj.programId,
+        page: (obj.pageNum == undefined) ? '' : obj.pageNum,
+        type: (obj.type == undefined) ? '' : obj.type,
+        keyword : (obj.keyword == undefined) ? '' : obj.keyword,
+        completed: (obj.isCompleted == undefined) ? '' : obj.isCompleted,
+        size: (obj.size == undefined) ? '' : obj.size,
+        includeCount: (obj.includeCount == undefined) ? '' : obj.includeCount
+      },
+      headers: {
+        "X-Auth-Token": obj.Cookie
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+
   }
 
   runProgram(obj) {
@@ -93,13 +179,31 @@ export class ProgramService{
     return this.oAPIService.call(oApiParam, false);
   }
 
-  getPermissions(cookie: string, permissions: any) {
+  getPermissions(cookie: string, permissions: any, orgId: string = null) {
     let oApiParam = {
       name: 'program',
       suffix: '/permissions',
       oParam: {
         permissions: permissions
       },
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'GET'
+    };
+
+    if(orgId != null) {
+      oApiParam.oParam['organizationId'] = orgId;
+    }
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+  getPendingRequest(cookie: string, id: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/' + id + '/pendingRequest',
+      oParam: {},
       headers: {
         "X-Auth-Token": cookie
       },
@@ -180,6 +284,20 @@ export class ProgramService{
     };
 
     return this.oAPIService.call(oApiParam, false);
+  }
+
+  getCountPendingRequests(cookie: string) {
+    let oApiParam = {
+      name: 'program',
+      suffix: '/programRequests/countPendingRequests',
+      oParam: {},
+      headers: {
+        "X-Auth-Token": cookie
+      },
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
   }
 
   sendNotification(id: string, cookie: string) {

@@ -27,7 +27,8 @@ import { UserAccessMock } from "./access/access.service.mock";
 import { UserSessionService } from "./user-session/user-session.service";
 import { FileExtractsService } from "./file-extracts/file-extracts.service";
 import { PeoplePickerService } from "./people-picker/people-picker.service";
-import { PeoplePickerAutoCompleteDirective } from './autoCompleteWrapper/peoplePickerAutoCompleteWrapper.service'; 
+import { PeoplePickerAutoCompleteDirective } from './autoCompleteWrapper/peoplePickerAutoCompleteWrapper.service';
+import { PeoplePickerServiceMock } from "./people-picker/people-picker.mock";
 
 /**
  * A module for reusable SAM Web Design components
@@ -72,6 +73,7 @@ import { PeoplePickerAutoCompleteDirective } from './autoCompleteWrapper/peopleP
     UserSessionService,
     FileExtractsService,
     PeoplePickerService,
+    //{ provide: PeoplePickerService, useClass: PeoplePickerServiceMock }
   ]
 })
 export class SamAPIKitModule { }

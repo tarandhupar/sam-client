@@ -4,6 +4,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 
 import { DisplayPageComponent } from './display-page.component';
+import { SamFeedbackSidenavComponent } from '../feedback-sidenav/feedback-sidenav.component';
 
 let fixture;
 let comp;
@@ -12,7 +13,7 @@ let fakepath;
 describe('src/app/app-components/display-page/display-page.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DisplayPageComponent ],
+      declarations: [ DisplayPageComponent, SamFeedbackSidenavComponent ],
       imports: [SamUIKitModule,RouterTestingModule]
     });
     TestBed.compileComponents().then( ()=>{
@@ -53,7 +54,7 @@ describe('src/app/app-components/display-page/display-page.spec.ts', () => {
     });
 
   }));
-
+  /* unused component
   it('DisplayPageTests: logo test', ()  => {
     fixture.whenStable().then(() => {
       expect( fixture.debugElement.query( By.css('.sidenav-logo') ).nativeElement.getAttribute("src") ).toEqual(fakepath);
@@ -70,5 +71,5 @@ describe('src/app/app-components/display-page/display-page.spec.ts', () => {
       expect(fixture.debugElement.query( By.css('.usa-sidenav-list li:nth-child(6) a') ).nativeElement.innerHTML).toEqual("Contact Information");
     });
 	});
-
+  */
 });

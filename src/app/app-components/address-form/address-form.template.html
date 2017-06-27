@@ -1,6 +1,6 @@
 <form [formGroup]="addressForm">
-  <h3 class="m_T-3x" *ngIf="!isOrgTypeSelected()">
-    <sam-select class="org-type-select usa-width-one-half" [(model)]="orgAddrModel.addrType" [name]="orgAddrSelectConfig.name" [options]="orgAddrSelectConfig.options" [label]="orgAddrSelectConfig.label" [disabled]="orgAddrSelectConfig.disabled" (modelChange)='onAddrTypeSelect($event)'></sam-select>
+  <h3 class="m_T-3x relative" *ngIf="!isOrgTypeSelected()">
+    <sam-select class="usa-width-one-half" [(model)]="orgAddrModel.addrType" [name]="orgAddrSelectConfig.name" [options]="orgAddrSelectConfig.options" [label]="orgAddrSelectConfig.label" [disabled]="orgAddrSelectConfig.disabled" (modelChange)='onAddrTypeSelect($event)'></sam-select>
     <i class="p_T-3x p_L-3x fa fa-times-circle org-address-icons" (click)="onCancelAddressFormClick()"></i>
   </h3>
   <h3 class="m_T-3x usa-width-one-whole relative" *ngIf="isOrgTypeSelected()">

@@ -4,7 +4,7 @@ import { DataServicePage } from "./data-service.page";
 
 export const routes: Routes = [
   {
-    path: 'data-service',
+    path: 'data-services',
     component: DataServicePage,
   }
 ];

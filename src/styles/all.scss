@@ -178,6 +178,7 @@ samsearchheader .search-header > .usa-width-one-whole{
         Legacy
 *******************************/
 
+
 @import 'utilities';
 @import 'margin-padding';
 @import 'global';
@@ -186,6 +187,7 @@ samsearchheader .search-header > .usa-width-one-whole{
 
 @import 'components/parent-orgs.scss';
 @import 'components/card';
+@import 'components/complex-form-template';
 @import 'components/date-entry';
 @import 'components/date-range';
 @import 'components/download';
@@ -225,13 +227,14 @@ samsearchheader .search-header > .usa-width-one-whole{
 @import 'components/role-management/role-managment';
 @import 'components/fal-table';
 @import 'components/address-form';
-@import 'components/workspace/_workspace';
+@import 'components/workspace';
 @import 'components/bread-crumbs';
 @import 'components/data-service/data-service';
 @import 'components/_status_banner';
 @import 'components/fh/fh';
 @import 'components/title-subtitle';
 @import 'components/organization-move';
+@import 'components/user-directory';
 
 @import 'templates/workspace';
 
@@ -340,5 +343,11 @@ select {
   background-position: right .65rem center;
   padding: 1rem 2.6rem 1rem 0.7em;
 }
-
-
+.sticky-element {
+  position: fixed;
+  z-index:20;
+  bottom: 0;
+  width: 48em;
+  background:white;
+  padding-left: 32em;
+}

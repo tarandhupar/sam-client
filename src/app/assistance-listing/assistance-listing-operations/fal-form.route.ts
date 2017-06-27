@@ -4,11 +4,11 @@ import {FALFormResolver} from "./fal-form-resolver.service";
 
 export const routes: Routes = [
   {
-    path: 'programsForm/add',
+    path: 'programs/add',
     component: FALFormComponent
   },
   {
-    path: 'programsForm/:id/edit',
+    path: 'programs/:id/edit',
     component: FALFormComponent,
     resolve: {
       fal: FALFormResolver

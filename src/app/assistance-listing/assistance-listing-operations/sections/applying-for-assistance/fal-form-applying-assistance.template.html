@@ -9,6 +9,7 @@
                       [name]="'deadlineFlag-radio-buttons'"
                       [options]="deadlinesFlagOptions"
                       [required]="true"
+                      [hint]="deadlineHint"
                       formControlName="flag"
                       [control]="falAssistanceForm.get('deadlines').get('flag')"
     ></sam-radio-button>
@@ -53,7 +54,7 @@
 
     <sam-checkbox [label]="'Application Procedures'"
                  [name]="'appProc-checkbox'"
-                 [hint]="'Select if applicable.'"
+                 [hint]="appProcedureHint"
                  [options]="appProcOptions"
                  formControlName="isApplicable"
     ></sam-checkbox>
@@ -61,6 +62,7 @@
     <sam-text-area [label]="'Please list the steps for applying for assistance. Only include instructions not already covered by 2 CFR 200.'"
                  [name]="'appProc-description'"
                  formControlName="description"
+                 [hint]= "'List all steps in the application process.'"
     ></sam-text-area>
 
   </div>
@@ -87,7 +89,7 @@
   <div formGroupName="awardProcedure">
     <sam-text-area *ngIf="falAssistanceForm.get('awardProcedure').get('description')"
                    [label]="'Award Procedure'"
-                   [hint]="'Describe how assistance is awarded. Include who approves the award and how assistance is distributed.'"
+                   [hint]="awardProcedureHint"
                    [name]="'awardProcedure-description'"
                    [required]="true"
                    formControlName="description"
@@ -98,7 +100,7 @@
   <div formGroupName="approval">
     <sam-select *ngIf="falAssistanceForm.get('approval').get('interval')"
                 [label]="'Date Range for Approval/Disapproval'"
-                [hint]="'Select the range that best represents how much time the approval process takes.'"
+                [hint]="approvalHint"
                 [name]="'approval-input'"
                 [options]="dateRangeOptions"
                 [required]="true"
@@ -116,7 +118,7 @@
   <div formGroupName="renewal">
     <sam-select *ngIf="falAssistanceForm.get('renewal').get('interval')"
                 [label]="'Renewals'"
-                [hint]="'Select the range that best represents when an awardee may apply for a renewal or extension.'"
+                [hint]="renewalHint"
                 [name]="'approval-input'"
                 [options]="dateRangeOptions"
                 [required]="true"
@@ -134,7 +136,7 @@
   <div formGroupName="appeal">
     <sam-select *ngIf="falAssistanceForm.get('appeal').get('interval')"
                 [label]="'Appeals'"
-                [hint]="'Select the range that best represents how long an applicant has to appeal a decision.'"
+                [hint]="appealsHint"
                 [name]="'appeals-input'"
                 [options]="dateRangeOptions"
                 [required]="true"

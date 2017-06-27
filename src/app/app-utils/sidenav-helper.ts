@@ -31,7 +31,9 @@ export class SidenavHelper {
             return possibleSection;
           }
         });
-        _.remove(possiblePagechildren, _.isUndefined);
+        possiblePagechildren = _.filter(possiblePagechildren, item => {
+          return !_.isUndefined(item);
+        });
         possiblePage.children = possiblePagechildren;
         return possiblePage;
       });

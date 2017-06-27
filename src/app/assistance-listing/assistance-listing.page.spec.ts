@@ -9,6 +9,7 @@ import { By } from '@angular/platform-browser';
 import { ProgramPage } from './assistance-listing.page';
 import { FHService, ProgramService, DictionaryService, HistoricalIndexService } from 'api-kit';
 import { KeysPipe } from '../app-pipes/keyspipe.pipe';
+import { PipesModule } from '../app-pipes/app-pipes.module';
 import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 import { DateFormatPipe } from '../app-pipes/date-format.pipe';
 import { AuthorizationPipe } from './pipes/authorization.pipe';
@@ -18,6 +19,10 @@ import { Observable } from 'rxjs';
 import { FinancialObligationChart } from './assistance-listing.chart';
 import {RouterTestingModule} from "@angular/router/testing";
 import {SidenavHelper} from "../app-utils/sidenav-helper";
+import { AppComponentsModule } from "../app-components/app-components.module";
+import {FALWrapperChangeRequestDropdownComponent} from "./components/change-request-dropdown/wrapper-change-request-dropdown.component";
+import {FALChangeRequestDropdownComponent} from "./components/change-request-dropdown/change-request-dropdown.component";
+import {RequestLabelPipe} from "./pipes/request-label.pipe";
 
 let comp: ProgramPage;
 let fixture: ComponentFixture<ProgramPage>;
@@ -497,16 +502,18 @@ describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
         HttpModule,
         RouterTestingModule,
         CommonModule,
-        SamUIKitModule
+        SamUIKitModule,
+        PipesModule,
+        AppComponentsModule
       ],
       declarations: [
         ProgramPage,
-        FilterMultiArrayObjectPipe,
-        KeysPipe,
         AuthorizationPipe,
-        DateFormatPipe,
         HistoricalIndexLabelPipe,
-        FinancialObligationChart
+        FinancialObligationChart,
+        FALWrapperChangeRequestDropdownComponent,
+        FALChangeRequestDropdownComponent,
+        RequestLabelPipe
       ], //declare main and subcomponents
       providers: [
        //start - Mocks HTTP provider
@@ -523,11 +530,8 @@ describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
         { provide: Location, useClass: Location },
         //{ provide: ActivatedRoute, useValue: { 'params': Observable.from([{ 'id': '3077ea1df409265fb4378e0e844b8811' }]) } },
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectPipe },
-        KeysPipe,
         AuthorizationPipe,
         HistoricalIndexLabelPipe,
-        DateFormatPipe,
       ]
     }) // https://github.com/angular/angular/issues/10727
     .overrideComponent(ProgramPage, {
@@ -587,7 +591,7 @@ describe('src/app/assistance-listing/assistance-listing.page.spec.ts', () => {
   it('ProgramPage: Should show the alert for updated since YYYY', () => {
     //mocked program should show the alert -> Verifying it
     expect(comp.alerts.length).toBeGreaterThan(0);
-    expect(fixture.debugElement.queryAll(By.css('samalert')).length).toBeGreaterThan(0);
+    expect(fixture.debugElement.queryAll(By.css('sam-alert')).length).toBeGreaterThan(0);
   });
 
   it('ProgramPage: Should have related FAL', () => {

@@ -1,3 +1,5 @@
+/*
+component is deprecated
 import { TestBed, async } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MockBackend } from '@angular/http/testing';
@@ -75,3 +77,4 @@ describe('InputAutocompleteTests', () => {
   });
 
 });
+*/

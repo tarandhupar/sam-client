@@ -1,5 +1,4 @@
 import {Component, EventEmitter, Output, ViewChild, Input} from '@angular/core';
-import {SortArrayOfObjects} from "../../../app-pipes/sort-array-object.pipe";
 
 @Component({
   selector: 'sam-contract-type-filter',
@@ -7,74 +6,69 @@ import {SortArrayOfObjects} from "../../../app-pipes/sort-array-object.pipe";
 })
 export class SamContractTypeFilter {
 
-  @ViewChild('listDisplay') listDisplay;
+  /**
+   * A string of comma separated keys used to identify beneficiary objects
+   * from the passed in options
+   */
+  @Input() contractValues: string;
 
-  @Input()
-  selectModel: string;
+  /**
+   * Event Emitter to push new beneficiaryValues when changed internally
+   */
+  @Output() contractValuesChange: EventEmitter<any> = new EventEmitter<any>();
 
-  @Input()
-  options: any;
+  /**
+   * An array of beneficiary objects used by the autocomplete multiselect
+   * component to generate the list of options in the dropdown.
+   */
+  @Input() contractOptions: Array<any> = [];
 
-  @Output()
-  modelChange: EventEmitter<any> = new EventEmitter<any>();
+  /**
+   * Configuration object for beneficiary input
+   */
+  @Input() contractConfig: any;
+
+  private selectedContractOptions: Array<any> = [];
 
   constructor(){}
 
   ngOnChanges() {
-    this.listDisplay.selectedItems=[];
-
-    if(this.selectModel !== '') {
-      let selectArray = this.selectModel.split(",");
-      this.populateSelectedList(selectArray, this.options);
-    }
-
-    if(this.selectModel === '') {
-      this.listDisplay.selectedItems = [];
+    if (this.contractValues === '') {
+      this.selectedContractOptions = [];
+    } else if (this.contractValues !== '') {
+      this.selectedContractOptions = this.getOptionByValue(this.contractOptions,
+        this.contractValues.split(','),
+        this.contractConfig.config.keyValueConfig.keyProperty);
     }
   }
 
-  setSelected(obj, shouldEmit:boolean) {
-    let o = Object.assign({}, obj);
-    // if(obj.type === 'applicant') {
-    //   o.label += " (A)";
-    // } else if(obj.type === 'beneficiary') {
-    //   o.label += " (B)";
-    // }
-    this.listDisplay.selectedItems.push(o);
-    this.listDisplay.selectedItems = new SortArrayOfObjects().transform(this.listDisplay.selectedItems, 'label');
-    if(shouldEmit){
-      this.emitSelectedList();
+  contractChanged(event) {
+    if (this.contractOptions.length > 0) {
+      this.selectedContractOptions = event;
+      this.contractValues = this.getValuesFromOptions(this.selectedContractOptions,
+        this.contractConfig.config.keyValueConfig.keyProperty);
+      this.contractValuesChange.emit(this.contractValues);
     }
-
   }
 
-  emitSelectedList() {
-    let emitArray1 = [];
-    for(var i=0; i<this.listDisplay.selectedItems.length; i++) {
-      emitArray1.push(this.listDisplay.selectedItems[i].value);
-    }
-    this.modelChange.emit(emitArray1);
+  getValuesFromOptions(optionsArray: Array<any>, keyProperty: string): string {
+    return optionsArray.map((option) => {
+      if (option[keyProperty]) {
+        return option[keyProperty];
+      }
+    }).join(',');
   }
 
-  populateSelectedList(selectArray: any, optionsObj: any) {
-
-    for(var j=0; j<selectArray.length; j++) {
-      for(var i=0; i<optionsObj.options.length; i++) {
-
-        if(optionsObj.options[i].value == selectArray[j]) {
-          let option = optionsObj.options[i];
-          let filterArr = this.listDisplay.selectedItems.filter((obj)=>{
-            if(obj.value==option.value && obj.type == option.type){
-              return true;
-            }
-            return false;
-          });
-          if(filterArr.length==0){
-            this.setSelected(optionsObj.options[i], false);
+  getOptionByValue(optionsArray: Array<any>, filterStringsArray: Array<string>, keyProperty: string): Array<any> {
+    return optionsArray.filter((option) => {
+      if (filterStringsArray.length > 0) {
+        for (let i = 0; i < filterStringsArray.length; i++) {
+          if (option[keyProperty] === filterStringsArray[i]) {
+            return option;
           }
         }
       }
-    }
+    });
   }
 
 }

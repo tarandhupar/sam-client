@@ -9,16 +9,16 @@ let fixture;
 let comp;
 let fakepath;
 
-fdescribe('src/app/app-components/editor/editor.spec.ts', () => {
+describe('src/app/app-components/editor/editor.spec.ts', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ SamEditorComponent ],
-      imports: [SamUIKitModule]
+      imports: [SamUIKitModule, RouterTestingModule.withRoutes([])]
     });
     TestBed.compileComponents().then( ()=>{
       fixture = TestBed.createComponent(SamEditorComponent);
       comp = fixture.componentInstance;
-      
+
       fixture.detectChanges();
     });
 

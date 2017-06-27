@@ -9,10 +9,12 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { WageDeterminationService } from 'api-kit';
 import { SamUIKitModule } from 'sam-ui-kit';
 
+import { FilterMultiArrayObjectPipe } from "../app-pipes/filter-multi-array-object.pipe";
 import { WageDeterminationPage } from './wage-determination.page';
 import { Observable } from 'rxjs';
-import { FilterMultiArrayObjectPipe } from '../app-pipes/filter-multi-array-object.pipe';
 import {SidenavHelper} from "../app-utils/sidenav-helper";
+import { PipesModule } from '../app-pipes/app-pipes.module';
+import { AppComponentsModule } from "../app-components/app-components.module";
 
 let comp:    WageDeterminationPage;
 let fixture: ComponentFixture<WageDeterminationPage>;
@@ -196,19 +198,17 @@ export class FilterMultiArrayObjectCustomPipe implements PipeTransform {
 describe('src/app/wage-determination/wage-determination.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ WageDeterminationPage,
-        FilterMultiArrayObjectPipe,
-        DateFormatPipe
-      ], // declare the test component
+      declarations: [ WageDeterminationPage], // declare the test component
       imports: [
         HttpModule,
         RouterTestingModule,
-        SamUIKitModule
+        SamUIKitModule,
+        PipesModule,
+        AppComponentsModule
       ],
       providers: [
         BaseRequestOptions,
         MockBackend,
-        DateFormatPipe,
         SidenavHelper,
         {
           provide: Http,
@@ -221,7 +221,6 @@ describe('src/app/wage-determination/wage-determination.spec.ts', () => {
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         { provide: WageDeterminationService, useValue: MockWageDeterminationService },
         { provide: FilterMultiArrayObjectPipe, useClass: FilterMultiArrayObjectCustomPipe }
-
       ]
     });
 

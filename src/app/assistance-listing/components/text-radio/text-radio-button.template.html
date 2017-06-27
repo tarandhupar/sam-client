@@ -9,9 +9,9 @@
         </div>
         <div class="usa-width-two-thirds" *ngIf="model.radioOptionId === option.value">
           <span *ngIf="option.flag == 'number'">
-          <sam-number [name]="'numtest'" [formControl]="textBoxControl"></sam-number></span>
+          <sam-number [name]="'numtest'" [hint]="'Enter whole dollar amount. Exclude the dollar sign.'" [formControl]="textBoxControl"></sam-number></span>
           <span *ngIf="option.flag == 'text'">
-          <sam-text [name]="'test'" [formControl]="textBoxControl"></sam-text></span>
+          <sam-text [name]="'test'"  [formControl]="textBoxControl"></sam-text></span>
         </div>
       </div>
     </li>

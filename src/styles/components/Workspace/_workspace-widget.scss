@@ -1,34 +1,32 @@
-.workspace-widget{
+.workspace-widget {
+  $widget-border-width: 1px;
+  $widget-border-color: $color-gray-light;
 
-
-  .workspace-widget-title{
+  .workspace-widget-title {
     font-weight: 600;
   }
 
-  .workspace-widget-body-section{
-    border: 2px solid $color-gray-light;
-    height: 190px;
+  .workspace-widget-body-section {
+    border: $widget-border-width solid $widget-border-color;
+    min-height: 190px;
   }
 
-  .workspace-widget-bot-section{
-    border: 2px solid $color-gray-light;
+  .workspace-widget-bot-section {
+    border: $widget-border-width solid $widget-border-color;
     border-top: none;
 
-    .workspace-widget-bot-icon{
+    .workspace-widget-bot-icon {
       position: absolute;
       right: 5px;
       top: 4px;
     }
   }
 
-  .workspace-widget-text{
+  .workspace-widget-text {
     color: $color-gray;
   }
 
-  .workspace-widget-bot-section:hover, i:hover, a:hover{
+  .workspace-widget-bot-section:hover, i:hover, a:hover {
     cursor: pointer;
   }
-
 }
-
-

@@ -10,6 +10,8 @@ export class OrgDetailPage {
 
   orgName: string = "";
   orgId: string = "";
+  orgType: string = "";
+  orgHierarchyTypes: any = [];
   deptLogo: any;
 
   currentSection: string = "Profile";
@@ -31,9 +33,12 @@ export class OrgDetailPage {
     this.fhService.getOrganizationById(this.orgId,false,true).subscribe(
       res => {
         this.orgName = res._embedded[0].org.name;
+        this.orgType = res._embedded[0].org.type;
+        this.orgHierarchyTypes = res._embedded[0].orgTypes;
         this.deptLogo = res._embedded[0]._link.logo;
         if(!this.deptLogo) this.updateNoLogoUrl();
         this.dataLoaded = true;
+
       });
   }
 
@@ -47,5 +52,9 @@ export class OrgDetailPage {
 
   updateNoLogoUrl(){
     this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
+  }
+
+  isMoveOffice(){
+    return this.orgHierarchyTypes.length === 3 && this.orgType.toLowerCase() === "office";
   }
 }

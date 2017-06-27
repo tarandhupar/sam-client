@@ -22,7 +22,22 @@ export class FALAuthorizationsComponent implements OnInit {
   falAuthForm: FormGroup;
   displayAuthInfo: any = [];
   formErrorArr: any = {};
+  description: string = `
+<p>This section should include the legal authority upon which a program is based.</p><p>When new legislation is passed that has a significant bearing on a program, the reference should be included in this section.</p>
 
+<p>Do not include appropriation legislation unless it authorizes the program or a significant element of the program.</p>
+
+<p>Cite the name of the act, title, part, section, public law number, statute, U.S.C. (if one exists), and Presidential Reorganization Memorandum. If an Executive Order applies, cite the number, title, and date. The formatted sequence for a typical authorization citation is: Name of Act, Title, Part, Section Number, Public Law Number, Statute Reference (if any), and U.S. Code Reference (if any). Separate the references within a citation using commas. Separate multiple citations using a semicolon. The rules governing how to properly submit your citations follow:</p>
+<ul>
+<li>... Each item (Act, Title, Part, etc.) should be separated by a comma. The Title, Part, and Section must follow the Act name.</li>
+<li> ... Acts and Executive Orders should have capital letters in the first letter of all main words.</li>
+<li>... Multiple public laws should be separated by commas. Example: Public Laws 89-177, 89-898, 90- 001, and 100-101. ... The semicolon should only be used to set the limit of a citation among multiple citations.</li>
+<li>... The phrase "as amended by" should not be used. Instead, use "as amended," showing the amending law as a separate citation.</li>
+</ul>
+
+<p>The Authorization Appendix (Appendix II) of the Catalog consists of acts, public law numbers and the programs they authorize. The appendix is compiled from the information supplied in this section.</p>
+
+`;
 
   constructor(private fb: FormBuilder){}
 

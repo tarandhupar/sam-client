@@ -32,7 +32,22 @@ export class FALFormContactInfoComponent implements OnInit {
   //errorExists: boolean = false;
   formErrorArr: any = {};
   review: boolean = false;
+  contactadditionalInforamtionHint:string = `<p>Identify Federal regional or local offices that may be contacted about this listing.</p>
+                                             <p>Identify the Federal regional or local office(s) that may be contacted for detailed information concerning a program, such as the availability of funds, the likelihood of receiving assistance and State Plan/application deadlines. 
+                                             Only the names of program managers and/or contact persons closest to the program should be listed. The commercial, FTS, FAX, and TTY/TTD telephone numbers, and e-mail addresses should also be included for the regional and local contact persons. 
+                                             Where appropriate, reference to Appendix IV of the Catalog for addresses and telephone numbers of Federal regional or field offices should be made in this section. 
+                                             As in the current Catalog, certain programs should list this information within the program description because of the small number of offices and/or the small number of programs for which those offices are relevant. 
+                                             The statement "See Appendix IV for list of addresses" alone is insufficient. The statement should be more specific, for example, "Complaints may be filed with the Department of Agriculture, Packers and Stockyards Regional Office, as listed in Appendix IV of the Catalog." 
+                                             The subagency designations, and Appendix IV should be mentioned along with whatever directions the applicant might need. If potential applicants are not encouraged to contact the regional or local offices or if the program is administered entirely at the headquarters level, select Not applicable.</p>`;
 
+  headquartersOfficeHint:string = `<p>Add up to two points of Contacts for your headquarters office.</p><br>
+                                   <p>List the names, addresses, commercial, FTS, FAX, and TTY/TDD telephone numbers, and e-mail addresses of the administering office at the headquarters level. 
+                                   The administering office will consist of the lowest agency subdivision that has direct operational responsibility for managing a program. 
+                                   If regional or local offices are not able to answer inquiries, list the telephone number for the headquarters administering office. 
+                                   If possible, provide a control number at the agency in case there might be difficulty contacting a resource person.</p>`;
+
+  websiteHint:string = `<p>Provide the primary web page URL for this listing. When possible, the web page should be specific to this listing.</p>
+                        <p>List the Website address of the administering office at the headquarters level.</p>`;
   constructor(private fb: FormBuilder,
               private service: FALFormService) {
 

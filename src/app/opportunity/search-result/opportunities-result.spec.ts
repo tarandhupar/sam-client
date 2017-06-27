@@ -4,11 +4,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 
 import { OpportunitiesResult } from './opportunities-result.component';
 
-var fixture;
-var comp;
+
 var titleEl;
 describe('src/app/opportunity/search-result/opportunities-result.spec.ts', () => {
-  beforeEach(async(() => {
+  let fixture:any;
+  let comp: OpportunitiesResult;
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ OpportunitiesResult ],
       imports: [
@@ -17,19 +18,25 @@ describe('src/app/opportunity/search-result/opportunities-result.spec.ts', () =>
         ])
       ]
     });
-    TestBed.compileComponents().then( ()=>{
-      fixture = TestBed.createComponent(OpportunitiesResult);
-      comp = fixture.componentInstance;
-      titleEl  = fixture.debugElement.query(By.css('.opportunity-title')); // find title element
-      comp.data = {
-        title: "SAMPLE TITLE",
-        isActive:true
-      };
-      fixture.detectChanges();// trigger data binding
-    });
-  }));
+    fixture = TestBed.createComponent(OpportunitiesResult);
+    comp = fixture.componentInstance;
+
+    comp.data = {
+      title: "SAMPLE TITLE",
+      isActive:true,
+      publishDate: "2012-01-01",
+      type: {
+        value: "dummy"
+      }
+    };
+    fixture.detectChanges();// trigger data binding
+  });
 
   it('OpportunitiesResultComponent: should display a title', () => {
-    expect(titleEl.nativeElement.textContent).toContain("SAMPLE TITLE");
+    fixture.detectChanges();// trigger data binding
+    fixture.whenStable().then(()=>{
+      titleEl  = fixture.debugElement.query(By.css('.opportunity-title')); // find title element
+      expect(titleEl.nativeElement.textContent).toContain("SAMPLE TITLE");
+    });
   });
 });

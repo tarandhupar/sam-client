@@ -23,13 +23,12 @@
         [(ngModel)]="usersEntered"
         (ngModelChange)="onUserClick($event)"
       ></sam-autocomplete>
-
-      <samAccordion [expandIndex]="0">
+      <sam-accordion [expandIndex]="0">
         <sam-accordion-section [headerText]="accordionHeading1" [name]="accordionName1">
           <sam-checkbox
             #statusCheckboxes
-            (modelChange)="activeFilter($event)"
-            [(model)]="StatusCheckboxModel"
+            (ngModelChange)="activeFilter($event)"
+            [(ngModel)]="StatusCheckboxModel"
             [name]="'Access-Status-Checkbox-Filter'"
             [options]="filters.status.options"
             [label]="filters.status.label"
@@ -37,9 +36,9 @@
             >
           </sam-checkbox>
         </sam-accordion-section>
-      </samAccordion>
+      </sam-accordion>
 
-      <samAccordion [expandIndex]="0">
+      <sam-accordion [expandIndex]="0">
         <sam-accordion-section [headerText]="accordionHeading2" [name]="accordionName2">
           <sam-checkbox
             (modelChange)="domainFilter($event)"
@@ -51,7 +50,7 @@
             >
           </sam-checkbox>
         </sam-accordion-section>
-      </samAccordion>
+      </sam-accordion>
     </div>
   </div>
 </div>

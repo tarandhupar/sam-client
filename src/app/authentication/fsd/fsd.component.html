@@ -18,7 +18,7 @@
       </li>
     </ul>
   </aside>
-  <section class="usa-width-three-fourths usa-fsd" [ngClass]="[activeRouteClass]">
+  <section class="usa-fsd" [ngClass]="[activeRouteClass, states.sidebar ? 'usa-width-three-fourths' : 'usa-width-one-whole']">
      <router-outlet></router-outlet>
   </section>
 </div>

@@ -1,6 +1,5 @@
-<div class="usa-width-one-whole organization-profile relative">
+<div class="usa-width-one-whole organization-profile p_L-5x">
   <div class="usa-width-one-whole" *ngIf="isDataAvailable">
-
     <div class="org-notification p_T-4x m_B-6x">&nbsp;
 
       <button *ngIf="isNextLayerCreatable() && selectConfig.options.length > 1" class="usa-button-big pull-right relative">
@@ -16,6 +15,15 @@
       <button class="usa-button-big pull-right relative" *ngIf="isNextLayerCreatable() && selectConfig.options.length === 1" (click)="onSelect(selectConfig.options[0].value)">
         Create {{selectConfig.options[0].label}}</button>
     </div>
+
+    <sam-alert class="org-detail-info-alert m_B-6x" (dismiss)="dismissCreateOrgInfoAlert()" [showClose]="true" [type]="'info'" [title]="'Information'" [description]="''" *ngIf="flashMsgService.isMoveOrgSuccess">
+
+      <p>
+        {{orgObj.name}} has been moved under {{hierarchyPath[hierarchyPath.length - 2]}}
+        <a>Click here</a> to view previous hierarchy for {{orgObj.name}}
+      </p>
+    </sam-alert>
+
     <div class="usa-width-one-whole">
       <span *ngFor="let hierarchyName of hierarchyPath; let i = index">
         <a [ngClass]="getLastHierarchyClass(i)" (click)="onChangeOrgDetail(hierarchyName)">{{hierarchyName}}</a>&nbsp; <span *ngIf="!isLastHierarchy(i)"> > </span>
@@ -58,7 +66,8 @@
     </div>
   </div>
 
-  <sam-alert class="org-detail-alert-message" (dismiss)="dismissCreateOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+ orgObj.name" *ngIf="flashMsgService.isCreateOrgSuccess && flashMsgService.isFlashMsgShow" ></sam-alert>
+  <sam-alert class="org-detail-alert-message" (dismiss)="dismissCreateOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'New Office Created - '+ orgObj.name" *ngIf="flashMsgService.isCreateOrgSuccess && flashMsgService.isFlashMsgShow && isDataAvailable" ></sam-alert>
   <sam-alert class="org-detail-alert-message" (dismiss)="dismissEditOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="'Your edits have been saved'" *ngIf="showEditOrgFlashAlert" ></sam-alert>
+  <sam-alert class="org-detail-alert-message" (dismiss)="dismissMoveOrgFlashAlert()" [showClose]="true" [type]="'success'" [title]="'Success'" [description]="orgObj.name+' successfully moved under '+ orgObj.fullParentPath.split('.').pop()" *ngIf="flashMsgService.isMoveOrgSuccess && flashMsgService.isFlashMsgShow && isDataAvailable" ></sam-alert>
 
 </div>

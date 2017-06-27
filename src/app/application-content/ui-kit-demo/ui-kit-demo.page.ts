@@ -27,6 +27,7 @@ export class UIKitDemoPage {
     {key: 'Maryland', value: 'Maryland', category: 'states'},
     {key: 'Virginia', value: 'Virginia', category: 'states'},
     {key: 'Washington DC', value: 'Washington DC', category: 'states'}];
+ 
   autocompletePeoplePickerConfig = {
     keyValueConfig: {
       keyProperty: 'email',
@@ -60,16 +61,36 @@ export class UIKitDemoPage {
   /**
    * Multiselect Demo
    */
-   multiselectOptions = [
-     { key: 'Christy', value: 'Christy' },
-     { key: 'Carlos', value: 'Carlos' },
-     { key: 'Colin', value: 'Colin' },
-     { key: 'Diego', value: 'Diego' }
+   multiselectOptions: any = [
+     { key: 'Random', value: 'Random'},
+     { key: 'Just some data', value: 'Just some data'},
+     { key: 'This has no category', value: 'This has no category'},
+     { key: 'I have no parent', value: 'I have no parent'},
+     { key: 'Christy', value: 'Christy', category: 'Team Members' },
+     { key: 'Carlos', value: 'Carlos', category: 'Team Members' },
+     { key: 'Colin', value: 'Colin', category: 'Team Members' },
+     { key: 'Diego', value: 'Diego', category: 'Team Members' },
+     { key: 'Delaware', value: 'Delaware', category: 'Mid-Atlantic States'},
+     { key: 'Maryland', value: 'Maryland', category: 'Mid-Atlantic States'},
+     { key: 'Virginia', value: 'Virginia', category: 'Mid-Atlantic States'},
+     { key: 'Washington, DC', value: 'Washington, DC', category: 'Mid-Atlantic States'},
+     { key: 'Onitama', value: 'Onitama', category: 'Board Games'},
+     { key: 'Power Grid', value: 'Power Grid', category: 'Board Games' },
+     { key: 'Splendor', value: 'Splendor', category: 'Board Games'},
+     { key: 'Ticket To Ride', value: 'Ticket to Ride', category: 'Board Games'}
    ]
 
-   multiselectConfig = {
+   multiselectConfigSelectable = {
      keyProperty: 'key',
-     valueProperty: 'value'
+     valueProperty: 'value',
+     categoryProperty: 'category',
+     parentCategoryProperty: 'category'
+   }
+
+  multiselectConfig = {
+     keyProperty: 'key',
+     valueProperty: 'value',
+     categoryProperty: 'category',
    }
   /**
    * Autocomplete Category demo
@@ -84,6 +105,33 @@ export class UIKitDemoPage {
     {key: 'Maryland', value: 'Maryland', category: 'states'},
     {key: 'Virginia', value: 'Virginia', category: 'states'},
     {key: 'Washington DC', value: 'Washington DC', category: 'states'}
+  ];
+
+  autocompleteCategoryObjects = [
+    {
+      key: 'id',
+      value: 'Board Games',
+      category: 'Board Games'
+    },
+    {
+      key: 'id',
+      value: 'Mid-Atlantic States',
+      category: 'Mid-Atlantic States'
+    },
+    {
+      key: 'id',
+      value: 'Team Members',
+      category: 'Team Members'
+    }
+  ];
+
+  modellz1 = [
+    {key: 'Diego', value: 'Diego', category: 'people'},
+    {key: 'Maryland', value: 'Maryland', category: 'states'},
+  ];
+  modellz2 = [
+    { key: 'Washington, DC', value: 'Washington, DC', category: 'Mid-Atlantic States'},
+    { key: 'Onitama', value: 'Onitama', category: 'Board Games'}
   ];
 
   checkFullParentOrgs(evt){

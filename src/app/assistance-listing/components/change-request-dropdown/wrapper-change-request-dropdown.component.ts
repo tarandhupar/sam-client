@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, OnInit } from '@angu
 import { FALChangeRequestDropdownComponent, FALChangeRequestListType } from "./change-request-dropdown.component";
 import * as _ from 'lodash';
 
-export interface ProgramChangeRequestModel {
+interface ProgramChangeRequestModel {
   id: string,
   status?: {
     code?: string
@@ -27,11 +27,14 @@ export class FALWrapperChangeRequestDropdownComponent extends FALChangeRequestDr
     super();
   }
 
-  ngOnChanges() {
+  ngOnChanges(value?) {
+    if(value && !_.isNil(value.requestTypeAction) && !_.isNil(value.requestTypeAction.currentValue)){
+      this.disableDropDown();
+    }
   }
 
   ngOnInit() {
-    //setup the list type of dropdown 
+    //setup the list type of dropdown
     switch (this.listingType.toLowerCase()) {
       case 'request':
         this.listType = FALChangeRequestListType.REQUEST;
@@ -44,9 +47,7 @@ export class FALWrapperChangeRequestDropdownComponent extends FALChangeRequestDr
     //business logic to show the dropdown for published FAL & user's permission (logged in user)
     if (this.program != null && this.program.archived === false && this.program.status.code === 'published' && this.program.latest === true && this.permissions !== null) {
       //remove `unarchive_request` option from the list
-      _.remove(this.options.request, {
-        'value': 'unarchive_request'
-      });
+      this.options.request = _.filter(this.options.request, item => { return (item.value != "unarchive_request") });
       this.displayDropdown = true;
     }
 
@@ -57,16 +58,7 @@ export class FALWrapperChangeRequestDropdownComponent extends FALChangeRequestDr
       this.displayDropdown = true;
     }
 
-    //if there a pending request & the list requested is a type of "request" then disabled the dropdown
-    if (!_.isNil(this.requestTypeAction) && this.listType === FALChangeRequestListType.REQUEST) {
-      this.disabled = true;
-    }
-
-    //if there a pending request & the list requested is a type of "action" then disabled the dropdown
-    if (!_.isNil(this.requestTypeAction) && this.listType === FALChangeRequestListType.ACTION) {
-      this.disabled = false;
-    }
-
+    this.disableDropDown();
     this.populateOptions();
 
     //hide dropdown if the logged-in user doesn't have the permission to see it
@@ -78,5 +70,17 @@ export class FALWrapperChangeRequestDropdownComponent extends FALChangeRequestDr
 
   public onSelect(event) {
     this.clickActionHandler.emit({ value: event, program: this.program });
+  }
+
+  private disableDropDown(){
+    //if there a pending request & the list requested is a type of "request" then disabled the dropdown
+    if (!_.isNil(this.requestTypeAction) && this.listType === FALChangeRequestListType.REQUEST) {
+      this.disabled = true;
+    }
+
+    //if there a pending request & the list requested is a type of "action" then disabled the dropdown
+    if (!_.isNil(this.requestTypeAction) && this.listType === FALChangeRequestListType.ACTION) {
+      this.disabled = false;
+    }
   }
 }

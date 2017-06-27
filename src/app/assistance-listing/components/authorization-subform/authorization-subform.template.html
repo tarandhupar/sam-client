@@ -82,6 +82,8 @@
 
         <div formGroupName="publicLaw" [class.hide]="authGrp.value.authType.indexOf('publicLaw') == -1" >
           <h4>Public Law</h4>
+          <ng-container *ngIf="authGrp.value.authType.indexOf('publicLaw') >= 0">
+          <sam-label-wrapper  [hint]="'Enter the 3 digit congress code and the public law number below'">
           <sam-text
             [control]="authGrp.controls.publicLaw.controls.congressCode"
             [name]="'congressCode'"
@@ -95,6 +97,8 @@
             [label]="'Law Number'"
             formControlName="number"
           ></sam-text>
+          </sam-label-wrapper>
+          </ng-container>
 
         </div>
 
@@ -118,6 +122,7 @@
 
         <div formGroupName="USC" [class.hide]="authGrp.value.authType.indexOf('USC') == -1" >
           <h4>USC</h4>
+          <sam-label-wrapper [hint] ="'If specifying a range, separate the sections with a hyphen (i.e. 23424-34244)'">
           <sam-text
             [control]="authGrp.controls.USC.controls.title"
             [name]="'title'"
@@ -131,7 +136,7 @@
             [label]="'Section'"
             formControlName="section"
           ></sam-text>
-
+          </sam-label-wrapper>
         </div>
 
         <sam-button buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>

@@ -15,18 +15,12 @@ export class ProfileComponent {
     nav: [
       { text: 'Personal Details', routerLink: ['details'],    routerLinkActive: 'usa-current' },
       { text: 'Reset Password',   routerLink: ['password'],   routerLinkActive: 'usa-current' },
-      { text: 'My Access',        routerLink: [],             routerLinkActive: 'usa-current' },
       { text: 'Role Migrations',  routerLink: ['migrations'], routerLinkActive: 'usa-current' }
     ],
-
-    systemNav: [
-      { text: 'System Account', routerLink: ['/system'], routerLinkActive: 'usa-current' }
-    ]
   };
 
   private states = {
     route: '',
-    system: false,
     fsd: false
   };
 
@@ -41,14 +35,7 @@ export class ProfileComponent {
   }
 
   ngOnInit() {
-    this.api.iam.checkSession((user) => {
-      this.store.nav[2].routerLink = ['/users', user._id, 'access'];
-
-      this.states.system = user.systemAccount;
-      this.states.fsd = user.fsd;
-    }, () => {
-      this.store.nav[2].routerLink = [];
-    });
+    this.states.fsd = this.api.iam.user.isFSD();
 
     this.checkRoute();
   }

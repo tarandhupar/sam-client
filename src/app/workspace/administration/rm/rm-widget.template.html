@@ -1,0 +1,37 @@
+<div class="rm-widget">
+  <div class="m_H-3x clearfix m_B-6x">
+    <a class='text-larger' [routerLink]="['/profile', 'access']">My Access</a>
+  </div>
+  <ng-container *ngIf="adminLevel < 2 ">
+    <div class="usa-grid-full m_H-3x">
+      <div class="usa-width-one-half clearfix">
+        <h3 class="m_B-0">Role Requests</h3>
+        <div>
+          <a class="text-larger" routerLink="/access/requests" [queryParams]="{status: 'pending'}">{{pendingCount === 0 ? '0' : pendingCount}} Pending</a>
+          <br>
+          <a class="text-larger" routerLink="/access/requests" [queryParams]="{status: 'escalated'}">{{escalatedCount === 0 ? '0' : escalatedCount}} Escalated</a>
+        </div>
+      </div>
+      <div class="usa-width-one-half clearfix">
+        <sam-autocomplete
+          labelText=""
+          [required]="false"
+          peoplepicker-autofill
+          [config]="autocompletePeoplePickerConfig"
+          (enterEvent)="onPersonChange($event)"
+
+        >
+        </sam-autocomplete>
+        <br>
+        <button routerLink='/access/bulk-update' class="usa-button usa-button-primary m_R-0" style="width: 100%">Bulk Update</button>
+      </div>
+    </div>
+    <div class="rm-nav m_H-3x clearfix">
+      <button *ngIf="adminLevel === 0" [routerLink]="'/access/workspace'" class="pull-left usa-button usa-button-transparent">Role Definitions</button>
+      <button [routerLink]="'/access/user-roles-directory'" class="pull-right usa-button usa-button-transparent">Go to Role Directory<i class="text-light-blue fa fa-caret-right m_L-2x"></i></button>
+    </div>
+  </ng-container>
+
+</div>
+
+

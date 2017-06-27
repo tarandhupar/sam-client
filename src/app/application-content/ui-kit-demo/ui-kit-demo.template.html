@@ -56,28 +56,28 @@
   </div>
 
   <div class="usa-grid">
-    <h2>Accordions Component &lt;samAccordions&gt;</h2>
+    <h2>Accordions Component &lt;sam-accordions&gt;</h2>
     <div class="usa-width-one-whole">
       <h3>Accordions without border</h3>
-      <samAccordion>
+      <sam-accordion>
         <sam-accordion-section headerText="Section title 1" name="aria-friendly-section-name">
           <a href>A link</a>
         </sam-accordion-section>
         <sam-accordion-section headerText="Section title 2" name="aria-friendly-section-name-2">
           <a href>A second link</a>
         </sam-accordion-section>
-      </samAccordion>
+      </sam-accordion>
     </div>
     <div class="usa-width-one-whole">
       <h3>Accordions with border, and initial selected tab</h3>
-      <samAccordion [expandIndex]="1" [bordered]="true">
+      <sam-accordion [expandIndex]="1" [bordered]="true">
         <sam-accordion-section headerText="Section title 1" name="aria-friendly-section-name">
           <a href>A link</a>
         </sam-accordion-section>
         <sam-accordion-section headerText="Section title 2" name="aria-friendly-section-name-2">
           <a href>A second link</a>
         </sam-accordion-section>
-      </samAccordion>
+      </sam-accordion>
     </div>
   </div>
 
@@ -756,13 +756,27 @@
   </div>
 
   <div class="usa-grid">
-    <h2 class="usa-width-one">Autocomplete Multiselect</h2>
+    <h2 class="usa-width-one">Autocomplete Multiselect (Selectable Categories)</h2>
+    <sam-autocomplete-multiselect class="usa-width-one-half" 
+                                  label="Team Members" required="true"
+                                  [keyValueConfig]="multiselectConfigSelectable" 
+                                  [options]="multiselectOptions"
+                                  [categoryIsSelectable]="true"
+                                  [categories]="autocompleteCategoryObjects"
+                                  [(ngModel)]="modellz1">
+      </sam-autocomplete-multiselect>
+    <div class="usa-width-one-half">{{modellz1 | json}}</div>
+  </div>
+
+  <div class="usa-grid">
+    <h2 class="usa-width-one">Autocomplete Multiselect (Not Selectable Categories)</h2>
     <sam-autocomplete-multiselect class="usa-width-one-half" 
                                   label="Team Members" required="true"
                                   [keyValueConfig]="multiselectConfig" 
-                                  [options]="multiselectOptions">
+                                  [options]="multiselectOptions"
+                                  [(ngModel)]="modellz2">
       </sam-autocomplete-multiselect>
-    <div class="usa-width-one-half"></div>
+    <div class="usa-width-one-half">{{modellz2 | json}}</div>
   </div>
 <br>
 </div>

@@ -1,10 +1,14 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FALFormService } from "../../fal-form.service";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { FALFormViewModel } from "../../fal-form.model";
 import { AutocompleteConfig } from "sam-ui-kit/types";
-import { FiscalYearTableConfig } from "../../../components/fiscal-year-table/fiscal-year-table.component";
-import { falCustomValidatorsComponent } from '../../../validators/assistance-listing-validators';
+import {
+  FiscalYearTableConfig,
+  FALFiscalYearTableComponent
+} from "../../../components/fiscal-year-table/fiscal-year-table.component";
+import { FALFormErrorService } from '../../fal-form-error.service';
+import { FALFieldNames, FALSectionNames } from '../../fal-form.constants';
 
 @Component({
   providers: [FALFormService],
@@ -14,11 +18,17 @@ import { falCustomValidatorsComponent } from '../../../validators/assistance-lis
 
 export class FALFormOverviewComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
-  @Output() public onError = new EventEmitter();
+  @Output() public showErrors = new EventEmitter();
+  @ViewChild('fundedProjects') fundedProjectsComponent: FALFiscalYearTableComponent;
 
   falOverviewForm: FormGroup;
   formErrorArr = [];
   review:boolean = false;
+
+  objectiveHint:string = `<p>Provide a plain text description highlighting program goals. Use specific terms that will help public users find this listing.</p>
+                          This section should be a brief, accurate statement of what the program is intended to accomplish or the goals toward which the program is directed. 
+                          This should be a statement of purpose and not merely a description of the program. 
+                          Goals as set forth in the authorizing legislation must be included.`;
 
   public fundedProjectsConfig: FiscalYearTableConfig = {
     name: 'funded-projects',
@@ -30,6 +40,15 @@ export class FALFormOverviewComponent implements OnInit {
     entry: {
       hint: 'Please describe funded projects:'
     },
+
+    textarea: {
+      required: true
+    },
+
+    select: {
+      required: true
+    },
+
     deleteModal: {
       title: 'Delete Examples of Funded Projects',
       description: '',
@@ -58,7 +77,7 @@ export class FALFormOverviewComponent implements OnInit {
     clearOnSelection: true, showOnEmptyInput: true
   };
 
-  constructor(private fb: FormBuilder, private service: FALFormService) {
+  constructor(private fb: FormBuilder, private service: FALFormService, private errorService: FALFormErrorService) {
   }
 
   ngOnInit() {
@@ -67,12 +86,17 @@ export class FALFormOverviewComponent implements OnInit {
       error => {
         console.error('error retrieving dictionary data', error);
       });
+
+    this.errorService.viewModel = this.viewModel;
+
     this.createForm();
     if (!this.viewModel.isNew) {
       this.updateForm();
-      this.collectErrors();
     }
 
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      this.updateErrors();
+    });
   }
 
   parseFunctionalCodes(data: any) {
@@ -92,7 +116,12 @@ export class FALFormOverviewComponent implements OnInit {
 
     this.falOverviewForm.controls['fcListDisplay'].updateValueAndValidity();
 
-    this.falOverviewForm.valueChanges.subscribe(data => this.updateViewModel(data));
+    this.falOverviewForm.valueChanges.subscribe(data => {
+      this.updateViewModel(data);
+      setTimeout(() => { // horrible hack to trigger angular change detection
+        this.updateErrors();
+      });
+    });
 
     if(this.viewModel.subjectTerms && this.viewModel.subjectTerms.length > 0){
       this.parseSubjectTerms(this.viewModel.subjectTerms);
@@ -114,9 +143,9 @@ export class FALFormOverviewComponent implements OnInit {
       'objective': '',
       'description': '',
       'functionalTypes': '',
-      'fcListDisplay': ['', falCustomValidatorsComponent.autoCompleteRequired],
-      'subjectTermsTypes': [''],
-      'stListDisplay': ['', falCustomValidatorsComponent.autoCompleteRequired],
+      'fcListDisplay': ['', (control) => { return control.errors; }],
+      'subjectTermsTypes': '',
+      'stListDisplay': ['', (control) => { return control.errors; }],
       'fundedProjects': null
     });
   }
@@ -135,8 +164,32 @@ export class FALFormOverviewComponent implements OnInit {
     this.viewModel.functionalCodes = functionaCodes.length > 0 ? functionaCodes : null;
     this.viewModel.subjectTerms = subjectTerms.length > 0 ? subjectTerms : null;
     this.viewModel.projects = this.saveProjects(data.fundedProjects);
+  }
 
-    this.collectErrors();
+  private updateErrors() {
+    this.errorService.viewModel = this.viewModel;
+
+    this.falOverviewForm.get('objective').clearValidators();
+    this.falOverviewForm.get('objective').setValidators((control) => { return control.errors });
+    this.falOverviewForm.get('objective').setErrors(this.errorService.validateObjective().errors);
+    this.markAndUpdateFieldStat('objective');
+
+    this.falOverviewForm.get('fcListDisplay').setErrors(this.errorService.validateFunctionalCodes().errors);
+    this.markAndUpdateFieldStat('fcListDisplay');
+
+    this.falOverviewForm.get('stListDisplay').setErrors(this.errorService.validateSubjectTerms().errors);
+    this.markAndUpdateFieldStat('stListDisplay');
+
+    this.errorService.validate(FALSectionNames.OVERVIEW, FALFieldNames.FUNDED_PROJECTS);
+
+    this.showErrors.emit(this.errorService.errors);
+  }
+
+  private markAndUpdateFieldStat(fieldName){
+    setTimeout(() => {
+      this.falOverviewForm.get(fieldName).markAsDirty();
+      this.falOverviewForm.get(fieldName).updateValueAndValidity({onlySelf: true, emitEvent: true});
+    });
   }
 
   updateForm() {
@@ -148,6 +201,10 @@ export class FALFormOverviewComponent implements OnInit {
       fundedProjects: this.loadProjects(this.viewModel.projects)
     }, {
       emitEvent: false
+    });
+
+    setTimeout(() => { // horrible hack to trigger angular change detection
+      this.updateErrors();
     });
   }
 
@@ -168,7 +225,12 @@ export class FALFormOverviewComponent implements OnInit {
 
       this.falOverviewForm.controls['stListDisplay'].updateValueAndValidity();
 
-      this.falOverviewForm.valueChanges.subscribe(data => this.updateViewModel(data));
+      this.falOverviewForm.valueChanges.subscribe(data => {
+        this.updateViewModel(data);
+        setTimeout(() => { // horrible hack to trigger angular change detection
+          this.updateErrors();
+        });
+      });
     }, error => {
       console.error('Error Retrieving Subject Terms!!', error);
     });
@@ -239,53 +301,5 @@ export class FALFormOverviewComponent implements OnInit {
     }
 
     return projectsForm;
-  }
-
-  validateSection(){
-    this.review = true;
-
-    for(let key of Object.keys(this.falOverviewForm.controls)) {
-      this.falOverviewForm.controls[key].markAsDirty();
-      this.falOverviewForm.controls[key].updateValueAndValidity();
-    }
-
-    if(this.formErrorArr.length > 0)
-      this.emitEvent();
-  }
-
-  collectErrors(){
-    for(let key of Object.keys(this.falOverviewForm.controls)) {
-      if(['functionalTypes', 'subjectTermsTypes'].indexOf(key) == -1){
-        this.checkControlforErrors(key);
-      }
-    }
-  }
-
-  checkControlforErrors(key){
-    let len = this.formErrorArr.length;
-    let index = this.formErrorArr.indexOf(key);
-
-    if(this.falOverviewForm.controls[key].errors){
-      if(index == -1) {
-        this.formErrorArr.push(key);
-      }
-    }
-    else {
-      if(index > -1) {
-        this.formErrorArr.splice(index, 1);
-      }
-    }
-
-    if(len !== this.formErrorArr.length && this.review){
-      this.emitEvent();
-    }
-  }
-
-  emitEvent(){
-
-    this.onError.emit({
-      formErrorArr: this.formErrorArr,
-      section: 'overview'
-    });
   }
 }

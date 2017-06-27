@@ -35,6 +35,6 @@ describe('The AlertFooter component', () => {
     component.refreshAlerts();
     fixture.detectChanges();
     //console.log(fixture.nativeElement.querySelector("samalert"));
-    expect(fixture.nativeElement.querySelectorAll("samalert").length).toBe(1);
+    expect(fixture.nativeElement.querySelectorAll("sam-alert").length).toBe(1);
   }));
 });

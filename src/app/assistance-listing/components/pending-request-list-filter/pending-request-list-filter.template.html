@@ -1,0 +1,40 @@
+ <div>
+    <sam-collapsible [label]="'Domain'" [startOpened]="true">
+      <sam-checkbox
+        [(model)]="domainFilterModel"
+        [name]="domainFilterConfig.name"
+        [options]="domainFilterConfig.options"
+        [label]="domainFilterConfig.label"
+        [hint]="domainFilterConfig.hint"
+        [errorMessage]="domainFilterConfig.errorMessage"
+        [hasSelectAll]="domainFilterConfig.hasSelectAll"
+        (modelChange)="domainFilterChange($event)">
+      </sam-checkbox>
+    </sam-collapsible>
+
+    <!-- AL Specific Filters -->
+    <sam-collapsible [label]="'Event'" [startOpened]="true" *ngIf="showALFilters">
+      <sam-checkbox
+        [(model)]="eventFilterModel"
+        [name]="eventFilterConfig.name"
+        [options]="eventFilterConfig.options"
+        [label]="eventFilterConfig.label"
+        [hint]="eventFilterConfig.hint"
+        [errorMessage]="eventFilterConfig.errorMessage"
+        [hasSelectAll]="eventFilterConfig.hasSelectAll"
+        (modelChange)="eventFilterChange($event)">
+      </sam-checkbox>
+    </sam-collapsible>
+    <sam-collapsible [label]="'Request Type'" [startOpened]="true" *ngIf="showALFilters && showALRequestFilters">
+      <sam-checkbox
+        [(model)]="alRequestTypeModel"
+        [name]="alRequestTypeConfig.name"
+        [options]="alRequestTypeConfig.options"
+        [label]="alRequestTypeConfig.label"
+        [hint]="alRequestTypeConfig.hint"
+        [errorMessage]="alRequestTypeConfig.errorMessage"
+        [hasSelectAll]="alRequestTypeConfig.hasSelectAll"
+        (modelChange)="alRequestTypeFilterChange($event)">
+      </sam-checkbox>
+    </sam-collapsible>
+ </div>

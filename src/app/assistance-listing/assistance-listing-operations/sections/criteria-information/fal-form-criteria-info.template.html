@@ -17,7 +17,7 @@
                         [config]="appAutocompleteConfig"
                         [required]="true"
                         [labelText]="'Applicant Eligibility'"
-                        [hint]="'Please select all that apply to help public users search for this listing.'"
+                        [hint]="applicantEligibilityHint"
                         [control]="falCriteriaForm.controls['appListDisplay']"></sam-autocomplete>
   </sam-list-display>
   <sam-text-area
@@ -32,6 +32,7 @@
     [name]="'beneficiary-SameAsApplicant-input-checkbox'"
     [options]="benSameAsApplicantConfig.options"
     formControlName="isSameAsApplicant"
+    [hint]="beneficiaryEligibilityHint"
     (modelChange)="chkSameAsApp($event)"></sam-checkbox>
   <div [hidden]="toggleBenSection">
     <sam-list-display [newValue]="benNGModel" formControlName="benListDisplay"
@@ -45,7 +46,6 @@
           [config]="benAutocompleteConfig"
           [required]="true"
           [labelText]="'Beneficiary Eligibility'"
-          [hint]="'Please select all that apply to help public users search for this listing.'"
           [control]="falCriteriaForm.controls['benListDisplay']"></sam-autocomplete>
     </sam-list-display>
     <sam-text-area
@@ -55,7 +55,7 @@
       formControlName="benDesc"></sam-text-area>
   </div>
   <sam-text-area
-    [hint]="'Describe the period of time when assistance is available. Also, the period of time when funding must be spent.'"
+    [hint]="timePhasingHint"
     [control]="falCriteriaForm.controls['lengthTimeDesc']"
     [name]="'lengthandtime-description-input'"
     [label]="'Length and Time Phasing of Assistance'"
@@ -90,7 +90,7 @@
         [config]="assUsageAutocompleteConfig"
         [required]="true"
         [labelText]="'Use of Assistance'"
-        [hint]="'Please select all that apply from the dropdown list.'"
+        [hint]="useOfAssistanceHint"
         [control]="falCriteriaForm.controls['assListDisplay']"></sam-autocomplete>
   </sam-list-display>
   <sam-text-area

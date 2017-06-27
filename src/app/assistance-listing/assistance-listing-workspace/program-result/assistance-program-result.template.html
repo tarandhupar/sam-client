@@ -2,7 +2,7 @@
   <div class="row">
     <div class="eight wide column">
       <h3 class="assistance-program-title">
-        <a [routerLink]="['/programs', data.id, 'view']">{{data.data.title}}</a>
+        <a [routerLink]="['/programs', data.id, 'review']">{{data.data.title}}</a>
       </h3>
 
       <ul class="sam-ui small list">
@@ -28,6 +28,7 @@
               [defaultOption]="changeRequestDropdown.defaultOption"
               (clickActionHandler)="onChangeRequestSelect($event)"
               [program]="data"
+              [requestTypeAction] = "requestTypeValue"
             ></wrapper-fal-change-request-dropdown>
         </li>
         <li>
@@ -47,6 +48,13 @@
       </ul>
     </div>
   </div>
+  <ng-container *ngIf="requestTypeValue && requestId">
+    <a class="usa-button-primary" [routerLink]="['/programs/change-request/', requestId, 'action']">
+      <span>{{ requestTypeValue | requestLabel }}</span>
+      <i aria-hidden="true" class="fa fa-chevron-circle-right"></i>
+    </a>
+    <div class="sam-ui divider"></div>
+  </ng-container>
 </div>
 
 

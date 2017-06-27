@@ -51,8 +51,8 @@ export class FSDComponent {
   }
 
   checkRoute() {
-    if(this.router.url.match(/\/fsd\/users\//)) {
-      this.states.sidebar = true;
+    if(this.router.url.match(/\/fsd\/users/)) {
+      this.states.sidebar = false;
     }
 
     this.states.route = this.router.url

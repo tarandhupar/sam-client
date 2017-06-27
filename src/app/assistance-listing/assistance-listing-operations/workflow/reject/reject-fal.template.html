@@ -1,4 +1,4 @@
-<div class="usa-grid-full">
+<div class="usa-grid-full" *ngIf="data">
   <sam-alert [attr.id]="rejectAlertConfig.id" [type]="rejectAlertConfig.type"
              [title]="rejectAlertConfig.title" [description]="rejectAlertConfig.description">
   </sam-alert>

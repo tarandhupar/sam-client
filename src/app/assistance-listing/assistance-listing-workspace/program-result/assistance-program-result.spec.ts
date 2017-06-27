@@ -1,7 +1,12 @@
 import {TestBed} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 
+import {SamUIKitModule} from 'sam-ui-kit';
 import {AssistanceProgramResult} from './assistance-program-result.component';
+import {FALWrapperChangeRequestDropdownComponent} from "../../components/change-request-dropdown/wrapper-change-request-dropdown.component";
+import {FALChangeRequestDropdownComponent} from "../../components/change-request-dropdown/change-request-dropdown.component";
+import {RequestLabelPipe} from "../../pipes/request-label.pipe";
+
 import moment = require("moment");
 
 var fixture;
@@ -11,13 +16,10 @@ var hideStatusLable;
 describe('AssistanceProgramResultComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [RouterTestingModule],
-      declarations: [AssistanceProgramResult],
+      imports: [RouterTestingModule,SamUIKitModule],
+      declarations: [AssistanceProgramResult,FALChangeRequestDropdownComponent,FALWrapperChangeRequestDropdownComponent,RequestLabelPipe],
     });
 
-    fixture = TestBed.createComponent(AssistanceProgramResult);
-
-    comp = fixture.componentInstance;
     fixture = TestBed.createComponent(AssistanceProgramResult);
     comp = fixture.componentInstance;
     hideStatusLable = fixture.nativeElement.querySelectorAll('.toggleStatusCode'); // find element

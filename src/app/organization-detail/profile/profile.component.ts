@@ -41,6 +41,7 @@ export class OrgDetailProfilePage {
   };
 
   subCommandBaseLevel = 4;
+  addrTypeMaping = {M:"Mailing Address", B:"Billing Address", S:"Shipping Address"};
 
   constructor(private fhService: FHService, private route: ActivatedRoute, private _router: Router, public flashMsgService:FlashMsgService){
   }
@@ -183,9 +184,11 @@ export class OrgDetailProfilePage {
   setupOrganizationAddress(org){
     this.orgAddresses = [];
     let addresses = org.orgAddresses.length > 0? org.orgAddresses:[];
-    if(addresses.length > 0)this.orgAddresses.push({addressType:"Mailing Address", value:{street:addresses[0].streetAddress, city:addresses[0].city, state:addresses[0].state, zip:addresses[0].zipcode}});
-    if(addresses.length > 1)this.orgAddresses.push({addressType:"Shipping Address", value:{street:addresses[1].streetAddress, city:addresses[1].city, state:addresses[1].state, zip:addresses[1].zipcode}});
-    if(addresses.length > 2)this.orgAddresses.push({addressType:"Billing Address", value:{street:addresses[2].streetAddress, city:addresses[2].city, state:addresses[2].state, zip:addresses[2].zipcode}});
+    addresses.forEach(e => {
+      if(e.type){
+        this.orgAddresses.push({addressType:this.addrTypeMaping[e.type], value:{street:e.streetAddress, city:e.city, state:e.state, zip:e.zipcode}});
+      }
+    });
   }
 
   setCurrentHierarchyType(type){
@@ -294,4 +297,12 @@ export class OrgDetailProfilePage {
     this.showEditOrgFlashAlert = false;
   }
 
+  dismissMoveOrgFlashAlert(){
+    this.flashMsgService.hideFlashMsg();
+    // this.flashMsgService.resetFlags();
+  }
+
+  dismissCreateOrgInfoAlert(){
+    this.flashMsgService.resetFlags();
+  }
 }

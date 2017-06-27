@@ -4,7 +4,7 @@
     Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Reports</a>
     <br>
     <h2 class="m_T-2x">{{name}}</h2>
-    <!--<samAccordion [expandIndex]="0" [bordered]="true" #samAccordionValue>-->
+    <!--<sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue>-->
       <!--<sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">-->
         <!--<form (ngSubmit)="onSubmit()" #reportForm="ngForm">-->
         <!--<p class="p_L-1x">Date Range</p>-->
@@ -25,7 +25,7 @@
         <!--</div>-->
         <!--</form>-->
       <!--</sam-accordion-section>-->
-    <!--</samAccordion>-->
+    <!--</sam-accordion>-->
     <br>
     <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
     <br>
@@ -36,7 +36,7 @@
         </sam-alert>
       </div>
     </div>
-    <samAccordion >
+    <sam-accordion >
       <sam-accordion-section  [name]="'Appendix'" [headerText]="'Appendix'" >
         <div *ngIf="data" [id]="id"> <!-- note the added *ngIf -->
           <div *ngIf="id">
@@ -55,6 +55,6 @@
           </div>
         </div>
       </sam-accordion-section>
-    </samAccordion>
+    </sam-accordion>
   </section>
 </div>

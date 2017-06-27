@@ -12,7 +12,7 @@ export class WrapperService {
         "program": "/fac/v1/programs",
         "fh" : "/federalorganizations/v1",
         "federalHierarchy": "/federalorganizations/v1/organizations",
-        "federalCreateOrg": "/federalorganizations/v1/organization",
+        "federalCreateOrg": "/fh/v1/organization",
         "federalHierarchyActive": "/federalorganizations/v1/activeorganizations",
         "entities": "/entities",
         "exclusions": "/exclusions",

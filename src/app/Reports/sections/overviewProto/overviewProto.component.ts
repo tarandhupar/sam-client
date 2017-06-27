@@ -157,11 +157,11 @@ export class OverviewProtoComponent implements OnInit, AfterViewInit {
       let isReportsAdmin = false;
 
       for (let _i = 0; _i < vm.userRoles.length; _i++) {
-        if (vm.userRoles[_i].role.indexOf('GSA_REPORT_R') >= 0) {
+        if (vm.userRoles[_i].indexOf('GSA_REPORT_R') >= 0) {
           isReportsUser = true;
         }
 
-        if (vm.userRoles[_i].role.indexOf('ADMIN') >= 0) {
+        if (vm.userRoles[_i].indexOf('ADMIN') >= 0) {
           isReportsAdmin = true;
         }
 

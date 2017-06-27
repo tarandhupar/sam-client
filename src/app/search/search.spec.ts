@@ -22,6 +22,8 @@ import {SamNaicsPscFilter} from "./naics-psc-filter/naics-psc-filter.component";
 import { RegionalOfficeListingResult } from "../assistance-listing/regional-office-listing-search-result/regional-office-listing-result.component";
 import {FormsModule} from "@angular/forms";
 import {DunsEntityAutoCompleteWrapper} from "../../api-kit/autoCompleteWrapper/entityDunsAutoCompleteWrapper.service";
+import { SamEligibilityFilter } from "./elegibility-filter/eligibility-filter.component";
+import { SamFunctionalCodesFilter } from "./functional-codes-filter/functional-codes-filter.component";
 let fixture;
 
 let searchServiceStub = {
@@ -80,27 +82,13 @@ let searchServiceStub = {
 
 let fhServiceStub = {};
 
-let awardType = {
-  "options": [
-    { label: 'Alaska', value: 'AK'},
-    { label: 'Alabama', value: 'AL'},
-    { label: 'New York', value: 'NY'},
-    { label: 'Virginia', value: 'VA'}
-  ],
-  "config": {
-    keyValueConfig: {
-      keyProperty: 'value',
-      valueProperty: 'label'
-    }
-  }
-};
-
 describe('src/app/search/search.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ SearchPage,OpportunitiesResult,AssistanceListingResult,FederalHierarchyResult,
         EntitiesResult,ExclusionsResult,WageDeterminationResult,AwardsResult,FHFeaturedResult,
-        SamContractTypeFilter, SamNaicsPscFilter, RegionalOfficeListingResult],
+        SamContractTypeFilter, SamNaicsPscFilter, RegionalOfficeListingResult,
+        SamEligibilityFilter, SamFunctionalCodesFilter],
       providers: [AlertFooterService, DunsEntityAutoCompleteWrapper ],
       imports: [
         SamUIKitModule,

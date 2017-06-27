@@ -7,92 +7,121 @@ import {SortArrayOfObjects} from "../../app-pipes/sort-array-object.pipe";
 })
 export class SamNaicsPscFilter {
 
-  @ViewChild('listDisplay') listDisplay;
+  /**********************************************************************
+   * PSC Related Inputs/Outputs                                         *
+   **********************************************************************/
 
-  @Input()
-  selectModel1: string = '';
+  /**
+   * String of comma separated psc values
+   */
+  @Input() pscValues: string = '';
 
-  @Input()
-  selectModel2: string = '';
+  /**
+   * EventEmitter for pscValues
+   */
+  @Output() pscValuesChange: EventEmitter<any> = new EventEmitter<any>();
 
-  @Input()
-  options1: any;
+  /**
+   * Array of psc objects to be used with autocomplete input
+   */
+  @Input() pscOptions: Array<any> = [];
 
-  @Input()
-  options2: any;
+  /**
+   * Configuration object for psc to be used with autocomplete input
+   */
+  @Input() pscConfig: any;
 
-  @Output()
-  modelChange1: EventEmitter<any> = new EventEmitter<any>();
+  /**********************************************************************
+   * NAICS Related Inputs/Outputs                                       *
+   **********************************************************************/
 
-  @Output()
-  modelChange2: EventEmitter<any> = new EventEmitter<any>();
+  /**
+   * String of comma separated naics values
+   */
+  @Input() naicsValues: string = '';
 
-  constructor(){}
+  /**
+   * EventEmitter for naicsValues
+   */
+  @Output() naicsValuesChange: EventEmitter<any> = new EventEmitter<any>();
+
+  /**
+   * Array of naics objects to be used with autocomplete input
+   */
+  @Input() naicsOptions: Array<any> = [];
+
+  /**
+   * COnfiguration object for naics to be used with autocomplete input
+   */
+  @Input() naicsConfig: any;
+
+  private selectedNaicsOptions: Array<any> = [];
+  private selectedPscOptions: Array<any> = [];
+
+  constructor() {}
 
   ngOnChanges() {
-    this.listDisplay.selectedItems=[];
+    if (this.pscValues === '') {
+      this.selectedPscOptions = [];
+    } else if (this.pscValues !== '') {
+      this.selectedPscOptions = this.getOptionsByValue(this.pscOptions,
+                                                       this.pscValues.split(','),
+                                                       this.pscConfig.config.keyValueConfig.keyProperty);
+    }
 
-    if(this.selectModel1 !== '') {
-      let selectArray = this.selectModel1.split(",");
-      this.populateSelectedList(selectArray, this.options1);
-    }
-    if(this.selectModel2 !== '') {
-      let selectArray = this.selectModel2.split(",");
-      this.populateSelectedList(selectArray, this.options2);
-    }
-    if(this.selectModel1 === '' && this.selectModel2  === '') {
-      this.listDisplay.selectedItems = [];
+    if (this.naicsValues === '') {
+      this.selectedNaicsOptions = [];
+    } else if (this.naicsValues !== '') {
+      this.selectedNaicsOptions = this.getOptionsByValue(this.naicsOptions,
+                                                         this.naicsValues.split(','),
+                                                         this.naicsConfig.config.keyValueConfig.keyProperty);
     }
   }
 
-  setSelected(obj, shouldEmit: boolean) {
-    let o = Object.assign({}, obj);
-    if(o.type === 'naics') {
-      o.label += " (NAICS)";
-    } else if(o.type === 'psc') {
-      o.label += " (PSC)";
-    }
-    this.listDisplay.selectedItems.push(o);
-    this.listDisplay.selectedItems = new SortArrayOfObjects().transform(this.listDisplay.selectedItems, 'label');
-    if(shouldEmit) {
-      this.emitSelectedList();
+  pscChanged(event) {
+    // WARNING: Conditional is checking that options have been passed 
+    // into the component from parent.
+    // If this is removed, the search filter will ignore any search
+    // parameters that were passed from the router and reset the search.
+    if (this.pscOptions.length > 0) {
+      this.selectedPscOptions = event;
+      this.pscValues = this.getValuesFromOptions(this.selectedPscOptions,
+                                                 this.pscConfig.config.keyValueConfig.keyProperty);
+      this.pscValuesChange.emit(this.pscValues);
     }
   }
 
-  emitSelectedList() {
-    let emitArray1 = [];
-    let emitArray2 = [];
-    for(var i=0; i<this.listDisplay.selectedItems.length; i++) {
-      if(this.listDisplay.selectedItems[i].type=="naics") {
-        emitArray1.push(this.listDisplay.selectedItems[i].value);
+  naicsChanged(event) {
+    // WARNING: Conditional is checking that options have been passed 
+    // into the component from parent.
+    // If this is removed, the search filter will ignore any search
+    // parameters that were passed from the router and reset the search.
+    if (this.naicsOptions.length > 0) {
+      this.selectedNaicsOptions = event;
+      this.naicsValues = this.getValuesFromOptions(this.selectedNaicsOptions,
+                                                   this.naicsConfig.config.keyValueConfig.keyProperty);
+      this.naicsValuesChange.emit(this.naicsValues);
+    }
+  }
+
+  getValuesFromOptions(optionsArray: Array<any>, keyProperty: string): string {
+    return optionsArray.map((option) => {
+      if (option[keyProperty]) {
+        return option[keyProperty];
       }
-      if(this.listDisplay.selectedItems[i].type=="psc") {
-        emitArray2.push(this.listDisplay.selectedItems[i].value);
-      }
-    }
-    this.modelChange1.emit(emitArray1);
-    this.modelChange2.emit(emitArray2);
+    }).join(',');
   }
 
-  populateSelectedList(selectArray: any, optionsObj: any) {
-
-    for(var j=0; j<selectArray.length; j++) {
-      for(var i=0; i<optionsObj.options.length; i++) {
-
-        if(optionsObj.options[i].value == selectArray[j]) {
-          let option = optionsObj.options[i];
-          let filterArr = this.listDisplay.selectedItems.filter((obj)=>{
-            if(obj.value==option.value){
-              return true;
-            }
-            return false;
-          });
-          if(filterArr.length==0){
-            this.setSelected(optionsObj.options[i], false);
+  getOptionsByValue(optionsArray: Array<any>, filterStringsArray: Array<string>, keyProperty: string): Array<any> {
+    return optionsArray.filter((option) => {
+      if (filterStringsArray.length > 0) {
+        for (let i = 0; i < filterStringsArray.length; i++) {
+          if (option[keyProperty] === filterStringsArray[i]) {
+            return option;
           }
         }
       }
-    }
+    });
   }
 
 }

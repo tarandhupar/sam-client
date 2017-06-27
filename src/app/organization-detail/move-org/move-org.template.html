@@ -1,11 +1,17 @@
-<div class="org-move-page usa-width-one-whole relative" xmlns="http://www.w3.org/1999/html">
-  <div class="usa-width-three-fourths m_L-5x p_T-6x">
+<div class="org-move-page usa-width-one-whole relative" *ngIf="dataLoaded">
+  <div class="usa-width-three-fourths m_L-5x p_T-6x" *ngIf="!reviewDetail">
     <h2 class="p_T-3x">Move {{org.name}}</h2>
     <p class="p_T-3x">
       Move this office to a new sub-tier department<br>
       Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur.
     </p>
     <p>* All the fields are required except those marked as optional </p>
+  </div>
+  <div class="usa-width-three-fourths m_L-5x p_T-6x" *ngIf="reviewDetail">
+    <h2 class="p_T-3x">Review Move - {{org.name}}</h2>
+    <p class="p_T-3x">
+      Lipsum Text goes here Pellentesque id ornare enim. Fusce sit amet hendrerit enim. Quisque fermentum ultricies rhoncus. Aenean gravida ac nisl vitae bibendum. Duis vestibulum interdum consequat. Vestibulum semper ultricies efficitur.
+    </p>
   </div>
   <div class="org-move-div usa-width-three-fourths m_L-5x p_B-6x" *ngIf="!updateDetail">
     <h3 class="org-move-title">{{org.name}}</h3>
@@ -16,9 +22,8 @@
       <sam-date [label]="''" name='start-date' [value]="startDate" [disabled]="true"></sam-date>
     </sam-label-wrapper>
     <p class="usa-width-one-whole p_T-2x hint-text m_B-3x">Start date of the office must be the same as the date of original office.</p>
-    <div class="usa-width-one-whole">
+    <div class="usa-width-one-whole m_B-6x">
       <sam-agency-picker (organization)="getFederalOrgName($event)"
-                         (orgFullPath)="getParentFullPath($event)"
                          [label]="'New parent Sub-tier'"
                          [multimode]="false"
                          [hint]="'Please select one sub-tier organization'"
@@ -28,10 +33,9 @@
 
     <sam-text-area [label]="'Message'" [name]="'move-org-message'" [placeholder]="'An optional message providing a reason to move this office'" [value]="message"></sam-text-area>
     <button class="usa-button-primary p_R-4x p_L-6x pull-right" (click)="onUpdateDetailClick()">Update Detail <i class="fa fa-arrow-right"></i></button>
-    <button class="usa-button-outline p_R-6x p_L-6x pull-right" (click)="location.back()">Cancel</button>
   </div>
 
   <div class="org-move-update-detail-div usa-width-three-fourths m_L-5x p_B-6x" *ngIf="updateDetail">
-    <create-org-form class="p_L-0x" [orgFormConfig]="orgFormConfig" (onCancelClick)="updateDetail = false"></create-org-form>
+    <create-org-form class="p_L-0x" [orgFormConfig]="orgFormConfig" (onCancelClick)="updateDetail = false" (onReviewClick)="reviewDetail = true" (onEditClick)="reviewDetail = false"></create-org-form>
   </div>
 </div>

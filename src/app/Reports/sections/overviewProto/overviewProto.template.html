@@ -34,45 +34,14 @@
       </div>
       <ul class="ul-css">
         <!--test report to test MSTR connection; to be deleted -isaac -->
-        <li class="report-li" #myVar>
+        <li class="report-li">
           <div class="usa-grid-full">
             <div class="usa-grid-full">
               <div class="grid-name">
                 <a [routerLink]="['../mstrProto']">
                   <b>Prototype Report for Common Components</b>
                 </a>
-                <b class="grid-overview1">&nbsp;&nbsp;&nbsp;&nbsp;
-                  <span>{{item.app}}</span>
-                </b>
               </div>
-              <div class="grid-date">
-                <span class="grid-overview2">
-                  <a (click)="selectItem(item.id)" >
-                    <i *ngIf="liked" (click)="addUser(item.id)" [ngClass]="{'fa fa-star-o': selectedIdx === item.id }">
-                    </i>
-                    <i *ngIf="!liked" (click)="deleteUser(item.id)" [ngClass]="{'fa fa-star': selectedIdx === item.id }">
-                    </i>
-                    <i *ngIf="selectedIdx !== item.id" [ngClass]="item.favorite ? 'fa fa-star' : 'fa fa-star-o'"></i>
-                    <span class="usa-sr-only">click to add {{item.name}} to your favorites</span>
-                </a>
-                </span>
-              </div>
-            </div>
-            <div class="usa-grid-full">
-              {{item.desc}}
-            </div>
-            <br>
-            <div class="usa-grid-full">
-              {{item.verb}}
-            </div>
-            <div class="usa-grid-full">
-              <samAccordion>
-                <sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">
-                  <div class="grid-name"></div>
-                  <div class="grid-date"><i class="fa fa-trash"></i></div>
-                  <!--<sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved ' + item.name">{{item.name}}-->
-                </sam-accordion-section>
-              </samAccordion>
             </div>
           </div>
         </li>
@@ -109,13 +78,13 @@
               {{item.verb}}
             </div>
             <div class="usa-grid-full">
-              <samAccordion>
+              <sam-accordion>
                 <sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved Criteria'">
                   <div class="grid-name"></div>
                   <div class="grid-date"><i class="fa fa-trash"></i></div>
                   <!--<sam-accordion-section [name]="'Saved Criteria'" [headerText]="'Saved ' + item.name">{{item.name}}-->
                 </sam-accordion-section>
-              </samAccordion>
+              </sam-accordion>
             </div>
           </div>
         </li>

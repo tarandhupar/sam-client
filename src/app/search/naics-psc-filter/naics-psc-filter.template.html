@@ -1,17 +1,17 @@
-<sam-label-wrapper class="sam-list-input">
-  <sam-type-ahead [placeholder]="options1.placeholder"
-                  [name]="options1.name"
-                  [options]="options1.options"
-                  [config]="options1.config"
-                  (modelChange)="setSelected($event, true)"
-                  [selectedList]="listDisplay.selectedItems">
-  </sam-type-ahead>
-  <sam-type-ahead [placeholder]="options2.placeholder"
-                  [name]="options2.name"
-                  [options]="options2.options"
-                  [config]="options2.config"
-                  (modelChange)="setSelected($event, true)"
-                  [selectedList]="listDisplay.selectedItems">
-  </sam-type-ahead>
-  <sam-list-display #listDisplay id="naics-psc-display" (modelChange)="emitSelectedList()" [config]="options1.config"><div [innerHTML]="options1.selectedLabel"></div></sam-list-display>
-</sam-label-wrapper>
+<sam-autocomplete-multiselect class="usa-award-filter"
+                              [label]="naicsConfig.label"
+                              [name]="naicsConfig.name"
+                              [options]="naicsOptions"
+                              [keyValueConfig]="naicsConfig.config.keyValueConfig"
+                              [ngModel]="selectedNaicsOptions"
+                              (ngModelChange)="naicsChanged($event)">
+</sam-autocomplete-multiselect>
+<sam-autocomplete-multiselect class="usa-award-filter"
+                              [label]="pscConfig.label"
+                              [name]="pscConfig.name"
+                              [options]="pscOptions"
+                              [keyValueConfig]="pscConfig.config.keyValueConfig"
+                              [ngModel]="selectedPscOptions"
+                              (ngModelChange)="pscChanged($event)">
+</sam-autocomplete-multiselect>
+

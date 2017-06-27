@@ -24,6 +24,28 @@ export class FALAssistanceComponent implements OnInit {
   falAssistanceForm: FormGroup;
   formErrorArr = [];
   review:boolean = false;
+  deadlineHint:string =`<p>By what date(s) or between what dates must an application be received by the Federal agency? If the deadline for submission of application is not available, a statement such as the following should be entered: Contact the headquarters (or regional office, as appropriate) for application deadlines. Where this information is not available, agencies should inform GSA as soon as possible after it becomes available. The phrase "See the Federal Register for deadline dates" is not sufficient. 
+                        Specific dates must be given. If there are no deadlines, select "None."</p>`;
+  addDeadlineHint: string = `List all deadlines in the application process. Enter each deadline separately.`;
+  appProcedureHint:string = `For eligible applicants (including intermediate levels), identified under the Applicant Eligibility section,
+                          what are the basic procedural steps required by the Federal agency in the application process, beginning with the lowest level and ending eventually with the Federal government?
+                          Do OMB Circular No. A-102 or A-100 Apply? Are there any Other Application Procedures?`;
+  awardProcedureHint:string = `<p>Describe how assistance is awarded. Include who approves the award and how assistance is distributed.</p>
+                               <p>Give the basic procedural steps for awarding assistance beginning with the organizational components of the Federal agency that has final approval authority for the application and end with the lowest level at which Federal resources are expended. 
+                               State if the assistance passes through the initial applicant for further distribution to other groups in the private sector. 
+                               These steps should be consistent with the steps identified in the Application Procedure subsection above.</p>`;
+  approvalHint:string = `<p>Select the range that best represents how much time the approval process takes.</p>
+                         <p>In terms of days, what is a representative range of the time required for the application or request to be approved or disapproved. 
+                         If, in the case of certain nonfinancial assistance programs this is not relevant, select "Not applicable."</p>`;
+
+  renewalHint:string = `<p>Select the range that best represents when an awardee may apply for a renewal or extension.</p>
+                        <p>Are renewals or extensions available? What are the procedures for such? If there are no renewals, enter "None." 
+                        If this does not apply to a particular program, select "Not applicable." Describe any additional information necessary.</p>`;
+
+  appealsHint:string = `<p>Select the range that best represents how long an applicant has to appeal a decision.</p>
+                        <p>For applications not approved, what appeal procedure and/or allowable rework time is available? If there is no appeal or rework time, select "None." 
+                        If this does not apply to the particular program, select "Not applicable." Describe any additional information necessary.</p>`;
+
 
   public deadlinesFlagOptions = [];
   public dateRangeOptions = [{ label: 'None Selected', value: 'na'}];

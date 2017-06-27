@@ -21,6 +21,7 @@ export class FederalHierarchyPage {
   totalPages:number = 0;
   totalRecords:number = 0;
 
+  orgSearchStatusModel = ['allActive'];
   orgStatusModel = ['Active'];
   orgStatusOptions = [
     { label: 'Active', value: 'Active', name: 'Active' },
@@ -47,6 +48,7 @@ export class FederalHierarchyPage {
 
   searchText:string = "";
   searchType:string = "general";
+  searchOrgType:any = [];
   resultType:string = "default";
   constructor(private fhService: FHService, private route: ActivatedRoute, private _router:Router){}
 
@@ -57,28 +59,34 @@ export class FederalHierarchyPage {
           this.userRole = queryParams['userRole'];
         }
         this.setCreateOrgTypes();
-
-        switch (this.userRole){
-          case "superAdmin":
-            this.fhService.getDepartmentsByStatus('active').subscribe( data => {
-              this.initiatePage(data._embedded,data._embedded.length);
-              this.dataLoaded = true;
-            });
-            break;
-          case "deptAdmin": case "agencyAdmin": case "officeAdmin":
+        if(this.userRole !== "superAdmin"){
           this.adminOrgKey = queryParams['orgId'];
           this.deptOrgKey = this.userRole === 'deptAdmin'? this.adminOrgKey:'100000000';
-          this.fhService.getDepartmentAdminLanding('active', this.deptOrgKey).subscribe( data => {
-            this.deptOrg = data._embedded[0].org;
-            this.deptLogo = data._embedded[0]._link.logo;
-            if(!this.deptLogo) this.updateNoLogoUrl();
-            this.initiatePage(this.deptOrg.hierarchy,this.deptOrg.hierarchy.length);
-              if(this.userRole !== 'deptAdmin') {this.setAdminOrg();}
-              this.dataLoaded = true;
-            });
-            break;
         }
+        this.loadDefaultData();
+
       });
+  }
+
+  loadDefaultData(){
+    switch (this.userRole){
+      case "superAdmin":
+        this.fhService.getDepartmentsByStatus('active').subscribe( data => {
+          this.initiatePage(data._embedded,data._embedded.length);
+          this.dataLoaded = true;
+        });
+        break;
+      case "deptAdmin": case "agencyAdmin": case "officeAdmin":
+        this.fhService.getDepartmentAdminLanding('active', this.deptOrgKey).subscribe( data => {
+          this.deptOrg = data._embedded[0].org;
+          this.deptLogo = data._embedded[0]._link.logo;
+          if(!this.deptLogo) this.updateNoLogoUrl();
+          this.initiatePage(this.deptOrg.hierarchy,this.deptOrg.hierarchy.length);
+          if(this.userRole !== 'deptAdmin') {this.setAdminOrg();}
+          this.dataLoaded = true;
+        });
+      break;
+    }
   }
 
   initiatePage(orgList,totalCount){
@@ -129,8 +137,8 @@ export class FederalHierarchyPage {
     this.adminOrg = this.orgList.find(e => { if(e.org.orgKey == this.adminOrgKey) return e;});
   }
 
-  onOrgStatusChange(orgStatusModel){
-    if(orgStatusModel.length === 2){
+  onDefaultOrgStatusChange(orgStatusModel){
+    if(orgStatusModel.length === 2 || orgStatusModel.length === 0){
       if(this.userRole === 'superAdmin') this.fhService.getDepartmentsByStatus('all').subscribe( data => this.initiatePage(data._embedded,data._embedded.length));
       if(this.userRole === 'deptAdmin' || this.userRole === 'agencyAdmin') this.fhService.getDepartmentAdminLanding('all', this.deptOrgKey).subscribe( data => this.initiatePage(data._embedded[0].org.hierarchy,data._embedded[0].org.hierarchy.length));
     }else if(orgStatusModel.length === 1){
@@ -138,14 +146,30 @@ export class FederalHierarchyPage {
       if(this.userRole === 'superAdmin') this.fhService.getDepartmentsByStatus(status).subscribe( data => this.initiatePage(data._embedded,data._embedded.length));
       if(this.userRole === 'deptAdmin' || this.userRole === 'agencyAdmin') this.fhService.getDepartmentAdminLanding(status, this.deptOrgKey).subscribe( data => this.initiatePage(data._embedded[0].org.hierarchy,data._embedded[0].org.hierarchy.length));
 
-    }else{
-      this.initiatePage([],0);
     }
   }
 
-  onSelectAdminOrg(val){this.showAdminOrg = val;}
+  onSearchOrgStatusChange(orgStatusModel){
+    this.orgSearchStatusModel = orgStatusModel;
+    this.curPage = 0;
+    this.showAdminOrg? this.searchFHAdmin():this.searchFH();
+  }
+
+  onSelectAdminOrg(val){
+    this.showAdminOrg = val;
+    this.curPage = 0;
+    if(this.isDefaultResult()){
+      this.showAdminOrg? this.searchFHAdmin():this.loadDefaultData();
+    }else{
+      this.showAdminOrg? this.searchFHAdmin():this.searchFH();
+    }
+  }
 
   isOrgActive(org):boolean{
+    if(!!org.modStatus){
+      return org.modStatus === "active";
+    }
+
     if(!!org.endDate){
       let endDate = moment(org.endDate);
       if (endDate.diff(moment()) < 0) {
@@ -177,26 +201,59 @@ export class FederalHierarchyPage {
     this._router.navigate(["/create-organization"],navigationExtras);
   }
 
-  onSelectCreateOrg(orgType){}
+  onSelectCreateOrg(orgType){
+
+  }
 
   updateNoLogoUrl(){
     this.deptLogo = {href:"src/assets/img/logo-not-found.png"};
   }
 
-  updateOrgType(val){}
+  updateOrgType(val){
+    this.searchOrgType = val;
+    this.curPage = 0;
+    this.showAdminOrg? this.searchFHAdmin():this.searchFH();
+  }
 
   searchFH(){
-    this.resultType = "search";
-    // Observable.forkJoin(
-    //   this.fhService.fhSearchCount(this.searchText, this.searchType),
-    //   this.fhService.fhSearch(this.searchText, this.curPage+1, this.recordsPerPage)
-    // ).subscribe( data => {
-    //   this.curPageOrgs = data[1]._embedded;
-    //   this.totalRecords = data[0];
-    //   this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
-    //   this.updateRecordsText();
-    // });
+    // Search field is required for searching in fh landing page
+    if(this.searchText.length > 0){
+      this.resultType = "search";
+      Observable.forkJoin(
+        this.fhService.fhSearchCount(this.searchText, this.searchType, this.orgSearchStatusModel, this.searchOrgType),
+        this.fhService.fhSearch(this.searchText, this.curPage+1, this.recordsPerPage, this.orgSearchStatusModel, this.searchOrgType)
+      ).subscribe( data => {
+        this.curPageOrgs = data[1]._embedded;
+        this.totalRecords = data[0];
+        this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
+        this.updateRecordsText();
+      });
+    }
+  }
+
+  searchFHAdmin(){
+    this.fhService.getMyOrganization(this.adminOrgKey, this.searchOrgType).subscribe(data => {
+      if(!!data._embedded){
+        this.curPageOrgs = [data._embedded[0]];
+      }else{
+        this.curPageOrgs = [];
+      }
+      if(this.orgSearchStatusModel.length === 1 && this.orgSearchStatusModel[0] === 'inactive'){
+        this.curPageOrgs = [];
+      }
+      this.totalRecords = this.curPageOrgs.length;
+      this.totalPages = Math.ceil(this.totalRecords/this.recordsPerPage);
+      this.updateRecordsText();
+      }
+    );
   }
 
   isDefaultResult():boolean{ return this.resultType === "default";}
+
+  getOrgTypeText(org):string{
+    let orgType = org.type.toUpperCase();
+    if( this.typeMap[orgType]) return this.typeMap[orgType];
+    return orgType.substr(0,1) + orgType.substr(1,orgType.length-1).toLowerCase() + " (L" + org.level + ")";
+
+  }
 }

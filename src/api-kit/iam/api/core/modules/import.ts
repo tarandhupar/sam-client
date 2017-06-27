@@ -29,7 +29,7 @@ export const $import = {
 
   history(email, $success, $error) {
     let endpoint = utilities.getUrl(config.import.history),
-        headers = getAuthHeaders(),
+        auth = getAuthHeaders(),
         mock = [];
 
     $success = $success || (() => {});
@@ -66,36 +66,40 @@ export const $import = {
       }
     ];
 
-    request
-      .get(endpoint)
-      .set(headers)
-      .end((err, response) => {
-        let accounts = [];
+    if(auth) {
+      request
+        .get(endpoint)
+        .set(auth)
+        .end((err, response) => {
+          let accounts = [];
 
-        if(!err) {
-          accounts = response.body || [];
-          accounts = accounts.map((account) => {
-            return transformMigrationAccount(account);
-          });
-
-          $success(accounts);
-        } else {
-          if(isDebug()) {
-            let accounts = mock.map((account) => {
+          if(!err) {
+            accounts = response.body || [];
+            accounts = accounts.map((account) => {
               return transformMigrationAccount(account);
             });
 
             $success(accounts);
           } else {
-            $error(exceptionHandler(response));
+            if(isDebug()) {
+              let accounts = mock.map((account) => {
+                return transformMigrationAccount(account);
+              });
+
+              $success(accounts);
+            } else {
+              $error(exceptionHandler(response));
+            }
           }
-        }
-      });
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   create(email, system, username, password, $success, $error) {
     let endpoint = utilities.getUrl(config.import.roles),
-        headers = getAuthHeaders(),
+        auth = getAuthHeaders(),
         params = {
           'legacySystem': system,
           'legacyUsername': username,
@@ -106,18 +110,22 @@ export const $import = {
     $success = $success || (() => {});
     $error = $error || (() => {});
 
-    request
-      .post(endpoint)
-      .set(headers)
-      .send(params)
-      .end(function(err, response) {
-        if(!err) {
-          $success(
-            transformMigrationAccount(response.body)
-          );
-        } else {
-          $error(response.body);
-        }
-      });
+    if(auth) {
+      request
+        .post(endpoint)
+        .set(auth)
+        .send(params)
+        .end(function(err, response) {
+          if(!err) {
+            $success(
+              transformMigrationAccount(response.body)
+            );
+          } else {
+            $error(response.body);
+          }
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   }
 };

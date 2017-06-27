@@ -3,7 +3,7 @@
 <form [formGroup]="falHeaderInfoForm">
   <sam-text *ngIf="!viewModel.isRevision"
            [maxlength]="144"
-           [hint]="'Spell out any acronyms and limit to 144 characters.'"
+           [hint]="titleHint"
            [control]="falHeaderInfoForm.controls['title']"
            [name]="'title-input'"
            [label]="'Title'"
@@ -14,7 +14,7 @@
     Title: {{ viewModel.title }}
   </div>
 
-  <sam-text [hint]="'The Popular Name should be different than the Program Title.'"
+  <sam-text [hint]="popularNameHint"
            [control]="falHeaderInfoForm.controls['alternativeNames']"
            [name]="'alternative-names-input'"
            [label]="'Popular Name'"
@@ -28,7 +28,8 @@
                 [orgId]="organizationId"
                 [initial]="organizationId ? [organizationId] : []"
                 (organization)="onOrganizationChange($event)"
-                [levelLimit]='2' #agencyPicker></sam-agency-picker>
+                [levelLimit]='2'
+                formControlName="federalAgency" #agencyPicker></sam-agency-picker>
 
   <div *ngIf="viewModel.isRevision && organizationData">
       {{ organizationData.type }}: {{ organizationData.name || organizationData.agencyName }}
@@ -42,7 +43,6 @@
              [control]="falHeaderInfoForm.controls['programNumber']"
              [name]="'programNumber-input'"
              [label]="'FAL Number'"
-             [errorMessage]="falHeaderInfoForm.controls['programNumber'].valid || falHeaderInfoForm.controls['programNumber'].pristine ? '': 'This number falls outside the range defined for this organization.'"
              formControlName="programNumber"></sam-number>
 
   <div *ngIf="viewModel.isRevision">
@@ -56,7 +56,7 @@
                      [config]="relProAutocompleteConfig">
 
     <sam-label-wrapper [label]="'Related Federal Assistance Listing'"
-                  [hint]="'Are there any related federal assistance listings?'">
+                  [hint]="relatedFalHint">
 
       <sam-autocomplete autofill-falProgram
                         [(ngModel)] = "rpNGModel"

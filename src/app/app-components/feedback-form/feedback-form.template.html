@@ -25,7 +25,7 @@
     </div>
     <div class="usa-width-one-whole feedback-question-div">
       <div class="usa-width-one-whole">
-        <samAccordion>
+        <sam-accordion>
           <div *ngFor="let qItem of questionData; let i = index" class="relative">
             <sam-accordion-section [headerText]="qItem.description" [name]="qItem.description" [isExpanded]="i === 0" (isExpandedChange)="onExpandChange($event, i)">
               <!--Rating Question-->
@@ -82,7 +82,7 @@
               <i class="fa fa-circle-thin" *ngIf="!answerData[i].edited"></i>
             </span>
           </div>
-        </samAccordion>
+        </sam-accordion>
       </div>
     </div>
     <div class="usa-width-one-whole feedback-footer">

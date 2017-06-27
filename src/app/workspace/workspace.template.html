@@ -1,21 +1,25 @@
 <div class="usa-grid-full workspace-image"></div>
+
 <div class="usa-grid-full p_B-6x workspace relative">
-
   <aside class="usa-width-one-fourth m_R-0">
-
     <div sam-sticky limit=1200 container="workspace">
       <ul class="usa-sidenav-list">
-        <li><h4 class="m_B-2x">My Workspace</h4>
-          <ul class="usa-sidenav-list">
-            <li><a #notification [ngClass]="getSectionClass('notification')" (click)="selectCurrentSection('notification')" href="{{currentUrl}}#notification">Notification</a></li>
-            <li><a #preference [ngClass]="getSectionClass('preference')" (click)="selectCurrentSection('preference')" href="{{currentUrl}}#preference">User Preferences</a></li>
-            <li><a #dataEntry [ngClass]="getSectionClass('dataEntry')" (click)="selectCurrentSection('dataEntry')" href="{{currentUrl}}#dataEntry">Data Entry</a></li>
-            <li><a #administration [ngClass]="getSectionClass('administration')" (click)="selectCurrentSection('administration')" href="{{currentUrl}}#administration">Administration</a></li>
-          </ul>
+        <li *ngFor="let nav of store.nav; let $index = index;">
+          <ng-container *ngIf="!(nav['hidden'] || false)">
+            <a *ngIf="nav.routerLink" [routerLink]="[nav.routerLink]" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
+            <a *ngIf="!nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
+            <ul class="usa-sidenav-sub_list" *ngIf="nav.children">
+              <li *ngFor="let subnav of nav.children; let $subIndex = index;">
+                <a *ngIf="!subnav.anchor" [routerLink]="[subnav.routerLink]" [routerLinkActive]="[subnav.routerLinkActive]" [innerText]="nav.text"></a>
+                <a *ngIf="subnav.anchor" [href]="subnav.routerLink" [innerText]="subnav.text" pageScroll></a>
+              </li>
+            </ul>
+          </ng-container>
         </li>
       </ul>
     </div>
   </aside>
+
   <div class="usa-width-three-fourths">
     <h1 class="m_T-3x m_L-3x workspace-title-text">My Workspace</h1>
 
@@ -45,13 +49,11 @@
     <workspace-search-report class="usa-width-one-whole"></workspace-search-report>
 
     <!--Data Entry section for workspace-->
-    <h2 id="dataEntry" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text" *ngIf="isDisplayDataEntry()">Data Entry</h2>
+    <h2 id="data-entry" class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text" *ngIf="isDisplayDataEntry()">Data Entry</h2>
     <workspace-data-entry class="usa-width-one-whole" [toggleControl]="dataEntryWidgetControl" *ngIf="isDisplayDataEntry()"></workspace-data-entry>
 
-
+    <!--Administration section for workspace-->
     <h2 id="administration"  class="usa-width-one-whole m_T-3x m_L-3x workspace-title-text">Administration</h2>
     <workspace-administration class="usa-width-one-whole" [toggleControl]="administrationWidgetControl"></workspace-administration>
-
-
   </div>
 </div>

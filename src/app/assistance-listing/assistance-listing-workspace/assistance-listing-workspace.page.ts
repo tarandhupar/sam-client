@@ -2,6 +2,8 @@ import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 import {ProgramService} from 'api-kit';
 import * as Cookies from 'js-cookie';
+import {ReplaySubject} from "rxjs/ReplaySubject";
+import {Observable} from "rxjs/Observable";
 
 @Component({
   moduleId: __filename,
@@ -29,6 +31,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
   cookieValue: string;
   runProgSub: any;
   public permissions: any;
+  pendingRequestCount: any;
   workspaceSearchConfig: any = {
     placeholder: "Search Workspace"
   };
@@ -48,7 +51,7 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       this.router.navigate(['accessrestricted']);
     }
 
-    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS').subscribe(res => {
+    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS, CREATE_RAO').subscribe(res => {
       this.permissions = res;
       if (!this.permissions['FAL_LISTING']) {
         this.router.navigate['accessrestricted'];
@@ -62,6 +65,23 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
           });
       }
     });
+
+    let userPermissionsAPI = this.loadUserPermissions();
+    this.loadCountPendingRequest(userPermissionsAPI);
+    // this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS').subscribe(res => {
+    //   this.permissions = res;
+    //   if (!this.permissions['FAL_LISTING']) {
+    //     this.router.navigate['accessrestricted'];
+    //   } else {
+    //     //this.setupQS();
+    //     this.activatedRoute.queryParams.subscribe(
+    //       data => {
+    //         this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
+    //         this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
+    //         this.runProgram();
+    //       });
+    //   }
+    // });
   }
 
   ngOnDestroy() {
@@ -129,8 +149,12 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
     this.router.navigate(['fal/workspace/'], navigationExtras);
   }
 
-  addBtnClick() {
-    this.router.navigate(['programsForm/add']);
+  addAssistanceListingClick() {
+    this.router.navigate(['programs/add']);
+  }
+
+  manageAssistanceLocationsClick(){
+    this.router.navigate(['fal/myRegionalOffices']);
   }
 
   workspaceSearchModel(event) {
@@ -149,6 +173,56 @@ export class FalWorkspacePage implements OnInit, OnDestroy {
       queryParams: qsobj
     };
     this.router.navigate(['/fal/workspace/'], navigationExtras);
+  }
+
+  private loadUserPermissions(){
+    let apiSubject = new ReplaySubject();
+
+    this.programService.getPermissions(this.cookieValue, 'FAL_LISTING, CREATE_FALS, FAL_REQUESTS, CREATE_RAO').subscribe(apiSubject);
+
+    apiSubject.subscribe(res => {
+      this.permissions = res;
+      if (!this.permissions['FAL_LISTING']) {
+        this.router.navigate['accessrestricted'];
+      } else {
+        //this.setupQS();
+        this.activatedRoute.queryParams.subscribe(
+          data => {
+            this.keyword = typeof data['keyword'] === "string" ? decodeURI(data['keyword']) : this.keyword;
+            this.pageNum = typeof data['page'] === "string" && parseInt(data['page']) - 1 >= 0 ? parseInt(data['page']) - 1 : this.pageNum;
+            this.runProgram();
+          });
+      }
+    });
+
+    return apiSubject;
+  }
+
+  private loadCountPendingRequest(apiSource: Observable<any>){
+    let apiSubject = new ReplaySubject(1);
+
+    // construct a stream of federal hierarchy data
+    let apiStream = apiSource.switchMap(api => {
+      if (this.permissions != null && (this.permissions.APPROVE_REJECT_AGENCY_CR == true ||
+        this.permissions.APPROVE_REJECT_ARCHIVE_CR == true ||
+        this.permissions.APPROVE_REJECT_NUMBER_CR == true ||
+        this.permissions.APPROVE_REJECT_TITLE_CR == true ||
+        this.permissions.APPROVE_REJECT_UNARCHIVE_CR == true ||
+        this.permissions.INITIATE_CANCEL_AGENCY_CR == true ||
+        this.permissions.INITIATE_CANCEL_ARCHIVE_CR == true ||
+        this.permissions.INITIATE_CANCEL_NUMBER_CR == true ||
+        this.permissions.INITIATE_CANCEL_TITLE_CR == true ||
+        this.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
+        return this.programService.getCountPendingRequests(this.cookieValue);
+      }
+      return Observable.empty<number>();
+    });
+
+    apiStream.subscribe(apiSubject);
+
+    apiSubject.subscribe(res => {
+      this.pendingRequestCount = res;
+    });
   }
 }
 

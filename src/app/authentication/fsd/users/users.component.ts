@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
+
 import { IAMService } from 'api-kit';
+
+import { SamUserDirectoryComponent } from 'app/app-components/user-directory/user-directory.component';
 
 @Component({
   templateUrl: './users.component.html',

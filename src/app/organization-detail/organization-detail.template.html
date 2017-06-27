@@ -13,7 +13,7 @@
         <li><a [ngClass]="getSectionClass('Profile')" [routerLink]="['/organization-detail',orgId,'profile']" (click)="selectCurrentSection('Profile')">Profile</a></li>
         <li><a [ngClass]="getSectionClass('Hierarchy')" (click)="selectCurrentSection('Hierarchy')">Hierarchy</a></li>
         <li><a [ngClass]="getSectionClass('Access')" (click)="selectCurrentSection('Access')">Access</a></li>
-        <li><a [ngClass]="getSectionClass('Move')" [routerLink]="['/organization-detail',orgId,'move']" (click)="selectCurrentSection('Move')">Move Office</a></li>
+        <li *ngIf="isMoveOffice()"><a [ngClass]="getSectionClass('Move')" [routerLink]="['/organization-detail',orgId,'move']" (click)="selectCurrentSection('Move')">Move Office</a></li>
         <li><a [ngClass]="getSectionClass('Administration')" (click)="selectCurrentSection('Administration')">Administration</a></li>
       </ul>
     </div>

@@ -1,4 +1,4 @@
-import { Component, DoCheck, ElementRef, Input, KeyValueDiffers, KeyValueDiffer, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
+import { Component, DoCheck, ElementRef, forwardRef, Input, KeyValueDiffers, KeyValueDiffer, OnInit, OnChanges, QueryList, SimpleChange, ViewChild, ViewChildren } from '@angular/core';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -6,7 +6,7 @@ import { cloneDeep, isArray, isNumber, merge } from 'lodash';
 
 import { SamNameEntryComponent } from 'sam-ui-kit/form-templates/name-entry';
 import { SamPhoneEntryComponent } from 'sam-ui-kit/form-templates/phone-entry'
-import { SamKBAComponent, SamPasswordComponent } from '../shared';
+import { SamKBAComponent, SamPasswordComponent } from '../../app-components';
 import { AgencyPickerComponent } from '../../app-components/agency-picker/agency-picker.component'
 
 import { IAMService } from 'api-kit';
@@ -27,7 +27,7 @@ export class RegisterMainComponent {
   @ViewChild('passwordComponent') passwordComponent: SamPasswordComponent;
   @ViewChild('controls') controls: ElementRef;
 
-  @ViewChildren(SamKBAComponent) kbaComponents:QueryList<any>;
+  @ViewChildren(forwardRef(() => SamKBAComponent)) kbaComponents:QueryList<any>;
 
   public userForm: FormGroup;
 
@@ -52,7 +52,7 @@ export class RegisterMainComponent {
   private token = '';
   private questions = [];
   private differ: KeyValueDiffer;
-  private user: User = {
+  public user: User = {
     _id: '',
     email: '',
 
@@ -138,9 +138,9 @@ export class RegisterMainComponent {
       changes.forEachChangedItem((diff) => {
         if(this.userForm.controls[diff.key]) {
           if(diff.key.match(/(department|agency|office)/) && isNumber(diff.currentValue) && !diff.currentValue) {
-            diff.currentValue = '';
+            return;
           }
-console.log(diff);
+
           this.userForm.controls[diff.key].setValue(diff.currentValue);
         }
       });
@@ -287,6 +287,10 @@ console.log(diff);
         hierarchy[intLevel].value;
       }
     });
+
+    this.userForm.controls['officeID'].setValue(
+       this.user.officeID || this.user.agencyID || this.user.departmentID
+    );
   }
 
   changeQuestion(questionID, $index) {
@@ -346,7 +350,7 @@ console.log(diff);
         case 'departmentID':
         case 'agencyID':
         case 'officeID':
-          userData[propKey] = parseInt(userData[propKey]);
+          userData[propKey] = parseInt(this.user[propKey]);
           break;
 
         case 'kbaAnswerList':
@@ -354,17 +358,15 @@ console.log(diff);
           break;
       }
 
-      isRemove = (
-        isArray(userData[propKey]) &&
-        !propKey.match(/(department|agency|office)ID/) && (
-          !(userData[propKey] || '').length || !userData[propKey]
-        )
-      );
+      isRemove = (isArray(userData[propKey]) && !userData[propKey].length) ||
+                 ((userData[propKey] || '').length == 0);
 
-      if(isRemove || (userData[propKey] || '').length == 0) {
+      if(isRemove && !propKey.match(/(department|agency|office)ID/)) {
         delete userData[propKey];
       }
     }
+
+    userData.isGov = this.states.isGov;
 
     return userData;
   }
@@ -391,7 +393,7 @@ console.log(diff);
     let userData,
         onError = ((error) => {
           // Error Promise
-          this.showAlert('error', error);
+          this.showAlert('error', error.message);
           this.states.submitted = false;
           this.states.loading = false;
         });

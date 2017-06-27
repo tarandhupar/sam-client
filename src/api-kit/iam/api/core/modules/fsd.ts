@@ -8,8 +8,7 @@ import {
   isDebug, logger
 } from './helpers';
 
-import User from '../user';
-import KBA from '../kba';
+import { User } from '../user';
 
 function transformUserKBAResponse(data) {
   let kba = [],
@@ -36,14 +35,18 @@ const reset = {
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    request
-      .get(endpoint)
-      .set(auth)
-      .then((response) => {
-        $success(response.body);
-      }, (response) => {
-        $error(exceptionHandler(response.body));
-      });
+    if(auth) {
+      request
+        .get(endpoint)
+        .set(auth)
+        .then((response) => {
+          $success(response.body);
+        }, (response) => {
+          $error(exceptionHandler(response.body));
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   verify(token, $success, $error) {
@@ -75,16 +78,17 @@ const reset = {
 export const fsd = {
   user(id, $success, $error) {
     let core = this,
-        endpoint = utilities.getUrl(config.fsd.user, { id: id });
+        endpoint = utilities.getUrl(config.fsd.user, { id: id }),
+        auth = getAuthHeaders();
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
     // Verify Session Token
-    if(Cookies.get('iPlanetDirectoryPro')) {
+    if(auth) {
       request
         .get(endpoint)
-        .set(getAuthHeaders())
+        .set(auth)
         .then((response) => {
           $success(response.body);
         }, (response) => {
@@ -107,69 +111,81 @@ export const fsd = {
 
   users($success, $error) {
     let endpoint = utilities.getUrl(config.fsd.users),
-        headers = getAuthHeaders();
+        auth = getAuthHeaders();
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    request
-      .get(endpoint)
-      .set(getAuthHeaders())
-      .then((response) => {
-        $success(response.body);
-      }, (response) => {
-        $error(exceptionHandler(response.body));
-      });
+    if(auth) {
+      request
+        .get(endpoint)
+        .set(auth)
+        .then((response) => {
+          $success(response.body);
+        }, (response) => {
+          $error(exceptionHandler(response.body));
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   kba(id, $success, $error) {
     let endpoint = utilities.getUrl(config.fsd.kba, { id: id }),
-        headers = getAuthHeaders();
+        auth = getAuthHeaders();
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    request
-      .get(endpoint)
-      .set(getAuthHeaders())
-      .then((response) => {
-        const kba = response.body || {};
-        $success(transformUserKBAResponse(kba));
-      }, (response) => {
-        if(isDebug()) {
-          const kba = {
-            uid: 1,
-            userEmail: id,
-            firstQuestion:  1,
-            secondQuestion: 2,
-            thirdQuestion:  3,
-            firstAnswer:  'question1',
-            secondAnswer: 'question2',
-            thirdAnswer:  'question3',
-          };
-
+    if(auth) {
+      request
+        .get(endpoint)
+        .set(auth)
+        .then((response) => {
+          const kba = response.body || {};
           $success(transformUserKBAResponse(kba));
-        } else {
-          $error(exceptionHandler(response.body));
-        }
-      });
+        }, (response) => {
+          if(isDebug()) {
+            const kba = {
+              uid: 1,
+              userEmail: id,
+              firstQuestion:  1,
+              secondQuestion: 2,
+              thirdQuestion:  3,
+              firstAnswer:  'question1',
+              secondAnswer: 'question2',
+              thirdAnswer:  'question3',
+            };
+
+            $success(transformUserKBAResponse(kba));
+          } else {
+            $error(exceptionHandler(response.body));
+          }
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   deactivate(id, $success, $error) {
     let endpoint = utilities.getUrl(config.fsd.deactivate, { id: id }),
-        headers = getAuthHeaders();
+        auth = getAuthHeaders();
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    request
-      .delete(endpoint)
-      .set(getAuthHeaders())
-      .then((response) => {
-        $success(response.body);
-      }, (response) => {
-        $error(exceptionHandler(response.body));
-      });
+    if(auth) {
+      request
+        .delete(endpoint)
+        .set(auth)
+        .then((response) => {
+          $success(response.body);
+        }, (response) => {
+          $error(exceptionHandler(response.body));
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   reset: reset

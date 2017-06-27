@@ -130,7 +130,7 @@
               [formControlName]="'fy2'"
     ></sam-text>
   </div>
-
+  <br><sam-label-wrapper [hint]="tatsHint"></sam-label-wrapper>
   <!-- Add new account form action buttons -->
   <sam-button *ngIf="!isEditing" buttonText="Add New TAF" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>
 

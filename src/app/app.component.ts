@@ -148,6 +148,12 @@ export class App{
       qsobj['assistanceType'] = null;
     }
 
+    if(searchObject.searchField !== 'ei') {
+      qsobj['entityType'] = null;
+    } else {
+      qsobj['entityType'] = ["ent","ex"];
+    }
+
     let navigationExtras: NavigationExtras = {
       queryParams: qsobj
     };

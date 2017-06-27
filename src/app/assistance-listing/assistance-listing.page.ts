@@ -11,6 +11,7 @@ import * as _ from 'lodash';
 // Todo: avoid importing all of observable
 import { ReplaySubject, Observable, Subscription } from 'rxjs';
 import {SidenavHelper} from '../app-utils/sidenav-helper';
+import {RequestLabelPipe} from "./pipes/request-label.pipe";
 
 @Component({
   moduleId: __filename,
@@ -20,10 +21,12 @@ import {SidenavHelper} from '../app-utils/sidenav-helper';
     ProgramService,
     DictionaryService,
     HistoricalIndexService,
-    SidenavHelper
+    SidenavHelper,
+    RequestLabelPipe
   ]
 })
 export class ProgramPage implements OnInit, OnDestroy {
+  programRequest: any;
   program: any;
   programID: any;
   federalHierarchy: any;
@@ -121,7 +124,8 @@ export class ProgramPage implements OnInit, OnDestroy {
     this.sidenavService.updateData(this.selectedPage, 0);
 
     if(this.cookieValue) {
-      this.loadUserPermissions();
+      let userPermissionsAPISource = this.loadUserPermissions(programAPISource);
+      this.loadPendingRequests(userPermissionsAPISource);
       //TODO check if this FAL has pending request, if so switch dropdown flag and add alert to link it to CR listing page
     }
   }
@@ -184,7 +188,6 @@ export class ProgramPage implements OnInit, OnDestroy {
 
       this.checkCurrentFY();
       this.setAlerts();
-      this.getRoles();
 
       if (this.program.data && this.program.data.authorizations) {
         this.authorizationIdsGrouped = _.values(_.groupBy(this.program.data.authorizations.list, 'authorizationId'));
@@ -403,10 +406,14 @@ Please contact the issuing agency listed under "Contact Information" for more in
     document.body.scrollTop = 0;
   }
 
-  private loadUserPermissions(){
-    let apiSubject = new ReplaySubject();
+  private loadUserPermissions(apiSource: Observable<any>){
+    let apiSubject = new ReplaySubject(1);
 
-    this.programService.getPermissions(this.cookieValue, 'FAL_REQUESTS').subscribe(apiSubject);
+    let apiStream = apiSource.switchMap(api => {
+      return this.programService.getPermissions(this.cookieValue, 'FAL_REQUESTS', api.data.organizationId);
+    });
+
+    apiStream.subscribe(apiSubject);
 
     apiSubject.subscribe(res => {
       this.changeRequestDropdown.permissions = res;
@@ -415,10 +422,37 @@ Please contact the issuing agency listed under "Contact Information" for more in
     return apiSubject;
   }
 
+  private loadPendingRequests(apiSource: Observable<any>){
+    let apiSubject = new ReplaySubject(1);
+    
+    // construct a stream of federal hierarchy data
+    let apiStream = apiSource.switchMap(api => {
+      if (this.changeRequestDropdown.permissions != null && (this.changeRequestDropdown.permissions.APPROVE_REJECT_AGENCY_CR == true || 
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_ARCHIVE_CR == true || 
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_NUMBER_CR == true || 
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_TITLE_CR == true || 
+        this.changeRequestDropdown.permissions.APPROVE_REJECT_UNARCHIVE_CR == true || 
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_AGENCY_CR == true || 
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_ARCHIVE_CR == true || 
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_NUMBER_CR == true || 
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_TITLE_CR == true || 
+        this.changeRequestDropdown.permissions.INITIATE_CANCEL_UNARCHIVE_CR == true)) {
+        return this.programService.getPendingRequest(this.cookieValue, this.programID);
+      }
+      return Observable.empty<any[]>();
+    });
+
+    apiStream.subscribe(apiSubject);
+
+    apiSubject.subscribe((res: any[]) => {
+      if (res.length > 0){
+        this.programRequest = res[0];
+      }
+    });
+  }
+
   public onChangeRequestSelect(event) {
-    if(event.value === 'archive_request') {
-      this.router.navigateByUrl('programs/' + event.program.id + '/archive-request');
-    }
+    this.router.navigateByUrl('programs/' + event.program.id + '/change-request?type='+event.value);
   }
 
   public canEdit() {
@@ -439,7 +473,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
   public onEditClick(page: string[]) {
     if (this.program._links && this.program._links['program:update'] && this.program._links['program:update'].href) {
       let id = this.program._links['program:update'].href.match(/\/programs\/(.*)\/edit/)[1]; // extract id from hateoas edit link
-      let url = '/programsForm/' + id + '/edit'.concat(page.toString());
+      let url = '/programs/' + id + '/edit'.concat(page.toString());
       this.router.navigateByUrl(url);
     } else if (this.program._links && this.program._links['program:revise']) {
       this.editModal.openModal(page.toString());
@@ -449,7 +483,7 @@ Please contact the issuing agency listed under "Contact Information" for more in
   public onEditModalSubmit(page: any[]) {
     this.editModal.closeModal();
     this.programService.reviseProgram(this.programID, this.cookieValue).subscribe(res => {
-      let url = '/programsForm/' + JSON.parse(res._body).id + '/edit'.concat(page[0]);
+      let url = '/programs/' + JSON.parse(res._body).id + '/edit'.concat(page[0]);
       this.router.navigateByUrl(url);
     });
   }
@@ -547,55 +581,9 @@ Please contact the issuing agency listed under "Contact Information" for more in
     let url = '/programs/' + this.program.id + '/reject';
     this.router.navigateByUrl(url);
   }
-
-  getRoles() {
-    this.rolesSub = this.programService.getPermissions(this.cookieValue, 'ROLES').subscribe(res => {
-      if (res && res.ROLES && res.ROLES.length > 0) {
-        this.roles = res.ROLES;
-        if(this.program._links && this.program._links['program:request:action:submit']) {
-          let href = this.program._links['program:request:action:submit'].href;
-          this.getReasons(href.substring(href.lastIndexOf("/") + 1), this.roles);
-        }
-      }
-    });
-  }
-  getReasons(programId: any, roles: any) {
-    this.reasonSub = this.programService.getReasons(programId, this.cookieValue).subscribe(res => {
-      let reason = res.reason;
-      if (this.cookieValue) {
-
-        // show alert if viewing pending version with having Agency Submitters, Agency Coordinators, superuser and limiteduser
-        if (this.program.status && this.program.status.code && this.program.status.code === 'pending' && ((roles && roles.length > 0) && (roles[0] === 'CFDA_AGENCY_COORD' || roles[0] === 'AGENCY_SUBMITTER'
-          || roles[0] === 'CFDASUPERUSER' || roles[0] === 'CFDALIMITEDSUPERUSER'))) {
-          let pendingAgencyAlertDesc = `This assistance listing is pending review/approval. Changes cannot be made at this time. Assistance Listing will publish on ` + moment(this.program.autoPublishDate).format("MM/DD/YYYY") + `.`+
-            `<br><br><b>Submission Comment</b> <br>` + reason;
-          let pendingAgencyAlert = {
-            'labelname': 'pending-fal-alert',
-            'config': {
-              'type': 'info',
-              'title': '',
-              'description': pendingAgencyAlertDesc
-            }
-          };
-          this.alerts.push(pendingAgencyAlert);
-        }
-        // show alert if viewing pending version with having OMB Reviewers, superuser and limiteduser
-        if (this.program.status && this.program.status.code && this.program.status.code === 'pending' && (this.roles[0] === 'OMB_ANALYST' || this.roles[0] === 'RMO_SUPERUSER'
-          || roles[0] === 'CFDASUPERUSER' || roles[0] === 'CFDALIMITEDSUPERUSER')) {
-          let pendingOMBAlertDesc = `This Assistance Listing revision is pending publication. The Assistance Listing will publish on ` + moment(this.program.autoPublishDate).format("MM/DD/YYYY") + ` unless you extend the review period, reject the Assistance Listing, or manually publish the Assistance Listing.
-            You can use the buttons below to perform any one of the aforementioned actions.<br><br><b>Submission Comment</b><br>` + reason;
-          let pendingOMBAlert = {
-            'labelname': 'pending-fal-alert',
-            'config': {
-              'type': 'warning',
-              'title': '',
-              'description': pendingOMBAlertDesc
-            }
-          };
-          this.alerts.push(pendingOMBAlert);
-        }
-      }
-    });
+  onSubmitClick() {
+    let url = '/programs/' + this.program.id + '/submit';
+    this.router.navigateByUrl(url);
   }
 
   public containsExecutiveOrder() {

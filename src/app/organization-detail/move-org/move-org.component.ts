@@ -4,6 +4,7 @@ import { AACRequestService } from 'api-kit/aac-request/aac-request.service.ts';
 import { FHService } from "api-kit/fh/fh.service";
 import { Location } from "@angular/common";
 import * as moment from 'moment/moment';
+import { LabelWrapper } from 'sam-ui-kit/wrappers/label-wrapper/label-wrapper.component';
 
 @Component ({
   templateUrl: 'move-org.template.html'
@@ -23,13 +24,14 @@ export class OrgMovePage {
 
   updateDetail:boolean = false;
   reviewDetail:boolean = false;
+  dataLoaded:boolean = false;
 
   orgFormConfig:any;
 
   constructor(private route: ActivatedRoute, private fhService: FHService){}
 
   ngOnInit(){
-    this.route.params.subscribe(
+    this.route.parent.params.subscribe(
       params => {
         this.setupOrg(params['orgId']);
       });
@@ -48,6 +50,7 @@ export class OrgMovePage {
 
         this.startDate = moment(this.org.startDate).format('Y-M-D');
         this.endDate = moment(this.org.endDate).format('Y-M-D');
+        this.dataLoaded = true;
       });
   }
 
@@ -62,16 +65,12 @@ export class OrgMovePage {
     if(this.targetParentOrg && this.endDate && moment(this.endDate,'Y-M-D').isValid()){
       this.updateDetail = true;
     }
-    
-    this.updateDetail = true;
+
   }
 
   getFederalOrgName(org){
     this.targetParentOrg = org;
-  }
-
-  getParentFullPath(fullPath){
-    console.log(fullPath);
+    this.orgFormConfig['parentId'] = org.value;
   }
 
   setOrgEndDate(endDate){

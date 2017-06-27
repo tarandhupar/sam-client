@@ -93,6 +93,7 @@ export class OrgAddrFormComponent {
       this.populateAddressFormField();
       this.isCityDisabled = false;
       this.isStateDisabled = false;
+      this.addressForm.get('postalCode').enable();
     }
   }
 
@@ -105,10 +106,17 @@ export class OrgAddrFormComponent {
     this.addressForm.get("streetAddr1").setValue(this.orgAddrModel.street1 );
     this.addressForm.get("streetAddr2").setValue(this.orgAddrModel.street2 );
 
-    this.country = {key:this.orgAddrModel.country,value:this.orgAddrModel.country};
-    this.state = {key:this.orgAddrModel.state,value:this.orgAddrModel.state};
-    this.cityOutput = {key:this.orgAddrModel.city,value:this.orgAddrModel.city};
-
+    this.locationService.searchCountry("iso3", this.orgAddrModel.country).subscribe(data => {
+      this.country = {key:this.orgAddrModel.country,value:data._embedded.countryList[0].country};
+      this.cityLocationConfig.serviceOptions.country = this.orgAddrModel.country;
+    });
+    this.locationService.searchState("statecode", this.orgAddrModel.state, this.orgAddrModel.country).subscribe(data => {
+      this.state = {key:this.orgAddrModel.state,value: data._embedded.stateList[0].state};
+      this.cityLocationConfig.serviceOptions.state = this.orgAddrModel.state;
+    });
+    this.locationService.searchCity(this.orgAddrModel.city, this.orgAddrModel.country, this.orgAddrModel.state, "statecode").subscribe(data => {
+      this.cityOutput = {key:data._embedded.cityList[0].cityCode, value:this.orgAddrModel.city};
+    });
   }
 
   onAddrTypeSelect(val){
@@ -146,7 +154,6 @@ export class OrgAddrFormComponent {
     }
     return this.locationService.validateZipWIthLocation(zipCode, this.cityLocationConfig.serviceOptions.state, this.cityOutput);
   }
-
 
   formatError(){
     this.addressForm.get("streetAddr1").markAsDirty();
@@ -197,7 +204,7 @@ export class OrgAddrFormComponent {
     if (!val || !val.key || !val.value) {
       return;
     }
-    this.orgAddrModel.state = val.value;
+    this.orgAddrModel.state = val.key;
     this.cityLocationConfig.serviceOptions.state = val.key;
   }
 

@@ -31,7 +31,7 @@ import * as moment from 'moment/moment';
               {{ data.aac }}
             </li>
             <li>
-              <strong>Entity Address</strong><br>
+              <strong>Address</strong><br>
               {{ data.address.streetAddress }}, {{ data.address.city }}, 
               {{ data.address.state}} {{data.address.zip}}
               </li>

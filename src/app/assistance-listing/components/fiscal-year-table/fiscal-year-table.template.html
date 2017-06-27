@@ -63,18 +63,20 @@
       </table>
 
       <sam-select *ngIf="isEditing"
-                 [hint]="'Select a Year'"
-                 [name]="config.name + '-year-select'"
-                 [required]="false"
-                 [options]="yearOptions"
-                 [formControlName]="'year'"
+                  [label]="'Select a Year'"
+                  [name]="config.name + '-year-select'"
+                  [required]="config.select?.required || false"
+                  [options]="yearOptions"
+                  [formControlName]="'year'"
+                  [control]="fyTableGroup.get('year')"
       ></sam-select>
 
       <sam-text-area *ngIf="isEditing"
-                   [hint]="config.entry?.hint"
-                   [name]="config.name + '-textarea'"
-                   [required]="false"
-                   [formControlName]="'textarea'"
+                     [label]="config.entry?.hint"
+                     [name]="config.name + '-textarea'"
+                     [required]="config.textarea?.required || false"
+                     [formControlName]="'textarea'"
+                     [control]="fyTableGroup.get('textarea')"
       ></sam-text-area>
 
       <sam-button *ngIf="!isEditing && yearOptions && yearOptions.length > 0" [buttonText]="'Add ' + config.itemName" (onClick)="displayForm()" [buttonType]="'default'"></sam-button>

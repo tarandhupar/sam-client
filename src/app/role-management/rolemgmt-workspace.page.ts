@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { UserAccessService } from "../../api-kit/access/access.service";
 import {RoleMgmtSidenav} from "./rolemgmt-sidenav/rolemgmt-sidenav.component";
+import {ActivatedRouteSnapshot, ActivatedRoute} from "@angular/router";
 
 @Component({
   templateUrl: './rolemgmt-workspace.page.html'
@@ -21,13 +22,20 @@ export class RoleMgmtWorkspace implements OnInit{
 
   @ViewChild('sideNav') sideNav: RoleMgmtSidenav;
 
-  constructor(private role: UserAccessService){
+  constructor(private role: UserAccessService, private route: ActivatedRoute){
 
   }
 
   ngOnInit(){
-    this.getStatusIds();
-}
+    let status = this.route.snapshot.queryParams['status'];
+    if (status === 'pending') {
+      this.onClickPending()
+    } else if (status === 'escalated') {
+      this.onClickEscalated();
+    } else {
+      this.getStatusIds();
+    }
+  }
 
   StatusValue(event){
     this.statusKey = event;
@@ -62,12 +70,16 @@ export class RoleMgmtWorkspace implements OnInit{
   }
 
   onClickEscalated() {
-    this.sideNav.statusCheckboxes.value = [4];
+    let e = [4];
+    this.sideNav.statusCheckboxes.value = e;
+    this.sideNav.StatusCheckboxModel = e;
     this.StatusValue("4");
   }
 
   onClickPending() {
-    this.sideNav.statusCheckboxes.value = [1];
+    let e = [1];
+    this.sideNav.statusCheckboxes.value = e;
+    this.sideNav.StatusCheckboxModel = e;
     this.StatusValue("1");
   }
 

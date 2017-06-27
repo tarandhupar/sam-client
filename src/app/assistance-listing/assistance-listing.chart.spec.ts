@@ -61,13 +61,13 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     comp.financialData = mockFinancialData;
     comp.dictionaries = mockDictionaries;
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
-    comp.ngOnChanges();
   });
 
   /**
    * Basic check that some kind of chart is created
    */
   it('FinancialObligationChart Create Visualization: Should display chart', () => {
+    comp.ngOnChanges({}):
     let chart = fixture.nativeElement.querySelector('#chart');
     expect(chart).not.toBeNull();
     expect(chart).toBeDefined();
@@ -84,6 +84,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
    * Basic check that some kind of table is created
    */
   it('FinancialObligationChart Create Visualization: Should display table', () => {
+    comp.ngOnChanges({}):
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
     expect(table).toBeDefined();
@@ -289,7 +290,6 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     comp.financialData = mockFinancialData;
     comp.dictionaries = mockDictionaries;
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
-    comp.ngOnChanges();
   });
 
   /**
@@ -297,6 +297,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
    * Display an empty cell where data is missing
    */
   it('FinancialObligationChart Table Combine Previous Obligations: Should total new and previous data of same type', () => {
+    comp.ngOnChanges({});
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
     expect(table).toBeDefined();
@@ -328,6 +329,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
    * Basic check that previous obligations do not break combines
    */
   it('FinancialObligationChart Table Combine Previous Obligations: Should not total new and previous data of different type', () => {
+    comp.ngOnChanges({});
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
     expect(table).toBeDefined();
@@ -349,6 +351,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
    * The total for each FY should add together data from all obligations, if it exists
    */
   it('FinancialObligationChart Table Combine Previous Obligations: Should total correct years from all obligations', () => {
+    comp.ngOnChanges({});
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
     expect(table).toBeDefined();
@@ -428,7 +431,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     comp.financialData = mockFinancialData;
 
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
-    comp.ngOnChanges();
+    comp.ngOnChanges({});
 
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();
@@ -491,7 +494,7 @@ describe('src/app/assistance-listing/assistance-listing.chart.spec.ts', () => {
     comp.financialData = mockFinancialData;
 
     fixture.detectChanges(); // 1st change detection triggers ngOnInit
-    comp.ngOnChanges();
+    comp.ngOnChanges({});
 
     let table = fixture.nativeElement.querySelector('#chart-table');
     expect(table).not.toBeNull();

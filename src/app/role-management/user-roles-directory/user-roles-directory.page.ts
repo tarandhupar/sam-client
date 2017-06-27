@@ -127,14 +127,10 @@ export class UserRolesDirectoryPage {
           _.forOwn(orgsByTier, (value, key) => {
             let orgs = value.map(o => {
               let v = {
-                name: o.organization.val,
+                name: o.organization.val || o.organization.id,
                 isSelected: o.organization.isSelected
               };
               return v;
-            });
-            // do not display orgs with no name
-            orgs = orgs.filter(o => {
-              return o && o.name;
             });
             tiers.push({ name: key, organizations: orgs});
           });

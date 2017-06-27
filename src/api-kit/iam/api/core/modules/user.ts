@@ -8,12 +8,40 @@ import {
   isDebug, logger
 } from './helpers';
 
-import User from '../user';
+import { User } from '../user';
 
 Cookies.defaults = config.cookies;
 
 function yesOrNo(value) {
   return (value || false) ? 'yes' : 'no';
+}
+
+function getMockUserAccount() {
+  const answer = '        ';
+
+  return {
+    _id: 'doe.john@gsa.gov',
+    email: 'doe.john@gsa.gov',
+
+    middleName: 'J',
+    firstName: 'John',
+    initials: 'J',
+    lastName: 'Doe',
+
+    workPhone: '12401234568',
+
+    departmentID: 100006688,
+    agencyID: 0,
+    officeID: 100173623,
+
+    kbaAnswerList: [
+      { questionId: 1, answer: answer },
+      { questionId: 3, answer: answer },
+      { questionId: 5, answer: answer }
+    ],
+
+    emailNotification: false,
+  };
 }
 
 /**
@@ -22,14 +50,14 @@ function yesOrNo(value) {
 const cac = {
   merge: function(email, token, $success, $error) {
     let endpoint = utilities.getUrl(config.mergeWith.replace(/\{email\}/g, email)),
-        headers = getAuthHeaders();
+        auth = getAuthHeaders();
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
     return request
       .post(endpoint)
-      .set(headers)
+      .set(auth)
       .then(function(response) {
         $success(response.body);
       }, $error);
@@ -188,7 +216,7 @@ const password = {
   // Password Reset for Authenticated Sessions
   change(email, oldPassword, newPassword, $success, $error) {
     let endpoint = utilities.getUrl(config.password.authenticated.replace(/\{email\}/g, email)),
-        headers = getAuthHeaders(),
+        auth = getAuthHeaders(),
         data = {
           currentpassword: oldPassword,
           userpassword: newPassword
@@ -197,37 +225,47 @@ const password = {
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    request
-      .post(endpoint)
-      .set(headers)
-      .send(data)
-      .end(function(err, response) {
-        if(!err) {
-          $success(response.body);
-        } else {
-          $error(exceptionHandler(response.body));
-        }
-      });
+    if(auth) {
+      request
+        .post(endpoint)
+        .set(auth)
+        .send(data)
+        .end(function(err, response) {
+          if(!err) {
+            $success(response.body);
+          } else {
+            $error(exceptionHandler(response.body));
+          }
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   }
 };
 
 export const user = {
+  states: {
+    auth: isDebug(),
+    fsd: isDebug(),
+    system: isDebug(),
+  },
+
   get($success, $error) {
     let core = this,
-        endpoint = utilities.getUrl(config.session);
+        endpoint = utilities.getUrl(config.session),
+        auth = getAuthHeaders();
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    // Verify Session Token
-    if(Cookies.get('iPlanetDirectoryPro')) {
+    if(auth) {
       // Verify User Session Cache
       if(Cookies.getJSON('IAMSession')) {
         $success(new User(Cookies.getJSON('IAMSession')));
       } else {
         request
           .get(endpoint)
-          .set(getAuthHeaders())
+          .set(auth)
           .then(function(response) {
             let $user: User = new User(response.body.sessionToken);
             Cookies.set('IAMSession', response.body.sessionToken, config.cookies);
@@ -238,7 +276,11 @@ export const user = {
           });
       }
     } else {
-      $error({ message: 'No user active user session.' });
+      if(isDebug()) {
+        $success(getMockUserAccount());
+      } else {
+        $error({ message: 'Please sign in' });
+      }
     }
   },
 
@@ -277,7 +319,7 @@ export const user = {
 
   update(userData, $success, $error) {
     let endpoint = utilities.getUrl(config.details.update),
-        headers = getAuthHeaders(),
+        auth = getAuthHeaders(),
         data = userData || {};
 
     $success = ($success || function(response) {});
@@ -289,34 +331,42 @@ export const user = {
       return;
     }
 
-    request
-      .patch(endpoint)
-      .set(headers)
-      .send(data)
-      .then((response) => {
-        let $user: User = merge(Cookies.getJSON('IAMSession') || {}, userData);
+    if(auth) {
+      request
+        .patch(endpoint)
+        .set(auth)
+        .send(data)
+        .then((response) => {
+          let $user: User = merge(Cookies.getJSON('IAMSession') || {}, userData);
 
-        Cookies.set('IAMSession', $user, config.cookies);
+          Cookies.set('IAMSession', $user, config.cookies);
 
-        $success(response.body);
-      }, $error);
+          $success(response.body);
+        }, $error);
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   deactivate(email, $success, $error) {
     let endpoint = utilities.getUrl(config.details.deactivate.replace(/\{email\}/g, email)),
-        headers = getAuthHeaders();
+        auth = getAuthHeaders();
 
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    request
-      .delete(endpoint)
-      .set(headers)
-      .then(function(response) {
-        $success(response);
-      }, function(response) {
-        $error(exceptionHandler(response.body));
-      });
+    if(auth) {
+      request
+        .delete(endpoint)
+        .set(auth)
+        .then(function(response) {
+          $success(response);
+        }, function(response) {
+          $error(exceptionHandler(response.body));
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   cac: cac,
@@ -324,11 +374,28 @@ export const user = {
   password: password,
 
   isSignedIn() {
-    return (Cookies.get('iPlanetDirectoryPro') || isDebug()) ? true : false;
+    if(isDebug()) {
+      return this.states.auth;
+    } else {
+      return Cookies.get('iPlanetDirectoryPro') ? true : false;
+    }
   },
 
   isFSD() {
-    const user = new User(Cookies.getJSON('IAMSession') || {});
-    return this.isSignedIn() && user['fsd'] ? true : false;
+    if(isDebug()) {
+      return this.states.fsd;
+    } else {
+      const user = new User(Cookies.getJSON('IAMSession') || {});
+      return this.isSignedIn() && user['fsd'] ? true : false;
+    }
+  },
+
+  isSystemAccount() {
+    if(isDebug()) {
+      return this.states.system;
+    } else {
+      const user = new User(Cookies.getJSON('IAMSession') || {});
+      return this.isSignedIn() && user['systemAccount'] ? true : false;
+    }
   }
 };

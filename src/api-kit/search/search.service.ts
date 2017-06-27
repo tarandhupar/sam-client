@@ -128,6 +128,10 @@ export class SearchService {
       oApiParam.oParam['assistance_type'] = obj.assistanceType;
     }
 
+    if(typeof obj.entityType !== 'undefined' && obj.entityType !== null && obj.entityType.length == 1 && (obj.entityType.indexOf('ent') > -1 || obj.entityType.indexOf('ex') > -1)) {
+      oApiParam.oParam['index'] = obj.entityType.join(',');
+    }
+
     return this.oAPIService.call(oApiParam);
   }
 

@@ -94,6 +94,18 @@ export class FALTafsComponent implements ControlValueAccessor, Validator {
 
   // controls
   public tafsForm: FormGroup;
+  tatsHint:string =`<p>Enter as many components as possible. Treasury Dept Code, Allocation Transfer Agency, and Treasury Account Main Code are required.</p><p>In order to provide more 
+                    complete information, Treasury Appropriation Fund Symbol (TAFS) for each CFDA entry must be provided in Paragraph 124 of the CFDA program description. 
+                    The TAFS is an administrative identifier that represents an act of congress that permits Federal agencies to incur obligations and make payments out of the 
+                    Treasury for specified purposes. Each TAFS provides the framework for establishing a set of balanced accounts on the books of the agency concerned. 
+                    The TAFS describes key components of financial information, such as the department or agency, and the specific account within the department or agency 
+                    providing funding for the relevant CFDA program, as well as the year(s) the funding is available for obligation. 
+                    The TAFS is a type of Treasury Account Symbol. These codes are important to help put programs in the context of other related funding information.
+                     In cases where more than one program is linked to one TAFS, each program should have its own entry with the TAFS number as appropriate. 
+                     In cases where one program is linked to more than one TAFS, please enter all relevant TAFS into the space provided. 
+                     All TAFS codes provided must include the following components: Treasury Department Code, Allocation Transfer Agency and Treasury Account Main Code. 
+                     All other components are optional; however, agencies are encouraged to include as many components as available. 
+                     If questions arise regarding correct entry of the above listed components, please coordinate the population of these data fields with your agency's budget office and/or CFO office as appropriate.</p>`;
 
   // label wrappers
   @ViewChild('tafsLabel') tafsWrapper: LabelWrapper;

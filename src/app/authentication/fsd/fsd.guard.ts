@@ -39,7 +39,7 @@ export class FSDGuard implements CanActivate, CanActivateChild {
   }
 
   verifyRoute(): boolean {
-    if(!this.api.iam.user.isSignedIn() && !this.api.iam.isDebug()) {
+    if(!this.api.iam.user.isSignedIn()) {
       this.router.navigate(['/signin']);
       return false;
     }

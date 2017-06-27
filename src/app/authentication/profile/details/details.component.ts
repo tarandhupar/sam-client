@@ -79,7 +79,29 @@ export class DetailsComponent {
 
     kbaAnswerList: [],
 
+    emailNotification: false,
     accountClaimed: true
+  };
+
+  private cache = {
+    identity: {
+      firstName: this.user.firstName,
+      initials: this.user.initials,
+      lastName: this.user.lastName,
+      suffix: this.user.suffix,
+      emailNotification: this.user.emailNotification
+    },
+
+    organization: {
+      departmentID: this.user.departmentID,
+      agencyID: this.user.agencyID,
+      officeID: this.user.officeID,
+      workPhone: this.user.workPhone
+    },
+
+    kba: {
+      kbaAnswerList: this.user.kbaAnswerList
+    }
   };
 
   private alerts = {
@@ -96,7 +118,10 @@ export class DetailsComponent {
     }
   };
 
+  private selected = [];
   private questions = [];
+
+  // Organization Names
   private hierarchy = {
     department: '',
     agency:     '',
@@ -122,6 +147,7 @@ export class DetailsComponent {
   ngOnInit() {
     this.initUser(() => {
       this.initForm();
+      this.syncCache();
     });
   }
 
@@ -135,7 +161,7 @@ export class DetailsComponent {
           key = diff.key.toString().match(/(middleName|initials)/) ? 'initials' : diff.key;
 
           if(key.match(/(department|agency|office)/) && isNumber(diff.currentValue) && !diff.currentValue) {
-            diff.currentValue = '';
+            return;
           }
 
           this.detailsForm.controls[key].setValue(diff.currentValue);
@@ -145,8 +171,66 @@ export class DetailsComponent {
     }
   }
 
+  syncCache() {
+    this.cache = {
+      identity: {
+        firstName: this.user.firstName,
+        initials: this.user.initials,
+        lastName: this.user.lastName,
+        suffix: this.user.suffix,
+        emailNotification: this.user.emailNotification
+      },
+
+      organization: {
+        departmentID: this.user.departmentID,
+        agencyID: this.user.agencyID,
+        officeID: this.user.officeID,
+        workPhone: this.user.workPhone
+      },
+
+      kba: {
+        kbaAnswerList: this.user.kbaAnswerList
+      }
+    };
+
+    this.updateSelectedOffice();
+  }
+
+  restoreCache() {
+    this.user = merge({},
+      this.user,
+      this.cache.identity,
+      this.cache.organization,
+      this.cache.kba,
+    );
+
+    this.updateSelectedOffice();
+  }
+
+  updateSelectedOffice() {
+    if(this.states.isGov) {
+      this.selected = [this.user.officeID || this.user.agencyID || this.user.departmentID];
+
+       this.api.fh
+        .getOrganizationById(this.selected)
+        .subscribe(data => {
+          this.setOrganizationNames(data);
+        });
+    }
+  }
+
+  handleAction(event, type) {
+    if(event.event == 'formActionSave') {
+      this.save(type);
+    } else {
+      this.restoreCache();
+    }
+  }
+
   initForm() {
     const orgID = (this.user.officeID || this.user.agencyID || this.user.departmentID || '').toString();
+
+    this.selected = [orgID];
 
     this.detailsForm = this.builder.group({
       firstName:     [this.user.firstName, Validators.required],
@@ -170,14 +254,6 @@ export class DetailsComponent {
     });
 
     this.states.isGov = orgID.length ? true : false;
-
-    if(this.states.isGov) {
-       this.api.fh
-        .getOrganizationById(orgID)
-        .subscribe(data => {
-          this.setOrganizationNames(data);
-        });
-    }
   }
 
   loadUser(cb) {
@@ -399,6 +475,12 @@ export class DetailsComponent {
         this.hierarchy[level]= hierarchy[intLevel].label;
       }
     });
+
+    this.detailsForm.controls['officeID'].setValue(
+       this.user.officeID || this.user.agencyID || this.user.departmentID
+    );
+
+    this.selected = [this.detailsForm.controls['officeID']];
   }
 
   setAAC(organization) {
@@ -615,12 +697,17 @@ export class DetailsComponent {
         valid = this.isValid(keys);
 
     this.states.submitted = true;
-    this.agencyPicker.setOrganizationFromBrowse();
+
+    if(this.agencyPicker) {
+      this.agencyPicker.setOrganizationFromBrowse();
+    }
 
     if(valid) {
       this.states.loading = true;
 
       this.saveGroup(keys, () => {
+        this.syncCache();
+
         this.states.editable[groupKey] = false;
         this.states.loading = false;
         // Trick Header to Update State

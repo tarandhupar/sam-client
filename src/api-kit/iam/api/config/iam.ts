@@ -51,7 +51,7 @@ export default {
     deactivate: '/my-details/api/fsd/{id}/deactivate',
     reset: {
       init:   '/password/api/fsd/{id}/passwordReset',
-      verify: '/password/api/fsd/passwordResetVerifyEmail',
+      verify: '/password/api/reset/passwordResetVerifyEmail',
     },
   },
 

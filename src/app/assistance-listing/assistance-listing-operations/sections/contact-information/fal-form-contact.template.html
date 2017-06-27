@@ -13,10 +13,11 @@
   <sam-text-area [control]="falContactInfoForm.controls['additionalInfo']"
                [name]="'addInfo-input'"
                [label]="'Additional Information'"
+               [hint]= "contactadditionalInforamtionHint"
                formControlName="additionalInfo"></sam-text-area>
 
   <h4>Headquaters Office</h4>
-  <label>Add up to two points of Contacts for your headquarters office.</label>
+  <sam-label-wrapper [hint]="headquartersOfficeHint"></sam-label-wrapper>
 
   <contactInfoTable [contactsInfo]="contactsInfo" [hideContactsForm]="hideContactsForm" [formErrorArr]="formErrorArr" (actionHandler)="actionHandler($event)" #contactInfoTable></contactInfoTable>
 
@@ -129,7 +130,7 @@
 
   <sam-text
     [control]="falContactInfoForm.controls['website']"
-    [hint]="'Provide the primary web page URL for this listing. When possible, the web page should be specific to this listing.'"
+    [hint]="websiteHint"
     [name]="'website-input'"
     [label]="'Website'"
     [errorMessage]="falContactInfoForm.controls['website'].valid || falContactInfoForm.controls['website'].pristine ? '' : 'Please enter a valid url. [protocol]://hostname.domain. Protocal can be ftp, http, or https. Spaces are not allowed.'"

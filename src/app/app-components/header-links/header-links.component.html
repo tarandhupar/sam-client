@@ -36,7 +36,7 @@
   <div [@flyInOut]="'in'" *ngIf="menuLink" class="sam-ui inverted attached menu">
     <div class="sam-ui labeled icon right inverted menu">
       <ng-container *ngFor="let item of dropdownData;let i=index">
-        <a class="item" *ngIf="itemToggle(item)" (click)="dropdownItemClick(item)">
+        <a class="item" [attr.id]="item.linkId" *ngIf="itemToggle(item)" (click)="dropdownItemClick(item)">
           <i class="icon fa" [ngClass]="item.linkClass"></i>
           {{item.linkTitle}}
         </a>

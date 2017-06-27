@@ -25,6 +25,7 @@ import { RequestDetailsComponent } from "./request-details/request-details";
 import { UserRolesDirectoryPage } from "./user-roles-directory/user-roles-directory.page";
 import { DomainDefinitionResolve } from "./domaindefinition.resolve";
 import { AppTemplatesModule } from "../app-templates/index";
+import { BulkUpdateComponent } from "./bulk-update/bulk-update.component";
 
 @NgModule({
   imports: [
@@ -54,6 +55,7 @@ import { AppTemplatesModule } from "../app-templates/index";
     RoleMgmtSidenav,
     RoleMgmtContent,
     UserRolesDirectoryPage,
+    BulkUpdateComponent,
   ],
   providers: [
     DomainsResolve,

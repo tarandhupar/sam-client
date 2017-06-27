@@ -6,11 +6,14 @@ import { UserMigrationsPage } from './public/migrations/migrations.page';
 import { UserProfilePage } from './public/profile/profile.page';
 import { GrantAccessPage } from "./grant-access/grant-access.page";
 import { RequestAccessResolve } from "./request-access.resolve";
-import { AdminOnlyGuard } from "../application-content/403/admin-only.guard";
-import { AdminOrDeptAdminGuard } from "../application-content/403/admin-or-dept-admin.guard";
+import { DeptAdminGuard } from "../application-content/403/dept-admin.guard";
 import { UserRoleDetailsPage } from "./user-role-details/user-role-details.page";
 import { UserRoleDetailsResolve } from "./user-role-details.resolve";
 import { DomainsResolve } from "../role-management/domains.resolve";
+import { AdminLevelResolve } from "../application-content/403/admin-level.resolve";
+import { UserNameResolve } from "../application-content/403/user-name.resolve";
+import {ProfileGuard} from "../authentication/profile/profile.guard";
+import {IsLoggedInGuard} from "../application-content/403/is-logged-in.guard";
 
 export const routes: Routes = [];
 
@@ -20,20 +23,56 @@ if (SHOW_OPTIONAL === 'true' || ENV === 'development') {
 
 routes.unshift(
   {
-    path: 'users/:id/access',
-    component: UserAccessPage,
-    resolve: { domains: DomainsResolve },
+    path: 'users',
+    canActivateChild: [ IsLoggedInGuard, DeptAdminGuard ],
+    resolve: { adminLevel: AdminLevelResolve },
+    children: [
+      {
+        path: ':id/access',
+        component: UserAccessPage,
+        data: { isAdminView: true },
+        resolve: { domains: DomainsResolve },
+      },
+      {
+        path: ':id/role-details',
+        component: UserRoleDetailsPage,
+        data: { isAdminView: true },
+        resolve: { details: UserRoleDetailsResolve },
+      },
+      {
+        path: ':id/edit-access',
+        component: GrantAccessPage,
+        data: { mode: 'edit', isAdminView: true },
+      },
+      {
+        path: ':id/grant-access',
+        component: GrantAccessPage,
+        resolve: { 'request': RequestAccessResolve },
+        data: { mode: 'grant', isAdminView: true },
+      },
+    ]
   },
   {
-    path: 'users/:id/role-details',
-    component: UserRoleDetailsPage,
-    resolve: {
-      details: UserRoleDetailsResolve
-    }
+    path: 'profile/access',
+    component: UserAccessPage,
+    data: { isAdminView: false },
+    resolve: { userName: UserNameResolve },
+    canActivate: [ IsLoggedInGuard ]
   },
-  { path: 'users/:id/edit-access',  component: GrantAccessPage, canActivate: [AdminOrDeptAdminGuard] },
-  { path: 'users/:id/grant-access',  component: GrantAccessPage, canActivate: [AdminOrDeptAdminGuard], resolve: { 'request': RequestAccessResolve }},
-  { path: 'users/:id/request-access',  component: GrantAccessPage },
+  {
+    path: 'profile/request-access',
+    component: GrantAccessPage,
+    data: { mode: 'request', isAdminView: false },
+    resolve: { userName: UserNameResolve },
+    canActivate: [ IsLoggedInGuard ]
+  },
+  {
+    path: 'profile/role-details',
+    component: UserRoleDetailsPage,
+    data: { isAdminView: false },
+    resolve: { details: UserRoleDetailsResolve },
+    canActivate: [ IsLoggedInGuard ]
+  }
 );
 
 export const routing = RouterModule.forChild(routes);

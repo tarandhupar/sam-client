@@ -9,6 +9,7 @@ import { SamAPIKitModule } from 'api-kit';
 import { UIKitDemoPage } from './ui-kit-demo.page';
 import { SimpleFormDemoPage } from './simple-form-demo.page';
 import { AppComponentsModule } from '../../app-components/app-components.module';
+import { SampleFormModule } from './sample-complex-form/sample-form.module';
 import { AlertsModule } from '../../alerts/alerts.module';
 import { HelpModule } from '../../Help/help.module';
 
@@ -27,6 +28,7 @@ import { CountyServiceDirective } from './county-demo';
     AppComponentsModule,
     AlertsModule,
     HelpModule,
+    SampleFormModule,
   ],
   exports: [
     CountryServiceDirective,

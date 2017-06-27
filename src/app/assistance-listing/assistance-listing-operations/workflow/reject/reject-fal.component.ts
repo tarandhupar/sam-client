@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {AlertFooterService} from "../../../../alerts/alert-footer/alert-footer.service";
 import {FALFormService} from "../../fal-form.service";
 import {FALFormViewModel} from "../../fal-form.model";
+import {AuthGuard} from "../../../authguard/authguard.component";
 
 @Component({
   selector: 'reject-fal',
@@ -18,7 +19,7 @@ export class RejectFALComponent implements OnInit {
   alerts = [];
   submitReason: string;
   rejectProgramId: string;
-
+  data: any;
   successFooterAlertModel = {
     title: "Success",
     description: "Rejection Successful.",
@@ -40,11 +41,10 @@ export class RejectFALComponent implements OnInit {
   };
 
 
-  constructor(private fb: FormBuilder, private alertFooterService: AlertFooterService, private router: Router, private service: FALFormService) {
+  constructor(private fb: FormBuilder, private alertFooterService: AlertFooterService, private router: Router, private service: FALFormService, private authGuard: AuthGuard) {
   }
 
   ngOnInit() {
-    this.createForm();
     this.populateData();
   }
 
@@ -57,13 +57,22 @@ export class RejectFALComponent implements OnInit {
   populateData() {
     let programId = this.router.url.split('/')[2];
     this.service.getFAL(programId).subscribe(res => {
+      this.authGuard.checkPermissions('reject', res);
+      this.createForm();
       this.title = res.data.title;
-      let rejectLink = res['_links']['program:request:reject'].href;
-      this.rejectProgramId = rejectLink.split('/')[5];
-      let href = res['_links']['program:request:action:submit'].href;
-      this.service.getSubmitReason(href.substring(href.lastIndexOf("/") + 1)).subscribe(res => {
-        this.submitReason = res.reason;
-      });
+      if (res && res['_links'] && res['_links']['program:request:reject'] && res['_links']['program:request:reject'].href) {
+        let rejectLink = res['_links']['program:request:reject'].href;
+        this.rejectProgramId = rejectLink.split('/')[5];
+        if (res && res['_links'] && res['_links']['program:request:action:submit']) {
+          if (res && res['_links'] && res['_links']['program:request:action:submit'] && res['_links']['program:request:action:submit'].href) {
+            let href = res['_links']['program:request:action:submit'].href;
+              this.service.getSubmitReason(href.substring(href.lastIndexOf("/") + 1)).subscribe(res => {
+                this.submitReason = res.reason;
+              });
+          }
+        }
+      }
+      this.data = res;
     });
   }
 
@@ -85,7 +94,7 @@ export class RejectFALComponent implements OnInit {
 
   onCancelClick() {
     let url = this.router.url;
-    url = url.replace("reject", "view");
+    url = url.replace("reject", "review");
     this.router.navigateByUrl(url);
   }
 }

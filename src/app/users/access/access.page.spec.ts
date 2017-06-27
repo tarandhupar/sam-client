@@ -1,17 +1,21 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from "@angular/forms";
 import { SamUIKitModule } from "sam-ui-kit/index";
-import { Router, ActivatedRoute } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { UserAccessPage } from "./access.page";
-import { UserAccessService } from "../../../../api-kit/access/access.service";
-import { UserAccessMock } from "../../../../api-kit/access/access.service.mock";
-import { AlertFooterService } from "../../../alerts/alert-footer/alert-footer.service";
-import { DateFormatPipe } from "../../../app-pipes/date-format.pipe";
+import { UserAccessService } from "api-kit/access/access.service";
+import { UserAccessMock } from "api-kit/access/access.service.mock";
 import { RouterTestingModule } from "@angular/router/testing";
-import { FHService } from "../../../../api-kit/fh/fh.service";
-import { WrapperService } from "../../../../api-kit/wrapper/wrapper.service";
 import { HttpModule } from "@angular/http";
 import { Observable } from "rxjs";
+import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { DateFormatPipe } from "../../app-pipes/date-format.pipe";
+import { RoleTable } from "../role-table/role-table.component";
+import { PendingRequestsComponent } from "../pending-requests/pending-requests.component";
+import { WorkspaceTemplateComponent } from "../../app-templates/workspace/workspace-template.component";
+import { AppComponentsModule } from "../../app-components/app-components.module";
+import { PipesModule } from "../../app-pipes/app-pipes.module";
+import { UserPic } from "../user-pic/user-pic.component";
 
 let mockActivatedRoute = {
   parent: {
@@ -22,6 +26,10 @@ let mockActivatedRoute = {
     }
   },
   snapshot: {
+    data: {
+      isAdminView: true,
+    },
+    params: { id: "timmmmmmy" },
     _lastPathIndex: 0,
   },
   queryParams: Observable.of({admin: 'true'})
@@ -44,23 +52,29 @@ let fhServiceStub = {
 };
 
 
-describe('The Roles Edit and New pages', () => {
+describe('The User Access Page', () => {
   let component: UserAccessPage;
   let fixture: any;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [UserAccessPage, DateFormatPipe],
+      declarations: [
+        UserAccessPage,
+        RoleTable,
+        PendingRequestsComponent,
+        WorkspaceTemplateComponent,
+        UserPic,
+      ],
       imports: [
         FormsModule,
         SamUIKitModule,
+        PipesModule,
         RouterTestingModule,
+        AppComponentsModule,
         HttpModule,
       ],
       providers: [
         AlertFooterService,
-        { provide: FHService, useValue: fhServiceStub },
-        WrapperService,
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: UserAccessService, useValue: UserAccessMock },
       ]
@@ -75,34 +89,4 @@ describe('The Roles Edit and New pages', () => {
     component.ngOnInit();
   });
 
-  it('should update fields when the domain changes', fakeAsync(() => {
-    component.ngOnInit();
-    tick();
-  }));
-
-  it('should filter roles', fakeAsync(() => {
-    fixture.detectChanges();
-    component.ngOnInit();
-    component.orgsChanged([1, 2]);
-    component.rolesChanged([1, 2, 3]);
-    component.domainsChanged([1, 2, 3]);
-    component.objectsChanged([1, 2, 3]);
-    component.permissionsChanged([1, 2, 3]);
-  }));
-
-  it('should collapse and expand all the things', fakeAsync(() => {
-    fixture.detectChanges();
-    component.ngOnInit();
-    fixture.detectChanges();
-    component.collapseAll();
-    fixture.detectChanges();
-    component.expandAll();
-    fixture.detectChanges();
-  }));
-
-  it('should cancel a request', fakeAsync(() => {
-    fixture.detectChanges();
-    component.ngOnInit();
-    component.onCancelRequestClick(1, 1);
-  }));
 });

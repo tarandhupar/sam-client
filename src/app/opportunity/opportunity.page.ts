@@ -719,4 +719,11 @@ export class OpportunityPage implements OnInit {
   private showHideAwardDetails(){
     this.showChangesAwardDetails = !this.showChangesAwardDetails;
   }
+  private numberLabel(){
+    if (this.opportunity.data.type === 'k' || (this.opportunity.data.type === 'm' && this.originalOpportunity.data.type === 'k')){
+      return "Solicitation Number";
+    } else {
+      return "Notice Number";
+    }
+  }
 }

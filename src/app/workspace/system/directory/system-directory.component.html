@@ -1,0 +1,36 @@
+<div class="usa-grid-full usa-workspace-system-directory">
+  <div class="usa-width-one-whole">
+    <h2>
+      System Accounts Directory
+      <div class="usa-button-controls">
+        <a class="usa-button usa-button-primary" [routerLink]="['profile']">Create</a>
+      </div>
+    </h2>
+
+    <table>
+      <tbody>
+        <tr *ngFor="let account of store.records; let $index = index;">
+          <td valign="top">
+            <h2>System Account</h2>
+            <h1><a [innerText]="account.systemName" [routerLink]="['profile', account._id]"></a></h1>
+            <div>
+              <span class="title">IP Address</span>
+              <span [innerText]="account.ipAddress"></span>
+            </div>
+            <div>
+              <span class="title">Sub Tier</span>
+              <span [innerText]="account.subtier"></span>
+            </div>
+          </td>
+          <td valign="bottom">
+            <div class="title">Primary Owner</div>
+            <div [innerText]="account.primaryOwnerName"></div>
+            <div [innerText]="account.primaryOwnerEmail"></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <sam-pagination [currentPage]="states.page.current" [totalPages]="states.page.total" [disabled]="states.loading" (pageChange)="onPage($event)"></sam-pagination>
+  </div>
+</div>

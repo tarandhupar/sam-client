@@ -68,7 +68,7 @@ export class RoleMgmtSidenav implements OnInit{
 
     getRequestorIds(){
       this.role.getRequestorIds().subscribe( res => {
-        if(res.length !=  0)
+        if(res && res.length)
           this.requestorIds = res.map(this.mapKeyAndVal);
       });
     }

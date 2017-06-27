@@ -4,6 +4,7 @@ import {
 } from '@angular/core/testing';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 
 // Load the implementations that should be tested
@@ -11,7 +12,8 @@ import { FederalHierarchyPage } from "./federal-hierarchy.page";
 import { SamUIKitModule } from "sam-ui-kit";
 import { SamAPIKitModule } from "api-kit";
 import { FHService } from "../../api-kit/fh/fh.service";
-
+import { FHSideNav } from "./fh-sidenav/fh-sidenav.component";
+import { OrgCreatePage } from '../organization-detail/create-org/create-org.component';
 
 class RouterStub {
   navigate(url: string) { return url; }
@@ -26,15 +28,15 @@ describe('Federal Hierarchy Page', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations:[FederalHierarchyPage],
+      declarations:[FederalHierarchyPage,FHSideNav],
       imports:[
         SamUIKitModule,
         SamAPIKitModule,
+        FormsModule,
         RouterTestingModule,
       ],
       providers: [
         FederalHierarchyPage,
-        { provide: Router, useClass: RouterStub },
         { provide: FHService ,useClass:FHServiceStub}
       ]
     });

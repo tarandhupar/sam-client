@@ -35,6 +35,9 @@ export class OrgCreateForm {
 
   @Input() orgFormConfig:any;
   @Output() onCancelClick: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onReviewClick: EventEmitter<any> = new EventEmitter<any>();
+  @Output() onEditClick: EventEmitter<any> = new EventEmitter<any>();
+
   // Indicate Funding radio group
   indicateFundRadioModel:any = '';
   indicateFundRadioConfig = {
@@ -73,6 +76,7 @@ export class OrgCreateForm {
   };
 
   extraAddressTypes = ["Billing Address","Shipping Address"];
+  addrTypeMaping = {M:"Mailing Address", B:"Billing Address", S:"Shipping Address"};
   orgTypeWithAddress = "office";
   showFullDes:boolean = false;
 
@@ -96,15 +100,36 @@ export class OrgCreateForm {
       if(!!this.orgParentId) this.getOrgDetail(this.orgParentId);
     } else{
       this.orgType = this.orgFormConfig.org.type.split(" ").join('').toLowerCase();
-      this.orgParentId = "100000000";
       this.setupOrgForms(this.orgType);
       this.populateOrgBasicForm(this.orgFormConfig.org);
       this.populateOrgForms(this.orgFormConfig.org);
+      this.orgParentId = this.orgFormConfig.parentId;
       if(!!this.orgParentId) this.getOrgDetail(this.orgParentId);
 
-      this.orgFormConfig.org.orgAddresses.forEach( e => {
-        this.orgAddresses.push({addrModel:e,showAddIcon:false});
-      });
+
+      if(this.orgFormConfig.org.orgAddresses.length > 0){
+        this.orgFormConfig.org.orgAddresses.forEach( e => {
+          if(e.type){
+            this.orgAddresses.push(
+              {
+                addrModel:{
+                  addrType:this.addrTypeMaping[e.type],
+                  country:e.countryCode,
+                  state:e.state,
+                  city:e.city,
+                  street1:e.streetAddress,
+                  street2:e.streetAddress2?e.streetAddress2:'',
+                  postalCode:e.zipcode
+                },
+                showAddIcon:false
+              });
+          }
+        });
+        if(this.orgAddresses.length < 3) this.orgAddresses[this.orgAddresses.length - 1].showAddIcon = true;
+      }else{
+        this.orgAddresses.push({addrModel:{addrType:"Mailing Address",country:"",state:"",city:"",street1:"",street2:"",postalCode:""},showAddIcon:true});
+      }
+
     }
 
   }
@@ -219,6 +244,7 @@ export class OrgCreateForm {
   }
 
   generateBasicOrgObj(){
+    if(!this.isCreateMode()) this.orgObj = this.orgFormConfig.org;
     this.orgObj['name'] = this.basicInfoForm.get('orgName').value;
     this.orgObj['startDate'] = this.basicInfoForm.get('orgStartDate').value;
     this.orgObj['summary'] = this.basicInfoForm.get('orgDescription').value;
@@ -230,17 +256,48 @@ export class OrgCreateForm {
     if (this.isAddressNeeded()){
       this.orgObj['newIsAward'] = this.indicateFundRadioModel === "Funding/Awarding"?true:false;
       this.orgObj['newIsFunding'] = this.indicateFundRadioModel === "Funding/Awarding" || this.indicateFundRadioModel == "Funding"?true:false;
-      this.orgObj['orgAddresses'] = [];
-      this.orgAddresses.forEach( e => {
-        this.orgObj['orgAddresses'].push({
-          "city": e.addrModel.city,
-          "countryCode": e.addrModel.country,
-          "state": e.addrModel.state,
-          "streetAddress": e.addrModel.street2.length > 0 ? e.addrModel.street1 +" "+ e.addrModel.street2: e.addrModel.street1,
-          "zipcode": e.addrModel.postalCode,
-        });
-      });
+      if(this.isCreateMode()){
+        this.createOrgAddresses();
+      }else{
+        this.updateOrgAddresses();
+      }
+
     }
+  }
+
+  createOrgAddresses(){
+    this.orgObj['orgAddresses'] = [];
+    this.orgAddresses.forEach( e => {
+      let addrType = "";
+      Object.keys(this.addrTypeMaping).forEach(key => {if(this.addrTypeMaping[key] === e.addrModel.addrType) addrType = key;});
+      this.orgObj['orgAddresses'].push({
+        "type": addrType,
+        "city": e.addrModel.city,
+        "countryCode": e.addrModel.country,
+        "state": e.addrModel.state,
+        "streetAddress":  e.addrModel.street1,
+        "streetAddress2":  e.addrModel.street2,
+        "zipcode": e.addrModel.postalCode,
+      });
+    });
+  }
+
+  updateOrgAddresses(){
+    this.orgObj['orgAddresses'] = this.orgFormConfig.org.orgAddresses;
+    this.orgAddresses.forEach( e => {
+      let addrType = "";
+      Object.keys(this.addrTypeMaping).forEach(key => {if(this.addrTypeMaping[key] === e.addrModel.addrType) addrType = key;});
+      this.orgObj['orgAddresses'].forEach( addr => {
+        if(addr.type === addrType){
+          addr["city"] = e.addrModel.city;
+          addr["countryCode"] = e.addrModel.country;
+          addr["state"] = e.addrModel.state;
+          addr["streetAddress"] =  e.addrModel.street1;
+          addr["streetAddress2"] =  e.addrModel.street2;
+          addr["zipcode"] = e.addrModel.postalCode;
+        }
+      })
+    })
   }
 
   setOrgStartDate(val){
@@ -264,6 +321,7 @@ export class OrgCreateForm {
       let isAddrValid = true;
       results.forEach(e => {if(e['description'] !== "VALID") isAddrValid = false;});
       if(isAddrValid && (!this.isAddressNeeded() || (this.isAddressNeeded() && this.indicateFundRadioModel !== '' )) && !this.basicInfoForm.invalid){
+        this.onReviewClick.emit(true);
         this.updateOrgInfoForReview();
         if (this.isAddressNeeded()) this.orgInfo.push({des: "Indicate Funding", value: this.indicateFundRadioModel});
         this.getOrgTypeSpecialInfo(this.orgType);
@@ -272,6 +330,7 @@ export class OrgCreateForm {
     }, error => {});
 
     if(!this.isAddressNeeded() && !this.basicInfoForm.invalid){
+      this.onReviewClick.emit(true);
       this.updateOrgInfoForReview();
       this.getOrgTypeSpecialInfo(this.orgType);
       this.generateBasicOrgObj();
@@ -282,18 +341,33 @@ export class OrgCreateForm {
   onEditFormClick(){
     this.createOrgPage = true;
     this.reviewOrgPage = false;
+    this.onEditClick.emit(true);
   }
 
   onConfirmFormClick(){
     //submit the form and navigate to the new created organization detail page
-    this.fhService.createOrganization(this.orgObj,this.fullParentPath,this.fullParentPathName).subscribe(
-      val => {
+    if(this.isCreateMode()){
+      this.fhService.createOrganization(this.orgObj,this.fullParentPath,this.fullParentPathName).subscribe(
+        val => {
+          this.flashMsgService.showFlashMsg();
+          this.flashMsgService.isCreateOrgSuccess = true;
+          this.router.navigate(['/organization-detail',val,'profile']);
+          setTimeout(()=>{this.flashMsgService.hideFlashMsg()}, 3000);
+        }
+      );
+    }else{
+      this.orgObj.fullParentPath = this.fullParentPath + '.' + this.orgObj.orgKey;
+      this.orgObj.fullParentPathName = this.fullParentPathName + '.' + this.orgObj.name.split(' ').join('_');
+      this.fhService.updateOrganization(this.orgObj,true).subscribe( val => {
         this.flashMsgService.showFlashMsg();
-        this.flashMsgService.isCreateOrgSuccess = true;
-        this.router.navigate(['/organization-detail',val,'profile']);
+        this.flashMsgService.isMoveOrgSuccess = true;
+
+        this.router.navigate(['/organization-detail',this.orgFormConfig.org.orgKey,'profile']);
         setTimeout(()=>{this.flashMsgService.hideFlashMsg()}, 3000);
-      }
-    );
+      })
+
+    }
+
   }
 
   onAddAddressForm(){
@@ -345,4 +419,5 @@ export class OrgCreateForm {
   onCancelBtnClick(){
     this.onCancelClick.emit(true);
   }
+
 }

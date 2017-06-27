@@ -26,15 +26,15 @@ describe('The Permissions Selector component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should select all permissions', () => {
+  it('should deselect all permissions', () => {
     fixture.debugElement.query(By.css('.check-all')).nativeElement.click();
     fixture.detectChanges();
-    expect(component.options[1].isSelected).toBeTruthy();
+    expect(component.options[1].isSelected).toBeFalsy();
   });
 
-  it('should select all defaults', () => {
+  it('should deselect all defaults', () => {
     fixture.debugElement.query(By.css('.check-all-defaults')).nativeElement.click();
     fixture.detectChanges();
-    expect(component.options[1].isDefault).toBeTruthy();
+    expect(component.options[1].isDefault).toBeFalsy();
   })
 });

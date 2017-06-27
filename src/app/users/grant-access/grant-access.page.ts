@@ -73,9 +73,13 @@ export class GrantAccessPage implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle('User Access');
-    let adminLevel = parseInt(Cookie.get('adminLevel'));
-    this.adminLevel = isNaN(adminLevel) ? null : adminLevel;
+    this.adminLevel = this.route.snapshot.data['adminLevel'];
     this.userName = this.route.snapshot.params['id'];
+
+    if (!this.userName) {
+      this.userName = this.route.snapshot.data['userName'];
+    }
+
     this.userCameFromRoleWorkspace = !!this.route.snapshot.queryParams['ref'];
 
     if (this.userCameFromRoleWorkspace) {
@@ -85,7 +89,8 @@ export class GrantAccessPage implements OnInit {
       this.getRoles();
     }
 
-    this.determinePageModeFromURL();
+    //this.determinePageModeFromURL();
+    this.mode = this.route.snapshot.data['mode'];
     this.getDomains();
     if (this.mode === 'edit') {
       this.initializePageFromQueryParameters();
@@ -124,47 +129,30 @@ export class GrantAccessPage implements OnInit {
 
   initializePageFromQueryParameters() {
     let queryParams = this.route.snapshot.queryParams;
-    //this.route.queryParams.subscribe(queryParams => {
-      this.role = parseInt(queryParams["role"]);
-      this.domain = parseInt(queryParams["domain"]);
-      this.orgs = queryParams["orgs"].split(',');
-      let obsAccess = this.getAccess();
-      this.getRoles().switchMap(() => obsAccess).subscribe(
-        res => {
-          this.userAccess = UserAccessModel.FromResponse(res);
-          this.onRoleChange(this.role);
-        },
-        error => {
-          this.footerAlert.registerFooterAlert({
-            title:"Unable to fetch access information.",
-            description:"",
-            type:'error',
-            timer:0
-          });
-        }
-      );
-
-      if (queryParams['orgs']) {
-        let orgIds = queryParams["orgs"].split(',');
-        if (orgIds.length) {
-          this.prePopulateOrgs(orgIds);
-        }
+    this.role = parseInt(queryParams["role"]);
+    this.domain = parseInt(queryParams["domain"]);
+    this.orgs = queryParams["orgs"].split(',');
+    let obsAccess = this.getAccess();
+    this.getRoles().switchMap(() => obsAccess).subscribe(
+      res => {
+        this.userAccess = UserAccessModel.FromResponse(res);
+        this.onRoleChange(this.role);
+      },
+      error => {
+        this.footerAlert.registerFooterAlert({
+          title:"Unable to fetch access information.",
+          description:"",
+          type:'error',
+          timer:0
+        });
       }
-    //});
-  }
+    );
 
-  determinePageModeFromURL() {
-    let match = this.router.url.match('edit-access');
-    if(match && match.length) {
-      this.mode = 'edit';
-    }
-    match = this.router.url.match('grant-access');
-    if (match && match.length) {
-      this.mode = 'grant';
-    }
-    match = this.router.url.match('request-access');
-    if (match && match.length) {
-      this.mode = 'request';
+    if (queryParams['orgs']) {
+      let orgIds = queryParams["orgs"].split(',');
+      if (orgIds.length) {
+        this.prePopulateOrgs(orgIds);
+      }
     }
   }
 
@@ -427,8 +415,8 @@ export class GrantAccessPage implements OnInit {
         },
         err => {
           this.footerAlert.registerFooterAlert({
-            title:"There was an error while trying to grant access.",
-            description:"",
+            title:"",
+            description:"There was an error while updating access.",
             type:'error',
             timer:3200
           });
@@ -440,7 +428,7 @@ export class GrantAccessPage implements OnInit {
 
     let orgIds = this.orgs.map(org => ''+org.value);
     let funcs: any = this.objects.map(obj => {
-      let perms = obj.permission.filter(p => !p.notChecked).map(p => p.id);
+      let perms = obj.permission.filter(p => p.notChecked).map(p => p.id);
       return {
         id: obj.function.id,
         permissions: perms
@@ -463,7 +451,7 @@ export class GrantAccessPage implements OnInit {
         );
       } else {
         let funcs2: any = this.objects.map(obj => {
-          let perms = obj.permission.filter(p => !p.notChecked).map(p => p.id);
+          let perms = obj.permission.filter(p => p.notChecked).map(p => p.id);
           return {
             function: obj.function.id,
             permission: perms

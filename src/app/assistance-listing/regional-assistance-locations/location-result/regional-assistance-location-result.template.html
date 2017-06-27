@@ -1,0 +1,74 @@
+<div class="sam-ui grid">
+  <div class="row">
+    <div class="eight wide column">
+      <h3 class="assistance-program-title">
+        {{data.title}}
+      </h3>
+
+      <ul class="sam-ui small list">
+        <li>
+          <strong>State/Region</strong><br>
+          <span>{{data.region}}</span>
+        </li>
+        <li>
+          <strong>Point Of Contact</strong><br>
+          <span>{{data.pointOfContact}}</span>
+        </li>
+        <li>
+          <strong>Address</strong><br>
+          <span>{{data.address.streetAddress}}, {{data.address.city}}, {{data.address.state}} {{data.address.zip}}</span>
+        </li>
+        <li>
+          <strong>Phone</strong><br>
+          <span>{{data.phone}}</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="four wide column">
+      <ul class="sam-ui small list">
+        <!--<li>-->
+          <!--<sam-select-->
+            <!--[hint]="actionsDropdown.config.hint"-->
+            <!--[name]="actionsDropdown.config.name"-->
+            <!--[disabled]="actionsDropdown.config.disabled"-->
+            <!--[options]="actionsDropdown.config.options"-->
+            <!--[ngModel]="actionsDropdown.defaultOption"-->
+            <!--(ngModelChange)="actionsDropdownSelect($event)"-->
+          <!--&gt;</sam-select>-->
+        <!--</li>-->
+        <li>
+          <span class="sam-ui mini label">Regional Agency Location</span>
+        </li>
+        <li>
+          <strong>Sub-Branch</strong><br>
+          <span>{{data.subBranch}}</span>
+        </li>
+        <li>
+          <strong>Division</strong><br>
+          <span>{{data.divison}}</span>
+        </li>
+        <li>
+          <strong>Created By: </strong><span>{{data.createdBy}}</span><br>
+          <strong>On: </strong> <span>{{data.createdDate|date: 'MMM d, yyyy h:m a '}}</span>
+        </li>
+        <li>
+          <strong>Last Modified By: </strong><span>{{data.modifiedBy}}</span><br>
+          <strong>On: </strong> <span>{{data.modifiedDate|date: 'MMM d, yyyy h:m a '}}</span>
+        </li>
+      </ul>
+
+      <!--<sam-modal #modal1-->
+        <!--[type]="'info'"-->
+        <!--[title]="'Are You Sure?'"-->
+        <!--[cancelButtonLabel]="'No'"-->
+        <!--[submitButtonLabel]="'Yes'"-->
+        <!--(onClose)="onModalClose($event)"-->
+        <!--(onSubmit)="deleteRAO($event)"-->
+      <!--&gt;</sam-modal>-->
+    </div>
+  </div>
+</div>
+
+
+

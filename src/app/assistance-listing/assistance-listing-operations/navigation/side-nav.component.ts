@@ -8,7 +8,6 @@ import {ActivatedRoute} from "@angular/router";
 })
 
 export class SideNavComponent implements OnInit {
-  @Input() showSubmit: boolean;
   currentUrl : string;
   currentSection: string;
 

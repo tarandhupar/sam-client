@@ -124,13 +124,7 @@ export class RoleDetailsPage {
   }
 
   isRoleNameDisabled() {
-    // all roles are editable
     return false;
-    // let d = this.domains.find(dom => +dom.id === +this.domain);
-    // if (!d) {
-    //   return false;
-    // }
-    // return d.legacyDomains;
   }
 
   onDomainChange() {

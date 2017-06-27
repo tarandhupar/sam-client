@@ -72,11 +72,10 @@ export class ReportProtoComponent implements OnInit {
 
     vm.url = vm.sanitizer.bypassSecurityTrustResourceUrl
     ('https://microstrategydev.helix.gsa.gov/MicroStrategy/servlet/mstrWeb?&evt=4001&hiddensections=path,dockLeft,footer'
-      + '&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0].role);
+      + '&uid=' + vm.user._id + '&reportID=' + vm.route.snapshot.params['id'] + '&role=' + vm.user.gsaRAC[0]);
     console.log(vm.dateFromModel);
     console.log(vm.dateToModel);
     console.log(vm.agencyPicker);
-    console.log(vm.url);
 
   }
   resetParameter(){
@@ -123,3 +122,4 @@ export class ReportProtoComponent implements OnInit {
 
 
 }
+

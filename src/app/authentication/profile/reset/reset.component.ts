@@ -1,7 +1,7 @@
 import { Component, DoCheck, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { SamPasswordComponent } from '../../shared';
+import { SamPasswordComponent } from '../../../app-components';
 
 import { IAMService } from 'api-kit';
 import { Validators as $Validators } from '../../shared/validators';

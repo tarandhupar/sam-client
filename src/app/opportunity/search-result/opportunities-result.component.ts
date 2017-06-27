@@ -21,7 +21,7 @@ import * as moment from 'moment/moment';
             <span [innerHTML]="data.description"></span>
           </p>
           <ul class="sam-ui small list">
-            <li *ngIf="data.type.value == 'Award Notice'">
+            <li *ngIf="data.type?.value == 'Award Notice'">
             <strong>Awardee</strong><br>
             <span>{{data.award?.awardee?.name}} <span *ngIf="data.award?.awardee?.duns!=null && data.award?.awardee?.duns.length > 0">({{data.award?.awardee?.duns}})</span></span>
             </li>

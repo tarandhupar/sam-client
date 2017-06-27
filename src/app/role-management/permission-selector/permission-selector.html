@@ -15,14 +15,14 @@
     <tr>
       <td class="new-column">&nbsp;<!-- New! Column Spacer --></td>
       <td class="left-align-text">All</td>
-      <td *ngIf="!hideDefaultColumn" class="checkbox-cell"><input type="checkbox" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked"></td>
+      <td *ngIf="!hideDefaultColumn" class="checkbox-cell"><input type="checkbox" class="check-all" (click)="onCheckAllDefaultClick($event.target.checked)" [(ngModel)]="isAllDefaultsChecked"></td>
       <td class="checkbox-cell"><input type="checkbox" (click)="onCheckAllClick($event.target.checked)" [(ngModel)]="isAllChecked"></td>
     </tr>
     <!-- data items -->
     <tr *ngFor="let option of options; let i = index">
       <td class="left-align-text new-column"><em *ngIf="option.isNew">New</em>&nbsp;</td>
       <td class="left-align-text">{{option.label}}</td>
-      <td *ngIf="!hideDefaultColumn" class="checkbox-cell"><input type="checkbox" (click)="onDefaultClick($event.target.checked, option)" [(ngModel)]="option.isDefault"></td>
+      <td *ngIf="!hideDefaultColumn" class="checkbox-cell"><input type="checkbox" class="check-all-defaults" (click)="onDefaultClick($event.target.checked, option)" [(ngModel)]="option.isDefault"></td>
       <td class="checkbox-cell"><input type="checkbox" (click)="onPermissionClick($event.target.checked, option)" [(ngModel)]="option.isSelected"></td>
     </tr>
   </tbody>

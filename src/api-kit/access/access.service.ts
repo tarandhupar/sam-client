@@ -375,6 +375,30 @@ export class UserAccessService {
     return this.callApi(apiOptions);
   }
 
+  // used to determine admin level of logged in user
+  getWidget() {
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/widget/',
+      method: 'GET',
+      oParam: {}
+    };
+
+    return this.callApi(apiOptions);
+  }
+
+  // used to determine admin level of logged in user
+  getAdminLevel() {
+    let apiOptions: any = {
+      name: 'rms',
+      suffix: '/checkaccess/',
+      method: 'GET',
+      oParam: {}
+    };
+
+    return this.callApi(apiOptions);
+  }
+
   addAuthHeader(options) {
     let iPlanetCookie = Cookie.getAll().iPlanetDirectoryPro;
 
@@ -385,5 +409,4 @@ export class UserAccessService {
     options.headers = options.headers || {};
     options.headers['X-Auth-Token'] = iPlanetCookie;
   }
-
 }

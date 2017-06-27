@@ -1,11 +1,11 @@
-<sam-button buttonText="Add Deadline" (onClick)="addAssist()" [class.hide]="hideAddButton"></sam-button>
+<sam-fieldset-wrapper [hint] ="'List all deadlines in the application process. Enter each deadline separately.'"><sam-button buttonText="Add Deadline" (onClick)="addAssist()" [class.hide]="hideAddButton"></sam-button>
 
 <div [formGroup]="falAssistSubForm" [class.hide]="!hideAddButton">
   <div formArrayName="deadlineList">
     <h4>{{subFormLabel}}</h4>
     <ng-container *ngFor="let assistGrp of falAssistSubForm.controls.deadlineList.controls; let i=index">
       <div [formGroupName]="i" [class.hide]="assistIndex !== i">
-
+        <sam-label-wrapper [hint] = "'Use the calendar and/or description field to provide deadline date(s). Leave the End Date blank if the deadline is fixed.'">
         <div class="start-date">
           <sam-date [name]="'start-date'"
                    [label]="'Start Date'"
@@ -19,10 +19,11 @@
                    formControlName="end"
           ></sam-date>
         </div>
-
+        </sam-label-wrapper>
         <sam-text-area [name]="'list-desc'"
                      [label]="'Describe this Deadline'"
                      formControlName="description"
+                     [hint]= "'Optionally provide a description for this deadline'"
         ></sam-text-area>
 
         <sam-button buttonText="Cancel" (onClick)="onSubFormCancelClick(i)"></sam-button>
@@ -30,4 +31,6 @@
       </div>
     </ng-container>
   </div>
+
 </div>
+</sam-fieldset-wrapper>

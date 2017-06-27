@@ -218,6 +218,18 @@
 							{{awardData.transactionInformation.preparedUser}}
 						</div>
 					</div>
+					<div class="sam-ui medium header">
+						Closed Status
+						<div class="sub header">
+							Currently unavailable
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Closed Status Date
+						<div class="sub header">
+							Currently unavailable
+						</div>
+					</div>
 				</div>
 				<div class="column">
 					<div class="sam-ui medium header">
@@ -241,6 +253,12 @@
 						Last Modified User
 						<div class="sub header">
 							{{awardData.transactionInformation.lastModifiedUser}}
+						</div>
+					</div>
+					<div class="sam-ui medium header">
+						Closed By
+						<div class="sub header">
+							Currently unavailable
 						</div>
 					</div>
 				</div>
@@ -386,7 +404,7 @@
 					<td>{{awardData.amountInformation.totalBaseExercisedOptionsValue | currency:'USD':true:'.2-2'}}</td>
 				</tr>
 				<tr>
-					<td><b>Base and All Options Value:</b></td>
+					<td><b>Base and All Options Value (Total Contract Value):</b></td>
 					<td>{{awardData.amountInformation.baseAllOptionsValue | currency:'USD':true:'.2-2'}}</td>
 					<td>{{awardData.amountInformation.totalBaseAllOptionsValue | currency:'USD':true:'.2-2'}}</td>
 				</tr>
@@ -399,6 +417,11 @@
 					<td><b>Non-Governmental Dollars:</b></td>
 					<td>{{awardData.amountInformation.nonGovernmentDollar | currency:'USD':true:'.2-2'}}</td>
 					<td>{{awardData.amountInformation.totalNonGovernmentDollar | currency:'USD':true:'.2-2'}}</td>
+				</tr>
+				<tr *ngIf="awardData.templateType == 'IDV'">
+					<td><b>Total Estimated Order Value:</b></td>
+					<td>Currently unavailable</td>
+					<td>Currently unavailable</td>
 				</tr>
 			</table>
 			
@@ -494,6 +517,12 @@
 				DUNS Number
 				<div class="sub header">
 					{{awardData.contractorInformation.duns}}
+				</div>
+			</div>
+			<div class="sam-ui medium header">
+				CAGE Code
+				<div class="sub header">
+					Currently unavailable
 				</div>
 			</div>
 			<div class="sam-ui medium header">
@@ -668,6 +697,12 @@
 					Contract Data
 				</h3>
 				<div class="sam-ui medium header">
+					Inherently Governmental Functions
+					<div class="sub header">
+						Currently unavailable
+					</div>
+				</div>
+				<div class="sam-ui medium header">
 					Type of Contract
 					<div class="sub header">
 						{{awardData.contractData.typeOfContract}}
@@ -787,23 +822,29 @@
 					</div>
 				</div>
 				<div class="sam-ui medium header">
-					Service Contract Act
+					Labor Standards
 					<div class="sub header">
 						{{awardData.legislativeMandates.laborStandards}}
 					</div>
 				</div>
 				<div class="sam-ui medium header">
-					Walsh-Healey Act
+					Materials, Supplies, Articles, and Equip
 					<div class="sub header">
 						{{awardData.legislativeMandates.materialsSuppliesArticlesEquip}}
 					</div>
 				</div> 
 				<div class="sam-ui medium header">
-					Davis Bacon Act
+					Construction Wage Rate Requirements
 					<div class="sub header">
 						{{awardData.legislativeMandates.contructionWageRateRequirements}}
 					</div>
 				</div> 
+				<div class="sam-ui medium header">
+					Additional Reporting
+					<div class="sub header">
+						Currently unavailable
+					</div>
+				</div>
 				<div class="sam-ui medium header">
 					Interagency Contracting Authority
 					<div class="sub header">
@@ -848,7 +889,7 @@
 					</div>
 				</div>
 				<div class="sam-ui medium header">
-					Maximum Order Limit
+					Individual Order/Call Limit
 					<div class="sub header">
 						{{awardData.contractMarketingData.maxOrderLimit | currency:'USD':true:'.2-2'}}
 					</div>
@@ -1109,17 +1150,28 @@
 				</div>
 			</div>
 			
+			<div class="sam-ui hidden divider"></div>
+			
 			<div id="award-type" *ngIf="awardData.templateType == 'AWARD' || awardData.templateType == 'IDV'">
 				
+				<div class="sam-ui medium header">
+					IDV Type of Set Aside
+					<div class="sub header">
+						Currently unavailable
+					</div>
+				</div>
 				<div class="sam-ui medium header">
 					Type of Set Aside
 					<div class="sub header">
 						{{awardData.competitionInformation.typeOfSetAsideDescription}}
 					</div>
 				</div>
-				
-				<div class="sam-ui hidden divider"></div>
-				
+				<div class="sam-ui medium header">
+					Type of Set Aside Source
+					<div class="sub header">
+						Currently unavailable
+					</div>
+				</div>				
 				<div class="sam-ui medium header">
 					Evaluated Preference
 					<div class="sub header">
@@ -1172,9 +1224,21 @@
 					</div>
 				</div>
 				<div class="sam-ui medium header">
+					IDV Number of Offers
+					<div class="sub header">
+						Currently unavailable
+					</div>
+				</div>
+				<div class="sam-ui medium header">
 					Number of Offers Received
 					<div class="sub header">
 						{{awardData.competitionInformation.numberOfOffersReceived}}
+					</div>
+				</div>
+				<div class="sam-ui medium header">
+					Number of Offers Source
+					<div class="sub header">
+						Currently unavailable
 					</div>
 				</div>
 				<div class="sam-ui medium header">

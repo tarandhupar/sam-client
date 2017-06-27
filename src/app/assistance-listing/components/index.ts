@@ -17,12 +17,19 @@ import { FALObligationSubFormComponent } from "./obligation-subform/obligation-s
 import { FALContactInfoTableComponent } from "./contact-information-table/contact-information-table.component";
 import { FALChangeRequestDropdownComponent } from "./change-request-dropdown/change-request-dropdown.component";
 import { FALWrapperChangeRequestDropdownComponent } from "./change-request-dropdown/wrapper-change-request-dropdown.component";
+import { PendingRequestListFilterComponent } from "./pending-request-list-filter/pending-request-list-filter.component";
+import {
+  FALErrorDisplayComponent,
+  FALErrorDisplayHelperComponent
+} from './fal-error-display/fal-error-display.component';
+import { PipesModule } from '../../app-pipes/app-pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     SamUIKitModule,
     ReactiveFormsModule,
+    PipesModule
   ],
   declarations: [
     FALAccountIdentificationComponent,
@@ -39,7 +46,10 @@ import { FALWrapperChangeRequestDropdownComponent } from "./change-request-dropd
     FALObligationSubFormComponent,
     FALChangeRequestDropdownComponent,
     FALWrapperChangeRequestDropdownComponent,
-    FALContactInfoTableComponent
+    FALContactInfoTableComponent,
+    PendingRequestListFilterComponent,
+    FALErrorDisplayComponent,
+    FALErrorDisplayHelperComponent
   ],
   exports: [
     FALAccountIdentificationComponent,
@@ -56,7 +66,9 @@ import { FALWrapperChangeRequestDropdownComponent } from "./change-request-dropd
     FALObligationSubFormComponent,
     FALChangeRequestDropdownComponent,
     FALWrapperChangeRequestDropdownComponent,
-    FALContactInfoTableComponent
+    FALContactInfoTableComponent,
+    PendingRequestListFilterComponent,
+    FALErrorDisplayComponent
   ]
 })
 export class FALComponentsModule {}

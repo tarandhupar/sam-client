@@ -36,20 +36,30 @@ export interface FiscalYearTableModel {
  * errorMessage: If provided, will be used as validation error message
  * itemName: Column header to show in fy table above text entries
  * entry.hint: Instructions for adding an entry
+ * textarea.required: Whether to show required tag on text area
+ * select.required: Whether to show required tag on select dropdown
  * deleteModal: If defined and not null, shows a modal with specified title and description when deleting from table
  */
 export interface FiscalYearTableConfig {
   name: string,
   label?: string,
   hint?: string,
-  required?: boolean
-  errorMessage?: string
+  required?: boolean,
+  errorMessage?: string,
 
   itemName: string,
 
   entry?: {
     hint?: string
-  }
+  },
+
+  textarea?: {
+    required?: boolean
+  },
+
+  select?: {
+    required?: boolean
+  },
 
   deleteModal?: {
     title?: string,
@@ -208,6 +218,8 @@ export class FALFiscalYearTableComponent implements ControlValueAccessor, Valida
 
     this.currentIndex = index;
     this.isEditing = true;
+
+    this.onChange();
   }
 
   public removeEntry(index: number) {

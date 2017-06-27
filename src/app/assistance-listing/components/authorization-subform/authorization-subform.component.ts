@@ -21,6 +21,7 @@ export class FALAuthSubFormComponent {
   mode:string;
   subFormLabel:string;
   review:boolean = false;
+
   //errorExists:boolean = false;
 
   checkboxConfig = {

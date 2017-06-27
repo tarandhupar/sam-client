@@ -7,23 +7,45 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class UserRoleDetailsPage {
 
-  private crumbs: Array<IBreadcrumb> = [
-    { url: '/role-management', breadcrumb: 'Role Management' },
-    { url: '/users/1/access', breadcrumb: 'Access' },
+  private myCrumbs: Array<IBreadcrumb> = [
+    { url: '/profile/details', breadcrumb: 'Profile' },
+    { url: '/profile/access', breadcrumb: 'Access' },
     { breadcrumb: 'Role Details' },
   ];
 
+  private adminCrumbs: Array<IBreadcrumb> = [
+    { url: '/access/requests', breadcrumb: 'Role Management' },
+    { url: '/users/1/access', breadcrumb: 'User Access' },
+    { breadcrumb: 'Role Details' },
+  ];
+
+  private crumbs = [
+
+  ];
+
   private details: any;
+  private isAdmin: boolean = false;
+  private editLink: Array<any>;
+  private editQueryParams;
 
   constructor(private route: ActivatedRoute) {
-    console.log('route', route);
 
   }
 
   ngOnInit() {
-    console.log('deets', this.details);
+    this.isAdmin = this.route.snapshot.data['isAdminView'];
     this.details = this.route.snapshot.data['details'];
-    let uid = this.route.snapshot.params['id'];
-    this.crumbs[1].url = `/users/${uid}/access`;
+    this.crumbs = this.isAdmin ? this.adminCrumbs : this.myCrumbs;
+    if (this.isAdmin) {
+      let uid = this.route.snapshot.params['id'];
+      this.crumbs[1].url = `/users/${uid}/access`;
+      this.editLink = ['/users', uid, 'edit-access'];
+      this.editQueryParams = {
+        role: this.details.roleId,
+        domain: this.details.domainId,
+        orgs: this.details.organizationId,
+      }
+    }
+
   }
 }

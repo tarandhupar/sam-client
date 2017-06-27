@@ -3,9 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { routing } from './403.route';
 import { ForbiddenPage } from "./403.page";
-import { AdminOnlyGuard } from "./admin-only.guard";
-import { AdminOrDeptAdminGuard } from "./admin-or-dept-admin.guard";
-
+import { SuperAdminGuard } from "./super-admin.guard";
+import { DeptAdminGuard } from "./dept-admin.guard";
+import { AdminLevelResolve } from "./admin-level.resolve";
+import { AdminLevelService } from "./admin-level.service";
+import { IsLoggedInService } from "./is-logged-in.service";
+import { IsLoggedInGuard } from "./is-logged-in.guard";
+import { UnauthenticatedPage } from "../401/401.page";
+import { UserNameResolve } from "./user-name.resolve";
 
 @NgModule({
   imports: [
@@ -13,11 +18,21 @@ import { AdminOrDeptAdminGuard } from "./admin-or-dept-admin.guard";
     RouterModule,
     routing
   ],
-  exports: [],
-  declarations: [ ForbiddenPage ],
+  exports: [
+
+  ],
+  declarations: [
+    ForbiddenPage,
+    UnauthenticatedPage,
+  ],
   providers: [
-    AdminOnlyGuard,
-    AdminOrDeptAdminGuard
+    SuperAdminGuard,
+    DeptAdminGuard,
+    AdminLevelService,
+    AdminLevelResolve,
+    IsLoggedInService,
+    IsLoggedInGuard,
+    UserNameResolve,
   ],
 })
 export class ForbiddenModule { }

@@ -39,7 +39,12 @@ import { SamStatusBannerComponent } from "./sam-status-banner/sam-status-banner.
 import { SamEditorComponent } from "./editor/editor.component";
 import { SamTitleSubtitleComponent } from "./title-subtitle/title-subtitle.component";
 import { SamCreatePageTemplateComponent } from "./create-page-template/create-page-template.component";
-import {PlaceholderProfilePic} from "./placeholder-profile-pic/placeholder-profile-pic.component";
+import { PlaceholderProfilePic } from "./placeholder-profile-pic/placeholder-profile-pic.component";
+import { SamComplexFormTemplateComponent } from "./complex-form-template/complex-form-template.component";
+import { StickyElementComponent } from "./sticky-element/sticky-element.componet";
+import { SamKBAComponent } from './kba/kba.component';
+import { SamPasswordComponent } from './password/password.component';
+import { SamUserDirectoryComponent } from './user-directory/user-directory.component';
 
 /**
  * A module for reusable SAM Web Design components
@@ -78,6 +83,11 @@ import {PlaceholderProfilePic} from "./placeholder-profile-pic/placeholder-profi
     SamTitleSubtitleComponent,
     SamCreatePageTemplateComponent,
     PlaceholderProfilePic,
+    SamComplexFormTemplateComponent,
+    StickyElementComponent,
+    SamKBAComponent,
+    SamPasswordComponent,
+    SamUserDirectoryComponent,
   ],
   imports: [
     BrowserModule,
@@ -120,6 +130,11 @@ import {PlaceholderProfilePic} from "./placeholder-profile-pic/placeholder-profi
     SamTitleSubtitleComponent,
     SamCreatePageTemplateComponent,
     PlaceholderProfilePic,
+    SamComplexFormTemplateComponent,
+    StickyElementComponent,
+    SamKBAComponent,
+    SamPasswordComponent,
+    SamUserDirectoryComponent,
   ],
   providers: [
     SamFeedbackComponent,

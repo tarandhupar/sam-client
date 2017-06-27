@@ -32,6 +32,20 @@ export class LocationService {
     return this.oAPIService.call(oApiParam);
   }
 
+  //search city by city name and filter by country code and state code
+  searchCity( q:string, countrycode:string, statecode:string, searchStr:string){
+    var oApiParam = {
+      name: 'location',
+      suffix: '/cities',
+      oParam: {q:q, cc:countrycode, searchvalue:statecode, searchby:searchStr},
+      method: 'GET'
+    };
+
+    return this.oAPIService.call(oApiParam);
+  }
+
+
+
   //gets autocomplete countries
   getAutoCompleteCountries(q:string) {
     var oApiParam = {
@@ -160,7 +174,7 @@ export class LocationService {
     if(city) oApiParam.oParam['citycode'] = city.key;
     return this.oAPIService.call(oApiParam);
   }
-  
+
   //gets naics details
   getNaicsDetails(sourceyear, code) {
     var oApiParam = {
@@ -172,7 +186,7 @@ export class LocationService {
 
     return this.oAPIService.call(oApiParam);
   }
-  
+
   //gets psc details
   getPSCDetails(q) {
     var oApiParam = {
@@ -184,5 +198,5 @@ export class LocationService {
 
     return this.oAPIService.call(oApiParam);
   }
-  
+
 }

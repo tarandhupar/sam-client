@@ -46,8 +46,7 @@
 							<div class="item" [attr.id]="generateID(opportunityFields.Solicitation, 'header')" *ngIf="shouldBeDisplayed(opportunityFields.Solicitation)">
 								<div class="content">
 									<div class="header">
-                    <ng-container *ngIf="opportunity.data?.type === 'k'">Solicitation Number</ng-container>
-                    <ng-container *ngIf="opportunity.data?.type !== 'k'">Notice Number</ng-container>
+                    <ng-container *ngIf="opportunity.data?.type && (originalOpportunity?.data?.type || opportunity.parent == null)">{{  numberLabel()}}</ng-container>
 									</div>
 									<div class="description">
 										{{ opportunity.data?.solicitationNumber }}
@@ -571,7 +570,7 @@
               <strong>Sort by</strong>
             </div>
             <div class="three wide column">
-              
+
               <sam-select class="sort-select"
                           [(model)]="awardSort"
                           [options]="awardSortOptions"

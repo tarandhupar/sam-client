@@ -1,14 +1,15 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {Router, NavigationExtras, ActivatedRoute} from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import {SearchService} from 'api-kit';
-import {CapitalizePipe} from '../app-pipes/capitalize.pipe';
-import {WageDeterminationService} from "../../api-kit/wage-determination/wage-determination.service";
-import {AlertFooterService} from '../alerts/alert-footer';
-import {OpportunityService} from "../../api-kit/opportunity/opportunity.service";
-import {SortArrayOfObjects} from "../app-pipes/sort-array-object.pipe";
-import {SearchDictionariesService} from "../../api-kit/search/search-dictionaries.service";
-import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
+import { SearchService } from 'api-kit';
+import { CapitalizePipe } from '../app-pipes/capitalize.pipe';
+import { WageDeterminationService } from "../../api-kit/wage-determination/wage-determination.service";
+import { AlertFooterService } from '../alerts/alert-footer';
+import { OpportunityService } from "../../api-kit/opportunity/opportunity.service";
+import { SortArrayOfObjects } from "../app-pipes/sort-array-object.pipe";
+import { SearchDictionariesService } from "../../api-kit/search/search-dictionaries.service";
+import { DictionaryService } from "../../api-kit/dictionary/dictionary.service";
 
 @Component({
   moduleId: __filename,
@@ -18,6 +19,7 @@ import {DictionaryService} from "../../api-kit/dictionary/dictionary.service";
 })
 
 export class SearchPage implements OnInit {
+
   keyword: string = "";
   index: string = "";
   organizationId: string = '';
@@ -55,6 +57,18 @@ export class SearchPage implements OnInit {
     ],
     name: 'active-filter'
   };
+
+  registrationExclusionCheckboxModel: any = [];
+  registrationExclusionCheckboxConfig ={
+    options: [
+      {value: 'ent', label: 'Registrations', name: 'checkbox-registrations'},
+      {value: 'ex', label: 'Exclusions', name:'checkbox-exclusions'}
+    ],
+    name: 'registration-exclusion-filter'
+
+  };
+
+
 
   // Wage Determination Radio Component
   wdTypeModel = '';
@@ -185,6 +199,7 @@ export class SearchPage implements OnInit {
 
   awardTypeModel: string = '';
   awardType = {
+    "label": "Award-IDV Type",
     "name": "Award-IDV Type",
     "placeholder": "Search Award-IDV Types",
     "selectedLabel": "Award - IDV Types Selected",
@@ -217,6 +232,7 @@ export class SearchPage implements OnInit {
   //Select Contract Types
   contractTypeModel: string = '';
   contractType = {
+    "label": "Contract Type",
     "name": "Contract Type",
     "placeholder": "Search Contract Types",
     "selectedLabel": "Contract Types Selected",
@@ -266,6 +282,7 @@ export class SearchPage implements OnInit {
   //Select NAICS Types
   naicsTypeModel: any = '';
   naicsType = {
+    "label": "NAICS",
     "name": "NAICS Type",
     "placeholder": "Search NAICS Types",
     "selectedLabel": "Codes Selected",
@@ -281,6 +298,7 @@ export class SearchPage implements OnInit {
   //Select PSC Types
   pscTypeModel: any = '';
   pscType = {
+    "label": "PSC",
     "name": "PSC Type",
     "placeholder": "Search PSC Types",
     "options": [],
@@ -293,8 +311,9 @@ export class SearchPage implements OnInit {
   };
 
   // Beneficiary Eligibility Object
-  benElModel: any = '';
+  benElSearchString: any = '';
   benElType = {
+    "label": "Beneficiaries",
     "name": "Beneficiary Eligibility",
     "placeholder": "Search Beneficiary",
     "selectedLabel": "Codes Selected",
@@ -308,8 +327,9 @@ export class SearchPage implements OnInit {
   };
 
   // Applicant Eligibility Object
-  appElModel: any = '';
+  appElSearchString: any = '';
   appElType = {
+    "label": "Applicants",
     "name": "Applicant Eligibility",
     "placeholder": "Search Applicant",
     "options": [],
@@ -324,6 +344,7 @@ export class SearchPage implements OnInit {
   //Assistance Type Filter
   assistanceTypeFilterModel: any = '';
   assistanceTypeOptions = {
+    "label": "Assistance Type",
     "name": "Assistance Type",
     "placeholder": "Search Assistance Type",
     "selectedLabel": "Selected",
@@ -409,17 +430,18 @@ export class SearchPage implements OnInit {
         this.pscTypeModel = data['psc'] && data['psc'] !== null ? data['psc'] : '';
         this.ro_keyword = typeof data['ro_keyword'] === "string" && this.showRegionalOffices ? decodeURI(data['ro_keyword']) : this.ro_keyword;
         this.dunsListString = data['duns'] && data['duns'] !== null ? data['duns'] : '';
-        this.appElModel = data['applicant'] && data['applicant'] !== null ? data['applicant'] : '';
-        this.benElModel = data['beneficiary'] && data['beneficiary'] !== null ? data['beneficiary'] : '';
+        this.appElSearchString = data['applicant'] && data['applicant'] !== null ? data['applicant'] : '';
+        this.benElSearchString = data['beneficiary'] && data['beneficiary'] !== null ? data['beneficiary'] : '';
         this.functionalCodesModel = data['functionalCodes'] && data['functionalCodes'] !== null ? data['functionalCodes'] : '';
         this.assistanceTypeFilterModel = data['assistanceType'] && data['assistanceType'] !== null ? data['assistanceType'] : '';
-
+        this.registrationExclusionCheckboxModel = data['entityType'] && data['entityType'] !== null ? data['entityType'].split(",") : [];
         // persist duns filter data
         this.grabPersistData(this.dunsListString);
         this.isSearchComplete = false;
         this.runSearch();
         this.loadParams();
       });
+
   }
 
   findInactiveResults() {
@@ -559,12 +581,12 @@ export class SearchPage implements OnInit {
       qsobj['duns'] = this.dunsListString;
     }
 
-    if (this.benElModel.length > 0) {
-      qsobj['beneficiary'] = this.benElModel;
+    if (this.benElSearchString.length > 0) {
+      qsobj['beneficiary'] = this.benElSearchString;
     }
 
-    if (this.appElModel.length > 0) {
-      qsobj['applicant'] = this.appElModel;
+    if (this.appElSearchString.length > 0) {
+      qsobj['applicant'] = this.appElSearchString;
     }
 
     if (this.functionalCodesModel && this.functionalCodesModel.length > 0) {
@@ -573,6 +595,10 @@ export class SearchPage implements OnInit {
 
     if (this.assistanceTypeFilterModel.length > 0) {
       qsobj['assistanceType'] = this.assistanceTypeFilterModel;
+    }
+
+    if (this.registrationExclusionCheckboxModel.length > 0) {
+      qsobj['entityType'] = this.registrationExclusionCheckboxModel;
     }
 
 
@@ -657,10 +683,11 @@ export class SearchPage implements OnInit {
       showRO: this.showRegionalOffices,
       ro_keyword: this.ro_keyword,
       duns: this.dunsListString,
-      applicant: this.appElModel,
-      beneficiary: this.benElModel,
+      applicant: this.appElSearchString,
+      beneficiary: this.benElSearchString,
       functionalCodes: this.functionalCodesModel,
-      assistanceType: this.assistanceTypeFilterModel
+      assistanceType: this.assistanceTypeFilterModel,
+      entityType: this.registrationExclusionCheckboxModel
     }).subscribe(
       data => {
         if (data._embedded && data._embedded.results) {
@@ -934,6 +961,36 @@ export class SearchPage implements OnInit {
     this.searchResultsRefresh()
   }
 
+  registrationExclusionCheckboxFilter(event){
+    this.registrationExclusionCheckboxModel = event;
+    this.pageNum=0;
+    this.searchResultsRefresh();
+  }
+
+  checkValidEntityTypeFilter(){
+    return this.checkValidRegistrationFilter() || this.checkValidExclusionFilter() || this.checkMultipleFiltersEntityType();
+  }
+
+  checkValidExclusionFilter(){
+    return this.registrationExclusionCheckboxModel.indexOf('ex') > -1 && this.registrationExclusionCheckboxModel.length == 1 && this.checkValidFilterExists();
+  }
+
+  checkValidRegistrationFilter(){
+    return this.registrationExclusionCheckboxModel.indexOf('ent') > -1 && this.registrationExclusionCheckboxModel.length == 1 && this.organizationId.length > 0;
+  }
+
+  checkMultipleFiltersEntityType(){
+    if(this.registrationExclusionCheckboxModel.length == 0 || this.registrationExclusionCheckboxModel.length ==2){
+      return this.organizationId.length > 0 && (this.pscTypeModel.length > 0 || this.naicsTypeModel.length > 0 || this.dunsListString.length > 0);
+    }
+    return false;
+  }
+
+
+  checkValidFilterExists(){
+    return this.dunsListString.length > 0 || this.naicsTypeModel.length >0 || this.pscTypeModel.length > 0;
+
+  }
   // event for wdFilter Change
   wdFilterChange(event) {
 
@@ -1131,13 +1188,13 @@ export class SearchPage implements OnInit {
   }
 
   benElSelected(evt) {
-    this.benElModel = evt.toString();
+    this.benElSearchString = evt.toString();
     this.pageNum = 0;
     this.searchResultsRefresh();
   }
 
   appElSelected(evt) {
-    this.appElModel = evt.toString();
+    this.appElSearchString = evt.toString();
     this.pageNum = 0;
     this.searchResultsRefresh();
   }
@@ -1233,8 +1290,8 @@ export class SearchPage implements OnInit {
   }
 
   eligibilityFilterClear() {
-    this.appElModel = '';
-    this.benElModel = '';
+    this.appElSearchString = '';
+    this.benElSearchString = '';
     this.searchResultsRefresh();
   }
 
@@ -1287,14 +1344,20 @@ export class SearchPage implements OnInit {
     this.dunsListString = '';
 
     // clear eligibility filter
-    this.appElModel = '';
-    this.benElModel = '';
+    this.appElSearchString = '';
+    this.benElSearchString = '';
 
     //clear assistance type filter
     this.assistanceTypeFilterModel = '';
 
     // clear functional codes filter
     this.functionalCodesModel = '';
+
+    //set entity type checkbox to default
+    if(this.index == 'ei'){
+      this.registrationExclusionCheckboxModel=["ent","ex"];
+    }
+
 
     this.searchResultsRefresh();
 
@@ -1310,29 +1373,13 @@ export class SearchPage implements OnInit {
     this.searchResultsRefresh();
   }
 
-  dunsListModelChange(object) {
-
-    // create comma-separated string to feed to es obj
-    this.dunsListString = this.buildDunsListString();
-
-    // call data refresh
+  dunsModelChange(event) {
+    this.dunsModelList = event;
+    this.dunsListString = this.dunsModelList.map((dunsObj) => {
+      return dunsObj.value;
+    }).join(',');
     this.pageNum = 0;
     this.searchResultsRefresh();
-
-  }
-
-
-  buildDunsListString() {
-
-    let finalString = '';
-
-    finalString = this.dunsModelList.map(function (dunsObj) {
-
-      finalString = dunsObj.value;
-
-      return finalString;
-    }).join(',');
-    return finalString
   }
 
   grabPersistData(dunsString: string) {

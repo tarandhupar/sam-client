@@ -17,12 +17,17 @@
     border-radius: .1em;
   }
 
+  .cursor-pointer:hover {
+    cursor: pointer;
+  }
+
   sam-agency-picker label {
     display: none;
   }
 
   .org-accordion .usa-accordion-content {
     padding: 0;
+    overflow: visible;
   }
 
   .results-text {
@@ -154,9 +159,6 @@
   }
 
   .requests-container {
-    border: 2px solid black;
-    background-color: $color-gray-lightest;
-
     .usa-button-transparent {
       padding: .2em;
     }
@@ -165,12 +167,12 @@
       margin-left: -8px;
     }
 
-    .request-block:not(:last-child) {
-      border-bottom: 2px solid black;
+    .request-block {
+      border: none;
     }
 
-    .request-block {
-      padding: .8em;
+    .request-block:not(:last-child) {
+      border-bottom: 1px solid black !important;
     }
   }
 

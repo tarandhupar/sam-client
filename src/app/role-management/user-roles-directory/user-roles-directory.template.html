@@ -10,7 +10,7 @@
   </div>
   <div workspace-left>
     <div class="clearfix">
-      <a class="pull-right" (click)="onClearAllClick()">Clear all</a>
+      <a class="pull-right pointer-hover" (click)="onClearAllClick()">Clear all</a>
     </div>
     <sam-solo-accordian titleText="Organization">
       <div class="org-picker-wrapper">
@@ -57,15 +57,14 @@
     </div>
     <ng-container *ngIf="users && users.length">
       <div class="user-row" *ngFor="let user of users">
-
         <!-- User Icon and name -->
         <div class="clearfix">
           <div class="pull-left">
             <placeholder-profile-pic></placeholder-profile-pic>
           </div>
           <div class="pull-left m_L-4x">
-            <h2><a>{{user.user.fullName}}</a></h2>
-            <h3 class="m_T-0">{{user.user.email}}</h3>
+            <h2>{{user.user.fullName}}</h2>
+            <h3 class="m_T-0"><a class="pointer-hover" [routerLink]="['/users', user.user.email, 'access']">{{user.user.email}}</a></h3>
           </div>
         </div>
 

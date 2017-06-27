@@ -1,0 +1,105 @@
+<div class="usa-grid-full" *ngIf = "pageReady">
+  <form [formGroup]="falChangeRequestActionForm">
+    <h1 class="m_T-0 p_T-6x"> {{pageTitle}} </h1>
+    <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="programRequest">
+      <div class="usa-width-one-half">
+        <div class="content"><strong>Title:</strong> {{programRequest.program.title}}</div>
+        <div class="content"><strong>Assistance Listing Number:</strong> {{programRequest.program.programNumber}}</div>
+      </div>
+      <div class="usa-width-one-half">
+        <div class="content">
+          <sam-label *ngIf="programRequest && isRequestStatus('pending')" [labelType]="'big'" [labelText]="'Pending'"></sam-label>
+          <sam-label *ngIf="programRequestAction && isRequestStatus('rejected')" [labelType]="'big'" [labelText]="'Rejected'"></sam-label>
+          <sam-label *ngIf="programRequestAction && isRequestStatus('approved')" [labelType]="'big'" [labelText]="'Approved'"></sam-label>
+          <sam-label *ngIf="programRequestAction && isRequestStatus('cancelled')" [labelType]="'big'" [labelText]="'Cancelled'"></sam-label>
+        </div>
+        <div class="content"><strong>Submitted Date:</strong> {{ programRequest.entryDate | dateFormat: 'MMM DD, YYYY' }}</div>
+        <div class="content"><strong>Submitted By:</strong> {{ programRequest.createdBy }}</div>
+      </div>
+    </div>
+
+    <div class="sam-ui section divider"></div>
+
+    <!--Display Form-->
+    <ng-container *ngIf="programRequest && programRequest.completed===false">
+      <ng-container *ngIf="requestType == 'archive_request'">
+        <sam-checkbox class="cb-request"
+                      [hint]="'Have you verified there is $0 funding and no active awards against this listing on USASpending.gov?*'"
+                      [name] ="'active-awards'"
+                      [options]="formOptions.archive"
+                      [hasSelectAll]="false"
+                      [control]="falChangeRequestActionForm.controls['activeAwards']"
+                      formControlName="activeAwards"
+                      >
+        </sam-checkbox>
+      </ng-container>
+
+      <div class="sam-ui hidden divider"></div>
+
+      <div class="usa-grid-full">
+        <h4>Comments</h4>
+        <strong>{{ programRequest.createdBy }}</strong> {{ programRequest.reason }}
+
+        <div class="sam-ui hidden divider"></div>
+
+        <sam-text-area [label]="'Comment*'"
+          [name]="'comment-input'"
+          [control]="falChangeRequestActionForm.controls['comment']"
+          [required]="true"
+          formControlName="comment"
+          >
+        </sam-text-area>
+      </div>
+
+      <div class="usa-grid-full">
+        <sam-button [buttonType]="buttonType"
+          [buttonText]="'Back'"
+          [buttonClass]="'usa-button-outline'"
+          (onClick)="goBack()">
+        </sam-button>
+
+        <!--Reviewer-->
+        <ng-container *ngIf="isPermissionType('approve_reject')">
+          <sam-button [buttonType]="buttonType"
+            [buttonText]="'Reject'"
+            [buttonClass]="'usa-button-primary-alt'"
+            (onClick)="rejectRequest()">
+          </sam-button>
+          <sam-button [buttonType]="buttonType"
+            [buttonText]="'Approve'"
+            [buttonClass]="'usa-button-primary'"
+            (onClick)="approveRequest()">
+          </sam-button>
+        </ng-container>
+
+        <!--Submitter-->
+        <ng-container  *ngIf="isPermissionType('cancel')">
+          <sam-button [buttonType]="buttonType"
+            [buttonText]="'Cancel Request'"
+            [buttonClass]="'usa-button-primary'"
+            (onClick)="cancelRequest()">
+          </sam-button>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <!--Display view request-->
+    <ng-container *ngIf="programRequest && programRequestAction && programRequest.completed===true">
+      <div class="usa-grid-full">
+        <h4>Comments</h4>
+        <p><strong>{{ programRequest.createdBy }}</strong> {{ programRequest.reason }}</p>
+        <p><strong>{{ programRequestAction.createdBy }}</strong> {{ programRequestAction.reason }}</p>
+      </div>
+
+      <div class="sam-ui hidden divider"></div>
+
+      <div class="usa-grid-full">
+        <sam-button [buttonType]="buttonType"
+          [buttonText]="'Back'"
+          [buttonClass]="'usa-button-outline'"
+          (onClick)="goBack()">
+        </sam-button>
+      </div>
+    </ng-container>
+  </form>
+</div>

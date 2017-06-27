@@ -6,12 +6,8 @@
         <a *ngIf="nav.routerLink.length" [routerLink]="nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
         <a *ngIf="!nav.routerLink.length" [routerLinkActive]="nav.routerLinkActive" [innerText]="nav.text"></a>
       </li>
-      <ng-container *ngIf="states.system">
-        <li *ngFor="let systemNav of store.systemNav; let $index = index;">
-          <a *ngIf="systemNav.routerLink" [routerLink]="systemNav.routerLink" [routerLinkActive]="[systemNav.routerLinkActive]" [innerText]="systemNav.text"></a>
-        </li>
-      </ng-container>
     </ul>
+    <a [routerLink]="['/profile', 'access']" class="usa-button usa-button-primary">View My Access</a>
   </aside>
   <section class="usa-width-three-fourths usa-profile" [ngClass]="[activeRouteClass]">
      <router-outlet></router-outlet>

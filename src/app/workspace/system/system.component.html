@@ -1,0 +1,24 @@
+<div class="usa-grid-full usa-authentication">
+  <aside class="usa-width-one-fourth usa-workspace-system" *ngIf="states.nav">
+    <h1 [innerText]="store.title"></h1>
+    <ul class="usa-sidenav-list">
+      <li *ngFor="let nav of store.nav; let $index = index;">
+        <ng-container *ngIf="!(nav['hidden'] || false)">
+          <a *ngIf="nav.routerLink" [routerLink]="nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
+          <a *ngIf="!nav.routerLink" [routerLinkActive]="[nav.routerLinkActive]" [innerText]="nav.text"></a>
+          <ul class="usa-sidenav-sub_list" [hidden]="!states.isProfile" *ngIf="nav.children">
+            <ng-container *ngFor="let subnav of nav.children; let $subIndex = index;">
+              <li *ngIf="!(subnav['hidden'] || false)">
+                <a *ngIf="!subnav.anchor" [routerLink]="[subnav.routerLink]" [routerLinkActive]="[subnav.routerLinkActive]" [innerText]="nav.text"></a>
+                <a *ngIf="subnav.anchor" [href]="subnav.routerLink" [innerText]="subnav.text" pageScroll></a>
+              </li>
+            </ng-container>
+          </ul>
+        </ng-container>
+      </li>
+    </ul>
+  </aside>
+  <section class="usa-workspace-system" [ngClass]="[activeRouteClass, (states.nav ? 'usa-width-three-fourths' : 'usa-width-one-whole')]">
+     <router-outlet></router-outlet>
+  </section>
+</div>

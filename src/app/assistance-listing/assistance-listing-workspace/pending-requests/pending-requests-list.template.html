@@ -1,0 +1,79 @@
+<div class="usa-grid" *ngIf="permissions">
+  <div class="workspace-content">
+  <div class="sam-ui grid">
+    <div class="row">
+      <div class="four wide column">
+        <a href="/fal/workspace">Back to My Workspace</a>
+      </div>
+      <div custom-input class="search-bar eight wide column">
+        <div class="sam-ui grid">
+          <div class="row">
+            <sam-text class="eight wide column" name="searchText" [(ngModel)]="keyword"></sam-text>
+            <sam-button class="div-right"
+                        [buttonType]="'default'"
+                        [buttonText]="'Search' "
+                        [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
+                        (onClick)="onFeedSearchClick()">
+            </sam-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<div>
+  <aside class="usa-width-one-third">
+  <pendingRequestListFilter [defaultDomainOption]="defaultDomainOption"
+                            [defaultEventOption]="defaultEventOption"
+                            (domainFilterModelChange)="domainFilterModelChangeHandler($event)"
+                            (eventFilterModelChange)="eventFilterModelChangeHandler($event)"
+                            (alRequestTypeModelChange)="requestTypeFilterModelChangeHandler($event)"></pendingRequestListFilter></aside>
+  <div class="usa-width-two-thirds">
+    <h3>Workspace</h3>
+    <h2>My Feed</h2>
+    <ng-container *ngIf="isAL && isRequest">
+      <strong>
+        <list-results-message *ngIf="totalElements > 0" [showing]="4" [currentPage]="currentPage+1" [total]="totalElements"></list-results-message>
+        <span *ngIf="totalElements==0">&nbsp;</span>
+      </strong>
+       <ng-container *ngFor="let row of programRequestList">
+         <div class="sam-ui section divider"></div>
+          <a class="requestLink" href="/programs/change-request/{{row.id}}/action">
+            <div class="sam-ui grid">
+              <div class="row">
+                <div id="request-name" class="four wide column">
+                  <ng-container *ngIf="row?.createdBy">
+                    {{ row.createdBy }}
+                  </ng-container>
+                </div>
+                <div id="request-type" class="eight wide column">
+                  <div><ng-container *ngIf="row?.requestType?.value">
+                      {{getRequestTypeTitle(row.requestType.value)}} in {{domainLabel}}
+                  </ng-container></div>
+                  <div><ng-container *ngIf="row?.entryDate">
+                    {{row.entryDate | dateFormat: 'MMM DD, YYYY h:mm a' }}
+                  </ng-container></div>
+                </div>
+              </div>
+            </div>
+            <div id="request-commnets" class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x">
+              <div class="content">
+                <div class="header">Comments</div>
+                <div class="description" *ngIf="row?.reason">
+                    {{row.reason}}
+                </div>
+              </div>
+            </div>
+          </a>
+      </ng-container>
+      <div class="search-inactive-results" *ngIf="!initLoad && programRequestList.length==0">
+        <p>There are no requests under the selected criteria.</p>
+      </div>
+      <sam-pagination (pageChange)="pageChangeHandler($event)" [currentPage]="currentPage+1" [totalPages]="totalPages"></sam-pagination>
+    </ng-container>
+    <div class="search-inactive-results" *ngIf="!isAL || !isRequest">
+      <p>There are no results under the selected criteria.</p>
+    </div>
+  </div>
+</div>
+  </div>
+</div>

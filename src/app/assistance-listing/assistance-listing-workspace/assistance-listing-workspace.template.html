@@ -1,9 +1,13 @@
 <workspace-layout *ngIf="permissions" (pageChange)="pageChange($event-1)" [currentPage]="pageNum+1" [totalPages]="totalPages"
                   [totalElements]="totalCount" [loadFlag]="data.length >= 0"
-                  titleText="Sam.gov Assistance Listings Workspace" [addBtnText]="permissions['CREATE_FALS'] ? addFALButtonText : null" (addBtnClick)="addBtnClick($event)">
+                  titleText="Sam.gov Assistance Listings Workspace">
   <br>
   <div workspace-sidebar></div>
   <div workspace-content class="workspace-content">
+    <a href="/fal/workspace/requests?domain=al&event=request">
+      <button class="fa fa-chevron-circle-right pending-button" *ngIf="pendingRequestCount == 1"> 1 Pending Request</button>
+      <button class="fa fa-chevron-circle-right pending-button" *ngIf="pendingRequestCount > 1"> {{ pendingRequestCount }} Pending Requests</button>
+    </a>
 
     <div class="sam-ui grid">
       <div class="row">
@@ -26,7 +30,28 @@
                   (onClick)="workspaceSearchClick()">
       </sam-button>
     </div>
+
     </div>
+      <div class="row" *ngIf="!initLoad">
+
+          <div *ngIf="permissions['CREATE_FALS']" class="eight wide">
+          <sam-button class="div-right"
+                      [buttonType]="'default'"
+                      [buttonText]="'Add Assistance Listing' "
+                      [buttonClass]="'sam-ui button dark blue'"
+                      (onClick)="addAssistanceListingClick()">
+          </sam-button>
+        </div>
+        <div *ngIf="permissions['CREATE_RAO']" class="eight wide">
+          <sam-button class="div-right"
+                      [buttonType]="'default'"
+                      [buttonText]="'Manage Assistance Locations' "
+                      [buttonClass]="'sam-ui button dark blue'"
+                      (onClick)="manageAssistanceLocationsClick()">
+          </sam-button>
+        </div>
+
+      </div>
     </div>
     <br>
     <div *ngFor="let row of data" tabindex="-1">

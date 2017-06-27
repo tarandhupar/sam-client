@@ -5,6 +5,7 @@ import {
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Location, LocationStrategy } from '@angular/common';
+import { FeedbackFormService } from "../app-components/feedback-form/feedback-form.service";
 
 // Load the implementations that should be tested
 import {HelpPage} from "./help.page";
@@ -23,6 +24,7 @@ describe('Help Page', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports:[RouterTestingModule],
     providers: [
+      FeedbackFormService,
       HelpPage,
       { provide: Router, useClass: RouterStub },
       { provide: Location, useClass: LocationStub }

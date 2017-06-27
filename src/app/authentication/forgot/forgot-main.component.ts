@@ -2,7 +2,7 @@ import { Component, DoCheck, Input, KeyValueDiffers, OnInit, OnChanges, SimpleCh
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 
-import { SamKBAComponent } from '../shared/kba';
+import { SamKBAComponent } from '../../app-components';
 
 import { IAMService } from 'api-kit';
 

@@ -16,7 +16,7 @@
             <label for="email-notification">I would like to be contacted when changes are made to the new SAM.gov</label>
           </li>
         </ul>
-      </fieldset>n
+      </fieldset>
       <fieldset class="phone">
         <legend>Business Phone</legend>
         <sam-phone-entry [model]="user.workPhone" (emitter)="updatePhoneNumber($event)" [label]="' '" [numbersOnly]="true" [required]="true" #phoneEntry></sam-phone-entry>

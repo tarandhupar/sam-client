@@ -1,0 +1,40 @@
+<div class="usa-grid-full" *ngIf = "pageReady">
+  <form [formGroup]="falChangeRequestForm">
+    <h1 class="m_T-0 p_T-6x"> {{pageTitle}} </h1>
+    <div class="usa-grid-full usa-bgcolor-gray-lightest p_All-3x" *ngIf="program">
+      <div class="content"><strong>Title:</strong> {{program.data.title}}</div>
+      <div class="content"><strong>Assistance Listing Number:</strong> {{program.data.programNumber}}</div>
+    </div>
+
+    <div class="sam-ui section divider"></div>
+
+    <div class="usa-grid-full">
+      <ng-container *ngIf="requestType == 'archive_request'">
+        <sam-checkbox class="cb-request"
+                      [hint]="'Have you verified there is $0 funding and no active awards against this listing on USASpending.gov?*'"
+                      [name] ="'active-awards'"
+                      [options]="archiveRequestActiveAwardsOptions"
+                      [hasSelectAll]="false"
+                      [control]="falChangeRequestForm.controls['activeAwards']"
+                      formControlName="activeAwards"
+        ></sam-checkbox>
+      </ng-container>
+        <sam-text-area [label]="'Comment*'"
+                       [name]="'comment-input'"
+                       [control]="falChangeRequestForm.controls['comment']"
+                       [required]="true"
+                       formControlName="comment"
+        ></sam-text-area>
+        <sam-button [buttonType]="buttonType"
+                    [buttonText]="submitButtonText"
+                    [buttonClass]="'usa-button-primary usa-search-submit search-btn'"
+                    (onClick)="submitChangeRequest()">
+        </sam-button>
+        <sam-button [buttonType]="buttonType"
+                    [buttonText]="'Cancel'"
+                    [buttonClass]="'usa-button-primary usa-search-submit'"
+                    (onClick)="cancelChangeRequest()">
+        </sam-button>
+      </div>
+  </form>
+</div>

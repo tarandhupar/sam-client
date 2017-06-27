@@ -4,11 +4,13 @@ import { FHWrapperService} from './fhWrapper.service';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs';
 import {Http, Headers, RequestOptions, Request, RequestMethod, Response, URLSearchParams} from '@angular/http';
+import { Cookie } from "ng2-cookies";
+import { Router } from "@angular/router";
 
 @Injectable()
 export class FHService {
 
-  constructor(private oAPIService: WrapperService, private fhAPIService: FHWrapperService, private _http: Http) { }
+  constructor(private oAPIService: WrapperService, private fhAPIService: FHWrapperService, private _http: Http, private  router: Router) { }
 
   getOrganizations(queryParams = {}) {
     let oApiParam = {
@@ -23,72 +25,31 @@ export class FHService {
 
   //gets organization with heirarchy data
   getOrganizationById(id: string, includeChildrenLevels: boolean, includeOrgTypes: boolean = false) {
-    // var oApiParam = {
-    //     name: '',
-    //     suffix: '',
-    //     oParam: {},
-    //     method: 'GET'
-    //   };
-    //
-    // //organizationId length >= 30 -> call opportunity org End Point
-    // if (id.length >= 30) {
-    //   oApiParam.name = 'opportunity';
-    //   oApiParam.suffix = '/opportunities/' + id + '/organization';
-    // } else { //organizationId less than 30 character then call Octo's FH End point
-    //   oApiParam.name = 'federalHierarchy';
-    //   oApiParam.suffix = ((includeChildrenLevels) ? '/hierarchy/' : '/') + id;
-    //   oApiParam.oParam = {
-    //     'sort': 'name',
-    //     'mode': 'slim'
-    //   };
-    // }
-    //
-    // if (includeOrgTypes) {
-    //   oApiParam.oParam['types'] = 'true';
-    // }
-    //
-    // return this.oAPIService.call(oApiParam);
+    var oApiParam = {
+        name: '',
+        suffix: '',
+        oParam: {},
+        method: 'GET'
+      };
 
-    return  Observable.of(
-      {_embedded:
-        [{org:
-        {
-          categoryDesc: "SUB COMMAND",
-          categoryId: "CAT-6",
-          code: "RMAC",
-          createdBy: "DODMIGRATOR",
-          createdDate: 1053388800000,
-          startDate: 1053388800000,
-          endDate: 1053388800000,
-          summary: "test summary",
-          shortName: "test short name",
-          description: "RMAC",
-          fpdsOrgId: "RMAC",
-          fpdsCode: "1021",
-          newIsFunding: true,
-          fullParentPath: "100000000.100000012.100000117.100000120",
-          fullParentPathName: "DEPT_OF_DEFENSE.DEPT_OF_THE_ARMY.AMC.RMAC",
-          isSourceFpds: true,
-          l1Name: "DEPT OF DEFENSE",
-          l1OrgKey: 100000000,
-          l2Name: "DEPT OF THE ARMY",
-          l3Name: "AMC",
-          l4Name: "RMAC",
-          lastModifiedBy: "FPDSADMIN",
-          lastModifiedDate: 1161993600000,
-          level: 4,
-          name: "RMAC",
-          orgCode: "ORG-2899",
-          orgKey: 100000120,
-          parentOrg: "AMC",
-          parentOrgKey: 100000117,
-          type: "OFFICE",
-          orgAddresses:[{addrType:"Mailing Address",country:"USA",state:"VA",city:"fairfax",street1:"street 123",street2:"",postalCode:"22030"}]
-        },
-          _link:{}
-        }]
-      }
-    );
+    //organizationId length >= 30 -> call opportunity org End Point
+    if (id.length >= 30) {
+      oApiParam.name = 'opportunity';
+      oApiParam.suffix = '/opportunities/' + id + '/organization';
+    } else { //organizationId less than 30 character then call Octo's FH End point
+      oApiParam.name = 'federalHierarchy';
+      oApiParam.suffix = ((includeChildrenLevels) ? '/hierarchy/' : '/') + id;
+      oApiParam.oParam = {
+        'sort': 'name',
+        'mode': 'slim'
+      };
+    }
+
+    if (includeOrgTypes) {
+      oApiParam.oParam['types'] = 'true';
+    }
+
+    return this.oAPIService.call(oApiParam);
   }
 
   getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
@@ -135,15 +96,14 @@ export class FHService {
   }
 
   getDepartmentsByStatus(status:string){
-    // let oApiParam = {
-    //   name: 'federalHierarchy',
-    //   suffix: '/activedepartment/',
-    //   method: 'GET',
-    //   oParam: {}
-    // };
-    // if(status !== 'active') oApiParam.oParam['status'] = status;
-    // return this.oAPIService.call(oApiParam);
-    return this._http.get("../../landing_superadmin.json").map((res:any) => res.json());
+    let oApiParam = {
+      name: 'federalHierarchy',
+      suffix: '/activedepartment/',
+      method: 'GET',
+      oParam: {}
+    };
+    if(status !== 'active') oApiParam.oParam['status'] = status;
+    return this.oAPIService.call(oApiParam);
   }
 
   getDepartmentAdminLanding(status:string, orgId:string){
@@ -181,14 +141,16 @@ export class FHService {
     return this.oAPIService.call(oApiParam);
   }
 
-  updateOrganization(org) {
+  updateOrganization(org, isMove:boolean = false) {
     let apiOptions: any = {
-      name: 'federalHierarchy',
-      suffix: '',
+      name: 'fh',
+      suffix: '/org',
       method: 'PUT',
+      oParam: {},
       body: org
     };
-    return this.fhAPIService.call(apiOptions);
+    if(isMove) apiOptions.oParam['isMove'] = isMove;
+    return this.callApi(apiOptions, false);
   }
 
   createOrganization(org, fullParentPath, fullParentPathName) {
@@ -209,7 +171,7 @@ export class FHService {
 
   }
 
-  fhSearch(q:string, pageNum, pageSize){
+  fhSearch(q:string, pageNum, pageSize, status, orgType){
     let apiOptions: any = {
       name: 'fh',
       suffix: '/search',
@@ -217,13 +179,20 @@ export class FHService {
       oParam: {
         'q':q,
         'pageNum':pageNum,
-        'pageSize':pageSize
+        'pageSize':pageSize,
+        'orderBy': 'orgKey',
+        'ascending': 'asc',
       }
     };
+    if(status.length === 1) apiOptions.oParam['status']= status[0];
+    if(orgType.length > 0) {
+      apiOptions.oParam['exclusive']= true;
+      apiOptions.oParam['depth']= orgType[0];
+    }
     return this.oAPIService.call(apiOptions);
   }
 
-  fhSearchCount(q:string, searchType){
+  fhSearchCount(q:string, searchType, status, orgType){
     let apiOptions: any = {
       name: 'fh',
       suffix: '/search/count',
@@ -233,6 +202,43 @@ export class FHService {
         'searchType':searchType,
       }
     };
+    if(status.length === 1) apiOptions.oParam['status']= status[0];
+    if(orgType.length > 0) {
+      apiOptions.oParam['exclusive']= true;
+      apiOptions.oParam['depth']= orgType[0];
+    }
     return this.oAPIService.call(apiOptions);
   }
+
+  getMyOrganization(orgKey, orgType){
+    if(orgType[0] === '2' || orgType.length === 0){
+      return this.getOrganizationById(orgKey, true);
+    }else {
+      return Observable.of({});
+    }
+  }
+
+  addAuthHeader(options) {
+    let iPlanetCookie = Cookie.getAll().iPlanetDirectoryPro;
+
+    if (!iPlanetCookie) {
+      return;
+    }
+
+    options.headers = options.headers || {};
+    options.headers['X-Auth-Token'] = iPlanetCookie;
+  }
+
+  callApi(oApiParam: any, convertToJSON: boolean = true) {
+    this.addAuthHeader(oApiParam);
+    return this.oAPIService
+      .call(oApiParam, convertToJSON)
+      .catch(res => {
+        if (res.status === 401 || res.status === 403) {
+          this.router.navigate(['/signin']);
+        }
+        return Observable.throw(res);
+      });
+  }
+
 }

@@ -21,12 +21,21 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
   public program: any;
   public complianceRequirementsGroup: FormGroup;
   private formErrors = new Set();
+  regulationHint:string = `<p>List the reference to all official published information pertinent to the program in the order indicated below.</p> 
+                  <p>If there are no materials of this nature available, enter "None." … A citation to the Code of Federal Regulations (CFR) including the title, part, and sections where appropriate. … The title, number, and price of guidelines, handbooks, or manuals. 
+                  Specify where these documents may be obtained if different from the Federal level offices described in the Information Contacts section of the program description. … The title, number and price of additional literature such as reports and brochures that are available. 
+                  Specify where these materials may be obtained if different from the Federal level offices described in the Information Contacts section of the program description.</p>`;
 
+  formulaMatchingHint:string =`<p>See the reference guide or online help for instructions when Yes is selected.</p>
+                               <p>Cite the statutory and/or administrative rule reference in the Code of Federal Regulations (CFR) to include the title, chapter, part and subpart or the public law citation. If the program has no statutory formula, indicate: "This program has no statutory formula."</p>
+                                <p>Specify by name each formula factor and its weight (percentage). Briefly describe the mathematical calculation performed. Provide the statistical source, agency and the date of that source used in computation of the formula identified above. If the source is unpublished, this should be indicated along with the identification of the office maintaining the data. Specify the current cost-sharing arrangement for the program. Include the minimum and/or maximum constraints by percentage.</p>
+                                <p>Specify the range of financial or other matching required from nonfederal sources, e.g., State and local governments or other organizations and individuals. Identify the available bonuses or incentives. Identify the amount of the nonfederal share as it increases/decreases from the past fiscal year to the budget fiscal year. If the program has no matching requirements, indicate: "This program has no matching requirements."</p>
+                                <p>Maintenance of Effort (MOE) requirements are provisions intended to ensure that Federal funds are used to supplement, not supplant, existing State and local resources. In most cases, these requirements are intended to prevent State and local governments from reducing their spending in federally funded areas as a condition for receiving Federal grants.</p>
+                                <p>If MOE programs have total allocations of $100 million or over in the current fiscal year, the following statement should be placed in the Formula and Matching Requirements section: "This program has MOE requirements; see funding agency for further details."</p>`;
   public policyRequirementsConfig: any = {
     checkbox: {
       name: 'compliance-policy-requirements',
-      label: 'Policy Requirements',
-      hint: 'Does 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards apply to this assistance listing?',
+      label: 'Does 2 CFR 200, Uniform Administrative Requirements, Cost Principles, and Audit Requirements for Federal Awards apply to this assistance listing?',
 
       options: []
     },
@@ -57,6 +66,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
     textarea: {
       showWhenCheckbox: 'checked',
       labels: ['Program Reports', 'Cash Reports', 'Progress Reports', 'Expenditure Reports', 'Performance Reports'],
+      hint: ['Describe required program reports', 'Describe required cash reports', 'Describe required progress reports', 'Describe required expenditure reports', 'Describe required performance reports'],
       required: [true, true, true, true, true]
     }
   };
@@ -82,7 +92,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
   public additionalDocumentationConfig: any = {
     name: 'compliance-additional-documentation',
     label: 'Regulations, Guidelines, and Literature',
-    hint: 'Please reference additional documentation specific to your program Do not include government wide guidance.',
+    hint: this.regulationHint,
     required: true,
     validateComponentLevel: false,
 
@@ -100,7 +110,7 @@ export class FALFormComplianceRequirementsComponent implements OnInit {
   public formulaMatchingConfig: any = {
     name: 'compliance-formula-matching',
     label: 'Formula Matching Requirements Maintenance of Effort',
-    hint: '',
+    hint: this.formulaMatchingHint,
     required: false,
   };
 

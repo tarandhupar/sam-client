@@ -2,7 +2,7 @@
 <div *ngIf="otherFinancialInfoForm" [formGroup]="otherFinancialInfoForm">
   <sam-text-area [label]="'Range and Average of Financial Assistance'"
                [name]="'assitance-range-input'"
-               [hint]="'Provide a range that best represents the smallest and largest awards available. Provide an approximate average award size.'"
+               [hint]="rangeAndAverageHint"
                [required]="false"
                [control]="otherFinancialInfoForm.get('assistanceRange')"
                [formControlName]="'assistanceRange'"

@@ -52,6 +52,6 @@ describe("Award data page in help page", ()=>{
     component.onRemoveFeatureClick('Request form for wage determination');
     component.onSaveEditPageClick();
     expect(component.curConfig.splashContent).toBe("Award wage determination data splash content");
-    expect(component.curFeatures).toEqual(['Search', 'View']);
+    expect(component.curFeatures[0]).toEqual(['Search', 'View']);
   });
 });

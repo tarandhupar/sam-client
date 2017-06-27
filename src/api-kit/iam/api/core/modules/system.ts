@@ -6,8 +6,36 @@ import {
   config, utilities,
   getAuthHeaders, exceptionHandler, sanitizeRequest,
   transformMigrationAccount,
-  isDebug
+  logger, isDebug
 } from './helpers';
+
+function getMockSystemAccount(index) {
+  const types = ['Gov','Non-Gov'];
+
+  index = index || 1;
+
+  return {
+    _id:               `system-email-${index}@email.com`,
+    email:             `system-email-${index}@email.com`,
+    systemType:        types[Math.random()],
+    systemName:        `System-Account-${index}`,
+    ipAddress:         `System-Account-${index}`,
+
+    comments:          'System comments...',
+    duns:              'Test Duns',
+    businessName:      'John Doe Inc.',
+    businessAddress:   '1600 Pennsylvania Ave NW, Washington DC 20500',
+    department:        100006688,
+    primaryOwnerName:  `Primary Owner Name ${index}`,
+    primaryOwnerEmail: `primary-owner-email-${index}@email.com`,
+
+    pointOfContact: [
+      { firstName: 'Tester', lastName: '#1', email: 'test.user@yahoo.com',   phone: '12223334444' },
+      { firstName: 'Tester', lastName: '#2', email: 'test.user@gmail.com',   phone: '15556667777' },
+      { firstName: 'Tester', lastName: '#3', email: 'test.user@hotmail.com', phone: '16667778888' }
+    ]
+  };
+}
 
 function transformSAResponse(data) {
   return defaults({
@@ -35,7 +63,7 @@ const $import = {
 
   history(id, $success, $error) {
     let endpoint = utilities.getUrl(config.system.account.import.history, { id: id }),
-        headers = getAuthHeaders(),
+        auth = getAuthHeaders(),
         mock = [];
 
     $success = $success || (() => {});
@@ -72,29 +100,33 @@ const $import = {
       }
     ];
 
-    request
-      .get(endpoint)
-      .set(headers)
-      .end((err, response) => {
-        let accounts = [];
+    if(auth) {
+      request
+        .get(endpoint)
+        .set(auth)
+        .end((err, response) => {
+          let accounts = [];
 
-        if(!err) {
-          accounts = (response.body || []).map((account) => transformMigrationAccount(account));
-          $success(accounts);
-        } else {
-          if(isDebug()) {
-            accounts = mock.map((account) => transformMigrationAccount(account));
+          if(!err) {
+            accounts = (response.body || []).map((account) => transformMigrationAccount(account));
             $success(accounts);
           } else {
-            $error(exceptionHandler(response));
+            if(isDebug()) {
+              accounts = mock.map((account) => transformMigrationAccount(account));
+              $success(accounts);
+            } else {
+              $error(exceptionHandler(response));
+            }
           }
-        }
-      });
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   create(id, system, username, password, $success, $error) {
     let endpoint = utilities.getUrl(config.system.account.import.create),
-        headers = getAuthHeaders(),
+        auth = getAuthHeaders(),
         params = {
           'legacySystem': system,
           'legacyUsername': username,
@@ -105,17 +137,27 @@ const $import = {
     $success = $success || (() => {});
     $error = $error || (() => {});
 
-    request
-      .post(endpoint)
-      .set(headers)
-      .send(params)
-      .end((err, response) => {
-        if(!err) {
-          $success(transformMigrationAccount(response.body));
-        } else {
-          $error(response.body);
-        }
-      });
+    logger(params);
+
+    if(auth) {
+      request
+        .post(endpoint)
+        .set(auth)
+        .send(params)
+        .end((err, response) => {
+          if(!err) {
+            $success(transformMigrationAccount(response.body));
+          } else {
+            $error(response.body);
+          }
+        });
+    } else {
+      if(isDebug()) {
+        $success(params);
+      } else {
+        $error({ message: 'Please sign in' });
+      }
+    }
   }
 };
 
@@ -126,7 +168,12 @@ const account = {
         auth = getAuthHeaders(),
         endpoint = isAll ?
           utilities.getUrl(config.system.account.get.replace(/\/\{id\}$/, '')) :
-          utilities.getUrl(config.system.account.get, { id: (id || '') });
+          utilities.getUrl(config.system.account.get, { id: (id || '') }),
+        mock = isAll ? [
+          getMockSystemAccount(1),
+          getMockSystemAccount(2),
+          getMockSystemAccount(3),
+        ] : getMockSystemAccount(1);
 
     if(isAll) {
       $error = $success;
@@ -149,7 +196,11 @@ const account = {
           }
         });
     } else {
-      $error(exceptionHandler({}));
+      if(isDebug()) {
+        $success(mock);
+      } else {
+        $error(exceptionHandler({}));
+      }
     }
   },
 
@@ -176,6 +227,8 @@ const account = {
     $success = $success || (() => {});
     $error = $error || (() => {});
 
+    logger(data);
+
     if(auth) {
       request
         .post(endpoint)
@@ -189,7 +242,11 @@ const account = {
           }
         });
     } else {
-      $error(exceptionHandler({}));
+      if(isDebug()) {
+        $success(data);
+      } else {
+        $error({ message: 'Please sign in' });
+      }
     }
   },
 
@@ -235,31 +292,35 @@ const account = {
     $success = $success || (() => {});
     $error = $error || (() => {});
 
-    request
-      .put(endpoint)
-      .set(auth)
-      .send(data)
-      .end(function(error, response) {
-        const message = response ? exceptionHandler(response.body) : error.rawResponse;
-        if(error) {
-          $error(message);
-        } else {
-          $success(message);
-        }
-      });
+    if(auth) {
+      request
+        .put(endpoint)
+        .set(auth)
+        .send(data)
+        .end(function(error, response) {
+          const message = response ? exceptionHandler(response.body) : error.rawResponse;
+          if(error) {
+            $error(message);
+          } else {
+            $success(message);
+          }
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   deactivate(id, $success, $error) {
     let endpoint = utilities.getUrl(config.system.account.deactivate, { id: id }),
-        headers = getAuthHeaders();
+        auth = getAuthHeaders();
 
     $success = $success || (() => {});
     $error = $error || (() => {});
 
-    if(id) {
+    if(auth && id) {
       request
         .delete(endpoint)
-        .set(headers)
+        .set(auth)
         .end(function(error, response) {
           if(error) {
             $error(exceptionHandler(response.body));

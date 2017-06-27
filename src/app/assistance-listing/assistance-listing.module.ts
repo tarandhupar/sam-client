@@ -10,28 +10,21 @@ import { SamUIKitModule } from 'sam-ui-kit';
 import { PipesModule } from '../app-pipes/app-pipes.module';
 import { ProgramDisplayPageDemoPage } from './display-template-demo/display-template-demo.page';
 import { AppComponentsModule } from "../app-components/app-components.module";
-import { ProgramPageOperations } from './assistance-listing-operations/assistance-listing-operations.page';
 import { AssistanceProgramResult } from './assistance-listing-workspace/program-result/assistance-program-result.component';
 import { AccessRestrictedPage } from './assistance-listing-workspace/program-result/testauthenvironment.page';
 import { FalWorkspacePage } from './assistance-listing-workspace/assistance-listing-workspace.page';
-import { FinancialInfoPage2 } from './assistance-listing-operations/sections/financial-info/other/financial-info-other.page';
-import { FALHeaderInfoComponent } from './assistance-listing-operations/sections/header-information/header-information.component';
-import { FALOverviewComponent } from './assistance-listing-operations/sections/overview/overview.component';
-import { FALContactInfoComponent } from './assistance-listing-operations/sections/contact-information/contact-information.component';
-import { FinancialObligationsComponent } from './assistance-listing-operations/sections/financial-info/obligations/obligation.component';
-import { ComplianceRequirementsPage } from './assistance-listing-operations/sections/compliance-requirements/compliance-requirements.page';
 import { FALComponentsModule } from './components/index';
-import { FALAccountIdentificationComponent } from "./components/account-identification.component";
-import { FALTafsComponent } from "./components/tafs.component";
-import { FALCriteriaInfoComponent } from "./assistance-listing-operations/sections/criteria-information/criteria-information.component";
-import { FALAuthorizationsComponent } from "./assistance-listing-operations/sections/authorizations/authorizations.component";
-import { FALAssistanceComponent } from './assistance-listing-operations/sections/applying-for-assistance/applying-for-assistance.component';
-
-import {FALFormModule} from "./assistance-listing-operations/fal-form.module";
-import {RejectFALComponent} from "./assistance-listing-operations/workflow/reject/reject-fal.component";
-import { FALFormArchiveRequestComponent } from "./assistance-listing-change-request/fal-form-archive-request.component";
-
-
+import { PendingRequestsListPage } from "./assistance-listing-workspace/pending-requests/pending-requests-list.page";
+import { FALFormModule } from "./assistance-listing-operations/fal-form.module";
+import { FalRegionalAssistanceLocationsPage } from './regional-assistance-locations/regional-assistance-location.page';
+import { RegionalAssistanceLocationResult } from './regional-assistance-locations/location-result/regional-assistance-location-result.component';
+import { RejectFALComponent } from "./assistance-listing-operations/workflow/reject/reject-fal.component";
+import {RequestLabelPipe} from "./pipes/request-label.pipe";
+import { FALFormErrorService } from './assistance-listing-operations/fal-form-error.service';
+import { FALReviewComponent } from "./assistance-listing-operations/workflow/review/fal-review.component";
+import {FALSubmitComponent} from "./assistance-listing-operations/workflow/submit/fal-form-submit.component";
+import { FALFormChangeRequestComponent } from "./assistance-listing-change-request/fal-form-change-request.component";
+import { FALFormChangeRequestActionComponent } from "./assistance-listing-change-request/fal-form-change-request-action.component";
 
 @NgModule({
   imports: [
@@ -61,23 +54,20 @@ import { FALFormArchiveRequestComponent } from "./assistance-listing-change-requ
     HistoricalIndexLabelPipe,
     AssistanceProgramResult,
     FalWorkspacePage,
-    ProgramPageOperations,
     AccessRestrictedPage,
-    FinancialInfoPage2,
-    ComplianceRequirementsPage,
-    FALHeaderInfoComponent,
-    FALOverviewComponent,
-    FALContactInfoComponent,
-    FinancialObligationsComponent,
-    FALAuthorizationsComponent,
-    FALCriteriaInfoComponent,
-    FALAssistanceComponent,
     RejectFALComponent,
-    FALFormArchiveRequestComponent
-   // FAlProgramServiceDirective
+    PendingRequestsListPage,
+    FALFormChangeRequestActionComponent,
+    FALFormChangeRequestComponent,
+    FALSubmitComponent,
+    RequestLabelPipe,
+    FALReviewComponent,
+    FalRegionalAssistanceLocationsPage,
+    RegionalAssistanceLocationResult,
+    FALReviewComponent
   ],
   providers: [
-    //FALProgramAutoCompleteWrapper
+    FALFormErrorService
   ],
 })
 export class ProgramModule { }

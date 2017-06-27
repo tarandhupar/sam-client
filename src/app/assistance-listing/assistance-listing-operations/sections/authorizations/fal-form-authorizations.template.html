@@ -2,6 +2,7 @@
 
 <form [formGroup]="falAuthForm">
 
+  <sam-fieldset-wrapper  [hint]="description">
   <authInfoTable
     [hideAddButton]="hideAddButton"
     [displayAuthInfo]="displayAuthInfo"
@@ -9,7 +10,7 @@
     (authTableActionHandler)="authActionHandler($event)" #authTable></authInfoTable>
 
   <authSubform [hideAddButton]="hideAddButton"  [formErrorArr]="formErrorArr" (authActionHandler)="authActionHandler($event)"  #authSubForm></authSubform>
-
+  </sam-fieldset-wrapper>
   <sam-text-area
     [control]="falAuthForm.controls['description']"
     [name]="'description-input'"

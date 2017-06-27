@@ -53,7 +53,7 @@
             </div>
             <div class="usa-grid-full">
             <div *ngIf="item.previousDates">
-              <samAccordion>
+              <sam-accordion>
                 <sam-accordion-section [name]="'Previous Years'" [headerText]="'Previous Years'">
                   <ul class="ul-css">
                     <li *ngFor="let previousReport of item.previousDates;let j=index">
@@ -62,7 +62,7 @@
                     </li>
                   </ul>
                 </sam-accordion-section>
-              </samAccordion>
+              </sam-accordion>
             </div>
             </div>
           </li>

@@ -85,7 +85,6 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   }
 
   addUser( id ) {
-   
     this.reportsService.savePreference(id, this.data, Cookies.get('iPlanetDirectoryPro'))
       .subscribe(
         data => this.data = data,
@@ -147,21 +146,20 @@ export class OverviewComponent implements OnInit, AfterViewInit {
 
   checkSession( cb: () => void ) {
     let vm = this;
-
-    this.api.iam.user.get(function(user) {
+    this.api.iam.user.get(function(user, error) {
       vm.states.isSignedIn = true;
       vm.states.showSignIn = false;
       vm.userRoles = user.gsaRAC;
-
+      
       let isReportsUser = false;
       let isReportsAdmin = false;
 
       for (let _i = 0; _i < vm.userRoles.length; _i++) {
-        if (vm.userRoles[_i].role.indexOf('GSA_REPORT_R') >= 0) {
+        if (vm.userRoles[_i].indexOf('GSA_REPORT_R') >= 0) {
           isReportsUser = true;
         }
 
-        if (vm.userRoles[_i].role.indexOf('ADMIN') >= 0) {
+        if (vm.userRoles[_i].indexOf('ADMIN') >= 0) {
           isReportsAdmin = true;
         }
 
@@ -171,6 +169,7 @@ export class OverviewComponent implements OnInit, AfterViewInit {
           vm.admin = vm.states.isAdmin;
         }
       }
+
       vm.user = user;
       if ( ENV === 'development') {
         if (vm.admin) {

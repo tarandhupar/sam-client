@@ -16,7 +16,7 @@ export { config };
 export { utils as utilities };
 
 export function getAuthHeaders() {
-  return Cookies.get('iPlanetDirectoryPro') ? { 'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro') } : {};
+  return Cookies.get('iPlanetDirectoryPro') ? { 'iPlanetDirectoryPro': Cookies.get('iPlanetDirectoryPro') } : false;
 }
 
 export function getParam(key) {

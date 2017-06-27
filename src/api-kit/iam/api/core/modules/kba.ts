@@ -11,10 +11,7 @@ import {
 export const kba = {
   questions($success, $error) {
     let endpoint = utilities.getUrl(config.kba.questions),
-        headers = {
-          iPlanetDirectoryPro: Cookies.get('iPlanetDirectoryPro')
-        },
-
+        auth = getAuthHeaders(),
         $kba = {
           questions: [],
           selected: []
@@ -23,46 +20,47 @@ export const kba = {
     $success = ($success || function(response) {});
     $error = ($error || function(error) {});
 
-    request
-      .get(endpoint)
-      .set(headers)
-      .then((response) => {
-        $kba.questions = (response.body.kbaQuestionList || []);
-        $kba.selected = (response.body.kbaAnswerIdList || []).map((questionID) => {
-          return parseInt(questionID, 10);
-        });
-
-        $success($kba);
-      }, (error) => {
-        if(isDebug()) {
-          $kba.questions =   [
-            { 'id': 1,  'question': 'What was the make and model of your first car?' },
-            { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
-            { 'id': 3,  'question': 'What was your high school mascot?' },
-            { 'id': 4,  'question': 'When you were young, what did you want to be when you grew up?' },
-            { 'id': 5,  'question': 'Where were you when you first heard about 9/11?' },
-            { 'id': 6,  'question': 'Where did you spend New Years Eve 2000?' },
-            { 'id': 7,  'question': 'Who was your childhood hero?' },
-            { 'id': 8,  'question': 'What is your favorite vacation spot?' },
-            { 'id': 9,  'question': 'What is the last name of your first grade teacher?' },
-            { 'id': 10, 'question': 'What is your dream job?' },
-            { 'id': 11, 'question': 'If you won the Lotto, what is the first thing you would do?' },
-            { 'id': 12, 'question': 'What is the title of your favorite book?' }
-          ];
+    if(auth) {
+      request
+        .get(endpoint)
+        .set(auth)
+        .then((response) => {
+          $kba.questions = (response.body.kbaQuestionList || []);
+          $kba.selected = (response.body.kbaAnswerIdList || []).map((questionID) => {
+            return parseInt(questionID, 10);
+          });
 
           $success($kba);
-        } else {
-          $error($kba);
-        }
-      });
+        }, (error) => {
+          if(isDebug()) {
+            $kba.questions =   [
+              { 'id': 1,  'question': 'What was the make and model of your first car?' },
+              { 'id': 2,  'question': 'Who is your favorite Actor/Actress?' },
+              { 'id': 3,  'question': 'What was your high school mascot?' },
+              { 'id': 4,  'question': 'When you were young, what did you want to be when you grew up?' },
+              { 'id': 5,  'question': 'Where were you when you first heard about 9/11?' },
+              { 'id': 6,  'question': 'Where did you spend New Years Eve 2000?' },
+              { 'id': 7,  'question': 'Who was your childhood hero?' },
+              { 'id': 8,  'question': 'What is your favorite vacation spot?' },
+              { 'id': 9,  'question': 'What is the last name of your first grade teacher?' },
+              { 'id': 10, 'question': 'What is your dream job?' },
+              { 'id': 11, 'question': 'If you won the Lotto, what is the first thing you would do?' },
+              { 'id': 12, 'question': 'What is the title of your favorite book?' }
+            ];
+
+            $success($kba);
+          } else {
+            $error($kba);
+          }
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   },
 
   update(answers, $success, $error) {
     let endpoint = utilities.getUrl(config.kba.update),
-        headers = {
-          iPlanetDirectoryPro: Cookies.get('iPlanetDirectoryPro')
-        },
-
+        auth = getAuthHeaders(),
         data = {
           kbaAnswerList: answers
         },
@@ -86,16 +84,20 @@ export const kba = {
       return;
     }
 
-    request
-      .patch(endpoint)
-      .set(headers)
-      .send(data)
-      .end(function(err, response) {
-        if(!err) {
-          $success(response.body);
-        } else {
-          $error(exceptionHandler(response.body));
-        }
-      });
+    if(auth) {
+      request
+        .patch(endpoint)
+        .set(auth)
+        .send(data)
+        .end(function(err, response) {
+          if(!err) {
+            $success(response.body);
+          } else {
+            $error(exceptionHandler(response.body));
+          }
+        });
+    } else {
+      $error({ message: 'Please sign in' });
+    }
   }
 };

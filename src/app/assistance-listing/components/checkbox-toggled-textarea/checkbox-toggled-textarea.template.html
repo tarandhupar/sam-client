@@ -16,6 +16,7 @@
     <ng-container *ngFor="let option of checkboxOptions; let i = index;">
       <sam-text-area [name]="name + '-textarea' + i"
                    [label]="textareaLabel[i]"
+                   [hint] = "textareaHint[i]"
                    [required]="textareaRequired[i]"
                    [hidden]="textareaHidden[i]"
                    [control]="validationGroup.get('textarea'+i)"

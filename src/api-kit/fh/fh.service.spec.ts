@@ -5,7 +5,7 @@ import { FHService } from './fh.service';
 import { FHWrapperService } from './fhWrapper.service';
 import { WrapperService } from '../wrapper/wrapper.service'
 
-describe('src/api-kit/fh/fh.service.spec.ts', () => {
+xdescribe('src/api-kit/fh/fh.service.spec.ts', () => {
 
     //Todo MOCK DATA AND TEST OTHER FUNCTIONS
   beforeEach(() => {

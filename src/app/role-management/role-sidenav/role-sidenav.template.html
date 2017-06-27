@@ -7,7 +7,7 @@
       <i class="fa fa-sliders fa-2x" aria-hidden="true"></i>
     </div>
     <div class = "def-filter">
-      <samAccordion [expandIndex]="0">
+      <sam-accordion [expandIndex]="0">
         <sam-accordion-section [headerText]="accordionHeading1" [name]="accordionName1">
           <sam-radio-button (modelChange) = "ChangeRoute($event)"
             [(model)]="path"
@@ -17,9 +17,9 @@
             >
           </sam-radio-button>
         </sam-accordion-section>
-      </samAccordion>
+      </sam-accordion>
 
-      <samAccordion [expandIndex]="0">
+      <sam-accordion [expandIndex]="0">
         <sam-accordion-section [headerText]="accordionHeading2" [name]="accordionName2">
           <sam-checkbox (modelChange)="activeFilter($event)"
             [(model)]="checkboxModel"
@@ -30,7 +30,7 @@
             >
           </sam-checkbox>
         </sam-accordion-section>
-      </samAccordion>
+      </sam-accordion>
       <div class = "tx-pad">
         <sam-label-wrapper [name]="'Domain-Text-Wrapper'" [errorMessage]="textErrorMessage">
           <input type="text" [(ngModel)]="newDomain" [name] = "'New-Domain-Text-Input'" placeholder="Add New..." (keydown) = "onEnterClick($event)">

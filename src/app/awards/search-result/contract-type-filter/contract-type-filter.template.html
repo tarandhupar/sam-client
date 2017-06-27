@@ -1,10 +1,8 @@
-<sam-label-wrapper class="sam-list-input">
-  <sam-type-ahead [placeholder]="options.placeholder"
-                  [name]="options.name"
-                  [options]="options.options"
-                  [config]="options.config"
-                  (modelChange)="setSelected($event, true)"
-                  [selectedList]="listDisplay.selectedItems">
-  </sam-type-ahead>
-  <sam-list-display #listDisplay id="assistance-type-display" (modelChange)="emitSelectedList()" [config]="options.config"><div [innerHTML]="options.selectedLabel"></div></sam-list-display>
-</sam-label-wrapper>
+<sam-autocomplete-multiselect class="usa-award-filter"
+                              [label]="contractConfig.label"
+                              [name]="contractConfig.name"
+                              [options]="contractOptions"
+                              [keyValueConfig]="contractConfig.config.keyValueConfig"
+                              [ngModel]="selectedContractOptions"
+                              (ngModelChange)="contractChanged($event)">
+</sam-autocomplete-multiselect>

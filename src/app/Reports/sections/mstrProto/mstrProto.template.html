@@ -4,23 +4,47 @@
     Back to: <a routerLink="/reports" routerLinkActive="Active">Dynamic Proto Reports</a>
     <br>
     <h2 class="m_T-2x">{{name}}</h2>
-    <samAccordion [expandIndex]="0" [bordered]="true" #samAccordionValue>
-      <sam-accordion-section headerText="Report Criteria" name="aria-friendly-section-name">
+    <sam-accordion [expandIndex]="0" [bordered]="true" #samAccordionValue>
+
+      <sam-accordion-section headerText="Using custom component" name="aria-friendly-section-name">
         <form (ngSubmit)="onSubmit()" #reportForm="ngForm">
-          <p class="p_L-0x">Pick a date:</p>
+          <p class="p_L-0x">Enter prompt answer or enter full URL:</p>
           <div class="display-block">
-            <sam-date name="chosen-date" [(ngModel)]="startDate" #startDateDom></sam-date>
+            <input type="text" name="customText" #customText>
           </div>
-          <p class="p_L-0x">Temporary field:</p>
-          <input type="text" name="testForm" #testForm>
+          <div class="display-block" style="font-size:12px;font-weight:700;color:blue;">{{url}}</div>
           <div class="usa-width-one-fourth">
-            <!--<sam-button [buttonId]="'defaultBtn'" [buttonText]="'Check Date'" [buttonType]="btnType" (click)="resetParameter();"></sam-button>-->
-            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute w/ with date Common Component'" [buttonType]="btnType" (click)="reportExecute()"></sam-button>
-            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute w/ text input'" [buttonType]="btnType" (click)="reportExecuteTest()"></sam-button>
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute'" [buttonType]="btnType" (click)="reportExecuteTest()"></sam-button>
           </div>
         </form>
       </sam-accordion-section>
-    </samAccordion>
+
+      <sam-accordion-section headerText="Using common components" name="aria-friendly-section-name">
+        <div class="display-block">
+          <sam-date-range [(ngModel)]='dateRange' name='dateRange'></sam-date-range>
+        </div>
+        <sam-agency-picker #agencyPicker name="agency-picker"
+                             [label]="'Search Federal Organizations'"
+                             (organization)="onOrganizationChange($event)" [(ngModel)]="agencyPickerValue">
+        </sam-agency-picker>
+        <div class="usa-width-one-fourth">
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute'" [buttonType]="btnType" (click)="reportExecuteCC()"></sam-button>
+          </div>
+      </sam-accordion-section>
+
+      <sam-accordion-section headerText="Using custom URL" name="aria-friendly-section-name">
+        <form (ngSubmit)="onSubmit()" #urlForm="ngForm">
+          <div class="display-block">
+            <textarea name="customUrl" #customUrl></textarea>
+            <div class="display-block" style="font-size:12px;font-weight:700;color:blue;">{{urlPassed}}</div>
+          </div>
+          <div class="usa-width-one-forth">
+            <sam-button [buttonId]="'defaultBtn'" [buttonText]="'Execute'" [buttonType]="btnType" (click)="reportExecuteUrl()"></sam-button>
+          </div>
+        </form>
+      </sam-accordion-section>
+
+    </sam-accordion>
     <br>
     <iframe name="viewport" [src]="url" *ngIf="showReport" class="no-frame" height="800" width="100%"></iframe>
     <br>
@@ -29,7 +53,7 @@
       </sam-alert>
     </div>
     <br><br>
-    <samAccordion>
+    <sam-accordion>
       <sam-accordion-section [name]="'Appendix'" [headerText]="'Appendix'">
         <div *ngIf="data" [id]="id">
           <!-- note the added *ngIf -->
@@ -49,6 +73,6 @@
           </div>
         </div>
       </sam-accordion-section>
-    </samAccordion>
+    </sam-accordion>
   </section>
 </div>

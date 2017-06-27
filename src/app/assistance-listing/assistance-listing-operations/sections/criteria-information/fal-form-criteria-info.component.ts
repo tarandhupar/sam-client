@@ -15,6 +15,123 @@ export class FALFormCriteriaInfoComponent implements OnInit {
   @Input() viewModel: FALFormViewModel;
   @Output() public onError = new EventEmitter();
 
+  applicantEligibilityHint:string=`<p>Please select all that apply to help public users search for this listing.</p>
+                                   <p>Who can apply to the Government and what criteria must the applicants) satisfy? Include also eligibility criteria required of subgrantees. The main purpose of this section is to inform potential applicants (particularly State and local governments, U.S. Territories, and federally recognized Indian tribal governments) that they can apply for a program. Some of the terms being used in this section are “public agency,” “public organizations,” and “public bodies” if these words mean the same as city, county, and State governments, use the latter more specific words.</p>
+                                   <p>Specifically, are State and local governments, private, public, profit, nonprofit organizations and institutions or individuals eligible? Since State designate Indian tribal governments are considered units of local government, indicate those programs that include or exclude these entities as units of local government because of the nature of the program. If institutions of higher education are eligible, indicate whether they must be public, private, State colleges and universities, junior or community colleges, etc. Indicate who specifically is not eligible. Certain programs involve intermediate level of application processing, i.e., applications transmitted through governmental or nongovernmental units that are neither the direct applicants to the Federal government nor the ultimate beneficiary. If this is the case, what Federal criteria or general criteria must this intermediate level applicant satisfy? Who specifically at this intermediate level is not eligible?</p>
+                                   <p>The information in the Applicant Eligibility Index is based on the information recorded in this section.</p>
+                                   <p>In order to make the entries in the Applicant Eligibility section of the program descriptions consistent, identify the Eligible applicants and Use of assistance from the following terms and incorporate them into the narrative of the program description:</p>
+                                   <p>Eligible Applicants</p>
+                                   <p>Federal - Department and establishment of the Federal government which are responsible for enforcement and the fulfillment of public policy. These departments and establishments directly administer and exercise jurisdiction over matters assigned to them, and are the administering agencies of Federal domestic assistance programs.</p>
+                                   <p>Interstate - An organizational unit established by two or more States to coordinate certain regional programs relating usually to boundaries for the control and improvement of rivers for irrigation or water power, conservation of natural resources, public utility regulation, development of ports, regional educational development, and regional planning.</p>
+                                   <p>Intrastate - An organizational entity within the boundaries of a State established for such purposes as trade, transportation, and communication, performing economic, cultural, and historical functions conducted wholly within the boundaries of a State and which is subject to State regulatory authority. Includes water and sewer districts, and may include a region wholly in a State, such as a Council of Governments. State - Any agency or instrumentality of the fifty States and the District of Columbia excluding the political subdivisions of State, but including public institutions of higher education and hospitals. (This term does not include U.S. possessions or territories.)</p>
+                                   <p>Local - Political subdivisions of a State created under general law or State charter that regulate and administer matters chiefly of local concern. These subdivisions include cities, parishes, counties, municipalities, towns, townships, villages, school districts, special districts, or agencies or instrumentalities of local government, exclusive of institutions of higher education and hospitals. Included are Indian tribes on State reservations, Indian school boards, and State-designated Indian tribes.</p>
+                                   <p>Sponsored organizations - A public purpose group other than a unit of government that is a beneficiary under a plan or program administered by a State, or political subdivision of a State or local government, and which is subject to approval by a Federal agency. Usually organized to work for a specific purpose. Examples: Community development agencies, model cities, community action agencies.</p>
+                                   <p>Public nonprofit institution organizations - A publicly owned agency or organization established to perform specialized functions or services for the benefit of all or part of the general public either without charge or at cost, making no profits and having no shareholders to receive dividends. Includes institutions of higher education and hospitals.</p>
+                                   <p>Other public institution organization - A public purpose agency performing functions such as taxation and police regulation for the convenience, safety, or welfare of the entire community, not of a specific individual or class of persons. Examples: Public broadcasting entities, public corporations, public radio-stations.</p>
+                                   <p>Federally Recognized Indian Tribal Government - The governing body or a governmental agency of an Indian tribe, Nation, pueblo, or other organized group or community (including any Native village as defined in the Alaska Native Claims Settlement Act) certified by the special programs and services provided through the Bureau of Indian Affairs.</p>
+                                   <p>U.S. territory or possession- Any agency or instrumentality of the Commonwealth of Puerto Rico, Virgin Islands, Guam, American Samoa, the Trust Territories of the Pacific Islands, and the Mariana Islands, including the political subdivisions of a territory, institutions of higher education, and hospitals. If territories are eligible to apply, the most accurate designation would be to state exactly which territory(ies) is eligible since all territories may not fall under the same set of eligibility criteria.</p>
+                                   <p>Individual/Family - A person or group of persons who meet specified eligibility criteria. An example of a program where this applicant is eligible is the Food Stamps Program (10.551). Minority group - A group regarded as a subgroup of the majority to include African Americans, Americans of Spanish descent, Asians, and other nonwhite persons. It may include disadvantaged or under represented groups, such as women, Vietnam-era veterans, and the physically challenged/disabled.</p>
+                                   <p>Specialized group - A group of people with a specific mutual interest. Examples: American Medical Association, students, veterans.</p>
+                                   <p>Small business - A business of less than 500 employees, independently owned and not dominant in its field. (Detailed criteria are established by the Small Business Administration.)</p>
+                                   <p>Profit organization - A public or private organization designed to produce product or deliver services to the public through a business enterprise which is structured and managed for profit.</p>
+                                    <p>Private nonprofit institution/organization – A privately owned organization or institution that represents community special interests through community service networks, public information, technical assistance, and public education. Operated exclusively for charitable, scientific, literary or educational purposes such that no part of its earnings is for the benefit of any private shareholder or individual. Includes private institutions of higher education and hospitals. Examples: Girl Scouts, American Civil Liberties Union.</p>
+                                    <p>Quasi-public nonprofit institution/organization - A private organization or institution engaged in rendering essential services to the public and therefore given special privileges such as those given to public institutions/organizations. Examples: American Red Cross, United Givers Fund. Other private institution/organization - A privately owned agency that operates for profit and disburses dividends to shareholders.</p>
+                                    <p>Anyone/general public - Any person(s), without regard to specified eligibility criteria.
+                                    <p>Native American Organization - Groups of Indians to include urban Indian groups, cooperatives, corporations, partnerships, and associations. Also, include Indians as a minority group.</p>`;
+
+  beneficiaryEligibilityHint:string = `<p>Please select all that apply to help public users search for this listing.</p>
+                                       <p>Specify who will receive the ultimate benefits from the program. Programs that provide direct assistance from a Federal agency will generally have the same applicant and beneficiary. Do not use the statement "Same as Applicant Eligibility." In cases where assistance is provided through State and local governments, the applicants and beneficiaries may be different since the assistance is transmitted to private sector beneficiaries who do not have to request or apply for the benefits.</p>
+                                       <p>In order to make the entries in the Beneficiary Eligibility section of the program descriptions consistent, select the beneficiary type from the terms below and also incorporate them into the narrative of the program description:</p>
+                                      <ul><li>Federal</li>
+                                      <li>Interstate</li>
+                                      <li>Intrastate</li>
+                                      <li>State</li>
+                                      <li>Local</li>
+                                      <li>Sponsored Organization</li>
+                                      <li>Public Nonprofit Institution/Organization</li>
+                                      <li>Other Public Institution/organization</li>
+                                      <li>Federally Recognized Indian Tribal Government</li>
+                                      <li>U.S. Territory/Possession</li>
+                                      <li>Individual/Family</li>
+                                      <li>Minority Group</li>
+                                      <li>Specialized Group</li>
+                                      <li>Small Business</li>
+                                      <li>Profit Organization</li>
+                                      <li>Private Organization</li>
+                                      <li>Quasi-Public Nonprofit Organization</li>
+                                      <li>Other Private Institution/organization</li>
+                                      <li>Anyone/General Public</li>
+                                      <li>Native American Organization</li>
+                                      <li>Health Professional</li>
+                                      <li>Education Professional</li>
+                                      <li>Student/Trainee</li> 
+                                      <li>Graduate Student</li>
+                                      <li>Scientists/Researcher</li>
+                                      <li>Artist/Humanist</li>
+                                      <li>Engineer/Architect</li>
+                                      <li>Builder/Contractor/Developer</li>
+                                      <li>Farmer/Rancher/Agriculture Producer</li>
+                                      <li>Industrialist/Business Person</li>
+                                      <li>Small Business Person</li>
+                                      <li>Consumer</li>
+                                      <li>Homeowner</li>
+                                      <li>Land/Property Owner</li>
+                                      <li>Black American</li>
+                                      <li>American Indian</li> 
+                                      <li>Spanish Origin</li>
+                                      <li>Oriental</li>
+                                      <li>Other Nonwhite</li>
+                                      <li>Migrant</li>
+                                      <li>U.S. Citizen</li>
+                                      <li>Refugee/Alien - veteran/service person/Reservist (including dependents)</li>
+                                      <li>Women</li>
+                                      <li>Handicapped (Deaf, Blind, Crippled)</li>
+                                      <li>Physically Afflicted (TB, Arthritis, Heart Disease)</li>
+                                      <li>Mentally Disabled</li> 
+                                      <li>Drug Addict</li>
+                                      <li>Alcoholic</li> 
+                                      <li>Juvenile Delinquent</li>
+                                      <li>Preschool</li>
+                                      <li>School</li>
+                                      <li>Infant (0-5)</li>
+                                      <li>Child (6-15)</li>
+                                      <li>Youth (16-21)</li>
+                                      <li>Senior Citizen (60+)</li>
+                                      <li>Unemployed</li>
+                                      <li>Welfare Recipient</li>
+                                      <li>Pension Recipient</li>
+                                      <li>Moderate Income</li>
+                                      <li>Low Income</li>
+                                      <li>Major Metropolis (over 250,000)</li>
+                                      <li>Other urban</li>
+                                      <li>Suburban</li>
+                                      <li>Rural</li>
+                                      <li>Education (0-8)</li>
+                                      <li>Education (9-12)</li>
+                                      <li>Education (13+)</li></ul>`;
+
+  timePhasingHint:string = `<p>Describe the period of time when assistance is available. Also, the period of time when funding must be spent.</p>
+                            <p>First, for what period of time is the assistance normally available? Is there a restriction placed on the time permitted to spend the money awarded? 
+                            Second, how is the assistance (particularly for grant programs) awarded and/or released; as a lump sum, quarterly, by letter of credit, etc.?</p>`;
+
+  useOfAssistanceHint:string =`<p>Please select all that apply from the dropdown list.</p>
+                               <br>
+                               <p>00 - No Functional Application/Unlimited Application 42 - Higher Education (includes Research)</p> 
+                                <p>12 - Agriculture/Forestry/Fish and Game 44 - Housing</p> 
+                                <p>14 - Business/Commerce 46 - Income Security/Social Service/Welfare</p> 
+                                <p>16 - Civil Defense/Disaster Prevention and Relief/Emergency Preparedness  48 - International (includes Export/lmport)</p> 
+                                <p>18 - Communications 52 - Libraries/information/Statistics</p> 
+                                <p>20 - Community Development (includes Federal surplus property) 54 - Maritime</p> 
+                                <p>22 - Construction/Renew al/Rehabilitation 58 - Planning</p> 
+                                <p>24 - Consumer Protection 60 - Public Works</p> 
+                                <p>26 - Culture/Arts/Humanities 62 - Recreation (includes Historic Preservation)</p> 
+                                <p>28 - Economic Development 64 - Regional Development</p> 
+                                <p>30 - Elementary/Secondary Education 66 - Science and Technology</p> 
+                                <p>32 - Employment/Labor/Management 70 - Training</p> 
+                                <p>34 - Energy 68 - Transportation</p>
+                                <p>36 - Environment (w ater, air, solid w aste, pesticides, radiation) 74 - Vocational Education</p> 
+                                <p>38 - Food and Nutrition 76 - Vocational Rehabilitation</p> 
+                                <p>40 - Health/Medical 72 - Youth Development</p>`;
   private formErrors = new Set();
 
   @ViewChild('appauto') appauto;

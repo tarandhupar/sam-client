@@ -68,7 +68,7 @@
 								<div class="header">
 									Address
 								</div>
-								<entityObjectAddress [address]="coreData.mailAddress">
+								<entityObjectAddress [address]="coreData.generalInfo.samAddress">
 								</entityObjectAddress>
 							</div>
 						</div>
@@ -370,12 +370,12 @@
 							<th scope="col">Description</th>
 						</tr>
 					</thead>
-					<tr *ngFor="let naics of naicsDetails.details">
+					<tr *ngFor="let naics of naicsDetails">
 						<td class="center aligned">
 							<i *ngIf="naics.naicsCode==assertions.primaryNaics" class="fa fa-check fa-lg"></i>
 						</td>
 						<td>{{naics.naicsCode}}</td>
-						<td>{{naics.description}}</td>
+						<td>{{naics.naicsTitle}}</td>
 					</tr>
 				</table>
 			</ng-container>
@@ -390,9 +390,9 @@
 							<th scope="col">Description</th>
 						</tr>
 					</thead>
-					<tr *ngFor="let pscCode of pscDetails.details">
+					<tr *ngFor="let pscCode of pscDetails">
 						<td>{{pscCode.pscCode}}</td>
-						<td>{{pscCode.description}}</td>
+						<td>{{pscCode.pscName}}</td>
 					</tr>
 				</table>
 			</ng-container>
@@ -554,7 +554,7 @@
 				</div>
 				<div id="exclusions-list" *ngSwitchDefault>
 					<p>
-						There are no active exclusion records associated to this entity by its unique entity identifier. You may conduct additional searches for exclusions records using different search criteria.
+						There are no active exclusion records associated to this entity by its unique entity identifier. You may conduct additional searches for exclusion records using different search criteria.
 					</p>
 				</div>
 			</ng-container>

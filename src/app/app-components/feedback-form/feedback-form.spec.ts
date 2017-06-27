@@ -12,6 +12,7 @@ import { FeedbackService } from 'api-kit/feedback/feedback.service';
 import { IAMService } from "api-kit/iam/iam.service";
 import { ApiService } from "../../../api-kit/iam/api/index";
 import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.service";
+import { FeedbackFormService } from "./feedback-form.service";
 
 class ApiServiceStub{
   checkSession($success?,$error?){}
@@ -113,6 +114,7 @@ describe('The Sam Feedback component', () => {
       declarations: [SamFeedbackComponent],
       imports: [SamUIKitModule, RouterTestingModule, BrowserModule, FormsModule, ReactiveFormsModule],
       providers: [
+        FeedbackFormService,
         AlertFooterService,
         { provide: ApiService, useClass: ApiServiceStub},
         { provide: IAMService, useClass: IAMServiceStub},

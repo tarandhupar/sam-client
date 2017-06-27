@@ -2,12 +2,12 @@ import { Injectable, Directive, Input, OnChanges } from '@angular/core';
 import 'rxjs/add/operator/map';
 import { AutocompleteService } from 'sam-ui-kit/form-controls/autocomplete/autocomplete.service';
 
-import { SearchDictionariesService} from "../search/search-dictionaries.service";
-import {Observable, ReplaySubject} from "rxjs";
+import { SearchDictionariesService } from "../search/search-dictionaries.service";
+import { Observable, ReplaySubject } from "rxjs";
 
 // service to call backend
 @Injectable()
-export class DunsEntityAutoCompleteWrapper implements AutocompleteService{
+export class DunsEntityAutoCompleteWrapper implements AutocompleteService {
   private target = "search";
   autocompleteIndex = "";
   constructor(private oSearchService:SearchDictionariesService) {}
@@ -33,7 +33,7 @@ export class DunsEntityAutoCompleteWrapper implements AutocompleteService{
     return results;
   }
 
-  fetch(val: string): Observable<any> {
+  fetch(val: string, pageEnd, options): Observable<any> {
     if(val.length > 2) {
       return this.getEntityDuns(val).map(o => o);
     } else {
@@ -48,7 +48,7 @@ export class DunsEntityAutoCompleteWrapper implements AutocompleteService{
 
 //directive to add to template
 @Directive({
-  selector: 'sam-autocomplete[autofill-entityduns]',
+  selector: 'sam-autocomplete[autofill-entityduns], sam-autocomplete-multiselect[autofill-entityduns]',
   providers: [
     { provide: AutocompleteService, useClass: DunsEntityAutoCompleteWrapper }
   ]

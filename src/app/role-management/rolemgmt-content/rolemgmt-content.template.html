@@ -2,21 +2,15 @@
   <div>
     <div class="overview-header">
       <div class="usa-grid-full">
-        <!--
-        <div class="usa-width-five-twelfths">
-          <h3>Select an Organization</h3>
-          <sam-agency-picker [multimode]="false"></sam-agency-picker>
-        </div>
-        -->
         <div class="usa-width-one-fourth">
           <h3>Requests</h3>
           <div>
             <span class="badge-primary">{{escalatedCount}}</span>
-            <a (click)="onEscalatedClick()">Escalated Requests</a>
+            <a class="pointer-hover" (click)="onEscalatedClick()">Escalated Requests</a>
           </div>
           <div class="m_T-2x">
             <span class="badge-primary">{{pendingCount}}</span>
-            <a (click)="onPendingClick()">Pending Requests</a>
+            <a class="pointer-hover" (click)="onPendingClick()">Pending Requests</a>
           </div>
         </div>
         <div class="usa-width-one-third">
@@ -30,7 +24,7 @@
         </div>
       </div>
       <div>
-        <button class="usa-button-transparent back-to-workspace-button p_L-0" [routerLink]="'/'">
+        <button class="usa-button-transparent back-to-workspace-button p_L-0" [routerLink]="'/workspace'">
           <i class="fa fa-arrow-circle-left icn_pos" aria-hidden="true"></i>
           <span class = "inline-block">Back to Workspace Home</span>
         </button>
@@ -136,7 +130,7 @@
               <ng-container *ngIf="content.status.toLowerCase() === 'approved'">
                 <div class="usa-width-one-third">
                   <div><strong>Approved By</strong></div>
-                  <div>---</div>
+                  <div>{{content.updatedBy}}</div>
                 </div>
                 <div class="usa-width-one-third">
                   <div><strong>Approved Date</strong></div>
@@ -150,7 +144,7 @@
             </div>
           </div>
 
-          <samAccordion>
+          <sam-accordion>
             <sam-accordion-section [name]="'comments'" [headerText]="'Comments'">
               <section class="comment-section" *ngIf="content.requestorMessage">
                 <div class="comment-user-icon">
@@ -175,8 +169,8 @@
                 </div>
               </section>
             </sam-accordion-section>
-          </samAccordion>
-          <samAccordion *ngIf='content.status.toLowerCase() === "approved"' class="details-accordion">
+          </sam-accordion>
+          <sam-accordion *ngIf='content.status.toLowerCase() === "approved"' class="details-accordion">
             <sam-accordion-section [name]="'details'" [headerText]="'Details'">
               <div class="usa-grid-full">
                 <div class="usa-width-one-third">
@@ -189,7 +183,7 @@
                 </div>
               </div>
             </sam-accordion-section>
-          </samAccordion>
+          </sam-accordion>
         </div>
       </section>
     </div>

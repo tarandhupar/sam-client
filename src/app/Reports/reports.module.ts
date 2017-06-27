@@ -12,6 +12,7 @@ import { AdhocComponent } from './sections/adhoc/adhoc.component';
 import { FavoritesComponent } from './sections/favorites/favorites.component';
 import { StaticComponent } from './sections/static/static.component';
 import { AppComponentsModule } from '../app-components/app-components.module';
+import { MstrProtoComponent } from './sections/mstrProto/mstrProto.component';
 import { AlertsModule } from '../alerts/alerts.module';
 import { SamUIKitModule } from 'sam-ui-kit';
 import { IAMService } from 'api-kit';
@@ -20,9 +21,6 @@ import { SamAPIKitModule } from 'api-kit';
 import { Router } from '@angular/router';
 import { globals } from '../../app/globals.ts';
 import { ReportsPipe } from './reports.pipe';
-// to be deleted -isaac
-import { MstrProtoComponent } from './sections/mstrProto/mstrProto.component';
-
 @NgModule({
   imports: [
     SamUIKitModule,
@@ -45,7 +43,6 @@ import { MstrProtoComponent } from './sections/mstrProto/mstrProto.component';
     StaticComponent,
     ReportsPipe,
     ReportProtoComponent,
-    // to be deleted -isaac
     MstrProtoComponent
   ],
   providers: [IAMService, ReportsService],

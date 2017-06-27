@@ -49,6 +49,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
   @Input() textareaMaxlength: number[]; // todo: implement this
   @Input() textareaRequired: boolean[];
   @Input() textareaLabel: string[];
+  @Input() textareaHint: string[];
   @Input() showWhenCheckbox: string; // 'checked' or 'unchecked'
   public textareaHidden: boolean[];
 
@@ -90,6 +91,7 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
         if(this.textareaMaxlength == null) { this.textareaMaxlength = this.options.textarea.maxlengths; }
         this.textareaRequired = this.textareaRequired || this.options.textarea.required;
         this.textareaLabel = this.textareaLabel || this.options.textarea.labels;
+        this.textareaHint = this.textareaHint || this.options.textarea.hint;
         this.showWhenCheckbox = this.showWhenCheckbox || this.options.textarea.showWhenCheckbox;
       }
     }
@@ -102,11 +104,15 @@ export class SamCheckboxToggledTextareaComponent implements ControlValueAccessor
     this.textareaHidden = [];
     this.textareaRequired = this.textareaRequired || [];
     this.textareaLabel = this.textareaLabel || [];
+    this.textareaHint= this.textareaHint || [];
     if(this.checkboxOptions) {
       for(let i = 0; i < this.checkboxOptions.length; i++) {
         this.textareaHidden.push(true);
         if(this.textareaLabel.length <= i || this.textareaLabel[i] == null) {
           this.textareaLabel.push('');
+        }
+        if(this.textareaHint.length <= i || this.textareaHint[i] == null) {
+          this.textareaHint.push('');
         }
         if(this.textareaRequired.length <= i || this.textareaRequired[i] == null) {
           this.textareaRequired.push(false);

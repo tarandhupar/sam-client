@@ -10,7 +10,7 @@
   }
 
   .sam-list-input .label-wrapper, .usa-form-hint-showmore-toggler{
-    max-width: 480px;
+    max-width: 460px;
   }
 
   sam-agency-picker .organization-container {
@@ -112,4 +112,9 @@
 
   }
 
+}
+.requestLink{
+  text-decoration: none;
+  color: black;
+  font-weight: normal;
 }

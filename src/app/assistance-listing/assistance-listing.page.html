@@ -11,7 +11,6 @@
            (onSubmit)="onDeleteModalSubmit()">
 </sam-modal>
 <div class="usa-grid assistance-listing-page" *ngIf="program">
-
   <!--Sidebar-->
   <aside class="usa-width-one-fourth">
     <div>&nbsp;</div>
@@ -43,6 +42,13 @@
 
   <!--Main Content-->
   <div *ngIf="program" class="usa-width-three-fourths">
+    <ng-container *ngIf="programRequest">
+      <a class="usa-button-primary" [routerLink]="['/programs/change-request/', programRequest.id, 'action']">
+        <span>{{ programRequest.requestType?.value | requestLabel }}</span>
+        <i aria-hidden="true" class="fa fa-chevron-circle-right"></i>
+      </a>
+      <div class="sam-ui divider"></div>
+    </ng-container>
 
     <!-- Alerts -->
     <ng-container *ngIf="alerts && alerts.length > 0">
@@ -65,6 +71,7 @@
 
       <div class="usa-grid-full">
         <div class="usa-width-two-thirds">
+          <sam-button *ngIf="program._links && program._links['program:submit']" buttonText="Submit" (onClick)="onSubmitClick($event)"></sam-button>
           <sam-button *ngIf="program._links && program._links['program:request:reject']" buttonText="Reject" (onClick)="onRejectClick($event)"></sam-button>
           <h1 class="sam-ui header">
             <span class="field" id="program-title">{{program?.data?.title}}</span>
@@ -79,7 +86,7 @@
             Delete
             <i class="fa fa-trash fal-delete" aria-hidden="true"></i>
           </a>
-            <wrapper-fal-change-request-dropdown
+            <wrapper-fal-change-request-dropdown *ngIf="changeRequestDropdown.permissions"
               [name]="changeRequestDropdown.config.name"
               [hint]="changeRequestDropdown.config.hint"
               [disabled]="changeRequestDropdown.config.disabled"
@@ -87,7 +94,8 @@
               [defaultOption]="changeRequestDropdown.defaultOption"
               (clickActionHandler)="onChangeRequestSelect($event)"
               [program]="program"
-              ></wrapper-fal-change-request-dropdown>
+              [requestTypeAction] = "programRequest?.requestType?.value">
+              </wrapper-fal-change-request-dropdown>
         </div>
       </div>
 
@@ -237,7 +245,7 @@
 
       <!-- Functional Codes -->
       <ng-container *ngIf="dictionaries && program.data?.functionalCodes && program.data?.functionalCodes.length > 0">
-        <h3 class="sam-ui dividing header ">Functional Codes  <i class="fa fa-lock" aria-hidden="true"></i></h3>
+        <h3 class="sam-ui dividing header " id="functional-codes-label">Functional Codes  <i class="fa fa-lock" aria-hidden="true"></i></h3>
         <ng-container *ngFor="let item of program.data?.functionalCodes | filterMultiArrayObject:dictionaries.functional_codes:'element_id':true:'elements'; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-functional-code-' + i">
               {{ item.displayValue }}<br>
@@ -248,7 +256,7 @@
 
       <!-- Subject Terms -->
       <ng-container *ngIf="dictionaries && program.data?.subjectTerms && program.data?.subjectTerms.length > 0">
-        <h3 class="sam-ui dividing header">Subject Terms  <i class="fa fa-lock" aria-hidden="true"></i></h3>
+        <h3 class="sam-ui dividing header" id="subject-terms-label">Subject Terms  <i class="fa fa-lock" aria-hidden="true"></i></h3>
         <ng-container *ngFor="let item of program.data?.subjectTerms | filterMultiArrayObject:dictionaries.program_subject_terms:'element_id':true:'elements'; let isLast = last; let i = index">
             <span class="field" [attr.id]="'program-subject-terms-' + i">
               {{ item.value }}<br>
@@ -358,9 +366,9 @@
 
     <!-- TAFS Codes -->
     <ng-container *ngIf="dictionaries && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
-    <h3 class="sam-ui dividing header">TAFS Codes  <i class="fa fa-lock" aria-hidden="true"></i></h3>
+    <h3 class="sam-ui dividing header" id="tafs-codes-label">TAFS Codes  <i class="fa fa-lock" aria-hidden="true"></i></h3>
 
-    <table class="sam-ui table celled" *ngIf="dictionaries && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
+    <table id="tafs-codes-table" class="sam-ui table celled" *ngIf="dictionaries && program.data?.financial?.treasury?.tafs && program.data?.financial?.treasury?.tafs?.length > 0">
       <thead>
       <tr>
         <th scope="col">

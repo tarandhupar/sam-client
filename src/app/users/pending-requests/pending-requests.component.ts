@@ -8,6 +8,7 @@ import { AlertFooterService } from "../../alerts/alert-footer/alert-footer.servi
 })
 export class PendingRequestsComponent {
   @Input() requests: Array<PendingRequest> = [];
+  @Input() hideCancel: boolean = false;
 
   public areRequestsVisible = false;
 

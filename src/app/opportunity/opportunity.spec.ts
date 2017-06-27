@@ -18,6 +18,7 @@ import { FixHTMLPipe } from './pipes/fix-html.pipe';
 import { FilesizePipe } from './pipes/filesize.pipe';
 import { SamUIKitModule } from 'sam-ui-kit';
 import {SidenavHelper} from "../app-utils/sidenav-helper";
+import { AppComponentsModule } from "../app-components/app-components.module";
 
 let comp: OpportunityPage;
 let fixture: ComponentFixture<OpportunityPage>;
@@ -353,14 +354,22 @@ let MockFHService = {
 describe('src/app/opportunity/opportunity.spec.ts', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [OpportunityPage, OpportunityTypeLabelPipe, TimezoneLabelPipe, FixHTMLPipe, FilesizePipe], // declare the test component
+      declarations: [
+        OpportunityPage,
+        OpportunityTypeLabelPipe,
+        TimezoneLabelPipe,
+        FixHTMLPipe,
+        FilesizePipe,
+      ], // declare the test component
       imports: [
         PipesModule,
         HttpModule,
+        AppComponentsModule,
         RouterTestingModule.withRoutes([
           { path: 'opportunities', component: OpportunityPage }
         ]),
-        SamUIKitModule
+        SamUIKitModule,
+        AppComponentsModule,
       ],
       providers: [
         BaseRequestOptions,

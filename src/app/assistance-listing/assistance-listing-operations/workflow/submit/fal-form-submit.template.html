@@ -1,13 +1,21 @@
-<div>
+<div class="usa-grid-full" *ngIf="data">
   <sam-alert [attr.id]="submissionAlertConfig.id" [type]="submissionAlertConfig.type"
              [title]="submissionAlertConfig.title" [description]="submissionAlertConfig.description">
   </sam-alert>
 
-  <h3>{{ viewModel.title }}</h3>
+  <form [formGroup]="falSubmitForm">
+    <br>
+    <h2>{{title}}</h2>
   <sam-text-area [label]="'Submission Comment'"
                  [name]="'submission-comment'"
                  [required]="true"
-                 [formControl]="reason"
-                 [control]="reason">
+                 formControlName="reason"
+                 [control]="falSubmitForm.controls['reason']">
   </sam-text-area>
+    <div class="usa-width-one-half">
+      <sam-button buttonText="Cancel" (onClick)="onCancelClick($event)"></sam-button>
+      <sam-button buttonText="Submit to OMB" (onClick)="onSubmitOMBClick($event)"
+                  [buttonType]="(!falSubmitForm.valid ? 'disabled' : 'default')"></sam-button>
+    </div>
+  </form>
 </div>

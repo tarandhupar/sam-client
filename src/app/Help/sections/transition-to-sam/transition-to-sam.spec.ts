@@ -33,7 +33,7 @@ describe("Transition Roadmap page in online help",()=>{
   it("should change filter by clicking By Legacy Website Button",()=>{
     fixture.detectChanges();
     expect(component.isCurrentFilter('feature')).toBe(true);
-    let filterDivs = fixture.debugElement.queryAll(By.css('.filter-div'));
+    let filterDivs = fixture.debugElement.queryAll(By.css('.item'));
     filterDivs[1].triggerEventHandler('click',null);
 
     fixture.whenStable().then(() => {
