@@ -3,6 +3,9 @@ import { ActivatedRoute, Router, NavigationExtras } from "@angular/router";
 import { FHService } from "api-kit/fh/fh.service";
 import * as moment from 'moment/moment';
 import { FlashMsgService } from "../flash-msg-service/flash-message.service";
+import { FHRoleModel } from "../../fh/fh-role-model/fh-role-model.model";
+import { IAMService } from "api-kit";
+import IAM from "../../../api-kit/iam/api/core/iam";
 
 @Component ({
   templateUrl: 'profile.template.html',
@@ -43,14 +46,25 @@ export class OrgDetailProfilePage {
   subCommandBaseLevel = 4;
   addrTypeMaping = {M:"Mailing Address", B:"Billing Address", S:"Shipping Address"};
 
-  constructor(private fhService: FHService, private route: ActivatedRoute, private _router: Router, public flashMsgService:FlashMsgService){
+  fhRoleModel:FHRoleModel;
+  user:any;
+
+  constructor(private fhService: FHService,
+              private route: ActivatedRoute,
+              private _router: Router,
+              private iamService: IAMService,
+              public flashMsgService:FlashMsgService
+  ){
   }
 
   ngOnInit(){
     this.route.parent.params.subscribe(
       params => {
         this.orgId = params['orgId'];
-        this.getOrgDetail(this.orgId);
+
+        // this.iamService.iam.checkSession(this.checkAccess, this.redirectToSignin);
+        this.iamService.iam.checkSession(this.checkAccess, this.checkAccess);
+
       });
   }
 
@@ -59,15 +73,31 @@ export class OrgDetailProfilePage {
   isEditableField(field):boolean{return field === "Description" || field === "Shortname";}
   isDoD():boolean{return this.hierarchyPath.some(e=> {return e.includes("DEFENSE");})}
 
-  getOrgDetail(orgId){
+  checkAccess = (user) => {
+    this.user = user;
+    this.fhService.getAccess(user.id).subscribe((data)=> {
+      if(data.result){
+        this.getOrgDetail(this.orgId);
+      }else{
+        this.redirectToForbidden();
+      }
+    });
+  };
+
+  redirectToSignin = () => { this._router.navigateByUrl('/signin')};
+  redirectToForbidden = () => {this._router.navigateByUrl('/403')};
+
+  getOrgDetail = (orgId) => {
     this.isDataAvailable = false;
     this.fhService.getOrganizationById(orgId,false,true).subscribe(
       val => {
+        this.fhRoleModel = FHRoleModel.FromResponse(val);
         this.orgObj = val._embedded[0].org;
         this.setupOrgFields(this.orgObj);
-        this.isDataAvailable = true;
         this.orgTypes = val._embedded[0].orgTypes;
         this.getSubLayerTypes();
+        this.isDataAvailable = true;
+
       });
   }
 
@@ -79,7 +109,6 @@ export class OrgDetailProfilePage {
     this.setupOrganizationCodes(orgDetail);
     this.setupOrganizationAddress(orgDetail);
     this.isFPDSSource = !!orgDetail.isSourceFpds?orgDetail.isSourceFpds:false;
-
   }
 
   onChangeOrgDetail(hierarchyName){
@@ -134,16 +163,22 @@ export class OrgDetailProfilePage {
     let description = this.getOrgFieldData(org,"summary");
     let shortName = this.getOrgFieldData(org,"shortName");
     let startDateStr = "";
+    let endDateStr = "";
     let funding = "";
 
     if(!!org.startDate){
       startDateStr = moment(org.startDate).format('MM/DD/YYYY');
     }
 
+    if(!!org.endDate){
+      endDateStr = moment(org.endDate).format('MM/DD/YYYY');
+    }
+
     this.orgDetails.push({description:this.capitalizeFirstLetter(org.type)+" Name", value:this.capitalizeFirstLetter(org.name)});
     this.orgDetails.push({description:"Description", value:description});
     this.orgDetails.push({description:"Shortname", value:shortName});
     this.orgDetails.push({description:"Start Date", value:startDateStr});
+    this.orgDetails.push({description:"End Date", value:endDateStr});
 
     this.editedDescription = description;
     this.editedShortname = shortName;
@@ -253,20 +288,26 @@ export class OrgDetailProfilePage {
     }else{
       switch (this.currentHierarchyType) {
         case "Department":
-          subLayers.push({value: 'Agency', label: 'Sub-Tier', name: 'Sub-Tier'});
+          if(this.fhRoleModel.hasPermissionType("POST",'Agency')){
+            subLayers.push({value: 'Agency', label: 'Sub-Tier', name: 'Sub-Tier'});
+          }
           break;
         case "Agency":
-          if(this.isDoD()) subLayers.push({value: 'MajorCommand', label: 'Major Command', name: 'Major Command'});
+          if(this.fhRoleModel.hasPermissionType("POST",'Office')) {
+            if(this.isDoD()) subLayers.push({value: 'MajorCommand', label: 'Major Command', name: 'Major Command'});
+          }
           break;
         case "Major Command":
-          subLayers.push({value: 'SubCommand', label: 'Sub Command 1', name: 'Sub Command 1'});
+          if(this.fhRoleModel.hasPermissionType("POST",'Office')) {
+            subLayers.push({value: 'SubCommand', label: 'Sub Command 1', name: 'Sub Command 1'});
+          }
           break;
         default:
           break;
       }
     }
 
-    if(curHierarchyType !== "Office" && curHierarchyType !== "Department"){
+    if(curHierarchyType !== "Office" && curHierarchyType !== "Department" && this.fhRoleModel.hasPermissionType("POST",'Office')){
       subLayers.push({value: 'Office', label: 'Office', name: 'Office'});
     }
 
