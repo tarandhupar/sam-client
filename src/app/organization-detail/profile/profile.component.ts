@@ -48,14 +48,12 @@ export class OrgDetailProfilePage {
   addrTypeMaping = {M:"Mailing Address", B:"Billing Address", S:"Shipping Address"};
 
   fhRoleModel:FHRoleModel;
-  user:any;
 
   constructor(private fhService: FHService,
               private route: ActivatedRoute,
               private _router: Router,
               private iamService: IAMService,
-              public flashMsgService:FlashMsgService
-  ){
+              public flashMsgService:FlashMsgService){
   }
 
   ngOnInit(){
@@ -75,14 +73,10 @@ export class OrgDetailProfilePage {
   isDoD():boolean{return this.hierarchyPath.some(e=> {return e.includes("DEFENSE");})}
 
   checkAccess = (user) => {
-    this.user = user;
-    this.fhService.getAccess(user.id).subscribe((data)=> {
-      if(data.result){
-        this.getOrgDetail(this.orgId);
-      }else{
-        this.redirectToForbidden();
-      }
-    });
+    this.fhService.getAccess(this.orgId).subscribe(
+      (data)=> {this.getOrgDetail(this.orgId);},
+      (error)=> {if(error.status === 403) this.redirectToForbidden();}
+    );
   };
 
   redirectToSignin = () => { this._router.navigateByUrl('/signin')};
@@ -100,7 +94,7 @@ export class OrgDetailProfilePage {
         this.isDataAvailable = true;
 
       });
-  }
+  };
 
   setupOrgFields(orgDetail){
     this.setCurrentHierarchyType(orgDetail.type);
