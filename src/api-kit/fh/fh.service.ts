@@ -52,6 +52,21 @@ export class FHService {
     return this.oAPIService.call(oApiParam);
   }
 
+  getAccess(orgKey:string, toJson?: boolean) {
+    toJson = toJson || false;
+
+    let apiOptions: any = {
+      name: 'fh',
+      suffix: '/admin/checkAccess/' + orgKey + '/',
+      method: 'GET',
+      oParam: {}
+    };
+
+    //
+    // return this.callApi(apiOptions, toJson);
+    return Observable.of({});
+  }
+
   getOrganizationLogo(organizationAPI: Observable<any>, cbSuccessFn: any, cbErrorFn: any) {
     organizationAPI.subscribe(org => {
       // Do some basic null checks

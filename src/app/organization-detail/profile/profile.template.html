@@ -33,7 +33,7 @@
     <!-- Detail Section-->
     <div class="usa-width-one-whole m_T-4x">
       <h3>{{currentHierarchyType}} Detail
-        <button class="usa-button-transparent pull-right m_0 p_T-0" (click)="onEditPageClick()" *ngIf="!isEdit && !isFPDSSource"><i class="fa fa-pencil"></i></button>
+        <button class="usa-button-transparent pull-right m_0 p_T-0" (click)="onEditPageClick()" *ngIf="!isEdit && !isFPDSSource && fhRoleModel.hasPermissionType('PUT',currentHierarchyType)"><i class="fa fa-pencil"></i></button>
         <button class="usa-button-transparent pull-right m_0 p_T-0 " (click)="onCancelEditPageClick()" *ngIf="isEdit"> <i class="fa fa-times"></i></button>
         <button class="usa-button-transparent pull-right m_0 p_T-0" (click)="onSaveEditPageClick()" *ngIf="isEdit"> <i class="fa fa-save"></i></button>
       </h3>
@@ -47,6 +47,9 @@
           </span>
           <textarea class="usa-width-two-thirds m_T-2x" rows="4" *ngIf="isEdit && pair.description === 'Description'" [(ngModel)]="editedDescription">{{editedDescription}}</textarea>
           <input class="usa-width-two-thirds org-edit-input" *ngIf="isEdit && pair.description === 'Shortname'" [(ngModel)]="editedShortname">
+          <sam-date [label]="''" name='end-date' [value]="editedEndDate" *ngIf="isEdit && pair.description === 'End Date'  && fhRoleModel.hasPermissionType('DELETE',currentHierarchyType)"></sam-date>
+          <span class="usa-width-two-thirds p_T-2x p_B-1x" *ngIf="isEdit && pair.description === 'End Date'  && !fhRoleModel.hasPermissionType('DELETE',currentHierarchyType)">{{pair.value}}</span>
+
         </p>
       </div>
       <h3>{{currentHierarchyType}} Codes</h3>
