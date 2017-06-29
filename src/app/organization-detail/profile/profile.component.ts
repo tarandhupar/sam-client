@@ -33,6 +33,7 @@ export class OrgDetailProfilePage {
   showEditOrgFlashAlert:boolean = false;
   editedDescription:string = "";
   editedShortname:string = "";
+  editedEndDate:string = "";
 
   noneDodHierarchy = ["Department", "Agency", "Office"];
   dodHierarchy = ["Department", "Agency", "Major Command", "Sub Command", "Office"];
@@ -70,7 +71,7 @@ export class OrgDetailProfilePage {
 
   isLastHierarchy(index):boolean{return index === this.hierarchyPath.length-1;}
   isNextLayerCreatable():boolean{return this.currentHierarchyType !== "Office";}
-  isEditableField(field):boolean{return field === "Description" || field === "Shortname";}
+  isEditableField(field):boolean{return ["Description","Shortname","End Date"].indexOf(field) !== -1;}
   isDoD():boolean{return this.hierarchyPath.some(e=> {return e.includes("DEFENSE");})}
 
   checkAccess = (user) => {
@@ -125,9 +126,11 @@ export class OrgDetailProfilePage {
 
   onSaveEditPageClick(){
     this.isEdit = false;
-    if(this.orgObj['summary'] !== this.editedDescription || this.orgObj['shortName'] !== this.editedShortname){
+    let endDateStr = moment(this.orgObj['endDate']).format('Y-M-D');
+    if(this.orgObj['summary'] !== this.editedDescription || this.orgObj['shortName'] !== this.editedShortname || endDateStr !== this.editedEndDate){
       this.orgObj['summary'] = this.editedDescription;
       this.orgObj['shortName'] = this.editedShortname;
+      this.orgObj['endDate'] = this.editedEndDate;
       this.fhService.updateOrganization(this.orgObj).subscribe(
         val => {
           this.getOrgDetail(this.orgId);
@@ -182,6 +185,7 @@ export class OrgDetailProfilePage {
 
     this.editedDescription = description;
     this.editedShortname = shortName;
+    this.editedEndDate = endDateStr;
 
     if(org.type === "OFFICE"){
       let fundingStrs = [];
